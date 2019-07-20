@@ -1,6 +1,16 @@
 {
-  "name": "nomie-dap",
+  "name": "open-nomie",
   "version": "4.0.51",
+  "homepage": "https://nomie.app",
+  "bugs": {
+    "url": "https://github.com/open-nomie/nomie/issues",
+    "email": "support@happydata.org"
+  },
+  "author": {
+    "name": "Brandon Corbin",
+    "email": "support@happydata.org",
+    "url": "https://nomie.app"
+  },
   "scripts": {
     "build": "node build-tools/bust-cache.js && rollup -c",
     "autobuild": "rollup -c -w",
