@@ -1,0 +1,25 @@
+{
+  "name": "Open Nomie",
+  "short_name": "Open Nomie",
+  "start_url": "http://localhost:5000",
+  "description": "Private Life Tracker",
+  "display": "standalone",
+  "theme_color": "#4d84a1",
+  "icons": [
+    {
+      "src": "https://dap.nomie.app/images/icon.png",
+      "sizes": "400x400",
+      "type": "image/png"
+    },
+    {
+      "src": "https://dap.nomie.app/images/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://dap.nomie.app/images/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

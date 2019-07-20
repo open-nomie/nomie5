@@ -1,0 +1,22 @@
+## Todo
+
+-   [] - come up with some way to pull in content
+-   [] - TESTING!
+-   [] - add goals
+-   [] - make logs FULLY editable
+-   [x] -   do onboarding slides
+-   [x] -   make export work with events
+-   [x] -   make /public/global.css pull from scss
+-   [x] -   complete tracker editor
+-   [x] -   start stats
+-   [x] -   get search working
+-   [x] -   Make location lookup work
+-   [x] -   timer input
+-   [] - Edit / Create boards
+-   [x] -   keypad input
+-   [x] -   slider input
+-   [x] -   board support
+-   [-] - Tracker Editor
+-   [x] -   Get date picker for desktop
+-   [x] -   Setup starter packs - make them easy for others to contirbute
+-   [x] -   think about adding page view data to a store - to maintain the state as a users clicks around
