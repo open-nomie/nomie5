@@ -1,6 +1,4 @@
 import { writable } from 'svelte/store';
-import config from '../store/config';
-import dayjs from 'dayjs';
 import NomieLog from '../modules/nomie-log/nomie-log';
 import Logger from '../utils/log/log';
 

@@ -6,10 +6,13 @@ import Storage from '../modules/storage/storage';
 import Tracker from '../modules/tracker/tracker';
 import StarterPack from '../modules/packs/default-trackers';
 
+// Config
+import config from '../../config/global';
+
 // Stores
-import config from '../store/config';
 import { Interact } from '../store/interact';
 import { BoardStore } from '../store/boards';
+
 // Utils
 import Logger from '../utils/log/log';
 

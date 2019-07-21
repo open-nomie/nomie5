@@ -10,7 +10,7 @@ import Storage from '../modules/storage/storage';
 import { TrackerStore } from './trackers';
 import { BoardStore } from './boards';
 
-import config from './config';
+import config from '../../config/global';
 
 const console = new Logger('🤠 userStore');
 

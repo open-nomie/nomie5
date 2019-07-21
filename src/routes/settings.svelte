@@ -1,4 +1,7 @@
 <script>
+  //Vendors
+  import { navigate } from "svelte-routing";
+
   // Components
   import NItem from "../components/list-item/list-item.svelte";
   import NText from "../components/text/text.svelte";
@@ -21,7 +24,7 @@
   import { TrackerStore } from "../store/trackers";
   import { BoardStore } from "../store/boards";
   // Config
-  import config from "../store/config";
+  import config from "../../config/global";
 
   // consts
   const Export = new Exporter();
@@ -48,6 +51,9 @@
     },
     bookAge(date) {
       return dayjs(`${date}-01`).fromNow();
+    },
+    faq() {
+      navigate("/faq");
     },
     export() {
       Export.onChange(change => {
@@ -133,6 +139,7 @@
 
 <NToolbar pinTop>
   <h2>Settings</h2>
+  <button on:click={methods.faq} class="btn btn-clear text-primary">FAQ</button>
 </NToolbar>
 {#if $UserStore.meta}
   <div class="page page-settings with-header">

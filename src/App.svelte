@@ -18,6 +18,7 @@
   import SettingsRoute from "./routes/settings.svelte";
   import StatsRoute from "./routes/stats.svelte";
   import BoardEditorRoute from "./routes/board-editor.svelte";
+  import FAQRoute from "./routes/faq.svelte";
 
   // Stores
   import { UserStore } from "./store/user"; //  user auth and state
@@ -83,6 +84,7 @@
       <Route path="/settings" component={SettingsRoute} />
       <Route path="/stats/:id" component={StatsRoute} />
       <Route path="/board/:id" component={BoardEditorRoute} />
+      <Route path="/faq" component={FAQRoute} />
     </div>
   </Router>
 {:else}

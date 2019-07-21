@@ -7,8 +7,10 @@ import Logger from '../utils/log/log';
 import dayjs from 'dayjs';
 import { writable } from 'svelte/store';
 
+// Config
+import config from '../../config/global';
+
 // Stores
-import config from '../store/config';
 import { UserStore } from './user';
 import locate from '../modules/locate/locate';
 import { Interact } from './interact';
