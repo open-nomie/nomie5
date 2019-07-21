@@ -8,6 +8,11 @@ In March 2019 I decided to remove the apps from Google Play and the App Store an
 
 While the native apps will continue to run for those who installed it before, I wanted to take the best parts of Nomie 1, 2 and 3 and release it as an open source solution that could be run in the browser. This project is that result.
 
+## Try it out
+
+Master Branch (Production) https://open.nomie.app
+Develop Branch (dev) https://dev.nomie.app
+
 ## [Svelte](https://svlete.dev)
 
 This rewrite/port uses SvelteJS https://svlete.dev - a great tool for building fast / reactive single page apps (like Vue, React) without the framework.
