@@ -1,21 +1,26 @@
 # TODO
 
-Generated Sat Jul 20 2019 9:53 pm
+Generated Sun Jul 21 2019 4:59 pm
 
+- **src/store/user.js**
+   - TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
 - **src/store/ledger.js**
    - TODO: this doesn't seem to be trigger a change in History.svetle
    - TODO: Make this use listBooks() array to only look for books that exist
 - **src/store/boards.js**
    - TODO: tried to make this a spread - but I keep breaking it.
+- **src/scss/main.scss**
+   - TODO: Look at making prefers-color-scheme work properly - when enabled, only buttons change
 - **src/routes/stats.svelte**
    - TODO: Needs to be refactored and cleaned up
-   - TODO: Implement IgnoreZeros
 - **src/routes/settings.svelte**
    - TODO: Make this a modal input - not a damn prompt
 - **src/routes/history.svelte**
    - TODO: This is really sloppy - clean it up.
 - **src/routes/board-editor.svelte**
    - TODO: Make sorting work
+- **src/modules/stats/stats.js**
+   - TODO: Implement IgnoreZeros
 - **src/containers/tracker/input/keypad.svelte**
    - and one for the pin-lock container - TODO: merge these some day
 - **src/containers/board/board.svelte**
