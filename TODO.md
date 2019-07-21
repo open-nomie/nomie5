@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sun Jul 21 2019 4:59 pm
+Generated Sun Jul 21 2019 5:11 pm
 
 - **src/store/user.js**
    - TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
