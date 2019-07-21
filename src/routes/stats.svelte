@@ -301,6 +301,7 @@
       <NPopcard level={10} arrow={true}>
 
         <div class="n-row data-blocks py-2 px-3 border-bottom">
+
           {#if state.tracker.math === 'sum'}
             <div class="block">
               <div class="label">Total</div>
@@ -308,19 +309,30 @@
                 {NomieUOM.format(math.round(state.stats.results.year.sum, 1000), state.tracker.uom)}
               </div>
             </div>
+          {:else}
+            <div class="block">
+              <div class="label">Year Avg</div>
+              <div class="value">
+                {NomieUOM.format(math.round(state.stats.results.year.avg, 1000), state.tracker.uom)}
+              </div>
+            </div>
           {/if}
-          <div class="block">
-            <div
-              class="label"
-              on:click={() => {
-                methods.show(state.stats.results.year.max.date);
-              }}>
-              Max {(state.stats.results.year.max.date || dayjs()).format('MMM D')}
+
+          {#if state.stats.results.year.max}
+            <div class="block">
+              <div
+                class="label"
+                on:click={() => {
+                  methods.show(state.stats.results.year.max.date);
+                }}>
+                Max {(state.stats.results.year.max.date || dayjs()).format('MMM D')}
+              </div>
+              <div class="value">
+                {NomieUOM.format(math.round(state.stats.results.year.max.value, 10), state.tracker.uom)}
+              </div>
             </div>
-            <div class="value">
-              {NomieUOM.format(math.round(state.stats.results.year.max.value, 10), state.tracker.uom)}
-            </div>
-          </div>
+          {/if}
+
           <div class="block">
             <div class="label">Month Avg</div>
             <div class="value">
@@ -408,9 +420,16 @@
                 {NomieUOM.format(math.round(state.stats.results.month.sum || 0, 1000), state.tracker.uom)}
               </div>
             </div>
+          {:else}
+            <div class="block">
+              <div class="label">{state.date.format('MMMM')} Avg</div>
+              <div class="value">
+                {NomieUOM.format(math.round(state.stats.results.month.avg || 0, 1000), state.tracker.uom)}
+              </div>
+            </div>
           {/if}
 
-          {#if state.stats.results.month.max}
+          {#if state.stats.results.month.max.value}
             <div class="block">
               <div class="label">
                 Max {(state.stats.results.month.max.date || dayjs()).format('MMM D')}

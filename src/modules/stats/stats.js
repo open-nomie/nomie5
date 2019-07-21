@@ -175,8 +175,8 @@ export default class StatsProcessor {
 	}
 
 	getMinMaxFromValueMap(valueMap) {
-		let min = { sum: null, dateKey: null, date: null };
-		let max = { sum: null, dateKey: null, date: null };
+		let min = { value: null, dateKey: null, date: null };
+		let max = { value: null, dateKey: null, date: null };
 		let valueArray = Object.keys(valueMap)
 			.map(dateKey => {
 				let value;
