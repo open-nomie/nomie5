@@ -10,8 +10,8 @@ While the native apps will continue to run for those who installed it before, I 
 
 ## Try it out
 
-Master Branch (Production) https://open.nomie.app
-Develop Branch (dev) https://dev.nomie.app
+-   **Master Branch** (Production) https://open.nomie.app
+-   **Develop Branch** (dev) https://dev.nomie.app
 
 ## [Svelte](https://svlete.dev)
 
