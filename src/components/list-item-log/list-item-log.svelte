@@ -27,9 +27,7 @@
   <NItem className="{className} my-3 mx-2 border pb-0 n-item-log">
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row my-2 pr-3 time-row">
-      <NText size="md" bold>
-        {dayjs(log.end).format('h:mm a ddd MMM D YYYY')}
-      </NText>
+      <NText size="md" bold>{dayjs(log.end).format('h:mm a')}</NText>
 
       <!-- If they have location-->
       {#if log.lat}
