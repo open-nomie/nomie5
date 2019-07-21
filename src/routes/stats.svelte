@@ -1,5 +1,6 @@
 <script>
   //Vendors
+  import { onMount } from "svelte";
   import { navigate, Router, Route } from "svelte-routing";
   import dayjs from "dayjs";
 
@@ -12,6 +13,7 @@
   import Tracker from "../modules/tracker/tracker";
   import CalendarMap from "../utils/calendar-map/calendar-map";
   import Storage from "../modules/storage/storage";
+  import StatsProcessor from "../modules/stats/stats";
 
   // Components
   import NText from "../components/text/text.svelte";
@@ -33,186 +35,168 @@
   import { TrackerStore } from "../store/trackers";
   import { LedgerStore } from "../store/ledger";
   import { Interact } from "../store/interact";
+  import { HistoryPage } from "../store/history-page";
 
   const console = new Logger("📊 Stats.svelte");
   const path = window.location.href.split("/");
   const mainTag = path[path.length - 1];
 
-  const getChartBase = () => {
-    return {
-      labels: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dev"
-      ],
-      points: [
-        { x: "Jan", y: 0 },
-        { x: "Feb", y: 0 },
-        { x: "Mar", y: 0 },
-        { x: "Apr", y: 0 },
-        { x: "May", y: 0 },
-        { x: "Jun", y: 0 },
-        { x: "Jul", y: 0 },
-        { x: "Aug", y: 0 },
-        { x: "Sep", y: 0 },
-        { x: "Oct", y: 0 },
-        { x: "Nov", y: 0 },
-        { x: "Jan", y: 0 }
-      ]
-    };
-  };
-
   // Local
   let refreshing = false;
+  let rows = [];
 
-  let data = {
+  let state = {
     date: dayjs(), // default to today - use dayjs object
-    tracker: null,
+    tracker: $TrackerStore[mainTag] || new Tracker({ tag: mainTag }),
     initalized: false,
-    trackers: null,
-    raw: null,
+    tracker: null,
     year: {
-      mode: "chart",
-      notworking: Storage.local.get(`stats/${mainTag}/year-mode`) || "chart",
-      total: null,
-      avg: null,
-      chart: getChartBase()
+      mode: "chart"
     },
     month: {
-      mode: "chart",
-      notworking: Storage.local.get(`stats/${mainTag}/month-mode`) || "chart",
-      total: null,
-      avg: null,
-      chart: {
-        labels: [],
-        points: []
-      }
+      mode: "chart"
     },
     day: {
-      mode: "list",
-      notworking: Storage.local.get(`stats/${mainTag}/day-mode`) || "list",
-      total: null,
-      avg: null
-    }
+      mode: "list"
+    },
+    stats: null
   };
 
-  // If we get some data - then
-  $: if ((data.raw || []).length && data.tracker) {
-    methods.getChartData("month");
+  $: if (rows.length) {
+    // Rows is populated from the intial load
+    console.log(":ROWS!");
   }
 
-  // Get the Tracker for the MainTag
-  $: if (Object.keys($TrackerStore || {}).length) {
-    // if it doesn't exist, create a temp one.
-    data.tracker =
-      $TrackerStore[mainTag] || new Tracker({ tag: mainTag, label: mainTag });
+  $: if (Object.keys($TrackerStore).length) {
+    state.tracker = $TrackerStore[mainTag] || new Tracker({ tag: mainTag });
   }
 
   const methods = {
+    getStats() {},
+    showHistory() {
+      navigate("/history");
+      setTimeout(() => {
+        $HistoryPage.date = state.date;
+      }, 10);
+    },
+    load() {
+      refreshing = true;
+      // Get Logs for the year and tag
+      LedgerStore.search(`#${mainTag}`, state.date.format("YYYY")).then(
+        resRows => {
+          // Expand Logs
+          resRows = resRows.map(log => {
+            log.expanded();
+            return log;
+          });
+          rows = resRows;
+          // Initialize the Stats OverView
+          state.stats = new StatsProcessor(rows, state.tracker, state.date);
+          refreshing = false;
+        }
+      );
+    },
     previous() {
-      data.date = data.date.subtract(1, "year");
+      state.date = state.date.subtract(1, "year");
       methods.load();
     },
     next() {
-      data.date = data.date.add(1, "year");
+      state.date = state.date.add(1, "year");
       methods.load();
     },
     setMode(unit, mode) {
       switch (unit) {
         case "day":
-          data.day.mode = mode;
+          state.day.mode = mode;
           break;
         case "month":
-          data.month.mode = mode;
+          state.month.mode = mode;
           break;
         case "year":
-          data.year.mode = mode;
+          state.year.mode = mode;
           break;
       }
     },
     previousMonth() {
-      let thisYear = data.date.year();
-      data.date = data.date.subtract(1, "month");
-      if (data.date.year() !== thisYear) {
+      let thisYear = state.date.year();
+      state.date = state.date.subtract(1, "month");
+      if (state.date.year() !== thisYear) {
         methods.load();
       } else {
         methods.refresh();
       }
     },
     nextMonth() {
-      let thisYear = data.date.year();
-      data.date = data.date.add(1, "month");
-      if (data.date.year() !== thisYear) {
+      let thisYear = state.date.year();
+      state.date = state.date.add(1, "month");
+      if (state.date.year() !== thisYear) {
         methods.load();
       } else {
         methods.refresh();
       }
     },
     previousDay() {
-      let thisYear = data.date.year();
-      data.date = data.date.subtract(1, "day");
-      if (data.date.year() !== thisYear) {
+      let thisYear = state.date.year();
+      state.date = state.date.subtract(1, "day");
+      if (state.date.year() !== thisYear) {
         methods.load();
       } else {
         methods.refresh();
       }
     },
     nextDay() {
-      let thisYear = data.date.year();
-      data.date = data.date.add(1, "day");
-      if (data.date.year() !== thisYear) {
+      let thisYear = state.date.year();
+      state.date = state.date.add(1, "day");
+      if (state.date.year() !== thisYear) {
         methods.load();
       } else {
         methods.refresh();
       }
     },
-    getRows(mode) {
-      let rows = data.raw
-        .filter(row => {
-          if (mode == "month") {
-            let monthKey = new Date(row.end).getMonth();
-            if (monthKey === data.date.month()) {
-              return true;
-            } else {
-              return false;
-            }
-          } else if (mode == "day") {
-            return (
-              data.date.format("YYYY-MM-DD") ===
-              dayjs(row.end).format("YYYY-MM-DD")
-            );
-          } else {
-            return true;
-          }
-        })
-        .sort((a, b) => {
-          return a.end > b.end ? -1 : 1;
-        });
+    // getRows(mode) {
+    //   let rows = state.raw
+    //     .filter(row => {
+    //       if (mode == "month") {
+    //         let monthKey = new Date(row.end).getMonth();
+    //         if (monthKey === state.date.month()) {
+    //           return true;
+    //         } else {
+    //           return false;
+    //         }
+    //       } else if (mode == "day") {
+    //         return (
+    //           state.date.format("YYYY-MM-DD") ===
+    //           dayjs(row.end).format("YYYY-MM-DD")
+    //         );
+    //       } else {
+    //         return true;
+    //       }
+    //     })
+    //     .sort((a, b) => {
+    //       return a.end > b.end ? -1 : 1;
+    //     });
 
-      return rows;
-    },
+    //   return rows;
+    // },
     refresh() {
+      state.stats.gotoDate(state.date);
+
       refreshing = true;
       setTimeout(() => {
         refreshing = false;
       });
+    },
+    show(date) {
+      state.date = date;
+      this.refresh();
     },
     getValueMap(rows) {
       let valueMap = {};
       rows.forEach(row => {
         let dayKey = dayjs(row.end).format("YYYY-MM-DD");
         valueMap[dayKey] = valueMap[dayKey] || [];
-        if (row.trackers[data.tracker.tag]) {
-          valueMap[dayKey].push(row.trackers[data.tracker.tag].value);
+        if (row.trackers[state.tracker.tag]) {
+          valueMap[dayKey].push(row.trackers[state.tracker.tag].value);
         }
       });
       return valueMap;
@@ -221,69 +205,6 @@
      * Get Chart Data - IMPORTANT and Sloppy
      * TODO: Needs to be refactored and cleaned up
      */
-    getChartData(mode) {
-      // Setup labels, points, row holder
-      let labels = []; // holds labels
-      let points = []; // holds x/y
-      let rows = []; // rows
-      let valueMap = {}; // used to group values based on a day key
-      // if we're doing a month
-      if (mode === "month") {
-        // Get month's rows
-        rows = methods.getRows("month");
-
-        valueMap = methods.getValueMap(rows);
-
-        let calendar = CalendarMap({
-          start: dayjs(data.date)
-            .startOf("month")
-            .toDate()
-            .getTime(),
-          end: dayjs(data.date)
-            .endOf("month")
-            .toDate()
-            .getTime(),
-          mode: "day"
-        });
-
-        calendar.label.forEach((dayKey, index) => {
-          if (valueMap[dayKey]) {
-            if (data.tracker.math === "sum") {
-              calendar.value[index] = math.sum(valueMap[dayKey]);
-            } else {
-              calendar.value[index] = math.average(valueMap[dayKey]);
-            }
-          }
-        });
-
-        let labels = calendar.label.map((dayKey, index) => {
-          return dayjs(dayKey).format("D");
-        });
-        // TODO: Implement IgnoreZeros
-        // Day Totals
-        data.day.total = math.sum(
-          valueMap[data.date.format("YYYY-MM-DD")] || [0]
-        );
-        data.day.avg = math.average(
-          valueMap[data.date.format("YYYY-MM-DD")] || [0]
-        );
-        // Month Totals
-
-        data.month.total = math.round(
-          math.sum(calendar.value.filter(v => v !== 0))
-        );
-        data.month.avg = math.average(calendar.value.filter(v => v !== 0));
-        data.month.chart = {
-          labels: labels,
-          points: calendar.value.map((value, index) => {
-            return {
-              x: labels[index],
-              y: value
-            };
-          })
-        };
-      }
-    },
     aboveOrBelow(ths, tht) {
       return new Promise((resolve, reject) => {
         resolve({
@@ -293,7 +214,7 @@
       });
     },
     getCalendarData(mode) {
-      let rows = methods.getRows(mode).map(row => {
+      let rows = state.stats.getRows(mode).map(row => {
         row.start = new Date(row.start);
         row.end = new Date(row.end);
         row.repeat = "never";
@@ -304,7 +225,7 @@
     getLocationSummary(type) {
       type = type || "year";
       let locations = {};
-      methods.getRows(type).forEach(row => {
+      state.stats.getRows(type).forEach(row => {
         if (row.lat) {
           let key = `${math.round(row.lat, 1000)},${math.round(row.lng, 1000)}`;
           locations[key] = locations[key] || { lat: row.lat, lng: row.lng };
@@ -313,90 +234,24 @@
       return Object.keys(locations).map(key => {
         return locations[key];
       });
-    },
-    percentile(xyarr) {
-      let values = math.percentile(
-        xyarr.map(row => {
-          return row.y;
-        })
-      );
-
-      let updatedArray = xyarr.map((row, index) => {
-        return {
-          y: values[index],
-          x: row.x
-        };
-      });
-
-      return updatedArray;
-    },
-    load() {
-      refreshing = true;
-      data.year.chart = getChartBase();
-      LedgerStore.search(`#${mainTag}`, data.date.format("YYYY")).then(rows => {
-        let monthMap = {
-          "1": [],
-          "2": [],
-          "3": [],
-          "4": [],
-          "5": [],
-          "6": [],
-          "7": [],
-          "8": [],
-          "9": [],
-          "10": [],
-          "11": [],
-          "12": []
-        };
-        // Set Raw
-        data.raw = rows;
-        // Loop over each Roow
-        rows.forEach(row => {
-          // Expand it
-          row.expanded();
-          let month = new Date(row.end).getMonth() + 1;
-          let trackerValue = (row.trackers[mainTag] || {}).value || null;
-          // If we have a tracker value - lets push it to the month
-          if (trackerValue) {
-            monthMap[month] = monthMap[month] || [];
-            monthMap[month].push(trackerValue);
-          }
-        }); // end looping over rows;
-
-        let values = Object.keys(monthMap).map(index => {
-          let value = 0;
-          if ((data.tracker || {}).math !== "sum") {
-            value = math.sum(monthMap[index]);
-          } else {
-            value = math.average(monthMap[index]);
-          }
-          return value;
-        });
-
-        data.year.total = math.round(math.sum(values));
-        data.year.avg = math.average(values);
-
-        // Loop over them to asign to the right point
-        math.percentile(values).forEach((value, index) => {
-          data.year.chart.points[index].y = value;
-        });
-
-        // Disable loading
-        refreshing = false;
-      });
     }
   };
 
-  TrackerStore.subscribe(tkrs => {
-    if (tkrs) {
-      data.trackers = tkrs;
-      methods.load();
-    }
+  onMount(() => {
+    methods.load();
   });
 </script>
 
 <style lang="scss">
+  .data-blocks {
+    display: flex;
+    justify-content: space-between;
+    align-items: space-evenly;
+    flex-wrap: wrap;
+  }
   .block {
+    margin: 0 3px;
+
     .label {
       font-size: 0.7rem;
     }
@@ -421,11 +276,11 @@
   }
 </style>
 
-{#if data.tracker !== null}
+{#if state.stats !== null}
   <NPage className="stats" withBack={true}>
 
     <div slot="header" class="n-row">
-      <h1>{data.tracker.emoji} {data.tracker.label}</h1>
+      <h1>{state.tracker.emoji} {state.tracker.label}</h1>
     </div>
 
     <div class="container pt-3 popcards">
@@ -434,11 +289,11 @@
 
         <button class="btn btn-clear" on:click={methods.previous}>
           <i class="zmdi zmdi-chevron-left font-140 mr-2" />
-          {data.date.subtract(1, 'year').format('YYYY')}
+          {state.date.subtract(1, 'year').format('YYYY')}
         </button>
-        <h1 class="n-title filler text-center">{data.date.format('YYYY')}</h1>
+        <h1 class="n-title filler text-center">{state.date.format('YYYY')}</h1>
         <button class="btn btn-clear" on:click={methods.next}>
-          {data.date.add(1, 'year').format('YYYY')}
+          {state.date.add(1, 'year').format('YYYY')}
           <i class="zmdi zmdi-chevron-right font-140 ml-2" />
         </button>
       </div>
@@ -446,34 +301,44 @@
       <NPopcard level={10} arrow={true}>
 
         <div class="n-row data-blocks py-2 px-3 border-bottom">
-          {#if data.tracker.math === 'sum' && data.year.total}
+          {#if state.tracker.math === 'sum'}
             <div class="block">
               <div class="label">Total</div>
               <div class="value">
-                {NomieUOM.format(data.year.total, data.tracker.uom)}
+                {NomieUOM.format(math.round(state.stats.results.year.sum, 1000), state.tracker.uom)}
               </div>
             </div>
           {/if}
-          {#if data.year.avg}
-            <div class="block">
-              <div class="label">Month Avg</div>
-              <div class="value">
-                {NomieUOM.format(data.year.avg, data.tracker.uom)}
-              </div>
+          <div class="block">
+            <div
+              class="label"
+              on:click={() => {
+                methods.show(state.stats.results.year.max.date);
+              }}>
+              Max {(state.stats.results.year.max.date || dayjs()).format('MMM D')}
             </div>
-          {/if}
+            <div class="value">
+              {NomieUOM.format(math.round(state.stats.results.year.max.value, 10), state.tracker.uom)}
+            </div>
+          </div>
+          <div class="block">
+            <div class="label">Month Avg</div>
+            <div class="value">
+              {NomieUOM.format(math.round(state.stats.results.year.sum / 12, 10), state.tracker.uom)}
+            </div>
+          </div>
         </div>
         <div class="n-row p-3">
           <div class="btn-group flex-grow">
             <button
-              class="btn btn-sm btn-white-pop {data.year.mode === 'chart' ? ' active' : ' inactive'}"
+              class="btn btn-sm btn-white-pop {state.year.mode === 'chart' ? ' active' : ' inactive'}"
               on:click={() => {
                 methods.setMode('year', 'chart');
               }}>
               Chart
             </button>
             <button
-              class="btn btn-sm btn-white-pop {data.year.mode === 'map' ? ' active' : ' inactive'}"
+              class="btn btn-sm btn-white-pop {state.year.mode === 'map' ? ' active' : ' inactive'}"
               on:click={() => {
                 methods.setMode('year', 'map');
               }}>
@@ -483,24 +348,34 @@
         </div>
 
         <div class="p-2">
-          {#if data.year.mode == 'chart'}
+          {#if state.year.mode == 'chart'}
             <BarChart
               height={140}
-              color={data.tracker.color}
-              labels={data.year.chart.labels}
-              points={data.year.chart.points}
+              color={state.tracker.color}
+              labels={state.stats.results.year.chart.labels}
+              points={state.stats.results.year.chart.points}
               on:tap={event => {
-                data.date = data.date.set('month', event.detail.index);
+                state.date = state.date.set('month', event.detail.index);
                 methods.refresh();
               }}
-              activeIndex={data.date.month() + 1} />
+              xFormat={x => {
+                return dayjs(x).format('MMM');
+              }}
+              yFormat={y => {
+                return NomieUOM.format(y, state.tracker.uom);
+              }}
+              activeIndex={state.date.month() + 1} />
           {/if}
-          {#if data.year.mode == 'map'}
+          {#if state.year.mode == 'map'}
             <div class="map-holder w-100">
-              <NMap
-                height={300}
-                small
-                locations={methods.getLocationSummary()} />
+              {#if refreshing}
+                <div class="empty-notice sm">Loading...</div>
+              {:else}
+                <NMap
+                  height={300}
+                  small
+                  locations={state.stats.getLocations('year')} />
+              {/if}
             </div>
           {/if}
         </div>
@@ -513,55 +388,66 @@
       <div class="n-row n-month-bar mt-3 mw-500px mx-auto">
         <button class="btn btn-clear" on:click={methods.previousMonth}>
           <i class="zmdi zmdi-chevron-left font-140 mr-2" />
-          {data.date.subtract(1, 'month').format('MMM')}
+          {state.date.subtract(1, 'month').format('MMM')}
         </button>
         <h1 class="n-title filler text-center">
-          {data.date.format('MMM YYYY')}
+          {state.date.format('MMM YYYY')}
         </h1>
         <button class="btn btn-clear" on:click={methods.nextMonth}>
-          {data.date.add(1, 'month').format('MMM')}
+          {state.date.add(1, 'month').format('MMM')}
           <i class="zmdi zmdi-chevron-right font-140 ml-2" />
         </button>
       </div>
 
       <NPopcard level={9} arrow={true}>
         <div class="n-row data-blocks py-2 px-3 border-bottom">
-          {#if data.tracker.math === 'sum'}
+          {#if state.tracker.math === 'sum'}
             <div class="block">
-              <div class="label">{data.date.format('MMMM')} Total</div>
+              <div class="label">{state.date.format('MMMM')} Total</div>
               <div class="value">
-                {NomieUOM.format(data.month.total || 0, data.tracker.uom)}
+                {NomieUOM.format(math.round(state.stats.results.month.sum || 0, 1000), state.tracker.uom)}
               </div>
             </div>
           {/if}
-          {#if data.month.avg}
+
+          {#if state.stats.results.month.max}
             <div class="block">
-              <div class="label">Daily Avg</div>
+              <div class="label">
+                Max {(state.stats.results.month.max.date || dayjs()).format('MMM D')}
+              </div>
               <div class="value">
-                {NomieUOM.format(data.month.avg, data.tracker.uom)}
+                {NomieUOM.format(math.round(state.stats.results.month.max.value, 10), state.tracker.uom)}
               </div>
             </div>
           {/if}
+
+          <div class="block">
+            <div class="label">Daily Avg</div>
+            <div class="value">
+              {NomieUOM.format(math.round(state.stats.results.month.avg, 10), state.tracker.uom)}
+            </div>
+          </div>
+
         </div>
 
         <div class="n-row p-3">
           <div class="btn-group flex-grow">
             <button
-              class="btn btn-sm btn-white-pop {data.month.mode === 'chart' ? ' active' : '   inactive'}"
+              class="btn btn-sm btn-white-pop {state.month.mode === 'chart' ? ' active' : '   inactive'}"
               on:click={() => {
                 methods.setMode('month', 'chart');
               }}>
               Chart
             </button>
             <button
-              class="btn btn-sm btn-white-pop {data.month.mode === 'map' ? ' active' : '   inactive'}"
+              class="btn btn-sm btn-white-pop {state.month.mode === 'map' ? ' active' : '   inactive'}"
               on:click={() => {
                 methods.setMode('month', 'map');
               }}>
               Where
             </button>
             <button
-              class="btn btn-sm btn-white-pop {data.month.mode === 'calendar' ? 'active' : '   inactive'}"
+              class="btn btn-sm btn-white-pop {state.month.mode === 'calendar' ? 'active' : '   inactive'}"
               on:click={() => {
                 methods.setMode('month', 'calendar');
               }}>
@@ -572,35 +458,39 @@
 
         <div class="p-2">
           {#if !refreshing}
-            {#if data.month.mode === 'chart'}
+            {#if state.month.mode === 'chart'}
               <BarChart
                 height={140}
-                color={data.tracker.color}
-                labels={data.month.chart.labels}
-                points={data.month.chart.points}
+                color={state.tracker.color}
+                labels={state.stats.results.month.chart.labels}
+                points={state.stats.results.month.chart.points}
                 on:tap={event => {
-                  let newDate = data.date
+                  let newDate = state.date
                     .toDate()
                     .setDate(event.detail.index + 1);
-                  data.date = dayjs(newDate);
+                  state.date = dayjs(newDate);
                   methods.refresh();
                 }}
-                activeIndex={data.date.toDate().getDate()} />
-            {:else if data.month.mode === 'map'}
-              <NMap small locations={methods.getLocationSummary('month')} />
-            {:else if data.month.mode === 'calendar'}
+                xFormat={x => (x % 2 ? x : '')}
+                yFormat={y => {
+                  return NomieUOM.format(y, state.tracker.uom);
+                }}
+                activeIndex={state.date.toDate().getDate()} />
+            {:else if state.month.mode === 'map'}
+              <NMap small locations={state.stats.getLocations('month')} />
+            {:else if state.month.mode === 'calendar'}
               <NCalendar
-                color={data.tracker.color}
+                color={state.tracker.color}
                 showHeader={false}
                 on:dayClick={event => {
-                  data.date = dayjs(event.detail);
+                  state.date = dayjs(event.detail);
                   methods.refresh();
                 }}
-                initialDate={data.date}
+                initialDate={state.date}
                 events={methods.getCalendarData('month')} />
             {/if}
           {:else}
-            <div class="empty-notice">Loading</div>
+            <div class="empty-notice sm">Loading</div>
           {/if}
         </div>
       </NPopcard>
@@ -612,24 +502,26 @@
 
         <button class="btn btn-clear" on:click={methods.previousDay}>
           <i class="zmdi zmdi-chevron-left font-140 mr-2" />
-          {data.date.subtract(1, 'day').format('ddd')}
+          {state.date.subtract(1, 'day').format('ddd')}
         </button>
-        <h1 class="n-title filler text-center">
-          {data.date.format('ddd MMM D')}
+        <h1
+          class="n-title btn btn-light filler text-center"
+          on:click={methods.showHistory}>
+          {state.date.format('ddd MMM D')}
         </h1>
         <button class="btn btn-clear" on:click={methods.nextDay}>
-          {data.date.add(1, 'day').format('ddd')}
+          {state.date.add(1, 'day').format('ddd')}
           <i class="zmdi zmdi-chevron-right font-140 ml-2" />
         </button>
       </div>
 
       <NPopcard level={8}>
         <div class="n-row data-blocks py-2 px-3 border-bottom">
-          {#if data.tracker.math === 'sum'}
-            {#await methods.aboveOrBelow(data.day.total, data.month.avg) then aob}
+          {#if state.tracker.math === 'sum'}
+            {#await methods.aboveOrBelow(state.stats.results.day.sum, state.stats.results.month.avg) then aob}
               <div class="block">
                 <div class="label">
-                  {data.date.format('ddd')} Total
+                  {state.date.format('ddd')} Total
                   {#if aob.direction != 'same'}
                     <span class="change">
                       <span
@@ -639,7 +531,7 @@
                   {/if}
                 </div>
                 <div class="value">
-                  {NomieUOM.format(data.day.total || 0, data.tracker.uom)}
+                  {NomieUOM.format(state.stats.results.day.sum || 0, state.tracker.uom)}
                 </div>
               </div>
             {/await}
@@ -647,7 +539,7 @@
             <div class="block">
               <div class="label">Daily Avg</div>
               <div class="value">
-                {NomieUOM.format(data.day.avg, data.tracker.uom)}
+                {NomieUOM.format(state.day.avg, state.tracker.uom)}
               </div>
             </div>
           {/if}
@@ -656,21 +548,21 @@
         <div class="n-row p-3">
           <div class="btn-group flex-grow">
             <button
-              class="btn btn-sm btn-white-pop {data.day.mode === 'list' ? ' active' : '   inactive'}"
+              class="btn btn-sm btn-white-pop {state.day.mode === 'list' ? ' active' : '   inactive'}"
               on:click={() => {
                 methods.setMode('day', 'list');
               }}>
               Logs
             </button>
             <button
-              class="btn btn-sm btn-white-pop {data.day.mode === 'map' ? ' active' : '   inactive'}"
+              class="btn btn-sm btn-white-pop {state.day.mode === 'map' ? ' active' : '   inactive'}"
               on:click={() => {
                 methods.setMode('day', 'map');
               }}>
               Where
             </button>
             <!-- <button
-              class="btn btn-sm btn-white-pop {data.day.mode === 'calendar' ? 'active' : '   inactive'}"
+              class="btn btn-sm btn-white-pop {state.day.mode === 'calendar' ? 'active' : '   inactive'}"
               on:click={() => {
                 methods.setMode('day', 'calendar');
               }}>
@@ -682,16 +574,16 @@
         <!-- <div class="n-row data-blocks py-2 px-3 border-bottom">
           <div class="btn-group flex-grow">
             <button
-              class="btn btn-sm btn-white-pop {data.day.mode === 'list' ? ' active' : '   inactive'}"
+              class="btn btn-sm btn-white-pop {state.day.mode === 'list' ? ' active' : '   inactive'}"
               on:click={() => {
-                data.month.mode = 'list';
+                state.month.mode = 'list';
               }}>
               <i class="zmdi zmdi-menu" />
             </button>
             <button
-              class="btn btn-sm btn-white-pop {data.day.mode === 'calendar' ? 'active' : '   inactive'}"
+              class="btn btn-sm btn-white-pop {state.day.mode === 'calendar' ? 'active' : '   inactive'}"
               on:click={() => {
-                data.month.mode = 'calendar';
+                state.month.mode = 'calendar';
               }}>
               <i class="zmdi zmdi-calendar" />
             </button>
@@ -700,30 +592,30 @@
 
         <div class="">
           {#if !refreshing}
-            {#if data.day.mode === 'list'}
+            {#if state.day.mode === 'list'}
               <div class="n-list">
-                {#if methods.getRows('day').length === 0}
+                {#if state.stats.getRows('day').length === 0}
                   <div class="empty-notice sm">No logs found on this day.</div>
                 {/if}
-                {#each methods.getRows('day') as log, index}
-                  {#if log.trackers[data.tracker.tag]}
+                {#each state.stats.getRows('day') as log, index}
+                  {#if log.trackers[state.tracker.tag]}
                     <NLogItem
                       {log}
                       on:locationClick={event => {
                         Interact.showLocations([log]);
                       }}
                       trackers={$TrackerStore}
-                      focus={data.tracker.tag} />
+                      focus={state.tracker.tag} />
                   {/if}
                 {/each}
               </div>
-            {:else if data.day.mode === 'map'}
-              <NMap small locations={methods.getLocationSummary('day')} />
-            {:else if data.day.mode === 'calendar'}
+            {:else if state.day.mode === 'map'}
+              <NMap small locations={state.stats.getLocations('day')} />
+            {:else if state.day.mode === 'calendar'}
               <div class="empty-notice" />
             {/if}
           {:else}
-            <div class="empty-notice">Loading</div>
+            <div class="empty-notice sm">Loading</div>
           {/if}
         </div>
       </NPopcard>
@@ -731,6 +623,6 @@
   </NPage>
 {:else}
   <NPage>
-    <div class="empty-notice">Loading...</div>
+    <div class="empty-notice sm">Loading...</div>
   </NPage>
 {/if}

@@ -48,8 +48,10 @@ const trackerStoreInit = () => {
 						});
 						// Setup Default Trackers
 					} else {
-						update(t => trackers);
-						resolve(trackers);
+						update(t => {
+							resolve(trackers);
+							return trackers;
+						});
 					}
 				});
 			});

@@ -20,8 +20,8 @@ const userInit = () => {
 	let listeners = [];
 
 	let state = {
-		signedIn: false,
-		initialized: false,
+		ready: false,
+		signedIn: undefined,
 		profile: {
 			username: null,
 		},
@@ -39,6 +39,7 @@ const userInit = () => {
 
 	const methods = {
 		initialize() {
+			// Set Dark or Light Mode
 			if (state.darkMode) {
 				document.body.classList.add('dark');
 			} else {
@@ -54,11 +55,50 @@ const userInit = () => {
 			} else if (UserSession.isUserSignedIn()) {
 				// Signed In - let's get the user Ready
 				methods.setProfile(UserSession.loadUserData());
+			} else {
+				update(u => {
+					u.ready = true;
+					u.signedIn = false;
+					return u;
+				});
 			}
 			// set highlevel initialize marker
-			this.initialized = true;
 
 			// TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
+		},
+		/**
+		 * Set Profile and Signin
+		 */
+		setProfile(profile) {
+			// Fire off the remaining bootstrap items.
+			methods.bootstrap();
+			// Update store with new profile.
+			update(p => {
+				p.profile = profile;
+				p.signedIn = true;
+				return p;
+			});
+		},
+		bootstrap() {
+			let start = new Date().getTime();
+			// First lets get the TrackerStore loaded
+			let promises = [];
+			promises.push(methods.loadMeta());
+			promises.push(
+				TrackerStore.initialize().then(trackers => {
+					// Now lets load the BoardStore and pass these trackers
+					return BoardStore.initialize(trackers).then(() => {
+						// Now let's fire off that we're ready
+						if (state.alwaysLocate) {
+							methods.locate();
+						}
+					});
+				})
+			);
+
+			return Promise.all(promises).then(() => {
+				return methods.fireReady(state);
+			});
 		},
 		reset() {
 			update(u => state);
@@ -132,33 +172,23 @@ const userInit = () => {
 			return UserSession;
 		},
 		onReady(func) {
-			if (state.signedIn) {
+			if (this.ready === true) {
 				func(state);
 			} else {
 				listeners.push(func);
 			}
 		},
 		fireReady(payload) {
+			update(b => {
+				b.ready = true;
+				return b;
+			});
 			listeners.forEach(func => {
 				func(payload);
 			});
 			listeners = [];
 		},
-		bootstrap() {
-			// First lets get the TrackerStore loaded
-			return methods.loadMeta().then(() => {
-				return TrackerStore.initialize().then(trackers => {
-					// Now lets load the BoardStore and pass these trackers
-					return BoardStore.initialize(trackers).then(() => {
-						// Now let's fire off that we're ready
-						if (state.alwaysLocate) {
-							methods.locate();
-						}
-						return methods.fireReady(state);
-					});
-				});
-			});
-		},
+
 		listFiles() {
 			return new Promise((resolve, reject) => {
 				let files = [];
@@ -172,16 +202,6 @@ const userInit = () => {
 					.then(() => {
 						resolve(files);
 					});
-			});
-		},
-		setProfile(profile) {
-			// Fire off the remaining bootstrap items.
-			methods.bootstrap();
-			// Update store with new profile.
-			update(p => {
-				p.profile = profile;
-				p.signedIn = true;
-				return p;
 			});
 		},
 	};

@@ -8,7 +8,7 @@
   // containers
   import NPage from "../../containers/layout/page.svelte";
   //modules
-  import StatsOverview from "../../modules/stats/overview";
+  import StatsProcessor from "../../modules/stats/stats";
   import Tracker from "../../modules/tracker/tracker";
   import Log from "../../modules/nomie-log/nomie-log";
   // utils
@@ -55,7 +55,7 @@
 
       console.log("Logs", logs);
 
-      let overview = new StatsOverview(logs, tracker).results;
+      let overview = new StatsProcessor(logs, tracker).results;
       console.log("Overview from stats.svelte", overview);
 
       if (overview.year.count !== logs.length) {

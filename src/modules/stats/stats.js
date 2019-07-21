@@ -4,15 +4,14 @@ import dayjs from 'dayjs';
 import Tracker from '../tracker/tracker';
 import Log from '../nomie-log/nomie-log';
 // Utils
-import CalendarMap from '../../utils/calendar-map/calendar-map';
 import Logger from '../../utils/log/log';
 import math from '../../utils/math/math';
 
 const console = new Logger('📊 stats/overview');
 
-export default class StatsOverview {
-	constructor(rows, tracker) {
-		this.date = dayjs();
+export default class StatsProcessor {
+	constructor(rows, tracker, date) {
+		this.date = date || dayjs();
 		this.rows = rows;
 		this.tracker = new Tracker(tracker);
 		this.valueMap = {}; // holder of days and array of values
@@ -20,8 +19,14 @@ export default class StatsOverview {
 		this.load();
 	}
 
+	gotoDate(date) {
+		this.date = date;
+		this.prepare();
+		return this;
+	}
+
 	load() {
-		console.log('Load()');
+		//('Load()');
 		this.rows = this.rows
 			.map(row => {
 				let log = new Log(row);
@@ -42,7 +47,7 @@ export default class StatsOverview {
 	}
 
 	prepare() {
-		console.log('Preparing');
+		//console.log('Preparing');
 		// filter rows for only this tracker.
 		this.results.year.count = this.rows.length;
 
@@ -57,8 +62,12 @@ export default class StatsOverview {
 		this.results.year = { ...this.results.year, ...this.getMinMaxFromValueMap(this.results.valueMap) };
 
 		console.log('Base Set', this.results);
+		console.log('prepare', {
+			results: this.results,
+		});
 		// Year is finished
 		this.results.month = this.generate('month');
+		this.results.day = this.generate('day');
 	}
 
 	date(date) {
@@ -115,12 +124,33 @@ export default class StatsOverview {
 			let dayKey = dayjs(row.end).format('YYYY-MM-DD');
 			valueMap[dayKey] = valueMap[dayKey] || [];
 			if (row.trackers[this.tracker.tag]) {
-				valueMap[dayKey].push(row.trackers[this.tracker.tag].value);
+				let value = row.trackers[this.tracker.tag].value;
+				value = isNaN(value) ? 0 : value;
+				valueMap[dayKey].push(value);
 			} else {
-				console.log(`row.trackers[${this.tracker.tag}] was not found`);
+				//console.log(`row.trackers[${this.tracker.tag}] was not found`);
 			}
 		});
 		return valueMap;
+	}
+
+	getLocations(mode) {
+		mode = mode || 'year';
+		let locations = {};
+		this.getRows(mode).forEach(row => {
+			if (row.lat) {
+				let key;
+				if (mode === 'year') {
+					key = `${math.round(row.lat, 1000)},${math.round(row.lng, 1000)}`;
+				} else {
+					key = `${row.lat},${row.lng}`;
+				}
+				locations[key] = locations[key] || { lat: row.lat, lng: row.lng };
+			}
+		});
+		return Object.keys(locations).map(key => {
+			return locations[key];
+		});
 	}
 
 	getRows(mode) {
@@ -216,6 +246,7 @@ export default class StatsOverview {
 			this.rows.forEach(row => {
 				let end = dayjs(row.end);
 				if (row.trackers[this.tracker.tag]) {
+					yearMap[end.format('YYYY-MM')] = yearMap[end.format('YYYY-MM')] || [];
 					yearMap[end.format('YYYY-MM')].push(row.trackers[this.tracker.tag].value);
 				}
 			});
@@ -230,7 +261,7 @@ export default class StatsOverview {
 				chartData.points.push(point);
 			});
 		}
-		console.log(`Chart data is done for ${mode}`, chartData);
+		//console.log(`Chart data is done for ${mode}`, chartData);
 		return chartData;
 	} // end toChartData()
 
@@ -251,7 +282,7 @@ export default class StatsOverview {
 			chart: this.toChartData(mode),
 		};
 
-		console.log(mode + ' Response', response);
+		// console.log(mode + ' Response', response);
 
 		return response;
 		// let calendar = CalendarMap({

@@ -77,4 +77,7 @@ export default {
 			return ((100 * d) / arr.reduce((a, b) => a + b, 0)) | 0;
 		});
 	},
+	trustfulNumber(number, def) {
+		return isNaN(number) ? def : number;
+	},
 };

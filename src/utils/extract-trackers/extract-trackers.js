@@ -43,13 +43,11 @@ export default function(text) {
 	// Loop over the Map's keys (tracker names)
 	for (var i in map) {
 		// only save those that aren't standard
-		if (['#nomie', 'nomie', 'score', 'rating', 'enc', 'b64img'].indexOf(i) == -1) {
-			map[i].value = math.sum(map[i].values);
-			final[i] = {
-				tracker: map[i].tracker,
-				value: map[i].value,
-			};
-		}
+		map[i].value = math.sum(map[i].values);
+		final[i] = {
+			tracker: map[i].tracker,
+			value: isNaN(map[i].value) ? 0 : map[i].value,
+		};
 	}
 
 	return final;
