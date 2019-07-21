@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Jul 20 2019 9:51 pm
+Generated Sat Jul 20 2019 9:53 pm
 
 - **src/store/ledger.js**
    - TODO: this doesn't seem to be trigger a change in History.svetle
