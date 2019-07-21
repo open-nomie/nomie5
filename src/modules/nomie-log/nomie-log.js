@@ -47,8 +47,8 @@ export default class Record {
 		return this;
 	}
 
-	hasTracker(tracker) {
-		return this.trackers.hasOwnProperty(tracker);
+	hasTracker(trackerTag) {
+		return this.trackers.hasOwnProperty(trackerTag);
 	}
 
 	noteTextLength() {
@@ -68,6 +68,10 @@ export default class Record {
 		} else {
 			return 0;
 		}
+	}
+
+	expand() {
+		return this.expanded();
 	}
 
 	expanded() {

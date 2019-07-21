@@ -25,12 +25,22 @@
   const padding = { top: 20, right: 15, bottom: 20, left: 25 };
   const dispatch = createEventDispatcher();
 
+  let finalPoints = [];
+
   $: if (points) {
-    let values = points.map(point => point.y);
-    let sum = math.sum(values);
-    let max = math.max(values);
-    if (sum) {
-      yTicks = [0, math.round(max * 0.5), max];
+    if (points.length) {
+      let values = points.map(point => point.y);
+      let sum = math.sum(values);
+      let max = math.max(values);
+      if (sum) {
+        yTicks = [0, math.round(max * 0.5), max];
+      }
+      finalPoints = math.percentile(values).map((value, index) => {
+        let p = { ...points[index] };
+        p.y = value;
+        return p;
+      });
+      console.log("Final Points", finalPoints);
     }
   }
 

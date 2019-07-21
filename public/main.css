@@ -7143,50 +7143,6 @@ body.dark {
       .show > body.dark .btn-light.dropdown-toggle:focus {
         box-shadow: 0 0 0 0.2rem rgba(71, 71, 71, 0.5); }
 
-@media (prefers-color-scheme: dark) {
-  --color-darkest: #000;
-  --color-bg: #1d1d1d;
-  --color-solid: #000;
-  --color-solid-1: #222;
-  --color-solid-2: #333;
-  --color-solid-3: #444;
-  --color-inverse: #fff;
-  --color-inverse-1: #eee;
-  --color-inverse-2: #ccc;
-  --color-inverse-3: #666;
-  --color-tabs: #000;
-  --color-faded: rgba(255, 255, 255, 0.6);
-  --color-faded-1: rgba(255, 255, 255, 0.1);
-  --color-faded-2: rgba(255, 255, 255, 0.2);
-  --color-faded-3: rgba(255, 255, 255, 0.4);
-  --color-full-screen: rgba(63, 62, 62, 0.8);
-  .n-item.border-bottom {
-    border-bottom: solid 1px rgba(255, 255, 255, 0.15) !important; }
-  .btn-clear {
-    color: var(--color-inverse-1); }
-  .btn-light {
-    color: #fff;
-    background-color: #333;
-    border-color: #262626; }
-    .btn-light:hover {
-      color: #fff;
-      background-color: #262626;
-      border-color: #262626; }
-    .btn-light:focus, .btn-light.focus {
-      box-shadow: 0 0 0 0.2rem rgba(71, 71, 71, 0.5); }
-    .btn-light.disabled, .btn-light:disabled {
-      color: #fff;
-      background-color: #333;
-      border-color: #262626; }
-    .btn-light:not(:disabled):not(.disabled):active, .btn-light:not(:disabled):not(.disabled).active,
-    .show > .btn-light.dropdown-toggle {
-      color: #fff;
-      background-color: #319ed7;
-      border-color: #060606; }
-      .btn-light:not(:disabled):not(.disabled):active:focus, .btn-light:not(:disabled):not(.disabled).active:focus,
-      .show > .btn-light.dropdown-toggle:focus {
-        box-shadow: 0 0 0 0.2rem rgba(71, 71, 71, 0.5); } }
-
 .full-screen {
   background-color: var(--color-inverse);
   z-index: 2000;

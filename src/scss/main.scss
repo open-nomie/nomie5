@@ -78,9 +78,10 @@ body.dark {
 	@include darkmode();
 }
 
-@media (prefers-color-scheme: dark) {
-	@include darkmode();
-}
+// TODO: Look at making prefers-color-scheme work properly - when enabled, only buttons change
+// @media (prefers-color-scheme: dark) {
+// 	@include darkmode();
+// }
 
 .full-screen {
 	background-color: var(--color-inverse);

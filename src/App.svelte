@@ -19,6 +19,8 @@
   import StatsRoute from "./routes/stats.svelte";
   import BoardEditorRoute from "./routes/board-editor.svelte";
   import FAQRoute from "./routes/faq.svelte";
+  // Testing Routes
+  import TestStatsRoute from "./routes/test/stats.svelte";
 
   // Stores
   import { UserStore } from "./store/user"; //  user auth and state
@@ -85,6 +87,7 @@
       <Route path="/stats/:id" component={StatsRoute} />
       <Route path="/board/:id" component={BoardEditorRoute} />
       <Route path="/faq" component={FAQRoute} />
+      <Route path="/test/stats" component={TestStatsRoute} />
     </div>
   </Router>
 {:else}

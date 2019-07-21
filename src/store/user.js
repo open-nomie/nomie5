@@ -38,6 +38,28 @@ const userInit = () => {
 	const { subscribe, set, update } = writable(state);
 
 	const methods = {
+		initialize() {
+			if (state.darkMode) {
+				document.body.classList.add('dark');
+			} else {
+				document.body.classList.remove('dark');
+			}
+			// Is blockstack user pending?
+			if (UserSession.isSignInPending()) {
+				UserSession.handlePendingSignIn().then(userData => {
+					// redirect user to home - to avoid having the
+					// blockstack authkey hanging around.
+					window.location.href = '/';
+				});
+			} else if (UserSession.isUserSignedIn()) {
+				// Signed In - let's get the user Ready
+				methods.setProfile(UserSession.loadUserData());
+			}
+			// set highlevel initialize marker
+			this.initialized = true;
+
+			// TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
+		},
 		reset() {
 			update(u => state);
 		},
@@ -161,26 +183,6 @@ const userInit = () => {
 				p.signedIn = true;
 				return p;
 			});
-		},
-		initialize() {
-			if (state.darkMode) {
-				document.body.classList.add('dark');
-			} else {
-				document.body.classList.remove('dark');
-			}
-			// Is blockstack user pending?
-			if (UserSession.isSignInPending()) {
-				UserSession.handlePendingSignIn().then(userData => {
-					// redirect user to home - to avoid having the
-					// blockstack authkey hanging around.
-					window.location.href = '/';
-				});
-			} else if (UserSession.isUserSignedIn()) {
-				// Signed In - let's get the user Ready
-				methods.setProfile(UserSession.loadUserData());
-			}
-			// set highlevel initialize marker
-			this.initialized = true;
 		},
 	};
 
