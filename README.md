@@ -10,8 +10,10 @@ While the native apps will continue to run for those who installed it before, I 
 
 ## Try it out
 
--   **Master Branch** (Production) https://open.nomie.app
--   **Develop Branch** (dev) https://dev.nomie.app
+-   **Production** (master) https://open.nomie.app
+-   **Experimental** (dev) https://dev.nomie.app
+
+Note: Data cannot be shared across domains, if you want to switch between prod and experimental, you'll need to export and import your data (in the settings tab).
 
 ## [Svelte](https://svlete.dev)
 
