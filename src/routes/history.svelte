@@ -237,51 +237,57 @@
       navigate(`/stats/${tracker.tag}`);
     },
     showLogOptions(log) {
-      let buttons = [];
-      // if (log.noteTextLength()) {
-      buttons.push({
-        title: "Edit Content",
-        click() {
-          Interact.prompt("Update Content", { value: log.note }).then(
-            content => {
-              log.note = content;
-              setTimeout(() => {
-                LedgerStore.updateLog(log).then(res => {
-                  methods.getLogs();
-                });
-              }, 10);
-            }
-          );
-        }
+      Interact.logOptions(log).then(() => {
+        setTimeout(() => {
+          methods.getLogs();
+        }, 120);
       });
-      // }
-      // if (log.trackersArray().length) {
-      //   buttons.push({ title: "Edit Tracker Data" });
-      // }
-      buttons.push({ title: "Edit Time and Location" });
-      buttons.push({
-        title: "Delete Log",
-        click() {
-          setTimeout(() => {
-            Interact.confirm(
-              "Are you sure?",
-              "Deleting an log cannot be undone, only recreated"
-            ).then(res => {
-              if (res === true) {
-                LedgerStore.deleteLogs([log]).then(() => {
-                  setTimeout(() => {
-                    methods.getLogs();
-                  }, 1000);
-                });
-              }
-            });
-          }, 10);
-        }
-      });
-      Interact.popmenu({
-        title: "Log Options",
-        buttons: buttons
-      });
+
+      // let buttons = [];
+      // // if (log.noteTextLength()) {
+      // buttons.push({
+      //   title: "Edit Content",
+      //   click() {
+      //     Interact.prompt("Update Content", { value: log.note }).then(
+      //       content => {
+      //         log.note = content;
+      //         setTimeout(() => {
+      //           LedgerStore.updateLog(log).then(res => {
+      //             methods.getLogs();
+      //           });
+      //         }, 10);
+      //       }
+      //     );
+      //   }
+      // });
+      // // }
+      // // if (log.trackersArray().length) {
+      // //   buttons.push({ title: "Edit Tracker Data" });
+      // // }
+      // buttons.push({ title: "Edit Time and Location" });
+      // buttons.push({
+      //   title: "Delete Log",
+      //   click() {
+      //     setTimeout(() => {
+      //       Interact.confirm(
+      //         "Are you sure?",
+      //         "Deleting an log cannot be undone, only recreated"
+      //       ).then(res => {
+      //         if (res === true) {
+      //           LedgerStore.deleteLogs([log]).then(() => {
+      //             setTimeout(() => {
+      //               methods.getLogs();
+      //             }, 1000);
+      //           });
+      //         }
+      //       });
+      //     }, 10);
+      //   }
+      // });
+      // Interact.popmenu({
+      //   title: "Log Options",
+      //   buttons: buttons
+      // });
     },
     selectDate() {
       let ranges = [
@@ -438,7 +444,7 @@
       class="btn btn-clear btn-icon"
       disabled={state.locations.length === 0}
       on:click={() => {
-        state.showAllLocations = !state.showAllLocations;
+        Interact.showLocations(state.locations);
       }}>
       <i class="zmdi zmdi-map" />
     </button>
@@ -477,7 +483,7 @@
       <Spinner size="50" speed="750" color="#666" thickness="2" gap="40" />
     </div>
   {:else}
-    <div class="container p-0 pt-2">
+    <div class="container p-0 pt-3">
       <!-- If no Logs found -->
       {#if state.logs.length === 0}
         {#if !state.searchMode}
@@ -496,8 +502,8 @@
         <!-- Loop over logs -->
         {#each state.logs as log, i (log._id)}
           <!-- If we have search results in this set - and a header doesn't exist, lets show one. -->
-          {#if !methods.headerExists(log.end) && state.searchMode && state.searchResults}
-            <NItem>
+          {#if !methods.headerExists(log.end)}
+            <NItem className="bg-transparent">
               <h1 class="n-title">{dayjs(log.end).format('ddd MMM D YYYY')}</h1>
               <div slot="right">
                 <NText size="md">{dayjs(log.end).fromNow()}</NText>
@@ -515,7 +521,7 @@
               Interact.showLocations([log]);
             }}
             on:moreClick={event => {
-              methods.showLogOptions(log);
+              Interact.logOptions(log).then(() => {});
             }} />
           <!-- Show the Log Item -->
         {/each}

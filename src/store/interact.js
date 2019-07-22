@@ -3,6 +3,9 @@ import { writable } from 'svelte/store';
 // utils
 import Logger from '../utils/log/log';
 
+// Stores
+import { LedgerStore } from '../store/ledger';
+
 const console = new Logger('✋ Interact');
 
 const interactInit = () => {
@@ -158,7 +161,84 @@ const interactInit = () => {
 				return b;
 			});
 		},
-		logOptions(log) {},
+		logOptions(log) {
+			return new Promise((resolve, reject) => {
+				let actions = {
+					updateContent() {
+						methods.prompt('Update Content', { value: log.note }).then(content => {
+							log.note = content;
+							setTimeout(() => {
+								LedgerStore.updateLog(log).then(res => {
+									resolve({ action: 'updated' });
+								});
+							}, 10);
+						});
+					},
+					updateLocation() {
+						methods.pickLocation().then(location => {
+							if (location) {
+								log.lat = location.lat;
+								log.lng = location.lng;
+								setTimeout(() => {
+									LedgerStore.updateLog(log).then(res => {
+										resolve({ action: 'updated' });
+									});
+								}, 10);
+							}
+						});
+					},
+					delete() {
+						setTimeout(() => {
+							methods
+								.confirm('Are you sure?', 'Deleting an log cannot be undone, only recreated')
+								.then(res => {
+									if (res === true) {
+										LedgerStore.deleteLogs([log]).then(() => {
+											setTimeout(() => {
+												resolve({ action: 'deleted' });
+											}, 1000);
+										});
+									}
+								});
+						}, 10);
+					},
+				};
+				let initial = [
+					{
+						title: 'Edit...',
+						click() {
+							setTimeout(() => {
+								methods.popmenu({
+									title: 'Edit Log',
+									buttons: [
+										{
+											title: 'Edit Content',
+											click: actions.updateContent,
+										},
+										{
+											title: 'Edit Location',
+											click: actions.updateLocation,
+										},
+										// {
+										// 	title: 'Edit Tracker Data',
+										// 	click() {
+										// 		//
+										// 	},
+										// },
+									],
+								});
+							}, 10);
+						},
+					},
+					{
+						title: 'Delete...',
+						click: actions.delete,
+					},
+				];
+
+				methods.popmenu({ title: 'Log Options', buttons: initial });
+			}); // end return promise
+		},
 		showLocations(locations) {
 			update(bs => {
 				bs.locationViewer.locations = locations;

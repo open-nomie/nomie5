@@ -66,17 +66,17 @@
     lockToggle() {
       if ($UserStore.meta.lock === true) {
         if (($UserStore.meta.pin || "").length == 0) {
-          // TODO: Make this a modal input - not a damn prompt
-          let pin = prompt("Enter 1 to 6 digit pin");
-          if (!pin) {
-            $UserStore.meta.lock = false;
-            $UserStore.meta.pin = null;
-            UserStore.saveMeta();
-          } else {
-            $UserStore.meta.lock = true;
-            $UserStore.meta.pin = pin;
-            UserStore.saveMeta();
-          }
+          Interact.prompt("Enter 1 to 6 digit pin", { value: "" }).then(pin => {
+            if (!pin) {
+              $UserStore.meta.lock = false;
+              $UserStore.meta.pin = null;
+              UserStore.saveMeta();
+            } else {
+              $UserStore.meta.lock = true;
+              $UserStore.meta.pin = pin;
+              UserStore.saveMeta();
+            }
+          });
         }
       } else {
         $UserStore.meta.lock = false;

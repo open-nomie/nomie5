@@ -540,7 +540,7 @@
             {#await methods.aboveOrBelow(state.stats.results.day.sum, state.stats.results.month.avg) then aob}
               <div class="block">
                 <div class="label">
-                  {state.date.format('ddd')} Total
+                  {state.date.format('ddd')} This Day
                   {#if aob.direction != 'same'}
                     <span class="change">
                       <span
@@ -555,12 +555,24 @@
               </div>
             {/await}
           {:else}
-            <div class="block">
-              <div class="label">Daily Avg</div>
-              <div class="value">
-                {NomieUOM.format(state.day.avg, state.tracker.uom)}
+            {#await methods.aboveOrBelow(state.stats.results.day.sum, state.stats.results.month.avg) then aob}
+              <div class="block">
+                <div class="label">
+                  This Day
+                  {#if aob.direction != 'same'}
+                    <span class="change">
+                      <span
+                        class="zmdi {aob.direction === 'above' ? 'zmdi-triangle-up' : 'zmdi-triangle-down'}" />
+                      {aob.amount}%
+                    </span>
+                  {/if}
+
+                </div>
+                <div class="value">
+                  {NomieUOM.format(state.stats.results.day.avg, state.tracker.uom)}
+                </div>
               </div>
-            </div>
+            {/await}
           {/if}
         </div>
 
@@ -580,34 +592,9 @@
               }}>
               Where
             </button>
-            <!-- <button
-              class="btn btn-sm btn-white-pop {state.day.mode === 'calendar' ? 'active' : '   inactive'}"
-              on:click={() => {
-                methods.setMode('day', 'calendar');
-              }}>
-              More...
-            </button> -->
+
           </div>
         </div>
-
-        <!-- <div class="n-row data-blocks py-2 px-3 border-bottom">
-          <div class="btn-group flex-grow">
-            <button
-              class="btn btn-sm btn-white-pop {state.day.mode === 'list' ? ' active' : '   inactive'}"
-              on:click={() => {
-                state.month.mode = 'list';
-              }}>
-              <i class="zmdi zmdi-menu" />
-            </button>
-            <button
-              class="btn btn-sm btn-white-pop {state.day.mode === 'calendar' ? 'active' : '   inactive'}"
-              on:click={() => {
-                state.month.mode = 'calendar';
-              }}>
-              <i class="zmdi zmdi-calendar" />
-            </button>
-          </div>
-        </div> -->
 
         <div class="">
           {#if !refreshing}
@@ -622,6 +609,9 @@
                       {log}
                       on:locationClick={event => {
                         Interact.showLocations([log]);
+                      }}
+                      on:moreClick={event => {
+                        Interact.logOptions(log).then(() => {});
                       }}
                       trackers={$TrackerStore}
                       focus={state.tracker.tag} />

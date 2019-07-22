@@ -7118,8 +7118,6 @@ body.dark {
   --color-full-screen: rgba(63, 62, 62, 0.8); }
   body.dark .n-item.border-bottom {
     border-bottom: solid 1px rgba(255, 255, 255, 0.15) !important; }
-  body.dark .btn-clear {
-    color: var(--color-inverse-1); }
   body.dark .btn-light {
     color: #fff;
     background-color: #333;
@@ -7282,7 +7280,10 @@ button:focus {
 
 .btn-clear {
   background-color: none;
-  border: none; }
+  border: none;
+  color: var(--color-inverse-1); }
+  .btn-clear[disabled] {
+    opacity: 0.2; }
 
 .btn-square {
   border-radius: 0 !important; }
