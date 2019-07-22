@@ -1,4 +1,7 @@
 <script>
+  //Vendors
+  import { navigate } from "svelte-routing";
+
   // Components
   import NItem from "../components/list-item/list-item.svelte";
   import NText from "../components/text/text.svelte";
@@ -21,7 +24,7 @@
   import { TrackerStore } from "../store/trackers";
   import { BoardStore } from "../store/boards";
   // Config
-  import config from "../store/config";
+  import config from "../../config/global";
 
   // consts
   const Export = new Exporter();
@@ -49,6 +52,9 @@
     bookAge(date) {
       return dayjs(`${date}-01`).fromNow();
     },
+    faq() {
+      navigate("/faq");
+    },
     export() {
       Export.onChange(change => {
         console.log("change", change);
@@ -60,17 +66,17 @@
     lockToggle() {
       if ($UserStore.meta.lock === true) {
         if (($UserStore.meta.pin || "").length == 0) {
-          // TODO: Make this a modal input - not a damn prompt
-          let pin = prompt("Enter 1 to 6 digit pin");
-          if (!pin) {
-            $UserStore.meta.lock = false;
-            $UserStore.meta.pin = null;
-            UserStore.saveMeta();
-          } else {
-            $UserStore.meta.lock = true;
-            $UserStore.meta.pin = pin;
-            UserStore.saveMeta();
-          }
+          Interact.prompt("Enter 1 to 6 digit pin", { value: "" }).then(pin => {
+            if (!pin) {
+              $UserStore.meta.lock = false;
+              $UserStore.meta.pin = null;
+              UserStore.saveMeta();
+            } else {
+              $UserStore.meta.lock = true;
+              $UserStore.meta.pin = pin;
+              UserStore.saveMeta();
+            }
+          });
         }
       } else {
         $UserStore.meta.lock = false;
@@ -133,6 +139,7 @@
 
 <NToolbar pinTop>
   <h2>Settings</h2>
+  <button on:click={methods.faq} class="btn btn-clear text-primary">FAQ</button>
 </NToolbar>
 {#if $UserStore.meta}
   <div class="page page-settings with-header">

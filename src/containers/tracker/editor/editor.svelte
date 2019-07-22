@@ -14,7 +14,7 @@
   import TrackerTypes from "../../../modules/tracker-types/tracker-types";
 
   // Stores
-  import config from "../../../store/config";
+  import config from "../../../../config/global";
   import { UserStore } from "../../../store/user";
   import { Interact } from "../../../store/interact";
   import { TrackerStore } from "../../../store/trackers";

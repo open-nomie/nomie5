@@ -1,7 +1,7 @@
 // Modules
 import Storage from '../storage/storage';
 // stores
-import config from '../../store/config';
+import config from '../../../config/global';
 import { LedgerStore } from '../../store/ledger';
 
 //vendors

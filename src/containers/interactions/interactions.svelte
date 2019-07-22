@@ -60,7 +60,7 @@
 <Toast message={$Interact.toast.message} show={$Interact.toast.show} />
 
 {#if $Interact.locationFinder.show}
-  <NModal title="Pick your location">
+  <NModal title="Pick your location" fullscreen>
     <NMap
       picker={true}
       on:change={event => {

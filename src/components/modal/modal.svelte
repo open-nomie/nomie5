@@ -36,10 +36,11 @@
     align-items: stretch;
     border: solid 1px var(--color-solid);
     &.full-screen-modal {
-      height: 100vh;
+      height: 96vh;
+      width: 96vw;
       max-width: 700px;
       max-height: 700px;
-      width: 100vw;
+
       .n-modal-body {
         flex-grow: 1;
       }

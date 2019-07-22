@@ -44,6 +44,70 @@
 
   // methods
   let methods = {
+    initialize() {
+      if (!map) {
+        map = L.map(id).fitWorld();
+      }
+      // Add Attribution
+      L.tileLayer(
+        "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+        {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/">OSM</a> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+          maxZoom: 18
+        }
+      ).addTo(map);
+
+      var myIcon = window.L.icon({
+        iconUrl: "/images/pin.png",
+        iconRetinaUrl: "/images/pin.png",
+        iconSize: [32, 32],
+        iconAnchor: [9, 21],
+        popupAnchor: [0, -14]
+      });
+
+      // Loop over locaitons provided in props
+      for (let i = 0; i < locations.length; i++) {
+        let mkr = new L.marker([locations[i].lat, locations[i].lng], {
+          icon: myIcon
+        });
+        // If location name is present (TODO) show it in a popup
+        if (locations[i].name) {
+          mkr.bindPopup(locations[i].name);
+        }
+        mkr.on("click", () => {
+          data.activeLocation = locations[i];
+        });
+        mkr.addTo(map);
+      }
+
+      let connectTheDots = data => {
+        var c = [];
+        data.forEach(location => {
+          c.push([location.lat, location.lng]);
+        });
+        return c;
+      };
+
+      let pathCoords = connectTheDots(locations);
+      //let pathLine =
+      window.L.polyline(pathCoords, {
+        color: "rgba(2.7%, 52.5%, 100%, 0.378)"
+      }).addTo(map);
+
+      map.on("moveend", function() {
+        dispatch("change", map.getCenter());
+      });
+
+      // Make the map fit the bounds of all locations provided
+      if (locations.length) {
+        map.fitBounds(
+          locations.map(loc => {
+            return [loc.lat, loc.lng];
+          })
+        );
+      }
+    },
     getLocation(lat, lng) {
       return new Promise((resolve, reject) => {
         geocodeService
@@ -78,68 +142,9 @@
   // On Mount
   onMount(() => {
     // Init map
-    if (!map) {
-      map = L.map(id).fitWorld();
-    }
-    // Add Attribution
-    L.tileLayer(
-      "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
-      {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/">OSM</a> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-        maxZoom: 18
-      }
-    ).addTo(map);
-
-    var myIcon = window.L.icon({
-      iconUrl: "/images/pin.png",
-      iconRetinaUrl: "/images/pin.png",
-      iconSize: [32, 32],
-      iconAnchor: [9, 21],
-      popupAnchor: [0, -14]
-    });
-
-    // Loop over locaitons provided in props
-    for (let i = 0; i < locations.length; i++) {
-      let mkr = new L.marker([locations[i].lat, locations[i].lng], {
-        icon: myIcon
-      });
-      // If location name is present (TODO) show it in a popup
-      if (locations[i].name) {
-        mkr.bindPopup(locations[i].name);
-      }
-      mkr.on("click", () => {
-        data.activeLocation = locations[i];
-      });
-      mkr.addTo(map);
-    }
-
-    let connectTheDots = data => {
-      var c = [];
-      data.forEach(location => {
-        c.push([location.lat, location.lng]);
-      });
-      return c;
-    };
-
-    let pathCoords = connectTheDots(locations);
-    //let pathLine =
-    window.L.polyline(pathCoords, {
-      color: "rgba(2.7%, 52.5%, 100%, 0.378)"
-    }).addTo(map);
-
-    map.on("moveend", function() {
-      dispatch("change", map.getCenter());
-    });
-
-    // Make the map fit the bounds of all locations provided
-    if (locations.length) {
-      map.fitBounds(
-        locations.map(loc => {
-          return [loc.lat, loc.lng];
-        })
-      );
-    }
+    setTimeout(() => {
+      methods.initialize();
+    }, 120);
   });
 </script>
 
@@ -157,11 +162,11 @@
   }
 
   .n-map-container .location-name {
-    background-color: var(--color-faded-1);
     position: absolute;
     top: 0px;
     left: 60px;
     right: 6px;
+
     font-weight: bold;
     line-height: 120%;
     z-index: 1000;

@@ -4,7 +4,7 @@ import { writable } from 'svelte/store';
 import Storage from '../modules/storage/storage';
 
 // Stores
-import config from '../store/config';
+import config from '../../config/global';
 
 // Utils
 import md5 from 'md5';

@@ -6,8 +6,9 @@
   //props
   export let className = undefined;
   export let withBack = false;
+  export let title = undefined;
   // Dynamic
-  $: hasHeader = arguments[1].$$slots.hasOwnProperty("header");
+  $: hasHeader = arguments[1].$$slots.hasOwnProperty("header") || title;
   $: hasSubHeader = arguments[1].$$slots.hasOwnProperty("sub-header");
   $: if (hasSubHeader) {
   }
@@ -34,6 +35,9 @@
           <i class="zmdi zmdi-chevron-left mr-2" />
           Back
         </button>
+      {/if}
+      {#if title}
+        <div class="title filler">{title}</div>
       {/if}
       <slot name="header" />
     </NToolbar>

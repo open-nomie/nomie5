@@ -19,18 +19,32 @@
   export let color = "#4d84a1";
   export let points;
   export let activeIndex;
+  export let xFormat = x => x;
+  export let yFormat = y => y;
 
   const xTicks = labels;
   let yTicks = [0, 5, 10, 20];
   const padding = { top: 20, right: 15, bottom: 20, left: 25 };
   const dispatch = createEventDispatcher();
 
+  let finalPoints = [];
+
   $: if (points) {
-    let values = points.map(point => point.y);
-    let sum = math.sum(values);
-    let max = math.max(values);
-    if (sum) {
-      yTicks = [0, math.round(max * 0.5), max];
+    if (points.length) {
+      let values = points.map(point => point.y);
+
+      let sum = math.sum(values);
+      let max = math.max(values);
+
+      if (sum) {
+        yTicks = [0, math.round(max * 0.5), max];
+      }
+      finalPoints = math.percentile(values).map((value, index) => {
+        let p = { ...points[index] };
+        p.y = value;
+        return p;
+      });
+      console.log("Points!", { finalPoints, max, sum });
     }
   }
 
@@ -55,6 +69,9 @@
       } else {
         return tick.substr(0, 2);
       }
+    },
+    toTrustedValue(value, base) {
+      return isNaN(value) ? base : value;
     }
   };
 </script>
@@ -67,6 +84,7 @@
   .n-chart {
     width: 100%;
     max-width: 500px;
+    position: relative;
     margin: 0 auto;
   }
 
@@ -97,6 +115,21 @@
     text-anchor: middle;
   }
 
+  .active-item {
+    position: absolute;
+    top: 0px;
+    right: 6px;
+    background-color: var(--color-faded);
+    padding: 4px 10px;
+    font-size: 0.6rem;
+    display: flex;
+    opacity: 0.6;
+    label {
+      margin: 0;
+      margin-right: 6px;
+    }
+  }
+
   .bars rect {
     stroke: none;
     opacity: 0.65;
@@ -119,7 +152,7 @@
             class="tick tick-{tick}"
             transform="translate(0, {yScale(tick) - padding.bottom})">
             <line x2="100%" />
-            <text y="-4">{tick} {tick === 20 ? '' : ''}</text>
+            <text y="-4">{yFormat(tick)} {tick === 20 ? '' : ''}</text>
           </g>
         {/each}
       </g>
@@ -128,9 +161,7 @@
       <g class="axis x-axis">
         {#each points as point, i}
           <g class="tick" transform="translate({xScale(i)},{height})">
-            <text x={barWidth / 2} y="-4">
-              {width > 380 ? point.x : methods.formatMobile(point.x, i)}
-            </text>
+            <text x={barWidth / 2} y="-4">{xFormat(point.x)}</text>
           </g>
         {/each}
       </g>
@@ -150,11 +181,17 @@
             ry="4"
             style="fill: {color}"
             x={xScale(i) + 2}
-            y={yScale(point.y)}
+            y={methods.toTrustedValue(yScale(point.y), 0)}
             width={barWidth - 4}
-            height={height - padding.bottom - yScale(point.y)} />
+            height={methods.toTrustedValue(height - padding.bottom - yScale(point.y), 0)} />
         {/each}
       </g>
     </svg>
+    {#if activeIndex}
+      <div class="active-item">
+        <label>{points[activeIndex - 1].date.format('ddd MMM D')}</label>
+        <div class="value">{yFormat(points[activeIndex - 1].y)}</div>
+      </div>
+    {/if}
   </div>
 {/if}

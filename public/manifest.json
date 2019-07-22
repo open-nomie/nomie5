@@ -1,6 +1,6 @@
 {
-  "name": "Open Nomie",
-  "short_name": "Open Nomie",
+  "name": "Nomie",
+  "short_name": "Nomie",
   "start_url": "http://localhost:5000",
   "description": "Private Life Tracker",
   "display": "standalone",

@@ -4,6 +4,9 @@
   import { Link } from "svelte-routing";
   import { onMount } from "svelte";
 
+  // Vendors
+  import Spinner from "svelte-spinner";
+
   // Containers
   import AppTabs from "./containers/layout/tabs.svelte";
   import Interactions from "./containers/interactions/interactions.svelte";
@@ -18,6 +21,9 @@
   import SettingsRoute from "./routes/settings.svelte";
   import StatsRoute from "./routes/stats.svelte";
   import BoardEditorRoute from "./routes/board-editor.svelte";
+  import FAQRoute from "./routes/faq.svelte";
+  // Testing Routes
+  import TestStatsRoute from "./routes/test/stats.svelte";
 
   // Stores
   import { UserStore } from "./store/user"; //  user auth and state
@@ -61,11 +67,13 @@
 
   // Initalize the User Store
   UserStore.initialize();
+  let ready = false;
 
   // Used to make sure that boards and trackers are loaded
   UserStore.onReady(() => {
     // Set the user if they're logged in
     user = $UserStore;
+    ready = true;
     // Run any commands if needed
     setTimeout(() => {
       CommanderStore.run();
@@ -73,7 +81,7 @@
   });
 </script>
 
-{#if user}
+{#if $UserStore.signedIn === true}
   <Router {url}>
     <AppTabs />
     <div class="main-content">
@@ -83,9 +91,15 @@
       <Route path="/settings" component={SettingsRoute} />
       <Route path="/stats/:id" component={StatsRoute} />
       <Route path="/board/:id" component={BoardEditorRoute} />
+      <Route path="/faq" component={FAQRoute} />
+      <Route path="/test/stats" component={TestStatsRoute} />
     </div>
   </Router>
-{:else}
+{:else if $UserStore.signedIn == undefined}
+  <div class="empty-notice">
+    <Spinner size="50" speed="750" color="#666" thickness="2" gap="40" />
+  </div>
+{:else if $UserStore.signedIn === false}
   <SetupRoute />
 {/if}
 

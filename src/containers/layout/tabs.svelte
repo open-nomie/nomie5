@@ -65,7 +65,7 @@
     </Link>
     <Link to="/settings">
       <Icon name="menu" />
-      <label>Settings</label>
+      <label>More</label>
     </Link>
   </div>
 </nav>
