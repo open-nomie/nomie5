@@ -249,6 +249,9 @@
     align-items: space-evenly;
     flex-wrap: wrap;
   }
+  .border-bottom {
+    border-bottom: solid 1px var(--color-faded-1) !important;
+  }
   .block {
     margin: 0 3px;
 
