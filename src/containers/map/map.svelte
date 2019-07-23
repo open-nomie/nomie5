@@ -11,6 +11,7 @@
 
   export let small = undefined;
   export let picker = undefined;
+  export let height = undefined;
 
   // consts
   const dispatch = createEventDispatcher();
@@ -107,6 +108,9 @@
           })
         );
       }
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 120);
     },
     getLocation(lat, lng) {
       return new Promise((resolve, reject) => {
@@ -150,15 +154,15 @@
 
 <style lang="scss">
   .n-map-container {
-    width: 100%;
-    display: flex;
-    flex-grow: 1;
-    flex-shrink: 1;
-    min-height: 260px;
-    height: 260px;
-    height: 100%;
-    min-width: 100%;
     position: relative;
+    min-height: 100%;
+    .n-map-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
   }
 
   .n-map-container .location-name {
@@ -195,11 +199,15 @@
   .n-map-container .n-map {
     width: 100%;
     height: 100%;
-    min-height: 240px;
+    // min-height: 260px;
+    flex-grow: 1;
+    flex-shrink: 1;
   }
 </style>
 
-<div class="n-map-container {small ? 'small ' : ''}">
+<div
+  class="n-map-container {small ? 'small ' : ''}"
+  style="height:{height ? height + 'px' : 'auto'}">
   {#if picker}
     <div class="picker-cover">
       <div class="picker-target">
@@ -233,7 +241,9 @@
       </div>
     </div>
   {/if}
-  <div {id} class="n-map" />
+  <div class="n-map-wrapper">
+    <div {id} class="n-map" />
+  </div>
 
   {#await getLocation()}
     <div class="location-name" />

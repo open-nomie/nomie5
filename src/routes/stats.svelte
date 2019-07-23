@@ -387,7 +387,7 @@
                 <div class="empty-notice sm">Loading...</div>
               {:else}
                 <NMap
-                  height={300}
+                  height={250}
                   small
                   locations={state.stats.getLocations('year')} />
               {/if}
@@ -499,7 +499,10 @@
                 }}
                 activeIndex={state.date.toDate().getDate()} />
             {:else if state.month.mode === 'map'}
-              <NMap small locations={state.stats.getLocations('month')} />
+              <NMap
+                small
+                locations={state.stats.getLocations('month')}
+                height={250} />
             {:else if state.month.mode === 'calendar'}
               <NCalendar
                 color={state.tracker.color}
@@ -622,7 +625,10 @@
                 {/each}
               </div>
             {:else if state.day.mode === 'map'}
-              <NMap small locations={state.stats.getLocations('day')} />
+              <NMap
+                small
+                locations={state.stats.getLocations('day')}
+                height={250} />
             {:else if state.day.mode === 'calendar'}
               <div class="empty-notice" />
             {/if}

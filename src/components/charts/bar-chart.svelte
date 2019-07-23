@@ -44,7 +44,6 @@
         p.y = value;
         return p;
       });
-      console.log("Points!", { finalPoints, max, sum });
     }
   }
 

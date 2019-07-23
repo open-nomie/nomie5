@@ -85,40 +85,6 @@
         $UserStore.meta.pin = null;
         UserStore.saveMeta();
       }
-    },
-    onImportFile(event) {
-      let reader = new FileReader();
-      let file = event.target.files[0];
-      reader.onload = theFile => {
-        let payload = JSON.parse(theFile.target.result);
-
-        Interact.confirm(
-          "Import this data?",
-          "Warning: Importing can cause issues with existing data.",
-          "Import",
-          "Cancel"
-        ).then(res => {
-          if (res) {
-            Interact.alert(
-              "Please Wait...",
-              "This page will refresh when the import is complete.",
-              "Loading..."
-            );
-            LedgerStore.import_3(payload).then(() => {
-              console.log("Events Imported... Now trackers");
-              let newTrackers = { ...trackers, ...payload.trackers };
-              TrackerStore.save(newTrackers).then(() => {
-                console.log("Trackers Saved!! importing Boards");
-                BoardStore.save(payload.boards).then(() => {
-                  console.log("Boards Saved!", payload.boards);
-                  window.location.href = "/";
-                });
-              });
-            });
-          }
-        });
-      };
-      reader.readAsText(file);
     }
   };
 
@@ -266,7 +232,7 @@
             {config.support_contact}
           </a>
         </NItem>
-        <NItem class="compact item-divider" />
+        <NItem className="compact item-divider" />
         <NItem title="Copyright 2019 All Rights Reserved.">
           <NText tag="div" size="sm">
             Nomie, and the Elephant are trademarks of Happy Data, LLC.

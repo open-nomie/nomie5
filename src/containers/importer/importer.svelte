@@ -51,7 +51,6 @@
         archive.trackers = methods.getTrackers();
         archive.boards = methods.getBoards();
         archive.records = methods.getRecords();
-        console.log("Loaded", fileData, archive);
       }
     },
     // On Import File
@@ -314,7 +313,6 @@
       });
       return Object.keys(boards)
         .filter(groupName => {
-          console.log("GroupName", groupName);
           return groupName.toLowerCase() !== "all";
         })
         .map(groupName => {
@@ -420,7 +418,6 @@
 
     // Get Trackers for archive
     getTrackers() {
-      console.log("Get Trackers", version, version === 2);
       let trackers = {};
       if (version === 1) {
         trackers = methods.v1Trackers();
