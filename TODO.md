@@ -1,6 +1,6 @@
 # TODO
 
-Generated Mon Jul 22 2019 9:43 pm
+Generated Tue Jul 23 2019 7:45 pm
 
 - **src/store/user.js**
    - TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
@@ -13,6 +13,8 @@ Generated Mon Jul 22 2019 9:43 pm
    - TODO: Look at making prefers-color-scheme work properly - when enabled, only buttons change
 - **src/routes/stats.svelte**
    - TODO: Needs to be refactored and cleaned up
+- **src/routes/settings.svelte**
+   - TODO: figure out how to handle a cancel in the interact prompt
 - **src/routes/history.svelte**
    - TODO: This is really sloppy - clean it up.
 - **src/routes/board-editor.svelte**

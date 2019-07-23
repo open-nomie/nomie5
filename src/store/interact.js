@@ -253,19 +253,29 @@ const interactInit = () => {
 				return bs;
 			});
 		},
-		toast(message) {
+		dismissToast() {
+			update(bs => {
+				bs.toast.message = null;
+				bs.toast.show = false;
+				return bs;
+			});
+		},
+		toast(message, perm) {
+			perm = perm === true ? true : false;
 			update(bs => {
 				bs.toast.message = message;
 				bs.toast.show = true;
 				return bs;
 			});
-			setTimeout(() => {
-				update(bs => {
-					bs.toast.message = null;
-					bs.toast.show = false;
-					return bs;
-				});
-			}, 1300);
+			if (!perm) {
+				setTimeout(() => {
+					update(bs => {
+						bs.toast.message = null;
+						bs.toast.show = false;
+						return bs;
+					});
+				}, 1300);
+			}
 		},
 		confirm(title, message, ok, cancel) {
 			return new Promise((resolve, reject) => {
@@ -321,6 +331,7 @@ const interactInit = () => {
 						b.prompt.show = true;
 						b.prompt.message = message;
 						b.prompt.value = options.value || null;
+						b.prompt.valueType = options.valueType || 'text';
 						b.prompt.title = options.title || 'Prompt';
 						b.prompt.cancel = 'Cancel';
 						b.prompt.placeholder = options.placeholder || '';

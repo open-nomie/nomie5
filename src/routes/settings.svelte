@@ -58,17 +58,30 @@
       navigate("/faq");
     },
     export() {
-      Export.onChange(change => {
-        console.log("change", change);
-      });
-      Export.start().then(() => {
-        console.log("Done with export");
+      Interact.confirm(
+        `Continue?`,
+        `This process might take a couple minutes. 
+        If you have a lot of data, it will seem like it gets hung up. 
+        Have patience.`
+      ).then(res => {
+        if (res === true) {
+          Export.onChange(change => {
+            Interact.toast(`Export: ${change}`, true);
+          });
+          Export.start().then(() => {
+            Interact.toast("Export Done!");
+          });
+        }
       });
     },
     lockToggle() {
       if ($UserStore.meta.lock === true) {
         if (($UserStore.meta.pin || "").length == 0) {
-          Interact.prompt("Enter 1 to 6 digit pin", { value: "" }).then(pin => {
+          // TODO: figure out how to handle a cancel in the interact prompt
+          Interact.prompt("Enter 1 to 6 digit pin", {
+            value: "",
+            valueType: "number"
+          }).then(pin => {
             if (!pin) {
               $UserStore.meta.lock = false;
               $UserStore.meta.pin = null;
@@ -173,12 +186,12 @@
             bind:this={fileInput}
             on:change={methods.onImportFile} />
         </NItem>
-        <NItem title="Export as JSON">
+        <NItem title="Export Data">
           <button
             class="btn-clear btn text-primary"
             on:click={methods.export}
             slot="right">
-            Save...
+            Export
           </button>
         </NItem>
       </div>

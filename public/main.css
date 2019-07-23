@@ -7372,7 +7372,7 @@ button:focus {
 
 .n-title, .n-item-divider .main,
 .n-item-divider .n-text {
-  font-size: 1.4rem !important;
+  font-size: 1.2rem !important;
   font-weight: 800 !important;
   color: var(--color-inverse);
   line-height: 120%;

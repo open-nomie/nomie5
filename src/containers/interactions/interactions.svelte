@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   //modules
   import Tracker from "../../modules/tracker/tracker";
   // Components
@@ -18,6 +19,12 @@
   import { ActiveLogStore } from "../../store/active-log";
   import { LedgerStore } from "../../store/ledger";
   import { BoardStore } from "../../store/boards";
+
+  let promptInput;
+
+  $: if ($Interact.prompt.show) {
+    promptInput.focus();
+  }
 </script>
 
 <NPopMenu
@@ -51,10 +58,26 @@
     }
     Interact.dismiss();
   }}>
-  <textarea
-    placeholder={$Interact.prompt.placeholder}
-    bind:value={$Interact.prompt.value}
-    class="form-control mt-2" />
+  {#if $Interact.prompt.valueType == 'textarea'}
+    <textarea
+      bind:this={promptInput}
+      placeholder={$Interact.prompt.placeholder}
+      bind:value={$Interact.prompt.value}
+      class="form-control mt-2" />
+  {:else if $Interact.prompt.valueType == 'number'}
+    <input
+      bind:this={promptInput}
+      placeholder={$Interact.prompt.placeholder}
+      bind:value={$Interact.prompt.value}
+      type="number"
+      class="form-control mt-2" />
+  {:else}
+    <input
+      bind:this={promptInput}
+      placeholder={$Interact.prompt.placeholder}
+      bind:value={$Interact.prompt.value}
+      class="form-control mt-2" />
+  {/if}
 </NAlertBox>
 
 <Toast message={$Interact.toast.message} show={$Interact.toast.show} />

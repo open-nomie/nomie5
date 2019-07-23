@@ -23,6 +23,7 @@
   import NPopcard from "../components/popcard/popcard.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
   import NLogItem from "../components/list-item-log/list-item-log.svelte";
+  import NTimeGrid from "../components/day-time-grid/day-time-grid.svelte";
 
   // containers
   import NPage from "../containers/layout/page.svelte";
@@ -280,26 +281,37 @@
 </style>
 
 {#if state.stats !== null && state.tracker}
-  <NPage className="stats" withBack={true}>
+  <NPage className="stats">
 
     <div slot="header" class="n-row">
+      <button
+        class="btn btn-clear btn-icon zmdi zmdi-close"
+        on:click={() => {
+          window.history.back();
+        }} />
       <h1>{state.tracker.emoji} {state.tracker.label}</h1>
+      <button
+        class="btn btn-clear btn-icon zmdi zmdi-edit"
+        on:click={() => {
+          Interact.editTracker(state.tracker).then(() => {
+            console.log('Tracker Edited');
+          });
+        }} />
+    </div>
+
+    <div slot="sub-header" class="n-row n-year-bar">
+      <button class="btn btn-clear" on:click={methods.previous}>
+        <i class="zmdi zmdi-chevron-left font-140 mr-2" />
+        {state.date.subtract(1, 'year').format('YYYY')}
+      </button>
+      <h1 class="n-title filler text-center">{state.date.format('YYYY')}</h1>
+      <button class="btn btn-clear" on:click={methods.next}>
+        {state.date.add(1, 'year').format('YYYY')}
+        <i class="zmdi zmdi-chevron-right font-140 ml-2" />
+      </button>
     </div>
 
     <div class="container pt-3 popcards">
-
-      <div class="n-row n-year-bar mw-500px mx-auto">
-
-        <button class="btn btn-clear" on:click={methods.previous}>
-          <i class="zmdi zmdi-chevron-left font-140 mr-2" />
-          {state.date.subtract(1, 'year').format('YYYY')}
-        </button>
-        <h1 class="n-title filler text-center">{state.date.format('YYYY')}</h1>
-        <button class="btn btn-clear" on:click={methods.next}>
-          {state.date.add(1, 'year').format('YYYY')}
-          <i class="zmdi zmdi-chevron-right font-140 ml-2" />
-        </button>
-      </div>
 
       <NPopcard level={10} arrow={true}>
 
@@ -339,7 +351,7 @@
           <div class="block">
             <div class="label">Month Avg</div>
             <div class="value">
-              {NomieUOM.format(math.round(state.stats.results.year.sum / 12, 10), state.tracker.uom)}
+              {NomieUOM.format(math.round(state.stats.results.year.avg, 10), state.tracker.uom)}
             </div>
           </div>
         </div>
@@ -637,6 +649,13 @@
           {/if}
         </div>
       </NPopcard>
+
+      <NPopcard className="mt-5">
+        <div class="p-3">
+          <NTimeGrid {rows} />
+        </div>
+      </NPopcard>
+
     </div>
   </NPage>
 {:else}
