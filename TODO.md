@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sun Jul 21 2019 9:12 pm
+Generated Mon Jul 22 2019 9:10 pm
 
 - **src/store/user.js**
    - TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
@@ -21,6 +21,8 @@ Generated Sun Jul 21 2019 9:12 pm
    - TODO: Implement IgnoreZeros
 - **src/containers/tracker/input/keypad.svelte**
    - and one for the pin-lock container - TODO: merge these some day
+- **src/containers/importer/importer.svelte**
+   - Modal will be hidden in settings TODO: make this not hacky -->
 - **src/containers/board/board.svelte**
    - TODO: fix user store to be a correct store
    - TODO: Look at why this is needed... slop!

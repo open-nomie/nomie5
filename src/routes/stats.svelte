@@ -259,7 +259,7 @@
       font-size: 0.7rem;
     }
     .value {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 500;
     }
   }
@@ -279,7 +279,7 @@
   }
 </style>
 
-{#if state.stats !== null}
+{#if state.stats !== null && state.tracker}
   <NPage className="stats" withBack={true}>
 
     <div slot="header" class="n-row">

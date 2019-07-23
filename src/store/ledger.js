@@ -6,6 +6,7 @@ import Storage from '../modules/storage/storage';
 import Logger from '../utils/log/log';
 import dayjs from 'dayjs';
 import { writable } from 'svelte/store';
+import PromiseStep from '../utils/promise-step/promise-step';
 
 // Config
 import config from '../../config/global';
@@ -296,11 +297,53 @@ const ledgerInit = () => {
 				Promise.all(promises).then(resolve);
 			});
 		},
+		import(rows, statusFunc) {
+			statusFunc = statusFunc || function() {};
+			return new Promise((resolve, reject) => {
+				base.books = {};
+				rows.forEach(rawLog => {
+					let log = rawLog instanceof NomieLog ? rawLog : new NomieLog(rawLog);
+					let bookKey = dayjs(new Date(log.end)).format('YYYY-MM');
+					base.books[bookKey] = base.books[bookKey] || [];
+					base.books[bookKey].push(log);
+				});
+
+				let bookDates = Object.keys(base.books).map(date => {
+					return {
+						date: date,
+						records: base.books[date],
+					};
+				});
+
+				PromiseStep(
+					bookDates,
+					row =>
+						methods.putBook(row.date, row.records).then(() => {
+							statusFunc({});
+						}),
+					statusFunc
+				)
+					.then(finished => {
+						console.log('Finished', finished);
+						resolve();
+					})
+					.catch(reject);
+
+				// Object.keys(base.books).forEach(date => {
+				// 	let rows = base.books[date];
+				// 	promises.push(methods.putBook(date, rows));
+				// });
+
+				// Promise.all(promises)
+				// 	.then(resolve)
+				// 	.catch(reject);
+			});
+		},
 		/**
 		 * Import Nomie 3 Backup
 		 * This will take a nomie 3 backup file and import it to Nomie 4
 		 */
-		import_3(payload) {
+		import_3_old(payload) {
 			return new Promise((resolve, reject) => {
 				payload = payload || {};
 				payload.nomie = payload.nomie || {};

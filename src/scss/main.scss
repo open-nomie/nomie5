@@ -264,6 +264,10 @@ button:focus {
 	border-radius: 0 !important;
 }
 
+.bg-faded {
+	background-color: var(--color-faded) !important;
+}
+
 .btn {
 	display: inline-flex;
 	align-items: center;

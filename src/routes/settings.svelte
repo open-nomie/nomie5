@@ -10,6 +10,7 @@
 
   // Containers
   import StorageManager from "../containers/storage/storage.svelte";
+  import ImporterModal from "../containers/importer/importer.svelte";
 
   //Modules
   import Exporter from "../modules/export/export";
@@ -40,6 +41,7 @@
   let trackers = null;
   let user = null;
   let fileInput;
+  let showImporter = false;
 
   let methods = {
     sign_out() {
@@ -189,14 +191,14 @@
 
       <div class="n-pop my-3">
         <NItem title="Data" borderBottom className="n-item-divider" />
-        <NItem title="Import Nomie 3 Backup">
+        <NItem title="Import Nomie Backup">
           <button
             class="btn btn-clear text-primary"
             slot="right"
             on:click={() => {
-              fileInput.click();
+              showImporter = true;
             }}>
-            Select...
+            Import
           </button>
           <input
             slot="right"
@@ -275,4 +277,8 @@
 
     </div>
   </div>
+{/if}
+
+{#if showImporter}
+  <ImporterModal on:dismiss={() => (showImporter = false)} />
 {/if}
