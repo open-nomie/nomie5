@@ -5,6 +5,7 @@
   export let title;
   export let allowClose;
   export let fullscreen = false;
+  export let flexBody = undefined;
 
   const has_header = (arguments[1].$$slots || {}).hasOwnProperty("header");
   const has_footer = (arguments[1].$$slots || {}).hasOwnProperty("footer");
@@ -43,6 +44,13 @@
 
       .n-modal-body {
         flex-grow: 1;
+        &.flex-body {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: stretch;
+          align-items: stretch;
+        }
       }
     }
   }
@@ -100,7 +108,9 @@
 
       </div>
     {/if}
-    <div class="n-modal-body {padding ? 'padding' : 'no-padding'}">
+    <div
+      class="n-modal-body {padding ? 'padding' : 'no-padding'}
+      {flexBody ? 'flex-body' : 'no-flex-body'}">
       <slot />
     </div>
     {#if has_footer}

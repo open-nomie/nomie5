@@ -12,9 +12,10 @@
   // Methods
   const select = num => () => (value += num);
   const clear = () => (value = "");
-  const submit = () => {
+  const submit = event => {
     setTimeout(() => {
       dispatch("submit");
+      event.stopPropagation();
     }, 10);
   };
 </script>

@@ -10,6 +10,7 @@ import { writable } from 'svelte/store';
 
 // Modules
 import Storage from '../modules/storage/storage';
+import locate from '../modules/locate/locate';
 
 // Stores
 import { TrackerStore } from './trackers';
@@ -96,7 +97,7 @@ const userInit = () => {
 					return BoardStore.initialize(trackers).then(() => {
 						// Now let's fire off that we're ready
 						if (state.alwaysLocate) {
-							methods.locate();
+							locate();
 						}
 					});
 				})

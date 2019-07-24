@@ -207,7 +207,7 @@
 
 <div
   class="n-map-container {small ? 'small ' : ''}"
-  style="height:{height ? height + 'px' : 'auto'}">
+  style="height:{height ? height + 'px' : ''}">
   {#if picker}
     <div class="picker-cover">
       <div class="picker-target">

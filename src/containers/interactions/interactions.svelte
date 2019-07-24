@@ -83,7 +83,7 @@
 <Toast message={$Interact.toast.message} show={$Interact.toast.show} />
 
 {#if $Interact.locationFinder.show}
-  <NModal title="Pick your location" fullscreen>
+  <NModal title="Pick your location" fullscreen flexBody>
     <NMap
       picker={true}
       on:change={event => {
@@ -170,6 +170,7 @@
   <NModal
     show={true}
     fullscreen
+    flexBody
     title={$Interact.locationViewer.title || 'Locations'}>
     <NMap locations={$Interact.locationViewer.locations} />
     <button
