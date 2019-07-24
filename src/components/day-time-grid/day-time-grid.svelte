@@ -5,6 +5,10 @@
   import Logger from "../../utils/log/log";
   import math from "../../utils/math/math";
 
+  //   // Props
+  export let rows = undefined;
+  export let color = undefined;
+
   // Consts
   const console = new Logger("⏰ Grid");
   const getEmptyDay = () => new Array(24).fill(0);
@@ -27,9 +31,6 @@
     });
     return max;
   };
-
-  // Props
-  export let rows = undefined;
 
   // Local Variables
   let days = emptyGrid();
@@ -70,8 +71,11 @@
     position: relative;
     label {
       margin: 0;
-      width: 50px;
+      width: 40px;
       font-size: 0.6rem;
+      text-align: right;
+      color: var(--color-faded-3);
+      padding-right: 4px;
     }
     .day {
       display: flex;
@@ -80,7 +84,9 @@
       .hour {
         width: calc(100% / 24);
         text-align: center;
-        margin: 1px;
+        margin: 0px;
+        margin-right: 1px;
+        margin-bottom: 1px;
         background-color: $primary;
       }
     }
@@ -98,7 +104,7 @@
       {#each day as hour, hi}
         <div
           class="hour hour-{hi}"
-          style="opacity: {days[index][hi] / 100 || 0.1}" />
+          style="opacity: {days[index][hi] / 100 || 0.1}; background-color: {color}" />
       {/each}
     </div>
   {/each}

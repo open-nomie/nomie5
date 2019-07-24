@@ -16,6 +16,7 @@
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
+    transition: all 0.2s ease-in-out;
     .point {
       $size: 20px;
       $half: $size * 0.5;

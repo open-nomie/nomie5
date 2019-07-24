@@ -60,6 +60,9 @@
     day: {
       mode: "list"
     },
+    overview: {
+      mode: "time"
+    },
     stats: null
   };
 
@@ -154,31 +157,7 @@
         methods.refresh();
       }
     },
-    // getRows(mode) {
-    //   let rows = state.raw
-    //     .filter(row => {
-    //       if (mode == "month") {
-    //         let monthKey = new Date(row.end).getMonth();
-    //         if (monthKey === state.date.month()) {
-    //           return true;
-    //         } else {
-    //           return false;
-    //         }
-    //       } else if (mode == "day") {
-    //         return (
-    //           state.date.format("YYYY-MM-DD") ===
-    //           dayjs(row.end).format("YYYY-MM-DD")
-    //         );
-    //       } else {
-    //         return true;
-    //       }
-    //     })
-    //     .sort((a, b) => {
-    //       return a.end > b.end ? -1 : 1;
-    //     });
 
-    //   return rows;
-    // },
     refresh() {
       state.stats.gotoDate(state.date);
 
@@ -371,6 +350,13 @@
               }}>
               Where
             </button>
+            <button
+              class="btn btn-sm btn-white-pop {state.year.mode === 'grid' ? ' active' : ' inactive'}"
+              on:click={() => {
+                methods.setMode('year', 'grid');
+              }}>
+              When
+            </button>
           </div>
         </div>
 
@@ -392,6 +378,11 @@
                 return NomieUOM.format(y, state.tracker.uom);
               }}
               activeIndex={state.date.month() + 1} />
+          {/if}
+          {#if state.year.mode == 'grid'}
+            <div class="grid-holder px-3 pb-3">
+              <NTimeGrid color={state.tracker.color} {rows} />
+            </div>
           {/if}
           {#if state.year.mode == 'map'}
             <div class="map-holder w-100">
@@ -650,16 +641,51 @@
         </div>
       </NPopcard>
 
-      <NPopcard className="mt-5">
-        <div class="p-3">
-          <NTimeGrid {rows} />
+      <!--
+        Year General Card
+      -->
+      <!-- 
+      <div class="n-row n-year-bar mt-3 mw-500px mx-auto">
+
+        <h1 class="n-title filler text-center">
+          {state.date.format('YYYY')} Overview
+        </h1>
+
+      </div> -->
+
+      <!-- <NPopcard className="mt-5">
+        <div class="n-row p-3">
+          <div class="btn-group flex-grow">
+            <button
+              class="btn btn-sm btn-white-pop {state.overview.mode === 'time' ? ' active' : '   inactive'}"
+              on:click={() => {
+                methods.setMode('overview', 'list');
+              }}>
+              Time & Day
+            </button>
+            <button
+              class="btn btn-sm btn-white-pop {state.overview.mode === 'map' ? ' active' : '   inactive'}"
+              on:click={() => {
+                methods.setMode('overview', 'map');
+              }}>
+              Where
+            </button>
+          </div>
+        </div> 
+        <div class="py-4 px-3">
+          
         </div>
-      </NPopcard>
+      </NPopcard> -->
 
     </div>
   </NPage>
 {:else}
   <NPage>
+    <div slot="header" class="n-row">
+      <div class="filler" />
+      <h1 class="text-centered">Stats</h1>
+      <div class="filler" />
+    </div>
     <div class="empty-notice sm">Loading...</div>
   </NPage>
 {/if}
