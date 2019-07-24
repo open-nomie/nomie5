@@ -2,12 +2,17 @@
   import { onMount } from "svelte";
   //modules
   import Tracker from "../../modules/tracker/tracker";
+  import NomieLog from "../../modules/nomie-log/nomie-log";
+  // utils
+  import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   // Components
   import Toast from "../../components/toast/toast.svelte";
   import NModal from "../../components/modal/modal.svelte";
+  import NItem from "../../components/list-item/list-item.svelte";
   import NAlertBox from "../../components/alertbox/alertbox.svelte";
   import NPopMenu from "../../components/pop-menu/pop-menu.svelte";
   import PinLock from "../pin-lock/pin-lock.svelte";
+  import NTextualize from "../../components/note-textualizer/note-textualizer.svelte";
   // Containers
   import NMap from "../map/map.svelte";
   import TrackerSelector from "../tracker/selector/selector.svelte";
@@ -19,12 +24,25 @@
   import { ActiveLogStore } from "../../store/active-log";
   import { LedgerStore } from "../../store/ledger";
   import { BoardStore } from "../../store/boards";
+  import { TrackerStore } from "../../store/trackers";
 
   let promptInput;
-
+  let logEditorTracker;
   $: if ($Interact.prompt.show) {
     promptInput.focus();
   }
+
+  const methods = {
+    getLogTrackers(log) {
+      return Object.keys(log.trackers).map(tag => {
+        return {
+          value: log.trackers[tag].value || 0,
+          tag: tag,
+          tracker: $TrackerStore[tag] || new Tracker({ tag: tag })
+        };
+      });
+    }
+  };
 </script>
 
 <NPopMenu
@@ -146,7 +164,7 @@
     }
   }} />
 
-{#if $Interact.trackerInput.show}
+{#if $Interact.trackerInput.show === true}
   <TrackerInput
     on:save={event => {
       Interact.dismissTrackerInput();
@@ -179,5 +197,71 @@
       slot="footer">
       Close
     </button>
+  </NModal>
+{/if}
+
+{#if $Interact.logDataEditor.show}
+  <NModal show={true} flexBody title="Edit Data">
+    <div class="n-list">
+      {#each methods.getLogTrackers($Interact.logDataEditor.log) as TrackerValue}
+        <NItem
+          title={`${TrackerValue.tracker.emoji} ${TrackerValue.tracker.label}`}
+          on:click={() => {
+            $Interact.logDataEditor.tag = TrackerValue.tag;
+            $Interact.logDataEditor.value = TrackerValue.value;
+          }}>
+          <span slot="right">
+            {NomieUOM.format(TrackerValue.value, TrackerValue.tracker.uom)}
+          </span>
+        </NItem>
+      {/each}
+    </div>
+
+    {#if $Interact.logDataEditor.tag && $Interact.logDataEditor.log}
+      <TrackerInput
+        saveLabel="Set"
+        hideAdd={true}
+        value={$Interact.logDataEditor.value}
+        tracker={$TrackerStore[$Interact.logDataEditor.tag] || new Tracker({
+            tag: $Interact.logDataEditor.tag
+          })}
+        on:save={event => {
+          let tracker = event.detail.tracker;
+          let value = event.detail.value;
+          let newNote = $Interact.logDataEditor.log.note
+            .split(' ')
+            .filter(word => {
+              return word.search(`#${$Interact.logDataEditor.tag}`) === -1;
+            });
+          newNote.push(`#${tracker.tag}(${value})`);
+          $Interact.logDataEditor.log.note = newNote.join(' ');
+          $Interact.logDataEditor.log = new NomieLog($Interact.logDataEditor.log);
+          $Interact.logDataEditor.log.expanded();
+          $Interact.logDataEditor.tag = null;
+        }}
+        on:cancel={() => {
+          $Interact.logDataEditor.tag = null;
+        }} />
+    {/if}
+
+    <button
+      class="btn btn-lg btn-light mr-1 flex-grow"
+      slot="footer"
+      on:click={Interact.dismissEditLogData}>
+      Cancel
+    </button>
+    <button
+      class="btn btn-lg btn-primary mr-1 flex-grow"
+      slot="footer"
+      on:click={() => {
+        $Interact.logDataEditor.show = false;
+        LedgerStore.updateLog($Interact.logDataEditor.log).then(() => {
+          Interact.dismissEditLogData();
+          Interact.toast('Updated');
+        });
+      }}>
+      Save
+    </button>
+
   </NModal>
 {/if}

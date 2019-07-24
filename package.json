@@ -1,6 +1,6 @@
 {
   "name": "open-nomie",
-  "version": "4.0.64",
+  "version": "4.0.65",
   "homepage": "https://nomie.app",
   "bugs": {
     "url": "https://github.com/open-nomie/nomie/issues",
@@ -18,10 +18,10 @@
     "dev": "concurrently \"run-p start:dev autobuild\" \"npm run scss\"",
     "start": "sirv public --single",
     "start:dev": "sirv public --cors --single --dev",
-    "patch": "node build-tools/patch-version.js",
+    "patch_version": "node build-tools/patch-version.js",
     "test": "jest src/**/*.spec.js",
     "todo": "node build-tools/get-todo.js",
-    "patch": "npm run patch && npm run todo"
+    "patch": "npm run patch_version && npm run todo"
   },
   "devDependencies": {
     "@kazzkiq/svelte-preprocess-scss": "^0.1.3",

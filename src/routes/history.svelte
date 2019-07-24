@@ -76,12 +76,6 @@
     checks.list_date = {};
   }
 
-  // Reactivly set if this is edit mode.
-  $: state.editMode =
-    Object.keys(state.selected).filter(a => {
-      return state.selected[a];
-    }).length > 0;
-
   // Methods
   const methods = {
     toggleSearch() {
@@ -210,10 +204,12 @@
       LedgerStore.deleteLogs(selected).then(d => {
         methods.clearSelected();
         setTimeout(() => {
-          methods.getLogs().then(() => {
-            methods.refresh();
-            state.loading = false;
-          });
+          methods.refresh();
+          state.loading = false;
+          // methods.getLogs().then(() => {
+          //   methods.refresh();
+          //   state.loading = false;
+          // });
         }, 200);
       });
     },
@@ -242,52 +238,6 @@
           methods.getLogs();
         }, 120);
       });
-
-      // let buttons = [];
-      // // if (log.noteTextLength()) {
-      // buttons.push({
-      //   title: "Edit Content",
-      //   click() {
-      //     Interact.prompt("Update Content", { value: log.note }).then(
-      //       content => {
-      //         log.note = content;
-      //         setTimeout(() => {
-      //           LedgerStore.updateLog(log).then(res => {
-      //             methods.getLogs();
-      //           });
-      //         }, 10);
-      //       }
-      //     );
-      //   }
-      // });
-      // // }
-      // // if (log.trackersArray().length) {
-      // //   buttons.push({ title: "Edit Tracker Data" });
-      // // }
-      // buttons.push({ title: "Edit Time and Location" });
-      // buttons.push({
-      //   title: "Delete Log",
-      //   click() {
-      //     setTimeout(() => {
-      //       Interact.confirm(
-      //         "Are you sure?",
-      //         "Deleting an log cannot be undone, only recreated"
-      //       ).then(res => {
-      //         if (res === true) {
-      //           LedgerStore.deleteLogs([log]).then(() => {
-      //             setTimeout(() => {
-      //               methods.getLogs();
-      //             }, 1000);
-      //           });
-      //         }
-      //       });
-      //     }, 10);
-      //   }
-      // });
-      // Interact.popmenu({
-      //   title: "Log Options",
-      //   buttons: buttons
-      // });
     },
     selectDate() {
       let ranges = [

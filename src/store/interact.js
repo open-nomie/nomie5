@@ -3,6 +3,9 @@ import { writable } from 'svelte/store';
 // utils
 import Logger from '../utils/log/log';
 
+// modules
+import NomieLog from '../modules/nomie-log/nomie-log';
+
 // Stores
 import { LedgerStore } from '../store/ledger';
 
@@ -33,6 +36,13 @@ const interactInit = () => {
 				show: false,
 				tracker: null,
 				onInteract: null,
+			},
+			logDataEditor: {
+				show: false,
+				log: null,
+				onInteract: null,
+				tag: null,
+				value: null,
 			},
 			toast: {
 				show: false,
@@ -116,6 +126,7 @@ const interactInit = () => {
 			});
 		},
 		dismissTrackerInput() {
+			console.log('Dismissing Tracker INput');
 			update(b => {
 				b.trackerInput.show = false;
 				b.trackerInput.tracker = null;
@@ -161,6 +172,26 @@ const interactInit = () => {
 				return b;
 			});
 		},
+		editLogData(log) {
+			log = new NomieLog(log);
+			log.expanded();
+			return new Promise((resolve, reject) => {
+				update(b => {
+					b.logDataEditor.show = true;
+					b.logDataEditor.log = log;
+					b.logDataEditor.onInteract = resolve;
+					return b;
+				});
+			});
+		},
+		dismissEditLogData() {
+			update(b => {
+				b.logDataEditor.show = false;
+				b.logDataEditor.log = null;
+				b.logDataEditor.onInteract = null;
+				return b;
+			});
+		},
 		logOptions(log) {
 			return new Promise((resolve, reject) => {
 				let actions = {
@@ -172,6 +203,11 @@ const interactInit = () => {
 									resolve({ action: 'updated' });
 								});
 							}, 10);
+						});
+					},
+					updateData() {
+						Interact.editLogData(log).then(log => {
+							console.log('Edit Log data', log);
 						});
 					},
 					updateLocation() {
@@ -219,12 +255,10 @@ const interactInit = () => {
 											title: 'Edit Location',
 											click: actions.updateLocation,
 										},
-										// {
-										// 	title: 'Edit Tracker Data',
-										// 	click() {
-										// 		//
-										// 	},
-										// },
+										{
+											title: 'Edit Tracker Data',
+											click: actions.updateData,
+										},
 									],
 								});
 							}, 10);
