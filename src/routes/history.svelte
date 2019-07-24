@@ -420,7 +420,7 @@
     {/if}
     <div class="filler" />
     <button
-      class="btn btn-clear btn-icon flex {state.searchMode ? 'text-red' : ''}"
+      class="btn btn-clear btn-icon flex {state.searchMode ? 'text-primary-bright' : ''}"
       on:click={methods.toggleSearch}>
       <i class="zmdi zmdi-search" />
     </button>
@@ -433,7 +433,7 @@
       </div>
     {:else}
       <div
-        class="header-date-control text-center {isToday ? 'today' : 'not-today text-danger'}"
+        class="header-date-control text-center {isToday ? 'today' : 'not-today text-primary-bright'}"
         on:click={methods.selectDate}>
         <NText tag="div" size="md" bold>{state.date.format('dddd')}</NText>
         <NText tag="div" size="sm">{state.date.format('MMM D YYYY')}</NText>
@@ -441,10 +441,10 @@
     {/if}
     <div class="filler" />
     <button
-      class="btn btn-clear btn-icon"
+      class="btn btn-clear btn-icon {state.showAllLocations ? 'text-primary-bright' : ''}"
       disabled={state.locations.length === 0}
       on:click={() => {
-        Interact.showLocations(state.locations);
+        state.showAllLocations = !state.showAllLocations;
       }}>
       <i class="zmdi zmdi-map" />
     </button>
@@ -482,6 +482,8 @@
     <div class="empty-notice">
       <Spinner size="50" speed="750" color="#666" thickness="2" gap="40" />
     </div>
+  {:else if state.showAllLocations}
+    <NMap locations={state.locations} />
   {:else}
     <div class="container p-0 pt-3">
       <!-- If no Logs found -->
@@ -544,7 +546,7 @@
   </NModal>
 {/if}
 
-{#if state.showAllLocations}
+<!-- {#if state.showAllLocations}
   <NModal show={true} title={'All Location'}>
     <NMap locations={state.locations} />
     <button
@@ -556,7 +558,7 @@
       Close
     </button>
   </NModal>
-{/if}
+{/if} -->
 
 {#if local.showDatePicker}
   <NModal show={true} title={'Select a Date'}>

@@ -401,7 +401,7 @@ button:focus {
 }
 
 .text-primary-bright {
-	color: $primaryBright;
+	color: $primaryBright !important;
 }
 .n-row {
 	display: flex;
@@ -465,7 +465,7 @@ nav {
 }
 .main-content {
 	z-index: 0;
-	padding-bottom: 50px;
+	margin-bottom: 50px; // add buffer for tab bar
 	flex-grow: 1;
 	flex-shrink: 1;
 	min-height: calc(100vh - 50px);

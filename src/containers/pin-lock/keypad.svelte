@@ -51,10 +51,10 @@
   <button class="btn btn-clear" use:tap on:tap={select(9)}>9</button>
 
   <button class="btn btn-clear" disabled={!value} use:tap on:tap={clear}>
-    clear
+    Clear
   </button>
   <button class="btn btn-clear" use:tap on:tap={select(0)}>0</button>
-  <button class="btn btn-clear" disabled={!value} use:tap on:click={submit}>
-    submit
+  <button class="btn btn-clear" disabled={!value} on:click={submit}>
+    Submit
   </button>
 </div>

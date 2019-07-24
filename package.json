@@ -1,6 +1,6 @@
 {
   "name": "open-nomie",
-  "version": "4.0.63",
+  "version": "4.0.64",
   "homepage": "https://nomie.app",
   "bugs": {
     "url": "https://github.com/open-nomie/nomie/issues",
@@ -21,7 +21,7 @@
     "patch": "node build-tools/patch-version.js",
     "test": "jest src/**/*.spec.js",
     "todo": "node build-tools/get-todo.js",
-    "commit-all": "npm run patch && npm run todo && git add . && git commit"
+    "patch": "npm run patch && npm run todo"
   },
   "devDependencies": {
     "@kazzkiq/svelte-preprocess-scss": "^0.1.3",

@@ -156,6 +156,7 @@
   .n-map-container {
     position: relative;
     min-height: 100%;
+    flex-grow: 1;
     .n-map-wrapper {
       position: absolute;
       top: 0;

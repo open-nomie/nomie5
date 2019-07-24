@@ -7402,7 +7402,7 @@ button:focus {
     background-color: var(--color-faded-2); }
 
 .text-primary-bright {
-  color: #319ed7; }
+  color: #319ed7 !important; }
 
 .n-row {
   display: flex;
@@ -7455,7 +7455,7 @@ nav {
 
 .main-content {
   z-index: 0;
-  padding-bottom: 50px;
+  margin-bottom: 50px;
   flex-grow: 1;
   flex-shrink: 1;
   min-height: calc(100vh - 50px);

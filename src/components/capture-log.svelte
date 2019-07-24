@@ -51,6 +51,8 @@
     showDate: false
   };
 
+  // TODO: Add a media/photo type of thing that can be added to a log..
+
   const methods = {
     advancedChanged() {
       if (state.date) {
