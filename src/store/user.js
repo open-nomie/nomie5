@@ -1,9 +1,14 @@
+/**
+ * User Store
+ *
+ * TODO: Look at push notifications in the browser
+ */
+
 // Utils
 import Logger from '../utils/log/log';
 import { writable } from 'svelte/store';
 
 // Modules
-import locate from '../modules/locate/locate';
 import Storage from '../modules/storage/storage';
 
 // Stores
@@ -12,13 +17,14 @@ import { BoardStore } from './boards';
 
 import config from '../../config/global';
 
+// Consts
 const console = new Logger('🤠 userStore');
-
 const UserSession = new blockstack.UserSession();
 
+// Store Initlization
 const userInit = () => {
 	let listeners = [];
-
+	// User State
 	let state = {
 		ready: false,
 		signedIn: undefined,
@@ -119,6 +125,16 @@ const userInit = () => {
 				return usr;
 			});
 		},
+		/**
+		 * Meta Data
+		 * Meta is unclassified data that is needed to make the app work
+		 * it's usually just user preferences but  can be used for other things
+		 *
+		 */
+
+		/**
+		 * Load Meta for this user
+		 */
 		loadMeta() {
 			return Storage.get(config.user_meta_path).then(value => {
 				if (value) {
@@ -129,12 +145,16 @@ const userInit = () => {
 				}
 			});
 		},
+		/**
+		 * Save the Meta object for this user
+		 */
 		saveMeta() {
 			let usr = this.data();
 			if (Object.keys(usr.meta).length) {
 				return Storage.put(config.user_meta_path, usr.meta);
 			}
 		},
+		// Get the current state
 		data() {
 			let d;
 			update(usr => {
@@ -143,6 +163,7 @@ const userInit = () => {
 			});
 			return d;
 		},
+		// Set Dark Mode for User
 		setDarkMode(bool) {
 			localStorage.setItem(config.dark_mode_key, JSON.stringify(bool));
 			if (bool) {
@@ -155,22 +176,12 @@ const userInit = () => {
 				return u;
 			});
 		},
-		locate() {
-			return locate()
-				.then(location => {
-					update(u => {
-						u.location = location;
-						return u;
-					});
-					return location;
-				})
-				.catch(e => {
-					console.error('Getting Location', e.message);
-				});
-		},
+
+		// Pass the Session
 		session() {
 			return UserSession;
 		},
+		// On Ready Event
 		onReady(func) {
 			if (this.ready === true) {
 				func(state);
@@ -178,6 +189,7 @@ const userInit = () => {
 				listeners.push(func);
 			}
 		},
+		// Fire when Ready!
 		fireReady(payload) {
 			update(b => {
 				b.ready = true;
@@ -188,7 +200,10 @@ const userInit = () => {
 			});
 			listeners = [];
 		},
-
+		/**
+		 * ListFiles()
+		 * LIst all files for this user
+		 */
 		listFiles() {
 			return new Promise((resolve, reject) => {
 				let files = [];

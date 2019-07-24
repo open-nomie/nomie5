@@ -85,9 +85,10 @@
         width: calc(100% / 24);
         text-align: center;
         margin: 0px;
-        margin-right: 1px;
-        margin-bottom: 1px;
         background-color: $primary;
+        margin-right: 4px;
+        margin-bottom: 2px;
+        border-radius: 4px;
       }
     }
   }
