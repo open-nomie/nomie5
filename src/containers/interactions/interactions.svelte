@@ -275,7 +275,6 @@
             $Interact.logDataEditor.onInteract(new NomieLog($Interact.logDataEditor.log));
           }
           Interact.dismissEditLogData();
-          Interact.toast('Updated');
         });
       }}>
       Save

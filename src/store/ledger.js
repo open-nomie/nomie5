@@ -176,13 +176,17 @@ const ledgerInit = () => {
 			if (foundIndex) {
 				book[foundIndex] = log;
 			}
+
 			// Update base again
 			update(bs => {
 				bs.saving = false;
 				bs.books[bookDate] = book;
 				return bs;
 			});
-			return methods.putBook(bookDate, book);
+			return methods.putBook(bookDate, book).then(res => {
+				Interact.toast('Log Updated');
+				return res;
+			});
 		},
 		/**
 		 * Save A Log!

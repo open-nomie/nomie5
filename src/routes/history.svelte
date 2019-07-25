@@ -90,13 +90,19 @@
 
   // Dynamically assign book
   $: if ($LedgerStore.books[state.date.format("YYYY-MM")]) {
-    loading = false;
+    loading = true;
     book = $LedgerStore.books[state.date.format("YYYY-MM")] || [];
     logs = (book || [])
       .filter(log => filterActiveDate(log))
       .sort((a, b) => {
         return a.end < b.end ? 1 : -1;
       });
+
+    setTimeout(() => {
+      loading = false;
+      // TODO: Look at making this refresh without doing the loading, it's pushing the page to the top and it's annoying
+      // window.scrollTo(0, windowScrollPosition);
+    }, 1);
   }
 
   $: if (searchLogs || logs) {
@@ -112,18 +118,6 @@
         };
       });
   }
-
-  // $: locations = ((searchLogs ? searchLogs : logs) || [])
-  //   .filter(log => {
-  //     return log.lat;
-  //   })
-  //   .map(log => {
-  //     return {
-  //       lat: log.lat,
-  //       lng: log.lng,
-  //       name: log.location
-  //     };
-  //   });
 
   // Methods
   const methods = {
@@ -225,9 +219,6 @@
         if (state.searchMode) {
           methods.refreshSearch();
         }
-        // setTimeout(() => {
-        //   methods.getLogs();
-        // }, 120);
       });
     },
     selectDate() {
@@ -511,20 +502,6 @@
     </button>
   </NModal>
 {/if}
-
-<!-- {#if state.showAllLocations}
-  <NModal show={true} title={'All Location'}>
-    <NMap locations={locations} />
-    <button
-      class="btn btn-lg btn-primary btn-block mb-0"
-      on:click={() => {
-        state.showAllLocations = false;
-      }}
-      slot="footer">
-      Close
-    </button>
-  </NModal>
-{/if} -->
 
 {#if local.showDatePicker}
   <NModal show={true} title={'Select a Date'}>

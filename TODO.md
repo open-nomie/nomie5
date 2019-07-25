@@ -1,6 +1,6 @@
 # TODO
 
-Generated Thu Jul 25 2019 6:17 pm
+Generated Thu Jul 25 2019 7:13 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -19,13 +19,17 @@ Generated Thu Jul 25 2019 6:17 pm
 - **src/routes/history.svelte**
    - TODO: Have it react when the ledger change, not a hard refresh
    - TODO: refactor so it's clean and using the proper amount of Store vs local
+   - TODO: Look at making this refresh without doing the loading, it's pushing the page to the top and it's annoying
    - TODO: This is really sloppy - clean it up.
+   - TODO: Search Day Header isn't working reliably... Pulling it for now.
 - **src/routes/board-editor.svelte**
    - TODO: Make sorting work
 - **src/modules/stats/stats.js**
    - TODO: Implement IgnoreZeros
 - **src/containers/tracker/input/keypad.svelte**
    - and one for the pin-lock container - TODO: merge these some day
+- **src/containers/map/map.svelte**
+   - TODO: Look at making this curved dotted lines - and not just straight ones
 - **src/containers/importer/importer.svelte**
    - Modal will be hidden in settings TODO: make this not hacky -->
 - **src/containers/board/board.svelte**

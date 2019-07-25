@@ -205,6 +205,7 @@ const interactInit = () => {
 			});
 		},
 		logOptions(log) {
+			log = new NomieLog(log);
 			if (!log.trackers) {
 				log.expanded();
 			}
@@ -213,11 +214,9 @@ const interactInit = () => {
 					updateContent() {
 						methods.prompt('Update Content', { value: log.note, valueType: 'textarea' }).then(content => {
 							log.note = content;
-							setTimeout(() => {
-								LedgerStore.updateLog(log).then(res => {
-									resolve({ action: 'updated' });
-								});
-							}, 10);
+							LedgerStore.updateLog(log).then(res => {
+								resolve({ action: 'updated' });
+							});
 						});
 					},
 					updateData() {
