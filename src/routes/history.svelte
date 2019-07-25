@@ -55,6 +55,7 @@
   let searchLogs = undefined; // hodler of searched logs
   let loading = true;
   let book = undefined;
+  let locations = [];
 
   // Used for checking things
   const checks = {
@@ -90,27 +91,39 @@
   // Dynamically assign book
   $: if ($LedgerStore.books[state.date.format("YYYY-MM")]) {
     loading = false;
-    book = $LedgerStore.books[state.date.format("YYYY-MM")];
+    book = $LedgerStore.books[state.date.format("YYYY-MM")] || [];
+    logs = (book || [])
+      .filter(log => filterActiveDate(log))
+      .sort((a, b) => {
+        return a.end < b.end ? 1 : -1;
+      });
   }
-  // Dynamically assign logs
-  $: logs = (book || [])
-    .filter(log => filterActiveDate(log))
-    .sort((a, b) => {
-      return a.end < b.end ? 1 : -1;
-    });
-  // Clear
 
-  $: locations = (searchLogs ? searchLogs : logs)
-    .filter(log => {
-      return log.lat;
-    })
-    .map(log => {
-      return {
-        lat: log.lat,
-        lng: log.lng,
-        name: log.location
-      };
-    });
+  $: if (searchLogs || logs) {
+    locations = (searchLogs || logs)
+      .filter(log => {
+        return log.lat;
+      })
+      .map(log => {
+        return {
+          lat: log.lat,
+          lng: log.lng,
+          name: log.location
+        };
+      });
+  }
+
+  // $: locations = ((searchLogs ? searchLogs : logs) || [])
+  //   .filter(log => {
+  //     return log.lat;
+  //   })
+  //   .map(log => {
+  //     return {
+  //       lat: log.lat,
+  //       lng: log.lng,
+  //       name: log.location
+  //     };
+  //   });
 
   // Methods
   const methods = {
@@ -125,7 +138,8 @@
     },
     getLogs(fresh) {
       fresh = fresh ? fresh : false;
-      // loading = true;
+
+      loading = true;
       // state.refreshing = true;
       // checks.list_date = {};
 

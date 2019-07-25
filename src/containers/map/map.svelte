@@ -23,13 +23,22 @@
   const geocodeService = L.esri.Geocoding.geocodeService();
 
   // Leaflet Map Holder
-  let map;
+  let MAP = undefined;
 
   // Local State
   let data = {
     locationName: null,
     activeLocation: locations[locations.length - 1] || null
   };
+
+  $: if (locations) {
+    console.log("Map Locations loaded", locations.length);
+    setTimeout(() => {
+      methods.init().then(() => {
+        methods.renderMap();
+      });
+    });
+  }
 
   if (!locations.length && picker) {
     locate().then(location => {
@@ -39,16 +48,32 @@
           lng: location.longitude
         }
       ];
-      map.setView(L.latLng(location.latitude, location.longitude), 12);
+      MAP.setView(L.latLng(location.latitude, location.longitude), 12);
     });
   }
 
   // methods
   let methods = {
-    initialize() {
-      if (!map) {
-        map = L.map(id).fitWorld();
-      }
+    init() {
+      /** Initialize map **/
+      return new Promise((resolve, reject) => {
+        if (!MAP) {
+          MAP = new L.Map(id).fitWorld();
+          console.log("no map lets create", MAP);
+        }
+        MAP.eachLayer(function(layer) {
+          MAP.removeLayer(layer);
+        });
+
+        MAP.on("moveend", function() {
+          dispatch("change", MAP.getCenter());
+        });
+        resolve(MAP);
+      });
+    },
+    renderMap() {
+      console.log("Render Map", MAP);
+
       // Add Attribution
       L.tileLayer(
         "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
@@ -57,7 +82,7 @@
             '&copy; <a href="https://www.openstreetmap.org/">OSM</a> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
           maxZoom: 18
         }
-      ).addTo(map);
+      ).addTo(MAP);
 
       var myIcon = window.L.icon({
         iconUrl: "/images/pin.png",
@@ -79,7 +104,7 @@
         mkr.on("click", () => {
           data.activeLocation = locations[i];
         });
-        mkr.addTo(map);
+        mkr.addTo(MAP);
       }
 
       let connectTheDots = data => {
@@ -94,23 +119,17 @@
       //let pathLine =
       window.L.polyline(pathCoords, {
         color: "rgba(2.7%, 52.5%, 100%, 0.378)"
-      }).addTo(map);
-
-      map.on("moveend", function() {
-        dispatch("change", map.getCenter());
-      });
+      }).addTo(MAP);
 
       // Make the map fit the bounds of all locations provided
       if (locations.length) {
-        map.fitBounds(
+        MAP.fitBounds(
           locations.map(loc => {
             return [loc.lat, loc.lng];
           })
         );
       }
-      setTimeout(() => {
-        map.invalidateSize();
-      }, 120);
+      MAP.invalidateSize();
     },
     getLocation(lat, lng) {
       return new Promise((resolve, reject) => {
@@ -145,10 +164,10 @@
 
   // On Mount
   onMount(() => {
-    // Init map
-    setTimeout(() => {
-      methods.initialize();
-    }, 120);
+    // methods.init().then(map => {
+    //   console.log("Inited", map);
+    //   // methods.renderMap();
+    // });
   });
 </script>
 
