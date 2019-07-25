@@ -256,6 +256,9 @@
       on:click={() => {
         $Interact.logDataEditor.show = false;
         LedgerStore.updateLog($Interact.logDataEditor.log).then(() => {
+          if ($Interact.logDataEditor.onInteract) {
+            $Interact.logDataEditor.onInteract(new NomieLog($Interact.logDataEditor.log));
+          }
           Interact.dismissEditLogData();
           Interact.toast('Updated');
         });

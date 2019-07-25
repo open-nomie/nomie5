@@ -260,6 +260,7 @@ const ledgerInit = () => {
 		 * @param {Array} logs
 		 */
 		async deleteLogs(logs) {
+			console.log('Delete logs', logs);
 			return new Promise((resolve, reject) => {
 				// Set up target books
 				let targets = {};

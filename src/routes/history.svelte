@@ -1,5 +1,10 @@
 <script>
-  // Another mad house!
+  /**
+   * History Tab
+   * A big collection of all things history
+   *
+   * TODO: Have it react when the ledger change, not a hard refresh
+   */
 
   // svelte
   import { navigate } from "svelte-routing";
@@ -30,10 +35,15 @@
 
   import { HistoryPage } from "../store/history-page";
 
-  let user = {};
+  /**
+   * I've messed this all up again. but it's faster and more responsivle
+   * TODO: refactor so it's clean and using the proper amount of Store vs local
+   */
+
   let datePicker;
 
-  const state = $HistoryPage;
+  const state = $HistoryPage; // Assign State to compiled history page
+
   let refreshing = false;
 
   let local = {
@@ -41,6 +51,12 @@
     datePickerValue: null
   };
 
+  let logs = undefined; // holder of the logs
+  let searchLogs = undefined; // hodler of searched logs
+  let loading = true;
+  let book = undefined;
+
+  // Used for checking things
   const checks = {
     list_date: {}
   };
@@ -48,19 +64,43 @@
   /// Watchers for when we're in edit mode
   // and when we have selected more than one.
 
-  // Dynamically set selectCount
-  $: selectCount = Object.keys(state.selected).filter(a => {
-    return state.selected[a];
-  }).length;
-
   let isToday = true;
 
+  // If the date changes - check to see if it's still today
   $: if (state.date) {
     isToday = new Date().toDateString() == state.date.toDate().toDateString();
   }
 
-  // Dynamically get locations as they change
-  $: state.locations = state.logs
+  // Filter logs for today
+  const filterActiveDate = log => {
+    return (
+      log.end >=
+        state.date
+          .startOf("day")
+          .toDate()
+          .getTime() &&
+      log.end <=
+        state.date
+          .endOf("day")
+          .toDate()
+          .getTime()
+    );
+  };
+
+  // Dynamically assign book
+  $: if ($LedgerStore.books[state.date.format("YYYY-MM")]) {
+    loading = false;
+    book = $LedgerStore.books[state.date.format("YYYY-MM")];
+  }
+  // Dynamically assign logs
+  $: logs = (book || [])
+    .filter(log => filterActiveDate(log))
+    .sort((a, b) => {
+      return a.end < b.end ? 1 : -1;
+    });
+  // Clear
+
+  $: locations = logs
     .filter(log => {
       return log.lat;
     })
@@ -71,10 +111,6 @@
         name: log.location
       };
     });
-
-  $: if (state.logs) {
-    checks.list_date = {};
-  }
 
   // Methods
   const methods = {
@@ -89,22 +125,15 @@
     },
     getLogs(fresh) {
       fresh = fresh ? fresh : false;
-      state.loading = true;
+      // loading = true;
       // state.refreshing = true;
-      checks.list_date = {};
-      state.logs = [];
+      // checks.list_date = {};
 
       // Query the Ledger for Posts on this day.
       return LedgerStore.query({
         start: state.date.startOf("day").toDate(),
         end: state.date.endOf("day").toDate(),
         fresh: fresh
-      }).then(logs => {
-        // state.refreshing = false;
-        state.loading = false;
-        return (state.logs = logs.sort((a, b) => {
-          return a.end < b.end ? 1 : -1;
-        }));
       });
     },
     clearLocation() {
@@ -120,7 +149,9 @@
     },
     clearSearch() {
       state.searchResults = null;
-      methods.getLogs();
+      state.searchMode = false;
+      state.searchTerm = "";
+      searchLogs = null;
     },
     previous() {
       methods.getDate(state.date.subtract(1, "day"));
@@ -149,83 +180,27 @@
         return false;
       }
     },
-    trackersArray(trackersObj) {
-      return Object.keys(trackersObj).map(key => {
-        return trackersObj[key];
-      });
-    },
-    isSelected(log) {
-      return (state.selected || []).indexOf(log) > -1;
-    },
-    toggleSelect(log) {
-      if (state.selected[log._id]) {
-        methods.unselectLog(log);
-      } else {
-        methods.selectLog(log);
-      }
-    },
-    selectLog(log) {
-      state.selected[log._id] = log;
-    },
-    unselectLog(log) {
-      state.selected[log._id] = false;
-      data = data;
-    },
     goto(date) {
       state.date = date;
       methods.getLogs();
-    },
-    clearSelected() {
-      state.selected = {};
-    },
-    deleteSelected() {
-      Interact.confirm(
-        "This cannot be undone!",
-        `Are you sure you want to delete ${
-          selectCount === 1 ? "this" : "these"
-        } ${selectCount === 1 ? "log" : "logs"}? This action cannot be undone.`,
-        "Yes, Delete",
-        "Cancel"
-      ).then(res => {
-        if (res === true) {
-          methods.doDeleteSelected();
-        }
-      });
-    },
-    doDeleteSelected() {
-      let selected = [];
-      Object.keys(state.selected).forEach(_id => {
-        if (state.selected[_id]) {
-          selected.push(state.selected[_id]);
-        }
-      });
-
-      state.loading = true;
-      LedgerStore.deleteLogs(selected).then(d => {
-        methods.clearSelected();
-        setTimeout(() => {
-          methods.refresh();
-          state.loading = false;
-          // methods.getLogs().then(() => {
-          //   methods.refresh();
-          //   state.loading = false;
-          // });
-        }, 200);
-      });
     },
     searchKeypress(event) {
       if (event.key === "Enter" || event.key === "Return") {
         methods.search(state.searchTerm, state.date.format("YYYY"));
       }
     },
+    refreshSearch() {
+      methods.search(state.searchTerm, state.date.format("YYYY"));
+    },
     search(key, year) {
       if (key.length > 1) {
         state.searchResults = [];
-        state.logs = [];
-        state.loading = true;
-        LedgerStore.search(state.searchTerm, year).then(logs => {
-          state.loading = false;
-          state.logs = logs;
+        loading = true;
+        LedgerStore.search(state.searchTerm, year).then(searchResults => {
+          console.log("Search logs", logs);
+          loading = false;
+          state.searchMode = true;
+          searchLogs = searchResults;
         });
       }
     },
@@ -233,10 +208,14 @@
       navigate(`/stats/${tracker.tag}`);
     },
     showLogOptions(log) {
-      Interact.logOptions(log).then(() => {
-        setTimeout(() => {
-          methods.getLogs();
-        }, 120);
+      Interact.logOptions(log).then(action => {
+        console.log("Action from logOptions", action);
+        if (state.searchMode) {
+          methods.refreshSearch();
+        }
+        // setTimeout(() => {
+        //   methods.getLogs();
+        // }, 120);
       });
     },
     selectDate() {
@@ -289,22 +268,12 @@
     }
   };
 
-  UserStore.subscribe(u => {
-    user = u;
-    if (user.signedIn) {
-      setTimeout(() => {
-        methods.getLogs();
-      }, 200);
-    }
-  });
-
-  LedgerStore.subscribe(lgr => {
-    state.ledger = lgr;
-  });
-
-  TrackerStore.subscribe(trackers => {
-    state.trackers = trackers;
-  });
+  /**
+   * // Fire off call to query the datastore
+   * This will call the ledger and load up the right book
+   * once the book is loaded, the logs var will be automaticallly filtered
+   */
+  methods.getLogs();
 </script>
 
 <style lang="scss" type="text/scss">
@@ -316,6 +285,15 @@
   }
   :global(.trackers-list .border-bottom:last-child) {
     border-bottom: none !important;
+  }
+
+  .search-bar {
+    position: relative;
+    .btn {
+      position: absolute;
+      right: 12px;
+      top: -3px;
+    }
   }
 
   .n-date-pill-container {
@@ -392,7 +370,7 @@
     <div class="filler" />
     <button
       class="btn btn-clear btn-icon {state.showAllLocations ? 'text-primary-bright' : ''}"
-      disabled={state.locations.length === 0}
+      disabled={locations.length === 0}
       on:click={() => {
         state.showAllLocations = !state.showAllLocations;
       }}>
@@ -415,29 +393,33 @@
   <NToolbar pinTop className="sub-header">
 
     <div
-      class="d-flex d-row justify-content-between align-items-center w-100 px-2">
+      class="d-flex d-row justify-content-between align-items-center w-100 px-2
+      search-bar">
       <input
         type="search"
         on:keypress={methods.searchKeypress}
         bind:value={state.searchTerm}
         placeholder="Search"
         class="search-input" />
+      <button
+        class="btn btn-clear btn-sm btn-icon zmdi zmdi-close"
+        on:click={methods.clearSearch} />
     </div>
   </NToolbar>
 {/if}
 
 <div
   class="page page-history {state.searchMode ? 'with-sub-header' : 'with-header'}">
-  {#if state.loading}
+  {#if loading}
     <div class="empty-notice">
       <Spinner size="50" speed="750" color="#666" thickness="2" gap="40" />
     </div>
   {:else if state.showAllLocations}
-    <NMap locations={state.locations} />
+    <NMap {locations} />
   {:else}
     <div class="container p-0 pt-3">
       <!-- If no Logs found -->
-      {#if state.logs.length === 0}
+      {#if logs.length === 0}
         {#if !state.searchMode}
           <div class="empty-notice">
             No records found for
@@ -450,9 +432,25 @@
           </div>
         {/if}
         <!-- If Logs and Not refreshing  -->
-      {:else if !refreshing}
+      {:else if !state.searchMode}
         <!-- Loop over logs -->
-        {#each state.logs as log, i (log._id)}
+        {#each logs as log, i (log._id)}
+          <LogItem
+            {log}
+            trackers={$TrackerStore}
+            on:trackerClick={event => {
+              methods.trackerTapped(event.detail.tracker, log);
+            }}
+            on:locationClick={event => {
+              Interact.showLocations([log]);
+            }}
+            on:moreClick={event => {
+              Interact.logOptions(log).then(() => {});
+            }} />
+          <!-- Show the Log Item -->
+        {/each}
+      {:else if state.searchMode && searchLogs}
+        {#each searchLogs as log, i (log._id)}
           <!-- If we have search results in this set - and a header doesn't exist, lets show one. -->
           {#if !methods.headerExists(log.end)}
             <NItem className="bg-transparent">
@@ -465,7 +463,7 @@
 
           <LogItem
             {log}
-            trackers={state.trackers}
+            trackers={$TrackerStore}
             on:trackerClick={event => {
               methods.trackerTapped(event.detail.tracker, log);
             }}
@@ -477,7 +475,10 @@
             }} />
           <!-- Show the Log Item -->
         {/each}
+      {:else if state.searchMode && !searchLogs}
+        <div class="empty-notice">Search {state.date.format('YYYY')}</div>
       {/if}
+
     </div>
   {/if}
 
@@ -498,7 +499,7 @@
 
 <!-- {#if state.showAllLocations}
   <NModal show={true} title={'All Location'}>
-    <NMap locations={state.locations} />
+    <NMap locations={locations} />
     <button
       class="btn btn-lg btn-primary btn-block mb-0"
       on:click={() => {

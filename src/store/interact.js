@@ -207,7 +207,10 @@ const interactInit = () => {
 					},
 					updateData() {
 						Interact.editLogData(log).then(log => {
-							console.log('Edit Log data', log);
+							console.log('Edit Log data - RESOLVING', log);
+							setTimeout(() => {
+								resolve({ action: 'data-updated' });
+							}, 10);
 						});
 					},
 					updateLocation() {
