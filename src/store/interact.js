@@ -1,3 +1,12 @@
+/**
+ * Interact Store
+ * This is used to fire off global interactions with the user.
+ * Anything thing that requires the users input that is used across
+ * multiple pages, containers or components.
+ *
+ * For example: Alerts, Confirms, Prompts, Location Lookup, Location Showing, Editing Trackers
+ */
+
 import { writable } from 'svelte/store';
 
 // utils
@@ -12,7 +21,7 @@ import { LedgerStore } from '../store/ledger';
 const console = new Logger('✋ Interact');
 
 const interactInit = () => {
-	let getBase = () => {
+	let getBaseState = () => {
 		return {
 			alert: {
 				show: false,
@@ -75,63 +84,63 @@ const interactInit = () => {
 		};
 	};
 
-	let base = getBase();
+	let state = getBaseState();
 
-	const { update, subscribe, set } = writable(base);
+	const { update, subscribe, set } = writable(state);
 
 	const methods = {
 		alert(title, message, ok) {
 			return new Promise(resolve => {
-				update(b => {
-					b.alert.show = true;
-					b.alert.title = title;
-					b.alert.message = message;
-					b.alert.cancel = null;
-					b.alert.ok = ok || 'Ok';
-					b.alert.onInteract = resolve;
-					return b;
+				update(s => {
+					s.alert.show = true;
+					s.alert.title = title;
+					s.alert.message = message;
+					s.alert.cancel = null;
+					s.alert.ok = ok || 'Ok';
+					s.alert.onInteract = resolve;
+					return s;
 				});
 			});
 		},
 		editTracker(tracker) {
 			return new Promise((resolve, reject) => {
-				update(b => {
-					b.trackerEditor.show = true;
-					b.trackerEditor.tracker = tracker;
-					b.trackerEditor.onInteract = event => {
+				update(s => {
+					s.trackerEditor.show = true;
+					s.trackerEditor.tracker = tracker;
+					s.trackerEditor.onInteract = event => {
 						resolve(event.detail);
 					};
-					return b;
+					return s;
 				});
 			});
 		},
 		dismissEditTracker() {
-			update(b => {
-				b.trackerEditor.show = false;
-				b.trackerEditor.tracker = null;
-				b.trackerEditor.onInteract = null;
-				return b;
+			update(s => {
+				s.trackerEditor.show = false;
+				s.trackerEditor.tracker = null;
+				s.trackerEditor.onInteract = null;
+				return s;
 			});
 		},
 		trackerInput(tracker) {
 			return new Promise((resolve, reject) => {
-				update(b => {
-					b.trackerInput.show = true;
-					b.trackerInput.tracker = tracker;
-					b.trackerInput.onInteract = tracker => {
+				update(s => {
+					s.trackerInput.show = true;
+					s.trackerInput.tracker = tracker;
+					s.trackerInput.onInteract = tracker => {
 						resolve(tracker);
 					};
-					return b;
+					return s;
 				});
 			});
 		},
 		dismissTrackerInput() {
 			console.log('Dismissing Tracker INput');
-			update(b => {
-				b.trackerInput.show = false;
-				b.trackerInput.tracker = null;
-				b.trackerInput.onInteract = null;
-				return b;
+			update(s => {
+				s.trackerInput.show = false;
+				s.trackerInput.tracker = null;
+				s.trackerInput.onInteract = null;
+				return s;
 			});
 		},
 		/**
@@ -139,13 +148,13 @@ const interactInit = () => {
 		 */
 		selectTracker() {
 			return new Promise((resolve, reject) => {
-				update(b => {
-					b.trackerSelector.show = true;
-					b.trackerSelector.multiple = false;
-					b.trackerSelector.onInteract = trackerArray => {
+				update(s => {
+					s.trackerSelector.show = true;
+					s.trackerSelector.multiple = false;
+					s.trackerSelector.onInteract = trackerArray => {
 						resolve(trackerArray.length ? trackerArray[0] : null);
 					};
-					return b;
+					return s;
 				});
 			});
 		},
@@ -154,45 +163,48 @@ const interactInit = () => {
 		 */
 		selectTrackers() {
 			return new Promise((resolve, reject) => {
-				update(b => {
-					b.trackerSelector.show = true;
-					b.trackerSelector.multiple = true;
-					b.trackerSelector.onInteract = trackerArray => {
+				update(s => {
+					s.trackerSelector.show = true;
+					s.trackerSelector.multiple = true;
+					s.trackerSelector.onInteract = trackerArray => {
 						resolve(trackerArray);
 					};
-					return b;
+					return s;
 				});
 			});
 		},
 		dismissTrackerSelector() {
-			update(b => {
-				b.trackerSelector.show = false;
-				b.trackerSelector.multiple = false;
-				b.trackerSelector.onInteract = null;
-				return b;
+			update(s => {
+				s.trackerSelector.show = false;
+				s.trackerSelector.multiple = false;
+				s.trackerSelector.onInteract = null;
+				return s;
 			});
 		},
 		editLogData(log) {
 			log = new NomieLog(log);
 			log.expanded();
 			return new Promise((resolve, reject) => {
-				update(b => {
-					b.logDataEditor.show = true;
-					b.logDataEditor.log = log;
-					b.logDataEditor.onInteract = resolve;
-					return b;
+				update(s => {
+					s.logDataEditor.show = true;
+					s.logDataEditor.log = log;
+					s.logDataEditor.onInteract = resolve;
+					return s;
 				});
 			});
 		},
 		dismissEditLogData() {
-			update(b => {
-				b.logDataEditor.show = false;
-				b.logDataEditor.log = null;
-				b.logDataEditor.onInteract = null;
-				return b;
+			update(s => {
+				s.logDataEditor.show = false;
+				s.logDataEditor.log = null;
+				s.logDataEditor.onInteract = null;
+				return s;
 			});
 		},
 		logOptions(log) {
+			if (!log.trackers) {
+				log.expanded();
+			}
 			return new Promise((resolve, reject) => {
 				let actions = {
 					updateContent() {
@@ -244,136 +256,140 @@ const interactInit = () => {
 				};
 				let initial = [
 					{
-						title: 'Edit Content',
+						title: 'Edit Note',
 						click: actions.updateContent,
 					},
 					{
 						title: 'Edit Location',
 						click: actions.updateLocation,
 					},
-					{
-						title: 'Edit Tracker Data',
-						click: actions.updateData,
-					},
-					{
-						title: 'Delete...',
-						click: actions.delete,
-					},
 				];
 
-				methods.popmenu({ title: 'Log Options', buttons: initial });
+				if (Object.keys(log.trackers).length) {
+					initial.push({
+						title: 'Edit Tracker Data',
+						click: actions.updateData,
+					});
+				}
+
+				initial.push({
+					title: 'Delete...',
+					click: actions.delete,
+				});
+
+				methods.popmenu({ title: 'Options', buttons: initial });
 			}); // end return promise
 		},
 		showLocations(locations) {
-			update(bs => {
-				bs.locationViewer.locations = locations;
-				bs.locationViewer.show = true;
-				return bs;
+			update(s => {
+				s.locationViewer.locations = locations;
+				s.locationViewer.show = true;
+				return s;
 			});
 		},
 		dismissLocations() {
-			update(bs => {
-				bs.locationViewer.locations = null;
-				bs.locationViewer.show = false;
-				return bs;
+			update(s => {
+				s.locationViewer.locations = null;
+				s.locationViewer.show = false;
+				return s;
 			});
 		},
 		dismissToast() {
-			update(bs => {
-				bs.toast.message = null;
-				bs.toast.show = false;
-				return bs;
+			update(s => {
+				s.toast.message = null;
+				s.toast.show = false;
+				return s;
 			});
 		},
 		toast(message, perm) {
 			perm = perm === true ? true : false;
-			update(bs => {
-				bs.toast.message = message;
-				bs.toast.show = true;
-				return bs;
+			update(s => {
+				s.toast.message = message;
+				s.toast.show = true;
+				return s;
 			});
 			if (!perm) {
 				setTimeout(() => {
-					update(bs => {
-						bs.toast.message = null;
-						bs.toast.show = false;
-						return bs;
+					update(s => {
+						s.toast.message = null;
+						s.toast.show = false;
+						return s;
 					});
 				}, 1300);
 			}
 		},
 		confirm(title, message, ok, cancel) {
 			return new Promise((resolve, reject) => {
-				update(b => {
-					b.alert.show = true;
-					b.alert.title = title;
-					b.alert.message = message;
-					b.alert.cancel = null;
-					b.alert.ok = ok || 'Ok';
-					b.alert.cancel = cancel || 'Cancel';
-					b.alert.onInteract = resolve;
-					return b;
+				update(s => {
+					s.alert.show = true;
+					s.alert.title = title;
+					s.alert.message = message;
+					s.alert.cancel = null;
+					s.alert.ok = ok || 'Ok';
+					s.alert.cancel = cancel || 'Cancel';
+					s.alert.onInteract = resolve;
+					return s;
 				});
 			});
 		},
 		popmenu(options) {
-			update(b => {
-				b.popmenu.show = true;
-				b.popmenu.buttons = options.buttons;
-				b.popmenu.title = options.title;
-				return b;
+			update(s => {
+				s.popmenu.show = true;
+				s.popmenu.buttons = options.buttons;
+				s.popmenu.title = options.title;
+				return s;
 			});
 		},
 		pickLocation() {
 			return new Promise((resolve, reject) => {
-				update(b => {
-					b.locationFinder.show = true;
-					b.locationFinder.onInteract = event => {
+				update(s => {
+					s.locationFinder.show = true;
+					s.locationFinder.onInteract = event => {
 						resolve(event);
 					};
-					return b;
+					return s;
 				});
 			});
 		},
 		dismissPickLocation() {
-			update(b => {
-				b.locationFinder.show = false;
-				b.locationFinder.onInteract = null;
-				return b;
+			update(s => {
+				s.locationFinder.show = false;
+				s.locationFinder.onInteract = null;
+				return s;
 			});
 		},
 		clearPrompt() {
-			update(b => {
-				b.prompt.show = false;
-				b.prompt.onInteract = null;
-				return b;
+			update(s => {
+				s.prompt.show = false;
+				s.prompt.onInteract = null;
+				return s;
 			});
 		},
 		prompt(message, options) {
 			return new Promise((resolve, reject) => {
 				setTimeout(() => {
-					update(b => {
-						b.prompt.show = true;
-						b.prompt.message = message;
-						b.prompt.value = options.value || null;
-						b.prompt.valueType = options.valueType || 'text';
-						b.prompt.title = options.title || 'Prompt';
-						b.prompt.cancel = 'Cancel';
-						b.prompt.placeholder = options.placeholder || '';
-						b.prompt.onInteract = res => {
+					update(s => {
+						s.prompt.show = true;
+						s.prompt.message = message;
+						s.prompt.value = options.value || null;
+						s.prompt.valueType = options.valueType || 'text';
+						s.prompt.title = options.title || 'Prompt';
+						s.prompt.cancel = 'Cancel';
+						s.prompt.placeholder = options.placeholder || '';
+						s.prompt.onInteract = res => {
 							resolve(b.prompt.value);
 						};
-						return b;
+						return s;
 					});
 				}, 10);
 			});
 		},
 		dismiss() {
-			update(b => {
-				b.alert.show = false;
-				b.popmenu.show = false;
-				b.prompt.show = false;
-				return b;
+			update(s => {
+				s.alert.show = false;
+				s.popmenu.show = false;
+				s.prompt.show = false;
+				return s;
 			});
 		},
 	};

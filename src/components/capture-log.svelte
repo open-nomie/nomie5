@@ -59,11 +59,10 @@
         ActiveLogStore.update(l => {
           let now = new Date();
           let gmtDate = new Date(state.date);
+
+          console.log("Updating Log with date", { now, gmtDate });
           // TODO: Mobile is getting GMT Time, desktop is not
-          // BUG
-          if (now.getTimezoneOffset() !== gmtDate.getTimezoneOffset()) {
-            alert("Timezone offset is not local");
-          }
+
           l.start = gmtDate.getTime();
           l.end = gmtDate.getTime();
           return l;
@@ -175,7 +174,7 @@
     }
   }
   .save-button {
-    width: 30px;
+    padding: 0 10px;
     height: 30px;
     border-radius: 15px;
     display: flex;
@@ -187,6 +186,7 @@
     flex-shrink: 0;
     margin-bottom: 6px;
     border: none;
+    font-size: 0.9rem;
     color: #fff;
     svg {
       fill: #fff;
@@ -246,9 +246,11 @@
         bind:this={textarea}
         placeholder="What's Up?"
         on:keypress={methods.keyPress} />
-      <button class="save-button" on:click={methods.logSave}>
-        <i class="zmdi zmdi-long-arrow-up text-white" />
-      </button>
+      {#if !saving}
+        <button class="save-button" on:click={methods.logSave}>Save</button>
+      {:else}
+        <button class="save-button">•••</button>
+      {/if}
     </div>
   </div>
 </div>
@@ -269,7 +271,7 @@
                 <input
                   type="datetime-local"
                   class="form-control mt-0"
-                  style="font-size:0.8rem; height:44px;"
+                  style="font-size:16px; height:44px; overflow:hidden"
                   on:input={() => {
                     methods.advancedChanged();
                   }}

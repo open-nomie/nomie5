@@ -88,6 +88,12 @@
     align-items: stretch;
     flex-grow: 1;
     height: 100%;
+    .btn.w-25 {
+      width: 30% !important;
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
   }
 </style>
 
@@ -146,13 +152,19 @@
     {/if}
 
     {#if data.tracker.type == 'timer' && data.value}
-      <button on:click={methods.onSave} class="btn btn-primary btn-lg w-100">
+      <button
+        on:click={methods.onSave}
+        class="btn btn-primary btn-lg"
+        style="width:105px;">
         {saveLabel} Time
       </button>
     {/if}
 
     {#if data.tracker.type != 'timer'}
-      <button on:click={methods.onSave} class="btn btn-primary btn-lg w-100">
+      <button
+        on:click={methods.onSave}
+        class="btn btn-primary btn-lg"
+        style="width:105px;">
         {saveLabel}
       </button>
     {/if}

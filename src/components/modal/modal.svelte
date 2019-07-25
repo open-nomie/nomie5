@@ -1,6 +1,8 @@
 <script>
   import NText from "../text/text.svelte";
   import { fly } from "svelte/transition";
+
+  // Props
   export let padding = false;
   export let title;
   export let allowClose;
@@ -29,7 +31,8 @@
     min-width: 320px;
     background-color: var(--color-solid);
     min-height: 200px;
-    max-height: 90vh;
+    max-height: 95vh;
+    max-width: 400px;
     border-radius: 0.7rem;
     display: flex;
     flex-direction: column;
