@@ -478,10 +478,19 @@ nav {
 [clickable] {
 	position: relative;
 	cursor: pointer;
+	touch-action: manipulation;
 }
 .clickable:hover,
 .clickable:focus {
 	background-color: rgba($primaryBright, 0.09);
+}
+.btn,
+a,
+input,
+header,
+footer,
+button {
+	touch-action: manipulation;
 }
 .filler {
 	flex-grow: 1;

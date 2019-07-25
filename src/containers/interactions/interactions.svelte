@@ -101,13 +101,21 @@
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
-      class="form-control mt-2" />
+      class="form-control mt-2"
+      style="min-height:200px;" />
   {:else if $Interact.prompt.valueType == 'number'}
     <input
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
       type="number"
+      class="form-control mt-2" />
+  {:else if $Interact.prompt.valueType == 'datetime'}
+    <input
+      bind:this={promptInput}
+      placeholder={$Interact.prompt.placeholder}
+      bind:value={$Interact.prompt.value}
+      type="datetime-local"
       class="form-control mt-2" />
   {:else}
     <input

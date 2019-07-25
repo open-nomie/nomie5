@@ -9,6 +9,9 @@
 
 import { writable } from 'svelte/store';
 
+// vendors
+import dayjs from 'dayjs';
+
 // utils
 import Logger from '../utils/log/log';
 
@@ -208,7 +211,7 @@ const interactInit = () => {
 			return new Promise((resolve, reject) => {
 				let actions = {
 					updateContent() {
-						methods.prompt('Update Content', { value: log.note }).then(content => {
+						methods.prompt('Update Content', { value: log.note, valueType: 'textarea' }).then(content => {
 							log.note = content;
 							setTimeout(() => {
 								LedgerStore.updateLog(log).then(res => {
@@ -222,6 +225,21 @@ const interactInit = () => {
 							console.log('Edit Log data - RESOLVING', log);
 							setTimeout(() => {
 								resolve({ action: 'data-updated' });
+							}, 10);
+						});
+					},
+					updateDate() {
+						Interact.prompt('New Date', {
+							valueType: 'datetime',
+							value: dayjs(new Date(log.end)).format('YYYY-MM-DDTHH:mm'),
+						}).then(date => {
+							console.log('Edit Log data - RESOLVING', log);
+							log.start = new Date(date).getTime();
+							log.end = new Date(date).getTime();
+							setTimeout(() => {
+								LedgerStore.updateLog(log).then(res => {
+									resolve({ action: 'date-updated' });
+								});
 							}, 10);
 						});
 					},
@@ -256,18 +274,22 @@ const interactInit = () => {
 				};
 				let initial = [
 					{
-						title: 'Edit Note',
+						title: 'Note',
 						click: actions.updateContent,
 					},
 					{
-						title: 'Edit Location',
+						title: 'Location',
 						click: actions.updateLocation,
+					},
+					{
+						title: 'Date & Time',
+						click: actions.updateDate,
 					},
 				];
 
 				if (Object.keys(log.trackers).length) {
 					initial.push({
-						title: 'Edit Tracker Data',
+						title: 'Tracker Data',
 						click: actions.updateData,
 					});
 				}
@@ -277,7 +299,7 @@ const interactInit = () => {
 					click: actions.delete,
 				});
 
-				methods.popmenu({ title: 'Options', buttons: initial });
+				methods.popmenu({ title: 'Edit Log', buttons: initial });
 			}); // end return promise
 		},
 		showLocations(locations) {
@@ -377,7 +399,7 @@ const interactInit = () => {
 						s.prompt.cancel = 'Cancel';
 						s.prompt.placeholder = options.placeholder || '';
 						s.prompt.onInteract = res => {
-							resolve(b.prompt.value);
+							resolve(s.prompt.value);
 						};
 						return s;
 					});

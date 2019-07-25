@@ -7466,11 +7466,20 @@ nav {
 .clickable,
 [clickable] {
   position: relative;
-  cursor: pointer; }
+  cursor: pointer;
+  touch-action: manipulation; }
 
 .clickable:hover,
 .clickable:focus {
   background-color: rgba(49, 158, 215, 0.09); }
+
+.btn,
+a,
+input,
+header,
+footer,
+button {
+  touch-action: manipulation; }
 
 .filler {
   flex-grow: 1;
