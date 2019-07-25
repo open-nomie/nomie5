@@ -108,6 +108,7 @@
       }
 
       let connectTheDots = data => {
+        // TODO: Look at making this curved dotted lines - and not just straight ones
         var c = [];
         data.forEach(location => {
           c.push([location.lat, location.lng]);

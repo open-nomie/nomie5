@@ -463,18 +463,21 @@
         {/each}
       {:else if state.searchMode && searchLogs}
         {#each searchLogs as log, i (log._id)}
-          <!-- If we have search results in this set - and a header doesn't exist, lets show one. -->
-          {#if !methods.headerExists(log.end)}
+          <!-- 
+            TODO: Search Day Header isn't working reliably... Pulling it for now. 
+            If we have search results in this set - and a header doesn't exist, lets show one. -->
+          <!-- {#if !methods.headerExists(log.end)}
             <NItem className="bg-transparent">
               <h1 class="n-title">{dayjs(log.end).format('ddd MMM D YYYY')}</h1>
               <div slot="right">
                 <NText size="md">{dayjs(log.end).fromNow()}</NText>
               </div>
             </NItem>
-          {/if}
+          {/if} -->
 
           <LogItem
             {log}
+            fullDate={true}
             trackers={$TrackerStore}
             on:trackerClick={event => {
               methods.trackerTapped(event.detail.tracker, log);

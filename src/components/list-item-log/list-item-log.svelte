@@ -22,7 +22,7 @@
   export let trackers = {};
   export let className = "";
   export let focus = false;
-
+  export let fullDate = false;
   // consts
   const dispatch = createEventDispatcher();
 
@@ -37,7 +37,9 @@
   <NItem className="{className} my-3 mx-2 border pb-0 n-item-log">
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row my-2 pr-3 time-row">
-      <NText size="md" bold>{dayjs(displayLog.end).format('h:mm a')}</NText>
+      <NText size="md" bold>
+        {dayjs(displayLog.end).format(fullDate ? 'ddd MMM D YYYY h:mm a' : 'h:mm a')}
+      </NText>
 
       <!-- If they have location-->
       {#if displayLog.lat}
