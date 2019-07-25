@@ -4,6 +4,7 @@
 
   // Modules
   import NomieLog from "../../modules/nomie-log/nomie-log";
+  import Tracker from "../../modules/tracker/tracker";
 
   // components
   import NItem from "../list-item/list-item.svelte";

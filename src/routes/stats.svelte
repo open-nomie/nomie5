@@ -1,4 +1,9 @@
 <script>
+  /**
+   * Stats Route
+   * This is stupid big... still needs to be organized
+   */
+
   //Vendors
   import { onMount } from "svelte";
   import { navigate, Router, Route } from "svelte-routing";
@@ -66,11 +71,6 @@
     stats: null
   };
 
-  $: if (rows.length) {
-    // Rows is populated from the intial load
-    console.log(":ROWS!");
-  }
-
   $: if (Object.keys($TrackerStore).length) {
     state.tracker = $TrackerStore[mainTag] || new Tracker({ tag: mainTag });
   }
@@ -82,6 +82,20 @@
       setTimeout(() => {
         $HistoryPage.date = state.date;
       }, 10);
+    },
+    getDayLogs() {
+      return new Promise((resolve, reject) => {
+        LedgerStore.query({
+          start: state.date.startOf("day").toDate(),
+          end: state.date.endOf("day").toDate()
+        }).then(logs => {
+          logs = logs.map(log => {
+            log.expanded();
+            return log;
+          });
+          resolve(logs);
+        });
+      });
     },
     load() {
       refreshing = true;
@@ -601,6 +615,13 @@
               }}>
               Where
             </button>
+            <button
+              class="btn btn-sm btn-white-pop {state.day.mode === 'all-logs' ? ' active' : '   inactive'}"
+              on:click={() => {
+                methods.setMode('day', 'all-logs');
+              }}>
+              All Logs
+            </button>
 
           </div>
         </div>
@@ -627,6 +648,24 @@
                   {/if}
                 {/each}
               </div>
+            {:else if state.day.mode === 'all-logs'}
+              <div class="n-list">
+                {#await methods.getDayLogs()}
+                  <div class="empty-notice sm">Getting logs...</div>
+                {:then logs}
+                  {#each logs as log, index}
+                    <NLogItem
+                      {log}
+                      on:locationClick={event => {
+                        Interact.showLocations([log]);
+                      }}
+                      on:moreClick={event => {
+                        Interact.logOptions(log).then(() => {});
+                      }}
+                      trackers={$TrackerStore} />
+                  {/each}
+                {/await}
+              </div>
             {:else if state.day.mode === 'map'}
               <NMap
                 small
@@ -640,42 +679,6 @@
           {/if}
         </div>
       </NPopcard>
-
-      <!--
-        Year General Card
-      -->
-      <!-- 
-      <div class="n-row n-year-bar mt-3 mw-500px mx-auto">
-
-        <h1 class="n-title filler text-center">
-          {state.date.format('YYYY')} Overview
-        </h1>
-
-      </div> -->
-
-      <!-- <NPopcard className="mt-5">
-        <div class="n-row p-3">
-          <div class="btn-group flex-grow">
-            <button
-              class="btn btn-sm btn-white-pop {state.overview.mode === 'time' ? ' active' : '   inactive'}"
-              on:click={() => {
-                methods.setMode('overview', 'list');
-              }}>
-              Time & Day
-            </button>
-            <button
-              class="btn btn-sm btn-white-pop {state.overview.mode === 'map' ? ' active' : '   inactive'}"
-              on:click={() => {
-                methods.setMode('overview', 'map');
-              }}>
-              Where
-            </button>
-          </div>
-        </div> 
-        <div class="py-4 px-3">
-          
-        </div>
-      </NPopcard> -->
 
     </div>
   </NPage>

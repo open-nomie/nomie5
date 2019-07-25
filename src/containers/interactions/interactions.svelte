@@ -41,6 +41,26 @@
           tracker: $TrackerStore[tag] || new Tracker({ tag: tag })
         };
       });
+    },
+    editLogDataOnSave(event) {
+      let tracker = event.detail.tracker;
+      let value = event.detail.value;
+      let valueSet = false;
+      let newNote = $Interact.logDataEditor.log.note.split(" ").map(word => {
+        if (word.search(`#${$Interact.logDataEditor.tag}`) === -1) {
+          return word;
+        } else if (!valueSet) {
+          valueSet = true;
+          return `#${tracker.tag}(${value})`;
+        } else {
+          return "";
+        }
+      });
+      newNote.push();
+      $Interact.logDataEditor.log.note = newNote.join(" ");
+      $Interact.logDataEditor.log = new NomieLog($Interact.logDataEditor.log);
+      $Interact.logDataEditor.log.expanded();
+      $Interact.logDataEditor.tag = null;
     }
   };
 </script>
@@ -225,20 +245,7 @@
         tracker={$TrackerStore[$Interact.logDataEditor.tag] || new Tracker({
             tag: $Interact.logDataEditor.tag
           })}
-        on:save={event => {
-          let tracker = event.detail.tracker;
-          let value = event.detail.value;
-          let newNote = $Interact.logDataEditor.log.note
-            .split(' ')
-            .filter(word => {
-              return word.search(`#${$Interact.logDataEditor.tag}`) === -1;
-            });
-          newNote.push(`#${tracker.tag}(${value})`);
-          $Interact.logDataEditor.log.note = newNote.join(' ');
-          $Interact.logDataEditor.log = new NomieLog($Interact.logDataEditor.log);
-          $Interact.logDataEditor.log.expanded();
-          $Interact.logDataEditor.tag = null;
-        }}
+        on:save={methods.editLogDataOnSave}
         on:cancel={() => {
           $Interact.logDataEditor.tag = null;
         }} />
