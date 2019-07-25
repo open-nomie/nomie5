@@ -244,28 +244,16 @@ const interactInit = () => {
 				};
 				let initial = [
 					{
-						title: 'Edit...',
-						click() {
-							setTimeout(() => {
-								methods.popmenu({
-									title: 'Edit Log',
-									buttons: [
-										{
-											title: 'Edit Content',
-											click: actions.updateContent,
-										},
-										{
-											title: 'Edit Location',
-											click: actions.updateLocation,
-										},
-										{
-											title: 'Edit Tracker Data',
-											click: actions.updateData,
-										},
-									],
-								});
-							}, 10);
-						},
+						title: 'Edit Content',
+						click: actions.updateContent,
+					},
+					{
+						title: 'Edit Location',
+						click: actions.updateLocation,
+					},
+					{
+						title: 'Edit Tracker Data',
+						click: actions.updateData,
 					},
 					{
 						title: 'Delete...',

@@ -4,6 +4,7 @@
   import NItem from "../../../components/list-item/list-item.svelte";
   import NModal from "../../../components/modal/modal.svelte";
   import NToggle from "../../../components/toggle-switch/toggle-switch.svelte";
+  import ColorPicker from "../../../components/color-picker/color-picker.svelte";
 
   // Utils
   import { createEventDispatcher } from "svelte";
@@ -86,6 +87,8 @@
   <NModal title="Tracker Editor" isVisible={show} allowClose>
     <div class="bg-faded">
       <NItem className="item-divider compact" />
+      <ColorPicker bind:value={tracker.color} />
+      <NItem className="item-divider compact" />
       <NItem title="Label">
         <div slot="right">
           <input
@@ -134,7 +137,7 @@
 
       </NItem>
       {#if tracker.type == 'tick'}
-        <NItem title="One Tap Save">
+        <NItem title="Auto Save On Tap">
           <div slot="right">
             <NToggle bind:value={tracker.one_tap} />
           </div>

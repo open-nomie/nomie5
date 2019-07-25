@@ -100,7 +100,7 @@
     });
   // Clear
 
-  $: locations = logs
+  $: locations = (searchLogs ? searchLogs : logs)
     .filter(log => {
       return log.lat;
     })
@@ -197,7 +197,6 @@
         state.searchResults = [];
         loading = true;
         LedgerStore.search(state.searchTerm, year).then(searchResults => {
-          console.log("Search logs", logs);
           loading = false;
           state.searchMode = true;
           searchLogs = searchResults;
@@ -209,7 +208,6 @@
     },
     showLogOptions(log) {
       Interact.logOptions(log).then(action => {
-        console.log("Action from logOptions", action);
         if (state.searchMode) {
           methods.refreshSearch();
         }
