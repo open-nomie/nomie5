@@ -24,6 +24,7 @@
     "patch": "npm run patch_version && npm run todo"
   },
   "devDependencies": {
+    "@jukben/emoji-search": "^2.0.1",
     "@kazzkiq/svelte-preprocess-scss": "^0.1.3",
     "@sveltejs/gestures": "0.0.1",
     "bootstrap": "^4.3.1",

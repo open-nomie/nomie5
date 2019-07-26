@@ -1,6 +1,6 @@
 <script>
   // vendors
-  import EmojiSearch from "emoji-search";
+  import EmojiSearch from "@jukben/emoji-search";
   import md5 from "md5";
   import Spinner from "svelte-spinner";
   import { createEventDispatcher } from "svelte";
