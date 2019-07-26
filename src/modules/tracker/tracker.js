@@ -1,7 +1,6 @@
 // import HookModel from './hook.class'
 // import { Reminder } from '../services/reminders/reminders.module'
 // import CardModel from './card.class'
-import NomieUOM from '../../utils/nomie-uom/nomie-uom';
 
 export default class TrackerConfig {
 	constructor(starter) {
@@ -52,20 +51,16 @@ export default class TrackerConfig {
 
 		this.hook = starter.hook || null;
 
-		// If it's a timer, set if started else null
 		if (this.type === 'timer') {
 			this.started = starter.started || null;
 		}
 
-		// Honestly, I don't remembrer what this is about
 		if (starter.decimal === true) {
 			this.decimal = true;
 		} else {
 			this.decimal = false;
 		}
-		// Holder for any scheduled reminders
-		// Not used in Open Nomie since we don't
-		// have a good means for notifications
+
 		this.reminders = [];
 
 		if (starter.reminders) {
@@ -84,23 +79,30 @@ export default class TrackerConfig {
 		}
 	}
 
-	// Make the tag look good if no label is provided
-	displayTag() {
-		this.tag.replace(/_/g, ' ') + '';
+	toTag(str) {
+		return (str || '').replace(/ /g, '_').toLowerCase();
 	}
 
-	toTag(str) {
-		// TODO : make this replace special characters too
-		return (str || '')
-			.replace(/\!|\"|\?/g, '')
-			.trim()
-			.replace(/( )/g, '_')
-			.toLowerCase();
+	// prepareCards(cards: Array) {
+	// 	let newCards = []
+	// 	cards.forEach(card => {
+	// 		if (typeof card == 'object') {
+	// 			newCards.push(new CardModel(card))
+	// 		} else if (card.search('internal://') === 0) {
+	// 			newCards.push(new CardModel(card))
+	// 		}
+	// 	})
+	// 	return newCards
+	// }
+
+	displayTag() {
+		let str = this.tag.replace(/_/g, ' ') + '';
+		return str;
 	}
 
 	displayValue(value) {
 		let v = parseFloat(value) || 0;
-		//return value;
-		return NomieUOM.format(Math.round(v * 100) / 100, this.uom);
+		return value;
+		// return NomieUOM.displayValue(this.uom, Math.round(v * 100) / 100);
 	}
 }

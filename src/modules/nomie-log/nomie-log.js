@@ -1,13 +1,10 @@
 import ExtractTrackers from '../../utils/extract-trackers/extract-trackers';
 import md5 from 'md5';
 import regexs from '../../utils/regex';
-import { isArray } from 'util';
 export default class Record {
 	constructor(starter) {
 		starter = starter || {};
-		// make a simple id - collision unlikely as they're stored in seperate books (by year);
-		// TODO see why nanoid doesn't work with svelte
-		this._id = starter._id || md5(Math.random() + new Date().getTime()).substr(0, 10);
+		this._id = starter._id || md5(new Date().getTime() + Math.random());
 		this.note = (starter.note || starter.notes || '').trim();
 		this.end = starter.end || new Date().getTime();
 		this.start = starter.start || new Date().getTime();
@@ -17,10 +14,10 @@ export default class Record {
 		this.location = starter.location || '';
 		this.modified = this.modified || false;
 
-		if (!starter._id) {
+		if (!starter.id) {
 			this._dirty = true;
 		} else {
-			delete this._dirty;
+			this._dirty = undefined;
 		}
 	}
 
@@ -46,9 +43,6 @@ export default class Record {
 			this.note = `${this.note} #${tag}(${value})`;
 		} else {
 			this.note = `${this.note} #${tag}`;
-		}
-		if (this.trackers) {
-			this.expand();
 		}
 		return this;
 	}
@@ -92,17 +86,12 @@ export default class Record {
 	trackersArray() {
 		let tks = ExtractTrackers(this.note);
 
-		let res = Object.keys(tks).map(key => {
+		return Object.keys(tks).map(key => {
 			return {
 				tag: tks[key].tracker,
 				value: tks[key].value,
 			};
 		});
-		if (isArray(res)) {
-			return res;
-		} else {
-			return [res];
-		}
 	}
 
 	public(tag) {
@@ -117,3 +106,49 @@ export default class Record {
 		};
 	}
 }
+
+// encrypted: boolean; // if the note should be encrypted
+// encryptionKey; // the encryption key (passed via starter)
+// start: Date; // when the log started
+// end: Date; // when the log ended
+// startDate; // from a calendar event
+// endDate; // from a calendar event
+// notes; // the note
+// description; // for Android
+// score: number; // overall score (from the stars )
+// title; // title of the log
+// isNomie: boolean; // is this a nomie event?
+// trackers: any; // array of trackers
+// location;
+// geo: any;
+// calendarId;
+// id: any; // id of the event
+// default: any; // default
+
+// Record.createStatement = `
+//   CREATE TABLE IF NOT EXISTS events (
+//     id INT PRIMARY KEY NOT NULL,
+//     notes TEXT NOT NULL,
+//     start INT,
+//     end INT,
+//     score INT,
+//     location CHAR(50),
+//     lat INT,
+//     lng INT
+//   )
+// `;
+
+// Record.schema = {
+//   name: "Record",
+//   primaryKey: "_id",
+//   properties: {
+//     _id: { type: "string" },
+//     notes: { type: "string" },
+//     end: { type: "int" },
+//     start: { type: "int" },
+//     geo: { type: "float[]", optional: true },
+//     location: { type: "string", optional: true },
+//     score: { type: "int", optional: true },
+//     tags: { type: "string[]", options: true }
+//   }
+// };

@@ -1,4 +1,3 @@
-// TODO: Comment this code mad man
 export default {
 	padTime(t) {
 		return (t + '').length === 1 ? (t + '').padStart(2, '0') : t;
@@ -14,8 +13,10 @@ export default {
 			hours = this.padTime(Math.floor(parseInt(minutes) / 60).toString());
 			minutes = this.padTime((parseInt(minutes) - parseInt(hours) * 60).toString());
 		}
+
 		seconds = this.padTime(Math.floor(parseInt(seconds) % 60).toString());
 		minutes = this.padTime(minutes);
+
 		if (hours !== '') {
 			hours = parseInt(hours);
 			return `${hours}:${minutes}:${seconds}`;
