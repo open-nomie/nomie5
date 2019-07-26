@@ -16,16 +16,10 @@ export default class StatsProcessor {
 		this.tracker = new Tracker(tracker);
 		this.valueMap = {}; // holder of days and array of values
 		// Convert to Logs if not already
-		this.load();
+		this.initialize();
 	}
 
-	gotoDate(date) {
-		this.date = date;
-		this.prepare();
-		return this;
-	}
-
-	load() {
+	initialize() {
 		//('Load()');
 		this.rows = this.rows
 			.map(row => {
@@ -44,6 +38,12 @@ export default class StatsProcessor {
 		};
 
 		this.prepare();
+	}
+
+	gotoDate(date) {
+		this.date = date;
+		this.prepare();
+		return this;
 	}
 
 	prepare() {
@@ -121,6 +121,9 @@ export default class StatsProcessor {
 	getValueMap(rows) {
 		let valueMap = {};
 		rows.forEach(row => {
+			if (!row.trackers) {
+				row.expand();
+			}
 			let dayKey = dayjs(row.end).format('YYYY-MM-DD');
 			valueMap[dayKey] = valueMap[dayKey] || [];
 			if (row.trackers[this.tracker.tag]) {

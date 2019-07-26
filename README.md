@@ -66,6 +66,24 @@ Blockstack.org is a "Decentralized computing network and app ecosystem" - basica
 /v01/data/trackers.json - trackers
 /v01/data/boards.json - users board configuration
 
+# Current Tracker Types
+
+**tick** Single Tap
+
+Just tap the button to automatically track, no value input.
+
+**value** Numeric
+
+Manually enter a value. Great for tracking caffiene, medicines
+
+**range** Range
+
+Great for any type of range selection - for example Mood.
+
+**timer** Timer
+
+Tap to start, tap to stop. The timer is great for tracking durations.
+
 # Coding Rules
 
 -   **Keep it readable** - focus on writing code that new people can easily understand and follow. If the code can't do it, then do it with comments. There's no such thing as too much commenting.

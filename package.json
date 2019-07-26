@@ -1,6 +1,6 @@
 {
   "name": "open-nomie",
-  "version": "4.0.72",
+  "version": "4.0.73",
   "homepage": "https://nomie.app",
   "bugs": {
     "url": "https://github.com/open-nomie/nomie/issues",
@@ -21,7 +21,8 @@
     "patch_version": "node build-tools/patch-version.js",
     "test": "jest src/**/*.spec.js",
     "todo": "node build-tools/get-todo.js",
-    "patch": "npm run patch_version && npm run todo"
+    "patch": "npm run patch_version && npm run todo",
+    "cypress": "cypress open"
   },
   "devDependencies": {
     "@jukben/emoji-search": "^2.0.1",
@@ -29,6 +30,7 @@
     "@sveltejs/gestures": "0.0.1",
     "bootstrap": "^4.3.1",
     "concurrently": "^4.1.1",
+    "cypress": "^3.4.0",
     "emoji-search": "^1.0.0",
     "find-in-files": "^0.5.0",
     "git-release-notes": "^4.0.1",

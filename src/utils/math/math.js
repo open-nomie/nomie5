@@ -73,8 +73,10 @@ export default {
 	},
 	//https://gist.github.com/IceCreamYou/6ffa1b18c4c8f6aeaad2
 	percentile(arr) {
-		return arr.map((d, i) => {
-			return ((100 * d) / arr.reduce((a, b) => a + b, 0)) | 0;
+		let min = this.min(arr, true) || 0;
+		let max = this.max(arr);
+		return arr.map((value, i) => {
+			return this.percentage(max, value);
 		});
 	},
 	trustfulNumber(number, def) {
