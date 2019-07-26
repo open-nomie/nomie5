@@ -66,6 +66,24 @@ Blockstack.org is a "Decentralized computing network and app ecosystem" - basica
 /v01/data/trackers.json - trackers
 /v01/data/boards.json - users board configuration
 
+# Current Tracker Types
+
+**tick** Single Tap
+
+Just tap the button to automatically track, no value input.
+
+**value** Numeric
+
+Manually enter a value. Great for tracking caffiene, medicines
+
+**range** Range
+
+Great for any type of range selection - for example Mood.
+
+**timer** Timer
+
+Tap to start, tap to stop. The timer is great for tracking durations.
+
 # Coding Rules
 
 -   **Keep it readable** - focus on writing code that new people can easily understand and follow. If the code can't do it, then do it with comments. There's no such thing as too much commenting.
@@ -73,3 +91,13 @@ Blockstack.org is a "Decentralized computing network and app ecosystem" - basica
 -   **Keep it flexible** - think in components. If you're doing something more than once, it most likely should be a component.
 -   **Keep cleaning, organizing and testing** - this project didn't start very clean, or ready for unit testing, this should be an on going objective.
 -   **Use what's there** - Twitter bootstrap ([and all it's classes](https://getbootstrap.com/)) are available, reuse what already exists before writing new - especially css.
+
+## MIT License
+
+Copyright 2019 Happy Data, LLC <support@happydata.org>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
