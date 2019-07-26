@@ -112,13 +112,14 @@
     max-width: 260px;
     margin: 20px auto;
     .row {
-      width: 260px;
+      width: 280px;
     }
   }
   div.button {
-    width: 60px;
-    height: 60px;
-    border-radius: 30px;
+    touch-action: manipulation;
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
     border: none;
     color: #fff;
     font-size: 26px;

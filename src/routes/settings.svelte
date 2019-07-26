@@ -10,6 +10,7 @@
 
   // Containers
   import StorageManager from "../containers/storage/storage.svelte";
+  import ImporterModal from "../containers/importer/importer.svelte";
 
   //Modules
   import Exporter from "../modules/export/export";
@@ -40,6 +41,7 @@
   let trackers = null;
   let user = null;
   let fileInput;
+  let showImporter = false;
 
   let methods = {
     sign_out() {
@@ -56,17 +58,30 @@
       navigate("/faq");
     },
     export() {
-      Export.onChange(change => {
-        console.log("change", change);
-      });
-      Export.start().then(() => {
-        console.log("Done with export");
+      Interact.confirm(
+        `Continue?`,
+        `This process might take a couple minutes. 
+        If you have a lot of data, it will seem like it gets hung up. 
+        Have patience.`
+      ).then(res => {
+        if (res === true) {
+          Export.onChange(change => {
+            Interact.toast(`Export: ${change}`, true);
+          });
+          Export.start().then(() => {
+            Interact.toast("Export Done!");
+          });
+        }
       });
     },
     lockToggle() {
       if ($UserStore.meta.lock === true) {
         if (($UserStore.meta.pin || "").length == 0) {
-          Interact.prompt("Enter 1 to 6 digit pin", { value: "" }).then(pin => {
+          // TODO: figure out how to handle a cancel in the interact prompt
+          Interact.prompt("Enter 1 to 6 digit pin", {
+            value: "",
+            valueType: "number"
+          }).then(pin => {
             if (!pin) {
               $UserStore.meta.lock = false;
               $UserStore.meta.pin = null;
@@ -83,40 +98,6 @@
         $UserStore.meta.pin = null;
         UserStore.saveMeta();
       }
-    },
-    onImportFile(event) {
-      let reader = new FileReader();
-      let file = event.target.files[0];
-      reader.onload = theFile => {
-        let payload = JSON.parse(theFile.target.result);
-
-        Interact.confirm(
-          "Import this data?",
-          "Warning: Importing can cause issues with existing data.",
-          "Import",
-          "Cancel"
-        ).then(res => {
-          if (res) {
-            Interact.alert(
-              "Please Wait...",
-              "This page will refresh when the import is complete.",
-              "Loading..."
-            );
-            LedgerStore.import_3(payload).then(() => {
-              console.log("Events Imported... Now trackers");
-              let newTrackers = { ...trackers, ...payload.trackers };
-              TrackerStore.save(newTrackers).then(() => {
-                console.log("Trackers Saved!! importing Boards");
-                BoardStore.save(payload.boards).then(() => {
-                  console.log("Boards Saved!", payload.boards);
-                  window.location.href = "/";
-                });
-              });
-            });
-          }
-        });
-      };
-      reader.readAsText(file);
     }
   };
 
@@ -189,14 +170,14 @@
 
       <div class="n-pop my-3">
         <NItem title="Data" borderBottom className="n-item-divider" />
-        <NItem title="Import Nomie 3 Backup">
+        <NItem title="Import Nomie Backup">
           <button
             class="btn btn-clear text-primary"
             slot="right"
             on:click={() => {
-              fileInput.click();
+              showImporter = true;
             }}>
-            Select...
+            Import
           </button>
           <input
             slot="right"
@@ -205,12 +186,12 @@
             bind:this={fileInput}
             on:change={methods.onImportFile} />
         </NItem>
-        <NItem title="Export as JSON">
+        <NItem title="Export Data">
           <button
             class="btn-clear btn text-primary"
             on:click={methods.export}
             slot="right">
-            Save...
+            Export
           </button>
         </NItem>
       </div>
@@ -264,7 +245,7 @@
             {config.support_contact}
           </a>
         </NItem>
-        <NItem class="compact item-divider" />
+        <NItem className="compact item-divider" />
         <NItem title="Copyright 2019 All Rights Reserved.">
           <NText tag="div" size="sm">
             Nomie, and the Elephant are trademarks of Happy Data, LLC.
@@ -275,4 +256,8 @@
 
     </div>
   </div>
+{/if}
+
+{#if showImporter}
+  <ImporterModal on:dismiss={() => (showImporter = false)} />
 {/if}

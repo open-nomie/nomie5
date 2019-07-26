@@ -2,6 +2,10 @@
   // Svelte
   import { createEventDispatcher } from "svelte";
 
+  // Modules
+  import NomieLog from "../../modules/nomie-log/nomie-log";
+  import Tracker from "../../modules/tracker/tracker";
+
   // components
   import NItem from "../list-item/list-item.svelte";
   import NText from "../text/text.svelte";
@@ -18,25 +22,33 @@
   export let trackers = {};
   export let className = "";
   export let focus = false;
-
+  export let fullDate = false;
   // consts
   const dispatch = createEventDispatcher();
+
+  let displayLog;
+
+  $: if (log) {
+    displayLog = new NomieLog(log);
+  }
 </script>
 
-{#if log}
+{#if displayLog}
   <NItem className="{className} my-3 mx-2 border pb-0 n-item-log">
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row my-2 pr-3 time-row">
-      <NText size="md" bold>{dayjs(log.end).format('h:mm a')}</NText>
+      <NText size="md" bold>
+        {dayjs(displayLog.end).format(fullDate ? 'ddd MMM D YYYY h:mm a' : 'h:mm a')}
+      </NText>
 
       <!-- If they have location-->
-      {#if log.lat}
+      {#if displayLog.lat}
         <button
           on:click={event => {
             dispatch('locationClick', {
-              location: log.location,
-              lat: log.lat,
-              lng: log.lng
+              location: displayLog.location,
+              lat: displayLog.lat,
+              lng: displayLog.lng
             });
             event.stopPropagation();
           }}
@@ -48,7 +60,7 @@
       <!-- Janky - fix this -->
       <button
         on:click={event => {
-          dispatch('moreClick', log);
+          dispatch('moreClick', displayLog);
         }}
         class="btn btn-sm btn-clear pl-2 pr-2 "
         style="margin-right:-20px; margin-top:-6px; font-size:32px; height:30px;
@@ -61,19 +73,19 @@
     <!-- Process the Note Content with the Textualizer 
     This really isn't special right now -->
     <NNoteTextualizer
-      note={log.note}
+      note={displayLog.note}
       {trackers}
-      className={log.trackersArray().length ? '' : 'pb-2'} />
+      className={displayLog.trackersArray().length ? '' : 'pb-2'} />
 
     <div class="trackers-list">
       <!-- Loop over the trackers within this log -->
-      {#each log.trackersArray().filter(trk => {
+      {#each displayLog.trackersArray().filter(trk => {
         if (focus) {
           return trk.tag == focus;
         } else {
           return true;
         }
-      }) as tracker (`${tracker.tag}-${log._id}`)}
+      }) as tracker (`${tracker.tag}-${displayLog._id}`)}
         <!-- Tracker List Item  -->
         <NItem
           borderBottom

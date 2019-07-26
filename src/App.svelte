@@ -65,6 +65,19 @@
     false
   );
 
+  //Setup an an offline notice
+  window.addEventListener("load", () => {
+    let onNetworkChange = event => {
+      if (navigator.onLine) {
+        document.body.classList.remove("offline");
+      } else {
+        document.body.classList.add("offline");
+      }
+    };
+    window.addEventListener("online", onNetworkChange);
+    window.addEventListener("offline", onNetworkChange);
+  });
+
   // Initalize the User Store
   UserStore.initialize();
   let ready = false;

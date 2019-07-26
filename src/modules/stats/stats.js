@@ -180,10 +180,10 @@ export default class StatsProcessor {
 		let valueArray = Object.keys(valueMap)
 			.map(dateKey => {
 				let value;
-				if (this.tracker.math === 'mean') {
-					value = math.average(valueMap[dateKey]);
-				} else {
+				if (this.tracker.math === 'sum') {
 					value = math.sum(valueMap[dateKey]);
+				} else {
+					value = math.average(valueMap[dateKey]);
 				}
 				return {
 					dateKey,

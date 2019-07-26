@@ -4,7 +4,9 @@ import regexs from '../../utils/regex';
 export default class Record {
 	constructor(starter) {
 		starter = starter || {};
-		this._id = starter._id || md5(new Date().getTime() + Math.random());
+		// make a simple id - collision unlikely as they're stored in seperate books (by year);
+		// TODO see why nanoid doesn't work with svelte
+		this._id = starter._id || md5(Math.random() + new Date().getTime()).substr(0, 10);
 		this.note = (starter.note || starter.notes || '').trim();
 		this.end = starter.end || new Date().getTime();
 		this.start = starter.start || new Date().getTime();
@@ -14,10 +16,10 @@ export default class Record {
 		this.location = starter.location || '';
 		this.modified = this.modified || false;
 
-		if (!starter.id) {
+		if (!starter._id) {
 			this._dirty = true;
 		} else {
-			this._dirty = undefined;
+			delete this._dirty;
 		}
 	}
 

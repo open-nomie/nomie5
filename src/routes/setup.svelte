@@ -176,7 +176,7 @@
   class="page page-setup p-2 d-flex flex-column h-100 justify-content-center
   align-items-center">
 
-  <img src="/images/nomie-white-type.png" class="logo" />
+  <img src="/images/nomie-white-type.png" alt="Nomie Logo" class="logo" />
 
   <!-- preload images -->
   <div class="" style="display:none;">

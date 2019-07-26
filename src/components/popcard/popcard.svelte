@@ -10,18 +10,19 @@
     border-radius: 12px;
     color: var(--color-inverse);
     min-height: 70px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border: solid 1px var(--color-solid-2);
+    box-shadow: 0px 4px 13px -6px rgba(0, 0, 0, 0.09);
+    border: solid 1px var(--color-faded-1);
     position: relative;
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
+    transition: all 0.2s ease-in-out;
     .point {
       $size: 20px;
       $half: $size * 0.5;
-      border-right: solid 1px var(--color-solid-2);
-      border-bottom: solid 1px var(--color-solid-2);
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      border-right: solid 1px var(--color-faded-1);
+      border-bottom: solid 1px var(--color-faded-1);
+      box-shadow: 0px 4px 13px -6px rgba(0, 0, 0, 0.09);
       transform: rotate(45deg);
       background-color: var(--color-solid);
       height: $size;

@@ -7099,6 +7099,29 @@ body {
   --color-faded-3: rgba(0, 0, 0, 0.4);
   --color-full-screen: rgba(0, 0, 0, 0.7); }
 
+body .main-content:before {
+  bottom: -50px;
+  left: 0;
+  right: 0;
+  content: '';
+  transition: all 0.2s ease-in-out;
+  position: fixed;
+  background-color: transparent; }
+
+body.offline .main-content:before {
+  transition: all 0.2s ease-in-out;
+  content: 'No internet connection';
+  position: fixed;
+  bottom: 50px !important;
+  left: 0;
+  right: 0;
+  background-color: var(--color-red);
+  color: #fff;
+  text-align: center;
+  font-size: 9px;
+  padding: 2px 10px;
+  z-index: 2000; }
+
 body.dark {
   --color-darkest: #000;
   --color-bg: #1d1d1d;
@@ -7288,6 +7311,9 @@ button:focus {
 .btn-square {
   border-radius: 0 !important; }
 
+.bg-faded {
+  background-color: var(--color-faded) !important; }
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -7369,7 +7395,7 @@ button:focus {
 
 .n-title, .n-item-divider .main,
 .n-item-divider .n-text {
-  font-size: 1.4rem !important;
+  font-size: 1.2rem !important;
   font-weight: 800 !important;
   color: var(--color-inverse);
   line-height: 120%;
@@ -7399,7 +7425,7 @@ button:focus {
     background-color: var(--color-faded-2); }
 
 .text-primary-bright {
-  color: #319ed7; }
+  color: #319ed7 !important; }
 
 .n-row {
   display: flex;
@@ -7452,7 +7478,7 @@ nav {
 
 .main-content {
   z-index: 0;
-  padding-bottom: 50px;
+  margin-bottom: 50px;
   flex-grow: 1;
   flex-shrink: 1;
   min-height: calc(100vh - 50px);
@@ -7463,11 +7489,20 @@ nav {
 .clickable,
 [clickable] {
   position: relative;
-  cursor: pointer; }
+  cursor: pointer;
+  touch-action: manipulation; }
 
 .clickable:hover,
 .clickable:focus {
   background-color: rgba(49, 158, 215, 0.09); }
+
+.btn,
+a,
+input,
+header,
+footer,
+button {
+  touch-action: manipulation; }
 
 .filler {
   flex-grow: 1;
