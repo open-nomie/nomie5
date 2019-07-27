@@ -34,6 +34,9 @@
   let ready = false;
   let path = window.location.href.split("/");
   let id = path[path.length - 1];
+  let isMobile =
+    typeof window.orientation !== "undefined" ||
+    navigator.userAgent.indexOf("IEMobile") !== -1;
 
   // $: if ((data.board || {}).hasOwnProperty("trackers")) {
   //   data.trackers = data.board.trackers.map(tag => {
@@ -67,11 +70,13 @@
     },
     deleteBoard() {
       Interact.confirm(
-        "Delete fro" + $BoardStore.activeBoard.label + " completely?",
+        "Delete board " + $BoardStore.activeBoard.label + " completely?",
         "You can recreate it later, but it's not super easy."
       ).then(res => {
         if (res === true) {
-          BoardStore.deleteBoard($BoardStore.activeBoard.id);
+          BoardStore.deleteBoard($BoardStore.activeBoard.id).then(() => {
+            window.location.href = "/";
+          });
         }
       });
     },
@@ -184,19 +189,6 @@
       bottom: 0;
     }
     margin-bottom: 12px;
-
-    &:nth-child(2n) {
-      animation-name: keyframes1;
-      animation-iteration-count: infinite;
-      transform-origin: 50% 10%;
-    }
-
-    &:nth-child(2n-1) {
-      animation-name: keyframes2;
-      animation-iteration-count: infinite;
-      animation-direction: alternate;
-      transform-origin: 30% 5%;
-    }
   } // end global
 
   :global(div[draggable] .hovered) {
@@ -208,6 +200,13 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    align-items: flex-start;
+  }
+  .grid-container {
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+    min-height: 75vh;
   }
 
   // Animation from https://www.kirupa.com/html5/creating_the_ios_icon_jiggle_wobble_effect_in_css.htm
@@ -239,7 +238,7 @@
       </NItem>
     </div>
 
-    <div class="container pt-3">
+    <div class="container pt-3 grid-container">
 
       <div
         class="grid"
@@ -269,27 +268,43 @@
           </div>
         {/each}
       </div>
-      <div class="n-row">
-        <div class="filler" />
-        <button
-          class="btn btn mt-4 btn-danger flex-grow"
-          on:click={methods.deleteBoard}>
-          Delete
-        </button>
-        <button
-          class="btn btn mt-4 btn-light mx-3 flex-grow"
-          on:click={() => {
-            window.history.back();
-          }}>
-          Cancel
-        </button>
-        <button
-          class="btn btn mt-4 btn-success flex-grow"
-          on:click={methods.save}>
-          Save
-        </button>
-        <div class="filler" />
+      <div class="filler" />
+      {#if isMobile}
+        <div class="container">
+          <div class="n-row pt-3 justify-content-center">
+            <NText class="xs" className="text-faded text-center">
+              You can drag and drop trackers on mobile, you'll just not see the
+              dragging action.
+            </NText>
+          </div>
+        </div>
+      {/if}
+
+      <div class="container">
+        <div class="n-row">
+          <div class="filler" />
+          <button
+            class="btn btn mt-4 btn-danger flex-grow"
+            on:click={methods.deleteBoard}>
+            Delete
+          </button>
+          <button
+            class="btn btn mt-4 btn-light mx-3 flex-grow"
+            on:click={() => {
+              window.history.back();
+            }}>
+            Cancel
+          </button>
+          <button
+            class="btn btn mt-4 btn-success flex-grow"
+            on:click={methods.save}>
+            Save
+          </button>
+          <div class="filler" />
+        </div>
       </div>
+      <!-- /.container -->
+
     </div>
   </NPage>
 {:else}

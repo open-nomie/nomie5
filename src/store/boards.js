@@ -66,6 +66,20 @@ const boardsInit = () => {
 			});
 			return d;
 		},
+		deleteBoard(boardId) {
+			let boards;
+			update(bs => {
+				bs.boards = bs.boards.filter(board => {
+					return board.id !== boardId;
+				});
+				boards = bs.boards;
+				// TODO - this save method name is not right
+				return bs;
+			});
+			return methods.save(boards).then(() => {
+				return methods.setActive('all');
+			});
+		},
 		removeTrackerFromBoard(tracker, boardId) {
 			console.log(`Removing tracker ${tracker.tag} from ${boardId}`);
 			let res;
