@@ -160,6 +160,46 @@ body.dark {
 	padding-right: 1rem;
 }
 
+.btn-content {
+	flex-direction: column;
+	position: relative;
+	padding: 12px 12px 16px;
+	margin: 10px;
+	border: solid 1px var(--color-solid);
+	color: var(--color-solid);
+	transition: all 0.2s ease-in-out;
+	&:hover {
+		color: var(--color-solid);
+		transform: scale(1.12);
+	}
+	.n-text.lg {
+		font-weight: bold;
+		font-size: 1rem !important;
+		margin-bottom: 2px;
+	}
+	.n-text.sm {
+		font-weight: 300;
+		opacity: 0.7;
+	}
+	&.active {
+		border: none;
+		background-color: var(--color-primary-bright);
+		color: #fff;
+		&:after {
+			$height: 24px;
+			position: absolute;
+			content: '✓';
+			top: -#{$height * 0.5};
+			left: -#{$height * 0.5};
+			width: $height;
+			height: $height;
+			background-color: var(--color-primary-bright);
+			border-radius: $height * 0.5;
+			box-shadow: 0px 4px 10px rgba($primary, 0.3);
+		}
+	}
+}
+
 .btn-icon {
 	font-size: 33px;
 	padding-left: 10px;

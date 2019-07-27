@@ -14,13 +14,25 @@ context('App', () => {
 			.contains('Next')
 			.click();
 
-		cy.get('.footer-buttons > .btn')
-			.contains('Next')
-			.click();
+		cy.wait(200);
 
 		cy.get('.footer-buttons > .btn')
 			.contains('Next')
 			.click();
+
+		cy.wait(200);
+
+		cy.get('.footer-buttons > .btn')
+			.contains('Next')
+			.click();
+
+		cy.wait(200);
+
+		cy.get('.footer-buttons > .btn')
+			.contains('Next')
+			.click();
+
+		cy.wait(200);
 
 		// cy.get('.footer-buttons > .btn')
 		// 	.contains('Login/Register')

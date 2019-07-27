@@ -27,6 +27,7 @@ const userInit = () => {
 	let listeners = [];
 	// User State
 	let state = {
+		storageType: Storage.local.get('root/storage_type') || 'blockstack',
 		ready: false,
 		signedIn: undefined,
 		profile: {
@@ -72,6 +73,13 @@ const userInit = () => {
 			// set highlevel initialize marker
 
 			// TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
+		},
+		setStorage(type) {
+			update(p => {
+				p.storageType = type === 'local' ? 'local' : 'blockchain';
+				Storage.local.put('root/storage_type', type === 'local' ? 'local' : 'blockchain');
+				return p;
+			});
 		},
 		/**
 		 * Set Profile and Signin

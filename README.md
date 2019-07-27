@@ -92,6 +92,10 @@ Tap to start, tap to stop. The timer is great for tracking durations.
 -   **Keep cleaning, organizing and testing** - this project didn't start very clean, or ready for unit testing, this should be an on going objective.
 -   **Use what's there** - Twitter bootstrap ([and all it's classes](https://getbootstrap.com/)) are available, reuse what already exists before writing new - especially css.
 
+## Trademark License
+
+Nomie and the Blue Elephant are registered Trademarks of Happy Data, LLC. Indianapolis, IN. For a commercial use of the brand or logomark please contact support@happydata.org
+
 ## MIT License
 
 Copyright 2019 Happy Data, LLC <support@happydata.org>
