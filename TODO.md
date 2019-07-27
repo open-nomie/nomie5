@@ -1,6 +1,6 @@
 # TODO
 
-Generated Fri Jul 26 2019 4:58 pm
+Generated Sat Jul 27 2019 12:03 am
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -32,6 +32,8 @@ Generated Fri Jul 26 2019 4:58 pm
    - TODO: Look at making this curved dotted lines - and not just straight ones
 - **src/containers/importer/importer.svelte**
    - Modal will be hidden in settings TODO: make this not hacky -->
+- **src/containers/board/tracker-button.svelte**
+   - TODO: Move this to components/tracker-button
 - **src/containers/board/board.svelte**
    - TODO: fix user store to be a correct store
    - TODO: Look at why this is needed... slop!
