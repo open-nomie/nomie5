@@ -28,12 +28,14 @@
     trackers: null,
     draggingTag: null,
     droppedTag: null,
+    hoverTag: null,
     refreshing: false
   };
 
   let ready = false;
   let path = window.location.href.split("/");
   let id = path[path.length - 1];
+  let showDeletes = true;
   let isMobile =
     typeof window.orientation !== "undefined" ||
     navigator.userAgent.indexOf("IEMobile") !== -1;
@@ -122,37 +124,95 @@
       // console.log("Moved", data.board.trackers);
       data.draggingTag = null;
       data.droppedTag = null;
+    },
+    drag: {
+      start(event, index, isTouch) {
+        isTouch = isTouch === true ? true : false;
+        document.body.classList.add("no-scroll");
+        data.draggingTag = event.target.dataset.id;
+        showDeletes = false;
+        // data.draggingTag = $BoardStore.activeBoard.trackers[item];
+      },
+      touchmove(evt) {
+        data.draggingTag = evt.target.id;
+        evt.target.style.position = "fixed";
+        evt.target.style.top = evt.pageY - 100 + "px";
+        evt.target.style.left = evt.pageX - 100 + "px";
+        let hoverElement = document.elementFromPoint(evt.pageY, evt.pageX);
+        if (hoverElement !== evt.target) {
+          data.hoverTag = hoverElement.id;
+        }
+      },
+      touchend(evt) {
+        evt.target.style.position = "relative";
+        evt.target.style.top = "inherit";
+        evt.target.style.left = "inherit";
+        if (data.draggingTag && data.hoverTag) {
+          methods.moveTag(data.draggingTag, data.hoverTag + "");
+          data.hoverTag = null;
+        } else {
+          data.hoverTag = null;
+        }
+      },
+      over(ev) {
+        if (ev.target.id) {
+          data.hoverTag = ev.target.id;
+        }
+        ev.preventDefault();
+      },
+      leave(ev) {
+        ev.preventDefault();
+      },
+      drop(ev) {
+        data.droppedTag = ev.target.id || data.hoverTag;
+        console.log("Dropped On", data.droppedTag);
+
+        setTimeout(() => {
+          document.body.classList.remove("no-scroll");
+          showDeletes = false;
+        }, 120);
+
+        if (data.draggingTag && data.droppedTag) {
+          data.hoverTag = null;
+          methods.moveTag(data.draggingTag, data.droppedTag);
+        }
+      }
     }
   };
 
   // TODO: Make sorting work
-  export function dragstart(ev, group, item) {
-    data.draggingTag = $BoardStore.activeBoard.trackers[item];
-    console.log("dragging", { ev, item, tag: data.draggingTag });
-  }
-  export function dragover(ev) {
-    ev.target.classList.add("hovered");
-    ev.preventDefault();
-  }
-  export function dragleave(ev) {
-    ev.target.classList.remove("hovered");
-    ev.preventDefault();
-  }
-  export function drop(ev, new_g, i) {
-    data.droppedTag = ev.target.id;
-    ev.target.classList.remove("hovered");
-    console.log("drop", {
-      ev,
-      target: ev.target,
-      dragging: data.draggingTag,
-      dropped: data.droppedTag
-    });
+  // export function dragstart(ev, group, item) {
+  //   document.body.classList.add("no-scroll");
+  //   data.draggingTag = $BoardStore.activeBoard.trackers[item];
+  //   console.log("dragging", { ev, item, tag: data.draggingTag });
+  // }
+  // export function dragover(ev) {
+  //   console.log("over", ev);
+  //   ev.target.classList.add("hovered");
+  //   ev.preventDefault();
+  // }
+  // export function dragleave(ev) {
+  //   ev.target.classList.remove("hovered");
+  //   ev.preventDefault();
+  // }
+  // export function drop(ev, new_g, i) {
+  //   data.droppedTag = ev.target.id;
+  //   ev.target.classList.remove("hovered");
+  //   setTimeout(() => {
+  //     document.body.classList.remove("no-scroll");
+  //   }, 120);
+  //   console.log("drop", {
+  //     ev,
+  //     target: ev.target,
+  //     dragging: data.draggingTag,
+  //     dropped: data.droppedTag
+  //   });
 
-    if (data.draggingTag && data.droppedTag) {
-      methods.moveTag(data.draggingTag, data.droppedTag);
-    }
-    // ev.target.style.backgroundColor = "black";
-  }
+  //   if (data.draggingTag && data.droppedTag) {
+  //     methods.moveTag(data.draggingTag, data.droppedTag);
+  //   }
+  //   // ev.target.style.backgroundColor = "black";
+  // }
 
   UserStore.onReady(() => {
     methods.initialize();
@@ -162,10 +222,14 @@
 <style lang="scss">
   div.tracker-grabber {
     position: relative;
+    padding: 12px;
+    margin: 0px;
     .btn-delete {
       $size: 30px;
       width: $size;
+      max-width: $size;
       height: $size;
+      padding: 0;
       border-radius: $size * 0.5;
       background-color: var(--color-solid);
       box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
@@ -173,40 +237,42 @@
       line-height: $size;
       border: none;
       position: absolute;
-      top: -6px;
-      right: -6px;
+      top: 10px;
+      right: 10px;
       z-index: 100;
+    }
+    transition: all 0.4s ease-in-out;
+    &.hovered {
+      transition: all 0.8s ease-in-out;
+      padding-left: 120px;
     }
   }
 
   :global(div.tracker-grabber .n-tracker-button) {
+    pointer-events: none;
     &:after {
       position: absolute;
+      z-index: 1200;
       content: "";
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
     }
-    margin-bottom: 12px;
   } // end global
-
-  :global(div[draggable] .hovered) {
-    padding-left: 100px;
-  }
 
   .grid {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: flex-start;
   }
   .grid-container {
     display: flex;
     flex-direction: column;
-    align-items: space-between;
-    min-height: 75vh;
+    align-items: space-around;
+    min-height: 50vh;
   }
 
   // Animation from https://www.kirupa.com/html5/creating_the_ios_icon_jiggle_wobble_effect_in_css.htm
@@ -238,29 +304,33 @@
       </NItem>
     </div>
 
-    <div class="container pt-3 grid-container">
+    <div class="container pt-3 px-0 grid-container">
 
       <div
         class="grid"
-        on:drop={event => drop(event, 'list')}
-        on:touchend={event => drop(event, 'list')}
-        on:dragover={dragover}
-        on:dragleave={dragleave}>
+        on:drop={methods.drag.drop}
+        on:touchend={methods.drag.touchend}
+        on:dragover={methods.drag.over}
+        on:dragleave={methods.drag.leave}>
         {#each methods.getTrackers() as tracker, i (tracker.tag)}
           <div
-            class="tracker-grabber"
+            class="tracker-grabber {data.hoverTag == tracker.tag ? 'hovered' : ''}"
+            data-id={tracker.tag}
+            id={tracker.tag}
             draggable={true}
-            on:touchstart={event => dragstart(event, 'list', i)}
-            on:touchmove={event => dragstart(event, 'list', i)}
-            on:dragstart={event => dragstart(event, 'list', i)}>
-            <button
-              class="btn-delete zmdi zmdi-close"
-              on:click={event => {
-                methods.removeTracker(event, tracker);
-              }} />
+            on:touchmove={event => methods.drag.touchmove(event, i)}
+            on:touchend={methods.drag.touchend}
+            on:touchstart={event => methods.drag.start(event, i, 'touch')}
+            on:dragstart={event => methods.drag.start(event, i)}>
+            {#if showDeletes}
+              <button
+                class="btn-delete zmdi zmdi-close"
+                on:click={event => {
+                  methods.removeTracker(event, tracker);
+                }} />
+            {/if}
             <NTrackerButton
               {tracker}
-              id={tracker.tag}
               className={i % 2 ? 'wiggle' : 'wiggle-other'} />
             <!-- <NItem title={tracker.label} borderBottom id={tracker.tag}>
               <span class="text-lg emoji" slot="left">{tracker.emoji}</span>

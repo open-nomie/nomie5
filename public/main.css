@@ -7074,6 +7074,14 @@ body {
   padding: 0;
   font-size: 18px; }
 
+body.no-scroll {
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0; }
+
 body {
   --color-darkest: #fff;
   --color-bg: #f9f9f9;
