@@ -35,6 +35,7 @@
     "find-in-files": "^0.5.0",
     "git-release-notes": "^4.0.1",
     "jest": "^24.8.0",
+    "localforage": "^1.7.3",
     "mini-css-extract-plugin": "^0.7.0",
     "node-sass": "^4.12.0",
     "nomie-uom": "^1.0.2",

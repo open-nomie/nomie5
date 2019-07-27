@@ -1,8 +1,15 @@
+import config from '../../../config/global';
+import localforage from 'localForage';
+
 export default {
 	async get(path) {
 		let content;
 		try {
-			content = await blockstack.getFile(path);
+			if (config.storage_engine === 'blockstack') {
+				content = await blockstack.getFile(path);
+			} else {
+				content = await localforage.getItem(path);
+			}
 			content = JSON.parse(content);
 		} catch (e) {
 			content = null;
@@ -10,7 +17,11 @@ export default {
 		return content ? content : null;
 	},
 	async put(path, content) {
-		return blockstack.putFile(path, JSON.stringify(content));
+		if (config.storage_engine === 'blockstack') {
+			return blockstack.putFile(path, JSON.stringify(content));
+		} else if (config.storage_engine === 'local') {
+			return localforage.setItem(path, JSON.stringify(content));
+		}
 	},
 	local: {
 		get(path) {

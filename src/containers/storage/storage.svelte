@@ -3,6 +3,8 @@
   import { Interact } from "../../store/interact";
   import NItem from "../../components/list-item/list-item.svelte";
 
+  import { UserStore } from "../../store/user";
+
   const state = {
     showFiles: false,
     files: []
@@ -11,15 +13,11 @@
   const methods = {
     initialize() {
       state.files = [];
-      return blockstack
-        .listFiles(file => {
-          methods.addFilesRef(file);
-          return true;
-        })
-        .then(() => {
-          state.files = state.files;
-          return state.files;
-        });
+      console.log("Initialize", UserStore.listFiles);
+      return UserStore.listFiles().then(files => {
+        state.files = files;
+        return state.files;
+      });
     },
     addFilesRef(name) {
       if (state.files.indexOf(name) == -1) {

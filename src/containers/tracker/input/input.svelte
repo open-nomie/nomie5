@@ -156,7 +156,7 @@
         on:click={methods.onSave}
         class="btn btn-primary btn-lg"
         style="width:105px;">
-        {saveLabel} Time
+        {saveLabel}
       </button>
     {/if}
 

@@ -9,6 +9,11 @@
 
   //vendors
   import Spinner from "svelte-spinner";
+
+  // Store
+  import { UserStore } from "../store/user";
+  import config from "../../config/global";
+
   const UserSession = new blockstack.UserSession();
 
   let isMobile =
@@ -43,7 +48,7 @@
     ]
   };
 
-  const slide5 = {
+  const slide5Blockstack = {
     title: `Data Encrypted with Blockstack`,
     img: "/images/screens/blockstack.png",
     message: [
@@ -53,11 +58,34 @@
     ]
   };
 
+  const slide5LocalForage = {
+    title: `Data is only stored locally`,
+    message: [
+      `This version of nomie will only store data locally on this device.`,
+      `What's this mean? No one but you can see your data.`
+    ]
+  };
+
   let slides = [];
   if (isMobile) {
-    slides = [slide1, slide2, slide3, slide4, slide5];
+    slides = [
+      slide1,
+      slide2,
+      slide3,
+      slide4,
+      config.storage_engine == "blockstack"
+        ? slide5Blockstack
+        : slide5LocalForage
+    ];
   } else {
-    slides = [slide1, slide2, slide3, slide5];
+    slides = [
+      slide1,
+      slide2,
+      slide3,
+      config.storage_engine == "blockstack"
+        ? slide5Blockstack
+        : slide5LocalForage
+    ];
   }
 
   const data = {
@@ -70,6 +98,9 @@
   const methods = {
     blockstackLogin() {
       UserSession.redirectToSignIn();
+    },
+    begin() {
+      UserStore.localForageSignin();
     },
     toggleMore() {
       data.showMore = !data.showMore;
@@ -220,9 +251,11 @@
   <div class="filler" />
   {#if data.activeSlide !== data.slides.length - 1}
     <button class="btn btn-white" on:click={methods.next}>Next</button>
-  {:else}
+  {:else if config.storage_engine == 'blockstack'}
     <button class="btn btn-white" on:click={methods.blockstackLogin}>
       Login/Register
     </button>
+  {:else}
+    <button class="btn btn-white" on:click={methods.begin}>Begin</button>
   {/if}
 </div>
