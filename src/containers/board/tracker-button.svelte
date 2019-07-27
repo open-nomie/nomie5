@@ -1,4 +1,6 @@
 <script>
+  // TODO: Move this to components/tracker-button
+
   // svelte
   import { createEventDispatcher, onMount } from "svelte";
 
@@ -14,6 +16,8 @@
   export let tracker = new Tracker();
   export let value = null;
   export let refreshing = false;
+  export let id = undefined;
+  export let className = undefined;
 
   // Define Dispatch
   const dispatch = createEventDispatcher();
@@ -175,7 +179,9 @@
 </style>
 
 <button
-  class="n-tracker-button {data.pressing ? 'pressing' : ''}"
+  {id}
+  class="n-tracker-button {data.pressing ? 'pressing' : ''}
+  {className}"
   on:click={methods.clicked}
   on:touchstart={methods.mousedown}
   on:mousedown={methods.mousedown}

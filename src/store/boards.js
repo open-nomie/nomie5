@@ -126,6 +126,14 @@ const boardsInit = () => {
 		activeLabel() {
 			return (methods.boardById(base.active) || {}).label;
 		},
+		sortActiveTrackers(tagsArray) {
+			update(bs => {
+				let board = methods.boardById(bs.activeBoard.id);
+				board.trackers = tagsArray;
+				methods.save(bs.boards);
+				return bs;
+			});
+		},
 		addTrackersToBoard(trackerArray, boardId) {
 			update(bs => {
 				// Find the board by id.

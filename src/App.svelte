@@ -23,8 +23,6 @@
   import BoardEditorRoute from "./routes/board-editor.svelte";
   import FAQRoute from "./routes/faq.svelte";
   import PluginsRoute from "./routes/plugins.svelte";
-  // Testing Routes
-  import TestStatsRoute from "./routes/test/stats.svelte";
 
   // Stores
   import { UserStore } from "./store/user"; //  user auth and state
@@ -106,7 +104,7 @@
       <Route path="/stats/:id" component={StatsRoute} />
       <Route path="/board/:id" component={BoardEditorRoute} />
       <Route path="/faq" component={FAQRoute} />
-      <Route path="/test/stats" component={TestStatsRoute} />
+      <!-- Plugin Coming Soon -->
       <Route path="/plugins" component={PluginsRoute} />
       <Route path="/plugins/settings/:pluginId" component={PluginsRoute} />
       <Route path="/plugins/:pluginId" component={PluginsRoute} />

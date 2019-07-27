@@ -549,3 +549,34 @@ button {
 		padding-top: 100px;
 	}
 }
+
+@keyframes keyframes1 {
+	0% {
+		transform: rotate(-1deg);
+		animation-timing-function: ease-in;
+	}
+	50% {
+		transform: rotate(1.5deg);
+		animation-timing-function: ease-out;
+	}
+}
+
+@keyframes keyframes2 {
+	0% {
+		transform: rotate(1deg);
+		animation-timing-function: ease-in;
+	}
+	50% {
+		transform: rotate(-1.5deg);
+		animation-timing-function: ease-out;
+	}
+}
+
+.wiggle {
+	animation: keyframes2 infinite 1s ease-out;
+	transform-origin: 50% 10%;
+}
+.wiggle-other {
+	animation: keyframes1 infinite 1s ease-in;
+	transform-origin: 30% 5%;
+}

@@ -3,7 +3,7 @@ import Tracker from '../../../src/modules/tracker/tracker';
 describe('modules/tracker', function() {
 	let tracker;
 	let stub = {
-		tag: 'tag',
+		tag: 'taggy_tag',
 		label: 'Tester',
 		uom: 'mile',
 		emoji: '🥪',
@@ -29,6 +29,11 @@ describe('modules/tracker', function() {
 	it('tracker.displayValue', () => {
 		tracker = new Tracker(stub);
 		expect(tracker.displayValue(100)).to.equal('100mi');
+		// expect(math.sum([1, 2])).to.equal(3);
+	});
+	it('tracker.displayTag', () => {
+		tracker = new Tracker(stub);
+		expect(tracker.displayTag()).to.equal('Taggy Tag');
 		// expect(math.sum([1, 2])).to.equal(3);
 	});
 	it('tracker.toTag', () => {

@@ -86,7 +86,13 @@ export default class TrackerConfig {
 
 	// Make the tag look good if no label is provided
 	displayTag() {
-		this.tag.replace(/_/g, ' ') + '';
+		return this.tag
+			.replace(/_/g, ' ')
+			.split(' ')
+			.map(word => {
+				return word.charAt(0).toUpperCase() + word.slice(1);
+			})
+			.join(' ');
 	}
 
 	toTag(str) {
