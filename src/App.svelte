@@ -22,6 +22,7 @@
   import StatsRoute from "./routes/stats.svelte";
   import BoardEditorRoute from "./routes/board-editor.svelte";
   import FAQRoute from "./routes/faq.svelte";
+  import PluginsRoute from "./routes/plugins.svelte";
   // Testing Routes
   import TestStatsRoute from "./routes/test/stats.svelte";
 
@@ -106,6 +107,9 @@
       <Route path="/board/:id" component={BoardEditorRoute} />
       <Route path="/faq" component={FAQRoute} />
       <Route path="/test/stats" component={TestStatsRoute} />
+      <Route path="/plugins" component={PluginsRoute} />
+      <Route path="/plugins/settings/:pluginId" component={PluginsRoute} />
+      <Route path="/plugins/:pluginId" component={PluginsRoute} />
     </div>
   </Router>
 {:else if $UserStore.signedIn == undefined}
