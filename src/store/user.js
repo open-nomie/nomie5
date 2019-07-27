@@ -8,6 +8,9 @@
 import Logger from '../utils/log/log';
 import { writable } from 'svelte/store';
 
+// vendors
+import localforage from 'localForage';
+
 // Modules
 import Storage from '../modules/storage/storage';
 import locate from '../modules/locate/locate';
@@ -60,9 +63,13 @@ const userInit = () => {
 					// blockstack authkey hanging around.
 					window.location.href = '/';
 				});
-			} else if (UserSession.isUserSignedIn()) {
+			} else if (UserSession.isUserSignedIn() || config.storage_engine === 'local') {
 				// Signed In - let's get the user Ready
-				methods.setProfile(UserSession.loadUserData());
+				if (config.storage_engine === 'local') {
+					methods.setProfile({ username: 'Local' });
+				} else if (config.storage_engine === 'blockstack') {
+					methods.setProfile(UserSession.loadUserData());
+				}
 			} else {
 				update(u => {
 					u.ready = true;
@@ -81,6 +88,11 @@ const userInit = () => {
 				return p;
 			});
 		},
+		localForageSignin() {
+			methods.setProfile({
+				username: 'LocalUser',
+			});
+		},
 		/**
 		 * Set Profile and Signin
 		 */
@@ -89,6 +101,7 @@ const userInit = () => {
 			methods.bootstrap();
 			// Update store with new profile.
 			update(p => {
+				p.ready = true;
 				p.profile = profile;
 				p.signedIn = true;
 				return p;
@@ -216,16 +229,24 @@ const userInit = () => {
 		listFiles() {
 			return new Promise((resolve, reject) => {
 				let files = [];
-				blockstack
-					.listFiles(file => {
-						if (files.indexOf(file) == -1) {
-							files.push(file);
-						}
-						return true;
-					})
-					.then(() => {
+				if (config.storage_engine === 'blockstack') {
+					blockstack
+						.listFiles(file => {
+							if (files.indexOf(file) == -1) {
+								files.push(file);
+							}
+							return true;
+						})
+						.then(() => {
+							resolve(files);
+						});
+				} else if (config.storage_engine === 'local') {
+					console.log('LocalStorage show');
+					localforage.keys().then(keys => {
+						files = keys;
 						resolve(files);
 					});
+				}
 			});
 		},
 	};
