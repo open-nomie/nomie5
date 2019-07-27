@@ -1,5 +1,5 @@
 import config from '../../../config/global';
-import localforage from 'localForage';
+import localforage from 'localforage';
 
 export default {
 	async get(path) {
