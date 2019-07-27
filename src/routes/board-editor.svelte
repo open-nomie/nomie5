@@ -18,6 +18,7 @@
   import { BoardStore } from "../store/boards";
   import { UserStore } from "../store/user";
   import { TrackerStore } from "../store/trackers";
+  import { Interact } from "../store/interact";
 
   const console = new Logger("🎲 Board Editor");
 
@@ -62,6 +63,36 @@
     save() {
       BoardStore.saveBoard($BoardStore.activeBoard).then(() => {
         window.history.back();
+      });
+    },
+    deleteBoard() {
+      Interact.confirm(
+        "Delete fro" + $BoardStore.activeBoard.label + " completely?",
+        "You can recreate it later, but it's not super easy."
+      ).then(res => {
+        if (res === true) {
+          BoardStore.deleteBoard($BoardStore.activeBoard.id);
+        }
+      });
+    },
+    removeTracker(event, tracker) {
+      Interact.confirm(
+        "Delete from " + $BoardStore.activeBoard.label + "?",
+        "You can always add it later"
+      ).then(res => {
+        if (res === true) {
+          event.preventDefault();
+          BoardStore.removeTrackerFromBoard(
+            tracker,
+            $BoardStore.activeBoard.id
+          ).then(() => {
+            data.refreshing = true;
+            setTimeout(() => {
+              data.refreshing = false;
+            }, 100);
+            console.log("Deleted");
+          });
+        } // accepted
       });
     },
     moveTag(fromTag, aboveTag) {
@@ -124,6 +155,25 @@
 </script>
 
 <style lang="scss">
+  div.tracker-grabber {
+    position: relative;
+    .btn-delete {
+      $size: 30px;
+      width: $size;
+      height: $size;
+      border-radius: $size * 0.5;
+      background-color: var(--color-solid);
+      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+      font-size: $size * 0.6;
+      line-height: $size;
+      border: none;
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      z-index: 100;
+    }
+  }
+
   :global(div.tracker-grabber .n-tracker-button) {
     &:after {
       position: absolute;
@@ -168,18 +218,15 @@
 
     <div slot="header" class="n-row">
       <div class="filler" />
-      <h1>Edit {$BoardStore.activeBoard.label}</h1>
+      <h1>Edit Board</h1>
       <div class="filler" />
-      <button class="btn btn-sm btn-clear text-primary" on:click={methods.save}>
-        Save
-      </button>
     </div>
 
     <div slot="sub-header">
       <NItem className="w-100">
         <div class="input-group mb-2">
           <div class="input-group-prepend">
-            <span class="input-group-text">Board Label</span>
+            <span class="input-group-text">Label</span>
           </div>
           <input
             type="text"
@@ -197,6 +244,7 @@
       <div
         class="grid"
         on:drop={event => drop(event, 'list')}
+        on:touchend={event => drop(event, 'list')}
         on:dragover={dragover}
         on:dragleave={dragleave}>
         {#each methods.getTrackers() as tracker, i (tracker.tag)}
@@ -204,7 +252,13 @@
             class="tracker-grabber"
             draggable={true}
             on:touchstart={event => dragstart(event, 'list', i)}
+            on:touchmove={event => dragstart(event, 'list', i)}
             on:dragstart={event => dragstart(event, 'list', i)}>
+            <button
+              class="btn-delete zmdi zmdi-close"
+              on:click={event => {
+                methods.removeTracker(event, tracker);
+              }} />
             <NTrackerButton
               {tracker}
               id={tracker.tag}
@@ -214,6 +268,27 @@
             </NItem> -->
           </div>
         {/each}
+      </div>
+      <div class="n-row">
+        <div class="filler" />
+        <button
+          class="btn btn mt-4 btn-danger flex-grow"
+          on:click={methods.deleteBoard}>
+          Delete
+        </button>
+        <button
+          class="btn btn mt-4 btn-light mx-3 flex-grow"
+          on:click={() => {
+            window.history.back();
+          }}>
+          Cancel
+        </button>
+        <button
+          class="btn btn mt-4 btn-success flex-grow"
+          on:click={methods.save}>
+          Save
+        </button>
+        <div class="filler" />
       </div>
     </div>
   </NPage>

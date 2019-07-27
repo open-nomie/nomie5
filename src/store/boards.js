@@ -52,7 +52,8 @@ const boardsInit = () => {
 			return Storage.put(`${config.data_root}/boards.json`, boards);
 		},
 		labelById(id) {
-			return (base.boards.find(b => b.id === id) || {}).label || 'Unknown';
+			let label = (base.boards.find(b => b.id === id) || {}).label;
+			return label ? label : '';
 		},
 		addTracker(tracker) {
 			return methods.addTrackersToActiveBoard([tracker]);
@@ -66,16 +67,19 @@ const boardsInit = () => {
 			return d;
 		},
 		removeTrackerFromBoard(tracker, boardId) {
-			return update(bs => {
+			console.log(`Removing tracker ${tracker.tag} from ${boardId}`);
+			let res;
+			update(bs => {
 				let board = methods.boardById(boardId);
 				if (board) {
 					board.trackers = board.trackers.filter(tag => {
 						return tag !== tracker.tag;
 					});
-					methods.save(bs.boards);
+					res = methods.save(bs.boards);
 				}
 				return bs;
 			});
+			return res;
 		},
 		addTrackersToActiveBoard(trackerArray) {
 			return methods.addTrackersToBoard(trackerArray, base.active);
