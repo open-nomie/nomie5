@@ -49,6 +49,9 @@ const userInit = () => {
 	const { subscribe, set, update } = writable(state);
 
 	const methods = {
+		getStorageEngine() {
+			return Storage.local.get('root/storage_type') || 'blockstack';
+		},
 		initialize() {
 			// Set Dark or Light Mode
 			if (state.darkMode) {
@@ -63,11 +66,11 @@ const userInit = () => {
 					// blockstack authkey hanging around.
 					window.location.href = '/';
 				});
-			} else if (UserSession.isUserSignedIn() || config.storage_engine === 'local') {
+			} else if (UserSession.isUserSignedIn() || methods.getStorageEngine() === 'local') {
 				// Signed In - let's get the user Ready
-				if (config.storage_engine === 'local') {
+				if (methods.getStorageEngine() === 'local') {
 					methods.setProfile({ username: 'Local' });
-				} else if (config.storage_engine === 'blockstack') {
+				} else if (methods.getStorageEngine() === 'blockstack') {
 					methods.setProfile(UserSession.loadUserData());
 				}
 			} else {
@@ -83,14 +86,9 @@ const userInit = () => {
 		},
 		setStorage(type) {
 			update(p => {
-				p.storageType = type === 'local' ? 'local' : 'blockchain';
-				Storage.local.put('root/storage_type', type === 'local' ? 'local' : 'blockchain');
+				p.storageType = type === 'local' ? 'local' : 'blockstack';
+				Storage.local.put('root/storage_type', type === 'local' ? 'local' : 'blockstack');
 				return p;
-			});
-		},
-		localForageSignin() {
-			methods.setProfile({
-				username: 'LocalUser',
 			});
 		},
 		/**
@@ -229,7 +227,7 @@ const userInit = () => {
 		listFiles() {
 			return new Promise((resolve, reject) => {
 				let files = [];
-				if (config.storage_engine === 'blockstack') {
+				if (Storage.local.get('root/storage_type') === 'blockstack') {
 					blockstack
 						.listFiles(file => {
 							if (files.indexOf(file) == -1) {
@@ -240,7 +238,7 @@ const userInit = () => {
 						.then(() => {
 							resolve(files);
 						});
-				} else if (config.storage_engine === 'local') {
+				} else if (Storage.local.get('root/storage_type') === 'local') {
 					console.log('LocalStorage show');
 					localforage.keys().then(keys => {
 						files = keys;

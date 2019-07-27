@@ -73,7 +73,7 @@
       state.show = !state.show;
     },
     checkTextareaSize() {
-      let height = textarea.scrollHeight;
+      let height = (textarea || {}).scrollHeight || 100;
       textarea.style.height = (height > 300 ? 300 : height) + "px";
     },
     async logSave() {

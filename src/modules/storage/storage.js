@@ -5,7 +5,7 @@ export default {
 	async get(path) {
 		let content;
 		try {
-			if (config.storage_engine === 'blockstack') {
+			if (this.local.get('root/storage_type') === 'blockstack') {
 				content = await blockstack.getFile(path);
 			} else {
 				content = await localforage.getItem(path);
@@ -17,10 +17,17 @@ export default {
 		return content ? content : null;
 	},
 	async put(path, content) {
-		if (config.storage_engine === 'blockstack') {
+		if (this.local.get('root/storage_type') === 'blockstack') {
 			return blockstack.putFile(path, JSON.stringify(content));
-		} else if (config.storage_engine === 'local') {
+		} else if (this.local.get('root/storage_type') === 'local') {
 			return localforage.setItem(path, JSON.stringify(content));
+		}
+	},
+	async delete(path) {
+		if (this.local.get('root/storage_type') === 'blockstack') {
+			return blockstack.deleteFile(path);
+		} else if (this.local.get('root/storage_type') === 'local') {
+			return localforage.removeItem(path);
 		}
 	},
 	local: {

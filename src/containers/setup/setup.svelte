@@ -2,6 +2,7 @@
   // svlete
   import { slide } from "svelte/transition";
   import { quintOut } from "svelte/easing";
+  import { navigate } from "svelte-routing";
 
   // components
   import NToolbar from "../../components/toolbar/toolbar.svelte";
@@ -86,6 +87,14 @@
     },
     next() {
       data.activeSlide = data.activeSlide + 1;
+      if (data.activeSlide === 5 && $UserStore.storageType === "local") {
+        window.location.href = "/";
+      } else if (
+        data.activeSlide === 5 &&
+        $UserStore.storageType === "blockstack"
+      ) {
+        methods.blockstackLogin();
+      }
     },
     back() {
       data.activeSlide = data.activeSlide - 1;

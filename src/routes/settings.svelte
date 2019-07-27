@@ -74,6 +74,30 @@
         }
       });
     },
+    switchToCloud() {
+      let msg = `Data is not automatically migrated to the cloud.
+                You should export your local data first, then import it once the switch is complete. 
+                You can always switch back`;
+      Interact.confirm("Switch to Blockstack - Are you sure?", msg).then(
+        res => {
+          if (res === true) {
+            UserStore.setStorage("blockstack");
+            window.location.href = "/";
+          }
+        }
+      );
+    },
+    switchToLocal() {
+      let msg = `Data is not automatically migrated FROM the cloud.
+                You should export your data first, then import it once the switch is complete. 
+                You can always switch back`;
+      Interact.confirm("Switch to Local - Are you sure?", msg).then(res => {
+        if (res === true) {
+          UserStore.setStorage("local");
+          window.location.href = "/";
+        }
+      });
+    },
     lockToggle() {
       if ($UserStore.meta.lock === true) {
         if (($UserStore.meta.pin || "").length == 0) {
@@ -125,20 +149,23 @@
 {#if $UserStore.meta}
   <div class="page page-settings with-header">
     <div class="container p-0 n-list">
-      <div class="n-pop my-3">
-        <NItem className="n-item-divider" borderBottom title="Account" />
-        <NItem>
-          <div class="title truncate">{$UserStore.profile.username}</div>
-          <div slot="right">
-            <button
-              class="btn btn-small btn-clear text-primary"
-              on:click={methods.sign_out}>
-              Sign Out
-            </button>
-          </div>
-        </NItem>
+      {#if $UserStore.storageType === 'blockstack'}
+        <div class="n-pop my-3">
+          <NItem className="n-item-divider" borderBottom title="Account" />
 
-      </div>
+          <NItem>
+            <div class="title truncate">{$UserStore.profile.username}</div>
+            <div slot="right">
+              <button
+                class="btn btn-small btn-clear text-primary"
+                on:click={methods.sign_out}>
+                Sign Out
+              </button>
+            </div>
+          </NItem>
+
+        </div>
+      {/if}
 
       <div class="n-pop my-3">
         <NItem title="Use Location">
@@ -197,8 +224,31 @@
       </div>
       <div class="n-pop my-3">
         <StorageManager />
-        <NItem title="First Book Created">
+        <NItem>
+          <div class="title truncate">
+            Storage:
+            <strong>
+              {$UserStore.storageType === 'local' ? 'Local' : 'Cloud'}
+            </strong>
+          </div>
           <div slot="right">
+            {#if $UserStore.storageType === 'local'}
+              <button
+                class="btn btn-clear text-primary"
+                on:click={methods.switchToCloud}>
+                Switch to Cloud
+              </button>
+            {:else}
+              <button
+                class="btn btn-clear text-primary"
+                on:click={methods.switchToLocal}>
+                Switch to Local
+              </button>
+            {/if}
+          </div>
+        </NItem>
+        <NItem title="First Book Created">
+          <div slot="right" class="pr-2">
             {#await LedgerStore.firstBook()}
               <span>Loading...</span>
             {:then value}
@@ -213,25 +263,25 @@
       <div class="n-pop my-3">
         <NItem title="About Nomie" borderBottom className="n-item-divider" />
         <NItem title="Learn More">
-          <span slot="right">
+          <span slot="right" class="pr-2">
             <a href="https://nomie.app?s=dap" target="_system">Nomie Website</a>
           </span>
         </NItem>
         <NItem title="Open Source">
-          <span slot="right">
+          <span slot="right" class="pr-2">
             <a href="https://github.com/open-nomie/nomie" target="_system">
               Github
             </a>
           </span>
         </NItem>
         <NItem title="Version">
-          <span slot="right">APP_VERSION</span>
+          <span slot="right" class="pr-2">APP_VERSION</span>
         </NItem>
         <NItem title="Url">
-          <span slot="right">APP_URL</span>
+          <span slot="right" class="pr-2">APP_URL</span>
         </NItem>
         <NItem title="Built">
-          <span slot="right">APP_BUILD_DATE</span>
+          <span slot="right" class="pr-2">APP_BUILD_DATE</span>
         </NItem>
 
       </div>
