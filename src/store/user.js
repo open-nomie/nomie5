@@ -9,7 +9,7 @@ import Logger from '../utils/log/log';
 import { writable } from 'svelte/store';
 
 // vendors
-import localforage from 'localForage';
+import localforage from 'localforage';
 
 // Modules
 import Storage from '../modules/storage/storage';
@@ -96,14 +96,15 @@ const userInit = () => {
 		 */
 		setProfile(profile) {
 			// Fire off the remaining bootstrap items.
-			methods.bootstrap();
-			// Update store with new profile.
-			update(p => {
-				p.ready = true;
-				p.profile = profile;
-				p.signedIn = true;
-				return p;
+			methods.bootstrap().then(() => {
+				update(p => {
+					p.ready = true;
+					p.profile = profile;
+					p.signedIn = true;
+					return p;
+				});
 			});
+			// Update store with new profile.
 		},
 		bootstrap() {
 			let start = new Date().getTime();

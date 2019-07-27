@@ -10,6 +10,8 @@ context('App', () => {
 		cy.hash().should('be.empty');
 	});
 	it('next button', () => {
+		cy.wait(200);
+
 		cy.get('.footer-buttons > .btn')
 			.contains('Next')
 			.click();
