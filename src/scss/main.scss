@@ -444,11 +444,18 @@ button:focus {
 }
 
 .n-title {
+	flex-direction: column;
 	font-size: 1.2rem !important;
 	font-weight: 800 !important;
 	color: var(--color-inverse);
 	line-height: 120%;
 	margin: 0;
+	small {
+		display: block;
+		font-size: 0.75rem;
+		line-height: 0.75rem;
+		opacity: 0.8;
+	}
 }
 
 .n-item-divider {

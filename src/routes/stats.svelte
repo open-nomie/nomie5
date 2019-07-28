@@ -550,6 +550,11 @@
           class="n-title btn btn-light filler text-center"
           on:click={methods.showHistory}>
           {state.date.format('ddd MMM D')}
+          {#if state.date.toDate().toDateString() !== new Date().toDateString()}
+            <small>{state.date.fromNow()}</small>
+          {:else}
+            <small>Today</small>
+          {/if}
         </h1>
         <button class="btn btn-clear" on:click={methods.nextDay}>
           {state.date.add(1, 'day').format('ddd')}

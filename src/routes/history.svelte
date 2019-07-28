@@ -8,6 +8,7 @@
 
   // svelte
   import { navigate } from "svelte-routing";
+  import { onMount } from "svelte";
 
   // components
   import NItem from "../components/list-item/list-item.svelte";
@@ -201,7 +202,7 @@
       methods.search(state.searchTerm, state.date.format("YYYY"));
     },
     search(key, year) {
-      if (key.length > 1) {
+      if ((key || "").length > 1) {
         state.searchResults = [];
         loading = true;
         LedgerStore.search(state.searchTerm, year).then(searchResults => {
@@ -271,6 +272,13 @@
     }
   };
 
+  onMount(() => {
+    console.log("OnMount", { searchLogs, state });
+    if ((state.searchTerm || "").length > 1 || !searchLogs) {
+      methods.refreshSearch();
+    }
+  });
+
   /**
    * // Fire off call to query the datastore
    * This will call the ledger and load up the right book
@@ -288,6 +296,20 @@
   }
   :global(.trackers-list .border-bottom:last-child) {
     border-bottom: none !important;
+  }
+
+  .history-toolbar-container {
+    .btn {
+      outline: none !important;
+    }
+    .btn.active {
+      background-color: var(--color-primary-bright);
+      color: #fff !important;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      border-radius: 20% !important;
+      outline: none !important;
+    }
   }
 
   .search-bar {
@@ -337,58 +359,62 @@
 </style>
 
 <NToolbar pinTop>
-  <div class="d-flex justify-content-stretch align-items-center w-100">
-    {#if state.searchMode}
+  <div class="container history-toolbar-container">
+    <div class="d-flex justify-content-stretch align-items-center w-100">
+      {#if state.searchMode}
+        <button
+          class="btn btn-clear btn-icon flex"
+          on:click={methods.previousSearch}>
+          <i class="zmdi zmdi-chevron-left" />
+        </button>
+      {:else}
+        <button class="btn btn-clear btn-icon flex" on:click={methods.previous}>
+          <i class="zmdi zmdi-chevron-left" />
+        </button>
+      {/if}
+      <div class="filler" />
       <button
-        class="btn btn-clear btn-icon flex"
-        on:click={methods.previousSearch}>
-        <i class="zmdi zmdi-chevron-left" />
+        class="btn btn-clear btn-icon flex {state.searchMode ? 'active text-primary-bright' : ''}"
+        on:click={methods.toggleSearch}>
+        <i class="zmdi zmdi-search" />
       </button>
-    {:else}
-      <button class="btn btn-clear btn-icon flex" on:click={methods.previous}>
-        <i class="zmdi zmdi-chevron-left" />
+      <div class="filler" />
+      {#if state.searchMode}
+        <div class="text-center">
+          <NText tag="div" size="lg" className="n-title" bold>
+            {state.date.format('YYYY')}
+          </NText>
+        </div>
+      {:else}
+        <div
+          class="header-date-control text-center {isToday ? 'today' : 'not-today text-primary-bright'}"
+          on:click={methods.selectDate}>
+          <NText tag="div" size="md" bold>{state.date.format('dddd')}</NText>
+          <NText tag="div" size="sm">{state.date.format('MMM D YYYY')}</NText>
+        </div>
+      {/if}
+      <div class="filler" />
+      <button
+        class="btn btn-clear btn-icon {state.showAllLocations ? 'active text-primary-bright' : ''}"
+        disabled={locations.length === 0}
+        on:click={() => {
+          state.showAllLocations = !state.showAllLocations;
+        }}>
+        <i class="zmdi zmdi-map" />
       </button>
-    {/if}
-    <div class="filler" />
-    <button
-      class="btn btn-clear btn-icon flex {state.searchMode ? 'text-primary-bright' : ''}"
-      on:click={methods.toggleSearch}>
-      <i class="zmdi zmdi-search" />
-    </button>
-    <div class="filler" />
-    {#if state.searchMode}
-      <div class="text-center">
-        <NText tag="div" size="lg" className="n-title" bold>
-          {state.date.format('YYYY')}
-        </NText>
-      </div>
-    {:else}
-      <div
-        class="header-date-control text-center {isToday ? 'today' : 'not-today text-primary-bright'}"
-        on:click={methods.selectDate}>
-        <NText tag="div" size="md" bold>{state.date.format('dddd')}</NText>
-        <NText tag="div" size="sm">{state.date.format('MMM D YYYY')}</NText>
-      </div>
-    {/if}
-    <div class="filler" />
-    <button
-      class="btn btn-clear btn-icon {state.showAllLocations ? 'text-primary-bright' : ''}"
-      disabled={locations.length === 0}
-      on:click={() => {
-        state.showAllLocations = !state.showAllLocations;
-      }}>
-      <i class="zmdi zmdi-map" />
-    </button>
-    <div class="filler" />
-    {#if state.searchMode}
-      <button class="btn btn-clear btn-icon flex" on:click={methods.nextSearch}>
-        <i class="zmdi zmdi-chevron-right " />
-      </button>
-    {:else}
-      <button class="btn btn-clear btn-icon flex" on:click={methods.next}>
-        <i class="zmdi zmdi-chevron-right" />
-      </button>
-    {/if}
+      <div class="filler" />
+      {#if state.searchMode}
+        <button
+          class="btn btn-clear btn-icon flex"
+          on:click={methods.nextSearch}>
+          <i class="zmdi zmdi-chevron-right " />
+        </button>
+      {:else}
+        <button class="btn btn-clear btn-icon flex" on:click={methods.next}>
+          <i class="zmdi zmdi-chevron-right" />
+        </button>
+      {/if}
+    </div>
   </div>
   <!-- end toolbar div wrapper-->
 </NToolbar>

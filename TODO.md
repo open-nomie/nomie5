@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Jul 27 2019 9:50 pm
+Generated Sat Jul 27 2019 11:19 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -25,6 +25,7 @@ Generated Sat Jul 27 2019 9:50 pm
    - TODO: Search Day Header isn't working reliably... Pulling it for now.
 - **src/routes/board-editor.svelte**
    - TODO: Make sorting work
+   - TODO: Fix Sorting on MObile -->
 - **src/modules/stats/stats.js**
    - TODO: Implement IgnoreZeros
 - **src/containers/tracker/input/keypad.svelte**

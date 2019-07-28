@@ -7439,11 +7439,17 @@ button:focus {
 
 .n-title, .n-item-divider .main,
 .n-item-divider .n-text {
+  flex-direction: column;
   font-size: 1.2rem !important;
   font-weight: 800 !important;
   color: var(--color-inverse);
   line-height: 120%;
   margin: 0; }
+  .n-title small, .n-item-divider .main small, .n-item-divider .n-text small {
+    display: block;
+    font-size: 0.75rem;
+    line-height: 0.75rem;
+    opacity: 0.8; }
 
 .n-item-divider {
   min-height: 60px !important;

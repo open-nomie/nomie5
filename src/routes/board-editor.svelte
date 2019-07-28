@@ -430,8 +430,8 @@
         <div class="container">
           <div class="n-row pt-3 justify-content-center">
             <NText class="xs" className="text-faded text-center">
-              You can drag and drop trackers on mobile, you'll just not see the
-              dragging action.
+              <!-- TODO: Fix Sorting on MObile -->
+              Sorting on mobile is currently jacked.
             </NText>
           </div>
         </div>
