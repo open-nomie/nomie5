@@ -53,7 +53,6 @@ const userInit = () => {
 			return Storage.local.get('root/storage_type') || 'blockstack';
 		},
 		initialize() {
-			console.log('Initialize');
 			// Set Dark or Light Mode
 			if (state.darkMode) {
 				document.body.classList.add('dark');
@@ -96,7 +95,6 @@ const userInit = () => {
 		 * Set Profile and Signin
 		 */
 		setProfile(profile) {
-			console.log('setProfile', profile);
 			// Fire off the remaining bootstrap items.
 			methods.bootstrap().then(() => {
 				update(p => {
@@ -109,16 +107,12 @@ const userInit = () => {
 			// Update store with new profile.
 		},
 		bootstrap() {
-			console.log('bootstrap()');
-			let start = new Date().getTime();
 			// First lets get the TrackerStore loaded
 			let promises = [];
 			promises.push(methods.loadMeta());
 			promises.push(methods.loadTrackersAndBoards());
-			console.log('bootstrap promise', promises);
 			return Promise.all(promises)
 				.then(() => {
-					console.log('bootstrap finished');
 					return methods.fireReady(state);
 				})
 				.catch(e => {
@@ -126,9 +120,7 @@ const userInit = () => {
 				});
 		},
 		loadTrackersAndBoards() {
-			console.log('loadTrackersAndBoards');
 			return TrackerStore.initialize().then(trackers => {
-				console.log('TrackerStore initialized', trackers);
 				// Now lets load the BoardStore and pass these trackers
 				return BoardStore.initialize(trackers).then(() => {
 					// Now let's fire off that we're ready
@@ -253,7 +245,6 @@ const userInit = () => {
 							resolve(files);
 						});
 				} else if (Storage.local.get('root/storage_type') === 'local') {
-					console.log('LocalStorage show');
 					localforage.keys().then(keys => {
 						files = keys;
 						resolve(files);

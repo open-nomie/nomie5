@@ -17,7 +17,6 @@ export default {
 		let content;
 		try {
 			if (this.storageType() === 'blockstack') {
-				console.log('blockstack get');
 				content = await blockstack.getFile(path);
 			} else {
 				content = await localforage.getItem(path);

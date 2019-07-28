@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Jul 27 2019 4:51 pm
+Generated Sat Jul 27 2019 9:40 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -9,6 +9,7 @@ Generated Sat Jul 27 2019 4:51 pm
    - TODO: this doesn't seem to be trigger a change in History.svetle
    - TODO: Make this use listBooks() array to only look for books that exist
 - **src/store/boards.js**
+   - TODO: figure out why duplicates happen on board saving
    - TODO: tried to make this a spread - but I keep breaking it.
 - **src/scss/main.scss**
    - TODO: Look at making prefers-color-scheme work properly - when enabled, only buttons change

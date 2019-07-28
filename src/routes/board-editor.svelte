@@ -29,7 +29,10 @@
     draggingTag: null,
     droppedTag: null,
     hoverTag: null,
-    refreshing: false
+    refreshing: false,
+    notice: "Notice",
+    lastDraggingTag: null,
+    draggingTracker: null
   };
 
   let ready = false;
@@ -52,6 +55,12 @@
     data.updatedLabel = $BoardStore.activeBoard.label;
   }
 
+  $: if (data.draggingTag && data.draggingTag !== data.lastDraggingTag) {
+    data.lastDraggingTag = data.draggingTag;
+    data.draggingTracker =
+      $TrackerStore[data.draggingTag] || new Tracker({ tag: data.draggingTag });
+  }
+
   const methods = {
     refresh() {
       data.refreshing = true;
@@ -66,6 +75,7 @@
       });
     },
     save() {
+      $BoardStore.activeBoard.label = data.updatedLabel;
       BoardStore.saveBoard($BoardStore.activeBoard).then(() => {
         window.history.back();
       });
@@ -134,25 +144,58 @@
         // data.draggingTag = $BoardStore.activeBoard.trackers[item];
       },
       touchmove(evt) {
+        // let ball = document.getElementById("ball");
+
+        // THIS IS HACKY HAS IT GETS
+
+        // Let's move the target with us
         data.draggingTag = evt.target.id;
-        evt.target.style.position = "fixed";
-        evt.target.style.top = evt.pageY - 100 + "px";
-        evt.target.style.left = evt.pageX - 100 + "px";
-        let hoverElement = document.elementFromPoint(evt.pageY, evt.pageX);
+
+        // let trackerDom = document.getElementById
+
+        // Define touching points
+        let y = evt.changedTouches[0].clientY;
+        let x = evt.changedTouches[0].clientX;
+
+        // Move tracker
+        evt.target.style.position = "absolute";
+        evt.target.style.top = y - 75 + "px";
+        evt.target.style.left = x - 75 + "px";
+        evt.target.style.zIndex = 3000;
+
+        let parent = document.getElementById("edit-grid");
+        let hoverY = y - 75;
+        let hoverElement = document.elementFromPoint(x, hoverY);
+
+        // Testing ball
+        ball.style.left = x + "px";
+        ball.style.top = y + "px";
+        ball.style.display = "block";
+
         if (hoverElement !== evt.target) {
+          console.log("hover elevement", hoverElement.id);
           data.hoverTag = hoverElement.id;
         }
       },
       touchend(evt) {
+        ball.style.display = "none";
         evt.target.style.position = "relative";
         evt.target.style.top = "inherit";
         evt.target.style.left = "inherit";
+        evt.target.style.zIndex = "inherit";
         if (data.draggingTag && data.hoverTag) {
           methods.moveTag(data.draggingTag, data.hoverTag + "");
           data.hoverTag = null;
         } else {
           data.hoverTag = null;
         }
+        setTimeout(() => {
+          document.body.classList.remove("no-scroll");
+          showDeletes = true;
+          data.draggingTag = null;
+          data.draggingTracker = null;
+          data.lastDraggingTag = null;
+        }, 120);
       },
       over(ev) {
         if (ev.target.id) {
@@ -169,7 +212,7 @@
 
         setTimeout(() => {
           document.body.classList.remove("no-scroll");
-          showDeletes = false;
+          showDeletes = true;
         }, 120);
 
         if (data.draggingTag && data.droppedTag) {
@@ -222,7 +265,7 @@
 <style lang="scss">
   div.tracker-grabber {
     position: relative;
-    padding: 12px;
+    padding: 8px;
     margin: 0px;
     .btn-delete {
       $size: 30px;
@@ -241,10 +284,26 @@
       right: 10px;
       z-index: 100;
     }
-    transition: all 0.4s ease-in-out;
+    // transition: all 0.4s ease-in-out;
     &.hovered {
-      transition: all 0.8s ease-in-out;
+      // transition: all 0.8s ease-in-out;
       padding-left: 120px;
+      position: relative;
+      &:after {
+        content: "Here";
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-faded-2);
+        background-color: var(--color-faded);
+        border: dotted 3px var(--color-faded-3);
+        border-radius: 12px;
+        top: 12px;
+        left: 12px;
+        right: 55%;
+        bottom: 6px;
+        position: absolute;
+      }
     }
   }
 
@@ -273,6 +332,25 @@
     flex-direction: column;
     align-items: space-around;
     min-height: 50vh;
+  }
+
+  #ball {
+    background-color: red;
+    height: 20px;
+    width: 20px;
+    position: fixed;
+    z-index: 3000;
+    border-radius: 10px;
+    display: none;
+  }
+  .notice {
+    position: fixed;
+    bottom: 70px;
+    left: 10px;
+    right: 10px;
+    padding: 5px;
+    border: solid 1px blue;
+    color: blue;
   }
 
   // Animation from https://www.kirupa.com/html5/creating_the_ios_icon_jiggle_wobble_effect_in_css.htm
@@ -308,6 +386,7 @@
 
       <div
         class="grid"
+        id="edit-grid"
         on:drop={methods.drag.drop}
         on:touchend={methods.drag.touchend}
         on:dragover={methods.drag.over}
@@ -337,6 +416,7 @@
             </NItem> -->
           </div>
         {/each}
+        <div id="ball" />
       </div>
       <div class="filler" />
       {#if isMobile}
@@ -356,7 +436,7 @@
           <button
             class="btn btn mt-4 btn-danger flex-grow"
             on:click={methods.deleteBoard}>
-            Delete
+            Destroy
           </button>
           <button
             class="btn btn mt-4 btn-light mx-3 flex-grow"
@@ -386,3 +466,5 @@
     </div>
   </NPage>
 {/if}
+
+<!-- <div class="notice">{data.notice}</div> -->
