@@ -209,8 +209,9 @@ const userInit = () => {
 		},
 		// On Ready Event
 		onReady(func) {
-			if (this.ready === true) {
-				func(state);
+			let st = this.data();
+			if (st.ready === true) {
+				func(st);
 			} else {
 				listeners.push(func);
 			}

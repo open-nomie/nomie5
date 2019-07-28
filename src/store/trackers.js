@@ -63,6 +63,17 @@ const trackerStoreInit = () => {
 			});
 			return data;
 		},
+		getRunning() {
+			let allTrackers = methods.getAll() || {};
+			return [];
+			// return Object.keys(allTrackers || {})
+			// 	.map(tag => {
+			// 		return allTrackers[tag];
+			// 	})
+			// 	.filter(tracker => {
+			// 		return tracker.started || false;
+			// 	});
+		},
 		/**
 		 * Get Active Store Data
 		 */
@@ -78,9 +89,10 @@ const trackerStoreInit = () => {
 		 * Get Trackers as Array
 		 */
 		getAsArray() {
-			return Object.keys(this.getAll())
+			let all = this.getAll();
+			return Object.keys(all)
 				.map(tag => {
-					return this.getAll()[tag];
+					return all[tag];
 				})
 				.sort((a, b) => {
 					a.label > b.label ? -1 : 1;

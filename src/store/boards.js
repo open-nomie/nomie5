@@ -5,6 +5,7 @@ import Storage from '../modules/storage/storage';
 
 // Stores
 import config from '../../config/global';
+import { TrackerStore } from '../store/trackers';
 
 // Utils
 import md5 from 'md5';
@@ -219,6 +220,8 @@ const boardsInit = () => {
 
 			if (data.active == 'all') {
 				trackers = Object.keys(trackers || {});
+			} else if (data.active == 'timers') {
+				trackers = TrackerStore.getRunning().map(tracker => tracker.tag);
 			} else {
 				let b = data.boards.find(board => board.id === data.active);
 				if (b) {
