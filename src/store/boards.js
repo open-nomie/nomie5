@@ -123,23 +123,16 @@ const boardsInit = () => {
 			});
 			return contains;
 		},
-		saveBoard(board) {
+		saveBoard(boardToSave) {
 			return new Promise(resolve => {
 				update(bs => {
-					let foundIndex;
-					bs.boards.forEach((brd, index) => {
-						if (brd.id === board.id && board.id !== null) {
-							foundIndex = index;
-						}
-					});
-					if (!foundIndex) {
-						if (!board.id) {
-							alert('No board id present in saved board');
-						} else {
-							bs.boards.push(board);
-						}
+					let existing = bs.boards.find(brd => brd.id == boardToSave.id);
+					if (existing) {
+						bs.boards = bs.boards.map(board => {
+							return board.id == boardToSave.id ? boardToSave : board;
+						});
 					} else {
-						bs.boards[foundIndex] = board;
+						bs.boards.push(boardToSave);
 					}
 					methods.save(bs.boards).then(resolve);
 					return bs;

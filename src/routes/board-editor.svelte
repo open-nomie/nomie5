@@ -1,6 +1,7 @@
 <script>
   //Vendors
   import { navigate, Router, Route } from "svelte-routing";
+  import { tap } from "@sveltejs/gestures";
 
   // Utils
   import Logger from "../utils/log/log";
@@ -93,6 +94,8 @@
       });
     },
     removeTracker(event, tracker) {
+      event.preventDefault();
+      event.stopPropagation();
       Interact.confirm(
         "Delete from " + $BoardStore.activeBoard.label + "?",
         "You can always add it later"
@@ -399,11 +402,15 @@
             draggable={true}
             on:touchmove={event => methods.drag.touchmove(event, i)}
             on:touchend={methods.drag.touchend}
-            on:touchstart={event => methods.drag.start(event, i, 'touch')}
+            xon:touchstart={event => methods.drag.start(event, i, 'touch')}
             on:dragstart={event => methods.drag.start(event, i)}>
             {#if showDeletes}
               <button
                 class="btn-delete zmdi zmdi-close"
+                use:tap
+                on:tap={event => {
+                  methods.removeTracker(event, tracker);
+                }}
                 on:click={event => {
                   methods.removeTracker(event, tracker);
                 }} />
