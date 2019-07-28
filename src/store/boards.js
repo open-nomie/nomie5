@@ -5,6 +5,7 @@ import Storage from '../modules/storage/storage';
 
 // Stores
 import config from '../../config/global';
+import { TrackerStore } from '../store/trackers';
 
 // Utils
 import md5 from 'md5';
@@ -38,13 +39,27 @@ const boardsInit = () => {
 		},
 		load(boards) {
 			return update(bs => {
-				bs.boards = boards;
+				let map = {};
+				// Filter out duplicate ID boards
+				// TODO: figure out why duplicates happen on board saving
+				bs.boards = boards.filter(board => {
+					map[board.id] = map[board.id] || null;
+					if (!map[board.id]) {
+						map[board.id] = true;
+						return true;
+					} else {
+						return false;
+					}
+				});
 				bs.loaded = true;
+				// Get the active board based on active id
 				bs.activeBoard = bs.boards.find(b => b.id == bs.active);
+
 				if (bs.activeBoard) {
+					// remove any nulls from the tracker array if they exist
 					bs.activeBoard.trackers = (bs.activeBoard.trackers || []).filter(b => (b ? true : false));
 				}
-
+				// return state
 				return bs;
 			});
 		},
@@ -52,7 +67,8 @@ const boardsInit = () => {
 			return Storage.put(`${config.data_root}/boards.json`, boards);
 		},
 		labelById(id) {
-			return (base.boards.find(b => b.id === id) || {}).label || 'Unknown';
+			let label = (base.boards.find(b => b.id === id) || {}).label;
+			return label ? label : '';
 		},
 		addTracker(tracker) {
 			return methods.addTrackersToActiveBoard([tracker]);
@@ -65,17 +81,33 @@ const boardsInit = () => {
 			});
 			return d;
 		},
+		deleteBoard(boardId) {
+			let boards;
+			update(bs => {
+				bs.boards = bs.boards.filter(board => {
+					return board.id !== boardId;
+				});
+				boards = bs.boards;
+				// TODO - this save method name is not right
+				return bs;
+			});
+			return methods.save(boards).then(() => {
+				return methods.setActive('all');
+			});
+		},
 		removeTrackerFromBoard(tracker, boardId) {
-			return update(bs => {
+			let res;
+			update(bs => {
 				let board = methods.boardById(boardId);
 				if (board) {
 					board.trackers = board.trackers.filter(tag => {
 						return tag !== tracker.tag;
 					});
-					methods.save(bs.boards);
+					res = methods.save(bs.boards);
 				}
 				return bs;
 			});
+			return res;
 		},
 		addTrackersToActiveBoard(trackerArray) {
 			return methods.addTrackersToBoard(trackerArray, base.active);
@@ -92,23 +124,16 @@ const boardsInit = () => {
 			});
 			return contains;
 		},
-		saveBoard(board) {
+		saveBoard(boardToSave) {
 			return new Promise(resolve => {
 				update(bs => {
-					let foundIndex;
-					bs.boards.forEach((brd, index) => {
-						if (brd.id === board.id && board.id !== null) {
-							foundIndex = index;
-						}
-					});
-					if (!foundIndex) {
-						if (!board.id) {
-							alert('No board id present in saved board');
-						} else {
-							bs.boards.push(board);
-						}
+					let existing = bs.boards.find(brd => brd.id == boardToSave.id);
+					if (existing) {
+						bs.boards = bs.boards.map(board => {
+							return board.id == boardToSave.id ? boardToSave : board;
+						});
 					} else {
-						bs.boards[foundIndex] = board;
+						bs.boards.push(boardToSave);
 					}
 					methods.save(bs.boards).then(resolve);
 					return bs;
@@ -125,6 +150,14 @@ const boardsInit = () => {
 		},
 		activeLabel() {
 			return (methods.boardById(base.active) || {}).label;
+		},
+		sortActiveTrackers(tagsArray) {
+			update(bs => {
+				let board = methods.boardById(bs.activeBoard.id);
+				board.trackers = tagsArray;
+				methods.save(bs.boards);
+				return bs;
+			});
 		},
 		addTrackersToBoard(trackerArray, boardId) {
 			update(bs => {
@@ -151,29 +184,35 @@ const boardsInit = () => {
 			});
 		},
 		addBoard(label, trackers) {
+			console.log('Add Board', { label, trackers });
 			trackers = trackers || [];
 			return new Promise((resolve, reject) => {
 				let id = md5(new Date().getTime() + label).substr(0, 10);
+				let boardStub = {
+					id: id,
+					label: label,
+					trackers: trackers,
+				};
 				update(bs => {
-					bs.boards.push({
-						id: id,
-						label: label,
-						trackers: trackers,
-					});
+					bs.boards.push(boardStub);
 					Storage.put(`${config.data_root}/boards.json`, bs.boards)
-						.then(resolve)
+						.then(() => {
+							resolve(boardStub);
+						})
 						.catch(reject);
 					return bs;
 				});
 			});
 		},
 		setActive(id) {
-			localStorage.setItem('active-board', id);
-			return update(bs => {
-				bs.active = id;
-				bs.activeBoard = bs.boards.find(b => b.id == bs.active);
-				return bs;
-			});
+			if (id) {
+				localStorage.setItem('active-board', id);
+				return update(bs => {
+					bs.active = id;
+					bs.activeBoard = bs.boards.find(b => b.id == bs.active);
+					return bs;
+				});
+			}
 		},
 		getActiveTrackerTags() {
 			let trackers = [];
@@ -181,6 +220,8 @@ const boardsInit = () => {
 
 			if (data.active == 'all') {
 				trackers = Object.keys(trackers || {});
+			} else if (data.active == 'timers') {
+				trackers = TrackerStore.getRunning().map(tracker => tracker.tag);
 			} else {
 				let b = data.boards.find(board => board.id === data.active);
 				if (b) {

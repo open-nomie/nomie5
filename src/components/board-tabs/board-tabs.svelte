@@ -49,7 +49,9 @@
 </style>
 
 <div class="n-board-tabs">
+
   <div class="mask">
+    <slot name="left" />
     {#each boards as board}
       <button
         class="tab {board.id == active ? 'active' : 'inactive'}"
@@ -66,5 +68,7 @@
       }}>
       <i class="zmdi zmdi-plus" />
     </button>
+    <slot name="right" />
   </div>
+
 </div>

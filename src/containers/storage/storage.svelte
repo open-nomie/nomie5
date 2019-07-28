@@ -1,7 +1,19 @@
 <script>
+  // Svelte
   import { onMount } from "svelte";
-  import { Interact } from "../../store/interact";
+
+  // Vendors
+  import localforage from "localforage";
+
+  // Modules
+  import Storage from "../../modules/storage/storage";
+
+  // Components
   import NItem from "../../components/list-item/list-item.svelte";
+
+  // Stores
+  import { Interact } from "../../store/interact";
+  import { UserStore } from "../../store/user";
 
   const state = {
     showFiles: false,
@@ -11,15 +23,11 @@
   const methods = {
     initialize() {
       state.files = [];
-      return blockstack
-        .listFiles(file => {
-          methods.addFilesRef(file);
-          return true;
-        })
-        .then(() => {
-          state.files = state.files;
-          return state.files;
-        });
+      console.log("Initialize", UserStore.listFiles);
+      return UserStore.listFiles().then(files => {
+        state.files = files;
+        return state.files;
+      });
     },
     addFilesRef(name) {
       if (state.files.indexOf(name) == -1) {
@@ -43,16 +51,22 @@
 
               let promises = [];
               state.files.forEach(file => {
-                promises.push(blockstack.deleteFile(file));
+                promises.push(Storage.delete(file));
               });
               Promise.all(promises)
                 .then(() => {
-                  localStorage.clear();
-                  Interact.alert("Done", "Your data has been destroyed.").then(
-                    () => {
-                      window.location.href = "/";
-                    }
-                  );
+                  localforage
+                    .clear()
+                    .then(() => {
+                      localStorage.clear();
+                      Interact.alert(
+                        "Done",
+                        "Your data has been destroyed."
+                      ).then(() => {
+                        window.location.href = "/";
+                      });
+                    })
+                    .catch(e => {});
                 })
                 .catch(e => {
                   localStorage.clear();

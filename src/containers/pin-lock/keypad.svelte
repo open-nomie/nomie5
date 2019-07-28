@@ -12,7 +12,12 @@
   // Methods
   const select = num => () => (value += num);
   const clear = () => (value = "");
-  const submit = () => dispatch("submit");
+  const submit = event => {
+    setTimeout(() => {
+      dispatch("submit");
+      event.stopPropagation();
+    }, 10);
+  };
 </script>
 
 <style>
@@ -26,6 +31,7 @@
   button {
     margin: 0;
     color: var(--color-solid-2);
+    touch-action: manipulation;
   }
   button:hover,
   button:focus {
@@ -45,10 +51,10 @@
   <button class="btn btn-clear" use:tap on:tap={select(9)}>9</button>
 
   <button class="btn btn-clear" disabled={!value} use:tap on:tap={clear}>
-    clear
+    Clear
   </button>
   <button class="btn btn-clear" use:tap on:tap={select(0)}>0</button>
-  <button class="btn btn-clear" disabled={!value} use:tap on:tap={submit}>
-    submit
+  <button class="btn btn-clear" disabled={!value} on:click={submit}>
+    Submit
   </button>
 </div>

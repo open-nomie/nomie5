@@ -1,7 +1,6 @@
 import ExtractTrackers from '../../utils/extract-trackers/extract-trackers';
 import md5 from 'md5';
 import regexs from '../../utils/regex';
-import { isArray } from 'util';
 export default class Record {
 	constructor(starter) {
 		starter = starter || {};
@@ -98,7 +97,7 @@ export default class Record {
 				value: tks[key].value,
 			};
 		});
-		if (isArray(res)) {
+		if (Array.isArray(res)) {
 			return res;
 		} else {
 			return [res];

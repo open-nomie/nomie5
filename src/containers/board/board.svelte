@@ -203,12 +203,30 @@
      * Create a new board
      */
     newBoard() {
-      let label = prompt("Board Name?");
-      if (label) {
-        UserStore.boards.addBoard(label).then(() => {
-          Interact.alert("Done!", "Board Created");
-        });
-      }
+      Interact.prompt("Board Label?", { placeholder: "Name or Emoji 👍" }).then(
+        res => {
+          if (res) {
+            let label = res.trim();
+            BoardStore.addBoard(label).then(board => {
+              console.log("Board created?", board);
+              Interact.alert(
+                "Created",
+                "Board was created. Go and add some trackers."
+              ).then(() => {
+                BoardStore.setActive(board.id);
+              });
+            });
+            console.log("RES!");
+          }
+        }
+      );
+
+      // let label = prompt("Board Name?");
+      // if (label) {
+      //   UserStore.boards.addBoard(label).then(() => {
+      //     Interact.alert("Done!", "Board Created");
+      //   });
+      // }
     },
 
     /**

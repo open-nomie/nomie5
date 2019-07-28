@@ -22,8 +22,7 @@
   import StatsRoute from "./routes/stats.svelte";
   import BoardEditorRoute from "./routes/board-editor.svelte";
   import FAQRoute from "./routes/faq.svelte";
-  // Testing Routes
-  import TestStatsRoute from "./routes/test/stats.svelte";
+  import PluginsRoute from "./routes/plugins.svelte";
 
   // Stores
   import { UserStore } from "./store/user"; //  user auth and state
@@ -65,6 +64,19 @@
     false
   );
 
+  //Setup an an offline notice
+  window.addEventListener("load", () => {
+    let onNetworkChange = event => {
+      if (navigator.onLine) {
+        document.body.classList.remove("offline");
+      } else {
+        document.body.classList.add("offline");
+      }
+    };
+    window.addEventListener("online", onNetworkChange);
+    window.addEventListener("offline", onNetworkChange);
+  });
+
   // Initalize the User Store
   UserStore.initialize();
   let ready = false;
@@ -92,7 +104,10 @@
       <Route path="/stats/:id" component={StatsRoute} />
       <Route path="/board/:id" component={BoardEditorRoute} />
       <Route path="/faq" component={FAQRoute} />
-      <Route path="/test/stats" component={TestStatsRoute} />
+      <!-- Plugin Coming Soon -->
+      <Route path="/plugins" component={PluginsRoute} />
+      <Route path="/plugins/settings/:pluginId" component={PluginsRoute} />
+      <Route path="/plugins/:pluginId" component={PluginsRoute} />
     </div>
   </Router>
 {:else if $UserStore.signedIn == undefined}

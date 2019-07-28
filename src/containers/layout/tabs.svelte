@@ -1,6 +1,12 @@
 <script>
+  // Vendors
   import { Link } from "svelte-routing";
+
+  // Components
   import Icon from "../../components/icon.svelte";
+
+  // Plugins
+  import Plugins from "../../plugins/plugins";
 </script>
 
 <style lang="scss">
@@ -17,6 +23,7 @@
     justify-content: space-between;
     align-items: stretch;
     z-index: 200;
+    padding: 0 16px;
 
     // Tab Links
 
@@ -41,7 +48,11 @@
     text-decoration: none;
     opacity: 0.6;
     transition: all 0.2s ease-in-out;
-    min-width: 30%;
+    min-width: 30px;
+    width: 100%;
+    i {
+      font-size: 1.2rem;
+    }
     label {
       margin-bottom: 0;
     }
@@ -55,17 +66,25 @@
 
 <nav id="app-tabs" class="">
   <div class="n-row mw-500px mx-auto">
-    <Link to="/history">
-      <Icon name="calendar" />
-      <label>History</label>
-    </Link>
     <Link to="/">
-      <Icon name="grid" />
+      <i class="zmdi zmdi-grid" />
       <label>Track</label>
     </Link>
+    <Link to="/history">
+      <i class="zmdi zmdi-calendar" />
+      <label>History</label>
+    </Link>
+
+    {#each Plugins.filter(p => p.tab) as plugin}
+      <Link to="/plugins/{plugin.id}">
+        <i class="zmdi zmdi-{plugin.tab.icon}" />
+        <label>{plugin.tab.label}</label>
+      </Link>
+    {/each}
+
     <Link to="/settings">
-      <Icon name="menu" />
-      <label>More</label>
+      <i class="zmdi zmdi-menu" />
+      <label>Settings</label>
     </Link>
   </div>
 </nav>

@@ -1,8 +1,14 @@
 <script>
-  // Another mad house!
+  /**
+   * History Tab
+   * A big collection of all things history
+   *
+   * TODO: Have it react when the ledger change, not a hard refresh
+   */
 
   // svelte
   import { navigate } from "svelte-routing";
+  import { onMount } from "svelte";
 
   // components
   import NItem from "../components/list-item/list-item.svelte";
@@ -30,10 +36,15 @@
 
   import { HistoryPage } from "../store/history-page";
 
-  let user = {};
+  /**
+   * I've messed this all up again. but it's faster and more responsivle
+   * TODO: refactor so it's clean and using the proper amount of Store vs local
+   */
+
   let datePicker;
 
-  const state = $HistoryPage;
+  const state = $HistoryPage; // Assign State to compiled history page
+
   let refreshing = false;
 
   let local = {
@@ -41,6 +52,13 @@
     datePickerValue: null
   };
 
+  let logs = undefined; // holder of the logs
+  let searchLogs = undefined; // hodler of searched logs
+  let loading = true;
+  let book = undefined;
+  let locations = [];
+
+  // Used for checking things
   const checks = {
     list_date: {}
   };
@@ -48,39 +66,59 @@
   /// Watchers for when we're in edit mode
   // and when we have selected more than one.
 
-  // Dynamically set selectCount
-  $: selectCount = Object.keys(state.selected).filter(a => {
-    return state.selected[a];
-  }).length;
-
   let isToday = true;
 
+  // If the date changes - check to see if it's still today
   $: if (state.date) {
     isToday = new Date().toDateString() == state.date.toDate().toDateString();
   }
 
-  // Dynamically get locations as they change
-  $: state.locations = state.logs
-    .filter(log => {
-      return log.lat;
-    })
-    .map(log => {
-      return {
-        lat: log.lat,
-        lng: log.lng,
-        name: log.location
-      };
-    });
+  // Filter logs for today
+  const filterActiveDate = log => {
+    return (
+      log.end >=
+        state.date
+          .startOf("day")
+          .toDate()
+          .getTime() &&
+      log.end <=
+        state.date
+          .endOf("day")
+          .toDate()
+          .getTime()
+    );
+  };
 
-  $: if (state.logs) {
-    checks.list_date = {};
+  // Dynamically assign book
+  $: if ($LedgerStore.books[state.date.format("YYYY-MM")]) {
+    loading = true;
+    book = $LedgerStore.books[state.date.format("YYYY-MM")] || [];
+    logs = (book || [])
+      .filter(log => filterActiveDate(log))
+      .sort((a, b) => {
+        return a.end < b.end ? 1 : -1;
+      });
+
+    setTimeout(() => {
+      loading = false;
+      // TODO: Look at making this refresh without doing the loading, it's pushing the page to the top and it's annoying
+      // window.scrollTo(0, windowScrollPosition);
+    }, 1);
   }
 
-  // Reactivly set if this is edit mode.
-  $: state.editMode =
-    Object.keys(state.selected).filter(a => {
-      return state.selected[a];
-    }).length > 0;
+  $: if (searchLogs || logs) {
+    locations = (searchLogs || logs)
+      .filter(log => {
+        return log.lat;
+      })
+      .map(log => {
+        return {
+          lat: log.lat,
+          lng: log.lng,
+          name: log.location
+        };
+      });
+  }
 
   // Methods
   const methods = {
@@ -95,22 +133,16 @@
     },
     getLogs(fresh) {
       fresh = fresh ? fresh : false;
-      state.loading = true;
+
+      loading = true;
       // state.refreshing = true;
-      checks.list_date = {};
-      state.logs = [];
+      // checks.list_date = {};
 
       // Query the Ledger for Posts on this day.
       return LedgerStore.query({
         start: state.date.startOf("day").toDate(),
         end: state.date.endOf("day").toDate(),
         fresh: fresh
-      }).then(logs => {
-        // state.refreshing = false;
-        state.loading = false;
-        return (state.logs = logs.sort((a, b) => {
-          return a.end < b.end ? 1 : -1;
-        }));
       });
     },
     clearLocation() {
@@ -126,7 +158,9 @@
     },
     clearSearch() {
       state.searchResults = null;
-      methods.getLogs();
+      state.searchMode = false;
+      state.searchTerm = "";
+      searchLogs = null;
     },
     previous() {
       methods.getDate(state.date.subtract(1, "day"));
@@ -155,81 +189,26 @@
         return false;
       }
     },
-    trackersArray(trackersObj) {
-      return Object.keys(trackersObj).map(key => {
-        return trackersObj[key];
-      });
-    },
-    isSelected(log) {
-      return (state.selected || []).indexOf(log) > -1;
-    },
-    toggleSelect(log) {
-      if (state.selected[log._id]) {
-        methods.unselectLog(log);
-      } else {
-        methods.selectLog(log);
-      }
-    },
-    selectLog(log) {
-      state.selected[log._id] = log;
-    },
-    unselectLog(log) {
-      state.selected[log._id] = false;
-      data = data;
-    },
     goto(date) {
       state.date = date;
       methods.getLogs();
-    },
-    clearSelected() {
-      state.selected = {};
-    },
-    deleteSelected() {
-      Interact.confirm(
-        "This cannot be undone!",
-        `Are you sure you want to delete ${
-          selectCount === 1 ? "this" : "these"
-        } ${selectCount === 1 ? "log" : "logs"}? This action cannot be undone.`,
-        "Yes, Delete",
-        "Cancel"
-      ).then(res => {
-        if (res === true) {
-          methods.doDeleteSelected();
-        }
-      });
-    },
-    doDeleteSelected() {
-      let selected = [];
-      Object.keys(state.selected).forEach(_id => {
-        if (state.selected[_id]) {
-          selected.push(state.selected[_id]);
-        }
-      });
-
-      state.loading = true;
-      LedgerStore.deleteLogs(selected).then(d => {
-        methods.clearSelected();
-        setTimeout(() => {
-          methods.getLogs().then(() => {
-            methods.refresh();
-            state.loading = false;
-          });
-        }, 200);
-      });
     },
     searchKeypress(event) {
       if (event.key === "Enter" || event.key === "Return") {
         methods.search(state.searchTerm, state.date.format("YYYY"));
       }
     },
+    refreshSearch() {
+      methods.search(state.searchTerm, state.date.format("YYYY"));
+    },
     search(key, year) {
-      if (key.length > 1) {
+      if ((key || "").length > 1) {
         state.searchResults = [];
-        state.logs = [];
-        state.loading = true;
-        LedgerStore.search(state.searchTerm, year).then(logs => {
-          state.loading = false;
-          state.logs = logs;
+        loading = true;
+        LedgerStore.search(state.searchTerm, year).then(searchResults => {
+          loading = false;
+          state.searchMode = true;
+          searchLogs = searchResults;
         });
       }
     },
@@ -237,57 +216,11 @@
       navigate(`/stats/${tracker.tag}`);
     },
     showLogOptions(log) {
-      Interact.logOptions(log).then(() => {
-        setTimeout(() => {
-          methods.getLogs();
-        }, 120);
+      Interact.logOptions(log).then(action => {
+        if (state.searchMode) {
+          methods.refreshSearch();
+        }
       });
-
-      // let buttons = [];
-      // // if (log.noteTextLength()) {
-      // buttons.push({
-      //   title: "Edit Content",
-      //   click() {
-      //     Interact.prompt("Update Content", { value: log.note }).then(
-      //       content => {
-      //         log.note = content;
-      //         setTimeout(() => {
-      //           LedgerStore.updateLog(log).then(res => {
-      //             methods.getLogs();
-      //           });
-      //         }, 10);
-      //       }
-      //     );
-      //   }
-      // });
-      // // }
-      // // if (log.trackersArray().length) {
-      // //   buttons.push({ title: "Edit Tracker Data" });
-      // // }
-      // buttons.push({ title: "Edit Time and Location" });
-      // buttons.push({
-      //   title: "Delete Log",
-      //   click() {
-      //     setTimeout(() => {
-      //       Interact.confirm(
-      //         "Are you sure?",
-      //         "Deleting an log cannot be undone, only recreated"
-      //       ).then(res => {
-      //         if (res === true) {
-      //           LedgerStore.deleteLogs([log]).then(() => {
-      //             setTimeout(() => {
-      //               methods.getLogs();
-      //             }, 1000);
-      //           });
-      //         }
-      //       });
-      //     }, 10);
-      //   }
-      // });
-      // Interact.popmenu({
-      //   title: "Log Options",
-      //   buttons: buttons
-      // });
     },
     selectDate() {
       let ranges = [
@@ -339,22 +272,19 @@
     }
   };
 
-  UserStore.subscribe(u => {
-    user = u;
-    if (user.signedIn) {
-      setTimeout(() => {
-        methods.getLogs();
-      }, 200);
+  onMount(() => {
+    console.log("OnMount", { searchLogs, state });
+    if ((state.searchTerm || "").length > 1 || !searchLogs) {
+      methods.refreshSearch();
     }
   });
 
-  LedgerStore.subscribe(lgr => {
-    state.ledger = lgr;
-  });
-
-  TrackerStore.subscribe(trackers => {
-    state.trackers = trackers;
-  });
+  /**
+   * // Fire off call to query the datastore
+   * This will call the ledger and load up the right book
+   * once the book is loaded, the logs var will be automaticallly filtered
+   */
+  methods.getLogs();
 </script>
 
 <style lang="scss" type="text/scss">
@@ -366,6 +296,29 @@
   }
   :global(.trackers-list .border-bottom:last-child) {
     border-bottom: none !important;
+  }
+
+  .history-toolbar-container {
+    .btn {
+      outline: none !important;
+    }
+    .btn.active {
+      background-color: var(--color-primary-bright);
+      color: #fff !important;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      border-radius: 20% !important;
+      outline: none !important;
+    }
+  }
+
+  .search-bar {
+    position: relative;
+    .btn {
+      position: absolute;
+      right: 12px;
+      top: -3px;
+    }
   }
 
   .n-date-pill-container {
@@ -406,58 +359,62 @@
 </style>
 
 <NToolbar pinTop>
-  <div class="d-flex justify-content-stretch align-items-center w-100">
-    {#if state.searchMode}
+  <div class="container history-toolbar-container">
+    <div class="d-flex justify-content-stretch align-items-center w-100">
+      {#if state.searchMode}
+        <button
+          class="btn btn-clear btn-icon flex"
+          on:click={methods.previousSearch}>
+          <i class="zmdi zmdi-chevron-left" />
+        </button>
+      {:else}
+        <button class="btn btn-clear btn-icon flex" on:click={methods.previous}>
+          <i class="zmdi zmdi-chevron-left" />
+        </button>
+      {/if}
+      <div class="filler" />
       <button
-        class="btn btn-clear btn-icon flex"
-        on:click={methods.previousSearch}>
-        <i class="zmdi zmdi-chevron-left" />
+        class="btn btn-clear btn-icon flex {state.searchMode ? 'active text-primary-bright' : ''}"
+        on:click={methods.toggleSearch}>
+        <i class="zmdi zmdi-search" />
       </button>
-    {:else}
-      <button class="btn btn-clear btn-icon flex" on:click={methods.previous}>
-        <i class="zmdi zmdi-chevron-left" />
+      <div class="filler" />
+      {#if state.searchMode}
+        <div class="text-center">
+          <NText tag="div" size="lg" className="n-title" bold>
+            {state.date.format('YYYY')}
+          </NText>
+        </div>
+      {:else}
+        <div
+          class="header-date-control text-center {isToday ? 'today' : 'not-today text-primary-bright'}"
+          on:click={methods.selectDate}>
+          <NText tag="div" size="md" bold>{state.date.format('dddd')}</NText>
+          <NText tag="div" size="sm">{state.date.format('MMM D YYYY')}</NText>
+        </div>
+      {/if}
+      <div class="filler" />
+      <button
+        class="btn btn-clear btn-icon {state.showAllLocations ? 'active text-primary-bright' : ''}"
+        disabled={locations.length === 0}
+        on:click={() => {
+          state.showAllLocations = !state.showAllLocations;
+        }}>
+        <i class="zmdi zmdi-map" />
       </button>
-    {/if}
-    <div class="filler" />
-    <button
-      class="btn btn-clear btn-icon flex {state.searchMode ? 'text-red' : ''}"
-      on:click={methods.toggleSearch}>
-      <i class="zmdi zmdi-search" />
-    </button>
-    <div class="filler" />
-    {#if state.searchMode}
-      <div class="text-center">
-        <NText tag="div" size="lg" className="n-title" bold>
-          {state.date.format('YYYY')}
-        </NText>
-      </div>
-    {:else}
-      <div
-        class="header-date-control text-center {isToday ? 'today' : 'not-today text-danger'}"
-        on:click={methods.selectDate}>
-        <NText tag="div" size="md" bold>{state.date.format('dddd')}</NText>
-        <NText tag="div" size="sm">{state.date.format('MMM D YYYY')}</NText>
-      </div>
-    {/if}
-    <div class="filler" />
-    <button
-      class="btn btn-clear btn-icon"
-      disabled={state.locations.length === 0}
-      on:click={() => {
-        Interact.showLocations(state.locations);
-      }}>
-      <i class="zmdi zmdi-map" />
-    </button>
-    <div class="filler" />
-    {#if state.searchMode}
-      <button class="btn btn-clear btn-icon flex" on:click={methods.nextSearch}>
-        <i class="zmdi zmdi-chevron-right " />
-      </button>
-    {:else}
-      <button class="btn btn-clear btn-icon flex" on:click={methods.next}>
-        <i class="zmdi zmdi-chevron-right" />
-      </button>
-    {/if}
+      <div class="filler" />
+      {#if state.searchMode}
+        <button
+          class="btn btn-clear btn-icon flex"
+          on:click={methods.nextSearch}>
+          <i class="zmdi zmdi-chevron-right " />
+        </button>
+      {:else}
+        <button class="btn btn-clear btn-icon flex" on:click={methods.next}>
+          <i class="zmdi zmdi-chevron-right" />
+        </button>
+      {/if}
+    </div>
   </div>
   <!-- end toolbar div wrapper-->
 </NToolbar>
@@ -465,27 +422,33 @@
   <NToolbar pinTop className="sub-header">
 
     <div
-      class="d-flex d-row justify-content-between align-items-center w-100 px-2">
+      class="d-flex d-row justify-content-between align-items-center w-100 px-2
+      search-bar">
       <input
         type="search"
         on:keypress={methods.searchKeypress}
         bind:value={state.searchTerm}
         placeholder="Search"
         class="search-input" />
+      <button
+        class="btn btn-clear btn-sm btn-icon zmdi zmdi-close"
+        on:click={methods.clearSearch} />
     </div>
   </NToolbar>
 {/if}
 
 <div
   class="page page-history {state.searchMode ? 'with-sub-header' : 'with-header'}">
-  {#if state.loading}
+  {#if loading}
     <div class="empty-notice">
       <Spinner size="50" speed="750" color="#666" thickness="2" gap="40" />
     </div>
+  {:else if state.showAllLocations}
+    <NMap {locations} />
   {:else}
     <div class="container p-0 pt-3">
       <!-- If no Logs found -->
-      {#if state.logs.length === 0}
+      {#if logs.length === 0}
         {#if !state.searchMode}
           <div class="empty-notice">
             No records found for
@@ -498,22 +461,12 @@
           </div>
         {/if}
         <!-- If Logs and Not refreshing  -->
-      {:else if !refreshing}
+      {:else if !state.searchMode}
         <!-- Loop over logs -->
-        {#each state.logs as log, i (log._id)}
-          <!-- If we have search results in this set - and a header doesn't exist, lets show one. -->
-          {#if !methods.headerExists(log.end)}
-            <NItem className="bg-transparent">
-              <h1 class="n-title">{dayjs(log.end).format('ddd MMM D YYYY')}</h1>
-              <div slot="right">
-                <NText size="md">{dayjs(log.end).fromNow()}</NText>
-              </div>
-            </NItem>
-          {/if}
-
+        {#each logs as log, i (log._id)}
           <LogItem
             {log}
-            trackers={state.trackers}
+            trackers={$TrackerStore}
             on:trackerClick={event => {
               methods.trackerTapped(event.detail.tracker, log);
             }}
@@ -525,7 +478,39 @@
             }} />
           <!-- Show the Log Item -->
         {/each}
+      {:else if state.searchMode && searchLogs}
+        {#each searchLogs as log, i (log._id)}
+          <!-- 
+            TODO: Search Day Header isn't working reliably... Pulling it for now. 
+            If we have search results in this set - and a header doesn't exist, lets show one. -->
+          <!-- {#if !methods.headerExists(log.end)}
+            <NItem className="bg-transparent">
+              <h1 class="n-title">{dayjs(log.end).format('ddd MMM D YYYY')}</h1>
+              <div slot="right">
+                <NText size="md">{dayjs(log.end).fromNow()}</NText>
+              </div>
+            </NItem>
+          {/if} -->
+
+          <LogItem
+            {log}
+            fullDate={true}
+            trackers={$TrackerStore}
+            on:trackerClick={event => {
+              methods.trackerTapped(event.detail.tracker, log);
+            }}
+            on:locationClick={event => {
+              Interact.showLocations([log]);
+            }}
+            on:moreClick={event => {
+              Interact.logOptions(log).then(() => {});
+            }} />
+          <!-- Show the Log Item -->
+        {/each}
+      {:else if state.searchMode && !searchLogs}
+        <div class="empty-notice">Search {state.date.format('YYYY')}</div>
       {/if}
+
     </div>
   {/if}
 
@@ -538,20 +523,6 @@
     <button
       class="btn btn-lg btn-primary btn-block mb-0"
       on:click={methods.clearLocation}
-      slot="footer">
-      Close
-    </button>
-  </NModal>
-{/if}
-
-{#if state.showAllLocations}
-  <NModal show={true} title={'All Location'}>
-    <NMap locations={state.locations} />
-    <button
-      class="btn btn-lg btn-primary btn-block mb-0"
-      on:click={() => {
-        state.showAllLocations = false;
-      }}
       slot="footer">
       Close
     </button>

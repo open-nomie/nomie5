@@ -33,19 +33,19 @@ const trackerStoreInit = () => {
 		initialize() {
 			return new Promise((resolve, reject) => {
 				return Storage.get(`${config.data_root}/trackers.json`).then(trackers => {
+					console.log('Trackers', trackers);
 					// If the user doesn't have trackers
 					// Let's prompt them to install some
 					if (!trackers) {
 						Interact.confirm(
 							`${StarterPack.label}`,
-							`Looks like you're new. Would you like to install the Nomie default trackers: ${startPackArray
-								.map(t => t.label)
-								.join(', ')}? You can always delete them later, or create new ones. `
+							`Install Default Trackers: ${startPackArray.map(t => t.label).join(', ')}? `
 						).then(res => {
 							if (res === true) {
 								methods.populate(StarterPack);
 							}
 						});
+						resolve({});
 						// Setup Default Trackers
 					} else {
 						update(t => {
@@ -63,6 +63,17 @@ const trackerStoreInit = () => {
 			});
 			return data;
 		},
+		getRunning() {
+			let allTrackers = methods.getAll() || {};
+			return [];
+			// return Object.keys(allTrackers || {})
+			// 	.map(tag => {
+			// 		return allTrackers[tag];
+			// 	})
+			// 	.filter(tracker => {
+			// 		return tracker.started || false;
+			// 	});
+		},
 		/**
 		 * Get Active Store Data
 		 */
@@ -78,9 +89,10 @@ const trackerStoreInit = () => {
 		 * Get Trackers as Array
 		 */
 		getAsArray() {
-			return Object.keys(this.getAll())
+			let all = this.getAll();
+			return Object.keys(all)
 				.map(tag => {
-					return this.getAll()[tag];
+					return all[tag];
 				})
 				.sort((a, b) => {
 					a.label > b.label ? -1 : 1;

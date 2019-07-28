@@ -1,4 +1,9 @@
 <script>
+  /**
+   * Stats Route
+   * This is stupid big... still needs to be organized
+   */
+
   //Vendors
   import { onMount } from "svelte";
   import { navigate, Router, Route } from "svelte-routing";
@@ -23,6 +28,7 @@
   import NPopcard from "../components/popcard/popcard.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
   import NLogItem from "../components/list-item-log/list-item-log.svelte";
+  import NTimeGrid from "../components/day-time-grid/day-time-grid.svelte";
 
   // containers
   import NPage from "../containers/layout/page.svelte";
@@ -59,13 +65,11 @@
     day: {
       mode: "list"
     },
+    overview: {
+      mode: "time"
+    },
     stats: null
   };
-
-  $: if (rows.length) {
-    // Rows is populated from the intial load
-    console.log(":ROWS!");
-  }
 
   $: if (Object.keys($TrackerStore).length) {
     state.tracker = $TrackerStore[mainTag] || new Tracker({ tag: mainTag });
@@ -78,6 +82,20 @@
       setTimeout(() => {
         $HistoryPage.date = state.date;
       }, 10);
+    },
+    getDayLogs() {
+      return new Promise((resolve, reject) => {
+        LedgerStore.query({
+          start: state.date.startOf("day").toDate(),
+          end: state.date.endOf("day").toDate()
+        }).then(logs => {
+          logs = logs.map(log => {
+            log.expanded();
+            return log;
+          });
+          resolve(logs);
+        });
+      });
     },
     load() {
       refreshing = true;
@@ -153,31 +171,7 @@
         methods.refresh();
       }
     },
-    // getRows(mode) {
-    //   let rows = state.raw
-    //     .filter(row => {
-    //       if (mode == "month") {
-    //         let monthKey = new Date(row.end).getMonth();
-    //         if (monthKey === state.date.month()) {
-    //           return true;
-    //         } else {
-    //           return false;
-    //         }
-    //       } else if (mode == "day") {
-    //         return (
-    //           state.date.format("YYYY-MM-DD") ===
-    //           dayjs(row.end).format("YYYY-MM-DD")
-    //         );
-    //       } else {
-    //         return true;
-    //       }
-    //     })
-    //     .sort((a, b) => {
-    //       return a.end > b.end ? -1 : 1;
-    //     });
 
-    //   return rows;
-    // },
     refresh() {
       state.stats.gotoDate(state.date);
 
@@ -249,6 +243,9 @@
     align-items: space-evenly;
     flex-wrap: wrap;
   }
+  .border-bottom {
+    border-bottom: solid 1px var(--color-faded-1) !important;
+  }
   .block {
     margin: 0 3px;
 
@@ -256,7 +253,7 @@
       font-size: 0.7rem;
     }
     .value {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 500;
     }
   }
@@ -276,27 +273,38 @@
   }
 </style>
 
-{#if state.stats !== null}
-  <NPage className="stats" withBack={true}>
+{#if state.stats !== null && state.tracker}
+  <NPage className="stats">
 
     <div slot="header" class="n-row">
+      <button
+        class="btn btn-clear btn-icon zmdi zmdi-close"
+        on:click={() => {
+          window.history.back();
+        }} />
       <h1>{state.tracker.emoji} {state.tracker.label}</h1>
+      <button
+        class="btn btn-clear btn-icon zmdi zmdi-edit"
+        on:click={() => {
+          Interact.editTracker(state.tracker).then(() => {
+            console.log('Tracker Edited');
+          });
+        }} />
+    </div>
+
+    <div slot="sub-header" class="n-row n-year-bar">
+      <button class="btn btn-clear" on:click={methods.previous}>
+        <i class="zmdi zmdi-chevron-left font-140 mr-2" />
+        {state.date.subtract(1, 'year').format('YYYY')}
+      </button>
+      <h1 class="n-title filler text-center">{state.date.format('YYYY')}</h1>
+      <button class="btn btn-clear" on:click={methods.next}>
+        {state.date.add(1, 'year').format('YYYY')}
+        <i class="zmdi zmdi-chevron-right font-140 ml-2" />
+      </button>
     </div>
 
     <div class="container pt-3 popcards">
-
-      <div class="n-row n-year-bar mw-500px mx-auto">
-
-        <button class="btn btn-clear" on:click={methods.previous}>
-          <i class="zmdi zmdi-chevron-left font-140 mr-2" />
-          {state.date.subtract(1, 'year').format('YYYY')}
-        </button>
-        <h1 class="n-title filler text-center">{state.date.format('YYYY')}</h1>
-        <button class="btn btn-clear" on:click={methods.next}>
-          {state.date.add(1, 'year').format('YYYY')}
-          <i class="zmdi zmdi-chevron-right font-140 ml-2" />
-        </button>
-      </div>
 
       <NPopcard level={10} arrow={true}>
 
@@ -336,7 +344,7 @@
           <div class="block">
             <div class="label">Month Avg</div>
             <div class="value">
-              {NomieUOM.format(math.round(state.stats.results.year.sum / 12, 10), state.tracker.uom)}
+              {NomieUOM.format(math.round(state.stats.results.year.avg, 10), state.tracker.uom)}
             </div>
           </div>
         </div>
@@ -355,6 +363,13 @@
                 methods.setMode('year', 'map');
               }}>
               Where
+            </button>
+            <button
+              class="btn btn-sm btn-white-pop {state.year.mode === 'grid' ? ' active' : ' inactive'}"
+              on:click={() => {
+                methods.setMode('year', 'grid');
+              }}>
+              When
             </button>
           </div>
         </div>
@@ -378,13 +393,18 @@
               }}
               activeIndex={state.date.month() + 1} />
           {/if}
+          {#if state.year.mode == 'grid'}
+            <div class="grid-holder px-3 pb-3">
+              <NTimeGrid color={state.tracker.color} {rows} />
+            </div>
+          {/if}
           {#if state.year.mode == 'map'}
             <div class="map-holder w-100">
               {#if refreshing}
                 <div class="empty-notice sm">Loading...</div>
               {:else}
                 <NMap
-                  height={300}
+                  height={250}
                   small
                   locations={state.stats.getLocations('year')} />
               {/if}
@@ -496,7 +516,10 @@
                 }}
                 activeIndex={state.date.toDate().getDate()} />
             {:else if state.month.mode === 'map'}
-              <NMap small locations={state.stats.getLocations('month')} />
+              <NMap
+                small
+                locations={state.stats.getLocations('month')}
+                height={250} />
             {:else if state.month.mode === 'calendar'}
               <NCalendar
                 color={state.tracker.color}
@@ -527,6 +550,11 @@
           class="n-title btn btn-light filler text-center"
           on:click={methods.showHistory}>
           {state.date.format('ddd MMM D')}
+          {#if state.date.toDate().toDateString() !== new Date().toDateString()}
+            <small>{state.date.fromNow()}</small>
+          {:else}
+            <small>Today</small>
+          {/if}
         </h1>
         <button class="btn btn-clear" on:click={methods.nextDay}>
           {state.date.add(1, 'day').format('ddd')}
@@ -592,6 +620,13 @@
               }}>
               Where
             </button>
+            <button
+              class="btn btn-sm btn-white-pop {state.day.mode === 'all-logs' ? ' active' : '   inactive'}"
+              on:click={() => {
+                methods.setMode('day', 'all-logs');
+              }}>
+              All Logs
+            </button>
 
           </div>
         </div>
@@ -618,8 +653,29 @@
                   {/if}
                 {/each}
               </div>
+            {:else if state.day.mode === 'all-logs'}
+              <div class="n-list">
+                {#await methods.getDayLogs()}
+                  <div class="empty-notice sm">Getting logs...</div>
+                {:then logs}
+                  {#each logs as log, index}
+                    <NLogItem
+                      {log}
+                      on:locationClick={event => {
+                        Interact.showLocations([log]);
+                      }}
+                      on:moreClick={event => {
+                        Interact.logOptions(log).then(() => {});
+                      }}
+                      trackers={$TrackerStore} />
+                  {/each}
+                {/await}
+              </div>
             {:else if state.day.mode === 'map'}
-              <NMap small locations={state.stats.getLocations('day')} />
+              <NMap
+                small
+                locations={state.stats.getLocations('day')}
+                height={250} />
             {:else if state.day.mode === 'calendar'}
               <div class="empty-notice" />
             {/if}
@@ -628,10 +684,16 @@
           {/if}
         </div>
       </NPopcard>
+
     </div>
   </NPage>
 {:else}
   <NPage>
+    <div slot="header" class="n-row">
+      <div class="filler" />
+      <h1 class="text-centered">Stats</h1>
+      <div class="filler" />
+    </div>
     <div class="empty-notice sm">Loading...</div>
   </NPage>
 {/if}

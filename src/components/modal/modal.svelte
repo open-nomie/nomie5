@@ -1,10 +1,13 @@
 <script>
   import NText from "../text/text.svelte";
   import { fly } from "svelte/transition";
+
+  // Props
   export let padding = false;
   export let title;
   export let allowClose;
   export let fullscreen = false;
+  export let flexBody = undefined;
 
   const has_header = (arguments[1].$$slots || {}).hasOwnProperty("header");
   const has_footer = (arguments[1].$$slots || {}).hasOwnProperty("footer");
@@ -28,7 +31,8 @@
     min-width: 320px;
     background-color: var(--color-solid);
     min-height: 200px;
-    max-height: 90vh;
+    max-height: 95vh;
+    max-width: 400px;
     border-radius: 0.7rem;
     display: flex;
     flex-direction: column;
@@ -43,6 +47,13 @@
 
       .n-modal-body {
         flex-grow: 1;
+        &.flex-body {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: stretch;
+          align-items: stretch;
+        }
       }
     }
   }
@@ -100,7 +111,9 @@
 
       </div>
     {/if}
-    <div class="n-modal-body {padding ? 'padding' : 'no-padding'}">
+    <div
+      class="n-modal-body {padding ? 'padding' : 'no-padding'}
+      {flexBody ? 'flex-body' : 'no-flex-body'}">
       <slot />
     </div>
     {#if has_footer}

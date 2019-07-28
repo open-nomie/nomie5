@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 export const HistoryPage = writable({
 	date: dayjs(new Date()),
 	time_format: 'YYYY-MM',
-	logs: [],
+	logs: null,
 	trackers: {},
 	ledger: null,
 	searchTerm: '',

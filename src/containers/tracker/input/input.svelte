@@ -1,6 +1,6 @@
 <script>
   // svelte
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
   // Components
   import NModal from "../../../components/modal/modal.svelte";
@@ -19,15 +19,23 @@
   // Props
   export let tracker = undefined;
   export let show = true;
+  export let value = undefined;
+  export let hideAdd = undefined;
+  export let saveLabel = "Save";
 
   // Consts
   const dispatch = createEventDispatcher();
 
   let data = {
-    value: 0,
+    value: null,
     timerStarted: false,
-    tracker: null
+    tracker: null,
+    ready: false
   };
+
+  $: if (value && !data.value) {
+    data.value = value;
+  }
 
   const methods = {
     onSave() {
@@ -65,6 +73,11 @@
   $: if (tracker) {
     data.tracker = tracker;
   }
+
+  onMount(() => {
+    console.log("Input Value", value, data.value);
+    data.ready = true;
+  });
 </script>
 
 <style lang="scss">
@@ -75,36 +88,46 @@
     align-items: stretch;
     flex-grow: 1;
     height: 100%;
+    .btn.w-25 {
+      width: 30% !important;
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
   }
 </style>
 
 <NModal show={true} title={tracker.label} className="tracker-input">
-  {#if tracker.type === 'range'}
-    <SliderInput
-      value={(data.value || tracker.min) + ''}
-      min={(tracker.min || 0) + ''}
-      max={(tracker.max || 0) + ''}
-      on:change={value => {
-        data.value = value.detail;
-      }} />
-  {/if}
+  {#if data.ready}
+    {#if tracker.type === 'range'}
+      <SliderInput
+        value={(data.value || tracker.min) + ''}
+        min={(tracker.min || 0) + ''}
+        max={(tracker.max || 0) + ''}
+        on:change={value => {
+          data.value = value.detail;
+        }} />
+    {/if}
 
-  {#if tracker.type === 'value'}
-    <NKeypad
-      {tracker}
-      on:change={value => {
-        data.value = value.detail;
-      }} />
-  {/if}
+    {#if tracker.type === 'value' || tracker.type === 'tick'}
+      <NKeypad
+        {tracker}
+        {value}
+        on:change={value => {
+          data.value = value.detail;
+        }} />
+    {/if}
 
-  {#if tracker.type === 'timer'}
-    <NTimer
-      tracker={data.tracker}
-      bind:value={data.value}
-      on:change={event => {
-        data.value = event.detail;
-      }} />
-  {/if}
+    {#if tracker.type === 'timer'}
+      <NTimer
+        {value}
+        tracker={data.tracker}
+        bind:value={data.value}
+        on:change={event => {
+          data.value = event.detail;
+        }} />
+    {/if}
+  {:else}...{/if}
 
   <div
     class="footer d-flex flex-row align-center justify-content-between w-100"
@@ -129,14 +152,20 @@
     {/if}
 
     {#if data.tracker.type == 'timer' && data.value}
-      <button on:click={methods.onSave} class="btn btn-primary btn-lg w-100">
-        Save Time
+      <button
+        on:click={methods.onSave}
+        class="btn btn-primary btn-lg"
+        style="width:105px;">
+        {saveLabel}
       </button>
     {/if}
 
     {#if data.tracker.type != 'timer'}
-      <button on:click={methods.onSave} class="btn btn-primary btn-lg w-100">
-        Save
+      <button
+        on:click={methods.onSave}
+        class="btn btn-primary btn-lg"
+        style="width:105px;">
+        {saveLabel}
       </button>
     {/if}
 
@@ -156,7 +185,7 @@
       </button>
     {/if}
 
-    {#if data.tracker.type !== 'timer' || data.value}
+    {#if (data.tracker.type !== 'timer' || data.value) && hideAdd !== true}
       <button
         on:click={methods.onAdd}
         class="btn btn-clear btn-lg w-25 {tracker.started ? 'd-none' : ''}">

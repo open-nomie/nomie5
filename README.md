@@ -54,17 +54,19 @@ npm run dev
 
 ## Data Storage
 
+Open Nomie as of Jul 27, will support either local (with localforage) or cloud (with blockstack)
+
+All storage is done based a key, value - so adding additional storage options in the future should be pretty easy.
+
 Blockstack.org is a "Decentralized computing network and app ecosystem" - basically, it offers a means to auth a user, and get/put files that are encrypted. This means Nomie works with flat files that require a network lookup. I've decided to create a "log book" for each month. Even heavy users will have a monthly book less than 100k, so that seemed reasonable. Plus doing it every day would require way too many network lookups when generating stats, and each year would be too big for and risky.
 
-/v01/data/books/2019-01
-
--   v01 - a way to make upgrading easier without affecting users existing data stores
--   data - generic
--   books - holder of books
--   2019-01 - json array of logs
-
+/v01/data/books/2019-01 - array of logs
 /v01/data/trackers.json - trackers
 /v01/data/boards.json - users board configuration
+
+## Component / Container Issues
+
+I don't like having a bunch of floating variables around, so like Vue, and Svete 2 - I tend to group data and methods together. But I flipped about half way through calling it data, to then calling it state. I'm not sure which will stick.
 
 # Current Tracker Types
 
@@ -91,6 +93,10 @@ Tap to start, tap to stop. The timer is great for tracking durations.
 -   **Keep it flexible** - think in components. If you're doing something more than once, it most likely should be a component.
 -   **Keep cleaning, organizing and testing** - this project didn't start very clean, or ready for unit testing, this should be an on going objective.
 -   **Use what's there** - Twitter bootstrap ([and all it's classes](https://getbootstrap.com/)) are available, reuse what already exists before writing new - especially css.
+
+## Trademark License
+
+Nomie and the Blue Elephant are registered Trademarks of Happy Data, LLC. Indianapolis, IN. For a commercial use of the brand or logomark please contact support@happydata.org
 
 ## MIT License
 

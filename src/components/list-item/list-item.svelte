@@ -8,6 +8,7 @@
   export let href = undefined;
   export let to = undefined;
   export let click = undefined;
+  export let id = null;
   export let className = "";
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty("left");
@@ -133,6 +134,7 @@
 </style>
 
 <div
+  {id}
   on:click={methods.clicked}
   class="n-item {borderBottom ? 'border-bottom' : 'no-border'}
   {className}"
