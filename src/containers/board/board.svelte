@@ -367,7 +367,7 @@
     align-items: stretch;
     height: 50px;
     z-index: 350;
-    background-color: #fff;
+    background-color: var(--color-solid);
   }
 
   .board-actions {
