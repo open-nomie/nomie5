@@ -31,7 +31,7 @@
   };
 
   const slide2 = {
-    title: `I'm like a private dairy, with hashtag analytics.`,
+    title: `I'm like a private diary, with hashtag analytics.`,
     img: "/images/screens/capture.png",
     message: [
       `Record and analyize your thoughts by typing or tapping your own custom trackers.`
