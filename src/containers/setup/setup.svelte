@@ -178,7 +178,7 @@
     {:else if data.activeSlide === 3}
       <Slide img={slide4.img} title={slide4.title} message={slide4.message} />
     {:else if data.activeSlide === 4}
-      <Slide title="Where would you like to store you data?">
+      <Slide title="Where would you like to store your data?">
         <button
           class="btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
           on:click={() => {
