@@ -29,7 +29,7 @@ export default [
 				data you need. For example: #water(34)`,
 	},
 	{
-		question: `Why create Nomie? `,
+		question: `Why create Nomie?`,
 		answer: `Because I (@brandoncorbin) need it.`,
 	},
 ];
