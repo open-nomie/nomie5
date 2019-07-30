@@ -97,7 +97,7 @@
   }
 
   .tick line {
-    stroke: #e2e2e2;
+    stroke: var(--color-solid-2);
     stroke-dasharray: 2;
   }
 
@@ -118,7 +118,8 @@
     position: absolute;
     top: 0px;
     right: 6px;
-    background-color: var(--color-faded);
+    background-color: var(--color-faded-2);
+    z-index: 120;
     padding: 4px 10px;
     font-size: 0.6rem;
     display: flex;

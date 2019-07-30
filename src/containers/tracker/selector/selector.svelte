@@ -87,6 +87,11 @@
           <span slot="left">
             <NText size="lg">{tracker.emoji}</NText>
           </span>
+          <span slot="right">
+            {#if data.selected.hasOwnProperty(tracker.tag)}
+              <i class="zmdi zmdi-check-circle text-primary" />
+            {/if}
+          </span>
         </NItem>
       {/each}
     </div>

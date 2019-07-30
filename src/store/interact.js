@@ -341,25 +341,29 @@ const interactInit = () => {
 		},
 		confirm(title, message, ok, cancel) {
 			return new Promise((resolve, reject) => {
-				update(s => {
-					s.alert.show = true;
-					s.alert.title = title;
-					s.alert.message = message;
-					s.alert.cancel = null;
-					s.alert.ok = ok || 'Ok';
-					s.alert.cancel = cancel || 'Cancel';
-					s.alert.onInteract = resolve;
-					return s;
-				});
+				setTimeout(() => {
+					update(s => {
+						s.alert.show = true;
+						s.alert.title = title;
+						s.alert.message = message;
+						s.alert.cancel = null;
+						s.alert.ok = ok || 'Ok';
+						s.alert.cancel = cancel || 'Cancel';
+						s.alert.onInteract = resolve;
+						return s;
+					});
+				}, 1);
 			});
 		},
 		popmenu(options) {
-			update(s => {
-				s.popmenu.show = true;
-				s.popmenu.buttons = options.buttons;
-				s.popmenu.title = options.title;
-				return s;
-			});
+			setTimeout(() => {
+				update(s => {
+					s.popmenu.show = true;
+					s.popmenu.buttons = options.buttons;
+					s.popmenu.title = options.title;
+					return s;
+				});
+			}, 1);
 		},
 		pickLocation() {
 			return new Promise((resolve, reject) => {
@@ -387,23 +391,25 @@ const interactInit = () => {
 			});
 		},
 		prompt(message, options) {
-			return new Promise((resolve, reject) => {
-				setTimeout(() => {
-					update(s => {
-						s.prompt.show = true;
-						s.prompt.message = message;
-						s.prompt.value = options.value || null;
-						s.prompt.valueType = options.valueType || 'text';
-						s.prompt.title = options.title || 'Prompt';
-						s.prompt.cancel = 'Cancel';
-						s.prompt.placeholder = options.placeholder || '';
-						s.prompt.onInteract = res => {
-							resolve(s.prompt.value);
-						};
-						return s;
-					});
-				}, 10);
-			});
+			setTimeout(() => {
+				return new Promise((resolve, reject) => {
+					setTimeout(() => {
+						update(s => {
+							s.prompt.show = true;
+							s.prompt.message = message;
+							s.prompt.value = options.value || null;
+							s.prompt.valueType = options.valueType || 'text';
+							s.prompt.title = options.title || 'Prompt';
+							s.prompt.cancel = 'Cancel';
+							s.prompt.placeholder = options.placeholder || '';
+							s.prompt.onInteract = res => {
+								resolve(s.prompt.value);
+							};
+							return s;
+						});
+					}, 10);
+				});
+			}, 1);
 		},
 		dismiss() {
 			update(s => {

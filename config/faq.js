@@ -12,18 +12,18 @@ export default [
 	},
 	{
 		question: `Where's my data stored?`,
-		answer: `Unless you've setup your own custom hosting with Blockstack,
-				your data is stored encrypted in Blockstack's instance of GaiaHub. 
-				The only person able to decrypt your data is you.`,
+		answer: `If you went with the cloud option, your data is stored encrypted in Blockstack's instance of GaiaHub. 
+				The only person able to decrypt your data is you. If you picked local storage, then your data is stored 
+				in the browser that's running this instance of Nomie.`,
 	},
 	{
 		question: `Can I host my own data?`,
-		answer: `Yes! If you're technical search form "DigitalOcean GaiaHub" and follow the instructions.
+		answer: `Yes! If you're technical search "Blockstack DigitalOcean GaiaHub" and follow the instructions.
 				This will direct you to Blockstack where you'll set your own GaiaHub storage`,
 	},
 	{
 		question: `Can I auto import thing into this version of Nomie?`,
-		answer: `Yes, using a custom URL parameter. If you add /?note=Hi to the end of this 
+		answer: `Kinda - using a custom URL parameter. If you add /?note=Hi to the end of this 
 				url - it will automatically create a note. Apps like Tasker (Android) and 
 				Shortcuts in iOS can open web browsers. So you url encode a note with the 
 				data you need. For example: #water(34)`,

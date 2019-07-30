@@ -200,8 +200,7 @@
     min-height: 40px;
     max-height: 200px;
     border-radius: 20px;
-    background-color: var(--color-faded);
-    border: solid 1px var(--color-faded);
+    background-color: var(--color-faded-1);
     overflow: hidden;
     transition: all 0.2s ease-in-out;
 

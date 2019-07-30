@@ -121,7 +121,7 @@
       }
       p {
         margin: 2px 0;
-        color: rgba(0, 0, 0, 0.54);
+        color: var(--color-inverse-3);
         line-height: 140%;
         font-size: 0.98rem;
         &.sm,

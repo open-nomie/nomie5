@@ -49,8 +49,9 @@ const trackerStoreInit = () => {
 						// Setup Default Trackers
 					} else {
 						update(t => {
-							resolve(trackers);
-							return trackers;
+							let cleanedTrackers = methods.scrub(trackers);
+							resolve(cleanedTrackers);
+							return cleanedTrackers;
 						});
 					}
 				});
@@ -73,6 +74,15 @@ const trackerStoreInit = () => {
 			// 	.filter(tracker => {
 			// 		return tracker.started || false;
 			// 	});
+		},
+		// Clean up any messy trackers
+		scrub(trackers) {
+			Object.keys(trackers).forEach(key => {
+				if (!trackers[key].tag) {
+					delete trackers[key];
+				}
+			});
+			return trackers;
 		},
 		/**
 		 * Get Active Store Data
@@ -170,6 +180,7 @@ const trackerStoreInit = () => {
 			} else {
 				return new Promise((resolve, reject) => {
 					update(b => {
+						// Save
 						methods
 							.save(b)
 							.then(resolve)
@@ -179,16 +190,25 @@ const trackerStoreInit = () => {
 				});
 			}
 		},
-		saveTracker(tracker) {
-			return new Promise(resolve => {
-				update(t => {
-					t = t || {};
-					t[tracker.tag] = tracker;
-					methods.save(t);
-					resolve(t);
-					return t;
-				});
+		deleteTracker(tracker) {
+			let response;
+			update(t => {
+				t = t || {};
+				delete t[tracker.tag];
+				response = methods.save(t);
+				return t;
 			});
+			return response;
+		},
+		saveTracker(tracker) {
+			let response;
+			update(t => {
+				t = t || {};
+				t[tracker.tag] = tracker;
+				response = methods.save(t);
+				return t;
+			});
+			return response;
 		},
 	};
 	return {

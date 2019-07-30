@@ -27,6 +27,8 @@ Since this version runs in the browser, it's using Blockstack for auth and stora
 
 ## Running it Locally
 
+You'll need Node >= 6 and NPM. I have not tested running this on Windows.
+
 ```
 git clone git@github.com:nomie-app/nomie.git
 cd nomie
@@ -34,16 +36,22 @@ npm install
 npm run dev
 ```
 
+Deploy straight to Netlify to test it out quickly.
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://app.netlify.com/start/deploy?repository=https://github.com/open-nomie/nomie)
+
 ## Structure Overview
 
 -   **/src**
 -   **/src/components** - simple single ui components to build the user interfact
 -   **/src/containers** - complicated components
 -   **/src/modules** - models and commonly used functions
+-   **/src/plugins** - holder of plugins (coming soon)
 -   **/src/routes** - nomie app's primary routes
 -   **/src/scss** - global SCSS styling, variables, bootstrap
 -   **/src/store** - application state management
 -   **/src/utils** - common utility functions
+-   **/cypress** - Unit and E2E testing
 
 ## Meet the Nouns
 

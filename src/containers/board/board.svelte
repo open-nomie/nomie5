@@ -302,20 +302,35 @@
           }
         }
       ];
-      if ($BoardStore.active !== "all") {
-        buttons.push({
-          title: `Remove ${tracker.label} from ${(activeBoard || {}).label}`,
-          click() {
-            if (
-              confirm(
-                `Remove ${tracker.label} from ${(activeBoard || {}).label}?`
-              )
-            ) {
-              BoardStore.removeTrackerFromBoard(tracker, $BoardStore.active);
-            }
+
+      const removeButton = {
+        title: `Remove...`,
+        click() {
+          if ($BoardStore.active === "all") {
+            Interact.confirm(
+              `Delete ${tracker.label} from Nomie`,
+              "You can always recreate it later. No historic data will be deleted deleted."
+            ).then(res => {
+              if (res) {
+                TrackerStore.deleteTracker(tracker).then(done => {
+                  console.log("Tracker Deleted");
+                });
+              }
+            });
+          } else {
+            Interact.confirm(
+              `Remove ${tracker.label} from this board?`,
+              "You can always re-add it later"
+            ).then(res => {
+              if (res) {
+                BoardStore.removeTrackerFromBoard(tracker, $BoardStore.active);
+              }
+            });
           }
-        });
-      }
+        }
+      };
+
+      buttons.push(removeButton);
       // Fire Popmenu
       Interact.popmenu({
         title: `${tracker.emoji || "⚪️"} ${tracker.label || tracker.tag}`,
@@ -367,7 +382,7 @@
     align-items: stretch;
     height: 50px;
     z-index: 350;
-    background-color: #fff;
+    background-color: var(--color-solid);
   }
 
   .board-actions {

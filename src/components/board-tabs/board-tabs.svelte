@@ -21,7 +21,7 @@
 <style lang="scss">
   .n-board-tabs {
     background-color: var(--color-solid);
-    border-bottom: solid 1px var(--color-faded);
+    border-bottom: solid 1px var(--color-solid-2);
     width: 100%;
     flex-grow: 1;
     overflow-x: scroll;

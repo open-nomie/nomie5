@@ -7149,7 +7149,7 @@ body.dark {
   --color-faded-2: rgba(255, 255, 255, 0.2);
   --color-faded-3: rgba(255, 255, 255, 0.4);
   --color-full-screen: rgba(63, 62, 62, 0.8);
-  --color-background-selected: rgba($primaryBright, 0.4); }
+  --color-background-selected: rgba($primaryBright, 0.8); }
   body.dark .n-item.border-bottom {
     border-bottom: solid 1px rgba(255, 255, 255, 0.15) !important; }
   body.dark .btn-light {
@@ -7176,7 +7176,7 @@ body.dark {
         box-shadow: 0 0 0 0.2rem rgba(71, 71, 71, 0.5); }
 
 .full-screen {
-  background-color: var(--color-inverse);
+  background-color: var(--color-faded-3);
   z-index: 2000;
   position: fixed;
   top: 0;
@@ -7395,7 +7395,7 @@ button:focus {
   .btn-white-pop.inactive {
     box-shadow: none;
     background-color: var(--color-solid);
-    color: var(--color-solid-3) !important;
+    color: var(--color-inverse-2) !important;
     border-color: var(--color-solid-2);
     opacity: 0.7; }
 
