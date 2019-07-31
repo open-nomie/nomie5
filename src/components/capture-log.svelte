@@ -18,6 +18,7 @@
 
   // Utils
   import Logger from "../utils/log/log";
+  import time from "../utils/time/time";
 
   // Stores
   import { Interact } from "../store/interact";
@@ -57,14 +58,12 @@
     advancedChanged() {
       if (state.date) {
         ActiveLogStore.update(l => {
-          let now = new Date();
-          let gmtDate = new Date(state.date);
-
-          console.log("Updating Log with date", { now, gmtDate });
+          let updatedDate = time.datetimeLocal(state.date);
+          // alert(now + " " + gmtDate);
           // TODO: Mobile is getting GMT Time, desktop is not
 
-          l.start = gmtDate.getTime();
-          l.end = gmtDate.getTime();
+          l.start = updatedDate.getTime();
+          l.end = updatedDate.getTime();
           return l;
         });
       }

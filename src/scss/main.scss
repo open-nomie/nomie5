@@ -80,6 +80,20 @@ body {
 		// $hover-border: darken($border, 10%),
 		// $active-background: darken($background, 10%), $active-border: darken($border, 12.5%)
 		@include button-variant(#333, darken(#333, 5%), darken(#333, 5%), darken(#333, 5%), rgba($primaryBright, 5%));
+		&:hover {
+			@include button-variant(
+				#333,
+				darken(#333, 10%),
+				darken(#333, 10%),
+				darken(#333, 10%),
+				rgba($primaryBright, 10%)
+			);
+		}
+	}
+	.form-control {
+		background-color: var(--color-solid);
+		border-color: var(--color-solid-1);
+		color: var(--color-inverse-2);
 	}
 }
 
@@ -170,6 +184,7 @@ body.dark {
 	border-radius: 12px;
 	padding-left: 1rem;
 	padding-right: 1rem;
+	transition: all 0.2s ease-in-out;
 }
 
 .btn-content {

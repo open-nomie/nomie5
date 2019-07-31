@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export default {
 	padTime(t) {
 		return (t + '').length === 1 ? (t + '').padStart(2, '0') : t;
@@ -22,6 +24,20 @@ export default {
 			return `${hours}:${minutes}:${seconds}`;
 		}
 		return `00:${minutes}:${seconds}`;
+	},
+	datetimeLocal(dateString) {
+		let dateSplit = dateString.split('T');
+		let dateStr = dateSplit[0];
+		let timeStr = dateSplit[1];
+
+		// This hack brought to you by datetime-local
+		// iOS defaults to GMT - but it doesn't do it on
+		// desktop browsers.
+		let updatedDate = dayjs(dateStr, 'YYYY-MM-DD')
+			.set('hour', timeStr.split(':')[0])
+			.set('minute', timeStr.split(':')[1])
+			.toDate();
+		return updatedDate;
 	},
 	// Milliseconds to Seconds
 	msToSecond(ms) {
