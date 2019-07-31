@@ -7239,6 +7239,45 @@ body.dark {
   padding-right: 1rem;
   transition: all 0.2s ease-in-out; }
 
+.mini-map {
+  position: fixed;
+  bottom: 70px;
+  right: 26px;
+  height: 100px;
+  width: 180px;
+  border-radius: 20px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  border: solid 1px var(--color-faded-1);
+  background-color: var(--color-solid);
+  overflow: hidden;
+  transition: all 0.2s ease-in-out; }
+  @media (max-width: 320px) {
+    .mini-map {
+      height: 80px;
+      width: 140px; } }
+  .mini-map .leaflet-top,
+  .mini-map .location-name,
+  .mini-map .leaflet-bottom {
+    display: none; }
+  .mini-map .n-map-container {
+    z-index: 10; }
+  .mini-map.opened {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-inverse);
+    height: 60px;
+    width: 120px;
+    z-index: 2000; }
+  .mini-map::after {
+    content: '';
+    z-index: 20;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; }
+
 .btn-content {
   flex-direction: column;
   position: relative;
