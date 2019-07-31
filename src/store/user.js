@@ -229,12 +229,15 @@ const userInit = () => {
 		},
 		/**
 		 * ListFiles()
-		 * LIst all files for this user
+		 * List all files for a user
+		 * TODO: move this to modules/storage
 		 */
 		listFiles() {
+			let data = methods.data();
+			let storageType = Storage.local.get('root/storage_type') || 'blockstack';
 			return new Promise((resolve, reject) => {
 				let files = [];
-				if (Storage.local.get('root/storage_type') === 'blockstack') {
+				if (data.storageType === 'blockstack') {
 					blockstack
 						.listFiles(file => {
 							if (files.indexOf(file) == -1) {
@@ -245,11 +248,13 @@ const userInit = () => {
 						.then(() => {
 							resolve(files);
 						});
-				} else if (Storage.local.get('root/storage_type') === 'local') {
+				} else if (data.storageType === 'local') {
 					localforage.keys().then(keys => {
 						files = keys;
 						resolve(files);
 					});
+				} else {
+					alert('No storage type found for ' + data.storageType);
 				}
 			});
 		},

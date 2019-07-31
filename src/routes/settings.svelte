@@ -267,6 +267,11 @@
             <a href="https://nomie.app?s=dap" target="_system">Nomie Website</a>
           </span>
         </NItem>
+        <NItem title="Reddit r/nomie">
+          <span slot="right" class="pr-2">
+            <a href="https://reddit.com/r/nomie" target="_system">r/nomie</a>
+          </span>
+        </NItem>
         <NItem title="Open Source">
           <span slot="right" class="pr-2">
             <a href="https://github.com/open-nomie/nomie" target="_system">
