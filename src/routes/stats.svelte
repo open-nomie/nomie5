@@ -2,6 +2,7 @@
   /**
    * Stats Route
    * This is stupid big... still needs to be organized
+   * SERIOUSLY BIG
    */
 
   //Vendors
@@ -29,6 +30,7 @@
   import NToolbar from "../components/toolbar/toolbar.svelte";
   import NLogItem from "../components/list-item-log/list-item-log.svelte";
   import NTimeGrid from "../components/day-time-grid/day-time-grid.svelte";
+  import KVBlock from "../components/kv-block/kv-block.svelte";
 
   // containers
   import NPage from "../containers/layout/page.svelte";
@@ -68,7 +70,13 @@
     overview: {
       mode: "time"
     },
-    stats: null
+    stats: null,
+    // Holder of the comparable tracker
+    // Current hack - tap the emoji in the title
+    compare: {
+      tracker: null,
+      stats: null
+    }
   };
 
   $: if (Object.keys($TrackerStore).length) {
@@ -98,21 +106,49 @@
       });
     },
     load() {
+      console.log("load()");
+      let tracker = $TrackerStore[mainTag] || new Tracker({ tag: mainTag });
       refreshing = true;
-      // Get Logs for the year and tag
-      LedgerStore.search(`#${mainTag}`, state.date.format("YYYY")).then(
-        resRows => {
-          // Expand Logs
-          resRows = resRows.map(log => {
-            log.expanded();
-            return log;
+      methods.getStats(tracker).then(res => {
+        console.log(`get stats for ${mainTag}`, res);
+        rows = res.rows;
+        state.stats = res.stats;
+
+        if (state.compare.tracker) {
+          console.log("load() for compare too");
+          methods.getStats(state.compare.tracker).then(compareRes => {
+            state.compare.stats = compareRes.stats;
+            state.compare.rows = compareRes.rows;
+            console.log("Stats Compare", state.compare);
           });
-          rows = resRows;
-          // Initialize the Stats OverView
-          state.stats = new StatsProcessor(rows, state.tracker, state.date);
-          refreshing = false;
         }
-      );
+
+        refreshing = false;
+      });
+      // Get Logs for the year and tag
+    },
+    getStats(tracker) {
+      return LedgerStore.search(
+        `#${tracker.tag}`,
+        state.date.format("YYYY")
+      ).then(resRows => {
+        // Expand Logs
+        resRows = resRows.map(log => {
+          log.expanded();
+          return log;
+        });
+        // Initialize the Stats OverView
+        let stats = new StatsProcessor(
+          resRows,
+          tracker,
+          state.date,
+          "getStats(" + tracker.tag + ")"
+        );
+        return {
+          stats,
+          rows: resRows
+        };
+      });
     },
     previous() {
       state.date = state.date.subtract(1, "year");
@@ -134,6 +170,20 @@
           state.year.mode = mode;
           break;
       }
+    },
+    compare() {
+      Interact.selectTracker().then(tracker => {
+        state.compare.tracker = tracker;
+        methods.getStats(state.compare.tracker).then(compareRes => {
+          state.compare.stats = compareRes.stats;
+          state.compare.rows = compareRes.rows;
+        });
+      });
+    },
+    removeCompare() {
+      state.compare.stats = null;
+      state.compare.tracker = null;
+      state.compare.rows = null;
     },
     previousMonth() {
       let thisYear = state.date.year();
@@ -174,11 +224,13 @@
 
     refresh() {
       state.stats.gotoDate(state.date);
-
+      if (state.compare.stats) {
+        state.compare.stats.gotoDate(state.date);
+      }
       refreshing = true;
       setTimeout(() => {
         refreshing = false;
-      });
+      }, 1);
     },
     show(date) {
       state.date = date;
@@ -246,17 +298,7 @@
   .border-bottom {
     border-bottom: solid 1px var(--color-faded-1) !important;
   }
-  .block {
-    margin: 0 3px;
 
-    .label {
-      font-size: 0.7rem;
-    }
-    .value {
-      font-size: 1.3rem;
-      font-weight: 500;
-    }
-  }
   .popcards {
     position: relative;
     min-height: 1200px;
@@ -282,7 +324,13 @@
         on:click={() => {
           window.history.back();
         }} />
-      <h1>{state.tracker.emoji} {state.tracker.label}</h1>
+      <h1 class="truncate" on:click={methods.compare}>
+        {state.tracker.emoji}
+        {#if state.compare.tracker}
+          <span class="text-faded">vs</span>
+          {state.compare.tracker.emoji}
+        {/if}
+      </h1>
       <button
         class="btn btn-clear btn-icon zmdi zmdi-edit"
         on:click={() => {
@@ -306,48 +354,65 @@
 
     <div class="container pt-3 popcards">
 
-      <NPopcard level={10} arrow={true}>
-
-        <div class="n-row data-blocks py-2 px-3 border-bottom">
-
-          {#if state.tracker.math === 'sum'}
-            <div class="block">
-              <div class="label">Total</div>
-              <div class="value">
-                {NomieUOM.format(math.round(state.stats.results.year.sum, 1000), state.tracker.uom)}
-              </div>
-            </div>
-          {:else}
-            <div class="block">
-              <div class="label">Year Avg</div>
-              <div class="value">
-                {NomieUOM.format(math.round(state.stats.results.year.avg, 1000), state.tracker.uom)}
-              </div>
-            </div>
-          {/if}
-
-          {#if state.stats.results.year.max}
-            <div class="block">
-              <div
-                class="label"
-                on:click={() => {
-                  methods.show(state.stats.results.year.max.date);
-                }}>
-                Max {(state.stats.results.year.max.date || dayjs()).format('MMM D')}
-              </div>
-              <div class="value">
-                {NomieUOM.format(math.round(state.stats.results.year.max.value, 10), state.tracker.uom)}
-              </div>
-            </div>
-          {/if}
-
-          <div class="block">
-            <div class="label">Month Avg</div>
-            <div class="value">
-              {NomieUOM.format(math.round(state.stats.results.year.avg, 10), state.tracker.uom)}
-            </div>
-          </div>
+      {#if state.compare.tracker}
+        <div class="text-center p2 pt-1">
+          <button class="btn btn-light btn-sm" on:click={methods.removeCompare}>
+            Remove {state.compare.tracker.emoji} {state.compare.tracker.label}
+          </button>
         </div>
+      {/if}
+
+      <!-- Year Card -->
+
+      <NPopcard level={10} arrow={true}>
+        <div class="n-row data-blocks py-2 px-3 border-bottom">
+          {#if state.tracker.math === 'sum'}
+            <KVBlock
+              label="Total"
+              value={NomieUOM.format(math.round(state.stats.results.year.sum, 1000), state.tracker.uom)} />
+          {:else}
+            <KVBlock
+              label="Year Avg"
+              value={NomieUOM.format(math.round(state.stats.results.year.avg, 1000), state.tracker.uom)} />
+          {/if}
+          {#if state.stats.results.year.max}
+            <KVBlock
+              onClick={() => {
+                methods.show(state.stats.results.year.max.date);
+              }}
+              label="Max {(state.stats.results.year.max.date || dayjs()).format('MMM D')}"
+              value={NomieUOM.format(math.round(state.stats.results.year.max.value, 10), state.tracker.uom)} />
+          {/if}
+          <KVBlock
+            label="Month Avg"
+            value={NomieUOM.format(math.round(state.stats.results.year.avg, 10), state.tracker.uom)} />
+        </div>
+        <!-- Compare If Needed-->
+        {#if state.compare.stats}
+          <div class="n-row data-blocks py-2 px-3 border-bottom">
+            {#if state.compare.tracker.math === 'sum'}
+              <KVBlock
+                label="{state.compare.tracker.emoji} Total"
+                value={NomieUOM.format(math.round(state.compare.stats.results.year.sum, 1000), state.compare.tracker.uom)} />
+            {:else}
+              <KVBlock
+                label="{state.compare.tracker.emoji} Year Avg"
+                value={NomieUOM.format(math.round(state.compare.stats.results.year.avg, 1000), state.compare.tracker.uom)} />
+            {/if}
+            {#if state.compare.stats.results.year.max}
+              <KVBlock
+                onClick={() => {
+                  methods.show(state.compare.stats.results.year.max.date);
+                }}
+                label="{state.compare.tracker.emoji} Max {(state.compare.stats.results.year.max.date || dayjs()).format('MMM D')}"
+                value={NomieUOM.format(math.round(state.compare.stats.results.year.max.value, 10), state.compare.tracker.uom)} />
+            {/if}
+            <KVBlock
+              label="{state.compare.tracker.emoji} Month Avg"
+              value={NomieUOM.format(math.round(state.compare.stats.results.year.avg, 10), state.compare.tracker.uom)} />
+          </div>
+        {/if}
+        <!-- Year Display Options-->
         <div class="n-row p-3">
           <div class="btn-group flex-grow">
             <button
@@ -392,11 +457,36 @@
                 return NomieUOM.format(y, state.tracker.uom);
               }}
               activeIndex={state.date.month() + 1} />
+            {#if state.compare.stats}
+              <BarChart
+                height={100}
+                color={state.compare.tracker.color}
+                labels={state.compare.stats.results.year.chart.labels}
+                points={state.compare.stats.results.year.chart.points}
+                on:tap={event => {
+                  state.date = state.date.set('month', event.detail.index);
+                  methods.refresh();
+                }}
+                xFormat={x => {
+                  return dayjs(x).format('MMM');
+                }}
+                yFormat={y => {
+                  return NomieUOM.format(y, state.compare.tracker.uom);
+                }}
+                activeIndex={state.date.month() + 1} />
+            {/if}
           {/if}
           {#if state.year.mode == 'grid'}
             <div class="grid-holder px-3 pb-3">
               <NTimeGrid color={state.tracker.color} {rows} />
             </div>
+            {#if state.compare.stats}
+              <div class="grid-holder px-3 pb-3">
+                <NTimeGrid
+                  color={state.compare.tracker.color}
+                  rows={state.compare.rows} />
+              </div>
+            {/if}
           {/if}
           {#if state.year.mode == 'map'}
             <div class="map-holder w-100">
@@ -434,40 +524,49 @@
       <NPopcard level={9} arrow={true}>
         <div class="n-row data-blocks py-2 px-3 border-bottom">
           {#if state.tracker.math === 'sum'}
-            <div class="block">
-              <div class="label">{state.date.format('MMMM')} Total</div>
-              <div class="value">
-                {NomieUOM.format(math.round(state.stats.results.month.sum || 0, 1000), state.tracker.uom)}
-              </div>
-            </div>
+            <KVBlock
+              label="{state.date.format('MMMM')} Total"
+              value={NomieUOM.format(math.round(state.stats.results.month.sum || 0, 1000), state.tracker.uom)} />
           {:else}
-            <div class="block">
-              <div class="label">{state.date.format('MMMM')} Avg</div>
-              <div class="value">
-                {NomieUOM.format(math.round(state.stats.results.month.avg || 0, 1000), state.tracker.uom)}
-              </div>
-            </div>
+            <KVBlock
+              label="{state.date.format('MMMM')} Avg"
+              value={NomieUOM.format(math.round(state.stats.results.month.avg || 0, 1000), state.tracker.uom)} />
           {/if}
 
           {#if state.stats.results.month.max.value}
-            <div class="block">
-              <div class="label">
-                Max {(state.stats.results.month.max.date || dayjs()).format('MMM D')}
-              </div>
-              <div class="value">
-                {NomieUOM.format(math.round(state.stats.results.month.max.value, 10), state.tracker.uom)}
-              </div>
-            </div>
+            <KVBlock
+              label="Max {(state.stats.results.month.max.date || dayjs()).format('MMM D')}"
+              value={NomieUOM.format(math.round(state.stats.results.month.max.value, 10), state.tracker.uom)} />
           {/if}
-
-          <div class="block">
-            <div class="label">Daily Avg</div>
-            <div class="value">
-              {NomieUOM.format(math.round(state.stats.results.month.avg, 10), state.tracker.uom)}
-            </div>
-          </div>
-
+          <KVBlock
+            label="Daily Avg"
+            value={NomieUOM.format(math.round(state.stats.results.month.avg, 10), state.tracker.uom)} />
         </div>
+        <!-- Compare -->
+        {#if state.compare.stats}
+          <div class="n-row data-blocks py-2 px-3 border-bottom">
+            {#if state.compare.tracker.math === 'sum'}
+              <KVBlock
+                label="{state.compare.tracker.emoji}
+                {state.date.format('MMMM')} Total"
+                value={NomieUOM.format(math.round(state.compare.stats.results.month.sum || 0, 1000), state.compare.tracker.uom)} />
+            {:else}
+              <KVBlock
+                label="{state.compare.tracker.emoji}
+                {state.date.format('MMMM')} Avg"
+                value={NomieUOM.format(math.round(state.compare.stats.results.month.avg || 0, 1000), state.compare.tracker.uom)} />
+            {/if}
+
+            {#if state.compare.stats.results.month.max.value}
+              <KVBlock
+                label="{state.compare.tracker.emoji} Max {(state.compare.stats.results.month.max.date || dayjs()).format('MMM D')}"
+                value={NomieUOM.format(math.round(state.compare.stats.results.month.max.value, 10), state.compare.tracker.uom)} />
+            {/if}
+            <KVBlock
+              label="{state.compare.tracker.emoji} Daily Avg"
+              value={NomieUOM.format(math.round(state.compare.stats.results.month.avg, 10), state.compare.tracker.uom)} />
+          </div>
+        {/if}
 
         <div class="n-row p-3">
           <div class="btn-group flex-grow">
@@ -515,6 +614,25 @@
                   return NomieUOM.format(y, state.tracker.uom);
                 }}
                 activeIndex={state.date.toDate().getDate()} />
+              {#if state.compare.stats && !refreshing}
+                <BarChart
+                  height={100}
+                  color={state.compare.stats.tracker.color}
+                  labels={state.compare.stats.results.month.chart.labels}
+                  points={state.compare.stats.results.month.chart.points}
+                  on:tap={event => {
+                    let newDate = state.date
+                      .toDate()
+                      .setDate(event.detail.index + 1);
+                    state.date = dayjs(newDate);
+                    methods.refresh();
+                  }}
+                  xFormat={x => (x % 2 ? x : '')}
+                  yFormat={y => {
+                    return NomieUOM.format(y, state.compare.tracker.uom);
+                  }}
+                  activeIndex={state.date.toDate().getDate()} />
+              {/if}
             {:else if state.month.mode === 'map'}
               <NMap
                 small
@@ -566,10 +684,11 @@
         <div class="n-row data-blocks py-2 px-3 border-bottom">
           {#if state.tracker.math === 'sum'}
             {#await methods.aboveOrBelow(state.stats.results.day.sum, state.stats.results.month.avg) then aob}
-              <div class="block">
-                <div class="label">
-                  {state.date.format('ddd')} This Day
-                  {#if aob.direction != 'same'}
+              <KVBlock
+                value={NomieUOM.format(state.stats.results.day.sum || 0, state.tracker.uom)}>
+                <div slot="label">
+                  {state.date.format('ddd')}
+                  {#if aob.direction != 'same' && isFinite(aob.amount)}
                     <span class="change">
                       <span
                         class="zmdi {aob.direction === 'above' ? 'zmdi-triangle-up' : 'zmdi-triangle-down'}" />
@@ -577,29 +696,19 @@
                     </span>
                   {/if}
                 </div>
-                <div class="value">
-                  {NomieUOM.format(state.stats.results.day.sum || 0, state.tracker.uom)}
-                </div>
-              </div>
+              </KVBlock>
+              {#if state.compare.stats}
+                <KVBlock
+                  label={state.compare.tracker.emoji}
+                  value={NomieUOM.format(state.compare.stats.results.day.sum || 0, state.compare.tracker.uom)} />
+              {/if}
             {/await}
           {:else}
             {#await methods.aboveOrBelow(state.stats.results.day.sum, state.stats.results.month.avg) then aob}
-              <div class="block">
-                <div class="label">
-                  This Day
-                  {#if aob.direction != 'same'}
-                    <span class="change">
-                      <span
-                        class="zmdi {aob.direction === 'above' ? 'zmdi-triangle-up' : 'zmdi-triangle-down'}" />
-                      {aob.amount}%
-                    </span>
-                  {/if}
-
-                </div>
-                <div class="value">
-                  {NomieUOM.format(state.stats.results.day.avg, state.tracker.uom)}
-                </div>
-              </div>
+              <KVBlock
+                value={NomieUOM.format(state.stats.results.day.avg, state.tracker.uom)}>
+                <div slot="label">This Day</div>
+              </KVBlock>
             {/await}
           {/if}
         </div>

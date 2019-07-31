@@ -10,13 +10,15 @@ import math from '../../utils/math/math';
 const console = new Logger('📊 stats/overview');
 
 export default class StatsProcessor {
-	constructor(rows, tracker, date) {
+	constructor(rows, tracker, date, caller) {
+		caller = caller || 'unknown';
 		this.date = date || dayjs();
 		this.rows = rows;
 		this.tracker = new Tracker(tracker);
 		this.valueMap = {}; // holder of days and array of values
 		// Convert to Logs if not already
 		this.initialize();
+		console.log('StatsProcessor initialized', caller);
 	}
 
 	initialize() {
