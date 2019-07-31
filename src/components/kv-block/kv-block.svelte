@@ -14,6 +14,7 @@
     .value {
       font-size: 1.3rem;
       font-weight: 500;
+    }
     &.clickable {
       border-bottom: dotted 1px var(--color-faded);
     }
