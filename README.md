@@ -42,6 +42,12 @@ npm install
 npm run dev
 ```
 
+## Running tests
+
+```
+npm run cypress
+```
+
 Deploy straight to Netlify to test it out quickly.
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://app.netlify.com/start/deploy?repository=https://github.com/open-nomie/nomie)

@@ -115,6 +115,7 @@ export default class StatsProcessor {
 		});
 
 		newMap.sum = math.sum(allValues);
+		console.log('Averaging the following values', allValues);
 		newMap.avg = math.average(allValues);
 
 		return newMap;
