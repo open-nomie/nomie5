@@ -7260,6 +7260,7 @@ body.dark {
   .mini-map .leaflet-bottom {
     display: none; }
   .mini-map .n-map-container {
+    background-color: var(--color-solid);
     z-index: 10; }
   .mini-map.opened {
     display: flex;

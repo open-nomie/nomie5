@@ -33,7 +33,6 @@ const trackerStoreInit = () => {
 		initialize() {
 			return new Promise((resolve, reject) => {
 				return Storage.get(`${config.data_root}/trackers.json`).then(trackers => {
-					console.log('Trackers', trackers);
 					// If the user doesn't have trackers
 					// Let's prompt them to install some
 					if (!trackers) {

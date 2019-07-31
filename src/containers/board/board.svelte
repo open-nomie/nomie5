@@ -208,7 +208,6 @@
           if (res) {
             let label = res.trim();
             BoardStore.addBoard(label).then(board => {
-              console.log("Board created?", board);
               Interact.alert(
                 "Created",
                 "Board was created. Go and add some trackers."
@@ -216,7 +215,6 @@
                 BoardStore.setActive(board.id);
               });
             });
-            console.log("RES!");
           }
         }
       );
@@ -312,9 +310,7 @@
               "You can always recreate it later. No historic data will be deleted deleted."
             ).then(res => {
               if (res) {
-                TrackerStore.deleteTracker(tracker).then(done => {
-                  console.log("Tracker Deleted");
-                });
+                TrackerStore.deleteTracker(tracker).then(done => {});
               }
             });
           } else {

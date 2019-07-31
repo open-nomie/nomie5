@@ -274,7 +274,6 @@
   };
 
   onMount(() => {
-    console.log("OnMount", { searchLogs, state });
     if ((state.searchTerm || "").length > 1 || !searchLogs) {
       methods.refreshSearch();
     }

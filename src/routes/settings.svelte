@@ -301,7 +301,7 @@
           </a>
         </NItem>
         <NItem className="compact item-divider" />
-        <NItem title="Copyright 2019 All Rights Reserved.">
+        <NItem title="Copyright 2019 All Rights Reserved." className="pb-3">
           <NText tag="div" size="sm">
             Nomie, and the Elephant are trademarks of Happy Data, LLC.
           </NText>

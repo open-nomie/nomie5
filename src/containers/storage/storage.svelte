@@ -23,7 +23,6 @@
   const methods = {
     initialize() {
       state.files = [];
-      console.log("Initialize", UserStore.listFiles);
       return UserStore.listFiles().then(files => {
         state.files = files;
         return state.files;

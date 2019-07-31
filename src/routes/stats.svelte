@@ -106,20 +106,16 @@
       });
     },
     load() {
-      console.log("load()");
       let tracker = $TrackerStore[mainTag] || new Tracker({ tag: mainTag });
       refreshing = true;
       methods.getStats(tracker).then(res => {
-        console.log(`get stats for ${mainTag}`, res);
         rows = res.rows;
         state.stats = res.stats;
 
         if (state.compare.tracker) {
-          console.log("load() for compare too");
           methods.getStats(state.compare.tracker).then(compareRes => {
             state.compare.stats = compareRes.stats;
             state.compare.rows = compareRes.rows;
-            console.log("Stats Compare", state.compare);
           });
         }
 
@@ -334,9 +330,7 @@
       <button
         class="btn btn-clear btn-icon zmdi zmdi-edit"
         on:click={() => {
-          Interact.editTracker(state.tracker).then(() => {
-            console.log('Tracker Edited');
-          });
+          Interact.editTracker(state.tracker).then(() => {});
         }} />
     </div>
 

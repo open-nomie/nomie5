@@ -85,7 +85,6 @@ export default class Export {
 					});
 				} else {
 					let events = flatten(finished);
-					console.log(`Done loading ${finished.length} books with ${events.length} events`);
 					resolve(events);
 				}
 			};

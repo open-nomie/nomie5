@@ -40,7 +40,6 @@
     } else if (slashes[2] == "settings") {
       state.mode = "settings";
     }
-    console.log("selected", state.plugin);
     if (state.plugin) {
       state.plugin.emoji = state.plugin.emoji || "🔌";
     }

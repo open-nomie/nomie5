@@ -139,7 +139,6 @@ const interactInit = () => {
 			});
 		},
 		dismissTrackerInput() {
-			console.log('Dismissing Tracker INput');
 			update(s => {
 				s.trackerInput.show = false;
 				s.trackerInput.tracker = null;

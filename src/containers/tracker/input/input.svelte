@@ -75,7 +75,6 @@
   }
 
   onMount(() => {
-    console.log("Input Value", value, data.value);
     data.ready = true;
   });
 </script>

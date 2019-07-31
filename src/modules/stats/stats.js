@@ -18,7 +18,6 @@ export default class StatsProcessor {
 		this.valueMap = {}; // holder of days and array of values
 		// Convert to Logs if not already
 		this.initialize();
-		console.log('StatsProcessor initialized', caller);
 	}
 
 	initialize() {
@@ -63,10 +62,6 @@ export default class StatsProcessor {
 
 		this.results.year = { ...this.results.year, ...this.getMinMaxFromValueMap(this.results.valueMap) };
 
-		console.log('Base Set', this.results);
-		console.log('prepare', {
-			results: this.results,
-		});
 		// Year is finished
 		this.results.month = this.generate('month');
 		this.results.day = this.generate('day');
@@ -115,7 +110,6 @@ export default class StatsProcessor {
 		});
 
 		newMap.sum = math.sum(allValues);
-		console.log('Averaging the following values', allValues);
 		newMap.avg = math.average(allValues);
 
 		return newMap;

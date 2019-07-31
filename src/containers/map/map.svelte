@@ -32,7 +32,6 @@
   };
 
   $: if (locations) {
-    console.log("Map Locations loaded", locations.length);
     setTimeout(() => {
       methods.init().then(() => {
         methods.renderMap();
@@ -59,7 +58,6 @@
       return new Promise((resolve, reject) => {
         if (!MAP) {
           MAP = new L.Map(id).fitWorld();
-          console.log("no map lets create", MAP);
         }
         MAP.eachLayer(function(layer) {
           MAP.removeLayer(layer);
@@ -72,7 +70,6 @@
       });
     },
     renderMap() {
-      console.log("Render Map", MAP);
       let mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png`;
       if (document.body.classList.contains("dark")) {
         mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png`;
@@ -166,7 +163,6 @@
   // On Mount
   onMount(() => {
     // methods.init().then(map => {
-    //   console.log("Inited", map);
     //   // methods.renderMap();
     // });
   });
