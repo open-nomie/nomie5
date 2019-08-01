@@ -46,7 +46,7 @@ export default class TrackerConfig {
 		// one tap
 		this.one_tap = starter.one_tap === true ? true : false;
 
-		this.note = starter.note || undefined;
+		this.note = starter.note || null;
 
 		this.hidden = starter.hidden === true ? true : false;
 

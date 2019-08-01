@@ -7,7 +7,7 @@
    */
   // svelte
   import { navigate, Link } from "svelte-routing";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import { fade } from "svelte/transition";
 
   // Components
@@ -30,6 +30,8 @@
   import math from "../../utils/math/math";
   import Logger from "../../utils/log/log";
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
+  import extractor from "../../utils/extract-trackers/extract-trackers";
+  import promiseStep from "../../utils/promise-step/promise-step";
 
   //Stores
   import { ActiveLogStore } from "../../store/active-log";
@@ -232,7 +234,7 @@
      */
     trackerTapped(tracker) {
       data.selectedTracker = tracker;
-
+      // If it's a plain old tick tracker
       if (tracker.type === "tick") {
         ActiveLogStore.addTag(tracker.tag);
         if (tracker.one_tap === true) {
@@ -241,6 +243,31 @@
             Interact.toast("Saved");
           });
         }
+        // If it's a note (combined trackers)
+      } else if (tracker.type === "note") {
+        // Extract Trackers
+        let trackerTags = extractor(tracker.note);
+        // Create array of items to pass to promise step
+        let items = Object.keys(trackerTags).map(tag => {
+          return {
+            tracker: $TrackerStore[tag] || new Tracker({ tag: tag }),
+            value: trackerTags[tag].value // not being used
+          };
+        });
+        // Step over each one...
+        promiseStep(items, item => {
+          return new Promise((resolve, reject) => {
+            // testing if going direct works
+            $Interact.trackerInput.show = false;
+            $Interact.trackerInput.tracker = null;
+            $Interact.trackerInput.onInteract = null;
+            setTimeout(() => {
+              Interact.trackerInput(item.tracker, item.value)
+                .then(resolve)
+                .catch(reject);
+            }, 300);
+          });
+        });
       } else {
         // It's an input of some sort
         Interact.trackerInput(tracker);

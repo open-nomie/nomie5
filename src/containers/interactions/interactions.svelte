@@ -32,6 +32,8 @@
     promptInput.focus();
   }
 
+  let ready = false;
+
   const methods = {
     getLogTrackers(log) {
       return Object.keys(log.trackers).map(tag => {
@@ -63,6 +65,7 @@
       $Interact.logDataEditor.tag = null;
     }
   };
+  ready = true;
 </script>
 
 <NPopMenu
@@ -159,22 +162,22 @@
   <PinLock />
 {/if}
 
-{#if $Interact.trackerEditor.show}
-  <NTrackerEditor
-    show={true}
-    tracker={new Tracker($Interact.trackerEditor.tracker)}
-    on:save={tracker => {
-      $Interact.trackerEditor.show = false;
-      $Interact.trackerEditor.tracker = null;
-      if ($Interact.trackerEditor.onInteract) {
-        $Interact.trackerEditor.onInteract(tracker);
-      }
-    }}
-    on:close={() => {
-      $Interact.trackerEditor.show = false;
-      $Interact.trackerEditor.tracker = null;
-    }} />
-{/if}
+<!-- Tracker Editor -->
+
+<NTrackerEditor
+  tracker={new Tracker($Interact.trackerEditor.tracker)}
+  on:save={tracker => {
+    $Interact.trackerEditor.show = false;
+    $Interact.trackerEditor.tracker = null;
+    if ($Interact.trackerEditor.onInteract) {
+      $Interact.trackerEditor.onInteract(tracker);
+    }
+  }}
+  on:close={() => {
+    Interact.dismissEditTracker();
+  }} />
+
+<!-- Tracker Selector -->
 
 <TrackerSelector
   show={$Interact.trackerSelector.show}
@@ -192,9 +195,14 @@
     }
   }} />
 
-{#if $Interact.trackerInput.show === true}
+<!-- Tracker Input -->
+
+{#if $Interact.trackerInput.show}
   <TrackerInput
     on:save={event => {
+      if ($Interact.trackerInput.onInteract) {
+        $Interact.trackerInput.onInteract(event.detail);
+      }
       Interact.dismissTrackerInput();
       ActiveLogStore.addTag(event.detail.tracker.tag, event.detail.value);
       LedgerStore.saveLog($ActiveLogStore).then(() => {
@@ -203,12 +211,18 @@
     }}
     on:add={event => {
       ActiveLogStore.addTag(event.detail.tracker.tag, event.detail.value);
+      if ($Interact.trackerInput.onInteract) {
+        $Interact.trackerInput.onInteract(event.detail);
+      }
       Interact.dismissTrackerInput();
     }}
     on:cancel={() => {
+      if ($Interact.trackerInput.onInteract) {
+        $Interact.trackerInput.onInteract(null);
+      }
       Interact.dismissTrackerInput();
     }}
-    show={true}
+    show={$Interact.trackerInput.show}
     tracker={new Tracker($Interact.trackerInput.tracker)} />
 {/if}
 

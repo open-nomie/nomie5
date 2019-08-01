@@ -7239,6 +7239,15 @@ body.dark {
   padding-right: 1rem;
   transition: all 0.2s ease-in-out; }
 
+body.scrolling .mini-map {
+  opacity: 0.3; }
+
+.input-model.type-range .keypad-holder {
+  display: none; }
+
+.input-model.type-value .tracker-input.slider {
+  display: none; }
+
 .mini-map {
   position: fixed;
   bottom: 70px;

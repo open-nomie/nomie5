@@ -1,6 +1,7 @@
 <script>
   // svelte
   import { createEventDispatcher, onMount } from "svelte";
+  import { slide } from "svelte/transition";
 
   // Components
   import NModal from "../../../components/modal/modal.svelte";
@@ -15,10 +16,11 @@
 
   // Stores
   import { TrackerStore } from "../../../store/trackers";
+  import { Interact } from "../../../store/interact";
 
   // Props
   export let tracker = undefined;
-  export let show = true;
+
   export let value = undefined;
   export let hideAdd = undefined;
   export let saveLabel = "Save";
@@ -32,10 +34,6 @@
     tracker: null,
     ready: false
   };
-
-  $: if (value && !data.value) {
-    data.value = value;
-  }
 
   const methods = {
     onSave() {
@@ -73,9 +71,15 @@
   $: if (tracker) {
     data.tracker = tracker;
   }
-
   onMount(() => {
-    data.ready = true;
+    if (value && !data.value) {
+      data.value = value;
+    } else {
+      data.value = tracker.default || 0;
+    }
+    setTimeout(() => {
+      data.ready = true;
+    }, 120);
   });
 </script>
 
@@ -96,36 +100,42 @@
   }
 </style>
 
-<NModal show={true} title={tracker.label} className="tracker-input">
-  {#if data.ready}
-    {#if tracker.type === 'range'}
-      <SliderInput
-        value={(data.value || tracker.min) + ''}
-        min={(tracker.min || 0) + ''}
-        max={(tracker.max || 0) + ''}
-        on:change={value => {
-          data.value = value.detail;
-        }} />
-    {/if}
-
-    {#if tracker.type === 'value' || tracker.type === 'tick'}
-      <NKeypad
-        {tracker}
-        {value}
-        on:change={value => {
-          data.value = value.detail;
-        }} />
-    {/if}
-
-    {#if tracker.type === 'timer'}
-      <NTimer
-        {value}
-        tracker={data.tracker}
-        bind:value={data.value}
-        on:change={event => {
-          data.value = event.detail;
-        }} />
-    {/if}
+<NModal
+  show={$Interact.trackerInput.show}
+  title="{tracker.emoji}
+  {tracker.label}"
+  className="tracker-input">
+  {#if $Interact.trackerInput.show}
+    <div
+      class="input-model type-{$Interact.trackerInput.tracker.type}"
+      transition:slide>
+      {#if tracker.type === 'range'}
+        <SliderInput
+          value={(data.value || tracker.min) + ''}
+          min={(tracker.min || 0) + ''}
+          max={(tracker.max || 0) + ''}
+          on:change={value => {
+            data.value = value.detail;
+          }} />
+      {:else if tracker.type === 'value' || tracker.type === 'tick'}
+        <div id="keypad-holder">
+          <NKeypad
+            {tracker}
+            {value}
+            on:change={value => {
+              data.value = value.detail;
+            }} />
+        </div>
+      {:else if tracker.type === 'timer'}
+        <NTimer
+          {value}
+          tracker={data.tracker}
+          bind:value={data.value}
+          on:change={event => {
+            data.value = event.detail;
+          }} />
+      {/if}
+    </div>
   {:else}...{/if}
 
   <div
