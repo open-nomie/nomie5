@@ -101,6 +101,8 @@
   }}>
   {#if $Interact.prompt.valueType == 'textarea'}
     <textarea
+      name="value"
+      title="input value"
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
@@ -108,6 +110,8 @@
       style="min-height:200px;" />
   {:else if $Interact.prompt.valueType == 'number'}
     <input
+      name="value"
+      title="input value"
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
@@ -115,6 +119,8 @@
       class="form-control mt-2" />
   {:else if $Interact.prompt.valueType == 'datetime'}
     <input
+      name="value"
+      title="input value"
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
@@ -122,6 +128,8 @@
       class="form-control mt-2" />
   {:else}
     <input
+      title="input value"
+      name="value"
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}

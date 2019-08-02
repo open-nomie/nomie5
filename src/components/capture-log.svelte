@@ -267,6 +267,7 @@
             <div class="n-row mb-2">
               <div class="input-group flex-grow mr-1">
                 <input
+                  name="note"
                   type="datetime-local"
                   class="form-control mt-0"
                   style="font-size:16px; height:44px; overflow:hidden"

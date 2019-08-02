@@ -61,7 +61,7 @@
     background-color: var(--color-solid);
 
     &.item-divider {
-      background-color: transparent;
+      background-color: var(--color-solid);
     }
     &.large {
       min-height: 56px;

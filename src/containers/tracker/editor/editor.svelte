@@ -93,8 +93,11 @@
       min-width: 190px;
       text-align: right;
     }
+    .form-control {
+      width: 200px;
+    }
     .item-divider.compact {
-      background-color: var(--color-faded-1);
+      background-color: var(--color-solid);
     }
   }
 </style>
@@ -155,7 +158,7 @@
 
         </NItem>
         {#if tracker.type == 'tick'}
-          <NItem title="Auto Save On Tap">
+          <NItem title="Save On Tap">
             <div slot="right">
               <NToggle bind:value={tracker.one_tap} />
             </div>
@@ -165,7 +168,7 @@
           <NItem title="Min">
             <div slot="right">
               <input
-                type="text"
+                type="number"
                 class="form-control"
                 bind:value={tracker.min} />
             </div>
@@ -173,7 +176,7 @@
           <NItem title="Max" borderBottom>
             <div slot="right">
               <input
-                type="text"
+                type="number"
                 class="form-control"
                 bind:value={tracker.max} />
             </div>

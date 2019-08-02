@@ -7197,10 +7197,6 @@ body.dark {
         body.dark .btn-light:hover:not(:disabled):not(.disabled):active:focus, body.dark .btn-light:hover:not(:disabled):not(.disabled).active:focus,
         .show > body.dark .btn-light:hover.dropdown-toggle:focus {
           box-shadow: 0 0 0 0.2rem rgba(60, 60, 60, 0.5); }
-  body.dark .form-control {
-    background-color: var(--color-solid);
-    border-color: var(--color-solid-1);
-    color: var(--color-inverse-2); }
 
 .full-screen {
   background-color: var(--color-faded-3);
@@ -7256,7 +7252,7 @@ body.scrolling .mini-map {
   width: 180px;
   border-radius: 20px;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-  border: solid 1px var(--color-faded-1);
+  border: solid 1px var(--color-faded-2);
   background-color: var(--color-solid);
   overflow: hidden;
   transition: all 0.2s ease-in-out; }
@@ -7277,6 +7273,7 @@ body.scrolling .mini-map {
     align-items: center;
     color: var(--color-inverse);
     height: 60px;
+    border-radius: 30px;
     width: 120px;
     z-index: 2000; }
   .mini-map::after {
@@ -7360,16 +7357,20 @@ body.scrolling .mini-map {
   color: #fff; }
 
 input[type='text'],
+input[type='number'],
 input[type='password'] {
-  background-color: var(--color-solid-1);
+  background-color: var(--color-faded-1);
+  border-color: var(--color-solid-1);
+  color: var(--color-inverse-2);
   border: none;
   font-size: 1rem;
   border-radius: 0.4rem;
   padding: 6px;
   color: var(--color-inverse); }
   input[type='text']:focus,
+  input[type='number']:focus,
   input[type='password']:focus {
-    background-color: var(--color-solid-2);
+    background-color: var(--color-faded-1);
     color: var(--color-inverse); }
 
 select {

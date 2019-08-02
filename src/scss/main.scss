@@ -90,11 +90,6 @@ body {
 			);
 		}
 	}
-	.form-control {
-		background-color: var(--color-solid);
-		border-color: var(--color-solid-1);
-		color: var(--color-inverse-2);
-	}
 }
 
 body {
@@ -220,7 +215,7 @@ body.scrolling {
 
 	border-radius: 20px;
 	box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-	border: solid 1px var(--color-faded-1);
+	border: solid 1px var(--color-faded-2);
 	background-color: var(--color-solid);
 	overflow: hidden;
 
@@ -240,6 +235,7 @@ body.scrolling {
 		align-items: center;
 		color: var(--color-inverse);
 		height: 60px;
+		border-radius: 30px;
 		width: 120px;
 		z-index: 2000;
 	}
@@ -343,15 +339,19 @@ body.scrolling {
 }
 
 input[type='text'],
+input[type='number'],
 input[type='password'] {
-	background-color: var(--color-solid-1);
+	background-color: var(--color-faded-1);
+	border-color: var(--color-solid-1);
+	color: var(--color-inverse-2);
+
 	border: none;
 	font-size: 1rem;
 	border-radius: 0.4rem;
 	padding: 6px;
 	color: var(--color-inverse);
 	&:focus {
-		background-color: var(--color-solid-2);
+		background-color: var(--color-faded-1);
 		color: var(--color-inverse);
 	}
 }
