@@ -8,6 +8,7 @@
   export let allowClose;
   export let fullscreen = false;
   export let flexBody = undefined;
+  export let show = true;
 
   const has_header = (arguments[1].$$slots || {}).hasOwnProperty("header");
   const has_footer = (arguments[1].$$slots || {}).hasOwnProperty("footer");
@@ -97,29 +98,31 @@
   }
 </style>
 
-<div class="n-modal-frame " transition:fly>
-  <div class="n-modal {fullscreen ? 'full-screen-modal' : ''}">
-    {#if has_header || title}
-      <div class="n-modal-header">
-        {#if has_header}
-          <slot name="header" />
-        {:else}
-          <NText tag="div" bold size="lg" className="text-center w-100 py-1">
-            {title}
-          </NText>
-        {/if}
+{#if show}
+  <div class="n-modal-frame " transition:fly>
+    <div class="n-modal {fullscreen ? 'full-screen-modal' : ''}">
+      {#if has_header || title}
+        <div class="n-modal-header">
+          {#if has_header}
+            <slot name="header" />
+          {:else}
+            <NText tag="div" bold size="lg" className="text-center w-100 py-1">
+              {title}
+            </NText>
+          {/if}
 
+        </div>
+      {/if}
+      <div
+        class="n-modal-body {padding ? 'padding' : 'no-padding'}
+        {flexBody ? 'flex-body' : 'no-flex-body'}">
+        <slot />
       </div>
-    {/if}
-    <div
-      class="n-modal-body {padding ? 'padding' : 'no-padding'}
-      {flexBody ? 'flex-body' : 'no-flex-body'}">
-      <slot />
+      {#if has_footer}
+        <div class="n-modal-footer">
+          <slot name="footer" />
+        </div>
+      {/if}
     </div>
-    {#if has_footer}
-      <div class="n-modal-footer">
-        <slot name="footer" />
-      </div>
-    {/if}
   </div>
-</div>
+{/if}

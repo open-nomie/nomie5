@@ -10,7 +10,8 @@ import math from '../../utils/math/math';
 const console = new Logger('📊 stats/overview');
 
 export default class StatsProcessor {
-	constructor(rows, tracker, date) {
+	constructor(rows, tracker, date, caller) {
+		caller = caller || 'unknown';
 		this.date = date || dayjs();
 		this.rows = rows;
 		this.tracker = new Tracker(tracker);
@@ -61,10 +62,6 @@ export default class StatsProcessor {
 
 		this.results.year = { ...this.results.year, ...this.getMinMaxFromValueMap(this.results.valueMap) };
 
-		console.log('Base Set', this.results);
-		console.log('prepare', {
-			results: this.results,
-		});
 		// Year is finished
 		this.results.month = this.generate('month');
 		this.results.day = this.generate('day');

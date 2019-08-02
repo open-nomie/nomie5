@@ -1,10 +1,11 @@
 # TODO
 
-Generated Tue Jul 30 2019 7:19 am
+Generated Wed Jul 31 2019 9:48 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
    - TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
+   - TODO: move this to modules/storage
 - **src/store/ledger.js**
    - TODO: this doesn't seem to be trigger a change in History.svetle
    - TODO: Make this use listBooks() array to only look for books that exist

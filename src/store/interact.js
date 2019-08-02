@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 
 // utils
 import Logger from '../utils/log/log';
+import time from '../utils/time/time';
 
 // modules
 import NomieLog from '../modules/nomie-log/nomie-log';
@@ -138,7 +139,6 @@ const interactInit = () => {
 			});
 		},
 		dismissTrackerInput() {
-			console.log('Dismissing Tracker INput');
 			update(s => {
 				s.trackerInput.show = false;
 				s.trackerInput.tracker = null;
@@ -221,20 +221,19 @@ const interactInit = () => {
 					},
 					updateData() {
 						Interact.editLogData(log).then(log => {
-							console.log('Edit Log data - RESOLVING', log);
 							setTimeout(() => {
 								resolve({ action: 'data-updated' });
 							}, 10);
 						});
 					},
 					updateDate() {
-						Interact.prompt('New Date', {
+						Interact.prompt('New Date / Time', {
 							valueType: 'datetime',
 							value: dayjs(new Date(log.end)).format('YYYY-MM-DDTHH:mm'),
 						}).then(date => {
-							console.log('Edit Log data - RESOLVING', log);
-							log.start = new Date(date).getTime();
-							log.end = new Date(date).getTime();
+							let localizedDate = time.datetimeLocal(date);
+							log.start = localizedDate.getTime();
+							log.end = localizedDate.getTime();
 							setTimeout(() => {
 								LedgerStore.updateLog(log).then(res => {
 									resolve({ action: 'date-updated' });
@@ -391,25 +390,23 @@ const interactInit = () => {
 			});
 		},
 		prompt(message, options) {
-			setTimeout(() => {
-				return new Promise((resolve, reject) => {
-					setTimeout(() => {
-						update(s => {
-							s.prompt.show = true;
-							s.prompt.message = message;
-							s.prompt.value = options.value || null;
-							s.prompt.valueType = options.valueType || 'text';
-							s.prompt.title = options.title || 'Prompt';
-							s.prompt.cancel = 'Cancel';
-							s.prompt.placeholder = options.placeholder || '';
-							s.prompt.onInteract = res => {
-								resolve(s.prompt.value);
-							};
-							return s;
-						});
-					}, 10);
-				});
-			}, 1);
+			return new Promise((resolve, reject) => {
+				setTimeout(() => {
+					update(s => {
+						s.prompt.show = true;
+						s.prompt.message = message;
+						s.prompt.value = options.value || null;
+						s.prompt.valueType = options.valueType || 'text';
+						s.prompt.title = options.title || 'Prompt';
+						s.prompt.cancel = 'Cancel';
+						s.prompt.placeholder = options.placeholder || '';
+						s.prompt.onInteract = res => {
+							resolve(s.prompt.value);
+						};
+						return s;
+					});
+				}, 10);
+			});
 		},
 		dismiss() {
 			update(s => {

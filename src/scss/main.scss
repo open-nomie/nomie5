@@ -80,6 +80,20 @@ body {
 		// $hover-border: darken($border, 10%),
 		// $active-background: darken($background, 10%), $active-border: darken($border, 12.5%)
 		@include button-variant(#333, darken(#333, 5%), darken(#333, 5%), darken(#333, 5%), rgba($primaryBright, 5%));
+		&:hover {
+			@include button-variant(
+				#333,
+				darken(#333, 10%),
+				darken(#333, 10%),
+				darken(#333, 10%),
+				rgba($primaryBright, 10%)
+			);
+		}
+	}
+	.form-control {
+		background-color: var(--color-solid);
+		border-color: var(--color-solid-1);
+		color: var(--color-inverse-2);
 	}
 }
 
@@ -170,6 +184,74 @@ body.dark {
 	border-radius: 12px;
 	padding-left: 1rem;
 	padding-right: 1rem;
+	transition: all 0.2s ease-in-out;
+}
+
+body.scrolling {
+	.mini-map {
+		opacity: 0.3;
+	}
+}
+
+.input-model {
+	&.type-range {
+		.keypad-holder {
+			display: none;
+		}
+	}
+	&.type-value {
+		.tracker-input.slider {
+			display: none;
+		}
+	}
+}
+
+.mini-map {
+	position: fixed;
+	bottom: 70px;
+	right: 26px;
+	height: 100px;
+	width: 180px;
+
+	@media (max-width: 320px) {
+		height: 80px;
+		width: 140px;
+	}
+
+	border-radius: 20px;
+	box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+	border: solid 1px var(--color-faded-1);
+	background-color: var(--color-solid);
+	overflow: hidden;
+
+	.leaflet-top,
+	.location-name,
+	.leaflet-bottom {
+		display: none;
+	}
+	.n-map-container {
+		background-color: var(--color-solid);
+		z-index: 10;
+	}
+	transition: all 0.2s ease-in-out;
+	&.opened {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: var(--color-inverse);
+		height: 60px;
+		width: 120px;
+		z-index: 2000;
+	}
+	&::after {
+		content: '';
+		z-index: 20;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+	}
 }
 
 .btn-content {

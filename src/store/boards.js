@@ -184,7 +184,6 @@ const boardsInit = () => {
 			});
 		},
 		addBoard(label, trackers) {
-			console.log('Add Board', { label, trackers });
 			trackers = trackers || [];
 			return new Promise((resolve, reject) => {
 				let id = md5(new Date().getTime() + label).substr(0, 10);

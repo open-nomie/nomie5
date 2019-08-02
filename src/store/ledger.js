@@ -264,7 +264,6 @@ const ledgerInit = () => {
 		 * @param {Array} logs
 		 */
 		async deleteLogs(logs) {
-			console.log('Delete logs', logs);
 			return new Promise((resolve, reject) => {
 				// Set up target books
 				let targets = {};
@@ -329,8 +328,7 @@ const ledgerInit = () => {
 					statusFunc
 				)
 					.then(finished => {
-						console.log('Finished', finished);
-						resolve();
+						resolve(finished);
 					})
 					.catch(reject);
 

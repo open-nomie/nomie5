@@ -17,6 +17,12 @@ Wanna know more about the Nomie story? [Here are a handful of podcasts talking a
 
 Note: Data cannot be shared across domains, if you want to switch between prod and experimental, you'll need to export and import your data (in the settings tab).
 
+## Want to contribute?
+
+1. Work in the develop branch, not master. All pull requests should be for develop.
+2. Keep dependencies to an absolute minimum.
+3. Reuse code when possible.
+
 ## [Svelte](https://svlete.dev)
 
 This rewrite/port uses SvelteJS https://svlete.dev - a great tool for building fast / reactive single page apps (like Vue, React) without the framework.
@@ -34,6 +40,12 @@ git clone git@github.com:nomie-app/nomie.git
 cd nomie
 npm install
 npm run dev
+```
+
+## Running tests
+
+```
+npm run cypress
 ```
 
 Deploy straight to Netlify to test it out quickly.

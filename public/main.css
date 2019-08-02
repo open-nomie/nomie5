@@ -7072,7 +7072,8 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-size: 18px; }
+  font-size: 18px;
+  background-color: var(--color-solid); }
 
 body.no-scroll {
   overflow: hidden;
@@ -7174,6 +7175,32 @@ body.dark {
       body.dark .btn-light:not(:disabled):not(.disabled):active:focus, body.dark .btn-light:not(:disabled):not(.disabled).active:focus,
       .show > body.dark .btn-light.dropdown-toggle:focus {
         box-shadow: 0 0 0 0.2rem rgba(71, 71, 71, 0.5); }
+    body.dark .btn-light:hover {
+      color: #fff;
+      background-color: #333;
+      border-color: #1a1a1a; }
+      body.dark .btn-light:hover:hover {
+        color: #fff;
+        background-color: #1a1a1a;
+        border-color: #1a1a1a; }
+      body.dark .btn-light:hover:focus, body.dark .btn-light:hover.focus {
+        box-shadow: 0 0 0 0.2rem rgba(60, 60, 60, 0.5); }
+      body.dark .btn-light:hover.disabled, body.dark .btn-light:hover:disabled {
+        color: #fff;
+        background-color: #333;
+        border-color: #1a1a1a; }
+      body.dark .btn-light:hover:not(:disabled):not(.disabled):active, body.dark .btn-light:hover:not(:disabled):not(.disabled).active,
+      .show > body.dark .btn-light:hover.dropdown-toggle {
+        color: #fff;
+        background-color: #319ed7;
+        border-color: black; }
+        body.dark .btn-light:hover:not(:disabled):not(.disabled):active:focus, body.dark .btn-light:hover:not(:disabled):not(.disabled).active:focus,
+        .show > body.dark .btn-light:hover.dropdown-toggle:focus {
+          box-shadow: 0 0 0 0.2rem rgba(60, 60, 60, 0.5); }
+  body.dark .form-control {
+    background-color: var(--color-solid);
+    border-color: var(--color-solid-1);
+    color: var(--color-inverse-2); }
 
 .full-screen {
   background-color: var(--color-faded-3);
@@ -7209,7 +7236,57 @@ body.dark {
 .btn {
   border-radius: 12px;
   padding-left: 1rem;
-  padding-right: 1rem; }
+  padding-right: 1rem;
+  transition: all 0.2s ease-in-out; }
+
+body.scrolling .mini-map {
+  opacity: 0.3; }
+
+.input-model.type-range .keypad-holder {
+  display: none; }
+
+.input-model.type-value .tracker-input.slider {
+  display: none; }
+
+.mini-map {
+  position: fixed;
+  bottom: 70px;
+  right: 26px;
+  height: 100px;
+  width: 180px;
+  border-radius: 20px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  border: solid 1px var(--color-faded-1);
+  background-color: var(--color-solid);
+  overflow: hidden;
+  transition: all 0.2s ease-in-out; }
+  @media (max-width: 320px) {
+    .mini-map {
+      height: 80px;
+      width: 140px; } }
+  .mini-map .leaflet-top,
+  .mini-map .location-name,
+  .mini-map .leaflet-bottom {
+    display: none; }
+  .mini-map .n-map-container {
+    background-color: var(--color-solid);
+    z-index: 10; }
+  .mini-map.opened {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-inverse);
+    height: 60px;
+    width: 120px;
+    z-index: 2000; }
+  .mini-map::after {
+    content: '';
+    z-index: 20;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; }
 
 .btn-content {
   flex-direction: column;

@@ -28,7 +28,7 @@
       text-align: center;
       font-weight: bold;
       font-size: 2rem;
-      margin: 20px 0;
+      margin: 0 0 20px 0;
       line-height: 2rem;
     }
 

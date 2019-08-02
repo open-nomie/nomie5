@@ -51,7 +51,6 @@
   // }
 
   $: if ($BoardStore.activeBoard && ready == false) {
-    console.log("Board Store loaded", $BoardStore);
     ready = true;
     data.updatedLabel = $BoardStore.activeBoard.label;
   }
@@ -110,13 +109,11 @@
             setTimeout(() => {
               data.refreshing = false;
             }, 100);
-            console.log("Deleted");
           });
         } // accepted
       });
     },
     moveTag(fromTag, aboveTag) {
-      console.log(`going to move ${fromTag} to above ${aboveTag}`);
       // trackers witout fromTag
       let indexToPlace = 0;
       let trackers = $BoardStore.activeBoard.trackers
@@ -130,11 +127,8 @@
           return tag;
         });
       trackers.splice(indexToPlace, 0, fromTag);
-      console.log({ trackers });
       $BoardStore.activeBoard.trackers = trackers;
 
-      // data.board.trackers = trackers;
-      // console.log("Moved", data.board.trackers);
       data.draggingTag = null;
       data.droppedTag = null;
     },
@@ -176,7 +170,6 @@
         ball.style.display = "block";
 
         if (hoverElement !== evt.target) {
-          console.log("hover elevement", hoverElement.id);
           data.hoverTag = hoverElement.id;
         }
       },
@@ -211,7 +204,6 @@
       },
       drop(ev) {
         data.droppedTag = ev.target.id || data.hoverTag;
-        console.log("Dropped On", data.droppedTag);
 
         setTimeout(() => {
           document.body.classList.remove("no-scroll");

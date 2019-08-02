@@ -58,6 +58,22 @@
         });
       }
     },
+    addTrackerToNote() {
+      Interact.selectTrackers().then(trackers => {
+        console.log("Trackers!?");
+        if (trackers) {
+          tracker.note =
+            tracker.note +
+            " " +
+            trackers
+              .map(tracker => {
+                return "#" + tracker.tag;
+              })
+              .join(" ");
+          console.log("New note", tracker.note);
+        }
+      });
+    },
     labelChanged(event) {
       if (tracker._dirty) {
         let tag = event.target.value.replace(/[^A-Z0-9]/gi, "_").toLowerCase();
@@ -83,123 +99,144 @@
   }
 </style>
 
-<div class="n-tracker-editor">
-  <NModal title="Tracker Editor" isVisible={show} allowClose>
-    <div class="bg-faded">
-      <NItem className="item-divider compact" />
-      <ColorPicker bind:value={tracker.color} />
-      <NItem className="item-divider compact" />
-      <NItem title="Label">
-        <div slot="right">
-          <input
-            type="text"
-            class="form-control"
-            bind:value={tracker.label}
-            on:keyup={methods.labelChanged} />
-        </div>
-      </NItem>
-      <NItem title="Emoji">
-        <div slot="right">
-          <input
-            type="text"
-            on:focus={event => {
-              event.target.select();
-            }}
-            maxlength="3"
-            class="form-control text-center"
-            bind:value={tracker.emoji} />
-        </div>
-      </NItem>
-      {#if tracker._dirty}
-        <NItem title="Tag">
+{#if $Interact.trackerEditor.show}
+
+  <div class="n-tracker-editor">
+    <NModal title="Tracker Editor {$Interact.trackerEditor.show}" allowClose>
+      <div class="bg-faded">
+        <NItem className="item-divider compact" />
+        <ColorPicker bind:value={tracker.color} />
+        <NItem className="item-divider compact" />
+        <NItem title="Label">
           <div slot="right">
             <input
               type="text"
               class="form-control"
-              bind:value={tracker.tag}
-              autocomplete="off"
-              autocorrect="off"
-              maxlength="10"
-              autocapitalize="off"
-              spellcheck="false" />
+              bind:value={tracker.label}
+              on:keyup={methods.labelChanged} />
           </div>
         </NItem>
-      {/if}
-      <NItem className="item-divider compact" />
-      <NItem title="Type">
-        <div slot="right">
-          <select class="form-control w-100" bind:value={tracker.type}>
-            {#each data.types as type}
-              <option value={type.id}>{type.label}</option>
-            {/each}
-          </select>
-        </div>
-
-      </NItem>
-      {#if tracker.type == 'tick'}
-        <NItem title="Auto Save On Tap">
+        <NItem title="Emoji">
           <div slot="right">
-            <NToggle bind:value={tracker.one_tap} />
+            <input
+              type="text"
+              on:focus={event => {
+                event.target.select();
+              }}
+              maxlength="3"
+              class="form-control text-center"
+              bind:value={tracker.emoji} />
           </div>
         </NItem>
-      {/if}
-      {#if tracker.type == 'range'}
-        <NItem title="Min">
+        {#if tracker._dirty}
+          <NItem title="Tag">
+            <div slot="right">
+              <input
+                type="text"
+                class="form-control"
+                bind:value={tracker.tag}
+                autocomplete="off"
+                autocorrect="off"
+                maxlength="10"
+                autocapitalize="off"
+                spellcheck="false" />
+            </div>
+          </NItem>
+        {/if}
+        <NItem className="item-divider compact" />
+        <NItem title="Type">
           <div slot="right">
-            <input type="text" class="form-control" bind:value={tracker.min} />
-          </div>
-        </NItem>
-        <NItem title="Max" borderBottom>
-          <div slot="right">
-            <input type="text" class="form-control" bind:value={tracker.max} />
-          </div>
-        </NItem>
-      {/if}
-      <NItem className="item-divider compact" />
-
-      {#if tracker.type !== 'timer'}
-        <NItem>
-          <div class="title truncate">Measure By</div>
-          <div slot="right">
-            <select bind:value={tracker.uom} class="form-control">
-              {#each Object.keys(data.groupedUOMs) as groupKey (groupKey)}
-                <option disabled>-- {groupKey}</option>
-                {#each data.groupedUOMs[groupKey] as uom (`${groupKey}-${uom.key}`)}
-                  <option
-                    value={uom.key}
-                    disabled={uom.key == 'time' && tracker.type != 'timer'}>
-                    {NomieUOM.plural(uom.key)}
-                  </option>
-                {/each}
+            <select class="form-control w-100" bind:value={tracker.type}>
+              {#each data.types as type}
+                <option value={type.id}>{type.label}</option>
               {/each}
             </select>
           </div>
+
         </NItem>
-      {/if}
+        {#if tracker.type == 'tick'}
+          <NItem title="Auto Save On Tap">
+            <div slot="right">
+              <NToggle bind:value={tracker.one_tap} />
+            </div>
+          </NItem>
+        {/if}
+        {#if tracker.type == 'range'}
+          <NItem title="Min">
+            <div slot="right">
+              <input
+                type="text"
+                class="form-control"
+                bind:value={tracker.min} />
+            </div>
+          </NItem>
+          <NItem title="Max" borderBottom>
+            <div slot="right">
+              <input
+                type="text"
+                class="form-control"
+                bind:value={tracker.max} />
+            </div>
+          </NItem>
+        {/if}
+        <NItem className="item-divider compact" />
 
-      <NItem title="Calculate">
-        <div slot="right">
-          <select class="form-control" bind:value={tracker.math}>
-            {#each ['sum', 'avg'] as math_key}
-              <option value={math_key}>{math_key}</option>
-            {/each}
-          </select>
-        </div>
-      </NItem>
-      <NItem className="item-divider compact" />
-    </div>
+        {#if tracker.type !== 'timer' && tracker.type !== 'note'}
+          <NItem>
+            <div class="title truncate">Measure By</div>
+            <div slot="right">
+              <select bind:value={tracker.uom} class="form-control">
+                {#each Object.keys(data.groupedUOMs) as groupKey (groupKey)}
+                  <option disabled>-- {groupKey}</option>
+                  {#each data.groupedUOMs[groupKey] as uom (`${groupKey}-${uom.key}`)}
+                    <option
+                      value={uom.key}
+                      disabled={uom.key == 'time' && tracker.type != 'timer'}>
+                      {NomieUOM.plural(uom.key)}
+                    </option>
+                  {/each}
+                {/each}
+              </select>
+            </div>
+          </NItem>
+        {/if}
+        {#if tracker.type !== 'note'}
+          <NItem title="Calculate">
+            <div slot="right">
+              <select class="form-control" bind:value={tracker.math}>
+                {#each ['sum', 'avg'] as math_key}
+                  <option value={math_key}>{math_key}</option>
+                {/each}
+              </select>
+            </div>
+          </NItem>
+        {:else}
+          <NItem>
+            <textarea
+              bind:value={tracker.note}
+              placeholder="#any #tracker #hashtags"
+              class="form-control my-2" />
+            <!-- <button
+            slot="right"
+            class="btn btn-clear btn-sm btn-icon zmdi zmdi-plus"
+            on:click={methods.addTrackerToNote} /> -->
+          </NItem>
+        {/if}
+        <NItem className="item-divider compact" />
+      </div>
 
-    <button
-      slot="footer"
-      on:click={methods.cancel}
-      class="btn btn-light btn-lg flex-grow mr-1">
-      Cancel
-    </button>
-    <button
-      slot="footer"
-      class="btn btn-primary btn-lg flex-grow ml-1"
-      on:click={methods.tracker_save}>
-      Save
-    </button>
-  </NModal>
-</div>
+      <button
+        slot="footer"
+        on:click={methods.cancel}
+        class="btn btn-light btn-lg flex-grow mr-1">
+        Cancel
+      </button>
+      <button
+        slot="footer"
+        class="btn btn-primary btn-lg flex-grow ml-1"
+        on:click={methods.tracker_save}>
+        Save
+      </button>
+    </NModal>
+  </div>
+{/if}

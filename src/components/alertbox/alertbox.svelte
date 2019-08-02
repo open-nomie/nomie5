@@ -37,7 +37,7 @@
     left: 0;
     right: 0;
     z-index: 1010;
-    background-color: rgba(0, 0, 0, 0.78);
+    background-color: rgba(0, 0, 0, 0.88);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -63,12 +63,14 @@
       width: 200px;
       min-width: 300px !important;
       flex-grow: 1;
-      background-color: #fff;
+      background-color: var(--color-solid);
+      border: solid 1px var(--color-faded-1);
       box-shadow: 0px 10px 16px -6px rgba(0, 0, 0, 0.2);
       margin: 10px;
       display: flex;
       justify-content: stretch;
       align-content: stretch;
+      color: var(--color-solid-3);
       .card-body {
         flex-grow: 1;
         flex-shrink: 1;
@@ -76,6 +78,7 @@
       }
     }
     .footer {
+      border-top: solid 1px var(--color-faded-1);
       button {
         min-width: 120px;
       }
@@ -102,7 +105,7 @@
       </div>
     </div>
 
-    <div class="p-2 border-top d-flex flex-row footer">
+    <div class="p-2 d-flex flex-row footer">
       {#if cancel}
         <button
           class="btn btn-light mr-1 flex-grow"

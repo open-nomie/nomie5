@@ -32,7 +32,6 @@
   };
 
   $: if (locations) {
-    console.log("Map Locations loaded", locations.length);
     setTimeout(() => {
       methods.init().then(() => {
         methods.renderMap();
@@ -59,7 +58,6 @@
       return new Promise((resolve, reject) => {
         if (!MAP) {
           MAP = new L.Map(id).fitWorld();
-          console.log("no map lets create", MAP);
         }
         MAP.eachLayer(function(layer) {
           MAP.removeLayer(layer);
@@ -72,17 +70,16 @@
       });
     },
     renderMap() {
-      console.log("Render Map", MAP);
-
+      let mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png`;
+      if (document.body.classList.contains("dark")) {
+        mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png`;
+      }
       // Add Attribution
-      L.tileLayer(
-        "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
-        {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/">OSM</a> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-          maxZoom: 18
-        }
-      ).addTo(MAP);
+      L.tileLayer(mapTheme, {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/">OSM</a> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+        maxZoom: 18
+      }).addTo(MAP);
 
       var myIcon = window.L.icon({
         iconUrl: "/images/pin.png",
@@ -166,7 +163,6 @@
   // On Mount
   onMount(() => {
     // methods.init().then(map => {
-    //   console.log("Inited", map);
     //   // methods.renderMap();
     // });
   });
@@ -174,6 +170,7 @@
 
 <style lang="scss">
   .n-map-container {
+    background-color: var(--color-solid);
     position: relative;
     min-height: 100%;
     flex-grow: 1;
@@ -183,6 +180,11 @@
       left: 0;
       right: 0;
       bottom: 0;
+    }
+
+    :global(.leaflet-control-attribution) {
+      background: var(--color-solid-2) !important;
+      color: var(--color-solid);
     }
   }
 

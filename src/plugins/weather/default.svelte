@@ -8,7 +8,6 @@
   let weather = null;
 
   onMount(async () => {
-    console.log("Mounted");
     locating = true;
     location = await locate();
     locating = false;

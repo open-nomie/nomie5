@@ -9,6 +9,7 @@
   // svelte
   import { navigate } from "svelte-routing";
   import { onMount } from "svelte";
+  import { fly } from "svelte/transition";
 
   // components
   import NItem from "../components/list-item/list-item.svelte";
@@ -273,7 +274,6 @@
   };
 
   onMount(() => {
-    console.log("OnMount", { searchLogs, state });
     if ((state.searchTerm || "").length > 1 || !searchLogs) {
       methods.refreshSearch();
     }
@@ -394,13 +394,8 @@
         </div>
       {/if}
       <div class="filler" />
-      <button
-        class="btn btn-clear btn-icon {state.showAllLocations ? 'active text-primary-bright' : ''}"
-        disabled={locations.length === 0}
-        on:click={() => {
-          state.showAllLocations = !state.showAllLocations;
-        }}>
-        <i class="zmdi zmdi-map" />
+      <button class="btn btn-clear btn-icon" on:click={methods.selectDate}>
+        <i class="zmdi zmdi-calendar" />
       </button>
       <div class="filler" />
       {#if state.searchMode}
@@ -513,7 +508,25 @@
 
     </div>
   {/if}
-
+  {#if locations.length}
+    {#if !state.showAllLocations}
+      <div
+        class="mini-map"
+        on:click={() => {
+          state.showAllLocations = !state.showAllLocations;
+        }}>
+        <NMap {locations} />
+      </div>
+    {:else}
+      <div
+        class="mini-map opened"
+        on:click={() => {
+          state.showAllLocations = !state.showAllLocations;
+        }}>
+        Close
+      </div>
+    {/if}
+  {/if}
   <!-- <input type="date" bind:this={datePicker} /> -->
 </div>
 
