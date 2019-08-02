@@ -7,17 +7,17 @@
   "theme_color": "#4d84a1",
   "icons": [
     {
-      "src": "https://dap.nomie.app/images/icon.png",
+      "src": "https://open.nomie.app/images/icon.png",
       "sizes": "400x400",
       "type": "image/png"
     },
     {
-      "src": "https://dap.nomie.app/images/icon.png",
+      "src": "https://open.nomie.app/images/icon.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://dap.nomie.app/images/icon.png",
+      "src": "https://open.nomie.app/images/icon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
