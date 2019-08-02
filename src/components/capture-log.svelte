@@ -73,7 +73,9 @@
     },
     checkTextareaSize() {
       let height = (textarea || {}).scrollHeight || 100;
-      textarea.style.height = (height > 300 ? 300 : height) + "px";
+      if (textarea) {
+        textarea.style.height = (height > 300 ? 300 : height) + "px";
+      }
     },
     async logSave() {
       await LedgerStore.saveLog($ActiveLogStore); // TODO: Make ledger task instead

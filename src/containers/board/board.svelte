@@ -247,6 +247,8 @@
       } else if (tracker.type === "note") {
         // Extract Trackers
         let trackerTags = extractor(tracker.note);
+        // Add Tag to the note first... 
+        ActiveLogStore.addTag(tracker.tag);
         // Create array of items to pass to promise step
         let items = Object.keys(trackerTags).map(tag => {
           return {

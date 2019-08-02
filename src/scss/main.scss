@@ -64,12 +64,12 @@ body {
 	--color-inverse-2: #ccc;
 	--color-inverse-3: #666;
 	--color-tabs: #000;
-	--color-faded: rgba(255, 255, 255, 0.6);
+	--color-faded: rgba(255, 255, 255, 0.2);
 	--color-faded-1: rgba(255, 255, 255, 0.1);
 	--color-faded-2: rgba(255, 255, 255, 0.2);
 	--color-faded-3: rgba(255, 255, 255, 0.4);
 	--color-full-screen: rgba(63, 62, 62, 0.8);
-	--color-background-selected: rgba($primaryBright, 0.8);
+	--color-background-selected: rgba($primaryBright, 0.82);
 
 	.n-item.border-bottom {
 		border-bottom: solid 1px rgba(255, 255, 255, 0.15) !important;
