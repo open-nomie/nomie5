@@ -153,7 +153,7 @@
     {#if data.tracker.type == 'timer'}
       <button
         on:click={methods.onCancel}
-        class="btn btn-light btn-lg mr-2 {data.value ? 'w-25' : 'w-100'}">
+        class="btn btn-clear btn-lg mr-2 {data.value ? 'w-25' : 'w-100'}">
         {#if data.value}
           <span class=" zmdi zmdi-close" />
         {:else}Close{/if}
@@ -163,7 +163,7 @@
     {#if data.tracker.type == 'timer' && data.value}
       <button
         on:click={methods.onSave}
-        class="btn btn-primary btn-lg"
+        class="btn btn-primary btn-lg btn-round"
         style="width:105px;">
         {saveLabel}
       </button>
@@ -172,7 +172,7 @@
     {#if data.tracker.type != 'timer'}
       <button
         on:click={methods.onSave}
-        class="btn btn-primary btn-lg"
+        class="btn btn-primary btn-lg btn-round"
         style="width:105px;">
         {saveLabel}
       </button>

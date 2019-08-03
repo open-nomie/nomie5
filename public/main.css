@@ -7234,6 +7234,8 @@ body.dark {
   padding-left: 1rem;
   padding-right: 1rem;
   transition: all 0.2s ease-in-out; }
+  .btn.btn-round {
+    border-radius: 30px !important; }
 
 body.scrolling .mini-map {
   opacity: 0.3; }

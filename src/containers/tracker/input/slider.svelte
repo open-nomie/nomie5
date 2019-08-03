@@ -51,19 +51,19 @@
       box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
       background: var(--color-faded);
       border-radius: 25px;
-      border: 0px solid var(--color-inverse);
+      padding: 0 6px;
+      border: 1px solid var(--color-faded-2);
     }
     input[type="range"]::-webkit-slider-thumb {
-      box-shadow: 5.4px 5.4px 6.5px rgba(0, 0, 0, 0.18),
-        0px 0px 5.4px rgba(13, 13, 13, 0.18);
-      border: 1px solid var(--color-faded-2);
+      box-shadow: 0px 4px 6px -2px var(--color-faded-2);
+      border: 2px solid var(--color-primary-bright);
       height: 39px;
       width: 40px;
       border-radius: 25px;
-      background: var(--color-primary-bright);
+      background: var(--color-solid);
       cursor: pointer;
       -webkit-appearance: none;
-      margin-top: 5.5px;
+      margin-top: 4px;
     }
     input[type="range"]:focus::-webkit-slider-runnable-track {
       background: var(--color-faded);
