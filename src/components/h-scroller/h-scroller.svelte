@@ -1,7 +1,6 @@
 <script>
   // svelte
   import { onMount } from "svelte";
-  import { createEventDispatcher } from "svelte";
 
   export let activeIndex = undefined;
   export let activeClass = "active";
@@ -11,11 +10,10 @@
   let wrapper;
   let scroller;
 
-  // consts
-  const dispatch = createEventDispatcher();
-
+  // Methods
   const methods = {
     init() {
+      // looop over children - apply a click event
       for (let i = 0; i < wrapper.children.length; i++) {
         let child = wrapper.children[i];
         child.addEventListener("click", event => {
@@ -27,11 +25,13 @@
         });
       }
     },
+    // Clear currently selected index
     clearSelected() {
       if (activeIndex > -1) {
         wrapper.children[activeIndex].classList.remove(activeClass);
       }
     },
+    // Select new item
     selectIndex(index) {
       methods.clearSelected();
       activeIndex = index;
@@ -46,6 +46,7 @@
       }
     }
   };
+  // when component mounts
   onMount(() => {
     methods.init();
     if (activeIndex) {
@@ -65,6 +66,7 @@
     flex-direction: row;
     flex-wrap: none;
     align-items: center;
+    min-width: 100%;
   }
 </style>
 

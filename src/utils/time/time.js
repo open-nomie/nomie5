@@ -7,7 +7,7 @@ export default {
 	// Seconds to Time Chunk
 	secondsToTime(secondsVar) {
 		secondsVar = secondsVar || 0;
-		let seconds = secondsVar.toFixed(0);
+		let seconds = secondsVar;
 		let minutes = Math.floor(parseInt(seconds) / 60).toString();
 		let hours = '';
 
