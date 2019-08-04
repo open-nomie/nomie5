@@ -5,7 +5,7 @@
   // Props
   export let padding = false;
   export let title;
-  export let allowClose;
+  export let allowClose = undefined;
   export let fullscreen = false;
   export let flexBody = undefined;
   export let show = true;

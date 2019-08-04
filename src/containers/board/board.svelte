@@ -17,6 +17,7 @@
   import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
   import TrackerInput from "../tracker/input/input.svelte";
   import NModal from "../../components/modal/modal.svelte";
+  import NHScroll from "../../components/h-scroller/h-scroller.svelte";
 
   // Vendors
   import Spinner from "svelte-spinner";
@@ -247,7 +248,7 @@
       } else if (tracker.type === "note") {
         // Extract Trackers
         let trackerTags = extractor(tracker.note);
-        // Add Tag to the note first... 
+        // Add Tag to the note first...
         ActiveLogStore.addTag(tracker.tag);
         // Create array of items to pass to promise step
         let items = Object.keys(trackerTags).map(tag => {
