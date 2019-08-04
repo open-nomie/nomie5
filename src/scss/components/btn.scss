@@ -18,9 +18,9 @@ button:focus {
 }
 
 .btn-primary {
-	background-color: $primaryBright;
+	background-color: var(--color-primary-bright);
 	&:hover {
-		background-color: darken($primaryBright, 10%);
+		background-color: --color-primary;
 	}
 }
 
@@ -28,16 +28,16 @@ button:focus {
 	border-color: var(--color-solid-2) !important;
 }
 
-.btn-light {
-	background-color: darken($faded, 6%);
-	&:hover {
-		background-color: darken($faded, 10%);
-	}
-}
+// .btn-light {
+// 	background-color: darken($faded, 6%);
+// 	// &:hover {
+// 	// 	background-color: darken($faded, 10%);
+// 	// }
+// }
 
 .btn-white-pop {
-	color: $primaryBright !important;
-	box-shadow: 0px 1px 5px rgba($primaryBright, 0.2);
+	color: var(--color-primary-bright) !important;
+	box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
 	border-color: var(--color-solid-2);
 	background-color: var(--color-faded);
 	&.inactive {
@@ -84,7 +84,7 @@ button:focus {
 			height: $height;
 			background-color: var(--color-primary-bright);
 			border-radius: $height * 0.5;
-			box-shadow: 0px 4px 10px rgba($primary, 0.3);
+			box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 		}
 	}
 }
@@ -96,16 +96,16 @@ button:focus {
 }
 
 .btn-primary {
-	background-color: $primaryBright;
+	background-color: var(--color-primary-bright);
 	&:hover {
-		background-color: darken($primaryBright, 10%);
+		background-color: var(--color-primary);
 	}
 }
 
 .btn-light {
-	background-color: darken($faded, 6%);
+	background-color: var(--color-faded);
 	&:hover {
-		background-color: darken($faded, 100%);
+		background-color: var(--color-faded-2);
 	}
 }
 

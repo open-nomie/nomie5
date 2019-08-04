@@ -4,16 +4,10 @@
 	width: 100%;
 	min-height: 50px;
 
-	overflow-x: scroll;
+	box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.091);
 	-webkit-overflow-scrolling: touch;
 	height: 50px;
-	.mask {
-		padding-left: 10px;
-		height: 100%;
-		width: fit-content;
-		display: flex;
-		align-content: center;
-	}
+
 	.tab {
 		color: var(--color-inverse-2);
 		border: none;

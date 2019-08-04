@@ -59,6 +59,7 @@
   .n-hscroller {
     white-space: nowrap;
     overflow-x: scroll;
+    overflow-y: hidden;
     scroll-behavior: smooth;
   }
   .n-hscroller .wrapper {
