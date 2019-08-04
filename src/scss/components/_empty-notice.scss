@@ -1,0 +1,23 @@
+.empty-notice {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+	flex-grow: 1;
+	flex-shrink: 1;
+	font-size: 1.6rem;
+	font-weight: bold;
+	opacity: 0.4;
+	text-align: center;
+	line-height: 130%;
+	min-height: 80vh;
+	max-width: 80vw;
+	margin: 0 auto;
+	color: var(--color-inverse-2);
+	&.sm {
+		min-height: 120px;
+		height: 120px;
+		font-size: 1.3rem;
+	}
+}
