@@ -24,6 +24,8 @@ import config from '../../config/global';
 // Consts
 const console = new Logger('🤠 userStore');
 const UserSession = new blockstack.UserSession();
+// Determine if user is in dark mode (over ride if true)
+const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 // Store Initlization
 const userInit = () => {
@@ -47,7 +49,6 @@ const userInit = () => {
 	};
 
 	const { subscribe, set, update } = writable(state);
-	const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 	const methods = {
 		getStorageEngine() {
