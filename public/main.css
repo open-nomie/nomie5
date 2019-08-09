@@ -7306,10 +7306,8 @@ select {
 
 .n-board-tabs {
   background-color: var(--color-solid);
-  border-bottom: solid 1px var(--color-solid-2);
   width: 100%;
   min-height: 50px;
-  box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.091);
   -webkit-overflow-scrolling: touch;
   height: 50px; }
   .n-board-tabs .tab {
@@ -7323,7 +7321,7 @@ select {
     flex-shrink: 0;
     height: 50px; }
     .n-board-tabs .tab.active {
-      border-bottom: solid 2px var(--color-inverse); }
+      border-bottom: solid 2px var(--color-primary-bright); }
 
 .full-screen {
   background-color: var(--color-faded-3);

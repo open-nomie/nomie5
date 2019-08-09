@@ -1,7 +1,26 @@
+const userSession = new blockstack.UserSession();
+
 export default {
 	authRequired: true,
 	name: 'Blockstack',
 	description: 'Encrypted storage you control.',
+	onReady(func) {
+		if (userSession.isSignInPending()) {
+			console.log('User is pending');
+			userSession.handlePendingSignIn().then(userData => {
+				console.log('Handling Pending Signin');
+				window.location.href = '/';
+			});
+		} else if (userSession.isUserSignedIn()) {
+			func();
+		} else {
+			// console.error('REDIRECTING TO BLOCKSTACK');
+			this.login();
+		}
+	},
+	getProfile() {
+		return userSession.loadUserData();
+	},
 	login() {
 		window.blockstack.redirectToSignIn();
 	},

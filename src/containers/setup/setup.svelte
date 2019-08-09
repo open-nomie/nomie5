@@ -4,6 +4,9 @@
   import { quintOut } from "svelte/easing";
   import { navigate } from "svelte-routing";
 
+  // modules
+  import Storage from "../../modules/storage/storage";
+
   // components
   import NToolbar from "../../components/toolbar/toolbar.svelte";
   import NText from "../../components/text/text.svelte";
@@ -103,6 +106,10 @@
 
   setTimeout(() => {
     data.ready = true;
+    if (!Storage._storageType()) {
+      // Default to blockstack Storage
+      Storage.setType("blockstack");
+    }
   }, 1000);
 </script>
 

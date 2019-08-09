@@ -45,8 +45,7 @@
 
   let methods = {
     sign_out() {
-      blockstack.signUserOut(window.location.origin);
-      localStorage.clear();
+      UserStore.signout();
     },
     sign_in() {
       UserStore.redirectToSignIn();
@@ -154,7 +153,9 @@
           <NItem className="n-item-divider" borderBottom title="Account" />
 
           <NItem>
-            <div class="title truncate">{$UserStore.profile.username || 'Blockstack'}</div>
+            <div class="title truncate">
+              {$UserStore.profile.username || 'Blockstack'}
+            </div>
             <div slot="right">
               <button
                 class="btn btn-small btn-clear text-primary"

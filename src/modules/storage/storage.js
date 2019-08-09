@@ -18,10 +18,22 @@ export default {
 	engine: null,
 	// Get user storage type
 	storageType() {
-		return this.engine || this.local.get('root/storage_type') || 'blockstack';
+		return this.engine || this._storageType() || 'local';
+	},
+	_storageType() {
+		return this.local.get('root/storage_type');
+	},
+	setType(type) {
+		this.local.put('root/storage_type', type);
 	},
 	getEngine() {
 		return this.engines[this.storageType()];
+	},
+	getProfile() {
+		return this.getEngine().getProfile();
+	},
+	onReady(func) {
+		return this.getEngine().onReady(func);
 	},
 	// Get a file
 	async get(path) {

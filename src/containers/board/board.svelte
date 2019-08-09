@@ -409,6 +409,8 @@
     height: 50px;
     z-index: 350;
     background-color: var(--color-solid);
+    border-bottom: var(--color-solid-2);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.04);
   }
 
   .board-actions {
@@ -465,7 +467,6 @@
   {#if data.boards}
     <div class="sub-header">
       <div class="container p-0 h-100">
-
         <NBoardTabs
           boards={methods.injectAllBoard($BoardStore.boards || [])}
           active={$BoardStore.active}

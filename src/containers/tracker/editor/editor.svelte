@@ -127,7 +127,6 @@
               on:focus={event => {
                 event.target.select();
               }}
-              maxlength="3"
               class="form-control text-center"
               bind:value={tracker.emoji} />
           </div>
