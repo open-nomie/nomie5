@@ -12,7 +12,6 @@
  */
 
 // Import the plugins
-import WeatherPlugin from './weather/weather';
 import Goals from './goals/goals';
 
 let plugins = [Goals];

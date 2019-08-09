@@ -154,7 +154,7 @@
           <NItem className="n-item-divider" borderBottom title="Account" />
 
           <NItem>
-            <div class="title truncate">{$UserStore.profile.username}</div>
+            <div class="title truncate">{$UserStore.profile.username || 'Blockstack'}</div>
             <div slot="right">
               <button
                 class="btn btn-small btn-clear text-primary"

@@ -20,7 +20,7 @@
 
   // Props
   export let tracker = undefined;
-
+  export let show = undefined;
   export let value = undefined;
   export let hideAdd = undefined;
   export let saveLabel = "Save";
@@ -101,42 +101,48 @@
 </style>
 
 <NModal
-  show={$Interact.trackerInput.show}
+  show={show || $Interact.trackerInput.show}
   title="{tracker.emoji}
   {tracker.label}"
   className="tracker-input">
-  {#if $Interact.trackerInput.show}
-    <div
-      class="input-model type-{$Interact.trackerInput.tracker.type}"
-      transition:slide>
-      {#if tracker.type === 'range'}
-        <SliderInput
-          value={(data.value || tracker.min) + ''}
-          min={(tracker.min || 0) + ''}
-          max={(tracker.max || 0) + ''}
+
+  <div class="input-model type-{tracker.type}" transition:slide>
+    {#if tracker.type === 'range'}
+      <SliderInput
+        value={(data.value || tracker.min) + ''}
+        min={(tracker.min || 0) + ''}
+        max={(tracker.max || 0) + ''}
+        on:change={value => {
+          data.value = value.detail;
+        }} />
+    {:else if tracker.type === 'value' || tracker.type === 'tick'}
+      <div id="keypad-holder">
+        <NKeypad
+          {tracker}
+          {value}
           on:change={value => {
             data.value = value.detail;
           }} />
-      {:else if tracker.type === 'value' || tracker.type === 'tick'}
-        <div id="keypad-holder">
-          <NKeypad
-            {tracker}
-            {value}
-            on:change={value => {
-              data.value = value.detail;
-            }} />
-        </div>
-      {:else if tracker.type === 'timer'}
-        <NTimer
+      </div>
+    {:else if tracker.type === 'timer'}
+      <NTimer
+        {value}
+        tracker={data.tracker}
+        bind:value={data.value}
+        on:change={event => {
+          data.value = event.detail;
+        }} />
+    {:else}
+      <div id="keypad-holder">
+        <NKeypad
+          {tracker}
           {value}
-          tracker={data.tracker}
-          bind:value={data.value}
-          on:change={event => {
-            data.value = event.detail;
+          on:change={value => {
+            data.value = value.detail;
           }} />
-      {/if}
-    </div>
-  {:else}...{/if}
+      </div>
+    {/if}
+  </div>
 
   <div
     class="footer d-flex flex-row align-center justify-content-between w-100"

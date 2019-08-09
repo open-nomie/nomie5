@@ -34,6 +34,17 @@
   // Set a better console
   const console = new Logger("App.svelte");
 
+  // Day Check - every 30 minutes
+  // Lets see if the day changed since last it was opened.
+  const today = new Date().toDateString();
+  const dayCheck = setInterval(() => {
+    if (today !== new Date().toDateString()) {
+      if (confirm("A new day has begun, you should refresh Nomie. Refresh?")) {
+        window.location.href = window.location.href;
+      }
+    }
+  }, 1000 * 60 * 30);
+
   // Not sure if theese are needed
   export let url = "";
   export let name = "nomie";
