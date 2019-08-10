@@ -24,12 +24,6 @@ export default {
 	login() {
 		window.blockstack.redirectToSignIn();
 	},
-	loginPending() {
-		// TODO: tie in pending
-	},
-	onLogin(payload) {
-		// TODO: tie in on login
-	},
 	put(path, content) {
 		return blockstack.putFile(path, JSON.stringify(content));
 	},
