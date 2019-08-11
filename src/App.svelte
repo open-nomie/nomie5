@@ -40,7 +40,7 @@
   const dayCheck = setInterval(() => {
     if (today !== new Date().toDateString()) {
       if (confirm("A new day has begun, you should refresh Nomie. Refresh?")) {
-        window.location.href = window.location.href;
+        window.location.reload();
       }
     }
   }, 1000 * 60 * 30);
