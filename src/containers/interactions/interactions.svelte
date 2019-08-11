@@ -44,6 +44,12 @@
         };
       });
     },
+    getTracker(tag) {
+      console.log("Going to get tracker for " + tag);
+      console.log("Tracker", $TrackerStore[tag]);
+
+      return $TrackerStore[tag] || new Tracker({ tag: tag });
+    },
     editLogDataOnSave(event) {
       let tracker = event.detail.tracker;
       let value = event.detail.value;
@@ -101,6 +107,8 @@
   }}>
   {#if $Interact.prompt.valueType == 'textarea'}
     <textarea
+      name="value"
+      title="input value"
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
@@ -108,6 +116,8 @@
       style="min-height:200px;" />
   {:else if $Interact.prompt.valueType == 'number'}
     <input
+      name="value"
+      title="input value"
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
@@ -115,6 +125,8 @@
       class="form-control mt-2" />
   {:else if $Interact.prompt.valueType == 'datetime'}
     <input
+      name="value"
+      title="input value"
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
@@ -122,6 +134,8 @@
       class="form-control mt-2" />
   {:else}
     <input
+      title="input value"
+      name="value"
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
@@ -247,10 +261,15 @@
     <div class="n-list">
       {#each methods.getLogTrackers($Interact.logDataEditor.log) as TrackerValue}
         <NItem
+          className="clickable"
           title={`${TrackerValue.tracker.emoji} ${TrackerValue.tracker.label}`}
           on:click={() => {
-            $Interact.logDataEditor.tag = TrackerValue.tag;
-            $Interact.logDataEditor.value = TrackerValue.value;
+            $Interact.logDataEditor.show = false;
+            setTimeout(() => {
+              $Interact.logDataEditor.tag = TrackerValue.tag;
+              $Interact.logDataEditor.value = TrackerValue.value;
+            }, 120);
+            console.log('on Click', $Interact.logDataEditor);
           }}>
           <span slot="right">
             {NomieUOM.format(TrackerValue.value, TrackerValue.tracker.uom)}
@@ -258,20 +277,6 @@
         </NItem>
       {/each}
     </div>
-
-    {#if $Interact.logDataEditor.tag && $Interact.logDataEditor.log}
-      <TrackerInput
-        saveLabel="Set"
-        hideAdd={true}
-        value={$Interact.logDataEditor.value}
-        tracker={$TrackerStore[$Interact.logDataEditor.tag] || new Tracker({
-            tag: $Interact.logDataEditor.tag
-          })}
-        on:save={methods.editLogDataOnSave}
-        on:cancel={() => {
-          $Interact.logDataEditor.tag = null;
-        }} />
-    {/if}
 
     <button
       class="btn btn-lg btn-light mr-1 flex-grow"
@@ -284,7 +289,9 @@
       slot="footer"
       on:click={() => {
         $Interact.logDataEditor.show = false;
+        console.log('TODO: Make editing data work');
         LedgerStore.updateLog($Interact.logDataEditor.log).then(() => {
+          console.log('Updated Log');
           if ($Interact.logDataEditor.onInteract) {
             $Interact.logDataEditor.onInteract(new NomieLog($Interact.logDataEditor.log));
           }
@@ -295,4 +302,17 @@
     </button>
 
   </NModal>
+{/if}
+
+{#if $Interact.logDataEditor.tag && $Interact.logDataEditor.value}
+  <TrackerInput
+    saveLabel="Set"
+    show={true}
+    hideAdd={true}
+    value={$Interact.logDataEditor.value}
+    tracker={methods.getTracker($Interact.logDataEditor.tag)}
+    on:save={methods.editLogDataOnSave}
+    on:cancel={() => {
+      $Interact.logDataEditor.tag = null;
+    }} />
 {/if}

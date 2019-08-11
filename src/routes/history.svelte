@@ -227,19 +227,19 @@
       let ranges = [
         {
           days: 90,
-          title: "90 Days Ago"
+          title: "90 Days Back"
         },
         {
           days: 180,
-          title: "6 Months Ago"
+          title: "6 Months Back"
         },
         {
           days: 365,
-          title: "1 Year Ago"
+          title: "1 Year Back"
         },
         {
           days: 730,
-          title: "2 Years Ago"
+          title: "2 Years Back"
         },
         {
           days: -1,

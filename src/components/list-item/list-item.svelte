@@ -60,8 +60,13 @@
 
     background-color: var(--color-solid);
 
+    select,
+    input {
+      margin: 6px 0;
+    }
+
     &.item-divider {
-      background-color: transparent;
+      background-color: var(--color-solid);
     }
     &.large {
       min-height: 56px;

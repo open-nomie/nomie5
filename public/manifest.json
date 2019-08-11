@@ -1,10 +1,11 @@
 {
-  "name": "Nomie",
-  "short_name": "Nomie",
+  "name": "Nomie 4",
+  "short_name": "Nomie 4",
   "start_url": "http://localhost:5000",
-  "description": "Private Life Tracker",
+  "description": "Private Mood & Life Tracker",
   "display": "standalone",
   "theme_color": "#4d84a1",
+  "background_color": "#4d84a1",
   "icons": [
     {
       "src": "https://open.nomie.app/images/icon.png",

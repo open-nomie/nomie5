@@ -1,0 +1,22 @@
+.n-board-tabs {
+	background-color: var(--color-solid);
+	width: 100%;
+	min-height: 50px;
+	-webkit-overflow-scrolling: touch;
+	height: 50px;
+
+	.tab {
+		color: var(--color-inverse-2);
+		border: none;
+		background: transparent;
+		padding: 4px 6px;
+		min-width: 40px;
+		max-width: 200px;
+		width: auto;
+		flex-shrink: 0;
+		height: 50px;
+		&.active {
+			border-bottom: solid 2px var(--color-primary-bright);
+		}
+	}
+}

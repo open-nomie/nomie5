@@ -1,6 +1,6 @@
 # TODO
 
-Generated Wed Jul 31 2019 9:48 pm
+Generated Fri Aug 9 2019 8:37 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -27,12 +27,16 @@ Generated Wed Jul 31 2019 9:48 pm
 - **src/routes/board-editor.svelte**
    - TODO: Make sorting work
    - TODO: Fix Sorting on MObile -->
+- **src/plugins/goals/goals.svelte**
+   - TODO: Finish Goals
 - **src/modules/stats/stats.js**
    - TODO: Implement IgnoreZeros
 - **src/containers/tracker/input/keypad.svelte**
    - and one for the pin-lock container - TODO: merge these some day
 - **src/containers/map/map.svelte**
    - TODO: Look at making this curved dotted lines - and not just straight ones
+- **src/containers/interactions/interactions.svelte**
+   - console.log('TODO: Make editing data work');
 - **src/containers/importer/importer.svelte**
    - Modal will be hidden in settings TODO: make this not hacky -->
 - **src/containers/board/tracker-button.svelte**

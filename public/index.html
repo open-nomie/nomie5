@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="utf8" />
-		<title>Open Nomie</title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=contain" />
-
+		<title>Nomie 4</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<meta name="description" content="100% Private Mood and Life Tracking. Powered by Blockstack" />
 		<meta name="apple-mobile-web-app-title" content="Nomie 4" />
+		<meta name="theme-color" content="#4d84a1" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<link rel="apple-touch-startup-image" href="/images/nomie-splash.png" />
 		<link rel="apple-touch-icon" href="/images/icon.png" />
@@ -13,45 +14,6 @@
 		<link rel="icon" type="image/png" href="/favicon.png" />
 		<link rel="icon" type="image/png" sizes="192x192" href="/images/icon.png" />
 		<link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
-		<!-- Browserstack for decentralied / encrypted storage -->
-		<script
-			src="https://unpkg.com/blockstack@19.2.1/dist/blockstack.js"
-			integrity="sha384-+qYCYoUGzsMLAzHm80c4DyhbWgHBBb2N0RFqsg7Lws5ljtBtj/IwpgxZkiR7j7lp"
-			crossorigin="anonymous"
-		></script>
-		<!-- Leaflet for Map -->
-		<link
-			rel="stylesheet"
-			href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-			integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-			crossorigin=""
-		/>
-		<script
-			src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
-			integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
-			crossorigin=""
-		></script>
-		<!-- GeoCoding -->
-
-		<!-- Load Esri Leaflet from CDN -->
-		<script
-			src="https://unpkg.com/esri-leaflet@2.2.4/dist/esri-leaflet.js"
-			integrity="sha512-tyPum7h2h36X52O2gz+Pe8z/3l+Y9S1yEUscbVs5r5aEY5dFmP1WWRY/WLLElnFHa+k1JBQZSCDGwEAnm2IxAQ=="
-			crossorigin=""
-		></script>
-
-		<!-- Load Esri Leaflet Geocoder from CDN -->
-		<link
-			rel="stylesheet"
-			href="https://unpkg.com/esri-leaflet-geocoder@2.2.14/dist/esri-leaflet-geocoder.css"
-			integrity="sha512-v5YmWLm8KqAAmg5808pETiccEohtt8rPVMGQ1jA6jqkWVydV5Cuz3nJ9fQ7ittSxvuqsvI9RSGfVoKPaAJZ/AQ=="
-			crossorigin=""
-		/>
-		<script
-			src="https://unpkg.com/esri-leaflet-geocoder@2.2.14/dist/esri-leaflet-geocoder.js"
-			integrity="sha512-uK5jVwR81KVTGe8KpJa1QIN4n60TsSV8+DPbL5wWlYQvb0/nYNgSOg9dZG6ViQhwx/gaMszuWllTemL+K+IXjg=="
-			crossorigin=""
-		></script>
 
 		<!-- ZMDI for icons -->
 		<link
@@ -65,6 +27,44 @@
 	</head>
 
 	<body>
+		<noscript>
+			Sorry. Nomie 4 requires Javascript to run.
+		</noscript>
+		<script
+			src="https://unpkg.com/blockstack@19.2.1/dist/blockstack.js"
+			integrity="sha384-+qYCYoUGzsMLAzHm80c4DyhbWgHBBb2N0RFqsg7Lws5ljtBtj/IwpgxZkiR7j7lp"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+			integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+			crossorigin=""
+		></script>
+		<!-- Load Esri Leaflet from CDN -->
+		<script
+			src="https://unpkg.com/esri-leaflet@2.2.4/dist/esri-leaflet.js"
+			integrity="sha512-tyPum7h2h36X52O2gz+Pe8z/3l+Y9S1yEUscbVs5r5aEY5dFmP1WWRY/WLLElnFHa+k1JBQZSCDGwEAnm2IxAQ=="
+			crossorigin=""
+		></script>
+		<script
+			src="https://unpkg.com/esri-leaflet-geocoder@2.2.14/dist/esri-leaflet-geocoder.js"
+			integrity="sha512-uK5jVwR81KVTGe8KpJa1QIN4n60TsSV8+DPbL5wWlYQvb0/nYNgSOg9dZG6ViQhwx/gaMszuWllTemL+K+IXjg=="
+			crossorigin=""
+		></script>
 		<script src="/bundle.js?v=APP_VERSION"></script>
+		<!-- Leaflet for Map -->
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+			integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+			crossorigin=""
+		/>
+		<!-- Load Esri Leaflet Geocoder from CDN -->
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/esri-leaflet-geocoder@2.2.14/dist/esri-leaflet-geocoder.css"
+			integrity="sha512-v5YmWLm8KqAAmg5808pETiccEohtt8rPVMGQ1jA6jqkWVydV5Cuz3nJ9fQ7ittSxvuqsvI9RSGfVoKPaAJZ/AQ=="
+			crossorigin=""
+		/>
 	</body>
 </html>

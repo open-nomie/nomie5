@@ -139,15 +139,24 @@
     background-color: $orange;
   }
   .row-3 .button-2 {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--color-faded-2);
+  }
+  .screen {
+    background-color: var(--color-faded-1);
+    h1 {
+      color: var(--color-inverse);
+    }
+    h6 {
+      color: var(--color-faded-2);
+    }
   }
 </style>
 
 <div class="tracker-input keypad">
-  <div class="screen bg-light px-4 py-2">
+  <div class="screen px-4 py-2">
     <h1 class="mb-0">{data.tempValue || 0}</h1>
     {#if tracker.uom !== 'count' && tracker.uom}
-      <h6 class="text-faded">
+      <h6 class="">
         {NomieUOM.format(parseFloat(data.tempValue) || 0, tracker.uom)}
       </h6>
     {/if}

@@ -180,7 +180,8 @@
 
 <button
   {id}
-  class="n-tracker-button {data.pressing ? 'pressing' : ''}
+  class="n-tracker-button tracker-{tracker.tag}
+  {data.pressing ? 'pressing' : ''}
   {className}"
   on:click={methods.clicked}
   on:touchstart={methods.mousedown}

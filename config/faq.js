@@ -8,7 +8,7 @@ export default [
 	{
 		question: 'When should I track?',
 		answer: `That's really up to you too, but the key is to keep it balanced, 
-				track a few times throug out the day maybe?`,
+				track a few times throughout the day maybe?`,
 	},
 	{
 		question: `Where's my data stored?`,
@@ -22,7 +22,7 @@ export default [
 				This will direct you to Blockstack where you'll set your own GaiaHub storage`,
 	},
 	{
-		question: `Can I auto import thing into this version of Nomie?`,
+		question: `Can I auto import things into this version of Nomie?`,
 		answer: `Kinda - using a custom URL parameter. If you add /?note=Hi to the end of this 
 				url - it will automatically create a note. Apps like Tasker (Android) and 
 				Shortcuts in iOS can open web browsers. So you url encode a note with the 

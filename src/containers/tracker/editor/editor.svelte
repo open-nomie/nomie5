@@ -53,9 +53,8 @@
           "Please fill out all required fields: title, tag and emoji"
         );
       } else {
-        TrackerStore.saveTracker(tracker).then(() => {
-          dispatch("save", tracker);
-        });
+        dispatch("save", tracker);
+        TrackerStore.saveTracker(tracker).then(() => {});
       }
     },
     addTrackerToNote() {
@@ -93,8 +92,11 @@
       min-width: 190px;
       text-align: right;
     }
+    .form-control {
+      width: 200px;
+    }
     .item-divider.compact {
-      background-color: var(--color-faded-1);
+      background-color: var(--color-solid);
     }
   }
 </style>
@@ -102,7 +104,9 @@
 {#if $Interact.trackerEditor.show}
 
   <div class="n-tracker-editor">
-    <NModal title="Tracker Editor {$Interact.trackerEditor.show}" allowClose>
+    <NModal
+      title="Edit {tracker.label.length ? tracker.label : 'Tracker'}"
+      allowClose>
       <div class="bg-faded">
         <NItem className="item-divider compact" />
         <ColorPicker bind:value={tracker.color} />
@@ -123,7 +127,6 @@
               on:focus={event => {
                 event.target.select();
               }}
-              maxlength="3"
               class="form-control text-center"
               bind:value={tracker.emoji} />
           </div>
@@ -155,27 +158,29 @@
 
         </NItem>
         {#if tracker.type == 'tick'}
-          <NItem title="Auto Save On Tap">
+          <NItem title="Save On Tap">
             <div slot="right">
               <NToggle bind:value={tracker.one_tap} />
             </div>
           </NItem>
         {/if}
         {#if tracker.type == 'range'}
-          <NItem title="Min">
-            <div slot="right">
-              <input
-                type="text"
-                class="form-control"
-                bind:value={tracker.min} />
-            </div>
-          </NItem>
-          <NItem title="Max" borderBottom>
-            <div slot="right">
-              <input
-                type="text"
-                class="form-control"
-                bind:value={tracker.max} />
+          <NItem title="Min / Max">
+            <div slot="right" class="">
+              <div class="n-row">
+                <input
+                  type="number"
+                  class="form-control mr-2"
+                  style="width:90px;"
+                  placeholder="Min"
+                  bind:value={tracker.min} />
+                <input
+                  type="number"
+                  class="form-control"
+                  style="width:90px;"
+                  placeholder="Max"
+                  bind:value={tracker.max} />
+              </div>
             </div>
           </NItem>
         {/if}
@@ -215,7 +220,7 @@
             <textarea
               bind:value={tracker.note}
               placeholder="#any #tracker #hashtags"
-              class="form-control my-2" />
+              class="form-control my-2 w-100" />
             <!-- <button
             slot="right"
             class="btn btn-clear btn-sm btn-icon zmdi zmdi-plus"
@@ -223,6 +228,14 @@
           </NItem>
         {/if}
         <NItem className="item-divider compact" />
+        <NItem title="Default Value">
+          <div slot="right">
+            <input
+              type="number"
+              class="form-control"
+              bind:value={tracker.default} />
+          </div>
+        </NItem>
       </div>
 
       <button

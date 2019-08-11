@@ -1,6 +1,20 @@
-# Open Nomie - Private & Encrypted Mood & Life Tracker
+# Nomie 4
 
-![](https://shareking.s3.amazonaws.com/Screen-Shot-2019-07-07-14-12-15.02.png)
+## Open Source Mood Tracker / Life Tracker / Data Journal
+
+![](https://shareking.s3.amazonaws.com/nomie4-screens.png?2)
+
+## Try it out
+
+-   https://open.nomie.app **Production** (master)
+
+If you like to live dangerously you can run the dev branch
+
+-   https://dev.nomie.app **Development** (develop)
+
+Note: Data cannot be shared across domains, if you want to switch between prod and experimental, you'll need to export and import your data (in the settings tab).
+
+## The Story
 
 I started [building Nomie in 2014](https://nomie.app/blog/original-nomie-blog-post) and over the next handful of years I release 3 major versions in 3 different JS technologies (VanilaJS -> Ionic -> ReactNative). The Nomie user base grew to ~100,000 users spread over multiple versions and multiple platforms.
 
@@ -9,13 +23,6 @@ In March 2019 I decided to remove the apps from Google Play and the App Store an
 While the native apps will continue to run for those who installed it before, I wanted to take the best parts of Nomie 1, 2 and 3 and release it as an open source solution that could be run in the browser. This project is that result.
 
 Wanna know more about the Nomie story? [Here are a handful of podcasts talking about each release](https://soundcloud.com/nomiepodcast).
-
-## Try it out
-
--   **Production** (master) https://open.nomie.app
--   **Experimental** (dev) https://dev.nomie.app
-
-Note: Data cannot be shared across domains, if you want to switch between prod and experimental, you'll need to export and import your data (in the settings tab).
 
 ## Want to contribute?
 
@@ -72,7 +79,7 @@ Deploy straight to Netlify to test it out quickly.
 -   **Board Tabs** - how you switch boards on the track tab
 -   **Log** - a record event. A lot contains a note, a note can contain unlimited numbers of tags; e.g: #mood(4) #pizza #beer(12). Logs can contain a lat and long. Tracker Objects and their values are parsed out of the logs in real time.
 
-## Data Storage
+## Data Storage - NEEDS UPDATING
 
 Open Nomie as of Jul 27, will support either local (with localforage) or cloud (with blockstack)
 
@@ -105,6 +112,10 @@ Great for any type of range selection - for example Mood.
 **timer** Timer
 
 Tap to start, tap to stop. The timer is great for tracking durations.
+
+**meta** Multi-tracker
+
+Combine multiple trackers into a single flow, for collecting a squence of tracker data
 
 # Coding Rules
 

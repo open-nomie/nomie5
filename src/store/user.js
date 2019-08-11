@@ -24,6 +24,8 @@ import config from '../../config/global';
 // Consts
 const console = new Logger('🤠 userStore');
 const UserSession = new blockstack.UserSession();
+// Determine if user is in dark mode (over ride if true)
+const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 // Store Initlization
 const userInit = () => {
@@ -50,36 +52,36 @@ const userInit = () => {
 
 	const methods = {
 		getStorageEngine() {
-			return Storage.local.get('root/storage_type') || 'blockstack';
+			return Storage.local.get('root/storage_type');
 		},
 		initialize() {
 			// Set Dark or Light Mode
-			if (state.darkMode) {
+			// Lets get dark Mode
+			if (state.darkMode || isDarkMode) {
 				document.body.classList.add('dark');
 			} else {
 				document.body.classList.remove('dark');
 			}
-			// Is blockstack user pending?
-			if (UserSession.isSignInPending()) {
-				UserSession.handlePendingSignIn().then(userData => {
-					// redirect user to home - to avoid having the
-					// blockstack authkey hanging around.
-					window.location.href = '/';
+
+			if (!Storage._storageType()) {
+				// If no storage type selected
+				// they're not signed in - this should trigger onboarding
+				// in App.svelte
+				update(p => {
+					p.signedIn = false;
+					return p;
 				});
-			} else if (UserSession.isUserSignedIn() || methods.getStorageEngine() === 'local') {
-				// Signed In - let's get the user Ready
-				if (methods.getStorageEngine() === 'local') {
-					methods.setProfile({ username: 'Local' });
-				} else if (methods.getStorageEngine() === 'blockstack') {
-					methods.setProfile(UserSession.loadUserData());
-				}
 			} else {
-				update(u => {
-					u.ready = true;
-					u.signedIn = false;
-					return u;
-				});
+				// Storage is set - wait for it to be ready
+				Storage.onReady(() => {
+					methods.setProfile(Storage.getProfile());
+				}); // end storage on Ready
 			}
+
+			// Storage.onReady(() => {
+			// 	methods.setProfile(Storage.getProfile());
+			// }); // end storage on Ready
+
 			// set highlevel initialize marker
 
 			// TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
@@ -91,6 +93,13 @@ const userInit = () => {
 				return p;
 			});
 		},
+		signout() {
+			localStorage.clear();
+			try {
+				blockstack.signUserOut(window.location.origin);
+			} catch (e) {}
+			window.location.href = window.location.href;
+		},
 		/**
 		 * Set Profile and Signin
 		 */
@@ -99,8 +108,8 @@ const userInit = () => {
 			methods.bootstrap().then(() => {
 				update(p => {
 					p.ready = true;
-					p.profile = profile;
 					p.signedIn = true;
+					p.profile = profile;
 					return p;
 				});
 			});
@@ -175,7 +184,7 @@ const userInit = () => {
 		 * Save the Meta object for this user
 		 */
 		saveMeta() {
-			let usr = this.data();
+			let usr = methods.data();
 			if (Object.keys(usr.meta).length) {
 				return Storage.put(config.user_meta_path, usr.meta);
 			}
@@ -209,7 +218,7 @@ const userInit = () => {
 		},
 		// On Ready Event
 		onReady(func) {
-			let st = this.data();
+			let st = methods.data() || {};
 			if (st.ready === true) {
 				func(st);
 			} else {

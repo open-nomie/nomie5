@@ -1,0 +1,27 @@
+.n-item-divider {
+	min-height: 60px !important;
+	align-items: flex-end !important;
+	padding-bottom: 10px !important;
+	&.border-bottom {
+		border-bottom-color: var(--color-faded) !important;
+	}
+	&.compact {
+		min-height: 30px !important;
+	}
+	.main,
+	.n-text {
+		@extend .n-title;
+	}
+}
+
+.border-bottom {
+	border-color: var(--color-faded-2) !important;
+}
+
+.bg-selected {
+	background-color: var(--color-background-selected) !important;
+}
+
+.bg-light {
+	background-color: var(--color-solid) !important;
+}

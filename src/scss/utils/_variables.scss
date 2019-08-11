@@ -17,3 +17,13 @@ $textFaded: #cccccc;
 $textFaded2: #dddddd;
 $green: #38a83f;
 $red: #e94151;
+
+$progress-height: 10px;
+$progress-font-size: 0.8rem;
+$progress-bg: var(--color-faded);
+$progress-border-radius: 10px;
+$progress-box-shadow: none;
+$progress-bar-color: var(--color-solid) !default;
+$progress-bar-bg: $primary !default;
+$progress-bar-animation-timing: 1s linear infinite !default;
+$progress-bar-transition: width 0.6s ease !default;

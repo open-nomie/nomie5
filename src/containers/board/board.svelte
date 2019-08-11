@@ -17,6 +17,7 @@
   import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
   import TrackerInput from "../tracker/input/input.svelte";
   import NModal from "../../components/modal/modal.svelte";
+  import NHScroll from "../../components/h-scroller/h-scroller.svelte";
 
   // Vendors
   import Spinner from "svelte-spinner";
@@ -247,6 +248,8 @@
       } else if (tracker.type === "note") {
         // Extract Trackers
         let trackerTags = extractor(tracker.note);
+        // Add Tag to the note first...
+        ActiveLogStore.addTag(tracker.tag);
         // Create array of items to pass to promise step
         let items = Object.keys(trackerTags).map(tag => {
           return {
@@ -406,6 +409,8 @@
     height: 50px;
     z-index: 350;
     background-color: var(--color-solid);
+    border-bottom: var(--color-solid-2);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.04);
   }
 
   .board-actions {
@@ -462,7 +467,6 @@
   {#if data.boards}
     <div class="sub-header">
       <div class="container p-0 h-100">
-
         <NBoardTabs
           boards={methods.injectAllBoard($BoardStore.boards || [])}
           active={$BoardStore.active}
