@@ -19,6 +19,7 @@ if (process.env.URL) {
 	manifestFile = manifestFile.replace(/http\:\/\/localhost\:5000/gi, process.env.URL);
 	fs.writeFileSync('./public/manifest.json', manifestFile, 'UTF-8');
 }
+let manifest = JSON.parse(manifestFile);
 
 export default {
 	input: 'src/main.js',
