@@ -17,7 +17,7 @@ const production = !process.env.ROLLUP_WATCH;
 let manifestFile = fs.readFileSync('./public/manifest.json', 'UTF-8');
 if (process.env.URL) {
 	manifestFile = manifestFile.replace(/http\:\/\/localhost\:5000/gi, process.env.URL);
-	fs.writeFileSync('./public/manifest.json', JSON.stringify(manifest, null, 2), 'UTF-8');
+	fs.writeFileSync('./public/manifest.json', manifestFile, 'UTF-8');
 }
 
 export default {
