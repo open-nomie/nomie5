@@ -107,8 +107,8 @@ const interactInit = () => {
 			});
 		},
 		vibrate(ms) {
-			ms = ms || 30;
-			if (navigator.hasOwnProperty('vibrate')) {
+			ms = ms || 90;
+			if (navigator.vibrate) {
 				navigator.vibrate(ms);
 			}
 		},
