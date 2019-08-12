@@ -9,7 +9,7 @@ if ('serviceWorker' in navigator) {
 	navigator.serviceWorker
 		.register('/service-worker.js', { scope: './' })
 		.then(registration => {
-			console.log('Nomie Service Worker Registered');
+			// TODO: handle anything required for service worker
 		})
 		.catch(e => {
 			console.log('Service worker registration failed', e.message);
@@ -19,7 +19,7 @@ if ('serviceWorker' in navigator) {
 const app = new App({
 	target: document.body,
 	props: {
-		name: 'Nomie Web',
+		name: 'Nomie 4',
 	},
 });
 export default app;

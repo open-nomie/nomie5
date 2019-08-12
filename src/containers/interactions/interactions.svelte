@@ -265,10 +265,8 @@
           title={`${TrackerValue.tracker.emoji} ${TrackerValue.tracker.label}`}
           on:click={() => {
             $Interact.logDataEditor.show = false;
-            setTimeout(() => {
-              $Interact.logDataEditor.tag = TrackerValue.tag;
-              $Interact.logDataEditor.value = TrackerValue.value;
-            }, 120);
+            $Interact.logDataEditor.tag = TrackerValue.tag;
+            $Interact.logDataEditor.value = TrackerValue.value;
             console.log('on Click', $Interact.logDataEditor);
           }}>
           <span slot="right">
