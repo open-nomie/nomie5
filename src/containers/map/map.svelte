@@ -5,6 +5,7 @@
 
   // modules
   import locate from "../../modules/locate/locate";
+  import distance from "../../modules/locate/distance";
 
   // props
   export let locations = [];
@@ -89,44 +90,64 @@
         popupAnchor: [0, -14]
       });
 
-      // Loop over locaitons provided in props
-      for (let i = 0; i < locations.length; i++) {
-        let mkr = new L.marker([locations[i].lat, locations[i].lng], {
+      let latLngArray = locations.map(loc => {
+        return [loc.lat, loc.lng];
+      });
+
+      // Quick Add Marker Function
+      let addMarker = (latLng, name, click) => {
+        let mkr = new L.marker(latLng, {
           icon: myIcon
         });
         // If location name is present (TODO) show it in a popup
-        if (locations[i].name) {
-          mkr.bindPopup(locations[i].name);
+        if (name) {
+          mkr.bindPopup(name);
         }
-        mkr.on("click", () => {
-          data.activeLocation = locations[i];
-        });
+        mkr.on("click", click);
         mkr.addTo(MAP);
-      }
-
-      let connectTheDots = data => {
-        // TODO: Look at making this curved dotted lines - and not just straight ones
-        var c = [];
-        data.forEach(location => {
-          c.push([location.lat, location.lng]);
-        });
-        return c;
       };
 
-      let pathCoords = connectTheDots(locations);
-      //let pathLine =
-      window.L.polyline(pathCoords, {
-        color: "rgba(2.7%, 52.5%, 100%, 0.378)"
-      }).addTo(MAP);
+      /**
+       * PIN RENDERING
+       * If maxDistance between them is greater than 0.1 km
+       */
+      let maxDistance = distance.furthest(latLngArray);
+      if (maxDistance > 0.4) {
+        // Loop over locaitons provided in props
+        locations.forEach(loc => {
+          addMarker([loc.lat, loc.lng], loc.name, () => {
+            data.activeLocation = loc;
+          });
+        });
 
-      // Make the map fit the bounds of all locations provided
-      if (locations.length) {
-        MAP.fitBounds(
-          locations.map(loc => {
-            return [loc.lat, loc.lng];
-          })
+        let connectTheDots = data => {
+          // TODO: Look at making this curved dotted lines - and not just straight ones
+          var c = [];
+          data.forEach(location => {
+            c.push([location.lat, location.lng]);
+          });
+          return c;
+        };
+        //let pathLine =
+        window.L.polyline(connectTheDots(locations), {
+          color: "rgba(2.7%, 52.5%, 100%, 0.378)"
+        }).addTo(MAP);
+      } else {
+        // Max Distance is not enough to justify rendering a bunch of pins
+        addMarker(
+          [locations[0].lat, locations[0].lng],
+          locations[0].name,
+          () => {
+            data.activeLocation = locations[0];
+          }
         );
       }
+
+      // Make the map fit the bounds of all locations provided
+      if (latLngArray.length) {
+        MAP.fitBounds(latLngArray);
+      }
+
       MAP.invalidateSize();
     },
     getLocation(lat, lng) {
