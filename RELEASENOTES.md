@@ -1,4 +1,4 @@
-# v4.16 - Sunday Aug 11 2019
+# v4.1.16 - Sunday Aug 11 2019
 
 ## Bugs
 
@@ -13,7 +13,7 @@
 -   Dark Mode - Automatic detection if device is in Dark mode
 -   Day Reset - Nomie will now ask to be refreshed when a new day starts [#18](https://github.com/open-nomie/nomie/issues/18)
 -   Scroll to focused tab - new horiztonal-scroller that will scroll to the active child.
--   Abstrated Storage Engine - should be easier to add new types of storage [#12](https://github.com/open-nomie/nomie/issues/12)
+-   Abstracted Storage Engine - should be easier to add new types of storage [#12](https://github.com/open-nomie/nomie/issues/12)
 
 ## Known Issues
 
