@@ -14,10 +14,10 @@ import fs from 'fs';
 const production = !process.env.ROLLUP_WATCH;
 
 // Replace Local Host with whatever the domain is
-let manifestFile = fs.readFileSync('./public/manifest.json');
+let manifestFile = fs.readFileSync('./public/manifest.json', 'UTF-8');
 if (process.env.URL) {
 	manifestFile = manifestFile.replace(/http\:\/\/localhost\:5000/gi, process.env.URL);
-	fs.writeFileSync('./public/manifest.json', JSON.stringify(manifest, null, 2));
+	fs.writeFileSync('./public/manifest.json', JSON.stringify(manifest, null, 2), 'UTF-8');
 }
 
 export default {
