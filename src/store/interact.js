@@ -106,6 +106,12 @@ const interactInit = () => {
 				});
 			});
 		},
+		vibrate(ms) {
+			ms = ms || 30;
+			if (navigator.hasOwnProperty('vibrate')) {
+				navigator.vibrate(ms);
+			}
+		},
 		editTracker(tracker) {
 			return new Promise((resolve, reject) => {
 				update(s => {

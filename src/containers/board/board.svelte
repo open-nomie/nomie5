@@ -495,6 +495,7 @@
                   methods.trackerTapped(tracker);
                 }}
                 on:longpress={() => {
+                  Interact.vibrate();
                   methods.showTrackerOptions(tracker);
                 }} />
             {/each}

@@ -1,6 +1,6 @@
 # TODO
 
-Generated Fri Aug 9 2019 8:37 pm
+Generated Mon Aug 12 2019 2:55 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -31,6 +31,8 @@ Generated Fri Aug 9 2019 8:37 pm
    - TODO: Finish Goals
 - **src/modules/stats/stats.js**
    - TODO: Implement IgnoreZeros
+- **src/main.js**
+   - TODO: handle anything required for service worker
 - **src/containers/tracker/input/keypad.svelte**
    - and one for the pin-lock container - TODO: merge these some day
 - **src/containers/map/map.svelte**
