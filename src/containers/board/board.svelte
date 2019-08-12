@@ -130,6 +130,13 @@
     editBoard() {
       navigate(`/board/${activeBoard.id}`);
     },
+    swipeLeft(e) {
+      console.log("Swiped!", e);
+      BoardStore.nextBoard();
+    },
+    swipeRight(e) {
+      BoardStore.previousBoard();
+    },
     addTapped() {
       if ($BoardStore.active == "all") {
         methods.trackerEditor();
@@ -483,7 +490,10 @@
     </div>
   {:else}
     <div class="container p-0">
-      <main class="n-board">
+      <main
+        class="n-board"
+        on:swipeleft={methods.swipeLeft}
+        on:swiperight={methods.swipeRight}>
 
         <div class="trackers">
           {#if !refreshing}

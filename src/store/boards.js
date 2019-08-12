@@ -213,6 +213,37 @@ const boardsInit = () => {
 				});
 			}
 		},
+		nextBoard() {
+			let data = methods.data();
+			let index = 0;
+			data.boards.forEach((b, bIndex) => {
+				if (b.id == data.active) {
+					index = bIndex;
+				}
+			});
+			if (index < data.boards.length - 1) {
+				console.log('Should go next', index, data.boards.length - 1);
+				let board = data.boards[index + 1];
+				if (board.id) {
+					methods.setActive(board.id);
+				}
+			}
+		},
+		previousBoard() {
+			let data = methods.data();
+			let index = 0;
+			data.boards.forEach((b, bIndex) => {
+				if (b.id == data.active) {
+					index = bIndex;
+				}
+			});
+			if (index > 0) {
+				let board = data.boards[index - 1];
+				if (board.id) {
+					methods.setActive(board.id);
+				}
+			}
+		},
 		getActiveTrackerTags() {
 			let trackers = [];
 			let data = methods.data();

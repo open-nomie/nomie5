@@ -9,6 +9,11 @@
   // Locals
   let wrapper;
   let scroller;
+  let ready = false;
+
+  $: if (activeIndex && ready) {
+    methods.selectIndex(activeIndex);
+  }
 
   // Methods
   const methods = {
@@ -24,6 +29,7 @@
           methods.selectIndex(selectedIndex);
         });
       }
+      ready = true;
     },
     // Clear currently selected index
     clearSelected() {
@@ -44,14 +50,15 @@
       } catch (e) {
         console.log("error", e.message);
       }
+      ready = true;
     }
   };
   // when component mounts
   onMount(() => {
     methods.init();
-    if (activeIndex) {
-      methods.selectIndex(activeIndex);
-    }
+    // if (activeIndex) {
+    //   methods.selectIndex(activeIndex);
+    // }
   });
 </script>
 

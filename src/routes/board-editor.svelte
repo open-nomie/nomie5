@@ -399,10 +399,6 @@
             {#if showDeletes}
               <button
                 class="btn-delete zmdi zmdi-close"
-                use:tap
-                on:tap={event => {
-                  methods.removeTracker(event, tracker);
-                }}
                 on:click={event => {
                   methods.removeTracker(event, tracker);
                 }} />

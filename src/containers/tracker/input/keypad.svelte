@@ -169,8 +169,7 @@
             {#if button !== null}
               <button
                 class="button button-{bindex}"
-                use:tap
-                on:tap={() => {
+                on:click={() => {
                   methods.onPress(button);
                   return false;
                 }}>

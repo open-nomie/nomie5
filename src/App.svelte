@@ -6,6 +6,8 @@
 
   // Vendors
   import Spinner from "svelte-spinner";
+  import { gestures } from "@composi/gestures";
+   
 
   // Containers
   import AppTabs from "./containers/layout/tabs.svelte";
@@ -33,6 +35,7 @@
 
   // Set a better console
   const console = new Logger("App.svelte");
+   gestures();
 
   // Day Check - every 30 minutes
   // Lets see if the day changed since last it was opened.
