@@ -14,6 +14,8 @@ If you like to live dangerously you can run the dev branch
 
 Note: Data cannot be shared across domains, if you want to switch between prod and experimental, you'll need to export and import your data (in the settings tab).
 
+Help Promote Nomie by [Tweeting](https://twitter.com/intent/tweet?hashtags=free,cantbeevil,dap,privacy,oss&text=Track%20your%20mood%20and%20everything%20that%20affects%20it%20-%20with%20Nomie%20https%3A//nomie.app)
+
 ## The Story
 
 I started [building Nomie in 2014](https://nomie.app/blog/original-nomie-blog-post) and over the next handful of years I release 3 major versions in 3 different JS technologies (VanilaJS -> Ionic -> ReactNative). The Nomie user base grew to ~100,000 users spread over multiple versions and multiple platforms.
