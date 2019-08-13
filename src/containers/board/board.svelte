@@ -130,12 +130,20 @@
     editBoard() {
       navigate(`/board/${activeBoard.id}`);
     },
+    isSwipeEnough(e) {
+      // TODO: See if https://www.npmjs.com/package/@composi/gestures can detect how much they swiped
+      // Otherwise it's too sensitive
+      return false;
+    },
     swipeLeft(e) {
-      console.log("Swiped!", e);
-      BoardStore.nextBoard();
+      if (methods.isSwipeEnough(e)) {
+        BoardStore.nextBoard();
+      }
     },
     swipeRight(e) {
-      BoardStore.previousBoard();
+      if (methods.isSwipeEnough(e)) {
+        BoardStore.previousBoard();
+      }
     },
     addTapped() {
       if ($BoardStore.active == "all") {
@@ -490,10 +498,7 @@
     </div>
   {:else}
     <div class="container p-0">
-      <main
-        class="n-board"
-        on:swipeleft={methods.swipeLeft}
-        on:swiperight={methods.swipeRight}>
+      <main class="n-board">
 
         <div class="trackers">
           {#if !refreshing}

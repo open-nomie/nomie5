@@ -15,7 +15,14 @@ export default {
 			func();
 		} else {
 			// console.error('REDIRECTING TO BLOCKSTACK');
-			this.login();
+			if (confirm('Sign-in/Register with Blockstack?')) {
+				this.login();
+			} else {
+				// Clear local storage
+				localStorage.clear();
+				// Show Onboarding
+				window.location.reload();
+			}
 		}
 	},
 	getProfile() {

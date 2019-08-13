@@ -52,7 +52,7 @@ const userInit = () => {
 
 	const methods = {
 		getStorageEngine() {
-			return Storage.local.get('root/storage_type');
+			return Storage._storageType();
 		},
 		initialize() {
 			// Set Dark or Light Mode
@@ -67,11 +67,13 @@ const userInit = () => {
 				// If no storage type selected
 				// they're not signed in - this should trigger onboarding
 				// in App.svelte
+				console.log('We Don/t have a Storage Type!');
 				update(p => {
 					p.signedIn = false;
 					return p;
 				});
 			} else {
+				console.log('We have a Storage Type!', Storage._storageType());
 				// Storage is set - wait for it to be ready
 				Storage.onReady(() => {
 					methods.setProfile(Storage.getProfile());
