@@ -1,6 +1,6 @@
 # TODO
 
-Generated Mon Aug 12 2019 8:23 pm
+Generated Tue Aug 13 2019 10:16 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -35,6 +35,8 @@ Generated Mon Aug 12 2019 8:23 pm
    - TODO: handle anything required for service worker
 - **src/containers/tracker/input/keypad.svelte**
    - and one for the pin-lock container - TODO: merge these some day
+- **src/containers/setup/setup.svelte**
+   - TODO: Make this design not suck! It's very boring.
 - **src/containers/map/map.svelte**
    - TODO: Look at making this curved dotted lines - and not just straight ones
 - **src/containers/interactions/interactions.svelte**

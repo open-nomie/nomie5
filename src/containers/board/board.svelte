@@ -136,14 +136,14 @@
       return false;
     },
     swipeLeft(e) {
-      if (methods.isSwipeEnough(e)) {
-        BoardStore.nextBoard();
-      }
+      // if (methods.isSwipeEnough(e)) {
+      //   BoardStore.nextBoard();
+      // }
     },
     swipeRight(e) {
-      if (methods.isSwipeEnough(e)) {
-        BoardStore.previousBoard();
-      }
+      // if (methods.isSwipeEnough(e)) {
+      //   BoardStore.previousBoard();
+      // }
     },
     addTapped() {
       if ($BoardStore.active == "all") {

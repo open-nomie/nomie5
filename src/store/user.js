@@ -32,7 +32,7 @@ const userInit = () => {
 	let listeners = [];
 	// User State
 	let state = {
-		storageType: Storage.local.get('root/storage_type') || 'blockstack',
+		storageType: Storage.local.get('root/storage_type'),
 		ready: false,
 		signedIn: undefined,
 		profile: {
@@ -244,30 +244,31 @@ const userInit = () => {
 		 * TODO: move this to modules/storage
 		 */
 		listFiles() {
-			let data = methods.data();
-			let storageType = Storage.local.get('root/storage_type') || 'blockstack';
-			return new Promise((resolve, reject) => {
-				let files = [];
-				if (data.storageType === 'blockstack') {
-					blockstack
-						.listFiles(file => {
-							if (files.indexOf(file) == -1) {
-								files.push(file);
-							}
-							return true;
-						})
-						.then(() => {
-							resolve(files);
-						});
-				} else if (data.storageType === 'local') {
-					localforage.keys().then(keys => {
-						files = keys;
-						resolve(files);
-					});
-				} else {
-					alert('No storage type found for ' + data.storageType);
-				}
-			});
+			// let data = methods.data();
+			// let storageType = Storage.local.get('root/storage_type');
+			return Storage.list();
+			// return new Promise((resolve, reject) => {
+			// 	let files = [];
+			// 	if (data.storageType === 'blockstack') {
+			// 		blockstack
+			// 			.listFiles(file => {
+			// 				if (files.indexOf(file) == -1) {
+			// 					files.push(file);
+			// 				}
+			// 				return true;
+			// 			})
+			// 			.then(() => {
+			// 				resolve(files);
+			// 			});
+			// 	} else if (data.storageType === 'local') {
+			// 		localforage.keys().then(keys => {
+			// 			files = keys;
+			// 			resolve(files);
+			// 		});
+			// 	} else {
+			// 		alert('No storage type found for ' + data.storageType);
+			// 	}
+			// });
 		},
 	};
 

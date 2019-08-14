@@ -6,6 +6,8 @@
   "display": "standalone",
   "theme_color": "#4d84a1",
   "background_color": "#4d84a1",
+  "lang": "en-us",
+  "orientation": "vertical",
   "icons": [
     {
       "src": "http://localhost:5000/images/icons/nomie-android-400.png",

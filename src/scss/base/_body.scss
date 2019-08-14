@@ -41,6 +41,7 @@ body {
 	--color-red: #e94151;
 	--color-tabs: var(--color-primary);
 	--color-faded: rgba(0, 0, 0, 0.06);
+	--color-faded-inverse: rgba(255, 255, 255, 0.06);
 	--color-faded-1: rgba(0, 0, 0, 0.1);
 	--color-faded-2: rgba(0, 0, 0, 0.2);
 	--color-faded-3: rgba(0, 0, 0, 0.4);
@@ -61,6 +62,7 @@ body {
 	--color-inverse-3: #666;
 	--color-tabs: #000;
 	--color-faded: rgba(255, 255, 255, 0.2);
+	--color-faded-inverse: rgba(0, 0, 0, 0.06);
 	--color-faded-1: rgba(255, 255, 255, 0.1);
 	--color-faded-2: rgba(255, 255, 255, 0.2);
 	--color-faded-3: rgba(255, 255, 255, 0.4);
