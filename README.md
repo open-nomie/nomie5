@@ -30,9 +30,9 @@ Wanna know more about the Nomie story? [Here are a handful of podcasts talking a
 2. Keep dependencies to an absolute minimum.
 3. Reuse code when possible.
 
-## [Svelte](https://svlete.dev)
+## [Svelte](https://svelte.dev)
 
-This rewrite/port uses SvelteJS https://svlete.dev - a great tool for building fast / reactive single page apps (like Vue, React) without the framework.
+This rewrite/port uses SvelteJS https://svelte.dev - a great tool for building fast / reactive single page apps (like Vue, React) without the framework.
 
 ## [Blockstack](https://blockstack.org)
 
