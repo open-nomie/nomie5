@@ -21,8 +21,6 @@ import config from '../../config/global';
 // Consts
 const console = new Logger('🤠 userStore');
 const UserSession = new blockstack.UserSession();
-// Determine if user is in dark mode (over ride if true)
-const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 // Store Initlization
 const userInit = () => {
@@ -54,11 +52,6 @@ const userInit = () => {
 		initialize() {
 			// Set Dark or Light Mode
 			// Lets get dark Mode
-			if (state.darkMode || isDarkMode) {
-				document.body.classList.add('dark');
-			} else {
-				document.body.classList.remove('dark');
-			}
 
 			if (!Storage._storageType()) {
 				// If no storage type selected
@@ -75,7 +68,14 @@ const userInit = () => {
 					methods.setProfile(Storage.getProfile());
 				}); // end storage on Ready
 			}
+
+			// Storage.onReady(() => {
+			// 	methods.setProfile(Storage.getProfile());
+			// }); // end storage on Ready
+
 			// set highlevel initialize marker
+
+			// TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
 		},
 		setStorage(type) {
 			update(p => {

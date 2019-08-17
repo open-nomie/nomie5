@@ -7,7 +7,6 @@
   // Vendors
   import Spinner from "svelte-spinner";
   import { gestures } from "@composi/gestures";
-   
 
   // Containers
   import AppTabs from "./containers/layout/tabs.svelte";
@@ -32,10 +31,11 @@
   import { BoardStore } from "./store/boards"; // board state  and methods
   import { TrackerStore } from "./store/trackers"; // tracker state and methods
   import { CommanderStore } from "./store/commander"; // commander - /?note=hi&lat=35&lng=-81.32
+  import config from "../config/global";
 
   // Set a better console
   const console = new Logger("App.svelte");
-   gestures();
+  gestures();
 
   // Day Check - every 30 minutes
   // Lets see if the day changed since last it was opened.
@@ -89,6 +89,16 @@
     };
     window.addEventListener("online", onNetworkChange);
     window.addEventListener("offline", onNetworkChange);
+
+    let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    let manualDarkMode = JSON.parse(
+      localStorage.getItem(config.dark_mode_key) || "false"
+    );
+    if (manualDarkMode || isDarkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
   });
 
   // Initalize the User Store

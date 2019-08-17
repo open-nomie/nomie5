@@ -1,9 +1,10 @@
 # TODO
 
-Generated Sat Aug 17 2019 2:17 pm
+Generated Sat Aug 17 2019 2:30 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
+   - TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
    - TODO: move this to modules/storage
 - **src/store/ledger.js**
    - TODO: this doesn't seem to be trigger a change in History.svetle
