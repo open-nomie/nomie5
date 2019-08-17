@@ -1,10 +1,9 @@
 # TODO
 
-Generated Tue Aug 13 2019 10:16 pm
+Generated Sat Aug 17 2019 2:17 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
-   - TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
    - TODO: move this to modules/storage
 - **src/store/ledger.js**
    - TODO: this doesn't seem to be trigger a change in History.svetle
@@ -37,6 +36,7 @@ Generated Tue Aug 13 2019 10:16 pm
    - and one for the pin-lock container - TODO: merge these some day
 - **src/containers/setup/setup.svelte**
    - TODO: Make this design not suck! It's very boring.
+   - TODO: UserSession shouldn't be in here - login should be fired by Storage.
 - **src/containers/map/map.svelte**
    - TODO: Look at making this curved dotted lines - and not just straight ones
 - **src/containers/interactions/interactions.svelte**
