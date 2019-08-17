@@ -83,8 +83,8 @@
       }).addTo(MAP);
 
       var myIcon = window.L.icon({
-        iconUrl: "/images/pin.png",
-        iconRetinaUrl: "/images/pin.png",
+        iconUrl: "/images/map/map-marker.svg",
+        iconRetinaUrl: "/images/map/map-marker.svg",
         iconSize: [32, 32],
         iconAnchor: [9, 21],
         popupAnchor: [0, -14]
@@ -134,13 +134,15 @@
         }).addTo(MAP);
       } else {
         // Max Distance is not enough to justify rendering a bunch of pins
-        addMarker(
-          [locations[0].lat, locations[0].lng],
-          locations[0].name,
-          () => {
-            data.activeLocation = locations[0];
-          }
-        );
+        if (locations.length) {
+          addMarker(
+            [locations[0].lat, locations[0].lng],
+            locations[0].name,
+            () => {
+              data.activeLocation = locations[0];
+            }
+          );
+        }
       }
 
       // Make the map fit the bounds of all locations provided

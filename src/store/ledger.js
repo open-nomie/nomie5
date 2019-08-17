@@ -50,20 +50,20 @@ const ledgerInit = () => {
 		},
 		firstBook() {
 			return new Promise((resolve, reject) => {
-				methods
-					.listBooks()
-					.then(books => {
-						if (books.length) {
-							resolve(books[0].replace(config.book_root + '/', ''));
-						} else {
-							resolve('Unknown');
-						}
-					})
-					.catch(reject);
+				// methods
+				// 	.listBooks()
+				// 	.then(books => {
+				// 		if (books.length) {
+				// 			resolve(books[0].replace(config.book_root + '/', ''));
+				// 		} else {
+				// 			resolve('Unknown');
+				// 		}
+				// 	})
+				// 	.catch(reject);
 			});
 		},
 		listBooks() {
-			return UserStore.listFiles().then(files => {
+			return Storage.list().then(files => {
 				return files.filter(f => {
 					return f.search(`${config.book_root}/`) > -1;
 				});

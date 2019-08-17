@@ -10,6 +10,7 @@ import replace from 'rollup-plugin-replace';
 import packagejson from './package.json';
 import dayjs from 'dayjs';
 import fs from 'fs';
+import copy from 'rollup-plugin-copy';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -32,6 +33,24 @@ export default {
 	},
 	plugins: [
 		builtins(),
+		copy({
+			targets: [
+				{ src: 'node_modules/leaflet/dist/**/*', dest: 'public/vendors/leaflet' },
+				{
+					src: 'node_modules/esri-leaflet/dist/esri-leaflet.js',
+					dest: 'public/vendors/leaflet',
+				},
+				{
+					src: 'node_modules/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.js',
+					dest: 'public/vendors/leaflet',
+				},
+				{
+					src: 'node_modules/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css',
+					dest: 'public/vendors/leaflet',
+				},
+				{ src: 'node_modules/blockstack/dist/**/*', dest: 'public/vendors/blockstack' },
+			],
+		}),
 		replace({
 			APP_VERSION: packagejson.version,
 			APP_BRANCH: process.env.BRANCH,

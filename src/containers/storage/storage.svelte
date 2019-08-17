@@ -23,7 +23,7 @@
   const methods = {
     initialize() {
       state.files = [];
-      return UserStore.listFiles().then(files => {
+      return Storage.list().then(files => {
         state.files = files;
         return state.files;
       });
@@ -83,7 +83,7 @@
         "Yes, Delete"
       ).then(res => {
         if (res === true) {
-          blockstack.deleteFile(file).then(() => {
+          Storage.deleteFile(file).then(() => {
             setTimeout(() => {
               methods.initialize();
             });

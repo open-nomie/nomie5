@@ -224,7 +224,9 @@
         </NItem>
       </div>
       <div class="n-pop my-3">
+        <!-- Stoage List - this is stupid I couldn't find it-->
         <StorageManager />
+        <!-- End Storage List-->
         <NItem>
           <div class="title truncate">
             Storage:

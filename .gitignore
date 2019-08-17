@@ -2,4 +2,5 @@
 node_modules
 public/bundle.*
 package-lock.json
-plugins/*/*
+plugins/*
+public/vendors/*

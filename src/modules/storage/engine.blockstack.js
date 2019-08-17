@@ -40,8 +40,11 @@ export default {
 		});
 	},
 	list() {
-		return blockstack.listFiles().then(content => {
-			return content;
+		return new Promise((resolve, reject) => {
+			userSession.listFiles(content => {
+				console.log('User Session files', content);
+				resolve(content);
+			});
 		});
 	},
 	delete(path) {

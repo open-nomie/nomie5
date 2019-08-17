@@ -8,9 +8,6 @@
 import Logger from '../utils/log/log';
 import { writable } from 'svelte/store';
 
-// vendors
-import localforage from 'localforage';
-
 // Modules
 import Storage from '../modules/storage/storage';
 import locate from '../modules/locate/locate';
@@ -73,20 +70,12 @@ const userInit = () => {
 					return p;
 				});
 			} else {
-				console.log('We have a Storage Type!', Storage._storageType());
 				// Storage is set - wait for it to be ready
 				Storage.onReady(() => {
 					methods.setProfile(Storage.getProfile());
 				}); // end storage on Ready
 			}
-
-			// Storage.onReady(() => {
-			// 	methods.setProfile(Storage.getProfile());
-			// }); // end storage on Ready
-
 			// set highlevel initialize marker
-
-			// TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
 		},
 		setStorage(type) {
 			update(p => {
