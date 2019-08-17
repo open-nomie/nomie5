@@ -50,18 +50,22 @@ const ledgerInit = () => {
 		},
 		firstBook() {
 			return new Promise((resolve, reject) => {
-				// methods
-				// 	.listBooks()
-				// 	.then(books => {
-				// 		if (books.length) {
-				// 			resolve(books[0].replace(config.book_root + '/', ''));
-				// 		} else {
-				// 			resolve('Unknown');
-				// 		}
-				// 	})
-				// 	.catch(reject);
+				methods
+					.listBooks()
+					.then(books => {
+						if (books.length) {
+							resolve(books[0].replace(config.book_root + '/', ''));
+						} else {
+							resolve('Unknown');
+						}
+					})
+					.catch(reject);
 			});
 		},
+		/**
+		 * Filter Documents - Get the Books
+		 * this will only find documents with the data/v01/book prefix
+		 */
 		listBooks() {
 			return Storage.list().then(files => {
 				return files.filter(f => {
@@ -71,11 +75,6 @@ const ledgerInit = () => {
 		},
 		async putBook(date, rows) {
 			return Storage.put(`${config.data_root}/books/${date}`, rows);
-		},
-		findFirst() {
-			let finished = [];
-			let first = 2013;
-			let lookups = () => {};
 		},
 		extractTrackerTagAndValues(logs) {
 			logs = logs || [];

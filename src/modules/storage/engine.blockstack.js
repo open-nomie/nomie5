@@ -41,10 +41,16 @@ export default {
 	},
 	list() {
 		return new Promise((resolve, reject) => {
-			userSession.listFiles(content => {
-				console.log('User Session files', content);
-				resolve(content);
-			});
+			let files = [];
+			blockstack
+				.listFiles((file, what) => {
+					files.push(file);
+					return true;
+				})
+				.then(() => {
+					resolve(files);
+				})
+				.catch(reject);
 		});
 	},
 	delete(path) {

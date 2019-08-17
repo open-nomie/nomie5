@@ -48,6 +48,10 @@ export default {
 					src: 'node_modules/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css',
 					dest: 'public/vendors/leaflet',
 				},
+				{
+					src: 'node_modules/material-design-iconic-font/dist/**/*',
+					dest: 'public/vendors/material-design-iconic-font',
+				},
 				{ src: 'node_modules/blockstack/dist/**/*', dest: 'public/vendors/blockstack' },
 			],
 		}),
