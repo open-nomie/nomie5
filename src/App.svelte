@@ -42,7 +42,7 @@
   const today = new Date().toDateString();
   const dayCheck = setInterval(() => {
     if (today !== new Date().toDateString()) {
-      if (confirm("A new day has begun, you should refresh Nomie. Refresh?")) {
+      if (confirm("A new day has begun, you should refresh Nomie.")) {
         window.location.reload();
       }
     }
@@ -58,15 +58,24 @@
     promptContent: null
   };
 
-  // Determine the user is null at first
-  let user = null;
+  const setDocumentParams = options => {
+    let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    let manualDarkMode = JSON.parse(
+      localStorage.getItem(config.dark_mode_key) || "false"
+    );
+    if (manualDarkMode || isDarkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  };
 
   // Setup isScrolling variable
   window.scrolling = false;
   let scollingTimeout;
   window.addEventListener(
     "scroll",
-    function(event) {
+    event => {
       // Clear our timeout throughout the scroll
       window.clearTimeout(scollingTimeout);
       // Set a timeout to run after scrolling ends
@@ -74,6 +83,26 @@
         document.body.classList.remove("scrolling");
       }, 200);
       document.body.classList.add("scrolling");
+    },
+    false
+  );
+
+  var hidden, visibilityChange;
+  if (typeof document.hidden !== "undefined") {
+    // Opera 12.10 and Firefox 18 and later support
+    hidden = "hidden";
+    visibilityChange = "visibilitychange";
+  } else if (typeof document.msHidden !== "undefined") {
+    hidden = "msHidden";
+    visibilityChange = "msvisibilitychange";
+  } else if (typeof document.webkitHidden !== "undefined") {
+    hidden = "webkitHidden";
+    visibilityChange = "webkitvisibilitychange";
+  }
+  document.addEventListener(
+    visibilityChange,
+    () => {
+      setDocumentParams({ hidden });
     },
     false
   );
@@ -89,16 +118,6 @@
     };
     window.addEventListener("online", onNetworkChange);
     window.addEventListener("offline", onNetworkChange);
-
-    let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    let manualDarkMode = JSON.parse(
-      localStorage.getItem(config.dark_mode_key) || "false"
-    );
-    if (manualDarkMode || isDarkMode) {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
   });
 
   // Initalize the User Store
@@ -108,7 +127,6 @@
   // Used to make sure that boards and trackers are loaded
   UserStore.onReady(() => {
     // Set the user if they're logged in
-    user = $UserStore;
     ready = true;
     // Run any commands if needed
     setTimeout(() => {

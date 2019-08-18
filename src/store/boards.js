@@ -1,3 +1,9 @@
+/**
+ * Board Store
+ *
+ * This is pretty messy and needs to be cleaned up and organized
+ */
+
 import { writable } from 'svelte/store';
 
 // Modules
@@ -109,9 +115,7 @@ const boardsInit = () => {
 			});
 			return res;
 		},
-		addTrackersToActiveBoard(trackerArray) {
-			return methods.addTrackersToBoard(trackerArray, base.active);
-		},
+
 		get(id) {
 			return methods.boardById(id);
 		},
@@ -158,6 +162,9 @@ const boardsInit = () => {
 				methods.save(bs.boards);
 				return bs;
 			});
+		},
+		addTrackersToActiveBoard(trackerArray) {
+			return methods.addTrackersToBoard(trackerArray, base.active);
 		},
 		addTrackersToBoard(trackerArray, boardId) {
 			update(bs => {
@@ -249,7 +256,7 @@ const boardsInit = () => {
 			let data = methods.data();
 
 			if (data.active == 'all') {
-				trackers = Object.keys(trackers || {});
+				trackers = TrackerStore.getAsArray().map(tracker => tracker.tag);
 			} else if (data.active == 'timers') {
 				trackers = TrackerStore.getRunning().map(tracker => tracker.tag);
 			} else {

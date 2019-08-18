@@ -134,6 +134,7 @@
     },
     drag: {
       start(event, index, isTouch) {
+        console.log("Started Drag");
         isTouch = isTouch === true ? true : false;
         document.body.classList.add("no-scroll");
         data.draggingTag = event.target.dataset.id;
@@ -147,7 +148,7 @@
 
         // Let's move the target with us
         data.draggingTag = evt.target.id;
-
+        document.body.classList.add("no-scroll");
         // let trackerDom = document.getElementById
 
         // Define touching points
@@ -376,6 +377,30 @@
         </div>
       </NItem>
     </div>
+    <div class="container">
+      <div class="n-row">
+        <div class="filler" />
+        <button
+          class="btn btn mt-4 btn-danger flex-grow"
+          on:click={methods.deleteBoard}>
+          Destroy
+        </button>
+        <button
+          class="btn btn mt-4 btn-light mx-3 flex-grow"
+          on:click={() => {
+            window.history.back();
+          }}>
+          Cancel
+        </button>
+        <button
+          class="btn btn mt-4 btn-success flex-grow"
+          on:click={methods.save}>
+          Save
+        </button>
+        <div class="filler" />
+      </div>
+    </div>
+    <!-- /.container -->
 
     <div class="container pt-3 px-0 grid-container">
 
@@ -417,38 +442,13 @@
       {#if isMobile}
         <div class="container">
           <div class="n-row pt-3 justify-content-center">
-            <NText class="xs" className="text-faded text-center">
+            <NText class="xs" className="text-center">
               <!-- TODO: Fix Sorting on MObile -->
               Sorting on mobile is currently jacked.
             </NText>
           </div>
         </div>
       {/if}
-
-      <div class="container">
-        <div class="n-row">
-          <div class="filler" />
-          <button
-            class="btn btn mt-4 btn-danger flex-grow"
-            on:click={methods.deleteBoard}>
-            Destroy
-          </button>
-          <button
-            class="btn btn mt-4 btn-light mx-3 flex-grow"
-            on:click={() => {
-              window.history.back();
-            }}>
-            Cancel
-          </button>
-          <button
-            class="btn btn mt-4 btn-success flex-grow"
-            on:click={methods.save}>
-            Save
-          </button>
-          <div class="filler" />
-        </div>
-      </div>
-      <!-- /.container -->
 
     </div>
   </NPage>

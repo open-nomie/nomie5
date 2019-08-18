@@ -97,6 +97,9 @@
         }
       });
     },
+    settingChange() {
+      UserStore.saveMeta();
+    },
     lockToggle() {
       if ($UserStore.meta.lock === true) {
         if (($UserStore.meta.pin || "").length == 0) {
@@ -250,6 +253,7 @@
             {/if}
           </div>
         </NItem>
+
         <NItem title="First Book Created">
           <div slot="right" class="pr-2">
             {#await LedgerStore.firstBook()}
@@ -261,6 +265,18 @@
             {/await}
           </div>
         </NItem>
+        <!-- {#if $UserStore.storageType === 'blockstack'}
+          TODO: Figure out how to make a sync before save...
+          <NItem
+            title="Sync before Save"
+            description="Sync cloud data before saving new data.">
+            <div slot="right">
+              <NToggle
+                bind:value={$UserStore.meta.syncBeforeSave}
+                on:change={methods.settingChange} />
+            </div>
+          </NItem>
+        {/if} -->
       </div>
 
       <div class="n-pop my-3">

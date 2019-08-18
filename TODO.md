@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Aug 17 2019 2:30 pm
+Generated Sat Aug 17 2019 8:25 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -18,6 +18,7 @@ Generated Sat Aug 17 2019 2:30 pm
    - TODO: Needs to be refactored and cleaned up
 - **src/routes/settings.svelte**
    - TODO: figure out how to handle a cancel in the interact prompt
+   - TODO: Figure out how to make a sync before save...
 - **src/routes/history.svelte**
    - TODO: Have it react when the ledger change, not a hard refresh
    - TODO: refactor so it's clean and using the proper amount of Store vs local

@@ -103,6 +103,30 @@ body {
 		}
 	}
 }
+
+body.hidden {
+	background-color: var(--color-primary);
+	display: flex !important;
+	justify-content: center;
+	align-content: center;
+	height: 100vh;
+	&:after {
+		content: '';
+		background-image: url(images/nomie-white-type.png);
+		display: block;
+		width: 200px;
+		height: 40px;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		justify-self: center;
+		align-self: center;
+	}
+	* {
+		display: none;
+	}
+}
+
 body.offline {
 	.main-content {
 		&:before {

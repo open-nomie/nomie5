@@ -9,6 +9,7 @@
   export let fullscreen = false;
   export let flexBody = undefined;
   export let show = true;
+  export let className = undefined;
 
   const has_header = (arguments[1].$$slots || {}).hasOwnProperty("header");
   const has_footer = (arguments[1].$$slots || {}).hasOwnProperty("footer");
@@ -99,7 +100,7 @@
 </style>
 
 {#if show}
-  <div class="n-modal-frame " transition:fly>
+  <div class="n-modal-frame {className}" transition:fly>
     <div class="n-modal {fullscreen ? 'full-screen-modal' : ''}">
       {#if has_header || title}
         <div class="n-modal-header">
