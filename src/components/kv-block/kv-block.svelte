@@ -12,7 +12,7 @@
       font-size: 0.7rem;
     }
     .value {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: 500;
     }
     &.clickable {

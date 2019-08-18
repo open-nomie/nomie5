@@ -63,7 +63,7 @@
     let manualDarkMode = JSON.parse(
       localStorage.getItem(config.dark_mode_key) || "false"
     );
-    if (manualDarkMode || isDarkMode) {
+    if (isDarkMode || manualDarkMode) {
       document.body.classList.add("dark");
     } else {
       document.body.classList.remove("dark");
@@ -107,6 +107,10 @@
     false
   );
 
+  window.addEventListener("change", () => {
+    console.log("Window just changed");
+  });
+
   //Setup an an offline notice
   window.addEventListener("load", () => {
     let onNetworkChange = event => {
@@ -118,6 +122,7 @@
     };
     window.addEventListener("online", onNetworkChange);
     window.addEventListener("offline", onNetworkChange);
+    setDocumentParams();
   });
 
   // Initalize the User Store

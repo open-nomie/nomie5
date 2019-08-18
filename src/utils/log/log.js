@@ -34,7 +34,7 @@ export default class Log {
 	showArgs(emoji, args) {
 		if (args) {
 			for (let i = 0; i < args.length; i++) {
-				console.log(i == 0 ? '👉 ' + emoji : '👉   ', args[i]);
+				console.log(i == 0 ? '⭐️ ' + emoji : '✨   ', args[i]);
 			}
 		}
 	}
