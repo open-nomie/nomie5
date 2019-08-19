@@ -57,7 +57,7 @@ const activeLogInit = () => {
 		},
 		addTag(tag, value) {
 			update(b => {
-				if (value) {
+				if (!isNaN(value)) {
 					b.note = `${b.note} #${tag}(${value})`;
 				} else {
 					b.note = `${b.note} #${tag}`;
