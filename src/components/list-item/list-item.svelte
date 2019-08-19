@@ -45,6 +45,9 @@
 <style lang="scss">
   @import "../../scss/utils/_utils.scss";
 
+  :global(.n-item .right .btn) {
+    margin-right: -10px !important;
+  }
   .n-item {
     text-align: left;
     display: flex;
@@ -56,7 +59,7 @@
     transition: all 0.2s ease-in-out;
     text-decoration: none;
     color: var(--color-inverse);
-    font-size: 1.1rem;
+    font-size: 1rem;
 
     background-color: var(--color-solid);
 
@@ -103,7 +106,7 @@
       flex-grow: 0;
       flex-shrink: 0;
       color: var(--color-inverse-2);
-      font-size: 1rem;
+      font-size: 0.9rem;
       .icon {
         $iconSize: 50px;
         height: $iconSize;
@@ -115,6 +118,7 @@
         justify-content: center;
       }
     }
+
     .main {
       overflow: hidden;
       flex-grow: 1;

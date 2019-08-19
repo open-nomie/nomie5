@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Aug 17 2019 9:13 pm
+Generated Mon Aug 19 2019 3:27 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -36,6 +36,8 @@ Generated Sat Aug 17 2019 9:13 pm
    - TODO: handle anything required for service worker
 - **src/containers/tracker/input/keypad.svelte**
    - and one for the pin-lock container - TODO: merge these some day
+- **src/containers/tracker/input/input.svelte**
+   - TODO: Figure out wtf is going on with value and data.value - can we just use value?
 - **src/containers/setup/setup.svelte**
    - TODO: Make this design not suck! It's very boring.
    - TODO: UserSession shouldn't be in here - login should be fired by Storage.
