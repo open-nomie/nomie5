@@ -1,6 +1,6 @@
 # TODO
 
-Generated Fri Aug 9 2019 8:37 pm
+Generated Sat Aug 17 2019 9:13 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -18,6 +18,7 @@ Generated Fri Aug 9 2019 8:37 pm
    - TODO: Needs to be refactored and cleaned up
 - **src/routes/settings.svelte**
    - TODO: figure out how to handle a cancel in the interact prompt
+   - TODO: Figure out how to make a sync before save...
 - **src/routes/history.svelte**
    - TODO: Have it react when the ledger change, not a hard refresh
    - TODO: refactor so it's clean and using the proper amount of Store vs local
@@ -31,8 +32,13 @@ Generated Fri Aug 9 2019 8:37 pm
    - TODO: Finish Goals
 - **src/modules/stats/stats.js**
    - TODO: Implement IgnoreZeros
+- **src/main.js**
+   - TODO: handle anything required for service worker
 - **src/containers/tracker/input/keypad.svelte**
    - and one for the pin-lock container - TODO: merge these some day
+- **src/containers/setup/setup.svelte**
+   - TODO: Make this design not suck! It's very boring.
+   - TODO: UserSession shouldn't be in here - login should be fired by Storage.
 - **src/containers/map/map.svelte**
    - TODO: Look at making this curved dotted lines - and not just straight ones
 - **src/containers/interactions/interactions.svelte**
@@ -43,6 +49,7 @@ Generated Fri Aug 9 2019 8:37 pm
    - TODO: Move this to components/tracker-button
 - **src/containers/board/board.svelte**
    - TODO: fix user store to be a correct store
+   - TODO: See if https:www.npmjs.com/package/@composi/gestures can detect how much they swiped
    - TODO: Look at why this is needed... slop!
    - TODO: Finish this starter pack add trackers, make them installable. -->
 - **src/components/capture-log.svelte**

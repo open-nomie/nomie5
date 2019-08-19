@@ -60,8 +60,9 @@ const trackerStoreInit = () => {
 			let data = {};
 			update(state => {
 				data = state;
+				return state;
 			});
-			return data;
+			return data || {};
 		},
 		getRunning() {
 			let allTrackers = methods.getAll() || {};
@@ -104,7 +105,7 @@ const trackerStoreInit = () => {
 					return all[tag];
 				})
 				.sort((a, b) => {
-					a.label > b.label ? -1 : 1;
+					return a.label < b.label ? -1 : 1;
 				});
 		},
 		// Get Tracker by Tag

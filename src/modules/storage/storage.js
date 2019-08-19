@@ -5,7 +5,6 @@
  */
 
 // Vendors
-import localforage from 'localforage';
 
 import LocalForageEngine from './engine.localforage';
 import BlockStackEngine from './engine.blockstack';

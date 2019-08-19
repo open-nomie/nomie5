@@ -62,8 +62,12 @@ const ledgerInit = () => {
 					.catch(reject);
 			});
 		},
+		/**
+		 * Filter Documents - Get the Books
+		 * this will only find documents with the data/v01/book prefix
+		 */
 		listBooks() {
-			return UserStore.listFiles().then(files => {
+			return Storage.list().then(files => {
 				return files.filter(f => {
 					return f.search(`${config.book_root}/`) > -1;
 				});
@@ -71,11 +75,6 @@ const ledgerInit = () => {
 		},
 		async putBook(date, rows) {
 			return Storage.put(`${config.data_root}/books/${date}`, rows);
-		},
-		findFirst() {
-			let finished = [];
-			let first = 2013;
-			let lookups = () => {};
 		},
 		extractTrackerTagAndValues(logs) {
 			logs = logs || [];

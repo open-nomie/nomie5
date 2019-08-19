@@ -71,6 +71,12 @@
     advancedToggle() {
       state.show = !state.show;
     },
+    swipeUp() {
+      state.show = true;
+    },
+    swipeDown() {
+      state.show = false;
+    },
     checkTextareaSize() {
       let height = (textarea || {}).scrollHeight || 100;
       if (textarea) {
@@ -235,111 +241,117 @@
   }
 </style>
 
-<div class="capture-log">
-  <div class="save-progress {saved ? 'saved' : ''} {saving ? 'saving' : ''}" />
-  <div class="container p-0">
+<div
+  class="capture-wrapper"
+  on:swipeup={methods.swipeUp}
+  on:swipedown={methods.swipeDown}>
+  <div class="capture-log">
     <div
-      class="mask-textarea {$ActiveLogStore.note.trim().length ? 'populated' : 'empty'}">
-      <textarea
-        disabled={saving || saved}
-        bind:value={$ActiveLogStore.note}
-        bind:this={textarea}
-        placeholder="What's Up?"
-        on:keypress={methods.keyPress} />
-      {#if !saving}
-        <button class="save-button" on:click={methods.logSave}>Save</button>
-      {:else}
-        <button class="save-button">•••</button>
-      {/if}
+      class="save-progress {saved ? 'saved' : ''}
+      {saving ? 'saving' : ''}" />
+    <div class="container p-0">
+      <div
+        class="mask-textarea {$ActiveLogStore.note.trim().length ? 'populated' : 'empty'}">
+        <textarea
+          disabled={saving || saved}
+          bind:value={$ActiveLogStore.note}
+          bind:this={textarea}
+          placeholder="What's Up?"
+          on:keypress={methods.keyPress} />
+        {#if !saving}
+          <button class="save-button" on:click={methods.logSave}>Save</button>
+        {:else}
+          <button class="save-button">•••</button>
+        {/if}
+      </div>
     </div>
   </div>
-</div>
-<div class="more-options">
-  <button
-    class="advanced-toggle {state.show ? 'active' : 'inactive'}"
-    on:click={methods.advancedToggle}>
-    •••
-  </button>
-  {#if state.show}
-    <div class="n-list" transition:slide>
-      <div class="container py-2">
+  <div class="more-options">
+    <button
+      class="advanced-toggle {state.show ? 'active' : 'inactive'}"
+      on:click={methods.advancedToggle}>
+      •••
+    </button>
+    {#if state.show}
+      <div class="n-list" transition:slide>
+        <div class="container py-2">
 
-        {#if !state.dateSet}
-          {#if state.date}
-            <div class="n-row mb-2">
-              <div class="input-group flex-grow mr-1">
-                <input
-                  name="note"
-                  type="datetime-local"
-                  class="form-control mt-0"
-                  style="font-size:16px; height:44px; overflow:hidden"
-                  on:input={() => {
-                    methods.advancedChanged();
-                  }}
-                  bind:value={state.date} />
-                <div class="input-group-append">
-                  <button
-                    class="btn btn-primary"
-                    on:click={() => {
-                      state.dateSet = true;
-                    }}>
-                    Set
-                  </button>
+          {#if !state.dateSet}
+            {#if state.date}
+              <div class="n-row mb-2">
+                <div class="input-group flex-grow mr-1">
+                  <input
+                    name="note"
+                    type="datetime-local"
+                    class="form-control mt-0"
+                    style="font-size:16px; height:44px; overflow:hidden"
+                    on:input={() => {
+                      methods.advancedChanged();
+                    }}
+                    bind:value={state.date} />
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-primary"
+                      on:click={() => {
+                        state.dateSet = true;
+                      }}>
+                      Set
+                    </button>
+                  </div>
                 </div>
+                <!-- end input-group -->
+                <!-- And cancel button-->
+                <button
+                  class="btn btn-clear btn-icon"
+                  on:click={() => {
+                    state.date = null;
+                  }}>
+                  <i class="zmdi zmdi-close" />
+                </button>
               </div>
-              <!-- end input-group -->
-              <!-- And cancel button-->
+            {:else}
               <button
-                class="btn btn-clear btn-icon"
+                class="btn btn-light btn btn-block"
                 on:click={() => {
-                  state.date = null;
+                  state.date = dayjs().format('YYYY-MM-DDTHH:mm');
                 }}>
-                <i class="zmdi zmdi-close" />
+                Set Custom Date
               </button>
-            </div>
+            {/if}
+          {:else}
+            <button
+              class="btn btn-danger btn btn-block"
+              on:click={() => {
+                state.date = null;
+                state.dateSet = false;
+              }}>
+              Clear {dayjs(state.date).format('ddd MMM D YYYY h:mm a')}
+            </button>
+          {/if}
+
+          {#if $ActiveLogStore.lat}
+            <button
+              class="btn btn-danger btn btn-block"
+              on:click={() => {
+                $ActiveLogStore.lat = null;
+                $ActiveLogStore.lng = null;
+              }}>
+              Clear Location
+            </button>
           {:else}
             <button
               class="btn btn-light btn btn-block"
               on:click={() => {
-                state.date = dayjs().format('YYYY-MM-DDTHH:mm');
+                Interact.pickLocation().then(location => {
+                  $ActiveLogStore.lat = location.lat;
+                  $ActiveLogStore.lng = location.lng;
+                });
               }}>
-              Set Custom Date
+              Set Custom Location
             </button>
           {/if}
-        {:else}
-          <button
-            class="btn btn-danger btn btn-block"
-            on:click={() => {
-              state.date = null;
-              state.dateSet = false;
-            }}>
-            Clear {dayjs(state.date).format('ddd MMM D YYYY h:mm a')}
-          </button>
-        {/if}
 
-        {#if $ActiveLogStore.lat}
-          <button
-            class="btn btn-danger btn btn-block"
-            on:click={() => {
-              $ActiveLogStore.lat = null;
-              $ActiveLogStore.lng = null;
-            }}>
-            Clear Location
-          </button>
-        {:else}
-          <button
-            class="btn btn-light btn btn-block"
-            on:click={() => {
-              Interact.pickLocation().then(location => {
-                $ActiveLogStore.lat = location.lat;
-                $ActiveLogStore.lng = location.lng;
-              });
-            }}>
-            Set Custom Location
-          </button>
-        {/if}
-
-        <!-- <NItem className="">
+          <!-- <NItem className="">
           <button
             class="btn btn-light btn btn-block"
             on:click={() => {
@@ -348,8 +360,9 @@
             Add a Photo
           </button>
         </NItem> -->
+        </div>
       </div>
-    </div>
-  {/if}
+    {/if}
 
+  </div>
 </div>

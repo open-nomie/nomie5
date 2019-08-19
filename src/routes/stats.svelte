@@ -321,9 +321,9 @@
           window.history.back();
         }} />
       <h1 class="truncate" on:click={methods.compare}>
-        {state.tracker.emoji}
+        {state.tracker.emoji} {state.tracker.label}
         {#if state.compare.tracker}
-          <span class="text-faded">vs</span>
+          <span class="">vs</span>
           {state.compare.tracker.emoji}
         {/if}
       </h1>
@@ -377,9 +377,9 @@
               label="Max {(state.stats.results.year.max.date || dayjs()).format('MMM D')}"
               value={NomieUOM.format(math.round(state.stats.results.year.max.value, 10), state.tracker.uom)} />
           {/if}
-          <KVBlock
+          <!-- <KVBlock
             label="Month Avg"
-            value={NomieUOM.format(math.round(state.stats.results.year.avg, 10), state.tracker.uom)} />
+            value={NomieUOM.format(math.round(state.stats.results.year.avg, 10), state.tracker.uom)} /> -->
         </div>
         <!-- Compare If Needed-->
         {#if state.compare.stats}

@@ -75,60 +75,60 @@
 
   // Subscribe to the Active Board
 
-  setTimeout(() => {
-    // TODO: fix user store to be a correct store
-    UserStore.subscribe(u => {
-      if (u) {
-        user = u;
-      }
-    });
-  }, 220);
-
-  LedgerStore.getToday();
-
-  // Watch for board Changes;
-  BoardStore.subscribe(boardsData => {
-    data.boards = boardsData.boards;
+  // setTimeout(() => {
+  //   // TODO: fix user store to be a correct store
+  //   UserStore.subscribe(u => {
+  //     if (u) {
+  //       user = u;
+  //     }
+  //   });
+  // }, 220);
+  UserStore.onReady(() => {
+    user = $UserStore;
   });
+
+  //
+  // Watch for board Changes;
+  // BoardStore.subscribe(boardsData => {
+  //   data.boards = boardsData.boards;
+  // });
 
   let activeTrackers = [];
+  let currentActive = undefined;
 
-  $: if ($BoardStore.active) {
-    if ($BoardStore.active === "all") {
-      activeTrackers = Object.keys($TrackerStore || {}).map(tag => {
-        return $TrackerStore[tag];
-      });
-    } else {
-      activeTrackers = BoardStore.getActiveTrackerTags().map(tag => {
-        return $TrackerStore[tag] || new Tracker({ tag: tag });
-      });
-    }
+  $: if (Object.keys($LedgerStore.today).length) {
+    today = $LedgerStore.today;
+    methods.refresh();
   }
 
-  // Subscribe for trackers
-  TrackerStore.subscribe(tkrs => {
-    if (Object.keys(tkrs || {}).length) {
-      trackers = tkrs;
-    }
-    data.loading = false;
-  });
-
-  onMount(() => {
-    LedgerStore.subscribe(ldgr => {
-      if (Object.keys(ldgr.today).length && data.gotToBeLoaded) {
-        today = ldgr.today;
-        methods.refresh();
-      }
+  $: if ($TrackerStore && $BoardStore.active) {
+    activeTrackers = BoardStore.getActiveTrackerTags().map(tag => {
+      return $TrackerStore[tag] || new Tracker({ tag: tag });
     });
-    // Give some breathing time before saying they have no trackers
-    setTimeout(() => {
-      data.gotToBeLoaded = true;
-    }, 1000);
-  });
+    trackers = $TrackerStore;
+    data.loading = false;
+    LedgerStore.getToday();
+    methods.refresh();
+  }
 
   const methods = {
     editBoard() {
       navigate(`/board/${activeBoard.id}`);
+    },
+    isSwipeEnough(e) {
+      // TODO: See if https://www.npmjs.com/package/@composi/gestures can detect how much they swiped
+      // Otherwise it's too sensitive
+      return false;
+    },
+    swipeLeft(e) {
+      // if (methods.isSwipeEnough(e)) {
+      //   BoardStore.nextBoard();
+      // }
+    },
+    swipeRight(e) {
+      // if (methods.isSwipeEnough(e)) {
+      //   BoardStore.previousBoard();
+      // }
     },
     addTapped() {
       if ($BoardStore.active == "all") {
@@ -221,13 +221,6 @@
           }
         }
       );
-
-      // let label = prompt("Board Name?");
-      // if (label) {
-      //   UserStore.boards.addBoard(label).then(() => {
-      //     Interact.alert("Done!", "Board Created");
-      //   });
-      // }
     },
 
     /**
@@ -464,7 +457,7 @@
 </style>
 
 {#if user}
-  {#if data.boards}
+  {#if $BoardStore.boards}
     <div class="sub-header">
       <div class="container p-0 h-100">
         <NBoardTabs
@@ -495,6 +488,7 @@
                   methods.trackerTapped(tracker);
                 }}
                 on:longpress={() => {
+                  Interact.vibrate();
                   methods.showTrackerOptions(tracker);
                 }} />
             {/each}

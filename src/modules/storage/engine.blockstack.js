@@ -15,7 +15,14 @@ export default {
 			func();
 		} else {
 			// console.error('REDIRECTING TO BLOCKSTACK');
-			this.login();
+			if (confirm('Sign-in/Register with Blockstack?')) {
+				this.login();
+			} else {
+				// Clear local storage
+				localStorage.clear();
+				// Show Onboarding
+				window.location.reload();
+			}
 		}
 	},
 	getProfile() {
@@ -33,8 +40,17 @@ export default {
 		});
 	},
 	list() {
-		return blockstack.listFiles().then(content => {
-			return content;
+		return new Promise((resolve, reject) => {
+			let files = [];
+			blockstack
+				.listFiles((file, what) => {
+					files.push(file);
+					return true;
+				})
+				.then(() => {
+					resolve(files);
+				})
+				.catch(reject);
 		});
 	},
 	delete(path) {

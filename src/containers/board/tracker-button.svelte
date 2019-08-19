@@ -2,12 +2,10 @@
   // TODO: Move this to components/tracker-button
 
   // svelte
-  import { createEventDispatcher, onMount } from "svelte";
+  import { createEventDispatcher } from "svelte";
 
   // modules
   import Tracker from "../../modules/tracker/tracker";
-
-  // Utils
 
   // Components
   import Counter from "../../components/counter/counter.svelte";
@@ -30,38 +28,18 @@
   // Functions
   const methods = {
     // Clicked
-    clicked() {
+    click() {
       dispatch("click", {});
     },
-
+    longPress() {
+      dispatch("longpress", {});
+    },
     // On Mouse Release / Touch Stop
     mouseup() {
       data.pressing = false;
-      clearInterval(timeout);
     },
-
-    // On Mouse / Touch
-    mousedown(event) {
-      if (!window.scrolling) {
-        // Figure long press
-        data.pressing = true;
-        // Clear by default
-        clearInterval(timeout);
-        // Timeout after 900ms
-        timeout = setInterval(() => {
-          // kill any propagation
-          event.stopPropagation();
-          event.preventDefault();
-          // clear interval
-          clearInterval(timeout);
-          // fire long press - if we're not scrolling
-          // the user will tend to press and hold a tracker when scrolling.
-          // this should limit false fires
-          if (!document.body.classList.contains("scrolling")) {
-            dispatch("longpress");
-          }
-        }, 900);
-      }
+    mousedown() {
+      data.pressing = true;
     }
   };
 </script>
@@ -129,7 +107,7 @@
       right: 20px;
       bottom: 2px;
       border-radius: 2px;
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: var(--color-faded);
     }
     header {
       display: flex;
@@ -180,15 +158,16 @@
 
 <button
   {id}
-  class="n-tracker-button tracker-{tracker.tag}
-  {data.pressing ? 'pressing' : ''}
-  {className}"
-  on:click={methods.clicked}
+  on:tap={methods.click}
+  on:longtap={methods.longPress}
   on:touchstart={methods.mousedown}
   on:mousedown={methods.mousedown}
   on:touchend={methods.mouseup}
   on:mouseout={methods.mouseup}
-  on:mouseup={methods.mouseup}>
+  on:mouseup={methods.mouseup}
+  class="n-tracker-button tracker-{tracker.tag}
+  {data.pressing ? 'pressing' : ''}
+  {className}">
   <header>
     {#if value}
       <span class="value left">{value}</span>

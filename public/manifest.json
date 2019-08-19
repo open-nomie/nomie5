@@ -6,19 +6,20 @@
   "display": "standalone",
   "theme_color": "#4d84a1",
   "background_color": "#4d84a1",
+  "lang": "en-us",
   "icons": [
     {
-      "src": "https://open.nomie.app/images/icon.png",
+      "src": "http://localhost:5000/images/icons/nomie-android-400.png",
       "sizes": "400x400",
       "type": "image/png"
     },
     {
-      "src": "https://open.nomie.app/images/icon.png",
+      "src": "http://localhost:5000/images/icons/nomie-android-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://open.nomie.app/images/icon.png",
+      "src": "http://localhost:5000/images/icons/nomie-android-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

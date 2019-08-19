@@ -59,7 +59,6 @@ export default class StatsProcessor {
 		this.results.year.avg = this.results.valueTotalMap.avg;
 
 		this.results.year.chart = this.toChartData('year');
-
 		this.results.year = { ...this.results.year, ...this.getMinMaxFromValueMap(this.results.valueMap) };
 
 		// Year is finished
@@ -86,12 +85,12 @@ export default class StatsProcessor {
 			sum: 0,
 			avg: 0,
 			days: {
-				...valueMap,
+				...valueMap, // put the valuemap in this new map
 			},
 		};
 		// Hold all values for total sum and avg
 		let allValues = [];
-
+		// Loop over the days provided
 		Object.keys(newMap.days).forEach(date => {
 			let values = newMap.days[date];
 			// If we should ignore zeros, then
@@ -101,13 +100,22 @@ export default class StatsProcessor {
 					return v !== 0 ? true : false;
 				});
 			}
-			allValues = [...allValues, ...values];
+			// Let's calcuate the days total
+			if (values.length) {
+				// If it's sum - add them all up
+				if (this.tracker.math === 'sum') {
+					allValues.push(math.sum(values));
+				} else {
+					// Else add it to the array for average lating
+					allValues = [...allValues, ...values];
+				}
+			}
 			// Sum and Avg this day
 			newMap.days[date] = {
 				sum: math.sum(values),
 				avg: math.average(values),
 			};
-		});
+		}); // end loop over each day
 
 		newMap.sum = math.sum(allValues);
 		newMap.avg = math.average(allValues);

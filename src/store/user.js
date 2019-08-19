@@ -8,9 +8,6 @@
 import Logger from '../utils/log/log';
 import { writable } from 'svelte/store';
 
-// vendors
-import localforage from 'localforage';
-
 // Modules
 import Storage from '../modules/storage/storage';
 import locate from '../modules/locate/locate';
@@ -24,15 +21,13 @@ import config from '../../config/global';
 // Consts
 const console = new Logger('🤠 userStore');
 const UserSession = new blockstack.UserSession();
-// Determine if user is in dark mode (over ride if true)
-const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 // Store Initlization
 const userInit = () => {
 	let listeners = [];
 	// User State
 	let state = {
-		storageType: Storage.local.get('root/storage_type') || 'blockstack',
+		storageType: Storage.local.get('root/storage_type'),
 		ready: false,
 		signedIn: undefined,
 		profile: {
@@ -52,21 +47,17 @@ const userInit = () => {
 
 	const methods = {
 		getStorageEngine() {
-			return Storage.local.get('root/storage_type');
+			return Storage._storageType();
 		},
 		initialize() {
 			// Set Dark or Light Mode
 			// Lets get dark Mode
-			if (state.darkMode || isDarkMode) {
-				document.body.classList.add('dark');
-			} else {
-				document.body.classList.remove('dark');
-			}
 
 			if (!Storage._storageType()) {
 				// If no storage type selected
 				// they're not signed in - this should trigger onboarding
 				// in App.svelte
+				console.log('We Don/t have a Storage Type!');
 				update(p => {
 					p.signedIn = false;
 					return p;
@@ -242,30 +233,31 @@ const userInit = () => {
 		 * TODO: move this to modules/storage
 		 */
 		listFiles() {
-			let data = methods.data();
-			let storageType = Storage.local.get('root/storage_type') || 'blockstack';
-			return new Promise((resolve, reject) => {
-				let files = [];
-				if (data.storageType === 'blockstack') {
-					blockstack
-						.listFiles(file => {
-							if (files.indexOf(file) == -1) {
-								files.push(file);
-							}
-							return true;
-						})
-						.then(() => {
-							resolve(files);
-						});
-				} else if (data.storageType === 'local') {
-					localforage.keys().then(keys => {
-						files = keys;
-						resolve(files);
-					});
-				} else {
-					alert('No storage type found for ' + data.storageType);
-				}
-			});
+			// let data = methods.data();
+			// let storageType = Storage.local.get('root/storage_type');
+			return Storage.list();
+			// return new Promise((resolve, reject) => {
+			// 	let files = [];
+			// 	if (data.storageType === 'blockstack') {
+			// 		blockstack
+			// 			.listFiles(file => {
+			// 				if (files.indexOf(file) == -1) {
+			// 					files.push(file);
+			// 				}
+			// 				return true;
+			// 			})
+			// 			.then(() => {
+			// 				resolve(files);
+			// 			});
+			// 	} else if (data.storageType === 'local') {
+			// 		localforage.keys().then(keys => {
+			// 			files = keys;
+			// 			resolve(files);
+			// 		});
+			// 	} else {
+			// 		alert('No storage type found for ' + data.storageType);
+			// 	}
+			// });
 		},
 	};
 

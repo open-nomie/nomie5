@@ -115,7 +115,7 @@
       width: 280px;
     }
   }
-  div.button {
+  button.button {
     touch-action: manipulation;
     width: 64px;
     height: 64px;
@@ -167,15 +167,14 @@
         {#each key as button, bindex}
           <div class="col-3">
             {#if button !== null}
-              <div
+              <button
                 class="button button-{bindex}"
-                use:tap
-                on:tap={() => {
+                on:click={() => {
                   methods.onPress(button);
                   return false;
                 }}>
                 {button}
-              </div>
+              </button>
             {/if}
           </div>
         {/each}
