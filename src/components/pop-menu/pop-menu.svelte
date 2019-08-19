@@ -21,7 +21,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 600;
+    z-index: 2000;
     &:before {
       content: "";
       background-color: var(--color-full-screen);

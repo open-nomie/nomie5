@@ -6,13 +6,13 @@
 
   // Svelte
   import { tap } from "@sveltejs/gestures";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
   // utils
   import NomieUOM from "../../../utils/nomie-uom/nomie-uom";
 
   // Props
-  export let value;
+  export let value = undefined;
   export let tracker;
 
   // consts

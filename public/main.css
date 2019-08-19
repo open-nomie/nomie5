@@ -7505,10 +7505,11 @@ body.scrolling .mini-map {
     justify-content: center;
     align-items: center;
     color: var(--color-inverse);
-    height: 60px;
-    border-radius: 30px;
-    width: 120px;
-    z-index: 2000; }
+    height: 50px;
+    border-radius: 25px;
+    width: 50px;
+    z-index: 2000;
+    bottom: 110px; }
   .mini-map::after {
     content: '';
     z-index: 20;
