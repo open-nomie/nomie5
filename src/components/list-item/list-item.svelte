@@ -10,6 +10,7 @@
   export let click = undefined;
   export let id = null;
   export let className = "";
+  export let itemDivider = undefined;
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty("left");
   const has_right = (arguments[1].$$slots || {}).hasOwnProperty("right");
@@ -45,7 +46,7 @@
 <style lang="scss">
   @import "../../scss/utils/_utils.scss";
 
-  :global(.n-item .right .btn) {
+  :global(.n-item .right .btn-clear) {
     margin-right: -10px !important;
   }
   .n-item {
@@ -70,6 +71,14 @@
 
     &.item-divider {
       background-color: var(--color-solid);
+    }
+
+    &.just-content {
+      background-color: transparent;
+      color: var(--color-solid-3);
+      font-size: 0.8rem;
+      padding-top: 10px;
+      padding-bottom: 10px;
     }
     &.large {
       min-height: 56px;
@@ -145,6 +154,7 @@
 <div
   {id}
   on:click={methods.clicked}
+  item-divider={itemDivider}
   class="n-item {borderBottom ? 'border-bottom' : 'no-border'}
   {className}"
   :alt="title">

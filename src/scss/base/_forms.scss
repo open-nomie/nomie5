@@ -17,6 +17,14 @@ input[type='password'] {
 }
 
 textarea.form-control {
+	background-color: var(--color-faded-1);
+	border-color: var(--color-solid-1);
+	color: var(--color-inverse-2);
+	border: none;
+	border-radius: 0.4rem;
+	padding: 6px;
+	font-size: 0.7rem;
+	color: var(--color-inverse);
 }
 
 select {

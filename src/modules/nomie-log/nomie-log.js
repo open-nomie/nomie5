@@ -8,13 +8,19 @@ export default class Record {
 		// TODO see why nanoid doesn't work with svelte
 		this._id = starter._id || md5(Math.random() + new Date().getTime()).substr(0, 10);
 		this.note = (starter.note || starter.notes || '').trim();
-		this.end = starter.end || new Date().getTime();
-		this.start = starter.start || new Date().getTime();
+
+		let end = starter.end ? new Date(starter.end) : new Date();
+		let start = starter.start ? new Date(starter.start) : end;
+
+		this.end = end.getTime();
+		this.start = start.getTime();
+
 		this.score = starter.score || null;
 		this.lat = starter.lat || null;
 		this.lng = starter.lng || null;
 		this.location = starter.location || '';
-		this.modified = this.modified || false;
+		this.modified = starter.modified || false;
+		this.source = starter.source || null;
 
 		if (!starter._id) {
 			this._dirty = true;

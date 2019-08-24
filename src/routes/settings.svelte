@@ -1,6 +1,6 @@
 <script>
   //Vendors
-  import { navigate } from "svelte-routing";
+  import { navigate, Link } from "svelte-routing";
 
   // Components
   import NItem from "../components/list-item/list-item.svelte";
@@ -312,17 +312,25 @@
 
       <div class="n-pop my-3 pt-2">
         <NItem title="Questions?">
-          <a
-            slot="right"
-            class="btn btn-clear text-primary"
-            href={`mailto:${config.support_email}?subject=Open Nomie Support`}>
-            {config.support_contact}
-          </a>
+          <span slot="right" class="pr-2">
+            <a
+              href={`mailto:${config.support_email}?subject=Open Nomie Support`}>
+              {config.support_contact}
+            </a>
+          </span>
+
         </NItem>
         <NItem className="compact item-divider" />
         <NItem title="Copyright 2019 All Rights Reserved." className="pb-3">
           <NText tag="div" size="sm">
-            Nomie, and the Elephant are trademarks of Happy Data, LLC.
+            Nomie & the Elephant are trademarks of
+            <a href="https://happydata.org">Happy Data, LLC</a>
+            <span
+              on:click={() => {
+                navigate('/api');
+              }}>
+              ...
+            </span>
           </NText>
         </NItem>
 

@@ -1,20 +1,10 @@
-.btn {
-	border-radius: 12px;
-	padding-left: 1rem;
-	padding-right: 1rem;
-	transition: all 0.2s ease-in-out;
-	display: inline-flex;
-	align-items: center;
-	vertical-align: middle;
-	justify-content: center;
-
-	&.btn-round {
-		border-radius: 30px !important;
-	}
-}
-
 button:focus {
 	outline: 0 !important;
+}
+
+.btn {
+	display: flex;
+	justify-content: center;
 }
 
 .btn-primary {
@@ -28,22 +18,22 @@ button:focus {
 	border-color: var(--color-solid-2) !important;
 }
 
-// .btn-light {
-// 	background-color: darken($faded, 6%);
-// 	// &:hover {
-// 	// 	background-color: darken($faded, 10%);
-// 	// }
-// }
-
 .btn-white-pop {
-	color: var(--color-primary-bright) !important;
+	font-size: 0.8rem;
+	font-weight: 600;
+
+	color: var(--color-inverse-2) !important;
 	box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
 	border-color: var(--color-solid-2);
 	background-color: var(--color-faded);
+	&.active {
+		color: var(--color-primary-bright) !important;
+	}
 	&.inactive {
+		font-weight: 500;
 		box-shadow: none;
 		background-color: var(--color-solid);
-		color: var(--color-inverse-2) !important;
+
 		border-color: var(--color-solid-2);
 		opacity: 0.7;
 	}
@@ -108,6 +98,38 @@ button:focus {
 	background-color: var(--color-faded);
 	&:hover {
 		background-color: var(--color-faded-2);
+	}
+}
+
+.btn-circle {
+	$width: 40px;
+	width: $width;
+	height: $width;
+	border-radius: $width * 0.5 !important;
+	&.btn-primary {
+		border: none !important;
+	}
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	flex-grow: 0;
+}
+
+.btn.touchable {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 60px;
+	min-width: 60px;
+	margin: 10px;
+	box-shadow: 0px 4px 8px -2px rgba(0, 0, 0, 0.1);
+
+	&.btn-lg {
+		min-height: 140px;
+		min-width: 140px;
+		font-size: 3rem;
 	}
 }
 
