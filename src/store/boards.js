@@ -34,7 +34,7 @@ const boardsInit = () => {
 	const { subscribe, set, update } = writable(base);
 
 	const methods = {
-		initialize(tkrs) {
+		initialize(UserStore, tkrs) {
 			trackers = tkrs;
 			return Storage.get(`${config.data_root}/boards.json`).then(boards => {
 				if (boards) {

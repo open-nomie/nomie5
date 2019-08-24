@@ -1,11 +1,13 @@
 # TODO
 
-Generated Fri Aug 23 2019 8:48 pm
+Generated Sat Aug 24 2019 10:26 am
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
    - TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
    - TODO: move this to modules/storage
+- **src/store/trackers.js**
+   - TODO: Move this to BoardStore
 - **src/store/ledger.js**
    - TODO: this doesn't seem to be trigger a change in History.svetle
    - TODO: Make this use listBooks() array to only look for books that exist
@@ -18,7 +20,6 @@ Generated Fri Aug 23 2019 8:48 pm
    - TODO: Needs to be refactored and cleaned up
 - **src/routes/settings.svelte**
    - TODO: figure out how to handle a cancel in the interact prompt
-   - TODO: Figure out how to make a sync before save...
 - **src/routes/history.svelte**
    - TODO: Have it react when the ledger change, not a hard refresh
    - TODO: refactor so it's clean and using the proper amount of Store vs local

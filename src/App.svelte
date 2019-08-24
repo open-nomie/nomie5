@@ -32,6 +32,8 @@
   import { BoardStore } from "./store/boards"; // board state  and methods
   import { TrackerStore } from "./store/trackers"; // tracker state and methods
   import { CommanderStore } from "./store/commander"; // commander - /?note=hi&lat=35&lng=-81.32
+  import { NomieAPI } from "./store/napi";
+
   import config from "../config/global";
 
   // Set a better console
@@ -60,8 +62,8 @@
   };
 
   const setDocumentParams = options => {
-    // let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    let isDarkMode = false;
+    let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    // let isDarkMode = false;
     let manualDarkMode = JSON.parse(
       localStorage.getItem(config.dark_mode_key) || "false"
     );
@@ -134,6 +136,7 @@
     // Run any commands if needed
     setTimeout(() => {
       CommanderStore.run();
+      NomieAPI.load();
     }, 500);
   });
 </script>

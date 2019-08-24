@@ -36,9 +36,11 @@ const userInit = () => {
 		alwaysLocate: JSON.parse(localStorage.getItem(config.always_locate_key) || 'false'),
 		darkMode: JSON.parse(localStorage.getItem(config.dark_mode_key) || 'false'),
 		location: null,
+		autoImportApi: false,
 		meta: {
 			lock: false,
 			pin: null,
+			aggressiveSync: false,
 		},
 		locked: true,
 	};
@@ -120,9 +122,9 @@ const userInit = () => {
 				});
 		},
 		loadTrackersAndBoards() {
-			return TrackerStore.initialize().then(trackers => {
+			return TrackerStore.initialize(this).then(trackers => {
 				// Now lets load the BoardStore and pass these trackers
-				return BoardStore.initialize(trackers).then(() => {
+				return BoardStore.initialize(this, trackers).then(() => {
 					// Now let's fire off that we're ready
 					if (state.alwaysLocate) {
 						locate();

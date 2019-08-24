@@ -49,6 +49,9 @@
   :global(.n-item .right .btn-clear) {
     margin-right: -10px !important;
   }
+  :global(.n-item .right .zmdi) .icon {
+    font-size: 26px !important;
+  }
   .n-item {
     text-align: left;
     display: flex;
@@ -116,8 +119,10 @@
       flex-shrink: 0;
       color: var(--color-inverse-2);
       font-size: 0.9rem;
+
       .icon {
         $iconSize: 50px;
+        font-size: $iconSize * 0.6;
         height: $iconSize;
         width: $iconSize;
         background-color: rgba(0, 0, 0, 0.1);
@@ -141,7 +146,7 @@
         margin: 2px 0;
         color: var(--color-inverse-3);
         line-height: 140%;
-        font-size: 0.98rem;
+        font-size: 0.9rem;
         &.sm,
         &.small {
           font-size: 0.8rem;
@@ -168,7 +173,7 @@
       <NText size="md" medium>{title}</NText>
     {/if}
     {#if description}
-      <p>{description}</p>
+      <p class="description">{description}</p>
     {/if}
     <slot />
   </div>

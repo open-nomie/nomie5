@@ -30,7 +30,7 @@ const trackerStoreInit = () => {
 		 * This takes place in the user store. Once the user is loaded, it will
 		 * initialize trackers and the boards. Then fire off the user ready command
 		 */
-		initialize() {
+		initialize(UserStore) {
 			return new Promise((resolve, reject) => {
 				return Storage.get(`${config.data_root}/trackers.json`).then(trackers => {
 					// If the user doesn't have trackers
@@ -113,8 +113,11 @@ const trackerStoreInit = () => {
 			let trackers = this.getAll();
 			return trackers.hasOwnProperty(tag) ? trackers[tag] : new Tracker({ tag: tag });
 		},
+
 		/**
 		 *  Populate Nomie with a starter Pack
+		 *
+		 * TODO: Move this to BoardStore
 		 *
 		 * This will take the default-trackers.js StarterPack and fill it in
 		 * Automatically creating boards and adding trackers

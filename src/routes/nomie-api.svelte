@@ -14,6 +14,7 @@
   // Components
   import NText from "../components/text/text.svelte";
   import NItem from "../components/list-item/list-item.svelte";
+  import NToggle from "../components/toggle-switch/toggle-switch.svelte";
 
   // containers
   import NPage from "../containers/layout/page.svelte";
@@ -22,6 +23,8 @@
   // Stores
   import { LedgerStore } from "../store/ledger";
   import { Interact } from "../store/interact";
+  import { UserStore } from "../store/user";
+  import { NomieAPI } from "../store/napi";
 
   let NAPI = new NomieAPICli({ domain: "nomieapi.com/.netlify/functions" });
 
@@ -32,17 +35,20 @@
     hidden: [],
     apiKey: null,
     privateKey: null,
-    view: "captured",
+    view: "settings",
     capturingId: null,
     apiExample: null,
     showPrivateKey: false
   };
 
+  $: autoImportAPI = $NomieAPI.autoImport;
+
   $: if (state.apiKey) {
-    state.apiExample = `{
-  "note": "Add #trackers here e.g. #mood(4)",
-  "api_key": "${state.apiKey}"  
-}`;
+    state.apiExample = JSON.stringify(
+      { note: "#mood(4)", api_key: state.apiKey },
+      null,
+      2
+    );
   }
 
   const methods = {
@@ -171,9 +177,8 @@
 
       <NItem
         className="py-2"
-        title={`Nomie Capture Setup`}
-        description={`Nomie API allows you to pull in posts from external services. 
-                It does this by providing an API key which you will use to post with to services like IFTTT.`} />
+        title={`Nomie API Setup`}
+        description={`Pull in content from external services like IFTTT or Zapier.`} />
 
       <div item-divider />
       <NItem
@@ -199,15 +204,16 @@
       <div class="d-flex justify-content-center p-3">
         <div class="btn-group flex-grow flex-shrink">
           <button
-            on:click={() => methods.setView('captured')}
-            class="btn btn-sm btn-white-pop {state.view === 'captured' ? 'active' : ''}">
-            Captured
-          </button>
-          <button
             on:click={() => methods.setView('settings')}
             class="btn btn-sm btn-white-pop {state.view === 'settings' ? 'active' : ''}">
             Settings
           </button>
+          <button
+            on:click={() => methods.setView('captured')}
+            class="btn btn-sm btn-white-pop {state.view === 'captured' ? 'active' : ''}">
+            Captured
+          </button>
+
         </div>
       </div>
       {#if state.view === 'captured'}
@@ -256,6 +262,25 @@
           <div class="empty-notice">No recent logs captured</div>
         {/if}
       {:else}
+        <!-- We're In the Settings Tab
+        -->
+        <NItem
+          title="Auto Import"
+          description="Automatically import new captured logs when Nomie starts.">
+          <div slot="right">
+            <NToggle
+              bind:value={autoImportAPI}
+              on:change={event => {
+                console.log('Auto?', autoImportAPI);
+                if (autoImportAPI === true) {
+                  NomieAPI.disableAutoImport();
+                } else {
+                  NomieAPI.enableAutoImport();
+                }
+              }} />
+          </div>
+        </NItem>
+        <div item-divider />
         <NItem title="API Key" className="py-2">
           <div>
             <input type="text" class="form-control mt-1" value={state.apiKey} />
@@ -263,19 +288,46 @@
         </NItem>
 
         <div item-divider />
-        <NItem title="Using the API" className="py-2">
-          <p class="text-sm">POST JSON to: https://nomieapi.com/log</p>
-          <textarea
-            class="form-control"
-            style="height:120px"
-            bind:value={state.apiExample} />
-          <p class="text-sm mt-1">
-            fields: note, api_key, lat, lng, date, source
-          </p>
-        </NItem>
+        {#if state.showExample}
+          <NItem title="Example POST">
+            <button
+              slot="right"
+              class="btn btn-clear"
+              on:click={() => (state.showExample = !state.showExample)}>
+              Close
+            </button>
+          </NItem>
+          <NItem className="py-2">
+            <p class="text-sm">POST JSON to: https://nomieapi.com/log</p>
+            <textarea
+              class="form-control"
+              style="height:120px"
+              bind:value={state.apiExample} />
+            <p class="text-sm mt-1">
+              fields: note, api_key, lat, lng, date, source
+            </p>
+          </NItem>
+        {:else}
+          <NItem title="Example POST">
+            <button
+              class="btn btn-clear"
+              slot="right"
+              on:click={() => (state.showExample = !state.showExample)}>
+              Show
+            </button>
+          </NItem>
+        {/if}
         <div item-divider />
         {#if state.showPrivateKey}
-          <NItem title="Private Key" className="py-2 pb-3">
+          <NItem title="Private Key">
+            <button
+              class="btn btn-clear"
+              slot="right"
+              on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
+              Hide
+            </button>
+          </NItem>
+          <NItem className="py-2 pb-3">
             <div>
               <textarea
                 type="text"
@@ -285,11 +337,11 @@
             </div>
           </NItem>
         {:else}
-          <NItem title="Private Key" className="py-2 pb-3">
+          <NItem title="Private Key">
             <button
-              class="clear btn btn-clear btn-sm"
+              class="btn btn-clear"
               slot="right"
-              on:click={methods.toggleShowPrivateKey}>
+              on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
               Show
             </button>
           </NItem>
@@ -299,6 +351,7 @@
           className="text-red"
           title="Unregister this API"
           on:click={methods.unregister} />
+        <div item-divider />
       {/if}
     {/if}
   </div>

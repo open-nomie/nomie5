@@ -24,6 +24,7 @@
   import { Interact } from "../store/interact";
   import { TrackerStore } from "../store/trackers";
   import { BoardStore } from "../store/boards";
+  import { NomieAPI } from "../store/napi";
   // Config
   import config from "../../config/global";
 
@@ -225,6 +226,9 @@
             Export
           </button>
         </NItem>
+        <NItem title="Nomie API" on:click={() => navigate('/api')}>
+          <span slot="right" class="icon zmdi zmdi-chevron-right" />
+        </NItem>
       </div>
       <div class="n-pop my-3">
         <!-- Stoage List - this is stupid I couldn't find it-->
@@ -265,18 +269,18 @@
             {/await}
           </div>
         </NItem>
-        <!-- {#if $UserStore.storageType === 'blockstack'}
-          TODO: Figure out how to make a sync before save...
+        {#if $UserStore.storageType === 'blockstack'}
           <NItem
-            title="Sync before Save"
-            description="Sync cloud data before saving new data.">
+            title="Aggressive Sync"
+            description="Using Nomie on multiple devices? Enable this to sync
+            remote data more often.">
             <div slot="right">
               <NToggle
-                bind:value={$UserStore.meta.syncBeforeSave}
+                bind:value={$UserStore.meta.aggressiveSync}
                 on:change={methods.settingChange} />
             </div>
           </NItem>
-        {/if} -->
+        {/if}
       </div>
 
       <div class="n-pop my-3">
@@ -323,7 +327,7 @@
         <NItem className="compact item-divider" />
         <NItem title="Copyright 2019 All Rights Reserved." className="pb-3">
           <NText tag="div" size="sm">
-            Nomie & the Elephant are trademarks of
+            Nomie & Elephant are trademarks of
             <a href="https://happydata.org">Happy Data, LLC</a>
             <span
               on:click={() => {
