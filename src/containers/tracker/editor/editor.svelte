@@ -40,7 +40,7 @@
     tracker.max = null;
   } else if (tracker.uom == "timer" && tracker.type != "timer") {
     tracker.uom = "num";
-  } else if (tracker.type === "range" && !tracker.min) {
+  } else if (tracker.type === "range" && isNaN(tracker.min)) {
     tracker.min = 1;
     tracker.max = 10;
   }
@@ -173,12 +173,17 @@
                   class="form-control mr-2"
                   style="width:90px;"
                   placeholder="Min"
+                  on:focus={e => {
+                    console.log('E Focused', e.target);
+                    e.target.select();
+                  }}
                   bind:value={tracker.min} />
                 <input
                   type="number"
                   class="form-control"
                   style="width:90px;"
                   placeholder="Max"
+                  on:focus={e => e.target.select()}
                   bind:value={tracker.max} />
               </div>
             </div>

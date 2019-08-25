@@ -213,16 +213,20 @@
 
   .n-map-container .location-name {
     position: absolute;
-    top: 0px;
-    left: 60px;
+    bottom: 0px;
+    left: 6px;
     right: 6px;
-
     font-weight: bold;
+    font-size: 0.9rem;
     line-height: 120%;
     z-index: 1000;
-    font-size: 0.7rem;
-    padding: 6px;
-    text-align: right;
+    padding: 10px 16px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    background-color: var(--color-solid);
+    border: solid 1px var(--color-faded);
+    text-align: center;
+    box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.12);
   }
 
   .picker-cover {
@@ -292,9 +296,9 @@
   </div>
 
   {#await getLocation()}
-    <div class="location-name" />
+    <div class="location-name truncate" />
   {:then address}
-    <div class="location-name">{(address || {}).Match_addr || ''}</div>
+    <div class="location-name truncate">{(address || {}).Match_addr || ''}</div>
   {:catch error}
     {error}
   {/await}

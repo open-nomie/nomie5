@@ -232,9 +232,10 @@
       if (tracker.type === "tick") {
         ActiveLogStore.addTag(tracker.tag);
         if (tracker.one_tap === true) {
+          let note = $ActiveLogStore.note + "";
           LedgerStore.saveLog($ActiveLogStore).then(() => {
+            Interact.toast(`Saved ${note}`);
             ActiveLogStore.clear();
-            Interact.toast("Saved");
           });
         }
         // If it's a note (combined trackers)

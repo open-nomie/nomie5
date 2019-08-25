@@ -75,7 +75,9 @@
     if (value && !data.value) {
       data.value = value;
     } else {
+      // TODO: Figure out wtf is going on with value and data.value - can we just use value?
       data.value = tracker.default || 0;
+      value = data.value;
     }
     setTimeout(() => {
       data.ready = true;
@@ -106,43 +108,45 @@
   {tracker.label}"
   className="tracker-input">
 
-  <div class="input-model type-{tracker.type}" transition:slide>
-    {#if tracker.type === 'range'}
-      <SliderInput
-        value={(data.value || tracker.min) + ''}
-        min={(tracker.min || 0) + ''}
-        max={(tracker.max || 0) + ''}
-        on:change={value => {
-          data.value = value.detail;
-        }} />
-    {:else if tracker.type === 'value' || tracker.type === 'tick'}
-      <div id="keypad-holder">
-        <NKeypad
-          {tracker}
-          {value}
+  {#if data.ready}
+    <div class="input-model type-{tracker.type}" transition:slide>
+      {#if tracker.type === 'range'}
+        <SliderInput
+          value={(data.value || tracker.min) + ''}
+          min={(tracker.min || 0) + ''}
+          max={(tracker.max || 0) + ''}
           on:change={value => {
             data.value = value.detail;
           }} />
-      </div>
-    {:else if tracker.type === 'timer'}
-      <NTimer
-        {value}
-        tracker={data.tracker}
-        bind:value={data.value}
-        on:change={event => {
-          data.value = event.detail;
-        }} />
-    {:else}
-      <div id="keypad-holder">
-        <NKeypad
-          {tracker}
+      {:else if tracker.type === 'value' || tracker.type === 'tick'}
+        <div id="keypad-holder">
+          <NKeypad
+            {tracker}
+            {value}
+            on:change={value => {
+              data.value = value.detail;
+            }} />
+        </div>
+      {:else if tracker.type === 'timer'}
+        <NTimer
           {value}
-          on:change={value => {
-            data.value = value.detail;
+          tracker={data.tracker}
+          bind:value={data.value}
+          on:change={event => {
+            data.value = event.detail;
           }} />
-      </div>
-    {/if}
-  </div>
+      {:else}
+        <div id="keypad-holder">
+          <NKeypad
+            {tracker}
+            value={data.value}
+            on:change={value => {
+              data.value = value.detail;
+            }} />
+        </div>
+      {/if}
+    </div>
+  {/if}
 
   <div
     class="footer d-flex flex-row align-center justify-content-between w-100"

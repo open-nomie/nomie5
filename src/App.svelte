@@ -24,6 +24,7 @@
   import BoardEditorRoute from "./routes/board-editor.svelte";
   import FAQRoute from "./routes/faq.svelte";
   import PluginsRoute from "./routes/plugins.svelte";
+  import NomieAPIRoute from "./routes/nomie-api.svelte";
 
   // Stores
   import { UserStore } from "./store/user"; //  user auth and state
@@ -31,6 +32,8 @@
   import { BoardStore } from "./store/boards"; // board state  and methods
   import { TrackerStore } from "./store/trackers"; // tracker state and methods
   import { CommanderStore } from "./store/commander"; // commander - /?note=hi&lat=35&lng=-81.32
+  import { NomieAPI } from "./store/napi";
+
   import config from "../config/global";
 
   // Set a better console
@@ -60,6 +63,7 @@
 
   const setDocumentParams = options => {
     let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    // let isDarkMode = false;
     let manualDarkMode = JSON.parse(
       localStorage.getItem(config.dark_mode_key) || "false"
     );
@@ -107,10 +111,6 @@
     false
   );
 
-  window.addEventListener("change", () => {
-    console.log("Window just changed");
-  });
-
   //Setup an an offline notice
   window.addEventListener("load", () => {
     let onNetworkChange = event => {
@@ -136,6 +136,7 @@
     // Run any commands if needed
     setTimeout(() => {
       CommanderStore.run();
+      NomieAPI.load();
     }, 500);
   });
 </script>
@@ -155,6 +156,7 @@
       <Route path="/plugins" component={PluginsRoute} />
       <Route path="/plugins/settings/:pluginId" component={PluginsRoute} />
       <Route path="/plugins/:pluginId" component={PluginsRoute} />
+      <Route path="/api" component={NomieAPIRoute} />
     </div>
   </Router>
 {:else if $UserStore.signedIn == undefined}

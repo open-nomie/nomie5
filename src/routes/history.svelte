@@ -523,7 +523,7 @@
         on:click={() => {
           state.showAllLocations = !state.showAllLocations;
         }}>
-        Close
+        <i class="zmdi zmdi-close" />
       </div>
     {/if}
   {/if}

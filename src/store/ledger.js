@@ -118,7 +118,17 @@ const ledgerInit = () => {
 
 				// If today exists in the book - roll with it.
 				if (base.books[todayKey]) {
-					setToday();
+					// Aggressively sync each time we get today - regardless if it exists.
+					if (UserStore.data().meta.aggressiveSync) {
+						console.log('Aggressively getting new logs');
+						methods.getBook(todayKey).then(book => {
+							base.books[todayKey] = book;
+							setToday();
+						});
+					} else {
+						console.log('Passively getting new logs');
+						setToday();
+					}
 				} else {
 					// If it doesn't exist, get it from storage
 					methods.getBook(todayKey).then(book => {
@@ -228,7 +238,7 @@ const ledgerInit = () => {
 								s.saving = false;
 								return s;
 							});
-							Interact.toast('Saved');
+							Interact.toast(`Saved ${log.note}`);
 							methods.getToday();
 							res({ log, book: date });
 						});
