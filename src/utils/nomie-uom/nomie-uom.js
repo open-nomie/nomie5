@@ -149,6 +149,16 @@ NomieUOM.uoms = {
 			return '¥' + v.toFixed(2);
 		},
 	},
+	yuan: {
+		singular: 'yuan',
+		plural: 'yuan',
+		symbol: '¥',
+		type: 'currency',
+		symbolAffix: 'pre',
+		display: function(v) {
+			return '¥' + v.toFixed(2);
+		},
+	},
 	euro: {
 		singular: 'Euro',
 		plural: 'Euros',
