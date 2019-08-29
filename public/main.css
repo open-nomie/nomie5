@@ -7437,6 +7437,14 @@ input[type='password'] {
 .form-control:focus {
   box-shadow: none !important; }
 
+input.form-control {
+  background-color: var(--color-faded-1);
+  border-color: var(--color-solid-1);
+  color: var(--color-inverse-2); }
+  input.form-control:focus {
+    background-color: var(--color-faded-1);
+    color: var(--color-inverse-2); }
+
 textarea.form-control {
   background-color: var(--color-faded-1);
   border-color: var(--color-solid-1);
@@ -7624,6 +7632,13 @@ body.scrolling .mini-map {
 @media (max-width: 767.98px) {
   .n-list .n-pop {
     border-radius: 0 !important; } }
+
+.n-item .left .btn-icon,
+.n-item .right .btn-icon {
+  max-width: 26px !important;
+  width: 26px;
+  padding: 0 !important;
+  text-align: center; }
 
 .n-item .right .zmdi {
   font-size: 26px; }

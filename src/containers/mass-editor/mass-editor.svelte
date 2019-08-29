@@ -170,7 +170,7 @@
       return found;
     },
     nextSample() {
-      if (state.example < state.found.length) {
+      if (state.example + 1 < state.found.length) {
         state.example = state.example + 1;
       }
     },
@@ -247,11 +247,11 @@
           <NProgress percentage={state.findingProgress} />
         </NItem>
         {#if state.found.length > 0 && state.example !== null}
-          <div class="p-1 mt-1 bg-faded">
+          <div class="p-1 mt-2">
             <NItem>
               <div>
                 <small class="text-faded-2">
-                  Sample {state.example} of {state.found.length}
+                  Sample {state.example + 1} of {state.found.length}
                 </small>
                 <br />
                 <small>

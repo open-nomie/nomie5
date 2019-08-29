@@ -317,16 +317,20 @@
           </div>
         </NItem>
         {#if $UserStore.storageType === 'blockstack'}
-          <NItem
-            title="Aggressive Sync"
-            description="Using Nomie on multiple devices? Enable this to sync
-            remote data more often.">
+          <NItem title="Aggressive Sync">
+            <span
+              slot="left"
+              class="btn-icon zmdi {`${$UserStore.meta.aggressiveSync ? 'zmdi-refresh-sync' : 'zmdi-refresh-sync-off'}`}"
+              style="color:#A2AEBB" />
             <div slot="right">
               <NToggle
                 bind:value={$UserStore.meta.aggressiveSync}
                 on:change={methods.settingChange} />
             </div>
           </NItem>
+          <NItem
+            description="Using Nomie on multiple devices? Enable Aggressive Sync
+            to sync more frequently" />
         {/if}
       </div>
 

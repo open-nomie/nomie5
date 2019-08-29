@@ -21,7 +21,15 @@ input[type='password'] {
 		box-shadow: none !important;
 	}
 }
-
+input.form-control {
+	background-color: var(--color-faded-1);
+	border-color: var(--color-solid-1);
+	color: var(--color-inverse-2);
+	&:focus {
+		background-color: var(--color-faded-1);
+		color: var(--color-inverse-2);
+	}
+}
 textarea.form-control {
 	background-color: var(--color-faded-1);
 	border-color: var(--color-solid-1);
