@@ -83,9 +83,10 @@ button:focus {
 }
 
 .btn-icon {
-	font-size: 33px;
+	font-size: 26px !important;
 	padding-left: 10px;
 	padding-right: 10px;
+	outline: 0 !important;
 }
 
 .btn-primary {

@@ -50,15 +50,18 @@
     margin-right: -10px !important;
   }
   :global(.n-item .right .zmdi) .icon {
-    font-size: 26px !important;
+    font-size: 24px !important;
+  }
+  :global(.n-item .left .zmdi) .icon {
+    font-size: 24px !important;
   }
   .n-item {
     text-align: left;
     display: flex;
     align-items: center;
     justify-content: stretch;
-    padding: 0px 16px;
-    min-height: 50px;
+    padding: 4px 16px;
+    min-height: 42px;
     position: relative;
     transition: all 0.2s ease-in-out;
     text-decoration: none;
@@ -69,7 +72,7 @@
 
     select,
     input {
-      margin: 6px 0;
+      margin: 8px 0;
     }
 
     &.item-divider {
@@ -142,6 +145,7 @@
         margin: 2px 0;
         line-height: 1.56rem;
       }
+
       p {
         margin: 2px 0;
         color: var(--color-inverse-3);

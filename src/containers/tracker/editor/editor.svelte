@@ -31,7 +31,8 @@
       let type = TrackerTypes[id];
       type.id = id;
       return type;
-    })
+    }),
+    editTag: false
   };
 
   $: if (tracker.type === "timer") {
@@ -45,6 +46,11 @@
     tracker.max = 10;
   }
 
+  $: if (tracker._dirty === true && tracker.label.length) {
+    console.log("Tracker is Dirty!", tracker._dirty, tracker);
+    data.editTag = true;
+  }
+
   const methods = {
     tracker_save() {
       if (!tracker.tag || !tracker.label) {
@@ -56,6 +62,16 @@
         dispatch("save", tracker);
         TrackerStore.saveTracker(tracker).then(() => {});
       }
+    },
+    editTag() {
+      Interact.confirm(
+        "Change this Tag?",
+        `If you've tracked with this in the past, use "Settings > Find and Replace" to replace #${tracker.tag} with your new tag.`
+      ).then(res => {
+        if (res === true) {
+          data.editTag = true;
+        }
+      });
     },
     addTrackerToNote() {
       Interact.selectTrackers().then(trackers => {
@@ -131,8 +147,9 @@
               bind:value={tracker.emoji} />
           </div>
         </NItem>
-        {#if tracker._dirty}
+        {#if data.editTag}
           <NItem title="Tag">
+
             <div slot="right">
               <input
                 type="text"
@@ -143,6 +160,13 @@
                 maxlength="10"
                 autocapitalize="off"
                 spellcheck="false" />
+            </div>
+          </NItem>
+        {:else}
+          <NItem title="Tag" on:click={methods.editTag}>
+            <div slot="right">
+              {tracker.tag}
+              <button class="btn-link">Edit</button>
             </div>
           </NItem>
         {/if}

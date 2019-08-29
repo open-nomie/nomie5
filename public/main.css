@@ -7136,9 +7136,10 @@ button:focus {
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); }
 
 .btn-icon {
-  font-size: 33px;
+  font-size: 26px !important;
   padding-left: 10px;
-  padding-right: 10px; }
+  padding-right: 10px;
+  outline: 0 !important; }
 
 .btn-primary {
   background-color: var(--color-primary-bright); }
@@ -7433,6 +7434,9 @@ input[type='password'] {
     background-color: var(--color-faded-1);
     color: var(--color-inverse); }
 
+.form-control:focus {
+  box-shadow: none !important; }
+
 textarea.form-control {
   background-color: var(--color-faded-1);
   border-color: var(--color-solid-1);
@@ -7628,6 +7632,10 @@ body.scrolling .mini-map {
 .n-item .right a,
 .n-item .right span {
   font-size: 0.9rem; }
+
+.n-item main small {
+  font-size: 0.8rem !important;
+  line-height: 0.9rem !important; }
 
 .n-item-divider {
   min-height: 60px !important;

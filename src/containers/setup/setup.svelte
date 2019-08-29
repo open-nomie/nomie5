@@ -21,9 +21,6 @@
   // Stores
   import { UserStore } from "../../store/user";
 
-  //vendors
-  import Spinner from "svelte-spinner";
-
   // TODO: UserSession shouldn't be in here - login should be fired by Storage.
   const UserSession = new blockstack.UserSession();
 
