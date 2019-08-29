@@ -75,7 +75,6 @@
     },
     addTrackerToNote() {
       Interact.selectTrackers().then(trackers => {
-        console.log("Trackers!?");
         if (trackers) {
           tracker.note =
             tracker.note +
@@ -85,7 +84,6 @@
                 return "#" + tracker.tag;
               })
               .join(" ");
-          console.log("New note", tracker.note);
         }
       });
     },
