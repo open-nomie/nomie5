@@ -97,13 +97,13 @@ nav {
 
 .main-content {
 	z-index: 0;
-	margin-bottom: 50px; // add buffer for tab bar
 	flex-grow: 1;
 	flex-shrink: 1;
-	min-height: calc(100vh - 50px);
+	min-height: calc(100vh - 50px) !important;
 	display: flex;
 	width: 100%;
-	background-color: var(--color-bg);
+	// background-color: var(--color-bg);
+	// background-color: red !important;
 }
 
 .clickable,

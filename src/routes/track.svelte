@@ -38,6 +38,7 @@
   #note-capture {
     position: fixed;
     bottom: 40px;
+    bottom: calc(40px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
     background-color: var(--color-solid);
@@ -55,11 +56,3 @@
 <div id="note-capture">
   <CaptureLog />
 </div>
-<!-- {#if data.hasTrackers}
-{:else}
-  <NPage title="No Trackers">
-    <div slot="header" class="n-row">
-      <h1>Let's get Started!</h1>
-    </div>
-  </NPage>
-{/if} -->
