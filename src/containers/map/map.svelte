@@ -29,7 +29,8 @@
   // Local State
   let data = {
     locationName: null,
-    activeLocation: locations[locations.length - 1] || null
+    activeLocation: locations[locations.length - 1] || null,
+    locating: false
   };
 
   $: if (locations) {
@@ -64,7 +65,18 @@
           MAP.removeLayer(layer);
         });
 
-        MAP.on("moveend", function() {
+        MAP.on("moveend", () => {
+          let center = MAP.getCenter();
+          let lat = center.lat;
+          let lng = center.lng;
+          // Stop this from being called multiple times.
+          if (!data.locating) {
+            data.locating = true;
+            methods.getLocation(lat, lng).then(loc => {
+              data.locationName = loc.Match_addr;
+              data.locating = false;
+            });
+          }
           dispatch("change", MAP.getCenter());
         });
         resolve(MAP);
@@ -204,7 +216,6 @@
       right: 0;
       bottom: 0;
     }
-
     :global(.leaflet-control-attribution) {
       background: var(--color-solid-2) !important;
       color: var(--color-solid);
@@ -213,20 +224,21 @@
 
   .n-map-container .location-name {
     position: absolute;
-    bottom: 0px;
+    bottom: 6px;
     left: 6px;
     right: 6px;
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 1rem;
     line-height: 120%;
     z-index: 1000;
-    padding: 10px 16px;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+    padding: 12px 16px;
+    border: 6px;
     background-color: var(--color-solid);
     border: solid 1px var(--color-faded);
+    color: var(--color-inverse);
+    border-bottom: none;
     text-align: center;
-    box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.12);
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.12);
   }
 
   .picker-cover {
@@ -295,12 +307,8 @@
     <div {id} class="n-map" />
   </div>
 
-  {#await getLocation()}
-    <div class="location-name truncate" />
-  {:then address}
-    <div class="location-name truncate">{(address || {}).Match_addr || ''}</div>
-  {:catch error}
-    {error}
-  {/await}
+  {#if data.locationName}
+    <div class="location-name truncate">{data.locationName}</div>
+  {/if}
 
 </div>

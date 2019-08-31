@@ -14,14 +14,12 @@ export default class Hooky {
 		this.hooks = {};
 	}
 	hook(hookName, func) {
-		console.log('hook', hookName);
 		if (typeof func === 'function') {
 			this.hooks[hookName] = this.hooks[hookName] || [];
 			this.hooks[hookName].push(func);
 		}
 	}
 	run(hookName, payload) {
-		console.log('run', hookName);
 		if (this.hooks.hasOwnProperty(hookName)) {
 			this.hooks[hookName].forEach(hook => {
 				hook(payload);

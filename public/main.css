@@ -7562,10 +7562,10 @@ body.scrolling .mini-map {
   background-color: var(--color-solid);
   overflow: hidden;
   transition: all 0.2s ease-in-out; }
-  @media (max-width: 320px) {
+  @media (max-width: 400px) {
     .mini-map {
       height: 80px;
-      width: 140px; } }
+      width: 80px; } }
   .mini-map .leaflet-top,
   .mini-map .location-name,
   .mini-map .leaflet-bottom {

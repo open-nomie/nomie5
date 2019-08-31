@@ -11,9 +11,9 @@ body.scrolling {
 	height: 100px;
 	width: 180px;
 
-	@media (max-width: 320px) {
+	@media (max-width: 400px) {
 		height: 80px;
-		width: 140px;
+		width: 80px;
 	}
 
 	border-radius: 20px;
