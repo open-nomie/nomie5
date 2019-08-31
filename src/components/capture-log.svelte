@@ -11,6 +11,7 @@
 
   // Modules
   import NomieLog from "../modules/nomie-log/nomie-log";
+  import Storage from "../modules/storage/storage";
 
   //Components
   import NItem from "../components/list-item/list-item.svelte";
@@ -100,6 +101,22 @@
       ActiveLogStore.clear();
       state.show = false;
       textarea.style.height = "40px";
+    },
+    removePhoto() {
+      let path = $ActiveLogStore.photo;
+      Storage.delete(path).then(() => {
+        ActiveLogStore.update(l => {
+          l.photo = null;
+          return l;
+        });
+      });
+    },
+    ifPopulated() {
+      return (
+        $ActiveLogStore.lat ||
+        $ActiveLogStore.note.trim().length > 0 ||
+        $ActiveLogStore.photo
+      );
     },
     capturePhoto() {
       Interact.openCamera(storagePath => {
@@ -273,7 +290,7 @@
       {saving ? 'saving' : ''}" />
     <div class="container p-0">
       <div
-        class="mask-textarea {$ActiveLogStore.note.trim().length ? 'populated' : 'empty'}">
+        class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 || $ActiveLogStore.photo ? 'populated' : 'empty'}">
         <textarea
           style="overflow:hidden"
           disabled={saving || saved}
@@ -374,13 +391,24 @@
               Set Custom Location
             </button>
           {/if}
-          <button
-            class="btn btn-light btn btn-block"
-            on:click={() => {
-              methods.capturePhoto();
-            }}>
-            Take a Photo
-          </button>
+
+          {#if !$ActiveLogStore.photo}
+            <button
+              class="btn btn-light btn btn-block"
+              on:click={() => {
+                methods.capturePhoto();
+              }}>
+              Take a Photo
+            </button>
+          {:else}
+            <button
+              class="btn btn-danger btn btn-block"
+              on:click={() => {
+                methods.removePhoto();
+              }}>
+              Remove Photo
+            </button>
+          {/if}
 
           <!-- <NItem className="">
           <button
