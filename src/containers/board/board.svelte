@@ -494,20 +494,6 @@
 
         </div>
 
-        <!-- {#if activeTrackers.length === 0 && data.gotToBeLoaded}
-          <div class="empty-notice flex-column" style="min-height:200px;">
-
-            {#if !activeBoard}
-              <button
-                class="btn btn btn-light mt-4"
-                on:click={methods.trackerEditor}>
-                Add Tracker
-              </button>
-            {/if}
-
-          </div>
-        {/if} -->
-
         {#if Object.keys($TrackerStore || {}).length}
           <div class="board-actions">
             <button class="btn btn btn-light" on:click={methods.addTapped}>
