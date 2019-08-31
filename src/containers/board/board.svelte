@@ -63,7 +63,8 @@
     showStartPacks: false,
     checks: 0,
     loading: true,
-    gotToBeLoaded: false
+    savingTrackers: []
+    // gotToBeLoaded: false,
   };
 
   $: if (trackers) {
@@ -85,6 +86,13 @@
   // }, 220);
   UserStore.onReady(() => {
     user = $UserStore;
+    LedgerStore.hook("onBeforeSave", log => {
+      console.log("before Save", log.trackersArray());
+      data.savingTrackers = log.trackersArray().map(t => t.tag);
+    });
+    LedgerStore.hook("onLogSaved", log => {
+      data.savingTrackers = [];
+    });
   });
 
   //
@@ -236,6 +244,7 @@
           LedgerStore.saveLog($ActiveLogStore).then(() => {
             Interact.toast(`Saved ${note}`);
             ActiveLogStore.clear();
+            data.savingTrackers = [];
           });
         }
         // If it's a note (combined trackers)
@@ -488,6 +497,7 @@
                 on:click={() => {
                   methods.trackerTapped(tracker);
                 }}
+                className={`${data.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
                 on:longpress={() => {
                   Interact.vibrate();
                   methods.showTrackerOptions(tracker);
@@ -496,7 +506,7 @@
           {/if}
         </div>
 
-        {#if activeTrackers.length === 0 && data.gotToBeLoaded}
+        <!-- {#if activeTrackers.length === 0 && data.gotToBeLoaded}
           <div class="empty-notice flex-column" style="min-height:200px;">
 
             {#if !activeBoard}
@@ -508,7 +518,7 @@
             {/if}
 
           </div>
-        {/if}
+        {/if} -->
 
         {#if Object.keys($TrackerStore || {}).length}
           <div class="board-actions">

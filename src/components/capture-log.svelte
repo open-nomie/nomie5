@@ -100,6 +100,7 @@
       textarea.style.height = "40px";
     }
   };
+
   // When a tag is added by a button or other service
   ActiveLogStore.hook("onAddTag", res => {
     // add space to the end.

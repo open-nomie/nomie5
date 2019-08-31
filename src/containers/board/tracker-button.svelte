@@ -65,6 +65,11 @@
     outline: none;
     transition: all 0.2s ease-in-out;
 
+    &.saving {
+      transition: all 0.2s ease-in-out;
+      border: solid 2px var(--color-primary-bright);
+    }
+
     @include media-breakpoint-up(md) {
       width: 7.8rem;
       height: 7.8rem;

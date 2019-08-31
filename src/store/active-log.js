@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 import NomieLog from '../modules/nomie-log/nomie-log';
 import Logger from '../utils/log/log';
+import Hooky from '../modules/hooks/hooks';
 
 const console = new Logger('✴️ store/active-log.js');
 
@@ -12,10 +13,7 @@ const activeLogInit = () => {
 
 	const { subscribe, set, update } = writable(base);
 
-	const hooks = {
-		onAdd: [],
-		onAddTag: [],
-	};
+	const hooky = new Hooky();
 
 	const methods = {
 		clear() {
@@ -27,24 +25,14 @@ const activeLogInit = () => {
 			});
 		},
 		hook(hookType, func) {
-			if (hooks[hookType].indexOf(func) === -1) {
-				hooks[hookType] = hooks[hookType] || [];
-				hooks[hookType].push(func);
-			}
-		},
-		runHook(hookType, payload) {
-			try {
-				(hooks[hookType] || []).forEach(hook => {
-					hook(payload);
-				});
-			} catch (e) {
-				console.error('Hook error', e);
-			}
+			// pass to hooky
+			hooky.hook(hookType, func);
 		},
 		updateNote(note) {
 			update(b => {
 				b.note = note;
-				this.runHook('onUpdate', b);
+				// this.runHook('onUpdate', b);
+				hooky.run('onUpdate', b);
 				return b;
 			});
 		},
@@ -62,7 +50,7 @@ const activeLogInit = () => {
 				} else {
 					b.note = `${b.note} #${tag}`;
 				}
-				this.runHook('onAddTag', { tag, value });
+				hooky.run('onAddTag', { tag, value });
 				return b;
 			});
 		},
