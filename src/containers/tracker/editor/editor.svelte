@@ -46,9 +46,10 @@
     tracker.max = 10;
   }
 
-  $: if (tracker._dirty === true && tracker.label.length) {
-    console.log("Tracker is Dirty!", tracker._dirty, tracker);
+  $: if (tracker._dirty === true) {
     data.editTag = true;
+  } else {
+    data.editTag = false;
   }
 
   const methods = {
@@ -112,6 +113,9 @@
     .item-divider.compact {
       background-color: var(--color-solid);
     }
+    textarea.form-control {
+      font-size: 16px;
+    }
   }
 </style>
 
@@ -163,8 +167,10 @@
         {:else}
           <NItem title="Tag" on:click={methods.editTag}>
             <div slot="right">
-              {tracker.tag}
-              <button class="btn-link">Edit</button>
+              <div class="n-row">
+                {tracker.tag}
+                <button class="btn-link btn">Edit</button>
+              </div>
             </div>
           </NItem>
         {/if}

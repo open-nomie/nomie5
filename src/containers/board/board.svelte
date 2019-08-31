@@ -90,7 +90,6 @@
   // If Today length - then lets set it ... but it should be a watch
   $: if (Object.keys($LedgerStore.today).length) {
     today = $LedgerStore.today;
-    console.log("Today set", today);
     methods.refresh();
   }
 
@@ -183,18 +182,19 @@
      * TODO: Look at why this is needed... slop!
      */
     refresh() {
+      // NO LONGER NEEDED!
       // Hacky way to get some reactive things to work.
       // Currently when starting timers it's not reacting.
       // this should force it - but will cause a hitch.
       // and should be fixed at some point.
-      refreshing = true;
-      let sTop = document.documentElement.scrollTop;
-      setTimeout(() => {
-        refreshing = false;
-        setTimeout(() => {
-          document.documentElement.scrollTop = sTop;
-        });
-      });
+      // refreshing = true;
+      // let sTop = document.documentElement.scrollTop;
+      // setTimeout(() => {
+      //   refreshing = false;
+      //   setTimeout(() => {
+      //     document.documentElement.scrollTop = sTop;
+      //   });
+      // });
     },
 
     /**

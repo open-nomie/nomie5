@@ -26,7 +26,7 @@ input.form-control {
 	border-color: var(--color-solid-1);
 	color: var(--color-inverse-2);
 	&:focus {
-		background-color: var(--color-faded-1);
+		background-color: var(--color-faded);
 		color: var(--color-inverse-2);
 	}
 }
@@ -39,6 +39,11 @@ textarea.form-control {
 	padding: 6px;
 	font-size: 0.7rem;
 	color: var(--color-inverse);
+	&:focus {
+		background-color: var(--color-faded);
+		border-color: var(--color-solid);
+		color: var(--color-inverse);
+	}
 }
 
 select {

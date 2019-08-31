@@ -70,7 +70,7 @@
       display: flex;
       justify-content: stretch;
       align-content: stretch;
-      color: var(--color-solid-3);
+      color: var(--color-inverse-2);
       .card-body {
         flex-grow: 1;
         flex-shrink: 1;
