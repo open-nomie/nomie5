@@ -127,13 +127,11 @@ const ledgerInit = () => {
 				if (base.books[todayKey]) {
 					// Aggressively sync each time we get today - regardless if it exists.
 					if (UserStore.data().meta.aggressiveSync) {
-						console.log('Aggressively getting new logs');
 						methods.getBook(todayKey).then(book => {
 							base.books[todayKey] = book;
 							setToday();
 						});
 					} else {
-						console.log('Passively getting new logs');
 						setToday();
 					}
 				} else {
