@@ -78,9 +78,11 @@
       state.show = false;
     },
     checkTextareaSize() {
-      let height = (textarea || {}).scrollHeight || 100;
-      if (textarea) {
+      let height = (textarea || {}).scrollHeight || 40;
+      if (textarea && $ActiveLogStore.note.length > 0) {
         textarea.style.height = (height > 300 ? 300 : height) + "px";
+      } else {
+        textarea.style.height = 40;
       }
     },
     async logSave() {
@@ -133,7 +135,7 @@
   .more-options {
     position: relative;
     z-index: 130;
-
+    padding: 0 12px;
     .n-list {
       padding-bottom: 10px;
       margin-top: -10px;
@@ -254,11 +256,13 @@
       <div
         class="mask-textarea {$ActiveLogStore.note.trim().length ? 'populated' : 'empty'}">
         <textarea
+          style="overflow:hidden"
           disabled={saving || saved}
           bind:value={$ActiveLogStore.note}
           bind:this={textarea}
           placeholder="What's Up?"
-          on:keypress={methods.keyPress} />
+          on:keypress={methods.keyPress}
+          on:paste={methods.keyPress} />
         {#if !saving}
           <button class="save-button" on:click={methods.logSave}>Save</button>
         {:else}
