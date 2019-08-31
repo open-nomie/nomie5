@@ -7,7 +7,8 @@
    */
 
   // Svelte
-  import { slide } from "svelte/transition";
+  import { onDestroy } from "svelte";
+  // import { slide } from "svelte/transition";
 
   // Modules
   import NomieLog from "../modules/nomie-log/nomie-log";
@@ -28,6 +29,8 @@
 
   // Consts
   const console = new Logger("capture-log");
+  const isIOS =
+    !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
   let textarea;
   let saving = false;
@@ -176,6 +179,16 @@
       padding-bottom: 10px;
       margin-top: -10px;
     }
+    .advanced-options-list {
+      transition: all 0.2s ease-in-out;
+      &.hidden {
+        height: 1px;
+        overflow: hidden;
+      }
+      &.visible {
+        height: 160px;
+      }
+    }
   }
   .advanced-toggle {
     background-color: transparent;
@@ -313,114 +326,120 @@
       on:click={methods.advancedToggle}>
       •••
     </button>
-    {#if state.show}
-      <div class="n-list" transition:slide>
-        <div class="container py-2">
 
-          {#if !state.dateSet}
-            {#if state.date}
-              <div class="n-row mb-2">
-                <div class="input-group flex-grow mr-1">
-                  <input
-                    name="note"
-                    type="datetime-local"
-                    class="form-control mt-0"
-                    style="font-size:16px; height:44px; overflow:hidden"
-                    on:input={() => {
-                      methods.advancedChanged();
-                    }}
-                    bind:value={state.date} />
-                  <div class="input-group-append">
-                    <button
-                      class="btn btn-primary"
-                      on:click={() => {
-                        state.dateSet = true;
-                      }}>
-                      Set
-                    </button>
-                  </div>
+    <div
+      class="advanced-options-list n-list {state.show ? 'visible' : 'hidden'}">
+      <div class="container py-2">
+
+        {#if !state.dateSet}
+          {#if state.date}
+            <div class="n-row mb-2">
+              <div class="input-group flex-grow mr-1">
+                <input
+                  name="note"
+                  type="datetime-local"
+                  class="form-control mt-0"
+                  style="font-size:16px; height:44px; overflow:hidden"
+                  on:input={() => {
+                    methods.advancedChanged();
+                  }}
+                  bind:value={state.date} />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-primary"
+                    on:click={() => {
+                      state.dateSet = true;
+                    }}>
+                    Set
+                  </button>
                 </div>
-                <!-- end input-group -->
-                <!-- And cancel button-->
-                <button
-                  class="btn btn-clear btn-icon"
-                  on:click={() => {
-                    state.date = null;
-                  }}>
-                  <i class="zmdi zmdi-close" />
-                </button>
               </div>
-            {:else}
+              <!-- end input-group -->
+              <!-- And cancel button-->
               <button
-                class="btn btn-light btn btn-block"
+                class="btn btn-clear btn-icon"
                 on:click={() => {
-                  state.date = dayjs().format('YYYY-MM-DDTHH:mm');
+                  state.date = null;
                 }}>
-                Set Custom Date
+                <i class="zmdi zmdi-close" />
               </button>
-            {/if}
-          {:else}
-            <button
-              class="btn btn-danger btn btn-block"
-              on:click={() => {
-                state.date = null;
-                state.dateSet = false;
-              }}>
-              Clear {dayjs(state.date).format('ddd MMM D YYYY h:mm a')}
-            </button>
-          {/if}
-
-          {#if $ActiveLogStore.lat}
-            <button
-              class="btn btn-danger btn btn-block"
-              on:click={() => {
-                $ActiveLogStore.lat = null;
-                $ActiveLogStore.lng = null;
-              }}>
-              Clear Location
-            </button>
+            </div>
           {:else}
             <button
               class="btn btn-light btn btn-block"
               on:click={() => {
-                Interact.pickLocation().then(location => {
-                  $ActiveLogStore.lat = location.lat;
-                  $ActiveLogStore.lng = location.lng;
-                });
+                state.date = dayjs().format('YYYY-MM-DDTHH:mm');
               }}>
-              Set Custom Location
+              Set Custom Date
             </button>
           {/if}
+        {:else}
+          <button
+            class="btn btn-danger btn btn-block"
+            on:click={() => {
+              state.date = null;
+              state.dateSet = false;
+            }}>
+            Clear {dayjs(state.date).format('ddd MMM D YYYY h:mm a')}
+          </button>
+        {/if}
 
-          {#if !$ActiveLogStore.photo}
+        {#if $ActiveLogStore.lat}
+          <button
+            class="btn btn-danger btn btn-block"
+            on:click={() => {
+              $ActiveLogStore.lat = null;
+              $ActiveLogStore.lng = null;
+            }}>
+            Clear Location
+          </button>
+        {:else}
+          <button
+            class="btn btn-light btn btn-block"
+            on:click={() => {
+              Interact.pickLocation().then(location => {
+                $ActiveLogStore.lat = location.lat;
+                $ActiveLogStore.lng = location.lng;
+              });
+            }}>
+            Set Custom Location
+          </button>
+        {/if}
+
+        {#if !$ActiveLogStore.photo}
+          {#if isIOS}
             <button
+              disabled
+              class="btn btn-light btn btn-block"
+              on:click={() => {
+                methods.iOSCapture();
+              }}>
+              Take a Photo iOS
+            </button>
+          {:else}
+            <button
+              disabled
               class="btn btn-light btn btn-block"
               on:click={() => {
                 methods.capturePhoto();
               }}>
               Take a Photo
             </button>
-          {:else}
-            <button
-              class="btn btn-danger btn btn-block"
-              on:click={() => {
-                methods.removePhoto();
-              }}>
-              Remove Photo
-            </button>
           {/if}
-
-          <!-- <NItem className="">
+        {:else}
           <button
-            class="btn btn-light btn btn-block"
+            disabled
+            class="btn btn-danger btn btn-block"
             on:click={() => {
-              alert('Needs implemented');
+              methods.removePhoto();
             }}>
-            Add a Photo
+            Remove Photo
           </button>
-        </NItem> -->
-        </div>
+        {/if}
+
       </div>
-    {/if}
+    </div>
+    <!-- advacned options list -->
+
   </div>
 </div>

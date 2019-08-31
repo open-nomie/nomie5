@@ -1,6 +1,6 @@
 <script>
   // svelte
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
 
   // Components
   import NToolbar from "../components/toolbar/toolbar.svelte";
@@ -37,7 +37,7 @@
 <style>
   #note-capture {
     position: fixed;
-    bottom: 50px;
+    bottom: 40px;
     left: 0;
     right: 0;
     background-color: var(--color-solid);
