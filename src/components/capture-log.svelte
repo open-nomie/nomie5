@@ -100,6 +100,25 @@
       ActiveLogStore.clear();
       state.show = false;
       textarea.style.height = "40px";
+    },
+    capturePhoto() {
+      Interact.openCamera(storagePath => {
+        console.log("Got it?", storagePath);
+        ActiveLogStore.update(l => {
+          l.photo = storagePath;
+          return l;
+        });
+        // We have a base64 url of an image.. do somethign with it.
+        // const path = `camera/${md5(payload)}`;
+        // console.log(`Write payload ${payload.length} to ${path}`);
+        // Storage.put(path, payload).then(() => {
+        //   console.log("image Saved", path);
+        //   ActiveLogStore.update(l => {
+        //     l.photo = path;
+        //     return l;
+        //   });
+        // });
+      });
     }
   };
 
@@ -355,6 +374,13 @@
               Set Custom Location
             </button>
           {/if}
+          <button
+            class="btn btn-light btn btn-block"
+            on:click={() => {
+              methods.capturePhoto();
+            }}>
+            Take a Photo
+          </button>
 
           <!-- <NItem className="">
           <button
@@ -368,6 +394,5 @@
         </div>
       </div>
     {/if}
-
   </div>
 </div>

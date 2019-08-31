@@ -10,6 +10,7 @@
   import NItem from "../list-item/list-item.svelte";
   import NText from "../text/text.svelte";
   import NNoteTextualizer from "../note-textualizer/note-textualizer.svelte";
+  import NCameraImage from "../camera/image.svelte";
 
   // utils
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
@@ -28,10 +29,28 @@
 
   let displayLog;
 
+  let state = {
+    showPhoto: false
+  };
+
   $: if (log) {
     displayLog = new NomieLog(log);
   }
 </script>
+
+<style lang="scss">
+  :global(.log-photo-wrapper img) {
+  }
+  .log-photo-wrapper {
+    margin-left: -20px;
+    margin-right: -20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-faded-1);
+    margin-bottom: 20px;
+  }
+</style>
 
 {#if displayLog}
   <NItem className="{className} my-3 mx-2 border pb-0 n-item-log">
@@ -56,6 +75,16 @@
           <i class="zmdi zmdi-globe text-primary-bright" />
         </button>
       {/if}
+      <!-- {#if displayLog.photo}
+        <button
+          on:click={event => {
+            state.showPhoto = !state.showPhoto;
+            event.stopPropagation();
+          }}
+          class="btn btn-sm btn-clear pl-2 pr-2 ">
+          <i class="zmdi zmdi-camera text-primary-bright" />
+        </button>
+      {/if} -->
       <div class="filler" />
       <!-- Janky - fix this -->
       <button
@@ -70,6 +99,11 @@
           style="height:30px; line-height:30px;" />
       </button>
     </div>
+    {#if displayLog.photo}
+      <div class="log-photo-wrapper">
+        <NCameraImage path={displayLog.photo} display="div" height={300} />
+      </div>
+    {/if}
     <!-- Process the Note Content with the Textualizer 
     This really isn't special right now -->
     <NNoteTextualizer

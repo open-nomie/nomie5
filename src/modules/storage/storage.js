@@ -43,6 +43,10 @@ export default {
 	async put(path, content) {
 		return await this.getEngine().put(path, content);
 	},
+	async putBinary(path, content) {
+		return await this.getEngine().putBinary(path, content);
+	},
+
 	// Delete a file
 	async delete(path) {
 		return await this.getEngine().delete(path);

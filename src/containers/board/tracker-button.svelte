@@ -16,6 +16,7 @@
   export let refreshing = false;
   export let id = undefined;
   export let className = undefined;
+  export let disabled = undefined;
 
   // Define Dispatch
   const dispatch = createEventDispatcher();
@@ -170,6 +171,7 @@
   on:touchend={methods.mouseup}
   on:mouseout={methods.mouseup}
   on:mouseup={methods.mouseup}
+  {disabled}
   class="n-tracker-button tracker-{tracker.tag}
   {data.pressing ? 'pressing' : ''}
   {className}">

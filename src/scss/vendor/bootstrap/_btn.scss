@@ -170,4 +170,7 @@ button:focus {
 
 .btn-round {
 	border-radius: 20px;
+	&.btn-lg {
+		border-radius: 30px;
+	}
 }

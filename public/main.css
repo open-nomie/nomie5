@@ -7206,6 +7206,8 @@ button:focus {
 
 .btn-round {
   border-radius: 20px; }
+  .btn-round.btn-lg, .btn-group-lg > .btn-round.btn {
+    border-radius: 30px; }
 
 html,
 body {

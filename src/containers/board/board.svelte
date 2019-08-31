@@ -497,6 +497,7 @@
                 on:click={() => {
                   methods.trackerTapped(tracker);
                 }}
+                disabled={data.savingTrackers.indexOf(tracker.tag) > -1}
                 className={`${data.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
                 on:longpress={() => {
                   Interact.vibrate();

@@ -33,6 +33,7 @@
     "concurrently": "^4.1.1",
     "copy": "^0.3.2",
     "cypress": "^3.4.0",
+    "dom-to-image": "^2.6.0",
     "esri-leaflet": "^2.3.0",
     "esri-leaflet-geocoder": "^2.2.14",
     "find-in-files": "^0.5.0",
@@ -67,6 +68,7 @@
   "dependencies": {
     "d3-scale": "^3.0.0",
     "dayjs": "^1.8.14",
+    "jslib-html5-camera-photo": "^3.0.2-beta.0",
     "md5": "^2.2.1",
     "svelte-awesome": "^1.4.1",
     "svelte-loader": "^2.13.4",

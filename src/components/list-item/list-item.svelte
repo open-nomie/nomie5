@@ -137,7 +137,6 @@
     }
 
     .main {
-      overflow: hidden;
       flex-grow: 1;
       flex-shrink: 1;
       h4 {
@@ -151,6 +150,7 @@
         color: var(--color-inverse-3);
         line-height: 140%;
         font-size: 0.9rem;
+
         &.sm,
         &.small {
           font-size: 0.8rem;
