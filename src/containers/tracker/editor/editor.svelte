@@ -31,7 +31,8 @@
       let type = TrackerTypes[id];
       type.id = id;
       return type;
-    })
+    }),
+    editTag: false
   };
 
   $: if (tracker.type === "timer") {
@@ -43,6 +44,12 @@
   } else if (tracker.type === "range" && isNaN(tracker.min)) {
     tracker.min = 1;
     tracker.max = 10;
+  }
+
+  $: if (tracker._dirty === true) {
+    data.editTag = true;
+  } else {
+    data.editTag = false;
   }
 
   const methods = {
@@ -57,9 +64,18 @@
         TrackerStore.saveTracker(tracker).then(() => {});
       }
     },
+    editTag() {
+      Interact.confirm(
+        "Change this Tag?",
+        `If you've tracked with this in the past, use "Settings > Find and Replace" to replace #${tracker.tag} with your new tag.`
+      ).then(res => {
+        if (res === true) {
+          data.editTag = true;
+        }
+      });
+    },
     addTrackerToNote() {
       Interact.selectTrackers().then(trackers => {
-        console.log("Trackers!?");
         if (trackers) {
           tracker.note =
             tracker.note +
@@ -69,7 +85,6 @@
                 return "#" + tracker.tag;
               })
               .join(" ");
-          console.log("New note", tracker.note);
         }
       });
     },
@@ -97,6 +112,9 @@
     }
     .item-divider.compact {
       background-color: var(--color-solid);
+    }
+    textarea.form-control {
+      font-size: 16px;
     }
   }
 </style>
@@ -131,8 +149,9 @@
               bind:value={tracker.emoji} />
           </div>
         </NItem>
-        {#if tracker._dirty}
+        {#if data.editTag}
           <NItem title="Tag">
+
             <div slot="right">
               <input
                 type="text"
@@ -143,6 +162,15 @@
                 maxlength="10"
                 autocapitalize="off"
                 spellcheck="false" />
+            </div>
+          </NItem>
+        {:else}
+          <NItem title="Tag" on:click={methods.editTag}>
+            <div slot="right">
+              <div class="n-row">
+                {tracker.tag}
+                <button class="btn-link btn">Edit</button>
+              </div>
             </div>
           </NItem>
         {/if}

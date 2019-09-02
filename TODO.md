@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Aug 24 2019 10:26 am
+Generated Sat Aug 31 2019 2:42 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -51,7 +51,6 @@ Generated Sat Aug 24 2019 10:26 am
 - **src/containers/board/tracker-button.svelte**
    - TODO: Move this to components/tracker-button
 - **src/containers/board/board.svelte**
-   - TODO: fix user store to be a correct store
    - TODO: See if https:www.npmjs.com/package/@composi/gestures can detect how much they swiped
    - TODO: Look at why this is needed... slop!
    - TODO: Finish this starter pack add trackers, make them installable. -->

@@ -7136,9 +7136,10 @@ button:focus {
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); }
 
 .btn-icon {
-  font-size: 33px;
+  font-size: 26px !important;
   padding-left: 10px;
-  padding-right: 10px; }
+  padding-right: 10px;
+  outline: 0 !important; }
 
 .btn-primary {
   background-color: var(--color-primary-bright); }
@@ -7177,7 +7178,7 @@ button:focus {
     font-size: 3rem; }
 
 .btn-group {
-  background-color: var(--color-solid-1);
+  background-color: var(--color-solid-2);
   padding: 2px;
   border-radius: 12px; }
   .btn-group .btn {
@@ -7205,6 +7206,8 @@ button:focus {
 
 .btn-round {
   border-radius: 20px; }
+  .btn-round.btn-lg, .btn-group-lg > .btn-round.btn {
+    border-radius: 30px; }
 
 html,
 body {
@@ -7235,7 +7238,7 @@ body {
   --color-inverse-3: #999;
   --color-solid: #fff;
   --color-solid-1: #eee;
-  --color-solid-2: #ccc;
+  --color-solid-2: rgb(223, 223, 223);
   --color-solid-3: #666;
   --color-primary: #20699d;
   --color-primary-muted: #4d84a1;
@@ -7433,6 +7436,17 @@ input[type='password'] {
     background-color: var(--color-faded-1);
     color: var(--color-inverse); }
 
+.form-control:focus {
+  box-shadow: none !important; }
+
+input.form-control {
+  background-color: var(--color-faded-1);
+  border-color: var(--color-solid-1);
+  color: var(--color-inverse-2); }
+  input.form-control:focus {
+    background-color: var(--color-faded);
+    color: var(--color-inverse-2); }
+
 textarea.form-control {
   background-color: var(--color-faded-1);
   border-color: var(--color-solid-1);
@@ -7442,6 +7456,10 @@ textarea.form-control {
   padding: 6px;
   font-size: 0.7rem;
   color: var(--color-inverse); }
+  textarea.form-control:focus {
+    background-color: var(--color-faded);
+    border-color: var(--color-solid);
+    color: var(--color-inverse); }
 
 select {
   -webkit-appearance: none;
@@ -7548,10 +7566,10 @@ body.scrolling .mini-map {
   background-color: var(--color-solid);
   overflow: hidden;
   transition: all 0.2s ease-in-out; }
-  @media (max-width: 320px) {
+  @media (max-width: 400px) {
     .mini-map {
       height: 80px;
-      width: 140px; } }
+      width: 80px; } }
   .mini-map .leaflet-top,
   .mini-map .location-name,
   .mini-map .leaflet-bottom {
@@ -7621,6 +7639,13 @@ body.scrolling .mini-map {
   .n-list .n-pop {
     border-radius: 0 !important; } }
 
+.n-item .left .btn-icon,
+.n-item .right .btn-icon {
+  max-width: 26px !important;
+  width: 26px;
+  padding: 0 !important;
+  text-align: center; }
+
 .n-item .right .zmdi {
   font-size: 26px; }
 
@@ -7628,6 +7653,10 @@ body.scrolling .mini-map {
 .n-item .right a,
 .n-item .right span {
   font-size: 0.9rem; }
+
+.n-item main small {
+  font-size: 0.8rem !important;
+  line-height: 0.9rem !important; }
 
 .n-item-divider {
   min-height: 60px !important;
@@ -7711,13 +7740,12 @@ nav {
 
 .main-content {
   z-index: 0;
-  margin-bottom: 50px;
   flex-grow: 1;
   flex-shrink: 1;
-  min-height: calc(100vh - 50px);
+  min-height: calc(100vh - 50px) !important;
   display: flex;
   width: 100%;
-  background-color: var(--color-bg); }
+  margin-bottom: 50px; }
 
 .clickable,
 [clickable] {

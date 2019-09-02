@@ -1,6 +1,7 @@
 // Modules
 import NomieLog from '../modules/nomie-log/nomie-log';
 import Storage from '../modules/storage/storage';
+import Hooky from '../modules/hooks/hooks';
 
 // Utils
 import Logger from '../utils/log/log';
@@ -17,6 +18,8 @@ import locate from '../modules/locate/locate';
 import { Interact } from './interact';
 
 const console = new Logger('🧺 store/ledger.js', true);
+
+const hooks = new Hooky();
 
 const ledgerInit = () => {
 	let base = {
@@ -41,7 +44,11 @@ const ledgerInit = () => {
 				return pass;
 			});
 		},
+		hook(type, func) {
+			hooks.hook(type, func);
+		},
 		async getBook(date) {
+			hooks.run('onBeforeGetBook', date);
 			return Storage.get(`${config.book_root}/${date}`).then(results => {
 				return (results || []).map(log => {
 					return new NomieLog(log);
@@ -120,13 +127,11 @@ const ledgerInit = () => {
 				if (base.books[todayKey]) {
 					// Aggressively sync each time we get today - regardless if it exists.
 					if (UserStore.data().meta.aggressiveSync) {
-						console.log('Aggressively getting new logs');
 						methods.getBook(todayKey).then(book => {
 							base.books[todayKey] = book;
 							setToday();
 						});
 					} else {
-						console.log('Passively getting new logs');
 						setToday();
 					}
 				} else {
@@ -161,6 +166,7 @@ const ledgerInit = () => {
 		 * This is a heavy function with the get and put of the book, so only use it when needed
 		 */
 		async updateLog(log) {
+			hooks.run('onBeforeUpdate', log);
 			// Set saving
 			update(bs => {
 				bs.saving = true;
@@ -209,6 +215,10 @@ const ledgerInit = () => {
 			log.end = log.end || new Date().getTime();
 			log.start = log.start || new Date().getTime();
 
+			// Make sure it's a Nomie Log
+			log = log instanceof NomieLog ? log : new NomieLog(log);
+			hooks.run('onBeforeSave', log);
+			// Return Promise
 			return new Promise(async (resolve, reject) => {
 				// Update store to show it's saving
 				update(s => {
@@ -239,6 +249,7 @@ const ledgerInit = () => {
 								return s;
 							});
 							Interact.toast(`Saved ${log.note}`);
+							hooks.run('onLogSaved', log);
 							methods.getToday();
 							res({ log, book: date });
 						});

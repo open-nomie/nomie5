@@ -22,6 +22,8 @@ export default class Record {
 		this.modified = starter.modified || false;
 		this.source = starter.source || null;
 
+		this.photo = starter.photo || null;
+
 		if (!starter._id) {
 			this._dirty = true;
 		} else {

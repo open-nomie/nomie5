@@ -23,6 +23,8 @@ import { Interact } from './interact';
 const console = new Logger('🚦 Nomie API');
 const NAPI = new NomieAPICli({ domain: 'nomieapi.com' });
 
+// Nomie API Store
+
 const nomieApiInit = () => {
 	const listeners = [];
 
@@ -35,8 +37,8 @@ const nomieApiInit = () => {
 	});
 
 	const methods = {
+		// Load the Napi - and fire things when ready
 		load() {
-			console.log('Load()');
 			NAPI.onReady(() => {
 				update(base => {
 					if (NAPI.isRegistered()) {
@@ -66,10 +68,7 @@ const nomieApiInit = () => {
 				if (logs.length) {
 					Interact.toast(`${logs.length} Nomie API logs to import`);
 					methods.import(logs).then(res => {
-						console.log('Done Importing', res);
-						NAPI.clear().then(() => {
-							console.log('Cleared Last');
-						});
+						NAPI.clear().then(() => {});
 					});
 				}
 			});

@@ -83,9 +83,10 @@ button:focus {
 }
 
 .btn-icon {
-	font-size: 33px;
+	font-size: 26px !important;
 	padding-left: 10px;
 	padding-right: 10px;
+	outline: 0 !important;
 }
 
 .btn-primary {
@@ -135,7 +136,7 @@ button:focus {
 }
 
 .btn-group {
-	background-color: var(--color-solid-1);
+	background-color: var(--color-solid-2);
 	padding: 2px;
 	border-radius: 12px;
 	.btn {
@@ -169,4 +170,7 @@ button:focus {
 
 .btn-round {
 	border-radius: 20px;
+	&.btn-lg {
+		border-radius: 30px;
+	}
 }

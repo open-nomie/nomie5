@@ -63,39 +63,31 @@
     showStartPacks: false,
     checks: 0,
     loading: true,
-    gotToBeLoaded: false
+    savingTrackers: []
+    // gotToBeLoaded: false,
   };
 
-  $: if (trackers) {
-    // not sure why these are responding
-  }
+  // Wait for the User to be ready
+  UserStore.onReady(() => {
+    user = $UserStore;
+    // Hook a before save - to highlight saving trackers
+    LedgerStore.hook("onBeforeSave", log => {
+      data.savingTrackers = log.trackersArray().map(t => t.tag);
+    });
+    // Hook on Save to clear saving Trackers
+    LedgerStore.hook("onLogSaved", log => {
+      data.savingTrackers = [];
+    });
+  });
+
+  // Set Local Variables
+  let activeTrackers = [];
+  let currentActive = undefined;
 
   $: activeTrackers = BoardStore.getActiveTrackerTags();
   $: activeBoard = $BoardStore.activeBoard;
 
-  // Subscribe to the Active Board
-
-  // setTimeout(() => {
-  //   // TODO: fix user store to be a correct store
-  //   UserStore.subscribe(u => {
-  //     if (u) {
-  //       user = u;
-  //     }
-  //   });
-  // }, 220);
-  UserStore.onReady(() => {
-    user = $UserStore;
-  });
-
-  //
-  // Watch for board Changes;
-  // BoardStore.subscribe(boardsData => {
-  //   data.boards = boardsData.boards;
-  // });
-
-  let activeTrackers = [];
-  let currentActive = undefined;
-
+  // If Today length - then lets set it ... but it should be a watch
   $: if (Object.keys($LedgerStore.today).length) {
     today = $LedgerStore.today;
     methods.refresh();
@@ -107,7 +99,9 @@
     });
     trackers = $TrackerStore;
     data.loading = false;
-    LedgerStore.getToday();
+    LedgerStore.getToday().then(() => {
+      today = $LedgerStore.today;
+    });
     methods.refresh();
   }
 
@@ -188,18 +182,19 @@
      * TODO: Look at why this is needed... slop!
      */
     refresh() {
+      // NO LONGER NEEDED!
       // Hacky way to get some reactive things to work.
       // Currently when starting timers it's not reacting.
       // this should force it - but will cause a hitch.
       // and should be fixed at some point.
-      refreshing = true;
-      let sTop = document.documentElement.scrollTop;
-      setTimeout(() => {
-        refreshing = false;
-        setTimeout(() => {
-          document.documentElement.scrollTop = sTop;
-        });
-      });
+      // refreshing = true;
+      // let sTop = document.documentElement.scrollTop;
+      // setTimeout(() => {
+      //   refreshing = false;
+      //   setTimeout(() => {
+      //     document.documentElement.scrollTop = sTop;
+      //   });
+      // });
     },
 
     /**
@@ -236,6 +231,7 @@
           LedgerStore.saveLog($ActiveLogStore).then(() => {
             Interact.toast(`Saved ${note}`);
             ActiveLogStore.clear();
+            data.savingTrackers = [];
           });
         }
         // If it's a note (combined trackers)
@@ -480,35 +476,23 @@
       <main class="n-board">
 
         <div class="trackers">
-          {#if !refreshing}
-            {#each activeTrackers as tracker (tracker.tag)}
-              <NTrackerButton
-                {tracker}
-                value={methods.getTrackerValue(tracker)}
-                on:click={() => {
-                  methods.trackerTapped(tracker);
-                }}
-                on:longpress={() => {
-                  Interact.vibrate();
-                  methods.showTrackerOptions(tracker);
-                }} />
-            {/each}
-          {/if}
+
+          {#each activeTrackers as tracker (tracker.tag)}
+            <NTrackerButton
+              {tracker}
+              value={methods.getTrackerValue(tracker)}
+              on:click={() => {
+                methods.trackerTapped(tracker);
+              }}
+              disabled={data.savingTrackers.indexOf(tracker.tag) > -1}
+              className={`${data.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
+              on:longpress={() => {
+                Interact.vibrate();
+                methods.showTrackerOptions(tracker);
+              }} />
+          {/each}
+
         </div>
-
-        {#if activeTrackers.length === 0 && data.gotToBeLoaded}
-          <div class="empty-notice flex-column" style="min-height:200px;">
-
-            {#if !activeBoard}
-              <button
-                class="btn btn btn-light mt-4"
-                on:click={methods.trackerEditor}>
-                Add Tracker
-              </button>
-            {/if}
-
-          </div>
-        {/if}
 
         {#if Object.keys($TrackerStore || {}).length}
           <div class="board-actions">

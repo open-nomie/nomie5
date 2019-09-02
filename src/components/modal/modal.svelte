@@ -35,12 +35,14 @@
     min-height: 200px;
     max-height: 95vh;
     max-width: 400px;
+    margin: 10px;
     border-radius: 0.7rem;
     display: flex;
     flex-direction: column;
     justify-content: stretch;
     align-items: stretch;
     border: solid 1px var(--color-solid);
+    box-shadow: 0px 16px 24px -12px rgba(0, 0, 0, 0.6);
     &.full-screen-modal {
       height: 96vh;
       width: 96vw;

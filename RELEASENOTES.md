@@ -1,3 +1,24 @@
+# v4.2.1 - Sat Aug 31 2019
+
+## Enhancements
+
+-   Settings: Added Find and Replace - search for content in your notes and replace it.
+-   Nomie UOM: Added CNY to currency
+-   Overall: Moved vendor resources out of rollup, and into build script (to help hot reload times)
+-   Tracker Page: Added Visuals to show which trackers are "being saved"
+-   Tracker Editor: Made tag editable - after confirming the dangers
+-   Dark theme enhancements
+
+## Bugs
+
+-   Lots of small bug fixes
+-   Made Nomie respect Safe Areas - like the iPhone X notch
+-   Double tapping records multiple times
+
+## Partial
+
+-   Add a Photo - it's not working for iOS or Safari - so it's disabled for now.
+
 # v4.1.16 - Sunday Aug 11 2019
 
 ## Bugs

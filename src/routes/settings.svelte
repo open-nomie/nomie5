@@ -11,6 +11,7 @@
   // Containers
   import StorageManager from "../containers/storage/storage.svelte";
   import ImporterModal from "../containers/importer/importer.svelte";
+  import MassEditor from "../containers/mass-editor/mass-editor.svelte";
 
   //Modules
   import Exporter from "../modules/export/export";
@@ -33,7 +34,8 @@
 
   let data = {
     signedIn: false,
-    files: []
+    files: [],
+    showMassEditor: false
   };
 
   $: alwaysLocate = $UserStore.alwaysLocate;
@@ -50,6 +52,10 @@
     },
     sign_in() {
       UserStore.redirectToSignIn();
+    },
+    closeMassEditor() {
+      console.log("closing");
+      data.showMassEditor = false;
     },
     bookAge(date) {
       return dayjs(`${date}-01`).fromNow();
@@ -174,6 +180,10 @@
 
       <div class="n-pop my-3">
         <NItem title="Use Location">
+          <span
+            slot="left"
+            class="btn-icon zmdi zmdi-my-location"
+            style="color:#F03A47" />
           <div slot="right">
             <NToggle
               bind:value={$UserStore.alwaysLocate}
@@ -183,6 +193,10 @@
           </div>
         </NItem>
         <NItem title="Dark Mode">
+          <span
+            slot="left"
+            class="btn-icon zmdi zmdi-brightness-2"
+            style="color:#666" />
           <div slot="right">
             <NToggle
               bind:value={$UserStore.darkMode}
@@ -192,6 +206,10 @@
           </div>
         </NItem>
         <NItem title="Require Pin">
+          <span
+            slot="left"
+            class="btn-icon zmdi zmdi-apps"
+            style="color:#71A2B6" />
           <div slot="right">
             <NToggle
               bind:value={$UserStore.meta.lock}
@@ -202,15 +220,23 @@
 
       <div class="n-pop my-3">
         <NItem title="Data" borderBottom className="n-item-divider" />
-        <NItem title="Import Nomie Backup">
-          <button
-            class="btn btn-clear text-primary"
-            slot="right"
-            on:click={() => {
-              showImporter = true;
-            }}>
-            Import
-          </button>
+        <NItem title="Nomie API" on:click={() => navigate('/api')}>
+          <span
+            slot="left"
+            class="btn-icon zmdi zmdi-code-setting"
+            style="color:#600047" />
+          <span slot="right" class="icon zmdi zmdi-chevron-right" />
+        </NItem>
+        <NItem
+          title="Import from Backup"
+          on:click={() => {
+            showImporter = true;
+          }}>
+          <span
+            slot="left"
+            class="btn-icon zmdi zmdi-cloud-download"
+            style="color:#00487C" />
+          <span slot="right" class="icon zmdi zmdi-chevron-right" />
           <input
             slot="right"
             class="d-none"
@@ -218,17 +244,29 @@
             bind:this={fileInput}
             on:change={methods.onImportFile} />
         </NItem>
-        <NItem title="Export Data">
-          <button
-            class="btn-clear btn text-primary"
-            on:click={methods.export}
-            slot="right">
-            Export
-          </button>
-        </NItem>
-        <NItem title="Nomie API" on:click={() => navigate('/api')}>
+        <NItem title="Generate Backup" on:click={methods.export}>
+          <span
+            slot="left"
+            class="btn-icon zmdi zmdi-cloud-upload"
+            style="color:#9E0031" />
           <span slot="right" class="icon zmdi zmdi-chevron-right" />
         </NItem>
+        <NItem
+          title="Find and Replace..."
+          on:click={() => {
+            data.showMassEditor = true;
+          }}>
+          <span
+            slot="left"
+            class="btn-icon zmdi zmdi-search-replace"
+            style="color:#0CCA4A" />
+          <span slot="right" class="icon zmdi zmdi-chevron-right" />
+        </NItem>
+
+        <MassEditor
+          on:close={methods.closeMassEditor}
+          show={data.showMassEditor} />
+
       </div>
       <div class="n-pop my-3">
         <!-- Stoage List - this is stupid I couldn't find it-->
@@ -236,29 +274,38 @@
         <!-- End Storage List-->
         <NItem>
           <div class="title truncate">
-            Storage:
             <strong>
               {$UserStore.storageType === 'local' ? 'Local' : 'Cloud'}
             </strong>
           </div>
+          <span
+            slot="left"
+            class="btn-icon zmdi zmdi-storage"
+            style="color:#F18F01" />
+
           <div slot="right">
             {#if $UserStore.storageType === 'local'}
               <button
                 class="btn btn-clear text-primary"
                 on:click={methods.switchToCloud}>
-                Switch to Cloud
+                Use Cloud
               </button>
             {:else}
               <button
                 class="btn btn-clear text-primary"
                 on:click={methods.switchToLocal}>
-                Switch to Local
+                Use Local
               </button>
             {/if}
           </div>
         </NItem>
 
         <NItem title="First Book Created">
+          <span
+            slot="left"
+            class="btn-icon zmdi zmdi-book"
+            style="color:#D741A7" />
+
           <div slot="right" class="pr-2">
             {#await LedgerStore.firstBook()}
               <span>Loading...</span>
@@ -270,16 +317,20 @@
           </div>
         </NItem>
         {#if $UserStore.storageType === 'blockstack'}
-          <NItem
-            title="Aggressive Sync"
-            description="Using Nomie on multiple devices? Enable this to sync
-            remote data more often.">
+          <NItem title="Aggressive Sync">
+            <span
+              slot="left"
+              class="btn-icon zmdi {`${$UserStore.meta.aggressiveSync ? 'zmdi-refresh-sync' : 'zmdi-refresh-sync-off'}`}"
+              style="color:#A2AEBB" />
             <div slot="right">
               <NToggle
                 bind:value={$UserStore.meta.aggressiveSync}
                 on:change={methods.settingChange} />
             </div>
           </NItem>
+          <NItem
+            description="Using Nomie on multiple devices? Enable Aggressive Sync
+            to sync more frequently" />
         {/if}
       </div>
 
