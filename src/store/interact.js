@@ -85,6 +85,10 @@ const interactInit = () => {
 				tracker: null,
 				onInteract: null,
 			},
+			camera: {
+				show: false,
+				onInteract: null,
+			},
 		};
 	};
 
@@ -152,6 +156,23 @@ const interactInit = () => {
 				return s;
 			});
 		},
+
+		openCamera(onSave) {
+			update(s => {
+				s.camera.show = true;
+				s.camera.onInteract = onSave;
+				console.log('open camera', s.camera);
+				return s;
+			});
+		},
+		closeCamera() {
+			update(s => {
+				s.camera.show = false;
+				s.camera.onInteract = null;
+				return s;
+			});
+		},
+
 		/**
 		 * Select a Single Tracker
 		 */

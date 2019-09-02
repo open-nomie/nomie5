@@ -16,15 +16,14 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 50px;
+    height: calc(50px + env(safe-area-inset-bottom));
+    padding-bottom: calc(env(safe-area-inset-bottom));
     background-color: var(--color-tabs);
     color: rgba(255, 255, 255, 0.5);
     display: flex;
     justify-content: space-between;
     align-items: stretch;
     z-index: 200;
-    padding: 0 16px;
-
     // Tab Links
 
     // Tab Icons

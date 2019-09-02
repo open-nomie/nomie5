@@ -27,6 +27,6 @@ export default {
 		});
 	},
 	delete(path) {
-		return localforage.deleteItem(path);
+		return localforage.removeItem(path);
 	},
 };

@@ -9,6 +9,7 @@ body {
 	padding: 0;
 	font-size: 18px;
 	background-color: var(--color-solid);
+	// padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 body.no-scroll {
@@ -29,7 +30,7 @@ body {
 	--color-inverse-3: #999;
 	--color-solid: #fff;
 	--color-solid-1: #eee;
-	--color-solid-2: #ccc;
+	--color-solid-2: rgb(223, 223, 223);
 	--color-solid-3: #666;
 	--color-primary: #20699d;
 	--color-primary-muted: #4d84a1;

@@ -1,6 +1,6 @@
 <script>
   // svelte
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
 
   // Components
   import NToolbar from "../components/toolbar/toolbar.svelte";
@@ -37,7 +37,8 @@
 <style>
   #note-capture {
     position: fixed;
-    bottom: 50px;
+    bottom: 40px;
+    bottom: calc(40px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
     background-color: var(--color-solid);
@@ -55,11 +56,3 @@
 <div id="note-capture">
   <CaptureLog />
 </div>
-<!-- {#if data.hasTrackers}
-{:else}
-  <NPage title="No Trackers">
-    <div slot="header" class="n-row">
-      <h1>Let's get Started!</h1>
-    </div>
-  </NPage>
-{/if} -->

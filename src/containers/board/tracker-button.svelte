@@ -16,6 +16,7 @@
   export let refreshing = false;
   export let id = undefined;
   export let className = undefined;
+  export let disabled = undefined;
 
   // Define Dispatch
   const dispatch = createEventDispatcher();
@@ -64,6 +65,11 @@
     height: 5.9rem;
     outline: none;
     transition: all 0.2s ease-in-out;
+
+    &.saving {
+      transition: all 0.2s ease-in-out;
+      border: solid 2px var(--color-primary-bright);
+    }
 
     @include media-breakpoint-up(md) {
       width: 7.8rem;
@@ -165,6 +171,7 @@
   on:touchend={methods.mouseup}
   on:mouseout={methods.mouseup}
   on:mouseup={methods.mouseup}
+  {disabled}
   class="n-tracker-button tracker-{tracker.tag}
   {data.pressing ? 'pressing' : ''}
   {className}">

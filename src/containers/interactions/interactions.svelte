@@ -1,10 +1,14 @@
 <script>
   import { onMount } from "svelte";
+  // vendors
+  import md5 from "md5";
+
   //modules
   import Tracker from "../../modules/tracker/tracker";
   import NomieLog from "../../modules/nomie-log/nomie-log";
   // utils
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
+  import Storage from "../../modules/storage/storage";
   // Components
   import Toast from "../../components/toast/toast.svelte";
   import NModal from "../../components/modal/modal.svelte";
@@ -13,6 +17,7 @@
   import NPopMenu from "../../components/pop-menu/pop-menu.svelte";
   import PinLock from "../pin-lock/pin-lock.svelte";
   import NTextualize from "../../components/note-textualizer/note-textualizer.svelte";
+  import NCamera from "../../components/camera/camera.svelte";
   // Containers
   import NMap from "../map/map.svelte";
   import TrackerSelector from "../tracker/selector/selector.svelte";
@@ -49,6 +54,16 @@
       console.log("Tracker", $TrackerStore[tag]);
 
       return $TrackerStore[tag] || new Tracker({ tag: tag });
+    },
+    onCameraPhoto(photo) {
+      const path = `camera/${md5(photo)}`;
+      // console.log(`Write payload ${payload.length} to ${path}`);
+      Storage.put(path, photo).then(() => {
+        console.log("image Saved", path, $Interact.camera);
+        if ($Interact.camera.onInteract) {
+          $Interact.camera.onInteract(path);
+        }
+      });
     },
     editLogDataOnSave(event) {
       let tracker = event.detail.tracker;
@@ -92,6 +107,13 @@
     $Interact.alert.onInteract(answer);
     Interact.dismiss();
   }} />
+
+<NCamera
+  show={$Interact.camera.show}
+  on:photo={event => {
+    methods.onCameraPhoto(event.detail);
+  }}
+  on:close={Interact.closeCamera} />
 
 <NAlertBox
   show={$Interact.prompt.show}

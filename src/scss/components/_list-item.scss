@@ -1,4 +1,13 @@
 .n-item {
+	.left,
+	.right {
+		.btn-icon {
+			max-width: 26px !important;
+			width: 26px;
+			padding: 0 !important;
+			text-align: center;
+		}
+	}
 	.right {
 		.zmdi {
 			font-size: 26px;
@@ -7,6 +16,12 @@
 		a,
 		span {
 			font-size: 0.9rem;
+		}
+	}
+	main {
+		small {
+			font-size: 0.8rem !important;
+			line-height: 0.9rem !important;
 		}
 	}
 }
