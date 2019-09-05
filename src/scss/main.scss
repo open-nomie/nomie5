@@ -82,16 +82,16 @@ $night: rgb(11, 0, 213);
 
 .glow {
 	&.glow-morning {
-		box-shadow: 0px 3px 30px -10px rgba($morning, 0.5) !important;
+		box-shadow: 0px 3px 20px -6px rgba($morning, 0.3) !important;
 	}
 	&.glow-afternoon {
-		box-shadow: 0px 3px 30px -10px rgba($afternoon, 0.5) !important;
+		box-shadow: 0px 3px 20px -6px rgba($afternoon, 0.3) !important;
 	}
 	&.glow-evening {
-		box-shadow: 0px 3px 30px -10px rgba($evening, 0.5) !important;
+		box-shadow: 0px 3px 20px -6px rgba($evening, 0.2) !important;
 	}
 	&.glow-night {
-		box-shadow: 0px 3px 30px -10px rgba($night, 0.5) !important;
+		box-shadow: 0px 3px 20px -6px rgba($night, 0.2) !important;
 	}
 }
 

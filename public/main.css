@@ -7561,8 +7561,7 @@ body.scrolling .mini-map {
   height: 100px;
   width: 180px;
   border-radius: 20px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-  border: solid 1px var(--color-faded-2);
+  box-shadow: 0px 4px 9px -2px rgba(0, 0, 0, 0.4);
   background-color: var(--color-solid);
   overflow: hidden;
   transition: all 0.2s ease-in-out; }
@@ -7722,16 +7721,16 @@ body.scrolling .mini-map {
     opacity: 0.8; }
 
 .glow.glow-morning {
-  box-shadow: 0px 3px 30px -10px rgba(255, 204, 0, 0.5) !important; }
+  box-shadow: 0px 3px 20px -6px rgba(255, 204, 0, 0.3) !important; }
 
 .glow.glow-afternoon {
-  box-shadow: 0px 3px 30px -10px rgba(47, 251, 254, 0.5) !important; }
+  box-shadow: 0px 3px 20px -6px rgba(47, 251, 254, 0.3) !important; }
 
 .glow.glow-evening {
-  box-shadow: 0px 3px 30px -10px rgba(237, 0, 182, 0.5) !important; }
+  box-shadow: 0px 3px 20px -6px rgba(237, 0, 182, 0.2) !important; }
 
 .glow.glow-night {
-  box-shadow: 0px 3px 30px -10px rgba(11, 0, 213, 0.5) !important; }
+  box-shadow: 0px 3px 20px -6px rgba(11, 0, 213, 0.2) !important; }
 
 .card {
   border-radius: 1rem; }
