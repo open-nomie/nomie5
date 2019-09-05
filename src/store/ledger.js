@@ -165,42 +165,82 @@ const ledgerInit = () => {
 		 * This method will accept a single log, and save it to the correct book.
 		 * This is a heavy function with the get and put of the book, so only use it when needed
 		 */
-		async updateLog(log) {
+		getIndex(array, func) {
+			let index = undefined;
+			array.forEach((item, i) => {
+				if (func(item)) {
+					index = i;
+				}
+			});
+			return index;
+		},
+		/**
+		 * UpdateLog
+		 *
+		 * Updates a log - you must provide both the updated log, and the previous date it was saved on.
+		 *
+		 * @param {NomieLog} log
+		 * @param {Date} previousEndDate
+		 */
+		async updateLog(log, previousEndDate) {
+			// Fire hooks
 			hooks.run('onBeforeUpdate', log);
 			// Set saving
 			update(bs => {
 				bs.saving = true;
 				return bs;
 			});
+
 			// Add modified flag - in case we want to use it later
 			log.modified = new Date().getTime();
+
 			// Get Date for Book ID
 			let bookDate = dayjs(new Date(log.end)).format(config.book_time_format);
-			// Get book
+			let previousBookDate = dayjs(new Date(previousEndDate)).format(config.book_time_format);
+			let isSameBook = bookDate === previousBookDate;
+
+			// Get books
 			let book = await methods.getBook(bookDate);
+			let previousBook; // incase we're moving a log from one book to another
+
 			// Set empty foundIndex
-			let foundIndex;
-			// Loop over books
-			book.forEach((row, index) => {
-				// If row id is the same as log id
-				if (row._id == log._id) {
-					foundIndex = index;
-				}
+			let foundIndex = methods.getIndex(book, row => {
+				return row._id == log._id;
 			});
+
 			// Did we find anything?
-			if (foundIndex) {
+			if (typeof foundIndex === 'number') {
+				// Update the row
 				book[foundIndex] = log;
+			} else {
+				// We didn't find it in the first book - so it must be a different book
+				book.push(log);
+			}
+			// Remove it from the prvious if we're in a different book
+			if (!isSameBook) {
+				previousBook = await methods.getBook(previousBookDate);
+				previousBook = previousBook.filter(row => {
+					return row._id !== log._id;
+				});
 			}
 
 			// Update base again
 			update(bs => {
 				bs.saving = false;
 				bs.books[bookDate] = book;
+				if (!isSameBook) {
+					bs.books[previousBookDate] = previousBook;
+				}
 				return bs;
 			});
-			return methods.putBook(bookDate, book).then(res => {
-				Interact.toast('Log Updated');
-				return res;
+
+			let promises = [methods.putBook(bookDate, book)];
+			if (!isSameBook) {
+				promises.push(methods.putBook(previousBookDate, previousBook));
+			}
+
+			return Promise.all(promises).then(res => {
+				return res[0];
 			});
 		},
 		/**

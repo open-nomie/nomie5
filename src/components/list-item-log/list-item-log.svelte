@@ -14,6 +14,7 @@
 
   // utils
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
+  import time from "../../utils/time/time";
 
   // vendors
   import dayjs from "dayjs";
@@ -50,10 +51,26 @@
     background-color: var(--color-faded-1);
     margin-bottom: 20px;
   }
+
+  .glow {
+    &.glow-morning {
+      box-shadow: 0px 5px 20px -10px rgba(255, 204, 0, 0.5);
+    }
+    &.glow-afternoon {
+      box-shadow: 0px 5px 20px -10px rgba(47, 130, 254, 0.5);
+    }
+    &.glow-evening {
+      box-shadow: 0px 5px 20px -10px rgba(237, 103, 0, 0.5);
+    }
+    &.glow-night {
+      box-shadow: 0px 5px 20px -10px rgba(59, 0, 237, 0.5);
+    }
+  }
 </style>
 
 {#if displayLog}
-  <NItem className="{className} my-3 mx-2 border pb-0 n-item-log">
+  <NItem
+    className="{className} my-3 mx-2 border pb-0 n-item-log glow glow-{time.dateToDesc(displayLog.end)}">
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row my-2 pr-3 time-row">
       <NText size="md" bold>

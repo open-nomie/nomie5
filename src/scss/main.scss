@@ -75,6 +75,26 @@
 	}
 }
 
+$morning: rgb(255, 204, 0);
+$afternoon: rgb(47, 251, 254);
+$evening: rgb(237, 0, 182);
+$night: rgb(11, 0, 213);
+
+.glow {
+	&.glow-morning {
+		box-shadow: 0px 3px 30px -10px rgba($morning, 0.5) !important;
+	}
+	&.glow-afternoon {
+		box-shadow: 0px 3px 30px -10px rgba($afternoon, 0.5) !important;
+	}
+	&.glow-evening {
+		box-shadow: 0px 3px 30px -10px rgba($evening, 0.5) !important;
+	}
+	&.glow-night {
+		box-shadow: 0px 3px 30px -10px rgba($night, 0.5) !important;
+	}
+}
+
 .card {
 	border-radius: 1rem;
 }

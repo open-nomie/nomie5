@@ -25,6 +25,19 @@ export default {
 		}
 		return `00:${minutes}:${seconds}`;
 	},
+	dateToDesc(date) {
+		let d = dayjs(date);
+		let h = d.format('H');
+		if (h >= 6 && h < 12) {
+			return 'morning';
+		} else if (h >= 12 && h < 18) {
+			return 'afternoon';
+		} else if (h >= 18 && h < 20) {
+			return 'evening';
+		} else {
+			return 'night';
+		}
+	},
 	datetimeLocal(dateString) {
 		let dateSplit = dateString.split('T');
 		let dateStr = dateSplit[0];

@@ -213,20 +213,24 @@
       {#if state.started && !state.captured}
         <button class="btn-capture" on:click={methods.capture} />
       {:else if state.captured}
-        <button class="btn btn-round btn-lg w-50" on:click={methods.clear}>
-          Retake
-        </button>
         <button
           class="btn btn-round btn-lg btn-primary w-50"
           on:click={methods.save}>
           Save
         </button>
       {:else}
-        <button class="btn btn-primary" on:click={methods.start}>Start</button>
+        <button class="btn btn-clear" on:click={methods.start}>Start</button>
       {/if}
       <div class="filler" />
-      <button
-        class="btn btn-clear btn-icon {state.captured ? '' : 'zmdi zmdi-camera-party-mode'}" />
+
+      {#if state.captured}
+        <button
+          class="btn btn-clear btn-icon zmdi zmdi-long-arrow-return"
+          on:click={methods.clear} />
+      {:else}
+        <button
+          class="btn btn-clear btn-icon {state.captured ? '' : 'zmdi zmdi-camera-party-mode'}" />
+      {/if}
     </div>
   </div>
 </div>

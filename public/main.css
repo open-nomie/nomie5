@@ -7721,6 +7721,18 @@ body.scrolling .mini-map {
     line-height: 0.75rem;
     opacity: 0.8; }
 
+.glow.glow-morning {
+  box-shadow: 0px 3px 30px -10px rgba(255, 204, 0, 0.5) !important; }
+
+.glow.glow-afternoon {
+  box-shadow: 0px 3px 30px -10px rgba(47, 251, 254, 0.5) !important; }
+
+.glow.glow-evening {
+  box-shadow: 0px 3px 30px -10px rgba(237, 0, 182, 0.5) !important; }
+
+.glow.glow-night {
+  box-shadow: 0px 3px 30px -10px rgba(11, 0, 213, 0.5) !important; }
+
 .card {
   border-radius: 1rem; }
 

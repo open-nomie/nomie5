@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Aug 31 2019 2:42 pm
+Generated Thu Sep 5 2019 7:05 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -45,6 +45,7 @@ Generated Sat Aug 31 2019 2:42 pm
 - **src/containers/map/map.svelte**
    - TODO: Look at making this curved dotted lines - and not just straight ones
 - **src/containers/interactions/interactions.svelte**
+   - TODO: move this to new log editor
    - console.log('TODO: Make editing data work');
 - **src/containers/importer/importer.svelte**
    - Modal will be hidden in settings TODO: make this not hacky -->
@@ -58,3 +59,4 @@ Generated Sat Aug 31 2019 2:42 pm
    - TODO: Add a media/photo type of thing that can be added to a log..
    - TODO: Mobile is getting GMT Time, desktop is not
    - await LedgerStore.saveLog($ActiveLogStore);  TODO: Make ledger task instead
+   - TODO: Make iOS pull image data from the photoHolder div - right not its pulling in the entire image not edited...

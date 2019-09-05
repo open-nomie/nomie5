@@ -1,6 +1,6 @@
 {
   "name": "open-nomie",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "homepage": "https://nomie.app",
   "bugs": {
     "url": "https://github.com/open-nomie/nomie/issues",
@@ -16,8 +16,10 @@
     "autobuild": "rollup -c -w",
     "scss": "node-sass ./src/scss/main.scss --output=./public --watch=./src/scss/**/*.scss --include-path",
     "dev": "node build-tools/move-resources.js && concurrently \"run-p start:dev autobuild\" \"npm run scss\"",
+    "dev:ip": "node build-tools/move-resources.js && concurrently \"run-p start:ip autobuild\" \"npm run scss\"",
     "start": "sirv public --single",
     "start:dev": "sirv public --cors --single --dev ",
+    "start:ip": "sirv public --cors --single --dev --host 0.0.0.0",
     "patch_version": "node build-tools/patch-version.js",
     "test": "jest src/**/*.spec.js",
     "todo": "node build-tools/get-todo.js",
@@ -34,6 +36,7 @@
     "copy": "^0.3.2",
     "cypress": "^3.4.0",
     "dom-to-image": "^2.6.0",
+    "dom-to-image-chrome-fix": "^2.6.0",
     "esri-leaflet": "^2.3.0",
     "esri-leaflet-geocoder": "^2.2.14",
     "find-in-files": "^0.5.0",

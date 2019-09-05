@@ -494,19 +494,17 @@
 
         </div>
 
-        {#if Object.keys($TrackerStore || {}).length}
-          <div class="board-actions">
-            <button class="btn btn btn-light" on:click={methods.addTapped}>
-              Add Tracker
-            </button>
+        <div class="board-actions">
+          <button class="btn btn btn-light" on:click={methods.addTapped}>
+            Add Tracker
+          </button>
 
-            {#if activeBoard}
-              <button on:click={methods.editBoard} class="btn btn btn-light">
-                Edit {(activeBoard || {}).label || null} Board
-              </button>
-            {/if}
-          </div>
-        {/if}
+          {#if activeBoard}
+            <button on:click={methods.editBoard} class="btn btn btn-light">
+              Edit {(activeBoard || {}).label || null} Board
+            </button>
+          {/if}
+        </div>
 
       </main>
     </div>
