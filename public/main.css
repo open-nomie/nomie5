@@ -7500,7 +7500,7 @@ select {
   padding: 0px 16px;
   height: 36px;
   border: solid 1px transparent;
-  background-color: var(--color-faded-1);
+  background-color: var(--color-faded);
   color: var(--color-inverse-2);
   flex-grow: 1;
   outline: none;
@@ -7568,7 +7568,7 @@ body.scrolling .mini-map {
   bottom: 70px;
   right: 26px;
   height: 100px;
-  width: 180px;
+  width: 100px;
   border-radius: 20px;
   box-shadow: 0px 4px 9px -2px rgba(0, 0, 0, 0.4);
   background-color: var(--color-solid);
@@ -7730,16 +7730,16 @@ body.scrolling .mini-map {
     opacity: 0.8; }
 
 .glow.glow-morning {
-  box-shadow: 0px 3px 20px -6px rgba(255, 204, 0, 0.3) !important; }
+  box-shadow: 0px 2px 24px -10px rgba(255, 204, 0, 0.2), 0px 3px 10px -2px rgba(254, 131, 0, 0.1) !important; }
 
 .glow.glow-afternoon {
-  box-shadow: 0px 3px 20px -6px rgba(47, 251, 254, 0.3) !important; }
+  box-shadow: 0px 2px 24px -10px rgba(0, 166, 255, 0.1), 0px 3px 10px -2px rgba(0, 255, 21, 0.1) !important; }
 
 .glow.glow-evening {
-  box-shadow: 0px 3px 20px -6px rgba(237, 0, 182, 0.2) !important; }
+  box-shadow: 0px 2px 24px -10px rgba(145, 25, 220, 0.1), 0px 3px 10px -2px rgba(62, 9, 252, 0.1) !important; }
 
 .glow.glow-night {
-  box-shadow: 0px 3px 20px -6px rgba(11, 0, 213, 0.2) !important; }
+  box-shadow: 0px 2px 24px -10px rgba(49, 31, 98, 0.2), 0px 3px 10px -2px rgba(195, 114, 124, 0.2) !important; }
 
 .card {
   border-radius: 1rem; }

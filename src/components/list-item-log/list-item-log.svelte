@@ -97,8 +97,8 @@
           dispatch('moreClick', displayLog);
         }}
         class="btn btn-sm btn-clear pl-2 pr-2 "
-        style="margin-right:-20px; margin-top:-6px; font-size:32px; height:30px;
-        line-height:30px;">
+        style="margin-right:-20px; margin-top:-10px; font-size:32px;
+        height:30px; line-height:30px;">
         <i
           class="zmdi zmdi-more text-primary-bright"
           style="height:30px; line-height:30px;" />
@@ -111,11 +111,12 @@
     {/if}
     <!-- Process the Note Content with the Textualizer 
     This really isn't special right now -->
-    <NNoteTextualizer
-      note={displayLog.note}
-      {trackers}
-      className={displayLog.trackersArray().length ? '' : 'pb-2'} />
-
+    {#if displayLog.note.length}
+      <NNoteTextualizer
+        note={displayLog.note}
+        {trackers}
+        className={displayLog.trackersArray().length ? '' : 'pb-2'} />
+    {/if}
     <div class="trackers-list">
       <!-- Loop over the trackers within this log -->
       {#each displayLog.trackersArray().filter(trk => {

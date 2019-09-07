@@ -75,23 +75,30 @@
 	}
 }
 
+$morning-alt: #fe8300;
 $morning: rgb(255, 204, 0);
-$afternoon: rgb(47, 251, 254);
-$evening: rgb(237, 0, 182);
-$night: rgb(11, 0, 213);
+
+$afternoon-alt: rgb(0, 255, 21);
+$afternoon: rgb(0, 166, 255);
+
+$evening-alt: rgb(62, 9, 252);
+$evening: rgb(145, 25, 220);
+
+$night-alt: #c3727c;
+$night: #311f62;
 
 .glow {
 	&.glow-morning {
-		box-shadow: 0px 3px 20px -6px rgba($morning, 0.3) !important;
+		box-shadow: 0px 2px 24px -10px rgba($morning, 0.2), 0px 3px 10px -2px rgba($morning-alt, 0.1) !important;
 	}
 	&.glow-afternoon {
-		box-shadow: 0px 3px 20px -6px rgba($afternoon, 0.3) !important;
+		box-shadow: 0px 2px 24px -10px rgba($afternoon, 0.1), 0px 3px 10px -2px rgba($afternoon-alt, 0.1) !important;
 	}
 	&.glow-evening {
-		box-shadow: 0px 3px 20px -6px rgba($evening, 0.2) !important;
+		box-shadow: 0px 2px 24px -10px rgba($evening, 0.1), 0px 3px 10px -2px rgba($evening-alt, 0.1) !important;
 	}
 	&.glow-night {
-		box-shadow: 0px 3px 20px -6px rgba($night, 0.2) !important;
+		box-shadow: 0px 2px 24px -10px rgba($night, 0.2), 0px 3px 10px -2px rgba($night-alt, 0.2) !important;
 	}
 }
 

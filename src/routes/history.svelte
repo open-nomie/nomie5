@@ -330,10 +330,26 @@
 
   .search-bar {
     position: relative;
-    .btn {
+    .btn.zmdi-close {
       position: absolute;
       right: 12px;
-      top: -3px;
+      top: 8px;
+      font-size: 10px !important;
+      display: flex !important;
+      width: 20px;
+      height: 20px;
+      border-radius: 10px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-inverse-3);
+      color: var(--color-solid);
+    }
+    .btn.zmdi-search {
+      position: absolute;
+      right: 32px;
+      top: 0px;
+      font-size: 24px !important;
     }
   }
 
@@ -452,13 +468,15 @@
     search-bar">
     <input
       type="search"
-      autofocus
       bind:this={searchInput}
       bind:value={state.searchTerm}
       on:keypress={methods.searchKeypress}
       placeholder="Search..."
       class="search-input" />
     {#if searchMode}
+      <button
+        class="btn btn-clear btn-sm btn-icon zmdi zmdi-search"
+        on:click={methods.refreshSearch} />
       <button
         class="btn btn-clear btn-sm btn-icon zmdi zmdi-close"
         on:click={methods.clearSearch} />
