@@ -25,6 +25,7 @@
   export let className = "";
   export let focus = false;
   export let fullDate = false;
+  export let show24Hour;
   // consts
   const dispatch = createEventDispatcher();
 
@@ -37,6 +38,8 @@
   $: if (log) {
     displayLog = new NomieLog(log);
   }
+
+  $: timeFormat = show24Hour ? "HH:mm" : "h:mm a";
 </script>
 
 <style lang="scss">
@@ -59,7 +62,7 @@
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row my-2 pr-3 time-row">
       <NText size="md" bold>
-        {dayjs(displayLog.end).format(fullDate ? 'ddd MMM D YYYY h:mm a' : 'h:mm a')}
+        {dayjs(displayLog.end).format(fullDate ? `ddd MMM D YYYY ${timeFormat}` : timeFormat)}
       </NText>
 
       <!-- If they have location-->

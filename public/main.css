@@ -7229,6 +7229,12 @@ body.no-scroll {
   left: 0;
   right: 0; }
 
+body.notched .notch-bottom {
+  padding-bottom: env(safe-area-inset-bottom) !important; }
+
+body.notched .notch-top {
+  padding-bottom: env(safe-area-inset-top) !important; }
+
 body {
   --color-darkest: #fff;
   --color-bg: #f9f9f9;

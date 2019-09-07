@@ -18,7 +18,7 @@
   import NItem from "../components/list-item/list-item.svelte";
   import dayjs from "dayjs";
   import md5 from "md5";
-  import domtoimage from "dom-to-image";
+  import domtoimage from "dom-to-image-chrome-fix";
 
   // Utils
   import Logger from "../utils/log/log";
@@ -28,6 +28,7 @@
   import { Interact } from "../store/interact";
   import { LedgerStore } from "../store/ledger";
   import { ActiveLogStore } from "../store/active-log";
+  import { UserStore } from "../store/user";
 
   // Consts
   const console = new Logger("capture-log");
@@ -52,8 +53,9 @@
     dateSet: false,
     show: false,
     showDate: false,
-    takingPhoto: false,
-    photoData: null
+    capturingEdits: false,
+    photoData: null,
+    finalImageData: null
   };
 
   // TODO: Add a media/photo type of thing that can be added to a log..
@@ -82,11 +84,13 @@
       state.show = false;
     },
     checkTextareaSize() {
-      let height = (textarea || {}).scrollHeight || 40;
-      if (textarea && $ActiveLogStore.note.length > 0) {
-        textarea.style.height = (height > 300 ? 300 : height) + "px";
-      } else {
-        textarea.style.height = 40;
+      if (textarea) {
+        let height = (textarea || {}).scrollHeight || 40;
+        if (textarea && $ActiveLogStore.note.length > 0) {
+          textarea.style.height = (height > 300 ? 300 : height) + "px";
+        } else {
+          textarea.style.height = 40;
+        }
       }
     },
     async logSave() {
@@ -130,13 +134,6 @@
           const fileContent = reader.result;
           const path = `camera/${md5(fileContent)}`;
           methods.showPhotoEditor(fileContent);
-
-          // Storage.put(path, fileContent).then(() => {
-          //   ActiveLogStore.update(l => {
-          //     l.photo = path;
-          //     return l;
-          //   });
-          // });
         });
       }
     },
@@ -168,39 +165,36 @@
       },
       attach() {
         if (photoHolder) {
-          // TODO: Make iOS pull image data from the photoHolder div - right not its pulling in the entire image not edited...
-          const path = state.photoPath;
-          Storage.put(path, state.photoData)
-            .then(() => {
-              state.takingPhoto = false;
-              ActiveLogStore.update(l => {
-                l.photo = path;
-                return l;
-              });
-              setTimeout(() => {
-                methods.photoEditor.cancel();
-              }, 120);
-            })
-            .catch(e => {
-              alert("It failed " + e.message);
-            });
-        }
-        // TODO see why domtoimage fails on iOS
-        //   domtoimage
-        //     .toPng(photoHolder)
-        //     .then(dataUrl => {
-        //       const path = `camera/${md5(dataUrl)}`;
-        //       console.log("File Path", path, dataUrl);
+          state.capturingEdits = true;
+          setTimeout(() => {
+            domtoimage
+              .toJpeg(document.getElementById("final-image-data-container"))
+              .then(dataUrl => {
+                state.capturingEdits = false;
+                state.finalImageData = dataUrl;
 
-        //     })
-        //     .catch(e => {
-        //       alert(
-        //         "Sorry, an error happened saving this image. iOS is a little buggy right now."
-        //       );
-        //       methods.photoEditor.cancel();
-        //       console.log("Error ", e.message);
-        //     });
-        // }
+                // Storage.put(path, dataUrl)
+                //   .then(() => {
+                //     // state.capturingEdits = false;
+                //     ActiveLogStore.update(l => {
+                //       l.photo = path;
+                //       return l;
+                //     });
+                //     setTimeout(() => {
+                //       methods.photoEditor.cancel();
+                //     }, 120);
+                //   })
+                //   .catch(e => {
+                //     alert("It failed " + e.message);
+                //   });
+              })
+              .catch(e => {
+                console.log(e);
+              });
+          }, 2000);
+        }
+
+        // TODO see why domtoimage fails on iOS
       },
       flip() {
         if (photoHolder) {
@@ -288,7 +282,7 @@
         opacity: 0;
       }
       &.visible {
-        height: 160px;
+        height: fit-content;
       }
     }
   }
@@ -502,7 +496,7 @@
               state.date = null;
               state.dateSet = false;
             }}>
-            Clear {dayjs(state.date).format('ddd MMM D YYYY h:mm a')}
+            Clear {dayjs(state.date).format(`ddd MMM D YYYY ${$UserStore.meta.is24Hour ? 'HH:mm' : 'h:mm a'}`)}
           </button>
         {/if}
 
@@ -528,7 +522,7 @@
           </button>
         {/if}
 
-        {#if !$ActiveLogStore.photo}
+        <!-- {#if !$ActiveLogStore.photo}
           {#if isIOS}
             <div style="width:0;height:0;overflow:hidden;">
               <input
@@ -541,6 +535,7 @@
             </div>
             <button
               class="btn btn-light btn btn-block mt-2"
+              disabled
               on:click={() => {
                 iOSFileInput.click();
               }}>
@@ -564,7 +559,7 @@
             }}>
             Remove Photo
           </button>
-        {/if}
+        {/if} -->
 
       </div>
     </div>
@@ -572,24 +567,45 @@
 
   </div>
 </div>
-{#if state.takingPhoto}
+<!-- {#if state.capturingEdits === true}
   <div class="photo-editor-window full-screen snap">
-    <div class="photo-editor" style="overflow:hidden">
+    <div
+      class="photo-editor"
+      id="final-image-data-container"
+      style="overflow:hidden">
       <img
+        alt="photo"
         src={state.photoData}
+        id="final-image-data"
         bind:this={finalImage}
         width="600"
         height="600" />
     </div>
   </div>
-{/if}
-{#if state.showPhotoEditor && !state.takingPhoto}
+{:else if state.finalImageData}
+  <div class="photo-editor-window full-screen captured">
+    <div class="photo-editor" style="overflow:hidden">
+      <img
+        alt="photo"
+        src={state.finalImageData}
+        bind:this={finalImage}
+        width="400"
+        height="400" />
+    </div>
+  </div>
+{:else if state.showPhotoEditor && !state.capturingEdits}
   <div class="photo-editor-window full-screen dark-glass">
     <div class="photo-editor">
       <div
         class="photo"
+        id="photo-editor-data"
         bind:this={photoHolder}
-        style="background-image:url({state.photoData})" />
+        style="background-image:url({state.photoData})">
+        {#if state.finalImageData}
+          <img src={state.finalImageData} width="100%" />
+          f
+        {:else}active image{/if}
+      </div>
       <div class="n-row">
         <button
           class="btn btn-clear btn-icon zmdi zmdi-close"
@@ -608,4 +624,4 @@
       </div>
     </div>
   </div>
-{/if}
+{/if} -->

@@ -41,7 +41,7 @@
     });
   }
 
-  if (!locations.length && picker) {
+  $: if (!locations.length && picker && MAP) {
     locate().then(location => {
       locations = [
         {

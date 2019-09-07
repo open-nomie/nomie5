@@ -7,7 +7,8 @@
     FACING_MODES,
     IMAGE_TYPES
   } from "jslib-html5-camera-photo";
-  import domtoimage from "dom-to-image";
+
+  import domtoimage from "dom-to-image-chrome-fix";
 
   // Modules
   import Storage from "../../modules/storage/storage";
@@ -96,10 +97,9 @@
     }
   }
   .camera-frame {
-    border: solid 1px var(--color-solid-2);
     border-radius: 6px;
-    height: 100vh;
-    width: 100vw;
+    height: 96vh;
+    width: 96vw;
     max-width: 400px;
     max-height: 700px;
     background-color: #222;

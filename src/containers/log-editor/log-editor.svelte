@@ -25,7 +25,8 @@
   // Setup state
   let state = {
     view: "note",
-    dateTimeValue: null
+    dateTimeValue: null,
+    saving: false
   };
 
   // Watch for Log
@@ -58,6 +59,7 @@
       return locations;
     },
     save() {
+      state.saving = true;
       let updatedDate = time.datetimeLocal(state.dateTimeValue);
       state.log.start = updatedDate.getTime();
       state.log.end = updatedDate.getTime();
@@ -176,14 +178,20 @@
     </div>
 
     <div class="buttons n-row" slot="footer">
-      <button
-        class="btn btn-clear w-50"
-        on:click={() => {
-          dispatch('close');
-        }}>
-        Cancel
-      </button>
-      <button class="btn btn-primary w-50" on:click={methods.save}>Save</button>
+      {#if !state.saving}
+        <button
+          class="btn btn-clear w-50"
+          on:click={() => {
+            dispatch('close');
+          }}>
+          Cancel
+        </button>
+        <button class="btn btn-primary w-50" on:click={methods.save}>
+          Save
+        </button>
+      {:else}
+        <button class="btn btn-primary w-100" disabled>Saving...</button>
+      {/if}
     </div>
 
   </NModal>

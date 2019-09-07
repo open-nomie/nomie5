@@ -468,6 +468,7 @@
             on:locationClick={event => {
               Interact.showLocations([log]);
             }}
+            show24Hour={$UserStore.meta.is24Hour}
             on:moreClick={event => {
               Interact.logOptions(log).then(() => {});
             }} />
