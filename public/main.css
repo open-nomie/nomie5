@@ -7229,6 +7229,12 @@ body.no-scroll {
   left: 0;
   right: 0; }
 
+body.notched .notch-bottom {
+  padding-bottom: env(safe-area-inset-bottom) !important; }
+
+body.notched .notch-top {
+  padding-bottom: env(safe-area-inset-top) !important; }
+
 body {
   --color-darkest: #fff;
   --color-bg: #f9f9f9;
@@ -7410,14 +7416,17 @@ body.dark {
 .text-faded-3 {
   color: var(--color-faded-3); }
 
+.text-xs {
+  font-size: 0.5rem !important; }
+
 .text-sm {
-  font-size: 0.7rem; }
+  font-size: 0.7rem !important; }
 
 .text-md {
-  font-size: 1rem; }
+  font-size: 1rem !important; }
 
 .text-lg {
-  font-size: 1.3rem; }
+  font-size: 1.3rem !important; }
 
 input[type='text'],
 input[type='number'],
@@ -7491,14 +7500,14 @@ select {
   padding: 0px 16px;
   height: 36px;
   border: solid 1px transparent;
-  background-color: var(--color-faded);
+  background-color: var(--color-faded-1);
   color: var(--color-inverse-2);
   flex-grow: 1;
   outline: none;
   transition: all 0.2s ease-in-out; }
   .search-input:focus {
-    border: solid 1px rgba(0, 0, 0, 0.2);
-    background-color: var(--color-faded-2); }
+    border: solid 1px var(--color-faded-1);
+    background-color: var(--color-faded); }
 
 .justify-content-stretch {
   justify-content: stretch; }
@@ -7561,8 +7570,7 @@ body.scrolling .mini-map {
   height: 100px;
   width: 180px;
   border-radius: 20px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-  border: solid 1px var(--color-faded-2);
+  box-shadow: 0px 4px 9px -2px rgba(0, 0, 0, 0.4);
   background-color: var(--color-solid);
   overflow: hidden;
   transition: all 0.2s ease-in-out; }
@@ -7720,6 +7728,18 @@ body.scrolling .mini-map {
     font-size: 0.75rem;
     line-height: 0.75rem;
     opacity: 0.8; }
+
+.glow.glow-morning {
+  box-shadow: 0px 3px 20px -6px rgba(255, 204, 0, 0.3) !important; }
+
+.glow.glow-afternoon {
+  box-shadow: 0px 3px 20px -6px rgba(47, 251, 254, 0.3) !important; }
+
+.glow.glow-evening {
+  box-shadow: 0px 3px 20px -6px rgba(237, 0, 182, 0.2) !important; }
+
+.glow.glow-night {
+  box-shadow: 0px 3px 20px -6px rgba(11, 0, 213, 0.2) !important; }
 
 .card {
   border-radius: 1rem; }

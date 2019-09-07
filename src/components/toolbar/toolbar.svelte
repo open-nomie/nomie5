@@ -23,6 +23,10 @@
     .btn-sm {
       max-height: 40px;
     }
+    &.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
 
     &.pin-top {
       position: fixed;
@@ -59,6 +63,9 @@
   }
   :global(.n-toolbar .zmdi) {
     font-size: 1.6rem !important;
+    &.text-xs {
+      font-size: 18px !important;
+    }
   }
 </style>
 

@@ -14,6 +14,7 @@
 
   // utils
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
+  import time from "../../utils/time/time";
 
   // vendors
   import dayjs from "dayjs";
@@ -24,6 +25,7 @@
   export let className = "";
   export let focus = false;
   export let fullDate = false;
+  export let show24Hour = false;
   // consts
   const dispatch = createEventDispatcher();
 
@@ -36,6 +38,8 @@
   $: if (log) {
     displayLog = new NomieLog(log);
   }
+
+  $: timeFormat = show24Hour ? "HH:mm" : "h:mm a";
 </script>
 
 <style lang="scss">
@@ -53,11 +57,12 @@
 </style>
 
 {#if displayLog}
-  <NItem className="{className} my-3 mx-2 border pb-0 n-item-log">
+  <NItem
+    className="{className} my-3 mx-2 border pb-0 n-item-log glow glow-{time.dateToDesc(displayLog.end)}">
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row my-2 pr-3 time-row">
       <NText size="md" bold>
-        {dayjs(displayLog.end).format(fullDate ? 'ddd MMM D YYYY h:mm a' : 'h:mm a')}
+        {dayjs(displayLog.end).format(fullDate ? `ddd MMM D YYYY ${timeFormat}` : timeFormat)}
       </NText>
 
       <!-- If they have location-->

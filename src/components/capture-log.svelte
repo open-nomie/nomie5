@@ -17,6 +17,8 @@
   //Components
   import NItem from "../components/list-item/list-item.svelte";
   import dayjs from "dayjs";
+  import md5 from "md5";
+  import domtoimage from "dom-to-image-chrome-fix";
 
   // Utils
   import Logger from "../utils/log/log";
@@ -26,6 +28,7 @@
   import { Interact } from "../store/interact";
   import { LedgerStore } from "../store/ledger";
   import { ActiveLogStore } from "../store/active-log";
+  import { UserStore } from "../store/user";
 
   // Consts
   const console = new Logger("capture-log");
@@ -33,27 +36,26 @@
     !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
   let textarea;
+  let iOSFileInput;
+  let photoHolder;
+  let finalImage;
   let saving = false;
   let saved = false;
 
-  // Show saving animation when needed
-  $: if ($LedgerStore.saving === false) {
-    setTimeout(() => {
-      saving = false;
-      saved = true;
-      setTimeout(() => {
-        saved = false;
-      }, 100);
-    }, 400);
-  } else {
+  $: if ($LedgerStore.saving) {
     saving = true;
+  } else {
+    saving = false;
   }
 
   let state = {
     date: null,
     dateSet: false,
     show: false,
-    showDate: false
+    showDate: false,
+    capturingEdits: false,
+    photoData: null,
+    finalImageData: null
   };
 
   // TODO: Add a media/photo type of thing that can be added to a log..
@@ -82,11 +84,13 @@
       state.show = false;
     },
     checkTextareaSize() {
-      let height = (textarea || {}).scrollHeight || 40;
-      if (textarea && $ActiveLogStore.note.length > 0) {
-        textarea.style.height = (height > 300 ? 300 : height) + "px";
-      } else {
-        textarea.style.height = 40;
+      if (textarea) {
+        let height = (textarea || {}).scrollHeight || 40;
+        if (textarea && $ActiveLogStore.note.length > 0) {
+          textarea.style.height = (height > 300 ? 300 : height) + "px";
+        } else {
+          textarea.style.height = 40;
+        }
       }
     },
     async logSave() {
@@ -121,9 +125,98 @@
         $ActiveLogStore.photo
       );
     },
+    iOSCapture(event) {
+      let input = event.target;
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.addEventListener("load", () => {
+          const fileContent = reader.result;
+          const path = `camera/${md5(fileContent)}`;
+          methods.showPhotoEditor(fileContent);
+        });
+      }
+    },
+    showPhotoEditor(photoData) {
+      state.showPhotoEditor = true;
+      state.photoData = photoData;
+      state.photoPath = `camera/${md5(photoData)}`;
+    },
+    photoEditor: {
+      getTransform() {
+        let transform = photoHolder.style.transform.trim().split(" ");
+        let t = { rotate: 0, scaleX: 1 };
+        transform.forEach(action => {
+          if (action.search("rotate") > -1) {
+            let deg = parseInt(action.replace(/(rotate\(|deg\)|;)/gi, ""));
+            deg = isNaN(deg) ? 0 : deg;
+            t.rotate = deg;
+          } else if (action.search("scaleX") > -1) {
+            let value = action.replace(/(scaleX\(|\)|;)/gi, "");
+            t.scaleX = parseInt(value);
+            t.scaleX = isNaN(t.scaleX) ? 1 : t.scaleX;
+          }
+        });
+        return t;
+      },
+      toStyle(transform) {
+        let style = `rotate(${transform.rotate}deg) scaleX(${transform.scaleX})`;
+        return style;
+      },
+      attach() {
+        if (photoHolder) {
+          state.capturingEdits = true;
+          setTimeout(() => {
+            domtoimage
+              .toJpeg(document.getElementById("final-image-data-container"))
+              .then(dataUrl => {
+                state.capturingEdits = false;
+                state.finalImageData = dataUrl;
+
+                // Storage.put(path, dataUrl)
+                //   .then(() => {
+                //     // state.capturingEdits = false;
+                //     ActiveLogStore.update(l => {
+                //       l.photo = path;
+                //       return l;
+                //     });
+                //     setTimeout(() => {
+                //       methods.photoEditor.cancel();
+                //     }, 120);
+                //   })
+                //   .catch(e => {
+                //     alert("It failed " + e.message);
+                //   });
+              })
+              .catch(e => {
+                console.log(e);
+              });
+          }, 2000);
+        }
+
+        // TODO see why domtoimage fails on iOS
+      },
+      flip() {
+        if (photoHolder) {
+          let transform = methods.photoEditor.getTransform();
+          transform.scaleX = transform.scaleX === 1 ? -1 : 1;
+          photoHolder.style.transform = methods.photoEditor.toStyle(transform);
+        }
+      },
+      rotate() {
+        if (photoHolder) {
+          let transform = methods.photoEditor.getTransform();
+          transform.rotate = transform.rotate + 90;
+          photoHolder.style.transform = methods.photoEditor.toStyle(transform);
+        }
+      },
+      cancel() {
+        state.showPhotoEditor = false;
+        state.photoData = null;
+      }
+    },
     capturePhoto() {
       Interact.openCamera(storagePath => {
-        console.log("Got it?", storagePath);
         ActiveLogStore.update(l => {
           l.photo = storagePath;
           return l;
@@ -144,6 +237,7 @@
 
   // When a tag is added by a button or other service
   ActiveLogStore.hook("onAddTag", res => {
+    console.log("onAddTag");
     // add space to the end.
     setTimeout(() => {
       if (textarea) {
@@ -181,12 +275,14 @@
     }
     .advanced-options-list {
       transition: all 0.2s ease-in-out;
+      border: none !important;
       &.hidden {
         height: 1px;
         overflow: hidden;
+        opacity: 0;
       }
       &.visible {
-        height: 160px;
+        height: fit-content;
       }
     }
   }
@@ -232,6 +328,26 @@
       width: 0;
     }
   }
+
+  .photo-editor {
+    background-color: var(--color-solid);
+    border-radius: 8px;
+    box-shadow: 0px 10px 20px -6px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    margin: 10px;
+    .photo {
+      width: 300px;
+      height: 300px;
+      overflow: hidden;
+      background-position: center center;
+      background-size: cover;
+    }
+    .n-row {
+      padding: 6px 16px 6px 6px;
+      color: var(--color-inverse);
+    }
+  }
+
   .save-button {
     padding: 0 10px;
     height: 30px;
@@ -380,7 +496,7 @@
               state.date = null;
               state.dateSet = false;
             }}>
-            Clear {dayjs(state.date).format('ddd MMM D YYYY h:mm a')}
+            Clear {dayjs(state.date).format(`ddd MMM D YYYY ${$UserStore.meta.is24Hour ? 'HH:mm' : 'h:mm a'}`)}
           </button>
         {/if}
 
@@ -406,19 +522,27 @@
           </button>
         {/if}
 
-        {#if !$ActiveLogStore.photo}
+        <!-- {#if !$ActiveLogStore.photo}
           {#if isIOS}
+            <div style="width:0;height:0;overflow:hidden;">
+              <input
+                class="btn btn-light btn-block"
+                type="file"
+                bind:this={iOSFileInput}
+                accept="image/*"
+                capture="camera"
+                on:change={methods.iOSCapture} />
+            </div>
             <button
+              class="btn btn-light btn btn-block mt-2"
               disabled
-              class="btn btn-light btn btn-block"
               on:click={() => {
-                methods.iOSCapture();
+                iOSFileInput.click();
               }}>
-              Take a Photo iOS
+              Attach a Photo
             </button>
           {:else}
             <button
-              disabled
               class="btn btn-light btn btn-block"
               on:click={() => {
                 methods.capturePhoto();
@@ -435,7 +559,7 @@
             }}>
             Remove Photo
           </button>
-        {/if}
+        {/if} -->
 
       </div>
     </div>
@@ -443,3 +567,61 @@
 
   </div>
 </div>
+<!-- {#if state.capturingEdits === true}
+  <div class="photo-editor-window full-screen snap">
+    <div
+      class="photo-editor"
+      id="final-image-data-container"
+      style="overflow:hidden">
+      <img
+        alt="photo"
+        src={state.photoData}
+        id="final-image-data"
+        bind:this={finalImage}
+        width="600"
+        height="600" />
+    </div>
+  </div>
+{:else if state.finalImageData}
+  <div class="photo-editor-window full-screen captured">
+    <div class="photo-editor" style="overflow:hidden">
+      <img
+        alt="photo"
+        src={state.finalImageData}
+        bind:this={finalImage}
+        width="400"
+        height="400" />
+    </div>
+  </div>
+{:else if state.showPhotoEditor && !state.capturingEdits}
+  <div class="photo-editor-window full-screen dark-glass">
+    <div class="photo-editor">
+      <div
+        class="photo"
+        id="photo-editor-data"
+        bind:this={photoHolder}
+        style="background-image:url({state.photoData})">
+        {#if state.finalImageData}
+          <img src={state.finalImageData} width="100%" />
+          f
+        {:else}active image{/if}
+      </div>
+      <div class="n-row">
+        <button
+          class="btn btn-clear btn-icon zmdi zmdi-close"
+          on:click={methods.photoEditor.cancel} />
+        <div class="filler" />
+        <button
+          class="btn btn-clear btn-icon zmdi zmdi-rotate-right"
+          on:click={methods.photoEditor.rotate} />
+        <button
+          class="btn btn-clear btn-icon zmdi zmdi-flip"
+          on:click={methods.photoEditor.flip} />
+        <div class="filler" />
+        <button
+          class="btn btn-clear btn-icon zmdi zmdi-check"
+          on:click={methods.photoEditor.attach} />
+      </div>
+    </div>
+  </div>
+{/if} -->

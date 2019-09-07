@@ -150,8 +150,8 @@ NomieUOM.uoms = {
 		},
 	},
 	yuan: {
-		singular: 'yuan',
-		plural: 'yuan',
+		singular: 'Yuan',
+		plural: 'Yuan',
 		symbol: '¥',
 		type: 'currency',
 		symbolAffix: 'pre',

@@ -137,12 +137,11 @@
     position: fixed;
     z-index: 2000;
     bottom: 0;
-
+    min-height: 50px;
     left: 0;
     right: 0;
     background-color: var(--color-primary);
     padding: 10px 20px;
-    padding-bottom: env(safe-area-inset-bottom);
     box-shadow: 0px -20px 30px -15px rgba(0, 0, 0, 0.32);
     .btn {
       color: #fff;
