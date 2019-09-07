@@ -392,10 +392,12 @@
 
         </NItem>
         <NItem className="compact item-divider" />
-        <NItem title="Copyright 2019 All Rights Reserved." className="pb-3">
+        <NItem title="Copyright 2019. All Rights Reserved." className="pb-3">
           <NText tag="div" size="sm">
-            Nomie & Elephant are trademarks of
-            <a href="https://www.happydata.org">Happy Data, LLC</a>
+            Nomie&reg; by
+            <a href="https://www.happydata.org" traget="_system">
+              Happy Data, LLC
+            </a>
           </NText>
         </NItem>
 

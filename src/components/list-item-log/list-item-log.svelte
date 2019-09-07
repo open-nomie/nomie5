@@ -80,16 +80,6 @@
           <i class="zmdi zmdi-globe text-primary-bright" />
         </button>
       {/if}
-      <!-- {#if displayLog.photo}
-        <button
-          on:click={event => {
-            state.showPhoto = !state.showPhoto;
-            event.stopPropagation();
-          }}
-          class="btn btn-sm btn-clear pl-2 pr-2 ">
-          <i class="zmdi zmdi-camera text-primary-bright" />
-        </button>
-      {/if} -->
       <div class="filler" />
       <!-- Janky - fix this -->
       <button
