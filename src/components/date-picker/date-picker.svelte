@@ -13,8 +13,7 @@
 </script>
 
 <style type="text/scss" lang="scss">
-  .n-date-picker {
-  }
+
 </style>
 
 <div class="n-date-picker p-3">

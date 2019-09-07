@@ -366,10 +366,6 @@
     width: 100%;
   }
 
-  .border-right-fade {
-    // border-right: solid 1px var(--color-solid-2);
-  }
-
   :global(.trackers-list) {
     border-bottom: solid 1px rgba(0, 0, 0, 0.06);
     border-top: solid 1px rgba(0, 0, 0, 0.06);

@@ -43,8 +43,6 @@
 </script>
 
 <style lang="scss">
-  :global(.log-photo-wrapper img) {
-  }
   .log-photo-wrapper {
     margin-left: -20px;
     margin-right: -20px;

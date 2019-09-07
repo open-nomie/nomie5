@@ -53,8 +53,6 @@
   .n-toolbar.stretch {
     justify-content: stretch;
   }
-  :globa(.sub-header) {
-  }
   :global(.n-toolbar .btn-clear) {
     border-radius: 0 !important;
     outline: none !important;
