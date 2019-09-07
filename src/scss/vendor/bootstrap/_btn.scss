@@ -2,6 +2,15 @@ button:focus {
 	outline: 0 !important;
 }
 
+.btn:focus,
+.btn.focus {
+	box-shadow: inherit;
+}
+
+.btn:active {
+	background-color: var(--color-faded-1);
+}
+
 .btn {
 	display: flex;
 	justify-content: center;

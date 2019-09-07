@@ -113,7 +113,8 @@
 
     {#if state.showFiles}
       {#each state.files as file (file)}
-        <NItem title={file}>
+        <NItem>
+          <div class="truncate">{file}</div>
           <button
             class="btn btn-sm btn-clear text-danger"
             slot="right"
