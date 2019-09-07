@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Sep 7 2019 11:49 am
+Generated Sat Sep 7 2019 2:18 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -25,7 +25,6 @@ Generated Sat Sep 7 2019 11:49 am
    - TODO: refactor so it's clean and using the proper amount of Store vs local
    - TODO: Look at making this refresh without doing the loading, it's pushing the page to the top and it's annoying
    - TODO: This is really sloppy - clean it up.
-   - TODO: Search Day Header isn't working reliably... Pulling it for now.
 - **src/routes/board-editor.svelte**
    - TODO: Make sorting work
    - TODO: Fix Sorting on MObile -->

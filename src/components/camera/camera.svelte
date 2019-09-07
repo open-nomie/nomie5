@@ -3,10 +3,7 @@
   import { onMount, createEventDispatcher } from "svelte";
 
   //Vendors
-  import CameraPhoto, {
-    FACING_MODES,
-    IMAGE_TYPES
-  } from "jslib-html5-camera-photo";
+  import CameraPhoto from "jslib-html5-camera-photo";
 
   import domtoimage from "dom-to-image-chrome-fix";
 

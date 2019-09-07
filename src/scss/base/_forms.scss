@@ -82,13 +82,13 @@ select {
 	padding: 0px 16px;
 	height: 36px;
 	border: solid 1px transparent;
-	background-color: var(--color-faded);
+	background-color: var(--color-faded-1);
 	color: var(--color-inverse-2);
 	flex-grow: 1;
 	outline: none;
 	transition: all 0.2s ease-in-out;
 	&:focus {
-		border: solid 1px rgba(0, 0, 0, 0.2);
-		background-color: var(--color-faded-2);
+		border: solid 1px var(--color-faded-1);
+		background-color: var(--color-faded);
 	}
 }

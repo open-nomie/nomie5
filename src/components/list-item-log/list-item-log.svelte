@@ -25,7 +25,7 @@
   export let className = "";
   export let focus = false;
   export let fullDate = false;
-  export let show24Hour;
+  export let show24Hour = false;
   // consts
   const dispatch = createEventDispatcher();
 
