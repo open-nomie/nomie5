@@ -1,6 +1,6 @@
 # TODO
 
-Generated Thu Sep 5 2019 7:37 pm
+Generated Sat Sep 7 2019 11:49 am
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -59,4 +59,3 @@ Generated Thu Sep 5 2019 7:37 pm
    - TODO: Add a media/photo type of thing that can be added to a log..
    - TODO: Mobile is getting GMT Time, desktop is not
    - await LedgerStore.saveLog($ActiveLogStore);  TODO: Make ledger task instead
-   - TODO: Make iOS pull image data from the photoHolder div - right not its pulling in the entire image not edited...
