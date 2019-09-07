@@ -14,6 +14,7 @@
 
   // utils
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
+  import time from "../../utils/time/time";
 
   // vendors
   import dayjs from "dayjs";
@@ -24,6 +25,7 @@
   export let className = "";
   export let focus = false;
   export let fullDate = false;
+  export let show24Hour = false;
   // consts
   const dispatch = createEventDispatcher();
 
@@ -36,11 +38,11 @@
   $: if (log) {
     displayLog = new NomieLog(log);
   }
+
+  $: timeFormat = show24Hour ? "HH:mm" : "h:mm a";
 </script>
 
 <style lang="scss">
-  :global(.log-photo-wrapper img) {
-  }
   .log-photo-wrapper {
     margin-left: -20px;
     margin-right: -20px;
@@ -53,11 +55,12 @@
 </style>
 
 {#if displayLog}
-  <NItem className="{className} my-3 mx-2 border pb-0 n-item-log">
+  <NItem
+    className="{className} my-3 mx-2 border pb-0 n-item-log glow glow-{time.dateToDesc(displayLog.end)}">
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row my-2 pr-3 time-row">
       <NText size="md" bold>
-        {dayjs(displayLog.end).format(fullDate ? 'ddd MMM D YYYY h:mm a' : 'h:mm a')}
+        {dayjs(displayLog.end).format(fullDate ? `ddd MMM D YYYY ${timeFormat}` : timeFormat)}
       </NText>
 
       <!-- If they have location-->
@@ -75,16 +78,6 @@
           <i class="zmdi zmdi-globe text-primary-bright" />
         </button>
       {/if}
-      <!-- {#if displayLog.photo}
-        <button
-          on:click={event => {
-            state.showPhoto = !state.showPhoto;
-            event.stopPropagation();
-          }}
-          class="btn btn-sm btn-clear pl-2 pr-2 ">
-          <i class="zmdi zmdi-camera text-primary-bright" />
-        </button>
-      {/if} -->
       <div class="filler" />
       <!-- Janky - fix this -->
       <button
@@ -92,8 +85,8 @@
           dispatch('moreClick', displayLog);
         }}
         class="btn btn-sm btn-clear pl-2 pr-2 "
-        style="margin-right:-20px; margin-top:-6px; font-size:32px; height:30px;
-        line-height:30px;">
+        style="margin-right:-20px; margin-top:-10px; font-size:32px;
+        height:30px; line-height:30px;">
         <i
           class="zmdi zmdi-more text-primary-bright"
           style="height:30px; line-height:30px;" />
@@ -106,11 +99,12 @@
     {/if}
     <!-- Process the Note Content with the Textualizer 
     This really isn't special right now -->
-    <NNoteTextualizer
-      note={displayLog.note}
-      {trackers}
-      className={displayLog.trackersArray().length ? '' : 'pb-2'} />
-
+    {#if displayLog.note.length}
+      <NNoteTextualizer
+        note={displayLog.note}
+        {trackers}
+        className={displayLog.trackersArray().length ? '' : 'pb-2'} />
+    {/if}
     <div class="trackers-list">
       <!-- Loop over the trackers within this log -->
       {#each displayLog.trackersArray().filter(trk => {

@@ -1,9 +1,20 @@
 .align-items-stretch {
-  align-items: stretch;
+	align-items: stretch;
+	display: flex;
+}
+.align-items-center {
+	align-items: center;
+	display: flex;
 }
 .justify-content-stretch {
-  justify-content: stretch;
+	justify-content: stretch;
+	display: flex;
+}
+.justify-content-center {
+	justify-content: center;
+	display: flex;
 }
 .justify-content-between {
-  justify-content: space-between;
+	justify-content: space-between;
+	display: flex;
 }

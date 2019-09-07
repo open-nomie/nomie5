@@ -88,7 +88,7 @@ select {
 	outline: none;
 	transition: all 0.2s ease-in-out;
 	&:focus {
-		border: solid 1px rgba(0, 0, 0, 0.2);
-		background-color: var(--color-faded-2);
+		border: solid 1px var(--color-faded-1);
+		background-color: var(--color-faded);
 	}
 }

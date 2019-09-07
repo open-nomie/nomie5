@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Aug 31 2019 2:42 pm
+Generated Sat Sep 7 2019 3:58 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -25,7 +25,6 @@ Generated Sat Aug 31 2019 2:42 pm
    - TODO: refactor so it's clean and using the proper amount of Store vs local
    - TODO: Look at making this refresh without doing the loading, it's pushing the page to the top and it's annoying
    - TODO: This is really sloppy - clean it up.
-   - TODO: Search Day Header isn't working reliably... Pulling it for now.
 - **src/routes/board-editor.svelte**
    - TODO: Make sorting work
    - TODO: Fix Sorting on MObile -->
@@ -45,6 +44,7 @@ Generated Sat Aug 31 2019 2:42 pm
 - **src/containers/map/map.svelte**
    - TODO: Look at making this curved dotted lines - and not just straight ones
 - **src/containers/interactions/interactions.svelte**
+   - TODO: move this to new log editor
    - console.log('TODO: Make editing data work');
 - **src/containers/importer/importer.svelte**
    - Modal will be hidden in settings TODO: make this not hacky -->

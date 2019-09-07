@@ -75,7 +75,7 @@
       width: 7.8rem;
       height: 7.8rem;
       .emoji {
-        font-size: 3.5rem;
+        font-size: 3.4rem;
         font-style: normal;
       }
     }
@@ -84,7 +84,7 @@
       width: 6.8rem;
       height: 6.8rem;
       .emoji {
-        font-size: 2.8rem;
+        font-size: 2.7rem;
         font-style: normal;
       }
     }

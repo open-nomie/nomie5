@@ -23,6 +23,7 @@
   import TrackerSelector from "../tracker/selector/selector.svelte";
   import NTrackerEditor from "../tracker/editor/editor.svelte";
   import TrackerInput from "../tracker/input/input.svelte";
+  import LogEditor from "../log-editor/log-editor.svelte";
   // Store
   import { Interact } from "../../store/interact";
   import { UserStore } from "../../store/user";
@@ -277,7 +278,8 @@
     </button>
   </NModal>
 {/if}
-
+<!-- 
+  TODO: move this to new log editor
 {#if $Interact.logDataEditor.show}
   <NModal show={true} flexBody title="Edit Data">
     <div class="n-list">
@@ -322,9 +324,9 @@
     </button>
 
   </NModal>
-{/if}
+{/if} -->
 
-{#if $Interact.logDataEditor.tag && $Interact.logDataEditor.value}
+<!-- {#if $Interact.logDataEditor.tag && $Interact.logDataEditor.value}
   <TrackerInput
     saveLabel="Set"
     show={true}
@@ -334,5 +336,25 @@
     on:save={methods.editLogDataOnSave}
     on:cancel={() => {
       $Interact.logDataEditor.tag = null;
+    }} />
+{/if} -->
+
+{#if $Interact.logEditor.show}
+  <LogEditor
+    log={$Interact.logEditor.log}
+    on:close={() => {
+      Interact.dismissEditLog();
+    }}
+    on:save={evt => {
+      let log = evt.detail;
+      console.log('Log to Save', log);
+      LedgerStore.updateLog(log, $Interact.logEditor.log.end)
+        .then(() => {
+          Interact.dismissEditLog();
+        })
+        .catch(e => {
+          Interact.alert(e.message);
+          Interact.dismissEditLog();
+        });
     }} />
 {/if}

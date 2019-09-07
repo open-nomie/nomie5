@@ -216,6 +216,18 @@
               on:change={methods.lockToggle} />
           </div>
         </NItem>
+        <NItem title="24 Hour Clock">
+          <span
+            slot="left"
+            class="btn-icon zmdi zmdi-time"
+            style="color:#666" />
+          <div slot="right">
+            <NToggle
+              bind:value={$UserStore.meta.is24Hour}
+              on:change={methods.settingChange} />
+          </div>
+        </NItem>
+
       </div>
 
       <div class="n-pop my-3">
@@ -338,7 +350,7 @@
         <NItem title="About Nomie" borderBottom className="n-item-divider" />
         <NItem title="Learn More">
           <span slot="right" class="pr-2">
-            <a href="https://nomie.app?s=dap" target="_system">Nomie Website</a>
+            <a href="https://nomie.app?s=dap" target="_system">Website</a>
           </span>
         </NItem>
         <NItem title="Reddit r/nomie">
@@ -346,6 +358,7 @@
             <a href="https://reddit.com/r/nomie" target="_system">r/nomie</a>
           </span>
         </NItem>
+
         <NItem title="Open Source">
           <span slot="right" class="pr-2">
             <a href="https://github.com/open-nomie/nomie" target="_system">
@@ -353,6 +366,9 @@
             </a>
           </span>
         </NItem>
+
+        <NItem className="compact item-divider" />
+
         <NItem title="Version">
           <span slot="right" class="pr-2">APP_VERSION</span>
         </NItem>
@@ -376,16 +392,12 @@
 
         </NItem>
         <NItem className="compact item-divider" />
-        <NItem title="Copyright 2019 All Rights Reserved." className="pb-3">
+        <NItem title="Copyright 2019. All Rights Reserved." className="pb-3">
           <NText tag="div" size="sm">
-            Nomie & Elephant are trademarks of
-            <a href="https://happydata.org">Happy Data, LLC</a>
-            <span
-              on:click={() => {
-                navigate('/api');
-              }}>
-              ...
-            </span>
+            Nomie&reg; by
+            <a href="https://www.happydata.org" traget="_system">
+              Happy Data, LLC
+            </a>
           </NText>
         </NItem>
 

@@ -10,7 +10,6 @@ import replace from 'rollup-plugin-replace';
 import packagejson from './package.json';
 import dayjs from 'dayjs';
 import fs from 'fs';
-import copy from 'rollup-plugin-copy';
 
 const production = !process.env.ROLLUP_WATCH;
 

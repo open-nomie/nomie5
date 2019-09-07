@@ -298,6 +298,9 @@
   .popcards {
     position: relative;
     min-height: 1200px;
+    margin-right: 10px;
+    margin-left: 10px;
+    width: calc(100% - 20px);
     &:after {
       position: absolute;
       bottom: 0;
@@ -751,6 +754,7 @@
                       on:moreClick={event => {
                         Interact.logOptions(log).then(() => {});
                       }}
+                      show24Hour={$UserStore.meta.is24Hour}
                       trackers={$TrackerStore}
                       focus={state.tracker.tag} />
                   {/if}
@@ -767,6 +771,7 @@
                       on:locationClick={event => {
                         Interact.showLocations([log]);
                       }}
+                      show24Hour={$UserStore.meta.is24Hour}
                       on:moreClick={event => {
                         Interact.logOptions(log).then(() => {});
                       }}

@@ -63,6 +63,7 @@
 
   const setDocumentParams = options => {
     let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
     // let isDarkMode = false;
     let manualDarkMode = JSON.parse(
       localStorage.getItem(config.dark_mode_key) || "false"

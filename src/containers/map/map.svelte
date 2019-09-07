@@ -41,7 +41,7 @@
     });
   }
 
-  if (!locations.length && picker) {
+  $: if (!locations.length && picker && MAP) {
     locate().then(location => {
       locations = [
         {
@@ -65,20 +65,32 @@
           MAP.removeLayer(layer);
         });
 
-        MAP.on("moveend", () => {
-          let center = MAP.getCenter();
-          let lat = center.lat;
-          let lng = center.lng;
-          // Stop this from being called multiple times.
-          if (!data.locating) {
-            data.locating = true;
-            methods.getLocation(lat, lng).then(loc => {
-              data.locationName = loc.Match_addr;
-              data.locating = false;
+        if (locations.length) {
+          methods.getLocation(locations[0].lat, locations[0].lng).then(loc => {
+            data.locationName = loc.Match_addr;
+            data.locating = false;
+          });
+        }
+        if (picker) {
+          MAP.on("moveend", () => {
+            let center = MAP.getCenter();
+            let lat = center.lat;
+            let lng = center.lng;
+            // Stop this from being called multiple times.
+            if (!data.locating) {
+              data.locating = true;
+              methods.getLocation(lat, lng).then(loc => {
+                data.locationName = loc.Match_addr;
+                data.locating = false;
+              });
+            }
+            dispatch("change", {
+              ...MAP.getCenter(),
+              ...{ location: data.locationName }
             });
-          }
-          dispatch("change", MAP.getCenter());
-        });
+          });
+        }
+
         resolve(MAP);
       });
     },

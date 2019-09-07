@@ -1,3 +1,19 @@
+# v.4.2.6 - Sat Set 7 2019
+
+## Enhancements
+
+-   New All-in-one Log Editor
+-   Improved History / Search Tab
+-   Time of Day coloring
+-   Added 24 hour option [#41]
+
+## Fixes
+
+-   Fixed Aggressive Sync [#42]
+-   Moving history point to last month bug [#44]
+-   Map Location always changing [#43]
+-   Cannot add Tracker when starting app [#45]
+
 # v4.2.1 - Sat Aug 31 2019
 
 ## Enhancements

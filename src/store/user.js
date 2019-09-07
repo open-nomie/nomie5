@@ -41,6 +41,7 @@ const userInit = () => {
 			lock: false,
 			pin: null,
 			aggressiveSync: false,
+			is24Hour: false,
 		},
 		locked: true,
 	};
