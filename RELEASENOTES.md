@@ -12,7 +12,6 @@
 -   Fixed Aggressive Sync [#42]
 -   Moving history point to last month bug [#44]
 -   Map Location always changing [#43]
--   Aggressive Sync TOO aggressive [#41]
 -   Cannot add Tracker when starting app [#45]
 
 # v4.2.1 - Sat Aug 31 2019
