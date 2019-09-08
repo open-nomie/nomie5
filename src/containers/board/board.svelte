@@ -228,6 +228,11 @@
         ActiveLogStore.addTag(tracker.tag);
         if (tracker.one_tap === true) {
           let note = $ActiveLogStore.note + "";
+          // Account for Positivity calculation
+          $ActiveLogStore.score = ActiveLogStore.calculateScore(
+            note,
+            $TrackerStore
+          );
           LedgerStore.saveLog($ActiveLogStore).then(() => {
             Interact.toast(`Saved ${note}`);
             ActiveLogStore.clear();

@@ -15,6 +15,7 @@
   import NItem from "../components/list-item/list-item.svelte";
   import NCell from "../components/cell/cell.svelte";
   import NText from "../components/text/text.svelte";
+  import NPoints from "../components/points/points.svelte";
   import NNoteTextualizer from "../components/note-textualizer/note-textualizer.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
   import NModal from "../components/modal/modal.svelte";
@@ -63,6 +64,7 @@
   let loading = true;
   let book = undefined;
   let locations = [];
+  let dayScore = 0;
 
   // Used for checking things
   const checks = {
@@ -103,6 +105,15 @@
       .filter(log => filterActiveDate(log))
       .sort((a, b) => {
         return a.end < b.end ? 1 : -1;
+      });
+
+    dayScore = 0;
+    logs
+      .filter(log => {
+        return log.score;
+      })
+      .forEach(log => {
+        dayScore = dayScore + parseInt(log.score);
       });
 
     setTimeout(() => {
@@ -425,7 +436,12 @@
           <NCell
             direction="row"
             className="justify-content-center align-items-center">
-            <i class="zmdi mr-2 text-faded-3 text-xs" />
+            {#if dayScore}
+              <NPoints points={dayScore} className="mr-2" />
+            {:else}
+              <i class="zmdi mr-2 text-faded-3 text-xs" />
+            {/if}
+
             <NCell direction="column">
               <NText tag="div" size="md" bold>
                 {state.date.format('dddd')}

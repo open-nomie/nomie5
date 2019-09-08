@@ -9,6 +9,7 @@ import { writable } from 'svelte/store';
 // utils
 import Logger from '../utils/log/log';
 import PromiseStep from '../utils/promise-step/promise-step';
+import calculateScore from '../utils/calculate-score/calculate-score';
 
 // Modules
 import Storage from '../modules/storage/storage';
@@ -19,6 +20,7 @@ import NomieAPICli from '../modules/nomie-api-cli/nomie-api-cli';
 // Stores
 import { LedgerStore } from './ledger';
 import { Interact } from './interact';
+import { TrackerStore } from './trackers';
 
 const console = new Logger('🚦 Nomie API');
 const NAPI = new NomieAPICli({ domain: 'nomieapi.com' });
@@ -79,6 +81,7 @@ const nomieApiInit = () => {
 				log => {
 					log.end = new Date(log.date);
 					let nLog = new NomieLog(log);
+					nLog.score = calculateScore(nLog.note, $TrackerStore);
 					return LedgerStore.saveLog(nLog);
 				},
 				status => {

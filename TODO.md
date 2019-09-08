@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Sep 7 2019 7:09 pm
+Generated Sun Sep 8 2019 4:20 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -56,5 +56,4 @@ Generated Sat Sep 7 2019 7:09 pm
    - TODO: Finish this starter pack add trackers, make them installable. -->
 - **src/components/capture-log.svelte**
    - TODO: Add a media/photo type of thing that can be added to a log..
-   - TODO: Mobile is getting GMT Time, desktop is not
    - await LedgerStore.saveLog($ActiveLogStore);  TODO: Make ledger task instead

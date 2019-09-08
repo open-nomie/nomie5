@@ -124,7 +124,6 @@ const ledgerInit = () => {
 			return trackers;
 		},
 		getToday() {
-			console.log('get Today');
 			return new Promise((resolve, reject) => {
 				let todayKey = dayjs().format('YYYY-MM');
 				// Set local function for setting today
@@ -275,6 +274,8 @@ const ledgerInit = () => {
 			// Make sure it's a Nomie Log
 			log = log instanceof NomieLog ? log : new NomieLog(log);
 			hooks.run('onBeforeSave', log);
+
+			console.log('Saving Log', log);
 			// Return Promise
 			return new Promise(async (resolve, reject) => {
 				// Update store to show it's saving

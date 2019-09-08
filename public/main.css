@@ -7668,6 +7668,14 @@ body.scrolling .mini-map {
 .n-item .right span {
   font-size: 0.9rem; }
 
+.n-item .right select {
+  min-width: 190px;
+  width: 190px;
+  text-align: right; }
+
+.n-item .right .form-control {
+  width: 190px; }
+
 .n-item main small {
   font-size: 0.8rem !important;
   line-height: 0.9rem !important; }

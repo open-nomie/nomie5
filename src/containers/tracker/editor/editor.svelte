@@ -14,6 +14,9 @@
   import Tracker from "../../../modules/tracker/tracker";
   import TrackerTypes from "../../../modules/tracker-types/tracker-types";
 
+  // containers
+  import PointsEditor from "../points-editor.svelte";
+
   // Stores
   import config from "../../../../config/global";
   import { UserStore } from "../../../store/user";
@@ -103,13 +106,6 @@
 
 <style lang="scss">
   .n-tracker-editor {
-    select {
-      min-width: 190px;
-      text-align: right;
-    }
-    .form-control {
-      width: 200px;
-    }
     .item-divider.compact {
       background-color: var(--color-solid);
     }
@@ -261,7 +257,10 @@
           </NItem>
         {/if}
         <NItem className="item-divider compact" />
-        <NItem title="Default Value">
+        <PointsEditor {tracker} />
+
+        <NItem className="item-divider compact" />
+        <NItem title="Default">
           <div slot="right">
             <input
               type="number"
