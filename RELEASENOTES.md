@@ -3,6 +3,8 @@
 ## Enhancements
 
 -   Fixed button styling, added on action
+-   Added Positivity Back to Nomie https://shareking.s3.amazonaws.com/Screen-Recording-2019-09-08-16-26-52.mp4
+-   Sticky Header to the Stats View
 
 # v.4.2.6 - Sat Set 7 2019
 

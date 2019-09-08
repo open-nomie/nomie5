@@ -9,6 +9,7 @@
 
 <style type="text/scss">
   .n-text {
+    color: var(--color-inverse);
     &.xs {
       font-size: 0.65rem;
     }
