@@ -301,7 +301,7 @@
     position: -webkit-sticky;
     position: sticky;
     top: 50px;
-    z-index: 3000;
+    z-index: 1000;
   }
 
   .subheader {
@@ -310,7 +310,7 @@
 
   .popcards {
     position: relative;
-    min-height: 1200px;
+    min-height: 200vh;
     margin-right: 10px;
     margin-left: 10px;
     width: calc(100% - 20px);

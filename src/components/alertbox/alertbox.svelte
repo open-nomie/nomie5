@@ -36,7 +36,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 1010;
+    z-index: 2200;
     background-color: rgba(0, 0, 0, 0.88);
     display: flex;
     justify-content: center;

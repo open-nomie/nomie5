@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sun Sep 8 2019 6:31 pm
+Generated Sun Sep 8 2019 9:11 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -38,6 +38,8 @@ Generated Sun Sep 8 2019 6:31 pm
    - and one for the pin-lock container - TODO: merge these some day
 - **src/containers/tracker/input/input.svelte**
    - TODO: Figure out wtf is going on with value and data.value - can we just use value?
+- **src/containers/tracker/editor/editor.svelte**
+   - TODO: Make edit tag work. It when saving the tracker we need to know it's original tag and replace it in the TrackerStore. Right not it just adds a new one since the tag is the key.
 - **src/containers/setup/setup.svelte**
    - TODO: Make this design not suck! It's very boring.
    - TODO: UserSession shouldn't be in here - login should be fired by Storage.

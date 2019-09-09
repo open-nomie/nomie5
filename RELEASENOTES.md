@@ -6,6 +6,10 @@
 -   Added Positivity Back to Nomie https://shareking.s3.amazonaws.com/Screen-Recording-2019-09-08-16-26-52.mp4
 -   Sticky Header to the Stats View
 
+## Bugs
+
+-   Fixed Negative Number issues [#47]
+
 # v.4.2.6 - Sat Set 7 2019
 
 ## Enhancements

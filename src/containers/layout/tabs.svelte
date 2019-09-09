@@ -23,9 +23,8 @@
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-    z-index: 200;
+    z-index: 1200;
     // Tab Links
-
     // Tab Icons
   }
 

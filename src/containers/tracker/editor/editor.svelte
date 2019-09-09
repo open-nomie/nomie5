@@ -39,24 +39,22 @@
   };
 
   $: if (tracker.type === "timer") {
+    console.log("Timer");
     tracker.uom = "timer";
     tracker.min = null;
     tracker.max = null;
   } else if (tracker.uom == "timer" && tracker.type != "timer") {
+    console.log("Number");
     tracker.uom = "num";
   } else if (tracker.type === "range" && isNaN(tracker.min)) {
+    console.log("Range");
     tracker.min = 1;
     tracker.max = 10;
   }
 
-  $: if (tracker._dirty === true) {
-    data.editTag = true;
-  } else {
-    data.editTag = false;
-  }
-
   const methods = {
     tracker_save() {
+      console.log("Saving Tag", tracker.tag);
       if (!tracker.tag || !tracker.label) {
         Interact.alert(
           "Missing Data",
@@ -68,14 +66,20 @@
       }
     },
     editTag() {
-      Interact.confirm(
-        "Change this Tag?",
-        `If you've tracked with this in the past, use "Settings > Find and Replace" to replace #${tracker.tag} with your new tag.`
-      ).then(res => {
-        if (res === true) {
-          data.editTag = true;
-        }
-      });
+      Interact.alert(
+        "Not Supported",
+        `Editing Tags is currently not supported. Your best option is to Export your data, and do a search/replace for the tag.`
+      );
+
+      // TODO: Make edit tag work. It when saving the tracker we need to know it's original tag and replace it in the TrackerStore. Right not it just adds a new one since the tag is the key.
+      // Interact.confirm(
+      //   "Change this Tag?",
+      //   `If you've tracked with this in the past, use "Settings > Find and Replace" to replace #${tracker.tag} with your new tag.`
+      // ).then(res => {
+      //   if (res === true) {
+      //     tracker._dirty = true;
+      //   }
+      // });
     },
     addTrackerToNote() {
       Interact.selectTrackers().then(trackers => {
@@ -145,9 +149,8 @@
               bind:value={tracker.emoji} />
           </div>
         </NItem>
-        {#if data.editTag}
+        {#if tracker._dirty}
           <NItem title="Tag">
-
             <div slot="right">
               <input
                 type="text"
@@ -165,7 +168,9 @@
             <div slot="right">
               <div class="n-row">
                 {tracker.tag}
-                <button class="btn-link btn">Edit</button>
+                <button class="btn-link btn" on:click={methods.editTag}>
+                  Edit
+                </button>
               </div>
             </div>
           </NItem>
@@ -193,7 +198,8 @@
             <div slot="right" class="">
               <div class="n-row">
                 <input
-                  type="number"
+                  pattern="[0-9]*"
+                  inputmode="numeric"
                   class="form-control mr-2"
                   style="width:90px;"
                   placeholder="Min"
@@ -203,7 +209,8 @@
                   }}
                   bind:value={tracker.min} />
                 <input
-                  type="number"
+                  pattern="[0-9]*"
+                  inputmode="numeric"
                   class="form-control"
                   style="width:90px;"
                   placeholder="Max"
@@ -249,25 +256,30 @@
             <textarea
               bind:value={tracker.note}
               placeholder="#any #tracker #hashtags"
-              class="form-control my-2 w-100" />
+              class="form-control w-100" />
             <!-- <button
             slot="right"
             class="btn btn-clear btn-sm btn-icon zmdi zmdi-plus"
             on:click={methods.addTrackerToNote} /> -->
           </NItem>
+          <NItem
+            description="Combine multiple trackers together using their
+            #hashtags. For example, #mood #sleep_quality. Nomie will then ask
+            for values one by one." />
         {/if}
         <NItem className="item-divider compact" />
         <PointsEditor {tracker} />
-
-        <NItem className="item-divider compact" />
+        <NItem className="item-divider bg-solid compact" />
         <NItem title="Default">
           <div slot="right">
             <input
-              type="number"
+              pattern="[0-9]*"
+              inputmode="numeric"
               class="form-control"
               bind:value={tracker.default} />
           </div>
         </NItem>
+        <NItem className="item-divider bg-solid compact" />
       </div>
 
       <button

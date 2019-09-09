@@ -85,7 +85,7 @@
 {#if tracker}
   <div class="points-editor">
     <div class="n-list">
-      <NItem title="Positivity">
+      <NItem title="Positivity" className="mb-2">
         <div slot="right">
 
           <select class="form-control w-100" bind:value={tracker.score}>
@@ -103,10 +103,12 @@
 
       {#if tracker.score === 'custom'}
         {#each tracker.score_calc || [] as condition, index}
-          <NItem
-            title="{index === 0 ? 'If:' : 'Else If:'}
-            {scoreOptions[condition.if] || 'Unknown'} is {condition.is}
-            {condition.v}">
+          <NItem>
+            <NText size="sm">
+              {index === 0 ? 'If:' : 'Else If:'}
+              {scoreOptions[condition.if] || 'Unknown'} is {condition.is}
+              {condition.v}
+            </NText>
             <button
               slot="left"
               on:click={() => {
@@ -152,15 +154,17 @@
             <NItem title="Value">
               <div slot="right">
                 <input
-                  type="number"
+                  pattern="[0-9]*"
+                  inputmode="numeric"
                   class="form-control"
                   bind:value={state.genesisCalc.v} />
               </div>
             </NItem>
-            <NItem title="Points">
+            <NItem title="Score">
               <div slot="right">
                 <input
-                  type="number"
+                  pattern="[0-9]*"
+                  inputmode="numeric"
                   class="form-control"
                   bind:value={state.genesisCalc.sc} />
               </div>
@@ -174,9 +178,10 @@
                   state.showConditionForm = false;
                 }} />
               <NItem
-                title="Add Condition"
                 className="text-primary text-center"
-                on:click={methods.saveCondition} />
+                on:click={methods.saveCondition}>
+                <span class="text-primary">Add Condition</span>
+              </NItem>
             </NCell>
           </div>
         {:else}

@@ -503,7 +503,7 @@
   {:else if state.showAllLocations}
     <NMap {locations} />
   {:else}
-    <div class="container p-0 pt-3">
+    <div class="container p-0">
       <!-- If no Logs found -->
       {#if logs.length === 0}
         {#if !searchMode}
