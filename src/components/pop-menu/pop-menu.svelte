@@ -2,6 +2,7 @@
   import NToolbar from "../toolbar/toolbar.svelte";
   import NItem from "../list-item/list-item.svelte";
   import { createEventDispatcher } from "svelte";
+  import { Lang } from "../../store/lang";
   const dispatch = createEventDispatcher();
 
   export let title = undefined;
@@ -104,7 +105,7 @@
         on:click={() => {
           dispatch('close');
         }}>
-        Cancel
+        {Lang.t('general.cancel')}
       </button>
     </div>
   </div>

@@ -31,7 +31,6 @@ const LangInit = () => {
 		lng: base.lang,
 		resources: {
 			en: enUS,
-			test: testLang,
 		},
 	});
 
