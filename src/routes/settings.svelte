@@ -340,19 +340,32 @@
           borderBottom
           className="n-item-divider" />
         <NItem title="Learn More">
-          <span slot="right" class="pr-2">
-            <a href="https://nomie.app?s=dap" target="_system">Website</a>
+          <span slot="right">
+            <a
+              href="https://nomie.app?s=dap"
+              class="btn btn-clear text-primary"
+              target="_system">
+              Website
+            </a>
           </span>
         </NItem>
         <NItem title="Reddit r/nomie">
-          <span slot="right" class="pr-2">
-            <a href="https://reddit.com/r/nomie" target="_system">r/nomie</a>
+          <span slot="right">
+            <a
+              href="https://reddit.com/r/nomie"
+              class="btn btn-clear text-primary"
+              target="_system">
+              r/nomie
+            </a>
           </span>
         </NItem>
 
         <NItem title="Open Source">
-          <span slot="right" class="pr-2">
-            <a href="https://github.com/open-nomie/nomie" target="_system">
+          <span slot="right">
+            <a
+              href="https://github.com/open-nomie/nomie"
+              class="btn btn-clear text-primary"
+              target="_system">
               Github
             </a>
           </span>
@@ -361,18 +374,19 @@
         <NItem className="compact item-divider" />
 
         <NItem title="Version">
-          <span slot="right" class="pr-2">APP_VERSION</span>
+          <span slot="right" class="pr-2 text-sm">APP_VERSION</span>
         </NItem>
         <NItem title="Built">
-          <span slot="right" class="pr-2">APP_BUILD_DATE</span>
+          <span slot="right" class="pr-2 text-sm">APP_BUILD_DATE</span>
         </NItem>
 
       </div>
 
       <div class="n-pop my-3 pt-2">
         <NItem title={Lang.t('general.questions')}>
-          <span slot="right" class="pr-2">
+          <span slot="right">
             <a
+              class="btn btn-clear text-primary"
               href={`mailto:${config.support_email}?subject=Open Nomie Support`}>
               {config.support_contact}
             </a>

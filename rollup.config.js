@@ -66,7 +66,7 @@ export default [
 			commonjs(),
 
 			// Remove Moe
-			visualizer(),
+			// visualizer(),
 
 			// Watch the `public` directory and refresh the
 			// browser on changes when not in production
