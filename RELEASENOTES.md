@@ -9,6 +9,7 @@
 -   Tagging Language Support Ticket [#50]
 -   Tagging Offline Support [#11] - Service workers now cache everything should work offline if using Local Storage
 -   Fixing double stones in UOM [#53]
+-   Fixing settings design
 
 ## Bugs
 
