@@ -26,6 +26,7 @@
   import { TrackerStore } from "../store/trackers";
   import { BoardStore } from "../store/boards";
   import { NomieAPI } from "../store/napi";
+  import { Lang } from "../store/lang";
   // Config
   import config from "../../config/global";
 
@@ -65,26 +66,22 @@
     },
     export() {
       Interact.confirm(
-        `Continue?`,
-        `This process might take a couple minutes. 
-        If you have a lot of data, it will seem like it gets hung up. 
-        Have patience.`
+        Lang.t("general.continue-question"),
+        Lang.t("settings.export-confirm")
       ).then(res => {
         if (res === true) {
           Export.onChange(change => {
             Interact.toast(`Export: ${change}`, true);
           });
           Export.start().then(() => {
-            Interact.toast("Export Done!");
+            Interact.toast(Lang.t("settings.export-complete"));
           });
         }
       });
     },
     switchToCloud() {
-      let msg = `Data is not automatically migrated to the cloud.
-                You should export your local data first, then import it once the switch is complete. 
-                You can always switch back`;
-      Interact.confirm("Switch to Blockstack - Are you sure?", msg).then(
+      let msg = Lang.t("settings.switch-to-cloud-notice");
+      Interact.confirm(Lang.t("settings.switch-to-cloud-confirm"), msg).then(
         res => {
           if (res === true) {
             UserStore.setStorage("blockstack");
@@ -94,15 +91,15 @@
       );
     },
     switchToLocal() {
-      let msg = `Data is not automatically migrated FROM the cloud.
-                You should export your data first, then import it once the switch is complete. 
-                You can always switch back`;
-      Interact.confirm("Switch to Local - Are you sure?", msg).then(res => {
-        if (res === true) {
-          UserStore.setStorage("local");
-          window.location.href = "/";
+      let msg = Lang.t("settings.switch-to-local-notice");
+      Interact.confirm(Lang.t("settings.switch-to-local-confirm"), msg).then(
+        res => {
+          if (res === true) {
+            UserStore.setStorage("local");
+            window.location.href = "/";
+          }
         }
-      });
+      );
     },
     settingChange() {
       UserStore.saveMeta();
@@ -111,7 +108,7 @@
       if ($UserStore.meta.lock === true) {
         if (($UserStore.meta.pin || "").length == 0) {
           // TODO: figure out how to handle a cancel in the interact prompt
-          Interact.prompt("Enter 1 to 6 digit pin", {
+          Interact.prompt(Lang.t("settings.pin-details"), {
             value: "",
             valueType: "number"
           }).then(pin => {
@@ -152,8 +149,10 @@
 </script>
 
 <NToolbar pinTop>
-  <h2>Settings</h2>
-  <button on:click={methods.faq} class="btn btn-clear text-primary">FAQ</button>
+  <h2>{Lang.t('settings.settings')}</h2>
+  <button on:click={methods.faq} class="btn btn-clear text-primary">
+    {Lang.t('general.faq')}
+  </button>
 </NToolbar>
 {#if $UserStore.meta}
   <div class="page page-settings with-header">
@@ -170,7 +169,7 @@
               <button
                 class="btn btn-small btn-clear text-primary"
                 on:click={methods.sign_out}>
-                Sign Out
+                {Lang.t('settings.sign-out')}
               </button>
             </div>
           </NItem>
@@ -179,7 +178,7 @@
       {/if}
 
       <div class="n-pop my-3">
-        <NItem title="Use Location">
+        <NItem title={Lang.t('settings.use-location')}>
           <span
             slot="left"
             class="btn-icon zmdi zmdi-my-location"
@@ -192,7 +191,7 @@
               }} />
           </div>
         </NItem>
-        <NItem title="Dark Mode">
+        <NItem title={Lang.t('settings.dark-mode')}>
           <span
             slot="left"
             class="btn-icon zmdi zmdi-brightness-2"
@@ -205,7 +204,7 @@
               }} />
           </div>
         </NItem>
-        <NItem title="Require Pin">
+        <NItem title={Lang.t('settings.require-pin')}>
           <span
             slot="left"
             class="btn-icon zmdi zmdi-apps"
@@ -216,7 +215,7 @@
               on:change={methods.lockToggle} />
           </div>
         </NItem>
-        <NItem title="24 Hour Clock">
+        <NItem title={Lang.t('settings.24-hour-clock')}>
           <span
             slot="left"
             class="btn-icon zmdi zmdi-time"
@@ -231,8 +230,13 @@
       </div>
 
       <div class="n-pop my-3">
-        <NItem title="Data" borderBottom className="n-item-divider" />
-        <NItem title="Nomie API" on:click={() => navigate('/api')}>
+        <NItem
+          title={Lang.t('settings.data')}
+          borderBottom
+          className="n-item-divider" />
+        <NItem
+          title={Lang.t('settings.nomie-api')}
+          on:click={() => navigate('/api')}>
           <span
             slot="left"
             class="btn-icon zmdi zmdi-code-setting"
@@ -240,7 +244,7 @@
           <span slot="right" class="icon zmdi zmdi-chevron-right" />
         </NItem>
         <NItem
-          title="Import from Backup"
+          title={Lang.t('settings.import-from-backup')}
           on:click={() => {
             showImporter = true;
           }}>
@@ -256,7 +260,9 @@
             bind:this={fileInput}
             on:change={methods.onImportFile} />
         </NItem>
-        <NItem title="Generate Backup" on:click={methods.export}>
+        <NItem
+          title={Lang.t('settings.generate-backup')}
+          on:click={methods.export}>
           <span
             slot="left"
             class="btn-icon zmdi zmdi-cloud-upload"
@@ -264,7 +270,7 @@
           <span slot="right" class="icon zmdi zmdi-chevron-right" />
         </NItem>
         <NItem
-          title="Find and Replace..."
+          title="{Lang.t('settings.find-and-replace')}..."
           on:click={() => {
             data.showMassEditor = true;
           }}>
@@ -300,19 +306,19 @@
               <button
                 class="btn btn-clear text-primary"
                 on:click={methods.switchToCloud}>
-                Use Cloud
+                {Lang.t('settings.use-cloud')}
               </button>
             {:else}
               <button
                 class="btn btn-clear text-primary"
                 on:click={methods.switchToLocal}>
-                Use Local
+                {Lang.t('settings.use-local')}
               </button>
             {/if}
           </div>
         </NItem>
 
-        <NItem title="First Book Created">
+        <NItem title={Lang.t('settings.first-book')}>
           <span
             slot="left"
             class="btn-icon zmdi zmdi-book"
@@ -329,7 +335,7 @@
           </div>
         </NItem>
         {#if $UserStore.storageType === 'blockstack'}
-          <NItem title="Aggressive Sync">
+          <NItem title={Lang.t('settings.aggressive-sync')}>
             <span
               slot="left"
               class="btn-icon zmdi {`${$UserStore.meta.aggressiveSync ? 'zmdi-refresh-sync' : 'zmdi-refresh-sync-off'}`}"
@@ -340,14 +346,15 @@
                 on:change={methods.settingChange} />
             </div>
           </NItem>
-          <NItem
-            description="Using Nomie on multiple devices? Enable Aggressive Sync
-            to sync more frequently" />
+          <NItem description={Lang.t('settings.aggressive-description')} />
         {/if}
       </div>
 
       <div class="n-pop my-3">
-        <NItem title="About Nomie" borderBottom className="n-item-divider" />
+        <NItem
+          title={Lang.t('settings.about-nomie')}
+          borderBottom
+          className="n-item-divider" />
         <NItem title="Learn More">
           <span slot="right" class="pr-2">
             <a href="https://nomie.app?s=dap" target="_system">Website</a>
@@ -382,7 +389,7 @@
       </div>
 
       <div class="n-pop my-3 pt-2">
-        <NItem title="Questions?">
+        <NItem title={Lang.t('general.questions')}>
           <span slot="right" class="pr-2">
             <a
               href={`mailto:${config.support_email}?subject=Open Nomie Support`}>

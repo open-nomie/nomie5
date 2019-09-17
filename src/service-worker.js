@@ -21,11 +21,6 @@ const RUNTIME = 'runtime';
 const PRECACHE_URLS = [
 	'index.html',
 	'./', // Alias for index.html
-	'/images/nomie-splash.png',
-	'/global.css?v=APP_VERSION',
-	'/main.css?v=APP_VERSION',
-	'/bundle.css?v=APP_VERSION',
-	'/bundle.js?v=APP_VERSION',
 ];
 
 // The install handler takes care of precaching the resources we always need.

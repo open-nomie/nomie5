@@ -41,7 +41,7 @@
   import { BoardStore } from "../../store/boards";
   import { TrackerStore } from "../../store/trackers";
   import { Interact } from "../../store/interact";
-
+  import { Lang } from "../../store/lang";
   // Consts
   const console = new Logger("board.svelte");
 
@@ -327,12 +327,12 @@
       ];
 
       const removeButton = {
-        title: `Remove...`,
+        title: `${Lang.t("general.remove")}...`,
         click() {
           if ($BoardStore.active === "all") {
             Interact.confirm(
-              `Delete ${tracker.label} from Nomie`,
-              "You can always recreate it later. No historic data will be deleted deleted."
+              Lang.t("general.delete-from-nomie", { thing: tracker.label }),
+              Lang.t("tracker.delete-description")
             ).then(res => {
               if (res) {
                 TrackerStore.deleteTracker(tracker).then(done => {});
@@ -501,12 +501,14 @@
 
         <div class="board-actions">
           <button class="btn btn btn-light" on:click={methods.addTapped}>
-            Add Tracker
+            {Lang.t('tracker.add-tracker')}
           </button>
 
           {#if activeBoard}
             <button on:click={methods.editBoard} class="btn btn btn-light">
-              Edit {(activeBoard || {}).label || null} Board
+              {Lang.t('board.edit-board', {
+                board: (activeBoard || {}).label || null
+              })}
             </button>
           {/if}
         </div>

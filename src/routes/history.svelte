@@ -36,6 +36,7 @@
   import { Interact } from "../store/interact";
   import { TrackerStore } from "../store/trackers";
   import { LedgerStore } from "../store/ledger";
+  import { Lang } from "../store/lang";
 
   import { HistoryPage } from "../store/history-page";
 
@@ -140,7 +141,6 @@
   // Methods
   const methods = {
     toggleSearch() {
-      console.log("Toggle Search");
       if (searchMode) {
         state.searchResults = null;
         state.searchTerm = null;
@@ -150,7 +150,6 @@
       }
     },
     getLogs(fresh) {
-      console.log("Get Logs");
       fresh = fresh ? fresh : false;
 
       loading = true;
@@ -170,7 +169,6 @@
       state.location.lng = null;
     },
     refresh() {
-      console.log("Refreshing");
       refreshing = true;
       setTimeout(() => {
         refreshing = false;
@@ -226,11 +224,9 @@
       }
     },
     refreshSearch() {
-      console.log("Refresh Search");
       methods.search(state.searchTerm, state.date.format("YYYY"));
     },
     search(key, year) {
-      console.log("SEarching", { key, year });
       searchMode = true;
       if ((key || "").length > 1) {
         state.searchResults = [];
@@ -483,7 +479,7 @@
       bind:this={searchInput}
       bind:value={state.searchTerm}
       on:keypress={methods.searchKeypress}
-      placeholder="Search..."
+      placeholder="{Lang.t('general.search')}..."
       class="search-input" />
     {#if searchMode}
       <button
@@ -508,13 +504,13 @@
       {#if logs.length === 0}
         {#if !searchMode}
           <div class="empty-notice">
-            No records found for
+            {Lang.t('history.no-records-found')}
             <br />
             {state.date.format('dddd, MMMM D YYYY')}
           </div>
         {:else}
           <div class="empty-notice">
-            {state.date.format('YYYY')} nothing found.
+            {state.date.format('YYYY')} {Lang.t('history.no-records-found')}
           </div>
         {/if}
         <!-- If Logs and Not refreshing  -->

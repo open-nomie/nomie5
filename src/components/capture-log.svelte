@@ -33,6 +33,7 @@
   import { LedgerStore } from "../store/ledger";
   import { ActiveLogStore } from "../store/active-log";
   import { UserStore } from "../store/user";
+  import { Lang } from "../store/lang";
 
   // Consts
   const console = new Logger("capture-log");
@@ -472,11 +473,13 @@
           disabled={saving || saved}
           bind:value={$ActiveLogStore.note}
           bind:this={textarea}
-          placeholder="What's Up?"
+          placeholder={Lang.t('general.whats-up')}
           on:keypress={methods.keyPress}
           on:paste={methods.keyPress} />
         {#if !saving}
-          <button class="save-button" on:click={methods.logSave}>Save</button>
+          <button class="save-button" on:click={methods.logSave}>
+            {Lang.t('general.save')}
+          </button>
         {:else}
           <button class="save-button">•••</button>
         {/if}
@@ -496,7 +499,7 @@
             state.showCustomDate = true;
           }}>
           <i class="zmdi zmdi-calendar" />
-          Date
+          {Lang.t('general.date')}
         </button>
       {:else}
         <button
@@ -505,7 +508,7 @@
             methods.clearDate();
           }}>
           <i class="zmdi zmdi-minus-circle text-white" />
-          Date
+          {Lang.t('general.date')}
           <!-- {dayjs(state.date).format(`YYYY/MM/DD ${$UserStore.meta.is24Hour ? 'HH:mm' : 'h:mm a'}`)} -->
         </button>
       {/if}
@@ -561,7 +564,7 @@
               bind:value={state.dateStarter} />
             <div class="input-group-append">
               <button class="btn btn-primary px-3" on:click={methods.setDate}>
-                Set
+                {Lang.t('general.set')}
               </button>
             </div>
           </div>

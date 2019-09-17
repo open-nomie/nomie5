@@ -22,6 +22,7 @@
   import { UserStore } from "../../../store/user";
   import { Interact } from "../../../store/interact";
   import { TrackerStore } from "../../../store/trackers";
+  import { Lang } from "../../../store/lang";
 
   const dispatch = createEventDispatcher();
 
@@ -150,7 +151,7 @@
           </div>
         </NItem>
         {#if tracker._dirty}
-          <NItem title="Tag">
+          <NItem title={Lang.t('tracker.tag')}>
             <div slot="right">
               <input
                 type="text"
@@ -164,19 +165,19 @@
             </div>
           </NItem>
         {:else}
-          <NItem title="Tag" on:click={methods.editTag}>
+          <NItem title={Lang.t('tracker.tag')} on:click={methods.editTag}>
             <div slot="right">
               <div class="n-row">
                 {tracker.tag}
                 <button class="btn-link btn" on:click={methods.editTag}>
-                  Edit
+                  {Lang.t('general.edit')}
                 </button>
               </div>
             </div>
           </NItem>
         {/if}
         <NItem className="item-divider compact" />
-        <NItem title="Type">
+        <NItem title={Lang.t('tracker.type')}>
           <div slot="right">
             <select class="form-control w-100" bind:value={tracker.type}>
               {#each data.types as type}
@@ -187,14 +188,14 @@
 
         </NItem>
         {#if tracker.type == 'tick'}
-          <NItem title="Save On Tap">
+          <NItem title={Lang.t('tracker.save-on-tap')}>
             <div slot="right">
               <NToggle bind:value={tracker.one_tap} />
             </div>
           </NItem>
         {/if}
         {#if tracker.type == 'range'}
-          <NItem title="Min / Max">
+          <NItem title={Lang.t('tracker.min-max')}>
             <div slot="right" class="">
               <div class="n-row">
                 <input
@@ -202,7 +203,7 @@
                   inputmode="numeric"
                   class="form-control mr-2"
                   style="width:90px;"
-                  placeholder="Min"
+                  placeholder={Lang.t('general.min')}
                   on:focus={e => {
                     console.log('E Focused', e.target);
                     e.target.select();
@@ -213,7 +214,7 @@
                   inputmode="numeric"
                   class="form-control"
                   style="width:90px;"
-                  placeholder="Max"
+                  placeholder={Lang.t('general.max')}
                   on:focus={e => e.target.select()}
                   bind:value={tracker.max} />
               </div>
@@ -224,7 +225,7 @@
 
         {#if tracker.type !== 'timer' && tracker.type !== 'note'}
           <NItem>
-            <div class="title truncate">Measure By</div>
+            <div class="title truncate">{Lang.t('tracker.measure-by')}</div>
             <div slot="right">
               <select bind:value={tracker.uom} class="form-control">
                 {#each Object.keys(data.groupedUOMs) as groupKey (groupKey)}
@@ -242,7 +243,7 @@
           </NItem>
         {/if}
         {#if tracker.type !== 'note'}
-          <NItem title="Calculate">
+          <NItem title={Lang.t('tracker.calculate')}>
             <div slot="right">
               <select class="form-control" bind:value={tracker.math}>
                 {#each ['sum', 'avg'] as math_key}
@@ -255,22 +256,19 @@
           <NItem>
             <textarea
               bind:value={tracker.note}
-              placeholder="#any #tracker #hashtags"
+              placeholder={Lang.t('tracker.note-placeholder')}
               class="form-control w-100" />
             <!-- <button
             slot="right"
             class="btn btn-clear btn-sm btn-icon zmdi zmdi-plus"
             on:click={methods.addTrackerToNote} /> -->
           </NItem>
-          <NItem
-            description="Combine multiple trackers together using their
-            #hashtags. For example, #mood #sleep_quality. Nomie will then ask
-            for values one by one." />
+          <NItem description={Lang.t('tracker.note-description')} />
         {/if}
         <NItem className="item-divider compact" />
         <PointsEditor {tracker} />
         <NItem className="item-divider bg-solid compact" />
-        <NItem title="Default">
+        <NItem title={Lang.t('tracker.default')}>
           <div slot="right">
             <input
               pattern="[0-9]*"
@@ -286,13 +284,13 @@
         slot="footer"
         on:click={methods.cancel}
         class="btn btn-light btn-lg flex-grow mr-1">
-        Cancel
+        {Lang.t('general.cancel')}
       </button>
       <button
         slot="footer"
         class="btn btn-primary btn-lg flex-grow ml-1"
         on:click={methods.tracker_save}>
-        Save
+        {Lang.t('general.save')}
       </button>
     </NModal>
   </div>
