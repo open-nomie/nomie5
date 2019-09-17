@@ -7724,6 +7724,50 @@ body.scrolling .mini-map {
   padding: 0;
   margin: 0; }
 
+.delete-on-app {
+  transition: all 0.3s ease-in-out; }
+  .delete-on-app.deleted {
+    transition: all 0.3s ease-in-out;
+    opacity: 0;
+    transform: scale(1.5); }
+    .delete-on-app.deleted .version {
+      bottom: 1000px;
+      opacity: 0; }
+    .delete-on-app.deleted svg {
+      transition: all 0.3s ease-in-out;
+      transform: scale(2); }
+
+.loading-screen {
+  background-color: #319ed7;
+  background-size: cover;
+  background-position: center;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  .loading-screen svg {
+    transition: all 0.3s ease-in-out; }
+
+.version {
+  position: absolute;
+  width: 100px;
+  bottom: 100px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: -50px;
+  left: 50%;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 12px;
+  text-align: center; }
+
 .n-item.bg-light {
   background-color: var(--color-bg) !important; }
   .n-item.bg-light.text-faded {
@@ -7839,10 +7883,3 @@ button {
 .wiggle-other {
   animation: keyframes1 infinite 0.6s ease-in;
   transform-origin: 30% 5%; }
-
-.delete-on-app {
-  transition: all 0.3s ease-in-out; }
-  .delete-on-app.deleted {
-    transition: all 0.3s ease-in-out;
-    opacity: 0;
-    transform: scale(1.5); }

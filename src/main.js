@@ -6,14 +6,16 @@ dayjs.extend(relativeTime);
 
 // Register Service Worker
 if ('serviceWorker' in navigator) {
-	navigator.serviceWorker
-		.register('/service-worker.js', { scope: './' })
-		.then(registration => {
-			// TODO: handle anything required for service worker
-		})
-		.catch(e => {
-			console.log('Service worker registration failed', e.message);
-		});
+	window.addEventListener('load', () => {
+		navigator.serviceWorker
+			.register('/service-worker.js', { scope: './' })
+			.then(registration => {
+				// TODO: handle anything required for service worker
+			})
+			.catch(e => {
+				console.log('Service worker registration failed', e.message);
+			});
+	});
 }
 
 const app = new App({

@@ -274,8 +274,6 @@ const ledgerInit = () => {
 			// Make sure it's a Nomie Log
 			log = log instanceof NomieLog ? log : new NomieLog(log);
 			hooks.run('onBeforeSave', log);
-
-			console.log('Saving Log', log);
 			// Return Promise
 			return new Promise(async (resolve, reject) => {
 				// Update store to show it's saving
