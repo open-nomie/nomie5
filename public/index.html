@@ -4,40 +4,83 @@
 		<meta charset="utf8" />
 		<title>Nomie 4</title>
 
-		<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover"
+		/>
 		<meta name="description" content="Open Source Mood and Life Tracking" />
 		<meta name="apple-mobile-web-app-title" content="Nomie 4" />
-		<meta name="theme-color" content="#4d84a1" />
+		<meta name="theme-color" content="#319ed7" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+		<meta name="full-screen" content="yes" />
 
-		<link rel="apple-touch-startup-image" href="/images/nomie-splash.png" />
 		<link rel="apple-touch-icon" href="/images/icons/nomie-512.png" />
 		<link rel="icon" type="image/png" href="/favicon.png" />
 		<link rel="icon" type="image/png" sizes="192x192" href="/images/icons/nomie-android-192.png" />
-		<link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+
+		<meta name="twitter:card" content="app" />
+		<meta name="twitter:site" content="@nomieapp" />
+		<meta name="twitter:creator" content="@brandoncorbin" />
+		<meta name="twitter:title" content="Nomie.app" />
+		<meta name="twitter:description" content="Mood and Life Tracking" />
+		<meta name="twitter:app:country" content="us" />
+
 		<base href="/" />
 
-		<!-- ZMDI for icons -->
-		<link rel="stylesheet" href="/vendors/material-design-iconic-font/css/material-design-iconic-font.min.css" />
 		<!-- main is from scss/main.scss -->
 		<link rel="stylesheet" href="/main.css?v=APP_VERSION" />
-		<!-- bundle is all the styles from the app and components-->
-		<link rel="stylesheet" href="/bundle.css?v=APP_VERSION" />
+		<style>
+			.loading-screen {
+				background-image: url('/images/nomie-splash.png');
+				background-size: cover;
+				background-position: center;
+				position: fixed;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				z-index: 4000;
+			}
+			.version {
+				position: absolute;
+				width: 100px;
+				bottom: 100px;
+				font-size: 12px;
+				color: #fff;
+				margin-left: -50px;
+				left: 50%;
+				background-color: rgba(0, 0, 0, 0.3);
+				border-radius: 12px;
+				height: 24px;
+				line-height: 24px;
+				padding: 0 12px;
+				text-align: center;
+			}
+		</style>
 	</head>
 
 	<body>
 		<noscript>
 			Sorry. Nomie 4 requires Javascript to run.
 		</noscript>
+
+		<div class="loading-screen delete-on-app">
+			<div class="version">vAPP_VERSION</div>
+		</div>
+		<!-- End Fakes-->
 		<script src="/vendors/blockstack/blockstack.js"></script>
 		<script src="/vendors/leaflet/leaflet.js"></script>
 		<script src="/vendors/leaflet/esri/esri-leaflet.js"></script>
 		<script src="/vendors/leaflet/geocoder/esri-leaflet-geocoder.js"></script>
-
 		<script src="/bundle.js?v=APP_VERSION"></script>
 		<!-- Styles -->
 		<link rel="stylesheet" href="vendors/leaflet/leaflet.css" />
 		<link rel="stylesheet" href="vendors/leaflet/geocoder/esri-leaflet-geocoder.css" integrity="" />
+		<!-- ZMDI for icons -->
+		<link rel="stylesheet" href="/vendors/material-design-iconic-font/css/material-design-iconic-font.min.css" />
+		<!-- bundle is all the styles from the app and components-->
+		<link rel="stylesheet" href="/bundle.css?v=APP_VERSION" />
 	</body>
 </html>

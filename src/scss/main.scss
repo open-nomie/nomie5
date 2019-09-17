@@ -204,3 +204,12 @@ button {
 	animation: keyframes1 infinite 0.6s ease-in;
 	transform-origin: 30% 5%;
 }
+
+.delete-on-app {
+	transition: all 0.3s ease-in-out;
+	&.deleted {
+		transition: all 0.3s ease-in-out;
+		opacity: 0;
+		transform: scale(1.5);
+	}
+}
