@@ -8,6 +8,7 @@
 
   // components
   import NItem from "../list-item/list-item.svelte";
+  import NPoints from "../points/points.svelte";
   import NText from "../text/text.svelte";
   import NNoteTextualizer from "../note-textualizer/note-textualizer.svelte";
   import NCameraImage from "../camera/image.svelte";
@@ -78,15 +79,19 @@
           <i class="zmdi zmdi-globe text-primary-bright" />
         </button>
       {/if}
+
       <div class="filler" />
+      {#if displayLog.score}
+        <NPoints points={displayLog.score} />
+      {/if}
       <!-- Janky - fix this -->
       <button
         on:click={event => {
           dispatch('moreClick', displayLog);
         }}
         class="btn btn-sm btn-clear pl-2 pr-2 "
-        style="margin-right:-20px; margin-top:-10px; font-size:32px;
-        height:30px; line-height:30px;">
+        style="margin-left:10px; margin-right:-20px; margin-top:-10px;
+        font-size:32px; height:30px; line-height:30px;">
         <i
           class="zmdi zmdi-more text-primary-bright"
           style="height:30px; line-height:30px;" />

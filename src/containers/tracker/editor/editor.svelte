@@ -14,11 +14,15 @@
   import Tracker from "../../../modules/tracker/tracker";
   import TrackerTypes from "../../../modules/tracker-types/tracker-types";
 
+  // containers
+  import PointsEditor from "../points-editor.svelte";
+
   // Stores
   import config from "../../../../config/global";
   import { UserStore } from "../../../store/user";
   import { Interact } from "../../../store/interact";
   import { TrackerStore } from "../../../store/trackers";
+  import { Lang } from "../../../store/lang";
 
   const dispatch = createEventDispatcher();
 
@@ -36,24 +40,22 @@
   };
 
   $: if (tracker.type === "timer") {
+    console.log("Timer");
     tracker.uom = "timer";
     tracker.min = null;
     tracker.max = null;
   } else if (tracker.uom == "timer" && tracker.type != "timer") {
+    console.log("Number");
     tracker.uom = "num";
   } else if (tracker.type === "range" && isNaN(tracker.min)) {
+    console.log("Range");
     tracker.min = 1;
     tracker.max = 10;
   }
 
-  $: if (tracker._dirty === true) {
-    data.editTag = true;
-  } else {
-    data.editTag = false;
-  }
-
   const methods = {
     tracker_save() {
+      console.log("Saving Tag", tracker.tag);
       if (!tracker.tag || !tracker.label) {
         Interact.alert(
           "Missing Data",
@@ -65,14 +67,20 @@
       }
     },
     editTag() {
-      Interact.confirm(
-        "Change this Tag?",
-        `If you've tracked with this in the past, use "Settings > Find and Replace" to replace #${tracker.tag} with your new tag.`
-      ).then(res => {
-        if (res === true) {
-          data.editTag = true;
-        }
-      });
+      Interact.alert(
+        "Not Supported",
+        `Editing Tags is currently not supported. Your best option is to Export your data, and do a search/replace for the tag.`
+      );
+
+      // TODO: Make edit tag work. It when saving the tracker we need to know it's original tag and replace it in the TrackerStore. Right not it just adds a new one since the tag is the key.
+      // Interact.confirm(
+      //   "Change this Tag?",
+      //   `If you've tracked with this in the past, use "Settings > Find and Replace" to replace #${tracker.tag} with your new tag.`
+      // ).then(res => {
+      //   if (res === true) {
+      //     tracker._dirty = true;
+      //   }
+      // });
     },
     addTrackerToNote() {
       Interact.selectTrackers().then(trackers => {
@@ -103,13 +111,6 @@
 
 <style lang="scss">
   .n-tracker-editor {
-    select {
-      min-width: 190px;
-      text-align: right;
-    }
-    .form-control {
-      width: 200px;
-    }
     .item-divider.compact {
       background-color: var(--color-solid);
     }
@@ -149,9 +150,8 @@
               bind:value={tracker.emoji} />
           </div>
         </NItem>
-        {#if data.editTag}
-          <NItem title="Tag">
-
+        {#if tracker._dirty}
+          <NItem title={Lang.t('tracker.tag')}>
             <div slot="right">
               <input
                 type="text"
@@ -165,17 +165,19 @@
             </div>
           </NItem>
         {:else}
-          <NItem title="Tag" on:click={methods.editTag}>
+          <NItem title={Lang.t('tracker.tag')} on:click={methods.editTag}>
             <div slot="right">
               <div class="n-row">
                 {tracker.tag}
-                <button class="btn-link btn">Edit</button>
+                <button class="btn-link btn" on:click={methods.editTag}>
+                  {Lang.t('general.edit')}
+                </button>
               </div>
             </div>
           </NItem>
         {/if}
         <NItem className="item-divider compact" />
-        <NItem title="Type">
+        <NItem title={Lang.t('tracker.type')}>
           <div slot="right">
             <select class="form-control w-100" bind:value={tracker.type}>
               {#each data.types as type}
@@ -186,31 +188,33 @@
 
         </NItem>
         {#if tracker.type == 'tick'}
-          <NItem title="Save On Tap">
+          <NItem title={Lang.t('tracker.save-on-tap')}>
             <div slot="right">
               <NToggle bind:value={tracker.one_tap} />
             </div>
           </NItem>
         {/if}
         {#if tracker.type == 'range'}
-          <NItem title="Min / Max">
+          <NItem title={Lang.t('tracker.min-max')}>
             <div slot="right" class="">
               <div class="n-row">
                 <input
-                  type="number"
+                  pattern="[0-9]*"
+                  inputmode="numeric"
                   class="form-control mr-2"
                   style="width:90px;"
-                  placeholder="Min"
+                  placeholder={Lang.t('general.min')}
                   on:focus={e => {
                     console.log('E Focused', e.target);
                     e.target.select();
                   }}
                   bind:value={tracker.min} />
                 <input
-                  type="number"
+                  pattern="[0-9]*"
+                  inputmode="numeric"
                   class="form-control"
                   style="width:90px;"
-                  placeholder="Max"
+                  placeholder={Lang.t('general.max')}
                   on:focus={e => e.target.select()}
                   bind:value={tracker.max} />
               </div>
@@ -221,7 +225,7 @@
 
         {#if tracker.type !== 'timer' && tracker.type !== 'note'}
           <NItem>
-            <div class="title truncate">Measure By</div>
+            <div class="title truncate">{Lang.t('tracker.measure-by')}</div>
             <div slot="right">
               <select bind:value={tracker.uom} class="form-control">
                 {#each Object.keys(data.groupedUOMs) as groupKey (groupKey)}
@@ -239,7 +243,7 @@
           </NItem>
         {/if}
         {#if tracker.type !== 'note'}
-          <NItem title="Calculate">
+          <NItem title={Lang.t('tracker.calculate')}>
             <div slot="right">
               <select class="form-control" bind:value={tracker.math}>
                 {#each ['sum', 'avg'] as math_key}
@@ -252,36 +256,41 @@
           <NItem>
             <textarea
               bind:value={tracker.note}
-              placeholder="#any #tracker #hashtags"
-              class="form-control my-2 w-100" />
+              placeholder={Lang.t('tracker.note-placeholder')}
+              class="form-control w-100" />
             <!-- <button
             slot="right"
             class="btn btn-clear btn-sm btn-icon zmdi zmdi-plus"
             on:click={methods.addTrackerToNote} /> -->
           </NItem>
+          <NItem description={Lang.t('tracker.note-description')} />
         {/if}
         <NItem className="item-divider compact" />
-        <NItem title="Default Value">
+        <PointsEditor {tracker} />
+        <NItem className="item-divider bg-solid compact" />
+        <NItem title={Lang.t('tracker.default')}>
           <div slot="right">
             <input
-              type="number"
+              pattern="[0-9]*"
+              inputmode="numeric"
               class="form-control"
               bind:value={tracker.default} />
           </div>
         </NItem>
+        <NItem className="item-divider bg-solid compact" />
       </div>
 
       <button
         slot="footer"
         on:click={methods.cancel}
         class="btn btn-light btn-lg flex-grow mr-1">
-        Cancel
+        {Lang.t('general.cancel')}
       </button>
       <button
         slot="footer"
         class="btn btn-primary btn-lg flex-grow ml-1"
         on:click={methods.tracker_save}>
-        Save
+        {Lang.t('general.save')}
       </button>
     </NModal>
   </div>

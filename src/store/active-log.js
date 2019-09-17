@@ -1,8 +1,10 @@
 import { writable } from 'svelte/store';
 import NomieLog from '../modules/nomie-log/nomie-log';
+import ExtractTrackers from '../utils/extract-trackers/extract-trackers';
 import Logger from '../utils/log/log';
 import Hooky from '../modules/hooks/hooks';
-
+import dayjs from 'dayjs';
+import calculateScore from '../utils/calculate-score/calculate-score';
 const console = new Logger('✴️ store/active-log.js');
 
 const activeLogInit = () => {
@@ -40,8 +42,12 @@ const activeLogInit = () => {
 			let log;
 			update(b => {
 				log = new NomieLog(b);
+				return b;
 			});
 			return log;
+		},
+		calculateScore(note, trackers) {
+			return calculateScore(note, trackers);
 		},
 		addTag(tag, value) {
 			update(b => {
@@ -50,6 +56,7 @@ const activeLogInit = () => {
 				} else {
 					b.note = `${b.note} #${tag}`;
 				}
+
 				hooky.run('onAddTag', { tag, value });
 				return b;
 			});

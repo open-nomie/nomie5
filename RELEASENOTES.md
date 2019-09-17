@@ -1,3 +1,20 @@
+# v.COMINGSOON
+
+## Enhancements
+
+-   Fixed button styling, added on action
+-   Added Positivity Back to Nomie https://shareking.s3.amazonaws.com/Screen-Recording-2019-09-08-16-26-52.mp4
+-   Sticky Header to the Stats View
+-   Changing verbage for Switching storage types [#51]
+-   Tagging Language Support Ticket [#50]
+-   Tagging Offline Support [#11] - Service workers now cache everything should work offline if using Local Storage
+-   Fixing double stones in UOM [#53]
+-   Fixing settings design
+
+## Bugs
+
+-   Fixed Negative Number issues [#47]
+
 # v.4.2.6 - Sat Set 7 2019
 
 ## Enhancements

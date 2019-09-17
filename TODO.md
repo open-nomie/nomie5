@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Sep 7 2019 3:58 pm
+Generated Tue Sep 17 2019 5:48 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -38,6 +38,8 @@ Generated Sat Sep 7 2019 3:58 pm
    - and one for the pin-lock container - TODO: merge these some day
 - **src/containers/tracker/input/input.svelte**
    - TODO: Figure out wtf is going on with value and data.value - can we just use value?
+- **src/containers/tracker/editor/editor.svelte**
+   - TODO: Make edit tag work. It when saving the tracker we need to know it's original tag and replace it in the TrackerStore. Right not it just adds a new one since the tag is the key.
 - **src/containers/setup/setup.svelte**
    - TODO: Make this design not suck! It's very boring.
    - TODO: UserSession shouldn't be in here - login should be fired by Storage.
@@ -56,5 +58,4 @@ Generated Sat Sep 7 2019 3:58 pm
    - TODO: Finish this starter pack add trackers, make them installable. -->
 - **src/components/capture-log.svelte**
    - TODO: Add a media/photo type of thing that can be added to a log..
-   - TODO: Mobile is getting GMT Time, desktop is not
    - await LedgerStore.saveLog($ActiveLogStore);  TODO: Make ledger task instead

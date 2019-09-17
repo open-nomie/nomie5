@@ -15,6 +15,7 @@
   import NItem from "../components/list-item/list-item.svelte";
   import NCell from "../components/cell/cell.svelte";
   import NText from "../components/text/text.svelte";
+  import NPoints from "../components/points/points.svelte";
   import NNoteTextualizer from "../components/note-textualizer/note-textualizer.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
   import NModal from "../components/modal/modal.svelte";
@@ -35,6 +36,7 @@
   import { Interact } from "../store/interact";
   import { TrackerStore } from "../store/trackers";
   import { LedgerStore } from "../store/ledger";
+  import { Lang } from "../store/lang";
 
   import { HistoryPage } from "../store/history-page";
 
@@ -63,6 +65,7 @@
   let loading = true;
   let book = undefined;
   let locations = [];
+  let dayScore = 0;
 
   // Used for checking things
   const checks = {
@@ -105,6 +108,15 @@
         return a.end < b.end ? 1 : -1;
       });
 
+    dayScore = 0;
+    logs
+      .filter(log => {
+        return log.score;
+      })
+      .forEach(log => {
+        dayScore = dayScore + parseInt(log.score);
+      });
+
     setTimeout(() => {
       loading = false;
       // TODO: Look at making this refresh without doing the loading, it's pushing the page to the top and it's annoying
@@ -129,7 +141,6 @@
   // Methods
   const methods = {
     toggleSearch() {
-      console.log("Toggle Search");
       if (searchMode) {
         state.searchResults = null;
         state.searchTerm = null;
@@ -139,7 +150,6 @@
       }
     },
     getLogs(fresh) {
-      console.log("Get Logs");
       fresh = fresh ? fresh : false;
 
       loading = true;
@@ -159,7 +169,6 @@
       state.location.lng = null;
     },
     refresh() {
-      console.log("Refreshing");
       refreshing = true;
       setTimeout(() => {
         refreshing = false;
@@ -215,11 +224,9 @@
       }
     },
     refreshSearch() {
-      console.log("Refresh Search");
       methods.search(state.searchTerm, state.date.format("YYYY"));
     },
     search(key, year) {
-      console.log("SEarching", { key, year });
       searchMode = true;
       if ((key || "").length > 1) {
         state.searchResults = [];
@@ -348,7 +355,7 @@
     .btn.zmdi-search {
       position: absolute;
       right: 32px;
-      top: 0px;
+      top: 5px;
       font-size: 24px !important;
     }
   }
@@ -425,7 +432,12 @@
           <NCell
             direction="row"
             className="justify-content-center align-items-center">
-            <i class="zmdi mr-2 text-faded-3 text-xs" />
+            {#if dayScore}
+              <NPoints points={dayScore} className="mr-2" />
+            {:else}
+              <i class="zmdi mr-2 text-faded-3 text-xs" />
+            {/if}
+
             <NCell direction="column">
               <NText tag="div" size="md" bold>
                 {state.date.format('dddd')}
@@ -467,7 +479,7 @@
       bind:this={searchInput}
       bind:value={state.searchTerm}
       on:keypress={methods.searchKeypress}
-      placeholder="Search..."
+      placeholder="{Lang.t('general.search')}..."
       class="search-input" />
     {#if searchMode}
       <button
@@ -487,18 +499,18 @@
   {:else if state.showAllLocations}
     <NMap {locations} />
   {:else}
-    <div class="container p-0 pt-3">
+    <div class="container p-0">
       <!-- If no Logs found -->
       {#if logs.length === 0}
         {#if !searchMode}
           <div class="empty-notice">
-            No records found for
+            {Lang.t('history.no-records-found')}
             <br />
             {state.date.format('dddd, MMMM D YYYY')}
           </div>
         {:else}
           <div class="empty-notice">
-            {state.date.format('YYYY')} nothing found.
+            {state.date.format('YYYY')} {Lang.t('history.no-records-found')}
           </div>
         {/if}
         <!-- If Logs and Not refreshing  -->

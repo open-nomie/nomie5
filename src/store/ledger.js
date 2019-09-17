@@ -124,7 +124,6 @@ const ledgerInit = () => {
 			return trackers;
 		},
 		getToday() {
-			console.log('get Today');
 			return new Promise((resolve, reject) => {
 				let todayKey = dayjs().format('YYYY-MM');
 				// Set local function for setting today

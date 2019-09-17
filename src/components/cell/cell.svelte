@@ -4,8 +4,11 @@
   export let className = null;
 </script>
 
-<div
-  class="n-cell d-flex flex-{direction} gap-{gap ? 'true' : 'false'}
-  {className}">
+<style lang="scss">
+  .n-cell .gap-2 {
+  }
+</style>
+
+<div class="n-cell d-flex flex-{direction} gap-{gap} {className}">
   <slot />
 </div>

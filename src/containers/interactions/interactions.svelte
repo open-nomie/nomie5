@@ -140,6 +140,8 @@
   {:else if $Interact.prompt.valueType == 'number'}
     <input
       name="value"
+      pattern="[0-9]*"
+      inputmode="numeric"
       title="input value"
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
@@ -242,6 +244,7 @@
       }
       Interact.dismissTrackerInput();
       ActiveLogStore.addTag(event.detail.tracker.tag, event.detail.value);
+      $ActiveLogStore.score = ActiveLogStore.calculateScore($ActiveLogStore.note, $TrackerStore);
       LedgerStore.saveLog($ActiveLogStore).then(() => {
         ActiveLogStore.clear();
       });

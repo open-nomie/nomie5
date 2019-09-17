@@ -23,7 +23,7 @@
     right: 0;
     bottom: 0;
     background-color: var(--color-full-screen);
-    z-index: 1000;
+    z-index: 2000;
     display: flex;
     flex-direction: column;
     align-items: center;

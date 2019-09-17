@@ -350,12 +350,6 @@ NomieUOM.uoms = {
 		type: 'weight',
 		symbolAffix: 'post',
 	},
-	strone: {
-		singular: 'Stone',
-		plural: 'Stones',
-		symbol: 'st',
-		type: 'weight',
-	},
 	stone: {
 		singular: 'Stone',
 		plural: 'Stones',

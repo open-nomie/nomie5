@@ -62,11 +62,13 @@
     justify-content: stretch;
     padding: 4px 16px;
     min-height: 42px;
+    max-width: 100vw;
     position: relative;
     transition: all 0.2s ease-in-out;
     text-decoration: none;
     color: var(--color-inverse);
     font-size: 1rem;
+    flex-shrink: 0;
 
     background-color: var(--color-solid);
 
@@ -139,6 +141,7 @@
     .main {
       flex-grow: 1;
       flex-shrink: 1;
+      overflow: hidden;
       h4 {
         font-size: 1.14rem;
         margin: 2px 0;

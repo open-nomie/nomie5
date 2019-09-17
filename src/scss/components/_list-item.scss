@@ -17,6 +17,14 @@
 		span {
 			font-size: 0.9rem;
 		}
+		select {
+			min-width: 190px;
+			width: 190px;
+			text-align: right;
+		}
+		.form-control {
+			width: 190px;
+		}
 	}
 	main {
 		small {

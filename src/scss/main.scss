@@ -53,6 +53,58 @@
 	margin: 0;
 }
 
+.delete-on-app {
+	transition: all 0.3s ease-in-out;
+	&.deleted {
+		transition: all 0.3s ease-in-out;
+		opacity: 0;
+		transform: scale(1.5);
+
+		.version {
+			bottom: 1000px;
+			opacity: 0;
+		}
+		svg {
+			transition: all 0.3s ease-in-out;
+			transform: scale(2);
+		}
+	}
+}
+
+.loading-screen {
+	background-color: $primaryBright;
+	background-size: cover;
+	background-position: center;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 4000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	svg {
+		transition: all 0.3s ease-in-out;
+	}
+}
+.version {
+	position: absolute;
+	width: 100px;
+	bottom: 100px;
+	font-size: 12px;
+	color: rgba(255, 255, 255, 0.5);
+	margin-left: -50px;
+	left: 50%;
+	background-color: rgba(0, 0, 0, 0.1);
+	border-radius: 12px;
+	height: 24px;
+	line-height: 24px;
+	padding: 0 12px;
+	text-align: center;
+}
+
 .n-item.bg-light {
 	background-color: var(--color-bg) !important;
 	&.text-faded {
@@ -103,7 +155,13 @@ $night: #311f62;
 }
 
 .card {
-	border-radius: 1rem;
+	border-radius: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	z-index: 120;
+	.card-body {
+		padding: 10px;
+	}
 }
 
 .mw-500px {

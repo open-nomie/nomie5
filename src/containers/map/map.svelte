@@ -182,7 +182,7 @@
           .reverse()
           .latlng([lat, lng])
           .run((error, result) => {
-            resolve(result.address);
+            resolve((result || {}).address || "Unknown");
           });
       });
     }

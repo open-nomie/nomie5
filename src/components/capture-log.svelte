@@ -16,6 +16,8 @@
 
   //Components
   import NItem from "../components/list-item/list-item.svelte";
+  import NCell from "../components/cell/cell.svelte";
+  import NPoints from "../components/points/points.svelte";
   import dayjs from "dayjs";
   import md5 from "md5";
   import domtoimage from "dom-to-image-chrome-fix";
@@ -23,12 +25,15 @@
   // Utils
   import Logger from "../utils/log/log";
   import time from "../utils/time/time";
+  import calculateScore from "../utils/calculate-score/calculate-score";
 
   // Stores
   import { Interact } from "../store/interact";
+  import { TrackerStore } from "../store/trackers";
   import { LedgerStore } from "../store/ledger";
   import { ActiveLogStore } from "../store/active-log";
   import { UserStore } from "../store/user";
+  import { Lang } from "../store/lang";
 
   // Consts
   const console = new Logger("capture-log");
@@ -50,39 +55,30 @@
 
   let state = {
     date: null,
-    dateSet: false,
-    show: false,
-    showDate: false,
+    dateStarter: dayjs().format("YYYY-MM-DDTHH:mm"),
     capturingEdits: false,
     photoData: null,
-    finalImageData: null
+    finalImageData: null,
+    score: 0,
+    showCustomDate: false
   };
 
   // TODO: Add a media/photo type of thing that can be added to a log..
 
   const methods = {
-    advancedChanged() {
-      if (state.date) {
-        ActiveLogStore.update(l => {
-          let updatedDate = time.datetimeLocal(state.date);
-          // alert(now + " " + gmtDate);
-          // TODO: Mobile is getting GMT Time, desktop is not
+    setDate() {
+      state.date = time.datetimeLocal(state.dateStarter);
+      $ActiveLogStore.start = state.date.getTime();
+      $ActiveLogStore.end = state.date.getTime();
+      state.showCustomDate = false;
+    },
+    clearDate() {
+      state.date = null;
+      $ActiveLogStore.start = null;
+      $ActiveLogStore.end = null;
+      state.showCustomDate = false;
+    },
 
-          l.start = updatedDate.getTime();
-          l.end = updatedDate.getTime();
-          return l;
-        });
-      }
-    },
-    advancedToggle() {
-      state.show = !state.show;
-    },
-    swipeUp() {
-      state.show = true;
-    },
-    swipeDown() {
-      state.show = false;
-    },
     checkTextareaSize() {
       if (textarea) {
         let height = (textarea || {}).scrollHeight || 40;
@@ -91,9 +87,18 @@
         } else {
           textarea.style.height = 40;
         }
+        // Cal
+        methods.calculateScore();
       }
     },
+    calculateScore() {
+      $ActiveLogStore.score = calculateScore(
+        $ActiveLogStore.note,
+        $TrackerStore
+      );
+    },
     async logSave() {
+      methods.calculateScore();
       await LedgerStore.saveLog($ActiveLogStore); // TODO: Make ledger task instead
       methods.clear();
     },
@@ -106,8 +111,13 @@
     },
     clear() {
       ActiveLogStore.clear();
-      state.show = false;
-      textarea.style.height = "40px";
+      setTimeout(() => {
+        state.date = null;
+        state.dateStarter = dayjs().format("YYYY-MM-DDTHH:mm");
+        if (textarea) {
+          textarea.style.height = "40px";
+        }
+      }, 120);
     },
     removePhoto() {
       let path = $ActiveLogStore.photo;
@@ -235,9 +245,13 @@
     }
   };
 
+  // Clear the settings when saved
+  LedgerStore.hook("onLogSaved", res => {
+    methods.clear();
+  });
+
   // When a tag is added by a button or other service
   ActiveLogStore.hook("onAddTag", res => {
-    console.log("onAddTag");
     // add space to the end.
     setTimeout(() => {
       if (textarea) {
@@ -251,6 +265,10 @@
 
 <style lang="scss">
   @import "../scss/utils/__utils.scss";
+
+  * {
+    // border: solid 1px red !important;
+  }
 
   #note-capture {
     background-color: var(--color-solid);
@@ -266,16 +284,46 @@
   }
 
   .more-options {
+    // background-color: pink;
     position: relative;
     z-index: 130;
-    padding: 0 12px;
-    .n-list {
-      padding-bottom: 10px;
-      margin-top: -10px;
+    padding: 0px 10px 10px;
+
+    .btn {
+      background-color: transparent;
+      display: flex;
+      align-items: center;
+      color: var(--color-solid-3);
+      padding: 2px 6px;
+      font-size: 0.8rem;
+      line-height: 0.8rem;
+      i {
+        margin-right: 4px;
+        font-size: 1rem;
+        color: var(--color-solid-2);
+      }
+      &.btn-active {
+        background-color: var(--color-inverse-1);
+        color: var(--color-solid-1);
+        i {
+          color: var(--color-primary-bright);
+        }
+      }
+      &.btn-close {
+        i {
+          color: var(--color-solid-3) !important;
+          font-size: 26px;
+        }
+      }
     }
     .advanced-options-list {
       transition: all 0.2s ease-in-out;
       border: none !important;
+
+      .btn-primary {
+        background-color: var(--color-primary-bright);
+        color: #fff;
+      }
       &.hidden {
         height: 1px;
         overflow: hidden;
@@ -425,11 +473,13 @@
           disabled={saving || saved}
           bind:value={$ActiveLogStore.note}
           bind:this={textarea}
-          placeholder="What's Up?"
+          placeholder={Lang.t('general.whats-up')}
           on:keypress={methods.keyPress}
           on:paste={methods.keyPress} />
         {#if !saving}
-          <button class="save-button" on:click={methods.logSave}>Save</button>
+          <button class="save-button" on:click={methods.logSave}>
+            {Lang.t('general.save')}
+          </button>
         {:else}
           <button class="save-button">•••</button>
         {/if}
@@ -437,129 +487,98 @@
     </div>
   </div>
   <div class="more-options">
-    <button
+
+    <NCell gap={1} className="py-2">
+      <div class="filler" />
+
+      <!-- Date Button -->
+      {#if !state.date}
+        <button
+          class="btn btn-sm mr-1"
+          on:click={() => {
+            state.showCustomDate = true;
+          }}>
+          <i class="zmdi zmdi-calendar" />
+          {Lang.t('general.date')}
+        </button>
+      {:else}
+        <button
+          class="btn btn-active btn-sm mr-1"
+          on:click={() => {
+            methods.clearDate();
+          }}>
+          <i class="zmdi zmdi-minus-circle text-white" />
+          {Lang.t('general.date')}
+          <!-- {dayjs(state.date).format(`YYYY/MM/DD ${$UserStore.meta.is24Hour ? 'HH:mm' : 'h:mm a'}`)} -->
+        </button>
+      {/if}
+
+      <!-- Location Button -->
+      {#if $ActiveLogStore.lat}
+        <button
+          class="btn btn-active btn-sm mr-2"
+          on:click={() => {
+            $ActiveLogStore.lat = null;
+            $ActiveLogStore.lng = null;
+          }}>
+          <i class="zmdi zmdi-minus-circle text-white" />
+          Location
+        </button>
+      {:else}
+        <button
+          class="btn btn btn-sm mr-2"
+          on:click={() => {
+            Interact.pickLocation().then(location => {
+              $ActiveLogStore.lat = location.lat;
+              $ActiveLogStore.lng = location.lng;
+              $ActiveLogStore.location = location.name;
+            });
+          }}>
+          <i class="zmdi zmdi-map" />
+          Location
+        </button>
+      {/if}
+      {#if $ActiveLogStore.score}
+        <NPoints points={$ActiveLogStore.score} />
+      {/if}
+
+      <div class="filler" />
+    </NCell>
+
+    <!-- <button
       class="advanced-toggle {state.show ? 'active' : 'inactive'}"
       on:click={methods.advancedToggle}>
       •••
-    </button>
+    </button> -->
 
     <div
-      class="advanced-options-list n-list {state.show ? 'visible' : 'hidden'}">
+      class="advanced-options-list {state.showCustomDate ? 'visible' : 'hidden'}">
       <div class="container py-2">
-
-        {#if !state.dateSet}
-          {#if state.date}
-            <div class="n-row mb-2">
-              <div class="input-group flex-grow mr-1">
-                <input
-                  name="note"
-                  type="datetime-local"
-                  class="form-control mt-0"
-                  style="font-size:16px; height:44px; overflow:hidden"
-                  on:input={() => {
-                    methods.advancedChanged();
-                  }}
-                  bind:value={state.date} />
-                <div class="input-group-append">
-                  <button
-                    class="btn btn-primary"
-                    on:click={() => {
-                      state.dateSet = true;
-                    }}>
-                    Set
-                  </button>
-                </div>
-              </div>
-              <!-- end input-group -->
-              <!-- And cancel button-->
-              <button
-                class="btn btn-clear btn-icon"
-                on:click={() => {
-                  state.date = null;
-                }}>
-                <i class="zmdi zmdi-close" />
+        <div class="n-row mb-2">
+          <div class="input-group flex-grow mr-1">
+            <input
+              name="note"
+              type="datetime-local"
+              class="form-control mt-0"
+              style="font-size:16px; height:44px; overflow:hidden"
+              bind:value={state.dateStarter} />
+            <div class="input-group-append">
+              <button class="btn btn-primary px-3" on:click={methods.setDate}>
+                {Lang.t('general.set')}
               </button>
             </div>
-          {:else}
-            <button
-              class="btn btn-light btn btn-block"
-              on:click={() => {
-                state.date = dayjs().format('YYYY-MM-DDTHH:mm');
-              }}>
-              Set Custom Date
-            </button>
-          {/if}
-        {:else}
+          </div>
+          <!-- end input-group -->
+          <!-- And cancel button-->
           <button
-            class="btn btn-danger btn btn-block"
+            class="btn btn-clear btn-icon btn-close"
             on:click={() => {
               state.date = null;
-              state.dateSet = false;
+              state.showCustomDate = false;
             }}>
-            Clear {dayjs(state.date).format(`ddd MMM D YYYY ${$UserStore.meta.is24Hour ? 'HH:mm' : 'h:mm a'}`)}
+            <i class="zmdi zmdi-close" />
           </button>
-        {/if}
-
-        {#if $ActiveLogStore.lat}
-          <button
-            class="btn btn-danger btn btn-block"
-            on:click={() => {
-              $ActiveLogStore.lat = null;
-              $ActiveLogStore.lng = null;
-            }}>
-            Clear Location
-          </button>
-        {:else}
-          <button
-            class="btn btn-light btn btn-block"
-            on:click={() => {
-              Interact.pickLocation().then(location => {
-                $ActiveLogStore.lat = location.lat;
-                $ActiveLogStore.lng = location.lng;
-              });
-            }}>
-            Set Custom Location
-          </button>
-        {/if}
-
-        <!-- {#if !$ActiveLogStore.photo}
-          {#if isIOS}
-            <div style="width:0;height:0;overflow:hidden;">
-              <input
-                class="btn btn-light btn-block"
-                type="file"
-                bind:this={iOSFileInput}
-                accept="image/*"
-                capture="camera"
-                on:change={methods.iOSCapture} />
-            </div>
-            <button
-              class="btn btn-light btn btn-block mt-2"
-              disabled
-              on:click={() => {
-                iOSFileInput.click();
-              }}>
-              Attach a Photo
-            </button>
-          {:else}
-            <button
-              class="btn btn-light btn btn-block"
-              on:click={() => {
-                methods.capturePhoto();
-              }}>
-              Take a Photo
-            </button>
-          {/if}
-        {:else}
-          <button
-            disabled
-            class="btn btn-danger btn btn-block"
-            on:click={() => {
-              methods.removePhoto();
-            }}>
-            Remove Photo
-          </button>
-        {/if} -->
+        </div>
 
       </div>
     </div>

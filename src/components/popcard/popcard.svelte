@@ -13,7 +13,7 @@
     box-shadow: 0px 4px 13px -6px rgba(0, 0, 0, 0.09);
     border: solid 1px var(--color-faded-1);
     position: relative;
-    max-width: 500px;
+    max-width: 800px;
     margin-left: auto;
     margin-right: auto;
     transition: all 0.2s ease-in-out;

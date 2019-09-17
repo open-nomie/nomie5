@@ -113,7 +113,8 @@
 
     {#if state.showFiles}
       {#each state.files as file (file)}
-        <NItem title={file}>
+        <NItem>
+          <div class="truncate">{file}</div>
           <button
             class="btn btn-sm btn-clear text-danger"
             slot="right"
@@ -124,17 +125,18 @@
           </button>
         </NItem>
       {/each}
-      <NItem title="Super Danger" className="n-item-divider" />
-      <NItem title="Delete all files">
+      <NItem title="Danger" className="n-item-divider" />
+      <NItem title="Destroy Everything">
         <button
           class="btn btn-sm btn-danger"
           slot="right"
           on:click={() => {
             methods.deleteEverything();
           }}>
-          Delete Everything
+          Destroy
         </button>
       </NItem>
+      <NItem className="n-item-divider" />
     {/if}
   </div>
 </div>
