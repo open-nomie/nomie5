@@ -68,6 +68,7 @@
     text-decoration: none;
     color: var(--color-inverse);
     font-size: 1rem;
+    flex-shrink: 0;
 
     background-color: var(--color-solid);
 
