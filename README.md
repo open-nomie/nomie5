@@ -69,6 +69,7 @@ Deploy straight to Netlify to test it out quickly.
 -   **/src/modules** - models and commonly used functions
 -   **/src/plugins** - holder of plugins (coming soon)
 -   **/src/routes** - nomie app's primary routes
+-   **/src/lang** - holder of languages
 -   **/src/scss** - global SCSS styling, variables, bootstrap
 -   **/src/store** - application state management
 -   **/src/utils** - common utility functions
@@ -80,6 +81,12 @@ Deploy straight to Netlify to test it out quickly.
 -   **Board** - a board is specific group of trackers.
 -   **Board Tabs** - how you switch boards on the track tab
 -   **Log** - a record event. A lot contains a note, a note can contain unlimited numbers of tags; e.g: #mood(4) #pizza #beer(12). Logs can contain a lat and long. Tracker Objects and their values are parsed out of the logs in real time.
+
+## Stores
+
+-   ** /src/store/lang ** - Language Controls
+-   ** /src/store/trackers ** -- Tracker Data and interactions
+    -- TODO: finish this
 
 ## Data Storage - NEEDS UPDATING
 

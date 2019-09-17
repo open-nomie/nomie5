@@ -355,7 +355,7 @@
     .btn.zmdi-search {
       position: absolute;
       right: 32px;
-      top: 0px;
+      top: 5px;
       font-size: 24px !important;
     }
   }

@@ -17,18 +17,18 @@
 
   // Modules
   import Tracker from "../modules/tracker/tracker";
-  import CalendarMap from "../utils/calendar-map/calendar-map";
-  import Storage from "../modules/storage/storage";
+  // import CalendarMap from "../utils/calendar-map/calendar-map";
+  // import Storage from "../modules/storage/storage";
   import StatsProcessor from "../modules/stats/stats";
 
   // Components
   import NText from "../components/text/text.svelte";
   import NCell from "../components/cell/cell.svelte";
-  import NItem from "../components/list-item/list-item.svelte";
+  // import NItem from "../components/list-item/list-item.svelte";
   import BarChart from "../components/charts/bar-chart.svelte";
-  import Tabs from "../components/board-tabs/board-tabs.svelte";
+  // import Tabs from "../components/board-tabs/board-tabs.svelte";
   import NPopcard from "../components/popcard/popcard.svelte";
-  import NToolbar from "../components/toolbar/toolbar.svelte";
+  // import NToolbar from "../components/toolbar/toolbar.svelte";
   import NLogItem from "../components/list-item-log/list-item-log.svelte";
   import NTimeGrid from "../components/day-time-grid/day-time-grid.svelte";
   import KVBlock from "../components/kv-block/kv-block.svelte";
@@ -39,7 +39,7 @@
   import NCalendar from "../containers/calendar/sweet.svelte";
 
   //store
-  import { BoardStore } from "../store/boards";
+  // import { BoardStore } from "../store/boards";
   import { UserStore } from "../store/user";
   import { TrackerStore } from "../store/trackers";
   import { LedgerStore } from "../store/ledger";

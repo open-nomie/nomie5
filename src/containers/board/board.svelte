@@ -413,10 +413,12 @@
     align-items: center;
     justify-content: center;
     margin: 16px;
+    padding: 0 10px;
     .btn {
       min-width: 220px;
       margin-left: 10px;
       margin-right: 10px;
+      max-width:200px;
     }
     @include media-breakpoint-down(sm) {
       min-width: 300px;

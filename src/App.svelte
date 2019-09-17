@@ -73,12 +73,6 @@
     } else {
       document.body.classList.remove("dark");
     }
-    document.querySelectorAll(".delete-on-app").forEach(d => {
-      d.classList.add("deleted");
-      setTimeout(() => {
-        d.remove();
-      }, 500);
-    });
   };
 
   // Setup isScrolling variable
@@ -139,6 +133,12 @@
   // Used to make sure that boards and trackers are loaded
   UserStore.onReady(() => {
     // Delete any startup UI elements
+    document.querySelectorAll(".delete-on-app").forEach(d => {
+      d.classList.add("deleted");
+      setTimeout(() => {
+        d.remove();
+      }, 500);
+    });
     // Set the user if they're logged in
     ready = true;
     // Run any commands if needed

@@ -8,6 +8,7 @@ import { scss } from '@kazzkiq/svelte-preprocess-scss';
 import builtins from 'rollup-plugin-node-builtins';
 import replace from 'rollup-plugin-replace';
 import packagejson from './package.json';
+import visualizer from 'rollup-plugin-visualizer';
 import dayjs from 'dayjs';
 import fs from 'fs';
 
@@ -63,6 +64,9 @@ export default [
 			json(),
 			resolve(),
 			commonjs(),
+
+			// Remove Moe
+			visualizer(),
 
 			// Watch the `public` directory and refresh the
 			// browser on changes when not in production

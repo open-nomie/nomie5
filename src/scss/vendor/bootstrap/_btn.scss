@@ -14,6 +14,9 @@ button:focus {
 .btn {
 	display: flex;
 	justify-content: center;
+	&.btn-lg {
+		border-radius: 0.6rem;
+	}
 }
 
 .btn-primary {

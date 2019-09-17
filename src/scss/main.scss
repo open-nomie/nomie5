@@ -155,7 +155,13 @@ $night: #311f62;
 }
 
 .card {
-	border-radius: 1rem;
+	border-radius: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	z-index: 120;
+	.card-body {
+		padding: 10px;
+	}
 }
 
 .mw-500px {

@@ -181,8 +181,7 @@
         <NItem title={Lang.t('settings.use-location')}>
           <span
             slot="left"
-            class="btn-icon zmdi zmdi-my-location"
-            style="color:#F03A47" />
+            class="btn-icon zmdi text-primary zmdi-my-location" />
           <div slot="right">
             <NToggle
               bind:value={$UserStore.alwaysLocate}
@@ -194,8 +193,7 @@
         <NItem title={Lang.t('settings.dark-mode')}>
           <span
             slot="left"
-            class="btn-icon zmdi zmdi-brightness-2"
-            style="color:#666" />
+            class="btn-icon zmdi text-primary zmdi-brightness-2" />
           <div slot="right">
             <NToggle
               bind:value={$UserStore.darkMode}
@@ -205,10 +203,7 @@
           </div>
         </NItem>
         <NItem title={Lang.t('settings.require-pin')}>
-          <span
-            slot="left"
-            class="btn-icon zmdi zmdi-apps"
-            style="color:#71A2B6" />
+          <span slot="left" class="btn-icon zmdi text-primary zmdi-apps" />
           <div slot="right">
             <NToggle
               bind:value={$UserStore.meta.lock}
@@ -216,10 +211,7 @@
           </div>
         </NItem>
         <NItem title={Lang.t('settings.24-hour-clock')}>
-          <span
-            slot="left"
-            class="btn-icon zmdi zmdi-time"
-            style="color:#666" />
+          <span slot="left" class="btn-icon zmdi text-primary zmdi-time" />
           <div slot="right">
             <NToggle
               bind:value={$UserStore.meta.is24Hour}
@@ -239,8 +231,7 @@
           on:click={() => navigate('/api')}>
           <span
             slot="left"
-            class="btn-icon zmdi zmdi-code-setting"
-            style="color:#600047" />
+            class="btn-icon zmdi text-primary zmdi-code-setting" />
           <span slot="right" class="icon zmdi zmdi-chevron-right" />
         </NItem>
         <NItem
@@ -250,8 +241,7 @@
           }}>
           <span
             slot="left"
-            class="btn-icon zmdi zmdi-cloud-download"
-            style="color:#00487C" />
+            class="btn-icon zmdi text-primary zmdi-cloud-download" />
           <span slot="right" class="icon zmdi zmdi-chevron-right" />
           <input
             slot="right"
@@ -265,8 +255,7 @@
           on:click={methods.export}>
           <span
             slot="left"
-            class="btn-icon zmdi zmdi-cloud-upload"
-            style="color:#9E0031" />
+            class="btn-icon zmdi text-primary zmdi-cloud-upload" />
           <span slot="right" class="icon zmdi zmdi-chevron-right" />
         </NItem>
         <NItem
@@ -276,8 +265,7 @@
           }}>
           <span
             slot="left"
-            class="btn-icon zmdi zmdi-search-replace"
-            style="color:#0CCA4A" />
+            class="btn-icon zmdi text-primary zmdi-search-replace" />
           <span slot="right" class="icon zmdi zmdi-chevron-right" />
         </NItem>
 
@@ -296,10 +284,7 @@
               {$UserStore.storageType === 'local' ? 'Local' : 'Cloud'}
             </strong>
           </div>
-          <span
-            slot="left"
-            class="btn-icon zmdi zmdi-storage"
-            style="color:#F18F01" />
+          <span slot="left" class="btn-icon zmdi text-primary zmdi-storage" />
 
           <div slot="right">
             {#if $UserStore.storageType === 'local'}
@@ -318,11 +303,11 @@
           </div>
         </NItem>
 
-        <NItem title={Lang.t('settings.first-book')}>
+        <!-- <NItem title={Lang.t('settings.first-book')}>
           <span
             slot="left"
-            class="btn-icon zmdi zmdi-book"
-            style="color:#D741A7" />
+            class="btn-icon zmdi text-primary zmdi-book"
+             />
 
           <div slot="right" class="pr-2">
             {#await LedgerStore.firstBook()}
@@ -333,13 +318,12 @@
               <span>{error}</span>
             {/await}
           </div>
-        </NItem>
+        </NItem> -->
         {#if $UserStore.storageType === 'blockstack'}
           <NItem title={Lang.t('settings.aggressive-sync')}>
             <span
               slot="left"
-              class="btn-icon zmdi {`${$UserStore.meta.aggressiveSync ? 'zmdi-refresh-sync' : 'zmdi-refresh-sync-off'}`}"
-              style="color:#A2AEBB" />
+              class="btn-icon zmdi text-primary {`${$UserStore.meta.aggressiveSync ? 'zmdi-refresh-sync' : 'zmdi-refresh-sync-off'}`}" />
             <div slot="right">
               <NToggle
                 bind:value={$UserStore.meta.aggressiveSync}
@@ -378,9 +362,6 @@
 
         <NItem title="Version">
           <span slot="right" class="pr-2">APP_VERSION</span>
-        </NItem>
-        <NItem title="Url">
-          <span slot="right" class="pr-2">APP_URL</span>
         </NItem>
         <NItem title="Built">
           <span slot="right" class="pr-2">APP_BUILD_DATE</span>

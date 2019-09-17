@@ -38,7 +38,7 @@ export default {
 			'no-records-found': 'No Records Found',
 		},
 		board: {
-			'edit-board': `Edit {{board}} Board!`,
+			'edit-board': `Edit {{board}} Board`,
 			'board-label': 'Board Label',
 		},
 		settings: {
@@ -54,9 +54,9 @@ export default {
 			'generate-backup': 'Generate Backup',
 			'find-and-replace': 'Find and Replace',
 			storage: 'Storage',
-			'use-local': 'Use Local',
-			'use-cloud': 'Use Cloud',
-			'first-book': 'First Book Created',
+			'use-local': 'Switch to Local',
+			'use-cloud': 'Switch to Cloud',
+			'first-book': 'First Record',
 			'about-nomie': 'About Nomie',
 			'export-confirm': `This process might take a couple minutes. 
             If you have a lot of data, it will seem like it gets hung up. 
@@ -66,7 +66,7 @@ export default {
             You should export your local data first, then import it once the switch is complete. 
             You can always switch back`,
 			'switch-to-cloud-confirm': 'Switch to Blockstack - Are you sure?',
-			'switch-to-cloud-notice': `Data is not automatically migrated FROM the cloud.
+			'switch-to-local-notice': `Data is not automatically migrated FROM the cloud.
             You should export your data first, then import it once the switch is complete. 
             You can always switch back`,
 			'switch-to-local-confirm': 'Switch to Local - Are you sure?',
