@@ -37,7 +37,8 @@
 <NHScroller activeIndex={data.activeIndex} className="n-board-tabs">
   {#each boards as board}
     <button
-      class="tab {board.id == active ? 'active' : 'inactive'}"
+      class="tab board-{board.id}
+      {board.id == active ? 'active' : 'inactive'}"
       on:click={() => {
         dispatch('tabTap', board);
       }}>
@@ -45,7 +46,7 @@
     </button>
   {/each}
   <button
-    class="tab"
+    class="tab add-board"
     on:click={() => {
       dispatch('create');
     }}>

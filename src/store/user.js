@@ -60,7 +60,7 @@ const userInit = () => {
 				// If no storage type selected
 				// they're not signed in - this should trigger onboarding
 				// in App.svelte
-				console.log('We Don/t have a Storage Type!');
+				console.log('We do not have a Storage Type!');
 				document.querySelectorAll('.delete-on-app').forEach(d => {
 					d.classList.add('deleted');
 					setTimeout(() => {

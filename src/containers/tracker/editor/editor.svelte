@@ -134,6 +134,7 @@
           <div slot="right">
             <input
               type="text"
+              name="label"
               class="form-control"
               bind:value={tracker.label}
               on:keyup={methods.labelChanged} />
@@ -143,6 +144,7 @@
           <div slot="right">
             <input
               type="text"
+              name="emoji"
               on:focus={event => {
                 event.target.select();
               }}
@@ -155,6 +157,7 @@
             <div slot="right">
               <input
                 type="text"
+                name="tag"
                 class="form-control"
                 bind:value={tracker.tag}
                 autocomplete="off"
@@ -179,7 +182,10 @@
         <NItem className="item-divider compact" />
         <NItem title={Lang.t('tracker.type')}>
           <div slot="right">
-            <select class="form-control w-100" bind:value={tracker.type}>
+            <select
+              class="form-control w-100"
+              name="type"
+              bind:value={tracker.type}>
               {#each data.types as type}
                 <option value={type.id}>{type.label}</option>
               {/each}
@@ -203,6 +209,7 @@
                   inputmode="numeric"
                   class="form-control mr-2"
                   style="width:90px;"
+                  name="min"
                   placeholder={Lang.t('general.min')}
                   on:focus={e => {
                     console.log('E Focused', e.target);
@@ -214,6 +221,7 @@
                   inputmode="numeric"
                   class="form-control"
                   style="width:90px;"
+                  name="max"
                   placeholder={Lang.t('general.max')}
                   on:focus={e => e.target.select()}
                   bind:value={tracker.max} />
@@ -245,7 +253,10 @@
         {#if tracker.type !== 'note'}
           <NItem title={Lang.t('tracker.calculate')}>
             <div slot="right">
-              <select class="form-control" bind:value={tracker.math}>
+              <select
+                class="form-control"
+                name="math"
+                bind:value={tracker.math}>
                 {#each ['sum', 'avg'] as math_key}
                   <option value={math_key}>{math_key}</option>
                 {/each}
