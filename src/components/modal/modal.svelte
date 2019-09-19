@@ -17,6 +17,7 @@
 </script>
 
 <style lang="scss">
+  @import "../../scss/vendor/bootstrap/base";
   .n-modal-frame {
     position: fixed;
     top: 0;
@@ -31,6 +32,31 @@
     justify-content: center;
     &.type-bottom {
       justify-content: flex-end;
+    }
+    &.type-fullscreen {
+      .n-modal {
+        height: 100vh;
+        width: 100vw;
+        max-height: 100vh;
+        max-width: 100vw;
+        border-radius: 0px;
+        margin: 0;
+        @include media-breakpoint-up(sm) {
+          max-width: 500px;
+          max-height: 700px;
+          border-radius: 0.7rem;
+        }
+      }
+    }
+    &.type-cover {
+      .n-modal {
+        min-height: 100vh;
+        min-width: 100vw;
+        max-height: 100vh;
+        max-width: 100vw;
+        border-radius: 0px;
+        margin: 0;
+      }
     }
   }
   .n-modal {
@@ -48,6 +74,14 @@
     border: solid 1px var(--color-solid);
     box-shadow: 0px 16px 24px -12px rgba(0, 0, 0, 0.6);
 
+    .n-modal-body {
+      flex-grow: 1;
+      height: 100%;
+      @include media-breakpoint-up(md) {
+        padding: 20px;
+      }
+    }
+
     &.full-screen-modal {
       height: 96vh;
       width: 96vw;
@@ -55,7 +89,6 @@
       max-height: 700px;
 
       .n-modal-body {
-        flex-grow: 1;
         &.flex-body {
           position: relative;
           display: flex;

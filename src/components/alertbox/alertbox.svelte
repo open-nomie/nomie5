@@ -102,7 +102,7 @@
     {#if title}
       <div
         class="card-title {!hasSlot && !message ? 'message-less' : 'message'}">
-        <NText size="lg" bold tag="div" className="">{title}</NText>
+        {title}
       </div>
     {/if}
 

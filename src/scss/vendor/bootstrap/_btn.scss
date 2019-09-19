@@ -12,6 +12,7 @@ button:focus {
 }
 
 .btn {
+	border-radius: 0.3rem;
 	display: flex;
 	justify-content: center;
 	&.btn-lg {

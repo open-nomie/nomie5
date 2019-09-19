@@ -4835,6 +4835,7 @@ button:focus {
   background-color: var(--color-faded-1); }
 
 .btn {
+  border-radius: 0.3rem;
   display: flex;
   justify-content: center; }
   .btn.btn-lg, .btn-group-lg > .btn {
@@ -5299,14 +5300,31 @@ select {
     color: var(--color-inverse-2);
     border: none;
     background: transparent;
-    padding: 4px 6px;
+    padding: 6px 10px;
     min-width: 40px;
     max-width: 200px;
     width: auto;
     flex-shrink: 0;
-    height: 50px; }
+    height: 50px;
+    position: relative; }
     .n-board-tabs .tab.active {
       border-bottom: solid 2px var(--color-primary-bright); }
+    .n-board-tabs .tab:last-child.active {
+      border-bottom: none; }
+    .n-board-tabs .tab:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transition: all 0.2s ease-in-out; }
+    .n-board-tabs .tab:active:after {
+      background-color: var(--color-primary-bright);
+      opacity: 0.5;
+      transition: all 0.2s ease-in-out; }
 
 .full-screen {
   background-color: var(--color-faded-3);
@@ -5483,18 +5501,19 @@ body.scrolling .mini-map {
   padding: 0;
   margin: 0; }
 
+.pointer {
+  cursor: pointer; }
+
 .delete-on-app {
-  transition: all 0.3s ease-in-out; }
+  transition: all 0.5s ease-in-out; }
   .delete-on-app.deleted {
-    transition: all 0.3s ease-in-out;
+    transition: all 0.5s ease-in-out;
     opacity: 0;
-    transform: scale(1.5); }
+    top: 400px;
+    bottom: -400px; }
     .delete-on-app.deleted .version {
       bottom: 1000px;
       opacity: 0; }
-    .delete-on-app.deleted svg {
-      transition: all 0.3s ease-in-out;
-      transform: scale(2); }
 
 .loading-screen {
   background-color: #319ed7;
@@ -5566,8 +5585,13 @@ body.scrolling .mini-map {
   .card .card-body {
     padding: 16px;
     min-height: 0; }
+  .card p,
+  .card .card-body {
+    font-size: 0.9rem; }
   .card .card-title {
-    padding: 8px 16px; }
+    padding: 11.2px 16px;
+    font-weight: bold;
+    font-size: 1.2rem; }
 
 .mw-500px {
   max-width: 500px !important; }

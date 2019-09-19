@@ -37,7 +37,7 @@ const trackerStoreInit = () => {
 					// If the user doesn't have trackers
 					// Let's prompt them to install some
 					if (!trackers) {
-						TrackerLibrary.toggle();
+						TrackerLibrary.toggle({ first: true });
 						// Interact.confirm(
 						// 	`${StarterPack.label}`,
 						// 	`Install Default Trackers: ${startPackArray.map(t => t.label).join(', ')}? `
@@ -212,10 +212,16 @@ const trackerStoreInit = () => {
 		},
 		saveTracker(tracker) {
 			let response;
+			let board = BoardStore.data();
 			update(t => {
 				t = t || {};
 				t[tracker.tag] = tracker;
 				response = methods.save(t);
+
+				if (board.id !== 'all') {
+					BoardStore.addTrackersToActiveBoard([tracker]);
+				}
+
 				return t;
 			});
 			return response;

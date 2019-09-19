@@ -18,6 +18,7 @@
   import TrackerInput from "../tracker/input/input.svelte";
   import NModal from "../../components/modal/modal.svelte";
   import NHScroll from "../../components/h-scroller/h-scroller.svelte";
+  import Elephant from "../../components/elephant.svelte";
 
   // Vendors
   import Spinner from "svelte-spinner";
@@ -219,10 +220,20 @@
         if (res) {
           let label = res.trim();
           BoardStore.addBoard(label).then(board => {
-            Interact.alert(Lang.t("general.created")).then(() => {
-              BoardStore.setActive(board.id);
-            });
+            BoardStore.setActive(board.id);
           });
+        }
+      });
+    },
+
+    enableBoards() {
+      Interact.confirm(
+        "Enable tabs?",
+        "This will allow you to organize a bunch of trackers."
+      ).then(res => {
+        if (res) {
+          $UserStore.meta.boardsEnabled = true;
+          UserStore.saveMeta();
         }
       });
     },
@@ -409,7 +420,7 @@
     left: 0;
     display: flex;
     justify-content: stretch;
-    align-items: stretch;
+    align-items: center;
     height: 50px;
     z-index: 350;
     background-color: var(--color-solid);
@@ -417,6 +428,20 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.04);
   }
 
+  .no-trackers {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 35vh;
+    text-align: center;
+    @include media-breakpoint-up(md) {
+      min-height: 55vh;
+    }
+    span {
+      margin-left: 8px;
+    }
+  }
   .board-actions {
     display: flex;
     align-items: center;
@@ -472,15 +497,26 @@
 {#if user}
   {#if $BoardStore.boards}
     <div class="sub-header">
-      <div class="container p-0 h-100">
-        <NBoardTabs
-          boards={methods.injectAllBoard($BoardStore.boards || [])}
-          active={$BoardStore.active}
-          on:create={methods.newBoard}
-          on:tabTap={event => {
-            BoardStore.setActive(event.detail.id);
-          }} />
-      </div>
+
+      {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
+        <div class="container p-0">
+          <NBoardTabs
+            boards={methods.injectAllBoard($BoardStore.boards || [])}
+            active={$BoardStore.active}
+            on:create={methods.newBoard}
+            on:tabTap={event => {
+              BoardStore.setActive(event.detail.id);
+            }} />
+        </div>
+      {:else}
+        <div class="filler" />
+        <img
+          src="/images/nomie-words.svg"
+          height="20"
+          on:click={methods.enableBoards} />
+        <div class="filler" />
+      {/if}
+
     </div>
   {/if}
   {#if data.loading}
@@ -492,6 +528,19 @@
       <main class="n-board">
 
         <div class="trackers">
+
+          {#if !activeTrackers.length}
+            <div class="no-trackers">
+              This tab is empty.
+              <br />
+              <span>
+                You should
+                <span class="text-primary pointer" on:click={methods.addTapped}>
+                  Add a tracker!
+                </span>
+              </span>
+            </div>
+          {/if}
 
           {#each activeTrackers as tracker (tracker.tag)}
             <NTrackerButton

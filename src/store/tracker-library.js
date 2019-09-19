@@ -26,12 +26,16 @@ const TrackerLibInit = () => {
 	const { update, subscribe, set } = writable({
 		trackers: Object.keys(StartPack.trackers).map(key => StartPack.trackers[key]),
 		show: false,
+		first: false,
 	});
 
 	const methods = {
-		toggle() {
+		toggle(options) {
+			options = options || {};
+			options.first = options.first || false;
 			update(p => {
 				p.show = !p.show;
+				p.first = options.first;
 				return p;
 			});
 		},

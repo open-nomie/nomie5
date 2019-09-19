@@ -104,6 +104,10 @@
     settingChange() {
       UserStore.saveMeta();
     },
+    // boardsToggle() {
+    //   $UserStore.meta.boardsEnabled = !$UserStore.meta.boardsEnabled;
+    //   UserStore.saveMeta();
+    // },
     lockToggle() {
       if ($UserStore.meta.lock === true) {
         if (($UserStore.meta.pin || "").length == 0) {
@@ -200,6 +204,14 @@
               on:change={event => {
                 UserStore.setDarkMode(event.detail);
               }} />
+          </div>
+        </NItem>
+        <NItem title={Lang.t('settings.enable-boards')}>
+          <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />
+          <div slot="right">
+            <NToggle
+              bind:value={$UserStore.meta.boardsEnabled}
+              on:change={methods.settingChange} />
           </div>
         </NItem>
         <NItem title={Lang.t('settings.require-pin')}>
