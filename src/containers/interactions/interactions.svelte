@@ -34,7 +34,8 @@
 
   let promptInput;
   let logEditorTracker;
-  $: if ($Interact.prompt.show) {
+
+  $: if ($Interact.prompt.show && promptInput) {
     promptInput.focus();
   }
 
@@ -118,7 +119,8 @@
 
 <NAlertBox
   show={$Interact.prompt.show}
-  title={$Interact.prompt.message}
+  title={$Interact.prompt.title}
+  message={$Interact.prompt.message}
   cancel={$Interact.prompt.cancel}
   onInteract={answer => {
     if (answer) {

@@ -155,12 +155,18 @@ $night: #311f62;
 }
 
 .card {
+	$padding: 16px;
 	border-radius: 0.5rem;
 	display: flex;
 	flex-direction: column;
 	z-index: 120;
 	.card-body {
-		padding: 10px;
+		padding: $padding;
+		min-height: 0;
+	}
+	.card-title {
+		$paddingTop: $padding * 0.5;
+		padding: $paddingTop $padding;
 	}
 }
 
@@ -261,4 +267,42 @@ button {
 .wiggle-other {
 	animation: keyframes1 infinite 0.6s ease-in;
 	transform-origin: 30% 5%;
+}
+
+.badge {
+	height: 22px;
+	border-radius: 11px;
+	padding: 0 12px;
+	line-height: 22px;
+	background-color: var(--color-primary);
+	color: #000;
+	font-size: 11px;
+	border: var(--color-primary);
+
+	&.badge-lg {
+		font-size: 1rem;
+		height: 2rem;
+		border-radius: 1rem;
+		line-height: 2rem;
+		padding: 0 18px;
+	}
+	&.badge-md {
+		font-size: 0.8rem;
+		height: 1.6rem;
+		border-radius: 0.8rem;
+		line-height: 1.6rem;
+		padding: 0 14px;
+	}
+}
+.badge-primary {
+	background-color: var(--color-primary);
+	color: #fff;
+}
+.badge-blue {
+	background-color: var(--color-blue);
+	color: #fff;
+}
+.badge-green {
+	background-color: var(--color-green);
+	color: #fff;
 }

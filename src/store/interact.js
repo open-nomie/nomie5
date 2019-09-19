@@ -79,6 +79,7 @@ const interactInit = () => {
 				show: false,
 				placeholder: null,
 				message: null,
+				title: null,
 			},
 			trackerInput: {
 				show: false,
@@ -239,12 +240,14 @@ const interactInit = () => {
 			return new Promise((resolve, reject) => {
 				let actions = {
 					updateContent() {
-						methods.prompt('Update Content', { value: log.note, valueType: 'textarea' }).then(content => {
-							log.note = content;
-							LedgerStore.updateLog(log).then(res => {
-								resolve({ action: 'updated' });
+						methods
+							.prompt('Update Content', null, { value: log.note, valueType: 'textarea' })
+							.then(content => {
+								log.note = content;
+								LedgerStore.updateLog(log).then(res => {
+									resolve({ action: 'updated' });
+								});
 							});
-						});
 					},
 					updateData() {
 						Interact.editLog(log).then(log => {
@@ -261,7 +264,7 @@ const interactInit = () => {
 						});
 					},
 					updateDate() {
-						Interact.prompt('New Date / Time', {
+						Interact.prompt('New Date / Time', null, {
 							valueType: 'datetime',
 							value: dayjs(new Date(log.end)).format('YYYY-MM-DDTHH:mm'),
 						}).then(date => {
@@ -429,15 +432,15 @@ const interactInit = () => {
 				return s;
 			});
 		},
-		prompt(message, options) {
+		prompt(title, message, options) {
 			return new Promise((resolve, reject) => {
 				setTimeout(() => {
 					update(s => {
 						s.prompt.show = true;
 						s.prompt.message = message;
+						s.prompt.title = title;
 						s.prompt.value = options.value || null;
 						s.prompt.valueType = options.valueType || 'text';
-						s.prompt.title = options.title || 'Prompt';
 						s.prompt.cancel = 'Cancel';
 						s.prompt.placeholder = options.placeholder || '';
 						s.prompt.onInteract = res => {

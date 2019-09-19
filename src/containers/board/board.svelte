@@ -42,6 +42,7 @@
   import { TrackerStore } from "../../store/trackers";
   import { Interact } from "../../store/interact";
   import { Lang } from "../../store/lang";
+  import { TrackerLibrary } from "../../store/tracker-library";
   // Consts
   const console = new Logger("board.svelte");
 
@@ -125,28 +126,35 @@
       // }
     },
     addTapped() {
-      if ($BoardStore.active == "all") {
-        methods.trackerEditor();
-      } else {
-        Interact.popmenu({
-          buttons: [
-            {
-              title: "Create a New Tracker",
-              click() {
-                methods.trackerEditor();
-              }
-            },
-            {
-              title: "Add Existing Trackers Here",
-              click() {
-                Interact.selectTrackers().then(tkrs => {
-                  BoardStore.addTrackersToActiveBoard(tkrs);
-                });
-              }
-            }
-          ]
+      let buttons = [];
+      buttons.push({
+        title: Lang.t("board.browse-starter-trackers"),
+        click() {
+          TrackerLibrary.toggle();
+        }
+      });
+
+      if ($BoardStore.active != "all") {
+        buttons.push({
+          title: Lang.t("board.add-existing-tracker"),
+          click() {
+            Interact.selectTrackers().then(tkrs => {
+              BoardStore.addTrackersToActiveBoard(tkrs);
+            });
+          }
         });
       }
+
+      buttons.push({
+        title: Lang.t("board.create-custom-tracker"),
+        click() {
+          methods.trackerEditor();
+        }
+      });
+
+      Interact.popmenu({
+        buttons: buttons
+      });
     },
     /**
      * Inject the "All" board automatically
@@ -201,21 +209,22 @@
      * Create a new board
      */
     newBoard() {
-      Interact.prompt("Board Label?", { placeholder: "Name or Emoji 👍" }).then(
-        res => {
-          if (res) {
-            let label = res.trim();
-            BoardStore.addBoard(label).then(board => {
-              Interact.alert(
-                "Created",
-                "Board was created. Go and add some trackers."
-              ).then(() => {
-                BoardStore.setActive(board.id);
-              });
-            });
-          }
+      Interact.prompt(
+        Lang.t("board.add-a-board"),
+        Lang.t("board.add-a-board-description"),
+        {
+          placeholder: Lang.t("board.board-input-placeholder")
         }
-      );
+      ).then(res => {
+        if (res) {
+          let label = res.trim();
+          BoardStore.addBoard(label).then(board => {
+            Interact.alert(Lang.t("general.created")).then(() => {
+              BoardStore.setActive(board.id);
+            });
+          });
+        }
+      });
     },
 
     /**
@@ -418,7 +427,7 @@
       min-width: 220px;
       margin-left: 10px;
       margin-right: 10px;
-      max-width:200px;
+      max-width: 200px;
     }
     @include media-breakpoint-down(sm) {
       min-width: 300px;

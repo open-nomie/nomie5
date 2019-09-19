@@ -108,7 +108,7 @@
       if ($UserStore.meta.lock === true) {
         if (($UserStore.meta.pin || "").length == 0) {
           // TODO: figure out how to handle a cancel in the interact prompt
-          Interact.prompt(Lang.t("settings.pin-details"), {
+          Interact.prompt(Lang.t("settings.pin-details"), null, {
             value: "",
             valueType: "number"
           }).then(pin => {

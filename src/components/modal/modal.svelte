@@ -10,6 +10,7 @@
   export let flexBody = undefined;
   export let show = true;
   export let className = undefined;
+  export let type = "normal";
 
   const has_header = (arguments[1].$$slots || {}).hasOwnProperty("header");
   const has_footer = (arguments[1].$$slots || {}).hasOwnProperty("footer");
@@ -28,6 +29,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    &.type-bottom {
+      justify-content: flex-end;
+    }
   }
   .n-modal {
     min-width: 320px;
@@ -43,6 +47,7 @@
     align-items: stretch;
     border: solid 1px var(--color-solid);
     box-shadow: 0px 16px 24px -12px rgba(0, 0, 0, 0.6);
+
     &.full-screen-modal {
       height: 96vh;
       width: 96vw;
@@ -102,7 +107,7 @@
 </style>
 
 {#if show}
-  <div class="n-modal-frame {className}" transition:fly>
+  <div class="n-modal-frame {className} type-{type}" transition:fly>
     <div class="n-modal {fullscreen ? 'full-screen-modal' : ''}">
       {#if has_header || title}
         <div class="n-modal-header">

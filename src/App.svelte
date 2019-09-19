@@ -11,6 +11,7 @@
   // Containers
   import AppTabs from "./containers/layout/tabs.svelte";
   import Interactions from "./containers/interactions/interactions.svelte";
+  import LibraryModal from "./containers/library/library.svelte";
 
   // Utils
   import Logger from "./utils/log/log";
@@ -33,6 +34,7 @@
   import { TrackerStore } from "./store/trackers"; // tracker state and methods
   import { CommanderStore } from "./store/commander"; // commander - /?note=hi&lat=35&lng=-81.32
   import { NomieAPI } from "./store/napi";
+  // import { TrackerLibrary } from './store/tracker-library';
 
   import config from "../config/global";
 
@@ -184,3 +186,4 @@
 
 <!-- Global Modals, alerts, menus, etc-->
 <Interactions />
+<LibraryModal />

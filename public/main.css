@@ -5564,7 +5564,10 @@ body.scrolling .mini-map {
   flex-direction: column;
   z-index: 120; }
   .card .card-body {
-    padding: 10px; }
+    padding: 16px;
+    min-height: 0; }
+  .card .card-title {
+    padding: 8px 16px; }
 
 .mw-500px {
   max-width: 500px !important; }
@@ -5647,3 +5650,37 @@ button {
 .wiggle-other {
   animation: keyframes1 infinite 0.6s ease-in;
   transform-origin: 30% 5%; }
+
+.badge {
+  height: 22px;
+  border-radius: 11px;
+  padding: 0 12px;
+  line-height: 22px;
+  background-color: var(--color-primary);
+  color: #000;
+  font-size: 11px;
+  border: var(--color-primary); }
+  .badge.badge-lg {
+    font-size: 1rem;
+    height: 2rem;
+    border-radius: 1rem;
+    line-height: 2rem;
+    padding: 0 18px; }
+  .badge.badge-md {
+    font-size: 0.8rem;
+    height: 1.6rem;
+    border-radius: 0.8rem;
+    line-height: 1.6rem;
+    padding: 0 14px; }
+
+.badge-primary {
+  background-color: var(--color-primary);
+  color: #fff; }
+
+.badge-blue {
+  background-color: var(--color-blue);
+  color: #fff; }
+
+.badge-green {
+  background-color: var(--color-green);
+  color: #fff; }

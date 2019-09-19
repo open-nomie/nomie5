@@ -12,6 +12,7 @@ import config from '../../config/global';
 // Stores
 import { Interact } from '../store/interact';
 import { BoardStore } from '../store/boards';
+import { TrackerLibrary } from '../store/tracker-library';
 
 // Utils
 import Logger from '../utils/log/log';
@@ -36,14 +37,15 @@ const trackerStoreInit = () => {
 					// If the user doesn't have trackers
 					// Let's prompt them to install some
 					if (!trackers) {
-						Interact.confirm(
-							`${StarterPack.label}`,
-							`Install Default Trackers: ${startPackArray.map(t => t.label).join(', ')}? `
-						).then(res => {
-							if (res === true) {
-								methods.populate(StarterPack);
-							}
-						});
+						TrackerLibrary.toggle();
+						// Interact.confirm(
+						// 	`${StarterPack.label}`,
+						// 	`Install Default Trackers: ${startPackArray.map(t => t.label).join(', ')}? `
+						// ).then(res => {
+						// 	if (res === true) {
+						// 		methods.populate(StarterPack);
+						// 	}
+						// });
 						resolve({});
 						// Setup Default Trackers
 					} else {
@@ -112,6 +114,11 @@ const trackerStoreInit = () => {
 		getByTag(tag) {
 			let trackers = this.getAll();
 			return trackers.hasOwnProperty(tag) ? trackers[tag] : new Tracker({ tag: tag });
+		},
+
+		tagExists(tag) {
+			let trackers = this.getAll();
+			return trackers.hasOwnProperty(tag) ? true : false;
 		},
 
 		/**
