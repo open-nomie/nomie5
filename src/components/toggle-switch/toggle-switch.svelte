@@ -6,11 +6,17 @@
   const dispatch = createEventDispatcher();
 
   export let value = false;
+  export let locked = null;
+
   const id = `switch-${Math.random()}`;
 
   const methods = {
     onChange(event) {
-      dispatch("change", event.target.checked);
+      if (locked == null) {
+        dispatch("change", event.target.checked);
+      } else {
+        event.target.checked = locked;
+      }
     }
   };
 </script>

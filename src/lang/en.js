@@ -41,10 +41,11 @@ export default {
 			'no-records-found': 'No Records Found',
 		},
 		board: {
+			'board-empty': 'Sure is Empty!',
 			'edit-board': `Edit {{board}} Board`,
 			'board-label': 'Board Label',
 			'create-custom-tracker': 'Create Custom Tracker',
-			'add-existing-tracker': 'Add Installed Tracker',
+			'add-existing-tracker': 'Add Existing Tracker',
 			'browse-starter-trackers': 'Browse Tracker Library',
 			'add-a-board': 'Add a Tab',
 			'add-a-board-description': `Tabs help you organize your trackers. For example: social, food, and fitness can contain trackers specifically for those activies. You can have the same tracker on multiple tabs.`,
@@ -52,7 +53,7 @@ export default {
 		},
 		settings: {
 			'sign-out': 'Sign Out',
-			'enable-boards': 'Enable Tabs',
+			'enable-boards': 'Tracker Board Tabs',
 			settings: 'Settings',
 			'use-location': 'Use Location',
 			'dark-mode': 'Dark Mode',

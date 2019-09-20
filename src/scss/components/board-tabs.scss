@@ -16,6 +16,9 @@
 		flex-shrink: 0;
 		height: 50px;
 		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		&.active {
 			border-bottom: solid 2px var(--color-primary-bright);
 		}

@@ -70,7 +70,7 @@
       flex-grow: 1;
       background-color: var(--color-solid);
       border: solid 1px var(--color-faded-1);
-      box-shadow: 0px 10px 16px -6px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--box-shadow);
       margin: 10px;
       display: flex;
       justify-content: stretch;

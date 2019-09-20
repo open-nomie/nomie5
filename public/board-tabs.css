@@ -14,7 +14,10 @@
     width: auto;
     flex-shrink: 0;
     height: 50px;
-    position: relative; }
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
     .n-board-tabs .tab.active {
       border-bottom: solid 2px var(--color-primary-bright); }
     .n-board-tabs .tab:last-child.active {

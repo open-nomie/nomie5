@@ -81,6 +81,9 @@
       background-color: var(--color-solid);
     }
 
+    &.disabled {
+      opacity: 0.5;
+    }
     &.just-content {
       background-color: transparent;
       color: var(--color-solid-3);

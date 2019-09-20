@@ -206,14 +206,23 @@
               }} />
           </div>
         </NItem>
-        <NItem title={Lang.t('settings.enable-boards')}>
-          <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />
-          <div slot="right">
-            <NToggle
-              bind:value={$UserStore.meta.boardsEnabled}
-              on:change={methods.settingChange} />
-          </div>
-        </NItem>
+        {#if $BoardStore.boards.length == 0}
+          <NItem title={Lang.t('settings.enable-boards')}>
+            <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />
+            <div slot="right">
+              <NToggle
+                bind:value={$UserStore.meta.boardsEnabled}
+                on:change={methods.settingChange} />
+            </div>
+          </NItem>
+        {:else}
+          <NItem title={Lang.t('settings.enable-boards')} className="disabled">
+            <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />
+            <div slot="right">
+              <NToggle value={true} locked={true} />
+            </div>
+          </NItem>
+        {/if}
         <NItem title={Lang.t('settings.require-pin')}>
           <span slot="left" class="btn-icon zmdi text-primary zmdi-apps" />
           <div slot="right">

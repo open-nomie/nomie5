@@ -76,7 +76,6 @@
 
     .n-modal-body {
       flex-grow: 1;
-      height: 100%;
       @include media-breakpoint-up(md) {
         padding: 20px;
       }

@@ -429,6 +429,7 @@
   }
 
   .no-trackers {
+    color: var(--color-inverse-2);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -437,9 +438,6 @@
     text-align: center;
     @include media-breakpoint-up(md) {
       min-height: 55vh;
-    }
-    span {
-      margin-left: 8px;
     }
   }
   .board-actions {
@@ -531,12 +529,11 @@
 
           {#if !activeTrackers.length}
             <div class="no-trackers">
-              This tab is empty.
+              {Lang.t('board.board-empty')}
               <br />
               <span>
-                You should
                 <span class="text-primary pointer" on:click={methods.addTapped}>
-                  Add a tracker!
+                  {Lang.t('tracker.add-tracker')}
                 </span>
               </span>
             </div>
