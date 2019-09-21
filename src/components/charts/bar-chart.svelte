@@ -187,7 +187,7 @@
         {/each}
       </g>
     </svg>
-    {#if activeIndex}
+    {#if activeIndex && points[activeIndex - 1]}
       <div class="active-item">
         <label>{points[activeIndex - 1].date.format('ddd MMM D')}</label>
         <div class="value">{yFormat(points[activeIndex - 1].y)}</div>

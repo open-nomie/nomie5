@@ -8,6 +8,7 @@
   //   // Props
   export let rows = undefined;
   export let color = undefined;
+  export let flex = true;
 
   // Consts
   const console = new Logger("⏰ Grid");
@@ -69,19 +70,26 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    flex-grow: 1;
+    height: 100%;
+    flex-shrink: 1;
+
     label {
       margin: 0;
       width: 40px;
       font-size: 0.6rem;
       text-align: right;
-      color: var(--color-faded-3);
+      color: var(--color-inverse);
       padding-right: 4px;
       width: 60px;
+      font-weight: bold;
+      text-transform: uppercase;
     }
     .day {
       display: flex;
       flex-direction: row;
-
+      height: calc(100% / 7);
+      align-items: center;
       .hour {
         width: calc(100% / 24);
         text-align: center;
@@ -90,6 +98,7 @@
         margin-right: 4px;
         margin-bottom: 2px;
         border-radius: 4px;
+        height: 95%;
       }
     }
   }

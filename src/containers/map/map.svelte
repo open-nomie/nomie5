@@ -216,6 +216,7 @@
 </script>
 
 <style lang="scss">
+  $locationHeight: 32px;
   .n-map-container {
     background-color: var(--color-solid);
     position: relative;
@@ -226,7 +227,8 @@
       top: 0;
       left: 0;
       right: 0;
-      bottom: 0;
+      bottom: $locationHeight;
+      z-index: 1;
     }
     :global(.leaflet-control-attribution) {
       background: var(--color-solid-2) !important;
@@ -236,21 +238,21 @@
 
   .n-map-container .location-name {
     position: absolute;
-    bottom: 6px;
-    left: 6px;
-    right: 6px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
     font-weight: bold;
-    font-size: 1rem;
-    line-height: 120%;
+    font-size: $locationHeight * 0.4;
+    line-height: $locationHeight;
+    height: $locationHeight;
     z-index: 1000;
-    padding: 12px 16px;
-    border: 6px;
+    padding: 0px 16px;
     background-color: var(--color-solid);
-    border: solid 1px var(--color-faded);
+    border-top: solid 1px var(--color-faded);
     color: var(--color-inverse);
-    border-bottom: none;
     text-align: center;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.12);
+    z-index: 2;
+    box-shadow: 0px -6px 10px rgba(0, 0, 0, 0.1);
   }
 
   .picker-cover {

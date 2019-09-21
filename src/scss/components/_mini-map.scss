@@ -30,7 +30,11 @@ body.scrolling {
 	.n-map-container {
 		background-color: var(--color-solid);
 		z-index: 10;
+		.n-map-wrapper {
+			bottom: 0px !important;
+		}
 	}
+
 	transition: all 0.2s ease-in-out;
 	&.opened {
 		display: flex;

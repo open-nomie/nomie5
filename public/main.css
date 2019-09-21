@@ -5385,6 +5385,8 @@ body.scrolling .mini-map {
   .mini-map .n-map-container {
     background-color: var(--color-solid);
     z-index: 10; }
+    .mini-map .n-map-container .n-map-wrapper {
+      bottom: 0px !important; }
   .mini-map.opened {
     display: flex;
     justify-content: center;

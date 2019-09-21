@@ -70,6 +70,7 @@
         margin-bottom: 0px;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
+        padding-bottom: env(safe-area-inset-bottom);
       }
     }
     &.type-fullscreen {

@@ -162,11 +162,19 @@
 
       if (
         state.view == "year" &&
-        ["streak", "logs", "all-logs"].indexOf(state.subview) > -1
+        ["map", "chart", "grid"].indexOf(state.subview) == -1
       ) {
         state.subview = "chart";
-      } else if (state.view == "month" && [""].indexOf(state.subview) > -1) {
+      } else if (
+        state.view == "month" &&
+        ["map", "logs", "streak"].indexOf(state.subview) == -1
+      ) {
         state.subview = "chart";
+      } else if (
+        state.view == "day" &&
+        ["map", "logs", "all-logs"].indexOf(state.subview) == -1
+      ) {
+        state.subview = "map";
       }
 
       methods.saveView();
@@ -180,6 +188,21 @@
     changeSubview(mode) {
       state.subview = mode;
       methods.saveView();
+    },
+    getChartLabels() {
+      let labels = state.stats.results.month.chart.labels || [];
+      return labels;
+    },
+    getChartPoints() {
+      let points = state.stats.results.month.chart.points || [];
+      return points;
+    },
+    activeIndex() {
+      if (state.view == "year") {
+        return state.date.month();
+      } else {
+        return state.date.date();
+      }
     },
     getDayLogs() {
       return new Promise((resolve, reject) => {
@@ -203,7 +226,7 @@
       methods.getStats(tracker).then(res => {
         rows = res.rows;
         state.stats = res.stats;
-
+        console.log("state.stats", state.stats);
         if (state.compare.tracker) {
           methods.getStats(state.compare.tracker).then(compareRes => {
             state.compare.stats = compareRes.stats;
@@ -312,6 +335,7 @@
       this.refresh();
     },
     getValueMap(rows) {
+      console.log("Get Value Map", rows);
       let valueMap = {};
       rows.forEach(row => {
         let dayKey = dayjs(row.end).format("YYYY-MM-DD");
@@ -374,6 +398,21 @@
     border-bottom: solid 1px var(--color-faded-1) !important;
   }
 
+  .stat-view-body {
+    flex-grow: 1;
+    min-height: 100%;
+    height: 100%;
+  }
+
+  .loading-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    flex-shrink: 1;
+    height: 100%;
+  }
+
   .sticky-header {
     background: var(--color-bg);
     position: -webkit-sticky;
@@ -403,10 +442,14 @@
   :global(.stats-modal .n-modal) {
     width: 96vw;
     max-width: 600px;
+    height: 86vh !important;
+    min-height: 540px !important;
+    max-height: 700px !important;
   }
   :global(.stats-modal .n-modal .n-modal-body) {
     padding: 0 !important;
-    min-height: 120px;
+    // min-height: 120px;
+    height: 100%;
   }
 </style>
 
@@ -594,141 +637,142 @@
         {/if}
       </div>
       <!-- End Value Header-->
+      <!-- Start button group-->
+      <div class="n-row py-2">
+        {#if state.view == 'year'}
+          <ButtonGroup
+            size="sm"
+            buttons={[{ label: Lang.t('stats.where'), active: state.subview == 'map', click() {
+                  methods.changeSubview('map');
+                } }, { label: Lang.t('stats.chart'), active: state.subview == 'chart', click() {
+                  methods.changeSubview('chart');
+                } }, { label: Lang.t('stats.when'), active: state.subview == 'grid', click() {
+                  methods.changeSubview('grid');
+                } }]} />
+        {:else if state.view == 'month'}
+          <ButtonGroup
+            size="sm"
+            buttons={[{ label: Lang.t('stats.where'), active: state.subview == 'map', click() {
+                  methods.changeSubview('map');
+                } }, { label: Lang.t('stats.chart'), active: state.subview == 'chart', click() {
+                  methods.changeSubview('chart');
+                } }, { label: Lang.t('stats.logs'), active: state.subview == 'logs', click() {
+                  methods.changeSubview('logs');
+                } }, { label: Lang.t('stats.streak'), active: state.subview == 'calendar', click() {
+                  methods.changeSubview('calendar');
+                } }]} />
+        {:else if state.view == 'day'}
+          <ButtonGroup
+            size="sm"
+            buttons={[{ label: Lang.t('stats.where'), active: state.subview == 'map', click() {
+                  methods.changeSubview('map');
+                } }, { label: Lang.t('stats.logs'), active: state.subview == 'logs', click() {
+                  methods.changeSubview('logs');
+                } }, { label: Lang.t('stats.all-logs'), active: state.subview == 'all-logs', click() {
+                  methods.changeSubview('all-logs');
+                } }]} />
+        {/if}
+      </div>
+      <!-- end button grouo-->
     </header>
 
-    <footer slot="footer" class="filler">
-      {#if state.view == 'year'}
-        <ButtonGroup
-          size="sm"
-          buttons={[{ label: Lang.t('stats.where'), active: state.subview == 'map', click() {
-                methods.changeSubview('map');
-              } }, { label: Lang.t('stats.chart'), active: state.subview == 'chart', click() {
-                methods.changeSubview('chart');
-              } }, { label: Lang.t('stats.when'), active: state.subview == 'grid', click() {
-                methods.changeSubview('grid');
-              } }]} />
-      {:else if state.view == 'month'}
-        <ButtonGroup
-          size="sm"
-          buttons={[{ label: Lang.t('stats.where'), active: state.subview == 'map', click() {
-                methods.changeSubview('map');
-              } }, { label: Lang.t('stats.chart'), active: state.subview == 'chart', click() {
-                methods.changeSubview('chart');
-              } }, { label: Lang.t('stats.logs'), active: state.subview == 'logs', click() {
-                methods.changeSubview('logs');
-              } }, { label: Lang.t('stats.streak'), active: state.subview == 'calendar', click() {
-                methods.changeSubview('calendar');
-              } }]} />
-      {:else if state.view == 'day'}
-        <ButtonGroup
-          size="sm"
-          buttons={[{ label: Lang.t('stats.where'), active: state.subview == 'map', click() {
-                methods.changeSubview('map');
-              } }, { label: Lang.t('stats.logs'), active: state.subview == 'logs', click() {
-                methods.changeSubview('logs');
-              } }, { label: Lang.t('stats.all-logs'), active: state.subview == 'all-logs', click() {
-                methods.changeSubview('all-logs');
-              } }]} />
-      {/if}
-    </footer>
+    {#if !refreshing}
+      <main class="stat-view-body {state.mode}-view">
 
-    <main class="stat-view-body {state.mode}-view">
-
-      <!-- START STAT COMPONENT VIEWS -->
-      {#if state.subview === 'chart' && state.view == 'month'}
-        <BarChart
-          height={140}
-          color={state.tracker.color}
-          labels={state.stats.results.month.chart.labels}
-          points={state.stats.results.month.chart.points}
-          on:tap={event => {
-            let newDate = state.date.toDate().setDate(event.detail.index + 1);
-            state.date = dayjs(newDate);
-            methods.refresh();
-          }}
-          xFormat={x => (x % 2 ? x : '')}
-          yFormat={y => {
-            return NomieUOM.format(y, state.tracker.uom);
-          }}
-          activeIndex={state.date.toDate().getDate()} />
-      {:else if state.subview === 'chart' && state.view == 'month'}
-        <BarChart
-          height={140}
-          color={state.tracker.color}
-          labels={state.stats.results.year.chart.labels}
-          points={state.stats.results.year.chart.points}
-          on:tap={event => {
-            let newDate = state.date.toDate().setDate(event.detail.index + 1);
-            state.date = dayjs(newDate);
-            methods.refresh();
-          }}
-          xFormat={x => (x % 2 ? x : '')}
-          yFormat={y => {
-            return NomieUOM.format(y, state.tracker.uom);
-          }}
-          activeIndex={state.date.toDate().getDate()} />
-        }
-      {:else if state.subview === 'grid'}
-        <NTimeGrid color={state.tracker.color} {rows} />
-      {:else if state.subview === 'map'}
-        <NMap
-          small
-          locations={state.stats.getLocations('month')}
-          height={250} />
-      {:else if state.subview === 'calendar'}
-        <div class="pt-2">
-          <NCalendar
-            color={state.tracker.color}
-            showHeader={false}
-            on:dayClick={event => {
-              state.date = dayjs(event.detail);
-              methods.refresh();
-            }}
-            initialDate={state.date}
-            events={methods.getCalendarData('month')} />
-        </div>
-      {:else if state.subview === 'list'}
-        <div class="n-list">
-          {#if state.stats.getRows('day').length === 0}
-            <div class="empty-notice sm">No logs found on this day.</div>
-          {/if}
-          {#each state.stats.getRows('day') as log, index}
-            {#if log.trackers[state.tracker.tag]}
-              <NLogItem
-                {log}
-                on:locationClick={event => {
-                  Interact.showLocations([log]);
-                }}
-                on:moreClick={event => {
-                  Interact.logOptions(log).then(() => {});
-                }}
-                show24Hour={$UserStore.meta.is24Hour}
-                trackers={$TrackerStore}
-                focus={state.tracker.tag} />
+        <!-- START STAT COMPONENT VIEWS -->
+        {#if state.subview === 'chart' && ['month', 'year'].indexOf(state.view) > -1}
+          <div class="p-2">
+            <BarChart
+              height={220}
+              color={state.tracker.color}
+              labels={state.stats.results[state.view].chart.labels || []}
+              points={state.stats.results[state.view].chart.points || []}
+              on:tap={event => {
+                console.log('Event tap', event);
+                let newDate;
+                if (state.view === 'year') {
+                  newDate = state.date.toDate().setMonth(event.detail.index);
+                  state.view = 'month';
+                } else if (state.view == 'month') {
+                  newDate = state.date.toDate().setDate(event.detail.index + 1);
+                  state.view = 'day';
+                  state.subview = 'logs';
+                }
+                state.date = dayjs(newDate);
+                methods.refresh();
+              }}
+              xFormat={x => (x % 2 ? x : '')}
+              yFormat={y => {
+                return NomieUOM.format(y, state.tracker.uom);
+              }}
+              activeIndex={methods.activeIndex} />
+          </div>
+        {:else if state.subview === 'grid'}
+          <NTimeGrid color={state.tracker.color} {rows} />
+        {:else if state.subview === 'map'}
+          <NMap
+            small
+            locations={state.stats.getLocations(state.view)}
+            height={250} />
+        {:else if state.subview === 'calendar'}
+          <div class="p-3">
+            <NCalendar
+              color={state.tracker.color}
+              showHeader={false}
+              on:dayClick={event => {
+                state.date = dayjs(event.detail);
+                methods.refresh();
+              }}
+              initialDate={state.date}
+              events={methods.getCalendarData('month')} />
+          </div>
+        {:else if state.subview === 'logs'}
+          <div class="n-list">
+            {#if state.stats.getRows(state.view).length === 0}
+              <div class="empty-notice sm">No logs found on this day.</div>
             {/if}
-          {/each}
-        </div>
-      {:else if state.subview === 'all-logs'}
-        <div class="n-list">
-          {#await methods.getDayLogs()}
-            <div class="empty-notice sm">Getting logs...</div>
-          {:then logs}
-            {#each logs as log, index}
-              <NLogItem
-                {log}
-                on:locationClick={event => {
-                  Interact.showLocations([log]);
-                }}
-                show24Hour={$UserStore.meta.is24Hour}
-                on:moreClick={event => {
-                  Interact.logOptions(log).then(() => {});
-                }}
-                trackers={$TrackerStore} />
+            {#each state.stats.getRows(state.view) as log, index}
+              {#if log.trackers[state.tracker.tag]}
+                <NLogItem
+                  {log}
+                  fulldate={true}
+                  on:locationClick={event => {
+                    Interact.showLocations([log]);
+                  }}
+                  on:moreClick={event => {
+                    Interact.logOptions(log).then(() => {});
+                  }}
+                  show24Hour={$UserStore.meta.is24Hour}
+                  trackers={$TrackerStore}
+                  focus={state.tracker.tag} />
+              {/if}
             {/each}
-          {/await}
-        </div>
-      {/if}
-    </main>
+          </div>
+        {:else if state.subview === 'all-logs'}
+          <div class="n-list">
+            {#await methods.getDayLogs()}
+              <div class="empty-notice sm">Getting logs...</div>
+            {:then logs}
+              {#each logs as log, index}
+                <NLogItem
+                  fulldate={true}
+                  {log}
+                  on:locationClick={event => {
+                    Interact.showLocations([log]);
+                  }}
+                  show24Hour={$UserStore.meta.is24Hour}
+                  on:moreClick={event => {
+                    Interact.logOptions(log).then(() => {});
+                  }}
+                  trackers={$TrackerStore} />
+              {/each}
+            {/await}
+          </div>
+        {/if}
+      </main>
+    {:else}
+      <main class="loading-main stat-view-body">Loading...</main>
+    {/if}
 
   </Modal>
 {/if}
