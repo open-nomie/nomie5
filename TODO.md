@@ -1,6 +1,6 @@
 # TODO
 
-Generated Fri Sep 20 2019 10:22 pm
+Generated Fri Sep 20 2019 10:48 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -32,6 +32,8 @@ Generated Fri Sep 20 2019 10:22 pm
    - TODO: Finish Goals
 - **src/modules/stats/stats.js**
    - TODO: Implement IgnoreZeros
+- **src/modules/export/csv.js**
+   - end TODO: See why end date is not working in query
 - **src/main.js**
    - TODO: handle anything required for service worker
 - **src/containers/tracker/input/keypad.svelte**

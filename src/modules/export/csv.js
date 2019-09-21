@@ -68,13 +68,10 @@ export default class CSV {
 	 */
 	async generate(options) {
 		options = options || {};
-		let start =
-			options.start ||
-			dayjs()
-				.subtract(1, 'month')
-				.toDate();
-		let end = options.end || new Date();
-		let trackers = options.trackers || [];
+		let start = options.start;
+		let end = options.end;
+		let trackers = options.trackers;
+
 		// Loop over provided trackers - make them real trackers
 		trackers.map(tracker => {
 			if (typeof tracker == 'string') {
@@ -86,8 +83,9 @@ export default class CSV {
 		// Get the logs for the provided time period
 		let logs = await LedgerStore.query({
 			start,
-			end,
+			// end TODO: See why end date is not working in query
 		});
+
 		// Expand and filter the logs
 		logs = logs
 			.map(record => {
@@ -108,7 +106,6 @@ export default class CSV {
 			});
 		// generate CSV array
 		let csvArray = this.logsToCSV(logs, trackers);
-		console.log('CSV', csvArray);
 		let filename = `nomie4-${dayjs(start).format('YYYY-MM-DD')}-${dayjs(end).format('YYYY-MM-DD')}.csv`;
 		this.download(filename, csvArray);
 	}

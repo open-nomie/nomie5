@@ -49,10 +49,8 @@
   const methods = {
     exportCSV() {
       let csv = new CSV();
-      let start = dayjs()
-        .subtract(1, "month")
-        .toDate();
-      let end = new Date();
+      let start = startDate.toDate();
+      let end = endDate.toDate();
       let trackers = state.trackers;
       csv.generate({
         trackers,

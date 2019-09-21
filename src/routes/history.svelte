@@ -238,7 +238,8 @@
       }
     },
     trackerTapped(tracker, log) {
-      navigate(`/stats/${tracker.id}`);
+      let trackerId = ($TrackerStore[tracker.tag] || {}).id;
+      navigate(`/stats/${trackerId}`);
     },
     showLogOptions(log) {
       Interact.logOptions(log).then(action => {
