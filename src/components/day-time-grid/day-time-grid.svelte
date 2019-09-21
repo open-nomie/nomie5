@@ -76,6 +76,7 @@
       text-align: right;
       color: var(--color-faded-3);
       padding-right: 4px;
+      width: 60px;
     }
     .day {
       display: flex;

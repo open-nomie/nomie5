@@ -1,6 +1,6 @@
 # TODO
 
-Generated Fri Sep 20 2019 10:48 pm
+Generated Sat Sep 21 2019 3:31 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -17,6 +17,8 @@ Generated Fri Sep 20 2019 10:48 pm
 - **src/scss/main.scss**
    - TODO: Look at making prefers-color-scheme work properly - when enabled, only buttons change
 - **src/routes/stats.svelte**
+   - TODO: Needs to be refactored and cleaned up
+- **src/routes/stats-og.svelte**
    - TODO: Needs to be refactored and cleaned up
 - **src/routes/settings.svelte**
    - TODO: figure out how to handle a cancel in the interact prompt

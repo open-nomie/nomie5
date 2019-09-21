@@ -4837,7 +4837,8 @@ button:focus {
 .btn {
   border-radius: 0.3rem;
   display: flex;
-  justify-content: center; }
+  justify-content: center;
+  align-items: center; }
   .btn.btn-lg, .btn-group-lg > .btn {
     border-radius: 0.6rem; }
 
@@ -4954,7 +4955,11 @@ button:focus {
     background: transparent !important;
     border: none;
     transition: all 0.2s ease-in-out;
-    color: var(--color-inverse); }
+    color: var(--color-inverse);
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding-left: 6px !important;
+    padding-right: 6px !important; }
     .btn-group .btn.active {
       background-color: var(--color-solid) !important;
       border-radius: 10px !important;
@@ -5168,6 +5173,9 @@ body.dark {
 
 .text-white {
   color: #fff; }
+
+.font-bold {
+  font-weight: bold; }
 
 .font-120 {
   font-size: 1.2rem; }

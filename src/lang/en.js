@@ -33,6 +33,17 @@ export default {
 			faq: 'FAQ',
 			'continue-question': 'Continue?',
 			loading: 'Loading...',
+			day: 'Day',
+			month: 'Month',
+			year: 'Year',
+		},
+		stats: {
+			when: 'When',
+			chart: 'Chart',
+			where: 'Where',
+			streak: 'Streak',
+			logs: 'Logs',
+			'all-logs': 'All Logs',
 		},
 		tabs: {
 			track: 'Track',

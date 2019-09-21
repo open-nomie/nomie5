@@ -15,6 +15,7 @@ button:focus {
 	border-radius: 0.3rem;
 	display: flex;
 	justify-content: center;
+	align-items: center;
 	&.btn-lg {
 		border-radius: 0.6rem;
 	}
@@ -161,6 +162,10 @@ button:focus {
 		border: none;
 		transition: all 0.2s ease-in-out;
 		color: var(--color-inverse);
+		flex-grow: 1;
+		flex-shrink: 1;
+		padding-left: 6px !important;
+		padding-right: 6px !important;
 		&.active {
 			background-color: var(--color-solid) !important;
 			border-radius: 10px !important;

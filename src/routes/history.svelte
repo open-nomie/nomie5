@@ -238,8 +238,9 @@
       }
     },
     trackerTapped(tracker, log) {
-      let trackerId = ($TrackerStore[tracker.tag] || {}).id;
-      navigate(`/stats/${trackerId}`);
+      // let trackerId = ($TrackerStore[tracker.tag] || {}).id;
+      // navigate(`/stats/${tracker.tag}`);
+      Interact.openStats(tracker.tag);
     },
     showLogOptions(log) {
       Interact.logOptions(log).then(action => {

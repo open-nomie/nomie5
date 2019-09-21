@@ -7,7 +7,9 @@
  * For example: Alerts, Confirms, Prompts, Location Lookup, Location Showing, Editing Trackers
  */
 
+// Svelte
 import { writable } from 'svelte/store';
+import { navigate } from 'svelte-routing';
 
 // vendors
 import dayjs from 'dayjs';
@@ -27,6 +29,9 @@ const console = new Logger('✋ Interact');
 const interactInit = () => {
 	let getBaseState = () => {
 		return {
+			stats: {
+				activeTag: null,
+			},
 			alert: {
 				show: false,
 				title: null,
@@ -157,7 +162,18 @@ const interactInit = () => {
 				return s;
 			});
 		},
-
+		openStats(tag) {
+			update(d => {
+				d.stats.activeTag = tag;
+				return d;
+			});
+		},
+		closeStats() {
+			update(d => {
+				d.stats.activeTag = null;
+				return d;
+			});
+		},
 		openCamera(onSave) {
 			update(s => {
 				s.camera.show = true;

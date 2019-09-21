@@ -12,6 +12,7 @@
   import AppTabs from "./containers/layout/tabs.svelte";
   import Interactions from "./containers/interactions/interactions.svelte";
   import LibraryModal from "./containers/library/library.svelte";
+  import Modal from "./components/modal/modal.svelte";
 
   // Utils
   import Logger from "./utils/log/log";
@@ -214,3 +215,4 @@
 <!-- Global Modals, alerts, menus, etc-->
 <Interactions />
 <LibraryModal />
+<StatsRoute id={$Interact.stats.activeTag} />
