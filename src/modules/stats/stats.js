@@ -211,40 +211,60 @@ export default class StatsProcessor {
 		return { min, max };
 	}
 
+	// Generate Chart Data
 	toChartData(mode) {
+		// Chart needs an array of Pointsa nd Labels
 		let chartData = {
 			labels: [],
 			points: [],
 		};
-		let dateMap = {};
-		let dateKey = 'YYYY-MM-DD';
+
+		// Set Start to Null
 		let start = null;
 		let dayCount = 0;
 
+		let hourMap = {};
+		this.rows.forEach(row => {
+			let rowDate = dayjs(row.end);
+			if (rowDate.format('YYYY-MM-DD') == this.date.format('YYYY-MM-DD')) {
+				hourMap[rowDate.format('H')] = hourMap[rowDate.format('H')] || [];
+			}
+		});
+
+		// If we're in a month
 		if (mode === 'month') {
-			dateKey = 'YYYY-MM';
+			// Get number of days in month
 			dayCount = this.date
 				.endOf('month')
 				.toDate()
 				.getDate();
+			// set start to start of month
 			start = this.date.startOf('month');
+			// loop over days
 			for (let i = 0; i < dayCount; i++) {
+				// setup loop date
 				let thisDate = start.add(i, 'days');
+				// Get label of day
 				let dayLabel = thisDate.format('DD');
+				// Push label of day to labels
 				chartData.labels.push(dayLabel);
+				// Get value of the day
 				let dayValue = this.results.valueTotalMap.days[thisDate.format('YYYY-MM-DD')];
+				// Create a point object with date, value and label
 				let point = {
 					date: thisDate,
 					x: dayLabel,
 					y: 0,
 				};
+				// If we have a value
 				if (dayValue) {
+					// figure out if we should provided the sum or avg
 					point.y = this.tracker.math === 'sum' ? dayValue.sum : dayValue.avg;
 				}
+				// Push Point to Chart data array.
 				chartData.points.push(point);
 			} // end looping over days
 		} else if (mode === 'year') {
-			dateKey = 'YYYY-MM';
 			let start = dayjs(this.date).startOf('year');
 			let yearMap = {};
 			for (var i = 0; i < 12; i++) {

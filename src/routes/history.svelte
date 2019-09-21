@@ -80,6 +80,7 @@
   // If the date changes - check to see if it's still today
   $: if (state.date) {
     isToday = new Date().toDateString() == state.date.toDate().toDateString();
+    console.log("state.date change", state.date);
   }
 
   // Filter logs for today
@@ -169,6 +170,7 @@
       state.location.lng = null;
     },
     refresh() {
+      console.log("Refreshing");
       refreshing = true;
       setTimeout(() => {
         refreshing = false;

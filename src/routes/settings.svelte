@@ -166,6 +166,26 @@
 
       <div class="n-pop">
         <NItem title={Lang.t('general.customize')} className="n-item-divider" />
+        <NItem title={Lang.t('settings.theme')}>
+          <span
+            slot="left"
+            class="btn-icon zmdi text-primary zmdi-invert-colors" />
+          <div slot="right">
+            <select
+              class="form-control"
+              style="min-width:100px;width:100px"
+              bind:value={$UserStore.theme}
+              on:change={event => {
+                console.log('Change!', $UserStore.theme);
+                UserStore.setTheme($UserStore.theme);
+              }}>
+              <option value="auto">Auto</option>
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+            </select>
+
+          </div>
+        </NItem>
         <NItem title={Lang.t('settings.use-location')}>
           <span
             slot="left"
@@ -178,18 +198,7 @@
               }} />
           </div>
         </NItem>
-        <NItem title={Lang.t('settings.dark-mode')}>
-          <span
-            slot="left"
-            class="btn-icon zmdi text-primary zmdi-brightness-2" />
-          <div slot="right">
-            <NToggle
-              bind:value={$UserStore.darkMode}
-              on:change={event => {
-                UserStore.setDarkMode(event.detail);
-              }} />
-          </div>
-        </NItem>
+
         {#if $BoardStore.boards.length == 0}
           <NItem title={Lang.t('settings.enable-boards')}>
             <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />

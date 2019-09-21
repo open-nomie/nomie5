@@ -7,6 +7,7 @@ export default {
 	board_file: 'boards.json',
 	always_locate_key: 'always-locate',
 	dark_mode_key: 'dark-mode',
+	theme_key: 'theme',
 	user_meta_path: 'data/v01/meta.json',
 	support_email: 'support@happydata.org',
 	support_contact: 'Email Brandon',

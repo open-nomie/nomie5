@@ -196,3 +196,26 @@
 .bg-light {
 	background-color: var(--color-solid) !important;
 }
+
+.n-item-log {
+	&.compact {
+		margin: 2px !important;
+		.time-row {
+			padding: 2px;
+			.time {
+				font-size: 0.8rem;
+			}
+		}
+		.n-note-textualized {
+			font-size: 0.9rem;
+			line-height: 1.2rem;
+		}
+		.n-item {
+			min-height: 30px;
+		}
+	}
+
+	.time-row {
+		padding-top: 12px;
+	}
+}

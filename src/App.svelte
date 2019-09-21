@@ -79,13 +79,13 @@
       let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)")
         .matches;
       // let isDarkMode = false;
-      let manualDarkMode = JSON.parse(
-        localStorage.getItem(config.dark_mode_key) || "false"
-      );
-      if (isDarkMode || manualDarkMode) {
-        document.body.classList.add("dark");
+      let theme = localStorage.getItem(config.theme_key) || "auto";
+      if (theme === "auto" && isDarkMode) {
+        document.body.classList.add("theme-dark");
+      } else if (theme === "auto") {
+        document.body.classList.add("theme-light");
       } else {
-        document.body.classList.remove("dark");
+        document.body.classList.add(`theme-${theme}`);
       }
       methods.hideSplashScreen();
     }
@@ -213,6 +213,6 @@
 {/if}
 
 <!-- Global Modals, alerts, menus, etc-->
+<StatsRoute id={$Interact.stats.activeTag} />
 <Interactions />
 <LibraryModal />
-<StatsRoute id={$Interact.stats.activeTag} />

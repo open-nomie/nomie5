@@ -36,6 +36,8 @@ export default {
 			day: 'Day',
 			month: 'Month',
 			year: 'Year',
+			map: 'Map',
+			time: 'Time',
 		},
 		stats: {
 			when: 'When',
@@ -80,7 +82,8 @@ export default {
 			'sign-out': 'Sign Out',
 			'enable-boards': 'Tracker Board Tabs',
 			settings: 'Settings',
-			'use-location': 'Use Location',
+			theme: 'Theme',
+			'use-location': 'Track Location',
 			'dark-mode': 'Dark Mode',
 			'require-pin': 'Require Pin',
 			'24-hour-clock': '24 hour clock',

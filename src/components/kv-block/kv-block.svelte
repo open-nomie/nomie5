@@ -3,10 +3,6 @@
   export let value = undefined;
   export let onClick = undefined;
   export let type = "text";
-
-  $: if (label) {
-    console.log("kv value", value);
-  }
 </script>
 
 <style lang="scss">

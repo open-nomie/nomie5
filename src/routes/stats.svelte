@@ -111,8 +111,6 @@
       $TrackerStore[$Interact.stats.activeTag] ||
       new Tracker({ tag: $Interact.stats.activeTag });
     methods.load();
-  } else {
-    console.log("Something reloaded the view - but tag did not change");
   }
 
   // $: if ($Interact.stats.activeTag && !state.ready) {
@@ -172,7 +170,7 @@
         state.subview = "chart";
       } else if (
         state.view == "day" &&
-        ["map", "logs", "all-logs"].indexOf(state.subview) == -1
+        ["map", "logs", "chart", "all-logs"].indexOf(state.subview) == -1
       ) {
         state.subview = "map";
       }
@@ -185,16 +183,35 @@
         methods.refresh();
       }
     },
+    getGridRows() {
+      if (state.view == "month") {
+        let start = state.date
+          .startOf("month")
+          .toDate()
+          .getTime();
+        let end = state.date
+          .endOf("month")
+          .toDate()
+          .getTime();
+        return rows.filter(row => {
+          return row.end > start && row.end < end;
+        });
+      } else {
+        return rows;
+      }
+    },
     changeSubview(mode) {
       state.subview = mode;
       methods.saveView();
     },
     getChartLabels() {
-      let labels = state.stats.results.month.chart.labels || [];
+      let view = state.view == "year" ? "year" : "month";
+      let labels = state.stats.results[view].chart.labels || [];
       return labels;
     },
     getChartPoints() {
-      let points = state.stats.results.month.chart.points || [];
+      let view = state.view == "year" ? "year" : "month";
+      let points = state.stats.results[view].chart.points || [];
       return points;
     },
     activeIndex() {
@@ -218,6 +235,13 @@
         });
       });
     },
+    xFormat(x) {
+      if (state.view == "month") {
+        return x % 2 ? x : "";
+      } else {
+        return dayjs(x).format("MMM");
+      }
+    },
     load() {
       let tracker =
         $TrackerStore[$Interact.stats.activeTag] ||
@@ -226,7 +250,6 @@
       methods.getStats(tracker).then(res => {
         rows = res.rows;
         state.stats = res.stats;
-        console.log("state.stats", state.stats);
         if (state.compare.tracker) {
           methods.getStats(state.compare.tracker).then(compareRes => {
             state.compare.stats = compareRes.stats;
@@ -332,6 +355,8 @@
     },
     show(date) {
       state.date = date;
+      state.view = "day";
+      state.subview = "logs";
       this.refresh();
     },
     getValueMap(rows) {
@@ -402,6 +427,7 @@
     flex-grow: 1;
     min-height: 100%;
     height: 100%;
+    background-color: var(--color-bg);
   }
 
   .loading-main {
@@ -429,7 +455,7 @@
     padding-bottom: 6px;
     justify-content: center;
     font-size: 12px;
-    color: #fff;
+    background-color: transparent !important;
     margin-left: -11px;
     margin-top: -11px;
     padding-top: 9px;
@@ -642,20 +668,22 @@
         {#if state.view == 'year'}
           <ButtonGroup
             size="sm"
-            buttons={[{ label: Lang.t('stats.where'), active: state.subview == 'map', click() {
+            buttons={[{ label: Lang.t('general.map'), active: state.subview == 'map', click() {
                   methods.changeSubview('map');
                 } }, { label: Lang.t('stats.chart'), active: state.subview == 'chart', click() {
                   methods.changeSubview('chart');
-                } }, { label: Lang.t('stats.when'), active: state.subview == 'grid', click() {
+                } }, { label: Lang.t('general.time'), active: state.subview == 'grid', click() {
                   methods.changeSubview('grid');
                 } }]} />
         {:else if state.view == 'month'}
           <ButtonGroup
             size="sm"
-            buttons={[{ label: Lang.t('stats.where'), active: state.subview == 'map', click() {
+            buttons={[{ label: Lang.t('general.map'), active: state.subview == 'map', click() {
                   methods.changeSubview('map');
                 } }, { label: Lang.t('stats.chart'), active: state.subview == 'chart', click() {
                   methods.changeSubview('chart');
+                } }, { label: Lang.t('general.time'), active: state.subview == 'grid', click() {
+                  methods.changeSubview('grid');
                 } }, { label: Lang.t('stats.logs'), active: state.subview == 'logs', click() {
                   methods.changeSubview('logs');
                 } }, { label: Lang.t('stats.streak'), active: state.subview == 'calendar', click() {
@@ -664,8 +692,10 @@
         {:else if state.view == 'day'}
           <ButtonGroup
             size="sm"
-            buttons={[{ label: Lang.t('stats.where'), active: state.subview == 'map', click() {
+            buttons={[{ label: Lang.t('general.map'), active: state.subview == 'map', click() {
                   methods.changeSubview('map');
+                } }, { label: Lang.t('stats.chart'), active: state.subview == 'chart', click() {
+                  methods.changeSubview('chart');
                 } }, { label: Lang.t('stats.logs'), active: state.subview == 'logs', click() {
                   methods.changeSubview('logs');
                 } }, { label: Lang.t('stats.all-logs'), active: state.subview == 'all-logs', click() {
@@ -680,35 +710,34 @@
       <main class="stat-view-body {state.mode}-view">
 
         <!-- START STAT COMPONENT VIEWS -->
-        {#if state.subview === 'chart' && ['month', 'year'].indexOf(state.view) > -1}
+        {#if state.subview === 'chart'}
           <div class="p-2">
             <BarChart
               height={220}
               color={state.tracker.color}
-              labels={state.stats.results[state.view].chart.labels || []}
-              points={state.stats.results[state.view].chart.points || []}
+              labels={methods.getChartLabels()}
+              points={methods.getChartPoints()}
               on:tap={event => {
-                console.log('Event tap', event);
                 let newDate;
                 if (state.view === 'year') {
                   newDate = state.date.toDate().setMonth(event.detail.index);
                   state.view = 'month';
                 } else if (state.view == 'month') {
                   newDate = state.date.toDate().setDate(event.detail.index + 1);
-                  state.view = 'day';
-                  state.subview = 'logs';
+                } else if (state.view == 'day') {
+                  newDate = state.date.toDate().setDate(event.detail.index + 1);
                 }
                 state.date = dayjs(newDate);
                 methods.refresh();
               }}
-              xFormat={x => (x % 2 ? x : '')}
+              xFormat={methods.xFormat}
               yFormat={y => {
                 return NomieUOM.format(y, state.tracker.uom);
               }}
-              activeIndex={methods.activeIndex} />
+              activeIndex={methods.activeIndex()} />
           </div>
         {:else if state.subview === 'grid'}
-          <NTimeGrid color={state.tracker.color} {rows} />
+          <NTimeGrid color={state.tracker.color} rows={methods.getGridRows()} />
         {:else if state.subview === 'map'}
           <NMap
             small
@@ -735,7 +764,8 @@
               {#if log.trackers[state.tracker.tag]}
                 <NLogItem
                   {log}
-                  fulldate={true}
+                  className="compact"
+                  fullDate={true}
                   on:locationClick={event => {
                     Interact.showLocations([log]);
                   }}
@@ -755,7 +785,8 @@
             {:then logs}
               {#each logs as log, index}
                 <NLogItem
-                  fulldate={true}
+                  className="compact"
+                  fullDate={true}
                   {log}
                   on:locationClick={event => {
                     Interact.showLocations([log]);

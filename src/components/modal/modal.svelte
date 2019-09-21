@@ -59,9 +59,10 @@
       justify-content: flex-end;
       margin-bottom: -20px;
       padding-bottom: 20px;
+
       &.hidden {
         .n-modal {
-          transform: translateY(300px);
+          transform: translateY(500px);
         }
       }
       .n-modal {
@@ -71,6 +72,8 @@
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         padding-bottom: env(safe-area-inset-bottom);
+        box-shadow: var(--box-shadow);
+        border: solid 1px var(--color-inverse-3);
       }
     }
     &.type-fullscreen {
