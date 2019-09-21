@@ -335,7 +335,7 @@
         {
           title: "Stats",
           click() {
-            navigate(`/stats/${tracker.tag}`, { tracker: tracker });
+            navigate(`/stats/${tracker.id}`, { tracker: tracker });
           }
         },
         {

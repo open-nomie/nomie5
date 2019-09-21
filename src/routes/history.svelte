@@ -238,7 +238,7 @@
       }
     },
     trackerTapped(tracker, log) {
-      navigate(`/stats/${tracker.tag}`);
+      navigate(`/stats/${tracker.id}`);
     },
     showLogOptions(log) {
       Interact.logOptions(log).then(action => {

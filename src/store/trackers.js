@@ -66,7 +66,17 @@ const trackerStoreInit = () => {
 			});
 			return data || {};
 		},
+		getById(id) {
+			let trackers = methods.getAll();
+			let tracker = Object.keys(trackers)
+				.map(tag => trackers[tag])
+				.find(tracker => {
+					return tracker.id === id;
+				});
+			return new Tracker(tracker);
+		},
 		getRunning() {
+			//TODO :: Get this working so you can see all timers on a single dynamic board
 			let allTrackers = methods.getAll() || {};
 			return [];
 			// return Object.keys(allTrackers || {})
@@ -82,6 +92,8 @@ const trackerStoreInit = () => {
 			Object.keys(trackers).forEach(key => {
 				if (!trackers[key].tag) {
 					delete trackers[key];
+				} else {
+					trackers[key] = new Tracker(trackers[key]);
 				}
 			});
 			return trackers;

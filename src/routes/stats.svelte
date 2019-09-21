@@ -46,9 +46,16 @@
   import { Interact } from "../store/interact";
   import { HistoryPage } from "../store/history-page";
 
+  // const path = window.location.href.split("/");
+  // const mainTag = path[path.length - 1];
+
+  export let id = null;
+
+  const mainTag = TrackerStore.getById(id).tag;
+
   const console = new Logger("📊 Stats.svelte");
-  const path = window.location.href.split("/");
-  const mainTag = path[path.length - 1];
+
+  console.log(mainTag);
 
   // Local
   let refreshing = false;
