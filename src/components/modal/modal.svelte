@@ -50,12 +50,17 @@
     }
     &.type-cover {
       .n-modal {
-        min-height: 100vh;
-        min-width: 100vw;
-        max-height: 100vh;
-        max-width: 100vw;
+        padding-top: env(safe-area-inset-top) !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         border-radius: 0px;
         margin: 0;
+        margin-left: 0;
+        margin-right: 0;
+        padding-bottom: env(safe-area-inset-bottom) !important;
       }
     }
   }

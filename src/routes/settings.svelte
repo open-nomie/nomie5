@@ -144,10 +144,6 @@
 {#if $UserStore.meta}
   <div class="page page-settings with-header">
     <div class="container p-0 n-list">
-      <NItem
-        title={Lang.t('general.customize')}
-        borderBottom
-        className="n-item-divider" />
       {#if $UserStore.storageType === 'blockstack'}
         <div class="n-pop">
           <NItem className="n-item-divider" borderBottom title="Account" />
@@ -169,6 +165,10 @@
       {/if}
 
       <div class="n-pop">
+        <NItem
+          title={Lang.t('general.customize')}
+          borderBottom
+          className="n-item-divider" />
         <NItem title={Lang.t('settings.use-location')}>
           <span
             slot="left"

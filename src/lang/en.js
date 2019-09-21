@@ -91,11 +91,11 @@ export default {
 			'switch-to-cloud-notice': `Data is not automatically migrated to the cloud.
             You should export your local data first, then import it once the switch is complete. 
             You can always switch back`,
-			'switch-to-cloud-confirm': 'Switch to Blockstack - Are you sure?',
+			'switch-to-cloud-confirm': 'Switch to Blockstack?',
 			'switch-to-local-notice': `Data is not automatically migrated FROM the cloud.
             You should export your data first, then import it once the switch is complete. 
             You can always switch back`,
-			'switch-to-local-confirm': 'Switch to Local - Are you sure?',
+			'switch-to-local-confirm': 'Switch to Local?',
 			'pin-details': 'Enter 1 to 6 digit pin',
 			'aggressive-sync': 'Aggressive Sync',
 			'aggressive-description': `Using Nomie on multiple devices? Enable Aggressive Sync

@@ -1,6 +1,112 @@
 // The component was getting to big... Needed some breathing room
 
 .n-item {
+	text-align: left;
+	display: flex;
+	align-items: center;
+	justify-content: stretch;
+	padding: 4px 16px;
+	min-height: 46px;
+	max-width: 100vw;
+	position: relative;
+	transition: all 0.2s ease-in-out;
+	text-decoration: none;
+	color: var(--color-inverse);
+	font-size: 1rem;
+	flex-shrink: 0;
+	background-color: var(--color-solid);
+
+	select,
+	input {
+		margin: 8px 0;
+	}
+
+	&.item-divider {
+		background-color: var(--color-solid);
+	}
+
+	&.disabled {
+		opacity: 0.5;
+	}
+	&.just-content {
+		background-color: transparent;
+		color: var(--color-inverse-2);
+		font-size: 0.8rem;
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+	&.large {
+		min-height: 56px;
+	}
+
+	&.compact {
+		min-height: 20px;
+	}
+
+	&.border,
+	&[border] {
+		border: none !important;
+		box-shadow: 0px 3px 4px -2px rgba(0, 0, 0, 0.03);
+		background-color: var(--color-solid);
+		border-radius: 0.9rem;
+		overflow: hidden;
+		max-width: 95vw;
+	}
+
+	&.border-bottom,
+	&[border-bottom] {
+		border-bottom: solid 1px rgba(0, 0, 0, 0.1);
+	}
+
+	.left {
+		padding-right: 16px;
+	}
+	.right {
+		padding-left: 16px;
+		text-align: right;
+	}
+
+	.left,
+	.right {
+		flex-grow: 0;
+		flex-shrink: 0;
+		color: var(--color-inverse-2);
+		font-size: 0.9rem;
+	}
+
+	.right .btn-clear {
+		margin-right: -10px !important;
+	}
+	.right .zmdi .icon {
+		font-size: 24px !important;
+	}
+	.left .zmdi .icon {
+		font-size: 24px !important;
+	}
+
+	.main {
+		flex-grow: 1;
+		flex-shrink: 1;
+		overflow: hidden;
+		h4 {
+			font-size: 1.14rem;
+			margin: 2px 0;
+			line-height: 1.56rem;
+		}
+
+		p {
+			margin: 2px 0;
+			color: var(--color-inverse-3);
+			line-height: 140%;
+			font-size: 0.9rem;
+
+			&.sm,
+			&.small {
+				font-size: 0.8rem;
+			}
+		}
+	}
+
 	.left,
 	.right {
 		.btn-icon {
