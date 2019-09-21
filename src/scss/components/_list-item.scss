@@ -1,3 +1,5 @@
+// The component was getting to big... Needed some breathing room
+
 .n-item {
 	.left,
 	.right {
@@ -6,6 +8,9 @@
 			width: 26px;
 			padding: 0 !important;
 			text-align: center;
+		}
+		.form-control {
+			margin: 6px 0;
 		}
 	}
 	.right {
@@ -32,14 +37,19 @@
 			line-height: 0.9rem !important;
 		}
 	}
-}
+	&.text-primary {
+		.n-text {
+			color: var(--color-primary);
+		}
+	}
+} // end .n-item
 
 .n-item-divider {
 	min-height: 60px !important;
 	height: 30px;
 	align-items: flex-end !important;
 	padding-bottom: 10px !important;
-	background-color: transparent !important;
+	background-color: var(--color-bg) !important;
 	&.border-bottom {
 		border-bottom-color: var(--color-faded) !important;
 	}

@@ -5188,7 +5188,8 @@ body.dark {
   font-size: 0.5rem !important; }
 
 .text-sm {
-  font-size: 0.7rem !important; }
+  font-size: 0.81rem !important;
+  line-height: 0.98rem; }
 
 .text-md {
   font-size: 1rem !important; }
@@ -5442,6 +5443,10 @@ body.scrolling .mini-map {
   padding: 0 !important;
   text-align: center; }
 
+.n-item .left .form-control,
+.n-item .right .form-control {
+  margin: 6px 0; }
+
 .n-item .right .zmdi {
   font-size: 26px; }
 
@@ -5462,12 +5467,15 @@ body.scrolling .mini-map {
   font-size: 0.8rem !important;
   line-height: 0.9rem !important; }
 
+.n-item.text-primary .n-text {
+  color: var(--color-primary); }
+
 .n-item-divider {
   min-height: 60px !important;
   height: 30px;
   align-items: flex-end !important;
   padding-bottom: 10px !important;
-  background-color: transparent !important; }
+  background-color: var(--color-bg) !important; }
   .n-item-divider.border-bottom {
     border-bottom-color: var(--color-faded) !important; }
   .n-item-divider.compact, [item-divider],
@@ -5508,6 +5516,9 @@ body.scrolling .mini-map {
 
 .pointer {
   cursor: pointer; }
+
+.gap {
+  height: 16px; }
 
 .library-modal .n-modal-body {
   background-color: var(--color-bg) !important; }

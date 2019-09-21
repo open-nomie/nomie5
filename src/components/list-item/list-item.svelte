@@ -1,4 +1,5 @@
 <script>
+  import { navigate, Link } from "svelte-routing";
   import NText from "../text/text.svelte";
   import { createEventDispatcher } from "svelte";
   export let title = undefined;
@@ -20,9 +21,11 @@
 
   const methods = {
     clicked(event) {
-      if (this.href) {
+      if (href) {
         // event.preventDefault();
-        window.location.href = this.href;
+        window.location.href = href;
+      } else if (to) {
+        navigate(to);
       } else {
         // this.$emit("click", this.$props);
       }
@@ -86,7 +89,7 @@
     }
     &.just-content {
       background-color: transparent;
-      color: var(--color-solid-3);
+      color: var(--color-inverse-2);
       font-size: 0.8rem;
       padding-top: 10px;
       padding-bottom: 10px;

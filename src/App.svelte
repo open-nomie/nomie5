@@ -26,6 +26,7 @@
   import FAQRoute from "./routes/faq.svelte";
   import PluginsRoute from "./routes/plugins.svelte";
   import NomieAPIRoute from "./routes/nomie-api.svelte";
+  import ExportRoute from "./routes/export.svelte";
 
   // Stores
   import { UserStore } from "./store/user"; //  user auth and state
@@ -198,6 +199,8 @@
       <Route path="/plugins/settings/:pluginId" component={PluginsRoute} />
       <Route path="/plugins/:pluginId" component={PluginsRoute} />
       <Route path="/api" component={NomieAPIRoute} />
+      <Route path="/settings/export/:type" component={ExportRoute} />
+      <Route path="/settings/export" component={ExportRoute} />
     </div>
   </Router>
 {:else if $UserStore.signedIn == undefined}

@@ -13,9 +13,6 @@
   import ImporterModal from "../containers/importer/importer.svelte";
   import MassEditor from "../containers/mass-editor/mass-editor.svelte";
 
-  //Modules
-  import Exporter from "../modules/export/export";
-
   // Vendors
   import dayjs from "dayjs";
 
@@ -31,7 +28,7 @@
   import config from "../../config/global";
 
   // consts
-  const Export = new Exporter();
+  // const Export = new Exporter();
 
   let data = {
     signedIn: false,
@@ -43,7 +40,7 @@
 
   let ledger = null;
   let trackers = null;
-  let user = null;
+  // let user = null;
   let fileInput;
   let showImporter = false;
 
@@ -64,21 +61,7 @@
     faq() {
       navigate("/faq");
     },
-    export() {
-      Interact.confirm(
-        Lang.t("general.continue-question"),
-        Lang.t("settings.export-confirm")
-      ).then(res => {
-        if (res === true) {
-          Export.onChange(change => {
-            Interact.toast(`Export: ${change}`, true);
-          });
-          Export.start().then(() => {
-            Interact.toast(Lang.t("settings.export-complete"));
-          });
-        }
-      });
-    },
+
     switchToCloud() {
       let msg = Lang.t("settings.switch-to-cloud-notice");
       Interact.confirm(Lang.t("settings.switch-to-cloud-confirm"), msg).then(
@@ -135,19 +118,19 @@
     }
   };
 
-  LedgerStore.subscribe(ldgr => {
-    ledger = ldgr;
-  });
+  // LedgerStore.subscribe(ldgr => {
+  //   ledger = ldgr;
+  // });
 
-  UserStore.subscribe(u => {
-    if (u.signedIn) {
-      user = u;
-    }
-  });
+  // UserStore.subscribe(u => {
+  //   if (u.signedIn) {
+  //     user = u;
+  //   }
+  // });
 
-  TrackerStore.subscribe(tkrs => {
-    trackers = tkrs || {};
-  });
+  // TrackerStore.subscribe(tkrs => {
+  //   trackers = tkrs || {};
+  // });
 
   const setTimeout = setTimeout;
 </script>
@@ -161,8 +144,12 @@
 {#if $UserStore.meta}
   <div class="page page-settings with-header">
     <div class="container p-0 n-list">
+      <NItem
+        title={Lang.t('general.customize')}
+        borderBottom
+        className="n-item-divider" />
       {#if $UserStore.storageType === 'blockstack'}
-        <div class="n-pop my-3">
+        <div class="n-pop">
           <NItem className="n-item-divider" borderBottom title="Account" />
 
           <NItem>
@@ -181,7 +168,7 @@
         </div>
       {/if}
 
-      <div class="n-pop my-3">
+      <div class="n-pop">
         <NItem title={Lang.t('settings.use-location')}>
           <span
             slot="left"
@@ -242,12 +229,13 @@
 
       </div>
 
-      <div class="n-pop my-3">
+      <div class="n-pop">
         <NItem
           title={Lang.t('settings.data')}
           borderBottom
           className="n-item-divider" />
         <NItem
+          className="clickable"
           title={Lang.t('settings.nomie-api')}
           on:click={() => navigate('/api')}>
           <span
@@ -256,6 +244,7 @@
           <span slot="right" class="icon zmdi zmdi-chevron-right" />
         </NItem>
         <NItem
+          className="clickable"
           title={Lang.t('settings.import-from-backup')}
           on:click={() => {
             showImporter = true;
@@ -271,15 +260,25 @@
             bind:this={fileInput}
             on:change={methods.onImportFile} />
         </NItem>
+
         <NItem
+          className="clickable"
           title={Lang.t('settings.generate-backup')}
-          on:click={methods.export}>
+          to="/settings/export/backup">
           <span
             slot="left"
             class="btn-icon zmdi text-primary zmdi-cloud-upload" />
           <span slot="right" class="icon zmdi zmdi-chevron-right" />
         </NItem>
         <NItem
+          className="clickable"
+          title={Lang.t('settings.generate-csv')}
+          to="/settings/export/csv">
+          <span slot="left" class="btn-icon zmdi text-primary zmdi-grid" />
+          <span slot="right" class="icon zmdi zmdi-chevron-right" />
+        </NItem>
+        <NItem
+          className="clickable"
           title="{Lang.t('settings.find-and-replace')}..."
           on:click={() => {
             data.showMassEditor = true;
@@ -295,7 +294,7 @@
           show={data.showMassEditor} />
 
       </div>
-      <div class="n-pop my-3">
+      <div class="n-pop">
         <!-- Stoage List - this is stupid I couldn't find it-->
         <StorageManager />
         <!-- End Storage List-->
@@ -355,7 +354,7 @@
         {/if}
       </div>
 
-      <div class="n-pop my-3">
+      <div class="n-pop">
         <NItem
           title={Lang.t('settings.about-nomie')}
           borderBottom
@@ -403,7 +402,7 @@
 
       </div>
 
-      <div class="n-pop my-3 pt-2">
+      <div class="n-pop pt-2">
         <NItem title={Lang.t('general.questions')}>
           <span slot="right">
             <a

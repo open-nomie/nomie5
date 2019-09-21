@@ -57,6 +57,10 @@
 	cursor: pointer;
 }
 
+.gap {
+	height: 16px;
+}
+
 // HACK! This isn't working in the component
 .library-modal .n-modal-body {
 	background-color: var(--color-bg) !important;

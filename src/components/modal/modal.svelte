@@ -72,7 +72,7 @@
     justify-content: stretch;
     align-items: stretch;
     border: solid 1px var(--color-solid);
-    box-shadow: 0px 16px 24px -12px rgba(0, 0, 0, 0.6);
+    box-shadow: var(--box-shadow);
 
     .n-modal-body {
       flex-grow: 1;

@@ -15,6 +15,9 @@ export default {
 			show: 'Show',
 			done: 'Done',
 			hide: 'Hide',
+			customize: 'Customize',
+			start: 'Start',
+			end: 'End',
 			set: 'Set',
 			edit: 'Edit',
 			created: 'Created',
@@ -40,6 +43,17 @@ export default {
 		history: {
 			'no-records-found': 'No Records Found',
 		},
+		export: {
+			csv: {
+				download: 'Download CSV...',
+				description:
+					'Export your individual tracker data to CSV. Only one year at a time is supported. Please note, that CSV exports cannot currently be imported back into Nomie. ',
+			},
+			backup: {
+				description: `Create an importable backup file. This allows you to transfer your data from one device to another using a single JSON file that contains ALL of you Nomie data.`,
+				download: 'Download Backup File...',
+			},
+		},
 		board: {
 			'board-empty': 'Sure is Empty!',
 			'edit-board': `Edit {{board}} Board`,
@@ -63,6 +77,7 @@ export default {
 			'nomie-api': 'Nomie API',
 			'import-from-backup': 'Import From Backup',
 			'generate-backup': 'Generate Backup',
+			'generate-csv': 'Generate CSV',
 			'find-and-replace': 'Find and Replace',
 			storage: 'Storage',
 			'use-local': 'Switch to Local',
