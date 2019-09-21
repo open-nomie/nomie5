@@ -146,7 +146,7 @@
     <div class="container p-0 n-list">
       {#if $UserStore.storageType === 'blockstack'}
         <div class="n-pop">
-          <NItem className="n-item-divider" borderBottom title="Account" />
+          <NItem className="n-item-divider" title="Account" />
 
           <NItem>
             <div class="title truncate">
@@ -165,10 +165,7 @@
       {/if}
 
       <div class="n-pop">
-        <NItem
-          title={Lang.t('general.customize')}
-          borderBottom
-          className="n-item-divider" />
+        <NItem title={Lang.t('general.customize')} className="n-item-divider" />
         <NItem title={Lang.t('settings.use-location')}>
           <span
             slot="left"
@@ -230,10 +227,7 @@
       </div>
 
       <div class="n-pop">
-        <NItem
-          title={Lang.t('settings.data')}
-          borderBottom
-          className="n-item-divider" />
+        <NItem title={Lang.t('settings.data')} className="n-item-divider" />
         <NItem
           className="clickable"
           title={Lang.t('settings.nomie-api')}
@@ -357,7 +351,6 @@
       <div class="n-pop">
         <NItem
           title={Lang.t('settings.about-nomie')}
-          borderBottom
           className="n-item-divider" />
         <NItem title="Learn More">
           <span slot="right">

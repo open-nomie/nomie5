@@ -148,6 +148,10 @@ button:focus {
 	}
 }
 
+.btn.btn-text {
+	color: var(--color-primary);
+}
+
 .btn-group {
 	background-color: var(--color-solid-2);
 	padding: 2px;

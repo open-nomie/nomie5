@@ -6,7 +6,7 @@
 	align-items: center;
 	justify-content: stretch;
 	padding: 4px 16px;
-	min-height: 46px;
+	min-height: 50px;
 	max-width: 100vw;
 	position: relative;
 	transition: all 0.2s ease-in-out;
@@ -82,6 +82,12 @@
 	}
 	.left .zmdi .icon {
 		font-size: 24px !important;
+	}
+
+	&.clickable {
+		// &:hover {
+		// 	background-color: var(--color-inverse-3);
+		// }
 	}
 
 	.main {

@@ -89,14 +89,14 @@
 
   <div class="btn-group w-100" slot="sub-header">
     <button
-      class="btn {type == 'backup' ? 'active' : ''}"
+      class="btn btn-sm {type == 'backup' ? 'active' : ''}"
       on:click={() => {
         type = 'backup';
       }}>
       Backup
     </button>
     <button
-      class="btn {type == 'csv' ? 'active' : ''}"
+      class="btn btn-sm {type == 'csv' ? 'active' : ''}"
       on:click={() => {
         type = 'csv';
       }}>

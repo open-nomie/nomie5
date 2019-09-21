@@ -528,15 +528,7 @@
         <div class="trackers">
 
           {#if !activeTrackers.length}
-            <div class="no-trackers">
-              {Lang.t('board.board-empty')}
-              <br />
-              <span>
-                <span class="text-primary pointer" on:click={methods.addTapped}>
-                  {Lang.t('tracker.add-tracker')}
-                </span>
-              </span>
-            </div>
+            <div class="no-trackers">{Lang.t('board.board-empty')}</div>
           {/if}
 
           {#each activeTrackers as tracker (tracker.tag)}
@@ -557,12 +549,15 @@
         </div>
 
         <div class="board-actions">
-          <button class="btn btn btn-light" on:click={methods.addTapped}>
+          <button class="btn btn btn-text" on:click={methods.addTapped}>
+            <i class="zmdi zmdi-plus" />
             {Lang.t('tracker.add-tracker')}
           </button>
 
           {#if activeBoard}
-            <button on:click={methods.editBoard} class="btn btn btn-light">
+            <button
+              on:click={methods.editBoard}
+              class="btn btn btn-text btn-sm">
               {Lang.t('board.edit-board', {
                 board: (activeBoard || {}).label || null
               })}

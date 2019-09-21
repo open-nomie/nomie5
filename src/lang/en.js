@@ -56,7 +56,7 @@ export default {
 		},
 		board: {
 			'board-empty': 'Sure is Empty!',
-			'edit-board': `Edit {{board}} Board`,
+			'edit-board': `Edit Tab`,
 			'board-label': 'Board Label',
 			'create-custom-tracker': 'Create Custom Tracker',
 			'add-existing-tracker': 'Add Existing Tracker',

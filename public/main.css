@@ -4943,6 +4943,9 @@ button:focus {
     min-width: 140px;
     font-size: 3rem; }
 
+.btn.btn-text {
+  color: var(--color-primary); }
+
 .btn-group {
   background-color: var(--color-solid-2);
   padding: 2px;
@@ -5442,7 +5445,7 @@ body.scrolling .mini-map {
   align-items: center;
   justify-content: stretch;
   padding: 4px 16px;
-  min-height: 46px;
+  min-height: 50px;
   max-width: 100vw;
   position: relative;
   transition: all 0.2s ease-in-out;

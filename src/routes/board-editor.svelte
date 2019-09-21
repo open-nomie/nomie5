@@ -82,7 +82,7 @@
     },
     deleteBoard() {
       Interact.confirm(
-        "Delete board " + $BoardStore.activeBoard.label + " completely?",
+        "Delete " + $BoardStore.activeBoard.label + " tab?",
         "You can recreate it later, but it's not super easy."
       ).then(res => {
         if (res === true) {
