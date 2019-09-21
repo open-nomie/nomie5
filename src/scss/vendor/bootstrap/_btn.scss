@@ -2,9 +2,22 @@ button:focus {
 	outline: 0 !important;
 }
 
+.btn:focus,
+.btn.focus {
+	box-shadow: inherit;
+}
+
+.btn:active {
+	background-color: var(--color-faded-1);
+}
+
 .btn {
+	border-radius: 0.3rem;
 	display: flex;
 	justify-content: center;
+	&.btn-lg {
+		border-radius: 0.6rem;
+	}
 }
 
 .btn-primary {
@@ -133,6 +146,10 @@ button:focus {
 		min-width: 140px;
 		font-size: 3rem;
 	}
+}
+
+.btn.btn-text {
+	color: var(--color-primary);
 }
 
 .btn-group {

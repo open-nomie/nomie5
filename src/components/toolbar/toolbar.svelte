@@ -23,6 +23,10 @@
     .btn-sm {
       max-height: 40px;
     }
+    &.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
 
     &.pin-top {
       position: fixed;
@@ -49,8 +53,6 @@
   .n-toolbar.stretch {
     justify-content: stretch;
   }
-  :globa(.sub-header) {
-  }
   :global(.n-toolbar .btn-clear) {
     border-radius: 0 !important;
     outline: none !important;
@@ -59,6 +61,9 @@
   }
   :global(.n-toolbar .zmdi) {
     font-size: 1.6rem !important;
+    &.text-xs {
+      font-size: 18px !important;
+    }
   }
 </style>
 

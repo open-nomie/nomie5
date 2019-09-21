@@ -16,16 +16,24 @@
 
   //Components
   import NItem from "../components/list-item/list-item.svelte";
+  import NCell from "../components/cell/cell.svelte";
+  import NPoints from "../components/points/points.svelte";
   import dayjs from "dayjs";
+  import md5 from "md5";
+  import domtoimage from "dom-to-image-chrome-fix";
 
   // Utils
   import Logger from "../utils/log/log";
   import time from "../utils/time/time";
+  import calculateScore from "../utils/calculate-score/calculate-score";
 
   // Stores
   import { Interact } from "../store/interact";
+  import { TrackerStore } from "../store/trackers";
   import { LedgerStore } from "../store/ledger";
   import { ActiveLogStore } from "../store/active-log";
+  import { UserStore } from "../store/user";
+  import { Lang } from "../store/lang";
 
   // Consts
   const console = new Logger("capture-log");
@@ -33,63 +41,64 @@
     !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
   let textarea;
+  let iOSFileInput;
+  let photoHolder;
+  let finalImage;
   let saving = false;
   let saved = false;
 
-  // Show saving animation when needed
-  $: if ($LedgerStore.saving === false) {
-    setTimeout(() => {
-      saving = false;
-      saved = true;
-      setTimeout(() => {
-        saved = false;
-      }, 100);
-    }, 400);
-  } else {
+  $: if ($LedgerStore.saving) {
     saving = true;
+  } else {
+    saving = false;
   }
 
   let state = {
     date: null,
-    dateSet: false,
-    show: false,
-    showDate: false
+    dateStarter: dayjs().format("YYYY-MM-DDTHH:mm"),
+    capturingEdits: false,
+    photoData: null,
+    finalImageData: null,
+    score: 0,
+    showCustomDate: false
   };
 
   // TODO: Add a media/photo type of thing that can be added to a log..
 
   const methods = {
-    advancedChanged() {
-      if (state.date) {
-        ActiveLogStore.update(l => {
-          let updatedDate = time.datetimeLocal(state.date);
-          // alert(now + " " + gmtDate);
-          // TODO: Mobile is getting GMT Time, desktop is not
+    setDate() {
+      state.date = time.datetimeLocal(state.dateStarter);
+      $ActiveLogStore.start = state.date.getTime();
+      $ActiveLogStore.end = state.date.getTime();
+      state.showCustomDate = false;
+    },
+    clearDate() {
+      state.date = null;
+      $ActiveLogStore.start = null;
+      $ActiveLogStore.end = null;
+      state.showCustomDate = false;
+    },
 
-          l.start = updatedDate.getTime();
-          l.end = updatedDate.getTime();
-          return l;
-        });
-      }
-    },
-    advancedToggle() {
-      state.show = !state.show;
-    },
-    swipeUp() {
-      state.show = true;
-    },
-    swipeDown() {
-      state.show = false;
-    },
     checkTextareaSize() {
-      let height = (textarea || {}).scrollHeight || 40;
-      if (textarea && $ActiveLogStore.note.length > 0) {
-        textarea.style.height = (height > 300 ? 300 : height) + "px";
-      } else {
-        textarea.style.height = 40;
+      if (textarea) {
+        let height = (textarea || {}).scrollHeight || 40;
+        if (textarea && $ActiveLogStore.note.length > 0) {
+          textarea.style.height = (height > 300 ? 300 : height) + "px";
+        } else {
+          textarea.style.height = 40;
+        }
+        // Cal
+        methods.calculateScore();
       }
+    },
+    calculateScore() {
+      $ActiveLogStore.score = calculateScore(
+        $ActiveLogStore.note,
+        $TrackerStore
+      );
     },
     async logSave() {
+      methods.calculateScore();
       await LedgerStore.saveLog($ActiveLogStore); // TODO: Make ledger task instead
       methods.clear();
     },
@@ -102,8 +111,13 @@
     },
     clear() {
       ActiveLogStore.clear();
-      state.show = false;
-      textarea.style.height = "40px";
+      setTimeout(() => {
+        state.date = null;
+        state.dateStarter = dayjs().format("YYYY-MM-DDTHH:mm");
+        if (textarea) {
+          textarea.style.height = "40px";
+        }
+      }, 120);
     },
     removePhoto() {
       let path = $ActiveLogStore.photo;
@@ -121,9 +135,98 @@
         $ActiveLogStore.photo
       );
     },
+    iOSCapture(event) {
+      let input = event.target;
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.addEventListener("load", () => {
+          const fileContent = reader.result;
+          const path = `camera/${md5(fileContent)}`;
+          methods.showPhotoEditor(fileContent);
+        });
+      }
+    },
+    showPhotoEditor(photoData) {
+      state.showPhotoEditor = true;
+      state.photoData = photoData;
+      state.photoPath = `camera/${md5(photoData)}`;
+    },
+    photoEditor: {
+      getTransform() {
+        let transform = photoHolder.style.transform.trim().split(" ");
+        let t = { rotate: 0, scaleX: 1 };
+        transform.forEach(action => {
+          if (action.search("rotate") > -1) {
+            let deg = parseInt(action.replace(/(rotate\(|deg\)|;)/gi, ""));
+            deg = isNaN(deg) ? 0 : deg;
+            t.rotate = deg;
+          } else if (action.search("scaleX") > -1) {
+            let value = action.replace(/(scaleX\(|\)|;)/gi, "");
+            t.scaleX = parseInt(value);
+            t.scaleX = isNaN(t.scaleX) ? 1 : t.scaleX;
+          }
+        });
+        return t;
+      },
+      toStyle(transform) {
+        let style = `rotate(${transform.rotate}deg) scaleX(${transform.scaleX})`;
+        return style;
+      },
+      attach() {
+        if (photoHolder) {
+          state.capturingEdits = true;
+          setTimeout(() => {
+            domtoimage
+              .toJpeg(document.getElementById("final-image-data-container"))
+              .then(dataUrl => {
+                state.capturingEdits = false;
+                state.finalImageData = dataUrl;
+
+                // Storage.put(path, dataUrl)
+                //   .then(() => {
+                //     // state.capturingEdits = false;
+                //     ActiveLogStore.update(l => {
+                //       l.photo = path;
+                //       return l;
+                //     });
+                //     setTimeout(() => {
+                //       methods.photoEditor.cancel();
+                //     }, 120);
+                //   })
+                //   .catch(e => {
+                //     alert("It failed " + e.message);
+                //   });
+              })
+              .catch(e => {
+                console.log(e);
+              });
+          }, 2000);
+        }
+
+        // TODO see why domtoimage fails on iOS
+      },
+      flip() {
+        if (photoHolder) {
+          let transform = methods.photoEditor.getTransform();
+          transform.scaleX = transform.scaleX === 1 ? -1 : 1;
+          photoHolder.style.transform = methods.photoEditor.toStyle(transform);
+        }
+      },
+      rotate() {
+        if (photoHolder) {
+          let transform = methods.photoEditor.getTransform();
+          transform.rotate = transform.rotate + 90;
+          photoHolder.style.transform = methods.photoEditor.toStyle(transform);
+        }
+      },
+      cancel() {
+        state.showPhotoEditor = false;
+        state.photoData = null;
+      }
+    },
     capturePhoto() {
       Interact.openCamera(storagePath => {
-        console.log("Got it?", storagePath);
         ActiveLogStore.update(l => {
           l.photo = storagePath;
           return l;
@@ -142,6 +245,11 @@
     }
   };
 
+  // Clear the settings when saved
+  LedgerStore.hook("onLogSaved", res => {
+    methods.clear();
+  });
+
   // When a tag is added by a button or other service
   ActiveLogStore.hook("onAddTag", res => {
     // add space to the end.
@@ -158,6 +266,10 @@
 <style lang="scss">
   @import "../scss/utils/__utils.scss";
 
+  * {
+    // border: solid 1px red !important;
+  }
+
   #note-capture {
     background-color: var(--color-solid);
   }
@@ -172,21 +284,53 @@
   }
 
   .more-options {
+    // background-color: pink;
     position: relative;
     z-index: 130;
-    padding: 0 12px;
-    .n-list {
-      padding-bottom: 10px;
-      margin-top: -10px;
+    padding: 0px 10px 10px;
+
+    .btn {
+      background-color: transparent;
+      display: flex;
+      align-items: center;
+      color: var(--color-solid-3);
+      padding: 2px 6px;
+      font-size: 0.8rem;
+      line-height: 0.8rem;
+      i {
+        margin-right: 4px;
+        font-size: 1rem;
+        color: var(--color-solid-2);
+      }
+      &.btn-active {
+        background-color: var(--color-inverse-1);
+        color: var(--color-solid-1);
+        i {
+          color: var(--color-primary-bright);
+        }
+      }
+      &.btn-close {
+        i {
+          color: var(--color-solid-3) !important;
+          font-size: 26px;
+        }
+      }
     }
     .advanced-options-list {
       transition: all 0.2s ease-in-out;
+      border: none !important;
+
+      .btn-primary {
+        background-color: var(--color-primary-bright);
+        color: #fff;
+      }
       &.hidden {
         height: 1px;
         overflow: hidden;
+        opacity: 0;
       }
       &.visible {
-        height: 160px;
+        height: fit-content;
       }
     }
   }
@@ -232,6 +376,26 @@
       width: 0;
     }
   }
+
+  .photo-editor {
+    background-color: var(--color-solid);
+    border-radius: 8px;
+    box-shadow: 0px 10px 20px -6px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    margin: 10px;
+    .photo {
+      width: 300px;
+      height: 300px;
+      overflow: hidden;
+      background-position: center center;
+      background-size: cover;
+    }
+    .n-row {
+      padding: 6px 16px 6px 6px;
+      color: var(--color-inverse);
+    }
+  }
+
   .save-button {
     padding: 0 10px;
     height: 30px;
@@ -309,11 +473,13 @@
           disabled={saving || saved}
           bind:value={$ActiveLogStore.note}
           bind:this={textarea}
-          placeholder="What's Up?"
+          placeholder={Lang.t('general.whats-up')}
           on:keypress={methods.keyPress}
           on:paste={methods.keyPress} />
         {#if !saving}
-          <button class="save-button" on:click={methods.logSave}>Save</button>
+          <button class="save-button" on:click={methods.logSave}>
+            {Lang.t('general.save')}
+          </button>
         {:else}
           <button class="save-button">•••</button>
         {/if}
@@ -321,121 +487,98 @@
     </div>
   </div>
   <div class="more-options">
-    <button
+
+    <NCell gap={1} className="py-2">
+      <div class="filler" />
+
+      <!-- Date Button -->
+      {#if !state.date}
+        <button
+          class="btn btn-sm mr-1"
+          on:click={() => {
+            state.showCustomDate = true;
+          }}>
+          <i class="zmdi zmdi-calendar" />
+          {Lang.t('general.date')}
+        </button>
+      {:else}
+        <button
+          class="btn btn-active btn-sm mr-1"
+          on:click={() => {
+            methods.clearDate();
+          }}>
+          <i class="zmdi zmdi-minus-circle text-white" />
+          {Lang.t('general.date')}
+          <!-- {dayjs(state.date).format(`YYYY/MM/DD ${$UserStore.meta.is24Hour ? 'HH:mm' : 'h:mm a'}`)} -->
+        </button>
+      {/if}
+
+      <!-- Location Button -->
+      {#if $ActiveLogStore.lat}
+        <button
+          class="btn btn-active btn-sm mr-2"
+          on:click={() => {
+            $ActiveLogStore.lat = null;
+            $ActiveLogStore.lng = null;
+          }}>
+          <i class="zmdi zmdi-minus-circle text-white" />
+          Location
+        </button>
+      {:else}
+        <button
+          class="btn btn btn-sm mr-2"
+          on:click={() => {
+            Interact.pickLocation().then(location => {
+              $ActiveLogStore.lat = location.lat;
+              $ActiveLogStore.lng = location.lng;
+              $ActiveLogStore.location = location.name;
+            });
+          }}>
+          <i class="zmdi zmdi-map" />
+          Location
+        </button>
+      {/if}
+      {#if $ActiveLogStore.score}
+        <NPoints points={$ActiveLogStore.score} />
+      {/if}
+
+      <div class="filler" />
+    </NCell>
+
+    <!-- <button
       class="advanced-toggle {state.show ? 'active' : 'inactive'}"
       on:click={methods.advancedToggle}>
       •••
-    </button>
+    </button> -->
 
     <div
-      class="advanced-options-list n-list {state.show ? 'visible' : 'hidden'}">
+      class="advanced-options-list {state.showCustomDate ? 'visible' : 'hidden'}">
       <div class="container py-2">
-
-        {#if !state.dateSet}
-          {#if state.date}
-            <div class="n-row mb-2">
-              <div class="input-group flex-grow mr-1">
-                <input
-                  name="note"
-                  type="datetime-local"
-                  class="form-control mt-0"
-                  style="font-size:16px; height:44px; overflow:hidden"
-                  on:input={() => {
-                    methods.advancedChanged();
-                  }}
-                  bind:value={state.date} />
-                <div class="input-group-append">
-                  <button
-                    class="btn btn-primary"
-                    on:click={() => {
-                      state.dateSet = true;
-                    }}>
-                    Set
-                  </button>
-                </div>
-              </div>
-              <!-- end input-group -->
-              <!-- And cancel button-->
-              <button
-                class="btn btn-clear btn-icon"
-                on:click={() => {
-                  state.date = null;
-                }}>
-                <i class="zmdi zmdi-close" />
+        <div class="n-row mb-2">
+          <div class="input-group flex-grow mr-1">
+            <input
+              name="note"
+              type="datetime-local"
+              class="form-control mt-0"
+              style="font-size:16px; height:44px; overflow:hidden"
+              bind:value={state.dateStarter} />
+            <div class="input-group-append">
+              <button class="btn btn-primary px-3" on:click={methods.setDate}>
+                {Lang.t('general.set')}
               </button>
             </div>
-          {:else}
-            <button
-              class="btn btn-light btn btn-block"
-              on:click={() => {
-                state.date = dayjs().format('YYYY-MM-DDTHH:mm');
-              }}>
-              Set Custom Date
-            </button>
-          {/if}
-        {:else}
+          </div>
+          <!-- end input-group -->
+          <!-- And cancel button-->
           <button
-            class="btn btn-danger btn btn-block"
+            class="btn btn-clear btn-icon btn-close"
             on:click={() => {
               state.date = null;
-              state.dateSet = false;
+              state.showCustomDate = false;
             }}>
-            Clear {dayjs(state.date).format('ddd MMM D YYYY h:mm a')}
+            <i class="zmdi zmdi-close" />
           </button>
-        {/if}
-
-        {#if $ActiveLogStore.lat}
-          <button
-            class="btn btn-danger btn btn-block"
-            on:click={() => {
-              $ActiveLogStore.lat = null;
-              $ActiveLogStore.lng = null;
-            }}>
-            Clear Location
-          </button>
-        {:else}
-          <button
-            class="btn btn-light btn btn-block"
-            on:click={() => {
-              Interact.pickLocation().then(location => {
-                $ActiveLogStore.lat = location.lat;
-                $ActiveLogStore.lng = location.lng;
-              });
-            }}>
-            Set Custom Location
-          </button>
-        {/if}
-
-        {#if !$ActiveLogStore.photo}
-          {#if isIOS}
-            <button
-              disabled
-              class="btn btn-light btn btn-block"
-              on:click={() => {
-                methods.iOSCapture();
-              }}>
-              Take a Photo iOS
-            </button>
-          {:else}
-            <button
-              disabled
-              class="btn btn-light btn btn-block"
-              on:click={() => {
-                methods.capturePhoto();
-              }}>
-              Take a Photo
-            </button>
-          {/if}
-        {:else}
-          <button
-            disabled
-            class="btn btn-danger btn btn-block"
-            on:click={() => {
-              methods.removePhoto();
-            }}>
-            Remove Photo
-          </button>
-        {/if}
+        </div>
 
       </div>
     </div>
@@ -443,3 +586,61 @@
 
   </div>
 </div>
+<!-- {#if state.capturingEdits === true}
+  <div class="photo-editor-window full-screen snap">
+    <div
+      class="photo-editor"
+      id="final-image-data-container"
+      style="overflow:hidden">
+      <img
+        alt="photo"
+        src={state.photoData}
+        id="final-image-data"
+        bind:this={finalImage}
+        width="600"
+        height="600" />
+    </div>
+  </div>
+{:else if state.finalImageData}
+  <div class="photo-editor-window full-screen captured">
+    <div class="photo-editor" style="overflow:hidden">
+      <img
+        alt="photo"
+        src={state.finalImageData}
+        bind:this={finalImage}
+        width="400"
+        height="400" />
+    </div>
+  </div>
+{:else if state.showPhotoEditor && !state.capturingEdits}
+  <div class="photo-editor-window full-screen dark-glass">
+    <div class="photo-editor">
+      <div
+        class="photo"
+        id="photo-editor-data"
+        bind:this={photoHolder}
+        style="background-image:url({state.photoData})">
+        {#if state.finalImageData}
+          <img src={state.finalImageData} width="100%" />
+          f
+        {:else}active image{/if}
+      </div>
+      <div class="n-row">
+        <button
+          class="btn btn-clear btn-icon zmdi zmdi-close"
+          on:click={methods.photoEditor.cancel} />
+        <div class="filler" />
+        <button
+          class="btn btn-clear btn-icon zmdi zmdi-rotate-right"
+          on:click={methods.photoEditor.rotate} />
+        <button
+          class="btn btn-clear btn-icon zmdi zmdi-flip"
+          on:click={methods.photoEditor.flip} />
+        <div class="filler" />
+        <button
+          class="btn btn-clear btn-icon zmdi zmdi-check"
+          on:click={methods.photoEditor.attach} />
+      </div>
+    </div>
+  </div>
+{/if} -->

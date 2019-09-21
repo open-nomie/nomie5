@@ -20,6 +20,7 @@
 
   // Stores
   import { UserStore } from "../../store/user";
+  import { Lang } from "../../store/lang";
 
   // TODO: UserSession shouldn't be in here - login should be fired by Storage.
   const UserSession = new blockstack.UserSession();
@@ -137,12 +138,11 @@
     position: fixed;
     z-index: 2000;
     bottom: 0;
-
+    min-height: 50px;
     left: 0;
     right: 0;
     background-color: var(--color-primary);
     padding: 10px 20px;
-    padding-bottom: env(safe-area-inset-bottom);
     box-shadow: 0px -20px 30px -15px rgba(0, 0, 0, 0.32);
     .btn {
       color: #fff;
@@ -195,8 +195,8 @@
           on:click={() => {
             UserStore.setStorage('blockstack');
           }}>
-          <NText size="lg">Encrypted in the Cloud</NText>
-          <NText size="sm">
+          <NText size="lg" className="text-white">Encrypted in the Cloud</NText>
+          <NText size="sm" className="text-white">
             Access your data on multiple devices using end-to-end encryption.
             <strong>Powered by Blockstack.</strong>
           </NText>
@@ -206,8 +206,8 @@
           on:click={() => {
             UserStore.setStorage('local');
           }}>
-          <NText size="lg">This Device Only</NText>
-          <NText size="sm">
+          <NText size="lg" className="text-white">This Device Only</NText>
+          <NText size="sm" className="text-white">
             All data is stored unencrypted, but ONLY on your device.
           </NText>
         </button>

@@ -3,11 +3,9 @@
   import { onMount, createEventDispatcher } from "svelte";
 
   //Vendors
-  import CameraPhoto, {
-    FACING_MODES,
-    IMAGE_TYPES
-  } from "jslib-html5-camera-photo";
-  import domtoimage from "dom-to-image";
+  import CameraPhoto from "jslib-html5-camera-photo";
+
+  import domtoimage from "dom-to-image-chrome-fix";
 
   // Modules
   import Storage from "../../modules/storage/storage";
@@ -96,10 +94,9 @@
     }
   }
   .camera-frame {
-    border: solid 1px var(--color-solid-2);
     border-radius: 6px;
-    height: 100vh;
-    width: 100vw;
+    height: 96vh;
+    width: 96vw;
     max-width: 400px;
     max-height: 700px;
     background-color: #222;
@@ -213,20 +210,24 @@
       {#if state.started && !state.captured}
         <button class="btn-capture" on:click={methods.capture} />
       {:else if state.captured}
-        <button class="btn btn-round btn-lg w-50" on:click={methods.clear}>
-          Retake
-        </button>
         <button
           class="btn btn-round btn-lg btn-primary w-50"
           on:click={methods.save}>
           Save
         </button>
       {:else}
-        <button class="btn btn-primary" on:click={methods.start}>Start</button>
+        <button class="btn btn-clear" on:click={methods.start}>Start</button>
       {/if}
       <div class="filler" />
-      <button
-        class="btn btn-clear btn-icon {state.captured ? '' : 'zmdi zmdi-camera-party-mode'}" />
+
+      {#if state.captured}
+        <button
+          class="btn btn-clear btn-icon zmdi zmdi-long-arrow-return"
+          on:click={methods.clear} />
+      {:else}
+        <button
+          class="btn btn-clear btn-icon {state.captured ? '' : 'zmdi zmdi-camera-party-mode'}" />
+      {/if}
     </div>
   </div>
 </div>

@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Aug 31 2019 2:42 pm
+Generated Fri Sep 20 2019 10:48 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -25,7 +25,6 @@ Generated Sat Aug 31 2019 2:42 pm
    - TODO: refactor so it's clean and using the proper amount of Store vs local
    - TODO: Look at making this refresh without doing the loading, it's pushing the page to the top and it's annoying
    - TODO: This is really sloppy - clean it up.
-   - TODO: Search Day Header isn't working reliably... Pulling it for now.
 - **src/routes/board-editor.svelte**
    - TODO: Make sorting work
    - TODO: Fix Sorting on MObile -->
@@ -33,18 +32,23 @@ Generated Sat Aug 31 2019 2:42 pm
    - TODO: Finish Goals
 - **src/modules/stats/stats.js**
    - TODO: Implement IgnoreZeros
+- **src/modules/export/csv.js**
+   - end TODO: See why end date is not working in query
 - **src/main.js**
    - TODO: handle anything required for service worker
 - **src/containers/tracker/input/keypad.svelte**
    - and one for the pin-lock container - TODO: merge these some day
 - **src/containers/tracker/input/input.svelte**
    - TODO: Figure out wtf is going on with value and data.value - can we just use value?
+- **src/containers/tracker/editor/editor.svelte**
+   - TODO: Make edit tag work. It when saving the tracker we need to know it's original tag and replace it in the TrackerStore. Right not it just adds a new one since the tag is the key.
 - **src/containers/setup/setup.svelte**
    - TODO: Make this design not suck! It's very boring.
    - TODO: UserSession shouldn't be in here - login should be fired by Storage.
 - **src/containers/map/map.svelte**
    - TODO: Look at making this curved dotted lines - and not just straight ones
 - **src/containers/interactions/interactions.svelte**
+   - TODO: move this to new log editor
    - console.log('TODO: Make editing data work');
 - **src/containers/importer/importer.svelte**
    - Modal will be hidden in settings TODO: make this not hacky -->
@@ -56,5 +60,4 @@ Generated Sat Aug 31 2019 2:42 pm
    - TODO: Finish this starter pack add trackers, make them installable. -->
 - **src/components/capture-log.svelte**
    - TODO: Add a media/photo type of thing that can be added to a log..
-   - TODO: Mobile is getting GMT Time, desktop is not
    - await LedgerStore.saveLog($ActiveLogStore);  TODO: Make ledger task instead

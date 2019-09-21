@@ -3,6 +3,7 @@
 
   // components
   import NHScroller from "../h-scroller/h-scroller.svelte";
+  import Elephant from "../elephant.svelte";
 
   export let boards = [];
   export let active = undefined;
@@ -37,15 +38,18 @@
 <NHScroller activeIndex={data.activeIndex} className="n-board-tabs">
   {#each boards as board}
     <button
-      class="tab {board.id == active ? 'active' : 'inactive'}"
+      class="tab board-{board.id}
+      {board.id == active ? 'active' : 'inactive'}"
       on:click={() => {
         dispatch('tabTap', board);
       }}>
-      {board.label}
+      {#if board.label == 'All'}
+        <Elephant size={18} />
+      {:else}{board.label}{/if}
     </button>
   {/each}
   <button
-    class="tab"
+    class="tab add-board"
     on:click={() => {
       dispatch('create');
     }}>

@@ -18,6 +18,7 @@
   import TrackerInput from "../tracker/input/input.svelte";
   import NModal from "../../components/modal/modal.svelte";
   import NHScroll from "../../components/h-scroller/h-scroller.svelte";
+  import Elephant from "../../components/elephant.svelte";
 
   // Vendors
   import Spinner from "svelte-spinner";
@@ -41,7 +42,8 @@
   import { BoardStore } from "../../store/boards";
   import { TrackerStore } from "../../store/trackers";
   import { Interact } from "../../store/interact";
-
+  import { Lang } from "../../store/lang";
+  import { TrackerLibrary } from "../../store/tracker-library";
   // Consts
   const console = new Logger("board.svelte");
 
@@ -125,28 +127,35 @@
       // }
     },
     addTapped() {
-      if ($BoardStore.active == "all") {
-        methods.trackerEditor();
-      } else {
-        Interact.popmenu({
-          buttons: [
-            {
-              title: "Create a New Tracker",
-              click() {
-                methods.trackerEditor();
-              }
-            },
-            {
-              title: "Add Existing Trackers Here",
-              click() {
-                Interact.selectTrackers().then(tkrs => {
-                  BoardStore.addTrackersToActiveBoard(tkrs);
-                });
-              }
-            }
-          ]
+      let buttons = [];
+      buttons.push({
+        title: Lang.t("board.browse-starter-trackers"),
+        click() {
+          TrackerLibrary.toggle();
+        }
+      });
+
+      if ($BoardStore.active != "all") {
+        buttons.push({
+          title: Lang.t("board.add-existing-tracker"),
+          click() {
+            Interact.selectTrackers().then(tkrs => {
+              BoardStore.addTrackersToActiveBoard(tkrs);
+            });
+          }
         });
       }
+
+      buttons.push({
+        title: Lang.t("board.create-custom-tracker"),
+        click() {
+          methods.trackerEditor();
+        }
+      });
+
+      Interact.popmenu({
+        buttons: buttons
+      });
     },
     /**
      * Inject the "All" board automatically
@@ -201,21 +210,32 @@
      * Create a new board
      */
     newBoard() {
-      Interact.prompt("Board Label?", { placeholder: "Name or Emoji 👍" }).then(
-        res => {
-          if (res) {
-            let label = res.trim();
-            BoardStore.addBoard(label).then(board => {
-              Interact.alert(
-                "Created",
-                "Board was created. Go and add some trackers."
-              ).then(() => {
-                BoardStore.setActive(board.id);
-              });
-            });
-          }
+      Interact.prompt(
+        Lang.t("board.add-a-board"),
+        Lang.t("board.add-a-board-description"),
+        {
+          placeholder: Lang.t("board.board-input-placeholder")
         }
-      );
+      ).then(res => {
+        if (res) {
+          let label = res.trim();
+          BoardStore.addBoard(label).then(board => {
+            BoardStore.setActive(board.id);
+          });
+        }
+      });
+    },
+
+    enableBoards() {
+      Interact.confirm(
+        "Enable tabs?",
+        "This will allow you to organize a bunch of trackers."
+      ).then(res => {
+        if (res) {
+          $UserStore.meta.boardsEnabled = true;
+          UserStore.saveMeta();
+        }
+      });
     },
 
     /**
@@ -228,6 +248,11 @@
         ActiveLogStore.addTag(tracker.tag);
         if (tracker.one_tap === true) {
           let note = $ActiveLogStore.note + "";
+          // Account for Positivity calculation
+          $ActiveLogStore.score = ActiveLogStore.calculateScore(
+            note,
+            $TrackerStore
+          );
           LedgerStore.saveLog($ActiveLogStore).then(() => {
             Interact.toast(`Saved ${note}`);
             ActiveLogStore.clear();
@@ -310,7 +335,7 @@
         {
           title: "Stats",
           click() {
-            navigate(`/stats/${tracker.tag}`, { tracker: tracker });
+            navigate(`/stats/${tracker.id}`, { tracker: tracker });
           }
         },
         {
@@ -322,12 +347,12 @@
       ];
 
       const removeButton = {
-        title: `Remove...`,
+        title: `${Lang.t("general.remove")}...`,
         click() {
           if ($BoardStore.active === "all") {
             Interact.confirm(
-              `Delete ${tracker.label} from Nomie`,
-              "You can always recreate it later. No historic data will be deleted deleted."
+              Lang.t("general.delete-from-nomie", { thing: tracker.label }),
+              Lang.t("tracker.delete-description")
             ).then(res => {
               if (res) {
                 TrackerStore.deleteTracker(tracker).then(done => {});
@@ -395,7 +420,7 @@
     left: 0;
     display: flex;
     justify-content: stretch;
-    align-items: stretch;
+    align-items: center;
     height: 50px;
     z-index: 350;
     background-color: var(--color-solid);
@@ -403,15 +428,29 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.04);
   }
 
+  .no-trackers {
+    color: var(--color-inverse-2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 35vh;
+    text-align: center;
+    @include media-breakpoint-up(md) {
+      min-height: 55vh;
+    }
+  }
   .board-actions {
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 16px;
+    padding: 0 10px;
     .btn {
       min-width: 220px;
       margin-left: 10px;
       margin-right: 10px;
+      max-width: 200px;
     }
     @include media-breakpoint-down(sm) {
       min-width: 300px;
@@ -456,15 +495,26 @@
 {#if user}
   {#if $BoardStore.boards}
     <div class="sub-header">
-      <div class="container p-0 h-100">
-        <NBoardTabs
-          boards={methods.injectAllBoard($BoardStore.boards || [])}
-          active={$BoardStore.active}
-          on:create={methods.newBoard}
-          on:tabTap={event => {
-            BoardStore.setActive(event.detail.id);
-          }} />
-      </div>
+
+      {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
+        <div class="container p-0">
+          <NBoardTabs
+            boards={methods.injectAllBoard($BoardStore.boards || [])}
+            active={$BoardStore.active}
+            on:create={methods.newBoard}
+            on:tabTap={event => {
+              BoardStore.setActive(event.detail.id);
+            }} />
+        </div>
+      {:else}
+        <div class="filler" />
+        <img
+          src="/images/nomie-words.svg"
+          height="20"
+          on:click={methods.enableBoards} />
+        <div class="filler" />
+      {/if}
+
     </div>
   {/if}
   {#if data.loading}
@@ -476,6 +526,10 @@
       <main class="n-board">
 
         <div class="trackers">
+
+          {#if !activeTrackers.length}
+            <div class="no-trackers">{Lang.t('board.board-empty')}</div>
+          {/if}
 
           {#each activeTrackers as tracker (tracker.tag)}
             <NTrackerButton
@@ -494,19 +548,22 @@
 
         </div>
 
-        {#if Object.keys($TrackerStore || {}).length}
-          <div class="board-actions">
-            <button class="btn btn btn-light" on:click={methods.addTapped}>
-              Add Tracker
-            </button>
+        <div class="board-actions">
+          <button class="btn btn btn-text" on:click={methods.addTapped}>
+            <i class="zmdi zmdi-plus" />
+            {Lang.t('tracker.add-tracker')}
+          </button>
 
-            {#if activeBoard}
-              <button on:click={methods.editBoard} class="btn btn btn-light">
-                Edit {(activeBoard || {}).label || null} Board
-              </button>
-            {/if}
-          </div>
-        {/if}
+          {#if activeBoard}
+            <button
+              on:click={methods.editBoard}
+              class="btn btn btn-text btn-sm">
+              {Lang.t('board.edit-board', {
+                board: (activeBoard || {}).label || null
+              })}
+            </button>
+          {/if}
+        </div>
 
       </main>
     </div>

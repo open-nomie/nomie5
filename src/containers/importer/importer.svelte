@@ -22,6 +22,7 @@
   import { LedgerStore } from "../../store/ledger";
   import { TrackerStore } from "../../store/trackers";
   import { BoardStore } from "../../store/boards";
+  import { Lang } from "../../store/lang";
 
   let fileInput; // holder of dom element self
   let fileData = null; // holder of file content
@@ -489,7 +490,7 @@
           slot="right"
           class="btn btn-clear text-danger"
           on:click={() => (fileData = null)}>
-          Cancel
+          {Lang.t('general.cancel')}
         </button>
       </NItem>
       <NItem className="item-divider compact bg-faded" />

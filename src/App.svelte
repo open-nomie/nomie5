@@ -11,6 +11,7 @@
   // Containers
   import AppTabs from "./containers/layout/tabs.svelte";
   import Interactions from "./containers/interactions/interactions.svelte";
+  import LibraryModal from "./containers/library/library.svelte";
 
   // Utils
   import Logger from "./utils/log/log";
@@ -25,6 +26,7 @@
   import FAQRoute from "./routes/faq.svelte";
   import PluginsRoute from "./routes/plugins.svelte";
   import NomieAPIRoute from "./routes/nomie-api.svelte";
+  import ExportRoute from "./routes/export.svelte";
 
   // Stores
   import { UserStore } from "./store/user"; //  user auth and state
@@ -33,6 +35,7 @@
   import { TrackerStore } from "./store/trackers"; // tracker state and methods
   import { CommanderStore } from "./store/commander"; // commander - /?note=hi&lat=35&lng=-81.32
   import { NomieAPI } from "./store/napi";
+  // import { TrackerLibrary } from './store/tracker-library';
 
   import config from "../config/global";
 
@@ -43,36 +46,96 @@
   // Day Check - every 30 minutes
   // Lets see if the day changed since last it was opened.
   const today = new Date().toDateString();
+  const confirming = false;
   const dayCheck = setInterval(() => {
-    if (today !== new Date().toDateString()) {
-      if (confirm("A new day has begun, you should refresh Nomie.")) {
+    // Fire off a notice if it's not today anymore - and we haven't
+    // already fired off the confirm prompt // stops the double firing.
+    if (today !== new Date().toDateString() && !confirming) {
+      confirming = confirm("A new day has begun, you should refresh Nomie.");
+      if (confirming) {
         window.location.reload();
       }
     }
   }, 1000 * 60 * 30);
 
   // Not sure if theese are needed
-  export let url = "";
   export let name = "nomie";
+  export let url = "";
 
-  // App Local State
-  let data = {
-    hasAccount: false,
-    promptContent: null
-  };
-
-  const setDocumentParams = options => {
-    let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    // let isDarkMode = false;
-    let manualDarkMode = JSON.parse(
-      localStorage.getItem(config.dark_mode_key) || "false"
-    );
-    if (isDarkMode || manualDarkMode) {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
+  const methods = {
+    routerChange(event) {
+      console.log("Router Change", event);
+    },
+    hideSplashScreen() {
+      document.querySelectorAll(".delete-on-app").forEach(d => {
+        d.classList.add("deleted");
+        setTimeout(() => {
+          d.remove();
+        }, 500);
+      });
+    },
+    setDocParams(options) {
+      let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)")
+        .matches;
+      // let isDarkMode = false;
+      let manualDarkMode = JSON.parse(
+        localStorage.getItem(config.dark_mode_key) || "false"
+      );
+      if (isDarkMode || manualDarkMode) {
+        document.body.classList.add("dark");
+      } else {
+        document.body.classList.remove("dark");
+      }
+      methods.hideSplashScreen();
     }
   };
+
+  /**
+   * Document Change State Monitoring
+   * In hopes of triggering events when the
+   * state of the window changes be it from
+   * the browser, or switching apps on a phone
+   * it kinda works.
+   */
+  let hidden, visibilityChange, router;
+  if (typeof document.hidden !== "undefined") {
+    // Opera 12.10 and Firefox 18 and later support
+    hidden = "hidden";
+    visibilityChange = "visibilitychange";
+  } else if (typeof document.msHidden !== "undefined") {
+    hidden = "msHidden";
+    visibilityChange = "msvisibilitychange";
+  } else if (typeof document.webkitHidden !== "undefined") {
+    hidden = "webkitHidden";
+    visibilityChange = "webkitvisibilitychange";
+  }
+  document.addEventListener(
+    visibilityChange,
+    () => {
+      methods.setDocParams({ hidden });
+    },
+    false
+  );
+
+  /**
+   *
+   * WINDOW LISTENERS
+   * GLoBaL StUFFs!
+   *
+   */
+
+  window.addEventListener("load", () => {
+    let onNetworkChange = event => {
+      if (navigator.onLine) {
+        document.body.classList.remove("offline");
+      } else {
+        document.body.classList.add("offline");
+      }
+    };
+    window.addEventListener("online", onNetworkChange);
+    window.addEventListener("offline", onNetworkChange);
+    methods.setDocParams();
+  });
 
   // Setup isScrolling variable
   window.scrolling = false;
@@ -91,41 +154,14 @@
     false
   );
 
-  var hidden, visibilityChange;
-  if (typeof document.hidden !== "undefined") {
-    // Opera 12.10 and Firefox 18 and later support
-    hidden = "hidden";
-    visibilityChange = "visibilitychange";
-  } else if (typeof document.msHidden !== "undefined") {
-    hidden = "msHidden";
-    visibilityChange = "msvisibilitychange";
-  } else if (typeof document.webkitHidden !== "undefined") {
-    hidden = "webkitHidden";
-    visibilityChange = "webkitvisibilitychange";
-  }
-  document.addEventListener(
-    visibilityChange,
-    () => {
-      setDocumentParams({ hidden });
-    },
-    false
-  );
+  /**
+   * Lastly...
+   *
+   * USER SETUP
+   * Main Script to initialize the user
+   *
+   */
 
-  //Setup an an offline notice
-  window.addEventListener("load", () => {
-    let onNetworkChange = event => {
-      if (navigator.onLine) {
-        document.body.classList.remove("offline");
-      } else {
-        document.body.classList.add("offline");
-      }
-    };
-    window.addEventListener("online", onNetworkChange);
-    window.addEventListener("offline", onNetworkChange);
-    setDocumentParams();
-  });
-
-  // Initalize the User Store
   UserStore.initialize();
   let ready = false;
 
@@ -135,14 +171,20 @@
     ready = true;
     // Run any commands if needed
     setTimeout(() => {
+      // If there are any URL caommands, it will run here.
       CommanderStore.run();
+      // If they have the API - it will load here
       NomieAPI.load();
     }, 500);
+  });
+
+  onMount(() => {
+    setTimeout(() => {}, 1000);
   });
 </script>
 
 {#if $UserStore.signedIn === true}
-  <Router {url}>
+  <Router {url} on:change={methods.routerChange} bind:this={router}>
     <AppTabs />
     <div class="main-content">
       <Route path="/history" component={HistoryRoute} />
@@ -157,6 +199,8 @@
       <Route path="/plugins/settings/:pluginId" component={PluginsRoute} />
       <Route path="/plugins/:pluginId" component={PluginsRoute} />
       <Route path="/api" component={NomieAPIRoute} />
+      <Route path="/settings/export/:type" component={ExportRoute} />
+      <Route path="/settings/export" component={ExportRoute} />
     </div>
   </Router>
 {:else if $UserStore.signedIn == undefined}
@@ -169,3 +213,4 @@
 
 <!-- Global Modals, alerts, menus, etc-->
 <Interactions />
+<LibraryModal />

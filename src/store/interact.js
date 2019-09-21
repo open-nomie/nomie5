@@ -50,7 +50,7 @@ const interactInit = () => {
 				tracker: null,
 				onInteract: null,
 			},
-			logDataEditor: {
+			logEditor: {
 				show: false,
 				log: null,
 				onInteract: null,
@@ -79,6 +79,7 @@ const interactInit = () => {
 				show: false,
 				placeholder: null,
 				message: null,
+				title: null,
 			},
 			trackerInput: {
 				show: false,
@@ -211,23 +212,23 @@ const interactInit = () => {
 				return s;
 			});
 		},
-		editLogData(log) {
+		editLog(log) {
 			log = new NomieLog(log);
 			log.expanded();
 			return new Promise((resolve, reject) => {
 				update(s => {
-					s.logDataEditor.show = true;
-					s.logDataEditor.log = log;
-					s.logDataEditor.onInteract = resolve;
+					s.logEditor.show = true;
+					s.logEditor.log = log;
+					s.logEditor.onInteract = resolve;
 					return s;
 				});
 			});
 		},
-		dismissEditLogData() {
+		dismissEditLog() {
 			update(s => {
-				s.logDataEditor.show = false;
-				s.logDataEditor.log = null;
-				s.logDataEditor.onInteract = null;
+				s.logEditor.show = false;
+				s.logEditor.log = null;
+				s.logEditor.onInteract = null;
 				return s;
 			});
 		},
@@ -239,22 +240,31 @@ const interactInit = () => {
 			return new Promise((resolve, reject) => {
 				let actions = {
 					updateContent() {
-						methods.prompt('Update Content', { value: log.note, valueType: 'textarea' }).then(content => {
-							log.note = content;
-							LedgerStore.updateLog(log).then(res => {
-								resolve({ action: 'updated' });
+						methods
+							.prompt('Update Content', null, { value: log.note, valueType: 'textarea' })
+							.then(content => {
+								log.note = content;
+								LedgerStore.updateLog(log).then(res => {
+									resolve({ action: 'updated' });
+								});
 							});
-						});
 					},
 					updateData() {
-						Interact.editLogData(log).then(log => {
+						Interact.editLog(log).then(log => {
+							setTimeout(() => {
+								resolve({ action: 'data-updated' });
+							}, 10);
+						});
+					},
+					editLog() {
+						Interact.editLog(log).then(log => {
 							setTimeout(() => {
 								resolve({ action: 'data-updated' });
 							}, 10);
 						});
 					},
 					updateDate() {
-						Interact.prompt('New Date / Time', {
+						Interact.prompt('New Date / Time', null, {
 							valueType: 'datetime',
 							value: dayjs(new Date(log.end)).format('YYYY-MM-DDTHH:mm'),
 						}).then(date => {
@@ -297,34 +307,40 @@ const interactInit = () => {
 						}, 10);
 					},
 				};
+				// let initial = [
+				// 	{
+				// 		title: 'Note',
+				// 		click: actions.updateContent,
+				// 	},
+				// 	{
+				// 		title: 'Location',
+				// 		click: actions.updateLocation,
+				// 	},
+				// 	{
+				// 		title: 'Date & Time',
+				// 		click: actions.updateDate,
+				// 	},
+				// ];
+
+				// if (Object.keys(log.trackers).length) {
+				// 	initial.push({
+				// 		title: 'Tracker Data',
+				// 		click: actions.updateData,
+				// 	});
+				// }
+
 				let initial = [
 					{
-						title: 'Note',
-						click: actions.updateContent,
+						title: 'Edit...',
+						click: actions.editLog,
 					},
 					{
-						title: 'Location',
-						click: actions.updateLocation,
-					},
-					{
-						title: 'Date & Time',
-						click: actions.updateDate,
+						title: 'Delete...',
+						click: actions.delete,
 					},
 				];
 
-				if (Object.keys(log.trackers).length) {
-					initial.push({
-						title: 'Tracker Data',
-						click: actions.updateData,
-					});
-				}
-
-				initial.push({
-					title: 'Delete...',
-					click: actions.delete,
-				});
-
-				methods.popmenu({ title: 'Edit Log', buttons: initial });
+				methods.popmenu({ title: 'Log Options', buttons: initial });
 			}); // end return promise
 		},
 		showLocations(locations) {
@@ -416,15 +432,15 @@ const interactInit = () => {
 				return s;
 			});
 		},
-		prompt(message, options) {
+		prompt(title, message, options) {
 			return new Promise((resolve, reject) => {
 				setTimeout(() => {
 					update(s => {
 						s.prompt.show = true;
 						s.prompt.message = message;
+						s.prompt.title = title;
 						s.prompt.value = options.value || null;
 						s.prompt.valueType = options.valueType || 'text';
-						s.prompt.title = options.title || 'Prompt';
 						s.prompt.cancel = 'Cancel';
 						s.prompt.placeholder = options.placeholder || '';
 						s.prompt.onInteract = res => {

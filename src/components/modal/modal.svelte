@@ -10,12 +10,14 @@
   export let flexBody = undefined;
   export let show = true;
   export let className = undefined;
+  export let type = "normal";
 
   const has_header = (arguments[1].$$slots || {}).hasOwnProperty("header");
   const has_footer = (arguments[1].$$slots || {}).hasOwnProperty("footer");
 </script>
 
 <style lang="scss">
+  @import "../../scss/vendor/bootstrap/base";
   .n-modal-frame {
     position: fixed;
     top: 0;
@@ -23,11 +25,44 @@
     right: 0;
     bottom: 0;
     background-color: var(--color-full-screen);
-    z-index: 1000;
+    z-index: 2000;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    &.type-bottom {
+      justify-content: flex-end;
+    }
+    &.type-fullscreen {
+      .n-modal {
+        height: 100vh;
+        width: 100vw;
+        max-height: 100vh;
+        max-width: 100vw;
+        border-radius: 0px;
+        margin: 0;
+        @include media-breakpoint-up(sm) {
+          max-width: 500px;
+          max-height: 700px;
+          border-radius: 0.7rem;
+        }
+      }
+    }
+    &.type-cover {
+      .n-modal {
+        padding-top: env(safe-area-inset-top) !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 0px;
+        margin: 0;
+        margin-left: 0;
+        margin-right: 0;
+        padding-bottom: env(safe-area-inset-bottom) !important;
+      }
+    }
   }
   .n-modal {
     min-width: 320px;
@@ -42,7 +77,15 @@
     justify-content: stretch;
     align-items: stretch;
     border: solid 1px var(--color-solid);
-    box-shadow: 0px 16px 24px -12px rgba(0, 0, 0, 0.6);
+    box-shadow: var(--box-shadow);
+
+    .n-modal-body {
+      flex-grow: 1;
+      @include media-breakpoint-up(md) {
+        padding: 20px;
+      }
+    }
+
     &.full-screen-modal {
       height: 96vh;
       width: 96vw;
@@ -50,7 +93,6 @@
       max-height: 700px;
 
       .n-modal-body {
-        flex-grow: 1;
         &.flex-body {
           position: relative;
           display: flex;
@@ -102,7 +144,7 @@
 </style>
 
 {#if show}
-  <div class="n-modal-frame {className}" transition:fly>
+  <div class="n-modal-frame {className} type-{type}" transition:fly>
     <div class="n-modal {fullscreen ? 'full-screen-modal' : ''}">
       {#if has_header || title}
         <div class="n-modal-header">

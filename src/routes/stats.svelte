@@ -17,17 +17,18 @@
 
   // Modules
   import Tracker from "../modules/tracker/tracker";
-  import CalendarMap from "../utils/calendar-map/calendar-map";
-  import Storage from "../modules/storage/storage";
+  // import CalendarMap from "../utils/calendar-map/calendar-map";
+  // import Storage from "../modules/storage/storage";
   import StatsProcessor from "../modules/stats/stats";
 
   // Components
   import NText from "../components/text/text.svelte";
-  import NItem from "../components/list-item/list-item.svelte";
+  import NCell from "../components/cell/cell.svelte";
+  // import NItem from "../components/list-item/list-item.svelte";
   import BarChart from "../components/charts/bar-chart.svelte";
-  import Tabs from "../components/board-tabs/board-tabs.svelte";
+  // import Tabs from "../components/board-tabs/board-tabs.svelte";
   import NPopcard from "../components/popcard/popcard.svelte";
-  import NToolbar from "../components/toolbar/toolbar.svelte";
+  // import NToolbar from "../components/toolbar/toolbar.svelte";
   import NLogItem from "../components/list-item-log/list-item-log.svelte";
   import NTimeGrid from "../components/day-time-grid/day-time-grid.svelte";
   import KVBlock from "../components/kv-block/kv-block.svelte";
@@ -38,16 +39,23 @@
   import NCalendar from "../containers/calendar/sweet.svelte";
 
   //store
-  import { BoardStore } from "../store/boards";
+  // import { BoardStore } from "../store/boards";
   import { UserStore } from "../store/user";
   import { TrackerStore } from "../store/trackers";
   import { LedgerStore } from "../store/ledger";
   import { Interact } from "../store/interact";
   import { HistoryPage } from "../store/history-page";
 
+  // const path = window.location.href.split("/");
+  // const mainTag = path[path.length - 1];
+
+  export let id = null;
+
+  const mainTag = TrackerStore.getById(id).tag;
+
   const console = new Logger("📊 Stats.svelte");
-  const path = window.location.href.split("/");
-  const mainTag = path[path.length - 1];
+
+  console.log(mainTag);
 
   // Local
   let refreshing = false;
@@ -295,9 +303,24 @@
     border-bottom: solid 1px var(--color-faded-1) !important;
   }
 
+  .sticky-header {
+    background: var(--color-bg);
+    position: -webkit-sticky;
+    position: sticky;
+    top: 50px;
+    z-index: 1000;
+  }
+
+  .subheader {
+    background: var(--color-bg) !important;
+  }
+
   .popcards {
     position: relative;
-    min-height: 1200px;
+    min-height: 200vh;
+    margin-right: 10px;
+    margin-left: 10px;
+    width: calc(100% - 20px);
     &:after {
       position: absolute;
       bottom: 0;
@@ -346,7 +369,7 @@
       </button>
     </div>
 
-    <div class="container pt-3 popcards">
+    <div class="pt-3 popcards">
 
       {#if state.compare.tracker}
         <div class="text-center p2 pt-1">
@@ -500,19 +523,20 @@
       <!--
         Month Card
       -->
-
-      <div class="n-row n-month-bar mt-3 mw-500px mx-auto">
-        <button class="btn btn-clear" on:click={methods.previousMonth}>
-          <i class="zmdi zmdi-chevron-left font-140 mr-2" />
-          {state.date.subtract(1, 'month').format('MMM')}
-        </button>
-        <h1 class="n-title filler text-center">
-          {state.date.format('MMM YYYY')}
-        </h1>
-        <button class="btn btn-clear" on:click={methods.nextMonth}>
-          {state.date.add(1, 'month').format('MMM')}
-          <i class="zmdi zmdi-chevron-right font-140 ml-2" />
-        </button>
+      <div class="sticky-header">
+        <div class="n-row n-month-bar mt-3 container">
+          <button class="btn btn-clear" on:click={methods.previousMonth}>
+            <i class="zmdi zmdi-chevron-left font-140 mr-2" />
+            {state.date.subtract(1, 'month').format('MMM')}
+          </button>
+          <h1 class="n-title filler text-center">
+            {state.date.format('MMM YYYY')}
+          </h1>
+          <button class="btn btn-clear" on:click={methods.nextMonth}>
+            {state.date.add(1, 'month').format('MMM')}
+            <i class="zmdi zmdi-chevron-right font-140 ml-2" />
+          </button>
+        </div>
       </div>
 
       <NPopcard level={9} arrow={true}>
@@ -652,26 +676,27 @@
       <!--
         Day Card
       -->
-      <div class="n-row n-year-bar mt-3 mw-500px mx-auto">
-
-        <button class="btn btn-clear" on:click={methods.previousDay}>
-          <i class="zmdi zmdi-chevron-left font-140 mr-2" />
-          {state.date.subtract(1, 'day').format('ddd')}
-        </button>
-        <h1
-          class="n-title btn btn-light filler text-center"
-          on:click={methods.showHistory}>
-          {state.date.format('ddd MMM D')}
-          {#if state.date.toDate().toDateString() !== new Date().toDateString()}
-            <small>{state.date.fromNow()}</small>
-          {:else}
-            <small>Today</small>
-          {/if}
-        </h1>
-        <button class="btn btn-clear" on:click={methods.nextDay}>
-          {state.date.add(1, 'day').format('ddd')}
-          <i class="zmdi zmdi-chevron-right font-140 ml-2" />
-        </button>
+      <div class="sticky-header">
+        <div class="n-row n-year-bar container">
+          <button class="btn btn-clear" on:click={methods.previousDay}>
+            <i class="zmdi zmdi-chevron-left font-140 mr-2" />
+            {state.date.subtract(1, 'day').format('ddd')}
+          </button>
+          <NCell direction="column" className="text-center">
+            <NText size="sm">{state.date.format('ddd MMM D YYYY')}</NText>
+            {#if state.date
+              .toDate()
+              .toDateString() !== new Date().toDateString()}
+              <NText size="xs">{state.date.fromNow()}</NText>
+            {:else}
+              <NText size="xs">Today</NText>
+            {/if}
+          </NCell>
+          <button class="btn btn-clear" on:click={methods.nextDay}>
+            {state.date.add(1, 'day').format('ddd')}
+            <i class="zmdi zmdi-chevron-right font-140 ml-2" />
+          </button>
+        </div>
       </div>
 
       <NPopcard level={8}>
@@ -751,6 +776,7 @@
                       on:moreClick={event => {
                         Interact.logOptions(log).then(() => {});
                       }}
+                      show24Hour={$UserStore.meta.is24Hour}
                       trackers={$TrackerStore}
                       focus={state.tracker.tag} />
                   {/if}
@@ -767,6 +793,7 @@
                       on:locationClick={event => {
                         Interact.showLocations([log]);
                       }}
+                      show24Hour={$UserStore.meta.is24Hour}
                       on:moreClick={event => {
                         Interact.logOptions(log).then(() => {});
                       }}

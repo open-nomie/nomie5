@@ -7,6 +7,8 @@
 
   // Plugins
   import Plugins from "../../plugins/plugins";
+
+  import { Lang } from "../../store/lang";
 </script>
 
 <style lang="scss">
@@ -23,9 +25,8 @@
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-    z-index: 200;
+    z-index: 1200;
     // Tab Links
-
     // Tab Icons
   }
 
@@ -65,13 +66,15 @@
 
 <nav id="app-tabs" class="">
   <div class="n-row mw-500px mx-auto">
+
     <Link to="/">
       <i class="zmdi zmdi-grid" />
-      <label>Track</label>
+      <label>{Lang.t('tabs.track')}</label>
     </Link>
+
     <Link to="/history">
       <i class="zmdi zmdi-calendar" />
-      <label>History</label>
+      <label>{Lang.t('tabs.history')}</label>
     </Link>
 
     {#each Plugins.filter(p => p.tab) as plugin}
@@ -83,7 +86,8 @@
 
     <Link to="/settings">
       <i class="zmdi zmdi-menu" />
-      <label>Settings</label>
+      <label>{Lang.t('tabs.settings')}</label>
     </Link>
+
   </div>
 </nav>

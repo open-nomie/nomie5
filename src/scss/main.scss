@@ -53,6 +53,72 @@
 	margin: 0;
 }
 
+.pointer {
+	cursor: pointer;
+}
+
+.gap {
+	height: 16px;
+}
+
+// HACK! This isn't working in the component
+.library-modal .n-modal-body {
+	background-color: var(--color-bg) !important;
+}
+
+.delete-on-app {
+	transition: all 0.5s ease-in-out;
+	&.deleted {
+		transition: all 0.5s ease-in-out;
+		opacity: 0;
+		top: 400px;
+		bottom: -400px;
+
+		.version {
+			bottom: 1000px;
+			opacity: 0;
+		}
+		svg {
+			// transition: all 0.3s ease-in-out;
+			// transform: scale(2);
+		}
+	}
+}
+
+.loading-screen {
+	background-color: $primaryBright;
+	background-size: cover;
+	background-position: center;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 4000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	svg {
+		transition: all 0.3s ease-in-out;
+	}
+}
+.version {
+	position: absolute;
+	width: 100px;
+	bottom: 100px;
+	font-size: 12px;
+	color: rgba(255, 255, 255, 0.5);
+	margin-left: -50px;
+	left: 50%;
+	background-color: rgba(0, 0, 0, 0.1);
+	border-radius: 12px;
+	height: 24px;
+	line-height: 24px;
+	padding: 0 12px;
+	text-align: center;
+}
+
 .n-item.bg-light {
 	background-color: var(--color-bg) !important;
 	&.text-faded {
@@ -63,7 +129,7 @@
 .n-title {
 	flex-direction: column;
 	font-size: 1.2rem !important;
-	font-weight: 800 !important;
+	font-weight: 700 !important;
 	color: var(--color-inverse);
 	line-height: 120%;
 	margin: 0;
@@ -75,8 +141,53 @@
 	}
 }
 
+$morning-alt: #fe8300;
+$morning: rgb(255, 204, 0);
+
+$afternoon-alt: rgb(0, 255, 21);
+$afternoon: rgb(0, 166, 255);
+
+$evening-alt: rgb(62, 9, 252);
+$evening: rgb(145, 25, 220);
+
+$night-alt: #c3727c;
+$night: #311f62;
+
+.glow {
+	&.glow-morning {
+		box-shadow: 0px 2px 24px -10px rgba($morning, 0.2), 0px 3px 10px -2px rgba($morning-alt, 0.1) !important;
+	}
+	&.glow-afternoon {
+		box-shadow: 0px 2px 24px -10px rgba($afternoon, 0.1), 0px 3px 10px -2px rgba($afternoon-alt, 0.1) !important;
+	}
+	&.glow-evening {
+		box-shadow: 0px 2px 24px -10px rgba($evening, 0.1), 0px 3px 10px -2px rgba($evening-alt, 0.1) !important;
+	}
+	&.glow-night {
+		box-shadow: 0px 2px 24px -10px rgba($night, 0.2), 0px 3px 10px -2px rgba($night-alt, 0.2) !important;
+	}
+}
+
 .card {
-	border-radius: 1rem;
+	$padding: 16px;
+	border-radius: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	z-index: 120;
+	.card-body {
+		padding: $padding;
+		min-height: 0;
+	}
+	p,
+	.card-body {
+		font-size: 0.9rem;
+	}
+	.card-title {
+		$paddingTop: $padding * 0.7;
+		padding: $paddingTop $padding;
+		font-weight: bold;
+		font-size: 1.2rem;
+	}
 }
 
 .mw-500px {
@@ -176,4 +287,42 @@ button {
 .wiggle-other {
 	animation: keyframes1 infinite 0.6s ease-in;
 	transform-origin: 30% 5%;
+}
+
+.badge {
+	height: 22px;
+	border-radius: 11px;
+	padding: 0 12px;
+	line-height: 22px;
+	background-color: var(--color-primary);
+	color: #000;
+	font-size: 11px;
+	border: var(--color-primary);
+
+	&.badge-lg {
+		font-size: 1rem;
+		height: 2rem;
+		border-radius: 1rem;
+		line-height: 2rem;
+		padding: 0 18px;
+	}
+	&.badge-md {
+		font-size: 0.8rem;
+		height: 1.6rem;
+		border-radius: 0.8rem;
+		line-height: 1.6rem;
+		padding: 0 14px;
+	}
+}
+.badge-primary {
+	background-color: var(--color-primary);
+	color: #fff;
+}
+.badge-blue {
+	background-color: var(--color-blue);
+	color: #fff;
+}
+.badge-green {
+	background-color: var(--color-green);
+	color: #fff;
 }

@@ -12,6 +12,7 @@ import config from '../../config/global';
 // Stores
 import { Interact } from '../store/interact';
 import { BoardStore } from '../store/boards';
+import { TrackerLibrary } from '../store/tracker-library';
 
 // Utils
 import Logger from '../utils/log/log';
@@ -36,14 +37,15 @@ const trackerStoreInit = () => {
 					// If the user doesn't have trackers
 					// Let's prompt them to install some
 					if (!trackers) {
-						Interact.confirm(
-							`${StarterPack.label}`,
-							`Install Default Trackers: ${startPackArray.map(t => t.label).join(', ')}? `
-						).then(res => {
-							if (res === true) {
-								methods.populate(StarterPack);
-							}
-						});
+						TrackerLibrary.toggle({ first: true });
+						// Interact.confirm(
+						// 	`${StarterPack.label}`,
+						// 	`Install Default Trackers: ${startPackArray.map(t => t.label).join(', ')}? `
+						// ).then(res => {
+						// 	if (res === true) {
+						// 		methods.populate(StarterPack);
+						// 	}
+						// });
 						resolve({});
 						// Setup Default Trackers
 					} else {
@@ -64,7 +66,17 @@ const trackerStoreInit = () => {
 			});
 			return data || {};
 		},
+		getById(id) {
+			let trackers = methods.getAll();
+			let tracker = Object.keys(trackers)
+				.map(tag => trackers[tag])
+				.find(tracker => {
+					return tracker.id === id;
+				});
+			return new Tracker(tracker);
+		},
 		getRunning() {
+			//TODO :: Get this working so you can see all timers on a single dynamic board
 			let allTrackers = methods.getAll() || {};
 			return [];
 			// return Object.keys(allTrackers || {})
@@ -80,6 +92,8 @@ const trackerStoreInit = () => {
 			Object.keys(trackers).forEach(key => {
 				if (!trackers[key].tag) {
 					delete trackers[key];
+				} else {
+					trackers[key] = new Tracker(trackers[key]);
 				}
 			});
 			return trackers;
@@ -112,6 +126,11 @@ const trackerStoreInit = () => {
 		getByTag(tag) {
 			let trackers = this.getAll();
 			return trackers.hasOwnProperty(tag) ? trackers[tag] : new Tracker({ tag: tag });
+		},
+
+		tagExists(tag) {
+			let trackers = this.getAll();
+			return trackers.hasOwnProperty(tag) ? true : false;
 		},
 
 		/**
@@ -205,10 +224,16 @@ const trackerStoreInit = () => {
 		},
 		saveTracker(tracker) {
 			let response;
+			let board = BoardStore.data();
 			update(t => {
 				t = t || {};
 				t[tracker.tag] = tracker;
 				response = methods.save(t);
+
+				if (board.id !== 'all') {
+					BoardStore.addTrackersToActiveBoard([tracker]);
+				}
+
 				return t;
 			});
 			return response;

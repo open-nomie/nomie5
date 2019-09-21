@@ -78,12 +78,12 @@
     },
     deleteFile(file) {
       Interact.confirm(
-        "Holup! Delete ${file}?",
+        `Holup! Delete ${file}?`,
         `This can cause serious problems if you don't know what you're doing.`,
         "Yes, Delete"
       ).then(res => {
         if (res === true) {
-          Storage.deleteFile(file).then(() => {
+          Storage.delete(file).then(() => {
             setTimeout(() => {
               methods.initialize();
             });
@@ -113,7 +113,8 @@
 
     {#if state.showFiles}
       {#each state.files as file (file)}
-        <NItem title={file}>
+        <NItem>
+          <div class="truncate">{file}</div>
           <button
             class="btn btn-sm btn-clear text-danger"
             slot="right"
@@ -124,17 +125,18 @@
           </button>
         </NItem>
       {/each}
-      <NItem title="Super Danger" className="n-item-divider" />
-      <NItem title="Delete all files">
+      <NItem title="Danger" className="n-item-divider" />
+      <NItem title="Destroy Everything">
         <button
           class="btn btn-sm btn-danger"
           slot="right"
           on:click={() => {
             methods.deleteEverything();
           }}>
-          Delete Everything
+          Destroy
         </button>
       </NItem>
+      <NItem className="n-item-divider" />
     {/if}
   </div>
 </div>

@@ -8,74 +8,98 @@ import { scss } from '@kazzkiq/svelte-preprocess-scss';
 import builtins from 'rollup-plugin-node-builtins';
 import replace from 'rollup-plugin-replace';
 import packagejson from './package.json';
+import visualizer from 'rollup-plugin-visualizer';
 import dayjs from 'dayjs';
 import fs from 'fs';
-import copy from 'rollup-plugin-copy';
 
 const production = !process.env.ROLLUP_WATCH;
 
 // Replace Local Host with whatever the domain is
-let manifestFile = fs.readFileSync('./public/manifest.json', 'UTF-8');
-if (process.env.URL) {
-	manifestFile = manifestFile.replace(/http\:\/\/localhost\:5000/gi, process.env.URL);
-	fs.writeFileSync('./public/manifest.json', manifestFile, 'UTF-8');
-}
-let manifest = JSON.parse(manifestFile);
+// let manifestFile = fs.readFileSync('./public/manifest.json', 'UTF-8');
+// if (process.env.URL) {
+// 	manifestFile = manifestFile.replace(/http\:\/\/localhost\:5000/gi, process.env.URL);
+// 	fs.writeFileSync('./public/manifest.json', manifestFile, 'UTF-8');
+// }
+// let manifest = JSON.parse(manifestFile);
 
-export default {
-	input: 'src/main.js',
-	output: {
-		sourcemap: true,
-		format: 'iife',
-		name: 'nomie',
-		file: 'public/bundle.js',
-		globals: {},
+export default [
+	{
+		input: 'src/main.js',
+		output: {
+			sourcemap: true,
+			format: 'iife',
+			name: 'nomie',
+			file: 'public/bundle.js',
+			globals: {},
+		},
+		plugins: [
+			builtins(),
+			//
+			replace({
+				APP_VERSION: packagejson.version,
+				APP_BRANCH: process.env.BRANCH,
+				APP_URL: process.env.URL,
+				APP_CONTEXT: process.env.CONTEXT,
+				APP_BUILD_DATE: dayjs().format('ddd MMM D YYYY h:mma'),
+			}),
+			scss({
+				input: './scss/main.scss',
+				output: function(styles, styleNodes) {
+					writeFileSync('./public/main.css', styles);
+				},
+			}),
+			svelte({
+				// enable run-time checks when not in production
+				dev: !production,
+				preprocess: {
+					style: scss({ all: true }),
+				},
+				// we'll extract any component CSS out into
+				// a separate file — better for performance
+				css: css => {
+					css.write('public/bundle.css');
+				},
+			}),
+
+			json(),
+			resolve(),
+			commonjs(),
+
+			// Remove Moe
+			// visualizer(),
+
+			// Watch the `public` directory and refresh the
+			// browser on changes when not in production
+			!production && livereload('public'),
+
+			// If we're building for production (npm run build
+			// instead of npm run dev), minify
+			production && terser(),
+		],
+		watch: {
+			clearScreen: true,
+		},
 	},
-	plugins: [
-		builtins(),
-		//
-		replace({
-			APP_VERSION: packagejson.version,
-			APP_BRANCH: process.env.BRANCH,
-			APP_URL: manifest.start_url,
-			APP_CONTEXT: process.env.CONTEXT,
-			APP_BUILD_DATE: dayjs().format('ddd MMM D YYYY h:mma'),
-		}),
-		scss({
-			input: './scss/main.scss',
-			output: function(styles, styleNodes) {
-				writeFileSync('./public/main.css', styles);
-			},
-		}),
-		svelte({
-			// enable run-time checks when not in production
-			dev: !production,
-			preprocess: {
-				style: scss({ all: true }),
-			},
-			// we'll extract any component CSS out into
-			// a separate file — better for performance
-			css: css => {
-				css.write('public/bundle.css');
-			},
-		}),
-
-		json(),
-		resolve(),
-		commonjs(),
-
-		// Watch the `public` directory and refresh the
-		// browser on changes when not in production
-		!production && livereload('public'),
-
-		// If we're building for production (npm run build
-		// instead of npm run dev), minify
-		production && terser(),
-	],
-	watch: {
-		clearScreen: true,
+	{
+		input: 'src/service-worker.js',
+		output: {
+			sourcemap: false,
+			format: 'cjs',
+			file: 'public/service-worker.js',
+		},
+		plugins: [
+			builtins(),
+			replace({
+				APP_VERSION: packagejson.version,
+				APP_BRANCH: process.env.BRANCH,
+				APP_URL: process.env.URL,
+				APP_SERVICE_URL: !production ? 'http://localhost:8888' : '',
+				APP_CONTEXT: process.env.CONTEXT,
+				APP_BUILD_DATE: dayjs().format('ddd MMM D YYYY h:mma'),
+			}),
+		],
 	},
-};
+];
 
 // copy({
 // 	targets: [
