@@ -220,5 +220,5 @@
 {#if $Interact.stats.activeTag}
   <StatsRoute id={$Interact.stats.activeTag} />
 {/if}
-<Interactions />
 <LibraryModal />
+<Interactions />

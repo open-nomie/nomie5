@@ -37,7 +37,10 @@ const trackerStoreInit = () => {
 					// If the user doesn't have trackers
 					// Let's prompt them to install some
 					if (!trackers) {
-						TrackerLibrary.toggle({ first: true });
+						console.log('Should open lib');
+						setTimeout(() => {
+							TrackerLibrary.showFirst();
+						}, 10);
 						// Interact.confirm(
 						// 	`${StarterPack.label}`,
 						// 	`Install Default Trackers: ${startPackArray.map(t => t.label).join(', ')}? `

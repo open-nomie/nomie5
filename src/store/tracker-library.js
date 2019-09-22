@@ -30,12 +30,17 @@ const TrackerLibInit = () => {
 	});
 
 	const methods = {
-		toggle(options) {
-			options = options || {};
-			options.first = options.first || false;
+		toggle() {
 			update(p => {
 				p.show = !p.show;
-				p.first = options.first;
+				p.first = false;
+				return p;
+			});
+		},
+		showFirst() {
+			update(p => {
+				p.show = true;
+				p.first = true;
 				return p;
 			});
 		},

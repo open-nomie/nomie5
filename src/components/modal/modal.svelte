@@ -191,35 +191,33 @@
   }
 </style>
 
-{#if showModal}
+<div
+  class="n-modal-frame {className} type-{type}
+  {domVisible ? 'visible' : 'hidden'}">
   <div
-    class="n-modal-frame {className} type-{type}
+    class="n-modal {fullscreen ? 'full-screen-modal' : ''}
     {domVisible ? 'visible' : 'hidden'}">
-    <div
-      class="n-modal {fullscreen ? 'full-screen-modal' : ''}
-      {domVisible ? 'visible' : 'hidden'}">
-      {#if has_header || title}
-        <div class="n-modal-header">
-          {#if has_header}
-            <slot name="header" />
-          {:else}
-            <NText tag="div" bold size="lg" className="text-center w-100 py-1">
-              {title}
-            </NText>
-          {/if}
+    {#if has_header || title}
+      <div class="n-modal-header">
+        {#if has_header}
+          <slot name="header" />
+        {:else}
+          <NText tag="div" bold size="lg" className="text-center w-100 py-1">
+            {title}
+          </NText>
+        {/if}
 
-        </div>
-      {/if}
-      <div
-        class="n-modal-body {padding ? 'padding' : 'no-padding'}
-        {flexBody ? 'flex-body' : 'no-flex-body'}">
-        <slot />
       </div>
-      {#if has_footer}
-        <div class="n-modal-footer">
-          <slot name="footer" />
-        </div>
-      {/if}
+    {/if}
+    <div
+      class="n-modal-body {padding ? 'padding' : 'no-padding'}
+      {flexBody ? 'flex-body' : 'no-flex-body'}">
+      <slot />
     </div>
+    {#if has_footer}
+      <div class="n-modal-footer">
+        <slot name="footer" />
+      </div>
+    {/if}
   </div>
-{/if}
+</div>
