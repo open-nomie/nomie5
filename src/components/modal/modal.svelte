@@ -62,11 +62,11 @@
 
       &.hidden {
         .n-modal {
-          transform: translateY(500px);
+          transform: translateY(700px);
         }
       }
       .n-modal {
-        transition: all 0.2s ease-in-out;
+        transition: all 0.4s ease-in-out;
         max-height: 70vh;
         margin-bottom: 0px;
         border-bottom-left-radius: 0;
