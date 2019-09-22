@@ -59,7 +59,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
 	// Skip cross-origin requests, like those for Google Analytics.
 	if (event.request.url.search(`/api/`) > -1) {
-	} else if (event.request.url.startsWith(self.location.origin)) {
+	} else if (event.request.url.startsWith(self.location.origin) && self.location.origin.search('nomie') > -1) {
 		event.respondWith(
 			caches.match(event.request).then(cachedResponse => {
 				if (cachedResponse) {

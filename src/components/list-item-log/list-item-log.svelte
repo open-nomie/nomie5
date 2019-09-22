@@ -59,10 +59,10 @@
   <NItem
     className="{className} my-3 mx-2 border pb-0 n-item-log glow glow-{time.dateToDesc(displayLog.end)}">
     <!-- Show the Trackers within this Log Item -->
-    <div class="n-row my-2 pr-3 time-row">
-      <NText size="md" bold>
+    <div class="n-row time-row">
+      <div class="time font-bold">
         {dayjs(displayLog.end).format(fullDate ? `ddd MMM D YYYY ${timeFormat}` : timeFormat)}
-      </NText>
+      </div>
 
       <!-- If they have location-->
       {#if displayLog.lat}
@@ -90,8 +90,8 @@
           dispatch('moreClick', displayLog);
         }}
         class="btn btn-sm btn-clear pl-2 pr-2 "
-        style="margin-left:10px; margin-right:-20px; margin-top:-10px;
-        font-size:32px; height:30px; line-height:30px;">
+        style="margin-left:10px; margin-right:-10px; margin-top:-10px;
+        font-size:32px; height:30px; min-width:40px; line-height:30px;">
         <i
           class="zmdi zmdi-more text-primary-bright"
           style="height:30px; line-height:30px;" />

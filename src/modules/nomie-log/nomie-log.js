@@ -1,4 +1,5 @@
 import ExtractTrackers from '../../utils/extract-trackers/extract-trackers';
+import CalculateScore from '../../utils/calculate-score/calculate-score';
 import md5 from 'md5';
 import regexs from '../../utils/regex';
 export default class Record {
@@ -15,7 +16,8 @@ export default class Record {
 		this.end = end.getTime();
 		this.start = start.getTime();
 
-		this.score = starter.score || null;
+		this.score = CalculateScore(this.note);
+
 		this.lat = starter.lat || null;
 		this.lng = starter.lng || null;
 		this.location = starter.location || '';

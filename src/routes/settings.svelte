@@ -13,9 +13,6 @@
   import ImporterModal from "../containers/importer/importer.svelte";
   import MassEditor from "../containers/mass-editor/mass-editor.svelte";
 
-  //Modules
-  import Exporter from "../modules/export/export";
-
   // Vendors
   import dayjs from "dayjs";
 
@@ -31,7 +28,7 @@
   import config from "../../config/global";
 
   // consts
-  const Export = new Exporter();
+  // const Export = new Exporter();
 
   let data = {
     signedIn: false,
@@ -43,7 +40,7 @@
 
   let ledger = null;
   let trackers = null;
-  let user = null;
+  // let user = null;
   let fileInput;
   let showImporter = false;
 
@@ -55,7 +52,6 @@
       UserStore.redirectToSignIn();
     },
     closeMassEditor() {
-      console.log("closing");
       data.showMassEditor = false;
     },
     bookAge(date) {
@@ -64,21 +60,7 @@
     faq() {
       navigate("/faq");
     },
-    export() {
-      Interact.confirm(
-        Lang.t("general.continue-question"),
-        Lang.t("settings.export-confirm")
-      ).then(res => {
-        if (res === true) {
-          Export.onChange(change => {
-            Interact.toast(`Export: ${change}`, true);
-          });
-          Export.start().then(() => {
-            Interact.toast(Lang.t("settings.export-complete"));
-          });
-        }
-      });
-    },
+
     switchToCloud() {
       let msg = Lang.t("settings.switch-to-cloud-notice");
       Interact.confirm(Lang.t("settings.switch-to-cloud-confirm"), msg).then(
@@ -104,11 +86,15 @@
     settingChange() {
       UserStore.saveMeta();
     },
+    // boardsToggle() {
+    //   $UserStore.meta.boardsEnabled = !$UserStore.meta.boardsEnabled;
+    //   UserStore.saveMeta();
+    // },
     lockToggle() {
       if ($UserStore.meta.lock === true) {
         if (($UserStore.meta.pin || "").length == 0) {
           // TODO: figure out how to handle a cancel in the interact prompt
-          Interact.prompt(Lang.t("settings.pin-details"), {
+          Interact.prompt(Lang.t("settings.pin-details"), null, {
             value: "",
             valueType: "number"
           }).then(pin => {
@@ -131,19 +117,19 @@
     }
   };
 
-  LedgerStore.subscribe(ldgr => {
-    ledger = ldgr;
-  });
+  // LedgerStore.subscribe(ldgr => {
+  //   ledger = ldgr;
+  // });
 
-  UserStore.subscribe(u => {
-    if (u.signedIn) {
-      user = u;
-    }
-  });
+  // UserStore.subscribe(u => {
+  //   if (u.signedIn) {
+  //     user = u;
+  //   }
+  // });
 
-  TrackerStore.subscribe(tkrs => {
-    trackers = tkrs || {};
-  });
+  // TrackerStore.subscribe(tkrs => {
+  //   trackers = tkrs || {};
+  // });
 
   const setTimeout = setTimeout;
 </script>
@@ -158,8 +144,8 @@
   <div class="page page-settings with-header">
     <div class="container p-0 n-list">
       {#if $UserStore.storageType === 'blockstack'}
-        <div class="n-pop my-3">
-          <NItem className="n-item-divider" borderBottom title="Account" />
+        <div class="n-pop">
+          <NItem className="n-item-divider" title="Account" />
 
           <NItem>
             <div class="title truncate">
@@ -177,7 +163,27 @@
         </div>
       {/if}
 
-      <div class="n-pop my-3">
+      <div class="n-pop">
+        <NItem title={Lang.t('general.customize')} className="n-item-divider" />
+        <NItem title={Lang.t('settings.theme')}>
+          <span
+            slot="left"
+            class="btn-icon zmdi text-primary zmdi-invert-colors" />
+          <div slot="right">
+            <select
+              class="form-control"
+              style="min-width:100px;width:100px"
+              bind:value={$UserStore.theme}
+              on:change={event => {
+                UserStore.setTheme($UserStore.theme);
+              }}>
+              <option value="auto">Auto</option>
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+            </select>
+
+          </div>
+        </NItem>
         <NItem title={Lang.t('settings.use-location')}>
           <span
             slot="left"
@@ -190,18 +196,24 @@
               }} />
           </div>
         </NItem>
-        <NItem title={Lang.t('settings.dark-mode')}>
-          <span
-            slot="left"
-            class="btn-icon zmdi text-primary zmdi-brightness-2" />
-          <div slot="right">
-            <NToggle
-              bind:value={$UserStore.darkMode}
-              on:change={event => {
-                UserStore.setDarkMode(event.detail);
-              }} />
-          </div>
-        </NItem>
+
+        {#if $BoardStore.boards.length == 0}
+          <NItem title={Lang.t('settings.enable-boards')}>
+            <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />
+            <div slot="right">
+              <NToggle
+                bind:value={$UserStore.meta.boardsEnabled}
+                on:change={methods.settingChange} />
+            </div>
+          </NItem>
+        {:else}
+          <NItem title={Lang.t('settings.enable-boards')} className="disabled">
+            <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />
+            <div slot="right">
+              <NToggle value={true} locked={true} />
+            </div>
+          </NItem>
+        {/if}
         <NItem title={Lang.t('settings.require-pin')}>
           <span slot="left" class="btn-icon zmdi text-primary zmdi-apps" />
           <div slot="right">
@@ -221,12 +233,10 @@
 
       </div>
 
-      <div class="n-pop my-3">
+      <div class="n-pop">
+        <NItem title={Lang.t('settings.data')} className="n-item-divider" />
         <NItem
-          title={Lang.t('settings.data')}
-          borderBottom
-          className="n-item-divider" />
-        <NItem
+          className="clickable"
           title={Lang.t('settings.nomie-api')}
           on:click={() => navigate('/api')}>
           <span
@@ -235,6 +245,7 @@
           <span slot="right" class="icon zmdi zmdi-chevron-right" />
         </NItem>
         <NItem
+          className="clickable"
           title={Lang.t('settings.import-from-backup')}
           on:click={() => {
             showImporter = true;
@@ -250,15 +261,25 @@
             bind:this={fileInput}
             on:change={methods.onImportFile} />
         </NItem>
+
         <NItem
+          className="clickable"
           title={Lang.t('settings.generate-backup')}
-          on:click={methods.export}>
+          to="/settings/export/backup">
           <span
             slot="left"
             class="btn-icon zmdi text-primary zmdi-cloud-upload" />
           <span slot="right" class="icon zmdi zmdi-chevron-right" />
         </NItem>
         <NItem
+          className="clickable"
+          title={Lang.t('settings.generate-csv')}
+          to="/settings/export/csv">
+          <span slot="left" class="btn-icon zmdi text-primary zmdi-grid" />
+          <span slot="right" class="icon zmdi zmdi-chevron-right" />
+        </NItem>
+        <NItem
+          className="clickable"
           title="{Lang.t('settings.find-and-replace')}..."
           on:click={() => {
             data.showMassEditor = true;
@@ -274,7 +295,7 @@
           show={data.showMassEditor} />
 
       </div>
-      <div class="n-pop my-3">
+      <div class="n-pop">
         <!-- Stoage List - this is stupid I couldn't find it-->
         <StorageManager />
         <!-- End Storage List-->
@@ -334,10 +355,9 @@
         {/if}
       </div>
 
-      <div class="n-pop my-3">
+      <div class="n-pop">
         <NItem
           title={Lang.t('settings.about-nomie')}
-          borderBottom
           className="n-item-divider" />
         <NItem title="Learn More">
           <span slot="right">
@@ -382,7 +402,7 @@
 
       </div>
 
-      <div class="n-pop my-3 pt-2">
+      <div class="n-pop pt-2">
         <NItem title={Lang.t('general.questions')}>
           <span slot="right">
             <a

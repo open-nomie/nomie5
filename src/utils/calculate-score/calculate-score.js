@@ -9,13 +9,14 @@ const isTrue = (condition, baseValue) => {
 	} else if (condition.is == 'lte') {
 		return baseValue <= condition.v;
 	} else if (condition.is == 'gte') {
-		return baseValue <= condition.v;
+		return baseValue >= condition.v;
 	} else if (condition.is == 'eq') {
 		return baseValue == condition.v;
 	}
 };
 
-export default (note, trackers) => {
+export default note => {
+	let trackers = window.$TrackerStore; // hack - fucking hell
 	let score = 0;
 	// Extract Trackers
 	let trackersInNotes = ExtractTrackers(note || '');

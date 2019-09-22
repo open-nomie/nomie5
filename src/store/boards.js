@@ -229,7 +229,6 @@ const boardsInit = () => {
 				}
 			});
 			if (index < data.boards.length - 1) {
-				console.log('Should go next', index, data.boards.length - 1);
 				let board = data.boards[index + 1];
 				if (board.id) {
 					methods.setActive(board.id);

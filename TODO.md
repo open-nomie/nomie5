@@ -1,6 +1,6 @@
 # TODO
 
-Generated Tue Sep 17 2019 8:02 pm
+Generated Sun Sep 22 2019 12:41 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -17,13 +17,15 @@ Generated Tue Sep 17 2019 8:02 pm
 - **src/scss/main.scss**
    - TODO: Look at making prefers-color-scheme work properly - when enabled, only buttons change
 - **src/routes/stats.svelte**
+   - Current hack - tap the emoji in the title - TODO: Make compare work again
+   - TODO: Needs to be refactored and cleaned up
+- **src/routes/stats-og.svelte**
    - TODO: Needs to be refactored and cleaned up
 - **src/routes/settings.svelte**
    - TODO: figure out how to handle a cancel in the interact prompt
 - **src/routes/history.svelte**
    - TODO: Have it react when the ledger change, not a hard refresh
    - TODO: refactor so it's clean and using the proper amount of Store vs local
-   - TODO: Look at making this refresh without doing the loading, it's pushing the page to the top and it's annoying
    - TODO: This is really sloppy - clean it up.
 - **src/routes/board-editor.svelte**
    - TODO: Make sorting work
@@ -32,6 +34,8 @@ Generated Tue Sep 17 2019 8:02 pm
    - TODO: Finish Goals
 - **src/modules/stats/stats.js**
    - TODO: Implement IgnoreZeros
+- **src/modules/export/csv.js**
+   - end TODO: See why end date is not working in query
 - **src/main.js**
    - TODO: handle anything required for service worker
 - **src/containers/tracker/input/keypad.svelte**

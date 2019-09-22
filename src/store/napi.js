@@ -90,7 +90,6 @@ const nomieApiInit = () => {
 			);
 		},
 		enableAutoImport() {
-			console.log('enabling');
 			update(base => {
 				base.autoImport = true;
 				localStorage.setItem('napi-auto', JSON.stringify(true));
@@ -98,7 +97,6 @@ const nomieApiInit = () => {
 			});
 		},
 		disableAutoImport() {
-			console.log('disabling');
 			update(base => {
 				base.autoImport = false;
 				localStorage.setItem('napi-auto', JSON.stringify(false));

@@ -66,10 +66,12 @@
 
 <nav id="app-tabs" class="">
   <div class="n-row mw-500px mx-auto">
+
     <Link to="/">
       <i class="zmdi zmdi-grid" />
       <label>{Lang.t('tabs.track')}</label>
     </Link>
+
     <Link to="/history">
       <i class="zmdi zmdi-calendar" />
       <label>{Lang.t('tabs.history')}</label>
@@ -86,5 +88,6 @@
       <i class="zmdi zmdi-menu" />
       <label>{Lang.t('tabs.settings')}</label>
     </Link>
+
   </div>
 </nav>

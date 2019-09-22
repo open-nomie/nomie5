@@ -53,20 +53,34 @@
 	margin: 0;
 }
 
+.pointer {
+	cursor: pointer;
+}
+
+.gap {
+	height: 16px;
+}
+
+// HACK! This isn't working in the component
+.library-modal .n-modal-body {
+	background-color: var(--color-bg) !important;
+}
+
 .delete-on-app {
-	transition: all 0.3s ease-in-out;
+	transition: all 0.5s ease-in-out;
 	&.deleted {
-		transition: all 0.3s ease-in-out;
+		transition: all 0.5s ease-in-out;
 		opacity: 0;
-		transform: scale(1.5);
+		top: 400px;
+		bottom: -400px;
 
 		.version {
 			bottom: 1000px;
 			opacity: 0;
 		}
 		svg {
-			transition: all 0.3s ease-in-out;
-			transform: scale(2);
+			// transition: all 0.3s ease-in-out;
+			// transform: scale(2);
 		}
 	}
 }
@@ -155,12 +169,24 @@ $night: #311f62;
 }
 
 .card {
+	$padding: 16px;
 	border-radius: 0.5rem;
 	display: flex;
 	flex-direction: column;
 	z-index: 120;
 	.card-body {
-		padding: 10px;
+		padding: $padding;
+		min-height: 0;
+	}
+	p,
+	.card-body {
+		font-size: 0.9rem;
+	}
+	.card-title {
+		$paddingTop: $padding * 0.7;
+		padding: $paddingTop $padding;
+		font-weight: bold;
+		font-size: 1.2rem;
 	}
 }
 
@@ -261,4 +287,42 @@ button {
 .wiggle-other {
 	animation: keyframes1 infinite 0.6s ease-in;
 	transform-origin: 30% 5%;
+}
+
+.badge {
+	height: 22px;
+	border-radius: 11px;
+	padding: 0 12px;
+	line-height: 22px;
+	background-color: var(--color-primary);
+	color: #000;
+	font-size: 11px;
+	border: var(--color-primary);
+
+	&.badge-lg {
+		font-size: 1rem;
+		height: 2rem;
+		border-radius: 1rem;
+		line-height: 2rem;
+		padding: 0 18px;
+	}
+	&.badge-md {
+		font-size: 0.8rem;
+		height: 1.6rem;
+		border-radius: 0.8rem;
+		line-height: 1.6rem;
+		padding: 0 14px;
+	}
+}
+.badge-primary {
+	background-color: var(--color-primary);
+	color: #fff;
+}
+.badge-blue {
+	background-color: var(--color-blue);
+	color: #fff;
+}
+.badge-green {
+	background-color: var(--color-green);
+	color: #fff;
 }

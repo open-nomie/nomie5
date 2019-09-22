@@ -17,6 +17,9 @@
 .text-white {
 	color: #fff;
 }
+.font-bold {
+	font-weight: bold;
+}
 .font-120 {
 	font-size: 1.2rem;
 }
@@ -40,7 +43,8 @@
 	font-size: 0.5rem !important;
 }
 .text-sm {
-	font-size: 0.7rem !important;
+	font-size: 0.81rem !important;
+	line-height: 0.98rem;
 }
 .text-md {
 	font-size: 1rem !important;

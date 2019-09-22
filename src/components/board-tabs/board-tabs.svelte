@@ -3,6 +3,7 @@
 
   // components
   import NHScroller from "../h-scroller/h-scroller.svelte";
+  import Elephant from "../elephant.svelte";
 
   export let boards = [];
   export let active = undefined;
@@ -42,7 +43,9 @@
       on:click={() => {
         dispatch('tabTap', board);
       }}>
-      {board.label}
+      {#if board.label == 'All'}
+        <Elephant size={18} />
+      {:else}{board.label}{/if}
     </button>
   {/each}
   <button

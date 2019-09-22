@@ -18,6 +18,7 @@
     right: 0;
     display: flex;
     justify-content: center;
+    pointer-events: none;
     .n-toast-panel {
       min-height: 36px;
       max-height: 36px;

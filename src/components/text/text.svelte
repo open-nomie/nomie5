@@ -10,11 +10,13 @@
 <style type="text/scss">
   .n-text {
     color: var(--color-inverse);
+    line-height: 100%;
     &.xs {
       font-size: 0.65rem;
     }
     &.sm {
       font-size: 0.85rem;
+      line-height: 0.98rem;
     }
     &.md {
       font-size: 1rem;

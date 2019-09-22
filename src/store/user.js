@@ -34,7 +34,7 @@ const userInit = () => {
 			username: null,
 		},
 		alwaysLocate: JSON.parse(localStorage.getItem(config.always_locate_key) || 'false'),
-		darkMode: JSON.parse(localStorage.getItem(config.dark_mode_key) || 'false'),
+		theme: localStorage.getItem(config.theme_key) || 'auto',
 		location: null,
 		autoImportApi: false,
 		meta: {
@@ -60,7 +60,6 @@ const userInit = () => {
 				// If no storage type selected
 				// they're not signed in - this should trigger onboarding
 				// in App.svelte
-				console.log('We do not have a Storage Type!');
 				document.querySelectorAll('.delete-on-app').forEach(d => {
 					d.classList.add('deleted');
 					setTimeout(() => {
@@ -199,15 +198,16 @@ const userInit = () => {
 			return d;
 		},
 		// Set Dark Mode for User
-		setDarkMode(bool) {
-			localStorage.setItem(config.dark_mode_key, JSON.stringify(bool));
-			if (bool) {
-				document.body.classList.add('dark');
-			} else {
-				document.body.classList.remove('dark');
-			}
+		setTheme(theme) {
+			theme = ['auto', 'light', 'dark'].indexOf(theme) > -1 ? theme : 'auto';
+			localStorage.setItem(config.theme_key, theme);
+			document.body.classList.remove(`theme-light`);
+			document.body.classList.remove(`theme-dark`);
+			document.body.classList.remove(`theme-auto`);
+			document.body.classList.add(`theme-${theme}`);
+
 			update(u => {
-				u.darkMode = bool;
+				u.theme = theme;
 				return u;
 			});
 		},

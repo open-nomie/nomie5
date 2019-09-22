@@ -7,7 +7,7 @@
    */
 
   // Svelte
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   // import { slide } from "svelte/transition";
 
   // Modules
@@ -25,7 +25,7 @@
   // Utils
   import Logger from "../utils/log/log";
   import time from "../utils/time/time";
-  import calculateScore from "../utils/calculate-score/calculate-score";
+  import CalculateScore from "../utils/calculate-score/calculate-score";
 
   // Stores
   import { Interact } from "../store/interact";
@@ -92,10 +92,7 @@
       }
     },
     calculateScore() {
-      $ActiveLogStore.score = calculateScore(
-        $ActiveLogStore.note,
-        $TrackerStore
-      );
+      $ActiveLogStore.score = CalculateScore($ActiveLogStore.note);
     },
     async logSave() {
       methods.calculateScore();

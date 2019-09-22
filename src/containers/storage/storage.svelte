@@ -78,12 +78,12 @@
     },
     deleteFile(file) {
       Interact.confirm(
-        "Holup! Delete ${file}?",
+        `Holup! Delete ${file}?`,
         `This can cause serious problems if you don't know what you're doing.`,
         "Yes, Delete"
       ).then(res => {
         if (res === true) {
-          Storage.deleteFile(file).then(() => {
+          Storage.delete(file).then(() => {
             setTimeout(() => {
               methods.initialize();
             });

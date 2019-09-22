@@ -7,7 +7,9 @@
  * For example: Alerts, Confirms, Prompts, Location Lookup, Location Showing, Editing Trackers
  */
 
+// Svelte
 import { writable } from 'svelte/store';
+import { navigate } from 'svelte-routing';
 
 // vendors
 import dayjs from 'dayjs';
@@ -27,6 +29,9 @@ const console = new Logger('✋ Interact');
 const interactInit = () => {
 	let getBaseState = () => {
 		return {
+			stats: {
+				activeTag: null,
+			},
 			alert: {
 				show: false,
 				title: null,
@@ -79,6 +84,7 @@ const interactInit = () => {
 				show: false,
 				placeholder: null,
 				message: null,
+				title: null,
 			},
 			trackerInput: {
 				show: false,
@@ -156,12 +162,22 @@ const interactInit = () => {
 				return s;
 			});
 		},
-
+		openStats(tag) {
+			update(d => {
+				d.stats.activeTag = tag;
+				return d;
+			});
+		},
+		closeStats() {
+			update(d => {
+				d.stats.activeTag = null;
+				return d;
+			});
+		},
 		openCamera(onSave) {
 			update(s => {
 				s.camera.show = true;
 				s.camera.onInteract = onSave;
-				console.log('open camera', s.camera);
 				return s;
 			});
 		},
@@ -239,12 +255,14 @@ const interactInit = () => {
 			return new Promise((resolve, reject) => {
 				let actions = {
 					updateContent() {
-						methods.prompt('Update Content', { value: log.note, valueType: 'textarea' }).then(content => {
-							log.note = content;
-							LedgerStore.updateLog(log).then(res => {
-								resolve({ action: 'updated' });
+						methods
+							.prompt('Update Content', null, { value: log.note, valueType: 'textarea' })
+							.then(content => {
+								log.note = content;
+								LedgerStore.updateLog(log).then(res => {
+									resolve({ action: 'updated' });
+								});
 							});
-						});
 					},
 					updateData() {
 						Interact.editLog(log).then(log => {
@@ -261,7 +279,7 @@ const interactInit = () => {
 						});
 					},
 					updateDate() {
-						Interact.prompt('New Date / Time', {
+						Interact.prompt('New Date / Time', null, {
 							valueType: 'datetime',
 							value: dayjs(new Date(log.end)).format('YYYY-MM-DDTHH:mm'),
 						}).then(date => {
@@ -429,15 +447,15 @@ const interactInit = () => {
 				return s;
 			});
 		},
-		prompt(message, options) {
+		prompt(title, message, options) {
 			return new Promise((resolve, reject) => {
 				setTimeout(() => {
 					update(s => {
 						s.prompt.show = true;
 						s.prompt.message = message;
+						s.prompt.title = title;
 						s.prompt.value = options.value || null;
 						s.prompt.valueType = options.valueType || 'text';
-						s.prompt.title = options.title || 'Prompt';
 						s.prompt.cancel = 'Cancel';
 						s.prompt.placeholder = options.placeholder || '';
 						s.prompt.onInteract = res => {
