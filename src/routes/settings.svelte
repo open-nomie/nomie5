@@ -52,7 +52,6 @@
       UserStore.redirectToSignIn();
     },
     closeMassEditor() {
-      console.log("closing");
       data.showMassEditor = false;
     },
     bookAge(date) {
@@ -176,7 +175,6 @@
               style="min-width:100px;width:100px"
               bind:value={$UserStore.theme}
               on:change={event => {
-                console.log('Change!', $UserStore.theme);
                 UserStore.setTheme($UserStore.theme);
               }}>
               <option value="auto">Auto</option>

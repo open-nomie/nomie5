@@ -40,22 +40,18 @@
   };
 
   $: if (tracker.type === "timer") {
-    console.log("Timer");
     tracker.uom = "timer";
     tracker.min = null;
     tracker.max = null;
   } else if (tracker.uom == "timer" && tracker.type != "timer") {
-    console.log("Number");
     tracker.uom = "num";
   } else if (tracker.type === "range" && isNaN(tracker.min)) {
-    console.log("Range");
     tracker.min = 1;
     tracker.max = 10;
   }
 
   const methods = {
     tracker_save() {
-      console.log("Saving Tag", tracker.tag);
       if (!tracker.tag || !tracker.label) {
         Interact.alert(
           "Missing Data",
@@ -212,7 +208,6 @@
                   name="min"
                   placeholder={Lang.t('general.min')}
                   on:focus={e => {
-                    console.log('E Focused', e.target);
                     e.target.select();
                   }}
                   bind:value={tracker.min} />

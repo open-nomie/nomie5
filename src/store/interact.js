@@ -178,7 +178,6 @@ const interactInit = () => {
 			update(s => {
 				s.camera.show = true;
 				s.camera.onInteract = onSave;
-				console.log('open camera', s.camera);
 				return s;
 			});
 		},

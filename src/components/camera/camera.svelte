@@ -51,7 +51,7 @@
       setTimeout(() => {
         domtoimage.toJpeg(imgWrapper, { quality: 0.85 }).then(dataUrl => {
           state.saving = false;
-          console.log("Image Captured", dataUrl.length);
+          
           dispatch("photo", dataUrl);
           setTimeout(() => {
             methods.close();

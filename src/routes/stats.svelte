@@ -324,7 +324,6 @@
       this.refresh();
     },
     getValueMap(rows) {
-      console.log("Get Value Map", rows);
       let valueMap = {};
       rows.forEach(row => {
         let dayKey = dayjs(row.end).format("YYYY-MM-DD");
@@ -377,13 +376,12 @@
     }
   };
 
-  onMount(() => {
-    // methods.load();
-    console.log("On Mount!");
-  });
-  onDestroy(() => {
-    console.log("On Destroy!");
-  });
+  // onMount(() => {
+
+  // });
+  // onDestroy(() => {
+
+  // });
 </script>
 
 <style lang="scss">

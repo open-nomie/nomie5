@@ -70,7 +70,6 @@
       });
     },
     toggleShowPrivateKey() {
-      console.log("Show toggle", state.showPrivateKey);
       state.showPrivateKey = !state.showPrivateKey;
     },
     register() {
@@ -125,7 +124,7 @@
       state.capturingId = log.id;
       log.end = new Date(log.date);
       let nLog = new NLog(log);
-      console.log("nLog", log, nLog);
+
       LedgerStore.saveLog(nLog).then(res => {
         state.hidden.push(log.id);
         state.hidden = state.hidden;
@@ -271,7 +270,6 @@
             <NToggle
               bind:value={autoImportAPI}
               on:change={event => {
-                console.log('Auto?', autoImportAPI);
                 if (autoImportAPI === true) {
                   NomieAPI.disableAutoImport();
                 } else {

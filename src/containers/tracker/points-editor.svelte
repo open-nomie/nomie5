@@ -50,13 +50,11 @@
       tracker.score_calc.push({ ...state.genesisCalc });
     },
     save() {
-      console.log("Saving", tracker);
       TrackerStore.saveTracker(tracker).then(() => {
         dispatch("save", tracker);
       });
     },
     removeCondition(index) {
-      console.log(`removing ${index}`);
       tracker.score_calc = tracker.score_calc.filter((row, ind) => {
         return ind !== index;
       });

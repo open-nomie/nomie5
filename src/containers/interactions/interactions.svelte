@@ -52,16 +52,13 @@
       });
     },
     getTracker(tag) {
-      console.log("Going to get tracker for " + tag);
-      console.log("Tracker", $TrackerStore[tag]);
-
       return $TrackerStore[tag] || new Tracker({ tag: tag });
     },
     onCameraPhoto(photo) {
       const path = `camera/${md5(photo)}`;
       // console.log(`Write payload ${payload.length} to ${path}`);
       Storage.put(path, photo).then(() => {
-        console.log("image Saved", path, $Interact.camera);
+        
         if ($Interact.camera.onInteract) {
           $Interact.camera.onInteract(path);
         }
@@ -352,7 +349,7 @@
     }}
     on:save={evt => {
       let log = evt.detail;
-      console.log('Log to Save', log);
+      
       LedgerStore.updateLog(log, $Interact.logEditor.log.end)
         .then(() => {
           Interact.dismissEditLog();

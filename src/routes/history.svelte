@@ -86,7 +86,6 @@
   $: if (state.date && state.date !== activeDate) {
     activeDate = state.date;
     isToday = new Date().toDateString() == state.date.toDate().toDateString();
-    console.log("state.date change", state.date);
   }
 
   // Filter logs for today
@@ -107,7 +106,6 @@
 
   // Dynamically assign book
   $: if ($LedgerStore.books[state.date.format("YYYY-MM")] && !searchMode) {
-    console.log("Ledger change");
     loading = true;
     book = $LedgerStore.books[state.date.format("YYYY-MM")] || [];
     logs = (book || [])
