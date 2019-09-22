@@ -5365,6 +5365,16 @@ select {
 body.scrolling .mini-map {
   opacity: 0.3; }
 
+.leaflet-bar a {
+  background-color: var(--color-solid) !important;
+  color: var(--color-inverse) !important;
+  border: solid 1px var(--color-faded-2) !important;
+  border-bottom: solid 1px var(--color-faded-2) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center;
+  padding: 0; }
+
 .mini-map {
   position: fixed;
   bottom: 70px;
@@ -5398,7 +5408,10 @@ body.scrolling .mini-map {
     border-radius: 25px;
     width: 50px;
     z-index: 2000;
-    bottom: 110px; }
+    bottom: 110px;
+    border: solid 1px var(--color-faded-2); }
+    .mini-map.opened .zmdi {
+      font-size: 1.4rem; }
   .mini-map::after {
     content: '';
     z-index: 20;

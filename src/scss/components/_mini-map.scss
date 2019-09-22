@@ -4,6 +4,17 @@ body.scrolling {
 	}
 }
 
+.leaflet-bar a {
+	background-color: var(--color-solid) !important;
+	color: var(--color-inverse) !important;
+	border: solid 1px var(--color-faded-2) !important;
+	border-bottom: solid 1px var(--color-faded-2) !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center;
+	padding: 0;
+}
+
 .mini-map {
 	position: fixed;
 	bottom: 70px;
@@ -46,6 +57,10 @@ body.scrolling {
 		width: 50px;
 		z-index: 2000;
 		bottom: 110px;
+		border: solid 1px var(--color-faded-2);
+		.zmdi {
+			font-size: 1.4rem;
+		}
 	}
 	&::after {
 		content: '';

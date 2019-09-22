@@ -96,7 +96,7 @@
     },
     renderMap() {
       let mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png`;
-      if (document.body.classList.contains("dark")) {
+      if (document.body.classList.contains("theme-dark")) {
         mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png`;
       }
       // Add Attribution

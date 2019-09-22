@@ -73,23 +73,10 @@
     tracker: null,
     initalized: false,
     tracker: null,
-    // year: {
-    //   mode: "chart"
-    // },
-    // month: {
-    //   mode: "chart"
-    // },
-    // day: {
-    //   mode: "list"
-    // },
-    // overview: {
-    //   mode: "time"
-    // },
     view: statStorage.view,
     subview: statStorage.subview,
     stats: null,
-    // Holder of the comparable tracker
-    // Current hack - tap the emoji in the title
+    // Current hack - tap the emoji in the title - TODO: Make compare work again
     compare: {
       tracker: null,
       stats: null
@@ -100,7 +87,6 @@
 
   // On First Load
   $: if ($Interact.stats.activeTag !== state.tag && $Interact.stats.activeTag) {
-    console.log("When me fire?");
     let tagViewSettings = statStorage[$Interact.stats.activeTag] || {
       view: "month",
       subview: "chart"
@@ -117,32 +103,6 @@
   } else if (!$Interact.stats.activeTag && state.tag) {
     state.date = dayjs();
   }
-
-  // $: if ($Interact.stats.activeTag && !state.ready) {
-  //   let stateUpdate = { ...state };
-
-  //   let tagViewSettings = statStorage[$Interact.stats.activeTag] || {
-  //     view: "month",
-  //     subview: "chart"
-  //   };
-
-  //   mainTag = $Interact.stats.activeTag;
-  //   state.tracker = $TrackerStore[mainTag] || new Tracker({ tag: mainTag });
-  //   methods.load();
-  //   state.view = tagViewSettings.view;
-  //   state.subview = tagViewSettings.subview;
-  //   state.ready = true;
-
-  //   console.log("Loading Stats");
-
-  //   setTimeout(() => {
-  //     domVisible = true;
-  //   }, 200);
-  // } else {
-  //   setTimeout(() => {
-  //     domVisible = false;
-  //   }, 300);
-  // }
 
   const methods = {
     getStats() {},
@@ -162,7 +122,6 @@
     },
     changeView(mode) {
       state.view = mode;
-
       if (
         state.view == "year" &&
         ["map", "chart", "grid"].indexOf(state.subview) == -1
@@ -170,7 +129,7 @@
         state.subview = "chart";
       } else if (
         state.view == "month" &&
-        ["map", "logs", "streak"].indexOf(state.subview) == -1
+        ["map", "logs", "streak", "grid", "chart"].indexOf(state.subview) == -1
       ) {
         state.subview = "chart";
       } else if (
