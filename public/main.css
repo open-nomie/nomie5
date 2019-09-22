@@ -5593,7 +5593,12 @@ body.scrolling .mini-map {
 .n-item-log.compact {
   margin: 2px !important; }
   .n-item-log.compact .time-row {
-    padding: 2px; }
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    height: 24px;
+    margin-top: 3px;
+    margin-bottom: -2px; }
     .n-item-log.compact .time-row .time {
       font-size: 0.8rem; }
   .n-item-log.compact .n-note-textualized {
