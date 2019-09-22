@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Sep 21 2019 8:12 pm
+Generated Sat Sep 21 2019 9:00 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -17,6 +17,7 @@ Generated Sat Sep 21 2019 8:12 pm
 - **src/scss/main.scss**
    - TODO: Look at making prefers-color-scheme work properly - when enabled, only buttons change
 - **src/routes/stats.svelte**
+   - Current hack - tap the emoji in the title - TODO: Make compare work again
    - TODO: Needs to be refactored and cleaned up
 - **src/routes/stats-og.svelte**
    - TODO: Needs to be refactored and cleaned up

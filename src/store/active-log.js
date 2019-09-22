@@ -4,7 +4,7 @@ import ExtractTrackers from '../utils/extract-trackers/extract-trackers';
 import Logger from '../utils/log/log';
 import Hooky from '../modules/hooks/hooks';
 import dayjs from 'dayjs';
-import calculateScore from '../utils/calculate-score/calculate-score';
+import CalculateScore from '../utils/calculate-score/calculate-score';
 const console = new Logger('✴️ store/active-log.js');
 
 const activeLogInit = () => {
@@ -46,8 +46,8 @@ const activeLogInit = () => {
 			});
 			return log;
 		},
-		calculateScore(note, trackers) {
-			return calculateScore(note, trackers);
+		calculateScore(note) {
+			return CalculateScore(note);
 		},
 		addTag(tag, value) {
 			update(b => {

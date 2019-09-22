@@ -63,6 +63,10 @@
   export let name = "nomie";
   export let url = "";
 
+  $: if (window && $TrackerStore) {
+    window.$TrackerStore = $TrackerStore;
+  }
+
   const methods = {
     routerChange(event) {
       console.log("Router Change", event);

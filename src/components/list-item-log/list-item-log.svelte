@@ -90,8 +90,8 @@
           dispatch('moreClick', displayLog);
         }}
         class="btn btn-sm btn-clear pl-2 pr-2 "
-        style="margin-left:10px; margin-right:-20px; margin-top:-10px;
-        font-size:32px; height:30px; line-height:30px;">
+        style="margin-left:10px; margin-right:-10px; margin-top:-10px;
+        font-size:32px; height:30px; min-width:40px; line-height:30px;">
         <i
           class="zmdi zmdi-more text-primary-bright"
           style="height:30px; line-height:30px;" />

@@ -15,7 +15,8 @@ const isTrue = (condition, baseValue) => {
 	}
 };
 
-export default (note, trackers) => {
+export default note => {
+	let trackers = window.$TrackerStore; // hack - fucking hell
 	let score = 0;
 	// Extract Trackers
 	let trackersInNotes = ExtractTrackers(note || '');
