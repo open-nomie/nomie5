@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Sep 21 2019 9:00 pm
+Generated Sat Sep 21 2019 9:22 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -26,7 +26,6 @@ Generated Sat Sep 21 2019 9:00 pm
 - **src/routes/history.svelte**
    - TODO: Have it react when the ledger change, not a hard refresh
    - TODO: refactor so it's clean and using the proper amount of Store vs local
-   - TODO: Look at making this refresh without doing the loading, it's pushing the page to the top and it's annoying
    - TODO: This is really sloppy - clean it up.
 - **src/routes/board-editor.svelte**
    - TODO: Make sorting work

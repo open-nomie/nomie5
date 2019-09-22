@@ -58,7 +58,11 @@
     searchMode: false
   };
 
-  $: searchMode = (state.searchTerm || "").length ? true : false;
+  // $: searchMode = (state.searchTerm || "").length ? true : false;
+  let searchMode = false;
+  $: if (state.searchTerm && !searchMode) {
+    searchMode = true;
+  }
 
   let logs = undefined; // holder of the logs
   let searchLogs = undefined; // hodler of searched logs
@@ -78,7 +82,9 @@
   let isToday = true;
 
   // If the date changes - check to see if it's still today
-  $: if (state.date) {
+  let activeDate;
+  $: if (state.date && state.date !== activeDate) {
+    activeDate = state.date;
     isToday = new Date().toDateString() == state.date.toDate().toDateString();
     console.log("state.date change", state.date);
   }
@@ -100,7 +106,8 @@
   };
 
   // Dynamically assign book
-  $: if ($LedgerStore.books[state.date.format("YYYY-MM")]) {
+  $: if ($LedgerStore.books[state.date.format("YYYY-MM")] && !searchMode) {
+    console.log("Ledger change");
     loading = true;
     book = $LedgerStore.books[state.date.format("YYYY-MM")] || [];
     logs = (book || [])
@@ -117,12 +124,7 @@
       .forEach(log => {
         dayScore = dayScore + parseInt(log.score);
       });
-
-    setTimeout(() => {
-      loading = false;
-      // TODO: Look at making this refresh without doing the loading, it's pushing the page to the top and it's annoying
-      // window.scrollTo(0, windowScrollPosition);
-    }, 1);
+    loading = false;
   }
 
   $: if (searchLogs || logs) {
@@ -553,12 +555,16 @@
             }} />
           <!-- Show the Log Item -->
         {/each}
-        <NItem on:click={methods.previousSearch}>
-          <center>
-            Search {state.date.subtract(1, 'year').format('YYYY')}...
-          </center>
-        </NItem>
-        <NItem className="item-divider compact" />
+        {#if !searchLogs.length}
+          <div class="gap" />
+          <NItem title="No Results for {state.date.format('YYYY')}" />
+        {/if}
+        <div class="gap" />
+        <NItem
+          className="text-primary"
+          on:click={methods.previousSearch}
+          title="Search {state.date.subtract(1, 'year').format('YYYY')}..." />
+        <div class="gap" />
       {:else if searchMode && !searchLogs}
         <div class="empty-notice">Search {state.date.format('YYYY')}</div>
       {/if}
