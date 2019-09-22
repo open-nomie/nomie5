@@ -9,7 +9,7 @@ const isTrue = (condition, baseValue) => {
 	} else if (condition.is == 'lte') {
 		return baseValue <= condition.v;
 	} else if (condition.is == 'gte') {
-		return baseValue <= condition.v;
+		return baseValue >= condition.v;
 	} else if (condition.is == 'eq') {
 		return baseValue == condition.v;
 	}

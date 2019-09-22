@@ -6,7 +6,7 @@
 
 {#if buttons.length}
   <div class="btn-group w-100">
-    {#each buttons as button, index (button.label + button.icon + index)}
+    {#each buttons as button, index (button.label + button.icon)}
       <button
         class="btn {button.active ? 'active' : ''} btn-{size}"
         on:click={button.click}>
