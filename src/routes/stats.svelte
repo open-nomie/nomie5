@@ -389,7 +389,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
   .border-bottom {
     border-bottom: solid 1px var(--color-faded-1) !important;
@@ -684,8 +684,7 @@
             on:tap={event => {
               let newDate;
               if (state.view === 'year') {
-                newDate = state.date.toDate().setMonth(event.detail.index);
-                state.view = 'month';
+                newDate = state.date.toDate().setMonth(event.detail.index + 1);
               } else if (state.view == 'month') {
                 newDate = state.date.toDate().setDate(event.detail.index + 1);
               } else if (state.view == 'day') {

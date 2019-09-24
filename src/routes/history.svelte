@@ -48,7 +48,29 @@
   let datePicker;
   let searchInput;
 
-  const state = $HistoryPage; // Assign State to compiled history page
+  const state = {
+    date: dayjs(new Date()),
+    time_format: "YYYY-MM",
+    logs: null,
+    trackers: {},
+    ledger: null,
+    searchTerm: "",
+    searchResults: null,
+    searchMode: false,
+    selected: {},
+    selectCount: 0,
+    editMode: false,
+    showDatePicker: false,
+    location: {
+      name: null,
+      lat: null,
+      lng: null
+    },
+    locations: [],
+    loading: true,
+    showAllLocations: false,
+    searchYear: dayjs().format("YYYY")
+  }; // Assign State to compiled history page
 
   let refreshing = false;
 
