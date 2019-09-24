@@ -63,11 +63,17 @@
 </script>
 
 <style lang="scss">
+  ::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+    display: none;
+  }
   .n-hscroller {
     white-space: nowrap;
     overflow-x: scroll;
     overflow-y: hidden;
     scroll-behavior: smooth;
+    min-height: 40px;
   }
   .n-hscroller .wrapper {
     display: flex;

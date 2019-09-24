@@ -79,6 +79,7 @@ export default {
 			'board-input-placeholder': 'Tab name or Emoji 👍',
 		},
 		settings: {
+			language: 'Language',
 			'sign-out': 'Sign Out',
 			'enable-boards': 'Tracker Board Tabs',
 			settings: 'Settings',

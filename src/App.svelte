@@ -68,9 +68,7 @@
   }
 
   const methods = {
-    routerChange(event) {
-      console.log("Router Change", event);
-    },
+    routerChange(event) {},
     hideSplashScreen() {
       document.querySelectorAll(".delete-on-app").forEach(d => {
         d.classList.add("deleted");

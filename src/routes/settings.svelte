@@ -184,6 +184,7 @@
 
           </div>
         </NItem>
+        <!-- Use Location -->
         <NItem title={Lang.t('settings.use-location')}>
           <span
             slot="left"
@@ -196,7 +197,7 @@
               }} />
           </div>
         </NItem>
-
+        <!-- Tracker Board Tabs -->
         {#if $BoardStore.boards.length == 0}
           <NItem title={Lang.t('settings.enable-boards')}>
             <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />
@@ -214,6 +215,7 @@
             </div>
           </NItem>
         {/if}
+        <!-- Pin Code -->
         <NItem title={Lang.t('settings.require-pin')}>
           <span slot="left" class="btn-icon zmdi text-primary zmdi-apps" />
           <div slot="right">
@@ -222,12 +224,31 @@
               on:change={methods.lockToggle} />
           </div>
         </NItem>
+        <!-- 24 Hour -->
         <NItem title={Lang.t('settings.24-hour-clock')}>
           <span slot="left" class="btn-icon zmdi text-primary zmdi-time" />
           <div slot="right">
             <NToggle
               bind:value={$UserStore.meta.is24Hour}
               on:change={methods.settingChange} />
+          </div>
+        </NItem>
+        <!-- Language -->
+        <NItem title={Lang.t('settings.language')}>
+          <span slot="left" class="btn-icon zmdi text-primary zmdi-translate" />
+          <div slot="right">
+            <select
+              class="form-control"
+              style="min-width:100px;width:100px"
+              bind:value={$Lang.lang}
+              on:change={event => {
+                Lang.setLang($Lang.lang);
+              }}>
+              {#each Lang.getLangs() as lang}
+                <option value={lang.key}>{lang.label}</option>
+              {/each}
+            </select>
+
           </div>
         </NItem>
 

@@ -12,7 +12,7 @@ import Logger from '../utils/log/log';
 // Vendors
 import i18next from 'i18next';
 
-import enUS from '../lang/en';
+import langs from '../lang/lang';
 // import testLang from '../lang/test';
 
 // Stores
@@ -23,20 +23,39 @@ const console = new Logger('🚦 Lang');
 
 const LangInit = () => {
 	let base = {
-		lang: 'en',
+		lang: localStorage.getItem('n4-lang') || 'en',
 	};
 	const { update, subscribe, set } = writable(base);
 
 	i18next.init({
 		lng: base.lang,
+		fallbackLng: 'en',
 		resources: {
-			en: enUS,
+			en: langs['en'].lang,
+			zhcn: langs['zhcn'].lang,
 		},
 	});
 
 	const methods = {
 		t(str, payload) {
 			return i18next.t(str, payload);
+		},
+		getLangs() {
+			return Object.keys(langs).map(key => {
+				let lang = langs[key];
+				lang.key = key;
+				return lang;
+			});
+		},
+		setLang(langKey) {
+			update(d => {
+				d.lang = langKey;
+				return d;
+			});
+			localStorage.setItem('n4-lang', langKey);
+			setTimeout(() => {
+				window.location.reload();
+			}, 10);
 		},
 	};
 

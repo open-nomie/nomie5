@@ -170,7 +170,6 @@
       state.location.lng = null;
     },
     refresh() {
-      console.log("Refreshing");
       refreshing = true;
       setTimeout(() => {
         refreshing = false;
