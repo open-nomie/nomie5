@@ -462,7 +462,7 @@
             }}>
 
             <i
-              class="zmdi text-white {data.showLocations ? 'zmdi-close' : 'zmdi-menu'}" />
+              class="zmdi text-primary {data.showLocations ? 'zmdi-close' : 'zmdi-menu'}" />
           </button>
         </div>
 
