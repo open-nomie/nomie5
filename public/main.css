@@ -5515,14 +5515,16 @@ body.scrolling .mini-map {
     padding-left: 16px;
     text-align: right;
     display: flex;
-    flex-wrap: nowrap;
-    flex-shrink: 0; }
+    flex-wrap: nowrap; }
+  .n-item .main {
+    flex-grow: 1;
+    flex-shrink: 1; }
   .n-item .left,
   .n-item .right {
-    flex-grow: 0;
-    flex-shrink: 0;
     color: var(--color-inverse-2);
-    font-size: 0.9rem; }
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    flex-grow: 0; }
   .n-item .right .btn-clear {
     margin-right: -10px !important; }
   .n-item .right .zmdi .icon {

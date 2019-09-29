@@ -275,6 +275,7 @@
 
 <style lang="scss">
   $locationHeight: 40px;
+
   .n-map-container {
     background-color: var(--color-solid);
     position: relative;
@@ -319,6 +320,9 @@
     }
 
     &.expanded {
+      .row {
+        min-height: 50px;
+      }
       z-index: 2001;
       max-height: 300px;
       flex-grow: 1;
@@ -331,7 +335,11 @@
         overflow: scroll;
         .btn.btn-icon {
           flex-shrink: 0;
-          min-width: 40px !important;
+          min-width: 46px !important;
+          margin: 0 !important;
+        }
+        .right {
+          margin-left: 0px;
         }
       }
     }
@@ -367,7 +375,7 @@
     pointer-events: none;
     position: absolute;
     top: 0;
-    bottom: 0;
+    bottom: $locationHeight;
     left: 0;
     right: 0;
     display: flex;
@@ -460,21 +468,18 @@
       {#if data.showLocations}
         <div class="locations list">
           {#each $Locations as location}
-            <Item className="compact">
-              <div slot="left" class="row">
-                <button
-                  slot="left"
-                  class="btn btn-sm btn-primary mr-2"
-                  on:click={() => {
-                    methods.setLocation(location);
-                  }}>
-                  Go
-                </button>
-                {location.name}
-              </div>
+            <Item className="compact" title={location.name}>
+              <button
+                slot="left"
+                class="btn btn-sm btn-primary"
+                on:click={() => {
+                  methods.setLocation(location);
+                }}>
+                Go
+              </button>
               <button
                 slot="right"
-                class="btn btn-clear btn-icon mr-2"
+                class="btn btn-clear btn-icon"
                 on:click={() => {
                   methods.editName(location);
                 }}>
