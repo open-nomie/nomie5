@@ -58,7 +58,6 @@
       const path = `camera/${md5(photo)}`;
       // console.log(`Write payload ${payload.length} to ${path}`);
       Storage.put(path, photo).then(() => {
-        
         if ($Interact.camera.onInteract) {
           $Interact.camera.onInteract(path);
         }
@@ -145,6 +144,7 @@
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
+      on:focus={this.select}
       type="number"
       class="form-control mt-2" />
   {:else if $Interact.prompt.valueType == 'datetime'}
@@ -152,6 +152,7 @@
       name="value"
       title="input value"
       bind:this={promptInput}
+      on:focus={this.select}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
       type="datetime-local"
@@ -349,7 +350,6 @@
     }}
     on:save={evt => {
       let log = evt.detail;
-      
       LedgerStore.updateLog(log, $Interact.logEditor.log.end)
         .then(() => {
           Interact.dismissEditLog();

@@ -71,10 +71,13 @@
         return res.json();
       })
       .then(payload => {
-        if (payload.version != appVersion && appVersion !== "APP_VERSION") {
-          let conf = confirm("A new update has been released. Update?");
-          if (conf === true) {
-            window.location.href = window.location.href;
+        if (payload.version != appVersion) {
+          // stop localhost from getting hit.
+          if (appVersion !== `APP${"_"}VERSION`) {
+            let conf = confirm("A new update has been released. Update?");
+            if (conf === true) {
+              window.location.href = window.location.href;
+            }
           }
         }
       });

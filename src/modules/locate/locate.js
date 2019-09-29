@@ -7,7 +7,7 @@ const LOC_CACHE_KEY = 'loc-cache';
 export default () => {
 	let getRealLocation = () => {
 		return new Promise((resolve, reject) => {
-			let lookup = () => {
+			try {
 				navigator.geolocation.getCurrentPosition(
 					pos => {
 						let payload = {
@@ -27,19 +27,9 @@ export default () => {
 						timeout: 6000,
 					}
 				);
-			};
-			// Query the permissions - hoping this stops IOS from asking all the damn time.
-			navigator.permissions.query({ name: 'geolocation' }).then(result => {
-				if (result.state == 'granted') {
-					console.log('accees', result.state);
-					lookup();
-				} else if (result.state == 'prompt') {
-					console.log('accees', result.state);
-					lookup();
-				} else if (result.state == 'denied') {
-					alert('Access to your device location has been denied');
-				}
-			});
+			} catch (e) {
+				reject(e);
+			}
 		});
 	};
 

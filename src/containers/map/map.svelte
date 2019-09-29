@@ -52,12 +52,17 @@
 
   // }
 
-  $: if (!locations.length && picker && MAP) {
+  $: if (picker && MAP) {
+    console.log("Need to locate");
     locate().then(location => {
-      locations.push({
-        lat: location.latitude,
-        lng: location.longitude
-      });
+      locations
+        .push({
+          lat: location.latitude,
+          lng: location.longitude
+        })
+        .catch(e => {
+          Interact.toast(e.message, { type: error });
+        });
       // data.lat = location.latitude;
       // data.lng = location.longitutde;
       MAP.setView(L.latLng(location.latitude, location.longitude), 12);
@@ -295,6 +300,14 @@
     }
   }
 
+  :global(.n-map-container .location-name .n-item .right .btn) {
+    margin-left: 6px;
+    min-width: 45px;
+  }
+  :global(.n-map-container .location-name .n-item .right) {
+    flex-shrink: 0;
+    width: 100px;
+  }
   .n-map-container .location-name {
     position: absolute;
     bottom: 0px;
@@ -332,12 +345,12 @@
       padding: 0;
       .locations.list {
         border-top: solid 1px var(--color-faded);
-        overflow: scroll;
-        .btn.btn-icon {
-          flex-shrink: 0;
-          min-width: 46px !important;
-          margin: 0 !important;
-        }
+        overflow-y: scroll;
+
+        display: flex;
+        flex-direction: column;
+        align-content: stretch;
+
         .right {
           margin-left: 0px;
         }
@@ -448,7 +461,8 @@
               data.showLocations = !data.showLocations;
             }}>
 
-            <i class="zmdi {data.showLocations ? 'zmdi-close' : 'zmdi-menu'}" />
+            <i
+              class="zmdi text-white {data.showLocations ? 'zmdi-close' : 'zmdi-menu'}" />
           </button>
         </div>
 
@@ -468,15 +482,12 @@
       {#if data.showLocations}
         <div class="locations list">
           {#each $Locations as location}
-            <Item className="compact" title={location.name}>
-              <button
-                slot="left"
-                class="btn btn-sm btn-primary"
-                on:click={() => {
-                  methods.setLocation(location);
-                }}>
-                Go
-              </button>
+            <Item
+              className="compact text-primary"
+              title={location.name}
+              on:click={() => {
+                methods.setLocation(location);
+              }}>
               <button
                 slot="right"
                 class="btn btn-clear btn-icon"
@@ -495,6 +506,7 @@
               </button>
             </Item>
           {/each}
+          <div class="gap" />
         </div>
       {/if}
 
