@@ -114,7 +114,7 @@
         document.body.classList.add(`theme-${theme}`);
       }
       methods.hideSplashScreen();
-      checkForUpdates();
+      //checkForUpdates();
     }
   };
 
