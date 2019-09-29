@@ -31,6 +31,11 @@ const LocationsInit = () => {
 	const { update, subscribe, set } = writable([]);
 
 	const methods = {
+		/**
+		 * Save a single location
+		 * it will update or insert if ifs new
+		 * @param {Location} location
+		 */
 		save(location) {
 			return new Promise((resolve, reject) => {
 				location = new Location(location);
@@ -59,9 +64,9 @@ const LocationsInit = () => {
 		},
 	};
 
+	// Get storage
 	Storage.onReady(() => {
 		Storage.get(`${config.data_root}/locations.json`).then(locations => {
-			console.log('Getting location data', locations);
 			update(d => locations || []);
 		});
 	});

@@ -43,17 +43,14 @@
     showLocations: false
   };
 
-  let lastKnownCount = 0;
+  // $: if (locations) {
+  // setTimeout(() => {
+  //   methods.init().then(() => {
+  //     methods.renderMap();
+  //   });
+  // });
 
-  $: if (locations) {
-    console.log("$if(locations) fired");
-    // setTimeout(() => {
-    //   methods.init().then(() => {
-    //     methods.renderMap();
-    //   });
-    // });
-    lastKnownCount = location.length;
-  }
+  // }
 
   $: if (!locations.length && picker && MAP) {
     locate().then(location => {
@@ -140,7 +137,6 @@
      * Save the current Location
      */
     saveLocation() {
-      console.log("Active location", data);
       Locations.save(
         new Location({
           name: data.locationName,
@@ -464,15 +460,18 @@
       {#if data.showLocations}
         <div class="locations list">
           {#each $Locations as location}
-            <Item title={location.name} className="compact">
-              <button
-                slot="left"
-                class="btn btn-sm btn-primary"
-                on:click={() => {
-                  methods.setLocation(location);
-                }}>
-                Go
-              </button>
+            <Item className="compact">
+              <div slot="left" class="row">
+                <button
+                  slot="left"
+                  class="btn btn-sm btn-primary mr-2"
+                  on:click={() => {
+                    methods.setLocation(location);
+                  }}>
+                  Go
+                </button>
+                {location.name}
+              </div>
               <button
                 slot="right"
                 class="btn btn-clear btn-icon mr-2"

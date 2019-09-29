@@ -71,7 +71,7 @@
         return res.json();
       })
       .then(payload => {
-        if (payload.version != appVersion) {
+        if (payload.version != appVersion && appVersion !== "APP_VERSION") {
           let conf = confirm("A new update has been released. Update?");
           if (conf === true) {
             window.location.href = window.location.href;
