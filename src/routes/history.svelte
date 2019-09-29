@@ -326,6 +326,7 @@
     if ((state.searchTerm || "").length > 1 && !searchLogs) {
       methods.refreshSearch();
     }
+    window.scrollTo(0, 0);
   });
 
   /**

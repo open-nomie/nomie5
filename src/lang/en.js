@@ -11,6 +11,8 @@ export default {
 			min: 'Min',
 			max: 'Max',
 			save: 'Save',
+			saved: 'Saved',
+			delete: 'Delete',
 			cancel: 'Cancel',
 			show: 'Show',
 			done: 'Done',

@@ -22,6 +22,10 @@ body.scrolling {
 	height: 100px;
 	width: 100px;
 
+	.location-name {
+		display: none !important;
+	}
+
 	@media (max-width: 400px) {
 		height: 80px;
 		width: 80px;

@@ -60,7 +60,7 @@
   {/if}
   <div class="main">
     {#if title}
-      <NText size="md" medium>{title}</NText>
+      <NText size="md" tag="div" medium>{title}</NText>
     {/if}
     {#if description}
       <p class="description">{description}</p>

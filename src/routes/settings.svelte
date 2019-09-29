@@ -1,6 +1,7 @@
 <script>
   //Vendors
   import { navigate, Link } from "svelte-routing";
+  import { onMount } from "svelte";
 
   // Components
   import NItem from "../components/list-item/list-item.svelte";
@@ -132,6 +133,9 @@
   // });
 
   const setTimeout = setTimeout;
+  onMount(() => {
+    window.scrollTo(0, 0);
+  });
 </script>
 
 <NToolbar pinTop>

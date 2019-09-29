@@ -5386,6 +5386,8 @@ body.scrolling .mini-map {
   background-color: var(--color-solid);
   overflow: hidden;
   transition: all 0.2s ease-in-out; }
+  .mini-map .location-name {
+    display: none !important; }
   @media (max-width: 400px) {
     .mini-map {
       height: 80px;
@@ -5436,17 +5438,16 @@ body.scrolling .mini-map {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: calc(100vh - 180px);
   width: 100%;
+  max-width: 90vw;
   flex-grow: 1;
   flex-shrink: 1;
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 1rem;
+  font-weight: 500;
   opacity: 0.4;
   text-align: center;
   line-height: 130%;
-  min-height: 80vh;
-  max-width: 80vw;
   margin: 0 auto;
   color: var(--color-inverse-2); }
   .empty-notice.sm {
@@ -5496,6 +5497,9 @@ body.scrolling .mini-map {
     min-height: 56px; }
   .n-item.compact {
     min-height: 20px; }
+    .n-item.compact .n-text.md {
+      font-size: 0.8rem;
+      line-height: 1rem; }
   .n-item.border, .n-item[border] {
     border: none !important;
     box-shadow: 0px 3px 4px -2px rgba(0, 0, 0, 0.03);
@@ -5509,7 +5513,10 @@ body.scrolling .mini-map {
     padding-right: 16px; }
   .n-item .right {
     padding-left: 16px;
-    text-align: right; }
+    text-align: right;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-shrink: 0; }
   .n-item .left,
   .n-item .right {
     flex-grow: 0;
