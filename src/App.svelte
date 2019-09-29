@@ -47,6 +47,7 @@
   // Day Check - every 30 minutes
   // Lets see if the day changed since last it was opened.
   const today = new Date().toDateString();
+  const appVersion = "APP_VERSION";
   const confirming = false;
   const dayCheck = setInterval(() => {
     // Fire off a notice if it's not today anymore - and we haven't
@@ -54,10 +55,30 @@
     if (today !== new Date().toDateString() && !confirming) {
       confirming = confirm("A new day has begun, you should refresh Nomie.");
       if (confirming) {
-        window.location.reload();
+        window.location.href = window.location.href;
       }
     }
   }, 1000 * 60 * 30);
+
+  /**
+   * Check for App Updates
+   * Will hit the version.json and compare it to the known
+   * version
+   **/
+  const checkForUpdates = () => {
+    fetch("./version.json")
+      .then(res => {
+        return res.json();
+      })
+      .then(payload => {
+        if (payload.version != appVersion) {
+          let conf = confirm("A new update has been released. Update?");
+          if (conf === true) {
+            window.location.href = window.location.href;
+          }
+        }
+      });
+  };
 
   // Not sure if theese are needed
   export let name = "nomie";
@@ -90,6 +111,7 @@
         document.body.classList.add(`theme-${theme}`);
       }
       methods.hideSplashScreen();
+      checkForUpdates();
     }
   };
 

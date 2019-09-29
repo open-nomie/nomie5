@@ -67,12 +67,12 @@
 }
 
 .delete-on-app {
-	transition: all 0.5s ease-in-out;
+	transition: all 1s ease-in-out;
+
 	&.deleted {
 		transition: all 0.5s ease-in-out;
 		opacity: 0;
-		top: 400px;
-		bottom: -400px;
+		transform: scale(1.7);
 
 		.version {
 			bottom: 1000px;
@@ -86,9 +86,6 @@
 }
 
 .loading-screen {
-	background-color: $primaryBright;
-	background-size: cover;
-	background-position: center;
 	position: fixed;
 	top: 0;
 	bottom: 0;
@@ -99,9 +96,37 @@
 	align-items: center;
 	justify-content: center;
 
-	svg {
-		transition: all 0.3s ease-in-out;
+	&.deleted {
 	}
+
+	&:before {
+		transition: all 0.5s ease-in-out;
+		content: '';
+		background-color: #fff;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 300;
+	}
+	&:after {
+		transition: all 0.5s ease-in-out;
+		content: '';
+		background-image: url(/images/nomie-splash.svg);
+		background-size: cover;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 400;
+		background-position: center;
+	}
+
+	// svg {
+	// 	transition: all 0.3s ease-in-out;
+	// }
 }
 .version {
 	position: absolute;
