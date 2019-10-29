@@ -117,8 +117,13 @@ const ledgerInit = () => {
 					trackers[tag] = trackers[tag] || {
 						values: [],
 						tag: tag,
+						hours: []
 					};
 					trackers[tag].values.push(log.trackers[tag].value);
+					let hour = parseInt(dayjs(log.end).format('H'));
+					 if(trackers[tag].hours.indexOf(hour) == -1) {
+						 trackers[tag].hours.push(hour);
+					 }
 				});
 			});
 			return trackers;

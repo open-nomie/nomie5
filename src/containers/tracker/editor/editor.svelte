@@ -94,7 +94,10 @@
     },
     labelChanged(event) {
       if (tracker._dirty) {
-        let tag = event.target.value.replace(/[^A-Z0-9]/gi, "_").toLowerCase();
+        let tag = event.target.value
+          .trim()
+          .replace(/[^A-Z0-9]/gi, "_")
+          .toLowerCase();
         tracker.tag = tag;
       }
     },

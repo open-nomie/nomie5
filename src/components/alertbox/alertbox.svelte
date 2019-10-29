@@ -76,6 +76,10 @@
       justify-content: stretch;
       align-content: stretch;
       color: var(--color-inverse-2);
+      .card-title {
+        line-height: 115%;
+        color: var(--color-inverse);
+      }
       .card-body {
         flex-grow: 1;
         flex-shrink: 1;

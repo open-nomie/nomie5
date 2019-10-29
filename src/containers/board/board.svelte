@@ -323,6 +323,14 @@
       }
       return value ? NomieUOM.format(value, tracker.uom) : null;
     },
+    getHoursUsed(tracker) {
+      console.log("Getting used hours");
+      if ($LedgerStore.today.hasOwnProperty(tracker.tag)) {
+        return $LedgerStore.today[tracker.tag].hours;
+      } else {
+        return [];
+      }
+    },
 
     /**
      * Sho Tracker Options
@@ -536,6 +544,7 @@
             <NTrackerButton
               {tracker}
               value={methods.getTrackerValue(tracker)}
+              hoursUsed={methods.getHoursUsed(tracker)}
               on:click={() => {
                 methods.trackerTapped(tracker);
               }}

@@ -48,7 +48,8 @@
   // Lets see if the day changed since last it was opened.
   const today = new Date().toDateString();
   const appVersion = "APP_VERSION";
-  const confirming = false;
+
+  let confirming = false;
   const dayCheck = setInterval(() => {
     // Fire off a notice if it's not today anymore - and we haven't
     // already fired off the confirm prompt // stops the double firing.

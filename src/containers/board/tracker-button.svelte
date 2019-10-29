@@ -6,6 +6,7 @@
 
   // modules
   import Tracker from "../../modules/tracker/tracker";
+  import TimeBalls from "../../components/time-balls/time-balls.svelte";
 
   // Components
   import Counter from "../../components/counter/counter.svelte";
@@ -17,6 +18,7 @@
   export let id = undefined;
   export let className = undefined;
   export let disabled = undefined;
+  export let hoursUsed = [];
 
   // Define Dispatch
   const dispatch = createEventDispatcher();
@@ -66,14 +68,26 @@
     outline: none;
     transition: all 0.2s ease-in-out;
 
+    .emoji {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
     &.saving {
       transition: all 0.2s ease-in-out;
       border: solid 2px var(--color-primary-bright);
     }
 
     @include media-breakpoint-up(md) {
-      width: 7.8rem;
-      height: 7.8rem;
+      width: 7.9rem;
+      height: 7.9rem;
       .emoji {
         font-size: 3.4rem;
         font-style: normal;
@@ -109,11 +123,12 @@
     .one-tap {
       position: absolute;
       height: 4px;
-      left: 20px;
-      right: 20px;
-      bottom: 2px;
       border-radius: 2px;
       background-color: var(--color-faded);
+      bottom: 2px;
+      left: 12%;
+      right: 12%;
+      z-index: 0;
     }
     header {
       display: flex;
@@ -142,7 +157,7 @@
     }
     footer {
       position: absolute;
-      bottom: 0.5rem;
+      bottom: 13px;
       left: 4px;
       right: 4px;
       text-align: center;
@@ -158,6 +173,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 2;
+    }
+    .balls {
+      position: absolute;
+      bottom: 2px;
+      left: 12%;
+      right: 12%;
+      z-index: 2;
     }
   }
 </style>
@@ -190,5 +213,10 @@
   <footer>{tracker.label}</footer>
   {#if tracker.one_tap}
     <div class="one-tap" />
+  {/if}
+  {#if hoursUsed.length}
+    <div class="balls">
+      <TimeBalls hours={hoursUsed} />
+    </div>
   {/if}
 </button>
