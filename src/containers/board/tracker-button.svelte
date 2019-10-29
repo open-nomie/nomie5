@@ -104,8 +104,8 @@
     }
 
     @include media-breakpoint-down(sm) {
-      width: 5.7rem;
-      height: 5.7rem;
+      width: 6rem;
+      height: 6rem;
       margin: 6px 3px !important;
 
       .emoji {

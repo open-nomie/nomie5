@@ -78,7 +78,26 @@
       $ActiveLogStore.end = null;
       state.showCustomDate = false;
     },
-
+    toggleCustomDate() {
+      if (state.date) {
+        // They clicked it - solets clear it
+        state.date = null;
+      } else {
+        state.showCustomDate = true;
+      }
+    },
+    toggleCustomLocation() {
+      if ($ActiveLogStore.lat) {
+        $ActiveLogStore.lat = null;
+        $ActiveLogStore.lng = null;
+      } else {
+        Interact.pickLocation().then(location => {
+          $ActiveLogStore.lat = location.lat;
+          $ActiveLogStore.lng = location.lng;
+          $ActiveLogStore.location = location.name;
+        });
+      }
+    },
     checkTextareaSize() {
       if (textarea) {
         let height = (textarea || {}).scrollHeight || 40;
@@ -270,6 +289,15 @@
   #note-capture {
     background-color: var(--color-solid);
   }
+
+  .post-score {
+    position: absolute;
+    top: -10px;
+    background-color: var(--color-solid);
+    box-shadow: var(--box-shadow);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
   .capture-log {
     border-top: solid 1px rgba(0, 0, 0, 0.1);
     padding: 10px;
@@ -277,7 +305,6 @@
     border-top: solid 1px var(--color-solid);
     box-shadow: 0px -2px 12px -4px rgba(0, 0, 0, 0.094);
     position: relative;
-    padding-bottom: 0;
   }
 
   .more-options {
@@ -394,7 +421,8 @@
   }
 
   .save-button {
-    padding: 0 10px;
+    padding: 0;
+    width: 30px;
     height: 30px;
     border-radius: 15px;
     display: flex;
@@ -425,15 +453,14 @@
     transition: all 0.2s ease-in-out;
 
     .save-button {
-      opacity: 0;
-      transition: all 0.2s ease-in-out;
+      display: none;
     }
 
     &.populated {
       background-color: rgba($green, 0.2);
       box-sizing: border-box;
       .save-button {
-        opacity: 1;
+        display: inline-flex;
       }
     }
 
@@ -473,22 +500,36 @@
           placeholder={Lang.t('general.whats-up')}
           on:keypress={methods.keyPress}
           on:paste={methods.keyPress} />
+
+        <button
+          class="btn btn-clear btn-icon zmdi zmdi-time px-1 {state.date ? 'text-green' : ''}"
+          on:click={methods.toggleCustomDate} />
+        <button
+          class="btn btn-clear btn-icon zmdi zmdi-my-location px-1 {$ActiveLogStore.lat ? 'text-green' : ''}
+          mr-1"
+          on:click={methods.toggleCustomLocation} />
+
         {#if !saving}
           <button class="save-button" on:click={methods.logSave}>
-            {Lang.t('general.save')}
+            <i class="zmdi zmdi-long-arrow-up" />
           </button>
         {:else}
           <button class="save-button">•••</button>
         {/if}
       </div>
     </div>
+
+    {#if $ActiveLogStore.score}
+      <div class="post-score">
+        <NPoints points={$ActiveLogStore.score} />
+      </div>
+    {/if}
+
   </div>
   <div class="more-options">
 
-    <NCell gap={1} className="py-2">
+    <!-- <NCell gap={1} className="py-2">
       <div class="filler" />
-
-      <!-- Date Button -->
       {#if !state.date}
         <button
           class="btn btn-sm mr-1"
@@ -506,11 +547,10 @@
           }}>
           <i class="zmdi zmdi-minus-circle text-white" />
           {Lang.t('general.date')}
-          <!-- {dayjs(state.date).format(`YYYY/MM/DD ${$UserStore.meta.is24Hour ? 'HH:mm' : 'h:mm a'}`)} -->
         </button>
       {/if}
 
-      <!-- Location Button -->
+ 
       {#if $ActiveLogStore.lat}
         <button
           class="btn btn-active btn-sm mr-2"
@@ -540,7 +580,7 @@
       {/if}
 
       <div class="filler" />
-    </NCell>
+    </NCell> -->
 
     <!-- <button
       class="advanced-toggle {state.show ? 'active' : 'inactive'}"

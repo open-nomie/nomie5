@@ -1,163 +1,180 @@
 html,
 body {
-	-webkit-user-select: none;
-	-webkit-touch-callout: none;
-	font-family: -apple-system, BlinkMacSystemFont, Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-	-webkit-text-size-adjust: auto;
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
-	font-size: 18px;
-	background-color: var(--color-solid);
-	// padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, Oxygen-Sans, Ubuntu,
+    Cantarell, "Helvetica Neue", sans-serif;
+  -webkit-text-size-adjust: auto;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+  background-color: var(--color-solid);
+  // padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 body.no-scroll {
-	overflow: hidden;
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 body.notched {
-	.notch-bottom {
-		padding-bottom: env(safe-area-inset-bottom) !important;
-	}
-	.notch-top {
-		padding-bottom: env(safe-area-inset-top) !important;
-	}
+  .notch-bottom {
+    padding-bottom: env(safe-area-inset-bottom) !important;
+  }
+  .notch-top {
+    padding-bottom: env(safe-area-inset-top) !important;
+  }
 }
 
 body {
-	--color-darkest: #fff;
-	--color-bg: #f9f9f9;
-	--color-inverse: #333;
-	--color-inverse-1: #555;
-	--color-inverse-2: #777;
-	--color-inverse-3: #999;
-	--color-solid: #fff;
-	--color-solid-1: #eee;
-	--color-solid-2: rgb(223, 223, 223);
-	--color-solid-3: #666;
-	--color-primary: #20699d;
-	--color-primary-muted: #4d84a1;
-	--color-primary-dark: #1a212a;
-	--color-primary-faded: rgba(50, 159, 215, 0.45);
-	--color-primary-bright: #319ed7;
-	--color-orange: #ed9614;
-	--color-green: #38a83f;
-	--color-red: #e94151;
-	--color-tabs: var(--color-primary);
-	--color-faded: rgba(0, 0, 0, 0.06);
-	--color-faded-inverse: rgba(255, 255, 255, 0.06);
-	--color-faded-1: rgba(0, 0, 0, 0.1);
-	--color-faded-2: rgba(0, 0, 0, 0.2);
-	--color-faded-3: rgba(0, 0, 0, 0.4);
-	--color-full-screen: rgba(0, 0, 0, 0.7);
-	--color-background-selected: #{rgba($primary, 0.1)};
-	--box-shadow: 0px 10px 20px -5px rgba(0, 0, 0, 0.2);
+  --color-darkest: #fff;
+  --color-bg: #f9f9f9;
+  --color-inverse: #333;
+  --color-inverse-1: #555;
+  --color-inverse-2: #777;
+  --color-inverse-3: #999;
+  --color-solid: #fff;
+  --color-solid-1: #eee;
+  --color-solid-2: rgb(223, 223, 223);
+  --color-solid-3: #666;
+  --color-primary: #20699d;
+  --color-primary-muted: #4d84a1;
+  --color-primary-dark: #1a212a;
+  --color-primary-faded: rgba(50, 159, 215, 0.45);
+  --color-primary-bright: #319ed7;
+  --color-orange: #ed9614;
+  --color-green: #38a83f;
+  --color-red: #e94151;
+  --color-tabs: var(--color-primary);
+  --color-faded: rgba(0, 0, 0, 0.06);
+  --color-faded-inverse: rgba(255, 255, 255, 0.06);
+  --color-faded-1: rgba(0, 0, 0, 0.1);
+  --color-faded-2: rgba(0, 0, 0, 0.2);
+  --color-faded-3: rgba(0, 0, 0, 0.4);
+  --color-full-screen: rgba(0, 0, 0, 0.7);
+  --color-background-selected: #{rgba($primary, 0.1)};
+  --color-translucent: rgba(255, 255, 255, 0.89);
+
+  --box-shadow-tight: 0px 2px 5px -1px rgba(0, 0, 0, 0.2);
+  --box-shadow: 0px 10px 20px -5px rgba(0, 0, 0, 0.2);
+  --box-shadow-float: 0 4px 8px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.08), 0 0 2px rgba(0, 0, 0, 0.24);
 }
 
 @mixin darkmode {
-	--color-darkest: #000;
-	--color-bg: #1d1d1d;
-	--color-solid: #000;
-	--color-solid-1: #222;
-	--color-solid-2: #333;
-	--color-solid-3: #444;
-	--color-inverse: #fff;
-	--color-inverse-1: #eee;
-	--color-inverse-2: #ccc;
-	--color-inverse-3: #666;
-	--color-tabs: #000;
-	--color-faded: rgba(255, 255, 255, 0.2);
-	--color-faded-inverse: rgba(0, 0, 0, 0.06);
-	--color-faded-1: rgba(255, 255, 255, 0.1);
-	--color-faded-2: rgba(255, 255, 255, 0.2);
-	--color-faded-3: rgba(255, 255, 255, 0.4);
-	--color-full-screen: rgba(0, 0, 0, 0.4);
-	--color-background-selected: rgba($primaryBright, 0.82);
-	--box-shadow: 0px 0px 40px -5px rgba(255, 255, 255, 0.2);
+  --color-darkest: #000;
+  --color-bg: #1d1d1d;
+  --color-solid: #000;
+  --color-solid-1: #222;
+  --color-solid-2: #333;
+  --color-solid-3: #444;
+  --color-inverse: #fff;
+  --color-inverse-1: #eee;
+  --color-inverse-2: #ccc;
+  --color-inverse-3: #666;
+  --color-tabs: #000;
+  --color-faded: rgba(255, 255, 255, 0.2);
+  --color-faded-inverse: rgba(0, 0, 0, 0.06);
+  --color-faded-1: rgba(255, 255, 255, 0.1);
+  --color-faded-2: rgba(255, 255, 255, 0.2);
+  --color-faded-3: rgba(255, 255, 255, 0.4);
+  --color-full-screen: rgba(0, 0, 0, 0.4);
+  --color-background-selected: rgba($primaryBright, 0.82);
+  --box-shadow: 0px 0px 40px -5px rgba(255, 255, 255, 0.2);
+  --box-shadow-tight: 0px 0px 8px -1px rgba(255, 255, 255, 0.4);
+  --box-shadow-float: 0 4px 8px rgba(255, 255, 255, 0.08),
+    0 2px 4px rgba(255, 255, 255, 0.08), 0 0 2px rgba(255, 255, 255, 0.24);
 
-	.n-item.border-bottom {
-		border-bottom: solid 1px rgba(255, 255, 255, 0.15) !important;
-	}
+  --color-translucent: rgba(0, 0, 0, 0.79);
 
-	.btn-light {
-		//$background, $border, $hover-background: darken($background, 7.5%),
-		// $hover-border: darken($border, 10%),
-		// $active-background: darken($background, 10%), $active-border: darken($border, 12.5%)
-		@include button-variant(#333, darken(#333, 5%), darken(#333, 5%), darken(#333, 5%), rgba($primaryBright, 5%));
-		&:hover {
-			@include button-variant(
-				#333,
-				darken(#333, 10%),
-				darken(#333, 10%),
-				darken(#333, 10%),
-				rgba($primaryBright, 10%)
-			);
-		}
-	}
+  .n-item.border-bottom {
+    border-bottom: solid 1px rgba(255, 255, 255, 0.15) !important;
+  }
+
+  .btn-light {
+    //$background, $border, $hover-background: darken($background, 7.5%),
+    // $hover-border: darken($border, 10%),
+    // $active-background: darken($background, 10%), $active-border: darken($border, 12.5%)
+    @include button-variant(
+      #333,
+      darken(#333, 5%),
+      darken(#333, 5%),
+      darken(#333, 5%),
+      rgba($primaryBright, 5%)
+    );
+    &:hover {
+      @include button-variant(
+        #333,
+        darken(#333, 10%),
+        darken(#333, 10%),
+        darken(#333, 10%),
+        rgba($primaryBright, 10%)
+      );
+    }
+  }
 }
 
 body {
-	.main-content {
-		&:before {
-			bottom: -50px;
-			left: 0;
-			right: 0;
-			content: '';
-			transition: all 0.2s ease-in-out;
-			position: fixed;
-			background-color: transparent;
-		}
-	}
+  .main-content {
+    &:before {
+      bottom: -50px;
+      left: 0;
+      right: 0;
+      content: "";
+      transition: all 0.2s ease-in-out;
+      position: fixed;
+      background-color: transparent;
+    }
+  }
 }
 
 body.hidden {
-	background-color: var(--color-primary);
-	display: flex !important;
-	justify-content: center;
-	align-content: center;
-	height: 100vh;
-	&:after {
-		content: '';
-		background-image: url(images/nomie-white-type.png);
-		display: block;
-		width: 200px;
-		height: 40px;
-		background-size: contain;
-		background-repeat: no-repeat;
-		background-position: center;
-		justify-self: center;
-		align-self: center;
-	}
-	* {
-		display: none;
-	}
+  background-color: var(--color-primary);
+  display: flex !important;
+  justify-content: center;
+  align-content: center;
+  height: 100vh;
+  &:after {
+    content: "";
+    background-image: url(images/nomie-white-type.png);
+    display: block;
+    width: 200px;
+    height: 40px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    justify-self: center;
+    align-self: center;
+  }
+  * {
+    display: none;
+  }
 }
 
 body.offline {
-	.main-content {
-		&:before {
-			transition: all 0.2s ease-in-out;
-			content: 'No internet connection';
-			position: fixed;
-			bottom: 50px !important;
-			left: 0;
-			right: 0;
-			background-color: var(--color-red);
-			color: #fff;
-			text-align: center;
-			font-size: 9px;
-			padding: 2px 10px;
-			z-index: 2000;
-		}
-	}
+  .main-content {
+    &:before {
+      transition: all 0.2s ease-in-out;
+      content: "No internet connection";
+      position: fixed;
+      bottom: 50px !important;
+      left: 0;
+      right: 0;
+      background-color: var(--color-red);
+      color: #fff;
+      text-align: center;
+      font-size: 9px;
+      padding: 2px 10px;
+      z-index: 2000;
+    }
+  }
 }
 
 body.theme-dark {
-	@include darkmode();
+  @include darkmode();
 }

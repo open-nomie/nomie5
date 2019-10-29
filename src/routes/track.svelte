@@ -45,7 +45,8 @@
     bottom: calc(40px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
-    background-color: var(--color-solid);
+    z-index: 10;
+    background-color: var(--color-translucent);
   }
   .page-track {
     display: flex;

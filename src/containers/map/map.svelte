@@ -294,10 +294,6 @@
       bottom: $locationHeight;
       z-index: 1;
     }
-    :global(.leaflet-control-attribution) {
-      background: var(--color-solid-2) !important;
-      color: var(--color-solid);
-    }
   }
 
   :global(.n-map-container .location-name .n-item .right .btn) {
