@@ -303,8 +303,8 @@
     padding: 10px;
     background-color: var(--color-solid);
     border-top: solid 1px var(--color-solid);
-    box-shadow: 0px -2px 12px -4px rgba(0, 0, 0, 0.094);
     position: relative;
+    z-index: 1;
   }
 
   .more-options {
@@ -312,7 +312,7 @@
     position: relative;
     z-index: 130;
     padding: 0px 10px 10px;
-
+    margin-top: -10px;
     .btn {
       background-color: transparent;
       display: flex;
@@ -590,8 +590,8 @@
 
     <div
       class="advanced-options-list {state.showCustomDate ? 'visible' : 'hidden'}">
-      <div class="container py-2">
-        <div class="n-row mb-2">
+      <div class="container pt-3 pb-1" style="max-width:300px">
+        <div class="n-row">
           <div class="input-group flex-grow mr-1">
             <input
               name="note"

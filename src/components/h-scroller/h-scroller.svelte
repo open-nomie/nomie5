@@ -29,6 +29,11 @@
           methods.selectIndex(selectedIndex);
         });
       }
+
+      scroller.addEventListener("scroll", evt => {
+        scroller.setAttribute("data-scroll", evt.target.scrollLeft);
+      });
+
       ready = true;
     },
     // Clear currently selected index
@@ -45,7 +50,17 @@
         let child = wrapper.children[activeIndex];
         let parentOffset = wrapper.offsetLeft;
         let childEnd = child.offsetLeft - parentOffset;
-        scroller.scrollTo(childEnd - child.offsetWidth * 0.5, 0);
+        let scrollTo = childEnd - child.offsetWidth * 0.5;
+        let scrolledAmount = scroller.scrollLeft;
+
+        console.log("child end", { scrollTo, childEnd, scrolledAmount });
+
+        if (childEnd > scroller.offsetWidth * 0.5) {
+          scroller.scrollTo(scrollTo, 0);
+        } else if (scrolledAmount > childEnd) {
+          scroller.scrollTo(scrollTo, 0);
+        }
+
         child.classList.add(activeClass);
       } catch (e) {
         console.log("error", e.message);
@@ -84,7 +99,7 @@
   }
 </style>
 
-<div class="n-hscroller {className}" bind:this={scroller}>
+<div class="n-hscroller {className}" data-scroll="0" bind:this={scroller}>
   <div class="wrapper" bind:this={wrapper}>
     <slot />
   </div>

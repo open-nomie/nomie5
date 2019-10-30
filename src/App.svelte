@@ -214,23 +214,19 @@
 
 {#if $UserStore.signedIn === true}
   <Router {url} on:change={methods.routerChange} bind:this={router}>
-    <AppTabs />
-    <div class="main-content">
-      <Route path="/history" component={HistoryRoute} />
-      <Route path="/history/:date" component={HistoryRoute} />
-      <Route path="/" component={TrackRoute} />
-      <Route path="/settings" component={SettingsRoute} />
-      <Route path="/stats/:id" component={StatsRoute} />
-      <Route path="/board/:id" component={BoardEditorRoute} />
-      <Route path="/faq" component={FAQRoute} />
-      <!-- Plugin Coming Soon -->
-      <Route path="/plugins" component={PluginsRoute} />
-      <Route path="/plugins/settings/:pluginId" component={PluginsRoute} />
-      <Route path="/plugins/:pluginId" component={PluginsRoute} />
-      <Route path="/api" component={NomieAPIRoute} />
-      <Route path="/settings/export/:type" component={ExportRoute} />
-      <Route path="/settings/export" component={ExportRoute} />
-    </div>
+    <Route path="/history" component={HistoryRoute} />
+    <Route path="/history/:date" component={HistoryRoute} />
+    <Route path="/" component={TrackRoute} />
+    <Route path="/settings" component={SettingsRoute} />
+    <Route path="/board/:id" component={BoardEditorRoute} />
+    <Route path="/faq" component={FAQRoute} />
+    <!-- Plugin Coming Soon -->
+    <Route path="/plugins" component={PluginsRoute} />
+    <Route path="/plugins/settings/:pluginId" component={PluginsRoute} />
+    <Route path="/plugins/:pluginId" component={PluginsRoute} />
+    <Route path="/api" component={NomieAPIRoute} />
+    <Route path="/settings/export/:type" component={ExportRoute} />
+    <Route path="/settings/export" component={ExportRoute} />
   </Router>
 {:else if $UserStore.signedIn == undefined}
   <div class="empty-notice">

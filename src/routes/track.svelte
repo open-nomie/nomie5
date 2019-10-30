@@ -55,9 +55,4 @@
   }
 </style>
 
-<div class="page page-track with-header">
-  <Board editMode={data.editMode} />
-</div>
-<div id="note-capture">
-  <CaptureLog />
-</div>
+<Board editMode={data.editMode} />

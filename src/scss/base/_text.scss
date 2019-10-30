@@ -1,54 +1,60 @@
 .truncate {
-	@include truncate(1);
+  @include truncate(1);
 }
 .truncate-2 {
-	@include truncate(2);
+  @include truncate(2);
 }
 // Colors
 .text-primary-bright {
-	color: $primaryBright !important;
+  color: $primaryBright !important;
 }
 .text-red {
-	color: $red !important;
+  color: $red !important;
 }
 .text-green {
-	color: $green !important;
+  color: $green !important;
+}
+.text-solid {
+  color: var(--color-solid);
+}
+.text-inverse {
+  color: var(--color-inverse);
 }
 .text-white {
-	color: #fff;
+  color: #fff;
 }
 .font-bold {
-	font-weight: bold;
+  font-weight: bold;
 }
 .font-120 {
-	font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 .font-140 {
-	font-size: 1.4rem;
+  font-size: 1.4rem;
 }
 .text-faded {
-	color: var(--color-faded);
+  color: var(--color-faded);
 }
 .text-faded-1 {
-	color: var(--color-faded-1);
+  color: var(--color-faded-1);
 }
 .text-faded-2 {
-	color: var(--color-faded-2);
+  color: var(--color-faded-2);
 }
 .text-faded-3 {
-	color: var(--color-faded-3);
+  color: var(--color-faded-3);
 }
 
 .text-xs {
-	font-size: 0.5rem !important;
+  font-size: 0.5rem !important;
 }
 .text-sm {
-	font-size: 0.81rem !important;
-	line-height: 0.98rem;
+  font-size: 0.81rem !important;
+  line-height: 0.98rem;
 }
 .text-md {
-	font-size: 1rem !important;
+  font-size: 1rem !important;
 }
 .text-lg {
-	font-size: 1.3rem !important;
+  font-size: 1.3rem !important;
 }
