@@ -33,7 +33,6 @@
     }
   });
   onMount(() => {
-    console.log("Tracker Mounted");
     window.scrollTo(0, 0);
   });
 </script>

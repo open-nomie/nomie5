@@ -1,6 +1,6 @@
 # TODO
 
-Generated Wed Oct 30 2019 10:35 pm
+Generated Wed Oct 30 2019 10:43 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -51,9 +51,6 @@ Generated Wed Oct 30 2019 10:35 pm
    - TODO: UserSession shouldn't be in here - login should be fired by Storage.
 - **src/containers/map/map.svelte**
    - TODO: Look at making this curved dotted lines - and not just straight ones
-- **src/containers/interactions/interactions.svelte**
-   - TODO: move this to new log editor
-   - console.log('TODO: Make editing data work');
 - **src/containers/importer/importer.svelte**
    - Modal will be hidden in settings TODO: make this not hacky -->
 - **src/containers/board/tracker-button.svelte**

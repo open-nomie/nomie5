@@ -53,7 +53,6 @@
   // }
 
   $: if (picker && MAP) {
-    console.log("Need to locate");
     locate().then(location => {
       locations
         .push({
@@ -72,7 +71,6 @@
   // methods
   let methods = {
     init() {
-      console.log("Init");
       /** Initialize map **/
       return new Promise((resolve, reject) => {
         if (!MAP) {

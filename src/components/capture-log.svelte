@@ -198,21 +198,6 @@
               .then(dataUrl => {
                 state.capturingEdits = false;
                 state.finalImageData = dataUrl;
-
-                // Storage.put(path, dataUrl)
-                //   .then(() => {
-                //     // state.capturingEdits = false;
-                //     ActiveLogStore.update(l => {
-                //       l.photo = path;
-                //       return l;
-                //     });
-                //     setTimeout(() => {
-                //       methods.photoEditor.cancel();
-                //     }, 120);
-                //   })
-                //   .catch(e => {
-                //     alert("It failed " + e.message);
-                //   });
               })
               .catch(e => {
                 console.log(e);

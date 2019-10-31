@@ -160,7 +160,6 @@
           locations={methods.getLocations()}
           picker={true}
           on:change={event => {
-            console.log('Location', event.detail);
             state.log.lat = event.detail.lat;
             state.log.lng = event.detail.lng;
             state.log.location = event.detail.location;

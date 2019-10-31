@@ -281,67 +281,6 @@
     </button>
   </NModal>
 {/if}
-<!-- 
-  TODO: move this to new log editor
-{#if $Interact.logDataEditor.show}
-  <NModal show={true} flexBody title="Edit Data">
-    <div class="n-list">
-      {#each methods.getLogTrackers($Interact.logDataEditor.log) as TrackerValue}
-        <NItem
-          className="clickable"
-          title={`${TrackerValue.tracker.emoji} ${TrackerValue.tracker.label}`}
-          on:click={() => {
-            $Interact.logDataEditor.show = false;
-            $Interact.logDataEditor.tag = TrackerValue.tag;
-            $Interact.logDataEditor.value = TrackerValue.value;
-            console.log('on Click', $Interact.logDataEditor);
-          }}>
-          <span slot="right">
-            {NomieUOM.format(TrackerValue.value, TrackerValue.tracker.uom)}
-          </span>
-        </NItem>
-      {/each}
-    </div>
-
-    <button
-      class="btn btn-lg btn-light mr-1 flex-grow"
-      slot="footer"
-      on:click={Interact.dismissEditLogData}>
-      Cancel
-    </button>
-    <button
-      class="btn btn-lg btn-primary mr-1 flex-grow"
-      slot="footer"
-      on:click={() => {
-        $Interact.logDataEditor.show = false;
-        console.log('TODO: Make editing data work');
-        LedgerStore.updateLog($Interact.logDataEditor.log).then(() => {
-          console.log('Updated Log');
-          if ($Interact.logDataEditor.onInteract) {
-            $Interact.logDataEditor.onInteract(new NomieLog($Interact.logDataEditor.log));
-          }
-          Interact.dismissEditLogData();
-        });
-      }}>
-      Save
-    </button>
-
-  </NModal>
-{/if} -->
-
-<!-- {#if $Interact.logDataEditor.tag && $Interact.logDataEditor.value}
-  <TrackerInput
-    saveLabel="Set"
-    show={true}
-    hideAdd={true}
-    value={$Interact.logDataEditor.value}
-    tracker={methods.getTracker($Interact.logDataEditor.tag)}
-    on:save={methods.editLogDataOnSave}
-    on:cancel={() => {
-      $Interact.logDataEditor.tag = null;
-    }} />
-{/if} -->
-
 {#if $Interact.logEditor.show}
   <LogEditor
     log={$Interact.logEditor.log}

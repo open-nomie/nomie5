@@ -101,7 +101,6 @@
       today = $LedgerStore.today;
       data.loading = false;
       boardTrackers = boardTrackers || [];
-      console.log("Ledger has cHanged - should redraw", lastLedgerStoreHash);
     }, 12);
   }
 
@@ -163,7 +162,7 @@
     // When user starts searching
     searchKeypress() {
       // Find trackers matching query
-      console.log("data.searchTerm.trim()", data.searchTerm.trim());
+
       foundTrackers = Object.keys($TrackerStore)
         .map(tag => {
           return $TrackerStore[tag];
