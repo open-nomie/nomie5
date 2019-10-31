@@ -121,12 +121,12 @@
   @import "../../scss/utils/_utils";
 
   .n-counter-manual {
-    padding: 40px 20px;
+    // padding: 40px 20px;
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-
+    flex-grow: 1;
     span {
       line-height: 40px;
       font-size: 40px;

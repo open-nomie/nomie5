@@ -104,10 +104,13 @@
 
 <NModal
   show={show || $Interact.trackerInput.show}
-  title="{tracker.emoji}
-  {tracker.label}"
+  type="fullscreen"
   className="tracker-input">
-
+  <div class="input-toolbar n-row" slot="header">
+    <div class="filler" />
+    {tracker.emoji} {tracker.label}
+    <div class="filler" />
+  </div>
   {#if data.ready}
     <div class="input-model type-{tracker.type}" transition:slide>
       {#if tracker.type === 'range'}
@@ -215,7 +218,7 @@
         on:click={methods.onAdd}
         class="btn btn-clear btn-lg w-25 {tracker.started ? 'd-none' : ''}">
         <!-- local hack to make plus match with close-->
-        <span class=" zmdi zmdi-plus" style="font-size:1.5rem;" />
+        <span class="zmdi zmdi-plus" />
       </button>
     {/if}
 

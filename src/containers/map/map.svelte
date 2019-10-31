@@ -52,7 +52,7 @@
 
   // }
 
-  $: if (picker && MAP) {
+  $: if (picker && MAP && locations.length == 0) {
     locate().then(location => {
       locations.push({
         lat: location.latitude,

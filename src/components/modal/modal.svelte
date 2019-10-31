@@ -90,6 +90,9 @@
           border-radius: 0.7rem;
         }
       }
+      .n-modal-footer {
+        padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+      }
     }
     &.type-cover {
       .n-modal {

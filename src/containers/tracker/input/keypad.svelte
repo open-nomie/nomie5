@@ -106,20 +106,21 @@
   .keypad {
     width: 100%;
   }
+  .dead-spot {
+    opacity: 0;
+    pointer-events: none;
+  }
   .keypad-keys {
     max-width: 90%;
     width: 260px;
     max-width: 260px;
     margin: 20px auto;
-    .row {
-      width: 280px;
-    }
   }
   button.button {
     touch-action: manipulation;
-    width: 64px;
-    height: 64px;
-    border-radius: 32px;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
     border: none;
     color: #fff;
     font-size: 26px;
@@ -128,6 +129,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 2px;
   }
   .row {
     margin-bottom: 10px;
@@ -140,11 +142,15 @@
   }
   .row-3 .button-2 {
     background-color: var(--color-faded-2);
+    color: var(--color-inverse);
   }
   .screen {
     background-color: var(--color-faded-1);
+    border-radius: 4px;
+    padding: 4px 14px;
     h1 {
       color: var(--color-inverse);
+      margin-top: 4px;
     }
     h6 {
       color: var(--color-faded-2);
@@ -153,7 +159,7 @@
 </style>
 
 <div class="tracker-input keypad">
-  <div class="screen px-4 py-2">
+  <div class="screen">
     <h1 class="mb-0">{data.tempValue || 0}</h1>
     {#if tracker.uom !== 'count' && tracker.uom}
       <h6 class="">
@@ -163,20 +169,20 @@
   </div>
   <div class="keypad-keys">
     {#each keys as key, kindex}
-      <div class="row row-{kindex}">
+      <div class="n-row row-{kindex} justify-content-center">
         {#each key as button, bindex}
-          <div class="col-3">
-            {#if button !== null}
-              <button
-                class="button button-{bindex}"
-                on:click={() => {
-                  methods.onPress(button);
-                  return false;
-                }}>
-                {button}
-              </button>
-            {/if}
-          </div>
+          {#if button !== null}
+            <button
+              class="button button-{bindex}"
+              on:click={() => {
+                methods.onPress(button);
+                return false;
+              }}>
+              {button}
+            </button>
+          {:else}
+            <button class="dead-spot button button-{bindex}" />
+          {/if}
         {/each}
       </div>
       <!-- end row-->

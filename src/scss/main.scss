@@ -20,6 +20,7 @@
 @import "./components/empty-notice";
 @import "./components/n-pop";
 @import "./components/list-item";
+@import "./components/tracker-input-modal";
 
 // TODO: Look at making prefers-color-scheme work properly - when enabled, only buttons change
 // @media (prefers-color-scheme: dark) {
@@ -27,6 +28,8 @@
 // }
 
 .input-model {
+  flex-grow: 1;
+  height: 100%;
   &.type-range {
     .keypad-holder {
       display: none;

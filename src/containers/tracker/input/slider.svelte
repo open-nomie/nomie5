@@ -15,6 +15,7 @@
     background-color: var(--color-solid);
   }
   .tracker-input {
+    position: relative;
     display: flex;
     flex: 1;
     flex-grow: 1;
@@ -32,6 +33,8 @@
       margin: 0 0 20px 0;
       line-height: 2rem;
       color: var(--color-inverse);
+      position: absolute;
+      bottom: 10px;
     }
 
     input[type="range"] {
@@ -44,26 +47,41 @@
     input[type="range"]:focus {
       outline: none;
     }
+
+    $size: 60px;
     input[type="range"]::-webkit-slider-runnable-track {
       width: 100%;
-      height: 50px;
+      height: $size;
       cursor: pointer;
       box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
       background: var(--color-faded);
-      border-radius: 25px;
+      border-radius: $size * 0.5;
       padding: 0 6px;
       border: 1px solid var(--color-faded-2);
+      position: relative;
     }
+    // input[type="range"] {
+    //   &:after {
+    //     content: "hi";
+    //     background-color: var(--color-primary);
+    //     position: absolute;
+    //     left: 0;
+    //     top: 0;
+    //     bottom: 0;
+    //     width: 50%;
+    //   }
+    // }
     input[type="range"]::-webkit-slider-thumb {
-      box-shadow: 0px 4px 6px -2px var(--color-faded-2);
-      border: 2px solid var(--color-primary-bright);
-      height: 39px;
-      width: 40px;
-      border-radius: 25px;
+      height: $size * 0.9;
+      width: $size * 0.9;
+      border: solid 1px var(--color-faded-2);
+      border-radius: $size * 0.5;
       background: var(--color-solid);
+      box-shadow: var(--box-shadow-float);
+      transform: rotate(90deg);
       cursor: pointer;
       -webkit-appearance: none;
-      margin-top: 4px;
+      margin-top: 2px;
     }
     input[type="range"]:focus::-webkit-slider-runnable-track {
       background: var(--color-faded);
@@ -122,6 +140,10 @@
     }
     input[type="range"]:focus::-ms-fill-upper {
       background: rgba(60, 63, 65, 0.08);
+    }
+
+    input[type="range"] {
+      transform: rotate(-90deg);
     }
   }
 </style>

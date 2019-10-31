@@ -1,0 +1,45 @@
+.n-modal-frame.tracker-input {
+  .n-modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    > div {
+      width: 100%;
+    }
+    .input-model {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  .tracker-input {
+    display: flex;
+    min-width: 80%;
+    height: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    align-items: center;
+  }
+  .tracker-input.keypad {
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+  }
+  .input-toolbar {
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+  .n-modal-footer {
+    .zmdi {
+      font-size: 2rem !important;
+    }
+    .zmdi-plus {
+      font-size: 2.2rem !important;
+    }
+  }
+}
