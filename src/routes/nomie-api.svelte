@@ -265,7 +265,7 @@
         -->
         <NItem
           title="Auto Import"
-          description="Automatically import new captured logs when Nomie starts.">
+          description="Automatically import captured logs">
           <div slot="right">
             <NToggle
               bind:value={autoImportAPI}

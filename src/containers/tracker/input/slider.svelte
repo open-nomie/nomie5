@@ -48,7 +48,7 @@
       outline: none;
     }
 
-    $size: 60px;
+    $size: 100px;
     input[type="range"]::-webkit-slider-runnable-track {
       width: 100%;
       height: $size;
@@ -81,7 +81,7 @@
       transform: rotate(90deg);
       cursor: pointer;
       -webkit-appearance: none;
-      margin-top: 2px;
+      margin-top: 5px;
     }
     input[type="range"]:focus::-webkit-slider-runnable-track {
       background: var(--color-faded);

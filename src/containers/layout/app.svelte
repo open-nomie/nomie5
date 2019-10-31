@@ -16,6 +16,7 @@
   onMount(() => {
     bodyPaddingTop = headerDom.offsetHeight;
     bodyPaddingBottom = footerDom.offsetHeight;
+    window.scrollTo(0, 0);
   });
 </script>
 

@@ -103,6 +103,7 @@
 
 <style lang="scss">
   @import "../../../scss/utils/__utils.scss";
+  @import "../../../scss/vendor/bootstrap/base";
   .keypad {
     width: 100%;
   }
@@ -111,15 +112,34 @@
     pointer-events: none;
   }
   .keypad-keys {
-    max-width: 90%;
-    width: 260px;
-    max-width: 260px;
-    margin: 20px auto;
+    margin: 20px 0;
   }
   button.button {
     touch-action: manipulation;
-    width: 60px;
-    height: 60px;
+    min-width: 60px;
+    min-height: 60px;
+    transition: all 0.2s ease-in-out;
+    &:active {
+      transform: scale(0.9);
+      transition: all 0.2s ease-in-out;
+    }
+
+    @include media-breakpoint-down(xs) {
+      width: 60px;
+      height: 60px;
+      margin: 2px;
+    }
+    @include media-breakpoint-up(sm) {
+      width: 66px;
+      height: 66px;
+      margin: 5px;
+    }
+    @include media-breakpoint-up(md) {
+      width: 80px;
+      height: 80px;
+      margin: 10px;
+    }
+
     border-radius: 30px;
     border: none;
     color: #fff;
