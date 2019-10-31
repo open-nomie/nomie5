@@ -154,6 +154,7 @@
 
     {#if data.tracker.type !== 'timer'}
       <button
+        aria-label="Cancel"
         on:click={methods.onCancel}
         class="btn btn-clear btn-lg w-25 {data.tracker.type == 'timer' && !data.tracker.started ? 'd-none' : ''}">
         <span class=" zmdi zmdi-close" />
@@ -163,6 +164,7 @@
     {#if data.tracker.type == 'timer'}
       <button
         on:click={methods.onCancel}
+        aria-label="Cancel"
         class="btn btn-clear btn-lg mr-2 {data.value ? 'w-25' : 'w-100'}">
         {#if data.value}
           <span class=" zmdi zmdi-close" />
@@ -173,7 +175,8 @@
     {#if data.tracker.type == 'timer' && data.value}
       <button
         on:click={methods.onSave}
-        class="btn btn-primary btn-lg btn-round"
+        class="btn btn-primary btn-lg "
+        aria-label="Save Report"
         style="width:105px;">
         {saveLabel}
       </button>
@@ -182,7 +185,8 @@
     {#if data.tracker.type != 'timer'}
       <button
         on:click={methods.onSave}
-        class="btn btn-primary btn-lg btn-round"
+        aria-label="Save Report"
+        class="btn btn-primary btn-lg "
         style="width:105px;">
         {saveLabel}
       </button>
@@ -191,6 +195,7 @@
     {#if data.tracker.type == 'timer' && !data.tracker.started && !data.value}
       <button
         on:click={methods.startTimer}
+        aria-label="Start Timer"
         class="btn btn-success btn-lg w-100">
         Start
       </button>
@@ -199,6 +204,7 @@
     {#if data.tracker.type == 'timer' && data.tracker.started !== null}
       <button
         on:click={methods.stopTimer}
+        aria-label="Stop Timer"
         class="btn btn-danger btn-lg btn-block {data.tracker.started > 0 ? '' : 'd-none'}">
         Stop
       </button>

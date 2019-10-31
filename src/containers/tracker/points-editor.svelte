@@ -68,6 +68,22 @@
     padding: 15px;
     border-radius: 5px;
     overflow: hidden;
+    font-weight: 600;
+    color: var(--color-inverse);
+    border-bottom: solid 1px var(--color-faded-3);
+    .form-control {
+      display: inline-block;
+      width: auto;
+      background-color: var(--color-solid) !important;
+      margin: 0 6px;
+      max-width: 75px;
+    }
+    .condition-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 10px;
+    }
   }
   :global(.condition-form .n-item) {
     background-color: var(--color-solid-1) !important;
@@ -82,7 +98,7 @@
 
 {#if tracker}
   <div class="points-editor">
-    <div class="n-list">
+    <div class="n-list mb-0">
       <NItem title="Positivity" className="mb-2">
         <div slot="right">
 
@@ -103,7 +119,7 @@
         {#each tracker.score_calc || [] as condition, index}
           <NItem>
             <NText size="sm">
-              {index === 0 ? 'If:' : 'Else If:'}
+              {index === 0 ? 'if:' : 'else if:'}
               {scoreOptions[condition.if] || 'Unknown'} is {condition.is}
               {condition.v}
             </NText>
@@ -124,63 +140,54 @@
 
         {#if state.showConditionForm}
           <div class="condition-form bg-faded">
-            <NItem title="IF" className="bg-faded">
-              <div slot="right">
-                <select
-                  class="form-control w-100"
-                  bind:value={state.genesisCalc.if}>
-                  <option value="value">Recorded Value</option>
-                  <option value="hour">Hour of Day (24)</option>
-                  <option value="month">Day of Month</option>
-                  <!-- <option value="total">Today's Total</option> -->
-                </select>
-              </div>
-            </NItem>
-            <NItem title="IS">
-              <div slot="right">
-                <select
-                  class="form-control w-100"
-                  bind:value={state.genesisCalc.is}>
-                  <option value="gt">Greater Than</option>
-                  <option value="gte">Greater or Equal</option>
-                  <option value="lt">Less Than</option>
-                  <option value="lte">Less or Equal</option>
-                  <option value="eq">Equal To</option>
-                </select>
-              </div>
-            </NItem>
-            <NItem title="Value">
-              <div slot="right">
-                <input
-                  pattern="[0-9]*"
-                  inputmode="numeric"
-                  class="form-control"
-                  bind:value={state.genesisCalc.v} />
-              </div>
-            </NItem>
-            <NItem title="Score">
-              <div slot="right">
-                <input
-                  pattern="[0-9]*"
-                  inputmode="numeric"
-                  class="form-control"
-                  bind:value={state.genesisCalc.sc} />
-              </div>
-            </NItem>
-            <NItem className="item-divider compact" />
-            <NCell>
-              <NItem
-                title="Done"
-                className="text-primary text-center"
+
+            <div class="condition-row">
+              {#if tracker.score_calc || [].length}else{/if}
+              if
+              <select class="form-control" bind:value={state.genesisCalc.if}>
+                <option value="value">Value</option>
+                <option value="hour">Hour</option>
+                <option value="month">Day</option>
+                <!-- <option value="total">Today's Total</option> -->
+              </select>
+              is
+              <select class="form-control" bind:value={state.genesisCalc.is}>
+                <option value="gt">></option>
+                <option value="gte">>=</option>
+                <option value="lt">&lt;</option>
+                <option value="lte">&lt;=</option>
+                <option value="eq">==</option>
+              </select>
+              <input
+                pattern="[0-9]*"
+                type="text"
+                placeholder={state.genesisCalc.if == 'value' ? 'value' : state.genesisCalc.if == 'hour' ? 'Hour of Day' : 'Day of Month'}
+                class="form-control"
+                bind:value={state.genesisCalc.v} />
+            </div>
+            <div class="condition-row">
+              Set Score to:
+              <input
+                type="text"
+                class="form-control"
+                bind:value={state.genesisCalc.sc} />
+            </div>
+
+            <div class="n-row pt-3">
+              <button
+                class="btn btn-clear btn-sm"
                 on:click={() => {
                   state.showConditionForm = false;
-                }} />
-              <NItem
-                className="text-primary text-center"
+                }}>
+                Cancel
+              </button>
+              <button
+                class="btn btn-primary btn-sm"
                 on:click={methods.saveCondition}>
-                <span class="text-primary">Add Condition</span>
-              </NItem>
-            </NCell>
+                Set Condition
+              </button>
+            </div>
+
           </div>
         {:else}
           <NItem className="item-divider compact" />

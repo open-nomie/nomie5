@@ -282,10 +282,6 @@
 <style lang="scss">
   @import "../scss/utils/__utils.scss";
 
-  * {
-    // border: solid 1px red !important;
-  }
-
   #note-capture {
     background-color: var(--color-solid);
   }
@@ -308,7 +304,6 @@
   }
 
   .more-options {
-    // background-color: pink;
     position: relative;
     z-index: 130;
     padding: 0px 10px 10px;
@@ -366,10 +361,7 @@
     width: 100%;
     outline: none !important;
     transition: all 0.2s ease-in-out;
-    &:focus,
-    &:active,
-    &:hover {
-    }
+
     &.active {
       color: $red;
       font-size: 33px;

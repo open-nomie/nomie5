@@ -1,72 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf8" />
-		<title>Nomie 4</title>
+  <head>
+    <meta charset="utf8" />
+    <title>Nomie 4</title>
 
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover"
-		/>
-		<meta name="description" content="Open Source Mood Tracking" />
-		<meta name="apple-mobile-web-app-title" content="Nomie 4" />
-		<meta name="theme-color" content="#319ed7" />
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-		<meta name="full-screen" content="yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover"
+    />
+    <meta name="description" content="Open Source Mood Tracking" />
+    <meta name="apple-mobile-web-app-title" content="Nomie 4" />
+    <meta name="theme-color" content="#319ed7" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="full-screen" content="yes" />
 
-		<link rel="apple-touch-icon" href="/images/icons/nomie-512.png" />
-		<link rel="icon" type="image/png" href="/favicon.png" />
-		<link rel="icon" type="image/png" sizes="192x192" href="/images/icons/nomie-android-192.png" />
-		<link
-			rel="apple-touch-startup-image"
-			media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
-			href="/images/splash-screen.svg"
-		/>
-		<link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/images/icons/nomie-512.png" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="/images/icons/nomie-android-192.png"
+    />
+    <link rel="manifest" href="/manifest.json" />
 
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content="https://open.nomie.app/" />
-		<meta property="og:title" content="Nomie 4" />
-		<meta property="og:description" content="Private Mood and Life Tracking" />
-		<meta property="og:image" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="APP_URL" />
+    <meta property="og:title" content="Nomie 4" />
+    <meta property="og:description" content="Private Mood and Life Tracking" />
+    <meta property="og:image" content="" />
 
-		<meta name="twitter:card" content="app" />
-		<meta name="twitter:site" content="@nomieapp" />
-		<meta name="twitter:creator" content="@brandoncorbin" />
-		<meta name="twitter:title" content="Nomie.app" />
-		<meta name="twitter:description" content="Mood Tracking" />
-		<meta name="twitter:app:country" content="us" />
+    <meta name="twitter:card" content="app" />
+    <meta name="twitter:site" content="@nomieapp" />
+    <meta name="twitter:creator" content="@brandoncorbin" />
+    <meta name="twitter:title" content="Nomie.app" />
+    <meta name="twitter:description" content="Mood Tracking" />
+    <meta name="twitter:app:country" content="us" />
 
-		<base href="/" />
+    <base href="/" />
 
-		<!-- main is from scss/main.scss -->
-		<link rel="stylesheet" href="/main.css?v=APP_VERSION" />
-	</head>
+    <!-- main is from scss/main.scss -->
+    <link rel="stylesheet" href="/main.css?v=APP_VERSION" />
+  </head>
 
-	<body>
-		<noscript>
-			Sorry. Nomie 4 requires Javascript to run.
-		</noscript>
+  <body>
+    <noscript>
+      Sorry. Nomie 4 requires Javascript to run.
+    </noscript>
 
-		<div class="loading-screen delete-on-app">
-			<div class="version">vAPP_VERSION</div>
-		</div>
-		<!-- End Fakes-->
-		<script src="/vendors/blockstack/blockstack.js"></script>
-		<script src="/vendors/leaflet/leaflet.js"></script>
-		<script src="/vendors/leaflet/esri/esri-leaflet.js"></script>
-		<script src="/vendors/leaflet/geocoder/esri-leaflet-geocoder.js"></script>
-		<script src="/bundle.js?v=APP_VERSION"></script>
-		<!-- Styles -->
-		<link rel="stylesheet" href="vendors/leaflet/leaflet.css" />
-		<link rel="stylesheet" href="vendors/leaflet/geocoder/esri-leaflet-geocoder.css" integrity="" />
-		<!-- ZMDI for icons -->
-		<link rel="stylesheet" href="/vendors/material-design-iconic-font/css/material-design-iconic-font.min.css" />
-		<!-- bundle is all the styles from the app and components-->
-		<link rel="stylesheet" href="/bundle.css?v=APP_VERSION" />
-		<!-- Simple Analytics - privacy first analytics -->
-		<script async defer src="https://cdn.simpleanalytics.io/hello.js"></script>
-		<noscript><img src="https://api.simpleanalytics.io/hello.gif" alt=""/></noscript>
-	</body>
+    <div class="loading-screen delete-on-app">
+      <div class="version">vAPP_VERSION</div>
+    </div>
+    <!-- End Fakes-->
+    <script src="/vendors/blockstack/blockstack.js"></script>
+    <script src="/vendors/leaflet/leaflet.js"></script>
+    <script src="/vendors/leaflet/esri/esri-leaflet.js"></script>
+    <script src="/vendors/leaflet/geocoder/esri-leaflet-geocoder.js"></script>
+    <script src="/bundle.js?v=APP_VERSION"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="vendors/leaflet/leaflet.css" />
+    <link
+      rel="stylesheet"
+      href="vendors/leaflet/geocoder/esri-leaflet-geocoder.css"
+      integrity=""
+    />
+    <!-- ZMDI for icons -->
+    <link
+      rel="stylesheet"
+      href="/vendors/material-design-iconic-font/css/material-design-iconic-font.min.css"
+    />
+    <!-- bundle is all the styles from the app and components-->
+    <link rel="stylesheet" href="/bundle.css?v=APP_VERSION" />
+    <!-- Simple Analytics - privacy first analytics -->
+    <script async defer src="https://cdn.simpleanalytics.io/hello.js"></script>
+    <noscript
+      ><img src="https://api.simpleanalytics.io/hello.gif" alt=""
+    /></noscript>
+  </body>
 </html>

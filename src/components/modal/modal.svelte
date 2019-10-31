@@ -112,10 +112,10 @@
     min-width: 320px;
     background-color: var(--color-solid);
     min-height: 200px;
-    max-height: 95vh;
+    max-height: 90vh;
     max-width: 400px;
     margin: 10px;
-    border-radius: 0.7rem;
+    border-radius: 1.4rem;
     display: flex;
     flex-direction: column;
     justify-content: stretch;

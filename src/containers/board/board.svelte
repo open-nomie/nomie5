@@ -150,7 +150,7 @@
    */
   const methods = {
     editBoard() {
-      navigate(`/board/${activeBoard.id}`);
+      navigate(`/board/${$BoardStore.activeBoard.id}`);
     },
     // When Tracker Subscribe
     onTrackersChange(trackers) {
@@ -519,7 +519,7 @@
       margin-right: 10px;
       max-width: 200px;
     }
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(xs) {
       min-width: 300px;
       max-width: 500px;
       margin-left: auto;

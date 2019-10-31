@@ -5619,8 +5619,7 @@ body.scrolling .mini-map {
     font-size: 24px !important; }
   .n-item .main {
     flex-grow: 1;
-    flex-shrink: 1;
-    overflow: hidden; }
+    flex-shrink: 1; }
     .n-item .main h4 {
       font-size: 1.14rem;
       margin: 2px 0;
@@ -5734,6 +5733,11 @@ body.scrolling .mini-map {
 
 .delete-on-app {
   transition: all 1s ease-in-out; }
+  .delete-on-app .version {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: var(--color-primary);
+    font-weight: bold;
+    z-index: 3000; }
   .delete-on-app.deleted {
     transition: all 0.5s ease-in-out;
     opacity: 0;
@@ -5778,7 +5782,7 @@ body.scrolling .mini-map {
 .version {
   position: absolute;
   width: 100px;
-  bottom: 100px;
+  bottom: 50px;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
   margin-left: -50px;

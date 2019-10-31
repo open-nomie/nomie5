@@ -22,8 +22,6 @@
     justify-content: space-between;
     align-items: stretch;
     z-index: 1200;
-    // Tab Links
-    // Tab Icons
   }
 
   :global(#app-tabs svg) {

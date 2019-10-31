@@ -104,7 +104,8 @@
   .main {
     flex-grow: 1;
     flex-shrink: 1;
-    overflow: hidden;
+    // TODO: see if making main overflow hidden was a bad idea
+    // overflow: hidden;
     h4 {
       font-size: 1.14rem;
       margin: 2px 0;

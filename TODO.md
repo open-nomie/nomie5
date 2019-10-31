@@ -1,6 +1,6 @@
 # TODO
 
-Generated Wed Oct 30 2019 8:52 pm
+Generated Wed Oct 30 2019 10:35 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -16,6 +16,8 @@ Generated Wed Oct 30 2019 8:52 pm
    - TODO: tried to make this a spread - but I keep breaking it.
 - **src/scss/main.scss**
    - TODO: Look at making prefers-color-scheme work properly - when enabled, only buttons change
+- **src/scss/components/_list-item.scss**
+   - TODO: see if making main overflow hidden was a bad idea
 - **src/routes/stats.svelte**
    - Current hack - tap the emoji in the title - TODO: Make compare work again
    - TODO: Needs to be refactored and cleaned up
