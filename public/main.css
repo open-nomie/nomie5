@@ -5217,14 +5217,16 @@ body.theme-dark {
   color: var(--color-faded-3); }
 
 .text-xs {
-  font-size: 0.5rem !important; }
+  font-size: 0.5rem !important;
+  line-height: 0.7rem; }
 
 .text-sm {
   font-size: 0.81rem !important;
   line-height: 0.98rem; }
 
 .text-md {
-  font-size: 1rem !important; }
+  font-size: 1rem !important;
+  line-height: 1.2rem; }
 
 .text-lg {
   font-size: 1.3rem !important; }

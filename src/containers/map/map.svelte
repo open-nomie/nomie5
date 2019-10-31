@@ -153,7 +153,7 @@
     },
 
     renderMap() {
-      let mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png`;
+      let mapTheme = `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`;
       if (document.body.classList.contains("theme-dark")) {
         mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png`;
       }
@@ -457,7 +457,7 @@
           {data.locationName || 'Locations'}
         </div>
 
-        {#if data.showLocations}
+        {#if data.showLocations && data.locationName}
           <div class="right">
             <div
               class="btn btn-clear text-primary"
@@ -476,25 +476,26 @@
             </div>
           {/if}
           {#each $Locations as location}
-            <Item
-              className="compact text-primary"
-              title={location.name}
-              on:click={() => {
-                methods.setLocation(location);
-              }}>
+            <Item className="compact text-primary">
               <button
                 slot="left"
-                class="btn btn-clear btn-icon text-primary"
+                class="btn btn-clear btn-icon text-red"
                 on:click={() => {
                   methods.setLocation(location);
                 }}>
                 <i class="zmdi zmdi-pin" />
               </button>
+              <div
+                class="text-md text-inverse font-weight-bold"
+                on:click={() => {
+                  methods.setLocation(location);
+                }}>
+                {location.name}
+              </div>
               <div slot="right" class="n-row" style="min-width:50px;">
                 <button
                   class="btn btn-clear btn-icon mr-2"
                   on:click={evt => {
-                    evt.stopPropagation();
                     methods.editName(location);
                   }}>
                   <i class="zmdi zmdi-edit" />
@@ -502,7 +503,6 @@
                 <button
                   class="btn btn-clear btn-icon px-0"
                   on:click={evt => {
-                    evt.stopPropagation();
                     methods.deleteLocation(location);
                   }}>
                   <i class="zmdi zmdi-delete" />
