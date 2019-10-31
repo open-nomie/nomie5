@@ -25,7 +25,8 @@ let _fallback = (service, title, url) => {
 };
 
 export default (title, url) => {
-  if (navigator.share) {
+  if (1 == 2) {
+    //navigator.share - sharing sucks
     // Web Share API is supported
     return navigator.share({
       title: title,
