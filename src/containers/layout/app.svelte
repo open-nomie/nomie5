@@ -2,20 +2,34 @@
   import { onMount } from "svelte";
   import AppTabs from "../layout/tabs.svelte";
   export let title = "Welcome";
+  export let refresh = undefined;
 
-  let bodyPaddingTop = 50;
-  let bodyPaddingBottom = 50;
+  let padBottomDom;
+  let padTopDom;
   let contentDom;
   let headerDom;
   let footerDom;
+
+  const padContent = () => {
+    padTopDom.style.height = `${headerDom.offsetHeight}px`;
+    padBottomDom.style.height = `${footerDom.offsetHeight}px`;
+  };
 
   $: if (title) {
     document.title = `Nomie ${title}`;
   }
 
+  $: if (refresh && padTopDom) {
+    padContent();
+  }
+
   onMount(() => {
-    bodyPaddingTop = headerDom.offsetHeight;
-    bodyPaddingBottom = footerDom.offsetHeight;
+    setTimeout(() => {
+      padContent();
+      setTimeout(() => {
+        padContent();
+      }, 100);
+    }, 100);
     window.scrollTo(0, 0);
   });
 </script>
@@ -59,11 +73,11 @@
 </div>
 <div class="content-slot" bind:this={contentDom}>
   <!-- Dynamically add padding to account for headers and footers -->
-  <div style="padding-top:{bodyPaddingTop}px" class="pad-top" />
+  <div bind:this={padTopDom} class="pad-top">&nbsp;</div>
   <!-- Insert Slotted Content -->
   <slot name="content" />
   <!-- Dynamically add padding to account for headers and footers -->
-  <div style="padding-bottom:{bodyPaddingBottom}px" class="pad-bottom" />
+  <div bind:this={padBottomDom} class="pad-bottom">&nbsp;</div>
 </div>
 <div class="footer-slot" bind:this={footerDom}>
   <slot name="footer" />

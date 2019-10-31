@@ -178,6 +178,19 @@
       let points = state.stats.results[view].chart.points || [];
       return points;
     },
+    getVsChartPoints() {
+      console.log("getvsChartPoints");
+      return new Promise((resolve, reject) => {
+        console.log("Is there a compare", { ...state.compare });
+        setTimeout(() => {
+          console.log("Is there a compare now?", { ...state.compare });
+          let view = state.view == "year" ? "year" : "month";
+          let points = state.compare.stats.results[view].chart.points || [];
+          resolve(points);
+        }, 120);
+      });
+      // return [];
+    },
     activeIndex() {
       if (state.view == "year") {
         return state.date.month();
@@ -214,12 +227,12 @@
       methods.getStats(tracker).then(res => {
         rows = res.rows;
         state.stats = res.stats;
-        // if (state.compare.tracker) {
-        //   methods.getStats(state.compare.tracker).then(compareRes => {
-        //     state.compare.stats = compareRes.stats;
-        //     state.compare.rows = compareRes.rows;
-        //   });
-        // }
+        if (state.compare.tracker) {
+          methods.getStats(state.compare.tracker).then(compareRes => {
+            state.compare.stats = compareRes.stats;
+            state.compare.rows = compareRes.rows;
+          });
+        }
 
         refreshing = false;
       });
@@ -461,7 +474,13 @@
       style="background-color:{state.tracker.color}"
       on:swipedown={methods.close}>
       {#if state.tracker}
-        {state.tracker.emoji} {state.tracker.label}
+        <button class="btn btn-clear btn-sm" on:click={methods.compare}>
+          {state.tracker.emoji} {state.tracker.label}
+          {#if state.compare.tracker}
+            <span class="mx-2">vs</span>
+            {state.compare.tracker.emoji}
+          {/if}
+        </button>
       {:else}
         <Spinner size="16" speed="750" color="#666" thickness="2" gap="40" />
         Loading...
@@ -483,14 +502,7 @@
                 methods.changeView('year');
               } }]} />
       </div>
-      <!-- End View Button Group -->
-      <!-- <h1 class="truncate" on:click={methods.compare}>
-        {state.tracker.emoji} {state.tracker.label}
-        {#if state.compare.tracker}
-          <span class="">vs</span>
-          {state.compare.tracker.emoji}
-        {/if}
-      </h1> -->
+
       <button
         class="btn btn-clear btn-icon zmdi zmdi-edit"
         on:click={() => {
@@ -677,7 +689,7 @@
       {#if state.subview === 'chart'}
         <div class="p-2">
           <BarChart
-            height={220}
+            height={state.compare.tracker ? 140 : 200}
             color={state.tracker.color}
             labels={methods.getChartLabels()}
             points={methods.getChartPoints()}
@@ -698,6 +710,38 @@
               return NomieUOM.format(y, state.tracker.uom);
             }}
             activeIndex={methods.activeIndex()} />
+          {#if state.compare.tracker}
+            {#await methods.getVsChartPoints() then points}
+              <BarChart
+                height={90}
+                color={state.compare.tracker.color}
+                labels={methods.getChartLabels()}
+                {points}
+                on:tap={event => {
+                  let newDate;
+                  if (state.view === 'year') {
+                    newDate = state.date
+                      .toDate()
+                      .setMonth(event.detail.index + 1);
+                  } else if (state.view == 'month') {
+                    newDate = state.date
+                      .toDate()
+                      .setDate(event.detail.index + 1);
+                  } else if (state.view == 'day') {
+                    newDate = state.date
+                      .toDate()
+                      .setDate(event.detail.index + 1);
+                  }
+                  state.date = dayjs(newDate);
+                  methods.refresh();
+                }}
+                xFormat={methods.xFormat}
+                yFormat={y => {
+                  return NomieUOM.format(y, state.compare.tracker.uom);
+                }}
+                activeIndex={methods.activeIndex()} />
+            {/await}
+          {/if}
         </div>
       {:else if state.subview === 'grid'}
         <NTimeGrid color={state.tracker.color} rows={methods.getGridRows()} />
