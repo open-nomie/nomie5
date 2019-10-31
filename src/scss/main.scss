@@ -284,14 +284,10 @@ button {
 }
 
 .page {
+  display: flex;
+  min-height: 100vh;
   flex-grow: 1;
   background-color: var(--color-bg);
-  &.with-header {
-    padding-top: 50px;
-  }
-  &.with-sub-header {
-    padding-top: 100px;
-  }
 }
 
 @keyframes keyframes1 {

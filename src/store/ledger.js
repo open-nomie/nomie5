@@ -8,6 +8,7 @@ import Logger from '../utils/log/log';
 import dayjs from 'dayjs';
 import { writable } from 'svelte/store';
 import PromiseStep from '../utils/promise-step/promise-step';
+import md5 from "md5";
 
 // Config
 import config from '../../config/global';
@@ -33,6 +34,7 @@ const ledgerInit = () => {
 		today: {},
 		count: 0,
 		saving: false,
+		hash: null
 	};
 
 	const methods = {
@@ -128,6 +130,12 @@ const ledgerInit = () => {
 			});
 			return trackers;
 		},
+		hashTodayPayload(today) {
+			let nodes = Object.keys(today).map((tag)=>{
+				return `${tag}-${today[tag].values.join(',')}`
+			});
+			return md5(nodes.join(','));
+		},
 		getToday() {
 			return new Promise((resolve, reject) => {
 				let todayKey = dayjs().format('YYYY-MM');
@@ -144,6 +152,8 @@ const ledgerInit = () => {
 					let trackersUsed = methods.extractTrackerTagAndValues(logs);
 					update(b => {
 						b.today = trackersUsed;
+						// Create a hash of this setting so we can watch for changes
+						b.hash = methods.hashTodayPayload(trackersUsed);
 						b.count++;
 						return b;
 					});

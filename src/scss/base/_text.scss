@@ -17,6 +17,15 @@
 .text-solid {
   color: var(--color-solid);
 }
+.bg-solid {
+  background-color: var(--color-solid);
+}
+.bg-inverse {
+  background-color: var(--color-inverse);
+}
+.bg-transparent {
+  background-color: transparent;
+}
 .text-inverse {
   color: var(--color-inverse);
 }

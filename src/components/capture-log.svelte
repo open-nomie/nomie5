@@ -590,7 +590,7 @@
 
     <div
       class="advanced-options-list {state.showCustomDate ? 'visible' : 'hidden'}">
-      <div class="container pt-3 pb-1" style="max-width:300px">
+      <div class="container pt-3 pb-1" style="max-width:320px">
         <div class="n-row">
           <div class="input-group flex-grow mr-1">
             <input

@@ -22,15 +22,6 @@ body.no-scroll {
   right: 0;
 }
 
-body.notched {
-  .notch-bottom {
-    padding-bottom: env(safe-area-inset-bottom) !important;
-  }
-  .notch-top {
-    padding-bottom: env(safe-area-inset-top) !important;
-  }
-}
-
 body {
   --color-darkest: #fff;
   --color-bg: #f9f9f9;
@@ -120,6 +111,7 @@ body {
 }
 
 body {
+  background-color: var(--color-bg);
   .main-content {
     &:before {
       bottom: -50px;

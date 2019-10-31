@@ -3,6 +3,8 @@
   import { navigate, Link } from "svelte-routing";
   import { onMount } from "svelte";
 
+  import SocialShare from "../modules/share/share";
+
   // Components
   import NItem from "../components/list-item/list-item.svelte";
   import NText from "../components/text/text.svelte";
@@ -50,6 +52,12 @@
   let methods = {
     sign_out() {
       UserStore.signout();
+    },
+    share() {
+      SocialShare(
+        `I track and monitor the good and bad in my life with Nomie - to know me. It's free, private, and you get to design what you track. @nomieapp`,
+        "https://nomie.app"
+      );
     },
     sign_in() {
       UserStore.redirectToSignIn();
@@ -140,7 +148,7 @@
   });
 </script>
 
-<AppLayout>
+<AppLayout title="Settings">
   <div slot="header">
     <NToolbar>
       <h2 class="text-inverse">{Lang.t('settings.settings')}</h2>
@@ -173,6 +181,15 @@
 
             </div>
           {/if}
+          <NItem className="n-item-divider compact" />
+          <NItem
+            className="clickable pt-2"
+            title={Lang.t('settings.share-nomie', 'Share Nomie w/ Friends')}
+            description="It'd be super helpful"
+            on:click={methods.share}>
+            <span slot="left" class="btn-icon zmdi text-primary zmdi-share" />
+            <span slot="right" class="icon zmdi zmdi-more" />
+          </NItem>
 
           <div class="n-pop">
             <NItem
@@ -442,32 +459,31 @@
 
           </div>
 
-          <div class="n-pop pt-2">
-            <NItem title={Lang.t('general.questions')}>
-              <span slot="right">
-                <a
-                  class="btn btn-clear text-primary"
-                  href={`mailto:${config.support_email}?subject=Open Nomie Support`}>
-                  {config.support_contact}
-                </a>
-              </span>
+          <NItem className="compact item-divider" />
 
-            </NItem>
-            <NItem className="compact item-divider" />
-            <NItem
-              title="Copyright 2019. All Rights Reserved."
-              className="pb-3">
-              <NText tag="div" size="sm">
-                Nomie&reg; by
-                <a href="https://www.happydata.org" traget="_system">
-                  Happy Data, LLC
-                </a>
-              </NText>
-            </NItem>
+          <NItem title={Lang.t('general.questions')}>
+            <span slot="right">
+              <a
+                class="btn btn-clear text-primary"
+                href={`mailto:${config.support_email}?subject=Open Nomie Support`}>
+                {config.support_contact}
+              </a>
+            </span>
+          </NItem>
 
-          </div>
+          <NItem className="compact item-divider" />
 
+          <NItem title="Copyright 2019. All Rights Reserved." className="pb-3">
+            <NText tag="div" size="sm">
+              Nomie&reg; by
+              <a href="https://www.happydata.org" traget="_system">
+                Happy Data, LLC
+              </a>
+            </NText>
+          </NItem>
         </div>
+        <!-- end container -->
+
       </div>
     {/if}
   </div>

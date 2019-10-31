@@ -1,6 +1,6 @@
 # TODO
 
-Generated Tue Oct 29 2019 10:55 pm
+Generated Wed Oct 30 2019 8:52 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -56,10 +56,6 @@ Generated Tue Oct 29 2019 10:55 pm
    - Modal will be hidden in settings TODO: make this not hacky -->
 - **src/containers/board/tracker-button.svelte**
    - TODO: Move this to components/tracker-button
-- **src/containers/board/board.svelte**
-   - TODO: See if https:www.npmjs.com/package/@composi/gestures can detect how much they swiped
-   - TODO: Look at why this is needed... slop!
-   - TODO: Finish this starter pack add trackers, make them installable. -->
 - **src/components/capture-log.svelte**
    - TODO: Add a media/photo type of thing that can be added to a log..
    - await LedgerStore.saveLog($ActiveLogStore);  TODO: Make ledger task instead

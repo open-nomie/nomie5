@@ -48,6 +48,7 @@
 
   let datePicker;
   let searchInput;
+  let appTitle = null;
 
   const state = {
     date: dayjs(new Date()),
@@ -145,8 +146,11 @@
       .forEach(log => {
         dayScore = dayScore + parseInt(log.score);
       });
+
     loading = false;
   }
+
+  $: appTitle = `History ${state.date.format("YYYY-MM-DD")}`;
 
   $: if (searchLogs || logs) {
     locations = (searchLogs || logs)
@@ -387,6 +391,12 @@
     padding-right: 16px !important;
     border-bottom-color: rgba(0, 0, 0, 0.05) !important;
   }
+  :global(.trackers-list .main div) {
+    font-size: 1.1rem !important;
+  }
+  :global(.trackers-list .emoji) {
+    font-size: 1.2rem !important;
+  }
   .btn.flex {
     display: flex;
     align-items: center;
@@ -397,7 +407,7 @@
   }
 </style>
 
-<AppLayout>
+<AppLayout title={appTitle}>
 
   <header slot="header">
     <NToolbar>
@@ -407,13 +417,13 @@
             <button
               class="btn btn-clear btn-icon flex"
               on:click={methods.previousSearch}>
-              <i class="zmdi zmdi-chevron-left" />
+              <i class="zmdi zmdi-arrow-left" />
             </button>
           {:else}
             <button
               class="btn btn-clear btn-icon flex"
               on:click={methods.previous}>
-              <i class="zmdi zmdi-chevron-left" />
+              <i class="zmdi zmdi-arrow-left" />
             </button>
           {/if}
           <!-- <div class="filler" /> -->
@@ -465,11 +475,11 @@
             <button
               class="btn btn-clear btn-icon flex"
               on:click={methods.nextSearch}>
-              <i class="zmdi zmdi-chevron-right " />
+              <i class="zmdi zmdi-arrow-right " />
             </button>
           {:else}
             <button class="btn btn-clear btn-icon flex" on:click={methods.next}>
-              <i class="zmdi zmdi-chevron-right" />
+              <i class="zmdi zmdi-arrow-right" />
             </button>
           {/if}
         </div>
@@ -590,7 +600,7 @@
           on:click={() => {
             state.showAllLocations = !state.showAllLocations;
           }}>
-          <i class="zmdi zmdi-close" />
+          {Lang.t('history.close-map', 'Close Map')}
         </div>
       {/if}
     {/if}

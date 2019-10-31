@@ -53,8 +53,6 @@
         let scrollTo = childEnd - child.offsetWidth * 0.5;
         let scrolledAmount = scroller.scrollLeft;
 
-        console.log("child end", { scrollTo, childEnd, scrolledAmount });
-
         if (childEnd > scroller.offsetWidth * 0.5) {
           scroller.scrollTo(scrollTo, 0);
         } else if (scrolledAmount > childEnd) {

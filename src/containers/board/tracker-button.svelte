@@ -34,6 +34,10 @@
     click() {
       dispatch("click", {});
     },
+    rightclick(evt) {
+      evt.preventDefault();
+      return false;
+    },
     longPress() {
       dispatch("longpress", {});
     },
@@ -192,6 +196,7 @@
   on:touchstart={methods.mousedown}
   on:mousedown={methods.mousedown}
   on:touchend={methods.mouseup}
+  on:contextmenu={methods.rightclick}
   on:mouseout={methods.mouseup}
   on:mouseup={methods.mouseup}
   {disabled}
