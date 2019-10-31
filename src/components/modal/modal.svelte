@@ -104,7 +104,6 @@
         margin: 0;
         margin-left: 0;
         margin-right: 0;
-        padding-bottom: env(safe-area-inset-bottom) !important;
       }
     }
   }

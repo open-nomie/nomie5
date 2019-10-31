@@ -292,7 +292,7 @@
     position: relative;
     z-index: 130;
     padding: 0px 10px 10px;
-    margin-top: -10px;
+    margin-top: -12px;
     .btn {
       background-color: transparent;
       display: flex;

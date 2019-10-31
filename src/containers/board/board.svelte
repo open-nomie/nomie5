@@ -479,6 +479,9 @@
     padding: 0px 0px;
     background-color: var(--color-bg);
     width: 100%;
+    @include media-breakpoint-up(md) {
+      padding-top: 20px;
+    }
   }
 
   .no-trackers {

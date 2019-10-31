@@ -62,7 +62,7 @@
   <!-- Insert Slotted Content -->
   <slot name="content" />
   <!-- Dynamically add padding to account for headers and footers -->
-  <div style="padding-bottom:{bodyPaddingBottom}px" class="pad-top" />
+  <div style="padding-bottom:{bodyPaddingBottom}px" class="pad-bottom" />
 </div>
 <div class="footer-slot" bind:this={footerDom}>
   <slot name="footer" />

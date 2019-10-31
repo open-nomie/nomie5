@@ -92,6 +92,7 @@
     @include media-breakpoint-up(md) {
       width: 7.9rem;
       height: 7.9rem;
+      margin: 12px 3px !important;
       .emoji {
         font-size: 3.4rem;
         font-style: normal;

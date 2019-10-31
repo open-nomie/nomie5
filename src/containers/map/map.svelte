@@ -54,14 +54,11 @@
 
   $: if (picker && MAP) {
     locate().then(location => {
-      locations
-        .push({
-          lat: location.latitude,
-          lng: location.longitude
-        })
-        .catch(e => {
-          Interact.toast(e.message, { type: error });
-        });
+      locations.push({
+        lat: location.latitude,
+        lng: location.longitude
+      });
+
       // data.lat = location.latitude;
       // data.lng = location.longitutde;
       MAP.setView(L.latLng(location.latitude, location.longitude), 12);
@@ -294,14 +291,6 @@
     }
   }
 
-  :global(.n-map-container .location-name .n-item .right .btn) {
-    margin-left: 6px;
-    min-width: 45px;
-  }
-  :global(.n-map-container .location-name .n-item .right) {
-    flex-shrink: 0;
-    width: 100px;
-  }
   .n-map-container .location-name {
     position: absolute;
     bottom: 0px;
@@ -456,11 +445,17 @@
             }}>
 
             <i
-              class="zmdi text-primary {data.showLocations ? 'zmdi-close' : 'zmdi-menu'}" />
+              class="zmdi {data.showLocations ? 'zmdi-chevron-down' : 'zmdi-chevron-up'}" />
           </button>
         </div>
 
-        <div class="name flex-grow">{data.locationName || ''}</div>
+        <div
+          class="name flex-grow"
+          on:click={() => {
+            data.showLocations = !data.showLocations;
+          }}>
+          {data.locationName || 'Locations'}
+        </div>
 
         {#if data.showLocations}
           <div class="right">
@@ -475,6 +470,11 @@
       </div>
       {#if data.showLocations}
         <div class="locations list">
+          {#if $Locations.length == 0}
+            <div class="empty-notice" style="max-height:120px;">
+              No Saved Locations
+            </div>
+          {/if}
           {#each $Locations as location}
             <Item
               className="compact text-primary"
@@ -483,21 +483,32 @@
                 methods.setLocation(location);
               }}>
               <button
-                slot="right"
-                class="btn btn-clear btn-icon"
+                slot="left"
+                class="btn btn-clear btn-icon text-primary"
                 on:click={() => {
-                  methods.editName(location);
+                  methods.setLocation(location);
                 }}>
-                <i class="zmdi zmdi-edit" />
+                <i class="zmdi zmdi-pin" />
               </button>
-              <button
-                slot="right"
-                class="btn btn-clear btn-icon flex-shrink-off"
-                on:click={() => {
-                  methods.deleteLocation(location);
-                }}>
-                <i class="zmdi zmdi-delete" />
-              </button>
+              <div slot="right" class="n-row" style="min-width:50px;">
+                <button
+                  class="btn btn-clear btn-icon mr-2"
+                  on:click={evt => {
+                    evt.stopPropagation();
+                    methods.editName(location);
+                  }}>
+                  <i class="zmdi zmdi-edit" />
+                </button>
+                <button
+                  class="btn btn-clear btn-icon px-0"
+                  on:click={evt => {
+                    evt.stopPropagation();
+                    methods.deleteLocation(location);
+                  }}>
+                  <i class="zmdi zmdi-delete" />
+                </button>
+              </div>
+
             </Item>
           {/each}
           <div class="gap" />

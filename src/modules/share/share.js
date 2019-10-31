@@ -2,31 +2,34 @@ import { Interact } from "../../store/interact";
 
 let _fallback = (service, title, url) => {
   let launchURL = "";
-  title = encodeURIComponent(title);
-  url = encodeURIComponent(url);
+  let _title = encodeURIComponent(title);
+  let _url = encodeURIComponent(url);
   switch (service) {
     case "twitter":
-      launchURL = `https://twitter.com/intent/tweet?url=${url}&text=${title}&via=nomieapp&hashtags=quantifedself`;
+      launchURL = `https://twitter.com/intent/tweet?url=${_url}&text=${_title}&via=nomieapp&hashtags=quantifedself`;
       break;
     case "facebook":
-      launchURL = `https://reddit.com/submit?url=${url}&title=${title}`;
+      launchURL = `https://reddit.com/submit?url=${_url}&title=${_title}`;
       break;
     case "linkedin":
-      launchURL = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}&summary=&source=nomie.app`;
+      launchURL = `https://www.linkedin.com/shareArticle?mini=true&url=${_url}&title=${_title}&summary=&source=nomie.app`;
       break;
     case "reddit":
-      launchURL = `https://reddit.com/submit?url=${url}&title=${title}`;
+      launchURL = `https://reddit.com/submit?url=${_url}&title=${_title}`;
       break;
     case "email":
-      launchURL = `mailto:?subject=Check%20out%20Nomie&body=${title}%0A%0A${url}`;
+      launchURL = `mailto:?subject=Check%20out%20Nomie&body=${_title}%0A%0A${url}`;
       break;
   }
-  window.open(launchURL, "_blank");
+  if (launchURL) {
+    window.open(launchURL, "_system");
+  }
 };
 
 export default (title, url) => {
   if (1 == 2) {
-    //navigator.share - sharing sucks
+    //navigator.share - sharing sucksbird
+
     // Web Share API is supported
     return navigator.share({
       title: title,
@@ -66,6 +69,17 @@ export default (title, url) => {
         }
       }
     ];
+    if (navigator.share) {
+      buttons.push({
+        title: "More...",
+        click() {
+          return navigator.share({
+            title: title,
+            url: url
+          });
+        }
+      });
+    }
     Interact.popmenu({ buttons: buttons });
     return Promise.resolve(null);
   }

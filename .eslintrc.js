@@ -12,16 +12,10 @@ module.exports = {
     ecmaVersion: 2019,
     sourceType: "module"
   },
-  overrides: [
-    {
-      files: ["**/*.svelte"],
-      processor: "svelte3/svelte3"
-    }
-  ],
   rules: {
-    indent: ["error", "tab"],
+    indent: ["error", "space"],
     "linebreak-style": ["error", "unix"],
-    quotes: ["error", "single"],
+    quotes: ["error", "double"],
     semi: ["error", "always"]
   }
 };
