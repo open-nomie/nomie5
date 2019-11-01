@@ -286,7 +286,6 @@
       top: 0;
       left: 0;
       right: 0;
-      bottom: $locationHeight;
       z-index: 1;
     }
   }
@@ -429,11 +428,11 @@
       </div>
     </div>
   {/if}
-  <div class="n-map-wrapper">
+  <div class="n-map-wrapper" style="bottom:{picker ? '50px' : '0'}">
     <div {id} class="n-map" />
   </div>
 
-  {#if data.locationName || picker}
+  {#if picker}
     <div class="location-name {data.showLocations ? 'expanded' : 'collapsed'}">
       <div class="row">
         <div class="left">

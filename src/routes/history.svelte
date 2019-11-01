@@ -527,11 +527,7 @@
         <!-- If no Logs found -->
         {#if logs.length === 0}
           {#if !searchMode}
-            <div class="empty-notice">
-              {Lang.t('history.no-records-found')}
-              <br />
-              {state.date.format('dddd, MMMM D YYYY')}
-            </div>
+            <div class="empty-notice">{Lang.t('history.no-records-found')}</div>
           {:else}
             <div class="empty-notice">
               {state.date.format('YYYY')} {Lang.t('history.no-records-found')}
