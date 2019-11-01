@@ -61,6 +61,7 @@
       }
     }
     .card {
+      border-radius: 1rem;
       transition: all 0.2s ease-in-out;
       max-width: 400px;
       max-height: 80vh;
@@ -90,6 +91,7 @@
       border-top: solid 1px var(--color-faded-1);
       button {
         min-width: 120px;
+        border-radius: 0.9rem;
       }
     }
     .btn-toolbar {
@@ -128,13 +130,15 @@
     <div class="p-2 d-flex flex-row footer">
       {#if cancel}
         <button
-          class="btn btn-light mr-1 flex-grow"
+          class="btn btn-lg btn-light mr-1 flex-grow"
           on:click={methods.onCancel}>
           {cancel}
         </button>
       {/if}
 
-      <button class="btn btn-primary ml-1 flex-grow" on:click={methods.onOk}>
+      <button
+        class="btn btn-lg btn-primary ml-1 flex-grow"
+        on:click={methods.onOk}>
         {ok}
       </button>
     </div>

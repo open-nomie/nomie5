@@ -54,8 +54,7 @@
     // Fire off a notice if it's not today anymore - and we haven't
     // already fired off the confirm prompt // stops the double firing.
     if (today !== new Date().toDateString() && !confirming) {
-      confirming = confirm("A new day has begun, you should refresh Nomie.");
-      if (confirming) {
+      if (confirm("A new day has begun, you should refresh Nomie.")) {
         window.location.href = window.location.href;
       }
     }

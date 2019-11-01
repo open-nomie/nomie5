@@ -30,6 +30,7 @@ body {
   --color-inverse-2: #777;
   --color-inverse-3: #999;
   --color-solid: #fff;
+  --color-white: #fff;
   --color-solid-1: #eee;
   --color-solid-2: rgb(223, 223, 223);
   --color-solid-3: #666;
@@ -55,6 +56,12 @@ body {
   --box-shadow: 0px 10px 20px -5px rgba(0, 0, 0, 0.2);
   --box-shadow-float: 0 4px 8px rgba(0, 0, 0, 0.08),
     0 2px 4px rgba(0, 0, 0, 0.08), 0 0 2px rgba(0, 0, 0, 0.24);
+}
+
+body.test {
+  * {
+    border: solid 1px rgba(red, 0.6) !important;
+  }
 }
 
 @mixin darkmode {
@@ -123,6 +130,16 @@ body {
       background-color: transparent;
     }
   }
+}
+
+.box-shadow-float {
+  box-shadow: var(--box-shadow-float);
+}
+.box-shadow-tight {
+  box-shadow: var(--box-shadow-tight);
+}
+.box-shadow {
+  box-shadow: var(--box-shadow);
 }
 
 body.hidden {

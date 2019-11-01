@@ -1,7 +1,8 @@
 <script>
   import NText from "../text/text.svelte";
   import { fly } from "svelte/transition";
-
+  import { createEventDispatcher } from "svelte";
+  const dispatch = createEventDispatcher();
   // Props
   export let padding = false;
   export let title;
@@ -151,7 +152,7 @@
     }
   }
   .n-modal-header {
-    padding: 10px 10px;
+    padding: 10px 16px;
     min-height: 40px;
     border-bottom: solid 1px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -189,6 +190,10 @@
     &.padding {
       padding: 20px;
     }
+    &.no-padding {
+      padding: 0px !important;
+      overflow: scroll;
+    }
     overflow-y: scroll;
   }
 </style>
@@ -204,9 +209,19 @@
         {#if has_header}
           <slot name="header" />
         {:else}
+          {#if allowClose}
+            <button
+              class="btn btn-clear btn-icon zmdi zmdi-close"
+              on:click={() => {
+                dispatch('close');
+              }} />
+          {/if}
           <NText tag="div" bold size="lg" className="text-center w-100 py-1">
             {title}
           </NText>
+          {#if allowClose}
+            <button class="btn btn-clear btn-icon zmdi" on:click={() => {}} />
+          {/if}
         {/if}
 
       </div>

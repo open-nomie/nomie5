@@ -9,7 +9,7 @@ let _fallback = (service, title, url) => {
       launchURL = `https://twitter.com/intent/tweet?url=${_url}&text=${_title}&via=nomieapp&hashtags=quantifedself`;
       break;
     case "facebook":
-      launchURL = `https://reddit.com/submit?url=${_url}&title=${_title}`;
+      launchURL = `https://www.facebook.com/sharer.php?u=${_url}`;
       break;
     case "linkedin":
       launchURL = `https://www.linkedin.com/shareArticle?mini=true&url=${_url}&title=${_title}&summary=&source=nomie.app`;

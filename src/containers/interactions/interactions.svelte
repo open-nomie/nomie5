@@ -271,14 +271,11 @@
     show={true}
     fullscreen
     flexBody
-    title={$Interact.locationViewer.title || 'Locations'}>
+    allowClose={true}
+    title={$Interact.locationViewer.locations[0].title || 'Location'}
+    on:close={Interact.dismissLocations}>
     <NMap locations={$Interact.locationViewer.locations} />
-    <button
-      class="btn btn-lg btn-primary btn-block mb-0"
-      on:click={() => Interact.dismissLocations()}
-      slot="footer">
-      Close
-    </button>
+    <div class="mt-2" slot="footer" />
   </NModal>
 {/if}
 {#if $Interact.logEditor.show}

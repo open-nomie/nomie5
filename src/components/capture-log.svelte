@@ -293,33 +293,33 @@
     z-index: 130;
     padding: 0px 10px 10px;
     margin-top: -12px;
-    .btn {
-      background-color: transparent;
-      display: flex;
-      align-items: center;
-      color: var(--color-solid-3);
-      padding: 2px 6px;
-      font-size: 0.8rem;
-      line-height: 0.8rem;
-      i {
-        margin-right: 4px;
-        font-size: 1rem;
-        color: var(--color-solid-2);
-      }
-      &.btn-active {
-        background-color: var(--color-inverse-1);
-        color: var(--color-solid-1);
-        i {
-          color: var(--color-primary-bright);
-        }
-      }
-      &.btn-close {
-        i {
-          color: var(--color-solid-3) !important;
-          font-size: 26px;
-        }
-      }
-    }
+    // .btn {
+    //   background-color: transparent;
+    //   display: flex;
+    //   align-items: center;
+    //   color: var(--color-solid-3);
+    //   padding: 2px 6px;
+    //   font-size: 0.8rem;
+    //   line-height: 0.8rem;
+    //   i {
+    //     margin-right: 4px;
+    //     font-size: 1rem;
+    //     color: var(--color-solid-2);
+    //   }
+    //   &.btn-active {
+    //     background-color: var(--color-inverse-1);
+    //     color: var(--color-solid-1);
+    //     i {
+    //       color: var(--color-primary-bright);
+    //     }
+    //   }
+    //   &.btn-close {
+    //     i {
+    //       color: var(--color-solid-3) !important;
+    //       font-size: 26px;
+    //     }
+    //   }
+    // }
     .advanced-options-list {
       transition: all 0.2s ease-in-out;
       border: none !important;
@@ -567,31 +567,29 @@
 
     <div
       class="advanced-options-list {state.showCustomDate ? 'visible' : 'hidden'}">
-      <div class="container pt-3 pb-1" style="max-width:320px">
+      <div class="container pt-3 pb-1" style="max-width:520px">
         <div class="n-row">
-          <div class="input-group flex-grow mr-1">
-            <input
-              name="note"
-              type="datetime-local"
-              class="form-control mt-0"
-              style="font-size:16px; height:44px; overflow:hidden"
-              bind:value={state.dateStarter} />
-            <div class="input-group-append">
-              <button class="btn btn-primary px-3" on:click={methods.setDate}>
-                {Lang.t('general.set')}
-              </button>
-            </div>
-          </div>
-          <!-- end input-group -->
-          <!-- And cancel button-->
           <button
-            class="btn btn-clear btn-icon btn-close"
+            class="btn btn-white btn-sm mr-1 btn-icon zmdi zmdi-chevron-left
+            box-shadow-float"
             on:click={() => {
               state.date = null;
               state.showCustomDate = false;
-            }}>
-            <i class="zmdi zmdi-close" />
+            }} />
+          <input
+            name="note"
+            type="datetime-local"
+            class="form-control mt-0 filler"
+            style="font-size:16px;"
+            bind:value={state.dateStarter} />
+          <button
+            class="btn btn-primary btn-sm mr-1 ml-2 px-3"
+            on:click={methods.setDate}>
+            {Lang.t('general.set')}
           </button>
+          <!-- end input-group -->
+          <!-- And cancel button-->
+
         </div>
 
       </div>

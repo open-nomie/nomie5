@@ -488,15 +488,22 @@
     min-height: 300px;
     height: 50vh;
     display: flex;
-    color: var(--color-solid-2);
+    color: var(--color-solid-3);
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
   .zmdi-search.active {
-    transform: scale(1.3);
-    color: var(--color-red);
+    transform: scale(1.5);
+    background-color: var(--color-primary) !important;
+    color: var(--color-white) !important;
+    box-shadow: var(--box-shadow-float) !important;
+    border-radius: 50% !important;
+    z-index: 1000;
+  }
+  .zmdi-search {
+    color: var(--color-inverse);
   }
   .n-board .trackers {
     max-width: 100%;
@@ -514,6 +521,7 @@
     align-items: center;
     justify-content: center;
     margin: 16px;
+    margin-bottom: 32px;
     padding: 0 10px;
     .btn {
       min-width: 220px;
@@ -521,7 +529,7 @@
       margin-right: 10px;
       max-width: 200px;
     }
-    @include media-breakpoint-down(xs) {
+    @include media-breakpoint-down(sm) {
       min-width: 300px;
       max-width: 500px;
       margin-left: auto;
@@ -639,9 +647,7 @@
             </button>
 
             {#if $BoardStore.activeBoard}
-              <button
-                on:click={methods.editBoard}
-                class="btn btn btn-text btn-sm">
+              <button on:click={methods.editBoard} class="btn btn btn-text">
                 {Lang.t('board.edit-board', {
                   board: ($BoardStore.activeBoard || {}).label || null
                 })}

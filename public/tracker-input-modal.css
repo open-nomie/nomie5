@@ -1,4 +1,5 @@
 .n-modal-frame.tracker-input .n-modal-body {
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   align-items: center; }

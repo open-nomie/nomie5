@@ -376,7 +376,7 @@
   .header-date-control {
     line-height: 100%;
     flex-grow: 1;
-    width: 100%;
+    flex-shrin: 1;
   }
 
   :global(.trackers-list) {
@@ -435,38 +435,36 @@
       <div class="filler" /> -->
           {#if searchMode}
             <div class="filler" />
-            <div class="text-center">
-              <NText tag="div" size="lg" className="n-title text-center" bold>
-                Search {state.date.format('YYYY')}
-              </NText>
+            <div class="text-center n-text md">
+              Search {state.date.format('YYYY')}
             </div>
             <div class="filler" />
           {:else}
+            <div class="filler" />
+
             <div
               class="header-date-control justify-content-center flex-grow
               text-center {isToday ? 'today' : 'not-today text-primary-bright'}"
               on:click={methods.selectDate}>
-              <NCell
-                direction="row"
-                className="justify-content-center align-items-center">
+              <div class="text-center text-md n-row">
                 {#if dayScore}
                   <NPoints points={dayScore} className="mr-2" />
                 {:else}
-                  <i class="zmdi mr-2 text-faded-3 text-xs" />
+                  <i class="zmdi mr-4 text-faded-3 text-xs" />
                 {/if}
-
-                <NCell direction="column">
-                  <NText tag="div" size="md" bold>
+                <div class="col">
+                  <div class="text-md font-weight-bold md">
                     {state.date.format('dddd')}
-                  </NText>
-                  <NText tag="div" size="sm">
-                    {state.date.format('MMM D YYYY')}
-                  </NText>
-                </NCell>
-                <i class="zmdi zmdi-more ml-2 text-faded-3 text-xs" />
-              </NCell>
-
+                  </div>
+                  <div class="text-sm">{state.date.format('MMM D YYYY')}</div>
+                </div>
+                <i class="zmdi zmdi-more mx-2 text-faded-3 text-xs" />
+              </div>
+              <!-- end text middle -->
             </div>
+            <!-- end header-date-control -->
+
+            <div class="filler" />
           {/if}
           <!-- <button class="btn btn-clear btn-icon" on:click={methods.selectDate}>
         <i class="zmdi zmdi-calendar" />
