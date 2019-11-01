@@ -510,6 +510,7 @@
   <!-- end header-content header -->
 
   <main slot="content" class="page page-history">
+
     {#if loading}
       <div class="empty-notice">
         <Spinner size="50" speed="750" color="#666" thickness="2" gap="40" />
@@ -518,6 +519,11 @@
       <NMap {locations} />
     {:else}
       <div class="container p-0">
+        {#if !isToday}
+          <div class="pt-3 text-center text-sm text-faded-3">
+            {dayjs(state.date).fromNow()}
+          </div>
+        {/if}
         <!-- If no Logs found -->
         {#if logs.length === 0}
           {#if !searchMode}

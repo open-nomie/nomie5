@@ -293,6 +293,7 @@
     z-index: 130;
     padding: 0px 10px 10px;
     margin-top: -12px;
+    background-color:var(--color-solid);
     // .btn {
     //   background-color: transparent;
     //   display: flex;
