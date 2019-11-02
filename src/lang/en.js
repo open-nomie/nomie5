@@ -39,7 +39,8 @@ export default {
       month: "Month",
       year: "Year",
       map: "Map",
-      time: "Time"
+      time: "Time",
+      close: "Close"
     },
     stats: {
       when: "When",
@@ -123,6 +124,7 @@ export default {
       "install-tracker-question": "Install {{tracker}}?",
       "add-tracker": "Add Tracker",
       "edit-tracker": "Edit Tracker",
+      "tracker-selector": "Tracker Selector",
       label: "Label",
       emoji: "Emoji",
       tag: "Tag",

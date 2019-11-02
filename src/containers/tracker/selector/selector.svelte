@@ -10,6 +10,7 @@
 
   // Stores
   import { TrackerStore } from "../../../store/trackers";
+  import { Lang } from "../../../store/lang";
 
   // Props
   export let show = false;
@@ -61,6 +62,9 @@
         data.selected[tracker.tag] = tracker;
       }
     },
+    close() {
+      dispatch("cancel");
+    },
     // Check if a letter has been shown
     alphaGroupExists(tracker) {
       if (data.trackers.length > 10) {
@@ -83,16 +87,24 @@
 </script>
 
 <style lang="scss">
-
+  :global(.tracker-selector-modal .sticky-top) {
+    position: sticky;
+    top: 0px;
+  }
 </style>
 
 {#if show}
-  <NModal title="Tracker Selector" allowClose={true}>
+  <NModal
+    title={Lang.t('tracker.tracker-selector')}
+    type="fullscreen"
+    className="tracker-selector-modal"
+    allowClose={true}
+    on:close={methods.close}>
     <div class="list">
       {#each data.trackers as tracker}
         {#if !methods.alphaGroupExists(tracker)}
           <NItem
-            className="bg-light text-faded"
+            className="bg-light text-faded sticky-top"
             title={tracker.label.substr(0, 1).toUpperCase()} />
         {/if}
         <NItem
@@ -114,12 +126,8 @@
       {/each}
     </div>
     <div slot="footer" class="n-row">
-      <button
-        class="btn btn-light btn-lg w-100 mr-2"
-        on:click={() => {
-          dispatch('cancel');
-        }}>
-        Close
+      <button class="btn btn-light btn-lg w-100 mr-2" on:click={methods.close}>
+        {Lang.t('general.close')}
       </button>
       {#if data.selectedArray.length > 0}
         <button

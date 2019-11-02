@@ -444,7 +444,7 @@
 
             <div
               class="header-date-control justify-content-center flex-grow
-              text-center {isToday ? 'today' : 'not-today text-primary-bright'}"
+              text-center"
               on:click={methods.selectDate}>
               <div class="text-center text-md n-row">
                 {#if dayScore}
@@ -453,10 +453,14 @@
                   <i class="zmdi mr-4 text-faded-3 text-xs" />
                 {/if}
                 <div class="col">
-                  <div class="text-md font-weight-bold md">
+                  <div
+                    class="{isToday ? 'text-inverse' : 'not-today text-primary-bright'}
+                    text-md text-inverse font-weight-bold md">
                     {state.date.format('dddd')}
                   </div>
-                  <div class="text-sm">{state.date.format('MMM D YYYY')}</div>
+                  <div class="text-sm text-inverse-2">
+                    {state.date.format('MMM D YYYY')}
+                  </div>
                 </div>
                 <i class="zmdi zmdi-more mx-2 text-faded-3 text-xs" />
               </div>

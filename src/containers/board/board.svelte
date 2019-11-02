@@ -478,12 +478,16 @@
   .n-board {
     padding: 0px 0px;
     background-color: var(--color-bg);
-    width: 100%;
+    min-height: 75vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     @include media-breakpoint-up(md) {
       padding-top: 20px;
     }
   }
-
+  .n-add-button {
+  }
   .no-trackers {
     min-height: 300px;
     height: 50vh;
@@ -638,16 +642,20 @@
                   methods.showTrackerOptions(tracker);
                 }} />
             {/each}
+            <button
+              class="n-tracker-button n-add-button"
+              on:click={methods.addButtonTap}>
+              <i class="emoji">+</i>
+            </button>
           </div>
 
           <div class="board-actions">
-            <button class="btn btn btn-text" on:click={methods.addButtonTap}>
-              <i class="zmdi zmdi-plus" />
-              {Lang.t('tracker.add-tracker')}
-            </button>
 
             {#if $BoardStore.activeBoard}
-              <button on:click={methods.editBoard} class="btn btn btn-text">
+              <button
+                on:click={methods.editBoard}
+                class="btn btn btn-light btn-sm icon-left">
+                <i class="zmdi zmdi-edit" />
                 {Lang.t('board.edit-board', {
                   board: ($BoardStore.activeBoard || {}).label || null
                 })}

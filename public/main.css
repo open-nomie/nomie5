@@ -5235,6 +5235,15 @@ body.theme-dark {
 .text-inverse {
   color: var(--color-inverse); }
 
+.text-inverse-1 {
+  color: var(--color-inverse-1); }
+
+.text-inverse-2 {
+  color: var(--color-inverse-2); }
+
+.text-inverse-3 {
+  color: var(--color-inverse-3); }
+
 .text-white {
   color: #fff; }
 
@@ -5788,6 +5797,120 @@ body.scrolling .mini-map {
 
 .n-modal-frame.tracker-input .n-modal-footer .zmdi-plus {
   font-size: 2.2rem !important; }
+
+body.scrolling .n-tracker-button {
+  pointer-events: none !important; }
+
+.n-tracker-button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: solid 1px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-solid);
+  color: var(--color-inverse);
+  box-shadow: var(--box-shadow);
+  border-radius: 1rem;
+  width: 5.9rem;
+  height: 5.9rem;
+  outline: none;
+  transition: all 0.2s ease-in-out; }
+  .n-tracker-button:active, .n-tracker-button.pressing {
+    transition: all 0.2s ease-in-out;
+    transform: scale(0.95);
+    box-shadow: var(--box-shadow-tight); }
+  .n-tracker-button .emoji {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1; }
+  .n-tracker-button.saving {
+    transition: all 0.2s ease-in-out;
+    border: solid 2px var(--color-primary-bright); }
+  @media (min-width: 600px) {
+    .n-tracker-button {
+      width: 7.9rem;
+      height: 7.9rem;
+      margin: 12px 3px !important; }
+      .n-tracker-button .emoji {
+        font-size: 3.4rem;
+        font-style: normal; } }
+  @media (max-width: 979.98px) {
+    .n-tracker-button {
+      width: 6.8rem;
+      height: 6.8rem; }
+      .n-tracker-button .emoji {
+        font-size: 2.7rem;
+        font-style: normal; } }
+  @media (max-width: 599.98px) {
+    .n-tracker-button {
+      width: 6rem;
+      height: 6rem;
+      margin: 6px 3px !important; }
+      .n-tracker-button .emoji {
+        font-size: 2.2rem;
+        font-style: normal; } }
+  .n-tracker-button .one-tap {
+    position: absolute;
+    height: 4px;
+    border-radius: 2px;
+    background-color: var(--color-faded);
+    bottom: 2px;
+    left: 12%;
+    right: 12%;
+    z-index: 0; }
+  .n-tracker-button header {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 0.4rem;
+    left: 6px;
+    right: 6px;
+    font-size: 11px;
+    line-height: 11px; }
+    .n-tracker-button header .value.left {
+      height: 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 14px;
+      min-width: 16px;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      top: 0px;
+      left: 6px;
+      background: transparent; }
+  .n-tracker-button footer {
+    position: absolute;
+    bottom: 13px;
+    left: 4px;
+    right: 4px;
+    text-align: center;
+    line-height: 100%;
+    font-size: 0.8rem; }
+  .n-tracker-button .countdown {
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2; }
+  .n-tracker-button .balls {
+    position: absolute;
+    bottom: 2px;
+    left: 12%;
+    right: 12%;
+    z-index: 2; }
 
 .input-model {
   flex-grow: 1;

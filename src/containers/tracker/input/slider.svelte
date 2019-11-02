@@ -81,7 +81,7 @@
       transform: rotate(90deg);
       cursor: pointer;
       -webkit-appearance: none;
-      margin-top: 5px;
+      margin-top: 4px;
     }
     input[type="range"]:focus::-webkit-slider-runnable-track {
       background: var(--color-faded);
