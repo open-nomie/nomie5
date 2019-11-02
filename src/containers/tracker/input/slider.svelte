@@ -5,7 +5,9 @@
   export let max = "10";
   export let value = "5";
 
-  let tempValue = value;
+  let tempValue;
+
+  $: tempValue = value;
 
   const dispatch = createEventDispatcher();
 </script>
@@ -158,4 +160,5 @@
     on:change={() => {
       dispatch('change', parseInt(tempValue));
     }} />
+
 </div>

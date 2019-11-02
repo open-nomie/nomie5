@@ -62,6 +62,24 @@ const trackerStoreInit = () => {
         );
       });
     },
+    startTimer(tracker) {
+      update(state => {
+        if (state[tracker.tag]) {
+          state[tracker.tag].started = new Date().getTime();
+        }
+        return state;
+      });
+      return methods.put();
+    },
+    stopTimer(tracker) {
+      update(state => {
+        if (state[tracker.tag]) {
+          state[tracker.tag].started = null;
+        }
+        return state;
+      });
+      return methods.put();
+    },
     getAll() {
       let data = {};
       update(state => {
@@ -181,6 +199,10 @@ const trackerStoreInit = () => {
           })
           .catch(reject);
       });
+    },
+    put() {
+      let data = methods.data();
+      return Storage.put(`${config.data_root}/trackers.json`, data);
     },
     /**
      * Save The Tracker Store

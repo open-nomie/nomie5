@@ -148,7 +148,8 @@
       display: flex;
       flex-direction: column;
       label {
-        font-size: 0.6rem;
+        font-size: 0.9rem;
+        color: var(--color-inverse-3);
         margin-top: 10px;
       }
       &.hours {

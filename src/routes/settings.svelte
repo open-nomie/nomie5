@@ -473,14 +473,18 @@
 
           <NItem className="compact item-divider" />
 
-          <NItem title="Copyright 2019. All Rights Reserved." className="pb-3">
-            <NText tag="div" size="sm">
+          <NItem>
+            <div class="text-sm pb-2 pt-2">
+              &copy; Copyright 2019. All Rights Reserved
+            </div>
+            <div class="text-sm pb-2">
               Nomie&reg; by
               <a href="https://www.happydata.org" traget="_system">
                 Happy Data, LLC
               </a>
-            </NText>
+            </div>
           </NItem>
+
         </div>
         <!-- end container -->
 

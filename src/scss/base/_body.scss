@@ -52,8 +52,8 @@ body {
   --color-background-selected: #{rgba($primary, 0.1)};
   --color-translucent: rgba(255, 255, 255, 0.89);
 
-  --box-shadow-tight: 0px 2px 5px -1px rgba(0, 0, 0, 0.2);
-  --box-shadow: 0px 10px 20px -5px rgba(0, 0, 0, 0.2);
+  --box-shadow-tight: 0px 3px 5px rgba(0, 0, 0, 0.2);
+  --box-shadow: 0px 8px 18px -10px rgba(0, 0, 0, 0.2);
   --box-shadow-float: 0 4px 8px rgba(0, 0, 0, 0.08),
     0 2px 4px rgba(0, 0, 0, 0.08), 0 0 2px rgba(0, 0, 0, 0.24);
 }
@@ -83,10 +83,12 @@ body.test {
   --color-faded-3: rgba(255, 255, 255, 0.4);
   --color-full-screen: rgba(0, 0, 0, 0.4);
   --color-background-selected: rgba($primaryBright, 0.82);
-  --box-shadow: 0px 0px 40px -5px rgba(255, 255, 255, 0.2);
-  --box-shadow-tight: 0px 0px 8px -1px rgba(255, 255, 255, 0.4);
-  --box-shadow-float: 0 4px 8px rgba(255, 255, 255, 0.08),
-    0 2px 4px rgba(255, 255, 255, 0.08), 0 0 2px rgba(255, 255, 255, 0.24);
+  --box-shadow: 0px 2px 2px rgba(255, 255, 255, 0.06),
+    0px 8px 10px rgba(0, 0, 0, 0.3);
+  --box-shadow-tight: 0px 2px 2px rgba(255, 255, 255, 0.06),
+    0px 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --box-shadow-float: 0px 2px 2px rgba(255, 255, 255, 0.06),
+    0px 6px 10px -1px rgba(0, 0, 0, 0.4);
 
   --color-translucent: rgba(0, 0, 0, 0.79);
 

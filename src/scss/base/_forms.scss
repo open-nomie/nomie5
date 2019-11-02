@@ -73,9 +73,12 @@ textarea.form-control {
 
 select {
   -webkit-appearance: none;
-  background-color: var(--color-solid-1) !important;
+  background-color: transparent !important;
   color: var(--color-inverse) !important;
-  border: solid 1px var(--color-solid) !important;
+  border: transparent !important;
+  border-radius: 0 !important;
+  border-bottom: solid 1px var(--color-inverse-3) !important;
+  position: relative;
 }
 
 .input-group {

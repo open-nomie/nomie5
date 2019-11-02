@@ -85,7 +85,7 @@
         max-width: 100vw;
         border-radius: 0px;
         margin: 0;
-        @include media-breakpoint-up(sm) {
+        @include media-breakpoint-up(md) {
           max-width: 500px;
           max-height: 700px;
           border-radius: 0.7rem;
