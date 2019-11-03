@@ -1,4 +1,4 @@
-# Nomie 4
+# Nomie 4.4.0
 
 ## Open Source Mood Tracker / Life Tracker / Data Journal
 
@@ -6,11 +6,15 @@
 
 ## Try it out
 
--   https://open.nomie.app **Production** (master)
+- https://open.nomie.app **Production** (master)
 
 If you like to live dangerously you can run the dev branch
 
--   https://dev.nomie.app **Development** (develop)
+- https://dev.nomie.app **Development** (develop)
+
+## Watch the [Nomie 4.4.0 release podcast](https://youtu.be/Lmpytrsj6mg)
+
+---
 
 Note: Data cannot be shared across domains, if you want to switch between prod and experimental, you'll need to export and import your data (in the settings tab).
 
@@ -63,30 +67,30 @@ Deploy straight to Netlify to test it out quickly.
 
 ## Structure Overview
 
--   **/src**
--   **/src/components** - simple single ui components to build the user interfact
--   **/src/containers** - complicated components
--   **/src/modules** - models and commonly used functions
--   **/src/plugins** - holder of plugins (coming soon)
--   **/src/routes** - nomie app's primary routes
--   **/src/lang** - holder of languages
--   **/src/scss** - global SCSS styling, variables, bootstrap
--   **/src/store** - application state management
--   **/src/utils** - common utility functions
--   **/cypress** - Unit and E2E testing
+- **/src**
+- **/src/components** - simple single ui components to build the user interfact
+- **/src/containers** - complicated components
+- **/src/modules** - models and commonly used functions
+- **/src/plugins** - holder of plugins (coming soon)
+- **/src/routes** - nomie app's primary routes
+- **/src/lang** - holder of languages
+- **/src/scss** - global SCSS styling, variables, bootstrap
+- **/src/store** - application state management
+- **/src/utils** - common utility functions
+- **/cypress** - Unit and E2E testing
 
 ## Meet the Nouns
 
--   **Tracker** - primarily represented by a button on the "track board". Trackers are represented by their hashtag in notes - for example: #sleep(160000).
--   **Board** - a board is specific group of trackers.
--   **Board Tabs** - how you switch boards on the track tab
--   **Log** - a record event. A lot contains a note, a note can contain unlimited numbers of tags; e.g: #mood(4) #pizza #beer(12). Logs can contain a lat and long. Tracker Objects and their values are parsed out of the logs in real time.
+- **Tracker** - primarily represented by a button on the "track board". Trackers are represented by their hashtag in notes - for example: #sleep(160000).
+- **Board** - a board is specific group of trackers.
+- **Board Tabs** - how you switch boards on the track tab
+- **Log** - a record event. A lot contains a note, a note can contain unlimited numbers of tags; e.g: #mood(4) #pizza #beer(12). Logs can contain a lat and long. Tracker Objects and their values are parsed out of the logs in real time.
 
 ## Stores
 
--   ** /src/store/lang ** - Language Controls
--   ** /src/store/trackers ** -- Tracker Data and interactions
-    -- TODO: finish this
+- ** /src/store/lang ** - Language Controls
+- ** /src/store/trackers ** -- Tracker Data and interactions
+  -- TODO: finish this
 
 ## Data Storage - NEEDS UPDATING
 
@@ -128,11 +132,11 @@ Combine multiple trackers into a single flow, for collecting a squence of tracke
 
 # Coding Rules
 
--   **Keep it readable** - focus on writing code that new people can easily understand and follow. If the code can't do it, then do it with comments. There's no such thing as too much commenting.
--   **Keep it under 300 lines** - the goal is to keep files under 300 lines of code. Note: Sometimes that's not feasible.
--   **Keep it flexible** - think in components. If you're doing something more than once, it most likely should be a component.
--   **Keep cleaning, organizing and testing** - this project didn't start very clean, or ready for unit testing, this should be an on going objective.
--   **Use what's there** - Twitter bootstrap ([and all its classes](https://getbootstrap.com/)) are available, reuse what already exists before writing new - especially css.
+- **Keep it readable** - focus on writing code that new people can easily understand and follow. If the code can't do it, then do it with comments. There's no such thing as too much commenting.
+- **Keep it under 300 lines** - the goal is to keep files under 300 lines of code. Note: Sometimes that's not feasible.
+- **Keep it flexible** - think in components. If you're doing something more than once, it most likely should be a component.
+- **Keep cleaning, organizing and testing** - this project didn't start very clean, or ready for unit testing, this should be an on going objective.
+- **Use what's there** - Twitter bootstrap ([and all its classes](https://getbootstrap.com/)) are available, reuse what already exists before writing new - especially css.
 
 ## Trademark License
 
