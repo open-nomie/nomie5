@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sun Sep 22 2019 12:41 pm
+Generated Sat Nov 2 2019 12:51 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -16,6 +16,8 @@ Generated Sun Sep 22 2019 12:41 pm
    - TODO: tried to make this a spread - but I keep breaking it.
 - **src/scss/main.scss**
    - TODO: Look at making prefers-color-scheme work properly - when enabled, only buttons change
+- **src/scss/components/_list-item.scss**
+   - TODO: see if making main overflow hidden was a bad idea
 - **src/routes/stats.svelte**
    - Current hack - tap the emoji in the title - TODO: Make compare work again
    - TODO: Needs to be refactored and cleaned up
@@ -49,17 +51,10 @@ Generated Sun Sep 22 2019 12:41 pm
    - TODO: UserSession shouldn't be in here - login should be fired by Storage.
 - **src/containers/map/map.svelte**
    - TODO: Look at making this curved dotted lines - and not just straight ones
-- **src/containers/interactions/interactions.svelte**
-   - TODO: move this to new log editor
-   - console.log('TODO: Make editing data work');
 - **src/containers/importer/importer.svelte**
    - Modal will be hidden in settings TODO: make this not hacky -->
 - **src/containers/board/tracker-button.svelte**
    - TODO: Move this to components/tracker-button
-- **src/containers/board/board.svelte**
-   - TODO: See if https:www.npmjs.com/package/@composi/gestures can detect how much they swiped
-   - TODO: Look at why this is needed... slop!
-   - TODO: Finish this starter pack add trackers, make them installable. -->
 - **src/components/capture-log.svelte**
    - TODO: Add a media/photo type of thing that can be added to a log..
    - await LedgerStore.saveLog($ActiveLogStore);  TODO: Make ledger task instead

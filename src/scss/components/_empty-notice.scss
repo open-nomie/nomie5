@@ -2,17 +2,17 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 100%;
+	height: calc(100vh - 180px);
 	width: 100%;
+	max-width: 90vw;
 	flex-grow: 1;
 	flex-shrink: 1;
-	font-size: 1.2rem;
-	font-weight: bold;
+	font-size: 1rem;
+	font-weight: 500;
 	opacity: 0.4;
 	text-align: center;
 	line-height: 130%;
-	min-height: 80vh;
-	max-width: 80vw;
+
 	margin: 0 auto;
 	color: var(--color-inverse-2);
 	&.sm {

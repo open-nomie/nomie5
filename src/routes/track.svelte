@@ -32,6 +32,9 @@
       data.hasTrackers = false;
     }
   });
+  onMount(() => {
+    window.scrollTo(0, 0);
+  });
 </script>
 
 <style>
@@ -41,7 +44,8 @@
     bottom: calc(40px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
-    background-color: var(--color-solid);
+    z-index: 10;
+    background-color: var(--color-translucent);
   }
   .page-track {
     display: flex;
@@ -50,9 +54,4 @@
   }
 </style>
 
-<div class="page page-track with-header">
-  <Board editMode={data.editMode} />
-</div>
-<div id="note-capture">
-  <CaptureLog />
-</div>
+<Board editMode={data.editMode} />

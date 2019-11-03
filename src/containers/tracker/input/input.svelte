@@ -1,4 +1,10 @@
 <script>
+  /**
+   * Tracker Input Mege Component
+   * This is a beast... Brace yourself.
+   * Officialy "walk through" - Nov 2 2019
+   */
+
   // svelte
   import { createEventDispatcher, onMount } from "svelte";
   import { slide } from "svelte/transition";
@@ -6,7 +12,7 @@
   // Components
   import NModal from "../../../components/modal/modal.svelte";
 
-  //Container Helpers
+  //Container for Slider (range), Keypad and Timer
   import SliderInput from "./slider.svelte";
   import NKeypad from "./keypad.svelte";
   import NTimer from "./timer.svelte";
@@ -17,32 +23,37 @@
   // Stores
   import { TrackerStore } from "../../../store/trackers";
   import { Interact } from "../../../store/interact";
+  import { Lang } from "../../../store/lang";
 
   // Props
-  export let tracker = undefined;
-  export let show = undefined;
-  export let value = undefined;
-  export let hideAdd = undefined;
-  export let saveLabel = "Save";
+  export let tracker = undefined; // You can provide a tracker
+  export let show = undefined; // If it should show or not
+  export let value = undefined; // If a valid is provided
+  export let hideAdd = undefined; // If the Add button should be hidden
+  export let saveLabel = Lang.t("general.save", "Save"); // The label of the save Button
 
   // Consts
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher(); // Setup the dispatcher
 
   let data = {
-    value: null,
-    timerStarted: false,
-    tracker: null,
-    ready: false
+    value: null, // holds current value
+    tracker: null, // holds current tracker
+    ready: false // when it's ready
   };
 
+  // Set up the Methods
   const methods = {
+    // When the Save is hit
     onSave() {
+      // Dispatch value and tracker
       dispatch("save", {
         value: data.value,
         tracker: tracker
       });
     },
+    // When Add is hit
     onAdd() {
+      // Dispatch add
       dispatch("add", {
         value: data.value,
         tracker: tracker
@@ -51,27 +62,43 @@
     onCancel() {
       dispatch("cancel");
     },
+    // When the user starts the time
     startTimer() {
+      // Set the date to epoch time (best to avoid timezones);
       data.tracker.started = new Date().getTime();
-      // TrackerStore.saveTracker(data.tracker);
-      $TrackerStore[data.tracker.tag].started = new Date().getTime();
-      TrackerStore.save();
+      // Start the Timer for this tracker
+      TrackerStore.startTimer(data.tracker);
     },
+    // Stop the Timer
     stopTimer() {
-      let s = (new Date().getTime() - tracker.started) / 1000;
-      setTimeout(() => {
-        data.tracker.started = null;
-        data.value = s;
-        $TrackerStore[data.tracker.tag].started = null;
-        TrackerStore.save();
-      }, 1);
+      // Get the Seconds between now and when the tracker started
+      data.value = (new Date().getTime() - tracker.started) / 1000;
+      // Clear local
+      data.tracker.started = null;
+      // tell store to stop timer
+      TrackerStore.stopTimer(data.tracker);
     }
   };
 
-  $: if (tracker) {
-    data.tracker = tracker;
+  // If Tracker Changes
+  // FIres each time something happens to this object
+  $: if (tracker && data.tracker && data.tracker !== tracker) {
+    // Set to local variable
+    setTimeout(() => {
+      // Set to not ready and the new tracker
+      data.ready = false;
+      data.tracker = tracker;
+      setTimeout(() => {
+        // Wait to set the value
+        data.value = tracker.default || 0;
+        data.ready = true;
+      }, 200);
+    }, 12);
   }
+
+  // When Component Mounts
   onMount(() => {
+    // If the value changes, and no data.value exists.
     if (value && !data.value) {
       data.value = value;
     } else {
@@ -79,6 +106,7 @@
       data.value = tracker.default || 0;
       value = data.value;
     }
+    data.tracker = tracker;
     setTimeout(() => {
       data.ready = true;
     }, 120);
@@ -104,12 +132,19 @@
 
 <NModal
   show={show || $Interact.trackerInput.show}
-  title="{tracker.emoji}
-  {tracker.label}"
+  type="fullscreen"
   className="tracker-input">
-
-  {#if data.ready}
-    <div class="input-model type-{tracker.type}" transition:slide>
+  <div class="input-toolbar n-row" slot="header">
+    <div class="filler" />
+    <span class="animate notice-text {data.ready ? 'visible' : 'hidden'}">
+      {tracker.emoji} {tracker.label}
+    </span>
+    <div class="filler" />
+  </div>
+  <!-- Is the data ready -->
+  {#if data.ready === true}
+    <!-- Slide in the input -->
+    <div class="input-model type-{tracker.type}">
       {#if tracker.type === 'range'}
         <SliderInput
           value={(data.value || tracker.min) + ''}
@@ -151,69 +186,77 @@
   <div
     class="footer d-flex flex-row align-center justify-content-between w-100"
     slot="footer">
-
-    {#if data.tracker.type !== 'timer'}
-      <button
-        on:click={methods.onCancel}
-        class="btn btn-clear btn-lg w-25 {data.tracker.type == 'timer' && !data.tracker.started ? 'd-none' : ''}">
-        <span class=" zmdi zmdi-close" />
-      </button>
-    {/if}
-
-    {#if data.tracker.type == 'timer'}
-      <button
-        on:click={methods.onCancel}
-        class="btn btn-clear btn-lg mr-2 {data.value ? 'w-25' : 'w-100'}">
-        {#if data.value}
+    {#if data.tracker}
+      {#if data.tracker.type !== 'timer'}
+        <button
+          aria-label="Cancel"
+          on:click={methods.onCancel}
+          class="btn btn-clear btn-lg w-25 {data.tracker.type == 'timer' && !data.tracker.started ? 'd-none' : ''}">
           <span class=" zmdi zmdi-close" />
-        {:else}Close{/if}
-      </button>
-    {/if}
+        </button>
+      {/if}
 
-    {#if data.tracker.type == 'timer' && data.value}
-      <button
-        on:click={methods.onSave}
-        class="btn btn-primary btn-lg btn-round"
-        style="width:105px;">
-        {saveLabel}
-      </button>
-    {/if}
+      {#if data.tracker.type == 'timer'}
+        <button
+          on:click={methods.onCancel}
+          aria-label="Cancel"
+          class="btn btn-clear btn-lg mr-2 {data.value ? 'w-25' : 'w-100'}">
+          {#if data.value}
+            <span class=" zmdi zmdi-close" />
+          {:else}Close{/if}
+        </button>
+      {/if}
 
-    {#if data.tracker.type != 'timer'}
-      <button
-        on:click={methods.onSave}
-        class="btn btn-primary btn-lg btn-round"
-        style="width:105px;">
-        {saveLabel}
-      </button>
-    {/if}
+      {#if data.tracker.type == 'timer' && data.value}
+        <button
+          on:click={methods.onSave}
+          class="btn btn-primary btn-lg "
+          aria-label="Save Report"
+          style="width:105px;">
+          {saveLabel}
+        </button>
+      {/if}
 
-    {#if data.tracker.type == 'timer' && !data.tracker.started && !data.value}
-      <button
-        on:click={methods.startTimer}
-        class="btn btn-success btn-lg w-100">
-        Start
-      </button>
-    {/if}
+      {#if data.tracker.type != 'timer'}
+        <button
+          on:click={methods.onSave}
+          aria-label="Save Report"
+          class="btn btn-primary btn-lg "
+          style="width:105px;">
+          {saveLabel}
+        </button>
+      {/if}
 
-    {#if data.tracker.type == 'timer' && data.tracker.started !== null}
-      <button
-        on:click={methods.stopTimer}
-        class="btn btn-danger btn-lg btn-block {data.tracker.started > 0 ? '' : 'd-none'}">
-        Stop
-      </button>
-    {/if}
+      {#if data.tracker.type == 'timer' && !data.tracker.started && !data.value}
+        <button
+          on:click={methods.startTimer}
+          aria-label="Start Timer"
+          class="btn btn-success btn-lg w-100">
+          Start
+        </button>
+      {/if}
 
-    {#if (data.tracker.type !== 'timer' || data.value) && hideAdd !== true}
-      <button
-        on:click={methods.onAdd}
-        class="btn btn-clear btn-lg w-25 {tracker.started ? 'd-none' : ''}">
-        <!-- local hack to make plus match with close-->
-        <span class=" zmdi zmdi-plus" style="font-size:1.5rem;" />
-      </button>
+      {#if data.tracker.type == 'timer' && data.tracker.started !== null}
+        <button
+          on:click={methods.stopTimer}
+          aria-label="Stop Timer"
+          class="btn btn-danger btn-lg btn-block {data.tracker.started > 0 ? '' : 'd-none'}">
+          Stop
+        </button>
+      {/if}
+
+      {#if (data.tracker.type !== 'timer' || data.value) && hideAdd !== true}
+        <button
+          on:click={methods.onAdd}
+          class="btn btn-clear btn-lg w-25 {tracker.started ? 'd-none' : ''}">
+          <!-- local hack to make plus match with close-->
+          <span class="zmdi zmdi-plus" />
+        </button>
+      {/if}
     {/if}
 
   </div>
+
   <!-- <div
     class="w-25 btn btn-clear {tracker.started ? 'd-inline-block' : 'd-none'}" /> -->
 </NModal>

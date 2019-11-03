@@ -14,10 +14,6 @@
 <style lang="scss">
   @import "../../scss/utils/__utils.scss";
   #app-tabs {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
     height: calc(50px + env(safe-area-inset-bottom));
     padding-bottom: calc(env(safe-area-inset-bottom));
     background-color: var(--color-tabs);
@@ -26,8 +22,6 @@
     justify-content: space-between;
     align-items: stretch;
     z-index: 1200;
-    // Tab Links
-    // Tab Icons
   }
 
   :global(#app-tabs svg) {

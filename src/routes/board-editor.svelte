@@ -356,13 +356,16 @@
   <NPage className="stats" withBack={true}>
 
     <div slot="header" class="n-row">
-      <div class="filler" />
-      <h1>Edit Board</h1>
-      <div class="filler" />
+      <h1 class="text-center flex-grow">Edit Board</h1>
+      <button
+        class="btn btn btn-clear text-danger "
+        on:click={methods.deleteBoard}>
+        Delete
+      </button>
     </div>
 
     <div slot="sub-header">
-      <NItem className="w-100">
+      <NItem className="w-100 p-0">
         <div class="input-group mb-2">
           <div class="input-group-prepend">
             <span class="input-group-text">Label</span>
@@ -380,11 +383,7 @@
     <div class="container">
       <div class="n-row">
         <div class="filler" />
-        <button
-          class="btn btn mt-4 btn-danger flex-grow"
-          on:click={methods.deleteBoard}>
-          Destroy
-        </button>
+
         <button
           class="btn btn mt-4 btn-light mx-3 flex-grow"
           on:click={() => {

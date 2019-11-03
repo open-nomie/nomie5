@@ -112,9 +112,22 @@
     </NItem>
 
     {#if state.showFiles}
+      <NItem title="Reset Nomie">
+        <button
+          class="btn btn-sm btn-danger"
+          slot="right"
+          on:click={() => {
+            methods.deleteEverything();
+          }}>
+          Reset
+        </button>
+      </NItem>
+      <NItem title="Files" className="n-item-divider" />
       {#each state.files as file (file)}
         <NItem>
-          <div class="truncate">{file}</div>
+          <div class="truncate">
+            {file.substr(0, 20)}{file.length > 20 ? '...' : ''}
+          </div>
           <button
             class="btn btn-sm btn-clear text-danger"
             slot="right"
@@ -125,17 +138,7 @@
           </button>
         </NItem>
       {/each}
-      <NItem title="Danger" className="n-item-divider" />
-      <NItem title="Destroy Everything">
-        <button
-          class="btn btn-sm btn-danger"
-          slot="right"
-          on:click={() => {
-            methods.deleteEverything();
-          }}>
-          Destroy
-        </button>
-      </NItem>
+
       <NItem className="n-item-divider" />
     {/if}
   </div>

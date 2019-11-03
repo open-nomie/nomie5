@@ -1,7 +1,8 @@
 <script>
   import NText from "../text/text.svelte";
   import { fly } from "svelte/transition";
-
+  import { createEventDispatcher } from "svelte";
+  const dispatch = createEventDispatcher();
   // Props
   export let padding = false;
   export let title;
@@ -84,11 +85,14 @@
         max-width: 100vw;
         border-radius: 0px;
         margin: 0;
-        @include media-breakpoint-up(sm) {
+        @include media-breakpoint-up(md) {
           max-width: 500px;
           max-height: 700px;
           border-radius: 0.7rem;
         }
+      }
+      .n-modal-footer {
+        padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
       }
     }
     &.type-cover {
@@ -104,7 +108,7 @@
         margin: 0;
         margin-left: 0;
         margin-right: 0;
-        padding-bottom: env(safe-area-inset-bottom) !important;
+        max-height: 100vh;
       }
     }
   }
@@ -112,10 +116,10 @@
     min-width: 320px;
     background-color: var(--color-solid);
     min-height: 200px;
-    max-height: 95vh;
+    max-height: 90vh;
     max-width: 400px;
     margin: 10px;
-    border-radius: 0.7rem;
+    border-radius: 1.4rem;
     display: flex;
     flex-direction: column;
     justify-content: stretch;
@@ -149,7 +153,7 @@
     }
   }
   .n-modal-header {
-    padding: 10px 10px;
+    padding: 10px 16px;
     min-height: 40px;
     border-bottom: solid 1px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -187,6 +191,10 @@
     &.padding {
       padding: 20px;
     }
+    &.no-padding {
+      padding: 0px !important;
+      overflow: scroll;
+    }
     overflow-y: scroll;
   }
 </style>
@@ -202,9 +210,19 @@
         {#if has_header}
           <slot name="header" />
         {:else}
+          {#if allowClose}
+            <button
+              class="btn btn-clear btn-icon zmdi zmdi-close"
+              on:click={() => {
+                dispatch('close');
+              }} />
+          {/if}
           <NText tag="div" bold size="lg" className="text-center w-100 py-1">
             {title}
           </NText>
+          {#if allowClose}
+            <button class="btn btn-clear btn-icon zmdi" on:click={() => {}} />
+          {/if}
         {/if}
 
       </div>

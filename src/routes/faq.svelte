@@ -9,6 +9,7 @@
   import NItem from "../components/list-item/list-item.svelte";
   // containers
   import NPage from "../containers/layout/page.svelte";
+
   // config
   import faq from "../../config/faq";
 </script>

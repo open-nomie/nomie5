@@ -6,7 +6,7 @@
 <style lang="scss">
   :global(.n-toolbar) {
     min-height: 50px;
-
+    background-color: var(--color-solid);
     display: flex;
     align-items: center;
     justify-content: stretch;
@@ -39,6 +39,7 @@
       min-height: 50px;
       border-bottom: solid 1px rgba(0, 0, 0, 0.1);
       box-shadow: 0px 4px 4px -2px rgba(0, 0, 0, 0.1);
+      padding-top: env(safe-area-inset-top);
       &.sub-header {
         top: 49px !important;
       }

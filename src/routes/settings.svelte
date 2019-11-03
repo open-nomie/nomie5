@@ -1,6 +1,9 @@
 <script>
   //Vendors
   import { navigate, Link } from "svelte-routing";
+  import { onMount } from "svelte";
+
+  import SocialShare from "../modules/share/share";
 
   // Components
   import NItem from "../components/list-item/list-item.svelte";
@@ -12,6 +15,8 @@
   import StorageManager from "../containers/storage/storage.svelte";
   import ImporterModal from "../containers/importer/importer.svelte";
   import MassEditor from "../containers/mass-editor/mass-editor.svelte";
+
+  import AppLayout from "../containers/layout/app.svelte";
 
   // Vendors
   import dayjs from "dayjs";
@@ -47,6 +52,12 @@
   let methods = {
     sign_out() {
       UserStore.signout();
+    },
+    share() {
+      SocialShare(
+        `I track and monitor the good and bad in my life with Nomie - to know me. It's free, private, and you get to design what you track. @nomieapp`,
+        "https://nomie.app"
+      );
     },
     sign_in() {
       UserStore.redirectToSignIn();
@@ -132,199 +143,245 @@
   // });
 
   const setTimeout = setTimeout;
+  onMount(() => {
+    window.scrollTo(0, 0);
+  });
 </script>
 
-<NToolbar pinTop>
-  <h2>{Lang.t('settings.settings')}</h2>
-  <button on:click={methods.faq} class="btn btn-clear text-primary">
-    {Lang.t('general.faq')}
-  </button>
-</NToolbar>
-{#if $UserStore.meta}
-  <div class="page page-settings with-header">
-    <div class="container p-0 n-list">
-      {#if $UserStore.storageType === 'blockstack'}
-        <div class="n-pop">
-          <NItem className="n-item-divider" title="Account" />
+<AppLayout title="Settings">
+  <div slot="header">
+    <NToolbar>
+      <h2 class="text-inverse">{Lang.t('settings.settings')}</h2>
+      <button on:click={methods.faq} class="btn btn-clear text-primary">
+        {Lang.t('general.faq')}
+      </button>
+    </NToolbar>
+  </div>
 
-          <NItem>
-            <div class="title truncate">
-              {$UserStore.profile.username || 'Blockstack'}
+  <div slot="content">
+    {#if $UserStore.meta}
+      <div class="page page-settings">
+        <div class="container p-0 n-list">
+          {#if $UserStore.storageType === 'blockstack'}
+            <div class="n-pop">
+              <NItem className="n-item-divider" title="Account" />
+
+              <NItem>
+                <div class="title truncate">
+                  {$UserStore.profile.username || 'Blockstack'}
+                </div>
+                <div slot="right">
+                  <button
+                    class="btn btn-small btn-clear text-primary"
+                    on:click={methods.sign_out}>
+                    {Lang.t('settings.sign-out')}
+                  </button>
+                </div>
+              </NItem>
+
             </div>
-            <div slot="right">
-              <button
-                class="btn btn-small btn-clear text-primary"
-                on:click={methods.sign_out}>
-                {Lang.t('settings.sign-out')}
-              </button>
-            </div>
+          {/if}
+          <NItem className="n-item-divider compact" />
+          <NItem
+            className="clickable pt-2"
+            title={Lang.t('settings.share-nomie', 'Share Nomie w/ Friends')}
+            description="It'd be super helpful"
+            on:click={methods.share}>
+            <span slot="left" class="btn-icon zmdi text-primary zmdi-share" />
+            <span slot="right" class="icon zmdi zmdi-more" />
           </NItem>
 
-        </div>
-      {/if}
+          <div class="n-pop">
+            <NItem
+              title={Lang.t('general.customize')}
+              className="n-item-divider" />
+            <NItem title={Lang.t('settings.theme')}>
+              <span
+                slot="left"
+                class="btn-icon zmdi text-primary zmdi-invert-colors" />
+              <div slot="right">
+                <select
+                  class="form-control"
+                  style="min-width:100px;width:100px"
+                  bind:value={$UserStore.theme}
+                  on:change={event => {
+                    UserStore.setTheme($UserStore.theme);
+                  }}>
+                  <option value="auto">Auto</option>
+                  <option value="dark">Dark</option>
+                  <option value="light">Light</option>
+                </select>
 
-      <div class="n-pop">
-        <NItem title={Lang.t('general.customize')} className="n-item-divider" />
-        <NItem title={Lang.t('settings.theme')}>
-          <span
-            slot="left"
-            class="btn-icon zmdi text-primary zmdi-invert-colors" />
-          <div slot="right">
-            <select
-              class="form-control"
-              style="min-width:100px;width:100px"
-              bind:value={$UserStore.theme}
-              on:change={event => {
-                UserStore.setTheme($UserStore.theme);
-              }}>
-              <option value="auto">Auto</option>
-              <option value="dark">Dark</option>
-              <option value="light">Light</option>
-            </select>
-
-          </div>
-        </NItem>
-        <NItem title={Lang.t('settings.use-location')}>
-          <span
-            slot="left"
-            class="btn-icon zmdi text-primary zmdi-my-location" />
-          <div slot="right">
-            <NToggle
-              bind:value={$UserStore.alwaysLocate}
-              on:change={event => {
-                UserStore.setAlwaysLocate(event.detail);
-              }} />
-          </div>
-        </NItem>
-
-        {#if $BoardStore.boards.length == 0}
-          <NItem title={Lang.t('settings.enable-boards')}>
-            <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />
-            <div slot="right">
-              <NToggle
-                bind:value={$UserStore.meta.boardsEnabled}
-                on:change={methods.settingChange} />
-            </div>
-          </NItem>
-        {:else}
-          <NItem title={Lang.t('settings.enable-boards')} className="disabled">
-            <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />
-            <div slot="right">
-              <NToggle value={true} locked={true} />
-            </div>
-          </NItem>
-        {/if}
-        <NItem title={Lang.t('settings.require-pin')}>
-          <span slot="left" class="btn-icon zmdi text-primary zmdi-apps" />
-          <div slot="right">
-            <NToggle
-              bind:value={$UserStore.meta.lock}
-              on:change={methods.lockToggle} />
-          </div>
-        </NItem>
-        <NItem title={Lang.t('settings.24-hour-clock')}>
-          <span slot="left" class="btn-icon zmdi text-primary zmdi-time" />
-          <div slot="right">
-            <NToggle
-              bind:value={$UserStore.meta.is24Hour}
-              on:change={methods.settingChange} />
-          </div>
-        </NItem>
-
-      </div>
-
-      <div class="n-pop">
-        <NItem title={Lang.t('settings.data')} className="n-item-divider" />
-        <NItem
-          className="clickable"
-          title={Lang.t('settings.nomie-api')}
-          on:click={() => navigate('/api')}>
-          <span
-            slot="left"
-            class="btn-icon zmdi text-primary zmdi-code-setting" />
-          <span slot="right" class="icon zmdi zmdi-chevron-right" />
-        </NItem>
-        <NItem
-          className="clickable"
-          title={Lang.t('settings.import-from-backup')}
-          on:click={() => {
-            showImporter = true;
-          }}>
-          <span
-            slot="left"
-            class="btn-icon zmdi text-primary zmdi-cloud-download" />
-          <span slot="right" class="icon zmdi zmdi-chevron-right" />
-          <input
-            slot="right"
-            class="d-none"
-            type="file"
-            bind:this={fileInput}
-            on:change={methods.onImportFile} />
-        </NItem>
-
-        <NItem
-          className="clickable"
-          title={Lang.t('settings.generate-backup')}
-          to="/settings/export/backup">
-          <span
-            slot="left"
-            class="btn-icon zmdi text-primary zmdi-cloud-upload" />
-          <span slot="right" class="icon zmdi zmdi-chevron-right" />
-        </NItem>
-        <NItem
-          className="clickable"
-          title={Lang.t('settings.generate-csv')}
-          to="/settings/export/csv">
-          <span slot="left" class="btn-icon zmdi text-primary zmdi-grid" />
-          <span slot="right" class="icon zmdi zmdi-chevron-right" />
-        </NItem>
-        <NItem
-          className="clickable"
-          title="{Lang.t('settings.find-and-replace')}..."
-          on:click={() => {
-            data.showMassEditor = true;
-          }}>
-          <span
-            slot="left"
-            class="btn-icon zmdi text-primary zmdi-search-replace" />
-          <span slot="right" class="icon zmdi zmdi-chevron-right" />
-        </NItem>
-
-        <MassEditor
-          on:close={methods.closeMassEditor}
-          show={data.showMassEditor} />
-
-      </div>
-      <div class="n-pop">
-        <!-- Stoage List - this is stupid I couldn't find it-->
-        <StorageManager />
-        <!-- End Storage List-->
-        <NItem>
-          <div class="title truncate">
-            <strong>
-              {$UserStore.storageType === 'local' ? 'Local' : 'Cloud'}
-            </strong>
-          </div>
-          <span slot="left" class="btn-icon zmdi text-primary zmdi-storage" />
-
-          <div slot="right">
-            {#if $UserStore.storageType === 'local'}
-              <button
-                class="btn btn-clear text-primary"
-                on:click={methods.switchToCloud}>
-                {Lang.t('settings.use-cloud')}
-              </button>
+              </div>
+            </NItem>
+            <!-- Use Location -->
+            <NItem title={Lang.t('settings.use-location')}>
+              <span
+                slot="left"
+                class="btn-icon zmdi text-primary zmdi-my-location" />
+              <div slot="right">
+                <NToggle
+                  bind:value={$UserStore.alwaysLocate}
+                  on:change={event => {
+                    UserStore.setAlwaysLocate(event.detail);
+                  }} />
+              </div>
+            </NItem>
+            <!-- Tracker Board Tabs -->
+            {#if $BoardStore.boards.length == 0}
+              <NItem title={Lang.t('settings.enable-boards')}>
+                <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />
+                <div slot="right">
+                  <NToggle
+                    bind:value={$UserStore.meta.boardsEnabled}
+                    on:change={methods.settingChange} />
+                </div>
+              </NItem>
             {:else}
-              <button
-                class="btn btn-clear text-primary"
-                on:click={methods.switchToLocal}>
-                {Lang.t('settings.use-local')}
-              </button>
+              <NItem
+                title={Lang.t('settings.enable-boards')}
+                className="disabled">
+                <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />
+                <div slot="right">
+                  <NToggle value={true} locked={true} />
+                </div>
+              </NItem>
             {/if}
-          </div>
-        </NItem>
+            <!-- Pin Code -->
+            <NItem title={Lang.t('settings.require-pin')}>
+              <span slot="left" class="btn-icon zmdi text-primary zmdi-apps" />
+              <div slot="right">
+                <NToggle
+                  bind:value={$UserStore.meta.lock}
+                  on:change={methods.lockToggle} />
+              </div>
+            </NItem>
+            <!-- 24 Hour -->
+            <NItem title={Lang.t('settings.24-hour-clock')}>
+              <span slot="left" class="btn-icon zmdi text-primary zmdi-time" />
+              <div slot="right">
+                <NToggle
+                  bind:value={$UserStore.meta.is24Hour}
+                  on:change={methods.settingChange} />
+              </div>
+            </NItem>
+            <!-- Language -->
+            <NItem title={Lang.t('settings.language')}>
+              <span
+                slot="left"
+                class="btn-icon zmdi text-primary zmdi-translate" />
+              <div slot="right">
+                <select
+                  class="form-control"
+                  style="min-width:100px;width:100px"
+                  bind:value={$Lang.lang}
+                  on:change={event => {
+                    Lang.setLang($Lang.lang);
+                  }}>
+                  {#each Lang.getLangs() as lang}
+                    <option value={lang.key}>{lang.label}</option>
+                  {/each}
+                </select>
 
-        <!-- <NItem title={Lang.t('settings.first-book')}>
+              </div>
+            </NItem>
+
+          </div>
+
+          <div class="n-pop">
+            <NItem title={Lang.t('settings.data')} className="n-item-divider" />
+            <NItem
+              className="clickable"
+              title={Lang.t('settings.nomie-api')}
+              on:click={() => navigate('/api')}>
+              <span
+                slot="left"
+                class="btn-icon zmdi text-primary zmdi-code-setting" />
+              <span slot="right" class="icon zmdi zmdi-chevron-right" />
+            </NItem>
+            <NItem
+              className="clickable"
+              title={Lang.t('settings.import-from-backup')}
+              on:click={() => {
+                showImporter = true;
+              }}>
+              <span
+                slot="left"
+                class="btn-icon zmdi text-primary zmdi-cloud-download" />
+              <span slot="right" class="icon zmdi zmdi-chevron-right" />
+              <input
+                slot="right"
+                class="d-none"
+                type="file"
+                bind:this={fileInput}
+                on:change={methods.onImportFile} />
+            </NItem>
+
+            <NItem
+              className="clickable"
+              title={Lang.t('settings.generate-backup')}
+              to="/settings/export/backup">
+              <span
+                slot="left"
+                class="btn-icon zmdi text-primary zmdi-cloud-upload" />
+              <span slot="right" class="icon zmdi zmdi-chevron-right" />
+            </NItem>
+            <NItem
+              className="clickable"
+              title={Lang.t('settings.generate-csv')}
+              to="/settings/export/csv">
+              <span slot="left" class="btn-icon zmdi text-primary zmdi-grid" />
+              <span slot="right" class="icon zmdi zmdi-chevron-right" />
+            </NItem>
+            <NItem
+              className="clickable"
+              title="{Lang.t('settings.find-and-replace')}..."
+              on:click={() => {
+                data.showMassEditor = true;
+              }}>
+              <span
+                slot="left"
+                class="btn-icon zmdi text-primary zmdi-search-replace" />
+              <span slot="right" class="icon zmdi zmdi-chevron-right" />
+            </NItem>
+
+            <MassEditor
+              on:close={methods.closeMassEditor}
+              show={data.showMassEditor} />
+
+          </div>
+          <div class="n-pop">
+            <!-- Stoage List - this is stupid I couldn't find it-->
+            <StorageManager />
+            <!-- End Storage List-->
+            <NItem>
+              <div class="title truncate">
+                <strong>
+                  {$UserStore.storageType === 'local' ? 'Local' : 'Cloud'}
+                </strong>
+              </div>
+              <span
+                slot="left"
+                class="btn-icon zmdi text-primary zmdi-storage" />
+
+              <div slot="right">
+                {#if $UserStore.storageType === 'local'}
+                  <button
+                    class="btn btn-clear text-primary"
+                    on:click={methods.switchToCloud}>
+                    {Lang.t('settings.use-cloud')}
+                  </button>
+                {:else}
+                  <button
+                    class="btn btn-clear text-primary"
+                    on:click={methods.switchToLocal}>
+                    {Lang.t('settings.use-local')}
+                  </button>
+                {/if}
+              </div>
+            </NItem>
+
+            <!-- <NItem title={Lang.t('settings.first-book')}>
           <span
             slot="left"
             class="btn-icon zmdi text-primary zmdi-book"
@@ -340,94 +397,103 @@
             {/await}
           </div>
         </NItem> -->
-        {#if $UserStore.storageType === 'blockstack'}
-          <NItem title={Lang.t('settings.aggressive-sync')}>
-            <span
-              slot="left"
-              class="btn-icon zmdi text-primary {`${$UserStore.meta.aggressiveSync ? 'zmdi-refresh-sync' : 'zmdi-refresh-sync-off'}`}" />
-            <div slot="right">
-              <NToggle
-                bind:value={$UserStore.meta.aggressiveSync}
-                on:change={methods.settingChange} />
+            {#if $UserStore.storageType === 'blockstack'}
+              <NItem title={Lang.t('settings.aggressive-sync')}>
+                <span
+                  slot="left"
+                  class="btn-icon zmdi text-primary {`${$UserStore.meta.aggressiveSync ? 'zmdi-refresh-sync' : 'zmdi-refresh-sync-off'}`}" />
+                <div slot="right">
+                  <NToggle
+                    bind:value={$UserStore.meta.aggressiveSync}
+                    on:change={methods.settingChange} />
+                </div>
+              </NItem>
+              <NItem description={Lang.t('settings.aggressive-description')} />
+            {/if}
+          </div>
+
+          <div class="n-pop">
+            <NItem
+              title={Lang.t('settings.about-nomie')}
+              className="n-item-divider" />
+            <NItem title="Learn More">
+              <span slot="right">
+                <a
+                  href="https://nomie.app?s=dap"
+                  class="btn btn-clear text-primary"
+                  target="_system">
+                  Website
+                </a>
+              </span>
+            </NItem>
+            <NItem title="Reddit r/nomie">
+              <span slot="right">
+                <a
+                  href="https://reddit.com/r/nomie"
+                  class="btn btn-clear text-primary"
+                  target="_system">
+                  r/nomie
+                </a>
+              </span>
+            </NItem>
+
+            <NItem title="Open Source">
+              <span slot="right">
+                <a
+                  href="https://github.com/open-nomie/nomie"
+                  class="btn btn-clear text-primary"
+                  target="_system">
+                  Github
+                </a>
+              </span>
+            </NItem>
+
+            <NItem className="compact item-divider" />
+
+            <NItem title="Version">
+              <span slot="right" class="pr-2 text-sm">APP_VERSION</span>
+            </NItem>
+            <NItem title="Built">
+              <span slot="right" class="pr-2 text-sm">APP_BUILD_DATE</span>
+            </NItem>
+
+          </div>
+
+          <NItem className="compact item-divider" />
+
+          <NItem title={Lang.t('general.questions')}>
+            <span slot="right">
+              <a
+                class="btn btn-clear text-primary"
+                href={`mailto:${config.support_email}?subject=Open Nomie Support`}>
+                {config.support_contact}
+              </a>
+            </span>
+          </NItem>
+
+          <NItem className="compact item-divider" />
+
+          <NItem>
+            <div class="text-sm pb-2 pt-2">
+              &copy; Copyright 2019. All Rights Reserved
+            </div>
+            <div class="text-sm pb-2">
+              Nomie&reg; by
+              <a href="https://www.happydata.org" traget="_system">
+                Happy Data, LLC
+              </a>
             </div>
           </NItem>
-          <NItem description={Lang.t('settings.aggressive-description')} />
-        {/if}
-      </div>
 
-      <div class="n-pop">
-        <NItem
-          title={Lang.t('settings.about-nomie')}
-          className="n-item-divider" />
-        <NItem title="Learn More">
-          <span slot="right">
-            <a
-              href="https://nomie.app?s=dap"
-              class="btn btn-clear text-primary"
-              target="_system">
-              Website
-            </a>
-          </span>
-        </NItem>
-        <NItem title="Reddit r/nomie">
-          <span slot="right">
-            <a
-              href="https://reddit.com/r/nomie"
-              class="btn btn-clear text-primary"
-              target="_system">
-              r/nomie
-            </a>
-          </span>
-        </NItem>
-
-        <NItem title="Open Source">
-          <span slot="right">
-            <a
-              href="https://github.com/open-nomie/nomie"
-              class="btn btn-clear text-primary"
-              target="_system">
-              Github
-            </a>
-          </span>
-        </NItem>
-
-        <NItem className="compact item-divider" />
-
-        <NItem title="Version">
-          <span slot="right" class="pr-2 text-sm">APP_VERSION</span>
-        </NItem>
-        <NItem title="Built">
-          <span slot="right" class="pr-2 text-sm">APP_BUILD_DATE</span>
-        </NItem>
+        </div>
+        <!-- end container -->
 
       </div>
-
-      <div class="n-pop pt-2">
-        <NItem title={Lang.t('general.questions')}>
-          <span slot="right">
-            <a
-              class="btn btn-clear text-primary"
-              href={`mailto:${config.support_email}?subject=Open Nomie Support`}>
-              {config.support_contact}
-            </a>
-          </span>
-
-        </NItem>
-        <NItem className="compact item-divider" />
-        <NItem title="Copyright 2019. All Rights Reserved." className="pb-3">
-          <NText tag="div" size="sm">
-            Nomie&reg; by
-            <a href="https://www.happydata.org" traget="_system">
-              Happy Data, LLC
-            </a>
-          </NText>
-        </NItem>
-
-      </div>
-
-    </div>
+    {/if}
   </div>
-{/if}
+  <!-- end content slot-->
+
+</AppLayout>
 
 {#if showImporter}
   <ImporterModal on:dismiss={() => (showImporter = false)} />

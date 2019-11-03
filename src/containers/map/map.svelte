@@ -3,9 +3,16 @@
   import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
 
+  // components
+  import Item from "../../components/list-item/list-item.svelte";
   // modules
   import locate from "../../modules/locate/locate";
   import distance from "../../modules/locate/distance";
+  import Location from "../../modules/locate/Location";
+  // stores
+  import { Locations } from "../../store/locations";
+  import { Interact } from "../../store/interact";
+  import { Lang } from "../../store/lang";
 
   // props
   export let locations = [];
@@ -30,25 +37,30 @@
   let data = {
     locationName: null,
     activeLocation: locations[locations.length - 1] || null,
-    locating: false
+    locating: false,
+    lat: null,
+    lng: null,
+    showLocations: false
   };
 
-  $: if (locations) {
-    setTimeout(() => {
-      methods.init().then(() => {
-        methods.renderMap();
-      });
-    });
-  }
+  // $: if (locations) {
+  // setTimeout(() => {
+  //   methods.init().then(() => {
+  //     methods.renderMap();
+  //   });
+  // });
 
-  $: if (!locations.length && picker && MAP) {
+  // }
+
+  $: if (picker && MAP && locations.length == 0) {
     locate().then(location => {
-      locations = [
-        {
-          lat: location.latitude,
-          lng: location.longitude
-        }
-      ];
+      locations.push({
+        lat: location.latitude,
+        lng: location.longitude
+      });
+
+      // data.lat = location.latitude;
+      // data.lng = location.longitutde;
       MAP.setView(L.latLng(location.latitude, location.longitude), 12);
     });
   }
@@ -76,6 +88,8 @@
             let center = MAP.getCenter();
             let lat = center.lat;
             let lng = center.lng;
+            data.lat = lat;
+            data.lng = lng;
             // Stop this from being called multiple times.
             if (!data.locating) {
               data.locating = true;
@@ -94,8 +108,52 @@
         resolve(MAP);
       });
     },
+    deleteLocation(location) {
+      Interact.confirm(`${Lang.t("general.delete")} ${location.name}?`).then(
+        res => {
+          if (res) {
+            Locations.deleteByID(location.id);
+          }
+        }
+      );
+    },
+    editName(location) {
+      Interact.prompt("Location Name", null, { value: location.name }).then(
+        res => {
+          location.name = res;
+          Locations.save(location);
+        }
+      );
+    },
+    setLocation(location) {
+      data.locationName = location.name;
+      data.lat = location.lat;
+      data.lng = location.lng;
+      locations = [location];
+      data.showLocations = false;
+      MAP.setView(L.latLng(location.lat, location.lng), 12);
+    },
+    /**
+     * Save the current Location
+     */
+    saveLocation() {
+      Locations.save(
+        new Location({
+          name: data.locationName,
+          lat: data.lat,
+          lng: data.lng
+        })
+      ).then(loc => {
+        Interact.toast(Lang.t("general.saved"));
+      });
+      // Locations.save({
+      //   name: data.locationName,
+      //   lat:
+      // })
+    },
+
     renderMap() {
-      let mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png`;
+      let mapTheme = `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`;
       if (document.body.classList.contains("theme-dark")) {
         mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png`;
       }
@@ -209,14 +267,15 @@
 
   // On Mount
   onMount(() => {
-    // methods.init().then(map => {
-    //   // methods.renderMap();
-    // });
+    methods.init().then(map => {
+      methods.renderMap();
+    });
   });
 </script>
 
 <style lang="scss">
-  $locationHeight: 32px;
+  $locationHeight: 40px;
+
   .n-map-container {
     background-color: var(--color-solid);
     position: relative;
@@ -227,12 +286,7 @@
       top: 0;
       left: 0;
       right: 0;
-      bottom: $locationHeight;
       z-index: 1;
-    }
-    :global(.leaflet-control-attribution) {
-      background: var(--color-solid-2) !important;
-      color: var(--color-solid);
     }
   }
 
@@ -242,30 +296,87 @@
     left: 0px;
     right: 0px;
     font-weight: bold;
-    font-size: $locationHeight * 0.4;
-    line-height: $locationHeight;
+    font-size: 0.9rem;
     height: $locationHeight;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+
+    transition: height 0.2s ease-in-out;
+
+    .row {
+      margin: 0;
+      flex-wrap: nowrap;
+    }
+
+    .locations {
+      width: 100%;
+    }
+
+    &.expanded {
+      .row {
+        min-height: 50px;
+      }
+      z-index: 2001;
+      max-height: 300px;
+      flex-grow: 1;
+      height: auto;
+      max-height: 300px;
+      overflow: scroll;
+      padding: 0;
+      .locations.list {
+        border-top: solid 1px var(--color-faded);
+        overflow-y: scroll;
+
+        display: flex;
+        flex-direction: column;
+        align-content: stretch;
+
+        .right {
+          margin-left: 0px;
+        }
+      }
+    }
+
     z-index: 1000;
-    padding: 0px 16px;
+    padding: 0px 5px;
     background-color: var(--color-solid);
     border-top: solid 1px var(--color-faded);
     color: var(--color-inverse);
     text-align: center;
     z-index: 2;
     box-shadow: 0px -6px 10px rgba(0, 0, 0, 0.1);
+    .row {
+      flex-grow: 1;
+      flex-shrink: 1;
+      align-items: center;
+      justify-content: stretch;
+      .name {
+        text-align: left;
+        width: calc(100% - 90px);
+        margin: 0 auto;
+        font-size: 0.7rem;
+        line-height: 0.8rem;
+        align-self: center;
+        flex-grow: 1;
+        flex-shrink: 1;
+        padding: 0 4px;
+      }
+    }
   }
 
   .picker-cover {
     pointer-events: none;
     position: absolute;
     top: 0;
-    bottom: 0;
+    bottom: $locationHeight;
     left: 0;
     right: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 20000;
+    z-index: 2000;
     svg {
       fill: red;
       opacity: 0.5;
@@ -317,12 +428,93 @@
       </div>
     </div>
   {/if}
-  <div class="n-map-wrapper">
+  <div class="n-map-wrapper" style="bottom:{picker ? '50px' : '0'}">
     <div {id} class="n-map" />
   </div>
 
-  {#if data.locationName}
-    <div class="location-name truncate">{data.locationName}</div>
+  {#if picker}
+    <div class="location-name {data.showLocations ? 'expanded' : 'collapsed'}">
+      <div class="row">
+        <div class="left">
+          <button
+            class="btn btn-clear btn-icon"
+            disabled={!picker}
+            on:click={() => {
+              data.showLocations = !data.showLocations;
+            }}>
+
+            <i
+              class="zmdi {data.showLocations ? 'zmdi-chevron-down' : 'zmdi-chevron-up'}" />
+          </button>
+        </div>
+
+        <div
+          class="name flex-grow"
+          on:click={() => {
+            data.showLocations = !data.showLocations;
+          }}>
+          {data.locationName || 'Locations'}
+        </div>
+
+        {#if data.showLocations && data.locationName}
+          <div class="right">
+            <div
+              class="btn btn-clear text-primary"
+              on:click={methods.saveLocation}>
+              Save
+            </div>
+          </div>
+        {/if}
+
+      </div>
+      {#if data.showLocations}
+        <div class="locations list">
+          {#if $Locations.length == 0}
+            <div class="empty-notice" style="max-height:120px;">
+              No Saved Locations
+            </div>
+          {/if}
+          {#each $Locations as location}
+            <Item className="compact text-primary">
+              <button
+                slot="left"
+                class="btn btn-clear btn-icon text-red"
+                on:click={() => {
+                  methods.setLocation(location);
+                }}>
+                <i class="zmdi zmdi-pin" />
+              </button>
+              <div
+                class="text-md text-inverse font-weight-bold"
+                on:click={() => {
+                  methods.setLocation(location);
+                }}>
+                {location.name}
+              </div>
+              <div slot="right" class="n-row" style="min-width:50px;">
+                <button
+                  class="btn btn-clear btn-icon mr-2"
+                  on:click={evt => {
+                    methods.editName(location);
+                  }}>
+                  <i class="zmdi zmdi-edit" />
+                </button>
+                <button
+                  class="btn btn-clear btn-icon px-0"
+                  on:click={evt => {
+                    methods.deleteLocation(location);
+                  }}>
+                  <i class="zmdi zmdi-delete" />
+                </button>
+              </div>
+
+            </Item>
+          {/each}
+          <div class="gap" />
+        </div>
+      {/if}
+
+    </div>
   {/if}
 
 </div>

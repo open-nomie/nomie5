@@ -117,8 +117,9 @@
   .active-item {
     position: absolute;
     top: 0px;
-    right: 6px;
-    background-color: var(--color-faded-2);
+    background-color: var(--color-solid);
+    border-radius: 4px;
+    box-shadow: var(--box-shadow-tight);
     z-index: 120;
     padding: 4px 10px;
     font-size: 0.6rem;

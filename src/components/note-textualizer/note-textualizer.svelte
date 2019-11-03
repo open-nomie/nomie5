@@ -65,7 +65,7 @@
 
 <style lang="scss">
   .n-note-textualized {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     line-height: 1.5rem;
     opacity: 0.8;
     margin-top: 6px;

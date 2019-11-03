@@ -53,9 +53,9 @@
   {#if $TrackerLibrary.first}
     <div class="px-2 pt-3 intro-message">
       <NText size="sm" tag="div">
-        Select at least 1 trackers to get started.
+        Select at least 1 tracker to get started.
         <br />
-        You can add more later, and create your own.
+        You can add more later (and create your own).
       </NText>
     </div>
   {/if}

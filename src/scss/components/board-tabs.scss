@@ -1,49 +1,54 @@
 .n-board-tabs {
-	background-color: var(--color-solid);
-	width: 100%;
-	min-height: 50px;
-	-webkit-overflow-scrolling: touch;
-	height: 50px;
+  background-color: var(--color-solid);
+  width: 100%;
+  min-height: 50px;
+  -webkit-overflow-scrolling: touch;
+  height: 50px;
+  box-shadow: inset 3px 0px 4px rgba(0, 0, 0, 0);
+  transition: all 0.2s ease-in-out;
+  &:not([data-scroll="0"]) {
+    box-shadow: inset 3px 0px 4px var(--color-faded-1);
+  }
 
-	.tab {
-		color: var(--color-inverse-2);
-		border: none;
-		background: transparent;
-		padding: 6px 10px;
-		min-width: 40px;
-		max-width: 200px;
-		width: auto;
-		flex-shrink: 0;
-		height: 50px;
-		position: relative;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		&.active {
-			border-bottom: solid 2px var(--color-primary-bright);
-		}
-		&:last-child {
-			&.active {
-				border-bottom: none;
-			}
-		}
-		&:after {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background-color: rgba(0, 0, 0, 0.1);
-			opacity: 0;
-			transition: all 0.2s ease-in-out;
-		}
-		&:active {
-			&:after {
-				background-color: var(--color-primary-bright);
-				opacity: 0.5;
-				transition: all 0.2s ease-in-out;
-			}
-		}
-	}
+  .tab {
+    color: var(--color-inverse-2);
+    border: none;
+    background: transparent;
+    padding: 6px 10px;
+    min-width: 40px;
+    max-width: 200px;
+    width: auto;
+    flex-shrink: 0;
+    height: 50px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &.active {
+      border-bottom: solid 2px var(--color-primary-bright);
+    }
+    &:last-child {
+      &.active {
+        border-bottom: none;
+      }
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transition: all 0.2s ease-in-out;
+    }
+    &:active {
+      &:after {
+        background-color: var(--color-primary-bright);
+        opacity: 0.5;
+        transition: all 0.2s ease-in-out;
+      }
+    }
+  }
 }

@@ -1,0 +1,31 @@
+.animate {
+  transition: all 0.2s ease-in-out;
+  &.hidden {
+    transition: all 0.2s ease-in-out;
+    pointer-events: none;
+  }
+  &.visible {
+    transition: all 0.2s ease-in-out;
+    opacity: 1;
+  }
+  &.notice-text {
+    &.hidden {
+      color: var(--color-primary-bright) !important;
+      transform: scale(1.1);
+    }
+  }
+
+  &.up {
+    &.hidden {
+      opacity: 0;
+      transform: translateY(200px);
+    }
+  }
+
+  &.down {
+    &.hidden {
+      opacity: 0;
+      transform: translateY(-200px);
+    }
+  }
+}

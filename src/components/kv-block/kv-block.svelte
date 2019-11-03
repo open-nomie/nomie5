@@ -15,6 +15,7 @@
     }
     .value {
       font-size: 1.2rem;
+      line-height: 1rem;
       font-weight: 700;
       small {
         font-weight: bold !important;
