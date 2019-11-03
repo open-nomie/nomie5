@@ -4,6 +4,7 @@ Fixes a lot of user submitted bugs, Chinese Translation, improved UI, and a hand
 
 ## Enhancements
 
+- Tracker Search
 - Saving/Reusing Locations
 - Double Emoji Support
 - Tracker Buttons now show marks for todays logs (Nomie 2 port)
