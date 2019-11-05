@@ -1,25 +1,69 @@
 {
-  "name": "Nomie",
-  "short_name": "Nomie",
-  "start_url": "http://localhost:5000",
-  "description": "Private Life Tracker",
+  "name": "Nomie 4",
+  "short_name": "Nomie 4",
+  "start_url": ".",
+  "description": "Private Mood & Life Tracker",
+  "orientation": "portrait",
   "display": "standalone",
-  "theme_color": "#4d84a1",
+  "theme_color": "#319ed7",
+  "background_color": "#319ed7",
+  "prompt_message": "Add a Home screen icon for easy access to Nomie",
+  "lang": "en-us",
+  "scope": "/",
   "icons": [
     {
-      "src": "https://dap.nomie.app/images/icon.png",
+      "src": "/images/icons/nomie-android-48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/nomie-android-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/nomie-android-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/nomie-android-114.png",
+      "sizes": "114x114",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/nomie-android-168.png",
+      "sizes": "168x168",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/nomie-android-400.png",
       "sizes": "400x400",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "https://dap.nomie.app/images/icon.png",
+      "src": "/images/icons/nomie-android-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "https://dap.nomie.app/images/icon.png",
+      "src": "/images/icons/nomie-android-400.png",
+      "sizes": "400x400",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/nomie-android-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

@@ -1,6 +1,6 @@
 <script>
   // svelte
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
 
   // Components
   import NToolbar from "../components/toolbar/toolbar.svelte";
@@ -32,15 +32,20 @@
       data.hasTrackers = false;
     }
   });
+  onMount(() => {
+    window.scrollTo(0, 0);
+  });
 </script>
 
 <style>
   #note-capture {
     position: fixed;
-    bottom: 50px;
+    bottom: 40px;
+    bottom: calc(40px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
-    background-color: var(--color-solid);
+    z-index: 10;
+    background-color: var(--color-translucent);
   }
   .page-track {
     display: flex;
@@ -49,17 +54,4 @@
   }
 </style>
 
-<div class="page page-track with-header">
-  <Board editMode={data.editMode} />
-</div>
-<div id="note-capture">
-  <CaptureLog />
-</div>
-<!-- {#if data.hasTrackers}
-{:else}
-  <NPage title="No Trackers">
-    <div slot="header" class="n-row">
-      <h1>Let's get Started!</h1>
-    </div>
-  </NPage>
-{/if} -->
+<Board editMode={data.editMode} />

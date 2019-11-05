@@ -15,6 +15,10 @@ export default {
 		label: 'Timer',
 		description: 'Tap to start, tap to stop. The timer is great for tracking durations.',
 	},
+	note: {
+		label: 'Multi Tracker',
+		description: 'Track multiple trackers in a series',
+	},
 	// note: {
 	// 	title: 'Prefilled Note',
 	// 	description: 'Prefill a full note - for example describing a common workout',

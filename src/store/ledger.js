@@ -1,12 +1,14 @@
 // Modules
 import NomieLog from '../modules/nomie-log/nomie-log';
 import Storage from '../modules/storage/storage';
+import Hooky from '../modules/hooks/hooks';
 
 // Utils
 import Logger from '../utils/log/log';
 import dayjs from 'dayjs';
 import { writable } from 'svelte/store';
 import PromiseStep from '../utils/promise-step/promise-step';
+import md5 from "md5";
 
 // Config
 import config from '../../config/global';
@@ -18,15 +20,29 @@ import { Interact } from './interact';
 
 const console = new Logger('🧺 store/ledger.js', true);
 
+const hooks = new Hooky();
+
+/**
+ * Ledger Store
+ * The ledger store is responsible for storing and getting logs, as well as maintaining what's
+ * happened today.
+ */
+
 const ledgerInit = () => {
 	let base = {
 		books: {},
 		today: {},
 		count: 0,
 		saving: false,
+		hash: null
 	};
 
 	const methods = {
+		/**
+		 * Filter Logs by start and end dates
+		 * @param {Array} logs
+		 * @param {Object} filter
+		 */
 		filterLogs(logs, filter) {
 			filter = filter || {};
 			return logs.filter(log => {
@@ -41,13 +57,28 @@ const ledgerInit = () => {
 				return pass;
 			});
 		},
-		async getBook(date) {
-			return Storage.get(`${config.book_root}/${date}`).then(results => {
+		// Connect to hooks
+		hook(type, func) {
+			hooks.hook(type, func);
+		},
+		/**
+		 * getBook
+		 *
+		 * Get a Book for a given month-year (2019-09)
+		 *
+		 * @param {String} bookDateString
+		 */
+		async getBook(bookDateString) {
+			hooks.run('onBeforeGetBook', bookDateString);
+			return Storage.get(`${config.book_root}/${bookDateString}`).then(results => {
 				return (results || []).map(log => {
 					return new NomieLog(log);
 				});
 			});
 		},
+		/**
+		 * Get the First Book
+		 */
 		firstBook() {
 			return new Promise((resolve, reject) => {
 				methods
@@ -62,20 +93,19 @@ const ledgerInit = () => {
 					.catch(reject);
 			});
 		},
+		/**
+		 * Filter Documents - Get the Books
+		 * this will only find documents with the data/v01/book prefix
+		 */
 		listBooks() {
-			return UserStore.listFiles().then(files => {
+			return Storage.list().then(files => {
 				return files.filter(f => {
 					return f.search(`${config.book_root}/`) > -1;
 				});
 			});
 		},
-		async putBook(date, rows) {
-			return Storage.put(`${config.data_root}/books/${date}`, rows);
-		},
-		findFirst() {
-			let finished = [];
-			let first = 2013;
-			let lookups = () => {};
+		async putBook(bookDateString, rows) {
+			return Storage.put(`${config.data_root}/books/${bookDateString}`, rows);
 		},
 		extractTrackerTagAndValues(logs) {
 			logs = logs || [];
@@ -89,17 +119,28 @@ const ledgerInit = () => {
 					trackers[tag] = trackers[tag] || {
 						values: [],
 						tag: tag,
+						hours: []
 					};
 					trackers[tag].values.push(log.trackers[tag].value);
+					let hour = parseInt(dayjs(log.end).format('H'));
+					 if(trackers[tag].hours.indexOf(hour) == -1) {
+						 trackers[tag].hours.push(hour);
+					 }
 				});
 			});
 			return trackers;
+		},
+		hashTodayPayload(today) {
+			let nodes = Object.keys(today).map((tag)=>{
+				return `${tag}-${today[tag].values.join(',')}`
+			});
+			return md5(nodes.join(','));
 		},
 		getToday() {
 			return new Promise((resolve, reject) => {
 				let todayKey = dayjs().format('YYYY-MM');
 				// Set local function for setting today
-				let setToday = () => {
+				let loadToday = () => {
 					let logs = methods.filterLogs(base.books[todayKey], {
 						start: dayjs()
 							.startOf('day')
@@ -111,20 +152,23 @@ const ledgerInit = () => {
 					let trackersUsed = methods.extractTrackerTagAndValues(logs);
 					update(b => {
 						b.today = trackersUsed;
+						// Create a hash of this setting so we can watch for changes
+						b.hash = methods.hashTodayPayload(trackersUsed);
 						b.count++;
 						return b;
 					});
 					resolve(base.today);
 				}; // end today_only
 
-				// If today exists in the book - roll with it.
 				if (base.books[todayKey]) {
-					setToday();
+					// If today exists in the book - roll with it.
+					// Aggressively sync each time we get today - regardless if it exists.
+					loadToday();
 				} else {
 					// If it doesn't exist, get it from storage
 					methods.getBook(todayKey).then(book => {
 						base.books[todayKey] = book;
-						setToday();
+						loadToday();
 					});
 				}
 			});
@@ -138,6 +182,7 @@ const ledgerInit = () => {
 						.then(resolve)
 						.catch(e => {
 							console.error('Location e', e);
+							Interact.alert(e.message);
 							resolve(null);
 						});
 				} else {
@@ -151,41 +196,82 @@ const ledgerInit = () => {
 		 * This method will accept a single log, and save it to the correct book.
 		 * This is a heavy function with the get and put of the book, so only use it when needed
 		 */
-		async updateLog(log) {
+		getIndex(array, func) {
+			let index = undefined;
+			array.forEach((item, i) => {
+				if (func(item)) {
+					index = i;
+				}
+			});
+			return index;
+		},
+		/**
+		 * UpdateLog
+		 *
+		 * Updates a log - you must provide both the updated log, and the previous date it was saved on.
+		 *
+		 * @param {NomieLog} log
+		 * @param {Date} previousEndDate
+		 */
+		async updateLog(log, previousEndDate) {
+			// Fire hooks
+			hooks.run('onBeforeUpdate', log);
 			// Set saving
 			update(bs => {
 				bs.saving = true;
 				return bs;
 			});
+
 			// Add modified flag - in case we want to use it later
 			log.modified = new Date().getTime();
+
 			// Get Date for Book ID
 			let bookDate = dayjs(new Date(log.end)).format(config.book_time_format);
-			// Get book
+			let previousBookDate = dayjs(new Date(previousEndDate)).format(config.book_time_format);
+			let isSameBook = bookDate === previousBookDate;
+
+			// Get books
 			let book = await methods.getBook(bookDate);
+			let previousBook; // incase we're moving a log from one book to another
+
 			// Set empty foundIndex
-			let foundIndex;
-			// Loop over books
-			book.forEach((row, index) => {
-				// If row id is the same as log id
-				if (row._id == log._id) {
-					foundIndex = index;
-				}
+			let foundIndex = methods.getIndex(book, row => {
+				return row._id == log._id;
 			});
+
 			// Did we find anything?
-			if (foundIndex) {
+			if (typeof foundIndex === 'number') {
+				// Update the row
 				book[foundIndex] = log;
+			} else {
+				// We didn't find it in the first book - so it must be a different book
+				book.push(log);
+			}
+			// Remove it from the prvious if we're in a different book
+			if (!isSameBook) {
+				previousBook = await methods.getBook(previousBookDate);
+				previousBook = previousBook.filter(row => {
+					return row._id !== log._id;
+				});
 			}
 
 			// Update base again
 			update(bs => {
 				bs.saving = false;
 				bs.books[bookDate] = book;
+				if (!isSameBook) {
+					bs.books[previousBookDate] = previousBook;
+				}
 				return bs;
 			});
-			return methods.putBook(bookDate, book).then(res => {
-				Interact.toast('Log Updated');
-				return res;
+
+			let promises = [methods.putBook(bookDate, book)];
+			if (!isSameBook) {
+				promises.push(methods.putBook(previousBookDate, previousBook));
+			}
+
+			return Promise.all(promises).then(res => {
+				return res[0];
 			});
 		},
 		/**
@@ -200,6 +286,10 @@ const ledgerInit = () => {
 			log.end = log.end || new Date().getTime();
 			log.start = log.start || new Date().getTime();
 
+			// Make sure it's a Nomie Log
+			log = log instanceof NomieLog ? log : new NomieLog(log);
+			hooks.run('onBeforeSave', log);
+			// Return Promise
 			return new Promise(async (resolve, reject) => {
 				// Update store to show it's saving
 				update(s => {
@@ -221,22 +311,24 @@ const ledgerInit = () => {
 				}
 				// Setup local save method
 				let doSave = date => {
-					return new Promise((res, rej) => {
+					return new Promise(async (res, rej) => {
 						let bookPath = `${config.data_root}/books/${date}`;
+
 						Storage.put(bookPath, base.books[date]).then(() => {
 							base = base;
 							update(s => {
 								s.saving = false;
 								return s;
 							});
-							Interact.toast('Saved');
+							Interact.toast(`Saved ${log.note}`);
+							hooks.run('onLogSaved', log);
 							methods.getToday();
 							res({ log, book: date });
 						});
 					});
 				};
 				// Check to see if this book exists locally for this log
-				if (base.books.hasOwnProperty(date)) {
+				if (base.books.hasOwnProperty(date) && !UserStore.data().meta.aggressiveSync) {
 					base.books[date].push(log);
 					// Return a Promise of the save
 					doSave(date)
@@ -264,7 +356,6 @@ const ledgerInit = () => {
 		 * @param {Array} logs
 		 */
 		async deleteLogs(logs) {
-			console.log('Delete logs', logs);
 			return new Promise((resolve, reject) => {
 				// Set up target books
 				let targets = {};
@@ -329,8 +420,7 @@ const ledgerInit = () => {
 					statusFunc
 				)
 					.then(finished => {
-						console.log('Finished', finished);
-						resolve();
+						resolve(finished);
 					})
 					.catch(reject);
 

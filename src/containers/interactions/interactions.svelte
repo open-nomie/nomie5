@@ -1,10 +1,14 @@
 <script>
   import { onMount } from "svelte";
+  // vendors
+  import md5 from "md5";
+
   //modules
   import Tracker from "../../modules/tracker/tracker";
   import NomieLog from "../../modules/nomie-log/nomie-log";
   // utils
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
+  import Storage from "../../modules/storage/storage";
   // Components
   import Toast from "../../components/toast/toast.svelte";
   import NModal from "../../components/modal/modal.svelte";
@@ -13,11 +17,13 @@
   import NPopMenu from "../../components/pop-menu/pop-menu.svelte";
   import PinLock from "../pin-lock/pin-lock.svelte";
   import NTextualize from "../../components/note-textualizer/note-textualizer.svelte";
+  import NCamera from "../../components/camera/camera.svelte";
   // Containers
   import NMap from "../map/map.svelte";
   import TrackerSelector from "../tracker/selector/selector.svelte";
   import NTrackerEditor from "../tracker/editor/editor.svelte";
   import TrackerInput from "../tracker/input/input.svelte";
+  import LogEditor from "../log-editor/log-editor.svelte";
   // Store
   import { Interact } from "../../store/interact";
   import { UserStore } from "../../store/user";
@@ -28,9 +34,12 @@
 
   let promptInput;
   let logEditorTracker;
-  $: if ($Interact.prompt.show) {
+
+  $: if ($Interact.prompt.show && promptInput) {
     promptInput.focus();
   }
+
+  let ready = false;
 
   const methods = {
     getLogTrackers(log) {
@@ -40,6 +49,18 @@
           tag: tag,
           tracker: $TrackerStore[tag] || new Tracker({ tag: tag })
         };
+      });
+    },
+    getTracker(tag) {
+      return $TrackerStore[tag] || new Tracker({ tag: tag });
+    },
+    onCameraPhoto(photo) {
+      const path = `camera/${md5(photo)}`;
+      // console.log(`Write payload ${payload.length} to ${path}`);
+      Storage.put(path, photo).then(() => {
+        if ($Interact.camera.onInteract) {
+          $Interact.camera.onInteract(path);
+        }
       });
     },
     editLogDataOnSave(event) {
@@ -63,6 +84,7 @@
       $Interact.logDataEditor.tag = null;
     }
   };
+  ready = true;
 </script>
 
 <NPopMenu
@@ -84,9 +106,17 @@
     Interact.dismiss();
   }} />
 
+<NCamera
+  show={$Interact.camera.show}
+  on:photo={event => {
+    methods.onCameraPhoto(event.detail);
+  }}
+  on:close={Interact.closeCamera} />
+
 <NAlertBox
   show={$Interact.prompt.show}
-  title={$Interact.prompt.message}
+  title={$Interact.prompt.title}
+  message={$Interact.prompt.message}
   cancel={$Interact.prompt.cancel}
   onInteract={answer => {
     if (answer) {
@@ -98,6 +128,8 @@
   }}>
   {#if $Interact.prompt.valueType == 'textarea'}
     <textarea
+      name="value"
+      title="input value"
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
@@ -105,20 +137,30 @@
       style="min-height:200px;" />
   {:else if $Interact.prompt.valueType == 'number'}
     <input
+      name="value"
+      pattern="[0-9]*"
+      inputmode="numeric"
+      title="input value"
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
+      on:focus={this.select}
       type="number"
       class="form-control mt-2" />
   {:else if $Interact.prompt.valueType == 'datetime'}
     <input
+      name="value"
+      title="input value"
       bind:this={promptInput}
+      on:focus={this.select}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
       type="datetime-local"
       class="form-control mt-2" />
   {:else}
     <input
+      title="input value"
+      name="value"
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
@@ -159,22 +201,22 @@
   <PinLock />
 {/if}
 
-{#if $Interact.trackerEditor.show}
-  <NTrackerEditor
-    show={true}
-    tracker={new Tracker($Interact.trackerEditor.tracker)}
-    on:save={tracker => {
-      $Interact.trackerEditor.show = false;
-      $Interact.trackerEditor.tracker = null;
-      if ($Interact.trackerEditor.onInteract) {
-        $Interact.trackerEditor.onInteract(tracker);
-      }
-    }}
-    on:close={() => {
-      $Interact.trackerEditor.show = false;
-      $Interact.trackerEditor.tracker = null;
-    }} />
-{/if}
+<!-- Tracker Editor -->
+
+<NTrackerEditor
+  tracker={new Tracker($Interact.trackerEditor.tracker)}
+  on:save={tracker => {
+    $Interact.trackerEditor.show = false;
+    $Interact.trackerEditor.tracker = null;
+    if ($Interact.trackerEditor.onInteract) {
+      $Interact.trackerEditor.onInteract(tracker);
+    }
+  }}
+  on:close={() => {
+    Interact.dismissEditTracker();
+  }} />
+
+<!-- Tracker Selector -->
 
 <TrackerSelector
   show={$Interact.trackerSelector.show}
@@ -192,23 +234,35 @@
     }
   }} />
 
-{#if $Interact.trackerInput.show === true}
+<!-- Tracker Input -->
+
+{#if $Interact.trackerInput.show}
   <TrackerInput
     on:save={event => {
+      if ($Interact.trackerInput.onInteract) {
+        $Interact.trackerInput.onInteract(event.detail);
+      }
       Interact.dismissTrackerInput();
       ActiveLogStore.addTag(event.detail.tracker.tag, event.detail.value);
+      $ActiveLogStore.score = ActiveLogStore.calculateScore($ActiveLogStore.note, $TrackerStore);
       LedgerStore.saveLog($ActiveLogStore).then(() => {
         ActiveLogStore.clear();
       });
     }}
     on:add={event => {
       ActiveLogStore.addTag(event.detail.tracker.tag, event.detail.value);
+      if ($Interact.trackerInput.onInteract) {
+        $Interact.trackerInput.onInteract(event.detail);
+      }
       Interact.dismissTrackerInput();
     }}
     on:cancel={() => {
+      if ($Interact.trackerInput.onInteract) {
+        $Interact.trackerInput.onInteract(null);
+      }
       Interact.dismissTrackerInput();
     }}
-    show={true}
+    show={$Interact.trackerInput.show}
     tracker={new Tracker($Interact.trackerInput.tracker)} />
 {/if}
 
@@ -217,68 +271,28 @@
     show={true}
     fullscreen
     flexBody
-    title={$Interact.locationViewer.title || 'Locations'}>
+    allowClose={true}
+    title={$Interact.locationViewer.locations[0].title || 'Location'}
+    on:close={Interact.dismissLocations}>
     <NMap locations={$Interact.locationViewer.locations} />
-    <button
-      class="btn btn-lg btn-primary btn-block mb-0"
-      on:click={() => Interact.dismissLocations()}
-      slot="footer">
-      Close
-    </button>
+    <div class="mt-2" slot="footer" />
   </NModal>
 {/if}
-
-{#if $Interact.logDataEditor.show}
-  <NModal show={true} flexBody title="Edit Data">
-    <div class="n-list">
-      {#each methods.getLogTrackers($Interact.logDataEditor.log) as TrackerValue}
-        <NItem
-          title={`${TrackerValue.tracker.emoji} ${TrackerValue.tracker.label}`}
-          on:click={() => {
-            $Interact.logDataEditor.tag = TrackerValue.tag;
-            $Interact.logDataEditor.value = TrackerValue.value;
-          }}>
-          <span slot="right">
-            {NomieUOM.format(TrackerValue.value, TrackerValue.tracker.uom)}
-          </span>
-        </NItem>
-      {/each}
-    </div>
-
-    {#if $Interact.logDataEditor.tag && $Interact.logDataEditor.log}
-      <TrackerInput
-        saveLabel="Set"
-        hideAdd={true}
-        value={$Interact.logDataEditor.value}
-        tracker={$TrackerStore[$Interact.logDataEditor.tag] || new Tracker({
-            tag: $Interact.logDataEditor.tag
-          })}
-        on:save={methods.editLogDataOnSave}
-        on:cancel={() => {
-          $Interact.logDataEditor.tag = null;
-        }} />
-    {/if}
-
-    <button
-      class="btn btn-lg btn-light mr-1 flex-grow"
-      slot="footer"
-      on:click={Interact.dismissEditLogData}>
-      Cancel
-    </button>
-    <button
-      class="btn btn-lg btn-primary mr-1 flex-grow"
-      slot="footer"
-      on:click={() => {
-        $Interact.logDataEditor.show = false;
-        LedgerStore.updateLog($Interact.logDataEditor.log).then(() => {
-          if ($Interact.logDataEditor.onInteract) {
-            $Interact.logDataEditor.onInteract(new NomieLog($Interact.logDataEditor.log));
-          }
-          Interact.dismissEditLogData();
+{#if $Interact.logEditor.show}
+  <LogEditor
+    log={$Interact.logEditor.log}
+    on:close={() => {
+      Interact.dismissEditLog();
+    }}
+    on:save={evt => {
+      let log = evt.detail;
+      LedgerStore.updateLog(log, $Interact.logEditor.log.end)
+        .then(() => {
+          Interact.dismissEditLog();
+        })
+        .catch(e => {
+          Interact.alert(e.message);
+          Interact.dismissEditLog();
         });
-      }}>
-      Save
-    </button>
-
-  </NModal>
+    }} />
 {/if}

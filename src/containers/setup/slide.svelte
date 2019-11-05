@@ -7,13 +7,13 @@
 
 <style lang="scss">
   .slide {
-    padding: 20px 40px;
+    padding: 20px 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-content: center;
     max-width: 400px;
-    height: 100vh;
+    height: calc(100vh - 100px);
     max-height: 700px;
     overflow: scroll;
 
@@ -27,12 +27,22 @@
     }
 
     h1 {
-      font-size: 1.6rem;
-      margin-top: 40px;
+      font-size: 1.2rem;
       font-weight: bolder;
+      text-align: center;
+      max-width: 240px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .content {
-      padding: 20px 0;
+      padding: 0 0 20px;
+      font-size: 1rem;
+    }
+    p {
+      font-size: 0.8rem;
+      font-weight: 200;
+      opacity: 0.77;
+      text-align: center;
     }
   }
 </style>
@@ -44,7 +54,7 @@
     </div>
   {/if}
   {#if title}
-    <h1>{title}</h1>
+    <h1 class={img ? 'mt-3' : ''}>{title}</h1>
   {/if}
   <div class="content">
     {#if message.length}

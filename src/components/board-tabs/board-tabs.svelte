@@ -1,14 +1,27 @@
 <script>
   import { createEventDispatcher } from "svelte";
 
+  // components
+  import NHScroller from "../h-scroller/h-scroller.svelte";
+  import Elephant from "../elephant.svelte";
+
   export let boards = [];
   export let active = undefined;
 
   const dispatch = createEventDispatcher();
 
   let data = {
-    active: null
+    active: null,
+    activeIndex: 0
   };
+
+  $: if (boards.length && active) {
+    boards.forEach((b, index) => {
+      if (b.id == active) {
+        data.activeIndex = index; // all
+      }
+    });
+  }
 
   const methods = {
     asArray() {
@@ -19,56 +32,28 @@
 </script>
 
 <style lang="scss">
-  .n-board-tabs {
-    background-color: var(--color-solid);
-    border-bottom: solid 1px var(--color-faded);
-    width: 100%;
-    flex-grow: 1;
-    overflow-x: scroll;
-    -webkit-overflow-scrolling: touch;
-    height: 50px;
-    .mask {
-      padding-left: 10px;
-      height: 100%;
-      width: fit-content;
-      display: flex;
-      align-content: center;
-    }
-    .tab {
-      color: var(--color-inverse-2);
-      border: none;
-      background: transparent;
-      padding: 4px 6px;
-      min-width: 40px;
-      white-space: pre;
-      &.active {
-        border-bottom: solid 2px var(--color-inverse);
-      }
-    }
-  }
+
 </style>
 
-<div class="n-board-tabs">
-
-  <div class="mask">
-    <slot name="left" />
-    {#each boards as board}
-      <button
-        class="tab {board.id == active ? 'active' : 'inactive'}"
-        on:click={() => {
-          dispatch('tabTap', board);
-        }}>
-        {board.label}
-      </button>
-    {/each}
+<NHScroller activeIndex={data.activeIndex} className="n-board-tabs">
+  {#each boards as board}
     <button
-      class="tab"
+      class="tab board-{board.id}
+      {board.id == active ? 'active' : 'inactive'}"
       on:click={() => {
-        dispatch('create');
+        dispatch('tabTap', board);
       }}>
-      <i class="zmdi zmdi-plus" />
+      {#if board.label == 'All'}
+        <Elephant size={18} />
+      {:else}{board.label}{/if}
     </button>
-    <slot name="right" />
-  </div>
-
-</div>
+  {/each}
+  <button
+    class="tab add-board"
+    on:click={() => {
+      dispatch('create');
+    }}>
+    <i class="zmdi zmdi-plus" />
+  </button>
+  <slot name="right" />
+</NHScroller>

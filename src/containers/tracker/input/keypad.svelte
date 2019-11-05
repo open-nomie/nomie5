@@ -6,13 +6,13 @@
 
   // Svelte
   import { tap } from "@sveltejs/gestures";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
   // utils
   import NomieUOM from "../../../utils/nomie-uom/nomie-uom";
 
   // Props
-  export let value;
+  export let value = undefined;
   export let tracker;
 
   // consts
@@ -103,23 +103,44 @@
 
 <style lang="scss">
   @import "../../../scss/utils/__utils.scss";
+  @import "../../../scss/vendor/bootstrap/base";
   .keypad {
     width: 100%;
   }
-  .keypad-keys {
-    max-width: 90%;
-    width: 260px;
-    max-width: 260px;
-    margin: 20px auto;
-    .row {
-      width: 280px;
-    }
+  .dead-spot {
+    opacity: 0;
+    pointer-events: none;
   }
-  div.button {
+  .keypad-keys {
+    margin: 20px 0;
+  }
+  button.button {
     touch-action: manipulation;
-    width: 64px;
-    height: 64px;
-    border-radius: 32px;
+    min-width: 60px;
+    min-height: 60px;
+    transition: all 0.2s ease-in-out;
+    &:active {
+      transform: scale(0.9);
+      transition: all 0.2s ease-in-out;
+    }
+
+    @include media-breakpoint-down(xs) {
+      width: 60px;
+      height: 60px;
+      margin: 2px;
+    }
+    @include media-breakpoint-up(sm) {
+      width: 66px;
+      height: 66px;
+      margin: 5px;
+    }
+    @include media-breakpoint-up(md) {
+      width: 80px;
+      height: 80px;
+      margin: 10px;
+    }
+
+    border-radius: 30px;
     border: none;
     color: #fff;
     font-size: 26px;
@@ -128,6 +149,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 2px;
   }
   .row {
     margin-bottom: 10px;
@@ -139,36 +161,48 @@
     background-color: $orange;
   }
   .row-3 .button-2 {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--color-faded-2);
+    color: var(--color-inverse);
+  }
+  .screen {
+    background-color: var(--color-faded-1);
+    border-radius: 4px;
+    padding: 4px 14px;
+    h1 {
+      color: var(--color-inverse);
+      margin-top: 4px;
+    }
+    h6 {
+      color: var(--color-faded-2);
+    }
   }
 </style>
 
 <div class="tracker-input keypad">
-  <div class="screen bg-light px-4 py-2">
+  <div class="screen">
     <h1 class="mb-0">{data.tempValue || 0}</h1>
     {#if tracker.uom !== 'count' && tracker.uom}
-      <h6 class="text-faded">
+      <h6 class="">
         {NomieUOM.format(parseFloat(data.tempValue) || 0, tracker.uom)}
       </h6>
     {/if}
   </div>
   <div class="keypad-keys">
     {#each keys as key, kindex}
-      <div class="row row-{kindex}">
+      <div class="n-row row-{kindex} justify-content-center">
         {#each key as button, bindex}
-          <div class="col-3">
-            {#if button !== null}
-              <div
-                class="button button-{bindex}"
-                use:tap
-                on:tap={() => {
-                  methods.onPress(button);
-                  return false;
-                }}>
-                {button}
-              </div>
-            {/if}
-          </div>
+          {#if button !== null}
+            <button
+              class="button button-{bindex}"
+              on:click={() => {
+                methods.onPress(button);
+                return false;
+              }}>
+              {button}
+            </button>
+          {:else}
+            <button class="dead-spot button button-{bindex}" />
+          {/if}
         {/each}
       </div>
       <!-- end row-->

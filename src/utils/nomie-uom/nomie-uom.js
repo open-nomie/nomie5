@@ -149,6 +149,16 @@ NomieUOM.uoms = {
 			return '¥' + v.toFixed(2);
 		},
 	},
+	yuan: {
+		singular: 'Yuan',
+		plural: 'Yuan',
+		symbol: '¥',
+		type: 'currency',
+		symbolAffix: 'pre',
+		display: function(v) {
+			return '¥' + v.toFixed(2);
+		},
+	},
 	euro: {
 		singular: 'Euro',
 		plural: 'Euros',
@@ -339,12 +349,6 @@ NomieUOM.uoms = {
 		symbol: 'kg',
 		type: 'weight',
 		symbolAffix: 'post',
-	},
-	strone: {
-		singular: 'Stone',
-		plural: 'Stones',
-		symbol: 'st',
-		type: 'weight',
 	},
 	stone: {
 		singular: 'Stone',

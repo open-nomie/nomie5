@@ -51,7 +51,6 @@
   // }
 
   $: if ($BoardStore.activeBoard && ready == false) {
-    console.log("Board Store loaded", $BoardStore);
     ready = true;
     data.updatedLabel = $BoardStore.activeBoard.label;
   }
@@ -83,7 +82,7 @@
     },
     deleteBoard() {
       Interact.confirm(
-        "Delete board " + $BoardStore.activeBoard.label + " completely?",
+        "Delete " + $BoardStore.activeBoard.label + " tab?",
         "You can recreate it later, but it's not super easy."
       ).then(res => {
         if (res === true) {
@@ -110,13 +109,11 @@
             setTimeout(() => {
               data.refreshing = false;
             }, 100);
-            console.log("Deleted");
           });
         } // accepted
       });
     },
     moveTag(fromTag, aboveTag) {
-      console.log(`going to move ${fromTag} to above ${aboveTag}`);
       // trackers witout fromTag
       let indexToPlace = 0;
       let trackers = $BoardStore.activeBoard.trackers
@@ -130,16 +127,14 @@
           return tag;
         });
       trackers.splice(indexToPlace, 0, fromTag);
-      console.log({ trackers });
       $BoardStore.activeBoard.trackers = trackers;
 
-      // data.board.trackers = trackers;
-      // console.log("Moved", data.board.trackers);
       data.draggingTag = null;
       data.droppedTag = null;
     },
     drag: {
       start(event, index, isTouch) {
+        console.log("Started Drag");
         isTouch = isTouch === true ? true : false;
         document.body.classList.add("no-scroll");
         data.draggingTag = event.target.dataset.id;
@@ -153,7 +148,7 @@
 
         // Let's move the target with us
         data.draggingTag = evt.target.id;
-
+        document.body.classList.add("no-scroll");
         // let trackerDom = document.getElementById
 
         // Define touching points
@@ -176,7 +171,6 @@
         ball.style.display = "block";
 
         if (hoverElement !== evt.target) {
-          console.log("hover elevement", hoverElement.id);
           data.hoverTag = hoverElement.id;
         }
       },
@@ -211,7 +205,6 @@
       },
       drop(ev) {
         data.droppedTag = ev.target.id || data.hoverTag;
-        console.log("Dropped On", data.droppedTag);
 
         setTimeout(() => {
           document.body.classList.remove("no-scroll");
@@ -363,13 +356,16 @@
   <NPage className="stats" withBack={true}>
 
     <div slot="header" class="n-row">
-      <div class="filler" />
-      <h1>Edit Board</h1>
-      <div class="filler" />
+      <h1 class="text-center flex-grow">Edit Board</h1>
+      <button
+        class="btn btn btn-clear text-danger "
+        on:click={methods.deleteBoard}>
+        Delete
+      </button>
     </div>
 
     <div slot="sub-header">
-      <NItem className="w-100">
+      <NItem className="w-100 p-0">
         <div class="input-group mb-2">
           <div class="input-group-prepend">
             <span class="input-group-text">Label</span>
@@ -384,6 +380,26 @@
         </div>
       </NItem>
     </div>
+    <div class="container">
+      <div class="n-row">
+        <div class="filler" />
+
+        <button
+          class="btn btn mt-4 btn-light mx-3 flex-grow"
+          on:click={() => {
+            window.history.back();
+          }}>
+          Cancel
+        </button>
+        <button
+          class="btn btn mt-4 btn-success flex-grow"
+          on:click={methods.save}>
+          Save
+        </button>
+        <div class="filler" />
+      </div>
+    </div>
+    <!-- /.container -->
 
     <div class="container pt-3 px-0 grid-container">
 
@@ -407,10 +423,6 @@
             {#if showDeletes}
               <button
                 class="btn-delete zmdi zmdi-close"
-                use:tap
-                on:tap={event => {
-                  methods.removeTracker(event, tracker);
-                }}
                 on:click={event => {
                   methods.removeTracker(event, tracker);
                 }} />
@@ -429,38 +441,13 @@
       {#if isMobile}
         <div class="container">
           <div class="n-row pt-3 justify-content-center">
-            <NText class="xs" className="text-faded text-center">
+            <NText class="xs" className="text-center">
               <!-- TODO: Fix Sorting on MObile -->
               Sorting on mobile is currently jacked.
             </NText>
           </div>
         </div>
       {/if}
-
-      <div class="container">
-        <div class="n-row">
-          <div class="filler" />
-          <button
-            class="btn btn mt-4 btn-danger flex-grow"
-            on:click={methods.deleteBoard}>
-            Destroy
-          </button>
-          <button
-            class="btn btn mt-4 btn-light mx-3 flex-grow"
-            on:click={() => {
-              window.history.back();
-            }}>
-            Cancel
-          </button>
-          <button
-            class="btn btn mt-4 btn-success flex-grow"
-            on:click={methods.save}>
-            Save
-          </button>
-          <div class="filler" />
-        </div>
-      </div>
-      <!-- /.container -->
 
     </div>
   </NPage>

@@ -2,12 +2,14 @@
   /**
    * Stats Route
    * This is stupid big... still needs to be organized
+   * SERIOUSLY BIG
    */
 
   //Vendors
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { navigate, Router, Route } from "svelte-routing";
   import dayjs from "dayjs";
+  import Spinner from "svelte-spinner";
 
   // Utils
   import math from "../utils/math/math";
@@ -16,19 +18,24 @@
 
   // Modules
   import Tracker from "../modules/tracker/tracker";
-  import CalendarMap from "../utils/calendar-map/calendar-map";
+  // import CalendarMap from "../utils/calendar-map/calendar-map";
   import Storage from "../modules/storage/storage";
   import StatsProcessor from "../modules/stats/stats";
 
   // Components
+  import ButtonGroup from "../components/button-group/button-group.svelte";
+
   import NText from "../components/text/text.svelte";
-  import NItem from "../components/list-item/list-item.svelte";
+  import NCell from "../components/cell/cell.svelte";
+  import Modal from "../components/modal/modal.svelte";
+  // import NItem from "../components/list-item/list-item.svelte";
   import BarChart from "../components/charts/bar-chart.svelte";
-  import Tabs from "../components/board-tabs/board-tabs.svelte";
+  // import Tabs from "../components/board-tabs/board-tabs.svelte";
   import NPopcard from "../components/popcard/popcard.svelte";
-  import NToolbar from "../components/toolbar/toolbar.svelte";
+  // import NToolbar from "../components/toolbar/toolbar.svelte";
   import NLogItem from "../components/list-item-log/list-item-log.svelte";
   import NTimeGrid from "../components/day-time-grid/day-time-grid.svelte";
+  import KVBlock from "../components/kv-block/kv-block.svelte";
 
   // containers
   import NPage from "../containers/layout/page.svelte";
@@ -36,43 +43,65 @@
   import NCalendar from "../containers/calendar/sweet.svelte";
 
   //store
-  import { BoardStore } from "../store/boards";
+  // import { BoardStore } from "../store/boards";
   import { UserStore } from "../store/user";
   import { TrackerStore } from "../store/trackers";
   import { LedgerStore } from "../store/ledger";
   import { Interact } from "../store/interact";
   import { HistoryPage } from "../store/history-page";
+  import { Lang } from "../store/lang";
+
+  // const path = window.location.href.split("/");
+  // const mainTag = path[path.length - 1];
+
+  // const mainTag = TrackerStore.getById(id).tag;
 
   const console = new Logger("📊 Stats.svelte");
-  const path = window.location.href.split("/");
-  const mainTag = path[path.length - 1];
 
   // Local
   let refreshing = false;
+  let hasStats = false;
   let rows = [];
+  let mainTag = $Interact.stats.activeTag;
+
+  let domVisible = false;
+
+  let statStorage = Storage.local.get("stats-view") || {};
 
   let state = {
     date: dayjs(), // default to today - use dayjs object
-    tracker: $TrackerStore[mainTag] || new Tracker({ tag: mainTag }),
+    tracker: null,
     initalized: false,
     tracker: null,
-    year: {
-      mode: "chart"
+    view: statStorage.view,
+    subview: statStorage.subview,
+    stats: null,
+    // Current hack - tap the emoji in the title - TODO: Make compare work again
+    compare: {
+      tracker: null,
+      stats: null
     },
-    month: {
-      mode: "chart"
-    },
-    day: {
-      mode: "list"
-    },
-    overview: {
-      mode: "time"
-    },
-    stats: null
+    ready: false,
+    tag: null
   };
 
-  $: if (Object.keys($TrackerStore).length) {
-    state.tracker = $TrackerStore[mainTag] || new Tracker({ tag: mainTag });
+  // On First Load
+  $: if ($Interact.stats.activeTag !== state.tag && $Interact.stats.activeTag) {
+    let tagViewSettings = statStorage[$Interact.stats.activeTag] || {
+      view: "month",
+      subview: "chart"
+    };
+    domVisible = true;
+    state.date = dayjs();
+    state.tag = $Interact.stats.activeTag;
+    state.view = tagViewSettings.view;
+    state.subview = tagViewSettings.subview;
+    state.tracker =
+      $TrackerStore[$Interact.stats.activeTag] ||
+      new Tracker({ tag: $Interact.stats.activeTag });
+    methods.load();
+  } else if (!$Interact.stats.activeTag && state.tag) {
+    state.date = dayjs();
   }
 
   const methods = {
@@ -82,6 +111,92 @@
       setTimeout(() => {
         $HistoryPage.date = state.date;
       }, 10);
+    },
+    saveView() {
+      let view = {
+        view: state.view,
+        subview: state.subview
+      };
+      statStorage[$Interact.stats.activeTag] = view;
+      Storage.local.put("stats-view", statStorage);
+    },
+    changeView(mode) {
+      state.view = mode;
+      if (
+        state.view == "year" &&
+        ["map", "chart", "grid"].indexOf(state.subview) == -1
+      ) {
+        state.subview = "chart";
+      } else if (
+        state.view == "month" &&
+        ["map", "logs", "streak", "grid", "chart"].indexOf(state.subview) == -1
+      ) {
+        state.subview = "chart";
+      } else if (
+        state.view == "day" &&
+        ["map", "logs", "chart", "all-logs"].indexOf(state.subview) == -1
+      ) {
+        state.subview = "map";
+      }
+
+      methods.saveView();
+
+      if (state.date.year() !== dayjs().year()) {
+        methods.load();
+      } else {
+        methods.refresh();
+      }
+    },
+    getGridRows() {
+      if (state.view == "month") {
+        let start = state.date
+          .startOf("month")
+          .toDate()
+          .getTime();
+        let end = state.date
+          .endOf("month")
+          .toDate()
+          .getTime();
+        return rows.filter(row => {
+          return row.end > start && row.end < end;
+        });
+      } else {
+        return rows;
+      }
+    },
+    changeSubview(mode) {
+      state.subview = mode;
+      methods.saveView();
+    },
+    getChartLabels() {
+      let view = state.view == "year" ? "year" : "month";
+      let labels = state.stats.results[view].chart.labels || [];
+      return labels;
+    },
+    getChartPoints() {
+      let view = state.view == "year" ? "year" : "month";
+      let points = state.stats.results[view].chart.points || [];
+      return points;
+    },
+    getVsChartPoints() {
+      console.log("getvsChartPoints");
+      return new Promise((resolve, reject) => {
+        console.log("Is there a compare", { ...state.compare });
+        setTimeout(() => {
+          console.log("Is there a compare now?", { ...state.compare });
+          let view = state.view == "year" ? "year" : "month";
+          let points = state.compare.stats.results[view].chart.points || [];
+          resolve(points);
+        }, 120);
+      });
+      // return [];
+    },
+    activeIndex() {
+      if (state.view == "year") {
+        return state.date.month();
+      } else {
+        return state.date.date();
+      }
     },
     getDayLogs() {
       return new Promise((resolve, reject) => {
@@ -97,22 +212,54 @@
         });
       });
     },
+    xFormat(x) {
+      if (state.view == "year") {
+        return dayjs(x).format("MMM");
+      } else {
+        return x % 2 ? x : "";
+      }
+    },
     load() {
+      let tracker =
+        $TrackerStore[$Interact.stats.activeTag] ||
+        new Tracker({ tag: $Interact.stats.activeTag });
       refreshing = true;
-      // Get Logs for the year and tag
-      LedgerStore.search(`#${mainTag}`, state.date.format("YYYY")).then(
-        resRows => {
-          // Expand Logs
-          resRows = resRows.map(log => {
-            log.expanded();
-            return log;
+      methods.getStats(tracker).then(res => {
+        rows = res.rows;
+        state.stats = res.stats;
+        if (state.compare.tracker) {
+          methods.getStats(state.compare.tracker).then(compareRes => {
+            state.compare.stats = compareRes.stats;
+            state.compare.rows = compareRes.rows;
           });
-          rows = resRows;
-          // Initialize the Stats OverView
-          state.stats = new StatsProcessor(rows, state.tracker, state.date);
-          refreshing = false;
         }
-      );
+
+        refreshing = false;
+      });
+      // Get Logs for the year and tag
+    },
+    getStats(tracker) {
+      return LedgerStore.search(
+        `#${tracker.tag}`,
+        state.date.format("YYYY")
+      ).then(resRows => {
+        // Expand Logs
+        resRows = resRows.map(log => {
+          log.expanded();
+          return log;
+        });
+        // Initialize the Stats OverView
+        let stats = new StatsProcessor(
+          resRows,
+          tracker,
+          state.date,
+          "getStats(" + tracker.tag + ")"
+        );
+        return {
+          stats,
+          rows: resRows
+        };
+      });
     },
     previous() {
       state.date = state.date.subtract(1, "year");
@@ -122,18 +269,19 @@
       state.date = state.date.add(1, "year");
       methods.load();
     },
-    setMode(unit, mode) {
-      switch (unit) {
-        case "day":
-          state.day.mode = mode;
-          break;
-        case "month":
-          state.month.mode = mode;
-          break;
-        case "year":
-          state.year.mode = mode;
-          break;
-      }
+    compare() {
+      Interact.selectTracker().then(tracker => {
+        state.compare.tracker = tracker;
+        methods.getStats(state.compare.tracker).then(compareRes => {
+          state.compare.stats = compareRes.stats;
+          state.compare.rows = compareRes.rows;
+        });
+      });
+    },
+    removeCompare() {
+      state.compare.stats = null;
+      state.compare.tracker = null;
+      state.compare.rows = null;
     },
     previousMonth() {
       let thisYear = state.date.year();
@@ -174,14 +322,18 @@
 
     refresh() {
       state.stats.gotoDate(state.date);
-
+      if (state.compare.stats) {
+        state.compare.stats.gotoDate(state.date);
+      }
       refreshing = true;
       setTimeout(() => {
         refreshing = false;
-      });
+      }, 1);
     },
     show(date) {
       state.date = date;
+      state.view = "day";
+      state.subview = "logs";
       this.refresh();
     },
     getValueMap(rows) {
@@ -207,6 +359,12 @@
         });
       });
     },
+    close() {
+      domVisible = false;
+      setTimeout(() => {
+        Interact.closeStats();
+      }, 600);
+    },
     getCalendarData(mode) {
       let rows = state.stats.getRows(mode).map(row => {
         row.start = new Date(row.start);
@@ -231,193 +389,139 @@
     }
   };
 
-  onMount(() => {
-    methods.load();
-  });
+  // onMount(() => {
+
+  // });
+  // onDestroy(() => {
+
+  // });
 </script>
 
 <style lang="scss">
   .data-blocks {
     display: flex;
-    justify-content: space-between;
-    align-items: space-evenly;
-    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
   }
   .border-bottom {
     border-bottom: solid 1px var(--color-faded-1) !important;
   }
-  .block {
-    margin: 0 3px;
 
-    .label {
-      font-size: 0.7rem;
-    }
-    .value {
-      font-size: 1.3rem;
-      font-weight: 500;
-    }
+  .stat-view-body {
+    flex-grow: 1;
+    min-height: 100%;
+    height: 100%;
+    background-color: var(--color-bg);
   }
-  .popcards {
-    position: relative;
-    min-height: 1200px;
-    &:after {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 5px;
-      content: ":)";
-      text-align: center;
-      color: var(--color-faded-2);
-    }
+
+  .loading-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    flex-shrink: 1;
+    height: 100%;
+  }
+
+  .sticky-header {
+    background: var(--color-bg);
+    position: -webkit-sticky;
+    position: sticky;
+    top: 50px;
+    z-index: 1000;
+  }
+
+  .subheader {
+    background: var(--color-bg) !important;
+  }
+  .stat-topbar {
+    text-align: center;
+    padding-bottom: 6px;
+    justify-content: center;
+    font-size: 12px;
+    background-color: transparent !important;
+    margin-left: -11px;
+    margin-top: -11px;
+    padding-top: 9px;
+    margin-bottom: 5px;
+    width: calc(100% + 22px);
+    border-top-left-radius: 0.6rem;
+    border-top-right-radius: 0.6rem;
+  }
+
+  :global(.stats-modal .n-modal) {
+    width: 96vw;
+    max-width: 600px;
+    height: 86vh !important;
+    min-height: 540px !important;
+    max-height: 700px !important;
+  }
+  :global(.stats-modal .n-modal .n-modal-body) {
+    padding: 0 !important;
+    // min-height: 120px;
+    height: 100%;
   }
 </style>
 
-{#if state.stats !== null && state.tracker}
-  <NPage className="stats">
-
-    <div slot="header" class="n-row">
+<Modal className="stats-modal" show={domVisible} type="bottom-slideup">
+  <header
+    slot="header"
+    class="n-column w-100 stats-header"
+    on:swipedown={methods.close}>
+    <div
+      class="stat-topbar n-row f-grow"
+      style="background-color:{state.tracker.color}"
+      on:swipedown={methods.close}>
+      {#if state.tracker}
+        <button class="btn btn-clear btn-sm" on:click={methods.compare}>
+          {state.tracker.emoji} {state.tracker.label}
+          {#if state.compare.tracker}
+            <span class="mx-2">vs</span>
+            {state.compare.tracker.emoji}
+          {/if}
+        </button>
+      {:else}
+        <Spinner size="16" speed="750" color="#666" thickness="2" gap="40" />
+        Loading...
+      {/if}
+    </div>
+    <div class="stat-header n-row f-grow">
       <button
         class="btn btn-clear btn-icon zmdi zmdi-close"
-        on:click={() => {
-          window.history.back();
-        }} />
-      <h1>{state.tracker.emoji} {state.tracker.label}</h1>
+        on:click={methods.close} />
+      <!-- View Button Group -->
+      <div class="mx-2 filler">
+        <ButtonGroup
+          size="sm"
+          buttons={[{ label: 'Day', active: state.view === 'day', click() {
+                methods.changeView('day');
+              } }, { label: 'Month', active: state.view === 'month', click() {
+                methods.changeView('month');
+              } }, { label: 'Year', active: state.view === 'year', click() {
+                methods.changeView('year');
+              } }]} />
+      </div>
+
       <button
         class="btn btn-clear btn-icon zmdi zmdi-edit"
         on:click={() => {
-          Interact.editTracker(state.tracker).then(() => {
-            console.log('Tracker Edited');
-          });
+          Interact.editTracker(state.tracker).then(() => {});
         }} />
     </div>
 
-    <div slot="sub-header" class="n-row n-year-bar">
-      <button class="btn btn-clear" on:click={methods.previous}>
-        <i class="zmdi zmdi-chevron-left font-140 mr-2" />
-        {state.date.subtract(1, 'year').format('YYYY')}
-      </button>
-      <h1 class="n-title filler text-center">{state.date.format('YYYY')}</h1>
-      <button class="btn btn-clear" on:click={methods.next}>
-        {state.date.add(1, 'year').format('YYYY')}
-        <i class="zmdi zmdi-chevron-right font-140 ml-2" />
-      </button>
-    </div>
-
-    <div class="container pt-3 popcards">
-
-      <NPopcard level={10} arrow={true}>
-
-        <div class="n-row data-blocks py-2 px-3 border-bottom">
-
-          {#if state.tracker.math === 'sum'}
-            <div class="block">
-              <div class="label">Total</div>
-              <div class="value">
-                {NomieUOM.format(math.round(state.stats.results.year.sum, 1000), state.tracker.uom)}
-              </div>
-            </div>
-          {:else}
-            <div class="block">
-              <div class="label">Year Avg</div>
-              <div class="value">
-                {NomieUOM.format(math.round(state.stats.results.year.avg, 1000), state.tracker.uom)}
-              </div>
-            </div>
-          {/if}
-
-          {#if state.stats.results.year.max}
-            <div class="block">
-              <div
-                class="label"
-                on:click={() => {
-                  methods.show(state.stats.results.year.max.date);
-                }}>
-                Max {(state.stats.results.year.max.date || dayjs()).format('MMM D')}
-              </div>
-              <div class="value">
-                {NomieUOM.format(math.round(state.stats.results.year.max.value, 10), state.tracker.uom)}
-              </div>
-            </div>
-          {/if}
-
-          <div class="block">
-            <div class="label">Month Avg</div>
-            <div class="value">
-              {NomieUOM.format(math.round(state.stats.results.year.avg, 10), state.tracker.uom)}
-            </div>
-          </div>
-        </div>
-        <div class="n-row p-3">
-          <div class="btn-group flex-grow">
-            <button
-              class="btn btn-sm btn-white-pop {state.year.mode === 'chart' ? ' active' : ' inactive'}"
-              on:click={() => {
-                methods.setMode('year', 'chart');
-              }}>
-              Chart
-            </button>
-            <button
-              class="btn btn-sm btn-white-pop {state.year.mode === 'map' ? ' active' : ' inactive'}"
-              on:click={() => {
-                methods.setMode('year', 'map');
-              }}>
-              Where
-            </button>
-            <button
-              class="btn btn-sm btn-white-pop {state.year.mode === 'grid' ? ' active' : ' inactive'}"
-              on:click={() => {
-                methods.setMode('year', 'grid');
-              }}>
-              When
-            </button>
-          </div>
-        </div>
-
-        <div class="p-2">
-          {#if state.year.mode == 'chart'}
-            <BarChart
-              height={140}
-              color={state.tracker.color}
-              labels={state.stats.results.year.chart.labels}
-              points={state.stats.results.year.chart.points}
-              on:tap={event => {
-                state.date = state.date.set('month', event.detail.index);
-                methods.refresh();
-              }}
-              xFormat={x => {
-                return dayjs(x).format('MMM');
-              }}
-              yFormat={y => {
-                return NomieUOM.format(y, state.tracker.uom);
-              }}
-              activeIndex={state.date.month() + 1} />
-          {/if}
-          {#if state.year.mode == 'grid'}
-            <div class="grid-holder px-3 pb-3">
-              <NTimeGrid color={state.tracker.color} {rows} />
-            </div>
-          {/if}
-          {#if state.year.mode == 'map'}
-            <div class="map-holder w-100">
-              {#if refreshing}
-                <div class="empty-notice sm">Loading...</div>
-              {:else}
-                <NMap
-                  height={250}
-                  small
-                  locations={state.stats.getLocations('year')} />
-              {/if}
-            </div>
-          {/if}
-        </div>
-      </NPopcard>
-
-      <!--
-        Month Card
-      -->
-
-      <div class="n-row n-month-bar mt-3 mw-500px mx-auto">
+    <div class="stat-sub-header n-row pt-2">
+      {#if state.view == 'year'}
+        <button class="btn btn-clear" on:click={methods.previous}>
+          <i class="zmdi zmdi-chevron-left font-140 mr-2" />
+          {state.date.subtract(1, 'year').format('YYYY')}
+        </button>
+        <h1 class="n-title filler text-center">{state.date.format('YYYY')}</h1>
+        <button class="btn btn-clear" on:click={methods.next}>
+          {state.date.add(1, 'year').format('YYYY')}
+          <i class="zmdi zmdi-chevron-right font-140 ml-2" />
+        </button>
+      {:else if state.view == 'month'}
         <button class="btn btn-clear" on:click={methods.previousMonth}>
           <i class="zmdi zmdi-chevron-left font-140 mr-2" />
           {state.date.subtract(1, 'month').format('MMM')}
@@ -429,271 +533,283 @@
           {state.date.add(1, 'month').format('MMM')}
           <i class="zmdi zmdi-chevron-right font-140 ml-2" />
         </button>
-      </div>
-
-      <NPopcard level={9} arrow={true}>
-        <div class="n-row data-blocks py-2 px-3 border-bottom">
-          {#if state.tracker.math === 'sum'}
-            <div class="block">
-              <div class="label">{state.date.format('MMMM')} Total</div>
-              <div class="value">
-                {NomieUOM.format(math.round(state.stats.results.month.sum || 0, 1000), state.tracker.uom)}
-              </div>
-            </div>
-          {:else}
-            <div class="block">
-              <div class="label">{state.date.format('MMMM')} Avg</div>
-              <div class="value">
-                {NomieUOM.format(math.round(state.stats.results.month.avg || 0, 1000), state.tracker.uom)}
-              </div>
-            </div>
-          {/if}
-
-          {#if state.stats.results.month.max.value}
-            <div class="block">
-              <div class="label">
-                Max {(state.stats.results.month.max.date || dayjs()).format('MMM D')}
-              </div>
-              <div class="value">
-                {NomieUOM.format(math.round(state.stats.results.month.max.value, 10), state.tracker.uom)}
-              </div>
-            </div>
-          {/if}
-
-          <div class="block">
-            <div class="label">Daily Avg</div>
-            <div class="value">
-              {NomieUOM.format(math.round(state.stats.results.month.avg, 10), state.tracker.uom)}
-            </div>
-          </div>
-
-        </div>
-
-        <div class="n-row p-3">
-          <div class="btn-group flex-grow">
-            <button
-              class="btn btn-sm btn-white-pop {state.month.mode === 'chart' ? ' active' : '   inactive'}"
-              on:click={() => {
-                methods.setMode('month', 'chart');
-              }}>
-              Chart
-            </button>
-            <button
-              class="btn btn-sm btn-white-pop {state.month.mode === 'map' ? ' active' : '   inactive'}"
-              on:click={() => {
-                methods.setMode('month', 'map');
-              }}>
-              Where
-            </button>
-            <button
-              class="btn btn-sm btn-white-pop {state.month.mode === 'calendar' ? 'active' : '   inactive'}"
-              on:click={() => {
-                methods.setMode('month', 'calendar');
-              }}>
-              Streak
-            </button>
-          </div>
-        </div>
-
-        <div class="p-2">
-          {#if !refreshing}
-            {#if state.month.mode === 'chart'}
-              <BarChart
-                height={140}
-                color={state.tracker.color}
-                labels={state.stats.results.month.chart.labels}
-                points={state.stats.results.month.chart.points}
-                on:tap={event => {
-                  let newDate = state.date
-                    .toDate()
-                    .setDate(event.detail.index + 1);
-                  state.date = dayjs(newDate);
-                  methods.refresh();
-                }}
-                xFormat={x => (x % 2 ? x : '')}
-                yFormat={y => {
-                  return NomieUOM.format(y, state.tracker.uom);
-                }}
-                activeIndex={state.date.toDate().getDate()} />
-            {:else if state.month.mode === 'map'}
-              <NMap
-                small
-                locations={state.stats.getLocations('month')}
-                height={250} />
-            {:else if state.month.mode === 'calendar'}
-              <NCalendar
-                color={state.tracker.color}
-                showHeader={false}
-                on:dayClick={event => {
-                  state.date = dayjs(event.detail);
-                  methods.refresh();
-                }}
-                initialDate={state.date}
-                events={methods.getCalendarData('month')} />
-            {/if}
-          {:else}
-            <div class="empty-notice sm">Loading</div>
-          {/if}
-        </div>
-      </NPopcard>
-
-      <!--
-        Day Card
-      -->
-      <div class="n-row n-year-bar mt-3 mw-500px mx-auto">
-
+      {:else if state.view == 'day'}
         <button class="btn btn-clear" on:click={methods.previousDay}>
           <i class="zmdi zmdi-chevron-left font-140 mr-2" />
           {state.date.subtract(1, 'day').format('ddd')}
         </button>
-        <h1
-          class="n-title btn btn-light filler text-center"
-          on:click={methods.showHistory}>
-          {state.date.format('ddd MMM D')}
+        <NCell direction="column" className="text-center">
+          <NText size="sm" className="font-bold">
+            {state.date.format('ddd MMM D YYYY')}
+          </NText>
           {#if state.date.toDate().toDateString() !== new Date().toDateString()}
-            <small>{state.date.fromNow()}</small>
+            <NText size="xs">{state.date.fromNow()}</NText>
           {:else}
-            <small>Today</small>
+            <NText size="xs">Today</NText>
           {/if}
-        </h1>
+        </NCell>
         <button class="btn btn-clear" on:click={methods.nextDay}>
           {state.date.add(1, 'day').format('ddd')}
           <i class="zmdi zmdi-chevron-right font-140 ml-2" />
         </button>
-      </div>
+      {/if}
+    </div>
+    <!-- end sub-header -->
+    <!-- Start Value Header-->
+    {#if state.stats}
+      <div class="n-row data-blocks py-2">
+        {#if state.view == 'year'}
+          {#if state.tracker.math === 'sum'}
+            <KVBlock
+              type="box"
+              label="Total"
+              value={NomieUOM.format(math.round(state.stats.results.year.sum, 1000), state.tracker.uom)} />
+          {:else}
+            <KVBlock
+              type="box"
+              label="Year Avg"
+              value={NomieUOM.format(math.round(state.stats.results.year.avg, 1000), state.tracker.uom)} />
+          {/if}
+          {#if state.stats.results.year.max}
+            <KVBlock
+              type="box"
+              onClick={() => {
+                methods.show(state.stats.results.year.max.date);
+              }}
+              label="Max {(state.stats.results.year.max.date || dayjs()).format('MMM D')}"
+              value={NomieUOM.format(math.round(state.stats.results.year.max.value, 10), state.tracker.uom)} />
+          {/if}
+        {:else if state.view == 'month'}
+          {#if state.tracker.math === 'sum'}
+            <KVBlock
+              type="box"
+              label="{state.date.format('MMM')} Total"
+              value={NomieUOM.format(math.round(state.stats.results.month.sum || 0, 1000), state.tracker.uom)} />
+          {:else}
+            <KVBlock
+              type="box"
+              label="{state.date.format('MMM')} Avg"
+              value={NomieUOM.format(math.round(state.stats.results.month.avg || 0, 1000), state.tracker.uom)} />
+          {/if}
 
-      <NPopcard level={8}>
-        <div class="n-row data-blocks py-2 px-3 border-bottom">
+          {#if state.stats.results.month.max.value}
+            <KVBlock
+              type="box"
+              label="Max {(state.stats.results.month.max.date || dayjs()).format('MMM D')}"
+              value={NomieUOM.format(math.round(state.stats.results.month.max.value, 10), state.tracker.uom)} />
+          {/if}
+          <KVBlock
+            type="box"
+            label="Daily Avg"
+            value={NomieUOM.format(math.round(state.stats.results.month.avg, 10), state.tracker.uom)} />
+        {:else if state.view == 'day'}
           {#if state.tracker.math === 'sum'}
             {#await methods.aboveOrBelow(state.stats.results.day.sum, state.stats.results.month.avg) then aob}
-              <div class="block">
-                <div class="label">
-                  {state.date.format('ddd')} This Day
-                  {#if aob.direction != 'same'}
-                    <span class="change">
+              <KVBlock
+                type="box"
+                value={NomieUOM.format(state.stats.results.day.sum || 0, state.tracker.uom)}>
+                <div slot="label">
+                  {state.date.format('ddd')}
+                  {#if aob.direction != 'same' && isFinite(aob.amount)}
+                    <div class="change">
                       <span
                         class="zmdi {aob.direction === 'above' ? 'zmdi-triangle-up' : 'zmdi-triangle-down'}" />
                       {aob.amount}%
-                    </span>
+                    </div>
                   {/if}
                 </div>
-                <div class="value">
-                  {NomieUOM.format(state.stats.results.day.sum || 0, state.tracker.uom)}
-                </div>
-              </div>
+              </KVBlock>
+              {#if state.compare.stats}
+                <KVBlock
+                  type="box"
+                  label={state.compare.tracker.emoji}
+                  value={NomieUOM.format(state.compare.stats.results.day.sum || 0, state.compare.tracker.uom)} />
+              {/if}
             {/await}
           {:else}
             {#await methods.aboveOrBelow(state.stats.results.day.sum, state.stats.results.month.avg) then aob}
-              <div class="block">
-                <div class="label">
-                  This Day
-                  {#if aob.direction != 'same'}
-                    <span class="change">
-                      <span
-                        class="zmdi {aob.direction === 'above' ? 'zmdi-triangle-up' : 'zmdi-triangle-down'}" />
-                      {aob.amount}%
-                    </span>
-                  {/if}
+              <KVBlock
+                type="box"
+                value={NomieUOM.format(state.stats.results.day.avg, state.tracker.uom) || '~'}>
+                <div slot="label">Day</div>
+              </KVBlock>
+            {/await}
+          {/if}
+        {/if}
+      </div>
+    {/if}
+    <!-- End Value Header-->
+    <!-- Start button group-->
+    <div class="n-row py-2">
+      {#if state.view == 'year'}
+        <ButtonGroup
+          size="sm"
+          buttons={[{ label: Lang.t('general.map'), active: state.subview == 'map', click() {
+                methods.changeSubview('map');
+              } }, { label: Lang.t('stats.chart'), active: state.subview == 'chart', click() {
+                methods.changeSubview('chart');
+              } }, { label: Lang.t('general.time'), active: state.subview == 'grid', click() {
+                methods.changeSubview('grid');
+              } }]} />
+      {:else if state.view == 'month'}
+        <ButtonGroup
+          size="sm"
+          buttons={[{ label: Lang.t('general.map'), active: state.subview == 'map', click() {
+                methods.changeSubview('map');
+              } }, { label: Lang.t('stats.chart'), active: state.subview == 'chart', click() {
+                methods.changeSubview('chart');
+              } }, { label: Lang.t('general.time'), active: state.subview == 'grid', click() {
+                methods.changeSubview('grid');
+              } }, { label: Lang.t('stats.logs'), active: state.subview == 'logs', click() {
+                methods.changeSubview('logs');
+              } }, { label: Lang.t('stats.streak'), active: state.subview == 'calendar', click() {
+                methods.changeSubview('calendar');
+              } }]} />
+      {:else if state.view == 'day'}
+        <ButtonGroup
+          size="sm"
+          buttons={[{ label: Lang.t('general.map'), active: state.subview == 'map', click() {
+                methods.changeSubview('map');
+              } }, { label: Lang.t('stats.chart'), active: state.subview == 'chart', click() {
+                methods.changeSubview('chart');
+              } }, { label: Lang.t('stats.logs'), active: state.subview == 'logs', click() {
+                methods.changeSubview('logs');
+              } }, { label: Lang.t('stats.all-logs'), active: state.subview == 'all-logs', click() {
+                methods.changeSubview('all-logs');
+              } }]} />
+      {/if}
+    </div>
+    <!-- end button grouo-->
+  </header>
 
-                </div>
-                <div class="value">
-                  {NomieUOM.format(state.stats.results.day.avg, state.tracker.uom)}
-                </div>
-              </div>
+  {#if !refreshing}
+    <main class="stat-view-body {state.mode}-view">
+
+      <!-- START STAT COMPONENT VIEWS -->
+      {#if state.subview === 'chart'}
+        <div class="p-2">
+          <BarChart
+            height={state.compare.tracker ? 140 : 200}
+            color={state.tracker.color}
+            labels={methods.getChartLabels()}
+            points={methods.getChartPoints()}
+            on:tap={event => {
+              let newDate;
+              if (state.view === 'year') {
+                newDate = state.date.toDate().setMonth(event.detail.index + 1);
+              } else if (state.view == 'month') {
+                newDate = state.date.toDate().setDate(event.detail.index + 1);
+              } else if (state.view == 'day') {
+                newDate = state.date.toDate().setDate(event.detail.index + 1);
+              }
+              state.date = dayjs(newDate);
+              methods.refresh();
+            }}
+            xFormat={methods.xFormat}
+            yFormat={y => {
+              return NomieUOM.format(y, state.tracker.uom);
+            }}
+            activeIndex={methods.activeIndex()} />
+          {#if state.compare.tracker}
+            {#await methods.getVsChartPoints() then points}
+              <BarChart
+                height={90}
+                color={state.compare.tracker.color}
+                labels={methods.getChartLabels()}
+                {points}
+                on:tap={event => {
+                  let newDate;
+                  if (state.view === 'year') {
+                    newDate = state.date
+                      .toDate()
+                      .setMonth(event.detail.index + 1);
+                  } else if (state.view == 'month') {
+                    newDate = state.date
+                      .toDate()
+                      .setDate(event.detail.index + 1);
+                  } else if (state.view == 'day') {
+                    newDate = state.date
+                      .toDate()
+                      .setDate(event.detail.index + 1);
+                  }
+                  state.date = dayjs(newDate);
+                  methods.refresh();
+                }}
+                xFormat={methods.xFormat}
+                yFormat={y => {
+                  return NomieUOM.format(y, state.compare.tracker.uom);
+                }}
+                activeIndex={methods.activeIndex()} />
             {/await}
           {/if}
         </div>
-
-        <div class="n-row p-3">
-          <div class="btn-group flex-grow">
-            <button
-              class="btn btn-sm btn-white-pop {state.day.mode === 'list' ? ' active' : '   inactive'}"
-              on:click={() => {
-                methods.setMode('day', 'list');
-              }}>
-              Logs
-            </button>
-            <button
-              class="btn btn-sm btn-white-pop {state.day.mode === 'map' ? ' active' : '   inactive'}"
-              on:click={() => {
-                methods.setMode('day', 'map');
-              }}>
-              Where
-            </button>
-            <button
-              class="btn btn-sm btn-white-pop {state.day.mode === 'all-logs' ? ' active' : '   inactive'}"
-              on:click={() => {
-                methods.setMode('day', 'all-logs');
-              }}>
-              All Logs
-            </button>
-
-          </div>
+      {:else if state.subview === 'grid'}
+        <NTimeGrid color={state.tracker.color} rows={methods.getGridRows()} />
+      {:else if state.subview === 'map'}
+        <NMap
+          small
+          locations={state.stats.getLocations(state.view)}
+          height={250} />
+      {:else if state.subview === 'calendar'}
+        <div class="p-3">
+          <NCalendar
+            color={state.tracker.color}
+            showHeader={false}
+            on:dayClick={event => {
+              state.date = dayjs(event.detail);
+              methods.refresh();
+            }}
+            initialDate={state.date}
+            events={methods.getCalendarData('month')} />
         </div>
-
-        <div class="">
-          {#if !refreshing}
-            {#if state.day.mode === 'list'}
-              <div class="n-list">
-                {#if state.stats.getRows('day').length === 0}
-                  <div class="empty-notice sm">No logs found on this day.</div>
-                {/if}
-                {#each state.stats.getRows('day') as log, index}
-                  {#if log.trackers[state.tracker.tag]}
-                    <NLogItem
-                      {log}
-                      on:locationClick={event => {
-                        Interact.showLocations([log]);
-                      }}
-                      on:moreClick={event => {
-                        Interact.logOptions(log).then(() => {});
-                      }}
-                      trackers={$TrackerStore}
-                      focus={state.tracker.tag} />
-                  {/if}
-                {/each}
-              </div>
-            {:else if state.day.mode === 'all-logs'}
-              <div class="n-list">
-                {#await methods.getDayLogs()}
-                  <div class="empty-notice sm">Getting logs...</div>
-                {:then logs}
-                  {#each logs as log, index}
-                    <NLogItem
-                      {log}
-                      on:locationClick={event => {
-                        Interact.showLocations([log]);
-                      }}
-                      on:moreClick={event => {
-                        Interact.logOptions(log).then(() => {});
-                      }}
-                      trackers={$TrackerStore} />
-                  {/each}
-                {/await}
-              </div>
-            {:else if state.day.mode === 'map'}
-              <NMap
-                small
-                locations={state.stats.getLocations('day')}
-                height={250} />
-            {:else if state.day.mode === 'calendar'}
-              <div class="empty-notice" />
-            {/if}
-          {:else}
-            <div class="empty-notice sm">Loading</div>
+      {:else if state.subview === 'logs'}
+        <div class="n-list">
+          {#if state.stats.getRows(state.view).length === 0}
+            <div class="empty-notice sm">No logs found on this day.</div>
           {/if}
+          {#each state.stats.getRows(state.view) as log, index}
+            {#if log.trackers[state.tracker.tag]}
+              <NLogItem
+                {log}
+                className="compact"
+                fullDate={true}
+                on:locationClick={event => {
+                  Interact.showLocations([log]);
+                }}
+                on:moreClick={event => {
+                  Interact.logOptions(log).then(() => {});
+                }}
+                show24Hour={$UserStore.meta.is24Hour}
+                trackers={$TrackerStore}
+                focus={state.tracker.tag} />
+            {/if}
+          {/each}
         </div>
-      </NPopcard>
+      {:else if state.subview === 'all-logs'}
+        <div class="n-list">
+          {#await methods.getDayLogs()}
+            <div class="empty-notice sm">Getting logs...</div>
+          {:then logs}
+            {#each logs as log, index}
+              <NLogItem
+                className="compact"
+                fullDate={true}
+                {log}
+                on:locationClick={event => {
+                  Interact.showLocations([log]);
+                }}
+                show24Hour={$UserStore.meta.is24Hour}
+                on:moreClick={event => {
+                  Interact.logOptions(log).then(() => {});
+                }}
+                trackers={$TrackerStore} />
+            {/each}
+          {/await}
+        </div>
+      {/if}
+    </main>
+  {:else}
+    <main class="loading-main stat-view-body">Loading...</main>
+  {/if}
 
-    </div>
-  </NPage>
-{:else}
-  <NPage>
-    <div slot="header" class="n-row">
-      <div class="filler" />
-      <h1 class="text-centered">Stats</h1>
-      <div class="filler" />
-    </div>
-    <div class="empty-notice sm">Loading...</div>
-  </NPage>
-{/if}
+</Modal>

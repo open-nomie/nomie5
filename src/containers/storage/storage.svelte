@@ -23,8 +23,7 @@
   const methods = {
     initialize() {
       state.files = [];
-      console.log("Initialize", UserStore.listFiles);
-      return UserStore.listFiles().then(files => {
+      return Storage.list().then(files => {
         state.files = files;
         return state.files;
       });
@@ -79,12 +78,12 @@
     },
     deleteFile(file) {
       Interact.confirm(
-        "Holup! Delete ${file}?",
+        `Holup! Delete ${file}?`,
         `This can cause serious problems if you don't know what you're doing.`,
         "Yes, Delete"
       ).then(res => {
         if (res === true) {
-          blockstack.deleteFile(file).then(() => {
+          Storage.delete(file).then(() => {
             setTimeout(() => {
               methods.initialize();
             });
@@ -113,8 +112,22 @@
     </NItem>
 
     {#if state.showFiles}
+      <NItem title="Reset Nomie">
+        <button
+          class="btn btn-sm btn-danger"
+          slot="right"
+          on:click={() => {
+            methods.deleteEverything();
+          }}>
+          Reset
+        </button>
+      </NItem>
+      <NItem title="Files" className="n-item-divider" />
       {#each state.files as file (file)}
-        <NItem title={file}>
+        <NItem>
+          <div class="truncate">
+            {file.substr(0, 20)}{file.length > 20 ? '...' : ''}
+          </div>
           <button
             class="btn btn-sm btn-clear text-danger"
             slot="right"
@@ -125,17 +138,8 @@
           </button>
         </NItem>
       {/each}
-      <NItem title="Super Danger" className="n-item-divider" />
-      <NItem title="Delete all files">
-        <button
-          class="btn btn-sm btn-danger"
-          slot="right"
-          on:click={() => {
-            methods.deleteEverything();
-          }}>
-          Delete Everything
-        </button>
-      </NItem>
+
+      <NItem className="n-item-divider" />
     {/if}
   </div>
 </div>

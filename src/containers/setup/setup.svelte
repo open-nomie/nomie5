@@ -1,8 +1,15 @@
 <script>
+  /**
+   * TODO: Make this design not suck! It's very boring.
+   */
+
   // svlete
   import { slide } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import { navigate } from "svelte-routing";
+
+  // modules
+  import Storage from "../../modules/storage/storage";
 
   // components
   import NToolbar from "../../components/toolbar/toolbar.svelte";
@@ -13,9 +20,9 @@
 
   // Stores
   import { UserStore } from "../../store/user";
+  import { Lang } from "../../store/lang";
 
-  //vendors
-  import Spinner from "svelte-spinner";
+  // TODO: UserSession shouldn't be in here - login should be fired by Storage.
   const UserSession = new blockstack.UserSession();
 
   let isMobile =
@@ -23,29 +30,29 @@
     navigator.userAgent.indexOf("IEMobile") !== -1;
 
   const slide1 = {
-    title: `Get to know yourself`,
+    title: `Get to Know Yourself`,
     message: [
-      "Hi, I'm Nomie! I was created to help you track, monitor and understand your mood + everything else that affects it."
+      "Track your mood (and literally anything else) with the tap of a button. Analyzing your life, doesn't get easier."
     ],
     img: "/images/screens/board.png"
   };
 
   const slide2 = {
-    title: `I'm like a private dairy, with hashtag analytics.`,
+    title: `A private data journal that will never judge`,
     img: "/images/screens/capture.png",
     message: [
-      `Record and analyize your thoughts by typing or tapping your own custom trackers.`
+      `Record your thoughts by typing a note and/or track data by tapping your own custom tracker buttons.`
     ]
   };
 
   const slide3 = {
-    title: `Stats by year, month, day, streaks, locations, and more...`,
+    title: `Visualize your Life`,
     img: "/images/screens/stats.png",
-    message: []
+    message: ["See when and where you did anything by day, month and year."]
   };
 
   const slide4 = {
-    title: `Yo! Add me to your Home Screen!`,
+    title: `Add to Home Screen`,
     img: "/images/screens/homescreen.png",
     message: [
       "If you're serious about tracking, make me easily accessible by hitting the share icon on your browser, then select 'Add to Homescreen'"
@@ -103,6 +110,10 @@
 
   setTimeout(() => {
     data.ready = true;
+    if (!Storage._storageType()) {
+      // Default to blockstack Storage
+      // Storage.setType("local");
+    }
   }, 1000);
 </script>
 
@@ -114,31 +125,24 @@
     color: #fff;
     justify-content: center;
 
-    .logo {
-      max-width: 120px;
-    }
-
     .slides {
       position: relative;
-      padding-bottom: 60px;
-    }
 
+      border-top: solid 1px rgba(0, 0, 0, 0.1);
+    }
     .logo {
-      width: 60px;
-      position: fixed;
-      opacity: 0.5;
-      top: 26px;
-      left: calc(50% - 30px);
+      margin-bottom: 10px;
     }
   }
   .footer-buttons {
     position: fixed;
     z-index: 2000;
     bottom: 0;
+    min-height: 50px;
     left: 0;
     right: 0;
     background-color: var(--color-primary);
-    padding: 20px;
+    padding: 10px 20px;
     box-shadow: 0px -20px 30px -15px rgba(0, 0, 0, 0.32);
     .btn {
       color: #fff;
@@ -157,7 +161,13 @@
   class="page page-setup p-2 d-flex flex-column h-100 justify-content-center
   align-items-center">
 
-  <img src="/images/nomie-white-type.png" alt="Nomie Logo" class="logo" />
+  <div class="p-2">
+    <img
+      src="/images/nomie-white-type.png"
+      alt="Nomie Logo"
+      width="68"
+      class="logo" />
+  </div>
 
   <!-- preload images -->
   <div class="" style="display:none;">
@@ -178,25 +188,26 @@
     {:else if data.activeSlide === 3}
       <Slide img={slide4.img} title={slide4.title} message={slide4.message} />
     {:else if data.activeSlide === 4}
-      <Slide title="Where would you like to store you data?">
+      <Slide title="Where would you like your data stored?">
+
         <button
-          class="btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
+          class="my-3 mt-4 btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
           on:click={() => {
             UserStore.setStorage('blockstack');
           }}>
-          <NText size="lg">Encrypted in the Cloud</NText>
-          <NText size="sm">
+          <NText size="lg" className="text-white">Encrypted in the Cloud</NText>
+          <NText size="sm" className="text-white">
             Access your data on multiple devices using end-to-end encryption.
             <strong>Powered by Blockstack.</strong>
           </NText>
         </button>
         <button
-          class="btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
+          class="my-3 btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
           on:click={() => {
             UserStore.setStorage('local');
           }}>
-          <NText size="lg">This Device Only</NText>
-          <NText size="sm">
+          <NText size="lg" className="text-white">This Device Only</NText>
+          <NText size="sm" className="text-white">
             All data is stored unencrypted, but ONLY on your device.
           </NText>
         </button>
@@ -214,7 +225,9 @@
   {/if}
   <div class="filler" />
   {#if data.showNext}
-    <button class="btn btn-white" on:click={methods.next}>Next</button>
+    {#if (data.activeSlide == 4 && $UserStore.storageType) || data.activeSlide != 4}
+      <button class="btn btn-white" on:click={methods.next}>Next</button>
+    {/if}
   {:else}
     <!-- <button class="btn btn-white" on:click={methods.blockstackLogin}>
       Login/Register

@@ -61,7 +61,7 @@
     <Counter
       started={tracker.started}
       lg
-      className="py-5 bg-light text-dark"
+      className="py-5 bg-light"
       on:change={event => {}} />
   {:else}
     <ManualTime

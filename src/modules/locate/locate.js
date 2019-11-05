@@ -7,25 +7,29 @@ const LOC_CACHE_KEY = 'loc-cache';
 export default () => {
 	let getRealLocation = () => {
 		return new Promise((resolve, reject) => {
-			navigator.geolocation.getCurrentPosition(
-				pos => {
-					let payload = {
-						time: new Date().getTime(),
-						latitude: pos.coords.latitude,
-						longitude: pos.coords.longitude,
-					};
+			try {
+				navigator.geolocation.getCurrentPosition(
+					pos => {
+						let payload = {
+							time: new Date().getTime(),
+							latitude: pos.coords.latitude,
+							longitude: pos.coords.longitude,
+						};
 
-					localStorage.setItem(LOC_CACHE_KEY, JSON.stringify(payload));
-					resolve(payload);
-				},
-				e => {
-					console.error(e);
-					reject(e);
-				},
-				{
-					timeout: 6000,
-				}
-			);
+						localStorage.setItem(LOC_CACHE_KEY, JSON.stringify(payload));
+						resolve(payload);
+					},
+					e => {
+						console.error(e);
+						reject(e);
+					},
+					{
+						timeout: 6000,
+					}
+				);
+			} catch (e) {
+				reject(e);
+			}
 		});
 	};
 

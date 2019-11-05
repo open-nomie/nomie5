@@ -2,6 +2,7 @@
   import NToolbar from "../toolbar/toolbar.svelte";
   import NItem from "../list-item/list-item.svelte";
   import { createEventDispatcher } from "svelte";
+  import { Lang } from "../../store/lang";
   const dispatch = createEventDispatcher();
 
   export let title = undefined;
@@ -21,7 +22,8 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 600;
+    z-index: 2000;
+    padding-bottom: env(safe-area-inset-bottom);
     &:before {
       content: "";
       background-color: var(--color-full-screen);
@@ -44,9 +46,10 @@
     &.hidden {
       pointer-events: none;
       opacity: 0;
+
       .card {
         opacity: 0;
-        transform: scaleY(0.1) scaleX(0.1);
+        transform: translateY(400px) scaleY(0.1) scaleX(0.1);
       }
     }
     .card {
@@ -59,7 +62,7 @@
       flex-grow: 1;
       background-color: var(--color-darkest);
       color: var(--color-inverse-1);
-
+      border-radius: 1.2rem;
       box-shadow: 0px 10px 16px -6px rgba(0, 0, 0, 0.2);
       padding: 10px;
       margin: 10px;
@@ -104,7 +107,7 @@
         on:click={() => {
           dispatch('close');
         }}>
-        Cancel
+        {Lang.t('general.cancel')}
       </button>
     </div>
   </div>

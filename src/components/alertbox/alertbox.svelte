@@ -11,6 +11,11 @@
   export let show = false;
   export let onInteract = null;
 
+  let hasSlot = false;
+  $: if (show) {
+    hasSlot = arguments[1].$$slots || {}.default;
+  }
+
   const methods = {
     onOk() {
       show = false;
@@ -36,8 +41,8 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 1010;
-    background-color: rgba(0, 0, 0, 0.78);
+    z-index: 2200;
+    background-color: rgba(0, 0, 0, 0.88);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -56,19 +61,26 @@
       }
     }
     .card {
+      border-radius: 1rem;
       transition: all 0.2s ease-in-out;
       max-width: 400px;
       max-height: 80vh;
-      min-height: 150px;
+      min-height: 100px;
       width: 200px;
       min-width: 300px !important;
       flex-grow: 1;
-      background-color: #fff;
-      box-shadow: 0px 10px 16px -6px rgba(0, 0, 0, 0.2);
+      background-color: var(--color-solid);
+      border: solid 1px var(--color-faded-1);
+      box-shadow: var(--box-shadow);
       margin: 10px;
       display: flex;
       justify-content: stretch;
       align-content: stretch;
+      color: var(--color-inverse-2);
+      .card-title {
+        line-height: 115%;
+        color: var(--color-inverse);
+      }
       .card-body {
         flex-grow: 1;
         flex-shrink: 1;
@@ -76,8 +88,10 @@
       }
     }
     .footer {
+      border-top: solid 1px var(--color-faded-1);
       button {
         min-width: 120px;
+        border-radius: 0.9rem;
       }
     }
     .btn-toolbar {
@@ -91,27 +105,40 @@
 <div
   class="full-screen dark-glass alert-dialog {show === true ? 'visible' : 'hidden'}">
   <div class="alert-dialog-window card">
+    {#if title}
+      <div
+        class="card-title {!hasSlot && !message ? 'message-less' : 'message'}">
+        {title}
+      </div>
+    {/if}
 
-    <div class="card-body">
-      {#if title}
-        <NText size="lg" bold tag="div" className="mb-2">{title}</NText>
-      {/if}
-      {#if message}{message}{/if}
-      <div class="slot-holder">
+    {#if message && !hasSlot}
+      <div class="card-body align-items-center pt-0">{message}</div>
+    {:else if hasSlot && !message}
+      <div class="slot-holder card-body pt-0">
         <slot />
       </div>
-    </div>
+    {:else if hasSlot && message}
+      <div class="slot-holder card-body pt-0">
+        <p>{message}</p>
+        <slot />
+      </div>
+    {/if}
 
-    <div class="p-2 border-top d-flex flex-row footer">
+    <!-- -->
+
+    <div class="p-2 d-flex flex-row footer">
       {#if cancel}
         <button
-          class="btn btn-light mr-1 flex-grow"
+          class="btn btn-lg btn-light mr-1 flex-grow"
           on:click={methods.onCancel}>
           {cancel}
         </button>
       {/if}
 
-      <button class="btn btn-primary ml-1 flex-grow" on:click={methods.onOk}>
+      <button
+        class="btn btn-lg btn-primary ml-1 flex-grow"
+        on:click={methods.onOk}>
         {ok}
       </button>
     </div>

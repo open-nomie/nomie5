@@ -8,11 +8,14 @@
 
   // components
   import NItem from "../list-item/list-item.svelte";
+  import NPoints from "../points/points.svelte";
   import NText from "../text/text.svelte";
   import NNoteTextualizer from "../note-textualizer/note-textualizer.svelte";
+  import NCameraImage from "../camera/image.svelte";
 
   // utils
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
+  import time from "../../utils/time/time";
 
   // vendors
   import dayjs from "dayjs";
@@ -23,23 +26,48 @@
   export let className = "";
   export let focus = false;
   export let fullDate = false;
+  export let show24Hour = false;
   // consts
   const dispatch = createEventDispatcher();
 
   let displayLog;
 
+  let state = {
+    showPhoto: false
+  };
+
   $: if (log) {
     displayLog = new NomieLog(log);
   }
+
+  $: fullDate =
+    log && new Date(log.end).toDateString() !== new Date().toDateString()
+      ? true
+      : false;
+
+  $: timeFormat = show24Hour ? "HH:mm" : "h:mm a";
 </script>
 
+<style lang="scss">
+  .log-photo-wrapper {
+    margin-left: -20px;
+    margin-right: -20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-faded-1);
+    margin-bottom: 20px;
+  }
+</style>
+
 {#if displayLog}
-  <NItem className="{className} my-3 mx-2 border pb-0 n-item-log">
+  <NItem
+    className="{className} my-3 mx-2 border pb-0 n-item-log glow glow-{time.dateToDesc(displayLog.end)}">
     <!-- Show the Trackers within this Log Item -->
-    <div class="n-row my-2 pr-3 time-row">
-      <NText size="md" bold>
-        {dayjs(displayLog.end).format(fullDate ? 'ddd MMM D YYYY h:mm a' : 'h:mm a')}
-      </NText>
+    <div class="n-row time-row">
+      <div class="time font-bold truncate">
+        {dayjs(displayLog.end).format(fullDate ? `ddd MMM D YYYY - ${timeFormat}` : timeFormat)}
+      </div>
 
       <!-- If they have location-->
       {#if displayLog.lat}
@@ -56,27 +84,37 @@
           <i class="zmdi zmdi-globe text-primary-bright" />
         </button>
       {/if}
+
       <div class="filler" />
+      {#if displayLog.score}
+        <NPoints points={displayLog.score} />
+      {/if}
       <!-- Janky - fix this -->
       <button
         on:click={event => {
           dispatch('moreClick', displayLog);
         }}
         class="btn btn-sm btn-clear pl-2 pr-2 "
-        style="margin-right:-20px; margin-top:-6px; font-size:32px; height:30px;
-        line-height:30px;">
+        style="margin-left:10px; margin-right:-10px; margin-top:-10px;
+        font-size:32px; height:30px; min-width:40px; line-height:30px;">
         <i
           class="zmdi zmdi-more text-primary-bright"
           style="height:30px; line-height:30px;" />
       </button>
     </div>
+    {#if displayLog.photo}
+      <div class="log-photo-wrapper">
+        <NCameraImage path={displayLog.photo} display="div" height={300} />
+      </div>
+    {/if}
     <!-- Process the Note Content with the Textualizer 
     This really isn't special right now -->
-    <NNoteTextualizer
-      note={displayLog.note}
-      {trackers}
-      className={displayLog.trackersArray().length ? '' : 'pb-2'} />
-
+    {#if displayLog.note.length}
+      <NNoteTextualizer
+        note={displayLog.note}
+        {trackers}
+        className={displayLog.trackersArray().length ? '' : 'pb-2'} />
+    {/if}
     <div class="trackers-list">
       <!-- Loop over the trackers within this log -->
       {#each displayLog.trackersArray().filter(trk => {

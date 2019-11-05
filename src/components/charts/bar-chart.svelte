@@ -97,7 +97,7 @@
   }
 
   .tick line {
-    stroke: #e2e2e2;
+    stroke: var(--color-solid-2);
     stroke-dasharray: 2;
   }
 
@@ -117,8 +117,10 @@
   .active-item {
     position: absolute;
     top: 0px;
-    right: 6px;
-    background-color: var(--color-faded);
+    background-color: var(--color-solid);
+    border-radius: 4px;
+    box-shadow: var(--box-shadow-tight);
+    z-index: 120;
     padding: 4px 10px;
     font-size: 0.6rem;
     display: flex;
@@ -186,7 +188,7 @@
         {/each}
       </g>
     </svg>
-    {#if activeIndex}
+    {#if activeIndex && points[activeIndex - 1]}
       <div class="active-item">
         <label>{points[activeIndex - 1].date.format('ddd MMM D')}</label>
         <div class="value">{yFormat(points[activeIndex - 1].y)}</div>

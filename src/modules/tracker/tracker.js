@@ -2,6 +2,7 @@
 // import { Reminder } from '../services/reminders/reminders.module'
 // import CardModel from './card.class'
 import NomieUOM from '../../utils/nomie-uom/nomie-uom';
+import md5 from 'md5';
 
 export default class TrackerConfig {
 	constructor(starter) {
@@ -13,7 +14,7 @@ export default class TrackerConfig {
 		if (!this.tag.length) {
 			this._dirty = true;
 		}
-
+		this.id = starter.id || md5(Math.random());
 		// Set the Type of the Input
 		this.type = starter.type || 'tick';
 		// Set the color if it's passed
@@ -46,7 +47,7 @@ export default class TrackerConfig {
 		// one tap
 		this.one_tap = starter.one_tap === true ? true : false;
 
-		this.note = starter.note || undefined;
+		this.note = starter.note || null;
 
 		this.hidden = starter.hidden === true ? true : false;
 

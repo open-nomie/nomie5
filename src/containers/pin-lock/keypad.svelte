@@ -40,20 +40,19 @@
 </style>
 
 <div class="keypad">
-  <button class="btn btn-clear" use:tap on:tap={select(1)}>1</button>
-  <button class="btn btn-clear" use:tap on:tap={select(2)}>2</button>
-  <button class="btn btn-clear" use:tap on:tap={select(3)}>3</button>
-  <button class="btn btn-clear" use:tap on:tap={select(4)}>4</button>
-  <button class="btn btn-clear" use:tap on:tap={select(5)}>5</button>
-  <button class="btn btn-clear" use:tap on:tap={select(6)}>6</button>
-  <button class="btn btn-clear" use:tap on:tap={select(7)}>7</button>
-  <button class="btn btn-clear" use:tap on:tap={select(8)}>8</button>
-  <button class="btn btn-clear" use:tap on:tap={select(9)}>9</button>
-
-  <button class="btn btn-clear" disabled={!value} use:tap on:tap={clear}>
+  <button class="btn btn-clear" on:click={select(1)}>1</button>
+  <button class="btn btn-clear" on:click={select(2)}>2</button>
+  <button class="btn btn-clear" on:click={select(3)}>3</button>
+  <button class="btn btn-clear" on:click={select(4)}>4</button>
+  <button class="btn btn-clear" on:click={select(5)}>5</button>
+  <button class="btn btn-clear" on:click={select(6)}>6</button>
+  <button class="btn btn-clear" on:click={select(7)}>7</button>
+  <button class="btn btn-clear" on:click={select(8)}>8</button>
+  <button class="btn btn-clear" on:click={select(9)}>9</button>
+  <button class="btn btn-clear" disabled={!value} on:click={clear}>
     Clear
   </button>
-  <button class="btn btn-clear" use:tap on:tap={select(0)}>0</button>
+  <button class="btn btn-clear" on:click={select(0)}>0</button>
   <button class="btn btn-clear" disabled={!value} on:click={submit}>
     Submit
   </button>

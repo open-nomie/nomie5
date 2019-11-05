@@ -1,3 +1,9 @@
+/**
+ * Board Store
+ *
+ * This is pretty messy and needs to be cleaned up and organized
+ */
+
 import { writable } from 'svelte/store';
 
 // Modules
@@ -28,7 +34,7 @@ const boardsInit = () => {
 	const { subscribe, set, update } = writable(base);
 
 	const methods = {
-		initialize(tkrs) {
+		initialize(UserStore, tkrs) {
 			trackers = tkrs;
 			return Storage.get(`${config.data_root}/boards.json`).then(boards => {
 				if (boards) {
@@ -109,9 +115,7 @@ const boardsInit = () => {
 			});
 			return res;
 		},
-		addTrackersToActiveBoard(trackerArray) {
-			return methods.addTrackersToBoard(trackerArray, base.active);
-		},
+
 		get(id) {
 			return methods.boardById(id);
 		},
@@ -159,6 +163,9 @@ const boardsInit = () => {
 				return bs;
 			});
 		},
+		addTrackersToActiveBoard(trackerArray) {
+			return methods.addTrackersToBoard(trackerArray, base.active);
+		},
 		addTrackersToBoard(trackerArray, boardId) {
 			update(bs => {
 				// Find the board by id.
@@ -184,7 +191,6 @@ const boardsInit = () => {
 			});
 		},
 		addBoard(label, trackers) {
-			console.log('Add Board', { label, trackers });
 			trackers = trackers || [];
 			return new Promise((resolve, reject) => {
 				let id = md5(new Date().getTime() + label).substr(0, 10);
@@ -214,12 +220,42 @@ const boardsInit = () => {
 				});
 			}
 		},
+		nextBoard() {
+			let data = methods.data();
+			let index = 0;
+			data.boards.forEach((b, bIndex) => {
+				if (b.id == data.active) {
+					index = bIndex;
+				}
+			});
+			if (index < data.boards.length - 1) {
+				let board = data.boards[index + 1];
+				if (board.id) {
+					methods.setActive(board.id);
+				}
+			}
+		},
+		previousBoard() {
+			let data = methods.data();
+			let index = 0;
+			data.boards.forEach((b, bIndex) => {
+				if (b.id == data.active) {
+					index = bIndex;
+				}
+			});
+			if (index > 0) {
+				let board = data.boards[index - 1];
+				if (board.id) {
+					methods.setActive(board.id);
+				}
+			}
+		},
 		getActiveTrackerTags() {
 			let trackers = [];
 			let data = methods.data();
 
 			if (data.active == 'all') {
-				trackers = Object.keys(trackers || {});
+				trackers = TrackerStore.getAsArray().map(tracker => tracker.tag);
 			} else if (data.active == 'timers') {
 				trackers = TrackerStore.getRunning().map(tracker => tracker.tag);
 			} else {

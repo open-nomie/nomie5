@@ -1,20 +1,28 @@
-@import '../../../../node_modules/bootstrap/scss/functions';
-@import '../../../../node_modules/bootstrap/scss/variables';
-@import '../../../../node_modules/bootstrap/scss/mixins';
+@import "../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../node_modules/bootstrap/scss/variables";
+
 // Override Bootstrap Variables if they exist
-@import '../../utils/_variables.scss';
+@import "../../utils/_variables.scss";
+@import "../../../../node_modules/bootstrap/scss/mixins";
 
 // Ad some additional Sizes = must be under the functions
 $sizes: map-merge(
-	(
-		10: 10%,
-		20: 20%,
-		33: 33%,
-		25: 25%,
-		50: 50%,
-		75: 75%,
-		100: 100%,
-		auto: auto,
-	),
-	$sizes
+  (
+    10: 10%,
+    20: 20%,
+    33: 33%,
+    25: 25%,
+    50: 50%,
+    75: 75%,
+    100: 100%,
+    auto: auto
+  ),
+  $sizes
 );
+
+@include media-breakpoint-down(sm) {
+  .container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}

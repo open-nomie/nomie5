@@ -7,13 +7,16 @@
  * For example: Alerts, Confirms, Prompts, Location Lookup, Location Showing, Editing Trackers
  */
 
+// Svelte
 import { writable } from 'svelte/store';
+import { navigate } from 'svelte-routing';
 
 // vendors
 import dayjs from 'dayjs';
 
 // utils
 import Logger from '../utils/log/log';
+import time from '../utils/time/time';
 
 // modules
 import NomieLog from '../modules/nomie-log/nomie-log';
@@ -26,6 +29,9 @@ const console = new Logger('✋ Interact');
 const interactInit = () => {
 	let getBaseState = () => {
 		return {
+			stats: {
+				activeTag: null,
+			},
 			alert: {
 				show: false,
 				title: null,
@@ -49,7 +55,7 @@ const interactInit = () => {
 				tracker: null,
 				onInteract: null,
 			},
-			logDataEditor: {
+			logEditor: {
 				show: false,
 				log: null,
 				onInteract: null,
@@ -78,10 +84,15 @@ const interactInit = () => {
 				show: false,
 				placeholder: null,
 				message: null,
+				title: null,
 			},
 			trackerInput: {
 				show: false,
 				tracker: null,
+				onInteract: null,
+			},
+			camera: {
+				show: false,
 				onInteract: null,
 			},
 		};
@@ -104,6 +115,12 @@ const interactInit = () => {
 					return s;
 				});
 			});
+		},
+		vibrate(ms) {
+			ms = ms || 90;
+			if (navigator.vibrate) {
+				navigator.vibrate(ms);
+			}
 		},
 		editTracker(tracker) {
 			return new Promise((resolve, reject) => {
@@ -138,7 +155,6 @@ const interactInit = () => {
 			});
 		},
 		dismissTrackerInput() {
-			console.log('Dismissing Tracker INput');
 			update(s => {
 				s.trackerInput.show = false;
 				s.trackerInput.tracker = null;
@@ -146,6 +162,33 @@ const interactInit = () => {
 				return s;
 			});
 		},
+		openStats(tag) {
+			update(d => {
+				d.stats.activeTag = tag;
+				return d;
+			});
+		},
+		closeStats() {
+			update(d => {
+				d.stats.activeTag = null;
+				return d;
+			});
+		},
+		openCamera(onSave) {
+			update(s => {
+				s.camera.show = true;
+				s.camera.onInteract = onSave;
+				return s;
+			});
+		},
+		closeCamera() {
+			update(s => {
+				s.camera.show = false;
+				s.camera.onInteract = null;
+				return s;
+			});
+		},
+
 		/**
 		 * Select a Single Tracker
 		 */
@@ -184,23 +227,23 @@ const interactInit = () => {
 				return s;
 			});
 		},
-		editLogData(log) {
+		editLog(log) {
 			log = new NomieLog(log);
 			log.expanded();
 			return new Promise((resolve, reject) => {
 				update(s => {
-					s.logDataEditor.show = true;
-					s.logDataEditor.log = log;
-					s.logDataEditor.onInteract = resolve;
+					s.logEditor.show = true;
+					s.logEditor.log = log;
+					s.logEditor.onInteract = resolve;
 					return s;
 				});
 			});
 		},
-		dismissEditLogData() {
+		dismissEditLog() {
 			update(s => {
-				s.logDataEditor.show = false;
-				s.logDataEditor.log = null;
-				s.logDataEditor.onInteract = null;
+				s.logEditor.show = false;
+				s.logEditor.log = null;
+				s.logEditor.onInteract = null;
 				return s;
 			});
 		},
@@ -212,29 +255,37 @@ const interactInit = () => {
 			return new Promise((resolve, reject) => {
 				let actions = {
 					updateContent() {
-						methods.prompt('Update Content', { value: log.note, valueType: 'textarea' }).then(content => {
-							log.note = content;
-							LedgerStore.updateLog(log).then(res => {
-								resolve({ action: 'updated' });
+						methods
+							.prompt('Update Content', null, { value: log.note, valueType: 'textarea' })
+							.then(content => {
+								log.note = content;
+								LedgerStore.updateLog(log).then(res => {
+									resolve({ action: 'updated' });
+								});
 							});
-						});
 					},
 					updateData() {
-						Interact.editLogData(log).then(log => {
-							console.log('Edit Log data - RESOLVING', log);
+						Interact.editLog(log).then(log => {
+							setTimeout(() => {
+								resolve({ action: 'data-updated' });
+							}, 10);
+						});
+					},
+					editLog() {
+						Interact.editLog(log).then(log => {
 							setTimeout(() => {
 								resolve({ action: 'data-updated' });
 							}, 10);
 						});
 					},
 					updateDate() {
-						Interact.prompt('New Date', {
+						Interact.prompt('New Date / Time', null, {
 							valueType: 'datetime',
 							value: dayjs(new Date(log.end)).format('YYYY-MM-DDTHH:mm'),
 						}).then(date => {
-							console.log('Edit Log data - RESOLVING', log);
-							log.start = new Date(date).getTime();
-							log.end = new Date(date).getTime();
+							let localizedDate = time.datetimeLocal(date);
+							log.start = localizedDate.getTime();
+							log.end = localizedDate.getTime();
 							setTimeout(() => {
 								LedgerStore.updateLog(log).then(res => {
 									resolve({ action: 'date-updated' });
@@ -271,34 +322,40 @@ const interactInit = () => {
 						}, 10);
 					},
 				};
+				// let initial = [
+				// 	{
+				// 		title: 'Note',
+				// 		click: actions.updateContent,
+				// 	},
+				// 	{
+				// 		title: 'Location',
+				// 		click: actions.updateLocation,
+				// 	},
+				// 	{
+				// 		title: 'Date & Time',
+				// 		click: actions.updateDate,
+				// 	},
+				// ];
+
+				// if (Object.keys(log.trackers).length) {
+				// 	initial.push({
+				// 		title: 'Tracker Data',
+				// 		click: actions.updateData,
+				// 	});
+				// }
+
 				let initial = [
 					{
-						title: 'Note',
-						click: actions.updateContent,
+						title: 'Edit...',
+						click: actions.editLog,
 					},
 					{
-						title: 'Location',
-						click: actions.updateLocation,
-					},
-					{
-						title: 'Date & Time',
-						click: actions.updateDate,
+						title: 'Delete...',
+						click: actions.delete,
 					},
 				];
 
-				if (Object.keys(log.trackers).length) {
-					initial.push({
-						title: 'Tracker Data',
-						click: actions.updateData,
-					});
-				}
-
-				initial.push({
-					title: 'Delete...',
-					click: actions.delete,
-				});
-
-				methods.popmenu({ title: 'Edit Log', buttons: initial });
+				methods.popmenu({ title: 'Log Options', buttons: initial });
 			}); // end return promise
 		},
 		showLocations(locations) {
@@ -341,25 +398,29 @@ const interactInit = () => {
 		},
 		confirm(title, message, ok, cancel) {
 			return new Promise((resolve, reject) => {
-				update(s => {
-					s.alert.show = true;
-					s.alert.title = title;
-					s.alert.message = message;
-					s.alert.cancel = null;
-					s.alert.ok = ok || 'Ok';
-					s.alert.cancel = cancel || 'Cancel';
-					s.alert.onInteract = resolve;
-					return s;
-				});
+				setTimeout(() => {
+					update(s => {
+						s.alert.show = true;
+						s.alert.title = title;
+						s.alert.message = message;
+						s.alert.cancel = null;
+						s.alert.ok = ok || 'Ok';
+						s.alert.cancel = cancel || 'Cancel';
+						s.alert.onInteract = resolve;
+						return s;
+					});
+				}, 1);
 			});
 		},
 		popmenu(options) {
-			update(s => {
-				s.popmenu.show = true;
-				s.popmenu.buttons = options.buttons;
-				s.popmenu.title = options.title;
-				return s;
-			});
+			setTimeout(() => {
+				update(s => {
+					s.popmenu.show = true;
+					s.popmenu.buttons = options.buttons;
+					s.popmenu.title = options.title;
+					return s;
+				});
+			}, 1);
 		},
 		pickLocation() {
 			return new Promise((resolve, reject) => {
@@ -386,15 +447,15 @@ const interactInit = () => {
 				return s;
 			});
 		},
-		prompt(message, options) {
+		prompt(title, message, options) {
 			return new Promise((resolve, reject) => {
 				setTimeout(() => {
 					update(s => {
 						s.prompt.show = true;
 						s.prompt.message = message;
+						s.prompt.title = title;
 						s.prompt.value = options.value || null;
 						s.prompt.valueType = options.valueType || 'text';
-						s.prompt.title = options.title || 'Prompt';
 						s.prompt.cancel = 'Cancel';
 						s.prompt.placeholder = options.placeholder || '';
 						s.prompt.onInteract = res => {
