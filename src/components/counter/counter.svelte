@@ -76,13 +76,16 @@
     width: 100%;
     justify-content: center;
     align-content: center;
+
     &.large {
       font-size: 40px;
       flex-grow: 1;
       text-align: center;
       justify-content: center;
       align-content: center;
-      height: auto;
+      min-height: 50px;
+      height: 50px;
+      color: var(--color-inverse-2);
     }
   }
 </style>

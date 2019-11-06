@@ -138,6 +138,9 @@ Combine multiple trackers into a single flow, for collecting a squence of tracke
 - **Keep cleaning, organizing and testing** - this project didn't start very clean, or ready for unit testing, this should be an on going objective.
 - **Use what's there** - Twitter bootstrap ([and all its classes](https://getbootstrap.com/)) are available, reuse what already exists before writing new - especially css.
 
+## Nomie Jingle 
+The Nomie Jingle was written and produced by soldilil - see more work at https://soldilil.bandcamp.com
+
 ## Trademark License
 
 Nomie and the Blue Elephant are registered Trademarks of Happy Data, LLC. Indianapolis, IN. For a commercial use of the brand or logomark please contact support@happydata.org
