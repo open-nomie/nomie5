@@ -109,20 +109,26 @@
 
       &.is-tiny {
         .phone-frame {
-          max-width: 136px !important;
-          width: 136px !important;
+          max-width: 146px !important;
+          width: 146px !important;
           margin-bottom: -30px !important;
         }
-        .top {
-          max-height: 240px;
+        .bottom {
+          max-height: 271px;
         }
         h1 {
           font-size: 1.1rem !important;
           line-height: 116%;
+          max-width: 500px;
+          margin-left: auto;
+          margin-right: auto;
         }
         p {
           font-size: 0.8rem;
           line-height: 116%;
+          max-width: 500px;
+          margin-left: auto;
+          margin-right: auto;
         }
       }
 
@@ -134,12 +140,16 @@
         position: relative;
 
         @include media-breakpoint-up(lg) {
-          width: 300px;
-          max-width: 300px;
-          margin-bottom: -200px;
+          width: 250px;
+          max-width: 250px;
+          margin-bottom: -70px;
+          .filler {
+            max-height: 20px;
+          }
         }
-        @include media-breakpoint-down(md) {
-          max-width: 200px;
+        @include media-breakpoint-down(sm) {
+          max-width: 180px;
+          margin-bottom: -40px;
         }
 
         z-index: 10;
@@ -167,10 +177,11 @@
       }
 
       .top {
-        height: 50%;
         flex-direction: column;
-        padding: 20px 35px 0;
-        max-height: 430px;
+        padding: 0px 35px 0;
+        height: calc(50vh - 20px);
+        flex-grow: 0;
+        flex-shrink: 0;
         justify-content: flex-end;
         background-color: var(--color-primary);
         h1 {
@@ -186,9 +197,9 @@
 
       .bottom {
         z-index: 0;
-        max-height: 50%;
-        min-height: 50%;
-        height: 50%;
+        flex-grow: 0;
+        flex-shrink: 0;
+        height: 50vh;
         background-color: var(--color-solid);
         color: var(--color-inverse);
         flex-direction: column;
@@ -200,6 +211,8 @@
           text-align: center;
         }
         p {
+          font-size: 0.8rem;
+          line-height: 120%;
           text-align: center;
           color: var(--color-inverse-2);
           a {
@@ -225,21 +238,24 @@
       }
     }
   }
+  .logo-holder {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    justify-content: center;
+  }
 </style>
 
 <main class="page page-setup">
-
+  <div class="logo-holder">
+    <Logo size={16} color="#FFFFFF" />
+  </div>
   <section
     class="slide slide-1 slide-welcome {data.activeSlide === 0 ? 'active' : 'hidden'}
     {data.isTiny ? 'is-tiny' : 'is-normal'}
     {data.transitioning ? 'move' : ''}">
     <div class="top center-grow">
-      <div class="filler" />
-      <Logo
-        size={data.isTiny ? 12 : 24}
-        color="#FFFFFF"
-        className="mb-2 mp-2 flex-shrink-off fade-right" />
-      <div class="filler" />
       <div class="bottom-pop phone-frame mt-2 fade-left">
         <img
           class="image gif"
@@ -268,12 +284,7 @@
     {data.isTiny ? 'is-tiny' : 'is-normal'}
     {data.transitioning ? 'move' : ''}">
     <div class="top center-grow">
-      <div class="filler" />
-      <Logo
-        size={data.isTiny ? 12 : 24}
-        color="#FFFFFF"
-        className="mb-2 mp-2 flex-shrink-off fade-right" />
-      <div class="filler" />
+
       <div class="bottom-pop phone-frame mt-2">
         <img
           class="image"
@@ -295,12 +306,7 @@
     {data.isTiny ? 'is-tiny' : 'is-normal'}
     {data.transitioning ? 'move' : ''}">
     <div class="top center-grow">
-      <div class="filler" />
-      <Logo
-        size={data.isTiny ? 12 : 24}
-        color="#FFFFFF"
-        className="mb-2 mp-2 flex-shrink-off fade-right" />
-      <div class="filler" />
+
       <div class="bottom-pop phone-frame mt-2">
         <img
           class="image"
@@ -323,19 +329,11 @@
     class="slide slide-1 slide-welcome {data.activeSlide === 3 ? 'active' : 'hidden'}
     {data.transitioning ? 'move' : ''}">
     <div
-      class="top center-grow"
-      style={data.isTiny ? 'max-height:30%' : 'max-height:40%'}>
+      class="top center-grow pt-3"
+      style={data.isTiny ? 'max-height:200px' : 'max-height:220px !important'}>
       <div class="filler" />
-      {#if !data.isTiny}
-        <Logo
-          size={data.isTiny ? 12 : 24}
-          color="#FFFFFF"
-          className="mb-3 mp-2 flex-shrink-off fade-right" />
-        <div class="filler" />
-      {/if}
-
       <h1>Data Storage</h1>
-      <p class="text-sm">Select where you'd like to store your data.</p>
+      <p class="text-sm">Where would you like to store your data?</p>
       <div class="filler" />
     </div>
     <div class="bottom center-grow" style="max-height:50%">
