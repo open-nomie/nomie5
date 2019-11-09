@@ -149,7 +149,12 @@
         }
         @include media-breakpoint-down(sm) {
           max-width: 180px;
-          margin-bottom: -40px;
+          margin-bottom: -50px;
+        }
+
+        @include media-breakpoint-down(xs) {
+          max-width: 120px;
+          margin-bottom: -30px;
         }
 
         z-index: 10;
@@ -203,7 +208,7 @@
         background-color: var(--color-solid);
         color: var(--color-inverse);
         flex-direction: column;
-        padding: 0 35px;
+        padding: 0 30px;
         overflow-y: scroll;
         h1 {
           font-size: 1.5rem;
@@ -266,13 +271,12 @@
     <div class="bottom center-grow">
       <h1>Track your mood & anything else, privately.</h1>
       <p>
-        Add to homescreen for the best experience. Nomie is opensource, and
-        completely private.
+        <strong>Add to homescreen for the best experience.</strong>
         <a
           href="https://nomie.app"
           target="_blank"
           aria-label="Learn more about Nomie">
-          more...
+          View Nomie Homepage
         </a>
         .
       </p>
