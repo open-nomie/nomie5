@@ -100,29 +100,18 @@
 
 <div class="n-storage">
   <div class="list">
-    <NItem title="Storage" className="n-item-divider">
+    <NItem title="Storage ({state.files.length})" className="n-item-divider">
       <button
         slot="right"
         class="btn btn-clear text-primary"
         on:click={() => {
           state.showFiles = !state.showFiles;
         }}>
-        {#if state.showFiles}Hide{:else}Show{/if}
+        {#if state.showFiles}Hide{:else}Show Files{/if}
       </button>
     </NItem>
 
     {#if state.showFiles}
-      <NItem title="Reset Nomie">
-        <button
-          class="btn btn-sm btn-danger"
-          slot="right"
-          on:click={() => {
-            methods.deleteEverything();
-          }}>
-          Reset
-        </button>
-      </NItem>
-      <NItem title="Files" className="n-item-divider" />
       {#each state.files as file (file)}
         <NItem>
           <div class="truncate">
@@ -138,8 +127,16 @@
           </button>
         </NItem>
       {/each}
-
-      <NItem className="n-item-divider" />
     {/if}
+    <NItem title="Reset Nomie">
+      <button
+        class="btn btn-sm btn-danger"
+        slot="right"
+        on:click={() => {
+          methods.deleteEverything();
+        }}>
+        Reset
+      </button>
+    </NItem>
   </div>
 </div>

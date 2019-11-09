@@ -1,6 +1,6 @@
 # TODO
 
-Generated Wed Nov 6 2019 9:35 am
+Generated Sat Nov 9 2019 12:50 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -58,3 +58,5 @@ Generated Wed Nov 6 2019 9:35 am
 - **src/components/capture-log.svelte**
    - TODO: Add a media/photo type of thing that can be added to a log..
    - await LedgerStore.saveLog($ActiveLogStore);  TODO: Make ledger task instead
+- **src/App.svelte**
+   - TODO: this is not working - why?
