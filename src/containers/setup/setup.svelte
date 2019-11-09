@@ -2,6 +2,7 @@
   /**
    * TODO: Make this design not suck! It's very boring.
    */
+  import { onMount } from "svelte";
 
   // modules
   import Storage from "../../modules/storage/storage";
@@ -30,7 +31,8 @@
     showMore: false,
     activeSlide: 0,
     showNext: true,
-    transitioning: false
+    transitioning: false,
+    isTiny: false
   };
 
   const methods = {
@@ -53,6 +55,13 @@
       data.activeSlide = data.activeSlide - 1;
     }
   };
+  onMount(() => {
+    setTimeout(() => {
+      if (window.document.body.offsetHeight < 720) {
+        data.isTiny = true;
+      }
+    }, 12);
+  });
 </script>
 
 <style lang="scss">
@@ -84,6 +93,7 @@
       flex-direction: column;
       height: 100%;
       transition: all 0.3s ease-in-out;
+      overflow-y: scroll;
       &.active {
       }
 
@@ -97,11 +107,63 @@
         transform: translateY(200px);
       }
 
+      &.is-tiny {
+        background-color: green !important;
+        .phone-frame {
+          max-width: 120px !important;
+          width: 120px !important;
+          margin-bottom: -10px !important;
+        }
+        .top {
+          max-height: 240px;
+        }
+      }
+
+      .phone-frame {
+        border-radius: 20px;
+        border: solid 10px #000;
+        border-bottom: solid 25px #000;
+        box-shadow: inset 10px 10px 10px black, var(--box-shadow-float);
+        position: relative;
+
+        @include media-breakpoint-up(lg) {
+          width: 300px;
+          max-width: 300px;
+          margin-bottom: -200px;
+        }
+        @include media-breakpoint-down(md) {
+          max-width: 200px;
+        }
+
+        z-index: 10;
+        position: relative;
+        margin-bottom: -70px;
+        background-color: black;
+        .gif,
+        .image {
+          background-color: black;
+          width: 100%;
+          border-radius: 12px;
+          overflow: hidden;
+        }
+        &:after {
+          content: "";
+          position: absolute;
+          height: 10px;
+          bottom: -30px;
+          left: -10px;
+          right: -10px;
+          border-radius: 20px;
+          background-color: rgba(0, 0, 0, 0.1);
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+      }
+
       .top {
         height: 50%;
         flex-direction: column;
         padding: 20px 35px 0;
-        max-height: 400px;
+        max-height: 430px;
         justify-content: flex-end;
         background-color: var(--color-primary);
         h1 {
@@ -114,42 +176,17 @@
           text-align: center;
         }
       }
-      .phone-frame {
-        border-radius: 20px;
-        border: solid 10px #000;
-        border-bottom: solid 25px #000;
-        box-shadow: inset 10px 10px 10px black, var(--box-shadow-float);
-
-        @include media-breakpoint-up(lg) {
-          width: 300px;
-          max-width: 300px;
-          margin-bottom: -200px;
-        }
-        @include media-breakpoint-down(md) {
-          max-width: 200px;
-        }
-        z-index: 10;
-        position: relative;
-        margin-bottom: -70px;
-        background-color: black;
-        .gif,
-        .image {
-          background-color: black;
-          width: 100%;
-          border-radius: 12px;
-          overflow: hidden;
-        }
-      }
 
       .bottom {
         z-index: 0;
         max-height: 50%;
         min-height: 50%;
+        height: 50%;
         background-color: var(--color-solid);
         color: var(--color-inverse);
         flex-direction: column;
         padding: 0 35px;
-        padding-bottom: env(safe-area-inset-bottom);
+        overflow-y: scroll;
         h1 {
           font-size: 1.5rem;
           font-weight: bolder;
@@ -187,11 +224,12 @@
 
   <section
     class="slide slide-1 slide-welcome {data.activeSlide === 0 ? 'active' : 'hidden'}
+    {data.isTiny ? 'is-tiny' : 'is-normal'}
     {data.transitioning ? 'move' : ''}">
     <div class="top center-grow">
       <div class="filler" />
       <Logo
-        size={23}
+        size={data.isTiny ? 12 : 24}
         color="#FFFFFF"
         className="mb-2 mp-2 flex-shrink-off fade-right" />
       <div class="filler" />
@@ -203,7 +241,7 @@
       </div>
     </div>
     <div class="bottom center-grow">
-      <h1 class="mb-3">Track your mood & anything else, privately.</h1>
+      <h1>Track your mood & anything else, privately.</h1>
       <p>
         Add to homescreen for the best experience. Nomie is opensource
         <a
@@ -219,10 +257,14 @@
 
   <section
     class="slide slide-1 slide-welcome {data.activeSlide === 1 ? 'active' : 'hidden'}
+    {data.isTiny ? 'is-tiny' : 'is-normal'}
     {data.transitioning ? 'move' : ''}">
     <div class="top center-grow">
       <div class="filler" />
-      <Logo size={23} color="#FFFFFF" className="mb-2 mp-2 flex-shrink-off" />
+      <Logo
+        size={data.isTiny ? 12 : 24}
+        color="#FFFFFF"
+        className="mb-2 mp-2 flex-shrink-off fade-right" />
       <div class="filler" />
       <div class="bottom-pop phone-frame mt-2">
         <img
@@ -242,10 +284,14 @@
 
   <section
     class="slide slide-1 slide-welcome {data.activeSlide === 2 ? 'active' : 'hidden'}
+    {data.isTiny ? 'is-tiny' : 'is-normal'}
     {data.transitioning ? 'move' : ''}">
     <div class="top center-grow">
       <div class="filler" />
-      <Logo size={23} color="#FFFFFF" className="mb-2 mp-2 flex-shrink-off" />
+      <Logo
+        size={data.isTiny ? 12 : 24}
+        color="#FFFFFF"
+        className="mb-2 mp-2 flex-shrink-off fade-right" />
       <div class="filler" />
       <div class="bottom-pop phone-frame mt-2">
         <img
@@ -268,15 +314,20 @@
   <section
     class="slide slide-1 slide-welcome {data.activeSlide === 3 ? 'active' : 'hidden'}
     {data.transitioning ? 'move' : ''}">
-    <div class="top center-grow" style="max-height:40%">
+    <div
+      class="top center-grow"
+      style={data.isTiny ? 'max-height:200px' : 'max-height:40%'}>
       <div class="filler" />
-      <Logo
-        size={23}
-        color="#FFFFFF"
-        className="mb-2 mp-2 flex-shrink-off fade-right" />
-      <div class="filler" />
-      <h1>Where would you like to store your data?</h1>
-      <p>You can always change this later</p>
+      {#if !data.isTiny}
+        <Logo
+          size={data.isTiny ? 12 : 24}
+          color="#FFFFFF"
+          className="mb-3 mp-2 flex-shrink-off fade-right" />
+        <div class="filler" />
+      {/if}
+
+      <h1>Data Storage</h1>
+      <p class="text-sm">Select where you'd like to store your data.</p>
       <div class="filler" />
     </div>
     <div class="bottom center-grow" style="max-height:50%">
@@ -301,6 +352,9 @@
           All data is stored unencrypted, but ONLY on your device.
         </NText>
       </button>
+      <div class="text-center text-sm text-faded-2">
+        You can always switch storage types later.
+      </div>
       <div class="filler" />
     </div>
   </section>
