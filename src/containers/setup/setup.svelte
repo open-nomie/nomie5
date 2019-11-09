@@ -57,7 +57,7 @@
   };
   onMount(() => {
     setTimeout(() => {
-      if (window.document.body.offsetHeight < 720) {
+      if (window.document.body.offsetHeight < 640) {
         data.isTiny = true;
       }
     }, 12);
@@ -108,14 +108,21 @@
       }
 
       &.is-tiny {
-        background-color: green !important;
         .phone-frame {
-          max-width: 120px !important;
-          width: 120px !important;
-          margin-bottom: -10px !important;
+          max-width: 136px !important;
+          width: 136px !important;
+          margin-bottom: -30px !important;
         }
         .top {
           max-height: 240px;
+        }
+        h1 {
+          font-size: 1.1rem !important;
+          line-height: 116%;
+        }
+        p {
+          font-size: 0.8rem;
+          line-height: 116%;
         }
       }
 
@@ -243,7 +250,8 @@
     <div class="bottom center-grow">
       <h1>Track your mood & anything else, privately.</h1>
       <p>
-        Add to homescreen for the best experience. Nomie is opensource
+        Add to homescreen for the best experience. Nomie is opensource, and
+        completely private.
         <a
           href="https://nomie.app"
           target="_blank"
@@ -316,7 +324,7 @@
     {data.transitioning ? 'move' : ''}">
     <div
       class="top center-grow"
-      style={data.isTiny ? 'max-height:200px' : 'max-height:40%'}>
+      style={data.isTiny ? 'max-height:30%' : 'max-height:40%'}>
       <div class="filler" />
       {#if !data.isTiny}
         <Logo
