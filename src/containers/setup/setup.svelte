@@ -3,20 +3,16 @@
    * TODO: Make this design not suck! It's very boring.
    */
 
-  // svlete
-  import { slide } from "svelte/transition";
-  import { quintOut } from "svelte/easing";
-  import { navigate } from "svelte-routing";
-
   // modules
   import Storage from "../../modules/storage/storage";
+  import Tracker from "../../modules/tracker/tracker";
 
   // components
-  import NToolbar from "../../components/toolbar/toolbar.svelte";
+  import TrackerButton from "../../containers/board/tracker-button.svelte";
   import NText from "../../components/text/text.svelte";
+  import Logo from "../../components/logo/logo.svelte";
 
   // Local components
-  import Slide from "./slide.svelte";
 
   // Stores
   import { UserStore } from "../../store/user";
@@ -29,109 +25,144 @@
     typeof window.orientation !== "undefined" ||
     navigator.userAgent.indexOf("IEMobile") !== -1;
 
-  const slide1 = {
-    title: `Get to Know Yourself`,
-    message: [
-      "Track your mood (and literally anything else) with the tap of a button. Analyzing your life, doesn't get easier."
-    ],
-    img: "/images/screens/board.png"
-  };
-
-  const slide2 = {
-    title: `A private data journal that will never judge`,
-    img: "/images/screens/capture.png",
-    message: [
-      `Record your thoughts by typing a note and/or track data by tapping your own custom tracker buttons.`
-    ]
-  };
-
-  const slide3 = {
-    title: `Visualize your Life`,
-    img: "/images/screens/stats.png",
-    message: ["See when and where you did anything by day, month and year."]
-  };
-
-  const slide4 = {
-    title: `Add to Home Screen`,
-    img: "/images/screens/homescreen.png",
-    message: [
-      "If you're serious about tracking, make me easily accessible by hitting the share icon on your browser, then select 'Add to Homescreen'"
-    ]
-  };
-
-  const slide5 = {
-    title: `Data Encrypted with Blockstack`,
-    img: "/images/screens/blockstack.png",
-    message: [
-      `Nomie uses Blockstack to authenticate and store encrypted user data.`,
-      `With a Blockstack profile, you will be able to control where your data is stored, and know everything is being encrypted with your own private keys`,
-      `What's this mean? No one but you can see your data.`
-    ]
-  };
-
-  let slides = [];
-  if (isMobile) {
-    slides = [slide1, slide2, slide3, slide4]; //slide5
-  } else {
-    slides = [slide1, slide2, slide3]; //slide5
-  }
-
   const data = {
     ready: false,
     showMore: false,
-    slides: slides,
     activeSlide: 0,
-    showStorageSelection: false,
-    showNext: true
+    showNext: true,
+    transitioning: false
   };
 
   const methods = {
     blockstackLogin() {
       UserSession.redirectToSignIn();
     },
-    toggleMore() {
-      data.showMore = !data.showMore;
-    },
+
     next() {
-      data.activeSlide = data.activeSlide + 1;
-      if (data.activeSlide === 5 && $UserStore.storageType === "local") {
-        window.location.href = "/";
-      } else if (
-        data.activeSlide === 5 &&
-        $UserStore.storageType === "blockstack"
-      ) {
-        methods.blockstackLogin();
+      if (data.activeSlide == 3 && $UserStore.storageType) {
+        if ($UserStore.storageType == "local") {
+          window.location.href = "/";
+        } else {
+          methods.blockstackLogin();
+        }
+      } else {
+        data.activeSlide = data.activeSlide + 1;
       }
     },
     back() {
       data.activeSlide = data.activeSlide - 1;
     }
   };
-
-  setTimeout(() => {
-    data.ready = true;
-    if (!Storage._storageType()) {
-      // Default to blockstack Storage
-      // Storage.setType("local");
-    }
-  }, 1000);
 </script>
 
 <style lang="scss">
   @import "../../scss/utils/_utils";
-  :global(.page-setup.page) {
-    background-color: var(--color-primary);
+  .page-setup.page {
+    background-color: var(--color-solid);
     min-height: calc(100vh);
+    max-height: calc(100vh);
     color: #fff;
     justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
 
-    .slides {
-      position: relative;
-
-      border-top: solid 1px rgba(0, 0, 0, 0.1);
-    }
     .logo {
       margin-bottom: 10px;
+    }
+    .center-grow {
+      flex-grow: 1;
+      flex-shrink: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .slide {
+      flex-grow: 1;
+      flex-shrink: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      transition: all 0.3s ease-in-out;
+      &.active {
+      }
+
+      &.hidden {
+        transition: all 0.3s ease-in-out;
+        pointer-events: none;
+        opacity: 0;
+        height: 0px;
+        max-height: 0;
+        overflow: hidden;
+        transform: translateY(200px);
+      }
+
+      .top {
+        height: 50%;
+        flex-direction: column;
+        padding: 20px 35px 0;
+        max-height: 400px;
+        justify-content: flex-end;
+        background-color: var(--color-primary);
+        h1 {
+          text-align: center;
+        }
+        p {
+          font-size: 0.8rem;
+          line-height: 1rem;
+          opacity: 0.7;
+          text-align: center;
+        }
+      }
+      .phone-frame {
+        border-radius: 20px;
+        border: solid 10px #000;
+        border-bottom: solid 25px #000;
+        box-shadow: inset 10px 10px 10px black, var(--box-shadow-float);
+
+        @include media-breakpoint-up(lg) {
+          width: 300px;
+          max-width: 300px;
+          margin-bottom: -200px;
+        }
+        @include media-breakpoint-down(md) {
+          max-width: 200px;
+        }
+        z-index: 10;
+        position: relative;
+        margin-bottom: -70px;
+        background-color: black;
+        .gif,
+        .image {
+          background-color: black;
+          width: 100%;
+          border-radius: 12px;
+          overflow: hidden;
+        }
+      }
+
+      .bottom {
+        z-index: 0;
+        max-height: 50%;
+        min-height: 50%;
+        background-color: var(--color-solid);
+        color: var(--color-inverse);
+        flex-direction: column;
+        padding: 0 35px;
+        padding-bottom: env(safe-area-inset-bottom);
+        h1 {
+          font-size: 1.5rem;
+          font-weight: bolder;
+          text-align: center;
+        }
+        p {
+          text-align: center;
+          color: var(--color-inverse-2);
+          a {
+            color: var(--color-primary);
+          }
+        }
+      }
     }
   }
   .footer-buttons {
@@ -141,96 +172,173 @@
     min-height: 50px;
     left: 0;
     right: 0;
-    background-color: var(--color-primary);
+    background-color: var(--color-solid);
     padding: 10px 20px;
-    box-shadow: 0px -20px 30px -15px rgba(0, 0, 0, 0.32);
     .btn {
-      color: #fff;
+      color: var(--color-primary);
       &:hover {
-        color: #fff;
+        color: var(--color-primary);
       }
     }
   }
 </style>
 
-<!-- <NToolbar>
-  <NText size="sm" bold>Nomie</NText>
-</NToolbar> -->
+<main class="page page-setup">
 
-<div
-  class="page page-setup p-2 d-flex flex-column h-100 justify-content-center
-  align-items-center">
+  <section
+    class="slide slide-1 slide-welcome {data.activeSlide === 0 ? 'active' : 'hidden'}
+    {data.transitioning ? 'move' : ''}">
+    <div class="top center-grow">
+      <div class="filler" />
+      <Logo
+        size={23}
+        color="#FFFFFF"
+        className="mb-2 mp-2 flex-shrink-off fade-right" />
+      <div class="filler" />
+      <div class="bottom-pop phone-frame mt-2 fade-left">
+        <img
+          class="image gif"
+          src="https://shareking.s3.amazonaws.com/nomie-4.2-homescreen.gif"
+          defer />
+      </div>
+    </div>
+    <div class="bottom center-grow">
+      <h1 class="mb-3">Track your mood & anything else, privately.</h1>
+      <p>
+        Add to homescreen for the best experience. Nomie is opensource
+        <a
+          href="https://nomie.app"
+          target="_blank"
+          aria-label="Learn more about Nomie">
+          more...
+        </a>
+        .
+      </p>
+    </div>
+  </section>
 
-  <div class="p-2">
-    <img
-      src="/images/nomie-white-type.png"
-      alt="Nomie Logo"
-      width="68"
-      class="logo" />
-  </div>
+  <section
+    class="slide slide-1 slide-welcome {data.activeSlide === 1 ? 'active' : 'hidden'}
+    {data.transitioning ? 'move' : ''}">
+    <div class="top center-grow">
+      <div class="filler" />
+      <Logo size={23} color="#FFFFFF" className="mb-2 mp-2 flex-shrink-off" />
+      <div class="filler" />
+      <div class="bottom-pop phone-frame mt-2">
+        <img
+          class="image"
+          aria-label="Nomie stats view"
+          src="/images/onboard/nomie4.2.3.stats.png" />
+      </div>
+    </div>
+    <div class="bottom center-grow">
+      <h1>Monitor your progress.</h1>
+      <p>
+        Streaks, charts, maps, view it all. Tip: Jump into stats by
+        long-pressing a tracker button.
+      </p>
+    </div>
+  </section>
 
-  <!-- preload images -->
-  <div class="" style="display:none;">
-    {#each data.slides as slide, index}
-      {#if slide.img}
-        <img src={slide.img} alt={slide.title} />
-      {/if}
-    {/each}
-  </div>
+  <section
+    class="slide slide-1 slide-welcome {data.activeSlide === 2 ? 'active' : 'hidden'}
+    {data.transitioning ? 'move' : ''}">
+    <div class="top center-grow">
+      <div class="filler" />
+      <Logo size={23} color="#FFFFFF" className="mb-2 mp-2 flex-shrink-off" />
+      <div class="filler" />
+      <div class="bottom-pop phone-frame mt-2">
+        <img
+          class="image"
+          aria-label="Nomie History view"
+          src="/images/onboard/nomie-history.png" />
+      </div>
+    </div>
+    <div class="bottom center-grow">
+      <h1>Go back in time!</h1>
+      <p>
+        See when
+        <strong>& where</strong>
+        you did anything. Also, write daily notes to help remember what life was
+        like.
+      </p>
+    </div>
+  </section>
 
-  <div class="slides">
-    {#if data.activeSlide === 0}
-      <Slide img={slide1.img} title={slide1.title} message={slide1.message} />
-    {:else if data.activeSlide === 1}
-      <Slide img={slide2.img} title={slide2.title} message={slide2.message} />
-    {:else if data.activeSlide === 2}
-      <Slide img={slide3.img} title={slide3.title} message={slide3.message} />
-    {:else if data.activeSlide === 3}
-      <Slide img={slide4.img} title={slide4.title} message={slide4.message} />
-    {:else if data.activeSlide === 4}
-      <Slide title="Where would you like your data stored?">
+  <section
+    class="slide slide-1 slide-welcome {data.activeSlide === 3 ? 'active' : 'hidden'}
+    {data.transitioning ? 'move' : ''}">
+    <div class="top center-grow" style="max-height:40%">
+      <div class="filler" />
+      <Logo
+        size={23}
+        color="#FFFFFF"
+        className="mb-2 mp-2 flex-shrink-off fade-right" />
+      <div class="filler" />
+      <h1>Where would you like to store your data?</h1>
+      <p>You can always change this later</p>
+      <div class="filler" />
+    </div>
+    <div class="bottom center-grow" style="max-height:50%">
+      <button
+        class="mt-5 btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
+        on:click={() => {
+          UserStore.setStorage('blockstack');
+        }}>
+        <NText size="lg" className="">Encrypted in the Cloud</NText>
+        <NText size="sm" className="">
+          Access your data on multiple devices using end-to-end encryption.
+          <strong>Powered by Blockstack.</strong>
+        </NText>
+      </button>
+      <button
+        class="my-3 btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
+        on:click={() => {
+          UserStore.setStorage('local');
+        }}>
+        <NText size="lg" className="">This Device Only</NText>
+        <NText size="sm" className="">
+          All data is stored unencrypted, but ONLY on your device.
+        </NText>
+      </button>
+      <div class="filler" />
+    </div>
+  </section>
 
-        <button
-          class="my-3 mt-4 btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
-          on:click={() => {
-            UserStore.setStorage('blockstack');
-          }}>
-          <NText size="lg" className="text-white">Encrypted in the Cloud</NText>
-          <NText size="sm" className="text-white">
-            Access your data on multiple devices using end-to-end encryption.
-            <strong>Powered by Blockstack.</strong>
-          </NText>
-        </button>
-        <button
-          class="my-3 btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
-          on:click={() => {
-            UserStore.setStorage('local');
-          }}>
-          <NText size="lg" className="text-white">This Device Only</NText>
-          <NText size="sm" className="text-white">
-            All data is stored unencrypted, but ONLY on your device.
-          </NText>
-        </button>
-      </Slide>
-    {/if}
-  </div>
-
-</div>
+</main>
 
 <div class="footer-buttons n-row">
   {#if data.activeSlide > 0}
-    <button class="btn btn-clear text-white" on:click={methods.back}>
-      Back
+    <button class="btn btn-clear font-weight-bold" on:click={methods.back}>
+      BACK
     </button>
   {/if}
   <div class="filler" />
-  {#if data.showNext}
-    {#if (data.activeSlide == 4 && $UserStore.storageType) || data.activeSlide != 4}
-      <button class="btn btn-white" on:click={methods.next}>Next</button>
-    {/if}
-  {:else}
-    <!-- <button class="btn btn-white" on:click={methods.blockstackLogin}>
-      Login/Register
-    </button> -->
+  {#if (data.activeSlide == 3 && $UserStore.storageType) || data.activeSlide != 3}
+    <button class="btn btn-white font-weight-bold" on:click={methods.next}>
+      NEXT
+    </button>
   {/if}
 </div>
+<!-- 
+<button
+  class="my-3 mt-4 btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
+  on:click={() => {
+    UserStore.setStorage('blockstack');
+  }}>
+  <NText size="lg" className="text-white">Encrypted in the Cloud</NText>
+  <NText size="sm" className="text-white">
+    Access your data on multiple devices using end-to-end encryption.
+    <strong>Powered by Blockstack.</strong>
+  </NText>
+</button>
+<button
+  class="my-3 btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
+  on:click={() => {
+    UserStore.setStorage('local');
+  }}>
+  <NText size="lg" className="text-white">This Device Only</NText>
+  <NText size="sm" className="text-white">
+    All data is stored unencrypted, but ONLY on your device.
+  </NText>
+</button> -->

@@ -4876,11 +4876,11 @@ button:focus {
   position: relative;
   padding: 12px 12px 16px;
   margin: 10px;
-  border: solid 1px rgba(255, 255, 255, 0.3);
-  color: var(--color-solid);
+  box-shadow: var(--box-shadow-float);
+  color: var(--color-primary);
   transition: all 0.2s ease-in-out; }
   .btn-content:hover {
-    color: var(--color-solid);
+    color: var(--color-primary);
     transform: scale(1.12); }
   .btn-content .n-text.lg {
     font-weight: bold;
@@ -4889,14 +4889,20 @@ button:focus {
   .btn-content .n-text.sm {
     font-size: 0.72rem !important;
     line-height: 1rem !important;
-    font-weight: 200;
+    font-weight: 400;
     opacity: 0.7; }
   .btn-content.active {
     border: none;
-    background-color: var(--color-primary-bright);
-    color: #fff; }
+    background-color: var(--color-primary-bright); }
+    .btn-content.active .n-text {
+      color: #fff !important; }
     .btn-content.active:after {
       position: absolute;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
       content: "✓";
       top: -12px;
       left: -12px;
@@ -5945,6 +5951,9 @@ body.scrolling .n-tracker-button {
     display: none; }
   .input-model.type-value .tracker-input.slider {
     display: none; }
+
+.text-underline {
+  text-decoration: underline !important; }
 
 .container-sm {
   max-width: 800px; }
