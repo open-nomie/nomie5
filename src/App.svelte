@@ -44,27 +44,35 @@
   const console = new Logger("App.svelte");
   gestures();
 
-  // Day Check - every 30 minutes
-  // Lets see if the day changed since last it was opened.
-  const today = new Date().toDateString();
-  const appVersion = "APP_VERSION";
-
+  /**
+   * New Day?
+   *
+   * This checks to see if the day has changed since it was last launched.
+   * If so, lets give the user the option to reload the app..
+   */
   let confirming = false;
+  const today = new Date().toDateString();
   const dayCheck = setInterval(() => {
     // Fire off a notice if it's not today anymore - and we haven't
     // already fired off the confirm prompt // stops the double firing.
     if (today !== new Date().toDateString() && !confirming) {
-      if (confirm("A new day has begun, you should refresh Nomie.")) {
-        window.location.href = window.location.href;
+      if (confirm("It's a new day! Nomie needs a refresh, do that now?")) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 200);
       }
     }
   }, 1000 * 60 * 30);
-
+  //
   /**
    * Check for App Updates
    * Will hit the version.json and compare it to the known
    * version
+   *
+   * TODO: this is not working - why?
    **/
+
+  const appVersion = "APP_VERSION";
   const checkForUpdates = () => {
     fetch("./version.json")
       .then(res => {
@@ -119,10 +127,13 @@
   };
 
   /**
+   * App to Forground
+   *
    * Document Change State Monitoring
    * In hopes of triggering events when the
    * state of the window changes be it from
    * the browser, or switching apps on a phone
+   *
    * it kinda works.
    */
   let hidden, visibilityChange, router;
@@ -165,7 +176,12 @@
     methods.setDocParams();
   });
 
-  // Setup isScrolling variable
+  /**
+   * Scroll Monitoring
+   * adds a window var and class to body that denotes scrolling
+   * this will used to stop events from happening on tracker buttons
+   * when the user is scrolling
+   */
   window.scrolling = false;
   let scollingTimeout;
   window.addEventListener(

@@ -1,3 +1,14 @@
+# v.4.4.8 - Nov 10 2019
+
+## Enhancements
+
+- Improved on boarding
+
+## Bug Fixes
+
+- App Reload on new day
+- Time visibility
+
 # v.4.4.0 - Nov 2 2019
 
 Fixes a lot of user submitted bugs, Chinese Translation, improved UI, and a handful of enhancements. Note worthy items includes:

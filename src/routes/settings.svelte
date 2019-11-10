@@ -352,7 +352,7 @@
           </div>
           <div class="n-pop">
             <!-- Stoage List - this is stupid I couldn't find it-->
-            <StorageManager />
+
             <!-- End Storage List-->
             <NItem>
               <div class="title truncate">
@@ -470,6 +470,8 @@
               </a>
             </span>
           </NItem>
+
+          <StorageManager />
 
           <NItem className="compact item-divider" />
 
