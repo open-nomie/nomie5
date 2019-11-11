@@ -38,12 +38,12 @@
 
   // If start Changes, make sure end date is the same year
   // Searching only works year by year.
-  $: if (state.start) {
+  $: if (state.start && dayjs(state.start, "YYYY-MM-DD") !== startDate) {
     startDate = dayjs(state.start, "YYYY-MM-DD");
+  }
+
+  $: if (state.end && dayjs(state.end, "YYYY-MM-DD") !== endDate) {
     endDate = dayjs(state.end, "YYYY-MM-DD");
-    if (startDate.format("YYYY") != endDate.format("YYYY")) {
-      state.end = endDate.year(startDate.format("YYYY")).format("YYYY-MM-DD");
-    }
   }
 
   const methods = {
@@ -52,6 +52,7 @@
       let start = startDate.toDate();
       let end = endDate.toDate();
       let trackers = state.trackers;
+
       csv.generate({
         trackers,
         start,
