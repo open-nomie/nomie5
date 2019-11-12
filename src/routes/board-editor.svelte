@@ -5,6 +5,7 @@
 
   // Utils
   import Logger from "../utils/log/log";
+  import arrayUtils from "../utils/array/array_utils";
   // Modules
   import Tracker from "../modules/tracker/tracker";
   // Components
@@ -20,8 +21,10 @@
   import { UserStore } from "../store/user";
   import { TrackerStore } from "../store/trackers";
   import { Interact } from "../store/interact";
+  import { Lang } from "../store/lang";
 
   const console = new Logger("🎲 Board Editor");
+  let trackers = [];
 
   let data = {
     board: null,
@@ -55,11 +58,11 @@
     data.updatedLabel = $BoardStore.activeBoard.label;
   }
 
-  $: if (data.draggingTag && data.draggingTag !== data.lastDraggingTag) {
-    data.lastDraggingTag = data.draggingTag;
-    data.draggingTracker =
-      $TrackerStore[data.draggingTag] || new Tracker({ tag: data.draggingTag });
-  }
+  // $: if (data.draggingTag && data.draggingTag !== data.lastDraggingTag) {
+  //   data.lastDraggingTag = data.draggingTag;
+  //   data.draggingTracker =
+  //     $TrackerStore[data.draggingTag] || new Tracker({ tag: data.draggingTag });
+  // }
 
   const methods = {
     refresh() {
@@ -69,11 +72,7 @@
       }, 100);
     },
     initialize() {},
-    getTrackers() {
-      return $BoardStore.activeBoard.trackers.map(tag => {
-        return $TrackerStore[tag] || new Tracker({ tag: tag });
-      });
-    },
+    getTrackers() {},
     save() {
       $BoardStore.activeBoard.label = data.updatedLabel;
       BoardStore.saveBoard($BoardStore.activeBoard).then(() => {
@@ -96,8 +95,8 @@
       event.preventDefault();
       event.stopPropagation();
       Interact.confirm(
-        "Delete from " + $BoardStore.activeBoard.label + "?",
-        "You can always add it later"
+        `Remove ${tracker.label} from ${$BoardStore.activeBoard.label}?`,
+        "You can always add it later."
       ).then(res => {
         if (res === true) {
           event.preventDefault();
@@ -113,145 +112,47 @@
         } // accepted
       });
     },
-    moveTag(fromTag, aboveTag) {
-      // trackers witout fromTag
-      let indexToPlace = 0;
-      let trackers = $BoardStore.activeBoard.trackers
-        .filter((tag, index) => {
-          return tag !== fromTag;
-        })
-        .map((tag, index) => {
-          if (tag === aboveTag) {
-            indexToPlace = index;
-          }
-          return tag;
-        });
-      trackers.splice(indexToPlace, 0, fromTag);
-      $BoardStore.activeBoard.trackers = trackers;
-
-      data.draggingTag = null;
-      data.droppedTag = null;
+    trackerIndex(tracker) {
+      return trackers.indexOf(tracker);
     },
-    drag: {
-      start(event, index, isTouch) {
-        console.log("Started Drag");
-        isTouch = isTouch === true ? true : false;
-        document.body.classList.add("no-scroll");
-        data.draggingTag = event.target.dataset.id;
-        showDeletes = false;
-        // data.draggingTag = $BoardStore.activeBoard.trackers[item];
-      },
-      touchmove(evt) {
-        // let ball = document.getElementById("ball");
-
-        // THIS IS HACKY HAS IT GETS
-
-        // Let's move the target with us
-        data.draggingTag = evt.target.id;
-        document.body.classList.add("no-scroll");
-        // let trackerDom = document.getElementById
-
-        // Define touching points
-        let y = evt.changedTouches[0].clientY;
-        let x = evt.changedTouches[0].clientX;
-
-        // Move tracker
-        evt.target.style.position = "absolute";
-        evt.target.style.top = y - 75 + "px";
-        evt.target.style.left = x - 75 + "px";
-        evt.target.style.zIndex = 3000;
-
-        let parent = document.getElementById("edit-grid");
-        let hoverY = y - 75;
-        let hoverElement = document.elementFromPoint(x, hoverY);
-
-        // Testing ball
-        ball.style.left = x + "px";
-        ball.style.top = y + "px";
-        ball.style.display = "block";
-
-        if (hoverElement !== evt.target) {
-          data.hoverTag = hoverElement.id;
-        }
-      },
-      touchend(evt) {
-        ball.style.display = "none";
-        evt.target.style.position = "relative";
-        evt.target.style.top = "inherit";
-        evt.target.style.left = "inherit";
-        evt.target.style.zIndex = "inherit";
-        if (data.draggingTag && data.hoverTag) {
-          methods.moveTag(data.draggingTag, data.hoverTag + "");
-          data.hoverTag = null;
-        } else {
-          data.hoverTag = null;
-        }
+    moveUp(tracker) {
+      let index = methods.trackerIndex(tracker);
+      console.log("Move Up", index);
+      if (index > 0) {
         setTimeout(() => {
-          document.body.classList.remove("no-scroll");
-          showDeletes = true;
-          data.draggingTag = null;
-          data.draggingTracker = null;
-          data.lastDraggingTag = null;
+          BoardStore.update(b => {
+            b.activeBoard.trackers = arrayUtils
+              .move(trackers, index, index - 1)
+              .map(r => r.tag);
+            return b;
+          });
         }, 120);
-      },
-      over(ev) {
-        if (ev.target.id) {
-          data.hoverTag = ev.target.id;
-        }
-        ev.preventDefault();
-      },
-      leave(ev) {
-        ev.preventDefault();
-      },
-      drop(ev) {
-        data.droppedTag = ev.target.id || data.hoverTag;
-
+        // BoardStore.update(b => {
+        //   b.activeBoard.trackers = arr;
+        //   return b;
+        // });
+      }
+    },
+    moveDown(tracker) {
+      let index = methods.trackerIndex(tracker);
+      if (index < trackers.length - 1) {
         setTimeout(() => {
-          document.body.classList.remove("no-scroll");
-          showDeletes = true;
+          BoardStore.update(b => {
+            b.activeBoard.trackers = array_move(trackers, index, index + 1).map(
+              r => r.tag
+            );
+            return b;
+          });
         }, 120);
-
-        if (data.draggingTag && data.droppedTag) {
-          data.hoverTag = null;
-          methods.moveTag(data.draggingTag, data.droppedTag);
-        }
       }
     }
   };
 
-  // TODO: Make sorting work
-  // export function dragstart(ev, group, item) {
-  //   document.body.classList.add("no-scroll");
-  //   data.draggingTag = $BoardStore.activeBoard.trackers[item];
-  //   console.log("dragging", { ev, item, tag: data.draggingTag });
-  // }
-  // export function dragover(ev) {
-  //   console.log("over", ev);
-  //   ev.target.classList.add("hovered");
-  //   ev.preventDefault();
-  // }
-  // export function dragleave(ev) {
-  //   ev.target.classList.remove("hovered");
-  //   ev.preventDefault();
-  // }
-  // export function drop(ev, new_g, i) {
-  //   data.droppedTag = ev.target.id;
-  //   ev.target.classList.remove("hovered");
-  //   setTimeout(() => {
-  //     document.body.classList.remove("no-scroll");
-  //   }, 120);
-  //   console.log("drop", {
-  //     ev,
-  //     target: ev.target,
-  //     dragging: data.draggingTag,
-  //     dropped: data.droppedTag
-  //   });
-
-  //   if (data.draggingTag && data.droppedTag) {
-  //     methods.moveTag(data.draggingTag, data.droppedTag);
-  //   }
-  //   // ev.target.style.backgroundColor = "black";
-  // }
+  BoardStore.subscribe(b => {
+    trackers = $BoardStore.activeBoard.trackers.map(tag => {
+      return $TrackerStore[tag] || new Tracker({ tag: tag });
+    });
+  });
 
   UserStore.onReady(() => {
     methods.initialize();
@@ -259,6 +160,15 @@
 </script>
 
 <style lang="scss">
+  .input-group {
+    .input-group-text {
+      color: var(--color-inverse-2);
+      background-color: var(--color-faded-1);
+    }
+    input {
+      padding-left: 16px;
+    }
+  }
   div.tracker-grabber {
     position: relative;
     padding: 8px;
@@ -270,7 +180,7 @@
       height: $size;
       padding: 0;
       border-radius: $size * 0.5;
-      background-color: var(--color-solid);
+      background-color: #fff;
       box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
       font-size: $size * 0.6;
       line-height: $size;
@@ -356,11 +266,9 @@
   <NPage className="stats" withBack={true}>
 
     <div slot="header" class="n-row">
-      <h1 class="text-center flex-grow">Edit Board</h1>
-      <button
-        class="btn btn btn-clear text-danger "
-        on:click={methods.deleteBoard}>
-        Delete
+      <h1 class="text-center flex-grow text-inverse">Edit Tab</h1>
+      <button class="btn btn btn-clear text-danger " on:click={methods.save}>
+        {Lang.t('general.save')}
       </button>
     </div>
 
@@ -380,30 +288,41 @@
         </div>
       </NItem>
     </div>
-    <div class="container">
-      <div class="n-row">
-        <div class="filler" />
-
-        <button
-          class="btn btn mt-4 btn-light mx-3 flex-grow"
-          on:click={() => {
-            window.history.back();
-          }}>
-          Cancel
-        </button>
-        <button
-          class="btn btn mt-4 btn-success flex-grow"
-          on:click={methods.save}>
-          Save
-        </button>
-        <div class="filler" />
-      </div>
-    </div>
     <!-- /.container -->
 
     <div class="container pt-3 px-0 grid-container">
 
-      <div
+      <div class="n-list">
+        {#each trackers as tracker, i (tracker.tag)}
+          <NItem>
+            <div slot="left" class="n-row">
+
+              <button
+                slot="left"
+                class="btn btn-icon zmdi zmdi-close text-red"
+                on:click={evt => {
+                  methods.removeTracker(evt, tracker);
+                }} />
+              <div class="emoji text-lg ml-2">{tracker.emoji}</div>
+            </div>
+            {tracker.label}
+            <div slot="right">
+              <button
+                class="btn btn-icon zmdi zmdi-chevron-up text-inverse"
+                on:click={() => {
+                  methods.moveUp(tracker);
+                }} />
+              <button
+                class="btn btn-icon zmdi zmdi-chevron-down text-inverse"
+                on:click={() => {
+                  methods.moveDown(tracker);
+                }} />
+            </div>
+          </NItem>
+        {/each}
+      </div>
+
+      <!-- <div
         class="grid"
         id="edit-grid"
         on:drop={methods.drag.drop}
@@ -411,7 +330,12 @@
         on:dragover={methods.drag.over}
         on:dragleave={methods.drag.leave}>
         {#each methods.getTrackers() as tracker, i (tracker.tag)}
-          <div
+          <NItem>
+            <div class="emoji" slot="left" />
+            <h1 class="title">{tracker.label}</h1>
+          </NItem> -->
+
+      <!-- <div
             class="tracker-grabber {data.hoverTag == tracker.tag ? 'hovered' : ''}"
             data-id={tracker.tag}
             id={tracker.tag}
@@ -430,25 +354,21 @@
             <NTrackerButton
               {tracker}
               className={i % 2 ? 'wiggle' : 'wiggle-other'} />
-            <!-- <NItem title={tracker.label} borderBottom id={tracker.tag}>
-              <span class="text-lg emoji" slot="left">{tracker.emoji}</span>
-            </NItem> -->
-          </div>
-        {/each}
+          </div> -->
+      <!-- {/each}
         <div id="ball" />
       </div>
-      <div class="filler" />
-      {#if isMobile}
-        <div class="container">
-          <div class="n-row pt-3 justify-content-center">
-            <NText class="xs" className="text-center">
-              <!-- TODO: Fix Sorting on MObile -->
-              Sorting on mobile is currently jacked.
-            </NText>
-          </div>
-        </div>
-      {/if}
+      <div class="filler" /> -->
 
+    </div>
+    <div class="n-row p-2">
+      <div class="filler" />
+      <button
+        class="btn btn btn-clear text-danger "
+        on:click={methods.deleteBoard}>
+        Delete this Tab
+      </button>
+      <div class="filler" />
     </div>
   </NPage>
 {:else}

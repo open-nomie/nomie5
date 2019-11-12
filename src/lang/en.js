@@ -84,7 +84,7 @@ export default {
     settings: {
       language: "Language",
       "sign-out": "Sign Out",
-      "enable-boards": "Show Board Tabs",
+      "enable-boards": "Enable Tabs",
       settings: "Settings",
       theme: "Theme",
       "use-location": "Track Location",

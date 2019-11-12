@@ -23,7 +23,9 @@
   import Elephant from "../../components/elephant.svelte";
   import CaptureLog from "../../components/capture-log.svelte";
 
+  // Containers
   import AppLayout from "../../containers/layout/app.svelte";
+  import BoardSortModal from "../../containers/board/board-sort.svelte";
 
   // Vendors
   import Spinner from "svelte-spinner";
@@ -84,6 +86,7 @@
     // Hook on Save to clear saving Trackers
     LedgerStore.hook("onLogSaved", log => {
       data.savingTrackers = [];
+      data.searching = false;
     });
     LedgerStore.getToday();
   });
@@ -481,7 +484,7 @@
     min-height: 75vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+
     @include media-breakpoint-up(md) {
       padding-top: 20px;
     }
@@ -500,8 +503,8 @@
 
   .zmdi-search.active {
     transform: scale(1.5);
-    background-color: var(--color-primary) !important;
-    color: var(--color-white) !important;
+    background-color: var(--color-solid) !important;
+    color: var(--color-green) !important;
     box-shadow: var(--box-shadow-float) !important;
     border-radius: 50% !important;
     z-index: 1000;
@@ -573,7 +576,15 @@
           on:tabTap={event => {
             methods.stopSearch();
             BoardStore.setActive(event.detail.id);
-          }} />
+          }}>
+          {#if $BoardStore.boards.length > 2}
+            <button
+              class="btn btn-clear btn-icon zmdi zmdi-sort-amount-desc"
+              on:click={() => {
+                Interact.toggleBoardSorter();
+              }} />
+          {/if}
+        </NBoardTabs>
       </div>
     {:else}
       <NToolbar>
@@ -620,11 +631,11 @@
           <!-- Loop over trackers -->
           <div class="trackers">
             {#if (foundTrackers || boardTrackers || []).length === 0}
-              <div class="no-trackers">
-                {#if foundTrackers != null}
+              {#if foundTrackers != null}
+                <div class="no-trackers">
                   {Lang.t('board.no-search-results', 'No trackers found')}
-                {:else}{Lang.t('board.board-empty')}{/if}
-              </div>
+                </div>
+              {/if}
             {/if}
 
             {#each foundTrackers || boardTrackers as tracker (tracker.tag)}
@@ -642,11 +653,13 @@
                   methods.showTrackerOptions(tracker);
                 }} />
             {/each}
-            <button
-              class="n-tracker-button n-add-button"
-              on:click={methods.addButtonTap}>
-              <i class="emoji">+</i>
-            </button>
+            {#if !data.searching}
+              <button
+                class="n-tracker-button n-add-button"
+                on:click={methods.addButtonTap}>
+                <i class="emoji">+</i>
+              </button>
+            {/if}
           </div>
 
           <div class="board-actions">
@@ -674,6 +687,10 @@
   </div>
   <!-- end content-->
 </AppLayout>
+
+{#if $Interact.boardSorter.show}
+  <BoardSortModal />
+{/if}
 
 {#if data.showStartPacks}
   <NModal title="Starter Packs">

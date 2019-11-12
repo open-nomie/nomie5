@@ -69,6 +69,26 @@
       display: flex;
       justify-content: stretch;
       align-content: stretch;
+
+      .btn {
+        $radius: 1rem;
+        border-radius: 0;
+        margin-bottom: 0;
+        margin-top: 0;
+        &:first-child {
+          border-top-right-radius: $radius;
+          border-top-left-radius: $radius;
+        }
+        &:nth-last-child(2) {
+          border-bottom-right-radius: $radius;
+          border-bottom-left-radius: $radius;
+        }
+        &:last-child {
+          border-radius: $radius;
+          margin-top: 10px;
+        }
+      }
+
       .card-body {
         flex-grow: 1;
         flex-shrink: 1;
