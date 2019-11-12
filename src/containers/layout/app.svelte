@@ -45,7 +45,7 @@
 
   .header-slot {
     padding-top: env(safe-area-inset-top);
-    background-color: var(--color-solid);
+    background-color: var(--header-background);
     flex-grow: 0;
     flex-shrink: 0;
     box-shadow: var(--box-shadow-float);

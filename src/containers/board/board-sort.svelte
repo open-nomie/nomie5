@@ -39,8 +39,15 @@
   };
 </script>
 
+<style>
+  .btn-group .btn {
+    width: 36px;
+  }
+</style>
+
 <Modal
   title="Sort Tabs"
+  type="fullscreen"
   allowClose={true}
   on:close={Interact.toggleBoardSorter}>
   <div slot="modal-header" class="n-row w-100">
@@ -49,22 +56,29 @@
       on:click={Interact.toggleBoardSorter} />
     {Lang.t('board.sort-tabs', 'Sort Tabs')}
     <button class="btn btn-clear">{Lang.t('general.save')}</button>
+    <button class="btn btn-icon btn-clear" />
   </div>
   <div class="n-list">
     {#each $BoardStore.boards as board, i (board.label)}
-      <NItem title={board.label}>
-        <div slot="right">
+      <NItem className="border-bottom" title={board.label}>
+
+        <div class="btn-group flex-shrink-off" slot="left">
           <button
-            class="btn btn-icon zmdi zmdi-chevron-up text-inverse"
+            class="btn px-2 btn-lg btn-light {i === 0 ? 'disabled' : ''}"
             on:click={() => {
               methods.moveUp(board);
-            }} />
+            }}>
+            <i class="zmdi zmdi-long-arrow-up" />
+          </button>
           <button
-            class="btn btn-icon zmdi zmdi-chevron-down text-inverse"
+            class="btn px-2 btn-lg btn-light {i === $BoardStore.boards.length - 1 ? 'disabled' : ''}"
             on:click={() => {
               methods.moveDown(board);
-            }} />
+            }}>
+            <i class="zmdi zmdi-long-arrow-down" />
+          </button>
         </div>
+
       </NItem>
     {/each}
   </div>

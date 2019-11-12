@@ -138,9 +138,9 @@
       if (index < trackers.length - 1) {
         setTimeout(() => {
           BoardStore.update(b => {
-            b.activeBoard.trackers = array_move(trackers, index, index + 1).map(
-              r => r.tag
-            );
+            b.activeBoard.trackers = arrayUtils
+              .move(trackers, index, index + 1)
+              .map(r => r.tag);
             return b;
           });
         }, 120);
@@ -249,6 +249,12 @@
     border-radius: 10px;
     display: none;
   }
+
+  .btn-group {
+    .btn {
+      width: 36px;
+    }
+  }
   .notice {
     position: fixed;
     bottom: 70px;
@@ -272,9 +278,9 @@
       </button>
     </div>
 
-    <div slot="sub-header">
-      <NItem className="w-100 p-0">
-        <div class="input-group mb-2">
+    <div slot="sub-header" class="py-1">
+      <NItem className="w-100 p-0 ">
+        <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text">Label</span>
           </div>
@@ -295,28 +301,33 @@
       <div class="n-list">
         {#each trackers as tracker, i (tracker.tag)}
           <NItem>
-            <div slot="left" class="n-row">
-
+            <div slot="right" class="n-row">
               <button
-                slot="left"
                 class="btn btn-icon zmdi zmdi-close text-red"
                 on:click={evt => {
                   methods.removeTracker(evt, tracker);
                 }} />
-              <div class="emoji text-lg ml-2">{tracker.emoji}</div>
             </div>
-            {tracker.label}
-            <div slot="right">
+            <div class="n-row filler">
+              <div class="emoji text-lg mr-2">{tracker.emoji}</div>
+              {tracker.label}
+              <div class="filler" />
+            </div>
+            <div class="btn-group flex-shrink-off" slot="left">
               <button
-                class="btn btn-icon zmdi zmdi-chevron-up text-inverse"
+                class="btn px-2 btn-lg btn-light {i === 0 ? 'disabled' : ''}"
                 on:click={() => {
                   methods.moveUp(tracker);
-                }} />
+                }}>
+                <i class="zmdi zmdi-long-arrow-up" />
+              </button>
               <button
-                class="btn btn-icon zmdi zmdi-chevron-down text-inverse"
+                class="btn px-2 btn-lg btn-light {i === trackers.length - 1 ? 'disabled' : ''}"
                 on:click={() => {
                   methods.moveDown(tracker);
-                }} />
+                }}>
+                <i class="zmdi zmdi-long-arrow-down" />
+              </button>
             </div>
           </NItem>
         {/each}

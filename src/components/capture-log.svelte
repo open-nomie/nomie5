@@ -282,8 +282,8 @@
   .capture-log {
     border-top: solid 1px rgba(0, 0, 0, 0.1);
     padding: 10px;
-    background-color: var(--color-solid);
-    border-top: solid 1px var(--color-solid);
+    background-color: var(--header-background);
+    border-top: solid 1px var(--header-background);
     position: relative;
     z-index: 1;
   }
@@ -293,7 +293,7 @@
     z-index: 130;
     padding: 0px 10px 10px;
     margin-top: -12px;
-    background-color:var(--color-solid);
+    background-color: var(--header-background);
     // .btn {
     //   background-color: transparent;
     //   display: flex;
