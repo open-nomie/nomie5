@@ -30,6 +30,7 @@ const userInit = () => {
     storageType: Storage.local.get("root/storage_type"),
     ready: false,
     signedIn: undefined,
+    launchCount: Storage.local.get("root/launch_count") || 0,
     profile: {
       username: null
     },
@@ -58,6 +59,10 @@ const userInit = () => {
       // Set Dark or Light Mode
       // Lets get dark Mode
 
+      // Count launch
+      state.launchCount++;
+      Storage.local.put("root/launch_count", state.launchCount);
+
       if (!Storage._storageType()) {
         // If no storage type selected
         // they're not signed in - this should trigger onboarding
@@ -70,6 +75,7 @@ const userInit = () => {
         });
         update(p => {
           p.signedIn = false;
+          d.launchCount = state.launchCount;
           return p;
         });
       } else {
@@ -88,17 +94,19 @@ const userInit = () => {
       // TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
     },
     setStorage(type) {
-      update(p => {
-        p.storageType = type === "local" ? "local" : "blockstack";
+      update(d => {
+        d.storageType = type === "local" ? "local" : "blockstack";
         Storage.local.put(
           "root/storage_type",
           type === "local" ? "local" : "blockstack"
         );
-        return p;
+        d.launchCount = state.launchCount;
+        return d;
       });
     },
     signout() {
       localStorage.clear();
+      Storage.clear();
       try {
         blockstack.signUserOut(window.location.origin);
       } catch (e) {}

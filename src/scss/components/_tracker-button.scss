@@ -1,3 +1,7 @@
+// * {
+//   border: solid 1px rgba(red, 0.5) !important;
+// }
+
 body.scrolling .n-tracker-button {
   pointer-events: none !important;
 }
@@ -22,6 +26,10 @@ body.scrolling .n-tracker-button {
     transition: all 0.2s ease-in-out;
     transform: scale(0.95);
     box-shadow: var(--box-shadow-tight);
+  }
+
+  &.added {
+    border: solid 1px rgba($green, 0.3);
   }
 
   .emoji {

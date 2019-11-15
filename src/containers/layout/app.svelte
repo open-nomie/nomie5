@@ -12,7 +12,7 @@
 
   const padContent = () => {
     padTopDom.style.height = `${headerDom.offsetHeight}px`;
-    padBottomDom.style.height = `${footerDom.offsetHeight}px`;
+    padBottomDom.style.minHeight = `${footerDom.offsetHeight}px`;
   };
 
   $: if (title) {
@@ -40,7 +40,7 @@
     -webkit-overflow-scrolling: touch;
     z-index: 0;
     color: var(--color-bg);
-    min-height: 100vh;
+    flex-grow: 1;
   }
 
   .header-slot {

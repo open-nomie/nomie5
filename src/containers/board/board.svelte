@@ -72,6 +72,7 @@
     showStartPacks: false, // shows the start library
     loading: true, // show spinner
     savingTrackers: [], // to highlight trackers that are being saved
+    addedTrackers: [], // Visually showing what trackers are in the notes field
     searching: false, // if the user is searching
     searchTerm: null // the search term the user is typing
   };
@@ -87,6 +88,7 @@
     LedgerStore.hook("onLogSaved", log => {
       data.savingTrackers = [];
       data.searching = false;
+      data.addedTrackers = [];
     });
     LedgerStore.getToday();
   });
@@ -472,6 +474,12 @@
   TrackerStore.subscribe(trackers => {
     methods.onTrackersChange(trackers);
   });
+
+  ActiveLogStore.subscribe(log => {
+    console.log("The Log has changed! Let's see what trackers are in there");
+    data.addedTrackers = new NomieLog(log).trackersArray().map(t => t.tag);
+    console.log("Added Trackers", data.addedTrackers);
+  });
 </script>
 
 <style type="text/scss" name="scss">
@@ -481,7 +489,7 @@
   .n-board {
     padding: 0px 0px;
     background-color: var(--color-bg);
-    min-height: 75vh;
+    min-height: 50vh;
     display: flex;
     flex-direction: column;
 
@@ -647,7 +655,7 @@
                   methods.trackerTapped(tracker);
                 }}
                 disabled={data.savingTrackers.indexOf(tracker.tag) > -1}
-                className={`${data.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
+                className={`${data.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${data.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
                 on:longpress={() => {
                   Interact.vibrate();
                   methods.showTrackerOptions(tracker);
@@ -667,8 +675,8 @@
             {#if $BoardStore.activeBoard}
               <button
                 on:click={methods.editBoard}
-                class="btn btn btn-light btn-sm icon-left">
-                <i class="zmdi zmdi-edit" />
+                class="btn btn btn-clear btn-sm icon-left">
+                <i class="zmdi zmdi-edit mr-2" />
                 {Lang.t('board.edit-board', {
                   board: ($BoardStore.activeBoard || {}).label || null
                 })}

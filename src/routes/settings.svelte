@@ -529,6 +529,9 @@
                 Happy Data, LLC
               </a>
             </div>
+            <div class="text-sm pb-2">
+              Launch Count {$UserStore.launchCount}
+            </div>
           </NItem>
 
         </div>
