@@ -4,7 +4,7 @@
   import { onMount } from "svelte";
 
   import SocialShare from "../modules/share/share";
-
+  import Storage from "../modules/storage/storage";
   // Components
   import NItem from "../components/list-item/list-item.svelte";
   import NText from "../components/text/text.svelte";
@@ -20,6 +20,7 @@
 
   // Vendors
   import dayjs from "dayjs";
+  import localforage from "localforage";
 
   // Stores
   import { UserStore } from "../store/user";
@@ -29,6 +30,7 @@
   import { BoardStore } from "../store/boards";
   import { NomieAPI } from "../store/napi";
   import { Lang } from "../store/lang";
+
   // Config
   import config from "../../config/global";
 
@@ -96,6 +98,37 @@
     },
     settingChange() {
       UserStore.saveMeta();
+    },
+    async deleteEverything() {
+      try {
+        let res = await Interact.confirm(
+          "DANGER ZONE!",
+          `This will destroy all of your data in Nomie. Are you sure?`,
+          "Destroy"
+        );
+        if (res) {
+          res = await Interact.confirm(
+            "Sorry! One last time.. Really?",
+            `You will basically be starting over from scratch... You good with that?`,
+            "Destroy Data"
+          );
+
+          if (res === true) {
+            let files = await Storage.list();
+
+            let promises = [];
+            files.forEach(file => {
+              promises.push(Storage.delete(file));
+            });
+            await Promise.all(promises);
+            await localforage.clear();
+            await Interact.alert("Done", "Your data has been destroyed.");
+            window.location.href = "/";
+          }
+        } // end if confirmed
+      } catch (e) {
+        Interact.alert(Lang.t("general.error"), e.message);
+      }
     },
     // boardsToggle() {
     //   $UserStore.meta.boardsEnabled = !$UserStore.meta.boardsEnabled;
@@ -350,38 +383,52 @@
               show={data.showMassEditor} />
 
           </div>
-          <div class="n-pop">
-            <!-- Stoage List - this is stupid I couldn't find it-->
+          <NItem
+            title={Lang.t('settings.storage')}
+            className="n-item-divider" />
+          <NItem>
+            <div class="title truncate">
+              <strong>
+                {$UserStore.storageType === 'local' ? 'Local' : 'Cloud'}
+              </strong>
+            </div>
+            <span slot="left" class="btn-icon zmdi text-primary zmdi-storage" />
 
-            <!-- End Storage List-->
-            <NItem>
-              <div class="title truncate">
-                <strong>
-                  {$UserStore.storageType === 'local' ? 'Local' : 'Cloud'}
-                </strong>
-              </div>
+            <div slot="right">
+              {#if $UserStore.storageType === 'local'}
+                <button
+                  class="btn btn-clear text-primary"
+                  on:click={methods.switchToCloud}>
+                  {Lang.t('settings.use-cloud')}
+                </button>
+              {:else}
+                <button
+                  class="btn btn-clear text-primary"
+                  on:click={methods.switchToLocal}>
+                  {Lang.t('settings.use-local')}
+                </button>
+              {/if}
+            </div>
+          </NItem>
+          {#if $UserStore.storageType === 'blockstack'}
+            <NItem title={Lang.t('settings.aggressive-sync')}>
               <span
                 slot="left"
-                class="btn-icon zmdi text-primary zmdi-storage" />
-
+                class="btn-icon zmdi text-primary {`${$UserStore.meta.aggressiveSync ? 'zmdi-refresh-sync' : 'zmdi-refresh-sync-off'}`}" />
               <div slot="right">
-                {#if $UserStore.storageType === 'local'}
-                  <button
-                    class="btn btn-clear text-primary"
-                    on:click={methods.switchToCloud}>
-                    {Lang.t('settings.use-cloud')}
-                  </button>
-                {:else}
-                  <button
-                    class="btn btn-clear text-primary"
-                    on:click={methods.switchToLocal}>
-                    {Lang.t('settings.use-local')}
-                  </button>
-                {/if}
+                <NToggle
+                  bind:value={$UserStore.meta.aggressiveSync}
+                  on:change={methods.settingChange} />
               </div>
             </NItem>
+            <NItem description={Lang.t('settings.aggressive-description')} />
+          {/if}
+          <StorageManager />
+          <!-- Stoage List - this is stupid I couldn't find it-->
 
-            <!-- <NItem title={Lang.t('settings.first-book')}>
+          <!-- End Storage List-->
+
+          <!-- <NItem title={Lang.t('settings.first-book')}>
           <span
             slot="left"
             class="btn-icon zmdi text-primary zmdi-book"
@@ -397,20 +444,6 @@
             {/await}
           </div>
         </NItem> -->
-            {#if $UserStore.storageType === 'blockstack'}
-              <NItem title={Lang.t('settings.aggressive-sync')}>
-                <span
-                  slot="left"
-                  class="btn-icon zmdi text-primary {`${$UserStore.meta.aggressiveSync ? 'zmdi-refresh-sync' : 'zmdi-refresh-sync-off'}`}" />
-                <div slot="right">
-                  <NToggle
-                    bind:value={$UserStore.meta.aggressiveSync}
-                    on:change={methods.settingChange} />
-                </div>
-              </NItem>
-              <NItem description={Lang.t('settings.aggressive-description')} />
-            {/if}
-          </div>
 
           <div class="n-pop">
             <NItem
@@ -471,7 +504,18 @@
             </span>
           </NItem>
 
-          <StorageManager />
+          <NItem className="compact item-divider" />
+
+          <NItem title="Reset Nomie">
+            <button
+              class="btn btn-sm btn-clear text-red"
+              slot="right"
+              on:click={() => {
+                methods.deleteEverything();
+              }}>
+              Reset
+            </button>
+          </NItem>
 
           <NItem className="compact item-divider" />
 

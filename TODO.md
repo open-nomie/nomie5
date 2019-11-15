@@ -1,6 +1,6 @@
 # TODO
 
-Generated Mon Nov 11 2019 10:51 pm
+Generated Fri Nov 15 2019 10:07 am
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser

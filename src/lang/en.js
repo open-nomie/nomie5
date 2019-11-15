@@ -5,6 +5,7 @@ export default {
       date: "Date",
       location: "Location",
       remove: "Remove",
+      error: "Error",
       all: "All",
       sum: "Sum",
       avg: "Avg",
@@ -120,7 +121,8 @@ export default {
             to sync more frequently`
     },
     tracker: {
-      "things-to-track": "Things to track",
+      "things-to-track": "Library",
+      "pick-at-least-one": "Pick at least one to continue...",
       "install-tracker-question": "Install {{tracker}}?",
       "add-tracker": "Add Tracker",
       "edit-tracker": "Edit Tracker",

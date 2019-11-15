@@ -86,6 +86,7 @@
       align-items: center;
       justify-content: center;
     }
+
     .slide {
       flex-grow: 1;
       flex-shrink: 1;
@@ -139,7 +140,7 @@
         box-shadow: inset 10px 10px 10px black, var(--box-shadow-float);
         position: relative;
 
-        @include media-breakpoint-up(lg) {
+        @include media-breakpoint-up(md) {
           width: 250px;
           max-width: 250px;
           margin-bottom: -70px;
@@ -150,11 +151,15 @@
         @include media-breakpoint-down(sm) {
           max-width: 180px;
           margin-bottom: -50px;
+          flex-grow: 0;
+          flex-shrink: 0;
         }
 
         @include media-breakpoint-down(xs) {
           max-width: 120px;
           margin-bottom: -30px;
+          flex-grow: 0;
+          flex-shrink: 0;
         }
 
         z-index: 10;
@@ -336,7 +341,7 @@
       class="top center-grow pt-3"
       style={data.isTiny ? 'max-height:200px' : 'max-height:220px !important'}>
       <div class="filler" />
-      <h1>Data Storage</h1>
+      <h1>{Lang.t('setup.pick-data-storage', 'Pick data storage...')}</h1>
       <p class="text-sm">Where would you like to store your data?</p>
       <div class="filler" />
     </div>
@@ -346,7 +351,7 @@
         on:click={() => {
           UserStore.setStorage('blockstack');
         }}>
-        <NText size="lg" className="">Encrypted in the Cloud</NText>
+        <NText size="lg" className="text-primary">Encrypted in the Cloud</NText>
         <NText size="sm" className="">
           Access your data on multiple devices using end-to-end encryption.
           <strong>Powered by Blockstack.</strong>
@@ -357,7 +362,7 @@
         on:click={() => {
           UserStore.setStorage('local');
         }}>
-        <NText size="lg" className="">This Device Only</NText>
+        <NText size="lg" className="text-primary">This Device Only</NText>
         <NText size="sm" className="">
           All data is stored unencrypted, but ONLY on your device.
         </NText>

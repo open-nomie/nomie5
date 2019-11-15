@@ -33,49 +33,7 @@
         state.files.push(name);
       }
     },
-    deleteEverything() {
-      Interact.confirm(
-        "DANGER ZONE!",
-        `This will destroy all of your data in Nomie. Are you sure?`,
-        "Destroy"
-      ).then(res => {
-        if (res === true) {
-          Interact.confirm(
-            "Sorry! One last time.. Really?",
-            `You will basically be starting over from scratch... You good with that?`,
-            "Destroy Data"
-          ).then(res => {
-            if (res === true) {
-              // Clear localstorage
 
-              let promises = [];
-              state.files.forEach(file => {
-                promises.push(Storage.delete(file));
-              });
-              Promise.all(promises)
-                .then(() => {
-                  localforage
-                    .clear()
-                    .then(() => {
-                      localStorage.clear();
-                      Interact.alert(
-                        "Done",
-                        "Your data has been destroyed."
-                      ).then(() => {
-                        window.location.href = "/";
-                      });
-                    })
-                    .catch(e => {});
-                })
-                .catch(e => {
-                  localStorage.clear();
-                  Interact.alert("Error Deleting", e.message);
-                });
-            }
-          });
-        }
-      });
-    },
     deleteFile(file) {
       Interact.confirm(
         `Holup! Delete ${file}?`,
@@ -100,15 +58,16 @@
 
 <div class="n-storage">
   <div class="list">
-    <NItem title="Storage ({state.files.length})" className="n-item-divider">
-      <button
-        slot="right"
-        class="btn btn-clear text-primary"
-        on:click={() => {
-          state.showFiles = !state.showFiles;
-        }}>
+    <NItem
+      title="Files ({state.files.length})"
+      on:click={() => {
+        state.showFiles = !state.showFiles;
+      }}
+      className="clickable">
+      <span slot="left" class="zmdi zmdi-folder text-primary btn-icon" />
+      <span slot="right" class="text-primary">
         {#if state.showFiles}Hide{:else}Show Files{/if}
-      </button>
+      </span>
     </NItem>
 
     {#if state.showFiles}
@@ -128,15 +87,6 @@
         </NItem>
       {/each}
     {/if}
-    <NItem title="Reset Nomie">
-      <button
-        class="btn btn-sm btn-danger"
-        slot="right"
-        on:click={() => {
-          methods.deleteEverything();
-        }}>
-        Reset
-      </button>
-    </NItem>
+
   </div>
 </div>

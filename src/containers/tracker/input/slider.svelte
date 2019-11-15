@@ -62,6 +62,7 @@
       padding: 0 6px;
       border: 1px solid var(--color-faded-2);
       position: relative;
+      margin-left: 20px;
     }
     input[type="range"]::-webkit-slider-thumb {
       height: $size * 0.9;
