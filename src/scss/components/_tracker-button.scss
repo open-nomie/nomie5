@@ -79,6 +79,17 @@ body.scrolling .n-tracker-button {
     }
   }
 
+  @include media-breakpoint-down(xs) {
+    width: 6.6rem !important;
+    height: 6.6rem !important;
+    margin: 12px 3px !important;
+
+    .emoji {
+      font-size: 2.2rem;
+      font-style: normal;
+    }
+  }
+
   .one-tap {
     position: absolute;
     height: 4px;

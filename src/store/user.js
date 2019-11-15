@@ -75,7 +75,7 @@ const userInit = () => {
         });
         update(p => {
           p.signedIn = false;
-          d.launchCount = state.launchCount;
+          p.launchCount = state.launchCount;
           return p;
         });
       } else {

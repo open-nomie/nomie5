@@ -79,7 +79,7 @@ button:focus {
   .n-text.lg {
     font-weight: bold;
     font-size: 1rem !important;
-    margin-bottom: 2px;
+    margin-bottom: 6px;
   }
   .n-text.sm {
     font-size: 0.72rem !important;
@@ -87,29 +87,34 @@ button:focus {
     font-weight: 400;
     opacity: 0.7;
   }
+  &:after {
+    $height: 24px;
+    position: absolute;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    content: "✓";
+    top: -#{$height * 0.5};
+    left: -#{$height * 0.5};
+    width: $height;
+    height: $height;
+    background-color: var(--color-solid);
+    border-radius: $height * 0.5;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  }
   &.active {
     border: none;
-    background-color: var(--color-primary-bright);
+    background-color: var(--color-primary);
 
     .n-text {
       color: #fff !important;
     }
     &:after {
-      $height: 24px;
-      position: absolute;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       color: #fff;
       content: "✓";
-      top: -#{$height * 0.5};
-      left: -#{$height * 0.5};
-      width: $height;
-      height: $height;
       background-color: var(--color-primary-bright);
-      border-radius: $height * 0.5;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     }
   }
 }
@@ -216,5 +221,8 @@ button:focus {
   border-radius: 20px;
   &.btn-lg {
     border-radius: 30px;
+  }
+  &.btn-outline {
+    border: solid 1px var(--color-primary);
   }
 }

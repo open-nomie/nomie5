@@ -1,3 +1,25 @@
+# v.4.5 - Nov 15 2019
+
+## Enhancements
+
+- Board Sorting [#66]
+- Rocking Trackers when selected - but before safe [#79]
+- Improved on boarding process
+- Added Launch counter (bottom of settings) - this will be used for an award/milestone thing
+- Tracker Sorting on Mobile
+
+## Fixes
+
+- Aligning elements on empty boards [#74]
+- Dark Theme Fixes [#75]
+- Board/Tab terminology [#76]
+- Putting labels ontop of Emojis for smaller screens and larger labels [#77]
+- Fixed padding on small screens [#78]
+- Tracker Editor X now closes modal
+- Searching now clears if you track something
+- Fixed Slider on Firefox and smaller screens
+- Cleaned up Settings
+
 # v.4.4.8 - Nov 10 2019
 
 ## Enhancements

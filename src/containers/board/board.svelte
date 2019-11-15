@@ -476,9 +476,7 @@
   });
 
   ActiveLogStore.subscribe(log => {
-    console.log("The Log has changed! Let's see what trackers are in there");
     data.addedTrackers = new NomieLog(log).trackersArray().map(t => t.tag);
-    console.log("Added Trackers", data.addedTrackers);
   });
 </script>
 

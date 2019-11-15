@@ -4886,32 +4886,36 @@ button:focus {
   .btn-content .n-text.lg {
     font-weight: bold;
     font-size: 1rem !important;
-    margin-bottom: 2px; }
+    margin-bottom: 6px; }
   .btn-content .n-text.sm {
     font-size: 0.72rem !important;
     line-height: 1rem !important;
     font-weight: 400;
     opacity: 0.7; }
+  .btn-content:after {
+    position: absolute;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    content: "✓";
+    top: -12px;
+    left: -12px;
+    width: 24px;
+    height: 24px;
+    background-color: var(--color-solid);
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); }
   .btn-content.active {
     border: none;
-    background-color: var(--color-primary-bright); }
+    background-color: var(--color-primary); }
     .btn-content.active .n-text {
       color: #fff !important; }
     .btn-content.active:after {
-      position: absolute;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       color: #fff;
       content: "✓";
-      top: -12px;
-      left: -12px;
-      width: 24px;
-      height: 24px;
-      background-color: var(--color-primary-bright);
-      border-radius: 12px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); }
+      background-color: var(--color-primary-bright); }
 
 .btn-icon {
   font-size: 26px !important;
@@ -4996,6 +5000,8 @@ button:focus {
   border-radius: 20px; }
   .btn-round.btn-lg, .btn-group-lg > .btn-round.btn {
     border-radius: 30px; }
+  .btn-round.btn-outline {
+    border: solid 1px var(--color-primary); }
 
 .show-test {
   border: solid 1px #000;
@@ -5897,6 +5903,14 @@ body.scrolling .n-tracker-button {
       .n-tracker-button .emoji {
         font-size: 2.2rem;
         font-style: normal; } }
+  @media (max-width: 349.98px) {
+    .n-tracker-button {
+      width: 6.6rem !important;
+      height: 6.6rem !important;
+      margin: 12px 3px !important; }
+      .n-tracker-button .emoji {
+        font-size: 2.2rem;
+        font-style: normal; } }
   .n-tracker-button .one-tap {
     position: absolute;
     height: 4px;
@@ -6222,3 +6236,7 @@ button {
 .badge-green {
   background-color: var(--color-green);
   color: #fff; }
+
+.badge-light {
+  background-color: var(--color-solid-2);
+  color: var(--color-inverse-2); }

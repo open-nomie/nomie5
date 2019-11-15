@@ -117,12 +117,13 @@
   .active-item {
     position: absolute;
     top: 0px;
+    right: 0px;
     background-color: var(--color-solid);
     border-radius: 4px;
     box-shadow: var(--box-shadow-tight);
     z-index: 120;
     padding: 4px 10px;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     display: flex;
     opacity: 0.6;
     label {

@@ -1,6 +1,6 @@
 # TODO
 
-Generated Fri Nov 15 2019 11:22 am
+Generated Fri Nov 15 2019 6:42 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -44,6 +44,9 @@ Generated Fri Nov 15 2019 11:22 am
 - **src/containers/tracker/editor/editor.svelte**
    - TODO: Make edit tag work. It when saving the tracker we need to know it's original tag and replace it in the TrackerStore. Right not it just adds a new one since the tag is the key.
 - **src/containers/setup/setup.svelte**
+   - TODO: Make this design not suck! It's very boring.
+   - TODO: UserSession shouldn't be in here - login should be fired by Storage.
+- **src/containers/setup/setup copy.svelte**
    - TODO: Make this design not suck! It's very boring.
    - TODO: UserSession shouldn't be in here - login should be fired by Storage.
 - **src/containers/map/map.svelte**

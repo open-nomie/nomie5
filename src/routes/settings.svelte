@@ -122,6 +122,7 @@
             });
             await Promise.all(promises);
             await localforage.clear();
+            localStorage.clear();
             await Interact.alert("Done", "Your data has been destroyed.");
             window.location.href = "/";
           }

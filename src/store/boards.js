@@ -36,12 +36,18 @@ const boardsInit = () => {
   const methods = {
     initialize(UserStore, tkrs) {
       trackers = tkrs;
-      return Storage.get(`${config.data_root}/boards.json`).then(boards => {
-        if (boards) {
-          methods.load(boards);
+      let boardData = Storage.get(`${config.data_root}/boards.json`).then(
+        boards => {
+          if (boards) {
+            methods.load(boards);
+          }
+          return boards;
         }
-        return boards;
-      });
+      );
+
+      console.log("Board Data");
+
+      return boardData;
     },
     load(boards) {
       return update(bs => {
