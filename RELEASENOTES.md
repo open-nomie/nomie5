@@ -3,10 +3,10 @@
 ## Enhancements
 
 - Board Sorting [#66]
-- Rocking Trackers when selected - but before safe [#79]
-- Improved on boarding process
+- Rocking Trackers when selected - but before save [#79]
+- Improved on-boarding process
 - Added Launch counter (bottom of settings) - this will be used for an award/milestone thing
-- # Tracker Sorting on Mobile
+- Tracker Sorting on Mobile
 
 ## Fixes
 
