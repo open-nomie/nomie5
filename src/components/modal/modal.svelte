@@ -119,7 +119,7 @@
     max-height: 90vh;
     max-width: 400px;
     margin: 10px;
-    border-radius: 1.4rem;
+    border-radius: 1.2rem;
     display: flex;
     flex-direction: column;
     justify-content: stretch;
@@ -132,6 +132,7 @@
       @include media-breakpoint-up(md) {
         padding: 20px;
       }
+      border-radius: 1.2rem;
       z-index: 1;
     }
 

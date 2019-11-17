@@ -49,11 +49,10 @@
     </button>
   {/each}
   <button
-    class="tab add-board"
+    class="btn btn-clear btn-icon add-board zmdi zmdi-plus"
     on:click={() => {
       dispatch('create');
-    }}>
-    <i class="zmdi zmdi-plus" />
-  </button>
+    }} />
+  <slot />
   <slot name="right" />
 </NHScroller>

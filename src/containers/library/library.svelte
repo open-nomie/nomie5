@@ -45,18 +45,14 @@
 </style>
 
 <Modal
-  type={$TrackerLibrary.first ? 'cover' : 'fullscreen'}
+  type={$TrackerLibrary.first ? 'fullscreen' : 'fullscreen'}
   show={$TrackerLibrary.show}
   className="library-modal"
   title={Lang.t('tracker.things-to-track')}>
 
   {#if $TrackerLibrary.first}
     <div class="px-2 pt-3 intro-message">
-      <NText size="sm" tag="div">
-        Select at least 1 tracker to get started.
-        <br />
-        You can add more later (and create your own).
-      </NText>
+      <NText size="sm" tag="div">{Lang.t('tracker.pick-at-least-one')}</NText>
     </div>
   {/if}
 

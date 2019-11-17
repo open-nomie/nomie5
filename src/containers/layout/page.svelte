@@ -18,7 +18,9 @@
 </script>
 
 <style>
-
+  .title {
+    color: var(--color-inverse);
+  }
 </style>
 
 <AppLayout>

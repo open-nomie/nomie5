@@ -105,8 +105,9 @@
 
   {#if type == 'csv'}
     <div class="container csv">
+      <div class="gap" />
       <NItem>
-        <p class="pt-3 text-sm">{Lang.t('export.csv.description')}</p>
+        <p class="text-sm">{Lang.t('export.csv.description')}</p>
       </NItem>
       <div class="gap" />
       <NItem title="Trackers" on:click={methods.selectTrackers}>
@@ -140,8 +141,9 @@
     </div>
   {:else}
     <div class="container backup">
+      <div class="gap" />
       <NItem>
-        <p class="pt-3 text-sm">{Lang.t('export.backup.description')}</p>
+        <p class=" text-sm">{Lang.t('export.backup.description')}</p>
       </NItem>
       <div class="gap" />
       <NItem

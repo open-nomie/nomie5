@@ -1,4 +1,4 @@
-# Nomie 4.4.0
+# Nomie 4.5
 
 ## Open Source Mood Tracker / Life Tracker / Data Journal
 
@@ -12,7 +12,7 @@ If you like to live dangerously you can run the dev branch
 
 - https://dev.nomie.app **Development** (develop)
 
-## Watch the [Nomie 4.4.0 release podcast](https://youtu.be/Lmpytrsj6mg)
+## Watch the [Nomie Podcast](https://www.youtube.com/channel/UCBDutSGTIQIO7cX3ZaJXv9Q)
 
 ---
 
@@ -138,7 +138,8 @@ Combine multiple trackers into a single flow, for collecting a squence of tracke
 - **Keep cleaning, organizing and testing** - this project didn't start very clean, or ready for unit testing, this should be an on going objective.
 - **Use what's there** - Twitter bootstrap ([and all its classes](https://getbootstrap.com/)) are available, reuse what already exists before writing new - especially css.
 
-## Nomie Jingle 
+## Nomie Jingle
+
 The Nomie Jingle was written and produced by soldilil - see more work at https://soldilil.bandcamp.com
 
 ## Trademark License

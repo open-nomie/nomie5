@@ -478,7 +478,9 @@
           {state.tracker.emoji} {state.tracker.label}
           {#if state.compare.tracker}
             <span class="mx-2">vs</span>
-            {state.compare.tracker.emoji}
+            {state.compare.tracker.emoji} {state.compare.tracker.label}
+          {:else}
+            <button class="badge badge-light ml-2">Vs</button>
           {/if}
         </button>
       {:else}

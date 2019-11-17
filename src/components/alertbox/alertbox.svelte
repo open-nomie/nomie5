@@ -14,6 +14,9 @@
   let hasSlot = false;
   $: if (show) {
     hasSlot = arguments[1].$$slots || {}.default;
+    // console.log("Show Alert");
+  } else {
+    // console.log("hide alert");
   }
 
   const methods = {

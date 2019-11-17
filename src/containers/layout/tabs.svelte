@@ -16,7 +16,7 @@
   #app-tabs {
     height: calc(50px + env(safe-area-inset-bottom));
     padding-bottom: calc(env(safe-area-inset-bottom));
-    background-color: var(--color-tabs);
+    background-color: var(--tabs-background);
     color: rgba(255, 255, 255, 0.5);
     display: flex;
     justify-content: space-between;
