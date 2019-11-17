@@ -1,7 +1,7 @@
 <script>
   import NToolbar from "../toolbar/toolbar.svelte";
   import NItem from "../list-item/list-item.svelte";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount, onDestroy } from "svelte";
   import { Lang } from "../../store/lang";
   const dispatch = createEventDispatcher();
 
@@ -13,6 +13,16 @@
   const methods = {
     backgroundClicked(event) {}
   };
+  let escListener;
+  $: if (show) {
+    escListener = document.addEventListener("keyup", evt => {
+      if (evt.key == "Escape") {
+        dispatch("close");
+      }
+    });
+  } else {
+    escListener = document.removeEventListener("keyup", () => {});
+  }
 </script>
 
 <style lang="scss" type="text/scss">
