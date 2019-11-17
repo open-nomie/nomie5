@@ -6,7 +6,6 @@
 <style lang="scss">
   :global(.n-toolbar) {
     min-height: 50px;
-    background-color: var(--color-solid);
     display: flex;
     align-items: center;
     justify-content: stretch;

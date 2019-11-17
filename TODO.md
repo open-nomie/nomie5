@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sun Nov 10 2019 9:53 am
+Generated Fri Nov 15 2019 6:42 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -29,9 +29,6 @@ Generated Sun Nov 10 2019 9:53 am
    - TODO: Have it react when the ledger change, not a hard refresh
    - TODO: refactor so it's clean and using the proper amount of Store vs local
    - TODO: This is really sloppy - clean it up.
-- **src/routes/board-editor.svelte**
-   - TODO: Make sorting work
-   - TODO: Fix Sorting on MObile -->
 - **src/plugins/goals/goals.svelte**
    - TODO: Finish Goals
 - **src/modules/stats/stats.js**
@@ -47,6 +44,9 @@ Generated Sun Nov 10 2019 9:53 am
 - **src/containers/tracker/editor/editor.svelte**
    - TODO: Make edit tag work. It when saving the tracker we need to know it's original tag and replace it in the TrackerStore. Right not it just adds a new one since the tag is the key.
 - **src/containers/setup/setup.svelte**
+   - TODO: Make this design not suck! It's very boring.
+   - TODO: UserSession shouldn't be in here - login should be fired by Storage.
+- **src/containers/setup/setup copy.svelte**
    - TODO: Make this design not suck! It's very boring.
    - TODO: UserSession shouldn't be in here - login should be fired by Storage.
 - **src/containers/map/map.svelte**

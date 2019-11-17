@@ -1,43 +1,59 @@
-import ExtractTrackers from "../../utils/extract-trackers/extract-trackers";
-import CalculateScore from "../../utils/calculate-score/calculate-score";
-import md5 from "md5";
-import regexs from "../../utils/regex";
+import nid from "../../modules/nid/nid";
+
+// Modules
+import ExtractTrackers from "../../utils/extract-trackers/extract-trackers"; // extract tracker function
+import CalculateScore from "../../utils/calculate-score/calculate-score"; // Score calculator
+import regexs from "../../utils/regex"; // Regex to find data points in the note
+
+/**
+ * Nomie Log / Record
+ * It's been called a record since Nomie 1, but a log is a better name
+ * you'll see i've used the term both thoughout - 🤦‍♂️
+ */
 export default class Record {
   constructor(starter) {
     starter = starter || {};
-    // make a simple id - collision unlikely as they're stored in seperate books (by year);
-    // TODO see why nanoid doesn't work with svelte
-    this._id =
-      starter._id || md5(Math.random() + new Date().getTime()).substr(0, 10);
-    this.note = (starter.note || starter.notes || "").trim();
 
-    let end = starter.end ? new Date(starter.end) : new Date();
+    this._dirty = starter._id ? undefined : true;
+    this._id = starter._id || nid(10); // create a random 10 char id if not proviedd
+    this.note = (starter.note || starter.notes || "").trim(); // Trim the note
+
+    /**
+     * Nomie uses the End date as the primary time.
+     * Currently as of 4.4.1 there is no active use of start..
+     */
+    let end = starter.end ? new Date(starter.end) : new Date(); // set the end date
     let start = starter.start ? new Date(starter.start) : end;
-
     this.end = end.getTime();
     this.start = start.getTime();
 
-    this.score = CalculateScore(this.note, this.end);
+    // Score Calculation
+    // This Might be a bad idea - but i'm doing it anyways
+    // If a score is set, use it - if not, calculate it.
+    // If a score is 0 or not set
+    this.score = starter.score || CalculateScore(this.note, this.end);
 
+    // Get location
     this.lat = starter.lat || null;
     this.lng = starter.lng || null;
     this.location = starter.location || "";
+
+    // Get if this has been edited
     this.modified = starter.modified || false;
+
+    // Get the source if provided
     this.source = starter.source || null;
 
+    // Associate Photo (not used )
     this.photo = starter.photo || null;
-
-    if (!starter._id) {
-      this._dirty = true;
-    } else {
-      delete this._dirty;
-    }
   }
 
+  // Get a hash of this note
   hash() {
-    return md5([this.note, this.start, this.end, this.lat, this.lng].join(""));
+    return nid([this.note, this.start, this.end, this.lat, this.lng].join(""));
   }
 
+  // Get it as an object
   toObject() {
     return {
       _id: this._id,
@@ -51,6 +67,7 @@ export default class Record {
     };
   }
 
+  // add a tag to the note
   addTag(tag, value) {
     if (value) {
       this.note = `${this.note} #${tag}(${value})`;
@@ -63,15 +80,18 @@ export default class Record {
     return this;
   }
 
+  // Does it have a specific  tracker?
   hasTracker(trackerTag) {
     return this.trackers.hasOwnProperty(trackerTag);
   }
 
+  // Get note length without tags
   noteTextLength() {
     let scrubbed = this.note.replace(new RegExp(regexs.tag, "gi"), "").trim();
     return scrubbed.length;
   }
 
+  // Get the score
   positivityScore() {
     if (this.score === 1) {
       return -2;
@@ -86,6 +106,7 @@ export default class Record {
     }
   }
 
+  // Expand for more data
   expand() {
     return this.expanded();
   }
@@ -99,6 +120,7 @@ export default class Record {
     });
   }
 
+  // Get trackers as array
   trackersArray() {
     let tks = ExtractTrackers(this.note);
 
@@ -115,6 +137,7 @@ export default class Record {
     }
   }
 
+  // Get public verion - WTF IS THIS EVEN? I don't remember
   public(tag) {
     return {
       duration: this.end - this.start,

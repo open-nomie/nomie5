@@ -125,7 +125,8 @@
     <NModal
       type="fullscreen"
       title="Edit {tracker.label.length ? tracker.label : 'Tracker'}"
-      allowClose>
+      allowClose
+      on:close={methods.cancel}>
 
       <NItem className="item-divider compact" />
       <ColorPicker bind:value={tracker.color} />
@@ -265,10 +266,6 @@
             bind:value={tracker.note}
             placeholder={Lang.t('tracker.note-placeholder')}
             class="form-control w-100 mt-2" />
-          <!-- <button
-            slot="right"
-            class="btn btn-clear btn-sm btn-icon zmdi zmdi-plus"
-            on:click={methods.addTrackerToNote} /> -->
         </NItem>
         <NItem description={Lang.t('tracker.note-description')} />
       {/if}

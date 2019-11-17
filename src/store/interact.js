@@ -40,6 +40,9 @@ const interactInit = () => {
 				cancel: null,
 				onInteract: null,
 			},
+			boardSorter: {
+				show: false,
+			},
 			trackerSelector: {
 				show: false,
 				multiple: false,
@@ -173,6 +176,12 @@ const interactInit = () => {
 				d.stats.activeTag = null;
 				return d;
 			});
+		},
+		toggleBoardSorter() {
+			update(s=>{
+				s.boardSorter.show = !s.boardSorter.show;
+				return s;
+			})
 		},
 		openCamera(onSave) {
 			update(s => {

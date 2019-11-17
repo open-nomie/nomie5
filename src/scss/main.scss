@@ -327,13 +327,44 @@ button {
   }
 }
 
+@keyframes shadow-pulse {
+  0% {
+    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 35px rgba(0, 0, 0, 0);
+  }
+}
+
 .wiggle {
   animation: keyframes2 infinite 0.6s ease-out;
   transform-origin: 50% 10%;
 }
 .wiggle-other {
-  animation: keyframes1 infinite 0.6s ease-in;
-  transform-origin: 30% 5%;
+  animation: keyframes2 infinite 0.6s ease-in;
+  transform-origin: 50% 10%;
+}
+
+.pulse {
+  transform: scale(1);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    // transform: scale3d(0.95);
+    box-shadow: 0 0 0 0 rgba($green, 0.3);
+  }
+
+  70% {
+    // transform: scale3d(1);
+    box-shadow: 0 0 0 10px rgba($green, 0);
+  }
+
+  100% {
+    // transform: scale3d(0.95);
+    box-shadow: 0 0 0 0 rgba($green, 0);
+  }
 }
 
 .badge {
@@ -372,4 +403,9 @@ button {
 .badge-green {
   background-color: var(--color-green);
   color: #fff;
+}
+
+.badge-light {
+  background-color: var(--color-solid-2);
+  color: var(--color-inverse-2);
 }

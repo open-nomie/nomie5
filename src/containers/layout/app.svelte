@@ -12,7 +12,7 @@
 
   const padContent = () => {
     padTopDom.style.height = `${headerDom.offsetHeight}px`;
-    padBottomDom.style.height = `${footerDom.offsetHeight}px`;
+    padBottomDom.style.minHeight = `${footerDom.offsetHeight}px`;
   };
 
   $: if (title) {
@@ -40,12 +40,12 @@
     -webkit-overflow-scrolling: touch;
     z-index: 0;
     color: var(--color-bg);
-    min-height: 100vh;
+    flex-grow: 1;
   }
 
   .header-slot {
     padding-top: env(safe-area-inset-top);
-    background-color: var(--color-solid);
+    background-color: var(--header-background);
     flex-grow: 0;
     flex-shrink: 0;
     box-shadow: var(--box-shadow-float);

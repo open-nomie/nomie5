@@ -5,6 +5,7 @@ export default {
       date: "Date",
       location: "Location",
       remove: "Remove",
+      error: "Error",
       all: "All",
       sum: "Sum",
       avg: "Avg",
@@ -76,7 +77,7 @@ export default {
       "board-label": "Board Label",
       "create-custom-tracker": "Create Custom Tracker",
       "add-existing-tracker": "Add Existing Tracker",
-      "browse-starter-trackers": "Browse Tracker Library",
+      "browse-starter-trackers": "Browse Library",
       "add-a-board": "Add a Tab",
       "add-a-board-description": `Tabs help you organize your trackers. For example: social, food, and fitness can contain trackers specifically for those activies. You can have the same tracker on multiple tabs.`,
       "board-input-placeholder": "Tab name or Emoji 👍"
@@ -84,7 +85,7 @@ export default {
     settings: {
       language: "Language",
       "sign-out": "Sign Out",
-      "enable-boards": "Show Board Tabs",
+      "enable-boards": "Enable Tabs",
       settings: "Settings",
       theme: "Theme",
       "use-location": "Track Location",
@@ -120,7 +121,8 @@ export default {
             to sync more frequently`
     },
     tracker: {
-      "things-to-track": "Things to track",
+      "things-to-track": "Library",
+      "pick-at-least-one": "Pick at least one to continue...",
       "install-tracker-question": "Install {{tracker}}?",
       "add-tracker": "Add Tracker",
       "edit-tracker": "Edit Tracker",
