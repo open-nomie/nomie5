@@ -132,7 +132,7 @@
       @include media-breakpoint-up(md) {
         padding: 20px;
       }
-      border-radius: 1.2rem;
+      // border-radius: 1.2rem;
       z-index: 1;
     }
 

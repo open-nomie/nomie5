@@ -8,7 +8,7 @@
   height={size}
   viewBox="0 0 376 108"
   fill="none"
-  class={className}
+  class="{className} nomie-logo wordmark"
   xmlns="http://www.w3.org/2000/svg">
   <path
     fill-rule="evenodd"

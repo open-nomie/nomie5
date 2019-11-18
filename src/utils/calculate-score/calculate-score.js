@@ -59,7 +59,7 @@ export default (note, endTime) => {
   // Loop over tags array
   tkrKeys.forEach(tag => {
     // If trackers has this tag
-    if (trackers[tag]) {
+    if ((trackers || {})[tag]) {
       // If the tracker has a score of custom
       if (trackers[tag].score === "custom") {
         let calc = trackers[tag].score_calc || [];

@@ -160,10 +160,7 @@
           methods._importRecords().then(() => {
             importing.all.running = false;
             importing.all.done = true;
-            Interact.alert(
-              "Import Complete",
-              `It's best to close and re-open Nomie after an import.`
-            );
+            window.location.reload();
             return true;
           });
         });

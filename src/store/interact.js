@@ -13,6 +13,7 @@ import { navigate } from 'svelte-routing';
 
 // vendors
 import dayjs from 'dayjs';
+import math from "../utils/math/math";
 
 // utils
 import Logger from '../utils/log/log';
@@ -25,6 +26,10 @@ import NomieLog from '../modules/nomie-log/nomie-log';
 import { LedgerStore } from '../store/ledger';
 
 const console = new Logger('✋ Interact');
+
+let fakeNote = "#water(43) #mood(5) This is a very long note that I would like to show off, and it should be able to be cut off at some point or another but never too early or late if you know what I mean. Shit it needs to be even longer than that! I must go on! Carry this axe and grind the stones of the forever more!";
+let randomLength = math.random_range(19,300);
+
 
 const interactInit = () => {
 	let getBaseState = () => {
@@ -39,6 +44,10 @@ const interactInit = () => {
 				ok: 'Ok',
 				cancel: null,
 				onInteract: null,
+			},
+			shareImage: {
+				log: null,
+				color: null
 			},
 			boardSorter: {
 				show: false,
@@ -158,12 +167,25 @@ const interactInit = () => {
 			});
 		},
 		dismissTrackerInput() {
-			update(s => {
-				s.trackerInput.show = false;
-				s.trackerInput.tracker = null;
-				s.trackerInput.onInteract = null;
-				return s;
+			update(d => {
+				d.trackerInput.show = false;
+				d.trackerInput.tracker = null;
+				d.trackerInput.onInteract = null;
+				return d;
 			});
+		},
+		openShareImage(log) {
+			update(d=>{
+				d.shareImage.log = log;
+				return d;
+			})
+		},
+		closeShareImage() {
+			update(d=>{
+				d.shareImage.color = null;
+				d.shareImage.log = null;
+				return d;
+			})
 		},
 		openStats(tag) {
 			update(d => {
@@ -287,6 +309,9 @@ const interactInit = () => {
 							}, 10);
 						});
 					},
+					shareLog() {
+						Interact.openShareImage(log)
+					},
 					updateDate() {
 						Interact.prompt('New Date / Time', null, {
 							valueType: 'datetime',
@@ -354,6 +379,10 @@ const interactInit = () => {
 				// }
 
 				let initial = [
+					{
+						title: 'Share...',
+						click: actions.shareLog,
+					},
 					{
 						title: 'Edit...',
 						click: actions.editLog,
