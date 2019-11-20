@@ -6,10 +6,8 @@
    * eventually it might be cleaned up - but for now, its about getting things to work.
    */
   // svelte
-  import { navigate, Link } from "svelte-routing";
-  import { onMount, tick } from "svelte";
-  import { fade } from "svelte/transition";
-  import md5 from "md5";
+  import { navigate } from "svelte-routing";
+  import { onMount, onDestroy } from "svelte";
 
   // Components
   import NTrackerButton from "./tracker-button.svelte";
@@ -28,7 +26,8 @@
   import BoardSortModal from "../../containers/board/board-sort.svelte";
 
   // Vendors
-  import Spinner from "svelte-spinner";
+  // import Spinner from "svelte-spinner";
+  import Spinner from "../../components/spinner/spinner.svelte";
 
   // Modules/Libs
   import Tracker from "../../modules/tracker/tracker";
@@ -59,10 +58,8 @@
   let today = {}; // holds today's activities
   let searchInput; // binding to dom element
   let foundTrackers = null; // for search results
-  let lastLedgerStoreHash = null; // for making so svelte doesnt get loop happy
-  let lastMasterHash = null; // for making sure svelte doesn't loop
-  let _trackers = null; // holder of trackers when store updates
-  let _board = null; // holder of current board data
+  // let lastLedgerStoreHash = null; // for making so svelte doesnt get loop happy
+  // let lastMasterHash = null; // for making sure svelte doesn't loop
   let boardTrackers = []; // Actual array to display to user
   let appTitle = "(Loading)";
 
@@ -76,7 +73,29 @@
     searching: false, // if the user is searching
     searchTerm: null, // the search term the user is typing
     activeTip: 0, // index of the current tip to show
-    hideTips: false // temp hide - it will stop showing after 12 launches.
+    hideTips: false, // temp hide - it will stop showing after 12 launches.
+    today: {}
+  };
+
+  let isReady = {
+    boards: false,
+    trackers: false,
+    ledger: false,
+    done: false,
+    checking: false
+  };
+
+  const checkIfReady = requester => {
+    // console.log("✓?", requester);
+    if (isReady.done == false) {
+      if (isReady.boards && $TrackerStore && isReady.ledger) {
+        console.log("All are done, marking complete");
+        isReady.done = true;
+        setTimeout(() => {
+          methods.render();
+        }, 20);
+      }
+    }
   };
 
   let tips = [
@@ -89,18 +108,20 @@
 
   // Wait for the User to be ready
   UserStore.onReady(() => {
+    console.log("User onReady");
+    // Set user to kick off top view conditional.
     user = $UserStore; // Kick off
-    // Hook a before save - to highlight saving trackers
+    /**
+     * Setup Hooks
+     * These will fire on before safe, and onLogSave
+     */
     LedgerStore.hook("onBeforeSave", log => {
       data.savingTrackers = log.trackersArray().map(t => t.tag);
-    });
-    // Hook on Save to clear saving Trackers
-    LedgerStore.hook("onLogSaved", log => {
+    }).hook("onLogSaved", log => {
       data.savingTrackers = [];
       data.searching = false;
       data.addedTrackers = [];
     });
-    LedgerStore.getToday();
   });
 
   /**
@@ -110,14 +131,14 @@
    * we need to stop loading, and populate today
    * and reload the trackers (for reacting to value changes)
    */
-  $: if ($LedgerStore.hash !== lastLedgerStoreHash) {
-    lastLedgerStoreHash = $LedgerStore.hash;
-    setTimeout(() => {
-      today = $LedgerStore.today;
-      data.loading = false;
-      boardTrackers = boardTrackers || [];
-    }, 12);
-  }
+  // $: if ($LedgerStore.hash !== lastLedgerStoreHash) {
+  //   lastLedgerStoreHash = $LedgerStore.hash;
+  //   setTimeout(() => {
+  //     today = $LedgerStore.today;
+  //     data.loading = false;
+  //     boardTrackers = boardTrackers || [];
+  //   }, 12);
+  // }
 
   /**
    * Boards, Trackers and Ledger
@@ -127,39 +148,49 @@
    * a reactive loop. Create a hash of the active board, plus
    * tracker data - this way it reacts if someone edits a tracker too
    */
-  $: if ($BoardStore && $TrackerStore && $LedgerStore) {
-    // Create a hash for this compbo
-    let boardHash = ($BoardStore.activeBoard || {}).trackers || [].join(",");
-    let mh = [$BoardStore.active, boardHash, JSON.stringify(_trackers)];
-    let masterHash = md5(mh.join(","));
+  // $: if ($BoardStore && $TrackerStore && $LedgerStore) {
+  //   // Create a hash for this compbo
+  //   let boardHash = ($BoardStore.activeBoard || {}).trackers || [].join(",");
+  //   let mh = [$BoardStore.active, boardHash, JSON.stringify(_trackers)];
+  //   let masterHash = md5(mh.join(","));
 
-    appTitle = `${
-      $BoardStore.active !== "all" && $BoardStore.activeBoard
-        ? $BoardStore.activeBoard.label
-        : "All"
-    }`;
-    // Compare hashes
-    if (lastMasterHash != masterHash) {
-      // Update hash to new one.
-      lastMasterHash = masterHash;
-      // Are we on the All board?
-      if ($BoardStore.active == "all") {
-        // Get all trackers from TrackerStore, convert to array
-        boardTrackers = Object.keys($TrackerStore)
-          .map(tag => {
-            return $TrackerStore[tag] || new Tracker({ tag: tag });
-          })
-          .sort((a, b) => {
-            return a.label > b.label ? 1 : -1;
-          });
-      } else {
-        // Get Board Trackers from active Board
-        boardTrackers = $BoardStore.activeBoard.trackers.map(tag => {
-          return $TrackerStore[tag] || new Tracker({ tag: tag });
-        });
-      }
-    } // end making sure we don't get into a loop
-  }
+  //   activeBoardId = ($BoardStore || {}).active ? $BoardStore.active : "all";
+  //   activeBoardLabel = ($BoardStore || {}).activeBoard
+  //     ? $BoardStore.activeBoard.label
+  //     : "All";
+
+  //   console.log("if BoardStore, TrackerStore and LedgerStore");
+
+  // activeBoardId = ($BoardStore || {}).active ? $BoardStore.active : "all";
+  // activeBoardLabel = ($BoardStore || {}).activeBoard
+  //   ? $BoardStore.activeBoard.label
+  //   : "All";
+
+  // appTitle = `${activeBoardLabel}`;
+  // // Compare hashes
+  // if (lastMasterHash != masterHash) {
+  //   // Update hash to new one.
+  //   lastMasterHash = masterHash;
+  //   // Are we on the All board?
+  //   if (activeBoardId == "all") {
+  //     // Get all trackers from TrackerStore, convert to array
+  //     boardTrackers = Object.keys($TrackerStore)
+  //       .map(tag => {
+  //         return $TrackerStore[tag] || new Tracker({ tag: tag });
+  //       })
+  //       .sort((a, b) => {
+  //         return a.label > b.label ? 1 : -1;
+  //       });
+  //   } else {
+  //     // Get Board Trackers from active Board
+  //     boardTrackers = (($BoardStore.activeBoard || {}).trackers || []).map(
+  //       tag => {
+  //         return $TrackerStore[tag] || new Tracker({ tag: tag });
+  //       }
+  //     );
+  //   }
+  // } // end making sure we don't get into a loop
+  // }
 
   /**
    * METHODS
@@ -168,15 +199,32 @@
     editBoard() {
       navigate(`/board/${$BoardStore.activeBoard.id}`);
     },
-    // When Tracker Subscribe
-    onTrackersChange(trackers) {
-      _trackers = trackers;
+    render() {
+      console.log("Render");
+      if ($BoardStore.active == "all") {
+        /**
+         * Build boardTrackers
+         * Get all trackers from TrackerStore, convert to array
+         **/
+        appTitle = "All";
+        boardTrackers = Object.keys($TrackerStore)
+          .map(tag => {
+            return $TrackerStore[tag] || new Tracker({ tag: tag });
+          })
+          // Sort ALL by label
+          .sort((a, b) => {
+            return a.label > b.label ? 1 : -1;
+          });
+      } else {
+        // Get Board Trackers from active Board
+        appTitle = ($BoardStore.activeBoard || {}).label || "";
+        boardTrackers = (($BoardStore.activeBoard || {}).trackers || []).map(
+          tag => {
+            return $TrackerStore[tag] || new Tracker({ tag: tag });
+          }
+        );
+      }
     },
-    // When Board Subscribe
-    onBoardChange(boardPayload) {
-      _board = boardPayload;
-    },
-
     nextTip() {
       if (data.activeTip == tips.length - 1) {
         data.activeTip = 0;
@@ -408,18 +456,17 @@
       let value = null;
 
       // Does this tracker exist in today's map?
-      if ($LedgerStore.today.hasOwnProperty(tracker.tag)) {
+      if (today.hasOwnProperty(tracker.tag)) {
         // What type of Math should we do?
         if (tracker.math === "sum") {
           // Sum it up!
-          value = math.round(math.sum($LedgerStore.today[tracker.tag].values));
+          value = math.round(math.sum(today[tracker.tag].values));
         } else {
           // Round things!
-          value = math.round(
-            math.average($LedgerStore.today[tracker.tag].values)
-          );
+          value = math.round(math.average(today[tracker.tag].values));
         }
       }
+      console.log("Get Tracker Value", value);
       return value ? NomieUOM.format(value, tracker.uom) : null;
     },
     /**
@@ -428,8 +475,8 @@
      * It maybe shouldn't be here, but it is for now
      */
     getHoursUsed(tracker) {
-      if ($LedgerStore.today.hasOwnProperty(tracker.tag)) {
-        return $LedgerStore.today[tracker.tag].hours;
+      if (today.hasOwnProperty(tracker.tag)) {
+        return today[tracker.tag].hours;
       } else {
         return [];
       }
@@ -492,18 +539,52 @@
     } // end showTrackerOptions
   };
 
-  // Wait for changes to happen to the boardstore
-  BoardStore.subscribe(boardPayload => {
-    methods.onBoardChange(boardPayload);
-  });
+  let boardUnsub;
+  let ledgerUnsub;
+  let trackersUnsub;
+  let activeLogUnsub;
 
-  // Wait for changes to happen to the tracker store
-  TrackerStore.subscribe(trackers => {
-    methods.onTrackersChange(trackers);
-  });
+  onMount(() => {
+    // Wait for changes to happen to the boardstore
+    boardUnsub = BoardStore.subscribe(boardPayload => {
+      // console.log("Board Store Subscribe");
+      // methods.onBoardChange(boardPayload);
+      isReady.boards = true;
+      checkIfReady("boardPayload");
+    });
 
-  ActiveLogStore.subscribe(log => {
-    data.addedTrackers = new NomieLog(log).trackersArray().map(t => t.tag);
+    ledgerUnsub = LedgerStore.subscribe(ledgerPayload => {
+      // If it's not saving
+      if (!ledgerPayload.saving) {
+        isReady.ledger = true; // say it's true
+        checkIfReady("ledgerPayload"); // check for others
+        setTimeout(() => {
+          today = ledgerPayload.today;
+          foundTrackers = foundTrackers; // force reaction
+          boardTrackers = boardTrackers; // force reaction
+        }, 100);
+      }
+    });
+
+    /**
+     * Active Log Change
+     * When the log changes, extract the trackers so we can
+     * make them pulse
+     */
+
+    activeLogUnsub = ActiveLogStore.subscribe(log => {
+      data.addedTrackers = new NomieLog(log).trackersArray().map(t => t.tag);
+    });
+    setTimeout(() => {
+      LedgerStore.getToday();
+    }, 20);
+  }); // end onMount
+
+  onDestroy(() => {
+    boardUnsub();
+    ledgerUnsub();
+    // trackersUnsub();
+    activeLogUnsub();
   });
 </script>
 
@@ -663,9 +744,9 @@
   <!-- end header-->
   <div slot="content" class="container board-container">
     {#if user}
-      {#if data.loading}
+      {#if !isReady.done}
         <div class="empty-notice">
-          <Spinner size="50" speed="750" color="#666" thickness="8" gap="40" />
+          <Spinner />
         </div>
       {:else}
         <main class="n-board h-100">

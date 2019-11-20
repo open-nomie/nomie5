@@ -5,7 +5,7 @@
   import { onMount } from "svelte";
 
   // Vendors
-  import Spinner from "svelte-spinner";
+  import Spinner from "./components/spinner/spinner.svelte";
   import { gestures } from "@composi/gestures";
 
   // Containers
@@ -244,8 +244,8 @@
     <Route path="/settings/export" component={ExportRoute} />
   </Router>
 {:else if $UserStore.signedIn == undefined}
-  <div class="empty-notice" style="height:100vh">
-    <Spinner size="60" speed="750" color="#319ed7" thickness="10" gap="40" />
+  <div class="empty-notice" style="height:calc(100vh - 75px)">
+    <Spinner />
   </div>
 {:else if $UserStore.signedIn === false}
   <SetupRoute />
