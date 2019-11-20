@@ -32,11 +32,13 @@
     activeSlide: 0,
     showNext: true,
     transitioning: false,
-    isTiny: false
+    isTiny: false,
+    redirecting: false
   };
 
   const methods = {
     blockstackLogin() {
+      data.redirecting = true;
       UserSession.redirectToSignIn();
     },
 
@@ -421,9 +423,15 @@
   {/if}
   <div class="filler" />
   {#if (data.activeSlide == 3 && $UserStore.storageType) || data.activeSlide != 3}
-    <button class="btn btn-clear " on:click={methods.next}>
-      <strong>NEXT</strong>
-    </button>
+    {#if !data.redirecting}
+      <button class="btn btn-clear " on:click={methods.next}>
+        <strong>NEXT</strong>
+      </button>
+    {:else}
+      <button class="btn btn-clear disabled" disabled="true">
+        <strong>Redirecting...</strong>
+      </button>
+    {/if}
   {/if}
 </div>
 <!-- 

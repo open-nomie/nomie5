@@ -39,8 +39,9 @@ export default {
   onReady(func) {
     return this.getEngine().onReady(func);
   },
-  init() {
-    return this.getEngine().init();
+  async init() {
+    let engineProfile = this.getEngine().init();
+    return engineProfile;
   },
   // Get a file
   async get(path) {

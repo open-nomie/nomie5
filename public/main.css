@@ -5520,7 +5520,7 @@ body.scrolling .mini-map {
   left: 16px;
   display: flex;
   margin: 0 !important;
-  border: none !important;
+  border: solid 1px var(--color-faded-2) !important;
   border-radius: 22px !important;
   box-shadow: var(--box-shadow-float) !important;
   height: 44px;

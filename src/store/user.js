@@ -75,16 +75,30 @@ const userInit = () => {
         });
       } else {
         // Storage is set - wait for it to be ready
+        Storage.onReady(() => {
+          console.log("Storage.onReady called");
+          methods
+            .bootstrap()
+            .then(() => {
+              update(d => {
+                d.ready = true;
+                d.signedIn = true;
+                d.profile = Storage.getProfile();
+                return d;
+              });
+            })
+            .catch(e => {
+              console.error(e.message);
+            });
+        }); // end storage on Ready
+
+        /**
+         * Initiate the Storage Engine
+         * This will do the work depending on if its
+         * blockstack (requiring a login) or localForage
+         */
         Storage.init();
-
-        // Storage.onReady(() => {
-        //   methods.setProfile(Storage.getProfile());
-        // }); // end storage on Ready
       }
-
-      // Storage.onReady(() => {
-      // 	methods.setProfile(Storage.getProfile());
-      // }); // end storage on Ready
 
       // set highlevel initialize marker
 
@@ -113,15 +127,10 @@ const userInit = () => {
      * Set Profile and Signin
      */
     setProfile(profile) {
+      console.log("user.setProfile()", profile);
+
       // Fire off the remaining bootstrap items.
-      methods.bootstrap().then(() => {
-        update(p => {
-          p.ready = true;
-          p.signedIn = true;
-          p.profile = profile;
-          return p;
-        });
-      });
+
       // Update store with new profile.
     },
     bootstrap() {
@@ -134,7 +143,8 @@ const userInit = () => {
           return methods.fireReady(state);
         })
         .catch(e => {
-          console.error(e);
+          console.error("bootstrap", e.message);
+          alert(e.message);
         });
     },
     loadTrackersAndBoards() {

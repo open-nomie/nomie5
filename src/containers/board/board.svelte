@@ -645,7 +645,8 @@
       <NToolbar>
         <i
           on:click={methods.enableBoards}
-          class="zmdi zmdi-tab clickable ml-2 text-xs text-solid" />
+          class="zmdi zmdi-tab clickable ml-2 text-xs"
+          style="opacity:0" />
         <div class="filler" />
         <img
           src="/images/nomie-words.svg"
