@@ -70,6 +70,11 @@
     opacity: 0.8;
     margin-top: 6px;
 
+    &.inherit {
+      font-size: inherit;
+      line-height: inherit;
+    }
+
     .tracker {
       position: relative;
       padding-right: 2px;
@@ -93,12 +98,11 @@
   }
 </style>
 
-{#if actual > 0}
-  <div class="n-note-textualized {className}">
-    {#each data.words as word}
-      {#if word.type === 'tracker'}
-        #{word.tracker.tag}{' '}
-      {:else}{word.value}{' '}{/if}
-    {/each}
-  </div>
-{/if}
+<div class="n-note-textualized {className}">
+  {#each data.words as word}
+    {#if word.type === 'tracker'}
+      <span class="tracker font-weight-bold">#{word.tracker.tag}</span>
+      {' '}
+    {:else}{word.value}{' '}{/if}
+  {/each}
+</div>

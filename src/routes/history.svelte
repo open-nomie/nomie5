@@ -517,7 +517,7 @@
 
     {#if loading}
       <div class="empty-notice">
-        <Spinner size="50" speed="750" color="#666" thickness="2" gap="40" />
+        <Spinner size="50" speed="750" color="#666" thickness="8" gap="40" />
       </div>
     {:else if state.showAllLocations}
       <NMap {locations} />

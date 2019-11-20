@@ -484,7 +484,7 @@
           {/if}
         </button>
       {:else}
-        <Spinner size="16" speed="750" color="#666" thickness="2" gap="40" />
+        <Spinner size="16" speed="750" color="#666" thickness="6" gap="40" />
         Loading...
       {/if}
     </div>

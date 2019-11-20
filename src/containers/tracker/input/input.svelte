@@ -211,7 +211,7 @@
         <button
           on:click={methods.onSave}
           class="btn btn-primary btn-lg "
-          aria-label="Save Report"
+          aria-label="Save this log"
           style="width:105px;">
           {saveLabel}
         </button>
@@ -220,7 +220,7 @@
       {#if data.tracker.type != 'timer'}
         <button
           on:click={methods.onSave}
-          aria-label="Save Report"
+          aria-label="Save this log"
           class="btn btn-primary btn-lg "
           style="width:105px;">
           {saveLabel}
@@ -248,6 +248,7 @@
       {#if (data.tracker.type !== 'timer' || data.value) && hideAdd !== true}
         <button
           on:click={methods.onAdd}
+          title="Add this to the note, but don't save yet"
           class="btn btn-clear btn-lg w-25 {tracker.started ? 'd-none' : ''}">
           <!-- local hack to make plus match with close-->
           <span class="zmdi zmdi-plus" />

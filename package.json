@@ -1,6 +1,6 @@
 {
   "name": "open-nomie",
-  "version": "4.5.1",
+  "version": "4.5.4",
   "homepage": "https://nomie.app",
   "bugs": {
     "url": "https://github.com/open-nomie/nomie/issues",
@@ -74,6 +74,7 @@
   "dependencies": {
     "d3-scale": "^3.0.0",
     "dayjs": "^1.8.14",
+    "dom-to-image-more": "^2.8.0",
     "jslib-html5-camera-photo": "^3.0.2-beta.0",
     "md5": "^2.2.1",
     "svelte-awesome": "^1.4.1",

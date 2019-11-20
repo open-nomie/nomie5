@@ -74,8 +74,18 @@
     savingTrackers: [], // to highlight trackers that are being saved
     addedTrackers: [], // Visually showing what trackers are in the notes field
     searching: false, // if the user is searching
-    searchTerm: null // the search term the user is typing
+    searchTerm: null, // the search term the user is typing
+    activeTip: 0, // index of the current tip to show
+    hideTips: false // temp hide - it will stop showing after 12 launches.
   };
+
+  let tips = [
+    "Press and hold a tracker button for more options",
+    "The History tab shows you everything you've done",
+    "Dark mode, location tracking, and export in Settings",
+    "Want to organize? Click the Nomie logo to enable Tabs",
+    "Want to auto import data?  Settings -> Nomie API"
+  ];
 
   // Wait for the User to be ready
   UserStore.onReady(() => {
@@ -124,7 +134,9 @@
     let masterHash = md5(mh.join(","));
 
     appTitle = `${
-      $BoardStore.active !== "all" ? $BoardStore.activeBoard.label : "All"
+      $BoardStore.active !== "all" && $BoardStore.activeBoard
+        ? $BoardStore.activeBoard.label
+        : "All"
     }`;
     // Compare hashes
     if (lastMasterHash != masterHash) {
@@ -163,6 +175,21 @@
     // When Board Subscribe
     onBoardChange(boardPayload) {
       _board = boardPayload;
+    },
+
+    nextTip() {
+      if (data.activeTip == tips.length - 1) {
+        data.activeTip = 0;
+      } else {
+        data.activeTip++;
+      }
+    },
+    previousTip() {
+      if (data.activeTip == 0) {
+        data.activeTip = tips.length - 1;
+      } else {
+        data.activeTip--;
+      }
     },
     // When user starts searching
     searchKeypress() {
@@ -494,6 +521,27 @@
     @include media-breakpoint-up(md) {
       padding-top: 20px;
     }
+
+    .new-user {
+      font-size: 0.7rem;
+      max-width: 280px;
+      border-radius: 30px;
+      background-color: transparent;
+      border: var(--modal-border);
+      color: var(--color-inverse-2);
+      margin: 10px auto;
+      padding: 6px 20px;
+      line-height: 115%;
+      flex-grow: 0;
+      .main {
+        text-align: center;
+      }
+      .btn {
+        &:active {
+          color: var(--color-inverse);
+        }
+      }
+    }
   }
   .n-add-button {
   }
@@ -542,6 +590,7 @@
       margin-right: 10px;
       max-width: 200px;
     }
+
     @include media-breakpoint-down(sm) {
       min-width: 300px;
       max-width: 500px;
@@ -594,14 +643,20 @@
       </div>
     {:else}
       <NToolbar>
+        <i
+          on:click={methods.enableBoards}
+          class="zmdi zmdi-tab clickable ml-2 text-xs"
+          style="opacity:0" />
         <div class="filler" />
-        <!-- Make the logo clickable - but prompt to enable tabs when they do-->
         <img
           src="/images/nomie-words.svg"
           aria-label="Nomie Logo"
           height="20"
           on:click={methods.enableBoards} />
         <div class="filler" />
+        <i
+          on:click={methods.enableBoards}
+          class="zmdi zmdi-tab clickable ml-2 text-xs text-faded-2" />
       </NToolbar>
     {/if}
   </div>
@@ -610,7 +665,7 @@
     {#if user}
       {#if data.loading}
         <div class="empty-notice">
-          <Spinner size="50" speed="750" color="#666" thickness="2" gap="40" />
+          <Spinner size="50" speed="750" color="#666" thickness="8" gap="40" />
         </div>
       {:else}
         <main class="n-board h-100">
@@ -667,6 +722,29 @@
               </button>
             {/if}
           </div>
+
+          <!-- Include User Tips - shit should be a component -->
+          {#if $UserStore.launchCount < 12 && data.hideTips !== true}
+            <div class="new-user tip n-row mb-3">
+              <button
+                class="text-md btn btn-clear btn-sm p-0 btn-icon flex-grow-off"
+                on:click={() => {
+                  data.hideTips = true;
+                }}>
+                <i class="text-md zmdi zmdi-close-circle" />
+              </button>
+              <div class="main filler m-1 ml-2">{tips[data.activeTip]}</div>
+              <div class="d-flex flex-row arrows">
+                <button
+                  class="btn btn-clear btn-icon zmdi px-1 zmdi-chevron-left"
+                  on:click={methods.previousTip} />
+                <button
+                  class="btn btn-clear btn-icon zmdi px-1 pl-2
+                  zmdi-chevron-right"
+                  on:click={methods.nextTip} />
+              </div>
+            </div>
+          {/if}
 
           <div class="board-actions">
 

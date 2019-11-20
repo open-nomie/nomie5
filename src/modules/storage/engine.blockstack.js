@@ -1,21 +1,92 @@
+import Logger from "../../utils/log/log";
+
 const userSession = new blockstack.UserSession();
+const console = new Logger("engine.blockstack");
+let askingForBlockstack = false;
 
 export default {
+  ready: false,
   authRequired: true,
   name: "Blockstack",
+  listeners: [],
   description: "Encrypted storage you control.",
+  init() {
+    /** Storage Init */
+    return new Promise((resolve, reject) => {
+      // Check if User signin is already pending
+      if (userSession.isSignInPending()) {
+        /**
+         * User Signin is Pending
+         * We will complete the signin, then
+         * refresh the page so everything loads
+         */
+        userSession
+          .handlePendingSignIn()
+          .then(() => {
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 120);
+          })
+          .catch(e => {
+            console.error("handlePending", e.message);
+          });
+      } else if (userSession.isUserSignedIn()) {
+        /**
+         * THe user is logged in
+         * Fire off the ready listeners
+         * and resolve the blockstack profile
+         */
+        this.fireReady();
+        resolve(this.getProfile());
+      } else {
+        /**
+         * Confirm if they want to signin with blockstack
+         * if not, we will clear out their localstorage
+         * and let them do it again
+         */
+        if (confirm("Sign-in/Register with Blockstack?")) {
+          this.login();
+        } else {
+          // Clear local storage
+          localStorage.clear();
+          // Show Onboarding
+          window.location.reload();
+        }
+      }
+    }); // end return promise
+  },
   onReady(func) {
+    if (this.ready) {
+      func();
+    } else {
+      if (this.listeners.indexOf(func) == -1) {
+        this.listeners.push(func);
+      }
+    }
+  },
+  fireReady() {
+    this.ready = true;
+    this.listeners.forEach(func => {
+      func();
+    });
+    this.listeners = [];
+  },
+  processLogin() {
     if (userSession.isSignInPending()) {
       userSession.handlePendingSignIn().then(userData => {
         window.location.href = "/";
       });
     } else if (userSession.isUserSignedIn()) {
       func();
-    } else {
+    } else if ((askingForBlockstack = false)) {
       // console.error('REDIRECTING TO BLOCKSTACK');
+      setTimeout(() => {
+        askingForBlockstack = true;
+      }, 1);
       if (confirm("Sign-in/Register with Blockstack?")) {
         this.login();
       } else {
+        askingForBlockstack = false;
         // Clear local storage
         localStorage.clear();
         // Show Onboarding

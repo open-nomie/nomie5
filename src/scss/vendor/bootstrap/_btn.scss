@@ -26,7 +26,7 @@ button:focus {
   }
   &:active {
     transition: all 0.2s ease-in-out;
-    transform: scale(0.9) !important;
+    transform: scale(0.97) !important;
   }
 }
 
@@ -69,12 +69,13 @@ button:focus {
   position: relative;
   padding: 12px 12px 16px;
   margin: 10px;
+  border: var(--modal-border);
   box-shadow: var(--box-shadow-float);
   color: var(--color-primary);
   transition: all 0.2s ease-in-out;
   &:hover {
     color: var(--color-primary);
-    transform: scale(1.12);
+    transform: scale(1.06);
   }
   .n-text.lg {
     font-weight: bold;
@@ -88,23 +89,9 @@ button:focus {
     opacity: 0.7;
   }
   &:after {
-    $height: 24px;
-    position: absolute;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    content: "✓";
-    top: -#{$height * 0.5};
-    left: -#{$height * 0.5};
-    width: $height;
-    height: $height;
-    background-color: var(--color-solid);
-    border-radius: $height * 0.5;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
   }
   &.active {
+    content: "✓";
     border: none;
     background-color: var(--color-primary);
 
@@ -112,6 +99,21 @@ button:focus {
       color: #fff !important;
     }
     &:after {
+      $height: 24px;
+      position: absolute;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      content: "";
+      top: -#{$height * 0.5};
+      left: -#{$height * 0.5};
+      width: $height;
+      height: $height;
+      background-color: var(--color-solid);
+      border-radius: $height * 0.5;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
       color: #fff;
       content: "✓";
       background-color: var(--color-primary-bright);

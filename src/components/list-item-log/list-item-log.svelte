@@ -66,7 +66,7 @@
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row time-row">
       <div class="time font-bold truncate">
-        {dayjs(displayLog.end).format(fullDate ? `ddd MMM D YYYY - ${timeFormat}` : timeFormat)}
+        {dayjs(displayLog.end).format(fullDate ? `MMM D ${timeFormat}` : timeFormat)}
       </div>
 
       <!-- If they have location-->

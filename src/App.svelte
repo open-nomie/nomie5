@@ -244,8 +244,8 @@
     <Route path="/settings/export" component={ExportRoute} />
   </Router>
 {:else if $UserStore.signedIn == undefined}
-  <div class="empty-notice">
-    <Spinner size="50" speed="750" color="#666" thickness="2" gap="40" />
+  <div class="empty-notice" style="height:100vh">
+    <Spinner size="60" speed="750" color="#319ed7" thickness="10" gap="40" />
   </div>
 {:else if $UserStore.signedIn === false}
   <SetupRoute />
