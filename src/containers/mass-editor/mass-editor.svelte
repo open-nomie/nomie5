@@ -222,7 +222,7 @@
                 size="30"
                 speed="750"
                 color="#ccc"
-                thickness="2"
+                thickness="6"
                 gap="40" />
             {/if}
           </span>
@@ -239,7 +239,7 @@
                 size="30"
                 speed="750"
                 color="#ccc"
-                thickness="2"
+                thickness="6"
                 gap="40" />
             {/if}
           </span>

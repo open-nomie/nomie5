@@ -110,7 +110,7 @@
           res = await Interact.confirm(
             "Sorry! One last time.. Really?",
             `You will basically be starting over from scratch... You good with that?`,
-            "Destroy Data"
+            "Destroy!"
           );
 
           if (res === true) {

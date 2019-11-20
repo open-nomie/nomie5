@@ -129,7 +129,7 @@
     </div>
     <div class="actions n-row">
       <button class="btn btn-clear" on:click={Interact.closeShareImage}>
-        <i class="zmdi zmdi-arrow-left" />
+        <i class="zmdi zmdi-close" />
       </button>
       <button class="btn btn-primary" on:click={methods.capture}>
         <i class="zmdi zmdi-download" />

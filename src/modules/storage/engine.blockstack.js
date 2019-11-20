@@ -1,21 +1,57 @@
 const userSession = new blockstack.UserSession();
-
+let askingForBlockstack = false;
+let listeners = [];
 export default {
   authRequired: true,
   name: "Blockstack",
   description: "Encrypted storage you control.",
+  init() {
+    if (userSession.isSignInPending()) {
+      userSession.handlePendingSignIn().then(userData => {
+        window.location.href = "/";
+      });
+    } else if (userSession.isUserSignedIn()) {
+    } else if ((askingForBlockstack = false)) {
+      // console.error('REDIRECTING TO BLOCKSTACK');
+
+      if (confirm("Sign-in/Register with Blockstack?")) {
+        this.login();
+      } else {
+        askingForBlockstack = false;
+        // Clear local storage
+        localStorage.clear();
+        // Show Onboarding
+        window.location.reload();
+      }
+    }
+  },
   onReady(func) {
+    if (listeners.indexOf(func) == -1) {
+      listeners.push(func);
+    }
+    listeners = [];
+  },
+  fireReady() {
+    listeners.forEach(func => {
+      func();
+    });
+  },
+  processLogin() {
     if (userSession.isSignInPending()) {
       userSession.handlePendingSignIn().then(userData => {
         window.location.href = "/";
       });
     } else if (userSession.isUserSignedIn()) {
       func();
-    } else {
+    } else if ((askingForBlockstack = false)) {
       // console.error('REDIRECTING TO BLOCKSTACK');
+      setTimeout(() => {
+        askingForBlockstack = true;
+      }, 1);
       if (confirm("Sign-in/Register with Blockstack?")) {
         this.login();
       } else {
+        askingForBlockstack = false;
         // Clear local storage
         localStorage.clear();
         // Show Onboarding

@@ -152,8 +152,8 @@
         position: relative;
 
         @include media-breakpoint-up(md) {
-          width: 300px;
-          max-width: 300px;
+          width: 220px;
+          max-width: 220px;
           margin-bottom: -70px;
           .filler {
             max-height: 20px;
@@ -217,7 +217,11 @@
           text-align: center;
         }
       }
-
+      @include media-breakpoint-up(md) {
+        .mobile-message {
+          display: none;
+        }
+      }
       .bottom {
         z-index: 0;
         flex-grow: 0;
@@ -260,10 +264,16 @@
     right: 0;
     background-color: var(--color-solid);
     padding: 10px 20px;
+    @include media-breakpoint-up(md) {
+      padding: 20px 30px;
+    }
     .btn {
-      color: var(--color-primary);
+      color: var(--color-primary-bright);
       &:hover {
         color: var(--color-primary);
+      }
+      @include media-breakpoint-up(md) {
+        font-size: 1.2rem;
       }
     }
   }
@@ -308,7 +318,7 @@
           </a>
         </strong>
       </p>
-      <p class="text-faded-2">
+      <p class="text-faded-2 mobile-message">
         For the best experience, hit share,
         <br />
         select "add to homescreen"
@@ -370,7 +380,7 @@
       style={data.isTiny ? 'max-height:200px' : 'max-height:250px !important'}>
       <div class="filler" />
       <h1>
-        {Lang.t('setup.pick-data-storage', 'Choose data storage location')}
+        {Lang.t('setup.pick-data-storage', `Choose your data's location`)}
       </h1>
       <div class="filler" />
     </div>
@@ -380,7 +390,7 @@
         on:click={() => {
           UserStore.setStorage('blockstack');
         }}>
-        <NText size="lg" className="text-primary">Encrypted in the Cloud</NText>
+        <NText size="lg">Encrypted in the Cloud</NText>
         <NText size="sm" className="">
           Access your data on multiple devices using end-to-end encryption.
           <strong>Powered by Blockstack.</strong>
@@ -391,7 +401,7 @@
         on:click={() => {
           UserStore.setStorage('local');
         }}>
-        <NText size="lg" className="text-primary">This Device Only</NText>
+        <NText size="lg">This Device Only</NText>
         <NText size="sm" className="">
           All data is stored unencrypted, but ONLY on your device.
         </NText>

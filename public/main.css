@@ -4844,7 +4844,7 @@ button:focus {
     border-radius: 1rem; }
   .btn:active {
     transition: all 0.2s ease-in-out;
-    transform: scale(0.9) !important; }
+    transform: scale(0.97) !important; }
 
 .btn-primary {
   background-color: var(--color-primary-bright); }
@@ -4877,12 +4877,13 @@ button:focus {
   position: relative;
   padding: 12px 12px 16px;
   margin: 10px;
+  border: var(--modal-border);
   box-shadow: var(--box-shadow-float);
   color: var(--color-primary);
   transition: all 0.2s ease-in-out; }
   .btn-content:hover {
     color: var(--color-primary);
-    transform: scale(1.12); }
+    transform: scale(1.06); }
   .btn-content .n-text.lg {
     font-weight: bold;
     font-size: 1rem !important;
@@ -4892,21 +4893,6 @@ button:focus {
     line-height: 1rem !important;
     font-weight: 400;
     opacity: 0.7; }
-  .btn-content:after {
-    position: absolute;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    content: "";
-    top: -12px;
-    left: -12px;
-    width: 24px;
-    height: 24px;
-    background-color: var(--color-solid);
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); }
   .btn-content.active {
     content: "✓";
     border: none;
@@ -4914,6 +4900,20 @@ button:focus {
     .btn-content.active .n-text {
       color: #fff !important; }
     .btn-content.active:after {
+      position: absolute;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      content: "";
+      top: -12px;
+      left: -12px;
+      width: 24px;
+      height: 24px;
+      background-color: var(--color-solid);
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
       color: #fff;
       content: "✓";
       background-color: var(--color-primary-bright); }
@@ -5085,7 +5085,8 @@ body {
   --box-shadow: 0px 8px 18px -10px rgba(0, 0, 0, 0.2);
   --box-shadow-float: 0 4px 8px rgba(0, 0, 0, 0.08),
     0 2px 4px rgba(0, 0, 0, 0.08), 0 0 2px rgba(0, 0, 0, 0.24);
-  --header-background: #fff; }
+  --header-background: #fff;
+  --modal-border: solid 1px rgba(255, 255, 255, 0.12); }
 
 body.test * {
   border: solid 1px rgba(255, 0, 0, 0.6) !important; }
@@ -5164,7 +5165,7 @@ body.theme-dark {
   --color-faded-1: rgba(255, 255, 255, 0.1);
   --color-faded-2: rgba(255, 255, 255, 0.2);
   --color-faded-3: rgba(255, 255, 255, 0.4);
-  --color-full-screen: rgba(0, 0, 0, 0.4);
+  --color-full-screen: rgba(0, 0, 0, 0.7);
   --color-background-selected: rgba($primaryBright, 0.82);
   --box-shadow: 0px 2px 2px rgba(255, 255, 255, 0.06),
     0px 8px 10px rgba(0, 0, 0, 0.3);
@@ -5172,6 +5173,7 @@ body.theme-dark {
     0px 4px 6px -1px rgba(0, 0, 0, 0.4);
   --box-shadow-float: 0px 2px 2px rgba(255, 255, 255, 0.06),
     0px 6px 10px -1px rgba(0, 0, 0, 0.4);
+  --modal-border: solid 1px rgba(255, 255, 255, 0.12);
   --color-translucent: rgba(0, 0, 0, 0.79); }
   body.theme-dark .n-item.border-bottom {
     border-bottom: solid 1px rgba(255, 255, 255, 0.15) !important; }

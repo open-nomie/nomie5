@@ -56,6 +56,7 @@ const userInit = () => {
       return Storage._storageType();
     },
     initialize() {
+      console.log("Initialize the user");
       // Set Dark or Light Mode
       // Lets get dark Mode
 
@@ -67,22 +68,18 @@ const userInit = () => {
         // If no storage type selected
         // they're not signed in - this should trigger onboarding
         // in App.svelte
-        document.querySelectorAll(".delete-on-app").forEach(d => {
-          // d.classList.add('deleted');
-          // setTimeout(() => {
-          // 	d.remove();
-          // }, 500);
-        });
         update(p => {
           p.signedIn = false;
-          p.launchCount = state.launchCount;
+          p.launchCount = 0;
           return p;
         });
       } else {
         // Storage is set - wait for it to be ready
-        Storage.onReady(() => {
-          methods.setProfile(Storage.getProfile());
-        }); // end storage on Ready
+        Storage.init();
+
+        // Storage.onReady(() => {
+        //   methods.setProfile(Storage.getProfile());
+        // }); // end storage on Ready
       }
 
       // Storage.onReady(() => {
@@ -106,7 +103,7 @@ const userInit = () => {
     },
     signout() {
       localStorage.clear();
-      Storage.clear();
+      // Storage.clear(); // no we shouldn't clear all storage.
       try {
         blockstack.signUserOut(window.location.origin);
       } catch (e) {}

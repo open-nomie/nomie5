@@ -73,7 +73,8 @@
       background-color: var(--color-darkest);
       color: var(--color-inverse-1);
       border-radius: 1.2rem;
-      box-shadow: 0px 10px 16px -6px rgba(0, 0, 0, 0.2);
+      border: var(--modal-border);
+      box-shadow: var(--box-shadow-float);
       padding: 10px;
       margin: 10px;
       display: flex;

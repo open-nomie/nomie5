@@ -499,7 +499,7 @@
               size="40"
               speed="750"
               color="#CCC"
-              thickness="2"
+              thickness="8"
               gap="40" />
           {:else if importing.trackers.done}
             Imported
@@ -521,7 +521,7 @@
               size="40"
               speed="750"
               color="#CCC"
-              thickness="2"
+              thickness="8"
               gap="40" />
           {:else if importing.boards.done}
             Imported

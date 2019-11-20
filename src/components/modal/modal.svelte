@@ -78,6 +78,7 @@
       }
     }
     &.type-fullscreen {
+      background-color: rgba(0, 0, 0, 0.95);
       .n-modal {
         height: 100vh;
         width: 100vw;
@@ -113,6 +114,7 @@
     }
   }
   .n-modal {
+    border: var(--modal-border);
     min-width: 320px;
     background-color: var(--color-solid);
     min-height: 200px;
@@ -124,8 +126,8 @@
     flex-direction: column;
     justify-content: stretch;
     align-items: stretch;
-    border: solid 1px var(--color-solid);
-    box-shadow: var(--box-shadow);
+    border: var(--modal-border);
+    box-shadow: var(--box-shadow-float);
     transition: all 0.2s ease-in-out;
     .n-modal-body {
       flex-grow: 1;

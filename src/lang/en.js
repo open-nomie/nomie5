@@ -121,8 +121,8 @@ export default {
             to sync more frequently`
     },
     tracker: {
-      "things-to-track": "Library",
-      "pick-at-least-one": "Pick at least one to continue...",
+      "things-to-track": "Tracker Library",
+      "pick-at-least-one": "Add at least one tracker to continue...",
       "install-tracker-question": "Install {{tracker}}?",
       "add-tracker": "Add Tracker",
       "edit-tracker": "Edit Tracker",
