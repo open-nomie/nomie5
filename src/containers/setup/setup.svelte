@@ -13,6 +13,8 @@
   import NText from "../../components/text/text.svelte";
   import Logo from "../../components/logo/logo.svelte";
 
+  import dayjs from "dayjs";
+
   // Local components
 
   // Stores
@@ -33,7 +35,8 @@
     showNext: true,
     transitioning: false,
     isTiny: false,
-    redirecting: false
+    redirecting: false,
+    timeFormat: "is12"
   };
 
   const methods = {
@@ -106,7 +109,7 @@
       flex-direction: column;
       height: 100%;
       transition: all 0.3s ease-in-out;
-      overflow-y: scroll;
+
       &.active {
       }
 
@@ -130,7 +133,6 @@
           max-height: 271px;
         }
         h1 {
-          font-size: 1.1rem !important;
           line-height: 116%;
           max-width: 500px;
           margin-left: auto;
@@ -233,7 +235,7 @@
         color: var(--color-inverse);
         flex-direction: column;
         padding: 0 16px;
-        overflow-y: scroll;
+
         h1 {
           font-size: 1.5rem;
           font-weight: bolder;
@@ -308,7 +310,9 @@
       </div>
     </div>
     <div class="bottom center-grow">
-      <h1>Track your mood, your sleep, your ... well, anything.</h1>
+      <h1 style="max-width:400px;">
+        Understand your mood, your sleep, your ... well, anything.
+      </h1>
       <p>
         <strong>
           Nomie is 100% private and open.
@@ -333,7 +337,6 @@
     {data.isTiny ? 'is-tiny' : 'is-normal'}
     {data.transitioning ? 'move' : ''}">
     <div class="top center-grow">
-
       <div class="bottom-pop phone-frame mt-2">
         <img
           class="image"
@@ -342,11 +345,10 @@
       </div>
     </div>
     <div class="bottom center-grow">
-      <h1>Monitor your progress.</h1>
-      <p>
-        Streaks, charts, maps, view it all. Tip: Jump into stats by
-        long-pressing a tracker button.
-      </p>
+      <h1 style="max-width:400px;">
+        Visualize your life with charts, streaks & maps.
+      </h1>
+      <p>Discover the patterns that make you, you.</p>
     </div>
   </section>
 
@@ -354,63 +356,71 @@
     class="slide slide-3 slide-welcome {data.activeSlide === 2 ? 'active' : 'hidden'}
     {data.isTiny ? 'is-tiny' : 'is-normal'}
     {data.transitioning ? 'move' : ''}">
-    <div class="top center-grow">
-
-      <div class="bottom-pop phone-frame mt-2">
-        <img
-          class="image"
-          aria-label="Nomie History view"
-          src="/images/onboard/nomie-history.png" />
-      </div>
+    <div class="top center-grow pt-3">
+      <div class="filler" />
+      <h1 class="mt-4">
+        {Lang.t('setup.choose-time-format', `Choose your time format...`)}
+      </h1>
+      <div class="filler" />
     </div>
     <div class="bottom center-grow">
-      <h1>Go back in time!</h1>
-      <p>
-        See when
-        <strong>& where</strong>
-        you did anything. Also, write daily notes to help remember what life was
-        like.
-      </p>
+      <button
+        class="btn-block my-3 btn btn-content {$UserStore.meta.is24Hour ? 'active' : ''}"
+        on:click={() => {
+          $UserStore.meta.is24Hour = true;
+          UserStore.saveMeta();
+        }}>
+        <div class="text-lg">{dayjs().format('HH:mm')}</div>
+      </button>
+      <button
+        class="btn-block my-3 btn btn-content {!$UserStore.meta.is24Hour ? 'active' : ''}"
+        on:click={() => {
+          $UserStore.meta.is24Hour = false;
+          UserStore.saveMeta();
+        }}>
+        <div class="text-lg">{dayjs().format('h:mm a')}</div>
+      </button>
     </div>
   </section>
 
   <section
     class="slide slide-4 slide-welcome {data.activeSlide === 3 ? 'active' : 'hidden'}
     {data.transitioning ? 'move' : ''}">
-    <div
-      class="top center-grow pt-3"
-      style={data.isTiny ? 'max-height:200px' : 'max-height:250px !important'}>
+    <div class="top center-grow pt-3" style="max-height:45vh;">
       <div class="filler" />
-      <h1>
-        {Lang.t('setup.pick-data-storage', `Choose your data's location`)}
+      <h1 class="mt-4">
+        {Lang.t('setup.pick-data-storage', `Choose your data's location...`)}
       </h1>
+      <p class="text-faded">You can change this later</p>
       <div class="filler" />
     </div>
-    <div class="bottom center-grow" style="max-height:50%">
+    <div class="bottom center-grow">
+      <div class="filler" />
       <button
-        class="mt-5 btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
+        class="btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
         on:click={() => {
           UserStore.setStorage('blockstack');
         }}>
-        <NText size="lg">Encrypted in the Cloud</NText>
-        <NText size="sm" className="">
+        <div class="text-md font-weight-bold text-inverse">
+          Encrypted in the Cloud
+        </div>
+        <div class="text-sm">
           Access your data on multiple devices using end-to-end encryption.
           <strong>Powered by Blockstack.</strong>
-        </NText>
+        </div>
       </button>
       <button
-        class="my-3 btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
+        class=" btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
         on:click={() => {
           UserStore.setStorage('local');
         }}>
-        <NText size="lg">This Device Only</NText>
-        <NText size="sm" className="">
+        <div class="text-md font-weight-bold text-inverse">
+          This Device Only
+        </div>
+        <div class="text-sm" className="">
           All data is stored unencrypted, but ONLY on your device.
-        </NText>
+        </div>
       </button>
-      <div class="text-center text-sm text-faded-2">
-        You can always switch storage types later.
-      </div>
       <div class="filler" />
     </div>
   </section>

@@ -103,7 +103,7 @@
       .card-body {
         flex-grow: 1;
         flex-shrink: 1;
-        overflow-y: scroll;
+        overflow-x: hidden;
       }
     }
     .btn-toolbar {

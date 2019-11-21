@@ -50,6 +50,8 @@
         pl.tag = tagValue.tag;
         pl.value = tagValue.value;
         pl.tracker = trackers.hasOwnProperty(pl.tag) ? trackers[pl.tag] : null;
+        pl.tracker =
+          pl.tracker instanceof Tracker ? pl.tracker : new Tracker(pl.tracker);
         return pl;
       });
     },

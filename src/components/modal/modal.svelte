@@ -134,6 +134,8 @@
       @include media-breakpoint-up(md) {
         padding: 20px;
       }
+      overflow-y: auto;
+      overflow-x: hidden;
       // border-radius: 1.2rem;
       z-index: 1;
     }

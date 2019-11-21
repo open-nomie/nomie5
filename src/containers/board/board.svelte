@@ -110,8 +110,9 @@
   let tips = [
     "Press and hold a tracker button for more options",
     "The History tab shows you everything you've done",
-    "Dark mode, location tracking, and export in Settings",
-    "Want to organize? Click the Nomie logo to enable Tabs",
+    "Check out the settings to change the theme",
+    "Enable auto location in the Settings for deeper data",
+    "Want to organize your trackers? Click the nomie logo above to enable Tabs",
     "Want to auto import data?  Settings -> Nomie API"
   ];
 
@@ -665,7 +666,7 @@
             methods.stopSearch();
             BoardStore.setActive(event.detail.id);
           }}>
-          {#if $BoardStore.boards.length > 2}
+          {#if $BoardStore.boards.length > 1}
             <button
               class="btn btn-clear btn-icon zmdi zmdi-sort-amount-desc"
               on:click={() => {

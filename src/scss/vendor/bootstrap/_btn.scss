@@ -63,12 +63,22 @@ button:focus {
 }
 
 .btn-content {
-  max-width: 300px;
+  width: 300px;
+
+  @include media-breakpoint-up(md) {
+    max-width: 450px;
+    width: 450px;
+  }
+  @include media-breakpoint-down(xs) {
+    max-width: 280px;
+    width: 280px;
+  }
   flex-direction: column;
   align-items: center;
   position: relative;
   padding: 12px 12px 16px;
   margin: 10px;
+  line-height: 112%;
   border: var(--modal-border);
   box-shadow: var(--box-shadow-float);
   color: var(--color-primary);
@@ -77,15 +87,15 @@ button:focus {
     color: var(--color-primary);
     transform: scale(1.06);
   }
-  .n-text.lg {
+  .text-md {
     font-weight: bold;
-    font-size: 1rem !important;
     margin-bottom: 6px;
   }
-  .n-text.sm {
+  .text-sm {
     font-size: 0.72rem !important;
     line-height: 1rem !important;
     font-weight: 400;
+    color: var(--color-faded-3);
     opacity: 0.7;
   }
   &:after {
@@ -94,7 +104,7 @@ button:focus {
     content: "✓";
     border: none;
     background-color: var(--color-primary);
-
+    color: #fff !important;
     .n-text {
       color: #fff !important;
     }

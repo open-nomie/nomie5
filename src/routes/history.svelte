@@ -462,7 +462,7 @@
                     {state.date.format('MMM D YYYY')}
                   </div>
                 </div>
-                <i class="zmdi zmdi-more mx-2 text-faded-3 text-xs" />
+                <i class="zmdi zmdi-calendar mx-2 text-faded-3 text-xs" />
               </div>
               <!-- end text middle -->
             </div>

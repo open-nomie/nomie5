@@ -15,8 +15,6 @@
     max-width: 400px;
     height: calc(100vh - 100px);
     max-height: 700px;
-    overflow: scroll;
-
     img {
       max-width: 100%;
       border-radius: 6px;
