@@ -119,6 +119,7 @@
     top: 0px;
     right: 0px;
     background-color: var(--color-solid);
+    color: var(--color-inverse);
     border-radius: 4px;
     box-shadow: var(--box-shadow-tight);
     z-index: 120;

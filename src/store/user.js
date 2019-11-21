@@ -115,6 +115,15 @@ const userInit = () => {
         return d;
       });
     },
+    resetLaunchCount() {
+      if (confirm("Reset Launch Count to zero?") === true) {
+        Storage.local.put("root/launch_count", 0);
+        update(d => {
+          d.launchCount = 0;
+          return d;
+        });
+      }
+    },
     signout() {
       localStorage.clear();
       // Storage.clear(); // no we shouldn't clear all storage.

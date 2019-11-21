@@ -5882,7 +5882,7 @@ body.scrolling .n-tracker-button {
     z-index: 1; }
   .n-tracker-button.saving {
     transition: all 0.2s ease-in-out;
-    border: solid 2px var(--color-primary-bright); }
+    border: solid 2px rgba(56, 168, 63, 0.5); }
   @media (min-width: 600px) {
     .n-tracker-button {
       width: 7.9rem;

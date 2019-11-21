@@ -2,39 +2,39 @@
   /**
    * Brace yourself - this is a massive file
    *
-   * It's usually the case with the main board of all versions of nomie
-   * eventually it might be cleaned up - but for now, its about getting things to work.
+   * Board / Home / MainView
+   * This monolith is basically the sum of all nomie.
+   * It should be broken down into more managable chunks over time.
+   * but for now, this is where all tracking and managing of your boards
+   * happens. God speed.
+   *
+   * Brnadon
    */
+
   // svelte
   import { navigate } from "svelte-routing";
   import { onMount, onDestroy } from "svelte";
 
   // Components
   import NTrackerButton from "./tracker-button.svelte";
-  import NTrackerEditor from "../tracker/editor/editor.svelte";
-  import NItem from "../../components/list-item/list-item.svelte";
   import NToolbar from "../../components/toolbar/toolbar.svelte";
   import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
-  import TrackerInput from "../tracker/input/input.svelte";
   import NModal from "../../components/modal/modal.svelte";
   import NHScroll from "../../components/h-scroller/h-scroller.svelte";
-  import Elephant from "../../components/elephant.svelte";
+  import LogoType from "../../components/logo/logo.svelte";
+  import LogoMark from "../../components/elephant.svelte";
+
   import CaptureLog from "../../components/capture-log.svelte";
+  import Spinner from "../../components/spinner/spinner.svelte";
 
   // Containers
   import AppLayout from "../../containers/layout/app.svelte";
   import BoardSortModal from "../../containers/board/board-sort.svelte";
 
-  // Vendors
-  // import Spinner from "svelte-spinner";
-  import Spinner from "../../components/spinner/spinner.svelte";
-
-  // Modules/Libs
+  // Modules/Libs/Utils
   import Tracker from "../../modules/tracker/tracker";
   import NomieLog from "../../modules/nomie-log/nomie-log";
   import StarterPacks from "../../modules/packs/starter-packs";
-
-  // Utils
   import math from "../../utils/math/math";
   import Logger from "../../utils/log/log";
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
@@ -58,25 +58,30 @@
   let today = {}; // holds today's activities
   let searchInput; // binding to dom element
   let foundTrackers = null; // for search results
-  // let lastLedgerStoreHash = null; // for making so svelte doesnt get loop happy
-  // let lastMasterHash = null; // for making sure svelte doesn't loop
   let boardTrackers = []; // Actual array to display to user
+
+  // Browser Title
   let appTitle = "(Loading)";
 
   // Data Storage
   let data = {
     selectedTracker: null, // populated when user tabs tracker
     showStartPacks: false, // shows the start library
-    loading: true, // show spinner
     savingTrackers: [], // to highlight trackers that are being saved
     addedTrackers: [], // Visually showing what trackers are in the notes field
     searching: false, // if the user is searching
     searchTerm: null, // the search term the user is typing
     activeTip: 0, // index of the current tip to show
-    hideTips: false, // temp hide - it will stop showing after 12 launches.
-    today: {}
+    hideTips: false // temp hide - it will stop showing after 12 launches.
   };
 
+  /**
+   * isReady
+   * Holder of the state for each req store
+   * boards, trackers and ledger need to be loaded
+   * before we can render the page. If the user is
+   * using blockstack, this could take a little bit
+   **/
   let isReady = {
     boards: false,
     trackers: false,
@@ -85,18 +90,22 @@
     checking: false
   };
 
+  // Check if it's ready
   const checkIfReady = requester => {
-    // console.log("✓?", requester);
     if (isReady.done == false) {
       if (isReady.boards && $TrackerStore && isReady.ledger) {
-        console.log("All are done, marking complete");
         isReady.done = true;
         setTimeout(() => {
-          methods.render();
+          methods.setBoardTrackers();
         }, 20);
       }
     }
   };
+
+  /**
+   * Add some tips to help new users
+   * This will stop showing after 12 nomie launches
+   **/
 
   let tips = [
     "Press and hold a tracker button for more options",
@@ -111,102 +120,26 @@
     console.log("User onReady");
     // Set user to kick off top view conditional.
     user = $UserStore; // Kick off
-    /**
-     * Setup Hooks
-     * These will fire on before safe, and onLogSave
-     */
+    // Setup Hooks These will fire on before safe, and onLogSave
     LedgerStore.hook("onBeforeSave", log => {
       data.savingTrackers = log.trackersArray().map(t => t.tag);
     }).hook("onLogSaved", log => {
+      // Clear saving states
       data.savingTrackers = [];
       data.searching = false;
       data.addedTrackers = [];
     });
   });
 
-  /**
-   * If the Ledger Changes
-   *
-   * A new event has been registered
-   * we need to stop loading, and populate today
-   * and reload the trackers (for reacting to value changes)
-   */
-  // $: if ($LedgerStore.hash !== lastLedgerStoreHash) {
-  //   lastLedgerStoreHash = $LedgerStore.hash;
-  //   setTimeout(() => {
-  //     today = $LedgerStore.today;
-  //     data.loading = false;
-  //     boardTrackers = boardTrackers || [];
-  //   }, 12);
-  // }
-
-  /**
-   * Boards, Trackers and Ledger
-   *
-   * If we have all three - we're ready to go.
-   * But we need to hash things so we don't get into a
-   * a reactive loop. Create a hash of the active board, plus
-   * tracker data - this way it reacts if someone edits a tracker too
-   */
-  // $: if ($BoardStore && $TrackerStore && $LedgerStore) {
-  //   // Create a hash for this compbo
-  //   let boardHash = ($BoardStore.activeBoard || {}).trackers || [].join(",");
-  //   let mh = [$BoardStore.active, boardHash, JSON.stringify(_trackers)];
-  //   let masterHash = md5(mh.join(","));
-
-  //   activeBoardId = ($BoardStore || {}).active ? $BoardStore.active : "all";
-  //   activeBoardLabel = ($BoardStore || {}).activeBoard
-  //     ? $BoardStore.activeBoard.label
-  //     : "All";
-
-  //   console.log("if BoardStore, TrackerStore and LedgerStore");
-
-  // activeBoardId = ($BoardStore || {}).active ? $BoardStore.active : "all";
-  // activeBoardLabel = ($BoardStore || {}).activeBoard
-  //   ? $BoardStore.activeBoard.label
-  //   : "All";
-
-  // appTitle = `${activeBoardLabel}`;
-  // // Compare hashes
-  // if (lastMasterHash != masterHash) {
-  //   // Update hash to new one.
-  //   lastMasterHash = masterHash;
-  //   // Are we on the All board?
-  //   if (activeBoardId == "all") {
-  //     // Get all trackers from TrackerStore, convert to array
-  //     boardTrackers = Object.keys($TrackerStore)
-  //       .map(tag => {
-  //         return $TrackerStore[tag] || new Tracker({ tag: tag });
-  //       })
-  //       .sort((a, b) => {
-  //         return a.label > b.label ? 1 : -1;
-  //       });
-  //   } else {
-  //     // Get Board Trackers from active Board
-  //     boardTrackers = (($BoardStore.activeBoard || {}).trackers || []).map(
-  //       tag => {
-  //         return $TrackerStore[tag] || new Tracker({ tag: tag });
-  //       }
-  //     );
-  //   }
-  // } // end making sure we don't get into a loop
-  // }
-
-  /**
-   * METHODS
-   */
+  // Component Methods
   const methods = {
     editBoard() {
       navigate(`/board/${$BoardStore.activeBoard.id}`);
     },
-    render() {
-      console.log("Render");
+    setBoardTrackers() {
       if ($BoardStore.active == "all") {
-        /**
-         * Build boardTrackers
-         * Get all trackers from TrackerStore, convert to array
-         **/
         appTitle = "All";
+        // Convert trackers to array
         boardTrackers = Object.keys($TrackerStore)
           .map(tag => {
             return $TrackerStore[tag] || new Tracker({ tag: tag });
@@ -218,6 +151,7 @@
       } else {
         // Get Board Trackers from active Board
         appTitle = ($BoardStore.activeBoard || {}).label || "";
+        // Get trackers from activeBoard
         boardTrackers = (($BoardStore.activeBoard || {}).trackers || []).map(
           tag => {
             return $TrackerStore[tag] || new Tracker({ tag: tag });
@@ -242,7 +176,6 @@
     // When user starts searching
     searchKeypress() {
       // Find trackers matching query
-
       foundTrackers = Object.keys($TrackerStore)
         .map(tag => {
           return $TrackerStore[tag];
@@ -365,7 +298,6 @@
     async trackerTapped(tracker) {
       // Set selected tracker to this one.
       data.selectedTracker = tracker;
-
       // If it's a plain old tick tracker
       if (tracker.type === "tick") {
         // Just add the tag to the note
@@ -404,10 +336,18 @@
         }
         // If it's a note (combined trackers)
       } else if (tracker.type === "note") {
-        // Extract Trackers
+        /**
+         * Note Tracker Type
+         * This is a note tracker type and will
+         * ask the user to provide inputs for
+         * each type of note
+         **/
+
+        // Get Trackers from the Note
         let trackerTags = extractor(tracker.note);
 
-        // Add Tag to the note first...
+        // Add Note Tracker Tag to the note first...
+        // This way we can look up some stats on it too
         ActiveLogStore.addTag(tracker.tag);
 
         // Create array of items to pass to promise step
@@ -430,7 +370,6 @@
             $Interact.trackerInput.show = false;
             $Interact.trackerInput.tracker = null;
             $Interact.trackerInput.onInteract = null;
-
             // Wait for timeout
             setTimeout(() => {
               // Show Tracker Input for this given tracker
@@ -466,7 +405,6 @@
           value = math.round(math.average(today[tracker.tag].values));
         }
       }
-      console.log("Get Tracker Value", value);
       return value ? NomieUOM.format(value, tracker.uom) : null;
     },
     /**
@@ -541,18 +479,35 @@
 
   let boardUnsub;
   let ledgerUnsub;
-  let trackersUnsub;
   let activeLogUnsub;
 
   onMount(() => {
     // Wait for changes to happen to the boardstore
     boardUnsub = BoardStore.subscribe(boardPayload => {
-      // console.log("Board Store Subscribe");
-      // methods.onBoardChange(boardPayload);
+      console.log("Board Payload", boardPayload);
       isReady.boards = true;
       checkIfReady("boardPayload");
+      // If the board is ready, and it changes
+      // Refire the setBoard Trackers for the new changes
+      if (isReady.done) {
+        methods.setBoardTrackers();
+      }
+      /**
+       * Board Check
+       * If this board doesn't exist (user clears localstorage, switching data store, imports etc)
+       * then we should set it to the ALL board
+       **/
+      if (
+        boardPayload.boards.map(b => b.id).indexOf(boardPayload.active) == -1 &&
+        boardPayload.active !== "all"
+      ) {
+        setTimeout(() => {
+          BoardStore.setActive("all");
+        }, 100);
+      }
     });
 
+    // Ledger Store Change
     ledgerUnsub = LedgerStore.subscribe(ledgerPayload => {
       // If it's not saving
       if (!ledgerPayload.saving) {
@@ -566,24 +521,21 @@
       }
     });
 
-    /**
-     * Active Log Change
-     * When the log changes, extract the trackers so we can
-     * make them pulse
-     */
-
+    // Active Log Change
     activeLogUnsub = ActiveLogStore.subscribe(log => {
+      /**
+       * Active Log Change
+       * When the log changes, extract the trackers so we can
+       * make them pulse
+       */
       data.addedTrackers = new NomieLog(log).trackersArray().map(t => t.tag);
     });
-    setTimeout(() => {
-      LedgerStore.getToday();
-    }, 20);
+    LedgerStore.getToday();
   }); // end onMount
 
   onDestroy(() => {
     boardUnsub();
     ledgerUnsub();
-    // trackersUnsub();
     activeLogUnsub();
   });
 </script>
@@ -729,11 +681,7 @@
           class="zmdi zmdi-tab clickable ml-2 text-xs"
           style="opacity:0" />
         <div class="filler" />
-        <img
-          src="/images/nomie-words.svg"
-          aria-label="Nomie Logo"
-          height="20"
-          on:click={methods.enableBoards} />
+        <LogoType size={20} on:click={methods.enableBoards} />
         <div class="filler" />
         <i
           on:click={methods.enableBoards}
@@ -805,7 +753,7 @@
           </div>
 
           <!-- Include User Tips - shit should be a component -->
-          {#if $UserStore.launchCount < 12 && data.hideTips !== true}
+          {#if $UserStore.launchCount < 12 && data.hideTips !== true && $BoardStore.active == 'all'}
             <div class="new-user tip n-row mb-3">
               <button
                 class="text-md btn btn-clear btn-sm p-0 btn-icon flex-grow-off"

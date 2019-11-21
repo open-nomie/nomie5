@@ -98,11 +98,13 @@
   }
 </style>
 
-<div class="n-note-textualized {className}">
-  {#each data.words as word}
-    {#if word.type === 'tracker'}
-      <span class="tracker font-weight-bold">#{word.tracker.tag}</span>
-      {' '}
-    {:else}{word.value}{' '}{/if}
-  {/each}
-</div>
+{#if actual}
+  <div class="n-note-textualized {className}">
+    {#each data.words as word}
+      {#if word.type === 'tracker'}
+        <span class="tracker font-weight-bold">#{word.tracker.tag}</span>
+        {' '}
+      {:else}{word.value}{' '}{/if}
+    {/each}
+  </div>
+{/if}
