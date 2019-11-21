@@ -64,7 +64,7 @@
 
 <Modal
   type={$TrackerLibrary.first ? 'fullscreen' : 'fullscreen'}
-  show={$TrackerLibrary.show}
+  show={true}
   className="library-modal"
   title={Lang.t('tracker.things-to-track')}>
 

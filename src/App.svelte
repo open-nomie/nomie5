@@ -34,6 +34,7 @@
   import { Interact } from "./store/interact"; //  global alerts, popmenus, confirms, etc
   import { BoardStore } from "./store/boards"; // board state  and methods
   import { TrackerStore } from "./store/trackers"; // tracker state and methods
+  import { TrackerLibrary } from "./store/tracker-library";
   import { CommanderStore } from "./store/commander"; // commander - /?note=hi&lat=35&lng=-81.32
   import { NomieAPI } from "./store/napi";
   // import { TrackerLibrary } from './store/tracker-library';
@@ -73,23 +74,6 @@
    **/
 
   const appVersion = "APP_VERSION";
-  const checkForUpdates = () => {
-    fetch("./version.json")
-      .then(res => {
-        return res.json();
-      })
-      .then(payload => {
-        if (payload.version != appVersion) {
-          // stop localhost from getting hit.
-          if (appVersion !== `APP${"_"}VERSION`) {
-            let conf = confirm("A new update has been released. Update?");
-            if (conf === true) {
-              window.location.href = window.location.href;
-            }
-          }
-        }
-      });
-  };
 
   // Not sure if theese are needed
   export let name = "nomie";
@@ -122,7 +106,6 @@
         document.body.classList.add(`theme-${theme}`);
       }
       methods.hideSplashScreen();
-      //checkForUpdates();
     }
   };
 
@@ -255,5 +238,7 @@
 {#if $Interact.stats.activeTag}
   <StatsRoute id={$Interact.stats.activeTag} />
 {/if}
-<LibraryModal />
+{#if $TrackerLibrary.show}
+  <LibraryModal />
+{/if}
 <Interactions />

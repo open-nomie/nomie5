@@ -128,6 +128,9 @@
       }
     }
   }
+  .footer .btn {
+    border-radius: 50px;
+  }
 </style>
 
 <NModal

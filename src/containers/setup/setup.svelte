@@ -391,11 +391,29 @@
       <h1 class="mt-4">
         {Lang.t('setup.pick-data-storage', `Choose your data's location...`)}
       </h1>
-      <p class="text-faded">You can change this later</p>
+      <p class="text-faded-3">
+        You can always change this later.
+        <a href="https://blockstack.com" class="text-white" target="_blank">
+          Learn more about Blockstack
+        </a>
+      </p>
       <div class="filler" />
     </div>
     <div class="bottom center-grow">
       <div class="filler" />
+
+      <button
+        class=" btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
+        on:click={() => {
+          UserStore.setStorage('local');
+        }}>
+        <div class="text-md font-weight-bold text-inverse">
+          On this Device Only
+        </div>
+        <div class="text-sm" className="">
+          All data is stored unencrypted, but ONLY on your device.
+        </div>
+      </button>
       <button
         class="btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
         on:click={() => {
@@ -406,19 +424,7 @@
         </div>
         <div class="text-sm">
           Access your data on multiple devices using end-to-end encryption.
-          <strong>Powered by Blockstack.</strong>
-        </div>
-      </button>
-      <button
-        class=" btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
-        on:click={() => {
-          UserStore.setStorage('local');
-        }}>
-        <div class="text-md font-weight-bold text-inverse">
-          This Device Only
-        </div>
-        <div class="text-sm" className="">
-          All data is stored unencrypted, but ONLY on your device.
+          <strong>Powered by Blockstack .</strong>
         </div>
       </button>
       <div class="filler" />

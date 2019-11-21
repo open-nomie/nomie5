@@ -5935,6 +5935,7 @@ body.scrolling .n-tracker-button {
     display: flex;
     justify-content: space-between;
     position: absolute;
+    z-index: 20;
     top: 0.4rem;
     left: 6px;
     right: 6px;
