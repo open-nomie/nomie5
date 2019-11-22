@@ -83,6 +83,7 @@
           </div>
         {/if}
         <TrackerButton
+          hideMore={true}
           {tracker}
           on:click={() => {
             if (!(TrackerStore.tagExists(tracker.tag) || installed.hasOwnProperty(tracker.tag))) {

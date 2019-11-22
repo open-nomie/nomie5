@@ -11,13 +11,14 @@
   import Logo from "../logo/logo.svelte";
   import dayjs from "dayjs";
   import domtoimage from "dom-to-image-more";
+  import regex from "../../utils/regex";
 
   let boxDom;
   let noteDom;
   let trackers = {};
   let ready = false;
   let theme = "default";
-  let themes = ["default", "pink", "blue", "dark", "green"];
+  let themes = ["default", "pink", "terminal", "blue", "dark", "green"];
 
   const methods = {
     randomTheme() {
@@ -43,17 +44,18 @@
         });
     },
     getIcons() {
-      console.log("Get trackers", trackers);
       let logTrackers = $Interact.shareImage.log.trackersArray();
-      return logTrackers.map(tagValue => {
-        let pl = {};
-        pl.tag = tagValue.tag;
-        pl.value = tagValue.value;
-        pl.tracker = trackers.hasOwnProperty(pl.tag) ? trackers[pl.tag] : null;
-        pl.tracker =
-          pl.tracker instanceof Tracker ? pl.tracker : new Tracker(pl.tracker);
-        return pl;
-      });
+      return logTrackers
+        .map(tagValue => {
+          let pl = {};
+          pl.tag = tagValue.tag;
+          pl.value = tagValue.value;
+          pl.tracker = trackers.hasOwnProperty(pl.tag)
+            ? trackers[pl.tag]
+            : null;
+          return pl;
+        })
+        .filter(pl => pl.tracker);
     },
     fontSize(str) {
       if (str.length < 40) {
@@ -72,17 +74,25 @@
         return 0.7;
       }
     },
-    formatNote() {},
+    noteLength() {
+      let note = $Interact.shareImage.log.note
+        .replace(new RegExp(regex.tag, "gi"), "")
+        .trim();
+      return note.length;
+    },
     resize() {
-      boxDom.style.height = `${boxDom.offsetWidth}px`;
-      noteDom.style.fontSize = `${methods.fontSize(
-        $Interact.shareImage.log.note
-      )}rem`;
-      ready = true;
+      if (boxDom.style) {
+        boxDom.style.height = `${boxDom.offsetWidth}px`;
+        noteDom.style.fontSize = `${methods.fontSize(
+          $Interact.shareImage.log.note
+        )}rem`;
+        ready = true;
+      }
     }
   };
+  let trackUnsub;
   onMount(() => {
-    TrackerStore.subscribe(tkrs => {
+    trackUnsub = TrackerStore.subscribe(tkrs => {
       trackers = tkrs;
       ready = true;
       setTimeout(() => {
@@ -90,10 +100,15 @@
       }, 100);
     });
   });
+  onDestroy(() => {
+    trackUnsub();
+  });
 </script>
 
 {#if ready}
-  <div class="share-image-component theme-{theme}">
+  <div
+    class="share-image-component theme-{theme} trackers-{methods.getIcons().length}
+    {methods.noteLength() ? 'has-note' : 'no-note'}">
     <div
       class="share-image-wrapper"
       bind:this={boxDom}
@@ -107,11 +122,11 @@
         </div>
       </div>
       <div class="note" bind:this={noteDom}>
-        {#if $Interact.shareImage.log.note.length}
+        {#if methods.noteLength()}
           <NNoteTextualizer
             note={$Interact.shareImage.log.note}
             {trackers}
-            className={'inherit'} />
+            className={'inherit mt-0'} />
         {/if}
       </div>
       <div class="trackers">
@@ -130,11 +145,16 @@
       <Logo size="20" />
     </div>
     <div class="actions n-row">
-      <button class="btn btn-clear" on:click={Interact.closeShareImage}>
+      <button
+        class="btn btn-clear clickable"
+        on:click={Interact.closeShareImage}>
         <i class="zmdi zmdi-close" />
       </button>
-      <button class="btn btn-primary" on:click={methods.capture}>
+      <button class="btn btn-primary clickable" on:click={methods.capture}>
         <i class="zmdi zmdi-download" />
+      </button>
+      <button class="btn btn-clear clickable" on:click={methods.randomTheme}>
+        <i class="zmdi zmdi-refresh" />
       </button>
     </div>
   </div>

@@ -5160,11 +5160,11 @@ body.theme-dark {
   --tabs-background: #000;
   --tracker-background: rgb(5, 5, 5);
   --color-darkest: #000;
-  --color-bg: #1e2125;
-  --color-solid: #111;
-  --color-solid-1: #222;
-  --color-solid-2: #333;
-  --color-solid-3: #444;
+  --color-bg: rgb(30, 30, 30);
+  --color-solid: rgb(15, 15, 15);
+  --color-solid-1: rgb(25, 25, 25);
+  --color-solid-2: rgb(35, 35, 35);
+  --color-solid-3: rgb(45, 45, 45);
   --color-inverse: #fff;
   --color-inverse-1: #eee;
   --color-inverse-2: #ccc;
@@ -5981,6 +5981,7 @@ body.scrolling .n-tracker-button {
     z-index: 2; }
 
 .share-image-component {
+  font-family: Roboto;
   background-color: rgba(0, 0, 0, 0.8);
   position: fixed;
   top: 0;
@@ -5997,18 +5998,45 @@ body.scrolling .n-tracker-button {
     border-radius: 5px;
     position: relative;
     background-color: var(--color-solid);
+    color: var(--color-inverse);
     width: 95vw;
     max-width: 400px;
     min-width: 300px;
     flex-grow: 0;
     flex-shrink: 0;
     display: flex;
-    flex-direction: column; }
+    flex-direction: column;
+    overflow: hidden; }
+  .share-image-component.no-note .note {
+    display: none; }
+  .share-image-component.no-note .trackers {
+    flex-grow: 1;
+    overflow: hidden;
+    flex-wrap: wrap;
+    align-items: center; }
+  .share-image-component.no-note.trackers-1 .trackers .emoji-value {
+    transform: scale(2.5);
+    top: -20px;
+    width: 100%; }
+    .share-image-component.no-note.trackers-1 .trackers .emoji-value .label {
+      width: 90%; }
+  .share-image-component.no-note.trackers-2 .trackers {
+    align-items: center;
+    padding-top: 0; }
+  .share-image-component.no-note.trackers-2 .trackers .emoji-value {
+    transform: scale(1.8);
+    min-width: 50% !important; }
+    .share-image-component.no-note.trackers-2 .trackers .emoji-value .label {
+      width: 100%; }
+    .share-image-component.no-note.trackers-2 .trackers .emoji-value:first-child {
+      margin-top: -80px; }
+    .share-image-component.no-note.trackers-2 .trackers .emoji-value:last-child {
+      margin-top: 80px; }
   .share-image-component .date {
     padding: 16px;
     line-height: 100%;
     font-weight: 500;
-    color: var(--color-solid-3); }
+    color: var(--color-inverse-2); }
     .share-image-component .date .day-date {
       font-weight: 700;
       font-size: 0.9rem; }
@@ -6022,6 +6050,7 @@ body.scrolling .n-tracker-button {
     line-height: 110%;
     flex-grow: 1;
     padding: 0px 16px;
+    word-spacing: 0.09rem;
     align-items: center; }
     .share-image-component .note .n-note-textualized {
       flex-grow: 1;
@@ -6046,8 +6075,7 @@ body.scrolling .n-tracker-button {
       flex-shrink: 0;
       border-radius: 30px;
       font-size: 24px;
-      border: solid 1px #fff;
-      background-color: transparent;
+      border: none;
       color: #fff; }
   .share-image-component .trackers {
     overflow: scroll;
@@ -6066,7 +6094,7 @@ body.scrolling .n-tracker-button {
       justify-content: center; }
       .share-image-component .trackers .emoji-value .label {
         font-size: 0.7rem;
-        line-height: 100%;
+        line-height: 120%;
         width: 65px;
         white-space: nowrap;
         overflow: hidden;
@@ -6080,12 +6108,14 @@ body.scrolling .n-tracker-button {
         white-space: nowrap;
         position: absolute;
         top: 0%;
+        font-weight: bold;
+        color: var(--color-inverse);
         margin-left: 1.1rem;
         font-size: 0.6rem;
         font-weight: 500;
         padding: 2px 5px;
         border-radius: 10px;
-        background-color: rgba(255, 255, 255, 0.8);
+        background-color: var(--color-translucent);
         border: solid 1px rgba(0, 0, 0, 0.1); }
   .share-image-component .nomie-logo {
     position: absolute;
@@ -6124,19 +6154,19 @@ body.scrolling .n-tracker-button {
       color: #000; }
     .share-image-component.theme-blue .nomie-logo path {
       fill: #fff; }
-  .share-image-component.theme-dark {
+  .share-image-component.theme-dark, .share-image-component.theme-terminal {
     --color-solid: #000; }
-    .share-image-component.theme-dark .note {
-      font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    .share-image-component.theme-dark .note, .share-image-component.theme-terminal .note {
       color: #fff;
       text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3); }
-      .share-image-component.theme-dark .note .tracker {
+      .share-image-component.theme-dark .note .tracker, .share-image-component.theme-terminal .note .tracker {
         color: rgba(255, 255, 255, 0.89); }
     .share-image-component.theme-dark .label,
-    .share-image-component.theme-dark .date {
+    .share-image-component.theme-dark .date, .share-image-component.theme-terminal .label,
+    .share-image-component.theme-terminal .date {
       color: #fff;
       opacity: 0.6; }
-    .share-image-component.theme-dark .nomie-logo path {
+    .share-image-component.theme-dark .nomie-logo path, .share-image-component.theme-terminal .nomie-logo path {
       fill: var(--color-primary-bright); }
 
 .input-model {

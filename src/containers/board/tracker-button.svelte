@@ -19,6 +19,7 @@
   export let className = undefined;
   export let disabled = undefined;
   export let hoursUsed = [];
+  export let hideMore = false;
 
   // Define Dispatch
   const dispatch = createEventDispatcher();
@@ -81,10 +82,12 @@
       <span class="value left">{value}</span>
     {/if}
     <div class="filler" />
-    <button
-      class="btn btn-xs btn-round zmdi zmdi-more text-faded-3 clickable py-1
-      px-2"
-      on:click={methods.moreClicked} />
+    {#if !hideMore}
+      <button
+        class="btn btn-xs btn-round zmdi zmdi-more text-faded-1 clickable py-1
+        px-2"
+        on:click={methods.moreClicked} />
+    {/if}
   </header>
   {#if tracker.started}
     <div class="center countdown">
