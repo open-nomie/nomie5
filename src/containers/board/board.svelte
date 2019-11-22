@@ -481,11 +481,18 @@
   let boardUnsub;
   let ledgerUnsub;
   let activeLogUnsub;
+  let trackerUnsub;
+  let lastTrackers;
 
   onMount(() => {
+    trackerUnsub = TrackerStore.subscribe(trackerStore => {
+      setTimeout(() => {
+        boardTrackers = boardTrackers;
+      }, 120);
+    });
+
     // Wait for changes to happen to the boardstore
     boardUnsub = BoardStore.subscribe(boardPayload => {
-      console.log("Board Payload", boardPayload);
       isReady.boards = true;
       checkIfReady("boardPayload");
       // If the board is ready, and it changes
@@ -538,6 +545,7 @@
     boardUnsub();
     ledgerUnsub();
     activeLogUnsub();
+    trackerUnsub();
   });
 </script>
 
