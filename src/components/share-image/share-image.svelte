@@ -19,6 +19,9 @@
   let ready = false;
   let theme = "default";
   let themes = ["default", "pink", "terminal", "blue", "dark", "green"];
+  let downloading = false;
+  let generated = null;
+  let generating = false;
 
   const methods = {
     randomTheme() {
@@ -28,20 +31,33 @@
       } else {
         theme = themes[0];
       }
+      methods.generate();
     },
-    capture() {
-      domtoimage
-        .toPng(boxDom)
-        .then(function(dataUrl) {
-          var link = document.createElement("a");
-          link.download = `nomie-${dayjs().format("YYYY-DD-MM-H-mm")}.png`;
-          link.href = dataUrl;
-          link.click();
-          Interact.closeShareImage();
-        })
-        .catch(function(error) {
-          console.error("oops, something went wrong!", error);
-        });
+    async generate() {
+      generating = true;
+      setTimeout(async () => {
+        generated = await domtoimage.toPng(boxDom);
+        generating = false;
+      }, 10);
+    },
+    async capture() {
+      downloading = true;
+
+      setTimeout(() => {
+        domtoimage
+          .toPng(boxDom)
+          .then(function(dataUrl) {
+            var link = document.createElement("a");
+            link.download = `nomie-${dayjs().format("YYYY-DD-MM-H-mm")}.png`;
+            link.href = dataUrl;
+            link.click();
+            downloading = false;
+            Interact.closeShareImage();
+          })
+          .catch(function(error) {
+            console.error("oops, something went wrong!", error);
+          });
+      }, 120);
     },
     getIcons() {
       let logTrackers = $Interact.shareImage.log.trackersArray();
@@ -97,6 +113,9 @@
       ready = true;
       setTimeout(() => {
         methods.resize();
+        setTimeout(() => {
+          methods.generate();
+        }, 10);
       }, 100);
     });
   });
@@ -105,14 +124,20 @@
   });
 </script>
 
-{#if ready}
+{#if ready && $Interact.shareImage.log}
   <div
-    class="share-image-component theme-{theme} trackers-{methods.getIcons().length}
+    class="share-image-component {downloading ? 'downloading' : ''} theme-{theme}
+    trackers-{methods.getIcons().length}
     {methods.noteLength() ? 'has-note' : 'no-note'}">
+
     <div
       class="share-image-wrapper"
       bind:this={boxDom}
       on:click={methods.randomTheme}>
+
+      {#if generated && !generating}
+        <!-- <img class="image-holder" alt="Download me!" src={generated} /> -->
+      {/if}
       <div class="date">
         <div class="day-date">
           {dayjs($Interact.shareImage.log.end).format(`MMMM D YYYY`)}

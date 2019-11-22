@@ -1,8 +1,4 @@
 .share-image-component {
-  * {
-    // border: solid 1px rgba(red, 0.5) !important;
-  }
-  font-family: Roboto;
   background-color: rgba(0, 0, 0, 0.8);
   position: fixed;
   top: 0;
@@ -13,8 +9,26 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+
   align-items: center;
   padding: 16px;
+
+  &.downloading {
+    // .share-image-wrapper {
+    //   transform: scale(2);
+    //   overflow: visible;
+    // }
+  }
+
+  .image-holder,
+  .generated {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: block;
+  }
+
   .share-image-wrapper {
     border-radius: 5px;
     position: relative;
@@ -35,15 +49,35 @@
       display: none;
     }
     .trackers {
-      flex-grow: 1;
+      flex-grow: 0;
+      height: 100%;
       overflow: hidden;
       flex-wrap: wrap;
       align-items: center;
+      align-content: center;
+      justify-content: center;
+      margin-top: -40px;
+      .emoji-value {
+        margin: 5px;
+        min-width: calc(30% - 5px);
+        height: auto;
+        .label {
+          font-size: 1rem;
+          width: auto;
+          line-height: 115%;
+          margin-top: 6px;
+        }
+        .emoji {
+          font-size: 2.5rem;
+          @include media-breakpoint-up(md) {
+            font-size: 2.8rem;
+          }
+        }
+      }
     }
     &.trackers-1 {
       .trackers .emoji-value {
         transform: scale(2.5);
-        top: -20px;
         width: 100%;
         .label {
           width: 90%;
@@ -51,22 +85,9 @@
       }
     }
     &.trackers-2 {
-      .trackers {
-        align-items: center;
-        padding-top: 0;
-      }
       .trackers .emoji-value {
-        transform: scale(1.8);
-        min-width: 50% !important;
-        .label {
-          width: 100%;
-        }
-        &:first-child {
-          margin-top: -80px;
-        }
-        &:last-child {
-          margin-top: 80px;
-        }
+        transform: scale(1.5);
+        min-width: 40% !important;
       }
     }
   } // end no-note
@@ -188,6 +209,9 @@
         color: darken(saturate($green, 20%), 20%);
       }
     }
+    .label {
+      color: #fff;
+    }
     .date {
       color: #000;
     }
@@ -206,6 +230,9 @@
       .tracker {
         color: darken(saturate(pink, 20%), 20%);
       }
+    }
+    .label {
+      color: $red;
     }
     .date {
       color: #000;
