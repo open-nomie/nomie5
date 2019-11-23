@@ -84,6 +84,11 @@
       view: "month",
       subview: "chart"
     };
+    setTimeout(() => {
+      if (statBodyDom) {
+        state.chartHeight = statBodyDom.offsetHeight * 0.9;
+      }
+    }, 500);
     domVisible = true;
     state.date = dayjs();
     state.tag = $Interact.stats.activeTag;
@@ -93,11 +98,6 @@
       $TrackerStore[$Interact.stats.activeTag] ||
       new Tracker({ tag: $Interact.stats.activeTag });
     methods.load();
-    setTimeout(() => {
-      if (statBodyDom) {
-        state.chartHeight = statBodyDom.offsetHeight * 0.9;
-      }
-    }, 120);
   } else if (!$Interact.stats.activeTag && state.tag) {
     /**
      * Fake onDestory()
@@ -179,15 +179,17 @@
       let points = state.stats.results[view].chart.points || [];
       return points;
     },
+    /**
+     * Generate the Stat Chart Points
+     * for the compare tracker
+     */
     getVsChartPoints() {
-      console.log("getvsChartPoints");
       return new Promise((resolve, reject) => {
-        console.log("Is there a compare", { ...state.compare });
         setTimeout(() => {
-          console.log("Is there a compare now?", { ...state.compare });
           let view = state.view == "year" ? "year" : "month";
-          state.vsChartPoints =
-            state.compare.stats.results[view].chart.points || [];
+          state.vsChartPoints = state.compare.stats.results
+            ? state.compare.stats.results[view].chart.points
+            : null;
         }, 100);
       });
       // return [];
@@ -232,9 +234,11 @@
           methods.getStats(state.compare.tracker).then(compareRes => {
             state.compare.stats = compareRes.stats;
             state.compare.rows = compareRes.rows;
-            if (statBodyDom) {
-              state.chartHeight = statBodyDom.offsetHeight * 0.47;
-            }
+            setTimeout(() => {
+              if (statBodyDom) {
+                state.chartHeight = statBodyDom.offsetHeight * 0.47;
+              }
+            }, 120);
             methods.getVsChartPoints();
             refreshing = false;
           });
@@ -276,20 +280,20 @@
       methods.load();
     },
     compare() {
-      console.log("compare()");
       Interact.selectTracker().then(tracker => {
-        console.log("Tracker selected");
-        state.compare.tracker = tracker;
-        methods.getStats(state.compare.tracker).then(compareRes => {
-          state.compare.stats = compareRes.stats;
-          state.compare.rows = compareRes.rows;
-          if (statBodyDom) {
-            state.chartHeight = statBodyDom.offsetHeight * 0.47;
-          }
-          methods.getVsChartPoints();
-        });
+        setTimeout(() => {
+          state.compare.tracker = tracker;
+          methods.load();
+        }, 20);
       });
     },
+    // methods.getStats(state.compare.tracker).then(compareRes => {
+    //   state.compare.stats = compareRes.stats;
+    //   state.compare.rows = compareRes.rows;
+    //   if (statBodyDom) {
+    //     state.chartHeight = statBodyDom.offsetHeight * 0.47;
+    //   }
+    // });
     removeCompare() {
       state.compare.stats = null;
       state.compare.tracker = null;
@@ -711,7 +715,6 @@
             labels={methods.getChartLabels()}
             points={methods.getChartPoints()}
             on:tap={event => {
-              console.log('Event', event);
               let newDate;
               state.date = dayjs(event.detail.point.date);
               methods.refresh();
@@ -730,7 +733,6 @@
               labels={methods.getChartLabels()}
               points={state.vsChartPoints}
               on:tap={event => {
-                console.log('Event', event);
                 let newDate;
                 state.date = dayjs(event.detail.point.date);
                 methods.refresh();

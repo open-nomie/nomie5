@@ -32,7 +32,6 @@
   let lastPoints = null;
   $: if (points && points !== lastPoints) {
     lastPoints = points;
-    console.log(`${title}`, lastPoints);
     if (points.length) {
       let values = points.map(point => point.y);
 
