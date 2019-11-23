@@ -7,5 +7,5 @@
   {size}
   speed="750"
   color="#319ed7"
-  thickness={Math.round(size * 0.2) + ''}
+  thickness={Math.round(size * 0.26) + ''}
   gap="40" />

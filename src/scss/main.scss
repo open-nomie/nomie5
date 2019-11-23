@@ -30,6 +30,26 @@
 // 	@include darkmode();
 // }
 
+.autocomplete-results {
+  background-color: var(--color-solid-1);
+  margin: 2px;
+  border-radius: 2px;
+  .tracker-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .btn {
+    flex-grow: 1;
+    flex-shrink: 1;
+    box-shadow: var(--box-shadow-tight);
+    background-color: var(--color-solid);
+    margin: 4px;
+    font-size: 0.82rem;
+    padding: 5px 6px;
+  }
+}
+
 .input-model {
   flex-grow: 1;
   height: 100%;

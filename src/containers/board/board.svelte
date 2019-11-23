@@ -41,6 +41,8 @@
   import extractor from "../../utils/extract-trackers/extract-trackers";
   import promiseStep from "../../utils/promise-step/promise-step";
 
+  import TrackerInputer from "../../modules/tracker/tracker-inputer";
+
   //Stores
   import { ActiveLogStore } from "../../store/active-log";
   import { LedgerStore } from "../../store/ledger";
@@ -299,92 +301,100 @@
     async trackerTapped(tracker) {
       // Set selected tracker to this one.
       data.selectedTracker = tracker;
-      // If it's a plain old tick tracker
-      if (tracker.type === "tick") {
-        // Just add the tag to the note
-        ActiveLogStore.addTag(tracker.tag);
 
-        // If it's one_tap - then save it
-        if (tracker.one_tap === true) {
-          // Make the note
-          let note = $ActiveLogStore.note + "";
+      // Inserting new TrackerInputer
+      let inputer = new TrackerInputer(tracker);
 
-          // Account for Positivity calculation
-          // This is for display only, the scores are always
-          // dynamically calculated
-          $ActiveLogStore.score = ActiveLogStore.calculateScore(
-            note,
-            $TrackerStore
-          );
-          try {
-            // Save the log
-            await LedgerStore.saveLog($ActiveLogStore);
+      inputer.get().then(value => {
+        console.log("Got the value", value);
+      });
 
-            // Let user Know it was saved
-            Interact.toast(`Saved ${note}`);
+      // // If it's a plain old tick tracker
+      // if (tracker.type === "tick") {
+      //   // Just add the tag to the note
+      //   ActiveLogStore.addTag(tracker.tag);
 
-            // Clear Log
-            ActiveLogStore.clear();
-          } catch (e) {
-            // Catch any problems
-            Interact.alert("Error", e.message);
-          }
-          // Refresh View
-          setTimeout(() => {
-            data.savingTrackers = [];
-            data = data;
-          }, 100);
-        }
-        // If it's a note (combined trackers)
-      } else if (tracker.type === "note") {
-        /**
-         * Note Tracker Type
-         * This is a note tracker type and will
-         * ask the user to provide inputs for
-         * each type of note
-         **/
+      //   // If it's one_tap - then save it
+      //   if (tracker.one_tap === true) {
+      //     // Make the note
+      //     let note = $ActiveLogStore.note + "";
 
-        // Get Trackers from the Note
-        let trackerTags = extractor(tracker.note);
+      //     // Account for Positivity calculation
+      //     // This is for display only, the scores are always
+      //     // dynamically calculated
+      //     $ActiveLogStore.score = ActiveLogStore.calculateScore(
+      //       note,
+      //       $TrackerStore
+      //     );
+      //     try {
+      //       // Save the log
+      //       await LedgerStore.saveLog($ActiveLogStore);
 
-        // Add Note Tracker Tag to the note first...
-        // This way we can look up some stats on it too
-        ActiveLogStore.addTag(tracker.tag);
+      //       // Let user Know it was saved
+      //       Interact.toast(`Saved ${note}`);
 
-        // Create array of items to pass to promise step
-        let items = Object.keys(trackerTags).map(tag => {
-          return {
-            tracker: $TrackerStore[tag] || new Tracker({ tag: tag }),
-            value: trackerTags[tag].value // not being used
-          };
-        });
+      //       // Clear Log
+      //       ActiveLogStore.clear();
+      //     } catch (e) {
+      //       // Catch any problems
+      //       Interact.alert("Error", e.message);
+      //     }
+      //     // Refresh View
+      //     setTimeout(() => {
+      //       data.savingTrackers = [];
+      //       data = data;
+      //     }, 100);
+      //   }
+      //   // If it's a note (combined trackers)
+      // } else if (tracker.type === "note") {
+      //   /**
+      //    * Note Tracker Type
+      //    * This is a note tracker type and will
+      //    * ask the user to provide inputs for
+      //    * each type of note
+      //    **/
 
-        /**
-         * Promise Step
-         * Loop over each of the items { tracker: [object], value: value }
-         * If this is a multiple tracker request we will show each of the
-         * tracker inputs one at a time using the promise step function
-         */
-        promiseStep(items, item => {
-          return new Promise((resolve, reject) => {
-            // testing if going direct works
-            $Interact.trackerInput.show = false;
-            $Interact.trackerInput.tracker = null;
-            $Interact.trackerInput.onInteract = null;
-            // Wait for timeout
-            setTimeout(() => {
-              // Show Tracker Input for this given tracker
-              // then return the promise and move on to the next
-              Interact.trackerInput(item.tracker, item.value)
-                .then(resolve)
-                .catch(reject);
-            }, 12);
-          });
-        });
-      } else {
-        // It's an input of some sort
-        Interact.trackerInput(tracker);
-      } // end if tick or others
+      //   // Get Trackers from the Note
+      //   let trackerTags = extractor(tracker.note);
+
+      //   // Add Note Tracker Tag to the note first...
+      //   // This way we can look up some stats on it too
+      //   ActiveLogStore.addTag(tracker.tag);
+
+      //   // Create array of items to pass to promise step
+      //   let items = Object.keys(trackerTags).map(tag => {
+      //     return {
+      //       tracker: $TrackerStore[tag] || new Tracker({ tag: tag }),
+      //       value: trackerTags[tag].value // not being used
+      //     };
+      //   });
+
+      //   /**
+      //    * Promise Step
+      //    * Loop over each of the items { tracker: [object], value: value }
+      //    * If this is a multiple tracker request we will show each of the
+      //    * tracker inputs one at a time using the promise step function
+      //    */
+      //   promiseStep(items, item => {
+      //     return new Promise((resolve, reject) => {
+      //       // testing if going direct works
+      //       $Interact.trackerInput.show = false;
+      //       $Interact.trackerInput.tracker = null;
+      //       $Interact.trackerInput.onInteract = null;
+      //       // Wait for timeout
+      //       setTimeout(() => {
+      //         // Show Tracker Input for this given tracker
+      //         // then return the promise and move on to the next
+      //         Interact.trackerInput(item.tracker, item.value)
+      //           .then(resolve)
+      //           .catch(reject);
+      //       }, 12);
+      //     });
+      //   });
+      // } else {
+      //   // It's an input of some sort
+      //   Interact.trackerInput(tracker);
+      // } // end if tick or others
     },
     /**
      * Get Tracker Value
