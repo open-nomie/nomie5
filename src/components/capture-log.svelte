@@ -157,14 +157,20 @@
         let last = value.charAt(value.length - 1);
         if (last == " ") {
           state.autocompleteResults = null;
-        } else {
+        } else if (value.length) {
           let arr = value.split(" ");
           let tag = arr[arr.length - 1];
           state.cursorIndex = arr.length - 1;
           if (tag.charAt(0) === "#" && tag.length > 1) {
             state.partialTag = tag;
             state.autocompleteResults = methods.checkForAutocomplete(tag);
+          } else {
+            state.partialTag = null;
+            state.autocompleteResults = null;
           }
+        } else {
+          state.partialTag = null;
+          state.autocompleteResults = null;
         }
       }
       methods.checkTextareaSize();
