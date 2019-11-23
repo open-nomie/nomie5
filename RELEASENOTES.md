@@ -1,7 +1,5 @@
 # v.4.6 - November 24 2019
 
-This one brings a lot of clean ups, a handful of bugs.
-
 ## Enhancements
 
 - Auto Complete when writing notes
