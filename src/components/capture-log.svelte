@@ -63,7 +63,8 @@
     score: 0,
     showCustomDate: false,
     autocompleteResults: null,
-    cursorIndex: null
+    cursorIndex: null,
+    partialTag: null
   };
 
   // TODO: Add a media/photo type of thing that can be added to a log..
@@ -134,12 +135,10 @@
     autocompleteTracker(tracker) {
       let inputer = new TrackerInputer(tracker);
       inputer
-        .get()
+        .get({ replace: state.partialTag })
         .then(() => {
           // Replace the original search tag
-          let note = $ActiveLogStore.note.split(" ");
-          note = note.filter((word, index) => index !== state.cursorIndex);
-          ActiveLogStore.updateNote(note.join(" ") + " ");
+          state.partialTag = null;
           state.cursorIndex = null;
           state.autocompleteResults = null;
           if (textarea) {
@@ -163,6 +162,7 @@
           let tag = arr[arr.length - 1];
           state.cursorIndex = arr.length - 1;
           if (tag.charAt(0) === "#" && tag.length > 1) {
+            state.partialTag = tag;
             state.autocompleteResults = methods.checkForAutocomplete(tag);
           }
         }
@@ -209,7 +209,7 @@
     // add space to the end.
     setTimeout(() => {
       if (textarea) {
-        textarea.value = textarea.value + " ";
+        textarea.value = textarea.value;
       }
       // adjust textarea size
       methods.checkTextareaSize();

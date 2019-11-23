@@ -3,7 +3,7 @@ import { LedgerStore } from "../../store/ledger";
 import { Interact } from "../../store/interact";
 import extractor from "../../utils/extract-trackers/extract-trackers";
 import Tracker from "./tracker";
-
+import PromiseStep from "../../utils/promise-step/promise-step";
 export default class TrackerInputer {
   constructor(tracker) {
     this.tracker = tracker;
@@ -25,19 +25,32 @@ export default class TrackerInputer {
     });
   }
 
-  async get() {
+  async get(options) {
+    options = options || {};
+
     // If it's a plain old tick tracker
     return new Promise((resolve, reject) => {
+      let finished = payload => {
+        resolve(payload);
+      };
+      let finishedWithError = err => {
+        console.log("error", err);
+        reject(err);
+      };
+      if (options.replace) {
+        setTimeout(() => {
+          ActiveLogStore.removeStr(options.replace);
+        }, 120);
+      }
       if (this.tracker.type === "tick") {
         // Just add the tag to the note
         ActiveLogStore.addTag(this.tracker.tag);
-
         // If it's one_tap - then save it
         if (this.tracker.one_tap === true) {
           // Make the note
-          let note = $ActiveLogStore.note + "";
+          //   let note = $ActiveLogStore.note + "";
         }
-        resolve();
+        finished();
         // If it's a note (combined trackers)
       } else if (this.tracker.type === "note") {
         /**
@@ -68,7 +81,7 @@ export default class TrackerInputer {
          * If this is a multiple tracker request we will show each of the
          * tracker inputs one at a time using the promise step function
          */
-        promiseStep(items, item => {
+        PromiseStep(items, item => {
           return new Promise((resolve, reject) => {
             // testing if going direct works
             //   $Interact.trackerInput.show = false;
@@ -84,13 +97,13 @@ export default class TrackerInputer {
             }, 12);
           });
         })
-          .then(resolve)
-          .catch(reject);
+          .then(finished)
+          .catch(finishedWithError);
       } else {
         // It's an input of some sort
         Interact.trackerInput(this.tracker)
-          .then(resolve)
-          .catch(reject);
+          .then(finished)
+          .catch(finishedWithError);
       } // end if tick or others
     }); // end return promise
   }

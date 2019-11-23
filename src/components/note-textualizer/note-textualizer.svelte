@@ -51,7 +51,7 @@
         word = word.trim();
         if (word.substr(0, 1) === "#") {
           noteArray.push(methods.parse_tracker_str(word));
-        } else {
+        } else if (word.length) {
           noteArray.push({ type: "string", value: word });
           actual++;
         }
