@@ -84,7 +84,7 @@
     <div class="filler" />
     {#if !hideMore}
       <button
-        class="btn btn-xs btn-round zmdi zmdi-more text-faded-1 clickable py-1
+        class="btn btn-xs btn-round zmdi zmdi-more text-faded-2 clickable py-1
         px-2"
         on:click={methods.moreClicked} />
     {/if}

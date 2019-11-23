@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Nov 23 2019 11:50 am
+Generated Sat Nov 23 2019 2:24 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -19,7 +19,6 @@ Generated Sat Nov 23 2019 11:50 am
 - **src/scss/components/_list-item.scss**
    - TODO: see if making main overflow hidden was a bad idea
 - **src/routes/stats.svelte**
-   - Current hack - tap the emoji in the title - TODO: Make compare work again
    - TODO: Needs to be refactored and cleaned up
 - **src/routes/stats-og.svelte**
    - TODO: Needs to be refactored and cleaned up

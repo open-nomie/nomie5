@@ -16,6 +16,7 @@
   export let labels = [];
   export let height = 200;
   export let width = 500;
+  export let title = "";
   export let color = "#4d84a1";
   export let points;
   export let activeIndex;
@@ -24,12 +25,14 @@
 
   const xTicks = labels;
   let yTicks = [0, 5, 10, 20];
-  const padding = { top: 20, right: 15, bottom: 20, left: 25 };
+  const padding = { top: 30, right: 15, bottom: 25, left: 25 };
   const dispatch = createEventDispatcher();
 
   let finalPoints = [];
-
-  $: if (points) {
+  let lastPoints = null;
+  $: if (points && points !== lastPoints) {
+    lastPoints = points;
+    console.log(`${title}`, lastPoints);
     if (points.length) {
       let values = points.map(point => point.y);
 
@@ -113,20 +116,32 @@
   .x-axis .tick text {
     text-anchor: middle;
   }
-
-  .active-item {
+  .title {
     position: absolute;
     top: 0px;
-    right: 0px;
-    background-color: var(--color-solid);
+    left: 0px;
+    font-size: 0.67rem;
     color: var(--color-inverse);
-    border-radius: 4px;
-    box-shadow: var(--box-shadow-tight);
+  }
+  .active-item {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    // background-color: var(--color-solid);
+    color: var(--color-inverse);
+    // border-radius: 4px;
+    // box-shadow: var(--box-shadow-tight);
     z-index: 120;
     padding: 4px 10px;
-    font-size: 0.7rem;
+    font-size: 0.67rem;
     display: flex;
     opacity: 0.6;
+    .value {
+      color: #fff;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      padding: 0 6px;
+    }
     label {
       margin: 0;
       margin-right: 6px;
@@ -147,6 +162,9 @@
 
 {#if points}
   <div class="n-chart" bind:clientWidth={width} bind:clientHeight={height}>
+    {#if title}
+      <div class="title">{title}</div>
+    {/if}
     <svg height={`${height}px`}>
       <!-- y axis -->
       <g class="axis y-axis" transform="translate(0,{padding.top})">
@@ -192,8 +210,12 @@
     </svg>
     {#if activeIndex && points[activeIndex - 1]}
       <div class="active-item">
-        <label>{points[activeIndex - 1].date.format('ddd MMM D')}</label>
-        <div class="value">{yFormat(points[activeIndex - 1].y)}</div>
+        <label>
+          {points[activeIndex - 1].date.format(points.length == 12 ? 'MMM YYYY' : 'ddd MMM D')}
+        </label>
+        <div class="value" style="background-color:{color}">
+          {yFormat(points[activeIndex - 1].y)}
+        </div>
       </div>
     {/if}
   </div>
