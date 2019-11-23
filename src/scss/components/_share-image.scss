@@ -149,7 +149,7 @@
     }
   }
   .trackers {
-    overflow: scroll;
+    overflow-y: auto;
     display: flex;
     max-width: 100%;
     padding: 16px 16px 6px;

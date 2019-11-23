@@ -6092,7 +6092,7 @@ body.scrolling .n-tracker-button {
       border: none;
       color: #fff; }
   .share-image-component .trackers {
-    overflow: scroll;
+    overflow-y: auto;
     display: flex;
     max-width: 100%;
     padding: 16px 16px 6px; }
