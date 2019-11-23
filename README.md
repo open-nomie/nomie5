@@ -1,8 +1,8 @@
-# Nomie 4.5
+# Nomie 4.6
 
 ## Open Source Mood Tracker / Life Tracker / Data Journal
 
-![](https://shareking.s3.amazonaws.com/nomie4-screens.png?2)
+![](https://shareking.s3.amazonaws.com/nomie-header.png?2)
 
 ## Try it out
 

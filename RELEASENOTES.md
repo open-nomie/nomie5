@@ -1,19 +1,22 @@
-# v.4.6 - Nomve 21 2019
+# v.4.6 - Nomve 24 2019
 
 This one brings a lot of clean ups, a handful of bugs.
 
 ## Enhancements
 
+- Auto Complete when writing notes
 - Log sharing - generate an image from a log
 - Time + metric/imperial selection during on boarding
 - default OZ trackers will become ML trackers if using metric
 - Desktop enhancements; scrollbar removal, esc support for alerts
 - Added Tips
+- Board Refactoring / making it easier to understand
+- Compare improvements
 
 ## Bugs
 
 - Blockstack redirect bug
--
+- ALL THE SCROLLBARS [#87]
 
 # v.4.5 - Nov 15 2019
 
