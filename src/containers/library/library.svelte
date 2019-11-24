@@ -8,8 +8,26 @@
   import { Lang } from "../../store/lang";
   import { TrackerLibrary } from "../../store/tracker-library";
   import { Interact } from "../../store/interact";
+  import { UserStore } from "../../store/user";
 
   let installed = {}; // hol der for anything installed during the opening
+
+  let trackers = [];
+  let ready = false;
+
+  UserStore.onReady(() => {
+    ready = true;
+  });
+
+  $: if ($TrackerLibrary && !trackers.length && ready) {
+    trackers = $TrackerLibrary.trackers.map(tracker => {
+      if (tracker.uom == "oz" && $UserStore.meta.is24Hour === true) {
+        tracker.uom = "milliliter";
+        tracker.default = "350";
+      }
+      return tracker;
+    });
+  }
 </script>
 
 <style lang="scss" type="text/scss">
@@ -46,7 +64,7 @@
 
 <Modal
   type={$TrackerLibrary.first ? 'fullscreen' : 'fullscreen'}
-  show={$TrackerLibrary.show}
+  show={true}
   className="library-modal"
   title={Lang.t('tracker.things-to-track')}>
 
@@ -57,7 +75,7 @@
   {/if}
 
   <div class="grid">
-    {#each $TrackerLibrary.trackers as tracker, index (tracker.tag)}
+    {#each trackers as tracker, index (tracker.tag)}
       <div class="tracker-option">
         {#if TrackerStore.tagExists(tracker.tag) || installed.hasOwnProperty(tracker.tag)}
           <div class="badge badge-green">
@@ -65,6 +83,7 @@
           </div>
         {/if}
         <TrackerButton
+          hideMore={true}
           {tracker}
           on:click={() => {
             if (!(TrackerStore.tagExists(tracker.tag) || installed.hasOwnProperty(tracker.tag))) {

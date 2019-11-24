@@ -1,7 +1,7 @@
 <script>
   import NToolbar from "../toolbar/toolbar.svelte";
   import NItem from "../list-item/list-item.svelte";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount, onDestroy } from "svelte";
   import { Lang } from "../../store/lang";
   const dispatch = createEventDispatcher();
 
@@ -13,6 +13,16 @@
   const methods = {
     backgroundClicked(event) {}
   };
+  let escListener;
+  $: if (show) {
+    escListener = document.addEventListener("keyup", evt => {
+      if (evt.key == "Escape") {
+        dispatch("close");
+      }
+    });
+  } else {
+    escListener = document.removeEventListener("keyup", () => {});
+  }
 </script>
 
 <style lang="scss" type="text/scss">
@@ -63,7 +73,8 @@
       background-color: var(--color-darkest);
       color: var(--color-inverse-1);
       border-radius: 1.2rem;
-      box-shadow: 0px 10px 16px -6px rgba(0, 0, 0, 0.2);
+      border: var(--modal-border);
+      box-shadow: var(--box-shadow-float);
       padding: 10px;
       margin: 10px;
       display: flex;
@@ -92,7 +103,7 @@
       .card-body {
         flex-grow: 1;
         flex-shrink: 1;
-        overflow-y: scroll;
+        overflow-x: hidden;
       }
     }
     .btn-toolbar {

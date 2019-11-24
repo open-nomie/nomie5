@@ -19,7 +19,7 @@
   import NNoteTextualizer from "../components/note-textualizer/note-textualizer.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
   import NModal from "../components/modal/modal.svelte";
-  import Spinner from "svelte-spinner";
+  import Spinner from "../components/spinner/spinner.svelte";
   import NDatePicker from "../components/date-picker/date-picker.svelte";
   import LogItem from "../components/list-item-log/list-item-log.svelte";
   import NDatePill from "../components/date-pill/date-pill.svelte";
@@ -462,7 +462,7 @@
                     {state.date.format('MMM D YYYY')}
                   </div>
                 </div>
-                <i class="zmdi zmdi-more mx-2 text-faded-3 text-xs" />
+                <i class="zmdi zmdi-calendar mx-2 text-faded-3 text-xs" />
               </div>
               <!-- end text middle -->
             </div>
@@ -517,7 +517,7 @@
 
     {#if loading}
       <div class="empty-notice">
-        <Spinner size="50" speed="750" color="#666" thickness="2" gap="40" />
+        <Spinner />
       </div>
     {:else if state.showAllLocations}
       <NMap {locations} />

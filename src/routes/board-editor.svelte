@@ -2,6 +2,7 @@
   //Vendors
   import { navigate, Router, Route } from "svelte-routing";
   import { tap } from "@sveltejs/gestures";
+  import { onMount, onDestroy } from "svelte";
 
   // Utils
   import Logger from "../utils/log/log";
@@ -85,8 +86,9 @@
         "You can recreate it later, but it's not super easy."
       ).then(res => {
         if (res === true) {
+          data.refreshing = true;
           BoardStore.deleteBoard($BoardStore.activeBoard.id).then(() => {
-            window.location.href = "/";
+            navigate("/");
           });
         }
       });
@@ -148,10 +150,22 @@
     }
   };
 
-  BoardStore.subscribe(b => {
-    trackers = $BoardStore.activeBoard.trackers.map(tag => {
-      return $TrackerStore[tag] || new Tracker({ tag: tag });
+  let boardUnsub;
+
+  onMount(() => {
+    boardUnsub = BoardStore.subscribe(b => {
+      if (b.activeBoard) {
+        trackers = b.activeBoard.trackers.map(tag => {
+          return $TrackerStore[tag] || new Tracker({ tag: tag });
+        });
+      } else {
+        navigate("/");
+      }
     });
+  });
+
+  onDestroy(() => {
+    boardUnsub();
   });
 
   UserStore.onReady(() => {

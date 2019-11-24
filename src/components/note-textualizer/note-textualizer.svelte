@@ -51,7 +51,7 @@
         word = word.trim();
         if (word.substr(0, 1) === "#") {
           noteArray.push(methods.parse_tracker_str(word));
-        } else {
+        } else if (word.length) {
           noteArray.push({ type: "string", value: word });
           actual++;
         }
@@ -69,6 +69,11 @@
     line-height: 1.5rem;
     opacity: 0.8;
     margin-top: 6px;
+
+    &.inherit {
+      font-size: inherit;
+      line-height: inherit;
+    }
 
     .tracker {
       position: relative;
@@ -93,11 +98,12 @@
   }
 </style>
 
-{#if actual > 0}
+{#if actual}
   <div class="n-note-textualized {className}">
     {#each data.words as word}
       {#if word.type === 'tracker'}
-        #{word.tracker.tag}{' '}
+        <span class="tracker font-weight-bold">#{word.tracker.tag}</span>
+        {' '}
       {:else}{word.value}{' '}{/if}
     {/each}
   </div>

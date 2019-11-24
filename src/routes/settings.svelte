@@ -110,7 +110,7 @@
           res = await Interact.confirm(
             "Sorry! One last time.. Really?",
             `You will basically be starting over from scratch... You good with that?`,
-            "Destroy Data"
+            "Destroy!"
           );
 
           if (res === true) {
@@ -530,7 +530,7 @@
                 Happy Data, LLC
               </a>
             </div>
-            <div class="text-sm pb-2">
+            <div class="text-sm pb-2" on:click={UserStore.resetLaunchCount}>
               Launch Count {$UserStore.launchCount}
             </div>
           </NItem>

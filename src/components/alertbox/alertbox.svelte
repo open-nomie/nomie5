@@ -12,11 +12,16 @@
   export let onInteract = null;
 
   let hasSlot = false;
+  let escListener;
   $: if (show) {
     hasSlot = arguments[1].$$slots || {}.default;
-    // console.log("Show Alert");
+    escListener = document.addEventListener("keyup", evt => {
+      if (evt.key == "Escape") {
+        methods.onCancel();
+      }
+    });
   } else {
-    // console.log("hide alert");
+    escListener = document.removeEventListener("keyup", () => {});
   }
 
   const methods = {
@@ -87,7 +92,7 @@
       .card-body {
         flex-grow: 1;
         flex-shrink: 1;
-        overflow-y: scroll;
+        overflow-y: auto;
       }
     }
     .footer {

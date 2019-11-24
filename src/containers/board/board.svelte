@@ -2,45 +2,46 @@
   /**
    * Brace yourself - this is a massive file
    *
-   * It's usually the case with the main board of all versions of nomie
-   * eventually it might be cleaned up - but for now, its about getting things to work.
+   * Board / Home / MainView
+   * This monolith is basically the sum of all nomie.
+   * It should be broken down into more managable chunks over time.
+   * but for now, this is where all tracking and managing of your boards
+   * happens. God speed.
+   *
+   * Brnadon
    */
+
   // svelte
-  import { navigate, Link } from "svelte-routing";
-  import { onMount, tick } from "svelte";
-  import { fade } from "svelte/transition";
-  import md5 from "md5";
+  import { navigate } from "svelte-routing";
+  import { onMount, onDestroy } from "svelte";
 
   // Components
   import NTrackerButton from "./tracker-button.svelte";
-  import NTrackerEditor from "../tracker/editor/editor.svelte";
-  import NItem from "../../components/list-item/list-item.svelte";
   import NToolbar from "../../components/toolbar/toolbar.svelte";
   import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
-  import TrackerInput from "../tracker/input/input.svelte";
   import NModal from "../../components/modal/modal.svelte";
   import NHScroll from "../../components/h-scroller/h-scroller.svelte";
-  import Elephant from "../../components/elephant.svelte";
+  import LogoType from "../../components/logo/logo.svelte";
+  import LogoMark from "../../components/elephant.svelte";
+
   import CaptureLog from "../../components/capture-log.svelte";
+  import Spinner from "../../components/spinner/spinner.svelte";
 
   // Containers
   import AppLayout from "../../containers/layout/app.svelte";
   import BoardSortModal from "../../containers/board/board-sort.svelte";
 
-  // Vendors
-  import Spinner from "svelte-spinner";
-
-  // Modules/Libs
+  // Modules/Libs/Utils
   import Tracker from "../../modules/tracker/tracker";
   import NomieLog from "../../modules/nomie-log/nomie-log";
   import StarterPacks from "../../modules/packs/starter-packs";
-
-  // Utils
   import math from "../../utils/math/math";
   import Logger from "../../utils/log/log";
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import extractor from "../../utils/extract-trackers/extract-trackers";
   import promiseStep from "../../utils/promise-step/promise-step";
+
+  import TrackerInputer from "../../modules/tracker/tracker-inputer";
 
   //Stores
   import { ActiveLogStore } from "../../store/active-log";
@@ -59,115 +60,125 @@
   let today = {}; // holds today's activities
   let searchInput; // binding to dom element
   let foundTrackers = null; // for search results
-  let lastLedgerStoreHash = null; // for making so svelte doesnt get loop happy
-  let lastMasterHash = null; // for making sure svelte doesn't loop
-  let _trackers = null; // holder of trackers when store updates
-  let _board = null; // holder of current board data
   let boardTrackers = []; // Actual array to display to user
+
+  // Browser Title
   let appTitle = "(Loading)";
 
   // Data Storage
   let data = {
     selectedTracker: null, // populated when user tabs tracker
     showStartPacks: false, // shows the start library
-    loading: true, // show spinner
     savingTrackers: [], // to highlight trackers that are being saved
     addedTrackers: [], // Visually showing what trackers are in the notes field
     searching: false, // if the user is searching
-    searchTerm: null // the search term the user is typing
+    searchTerm: null, // the search term the user is typing
+    activeTip: 0, // index of the current tip to show
+    hideTips: false // temp hide - it will stop showing after 12 launches.
   };
+
+  /**
+   * isReady
+   * Holder of the state for each req store
+   * boards, trackers and ledger need to be loaded
+   * before we can render the page. If the user is
+   * using blockstack, this could take a little bit
+   **/
+  let isReady = {
+    boards: false,
+    trackers: false,
+    ledger: false,
+    done: false,
+    checking: false
+  };
+
+  // Check if it's ready
+  const checkIfReady = requester => {
+    if (isReady.done == false) {
+      if (isReady.boards && $TrackerStore && isReady.ledger) {
+        isReady.done = true;
+        setTimeout(() => {
+          methods.setBoardTrackers();
+        }, 20);
+      }
+    }
+  };
+
+  /**
+   * Add some tips to help new users
+   * This will stop showing after 12 nomie launches
+   **/
+
+  let tips = [
+    "Press and hold a tracker button for more options",
+    "The History tab shows you everything you've done",
+    "Check out the settings to change the theme",
+    "Enable auto location in the Settings for deeper data",
+    "Want to organize your trackers? Click the nomie logo above to enable Tabs",
+    "Want to auto import data?  Settings -> Nomie API"
+  ];
 
   // Wait for the User to be ready
   UserStore.onReady(() => {
+    console.log("User onReady");
+    // Set user to kick off top view conditional.
     user = $UserStore; // Kick off
-    // Hook a before save - to highlight saving trackers
+    // Setup Hooks These will fire on before safe, and onLogSave
     LedgerStore.hook("onBeforeSave", log => {
       data.savingTrackers = log.trackersArray().map(t => t.tag);
-    });
-    // Hook on Save to clear saving Trackers
-    LedgerStore.hook("onLogSaved", log => {
+    }).hook("onLogSaved", log => {
+      // Clear saving states
       data.savingTrackers = [];
       data.searching = false;
       data.addedTrackers = [];
     });
-    LedgerStore.getToday();
   });
 
-  /**
-   * If the Ledger Changes
-   *
-   * A new event has been registered
-   * we need to stop loading, and populate today
-   * and reload the trackers (for reacting to value changes)
-   */
-  $: if ($LedgerStore.hash !== lastLedgerStoreHash) {
-    lastLedgerStoreHash = $LedgerStore.hash;
-    setTimeout(() => {
-      today = $LedgerStore.today;
-      data.loading = false;
-      boardTrackers = boardTrackers || [];
-    }, 12);
-  }
-
-  /**
-   * Boards, Trackers and Ledger
-   *
-   * If we have all three - we're ready to go.
-   * But we need to hash things so we don't get into a
-   * a reactive loop. Create a hash of the active board, plus
-   * tracker data - this way it reacts if someone edits a tracker too
-   */
-  $: if ($BoardStore && $TrackerStore && $LedgerStore) {
-    // Create a hash for this compbo
-    let boardHash = ($BoardStore.activeBoard || {}).trackers || [].join(",");
-    let mh = [$BoardStore.active, boardHash, JSON.stringify(_trackers)];
-    let masterHash = md5(mh.join(","));
-
-    appTitle = `${
-      $BoardStore.active !== "all" ? $BoardStore.activeBoard.label : "All"
-    }`;
-    // Compare hashes
-    if (lastMasterHash != masterHash) {
-      // Update hash to new one.
-      lastMasterHash = masterHash;
-      // Are we on the All board?
+  // Component Methods
+  const methods = {
+    editBoard() {
+      navigate(`/board/${$BoardStore.activeBoard.id}`);
+    },
+    setBoardTrackers() {
       if ($BoardStore.active == "all") {
-        // Get all trackers from TrackerStore, convert to array
+        appTitle = "All";
+        // Convert trackers to array
         boardTrackers = Object.keys($TrackerStore)
           .map(tag => {
             return $TrackerStore[tag] || new Tracker({ tag: tag });
           })
+          // Sort ALL by label
           .sort((a, b) => {
             return a.label > b.label ? 1 : -1;
           });
       } else {
         // Get Board Trackers from active Board
-        boardTrackers = $BoardStore.activeBoard.trackers.map(tag => {
-          return $TrackerStore[tag] || new Tracker({ tag: tag });
-        });
+        appTitle = ($BoardStore.activeBoard || {}).label || "";
+        // Get trackers from activeBoard
+        boardTrackers = (($BoardStore.activeBoard || {}).trackers || []).map(
+          tag => {
+            return $TrackerStore[tag] || new Tracker({ tag: tag });
+          }
+        );
       }
-    } // end making sure we don't get into a loop
-  }
-
-  /**
-   * METHODS
-   */
-  const methods = {
-    editBoard() {
-      navigate(`/board/${$BoardStore.activeBoard.id}`);
     },
-    // When Tracker Subscribe
-    onTrackersChange(trackers) {
-      _trackers = trackers;
+    nextTip() {
+      if (data.activeTip == tips.length - 1) {
+        data.activeTip = 0;
+      } else {
+        data.activeTip++;
+      }
     },
-    // When Board Subscribe
-    onBoardChange(boardPayload) {
-      _board = boardPayload;
+    previousTip() {
+      if (data.activeTip == 0) {
+        data.activeTip = tips.length - 1;
+      } else {
+        data.activeTip--;
+      }
     },
     // When user starts searching
     searchKeypress() {
       // Find trackers matching query
-
       foundTrackers = Object.keys($TrackerStore)
         .map(tag => {
           return $TrackerStore[tag];
@@ -291,85 +302,102 @@
       // Set selected tracker to this one.
       data.selectedTracker = tracker;
 
-      // If it's a plain old tick tracker
-      if (tracker.type === "tick") {
-        // Just add the tag to the note
-        ActiveLogStore.addTag(tracker.tag);
+      // Inserting new TrackerInputer
+      let inputer = new TrackerInputer(tracker);
 
-        // If it's one_tap - then save it
-        if (tracker.one_tap === true) {
-          // Make the note
-          let note = $ActiveLogStore.note + "";
-
-          // Account for Positivity calculation
-          // This is for display only, the scores are always
-          // dynamically calculated
-          $ActiveLogStore.score = ActiveLogStore.calculateScore(
-            note,
-            $TrackerStore
-          );
-          try {
-            // Save the log
-            await LedgerStore.saveLog($ActiveLogStore);
-
-            // Let user Know it was saved
-            Interact.toast(`Saved ${note}`);
-
-            // Clear Log
-            ActiveLogStore.clear();
-          } catch (e) {
-            // Catch any problems
-            Interact.alert("Error", e.message);
-          }
-          // Refresh View
-          setTimeout(() => {
-            data.savingTrackers = [];
-            data = data;
-          }, 100);
+      inputer.get().then(value => {
+        console.log("Got the value", value);
+        if (tracker.one_tap) {
+          LedgerStore.saveLog($ActiveLogStore);
         }
-        // If it's a note (combined trackers)
-      } else if (tracker.type === "note") {
-        // Extract Trackers
-        let trackerTags = extractor(tracker.note);
+      });
 
-        // Add Tag to the note first...
-        ActiveLogStore.addTag(tracker.tag);
+      // // If it's a plain old tick tracker
+      // if (tracker.type === "tick") {
+      //   // Just add the tag to the note
+      //   ActiveLogStore.addTag(tracker.tag);
 
-        // Create array of items to pass to promise step
-        let items = Object.keys(trackerTags).map(tag => {
-          return {
-            tracker: $TrackerStore[tag] || new Tracker({ tag: tag }),
-            value: trackerTags[tag].value // not being used
-          };
-        });
+      //   // If it's one_tap - then save it
+      //   if (tracker.one_tap === true) {
+      //     // Make the note
+      //     let note = $ActiveLogStore.note + "";
 
-        /**
-         * Promise Step
-         * Loop over each of the items { tracker: [object], value: value }
-         * If this is a multiple tracker request we will show each of the
-         * tracker inputs one at a time using the promise step function
-         */
-        promiseStep(items, item => {
-          return new Promise((resolve, reject) => {
-            // testing if going direct works
-            $Interact.trackerInput.show = false;
-            $Interact.trackerInput.tracker = null;
-            $Interact.trackerInput.onInteract = null;
+      //     // Account for Positivity calculation
+      //     // This is for display only, the scores are always
+      //     // dynamically calculated
+      //     $ActiveLogStore.score = ActiveLogStore.calculateScore(
+      //       note,
+      //       $TrackerStore
+      //     );
+      //     try {
+      //       // Save the log
+      //       await LedgerStore.saveLog($ActiveLogStore);
 
-            // Wait for timeout
-            setTimeout(() => {
-              // Show Tracker Input for this given tracker
-              // then return the promise and move on to the next
-              Interact.trackerInput(item.tracker, item.value)
-                .then(resolve)
-                .catch(reject);
-            }, 12);
-          });
-        });
-      } else {
-        // It's an input of some sort
-        Interact.trackerInput(tracker);
-      } // end if tick or others
+      //       // Let user Know it was saved
+      //       Interact.toast(`Saved ${note}`);
+
+      //       // Clear Log
+      //       ActiveLogStore.clear();
+      //     } catch (e) {
+      //       // Catch any problems
+      //       Interact.alert("Error", e.message);
+      //     }
+      //     // Refresh View
+      //     setTimeout(() => {
+      //       data.savingTrackers = [];
+      //       data = data;
+      //     }, 100);
+      //   }
+      //   // If it's a note (combined trackers)
+      // } else if (tracker.type === "note") {
+      //   /**
+      //    * Note Tracker Type
+      //    * This is a note tracker type and will
+      //    * ask the user to provide inputs for
+      //    * each type of note
+      //    **/
+
+      //   // Get Trackers from the Note
+      //   let trackerTags = extractor(tracker.note);
+
+      //   // Add Note Tracker Tag to the note first...
+      //   // This way we can look up some stats on it too
+      //   ActiveLogStore.addTag(tracker.tag);
+
+      //   // Create array of items to pass to promise step
+      //   let items = Object.keys(trackerTags).map(tag => {
+      //     return {
+      //       tracker: $TrackerStore[tag] || new Tracker({ tag: tag }),
+      //       value: trackerTags[tag].value // not being used
+      //     };
+      //   });
+
+      //   /**
+      //    * Promise Step
+      //    * Loop over each of the items { tracker: [object], value: value }
+      //    * If this is a multiple tracker request we will show each of the
+      //    * tracker inputs one at a time using the promise step function
+      //    */
+      //   promiseStep(items, item => {
+      //     return new Promise((resolve, reject) => {
+      //       // testing if going direct works
+      //       $Interact.trackerInput.show = false;
+      //       $Interact.trackerInput.tracker = null;
+      //       $Interact.trackerInput.onInteract = null;
+      //       // Wait for timeout
+      //       setTimeout(() => {
+      //         // Show Tracker Input for this given tracker
+      //         // then return the promise and move on to the next
+      //         Interact.trackerInput(item.tracker, item.value)
+      //           .then(resolve)
+      //           .catch(reject);
+      //       }, 12);
+      //     });
+      //   });
+      // } else {
+      //   // It's an input of some sort
+      //   Interact.trackerInput(tracker);
+      // } // end if tick or others
     },
     /**
      * Get Tracker Value
@@ -381,16 +409,14 @@
       let value = null;
 
       // Does this tracker exist in today's map?
-      if ($LedgerStore.today.hasOwnProperty(tracker.tag)) {
+      if (today.hasOwnProperty(tracker.tag)) {
         // What type of Math should we do?
         if (tracker.math === "sum") {
           // Sum it up!
-          value = math.round(math.sum($LedgerStore.today[tracker.tag].values));
+          value = math.round(math.sum(today[tracker.tag].values));
         } else {
           // Round things!
-          value = math.round(
-            math.average($LedgerStore.today[tracker.tag].values)
-          );
+          value = math.round(math.average(today[tracker.tag].values));
         }
       }
       return value ? NomieUOM.format(value, tracker.uom) : null;
@@ -401,8 +427,8 @@
      * It maybe shouldn't be here, but it is for now
      */
     getHoursUsed(tracker) {
-      if ($LedgerStore.today.hasOwnProperty(tracker.tag)) {
-        return $LedgerStore.today[tracker.tag].hours;
+      if (today.hasOwnProperty(tracker.tag)) {
+        return today[tracker.tag].hours;
       } else {
         return [];
       }
@@ -465,18 +491,74 @@
     } // end showTrackerOptions
   };
 
-  // Wait for changes to happen to the boardstore
-  BoardStore.subscribe(boardPayload => {
-    methods.onBoardChange(boardPayload);
-  });
+  let boardUnsub;
+  let ledgerUnsub;
+  let activeLogUnsub;
+  let trackerUnsub;
+  let lastTrackers;
 
-  // Wait for changes to happen to the tracker store
-  TrackerStore.subscribe(trackers => {
-    methods.onTrackersChange(trackers);
-  });
+  onMount(() => {
+    trackerUnsub = TrackerStore.subscribe(trackerStore => {
+      setTimeout(() => {
+        boardTrackers = boardTrackers;
+      }, 120);
+    });
 
-  ActiveLogStore.subscribe(log => {
-    data.addedTrackers = new NomieLog(log).trackersArray().map(t => t.tag);
+    // Wait for changes to happen to the boardstore
+    boardUnsub = BoardStore.subscribe(boardPayload => {
+      isReady.boards = true;
+      checkIfReady("boardPayload");
+      // If the board is ready, and it changes
+      // Refire the setBoard Trackers for the new changes
+      if (isReady.done) {
+        methods.setBoardTrackers();
+      }
+      /**
+       * Board Check
+       * If this board doesn't exist (user clears localstorage, switching data store, imports etc)
+       * then we should set it to the ALL board
+       **/
+      if (
+        boardPayload.boards.map(b => b.id).indexOf(boardPayload.active) == -1 &&
+        boardPayload.active !== "all"
+      ) {
+        setTimeout(() => {
+          BoardStore.setActive("all");
+        }, 100);
+      }
+    });
+
+    // Ledger Store Change
+    ledgerUnsub = LedgerStore.subscribe(ledgerPayload => {
+      // If it's not saving
+      if (!ledgerPayload.saving) {
+        isReady.ledger = true; // say it's true
+        checkIfReady("ledgerPayload"); // check for others
+        setTimeout(() => {
+          today = ledgerPayload.today;
+          foundTrackers = foundTrackers; // force reaction
+          boardTrackers = boardTrackers; // force reaction
+        }, 100);
+      }
+    });
+
+    // Active Log Change
+    activeLogUnsub = ActiveLogStore.subscribe(log => {
+      /**
+       * Active Log Change
+       * When the log changes, extract the trackers so we can
+       * make them pulse
+       */
+      data.addedTrackers = new NomieLog(log).trackersArray().map(t => t.tag);
+    });
+    LedgerStore.getToday();
+  }); // end onMount
+
+  onDestroy(() => {
+    boardUnsub();
+    ledgerUnsub();
+    activeLogUnsub();
+    trackerUnsub();
   });
 </script>
 
@@ -493,6 +575,27 @@
 
     @include media-breakpoint-up(md) {
       padding-top: 20px;
+    }
+
+    .new-user {
+      font-size: 0.7rem;
+      max-width: 280px;
+      border-radius: 30px;
+      background-color: transparent;
+      border: var(--modal-border);
+      color: var(--color-inverse-2);
+      margin: 10px auto;
+      padding: 6px 20px;
+      line-height: 115%;
+      flex-grow: 0;
+      .main {
+        text-align: center;
+      }
+      .btn {
+        &:active {
+          color: var(--color-inverse);
+        }
+      }
     }
   }
   .n-add-button {
@@ -542,6 +645,7 @@
       margin-right: 10px;
       max-width: 200px;
     }
+
     @include media-breakpoint-down(sm) {
       min-width: 300px;
       max-width: 500px;
@@ -583,7 +687,7 @@
             methods.stopSearch();
             BoardStore.setActive(event.detail.id);
           }}>
-          {#if $BoardStore.boards.length > 2}
+          {#if $BoardStore.boards.length > 1}
             <button
               class="btn btn-clear btn-icon zmdi zmdi-sort-amount-desc"
               on:click={() => {
@@ -594,23 +698,25 @@
       </div>
     {:else}
       <NToolbar>
+        <i
+          on:click={methods.enableBoards}
+          class="zmdi zmdi-tab clickable ml-2 text-xs"
+          style="opacity:0" />
         <div class="filler" />
-        <!-- Make the logo clickable - but prompt to enable tabs when they do-->
-        <img
-          src="/images/nomie-words.svg"
-          aria-label="Nomie Logo"
-          height="20"
-          on:click={methods.enableBoards} />
+        <LogoType size={20} on:click={methods.enableBoards} />
         <div class="filler" />
+        <i
+          on:click={methods.enableBoards}
+          class="zmdi zmdi-tab clickable ml-2 text-xs text-faded-2" />
       </NToolbar>
     {/if}
   </div>
   <!-- end header-->
   <div slot="content" class="container board-container">
     {#if user}
-      {#if data.loading}
+      {#if !isReady.done}
         <div class="empty-notice">
-          <Spinner size="50" speed="750" color="#666" thickness="2" gap="40" />
+          <Spinner />
         </div>
       {:else}
         <main class="n-board h-100">
@@ -667,6 +773,29 @@
               </button>
             {/if}
           </div>
+
+          <!-- Include User Tips - shit should be a component -->
+          {#if $UserStore.launchCount < 12 && data.hideTips !== true && $BoardStore.active == 'all'}
+            <div class="new-user tip n-row mb-3">
+              <button
+                class="text-md btn btn-clear btn-sm p-0 btn-icon flex-grow-off"
+                on:click={() => {
+                  data.hideTips = true;
+                }}>
+                <i class="text-md zmdi zmdi-close-circle" />
+              </button>
+              <div class="main filler m-1 ml-2">{tips[data.activeTip]}</div>
+              <div class="d-flex flex-row arrows">
+                <button
+                  class="btn btn-clear btn-icon zmdi px-1 zmdi-chevron-left"
+                  on:click={methods.previousTip} />
+                <button
+                  class="btn btn-clear btn-icon zmdi px-1 pl-2
+                  zmdi-chevron-right"
+                  on:click={methods.nextTip} />
+              </div>
+            </div>
+          {/if}
 
           <div class="board-actions">
 

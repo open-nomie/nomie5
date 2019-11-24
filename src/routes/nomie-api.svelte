@@ -169,7 +169,7 @@
   <div class="container">
     {#if !state.ready}
       <div class="empty-notice">
-        <Spinner size="50" speed="750" color="#666" thickness="2" gap="40" />
+        <Spinner size="50" speed="750" color="#666" thickness="8" gap="40" />
       </div>
     {:else if state.ready && !state.registered}
       <div item-divider />
@@ -240,7 +240,7 @@
                       size="30"
                       speed="750"
                       color="#FFF"
-                      thickness="2"
+                      thickness="6"
                       gap="40" />
                   {:else}
                     <span class="zmdi zmdi-download" />

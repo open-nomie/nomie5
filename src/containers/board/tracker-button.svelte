@@ -19,6 +19,7 @@
   export let className = undefined;
   export let disabled = undefined;
   export let hoursUsed = [];
+  export let hideMore = false;
 
   // Define Dispatch
   const dispatch = createEventDispatcher();
@@ -33,6 +34,13 @@
     // Clicked
     click() {
       dispatch("click", {});
+    },
+    moreClicked(evt) {
+      console.log("more clicked");
+      evt.stopPropagation();
+      evt.preventDefault();
+
+      methods.longPress();
     },
     rightclick(evt) {
       evt.preventDefault();
@@ -57,7 +65,7 @@
 
 <button
   {id}
-  on:tap={methods.click}
+  on:click={methods.click}
   on:longtap={methods.longPress}
   on:touchstart={methods.mousedown}
   on:mousedown={methods.mousedown}
@@ -74,6 +82,12 @@
       <span class="value left">{value}</span>
     {/if}
     <div class="filler" />
+    {#if !hideMore}
+      <button
+        class="btn btn-xs btn-round zmdi zmdi-more text-faded-2 clickable py-1
+        px-2"
+        on:click={methods.moreClicked} />
+    {/if}
   </header>
   {#if tracker.started}
     <div class="center countdown">

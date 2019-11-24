@@ -128,19 +128,21 @@
       width: 60px;
       height: 60px;
       margin: 2px;
+      border-radius: 30px;
     }
     @include media-breakpoint-up(sm) {
       width: 66px;
       height: 66px;
       margin: 5px;
+      border-radius: 33px;
     }
     @include media-breakpoint-up(md) {
       width: 80px;
       height: 80px;
-      margin: 10px;
+      margin: 6px;
+      border-radius: 40px;
     }
 
-    border-radius: 30px;
     border: none;
     color: #fff;
     font-size: 26px;

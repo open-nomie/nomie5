@@ -13,6 +13,8 @@
   import NText from "../../components/text/text.svelte";
   import Logo from "../../components/logo/logo.svelte";
 
+  import dayjs from "dayjs";
+
   // Local components
 
   // Stores
@@ -32,11 +34,14 @@
     activeSlide: 0,
     showNext: true,
     transitioning: false,
-    isTiny: false
+    isTiny: false,
+    redirecting: false,
+    timeFormat: "is12"
   };
 
   const methods = {
     blockstackLogin() {
+      data.redirecting = true;
       UserSession.redirectToSignIn();
     },
 
@@ -104,7 +109,7 @@
       flex-direction: column;
       height: 100%;
       transition: all 0.3s ease-in-out;
-      overflow-y: scroll;
+
       &.active {
       }
 
@@ -128,7 +133,6 @@
           max-height: 271px;
         }
         h1 {
-          font-size: 1.1rem !important;
           line-height: 116%;
           max-width: 500px;
           margin-left: auto;
@@ -152,8 +156,8 @@
         position: relative;
 
         @include media-breakpoint-up(md) {
-          width: 300px;
-          max-width: 300px;
+          width: 220px;
+          max-width: 220px;
           margin-bottom: -70px;
           .filler {
             max-height: 20px;
@@ -217,7 +221,11 @@
           text-align: center;
         }
       }
-
+      @include media-breakpoint-up(md) {
+        .mobile-message {
+          display: none;
+        }
+      }
       .bottom {
         z-index: 0;
         flex-grow: 0;
@@ -227,7 +235,7 @@
         color: var(--color-inverse);
         flex-direction: column;
         padding: 0 16px;
-        overflow-y: scroll;
+
         h1 {
           font-size: 1.5rem;
           font-weight: bolder;
@@ -260,10 +268,16 @@
     right: 0;
     background-color: var(--color-solid);
     padding: 10px 20px;
+    @include media-breakpoint-up(md) {
+      padding: 20px 30px;
+    }
     .btn {
-      color: var(--color-primary);
+      color: var(--color-primary-bright);
       &:hover {
         color: var(--color-primary);
+      }
+      @include media-breakpoint-up(md) {
+        font-size: 1.2rem;
       }
     }
   }
@@ -296,7 +310,9 @@
       </div>
     </div>
     <div class="bottom center-grow">
-      <h1>Track your mood, your sleep, your ... well, anything.</h1>
+      <h1 style="max-width:400px;">
+        Understand your mood, your sleep, your ... well, anything.
+      </h1>
       <p>
         <strong>
           Nomie is 100% private and open.
@@ -308,7 +324,7 @@
           </a>
         </strong>
       </p>
-      <p class="text-faded-2">
+      <p class="text-faded-2 mobile-message">
         For the best experience, hit share,
         <br />
         select "add to homescreen"
@@ -321,7 +337,6 @@
     {data.isTiny ? 'is-tiny' : 'is-normal'}
     {data.transitioning ? 'move' : ''}">
     <div class="top center-grow">
-
       <div class="bottom-pop phone-frame mt-2">
         <img
           class="image"
@@ -330,11 +345,10 @@
       </div>
     </div>
     <div class="bottom center-grow">
-      <h1>Monitor your progress.</h1>
-      <p>
-        Streaks, charts, maps, view it all. Tip: Jump into stats by
-        long-pressing a tracker button.
-      </p>
+      <h1 style="max-width:400px;">
+        Visualize your life with charts, streaks & maps.
+      </h1>
+      <p>Discover the patterns that make you, you.</p>
     </div>
   </section>
 
@@ -342,63 +356,77 @@
     class="slide slide-3 slide-welcome {data.activeSlide === 2 ? 'active' : 'hidden'}
     {data.isTiny ? 'is-tiny' : 'is-normal'}
     {data.transitioning ? 'move' : ''}">
-    <div class="top center-grow">
-
-      <div class="bottom-pop phone-frame mt-2">
-        <img
-          class="image"
-          aria-label="Nomie History view"
-          src="/images/onboard/nomie-history.png" />
-      </div>
+    <div class="top center-grow pt-3">
+      <div class="filler" />
+      <h1 class="mt-4">
+        {Lang.t('setup.choose-time-format', `Choose your time format...`)}
+      </h1>
+      <div class="filler" />
     </div>
     <div class="bottom center-grow">
-      <h1>Go back in time!</h1>
-      <p>
-        See when
-        <strong>& where</strong>
-        you did anything. Also, write daily notes to help remember what life was
-        like.
-      </p>
+      <button
+        class="btn-block my-3 btn btn-content {$UserStore.meta.is24Hour ? 'active' : ''}"
+        on:click={() => {
+          $UserStore.meta.is24Hour = true;
+          UserStore.saveMeta();
+        }}>
+        <div class="text-lg">{dayjs().format('HH:mm')}</div>
+      </button>
+      <button
+        class="btn-block my-3 btn btn-content {!$UserStore.meta.is24Hour ? 'active' : ''}"
+        on:click={() => {
+          $UserStore.meta.is24Hour = false;
+          UserStore.saveMeta();
+        }}>
+        <div class="text-lg">{dayjs().format('h:mm a')}</div>
+      </button>
     </div>
   </section>
 
   <section
     class="slide slide-4 slide-welcome {data.activeSlide === 3 ? 'active' : 'hidden'}
     {data.transitioning ? 'move' : ''}">
-    <div
-      class="top center-grow pt-3"
-      style={data.isTiny ? 'max-height:200px' : 'max-height:250px !important'}>
+    <div class="top center-grow pt-3" style="max-height:45vh;">
       <div class="filler" />
-      <h1>
-        {Lang.t('setup.pick-data-storage', 'Choose data storage location')}
+      <h1 class="mt-4">
+        {Lang.t('setup.pick-data-storage', `Choose your data's location...`)}
       </h1>
+      <p class="text-faded-3">
+        You can always change this later.
+        <a href="https://blockstack.com" class="text-white" target="_blank">
+          Learn more about Blockstack
+        </a>
+      </p>
       <div class="filler" />
     </div>
-    <div class="bottom center-grow" style="max-height:50%">
+    <div class="bottom center-grow">
+      <div class="filler" />
+
       <button
-        class="mt-5 btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
-        on:click={() => {
-          UserStore.setStorage('blockstack');
-        }}>
-        <NText size="lg" className="text-primary">Encrypted in the Cloud</NText>
-        <NText size="sm" className="">
-          Access your data on multiple devices using end-to-end encryption.
-          <strong>Powered by Blockstack.</strong>
-        </NText>
-      </button>
-      <button
-        class="my-3 btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
+        class=" btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
         on:click={() => {
           UserStore.setStorage('local');
         }}>
-        <NText size="lg" className="text-primary">This Device Only</NText>
-        <NText size="sm" className="">
+        <div class="text-md font-weight-bold text-inverse">
+          On this Device Only
+        </div>
+        <div class="text-sm" className="">
           All data is stored unencrypted, but ONLY on your device.
-        </NText>
+        </div>
       </button>
-      <div class="text-center text-sm text-faded-2">
-        You can always switch storage types later.
-      </div>
+      <button
+        class="btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
+        on:click={() => {
+          UserStore.setStorage('blockstack');
+        }}>
+        <div class="text-md font-weight-bold text-inverse">
+          Encrypted in the Cloud
+        </div>
+        <div class="text-sm">
+          Access your data on multiple devices using end-to-end encryption.
+          <strong>Powered by Blockstack .</strong>
+        </div>
+      </button>
       <div class="filler" />
     </div>
   </section>
@@ -411,9 +439,15 @@
   {/if}
   <div class="filler" />
   {#if (data.activeSlide == 3 && $UserStore.storageType) || data.activeSlide != 3}
-    <button class="btn btn-clear " on:click={methods.next}>
-      <strong>NEXT</strong>
-    </button>
+    {#if !data.redirecting}
+      <button class="btn btn-clear " on:click={methods.next}>
+        <strong>NEXT</strong>
+      </button>
+    {:else}
+      <button class="btn btn-clear disabled" disabled="true">
+        <strong>Redirecting...</strong>
+      </button>
+    {/if}
   {/if}
 </div>
 <!-- 

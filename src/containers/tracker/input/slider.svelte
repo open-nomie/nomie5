@@ -44,7 +44,7 @@
       padding: 0 5px;
       margin: 0 auto;
       -webkit-appearance: none;
-      width: 50vh;
+      width: 46vh;
       margin: -5.5px 0;
     }
     input[type="range"]:focus {
@@ -53,7 +53,7 @@
 
     $size: 100px;
     input[type="range"]::-webkit-slider-runnable-track {
-      width: 50vh;
+      width: 46vh;
       height: $size;
       cursor: pointer;
       box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
@@ -80,7 +80,7 @@
       background: var(--color-faded);
     }
     input[type="range"]::-moz-range-track {
-      width: 50vh;
+      width: 46vh;
       height: $size;
       cursor: pointer;
       box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);

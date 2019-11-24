@@ -3,13 +3,12 @@
    * Stats Route
    * This is stupid big... still needs to be organized
    * SERIOUSLY BIG
+   *
    */
 
   //Vendors
-  import { onMount, onDestroy } from "svelte";
-  import { navigate, Router, Route } from "svelte-routing";
+  import { navigate } from "svelte-routing";
   import dayjs from "dayjs";
-  import Spinner from "svelte-spinner";
 
   // Utils
   import math from "../utils/math/math";
@@ -24,7 +23,7 @@
 
   // Components
   import ButtonGroup from "../components/button-group/button-group.svelte";
-
+  import Spinner from "../components/spinner/spinner.svelte";
   import NText from "../components/text/text.svelte";
   import NCell from "../components/cell/cell.svelte";
   import Modal from "../components/modal/modal.svelte";
@@ -51,46 +50,45 @@
   import { HistoryPage } from "../store/history-page";
   import { Lang } from "../store/lang";
 
-  // const path = window.location.href.split("/");
-  // const mainTag = path[path.length - 1];
-
-  // const mainTag = TrackerStore.getById(id).tag;
-
   const console = new Logger("📊 Stats.svelte");
 
   // Local
-  let refreshing = false;
-  let hasStats = false;
+  let refreshing = false; // Used to show and hide things while loading
   let rows = [];
-  let mainTag = $Interact.stats.activeTag;
+  let statBodyDom; // Get the stat body for height reference (chart heights)
+  let domVisible = false; // if the dom show should (for animations opposed to if else)
 
-  let domVisible = false;
-
-  let statStorage = Storage.local.get("stats-view") || {};
+  let statStorage = Storage.local.get("stats-view") || {}; // Store user preferences
 
   let state = {
     date: dayjs(), // default to today - use dayjs object
     tracker: null,
-    initalized: false,
-    tracker: null,
-    view: statStorage.view,
-    subview: statStorage.subview,
-    stats: null,
-    // Current hack - tap the emoji in the title - TODO: Make compare work again
+    view: statStorage.view, // day month year
+    subview: statStorage.subview, // what sub view (chart map logs)
+    stats: null, // holds stats for this tracker
     compare: {
       tracker: null,
       stats: null
     },
-    ready: false,
-    tag: null
+    tag: null, // holder of the tag for this tracker
+    vsChartPoints: null, // holder of compare points
+    chartHeight: 200 // default chart height - set to height of statBodyDom
   };
 
-  // On First Load
+  /**
+   * Fake onMount()
+   * Checks to see if state.tag is a match - if not, we know it's the first
+   */
   $: if ($Interact.stats.activeTag !== state.tag && $Interact.stats.activeTag) {
     let tagViewSettings = statStorage[$Interact.stats.activeTag] || {
       view: "month",
       subview: "chart"
     };
+    setTimeout(() => {
+      if (statBodyDom) {
+        state.chartHeight = statBodyDom.offsetHeight * 0.9;
+      }
+    }, 500);
     domVisible = true;
     state.date = dayjs();
     state.tag = $Interact.stats.activeTag;
@@ -101,11 +99,14 @@
       new Tracker({ tag: $Interact.stats.activeTag });
     methods.load();
   } else if (!$Interact.stats.activeTag && state.tag) {
+    /**
+     * Fake onDestory()
+     * Checks to see if state.tag is a match - if not, we know it's the first
+     */
     state.date = dayjs();
   }
 
   const methods = {
-    getStats() {},
     showHistory() {
       navigate("/history");
       setTimeout(() => {
@@ -178,22 +179,24 @@
       let points = state.stats.results[view].chart.points || [];
       return points;
     },
+    /**
+     * Generate the Stat Chart Points
+     * for the compare tracker
+     */
     getVsChartPoints() {
-      console.log("getvsChartPoints");
       return new Promise((resolve, reject) => {
-        console.log("Is there a compare", { ...state.compare });
         setTimeout(() => {
-          console.log("Is there a compare now?", { ...state.compare });
           let view = state.view == "year" ? "year" : "month";
-          let points = state.compare.stats.results[view].chart.points || [];
-          resolve(points);
-        }, 120);
+          state.vsChartPoints = state.compare.stats.results
+            ? state.compare.stats.results[view].chart.points
+            : null;
+        }, 100);
       });
       // return [];
     },
     activeIndex() {
       if (state.view == "year") {
-        return state.date.month();
+        return state.date.month() + 1;
       } else {
         return state.date.date();
       }
@@ -231,10 +234,17 @@
           methods.getStats(state.compare.tracker).then(compareRes => {
             state.compare.stats = compareRes.stats;
             state.compare.rows = compareRes.rows;
+            setTimeout(() => {
+              if (statBodyDom) {
+                state.chartHeight = statBodyDom.offsetHeight * 0.47;
+              }
+            }, 120);
+            methods.getVsChartPoints();
+            refreshing = false;
           });
+        } else {
+          refreshing = false;
         }
-
-        refreshing = false;
       });
       // Get Logs for the year and tag
     },
@@ -271,13 +281,19 @@
     },
     compare() {
       Interact.selectTracker().then(tracker => {
-        state.compare.tracker = tracker;
-        methods.getStats(state.compare.tracker).then(compareRes => {
-          state.compare.stats = compareRes.stats;
-          state.compare.rows = compareRes.rows;
-        });
+        setTimeout(() => {
+          state.compare.tracker = tracker;
+          methods.load();
+        }, 20);
       });
     },
+    // methods.getStats(state.compare.tracker).then(compareRes => {
+    //   state.compare.stats = compareRes.stats;
+    //   state.compare.rows = compareRes.rows;
+    //   if (statBodyDom) {
+    //     state.chartHeight = statBodyDom.offsetHeight * 0.47;
+    //   }
+    // });
     removeCompare() {
       state.compare.stats = null;
       state.compare.tracker = null;
@@ -321,10 +337,12 @@
     },
 
     refresh() {
+      methods.getVsChartPoints();
       state.stats.gotoDate(state.date);
       if (state.compare.stats) {
         state.compare.stats.gotoDate(state.date);
       }
+
       refreshing = true;
       setTimeout(() => {
         refreshing = false;
@@ -484,7 +502,7 @@
           {/if}
         </button>
       {:else}
-        <Spinner size="16" speed="750" color="#666" thickness="2" gap="40" />
+        <Spinner size="16" />
         Loading...
       {/if}
     </div>
@@ -685,26 +703,20 @@
   </header>
 
   {#if !refreshing}
-    <main class="stat-view-body {state.mode}-view">
+    <main class="stat-view-body {state.mode}-view" bind:this={statBodyDom}>
 
       <!-- START STAT COMPONENT VIEWS -->
       {#if state.subview === 'chart'}
         <div class="p-2">
           <BarChart
-            height={state.compare.tracker ? 140 : 200}
+            title={`${state.tracker.emoji} ${state.tracker.label}`}
+            height={state.chartHeight}
             color={state.tracker.color}
             labels={methods.getChartLabels()}
             points={methods.getChartPoints()}
             on:tap={event => {
               let newDate;
-              if (state.view === 'year') {
-                newDate = state.date.toDate().setMonth(event.detail.index + 1);
-              } else if (state.view == 'month') {
-                newDate = state.date.toDate().setDate(event.detail.index + 1);
-              } else if (state.view == 'day') {
-                newDate = state.date.toDate().setDate(event.detail.index + 1);
-              }
-              state.date = dayjs(newDate);
+              state.date = dayjs(event.detail.point.date);
               methods.refresh();
             }}
             xFormat={methods.xFormat}
@@ -712,37 +724,24 @@
               return NomieUOM.format(y, state.tracker.uom);
             }}
             activeIndex={methods.activeIndex()} />
-          {#if state.compare.tracker}
-            {#await methods.getVsChartPoints() then points}
-              <BarChart
-                height={90}
-                color={state.compare.tracker.color}
-                labels={methods.getChartLabels()}
-                {points}
-                on:tap={event => {
-                  let newDate;
-                  if (state.view === 'year') {
-                    newDate = state.date
-                      .toDate()
-                      .setMonth(event.detail.index + 1);
-                  } else if (state.view == 'month') {
-                    newDate = state.date
-                      .toDate()
-                      .setDate(event.detail.index + 1);
-                  } else if (state.view == 'day') {
-                    newDate = state.date
-                      .toDate()
-                      .setDate(event.detail.index + 1);
-                  }
-                  state.date = dayjs(newDate);
-                  methods.refresh();
-                }}
-                xFormat={methods.xFormat}
-                yFormat={y => {
-                  return NomieUOM.format(y, state.compare.tracker.uom);
-                }}
-                activeIndex={methods.activeIndex()} />
-            {/await}
+          {#if state.vsChartPoints}
+            <div class="mt-1" />
+            <BarChart
+              height={state.chartHeight}
+              title={`${state.compare.tracker.emoji} ${state.compare.tracker.label}`}
+              color={state.compare.tracker.color}
+              labels={methods.getChartLabels()}
+              points={state.vsChartPoints}
+              on:tap={event => {
+                let newDate;
+                state.date = dayjs(event.detail.point.date);
+                methods.refresh();
+              }}
+              xFormat={methods.xFormat}
+              yFormat={y => {
+                return NomieUOM.format(y, state.compare.tracker.uom);
+              }}
+              activeIndex={methods.activeIndex()} />
           {/if}
         </div>
       {:else if state.subview === 'grid'}

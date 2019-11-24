@@ -46,7 +46,7 @@ body.scrolling .n-tracker-button {
 
   &.saving {
     transition: all 0.2s ease-in-out;
-    border: solid 2px var(--color-primary-bright);
+    border: solid 2px rgba($green, 0.5);
   }
 
   @include media-breakpoint-up(md) {
@@ -104,6 +104,7 @@ body.scrolling .n-tracker-button {
     display: flex;
     justify-content: space-between;
     position: absolute;
+    z-index: 20;
     top: 0.4rem;
     left: 6px;
     right: 6px;

@@ -49,14 +49,24 @@ const activeLogInit = () => {
     calculateScore(note) {
       return CalculateScore(note, new Date().getTime());
     },
+    removeStr(str) {
+      update(b => {
+        b.note = b.note
+          .split(" ")
+          .filter(word => {
+            return word !== str;
+          })
+          .join(" ");
+        return b;
+      });
+    },
     addTag(tag, value) {
       update(b => {
         if (!isNaN(value)) {
-          b.note = `${b.note} #${tag}(${value})`;
+          b.note = `${b.note} #${tag}(${value}) `;
         } else {
-          b.note = `${b.note} #${tag}`;
+          b.note = `${b.note} #${tag} `;
         }
-
         hooky.run("onAddTag", { tag, value });
         return b;
       });

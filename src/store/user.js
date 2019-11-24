@@ -56,6 +56,7 @@ const userInit = () => {
       return Storage._storageType();
     },
     initialize() {
+      console.log("Initialize the user");
       // Set Dark or Light Mode
       // Lets get dark Mode
 
@@ -67,27 +68,37 @@ const userInit = () => {
         // If no storage type selected
         // they're not signed in - this should trigger onboarding
         // in App.svelte
-        document.querySelectorAll(".delete-on-app").forEach(d => {
-          // d.classList.add('deleted');
-          // setTimeout(() => {
-          // 	d.remove();
-          // }, 500);
-        });
         update(p => {
           p.signedIn = false;
-          p.launchCount = state.launchCount;
+          p.launchCount = 0;
           return p;
         });
       } else {
         // Storage is set - wait for it to be ready
         Storage.onReady(() => {
-          methods.setProfile(Storage.getProfile());
+          console.log("Storage.onReady called");
+          methods
+            .bootstrap()
+            .then(() => {
+              update(d => {
+                d.ready = true;
+                d.signedIn = true;
+                d.profile = Storage.getProfile();
+                return d;
+              });
+            })
+            .catch(e => {
+              console.error(e.message);
+            });
         }); // end storage on Ready
-      }
 
-      // Storage.onReady(() => {
-      // 	methods.setProfile(Storage.getProfile());
-      // }); // end storage on Ready
+        /**
+         * Initiate the Storage Engine
+         * This will do the work depending on if its
+         * blockstack (requiring a login) or localForage
+         */
+        Storage.init();
+      }
 
       // set highlevel initialize marker
 
@@ -104,9 +115,18 @@ const userInit = () => {
         return d;
       });
     },
+    resetLaunchCount() {
+      if (confirm("Reset Launch Count to zero?") === true) {
+        Storage.local.put("root/launch_count", 0);
+        update(d => {
+          d.launchCount = 0;
+          return d;
+        });
+      }
+    },
     signout() {
       localStorage.clear();
-      Storage.clear();
+      // Storage.clear(); // no we shouldn't clear all storage.
       try {
         blockstack.signUserOut(window.location.origin);
       } catch (e) {}
@@ -116,15 +136,10 @@ const userInit = () => {
      * Set Profile and Signin
      */
     setProfile(profile) {
+      console.log("user.setProfile()", profile);
+
       // Fire off the remaining bootstrap items.
-      methods.bootstrap().then(() => {
-        update(p => {
-          p.ready = true;
-          p.signedIn = true;
-          p.profile = profile;
-          return p;
-        });
-      });
+
       // Update store with new profile.
     },
     bootstrap() {
@@ -137,7 +152,8 @@ const userInit = () => {
           return methods.fireReady(state);
         })
         .catch(e => {
-          console.error(e);
+          console.error("bootstrap", e.message);
+          alert(e.message);
         });
     },
     loadTrackersAndBoards() {

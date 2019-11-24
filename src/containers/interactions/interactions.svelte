@@ -17,7 +17,10 @@
   import NPopMenu from "../../components/pop-menu/pop-menu.svelte";
   import PinLock from "../pin-lock/pin-lock.svelte";
   import NTextualize from "../../components/note-textualizer/note-textualizer.svelte";
-  import NCamera from "../../components/camera/camera.svelte";
+
+  import NShareImage from "../../components/share-image/share-image.svelte";
+
+  // import NCamera from "../../components/camera/camera.svelte";
   // Containers
   import NMap from "../map/map.svelte";
   import TrackerSelector from "../tracker/selector/selector.svelte";
@@ -106,12 +109,12 @@
     Interact.dismiss();
   }} />
 
-<NCamera
+<!-- <NCamera
   show={$Interact.camera.show}
   on:photo={event => {
     methods.onCameraPhoto(event.detail);
   }}
-  on:close={Interact.closeCamera} />
+  on:close={Interact.closeCamera} /> -->
 
 <NAlertBox
   show={$Interact.prompt.show}
@@ -233,6 +236,11 @@
       Interact.dismissTrackerSelector();
     }
   }} />
+
+<!-- Share Image -->
+{#if $Interact.shareImage.log}
+  <NShareImage />
+{/if}
 
 <!-- Tracker Input -->
 

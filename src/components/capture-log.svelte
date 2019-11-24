@@ -26,6 +26,7 @@
   import Logger from "../utils/log/log";
   import time from "../utils/time/time";
   import CalculateScore from "../utils/calculate-score/calculate-score";
+  import TrackerInputer from "../modules/tracker/tracker-inputer";
 
   // Stores
   import { Interact } from "../store/interact";
@@ -60,7 +61,10 @@
     photoData: null,
     finalImageData: null,
     score: 0,
-    showCustomDate: false
+    showCustomDate: false,
+    autocompleteResults: null,
+    cursorIndex: null,
+    partialTag: null
   };
 
   // TODO: Add a media/photo type of thing that can be added to a log..
@@ -110,6 +114,16 @@
         methods.calculateScore();
       }
     },
+    checkForAutocomplete(searchTag) {
+      let tkrs = Object.keys($TrackerStore || {})
+        .map(tag => {
+          return $TrackerStore[tag];
+        })
+        .filter(trk => {
+          return trk.tag.search(searchTag.replace("#", "")) > -1;
+        });
+      return tkrs.length ? tkrs : null;
+    },
     calculateScore() {
       $ActiveLogStore.score = CalculateScore($ActiveLogStore.note);
     },
@@ -118,10 +132,46 @@
       await LedgerStore.saveLog($ActiveLogStore); // TODO: Make ledger task instead
       methods.clear();
     },
+    autocompleteTracker(tracker) {
+      let inputer = new TrackerInputer(tracker);
+      inputer
+        .get({ replace: state.partialTag })
+        .then(() => {
+          // Replace the original search tag
+          state.partialTag = null;
+          state.cursorIndex = null;
+          state.autocompleteResults = null;
+          if (textarea) {
+            textarea.focus();
+          }
+        })
+        .catch(e => {
+          console.log("ERror caught", e.message);
+        });
+    },
     keyPress(event) {
       if (event.key === "Enter" && event.getModifierState("Shift")) {
         event.preventDefault();
-        methods.logSave();
+      } else {
+        let value = event.target.value;
+        let last = value.charAt(value.length - 1);
+        if (last == " ") {
+          state.autocompleteResults = null;
+        } else if (value.length) {
+          let arr = value.split(" ");
+          let tag = arr[arr.length - 1];
+          state.cursorIndex = arr.length - 1;
+          if (tag.charAt(0) === "#" && tag.length > 1) {
+            state.partialTag = tag;
+            state.autocompleteResults = methods.checkForAutocomplete(tag);
+          } else {
+            state.partialTag = null;
+            state.autocompleteResults = null;
+          }
+        } else {
+          state.partialTag = null;
+          state.autocompleteResults = null;
+        }
       }
       methods.checkTextareaSize();
     },
@@ -129,6 +179,8 @@
       ActiveLogStore.clear();
       setTimeout(() => {
         state.date = null;
+        state.autocompleteResults = null;
+        state.cursorIndex = null;
         state.dateStarter = dayjs().format("YYYY-MM-DDTHH:mm");
         if (textarea) {
           textarea.style.height = "40px";
@@ -147,102 +199,9 @@
     ifPopulated() {
       return (
         $ActiveLogStore.lat ||
-        $ActiveLogStore.note.trim().length > 0 ||
+        ($ActiveLogStore.note.trim() || "").length > 0 ||
         $ActiveLogStore.photo
       );
-    },
-    iOSCapture(event) {
-      let input = event.target;
-      if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.readAsDataURL(input.files[0]);
-        reader.addEventListener("load", () => {
-          const fileContent = reader.result;
-          const path = `camera/${md5(fileContent)}`;
-          methods.showPhotoEditor(fileContent);
-        });
-      }
-    },
-    showPhotoEditor(photoData) {
-      state.showPhotoEditor = true;
-      state.photoData = photoData;
-      state.photoPath = `camera/${md5(photoData)}`;
-    },
-    photoEditor: {
-      getTransform() {
-        let transform = photoHolder.style.transform.trim().split(" ");
-        let t = { rotate: 0, scaleX: 1 };
-        transform.forEach(action => {
-          if (action.search("rotate") > -1) {
-            let deg = parseInt(action.replace(/(rotate\(|deg\)|;)/gi, ""));
-            deg = isNaN(deg) ? 0 : deg;
-            t.rotate = deg;
-          } else if (action.search("scaleX") > -1) {
-            let value = action.replace(/(scaleX\(|\)|;)/gi, "");
-            t.scaleX = parseInt(value);
-            t.scaleX = isNaN(t.scaleX) ? 1 : t.scaleX;
-          }
-        });
-        return t;
-      },
-      toStyle(transform) {
-        let style = `rotate(${transform.rotate}deg) scaleX(${transform.scaleX})`;
-        return style;
-      },
-      attach() {
-        if (photoHolder) {
-          state.capturingEdits = true;
-          setTimeout(() => {
-            domtoimage
-              .toJpeg(document.getElementById("final-image-data-container"))
-              .then(dataUrl => {
-                state.capturingEdits = false;
-                state.finalImageData = dataUrl;
-              })
-              .catch(e => {
-                console.log(e);
-              });
-          }, 2000);
-        }
-
-        // TODO see why domtoimage fails on iOS
-      },
-      flip() {
-        if (photoHolder) {
-          let transform = methods.photoEditor.getTransform();
-          transform.scaleX = transform.scaleX === 1 ? -1 : 1;
-          photoHolder.style.transform = methods.photoEditor.toStyle(transform);
-        }
-      },
-      rotate() {
-        if (photoHolder) {
-          let transform = methods.photoEditor.getTransform();
-          transform.rotate = transform.rotate + 90;
-          photoHolder.style.transform = methods.photoEditor.toStyle(transform);
-        }
-      },
-      cancel() {
-        state.showPhotoEditor = false;
-        state.photoData = null;
-      }
-    },
-    capturePhoto() {
-      Interact.openCamera(storagePath => {
-        ActiveLogStore.update(l => {
-          l.photo = storagePath;
-          return l;
-        });
-        // We have a base64 url of an image.. do somethign with it.
-        // const path = `camera/${md5(payload)}`;
-        // console.log(`Write payload ${payload.length} to ${path}`);
-        // Storage.put(path, payload).then(() => {
-        //   console.log("image Saved", path);
-        //   ActiveLogStore.update(l => {
-        //     l.photo = path;
-        //     return l;
-        //   });
-        // });
-      });
     }
   };
 
@@ -256,7 +215,7 @@
     // add space to the end.
     setTimeout(() => {
       if (textarea) {
-        textarea.value = textarea.value + " ";
+        textarea.value = textarea.value;
       }
       // adjust textarea size
       methods.checkTextareaSize();
@@ -287,6 +246,45 @@
     position: relative;
     z-index: 1;
   }
+  .autocomplete-results {
+    background-color: var(--color-solid-1);
+    margin: 0px;
+    border-radius: 2px;
+    padding: 2px;
+    transition: all 0.2s ease-in-out;
+    z-index: 100;
+    &.animate {
+      &.visible {
+        transition: all 0.2s ease-in-out;
+        opacity: 1;
+      }
+      &.hidden {
+        max-height: 0px !important;
+        padding: 0;
+        overflow: hidden;
+        margin: 0;
+        transition: all 0.2s ease-in-out;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(60px);
+      }
+    }
+
+    .tracker-list {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    .btn {
+      flex-grow: 1;
+      flex-shrink: 1;
+      box-shadow: var(--box-shadow-tight);
+      background-color: var(--color-solid);
+      margin: 3px;
+      font-size: 0.82rem;
+      padding: 5px 6px;
+    }
+  }
 
   .more-options {
     position: relative;
@@ -294,33 +292,7 @@
     padding: 0px 10px 10px;
     margin-top: -12px;
     background-color: var(--header-background);
-    // .btn {
-    //   background-color: transparent;
-    //   display: flex;
-    //   align-items: center;
-    //   color: var(--color-solid-3);
-    //   padding: 2px 6px;
-    //   font-size: 0.8rem;
-    //   line-height: 0.8rem;
-    //   i {
-    //     margin-right: 4px;
-    //     font-size: 1rem;
-    //     color: var(--color-solid-2);
-    //   }
-    //   &.btn-active {
-    //     background-color: var(--color-inverse-1);
-    //     color: var(--color-solid-1);
-    //     i {
-    //       color: var(--color-primary-bright);
-    //     }
-    //   }
-    //   &.btn-close {
-    //     i {
-    //       color: var(--color-solid-3) !important;
-    //       font-size: 26px;
-    //     }
-    //   }
-    // }
+
     .advanced-options-list {
       transition: all 0.2s ease-in-out;
       border: none !important;
@@ -463,11 +435,32 @@
   class="capture-wrapper"
   on:swipeup={methods.swipeUp}
   on:swipedown={methods.swipeDown}>
+
+  <div
+    class="autocomplete-results animate {state.autocompleteResults ? 'visible' : 'hidden'}">
+    <div class="container p-0 tracker-list">
+      {#each state.autocompleteResults || [] as tracker (tracker.tag)}
+        <button
+          class="btn btn-tracker-inline"
+          on:click={() => {
+            methods.autocompleteTracker(tracker);
+          }}>
+          {tracker.emoji} {tracker.tag}
+        </button>
+      {/each}
+      <div class="filler" />
+    </div>
+  </div>
+
   <div class="capture-log">
     <div
       class="save-progress {saved ? 'saved' : ''}
       {saving ? 'saving' : ''}" />
     <div class="container p-0">
+
+      <!-- Auto Complet e-->
+
+      <!-- Note Input -->
       <div
         class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 || $ActiveLogStore.photo ? 'populated' : 'empty'}">
         <textarea
@@ -476,7 +469,7 @@
           bind:value={$ActiveLogStore.note}
           bind:this={textarea}
           placeholder={Lang.t('general.whats-up')}
-          on:keypress={methods.keyPress}
+          on:input={methods.keyPress}
           on:paste={methods.keyPress} />
 
         <button
@@ -505,67 +498,6 @@
 
   </div>
   <div class="more-options">
-
-    <!-- <NCell gap={1} className="py-2">
-      <div class="filler" />
-      {#if !state.date}
-        <button
-          class="btn btn-sm mr-1"
-          on:click={() => {
-            state.showCustomDate = true;
-          }}>
-          <i class="zmdi zmdi-calendar" />
-          {Lang.t('general.date')}
-        </button>
-      {:else}
-        <button
-          class="btn btn-active btn-sm mr-1"
-          on:click={() => {
-            methods.clearDate();
-          }}>
-          <i class="zmdi zmdi-minus-circle text-white" />
-          {Lang.t('general.date')}
-        </button>
-      {/if}
-
- 
-      {#if $ActiveLogStore.lat}
-        <button
-          class="btn btn-active btn-sm mr-2"
-          on:click={() => {
-            $ActiveLogStore.lat = null;
-            $ActiveLogStore.lng = null;
-          }}>
-          <i class="zmdi zmdi-minus-circle text-white" />
-          Location
-        </button>
-      {:else}
-        <button
-          class="btn btn btn-sm mr-2"
-          on:click={() => {
-            Interact.pickLocation().then(location => {
-              $ActiveLogStore.lat = location.lat;
-              $ActiveLogStore.lng = location.lng;
-              $ActiveLogStore.location = location.name;
-            });
-          }}>
-          <i class="zmdi zmdi-map" />
-          Location
-        </button>
-      {/if}
-      {#if $ActiveLogStore.score}
-        <NPoints points={$ActiveLogStore.score} />
-      {/if}
-
-      <div class="filler" />
-    </NCell> -->
-
-    <!-- <button
-      class="advanced-toggle {state.show ? 'active' : 'inactive'}"
-      on:click={methods.advancedToggle}>
-      •••
-    </button> -->
-
     <div
       class="advanced-options-list {state.showCustomDate ? 'visible' : 'hidden'}">
       <div class="container pt-3 pb-1" style="max-width:520px">
@@ -599,61 +531,3 @@
 
   </div>
 </div>
-<!-- {#if state.capturingEdits === true}
-  <div class="photo-editor-window full-screen snap">
-    <div
-      class="photo-editor"
-      id="final-image-data-container"
-      style="overflow:hidden">
-      <img
-        alt="photo"
-        src={state.photoData}
-        id="final-image-data"
-        bind:this={finalImage}
-        width="600"
-        height="600" />
-    </div>
-  </div>
-{:else if state.finalImageData}
-  <div class="photo-editor-window full-screen captured">
-    <div class="photo-editor" style="overflow:hidden">
-      <img
-        alt="photo"
-        src={state.finalImageData}
-        bind:this={finalImage}
-        width="400"
-        height="400" />
-    </div>
-  </div>
-{:else if state.showPhotoEditor && !state.capturingEdits}
-  <div class="photo-editor-window full-screen dark-glass">
-    <div class="photo-editor">
-      <div
-        class="photo"
-        id="photo-editor-data"
-        bind:this={photoHolder}
-        style="background-image:url({state.photoData})">
-        {#if state.finalImageData}
-          <img src={state.finalImageData} width="100%" />
-          f
-        {:else}active image{/if}
-      </div>
-      <div class="n-row">
-        <button
-          class="btn btn-clear btn-icon zmdi zmdi-close"
-          on:click={methods.photoEditor.cancel} />
-        <div class="filler" />
-        <button
-          class="btn btn-clear btn-icon zmdi zmdi-rotate-right"
-          on:click={methods.photoEditor.rotate} />
-        <button
-          class="btn btn-clear btn-icon zmdi zmdi-flip"
-          on:click={methods.photoEditor.flip} />
-        <div class="filler" />
-        <button
-          class="btn btn-clear btn-icon zmdi zmdi-check"
-          on:click={methods.photoEditor.attach} />
-      </div>
-    </div>
-  </div>
-{/if} -->

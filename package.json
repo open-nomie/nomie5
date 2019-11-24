@@ -1,6 +1,6 @@
 {
   "name": "open-nomie",
-  "version": "4.5.1",
+  "version": "4.6.0",
   "homepage": "https://nomie.app",
   "bugs": {
     "url": "https://github.com/open-nomie/nomie/issues",
@@ -20,10 +20,12 @@
     "start": "sirv public --single",
     "start:og": "sirv public --cors --single --dev ",
     "start:dev": "sirv public --cors --single --dev --host 0.0.0.0",
-    "patch_version": "node build-tools/patch-version.js",
+    "version_patch": "node build-tools/patch-version.js patch",
+    "version_minor": "node build-tools/patch-version.js minor",
     "test": "jest src/**/*.spec.js",
     "todo": "node build-tools/get-todo.js",
-    "patch": "npm run patch_version && npm run todo",
+    "patch": "npm run version_patch && npm run todo",
+    "minor": "npm run version_minor && npm run todo",
     "cypress": "cypress open"
   },
   "devDependencies": {
@@ -74,6 +76,7 @@
   "dependencies": {
     "d3-scale": "^3.0.0",
     "dayjs": "^1.8.14",
+    "dom-to-image-more": "^2.8.0",
     "jslib-html5-camera-photo": "^3.0.2-beta.0",
     "md5": "^2.2.1",
     "svelte-awesome": "^1.4.1",
