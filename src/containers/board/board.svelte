@@ -775,7 +775,7 @@
           </div>
 
           <!-- Include User Tips - shit should be a component -->
-          {#if $UserStore.launchCount < 12 && data.hideTips !== true && $BoardStore.active == 'all'}
+          {#if $UserStore.launchCount < 5 && data.hideTips !== true && $BoardStore.active == 'all'}
             <div class="new-user tip n-row mb-3">
               <button
                 class="text-md btn btn-clear btn-sm p-0 btn-icon flex-grow-off"

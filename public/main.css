@@ -4900,7 +4900,6 @@ button:focus {
     font-size: 0.72rem !important;
     line-height: 1rem !important;
     font-weight: 400;
-    color: var(--color-faded-3);
     opacity: 0.7; }
   .btn-content.active {
     content: "✓";
@@ -4916,7 +4915,6 @@ button:focus {
       align-items: center;
       justify-content: center;
       color: #fff;
-      content: "";
       top: -12px;
       left: -12px;
       width: 24px;
@@ -4927,6 +4925,8 @@ button:focus {
       color: #fff;
       content: "✓";
       background-color: var(--color-primary-bright); }
+      .btn-content.active:after .text-sm {
+        color: rgba(255, 255, 255, 0.7) !important; }
 
 .btn-icon {
   font-size: 26px !important;
