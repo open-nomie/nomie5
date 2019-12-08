@@ -25,10 +25,10 @@
 @import "./components/tracker-button";
 @import "./components/share-image";
 
-// TODO: Look at making prefers-color-scheme work properly - when enabled, only buttons change
-// @media (prefers-color-scheme: dark) {
-// 	@include darkmode();
-// }
+/**
+THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 
+TODO: Organize main into components or containers. 
+**/
 
 .input-model {
   flex-grow: 1;

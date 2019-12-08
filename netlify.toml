@@ -5,3 +5,7 @@
   from = "/*"
   to = "/index.html"
   status = 200
+[[headers]]
+  for = "/service-worker.js"
+  [headers.values]
+    Cache-Control = "max-age=0"

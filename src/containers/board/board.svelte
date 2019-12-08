@@ -114,7 +114,7 @@
     "The History tab shows you everything you've done",
     "Check out the settings to change the theme",
     "Enable auto location in the Settings for deeper data",
-    "Want to organize your trackers? Click the nomie logo above to enable Tabs",
+    "Click the nomie logo above to enable Tabs",
     "Want to auto import data?  Settings -> Nomie API"
   ];
 
