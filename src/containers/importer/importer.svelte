@@ -160,7 +160,8 @@
           methods._importRecords().then(() => {
             importing.all.running = false;
             importing.all.done = true;
-            window.location.reload();
+            // window.location.reload();
+            window.location.href = window.location.href;
             return true;
           });
         });

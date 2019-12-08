@@ -1,0 +1,7 @@
+{
+  "blockstack.js": "sha384-89fUBwtmijI3gv30FamqS32y050s8LlxKvr6qRS/RVVQjijZVvsJ8Q4iMM1Jm9EQ",
+  "main.js.map": {
+    "src": "blockstack.js.map",
+    "integrity": "sha384-hQuv7Gu0gaKNreuHXgbx+o9l02oAW5QEOh866zZ7ymnm8cw72Q0b7UlmaRtNqrQY"
+  }
+}

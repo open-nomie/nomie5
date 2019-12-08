@@ -11,6 +11,10 @@
   import NToggle from "../components/toggle-switch/toggle-switch.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
 
+  import BlockstackOptions from "../components/storage/blockstack.svelte";
+  import LocalstorageOptions from "../components/storage/localstorage.svelte";
+  import PouchDBOptions from "../components/storage/pouchdb.svelte";
+
   // Containers
   import StorageManager from "../containers/storage/storage.svelte";
   import ImporterModal from "../containers/importer/importer.svelte";
@@ -131,6 +135,25 @@
         Interact.alert(Lang.t("general.error"), e.message);
       }
     },
+    storageMenu() {
+      let buttons = [
+        {
+          title: "Blockstack",
+          description: "Am I a thing too?",
+          click() {
+            console.log("blockstack");
+          }
+        }
+      ];
+      Interact.popmenu({
+        title: Lang.t(
+          "storage.type_selector_description",
+          `Pick storage option`
+        ),
+        description: "Am I a thing?",
+        buttons: buttons
+      });
+    },
     // boardsToggle() {
     //   $UserStore.meta.boardsEnabled = !$UserStore.meta.boardsEnabled;
     //   UserStore.saveMeta();
@@ -196,25 +219,7 @@
     {#if $UserStore.meta}
       <div class="page page-settings">
         <div class="container p-0 n-list">
-          {#if $UserStore.storageType === 'blockstack'}
-            <div class="n-pop">
-              <NItem className="n-item-divider" title="Account" />
 
-              <NItem>
-                <div class="title truncate">
-                  {$UserStore.profile.username || 'Blockstack'}
-                </div>
-                <div slot="right">
-                  <button
-                    class="btn btn-small btn-clear text-primary"
-                    on:click={methods.sign_out}>
-                    {Lang.t('settings.sign-out')}
-                  </button>
-                </div>
-              </NItem>
-
-            </div>
-          {/if}
           <NItem className="n-item-divider compact" />
           <NItem
             className="clickable pt-2"
@@ -387,16 +392,28 @@
           <NItem
             title={Lang.t('settings.storage')}
             className="n-item-divider" />
+
           <NItem>
             <div class="title truncate">
-              <strong>
-                {$UserStore.storageType === 'local' ? 'Local' : 'Cloud'}
-              </strong>
+              <strong>{Lang.t('general.type', 'Type')}</strong>
             </div>
             <span slot="left" class="btn-icon zmdi text-primary zmdi-storage" />
 
             <div slot="right">
-              {#if $UserStore.storageType === 'local'}
+
+              <button
+                class="btn btn-clear icon-right"
+                on:click={methods.storageMenu}>
+                {#if $UserStore.storageType === 'local'}
+                  {Lang.t('storage.local', 'Local')}
+                {:else if $UserStore.storageType === 'pouchdb'}
+                  {Lang.t('storage.pouchdb', 'Local + CouchDB')}
+                {:else if $UserStore.storageType === 'blockstack'}
+                  {Lang.t('storage.blockstack', 'Blockstack')}
+                {/if}
+                <i class="zmdi zmdi-chevron-down ml-2" />
+              </button>
+              <!-- {#if $UserStore.storageType === 'local'}
                 <button
                   class="btn btn-clear text-primary"
                   on:click={methods.switchToCloud}>
@@ -408,10 +425,23 @@
                   on:click={methods.switchToLocal}>
                   {Lang.t('settings.use-local')}
                 </button>
-              {/if}
+              {/if} -->
             </div>
           </NItem>
+
           {#if $UserStore.storageType === 'blockstack'}
+            <BlockstackOptions />
+          {/if}
+          {#if $UserStore.storageType === 'localstorage'}
+            <LocalstorageOptions />
+          {/if}
+          {#if $UserStore.storageType === 'pouchdb'}
+            <PouchDBOptions />
+          {/if}
+
+          <NItem className="n-item-divider" />
+          <StorageManager />
+          <!-- {#if $UserStore.storageType === 'blockstack'}
             <NItem title={Lang.t('settings.aggressive-sync')}>
               <span
                 slot="left"
@@ -423,8 +453,8 @@
               </div>
             </NItem>
             <NItem description={Lang.t('settings.aggressive-description')} />
-          {/if}
-          <StorageManager />
+          {/if} -->
+
           <!-- Stoage List - this is stupid I couldn't find it-->
 
           <!-- End Storage List-->

@@ -59,7 +59,7 @@
     if (today !== new Date().toDateString() && !confirming) {
       if (confirm("It's a new day! Nomie needs a refresh, do that now?")) {
         setTimeout(() => {
-          window.location.reload();
+          window.location.href = "/";
         }, 200);
       }
     }

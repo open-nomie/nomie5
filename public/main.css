@@ -4835,6 +4835,7 @@ button:focus {
   color: var(--color-primary) !important; }
 
 .btn {
+  cursor: pointer;
   transition: all 0.2s ease-in-out;
   border-radius: 0.4rem;
   display: flex;
@@ -6187,6 +6188,10 @@ body.scrolling .n-tracker-button {
     .share-image-component.theme-dark .nomie-logo path, .share-image-component.theme-terminal .nomie-logo path {
       fill: var(--color-primary-bright); }
 
+/**
+THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 
+TODO: Organize main into components or containers. 
+**/
 .input-model {
   flex-grow: 1;
   height: 100%; }

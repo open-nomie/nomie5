@@ -50,7 +50,8 @@ export default {
           // Clear local storage
           localStorage.clear();
           // Show Onboarding
-          window.location.reload();
+          // window.location.reload();
+          window.location.href = "/";
         }
       }
     }); // end return promise
@@ -90,12 +91,17 @@ export default {
         // Clear local storage
         localStorage.clear();
         // Show Onboarding
-        window.location.reload();
+        // window.location.reload();
+        window.location.href = "/";
       }
     }
   },
   getProfile() {
-    return userSession.loadUserData();
+    console.log(
+      "!!!!! 💰💰💰💰💰 Getting User Profile!!!",
+      blockstack.loadUserData()
+    );
+    return blockstack.loadUserData();
   },
   login() {
     window.blockstack.redirectToSignIn();

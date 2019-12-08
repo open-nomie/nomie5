@@ -84,6 +84,7 @@ const userInit = () => {
                 d.ready = true;
                 d.signedIn = true;
                 d.profile = Storage.getProfile();
+                console.log("Setting profile to", d.profile);
                 return d;
               });
             })

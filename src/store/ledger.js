@@ -360,31 +360,55 @@ const ledgerInit = () => {
           }, 120);
           return { log, book: date };
         };
+
+        /** UPDATE always agreesive sync */
+        let book = await Storage.get(`${config.data_root}/books/${date}`);
+        let cont = true;
+        if ((book || []).length < currentState.books[date].length) {
+          cont = confirm(
+            `${date} storage has ${book.length} records. This is less than expected. Something might be wrong. Continue anyway?`
+          );
+        }
+        // If we can continue
+        if (cont) {
+          currentState.books[date] = book || [];
+          currentState.books[date].push(log);
+          // Return promise of save
+          doSave(date)
+            .then(resolve)
+            .catch(reject);
+        } else {
+          reject({
+            message:
+              "Data loaded from storage is at least 25% less than expected"
+          });
+        }
+
         /**
          * Does this Book exist? If not, we need to get it
          * Also, lets make sure they don't want agreesiveSync
          * If they do, then just always get the book
          */
-        if (
-          currentState.books.hasOwnProperty(date) &&
-          !UserStore.data().meta.aggressiveSync
-        ) {
-          currentState.books[date].push(log);
-          // Return a Promise of the save
-          doSave(date)
-            .then(resolve)
-            .catch(reject);
-        } else {
-          // Need to fetch this book...
-          Storage.get(`${config.data_root}/books/${date}`).then(data => {
-            currentState.books[date] = data || [];
-            currentState.books[date].push(log);
-            // Return promise of save
-            doSave(date)
-              .then(resolve)
-              .catch(reject);
-          });
-        }
+        // if (
+        //   currentState.books.hasOwnProperty(date) &&
+        //   !UserStore.data().meta.aggressiveSync
+        // ) {
+        //   currentState.books[date].push(log);
+        //   // Return a Promise of the save
+        //   doSave(date)
+        //     .then(resolve)
+        //     .catch(reject);
+        // } else {
+        //   // Need to fetch this book...
+        //   Storage.get(`${config.data_root}/books/${date}`).then(data => {
+        //     currentState.books[date] = data || [];
+        //     currentState.books[date].push(log);
+        //     // Return promise of save
+        //     doSave(date)
+        //       .then(resolve)
+        //       .catch(reject);
+        //   });
+        // }
       });
     },
 
