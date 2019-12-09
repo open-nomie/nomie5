@@ -34,6 +34,7 @@ export default {
     } catch (e) {
       console.log("Error getting Engine");
       console.log("e", e.message);
+      return null;
     }
   },
   getProfile() {

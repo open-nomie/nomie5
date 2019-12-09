@@ -29,6 +29,21 @@ button:focus {
     transition: all 0.2s ease-in-out;
     transform: scale(0.97) !important;
   }
+
+  &.btn-desc {
+    text-align: left;
+    align-items: flex-start;
+    flex-direction: column;
+    .description {
+      font-size: 0.68rem;
+      line-height: 130%;
+      margin-bottom: 5px;
+    }
+    .title {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+  }
 }
 
 .btn-primary {

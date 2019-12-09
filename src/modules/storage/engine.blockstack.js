@@ -10,6 +10,7 @@ export default {
   name: "Blockstack",
   listeners: [],
   description: "Encrypted storage you control.",
+  profile: null,
   init() {
     /** Storage Init */
     return new Promise((resolve, reject) => {
@@ -96,12 +97,15 @@ export default {
       }
     }
   },
-  getProfile() {
-    console.log(
-      "!!!!! 💰💰💰💰💰 Getting User Profile!!!",
-      blockstack.loadUserData()
-    );
-    return blockstack.loadUserData();
+  async getProfile() {
+    if (this.profile) {
+      return this.profile;
+    } else {
+      let u = new blockstack.UserSession();
+      let data = await u.loadUserData();
+      this.profile = data;
+      return this.profile;
+    }
   },
   login() {
     window.blockstack.redirectToSignIn();

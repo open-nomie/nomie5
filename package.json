@@ -71,8 +71,7 @@
     "style-loader": "^0.23.1",
     "svelte": "^3.0.0",
     "svelte-preprocess-css-global": "0.0.1",
-    "svelte-routing": "^1.2.0",
-    "jslib-html5-camera-photo": "^3.0.2-beta.0"
+    "svelte-routing": "^1.2.0"
   },
   "dependencies": {
     "d3-scale": "^3.0.0",

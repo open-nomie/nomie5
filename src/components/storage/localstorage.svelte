@@ -1,1 +1,1 @@
-<div class="localstorage storage-option">This is localstorage</div>
+<div class="local storage-option">This is localstorage</div>

@@ -61,7 +61,7 @@
     },
     share() {
       SocialShare(
-        `I track and monitor the good and bad in my life with Nomie - to know me. It's free, private, and you get to design what you track. @nomieapp`,
+        `I track my life with Nomie! It's free, private, and you get to design what you track. @nomieapp`,
         "https://nomie.app"
       );
     },
@@ -78,28 +78,28 @@
       navigate("/faq");
     },
 
-    switchToCloud() {
-      let msg = Lang.t("settings.switch-to-cloud-notice");
-      Interact.confirm(Lang.t("settings.switch-to-cloud-confirm"), msg).then(
-        res => {
-          if (res === true) {
-            UserStore.setStorage("blockstack");
-            window.location.href = "/";
-          }
-        }
-      );
-    },
-    switchToLocal() {
-      let msg = Lang.t("settings.switch-to-local-notice");
-      Interact.confirm(Lang.t("settings.switch-to-local-confirm"), msg).then(
-        res => {
-          if (res === true) {
-            UserStore.setStorage("local");
-            window.location.href = "/";
-          }
-        }
-      );
-    },
+    // switchToCloud() {
+    //   let msg = Lang.t("settings.switch-to-cloud-notice");
+    //   Interact.confirm(Lang.t("settings.switch-to-cloud-confirm"), msg).then(
+    //     res => {
+    //       if (res === true) {
+    //         UserStore.setStorage("blockstack");
+    //         window.location.href = "/";
+    //       }
+    //     }
+    //   );
+    // },
+    // switchToLocal() {
+    //   let msg = Lang.t("settings.switch-to-local-notice");
+    //   Interact.confirm(Lang.t("settings.switch-to-local-confirm"), msg).then(
+    //     res => {
+    //       if (res === true) {
+    //         UserStore.setStorage("local");
+    //         window.location.href = "/";
+    //       }
+    //     }
+    //   );
+    // },
     settingChange() {
       UserStore.saveMeta();
     },
@@ -135,22 +135,73 @@
         Interact.alert(Lang.t("general.error"), e.message);
       }
     },
+    switchStorage(type) {
+      let from = $UserStore.storageType;
+      let to = type;
+      let conf = confirm(
+        `${Lang.t(
+          "storage.switch",
+          `Switch from ${from} to ${to}? You can always switch back. 
+
+Note: Your data will not automatically move over. You'll first need to export it, then you can import into this new storage.`
+        )}`
+      );
+      if (conf === true) {
+        if (["local", "pouchdb", "blockstack"].indexOf(to) > -1) {
+          UserStore.setStorage(to);
+          Interact.reload();
+        } else {
+          alert(`Error: ${to} is not valid`);
+        }
+      }
+    },
     storageMenu() {
       let buttons = [
         {
-          title: "Blockstack",
-          description: "Am I a thing too?",
+          title: `${$UserStore.storageType === "local" ? "✓" : ""} ${Lang.t(
+            "storage.local_title",
+            "This Device Only"
+          )}`,
+          description: Lang.t(
+            "storage.local_description",
+            "Good for getting started, but make sure you backup your data."
+          ),
           click() {
-            console.log("blockstack");
+            methods.switchStorage("local");
+          }
+        },
+        {
+          title: `${
+            $UserStore.storageType === "blockstack" ? "✓" : ""
+          } Blockstack`,
+          description: Lang.t(
+            "storage.blockstack_description",
+            "Stored encryted with Blockstack's file storage. FREE"
+          ),
+          click() {
+            methods.switchStorage("blockstack");
+          }
+        },
+        {
+          title: `${$UserStore.storageType === "pouchdb" ? "✓" : ""} ${Lang.t(
+            "storage.pouchdb_title",
+            "Device + My own CouchDB"
+          )}`,
+          description: Lang.t(
+            "storage.pouchdb_description",
+            "Have a CouchDB server? Sync in near-real time."
+          ),
+          click() {
+            methods.switchStorage("pouchdb");
           }
         }
       ];
       Interact.popmenu({
-        title: Lang.t(
-          "storage.type_selector_description",
-          `Pick storage option`
+        title: Lang.t("storage.type_selector_title", `Storage Options`),
+        description: Lang.t(
+          "storage.type_selector_title",
+          `How would you like your data stored?`
         ),
-        description: "Am I a thing?",
         buttons: buttons
       });
     },
@@ -432,14 +483,17 @@
           {#if $UserStore.storageType === 'blockstack'}
             <BlockstackOptions />
           {/if}
-          {#if $UserStore.storageType === 'localstorage'}
+          {#if $UserStore.storageType === 'local'}
             <LocalstorageOptions />
           {/if}
           {#if $UserStore.storageType === 'pouchdb'}
             <PouchDBOptions />
           {/if}
 
-          <NItem className="n-item-divider" />
+          <NItem title="DB Stats" className="n-item-divider" />
+          <NItem title={Lang.t('general.trackers', 'Trackers')}>
+            <span slot="right">{TrackerStore.getAsArray().length}</span>
+          </NItem>
           <StorageManager />
           <!-- {#if $UserStore.storageType === 'blockstack'}
             <NItem title={Lang.t('settings.aggressive-sync')}>

@@ -92,6 +92,7 @@
 
 <NPopMenu
   title={$Interact.popmenu.title}
+  description={$Interact.popmenu.description}
   show={$Interact.popmenu.show}
   buttons={$Interact.popmenu.buttons}
   on:close={() => {
