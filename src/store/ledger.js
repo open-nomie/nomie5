@@ -364,11 +364,11 @@ const ledgerInit = () => {
         /** UPDATE always agreesive sync */
         let book = await Storage.get(`${config.data_root}/books/${date}`);
         let cont = true;
-        if ((book || []).length < currentState.books[date].length) {
-          cont = confirm(
-            `${date} storage has ${book.length} records. This is less than expected. Something might be wrong. Continue anyway?`
-          );
-        }
+        // if ((book || []).length < currentState.books[date].length) {
+        //   cont = confirm(
+        //     `${date} storage has ${book.length} records. This is less than expected. Something might be wrong. Continue anyway?`
+        //   );
+        // }
         // If we can continue
         if (cont) {
           currentState.books[date] = book || [];

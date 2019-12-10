@@ -39,7 +39,6 @@ export default {
   },
   getProfile() {
     const engine = this.getEngine();
-    console.log("getprofile engine", engine);
     return engine.getProfile();
   },
   onReady(func) {

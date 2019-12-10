@@ -24,8 +24,6 @@
     success: false
   };
 
-  console.log("## pouchDB", data);
-
   const methods = {
     init() {
       data.remote = Storage.local.get("pouch-remote") || null;
@@ -88,14 +86,7 @@
     }
   };
 
-  //   $: if ((data.engine || {}).sync)  {
-  //     console.log("data engine sync change", data.engine.sync);
-  //   } else {
-  //     console.log("data sync off");
-  //   }
-
   $: if (data.form.username && data.form.password && data.form.host) {
-    console.log("Can save!");
     data.form.auth = btoa(data.form.username + ":" + data.form.password);
     data.canSave = true;
   }
@@ -117,7 +108,6 @@
   }
 
   onMount(async () => {
-    console.log("STORAGE", Storage);
     data.engine = Storage.getEngine();
     methods.init();
   });

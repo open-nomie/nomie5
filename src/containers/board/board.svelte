@@ -120,7 +120,6 @@
 
   // Wait for the User to be ready
   UserStore.onReady(() => {
-    console.log("User onReady");
     // Set user to kick off top view conditional.
     user = $UserStore; // Kick off
     // Setup Hooks These will fire on before safe, and onLogSave

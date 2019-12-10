@@ -56,7 +56,6 @@ const userInit = () => {
       return Storage._storageType();
     },
     initialize() {
-      console.log("Initialize the user");
       // Set Dark or Light Mode
       // Lets get dark Mode
 
@@ -76,7 +75,6 @@ const userInit = () => {
       } else {
         // Storage is set - wait for it to be ready
         Storage.onReady(() => {
-          console.log("Storage.onReady called");
           methods
             .bootstrap()
             .then(() => {
@@ -84,7 +82,7 @@ const userInit = () => {
                 d.ready = true;
                 d.signedIn = true;
                 d.profile = Storage.getProfile();
-                console.log("Setting profile to", d.profile);
+
                 return d;
               });
             })
