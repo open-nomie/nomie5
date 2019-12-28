@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import AppTabs from "../layout/tabs.svelte";
+  import tick from "../../utils/tick/tick";
   export let title = "Welcome";
   export let refresh = undefined;
 
@@ -23,13 +24,11 @@
     padContent();
   }
 
-  onMount(() => {
-    setTimeout(() => {
-      padContent();
-      setTimeout(() => {
-        padContent();
-      }, 100);
-    }, 100);
+  onMount(async () => {
+    await tick(100);
+    padContent();
+    await tick(100);
+    padContent();
     window.scrollTo(0, 0);
   });
 </script>

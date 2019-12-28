@@ -1,7 +1,10 @@
 export default (time, callback) => {
   return new Promise(resolve => {
     setTimeout(() => {
-      callback || function() {};
+      if (callback) {
+        callback();
+      }
+      resolve();
     }, time);
   });
 };
