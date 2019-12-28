@@ -50,6 +50,7 @@ export default {
   },
   // Get a file
   async get(path) {
+    console.log(`get ${path}`);
     return await this.getEngine().get(path);
   },
   // Put a file

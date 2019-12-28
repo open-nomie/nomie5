@@ -3,9 +3,4 @@
   export let size = 60;
 </script>
 
-<Spinner
-  {size}
-  speed="750"
-  color="#319ed7"
-  thickness={Math.round(size * 0.2) + ''}
-  gap="40" />
+<Spinner {size} speed="750" color="#319ed7" thickness={4} gap="20" />

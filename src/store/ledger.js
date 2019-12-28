@@ -10,12 +10,13 @@ import dayjs from "dayjs";
 import { writable } from "svelte/store";
 import PromiseStep from "../utils/promise-step/promise-step";
 import md5 from "md5";
+import tick from "../utils/tick/tick";
 
 // Config
 import config from "../../config/global";
 
 // Stores
-import { UserStore } from "./user";
+// import { UserStore } from "./user";
 import { Interact } from "./interact";
 
 const console = new Logger("🧺 store/ledger.js", true);
@@ -39,6 +40,7 @@ const ledgerInit = () => {
    */
   let base = {
     books: {},
+    booksLastUpdate: {},
     today: {},
     count: 0,
     saving: false,
@@ -79,13 +81,11 @@ const ledgerInit = () => {
      */
     async getBook(bookDateString) {
       hooks.run("onBeforeGetBook", bookDateString);
-      return Storage.get(`${config.book_root}/${bookDateString}`).then(
-        results => {
-          return (results || []).map(log => {
-            return new NomieLog(log);
-          });
-        }
-      );
+      let book = await Storage.get(`${config.book_root}/${bookDateString}`);
+
+      return (book || []).map(log => {
+        return new NomieLog(log);
+      });
     },
     /**
      * Put a Book
@@ -150,51 +150,90 @@ const ledgerInit = () => {
       });
       return trackers;
     },
+
     hashTodayPayload(today) {
       let nodes = Object.keys(today).map(tag => {
         return `${tag}-${today[tag].values.join(",")}`;
       });
       return md5(nodes.join(","));
     },
-    getToday() {
-      return new Promise((resolve, reject) => {
-        let todayKey = dayjs().format("YYYY-MM");
-        // Set local function for setting today
-        let loadToday = () => {
-          let logs = methods.filterLogs(base.books[todayKey], {
-            start: dayjs()
-              .startOf("day")
-              .toDate(),
-            end: dayjs()
-              .endOf("day")
-              .toDate()
-          });
-          let trackersUsed = methods.extractTrackerTagAndValues(logs);
-          let data;
-          update(d => {
-            data = d;
-            d.today = trackersUsed;
-            // Create a hash of this setting so we can watch for changes
-            d.hash = methods.hashTodayPayload(trackersUsed);
-            d.count++;
-            return d;
-          });
-          resolve(data.today);
-        }; // end today_only
 
-        if (base.books[todayKey]) {
-          // If today exists in the book - roll with it.
-          // Aggressively sync each time we get today - regardless if it exists.
-          loadToday();
-        } else {
-          // If it doesn't exist, get it from storage
-          methods.getBook(todayKey).then(book => {
-            base.books[todayKey] = book;
-            loadToday();
-          });
-        }
-      });
+    async getToday() {
+      let todayKey = dayjs().format("YYYY-MM");
+      if (base.books[todayKey]) {
+        return methods.todayReady();
+      } else {
+        let book = await methods.getBook(todayKey);
+        base.books[todayKey] = book || [];
+        base.booksLastUpdate[todayKey] = await methods.getLastUpdate(todayKey);
+        return methods.todayReady();
+      }
     },
+
+    async todayReady() {
+      let start = dayjs().startOf("day");
+      let end = dayjs().endOf("day");
+      let todayKey = dayjs().format("YYYY-MM");
+      let allLogs = base.books[todayKey];
+      let todaysLogs = methods.filterLogs(allLogs, {
+        start: start.toDate(),
+        end: end.toDate()
+      });
+      let trackersUsed = methods.extractTrackerTagAndValues(todaysLogs);
+      let data;
+      update(d => {
+        data = d;
+        d.today = trackersUsed;
+        d.hash = methods.hashTodayPayload(trackersUsed);
+        // d.count++;
+        return d;
+      });
+      return data;
+    },
+
+    // getToday() {
+    //   return new Promise((resolve, reject) => {
+    //     let todayKey = dayjs().format("YYYY-MM");
+    //     // Set local function for setting today
+    //     let loadToday = () => {
+    //       let logs = methods.filterLogs(base.books[todayKey], {
+    //         start: dayjs()
+    //           .startOf("day")
+    //           .toDate(),
+    //         end: dayjs()
+    //           .endOf("day")
+    //           .toDate()
+    //       });
+    //       let trackersUsed = methods.extractTrackerTagAndValues(logs);
+    //       let data;
+    //       update(d => {
+    //         data = d;
+    //         d.today = trackersUsed;
+    //         // Create a hash of this setting so we can watch for changes
+    //         d.hash = methods.hashTodayPayload(trackersUsed);
+    //         d.count++;
+    //         return d;
+    //       });
+    //       resolve(data.today);
+    //     }; // end today_only
+
+    //     if (base.books[todayKey]) {
+    //       // If today exists in the book - roll with it.
+    //       // Aggressively sync each time we get today - regardless if it exists.
+    //       loadToday();
+    //     } else {
+    //       // If it doesn't exist, get it from storage
+    //       methods.getBook(todayKey).then(async book => {
+    //         base.books[todayKey] = book;
+    //         base.booksLastUpdate[todayKey] = await Storage.get(
+    //           `${config.data_root}/books/${todayKey}_last`
+    //         );
+    //         console.log("Got Last Update on Book", base.booksLastUpdate);
+    //         loadToday();
+    //       });
+    //     }
+    //   });
+    // },
     locateIfNeeded() {
       let shouldLocate = JSON.parse(
         localStorage.getItem(config.always_locate_key) || "false"
@@ -321,6 +360,35 @@ const ledgerInit = () => {
       return log;
     },
 
+    getLastUpdatePath(date) {
+      return `${config.data_root}/books/${date}_last`;
+    },
+    async getLastUpdate(date) {
+      return await Storage.get(methods.getLastUpdatePath(date));
+    },
+
+    async getBookWithSync(date) {
+      console.log(`Sync: check if out of sync`);
+      let lastUpdate = await methods.getLastUpdate(date);
+      let book = base.books[date] || [];
+
+      if (lastUpdate) {
+        let lu = new Date(lastUpdate);
+        let bu = new Date(base.booksLastUpdate[date]);
+        console.log("Save Diff", lu.getTime() - bu.getTime());
+        if (lu > bu) {
+          book = await Storage.get(`${config.data_root}/books/${date}`);
+          console.log(
+            "Sync: Was out of sync with server.. It's now updated",
+            book
+          );
+        }
+      } else {
+        console.log("Sync: No lastUpdate");
+      }
+      return book;
+    }, // end update if out of sync
+
     /**
      * Save A Log!
      *
@@ -329,7 +397,10 @@ const ledgerInit = () => {
      * @param {NomieLog} log
      */
     async saveLog(log) {
+      // Set up a holder for current state
       let currentState;
+
+      // extract current state
       update(s => {
         s.saving = true;
         currentState = s;
@@ -340,76 +411,34 @@ const ledgerInit = () => {
       // Set the date for the book
       let date = dayjs(new Date(log.end)).format("YYYY-MM");
 
-      //Return Promise
-      return new Promise(async (resolve, reject) => {
-        // Update store to show it's saving
+      // Set Path
+      let bookPath = `${config.data_root}/books/${date}`; // path to book
+      // Update if out of sync with Server
+      let book = await methods.getBookWithSync(date);
+      book.push(log); // push log
+      // Save Book.
+      await Storage.put(bookPath, book); // put the content
+      currentState.books[date] = book; // update state
 
-        /** Reusable Save */
-        let doSave = async date => {
-          let bookPath = `${config.data_root}/books/${date}`; // path to book
-          await Storage.put(bookPath, currentState.books[date]); // put the content
-          update(s => {
-            s.saving = false;
-            s.books = currentState.books;
-            return s;
-          });
-          Interact.toast(`Saved ${log.note}`); // show Alert
-          hooks.run("onLogSaved", log);
-          setTimeout(() => {
-            methods.getToday(); // Get Today
-          }, 120);
-          return { log, book: date };
-        };
+      // Save Last Update to server
+      let timeString = new Date().toJSON();
+      let lastDatePath = methods.getLastUpdatePath(date);
+      await Storage.put(lastDatePath, timeString);
+      currentState.booksLastUpdate[date] = timeString;
 
-        /** UPDATE always agreesive sync */
-        let book = await Storage.get(`${config.data_root}/books/${date}`);
-        let cont = true;
-        // if ((book || []).length < currentState.books[date].length) {
-        //   cont = confirm(
-        //     `${date} storage has ${book.length} records. This is less than expected. Something might be wrong. Continue anyway?`
-        //   );
-        // }
-        // If we can continue
-        if (cont) {
-          currentState.books[date] = book || [];
-          currentState.books[date].push(log);
-          // Return promise of save
-          doSave(date)
-            .then(resolve)
-            .catch(reject);
-        } else {
-          reject({
-            message:
-              "Data loaded from storage is at least 25% less than expected"
-          });
-        }
-
-        /**
-         * Does this Book exist? If not, we need to get it
-         * Also, lets make sure they don't want agreesiveSync
-         * If they do, then just always get the book
-         */
-        // if (
-        //   currentState.books.hasOwnProperty(date) &&
-        //   !UserStore.data().meta.aggressiveSync
-        // ) {
-        //   currentState.books[date].push(log);
-        //   // Return a Promise of the save
-        //   doSave(date)
-        //     .then(resolve)
-        //     .catch(reject);
-        // } else {
-        //   // Need to fetch this book...
-        //   Storage.get(`${config.data_root}/books/${date}`).then(data => {
-        //     currentState.books[date] = data || [];
-        //     currentState.books[date].push(log);
-        //     // Return promise of save
-        //     doSave(date)
-        //       .then(resolve)
-        //       .catch(reject);
-        //   });
-        // }
+      // Update Store
+      update(s => {
+        s.saving = false;
+        s.books = currentState.books;
+        return s;
       });
+
+      /** Fire off Notifications and hooks Save */
+      Interact.toast(`Saved ${log.note}`); // show Alert
+      hooks.run("onLogSaved", log);
+      await tick(120);
+      methods.getToday(); // Get Today
+      return { log, date };
     },
 
     /**
