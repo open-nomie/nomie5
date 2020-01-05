@@ -6,6 +6,7 @@
   const dispatch = createEventDispatcher();
 
   export let title = undefined;
+  export let description = undefined;
   export let buttons = [];
   export let cancel = undefined;
   export let show = true;
@@ -117,20 +118,28 @@
 <div
   class="full-screen dark-glass pop-menu {show === true ? 'visible' : 'hidden'}">
   <div class="card">
-    {#if title}
+    {#if title || description}
       <div class="pb-4 pt-2 text-center">
-        <h5 class="text-center m-0 p-0">{title}</h5>
+        {#if title}
+          <h5 class="text-center m-0 p-0">{title}</h5>
+        {/if}
+        {#if description}
+          <p class="text-center m-0 p-0">{description}</p>
+        {/if}
       </div>
     {/if}
     <div class="list">
       {#each buttons as button}
         <button
-          class="btn btn-block btn-light btn-lg"
+          class="btn btn-block btn-light btn-lg {button.description ? 'btn-desc' : ''}"
           on:click={() => {
             button.click();
             dispatch('close');
           }}>
-          {button.title}
+          <div class="title">{button.title}</div>
+          {#if button.description}
+            <div class="description">{button.description}</div>
+          {/if}
         </button>
       {/each}
       <button

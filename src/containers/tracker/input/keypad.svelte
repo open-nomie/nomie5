@@ -1,9 +1,4 @@
 <script>
-  /**
-   * Fuck - There are two keypads now.. This one for inputing a tracker value
-   * and one for the pin-lock container - TODO: merge these some day
-   */
-
   // Svelte
   import { tap } from "@sveltejs/gestures";
   import { createEventDispatcher, onMount } from "svelte";

@@ -1,6 +1,6 @@
 # TODO
 
-Generated Sat Nov 23 2019 2:54 pm
+Generated Thu Jan 2 2020 5:44 pm
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -15,7 +15,7 @@ Generated Sat Nov 23 2019 2:54 pm
    - TODO: figure out why duplicates happen on board saving
    - TODO: tried to make this a spread - but I keep breaking it.
 - **src/scss/main.scss**
-   - TODO: Look at making prefers-color-scheme work properly - when enabled, only buttons change
+   - TODO: Organize main into components or containers.
 - **src/scss/components/_list-item.scss**
    - TODO: see if making main overflow hidden was a bad idea
 - **src/routes/stats.svelte**
@@ -36,8 +36,6 @@ Generated Sat Nov 23 2019 2:54 pm
    - end TODO: See why end date is not working in query
 - **src/main.js**
    - TODO: handle anything required for service worker
-- **src/containers/tracker/input/keypad.svelte**
-   - and one for the pin-lock container - TODO: merge these some day
 - **src/containers/tracker/input/input.svelte**
    - TODO: Figure out wtf is going on with value and data.value - can we just use value?
 - **src/containers/tracker/editor/editor.svelte**

@@ -280,6 +280,7 @@
       flex-shrink: 1;
       box-shadow: var(--box-shadow-tight);
       background-color: var(--color-solid);
+      color: var(--color-inverse-2);
       margin: 3px;
       font-size: 0.82rem;
       padding: 5px 6px;

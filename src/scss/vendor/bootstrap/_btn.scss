@@ -16,6 +16,7 @@ button:focus {
 }
 
 .btn {
+  cursor: pointer;
   transition: all 0.2s ease-in-out;
   border-radius: 0.4rem;
   display: flex;
@@ -27,6 +28,21 @@ button:focus {
   &:active {
     transition: all 0.2s ease-in-out;
     transform: scale(0.97) !important;
+  }
+
+  &.btn-desc {
+    text-align: left;
+    align-items: flex-start;
+    flex-direction: column;
+    .description {
+      font-size: 0.68rem;
+      line-height: 130%;
+      margin-bottom: 5px;
+    }
+    .title {
+      font-size: 1rem;
+      font-weight: 500;
+    }
   }
 }
 
@@ -95,7 +111,6 @@ button:focus {
     font-size: 0.72rem !important;
     line-height: 1rem !important;
     font-weight: 400;
-    color: var(--color-faded-3);
     opacity: 0.7;
   }
   &:after {
@@ -116,7 +131,6 @@ button:focus {
       align-items: center;
       justify-content: center;
       color: #fff;
-      content: "";
       top: -#{$height * 0.5};
       left: -#{$height * 0.5};
       width: $height;
@@ -127,6 +141,9 @@ button:focus {
       color: #fff;
       content: "✓";
       background-color: var(--color-primary-bright);
+      .text-sm {
+        color: rgba(255, 255, 255, 0.7) !important;
+      }
     }
   }
 }

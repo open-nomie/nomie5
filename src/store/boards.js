@@ -44,9 +44,6 @@ const boardsInit = () => {
           return boards;
         }
       );
-
-      console.log("Board Data");
-
       return boardData;
     },
     load(boards) {

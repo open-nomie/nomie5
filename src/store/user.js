@@ -56,7 +56,6 @@ const userInit = () => {
       return Storage._storageType();
     },
     initialize() {
-      console.log("Initialize the user");
       // Set Dark or Light Mode
       // Lets get dark Mode
 
@@ -76,7 +75,6 @@ const userInit = () => {
       } else {
         // Storage is set - wait for it to be ready
         Storage.onReady(() => {
-          console.log("Storage.onReady called");
           methods
             .bootstrap()
             .then(() => {
@@ -84,6 +82,7 @@ const userInit = () => {
                 d.ready = true;
                 d.signedIn = true;
                 d.profile = Storage.getProfile();
+
                 return d;
               });
             })
@@ -105,15 +104,15 @@ const userInit = () => {
       // TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
     },
     setStorage(type) {
+      type =
+        ["blockstack", "local", "pouchdb"].indexOf(type) > -1 ? type : "local";
       update(d => {
-        d.storageType = type === "local" ? "local" : "blockstack";
-        Storage.local.put(
-          "root/storage_type",
-          type === "local" ? "local" : "blockstack"
-        );
+        d.storageType = type;
+        Storage.local.put("root/storage_type", type);
         d.launchCount = state.launchCount;
         return d;
       });
+      return type;
     },
     resetLaunchCount() {
       if (confirm("Reset Launch Count to zero?") === true) {
@@ -264,6 +263,9 @@ const userInit = () => {
         func(payload);
       });
       listeners = [];
+    },
+    storage() {
+      return Storage;
     },
     /**
      * ListFiles()

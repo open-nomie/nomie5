@@ -8,16 +8,19 @@
 
 import LocalForageEngine from "./engine.localforage";
 import BlockStackEngine from "./engine.blockstack";
+import PouchDBEngine from "./engine.pouchdb";
 
 export default {
   engines: {
     blockstack: BlockStackEngine,
-    local: LocalForageEngine
+    local: LocalForageEngine,
+    pouchdb: PouchDBEngine
   },
   engine: null,
   // Get user storage type
   storageType() {
     return this.engine || this._storageType() || "local";
+    // return "pouchdb";
   },
   _storageType() {
     return this.local.get("root/storage_type");
@@ -31,10 +34,12 @@ export default {
     } catch (e) {
       console.log("Error getting Engine");
       console.log("e", e.message);
+      return null;
     }
   },
   getProfile() {
-    return this.getEngine().getProfile();
+    const engine = this.getEngine();
+    return engine.getProfile();
   },
   onReady(func) {
     return this.getEngine().onReady(func);

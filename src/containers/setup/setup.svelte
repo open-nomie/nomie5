@@ -407,11 +407,9 @@
         on:click={() => {
           UserStore.setStorage('local');
         }}>
-        <div class="text-md font-weight-bold text-inverse">
-          On this Device Only
-        </div>
+        <div class="text-md font-weight-bold">On this Device Only</div>
         <div class="text-sm" className="">
-          All data is stored unencrypted, but ONLY on your device.
+          Stored unencrypted ONLY on this device.
         </div>
       </button>
       <button
@@ -419,12 +417,10 @@
         on:click={() => {
           UserStore.setStorage('blockstack');
         }}>
-        <div class="text-md font-weight-bold text-inverse">
-          Encrypted in the Cloud
-        </div>
+        <div class="text-md font-weight-bold">Encrypted in the Cloud</div>
         <div class="text-sm">
-          Access your data on multiple devices using end-to-end encryption.
-          <strong>Powered by Blockstack .</strong>
+          Multiple device support with end-to-end encryption
+          <strong>by Blockstack.</strong>
         </div>
       </button>
       <div class="filler" />

@@ -2373,6 +2373,43 @@ input[type="button"].btn-block {
     .custom-select {
       transition: none; } }
 
+@keyframes progress-bar-stripes {
+  from {
+    background-position: 10px 0; }
+  to {
+    background-position: 0 0; } }
+
+.progress {
+  display: flex;
+  height: 10px;
+  overflow: hidden;
+  font-size: 0.8rem;
+  background-color: var(--color-faded);
+  border-radius: 10px; }
+
+.progress-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--color-solid);
+  text-align: center;
+  white-space: nowrap;
+  background-color: #20699d;
+  transition: width 0.6s ease; }
+  @media (prefers-reduced-motion: reduce) {
+    .progress-bar {
+      transition: none; } }
+
+.progress-bar-striped {
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-size: 10px 10px; }
+
+.progress-bar-animated {
+  animation: progress-bar-stripes 1s linear infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .progress-bar-animated {
+      animation: none; } }
+
 .media {
   display: flex;
   align-items: flex-start; }
@@ -4835,6 +4872,7 @@ button:focus {
   color: var(--color-primary) !important; }
 
 .btn {
+  cursor: pointer;
   transition: all 0.2s ease-in-out;
   border-radius: 0.4rem;
   display: flex;
@@ -4845,6 +4883,17 @@ button:focus {
   .btn:active {
     transition: all 0.2s ease-in-out;
     transform: scale(0.97) !important; }
+  .btn.btn-desc {
+    text-align: left;
+    align-items: flex-start;
+    flex-direction: column; }
+    .btn.btn-desc .description {
+      font-size: 0.68rem;
+      line-height: 130%;
+      margin-bottom: 5px; }
+    .btn.btn-desc .title {
+      font-size: 1rem;
+      font-weight: 500; }
 
 .btn-primary {
   background-color: var(--color-primary-bright); }
@@ -4900,7 +4949,6 @@ button:focus {
     font-size: 0.72rem !important;
     line-height: 1rem !important;
     font-weight: 400;
-    color: var(--color-faded-3);
     opacity: 0.7; }
   .btn-content.active {
     content: "✓";
@@ -4916,7 +4964,6 @@ button:focus {
       align-items: center;
       justify-content: center;
       color: #fff;
-      content: "";
       top: -12px;
       left: -12px;
       width: 24px;
@@ -4927,6 +4974,8 @@ button:focus {
       color: #fff;
       content: "✓";
       background-color: var(--color-primary-bright); }
+      .btn-content.active:after .text-sm {
+        color: rgba(255, 255, 255, 0.7) !important; }
 
 .btn-icon {
   font-size: 26px !important;
@@ -5062,7 +5111,7 @@ body.no-scroll {
 
 body {
   --color-darkest: #fff;
-  --color-bg: #f9f9f9;
+  --color-bg: #eeeeee;
   --tracker-background: #fff;
   --color-inverse: #333;
   --color-inverse-1: #555;
@@ -5094,7 +5143,11 @@ body {
   --box-shadow-tight: 0px 3px 5px rgba(0, 0, 0, 0.2);
   --box-shadow: 0px 8px 18px -10px rgba(0, 0, 0, 0.2);
   --box-shadow-float: 0 4px 8px rgba(0, 0, 0, 0.08),
-    0 2px 4px rgba(0, 0, 0, 0.08), 0 0 2px rgba(0, 0, 0, 0.24);
+    0 2px 4px rgba(0, 0, 0, 0.08), 0 0 2px rgba(0, 0, 0, 0.14);
+  --box-shadow-neu: 4px 4px 8px rgba(0, 0, 0, 0.2),
+    -4px -4px 8px rgba(255, 255, 255, 0.9);
+  --box-shadow-neu-tight: 2px 2px 4px rgba(0, 0, 0, 0.2),
+    -2px -2px 4px rgba(255, 255, 255, 0.9);
   --header-background: #fff;
   --modal-border: solid 1px rgba(0, 0, 0, 0.12); }
 
@@ -5156,8 +5209,8 @@ body.offline .main-content:before {
   z-index: 2000; }
 
 body.theme-dark {
-  --header-background: #000;
-  --tabs-background: #000;
+  --header-background: #111;
+  --tabs-background: #111;
   --tracker-background: rgb(5, 5, 5);
   --color-darkest: #000;
   --color-bg: rgb(30, 30, 30);
@@ -5182,7 +5235,11 @@ body.theme-dark {
   --box-shadow-tight: 0px 2px 2px rgba(255, 255, 255, 0.06),
     0px 4px 6px -1px rgba(0, 0, 0, 0.4);
   --box-shadow-float: 0px 2px 2px rgba(255, 255, 255, 0.06),
-    0px 6px 10px -1px rgba(0, 0, 0, 0.4);
+    0px 6px 10px -1px rgba(0, 0, 0, 0.1);
+  --box-shadow-neu: 4px 4px 8px rgba(255, 255, 255, 0.1),
+    -4px -4px 8px rgba(0, 0, 0, 0.3);
+  --box-shadow-neu-tight: 2px 2px 4px rgba(255, 255, 255, 0.1),
+    -2px -2px 4px rgba(0, 0, 0, 0.3);
   --modal-border: solid 1px rgba(255, 255, 255, 0.12);
   --color-translucent: rgba(0, 0, 0, 0.79); }
   body.theme-dark .n-item.border-bottom {
@@ -6187,6 +6244,10 @@ body.scrolling .n-tracker-button {
     .share-image-component.theme-dark .nomie-logo path, .share-image-component.theme-terminal .nomie-logo path {
       fill: var(--color-primary-bright); }
 
+/**
+THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 
+TODO: Organize main into components or containers. 
+**/
 .input-model {
   flex-grow: 1;
   height: 100%; }

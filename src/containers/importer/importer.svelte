@@ -54,6 +54,9 @@
         archive.records = methods.getRecords();
       }
     },
+    finish() {
+      document.location.href = "/";
+    },
     // On Import File
     // Process the file - see if we can do anything with it.
     onImportFile(event) {
@@ -160,7 +163,9 @@
           methods._importRecords().then(() => {
             importing.all.running = false;
             importing.all.done = true;
-            window.location.reload();
+            Interact.toast("Import Complete. Reloading...");
+            // window.location.reload();
+            window.location.href = "/";
             return true;
           });
         });
@@ -456,21 +461,33 @@
 </script>
 
 <!-- Modal will be hidden in settings TODO: make this not hacky -->
-<NModal title="Import Data" fullscreen={true} show={true}>
+<NModal
+  title="Import Backups"
+  fullscreen={true}
+  on:close={() => {
+    dispatch('dismiss');
+  }}
+  allowClose={true}
+  show={true}>
   {#if !fileData}
-    <div class="empty-notice" style="opacity:1">
-      <button
-        class="btn btn-clear text-primary"
-        on:click={() => {
-          fileInput.click();
-        }}>
-        Select Nomie Backup...
-      </button>
-      <input
-        class="d-none"
-        type="file"
-        bind:this={fileInput}
-        on:change={methods.onImportFile} />
+    <div class="empty-notice" style="opacity:1; max-height:80%">
+      <div class="text-center d-flex flex-column justify-content-center">
+        <p class="text-sm text-faded-3 mb-2">
+          Import backups (not CSVs) from Nomie 1, Nomie 2 and Nomie 3.
+        </p>
+        <button
+          class="btn btn-primary"
+          on:click={() => {
+            fileInput.click();
+          }}>
+          Select Nomie Backup...
+        </button>
+        <input
+          class="d-none"
+          type="file"
+          bind:this={fileInput}
+          on:change={methods.onImportFile} />
+      </div>
     </div>
   {/if}
   <div class="n-list">
@@ -564,24 +581,22 @@
   </div>
 
   <!-- Footer -->
-  <button
-    class="btn flex-grow flex-shrink btn-light btn-lg"
-    slot="footer"
-    on:click={() => {
-      dispatch('dismiss');
-    }}>
-    Close
-  </button>
-  <div slot="footer">
+  <div slot="footer" class="flex-grow">
     {#if fileData && version && !importing.all.running && !importing.all.done}
       <button
-        class="btn btn-primary flex-grow btn-lg ml-2"
+        class="btn btn-primary btn-block btn-lg btn-block"
         on:click={methods.importAll}>
         Import All
       </button>
     {:else if importing.all.running}
-      <button class="btn btn-primary flex-grow btn-lg ml-2" disabled>
-        Importing
+      <button class="btn btn-primary btn-block flex-grow btn-lg" disabled>
+        Importing...
+      </button>
+    {:else if importing.all.done}
+      <button
+        class="btn btn-primary btn-block btn-lg"
+        on:click={methods.finish}>
+        Finsished
       </button>
     {/if}
   </div>

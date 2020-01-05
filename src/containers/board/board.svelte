@@ -114,13 +114,12 @@
     "The History tab shows you everything you've done",
     "Check out the settings to change the theme",
     "Enable auto location in the Settings for deeper data",
-    "Want to organize your trackers? Click the nomie logo above to enable Tabs",
+    "Click the nomie logo above to enable Tabs",
     "Want to auto import data?  Settings -> Nomie API"
   ];
 
   // Wait for the User to be ready
   UserStore.onReady(() => {
-    console.log("User onReady");
     // Set user to kick off top view conditional.
     user = $UserStore; // Kick off
     // Setup Hooks These will fire on before safe, and onLogSave
@@ -311,93 +310,6 @@
           LedgerStore.saveLog($ActiveLogStore);
         }
       });
-
-      // // If it's a plain old tick tracker
-      // if (tracker.type === "tick") {
-      //   // Just add the tag to the note
-      //   ActiveLogStore.addTag(tracker.tag);
-
-      //   // If it's one_tap - then save it
-      //   if (tracker.one_tap === true) {
-      //     // Make the note
-      //     let note = $ActiveLogStore.note + "";
-
-      //     // Account for Positivity calculation
-      //     // This is for display only, the scores are always
-      //     // dynamically calculated
-      //     $ActiveLogStore.score = ActiveLogStore.calculateScore(
-      //       note,
-      //       $TrackerStore
-      //     );
-      //     try {
-      //       // Save the log
-      //       await LedgerStore.saveLog($ActiveLogStore);
-
-      //       // Let user Know it was saved
-      //       Interact.toast(`Saved ${note}`);
-
-      //       // Clear Log
-      //       ActiveLogStore.clear();
-      //     } catch (e) {
-      //       // Catch any problems
-      //       Interact.alert("Error", e.message);
-      //     }
-      //     // Refresh View
-      //     setTimeout(() => {
-      //       data.savingTrackers = [];
-      //       data = data;
-      //     }, 100);
-      //   }
-      //   // If it's a note (combined trackers)
-      // } else if (tracker.type === "note") {
-      //   /**
-      //    * Note Tracker Type
-      //    * This is a note tracker type and will
-      //    * ask the user to provide inputs for
-      //    * each type of note
-      //    **/
-
-      //   // Get Trackers from the Note
-      //   let trackerTags = extractor(tracker.note);
-
-      //   // Add Note Tracker Tag to the note first...
-      //   // This way we can look up some stats on it too
-      //   ActiveLogStore.addTag(tracker.tag);
-
-      //   // Create array of items to pass to promise step
-      //   let items = Object.keys(trackerTags).map(tag => {
-      //     return {
-      //       tracker: $TrackerStore[tag] || new Tracker({ tag: tag }),
-      //       value: trackerTags[tag].value // not being used
-      //     };
-      //   });
-
-      //   /**
-      //    * Promise Step
-      //    * Loop over each of the items { tracker: [object], value: value }
-      //    * If this is a multiple tracker request we will show each of the
-      //    * tracker inputs one at a time using the promise step function
-      //    */
-      //   promiseStep(items, item => {
-      //     return new Promise((resolve, reject) => {
-      //       // testing if going direct works
-      //       $Interact.trackerInput.show = false;
-      //       $Interact.trackerInput.tracker = null;
-      //       $Interact.trackerInput.onInteract = null;
-      //       // Wait for timeout
-      //       setTimeout(() => {
-      //         // Show Tracker Input for this given tracker
-      //         // then return the promise and move on to the next
-      //         Interact.trackerInput(item.tracker, item.value)
-      //           .then(resolve)
-      //           .catch(reject);
-      //       }, 12);
-      //     });
-      //   });
-      // } else {
-      //   // It's an input of some sort
-      //   Interact.trackerInput(tracker);
-      // } // end if tick or others
     },
     /**
      * Get Tracker Value
@@ -775,7 +687,7 @@
           </div>
 
           <!-- Include User Tips - shit should be a component -->
-          {#if $UserStore.launchCount < 12 && data.hideTips !== true && $BoardStore.active == 'all'}
+          {#if $UserStore.launchCount < 5 && data.hideTips !== true && $BoardStore.active == 'all'}
             <div class="new-user tip n-row mb-3">
               <button
                 class="text-md btn btn-clear btn-sm p-0 btn-icon flex-grow-off"
