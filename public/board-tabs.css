@@ -1,6 +1,5 @@
 .n-board-tabs {
   background-color: var(--header-background);
-  backdrop-filter: saturate(180%) blur(20px);
   width: 100%;
   min-height: 50px;
   -webkit-overflow-scrolling: touch;

@@ -5148,7 +5148,7 @@ body {
     -4px -4px 8px rgba(255, 255, 255, 0.9);
   --box-shadow-neu-tight: 2px 2px 4px rgba(0, 0, 0, 0.2),
     -2px -2px 4px rgba(255, 255, 255, 0.9);
-  --header-background: rgba(255, 255, 255, 0.5);
+  --header-background: #fff;
   --modal-border: solid 1px rgba(0, 0, 0, 0.12); }
 
 body.test * {
@@ -5209,8 +5209,8 @@ body.offline .main-content:before {
   z-index: 2000; }
 
 body.theme-dark {
-  --header-background: rgba(0, 0, 0, 0.6);
-  --tabs-background: rgba(0, 0, 0, 0.6);
+  --header-background: #111;
+  --tabs-background: #111;
   --tracker-background: rgb(5, 5, 5);
   --color-darkest: #000;
   --color-bg: rgb(30, 30, 30);
@@ -5519,7 +5519,6 @@ select {
 
 .n-board-tabs {
   background-color: var(--header-background);
-  backdrop-filter: saturate(180%) blur(20px);
   width: 100%;
   min-height: 50px;
   -webkit-overflow-scrolling: touch;
