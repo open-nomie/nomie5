@@ -75,6 +75,8 @@ export default class TrackerInputer {
           };
         });
 
+        console.log("Items", items);
+
         /**
          * Promise Step
          * Loop over each of the items { tracker: [object], value: value }
