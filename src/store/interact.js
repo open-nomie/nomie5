@@ -157,7 +157,6 @@ const interactInit = () => {
       });
     },
     trackerInput(tracker, value) {
-      console.log("Tracker Input", tracker, value);
       return new Promise((resolve, reject) => {
         update(s => {
           s.trackerInput.show = true;
