@@ -108,19 +108,20 @@
   };
   let trackUnsub;
   onMount(() => {
-    trackUnsub = TrackerStore.subscribe(tkrs => {
-      trackers = tkrs;
-      ready = true;
+    trackers = $TrackerStore;
+    ready = true;
+    setTimeout(() => {
+      methods.resize();
       setTimeout(() => {
-        methods.resize();
-        setTimeout(() => {
-          methods.generate();
-        }, 10);
-      }, 100);
-    });
+        methods.generate();
+      }, 10);
+    }, 100);
+    // trackUnsub = TrackerStore.subscribe(tkrs => {
+
+    // });
   });
   onDestroy(() => {
-    trackUnsub();
+    // trackUnsub();
   });
 </script>
 

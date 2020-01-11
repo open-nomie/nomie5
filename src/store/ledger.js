@@ -18,6 +18,7 @@ import config from "../../config/global";
 // Stores
 // import { UserStore } from "./user";
 import { Interact } from "./interact";
+import { LastUsed } from "./last-used";
 
 const console = new Logger("🧺 store/ledger.js", true);
 const hooks = new Hooky(); // Hooky is for firing off generic events
@@ -127,6 +128,9 @@ const ledgerInit = () => {
         });
       });
     },
+    getLastUsed() {
+      return LastUsed;
+    },
     extractTrackerTagAndValues(logs) {
       logs = logs || [];
       let trackers = {};
@@ -190,50 +194,9 @@ const ledgerInit = () => {
       });
       return data;
     },
-
-    // getToday() {
-    //   return new Promise((resolve, reject) => {
-    //     let todayKey = dayjs().format("YYYY-MM");
-    //     // Set local function for setting today
-    //     let loadToday = () => {
-    //       let logs = methods.filterLogs(base.books[todayKey], {
-    //         start: dayjs()
-    //           .startOf("day")
-    //           .toDate(),
-    //         end: dayjs()
-    //           .endOf("day")
-    //           .toDate()
-    //       });
-    //       let trackersUsed = methods.extractTrackerTagAndValues(logs);
-    //       let data;
-    //       update(d => {
-    //         data = d;
-    //         d.today = trackersUsed;
-    //         // Create a hash of this setting so we can watch for changes
-    //         d.hash = methods.hashTodayPayload(trackersUsed);
-    //         d.count++;
-    //         return d;
-    //       });
-    //       resolve(data.today);
-    //     }; // end today_only
-
-    //     if (base.books[todayKey]) {
-    //       // If today exists in the book - roll with it.
-    //       // Aggressively sync each time we get today - regardless if it exists.
-    //       loadToday();
-    //     } else {
-    //       // If it doesn't exist, get it from storage
-    //       methods.getBook(todayKey).then(async book => {
-    //         base.books[todayKey] = book;
-    //         base.booksLastUpdate[todayKey] = await Storage.get(
-    //           `${config.data_root}/books/${todayKey}_last`
-    //         );
-    //         console.log("Got Last Update on Book", base.booksLastUpdate);
-    //         loadToday();
-    //       });
-    //     }
-    //   });
-    // },
+    /**
+     * Get the Users location if it's needed
+     */
     locateIfNeeded() {
       let shouldLocate = JSON.parse(
         localStorage.getItem(config.always_locate_key) || "false"
@@ -375,19 +338,20 @@ const ledgerInit = () => {
       if (lastUpdate) {
         let lu = new Date(lastUpdate);
         let bu = new Date(base.booksLastUpdate[date]);
-        console.log("Save Diff", lu.getTime() - bu.getTime());
         if (lu > bu) {
           book = await Storage.get(`${config.data_root}/books/${date}`);
-          console.log(
-            "Sync: Was out of sync with server.. It's now updated",
-            book
-          );
         }
       } else {
         console.log("Sync: No lastUpdate");
       }
       return book;
     }, // end update if out of sync
+
+    async getLog(id, book) {
+      let bookData = await Storage.get(`${config.data_root}/books/${book}`);
+      let logRaw = bookData.find(row => row._id == id);
+      return logRaw ? new NomieLog(logRaw) : null;
+    },
 
     /**
      * Save A Log!
@@ -408,6 +372,7 @@ const ledgerInit = () => {
       });
       // Set the time
       log = await methods.prepareLog(log);
+
       // Set the date for the book
       let date = dayjs(new Date(log.end)).format("YYYY-MM");
 
@@ -425,6 +390,9 @@ const ledgerInit = () => {
       let lastDatePath = methods.getLastUpdatePath(date);
       await Storage.put(lastDatePath, timeString);
       currentState.booksLastUpdate[date] = timeString;
+
+      // Set the Last Used for Trackers in this log
+      LastUsed.record(log);
 
       // Update Store
       update(s => {
