@@ -523,11 +523,6 @@
       <NMap {locations} />
     {:else}
       <div class="container p-0">
-        {#if !isToday}
-          <div class="pt-3 text-center text-sm text-faded-3">
-            {dayjs(state.date).fromNow()}
-          </div>
-        {/if}
         <!-- If no Logs found -->
         {#if logs.length === 0}
           {#if !searchMode}

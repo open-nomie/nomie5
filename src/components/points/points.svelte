@@ -13,7 +13,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 19px;
+    font-size: 1rem;
     font-weight: bolder;
     overflow: visible;
     max-height: 22px;

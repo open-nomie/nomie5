@@ -205,9 +205,7 @@
     }, 500);
   });
 
-  onMount(() => {
-    setTimeout(() => {}, 1000);
-  });
+  // onMount(() => {});
 </script>
 
 {#if $UserStore.signedIn === true}
