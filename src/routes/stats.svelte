@@ -185,12 +185,14 @@
      */
     getVsChartPoints() {
       return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          let view = state.view == "year" ? "year" : "month";
-          state.vsChartPoints = state.compare.stats.results
-            ? state.compare.stats.results[view].chart.points
-            : null;
-        }, 100);
+        if (state.compare.tracker) {
+          setTimeout(() => {
+            let view = state.view == "year" ? "year" : "month";
+            state.vsChartPoints = state.compare.stats.results
+              ? state.compare.stats.results[view].chart.points
+              : null;
+          }, 100);
+        }
       });
       // return [];
     },

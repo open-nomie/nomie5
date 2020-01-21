@@ -301,7 +301,7 @@ button {
 
 .page {
   display: flex;
-  min-height: 100vh;
+  min-height: calc(100vh - 120px);
   flex-grow: 1;
   background-color: var(--color-bg);
 }
@@ -366,6 +366,18 @@ button {
     // transform: scale3d(0.95);
     box-shadow: 0 0 0 0 rgba($green, 0);
   }
+}
+
+.offline-notice {
+  background-color: $red;
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 2px 10px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5000;
 }
 
 .badge {

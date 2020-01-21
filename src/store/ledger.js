@@ -20,7 +20,7 @@ import config from "../../config/global";
 import { Interact } from "./interact";
 import { LastUsed } from "./last-used";
 
-const console = new Logger("🧺 store/ledger.js", true);
+const console = new Logger("🧺 store/ledger.js");
 const hooks = new Hooky(); // Hooky is for firing off generic events
 
 // Work on making things able to save in bulk
@@ -84,9 +84,14 @@ const ledgerInit = () => {
       hooks.run("onBeforeGetBook", bookDateString);
       let book = await Storage.get(`${config.book_root}/${bookDateString}`);
 
-      return (book || []).map(log => {
-        return new NomieLog(log);
-      });
+      return (book || [])
+        .map(log => {
+          return new NomieLog(log);
+        })
+        .filter(log => {
+          // Remove invalid Logs
+          return log.isValid();
+        });
     },
     /**
      * Put a Book
@@ -484,15 +489,6 @@ const ledgerInit = () => {
             resolve(finished);
           })
           .catch(reject);
-
-        // Object.keys(base.books).forEach(date => {
-        // 	let rows = base.books[date];
-        // 	promises.push(methods.putBook(date, rows));
-        // });
-
-        // Promise.all(promises)
-        // 	.then(resolve)
-        // 	.catch(reject);
       });
     },
     /**
