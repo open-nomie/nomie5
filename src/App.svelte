@@ -245,7 +245,7 @@
   <LibraryModal />
 {/if}
 <Interactions />
-{#if $UserStore.storageType == 'blockstack' && !offline}
+{#if $UserStore.storageType == 'blockstack' && offline}
   <div class="offline-notice">
     No connection to Blockstack. Avoid tracking while offline.
   </div>
