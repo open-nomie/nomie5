@@ -6,50 +6,58 @@
   import { Lang } from "../../store/lang";
   import { Interact } from "../../store/interact";
   import Storage from "../../modules/storage/storage";
+  import Remote from "../../modules/remote/remote";
+
+  let pouchEngine;
 
   let data = {
     engine: null,
-    enabled: false,
-    remote: null,
-    canSave: false,
-    invalidURL: true,
-    urlDetails: null,
+    isValidSyncURL: false,
     form: {
       username: null,
       password: null,
       host: null
     },
-    request: null,
-    requestDisplay: null,
-    success: false
+    success: false,
+    syncing: false
   };
 
   const methods = {
+    // Initialize Pouch DB
     init() {
-      data.remote = Storage.local.get("pouch-remote") || null;
-      if (data.engine) {
-        if (data.engine.remote) {
-          data.remote = data.engine.remote;
-          data.form.username;
-          data.enabled = data.engine.sync;
-          data.syncing = true;
-        }
+      // Get Remote from Local STorage.
+      if (data.remote.isValid()) {
+        data.form.host = data.remote.url.toString();
+        data.form.username = data.remote.username;
+        data.form.password = data.remote.password;
       }
-      if (data.remote) {
-        data.form = { ...data.remote };
-      }
+    },
+    isValidURL() {
+      let valid = false;
+      try {
+        let url = new URL(data.form.host);
+        valid = true;
+      } catch (e) {}
+      return valid;
+    },
+    saveRemote() {
+      let remote = new Remote({
+        url: data.form.host,
+        username: data.form.username || "".length ? data.form.username : null,
+        password: data.form.password || "".length ? data.form.password : null,
+        syncEnabled: true
+      });
+      pouchEngine.saveRemote(remote);
     },
     startSync() {
       data.syncing = true;
-      data.engine.startSync();
-      data.engine.remote.valid = true;
+      pouchEngine.startSync();
     },
     stopSync() {
       data.syncing = false;
-      data.engine.stopSync();
-      data.engine.remote.valid = false;
+      pouchEngine.stopSync();
     },
-    testConnection() {
+    async testConnection() {
       let connection = methods.getConnectionURL();
       let testPouch = new PouchDB(connection);
       testPouch
@@ -60,9 +68,11 @@
             "Connected successfully! Would you like to save this connection?"
           );
           if (shouldSave) {
-            data.form.valid = true;
-            Storage.local.put("pouchdb-remote", data.form);
-            methods.startSync();
+            methods.saveRemote();
+            setTimeout(() => {
+              methods.startSync();
+              data.syncing = true;
+            }, 120);
           }
         })
         .catch(e => {
@@ -77,43 +87,70 @@
       //   });
     },
     getConnectionURL() {
-      if (data.urlDetails) {
-        let auth = btoa(`${data.form.username}:${data.form.password}`);
-        return `${data.urlDetails.protocol}//${data.form.username}:${data.form.password}@${data.urlDetails.host}${data.urlDetails.pathname}${data.engine.dbKey}`;
-      } else {
-        return null;
+      // Remove Password with Stars
+      let dotted = str => {
+        if (str && str.length) {
+          return new Array(str.length).fill("⭐️").join("");
+        } else {
+          return "";
+        }
+      };
+      // Parse the current URL
+      try {
+        let urlDetails = new URL(data.form.host);
+        data.isValidSyncURL = true;
+        if (lastUsername) {
+          return `${urlDetails.protocol}//${data.form.username}:${dotted(
+            data.form.password
+          )}@${urlDetails.host}${urlDetails.pathname}${pouchEngine.dbKey}`;
+        } else {
+          return `${urlDetails.protocol}//${urlDetails.host}${urlDetails.pathname}${pouchEngine.dbKey}`;
+        }
+      } catch (e) {
+        // It's an invalid URL
+        data.isValidSyncURL = false;
+        return "";
       }
     }
   };
 
-  $: if (data.form.username && data.form.password && data.form.host) {
-    data.form.auth = btoa(data.form.username + ":" + data.form.password);
-    data.canSave = true;
-  }
+  // Watch Form and Connection String
+
+  let connectionString = null;
 
   let lastHost = null;
-
   $: if (data.form.host && data.form.host !== lastHost) {
     lastHost = data.form.host;
-    try {
-      let url = new URL(data.form.host);
-      data.invalidURL = false;
-      data.urlDetails = url;
-    } catch (e) {
-      data.invalidURL = true;
-      data.urlDetails = null;
-      data.request = null;
-      data.requestDisplay = null;
-    }
+    connectionString = methods.getConnectionURL();
+  }
+
+  let lastUsername = null;
+  $: if (data.form.username && data.form.username !== lastUsername) {
+    lastUsername = data.form.username;
+    connectionString = methods.getConnectionURL();
+  }
+
+  let lastPassword = null;
+  $: if (data.form.password && data.form.password !== lastPassword) {
+    lastPassword = data.form.password;
+    connectionString = methods.getConnectionURL();
+  }
+
+  $: if (pouchEngine && pouchEngine.syncing) {
+    data.syncing = pouchEngine.syncing;
   }
 
   onMount(async () => {
-    data.engine = Storage.getEngine();
+    // Get Pouch ENgine
+    pouchEngine = Storage.getEngine();
+    // Get Remote Settings
+    data.remote = pouchEngine.getRemote();
+    // Fire of Initialization
     methods.init();
   });
 </script>
 
-{#if data.engine}
+{#if pouchEngine}
   <div class="pouchdb storage-option">
     <NItem>
       <span
@@ -122,19 +159,17 @@
       <div class="title truncate">Sync to CouchDB</div>
       <div slot="right">
         <NToggle
-          bind:value={data.engine.sync}
+          bind:value={data.remote.syncEnabled}
           on:change={event => {
-            Storage.local.put('pouchdb-sync', event.detail);
             if (event.detail == false) {
               methods.stopSync();
             } else if (event.detail === true) {
-              data.engine.startSync();
-              data.syncing = true;
+              pouchEngine.startSync();
             }
           }} />
       </div>
     </NItem>
-    {#if data.engine.sync}
+    {#if data.remote.syncEnabled}
       {#if data.syncing}
         <div class="data-syncing">
           <NItem
@@ -162,8 +197,12 @@
               bind:value={data.form.host}
               placeholder="https://my-couch-server:12345"
               autocomplete="off" />
-            {#if data.invalidURL && data.form.host}
-              <div class="n-row text-xs text-red">Invalid URL</div>
+            {#if !methods.isValidURL()}
+              <div class="n-row text-xs text-red">
+                {data.form.host} Invalid URL
+              </div>
+            {:else}
+              <div class="n-row text-sm">{connectionString}</div>
             {/if}
 
             {#if data.urlDetails}
@@ -204,7 +243,7 @@
               placeholder="Password"
               bind:value={data.form.password} />
           </NItem>
-          {#if data.canSave}
+          {#if data.isValidSyncURL}
             <NItem
               className="clickable text-primary"
               on:click={methods.testConnection}>

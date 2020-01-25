@@ -2,7 +2,9 @@ import { writable } from "svelte/store";
 import config from "../../config/global";
 // utils
 import Logger from "../utils/log/log";
-import Storage from "../modules/storage/storage";
+
+import NStorage from "../modules/storage/storage";
+
 import dayjs from "dayjs";
 
 const console = new Logger("♹ store/${lastUsedKey}.js");
@@ -20,7 +22,7 @@ const LastUsedStore = () => {
   const methods = {
     async init() {
       let fromStore =
-        (await Storage.get(`${config.data_root}/${lastUsedKey}`)) || {};
+        (await NStorage.get(`${config.data_root}/${lastUsedKey}`)) || {};
       update(d => {
         d = fromStore;
         return d;
@@ -57,11 +59,13 @@ const LastUsedStore = () => {
         return d;
       });
       // Write to storage
-      return await Storage.put(`${config.data_root}/${lastUsedKey}`, data);
+      return await NStorage.put(`${config.data_root}/${lastUsedKey}`, data);
     }
   };
 
-  methods.init();
+  setTimeout(() => {
+    methods.init();
+  }, 120);
 
   return {
     update,
