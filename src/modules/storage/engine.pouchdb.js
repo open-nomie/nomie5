@@ -142,7 +142,6 @@ export default {
       username: "Local User"
     };
   },
-  async deleteRev(path, rev) {},
   async put(path, content) {
     let payload = {
       _id: path,
