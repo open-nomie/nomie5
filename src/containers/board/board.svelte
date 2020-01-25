@@ -307,7 +307,6 @@
       let inputer = new TrackerInputer(tracker);
 
       inputer.get().then(value => {
-        console.log("Got the value", value);
         if (tracker.one_tap) {
           LedgerStore.saveLog($ActiveLogStore);
         }
