@@ -56,6 +56,7 @@
     "nomie-uom": "^1.0.2",
     "npm-run-all": "^4.1.5",
     "pouchdb": "^7.1.1",
+    "register-service-worker": "^1.6.2",
     "release-it": "^12.4.3",
     "rollup": "^1.10.1",
     "rollup-plugin-commonjs": "^9.3.4",
