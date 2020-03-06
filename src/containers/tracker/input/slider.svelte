@@ -13,6 +13,7 @@
 </script>
 
 <style lang="scss">
+  @import "../../../scss/vendor/bootstrap/base";
   input[type="range"] {
     background-color: var(--color-solid);
   }
@@ -45,6 +46,9 @@
       margin: 0 auto;
       -webkit-appearance: none;
       width: 46vh;
+      @include media-breakpoint-up(md) {
+        width: 40vh;
+      }
       margin: -5.5px 0;
     }
     input[type="range"]:focus {
@@ -54,6 +58,9 @@
     $size: 100px;
     input[type="range"]::-webkit-slider-runnable-track {
       width: 46vh;
+      @include media-breakpoint-up(md) {
+        width: 40vh;
+      }
       height: $size;
       cursor: pointer;
       box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
@@ -81,6 +88,9 @@
     }
     input[type="range"]::-moz-range-track {
       width: 46vh;
+      @include media-breakpoint-up(md) {
+        width: 40vh;
+      }
       height: $size;
       cursor: pointer;
       box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);

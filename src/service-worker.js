@@ -15,7 +15,7 @@
 // Change to v2, etc. when you update any of the local resources, which will
 // in turn trigger the install event again.
 const PRECACHE = "precache-APP_VERSION";
-const RUNTIME = "runtime";
+const RUNTIME = "runtime-APP_VERSION";
 
 // A list of local resources we always want to be cached.
 const PRECACHE_URLS = [
@@ -60,17 +60,12 @@ self.addEventListener("activate", event => {
 // from the network before returning it to the page.
 self.addEventListener("fetch", event => {
   // Skip cross-origin requests, like those for Google Analytics.
-  if (event.request.url.search(`/api/`) > -1) {
-  } else if (
-    event.request.url.startsWith(self.location.origin) &&
-    self.location.origin.search("nomie") > -1
-  ) {
+  if (event.request.url.startsWith(self.location.origin)) {
     event.respondWith(
       caches.match(event.request).then(cachedResponse => {
         if (cachedResponse) {
           return cachedResponse;
         }
-
         return caches.open(RUNTIME).then(cache => {
           return fetch(event.request).then(response => {
             // Put a copy of the response in the runtime cache.

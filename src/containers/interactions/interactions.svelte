@@ -272,7 +272,8 @@
       Interact.dismissTrackerInput();
     }}
     show={$Interact.trackerInput.show}
-    tracker={new Tracker($Interact.trackerInput.tracker)} />
+    tracker={new Tracker($Interact.trackerInput.tracker)}
+    value={$Interact.trackerInput.value} />
 {/if}
 
 {#if $Interact.locationViewer.show}

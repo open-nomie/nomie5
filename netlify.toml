@@ -3,7 +3,7 @@
   publish = "public"
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/"
   status = 200
 [[headers]]
   for = "/service-worker.js"

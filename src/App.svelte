@@ -83,6 +83,9 @@
     window.$TrackerStore = $TrackerStore;
   }
 
+  // Offline monitor
+  let offline = false;
+
   const methods = {
     routerChange(event) {},
     hideSplashScreen() {
@@ -149,9 +152,11 @@
   window.addEventListener("load", () => {
     let onNetworkChange = event => {
       if (navigator.onLine) {
-        document.body.classList.remove("offline");
+        document.body.classList.remove("is-offline");
+        offline = false;
       } else {
-        document.body.classList.add("offline");
+        document.body.classList.add("is-offline");
+        offline = true;
       }
     };
     window.addEventListener("online", onNetworkChange);
@@ -205,9 +210,7 @@
     }, 500);
   });
 
-  onMount(() => {
-    setTimeout(() => {}, 1000);
-  });
+  // onMount(() => {});
 </script>
 
 {#if $UserStore.signedIn === true}
@@ -242,3 +245,8 @@
   <LibraryModal />
 {/if}
 <Interactions />
+{#if $UserStore.storageType == 'blockstack' && offline}
+  <div class="offline-notice">
+    No connection to Blockstack. Avoid tracking while offline.
+  </div>
+{/if}

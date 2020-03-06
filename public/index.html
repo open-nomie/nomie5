@@ -4,10 +4,8 @@
     <meta charset="utf8" />
     <title>Nomie 4</title>
 
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta name="description" content="Open Source Mood Tracking" />
     <meta name="apple-mobile-web-app-title" content="Nomie 4" />
     <meta name="theme-color" content="#319ed7" />
@@ -17,12 +15,7 @@
 
     <link rel="apple-touch-icon" href="/images/icons/nomie-512.png" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="/images/icons/nomie-android-192.png"
-    />
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/icons/nomie-android-192.png" />
     <link rel="manifest" href="/manifest.json" />
 
     <meta property="og:type" content="website" />
@@ -41,7 +34,7 @@
     <base href="/" />
 
     <!-- main is from scss/main.scss -->
-    <link rel="stylesheet" href="/main.css?v=APP_VERSION" />
+    <link rel="stylesheet" href="/main.css?v=4.6.20" />
   </head>
 
   <body>
@@ -50,36 +43,25 @@
     </noscript>
 
     <div class="loading-screen delete-on-app">
-      <div class="version">vAPP_VERSION</div>
+      <div class="version">v4.6.20</div>
     </div>
-    <!-- End Fakes-->
+
+    <!-- Javascript Includes -->
+    <script src="/vendors/pouchdb/pouchdb.min.js"></script>
     <script src="/vendors/blockstack/blockstack.js"></script>
     <script src="/vendors/leaflet/leaflet.js"></script>
     <script src="/vendors/leaflet/esri/esri-leaflet.js"></script>
     <script src="/vendors/leaflet/geocoder/esri-leaflet-geocoder.js"></script>
 
-    <script src="/vendors/pouchdb/pouchdb.min.js"></script>
+    <!-- App Bundle -->
+    <script src="/bundle.js?v=4.6.20"></script>
 
-    <script src="/bundle.js?v=APP_VERSION"></script>
-    <!-- Styles -->
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="vendors/leaflet/leaflet.css" />
-    <link
-      rel="stylesheet"
-      href="vendors/leaflet/geocoder/esri-leaflet-geocoder.css"
-      integrity=""
-    />
+    <link rel="stylesheet" href="vendors/leaflet/geocoder/esri-leaflet-geocoder.css" />
     <!-- ZMDI for icons -->
-    <link
-      rel="stylesheet"
-      href="/vendors/material-design-iconic-font/css/material-design-iconic-font.min.css"
-    />
+    <link rel="stylesheet" href="/vendors/material-design-iconic-font/css/material-design-iconic-font.min.css" />
     <!-- bundle is all the styles from the app and components-->
-    <link rel="stylesheet" href="/bundle.css?v=APP_VERSION" />
-    <!-- Simple Analytics - privacy first analytics -->
-    <!-- <script async defer src="https://cdn.simpleanalytics.io/hello.js"></script> -->
-    <!--   
-    <noscript
-      ><img src="https://api.simpleanalytics.io/hello.gif" alt=""
-    /></noscript> -->
+    <link rel="stylesheet" href="/bundle.css?v=4.6.20" />
   </body>
 </html>

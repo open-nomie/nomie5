@@ -14,6 +14,7 @@
   // svelte
   import { navigate } from "svelte-routing";
   import { onMount, onDestroy } from "svelte";
+  import dayjs from "dayjs";
 
   // Components
   import NTrackerButton from "./tracker-button.svelte";
@@ -52,6 +53,7 @@
   import { Interact } from "../../store/interact";
   import { Lang } from "../../store/lang";
   import { TrackerLibrary } from "../../store/tracker-library";
+  import { LastUsed } from "../../store/last-used";
   // Consts
   const console = new Logger("board.svelte");
 
@@ -305,7 +307,6 @@
       let inputer = new TrackerInputer(tracker);
 
       inputer.get().then(value => {
-        console.log("Got the value", value);
         if (tracker.one_tap) {
           LedgerStore.saveLog($ActiveLogStore);
         }
@@ -393,8 +394,35 @@
           }
         }
       };
+
+      // If a Last Used is present
+      if ($LastUsed.hasOwnProperty(tracker.tag)) {
+        let last = $LastUsed[tracker.tag];
+        if (last.log) {
+          buttons.push({
+            title: `${Lang.t("board.last-used", "Last Used")} ${dayjs(
+              last.date
+            ).fromNow()}`,
+            click: async () => {
+              let log = await LedgerStore.getLog(last.log, last.book);
+              if (log) {
+                Interact.openShareImage(log);
+              } else {
+                Interact.alert(
+                  Lang.t("general.error", "Error"),
+                  Lang.t(
+                    "general.log-not-found",
+                    "Sorry, that log was not found, was it deleted?"
+                  )
+                );
+              }
+            }
+          });
+        }
+      }
       // Add Remove button to array
       buttons.push(removeButton);
+
       // Fire Pop menu
       Interact.popmenu({
         title: `${tracker.emoji || "⚪️"} ${tracker.label || tracker.tag}`,

@@ -157,7 +157,7 @@
 <NPage className="stats" withBack={true}>
 
   <div slot="header" class="n-row">
-    <h1>Nomie API</h1>
+    <h1 class="text-inverse">Nomie API</h1>
     <div class="filler" />
     {#if state.registered}
       <button class="btn btn-clear btn-icon btn-sm" on:click={methods.getLogs}>
@@ -265,6 +265,7 @@
         -->
         <NItem
           title="Auto Import"
+          className="p-3"
           description="Automatically import captured logs">
           <div slot="right">
             <NToggle
@@ -279,7 +280,7 @@
           </div>
         </NItem>
         <div item-divider />
-        <NItem title="API Key" className="py-2">
+        <NItem title="API Key" className="p-3">
           <div>
             <input type="text" class="form-control mt-1" value={state.apiKey} />
           </div>

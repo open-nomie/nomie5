@@ -89,6 +89,9 @@
       {#if displayLog.score}
         <NPoints points={displayLog.score} />
       {/if}
+      <div class="time-ago text-faded-2 ml-3">
+        {time.fromNow(displayLog.end)}
+      </div>
       <!-- Janky - fix this -->
       <button
         on:click={event => {

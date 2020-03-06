@@ -65,7 +65,8 @@ const interactInit = () => {
       trackerInput: {
         show: false,
         tracker: null,
-        onInteract: null
+        onInteract: null,
+        value: null
       },
       logEditor: {
         show: false,
@@ -130,10 +131,10 @@ const interactInit = () => {
       });
     },
     vibrate(ms) {
-      ms = ms || 90;
-      if (navigator.vibrate) {
-        navigator.vibrate(ms);
-      }
+      // ms = ms || 90;
+      // if (navigator.vibrate) {
+      //   navigator.vibrate(ms);
+      // }
     },
     editTracker(tracker) {
       return new Promise((resolve, reject) => {
@@ -155,11 +156,12 @@ const interactInit = () => {
         return s;
       });
     },
-    trackerInput(tracker) {
+    trackerInput(tracker, value) {
       return new Promise((resolve, reject) => {
         update(s => {
           s.trackerInput.show = true;
           s.trackerInput.tracker = tracker;
+          s.trackerInput.value = value;
           s.trackerInput.onInteract = tracker => {
             resolve(tracker);
           };

@@ -15,6 +15,7 @@ export default class Record {
     starter = starter || {};
 
     this._dirty = starter._id ? undefined : true;
+
     this._id = starter._id || nid(10); // create a random 10 char id if not proviedd
     this.note = (starter.note || starter.notes || "").trim(); // Trim the note
 
@@ -51,6 +52,10 @@ export default class Record {
   // Get a hash of this note
   hash() {
     return nid([this.note, this.start, this.end, this.lat, this.lng].join(""));
+  }
+
+  isValid() {
+    return this.note.length > 0 || this.lat || this.lng;
   }
 
   // Get it as an object

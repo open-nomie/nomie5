@@ -7,6 +7,13 @@
  */
 // import pouchdb from "pouchdb";
 import Storage from "../storage/storage";
+import Remote from "../../modules/remote/remote";
+import Logger from "../../utils/log/log";
+import { Interact } from "../../store/interact";
+
+import { Lang } from "../../store/lang";
+
+const console = new Logger("👨‍💻 engine.pouchdb");
 
 let listeners = [];
 let syncer;
@@ -14,6 +21,7 @@ let dbKey = "nomie4-v01";
 
 export default {
   name: "PouchDB",
+  syncValid: false,
   description: "Stored locally, with CouchDB Syncing support",
   authRequired: false,
   remote: null, // object to store username, password, host
@@ -26,8 +34,6 @@ export default {
     revs_limit: 2
   }),
   onReady(func) {
-    this.sync = Storage.local.get("pouchdb-sync") || false;
-    this.remote = Storage.local.get("pouchdb-remote") || null;
     func(this);
     // No need to setup just call the function
     // if (listeners.indexOf(func) == -1) {
@@ -42,12 +48,12 @@ export default {
   },
   // Convert a remote object to CouchURL
   remoteToUrl() {
-    let remote = Storage.local.get("pouchdb-remote");
-    if (remote) {
-      let parsed = new URL(remote.host);
-      parsed.username = remote.username;
-      parsed.password = remote.password;
-      parsed.pathname = "/" + this.dbKey;
+    let remote = this.getRemote();
+    if (remote.isValid()) {
+      let parsed = remote.url;
+      parsed.username = remote.username ? remote.username || "".length : null;
+      parsed.password = remote.password ? remote.password || "".length : null;
+      parsed.pathname = `/${remote.dbPrefix || ""}${this.dbKey}`;
       return parsed.toString();
     } else {
       return null;
@@ -58,30 +64,40 @@ export default {
     this.syncing = true;
   },
   onPaused(change) {
-    this.syncing = true;
+    this.syncing = false;
   },
   onError(error) {
-    console.log("Sync Error", error);
+    Interact.alert(Lang.t("sync.error", "Sync Error"), error.message);
+    console.error("Sync Error", error);
+    this.syncing = false;
   },
   stopSync() {
-    this.syncer.cancel();
+    if (this.syncer) {
+      this.syncer.cancel();
+      this.syncing = false;
+      let remote = this.getRemote();
+      remote.syncEnabled = false;
+      this.saveRemote(remote);
+    }
   },
   startSync() {
     let errorCount = 0;
     let syncURL = this.remoteToUrl();
-    if (syncURL && this.sync) {
+    let self = this;
+    if (syncURL) {
       this.syncer = PouchDB.sync(dbKey, syncURL, {
         live: true,
         retry: true
       });
+
       this.syncer
         .catch(e => {
-          console.log("Catch error in syncer", e.message);
+          console.error("Catch error in syncer", e.message);
           this.syncing = false;
         })
         .then(res => {
-          this.syncing = true;
-          this.valid = true;
+          self.syncing = true;
+          self.syncValid = true;
         });
       this.syncer
         .on("complete", this.onChange)
@@ -94,12 +110,26 @@ export default {
             alert("Something bad is going on");
           }
         });
-    } else {
-      console.log("🥊 Sync disabled");
     }
   },
+  getRemote() {
+    this.remote = new Remote(Storage.local.get("pouchdb-remote"));
+    return this.remote;
+  },
+  saveRemote(remote) {
+    this.remote = remote;
+    Storage.local.put("pouchdb-remote", remote);
+  },
   init() {
-    this.startSync();
+    // Get Remote from Storage
+    this.getRemote();
+    // Determine if we should be syncing
+    this.sync = this.remote.sync;
+    if (this.remote.syncEnabled) {
+      setTimeout(() => {
+        this.startSync();
+      }, 500);
+    }
     this.fireReady();
   },
   info() {
@@ -112,7 +142,6 @@ export default {
       username: "Local User"
     };
   },
-  async deleteRev(path, rev) {},
   async put(path, content) {
     let payload = {
       _id: path,

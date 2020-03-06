@@ -1,6 +1,6 @@
 # TODO
 
-Generated Thu Jan 2 2020 5:44 pm
+Generated Fri Mar 6 2020 9:50 am
 
 - **src/store/user.js**
    - TODO: Look at push notifications in the browser
@@ -34,8 +34,6 @@ Generated Thu Jan 2 2020 5:44 pm
    - TODO: Implement IgnoreZeros
 - **src/modules/export/csv.js**
    - end TODO: See why end date is not working in query
-- **src/main.js**
-   - TODO: handle anything required for service worker
 - **src/containers/tracker/input/input.svelte**
    - TODO: Figure out wtf is going on with value and data.value - can we just use value?
 - **src/containers/tracker/editor/editor.svelte**

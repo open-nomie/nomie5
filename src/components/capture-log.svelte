@@ -242,6 +242,7 @@
     border-top: solid 1px rgba(0, 0, 0, 0.1);
     padding: 10px;
     background-color: var(--header-background);
+    // backdrop-filter: saturate(180%) blur(20px);
     border-top: solid 1px var(--header-background);
     position: relative;
     z-index: 1;

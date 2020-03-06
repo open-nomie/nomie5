@@ -304,6 +304,7 @@
     <div class="top center-grow">
       <div class="bottom-pop phone-frame mt-2 fade-left">
         <img
+          alt="Nomie Homescreen"
           class="image gif"
           src="https://shareking.s3.amazonaws.com/nomie-4.2-homescreen.gif"
           defer />
@@ -340,7 +341,7 @@
       <div class="bottom-pop phone-frame mt-2">
         <img
           class="image"
-          aria-label="Nomie stats view"
+          alt="Nomie stats view"
           src="/images/onboard/nomie4.2.3.stats.png" />
       </div>
     </div>
