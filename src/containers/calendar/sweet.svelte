@@ -120,10 +120,20 @@
       state.date = dayjs();
     },
     getDayStyle(day) {
+      let score = undefined;
       let activeToday = events.find(row => {
         return day.toDate().toDateString() === new Date(row.end).toDateString();
       });
-      return activeToday ? `background-color:${color}; color:#FFF` : "";
+      // Highlight based on positivity score
+      if (activeToday) {
+        return `font-weight:bold; border:solid 2px ${
+          activeToday.score > -1 ? "var(--color-green)" : "var(--color-red)"
+        }; color:${
+          activeToday.score > -1 ? "var(--color-green)" : "var(--color-red)"
+        };`;
+      } else {
+        return ``;
+      }
     },
     getDayClass(day) {
       let activeToday = events.find(row => {
