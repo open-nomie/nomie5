@@ -29,9 +29,11 @@
     "release:minor": "release-it minor --no-npm.publish"
   },
   "release-it": {
-    "@release-it/conventional-changelog": {
-      "preset": "cli",
-      "infile": "CHANGELOG.md"
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "cors",
+        "infile": "CHANGELOG.md"
+      }
     }
   },
   "devDependencies": {
