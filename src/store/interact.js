@@ -222,7 +222,9 @@ const interactInit = () => {
         return s;
       });
     },
-
+    shareLog(log) {
+      Interact.openShareImage(log);
+    },
     /**
      * Select a Single Tracker
      */
@@ -348,20 +350,15 @@ const interactInit = () => {
           },
           delete() {
             setTimeout(() => {
-              methods
-                .confirm(
-                  "Are you sure?",
-                  "Deleting an log cannot be undone, only recreated"
-                )
-                .then(res => {
-                  if (res === true) {
-                    LedgerStore.deleteLogs([log]).then(() => {
-                      setTimeout(() => {
-                        resolve({ action: "deleted" });
-                      }, 1000);
-                    });
-                  }
-                });
+              methods.confirm("Are you sure?", "Deleting an log cannot be undone, only recreated").then(res => {
+                if (res === true) {
+                  LedgerStore.deleteLogs([log]).then(() => {
+                    setTimeout(() => {
+                      resolve({ action: "deleted" });
+                    }, 1000);
+                  });
+                }
+              });
             }, 10);
           }
         };
