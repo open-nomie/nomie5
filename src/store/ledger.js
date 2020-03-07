@@ -1,7 +1,23 @@
+/**
+ * The Ledger!
+ *
+ * This is the core module for storing Nomie Logs.
+ * Ledgers store logs in a month file. /MM-YYYY.json for example
+ * this might change in the future, as it makes it
+ * easier to accidentally lose a month worth of data.
+ *
+ *
+ */
+
 // Modules
+
+// Nomie log is the base Log item that is saved in a ledger
 import NomieLog from "../modules/nomie-log/nomie-log";
+// Storage for generic access to local,blockstack,pouch
 import Storage from "../modules/storage/storage";
+// Hooks for firing off hooks
 import Hooky from "../modules/hooks/hooks";
+// Get the Geo Location module
 import locate from "../modules/locate/locate";
 
 // Utils
@@ -16,7 +32,6 @@ import tick from "../utils/tick/tick";
 import config from "../../config/global";
 
 // Stores
-// import { UserStore } from "./user";
 import { Interact } from "./interact";
 import { LastUsed } from "./last-used";
 import { PeopleStore } from "./people-store";
@@ -25,23 +40,18 @@ import { ContextStore } from "./context-store";
 const console = new Logger("🧺 store/ledger.js");
 const hooks = new Hooky(); // Hooky is for firing off generic events
 
-/**
- * Ledger Store
- * The ledger store is responsible for storing and getting logs, as well as maintaining what's
- * happened today.
- */
-
+// initialize the Store
 const ledgerInit = () => {
   /**
    * Set base object for store
    */
   let base = {
-    books: {},
+    books: {}, // holder of books - YYYY-MM
     booksLastUpdate: {},
-    today: {},
-    count: 0,
-    saving: false,
-    hash: null
+    today: {}, // hold todays logs
+    count: 0, //
+    saving: false, // are we saving?
+    hash: null // hash for svelte auto reloading
   };
 
   const methods = {
@@ -77,9 +87,11 @@ const ledgerInit = () => {
      * @param {String} bookDateString
      */
     async getBook(bookDateString) {
+      // call any hooks
       hooks.run("onBeforeGetBook", bookDateString);
+      // Get the book from storage
       let book = await Storage.get(`${config.book_root}/${bookDateString}`);
-
+      // Return book with Nomie Logs
       return (book || [])
         .map(log => {
           return new NomieLog(log);
@@ -104,19 +116,13 @@ const ledgerInit = () => {
      * the user has. Good for figuring out
      * first track
      */
-    firstBook() {
-      return new Promise((resolve, reject) => {
-        methods
-          .listBooks()
-          .then(books => {
-            if (books.length) {
-              resolve(books[0].replace(config.book_root + "/", ""));
-            } else {
-              resolve("Unknown");
-            }
-          })
-          .catch(reject);
-      });
+    async firstBook() {
+      const books = await methods.listBooks();
+      if (books.length) {
+        return books[0].replace(config.book_root + "/", "");
+      } else {
+        return "Unknown";
+      }
     },
     /**
      * Filter Documents - Get the Books
@@ -156,13 +162,21 @@ const ledgerInit = () => {
       return trackers;
     },
 
+    /**
+     * Create a hash for Today
+     * This helps us monitor any changes on state.hash
+     * @param {Object} today
+     */
     hashTodayPayload(today) {
       let nodes = Object.keys(today).map(tag => {
         return `${tag}-${today[tag].values.join(",")}`;
       });
       return md5(nodes.join(","));
     },
-
+    /**
+     * Get Today
+     * Returns today's book
+     */
     async getToday() {
       let todayKey = dayjs().format("YYYY-MM");
       if (base.books[todayKey]) {
@@ -174,23 +188,27 @@ const ledgerInit = () => {
         return methods.todayReady();
       }
     },
-
+    /**
+     * Update Today
+     */
     async todayReady() {
       let start = dayjs().startOf("day");
       let end = dayjs().endOf("day");
       let todayKey = dayjs().format("YYYY-MM");
       let allLogs = base.books[todayKey];
+      // Extract just today's logs from the book
       let todaysLogs = methods.filterLogs(allLogs, {
         start: start.toDate(),
         end: end.toDate()
       });
+      // Extract Trackers
       let trackersUsed = methods.extractTrackerTagAndValues(todaysLogs);
+      // Setup data for update
       let data;
       update(d => {
         data = d;
         d.today = trackersUsed;
         d.hash = methods.hashTodayPayload(trackersUsed);
-        // d.count++;
         return d;
       });
       return data;
@@ -303,10 +321,14 @@ const ledgerInit = () => {
      * Prepare a log
      */
     async prepareLog(log) {
+      // Make sure start and end are setup
       log.end = log.end || new Date().getTime();
       log.start = log.start || new Date().getTime();
+      // If it's not a NomieLog - make it one.
       log = log instanceof NomieLog ? log : new NomieLog(log);
+      // Log is being prepared to save - on Before Save
       hooks.run("onBeforeSave", log);
+      // Clean the dirty dirty
       delete log._dirty;
       // Trim any white space from note
       log.note = log.note.trim();
@@ -314,21 +336,34 @@ const ledgerInit = () => {
       let location = await methods.locateIfNeeded();
       // If we have a location add to log
       if (location && !log.lat) {
+        // Add location Data
         log.lat = location.latitude;
         log.lng = location.longitude;
       }
       return log;
     },
-
+    /**
+     * Get the Last Updataed File Path
+     * Used to help make sure we don't overwrite any data
+     * @param {String} date YYYY-MM
+     */
     getLastUpdatePath(date) {
       return `${config.data_root}/books/${date}_last`;
     },
+    /**
+     * Get the Last Updataed Time for a book
+     * Used to help make sure we don't overwrite any data
+     * @param {String} date YYYY-MM
+     */
     async getLastUpdate(date) {
       return await Storage.get(methods.getLastUpdatePath(date));
     },
-
+    /**
+     * Get a Book - with syncing
+     * @param {String} date
+     */
     async getBookWithSync(date) {
-      console.log(`Sync: check if out of sync`);
+      // Get books last
       let lastUpdate = await methods.getLastUpdate(date);
       let book = base.books[date] || [];
 
