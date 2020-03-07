@@ -1,4 +1,5 @@
 <script>
+  import { createEventDispatcher } from "svelte";
   // Components
   import NTagBadge from "../tag-badge/tag-badge.svelte";
 
@@ -13,6 +14,8 @@
   export let trackers = {};
   export let className = undefined;
 
+  const dispatch = createEventDispatcher();
+
   const data = {
     words: []
   };
@@ -25,6 +28,9 @@
     },
     tracker_get(tag) {
       return (trackers || {})[tag] || new Tracker({ tag: tag });
+    },
+    textElementClick(element) {
+      dispatch("textClick", element);
     },
     parse_tracker_str(str) {
       let extractedTrackers = extractTrackers(str);
@@ -46,11 +52,20 @@
     note_to_array(str) {
       let noteArray = [];
       let words = methods.split(str);
+      let people = [];
+      let context = [];
 
       words.forEach(word => {
         word = word.trim();
-        if (word.substr(0, 1) === "#") {
+        const first = word.substr(0, 1);
+        if (first === "#") {
           noteArray.push(methods.parse_tracker_str(word));
+        } else if (first === "@") {
+          people.push(word);
+          noteArray.push({ type: "person", value: word });
+        } else if (first === "+") {
+          context.push(word);
+          noteArray.push({ type: "context", value: word });
         } else if (word.length) {
           noteArray.push({ type: "string", value: word });
           actual++;
@@ -103,8 +118,24 @@
     {#each data.words as word}
       {#if word.type === 'tracker'}
         <span class="tracker font-weight-bold">#{word.tracker.tag}</span>
-        {' '}
-      {:else}{word.value}{' '}{/if}
+      {:else if word.type == 'person'}
+        <span
+          class="person font-weight-bold clickable text-primary"
+          on:click={() => {
+            methods.textElementClick(word);
+          }}>
+          {word.value}
+        </span>
+      {:else if word.type == 'context'}
+        <span
+          class="context font-weight-bold clickable text-primary"
+          on:click={() => {
+            methods.textElementClick(word);
+          }}>
+          {word.value}
+        </span>
+      {:else}{word.value}{/if}
+      {' '}
     {/each}
   </div>
 {/if}

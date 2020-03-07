@@ -550,7 +550,7 @@ const ledgerInit = () => {
               return (
                 JSON.stringify(row)
                   .toLowerCase()
-                  .search(term.toLowerCase()) > -1
+                  .indexOf(term.toLowerCase()) > -1
               );
             })
             .sort((a, b) => {

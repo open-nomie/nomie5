@@ -545,6 +545,10 @@
               on:locationClick={event => {
                 Interact.showLocations([log]);
               }}
+              on:textClick={event => {
+                state.searchTerm = event.detail.value;
+                methods.search(state.searchTerm);
+              }}
               show24Hour={$UserStore.meta.is24Hour}
               on:moreClick={event => {
                 Interact.logOptions(log).then(() => {});
@@ -559,6 +563,10 @@
               trackers={$TrackerStore}
               on:trackerClick={event => {
                 methods.trackerTapped(event.detail.tracker, log);
+              }}
+              on:textClick={event => {
+                state.searchTerm = event.detail.value;
+                methods.search(state.searchTerm);
               }}
               on:locationClick={event => {
                 Interact.showLocations([log]);

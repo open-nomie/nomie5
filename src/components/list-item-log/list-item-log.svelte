@@ -58,6 +58,15 @@
     background-color: var(--color-faded-1);
     margin-bottom: 20px;
   }
+  .more-button {
+    margin-left: 10px;
+    margin-right: -10px;
+    margin-top: -10px;
+    font-size: 32px;
+    height: 30px;
+    min-width: 40px;
+    line-height: 30px;
+  }
 </style>
 
 {#if displayLog}
@@ -86,6 +95,7 @@
       {/if}
 
       <div class="filler" />
+      <!-- SCORE display -->
       {#if displayLog.score}
         <NPoints points={displayLog.score} />
       {/if}
@@ -97,9 +107,8 @@
         on:click={event => {
           dispatch('moreClick', displayLog);
         }}
-        class="btn btn-sm btn-clear pl-2 pr-2 "
-        style="margin-left:10px; margin-right:-10px; margin-top:-10px;
-        font-size:32px; height:30px; min-width:40px; line-height:30px;">
+        class="btn btn-sm btn-clear pl-2 pr-2 more-button"
+        style="">
         <i
           class="zmdi zmdi-more text-primary-bright"
           style="height:30px; line-height:30px;" />
@@ -114,6 +123,10 @@
     This really isn't special right now -->
     {#if displayLog.note.length}
       <NNoteTextualizer
+        item
+        on:textClick={evt => {
+          dispatch('textClick', evt.detail);
+        }}
         note={displayLog.note}
         {trackers}
         className={displayLog.trackersArray().length ? '' : 'pb-2'} />
