@@ -23,6 +23,7 @@
   import NDatePicker from "../components/date-picker/date-picker.svelte";
   import LogItem from "../components/list-item-log/list-item-log.svelte";
   import NDatePill from "../components/date-pill/date-pill.svelte";
+  import NSearchBar from "../components/search-bar/search-bar.svelte";
 
   // Containers
   import NMap from "../containers/map/map.svelte";
@@ -246,6 +247,20 @@
       methods.search(state.searchTerm, state.date.format("YYYY"));
       searchMode = true;
     },
+    searchChange(evt) {
+      console.log("history evt", evt);
+      state.searchTerm = evt.detail;
+      // if (state.searchTerm.length > 1) {
+      //   console.log("Searching");
+      //   methods.search(state.searchTerm, state.date.format("YYYY"));
+      // }
+    },
+    doSearch(evt) {
+      state.searchTerm = evt.detail;
+      if (state.searchTerm.length > 1) {
+        methods.search(state.searchTerm, state.date.format("YYYY"));
+      }
+    },
     searchKeypress(event) {
       if (event.key === "Enter" || event.key === "Return") {
         methods.search(state.searchTerm, state.date.format("YYYY"));
@@ -432,27 +447,12 @@
 <AppLayout title={appTitle}>
 
   <header slot="header">
-    <NToolbar>
-      <div
-        class="d-flex d-row justify-content-between align-items-center w-100
-        search-bar">
-        <input
-          type="search"
-          bind:this={searchInput}
-          bind:value={state.searchTerm}
-          on:keypress={methods.searchKeypress}
-          placeholder="{Lang.t('general.search')}..."
-          class="search-input" />
-        {#if searchMode}
-          <button
-            class="btn btn-clear btn-sm btn-icon zmdi zmdi-search"
-            on:click={methods.refreshSearch} />
-          <button
-            class="btn btn-clear btn-sm btn-icon zmdi zmdi-close"
-            on:click={methods.clearSearch} />
-        {/if}
-      </div>
-    </NToolbar>
+    <NSearchBar
+      searchTerm={state.searchTerm}
+      hasResults={(searchLogs || []).length > 0}
+      on:change={methods.searchChange}
+      on:clear={methods.clearSearch}
+      on:search={methods.doSearch} />
 
     <NToolbar>
       <div class="container history-toolbar-container">
