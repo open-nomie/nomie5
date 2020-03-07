@@ -64,6 +64,7 @@ body.scrolling {
   right: 26px;
   height: 100px;
   width: 100px;
+  transition: all 0.2s ease-in-out;
 
   .location-name {
     display: none !important;
@@ -92,8 +93,18 @@ body.scrolling {
       bottom: 0px !important;
     }
   }
+  &.closed {
+    &::after {
+      content: "";
+      z-index: 20;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
 
-  transition: all 0.2s ease-in-out;
   &.opened {
     transition: all 0.2s ease-in-out;
     display: flex;
@@ -115,20 +126,8 @@ body.scrolling {
     }
     .btn {
       position: absolute;
-      bottom: 16px;
-      left: 16px;
       z-index: 2000;
-      border-radius: 20px;
-      padding: 6px 20px;
+      bottom: 16px;
     }
-  }
-  &::after {
-    content: "";
-    z-index: 20;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
   }
 }
