@@ -63,9 +63,11 @@
         } else if (first === "@") {
           people.push(word);
           noteArray.push({ type: "person", value: word });
+          actual++;
         } else if (first === "+") {
           context.push(word);
           noteArray.push({ type: "context", value: word });
+          actual++;
         } else if (word.length) {
           noteArray.push({ type: "string", value: word });
           actual++;
