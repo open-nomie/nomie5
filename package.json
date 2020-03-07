@@ -31,7 +31,7 @@
   "release-it": {
     "plugins": {
       "@release-it/conventional-changelog": {
-        "preset": "core",
+        "preset": "angular",
         "infile": "CHANGELOG.md"
       }
     }
