@@ -28,9 +28,16 @@
     "release:patch": "release-it patch --no-npm.publish",
     "release:minor": "release-it minor --no-npm.publish"
   },
+  "release-it": {
+    "@release-it/conventional-changelog": {
+      "preset": "cli",
+      "infile": "CHANGELOG.md"
+    }
+  },
   "devDependencies": {
     "@composi/gestures": "^1.0.8",
     "@kazzkiq/svelte-preprocess-scss": "^0.1.3",
+    "@release-it/conventional-changelog": "^1.1.0",
     "@sveltejs/gestures": "0.0.1",
     "blockstack": "^19.2.5",
     "bootstrap": "^4.3.1",
