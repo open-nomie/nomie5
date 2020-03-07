@@ -46,9 +46,6 @@ export default class Record {
 
     // Get the source if provided
     this.source = starter.source || null;
-
-    // Associate Photo (not used )
-    this.photo = starter.photo || null;
   }
 
   // Get a hash of this note
