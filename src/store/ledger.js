@@ -20,21 +20,16 @@ import config from "../../config/global";
 import { Interact } from "./interact";
 import { LastUsed } from "./last-used";
 import { PeopleStore } from "./people-store";
+import { ContextStore } from "./context-store";
 
 const console = new Logger("🧺 store/ledger.js");
 const hooks = new Hooky(); // Hooky is for firing off generic events
-
-// Work on making things able to save in bulk
-let savingQ = [];
 
 /**
  * Ledger Store
  * The ledger store is responsible for storing and getting logs, as well as maintaining what's
  * happened today.
  */
-
-let bulkSaving = []; // holder of logs to save - if the user gets all fast like
-let isSavingBulk = false;
 
 const ledgerInit = () => {
   /**
@@ -396,7 +391,13 @@ const ledgerInit = () => {
 
       // Set the Last Used for Trackers in this log
       LastUsed.record(log);
-      PeopleStore.save(log.getMeta().people);
+
+      // Get Log Meta
+      const meta = log.getMeta();
+      // Save any new people to the People Store
+      PeopleStore.save(meta.people);
+      // Save any new Context to the Context Store
+      ContextStore.save(meta.context);
 
       // Update Store
       update(s => {
