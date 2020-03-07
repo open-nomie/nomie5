@@ -16,11 +16,8 @@
 
   //Components
   import NItem from "../components/list-item/list-item.svelte";
-  import NCell from "../components/cell/cell.svelte";
   import NPoints from "../components/points/points.svelte";
   import dayjs from "dayjs";
-  import md5 from "md5";
-  import domtoimage from "dom-to-image-chrome-fix";
 
   // Utils
   import Logger from "../utils/log/log";
@@ -40,20 +37,23 @@
 
   // Consts
   const console = new Logger("capture-log");
-  const isIOS =
-    !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
-  let textarea;
-  let iOSFileInput;
+  let textarea; // Holder of the Textarea
   let saving = false;
   let saved = false;
 
+  /**
+   * Is the Ledger currently being saved?
+   */
   $: if ($LedgerStore.saving) {
     saving = true;
   } else {
     saving = false;
   }
 
+  /**
+   * Setup Capture Log State
+   */
   let state = {
     date: null,
     dateStarter: dayjs().format("YYYY-MM-DDTHH:mm"),
@@ -63,8 +63,6 @@
     cursorIndex: null,
     partialTag: null
   };
-
-  // TODO: Add a media/photo type of thing that can be added to a log..
 
   const methods = {
     setDate() {
@@ -156,16 +154,20 @@
     calculateScore() {
       $ActiveLogStore.score = CalculateScore($ActiveLogStore.note);
     },
+    /**
+     * Log Save! Save the Log
+     * Caculates the score, then passes it to the ledger store to be saved.
+     */
     async logSave() {
       methods.calculateScore();
       await LedgerStore.saveLog($ActiveLogStore); // TODO: Make ledger task instead
       methods.clear();
     },
     autocompleteText(text) {
-      ActiveLogStore.update(s => {
-        s.note = s.note.replace(state.partialTag, text + " ");
-        return s;
-      });
+      $ActiveLogStore.note = $ActiveLogStore.note.replace(
+        state.partialTag,
+        text + " "
+      );
       methods.autoCompleteDone();
     },
     autoCompleteDone() {
@@ -185,7 +187,7 @@
           methods.autoCompleteDone();
         })
         .catch(e => {
-          console.log("ERror caught", e.message);
+          console.error("Error caught", e.message);
         });
     },
     keyPress(event) {
@@ -243,15 +245,6 @@
           textarea.style.height = "40px";
         }
       }, 120);
-    },
-    removePhoto() {
-      let path = $ActiveLogStore.photo;
-      Storage.delete(path).then(() => {
-        ActiveLogStore.update(l => {
-          l.photo = null;
-          return l;
-        });
-      });
     },
     ifPopulated() {
       return (
@@ -407,25 +400,6 @@
     &.clear {
       transition: none;
       width: 0;
-    }
-  }
-
-  .photo-editor {
-    background-color: var(--color-solid);
-    border-radius: 8px;
-    box-shadow: 0px 10px 20px -6px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-    margin: 10px;
-    .photo {
-      width: 300px;
-      height: 300px;
-      overflow: hidden;
-      background-position: center center;
-      background-size: cover;
-    }
-    .n-row {
-      padding: 6px 16px 6px 6px;
-      color: var(--color-inverse);
     }
   }
 

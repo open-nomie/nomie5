@@ -114,11 +114,7 @@
           style="height:30px; line-height:30px;" />
       </button>
     </div>
-    {#if displayLog.photo}
-      <div class="log-photo-wrapper">
-        <NCameraImage path={displayLog.photo} display="div" height={300} />
-      </div>
-    {/if}
+
     <!-- Process the Note Content with the Textualizer 
     This really isn't special right now -->
     {#if displayLog.note.length}
