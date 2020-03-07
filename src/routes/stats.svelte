@@ -757,6 +757,7 @@
         <div class="p-3">
           <NCalendar
             color={state.tracker.color}
+            tracker={state.tracker}
             showHeader={false}
             on:dayClick={event => {
               state.date = dayjs(event.detail);

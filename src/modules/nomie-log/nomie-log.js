@@ -58,8 +58,8 @@ export default class Record {
     return this.note.length > 0 || this.lat || this.lng;
   }
 
-  calculateScore() {
-    return _calculateScore(this.note, this.end);
+  calculateScore(note = null) {
+    return _calculateScore(note || this.note, this.end);
   }
 
   // Get it as an object

@@ -5463,8 +5463,8 @@ select {
   padding-right: 6px; }
 
 .search-input {
-  border-radius: 20px;
-  padding: 0px 16px;
+  border-radius: 40px !important;
+  padding: 0px 16px !important;
   height: 36px;
   border: solid 1px transparent;
   background-color: var(--color-faded);
