@@ -2,7 +2,7 @@ import nid from "../../modules/nid/nid";
 
 // Modules
 import extractTrackers from "../../utils/extract-trackers/extract-trackers"; // extract tracker function
-import calculateScore from "../../utils/calculate-score/calculate-score"; // Score calculator
+import _calculateScore from "../../utils/calculate-score/calculate-score"; // Score calculator
 import regexs from "../../utils/regex"; // Regex to find data points in the note
 import extractPeople from "../../utils/extract-trackers/extract-people";
 import extractContext from "../../utils/extract-trackers/extract-context";
@@ -34,7 +34,8 @@ export default class Record {
     // This Might be a bad idea - but i'm doing it anyways
     // If a score is set, use it - if not, calculate it.
     // If a score is 0 or not set
-    this.score = starter.score || calculateScore(this.note, this.end);
+    //starter.score ||
+    this.score = _calculateScore(this.note, this.end);
 
     // Get location
     this.lat = starter.lat || null;
@@ -55,6 +56,10 @@ export default class Record {
 
   isValid() {
     return this.note.length > 0 || this.lat || this.lng;
+  }
+
+  calculateScore() {
+    return _calculateScore(this.note, this.end);
   }
 
   // Get it as an object
