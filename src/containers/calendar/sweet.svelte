@@ -124,6 +124,7 @@
       let activeToday = events.find(row => {
         return day.toDate().toDateString() === new Date(row.end).toDateString();
       });
+
       // Highlight based on positivity score
       if (activeToday) {
         return `font-weight:bold; border:solid 2px ${
