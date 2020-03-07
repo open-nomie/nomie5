@@ -363,22 +363,30 @@ const ledgerInit = () => {
      * @param {String} date
      */
     async getBookWithSync(date) {
-      // Get books last
-      let lastUpdate = await methods.getLastUpdate(date);
-      let book = base.books[date] || [];
-
-      if (lastUpdate) {
-        let lu = new Date(lastUpdate);
-        let bu = new Date(base.booksLastUpdate[date]);
-        if (lu > bu) {
-          book = await Storage.get(`${config.data_root}/books/${date}`);
-        }
-      } else {
-        console.log("Sync: No lastUpdate");
+      try {
+        const book = await Storage.get(`${config.data_root}/books/${date}`);
+        return book;
+      } catch (e) {
+        alert(e.message);
       }
-      return book;
     }, // end update if out of sync
+    // async getBookWithSync(date) {
+    //   // OLD FUNCTION - this might have been the problem
+    //   // Get books last
+    //   let lastUpdate = await methods.getLastUpdate(date);
+    //   let book = base.books[date] || [];
 
+    //   if (lastUpdate) {
+    //     let lu = new Date(lastUpdate);
+    //     let bu = new Date(base.booksLastUpdate[date]);
+    //     if (lu > bu) {
+    //       book = await Storage.get(`${config.data_root}/books/${date}`);
+    //     }
+    //   } else {
+    //     console.log("Sync: No lastUpdate");
+    //   }
+    //   return book;
+    // }, // end update if out of sync
     async getLog(id, book) {
       let bookData = await Storage.get(`${config.data_root}/books/${book}`);
       let logRaw = bookData.find(row => row._id == id);
