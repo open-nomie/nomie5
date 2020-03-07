@@ -41,7 +41,8 @@ export default {
       year: "Year",
       map: "Map",
       time: "Time",
-      close: "Close"
+      close: "Close",
+      today: "Today"
     },
     stats: {
       when: "When",
