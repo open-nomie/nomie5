@@ -19,6 +19,7 @@ import config from "../../config/global";
 // import { UserStore } from "./user";
 import { Interact } from "./interact";
 import { LastUsed } from "./last-used";
+import { PeopleStore } from "./people-store";
 
 const console = new Logger("🧺 store/ledger.js");
 const hooks = new Hooky(); // Hooky is for firing off generic events
@@ -203,9 +204,7 @@ const ledgerInit = () => {
      * Get the Users location if it's needed
      */
     locateIfNeeded() {
-      let shouldLocate = JSON.parse(
-        localStorage.getItem(config.always_locate_key) || "false"
-      );
+      let shouldLocate = JSON.parse(localStorage.getItem(config.always_locate_key) || "false");
 
       return new Promise((resolve, reject) => {
         if (shouldLocate) {
@@ -258,9 +257,7 @@ const ledgerInit = () => {
 
       // Get Date for Book ID
       let bookDate = dayjs(new Date(log.end)).format(config.book_time_format);
-      let previousBookDate = dayjs(new Date(previousEndDate)).format(
-        config.book_time_format
-      );
+      let previousBookDate = dayjs(new Date(previousEndDate)).format(config.book_time_format);
       let isSameBook = bookDate === previousBookDate;
 
       // Get books
@@ -375,6 +372,7 @@ const ledgerInit = () => {
         currentState = s;
         return s;
       });
+
       // Set the time
       log = await methods.prepareLog(log);
 
@@ -398,6 +396,7 @@ const ledgerInit = () => {
 
       // Set the Last Used for Trackers in this log
       LastUsed.record(log);
+      PeopleStore.save(log.getMeta().people);
 
       // Update Store
       update(s => {

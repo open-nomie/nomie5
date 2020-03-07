@@ -35,6 +35,7 @@
   import { ActiveLogStore } from "../store/active-log";
   import { UserStore } from "../store/user";
   import { Lang } from "../store/lang";
+  import { PeopleStore } from "../store/people-store";
 
   // Consts
   const console = new Logger("capture-log");
@@ -114,15 +115,30 @@
         methods.calculateScore();
       }
     },
-    checkForAutocomplete(searchTag) {
-      let tkrs = Object.keys($TrackerStore || {})
-        .map(tag => {
-          return $TrackerStore[tag];
-        })
-        .filter(trk => {
-          return trk.tag.search(searchTag.replace("#", "")) > -1;
-        });
-      return tkrs.length ? tkrs : null;
+    /**
+     * Check for Auto Complete
+     */
+    autoCompleteSearch(searchTag, type = "tracker") {
+      if (type == "tracker") {
+        let tkrs = Object.keys($TrackerStore || {})
+          .map(tag => {
+            return $TrackerStore[tag];
+          })
+          .filter(trk => {
+            return trk.tag.search(searchTag.replace("#", "")) > -1;
+          });
+        return tkrs.length ? tkrs : null;
+      } else if (type === "person") {
+        let people = Object.keys($PeopleStore).filter(
+          person => person.toLowerCase().search(searchTag) > -1
+        );
+        return people.length ? people : null;
+        console.log("PERSON!!", people);
+        return null;
+      } else if (type === "context") {
+        console.log("Context");
+        return null;
+      }
     },
     calculateScore() {
       $ActiveLogStore.score = CalculateScore($ActiveLogStore.note);
@@ -161,9 +177,27 @@
           let arr = value.split(" ");
           let tag = arr[arr.length - 1];
           state.cursorIndex = arr.length - 1;
+          // If its a tag
           if (tag.charAt(0) === "#" && tag.length > 1) {
             state.partialTag = tag;
-            state.autocompleteResults = methods.checkForAutocomplete(tag);
+            state.autocompleteResults = methods.autoCompleteSearch(
+              tag,
+              "tracker"
+            );
+            // If its a person
+          } else if (tag.charAt(0) === "@" && tag.length > 1) {
+            state.partialTag = tag;
+            state.autocompleteResults = methods.autoCompleteSearch(
+              tag,
+              "person"
+            );
+            // If it's context
+          } else if (tag.charAt(0) === "+" && tag.length > 1) {
+            state.partialTag = tag;
+            state.autocompleteResults = methods.autoCompleteSearch(
+              tag,
+              "context"
+            );
           } else {
             state.partialTag = null;
             state.autocompleteResults = null;

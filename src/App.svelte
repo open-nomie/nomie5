@@ -37,6 +37,7 @@
   import { TrackerLibrary } from "./store/tracker-library";
   import { CommanderStore } from "./store/commander"; // commander - /?note=hi&lat=35&lng=-81.32
   import { NomieAPI } from "./store/napi";
+  import { PeopleStore } from "./store/people-store";
   // import { TrackerLibrary } from './store/tracker-library';
 
   import config from "../config/global";
@@ -201,6 +202,7 @@
   UserStore.onReady(() => {
     // Set the user if they're logged in
     ready = true;
+    PeopleStore.init();
     // Run any commands if needed
     setTimeout(() => {
       // If there are any URL caommands, it will run here.

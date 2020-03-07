@@ -1,9 +1,11 @@
 import nid from "../../modules/nid/nid";
 
 // Modules
-import ExtractTrackers from "../../utils/extract-trackers/extract-trackers"; // extract tracker function
-import CalculateScore from "../../utils/calculate-score/calculate-score"; // Score calculator
+import extractTrackers from "../../utils/extract-trackers/extract-trackers"; // extract tracker function
+import calculateScore from "../../utils/calculate-score/calculate-score"; // Score calculator
 import regexs from "../../utils/regex"; // Regex to find data points in the note
+import extractPeople from "../../utils/extract-trackers/extract-people";
+import extractContext from "../../utils/extract-trackers/extract-context";
 
 /**
  * Nomie Log / Record
@@ -32,7 +34,7 @@ export default class Record {
     // This Might be a bad idea - but i'm doing it anyways
     // If a score is set, use it - if not, calculate it.
     // If a score is 0 or not set
-    this.score = starter.score || CalculateScore(this.note, this.end);
+    this.score = starter.score || calculateScore(this.note, this.end);
 
     // Get location
     this.lat = starter.lat || null;
@@ -118,16 +120,32 @@ export default class Record {
 
   expanded() {
     return Object.assign(this, {
-      trackers: ExtractTrackers(this.note),
+      trackers: extractTrackers(this.note),
       duration: this.end - this.start,
       startDate: new Date(this.start),
       endDate: new Date(this.end)
     });
   }
 
+  getMeta() {
+    return {
+      people: this.getPeople(),
+      context: this.getContext(),
+      trackers: this.trackersArray()
+    };
+  }
+
+  getPeople() {
+    return extractPeople(this.note || "");
+  }
+
+  getContext() {
+    return extractContext(this.note || "");
+  }
+
   // Get trackers as array
   trackersArray() {
-    let tks = ExtractTrackers(this.note);
+    let tks = extractTrackers(this.note);
 
     let res = Object.keys(tks).map(key => {
       return {
