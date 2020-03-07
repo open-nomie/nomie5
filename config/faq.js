@@ -10,6 +10,11 @@ export default [
     answer: `Tabs are hidden by default, and you cannot sort trackers on the default tab. But you can on other tabs. Turn tabs on by going to setting enabling selecting "Show Board Tabs". You can keep the same Tracker in multiple tabs.`
   },
   {
+    question: "Can I delete a tracker off the main screen?",
+    answer:
+      "Only if you want to delete that tracker from Nomie. You can always recreate it, and the data you tracked with that tracker will remain. Only the tracker button will be deleted."
+  },
+  {
     question: "When should I track?",
     answer: `That's really up to you too, but the key is to keep it balanced, 
 				track a few times throughout the day maybe?`
