@@ -11,10 +11,11 @@ body.scrolling .n-tracker-button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: solid 1px rgba(0, 0, 0, 0.1);
-  background-color: var(--tracker-background);
+  // border: solid 1px rgba(0, 0, 0, 0.1);
+  border: none !important;
+  background-color: var(--color-bg);
   color: var(--color-inverse);
-  box-shadow: var(--box-shadow);
+  box-shadow: var(--box-shadow-neu);
   border-radius: 1rem;
   width: 5.9rem;
   height: 5.9rem;
@@ -23,9 +24,11 @@ body.scrolling .n-tracker-button {
 
   &:active,
   &.pressing {
+    background-color: var(--tracker-background);
     transition: all 0.2s ease-in-out;
     transform: scale(0.95);
-    box-shadow: var(--box-shadow-tight);
+    // box-shadow: var(--box-shadow-tight);
+    box-shadow: var(--box-shadow-neu);
   }
 
   &.added {
