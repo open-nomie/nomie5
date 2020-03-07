@@ -161,7 +161,8 @@
         return {
           lat: log.lat,
           lng: log.lng,
-          name: log.location
+          name: log.location,
+          log: log
         };
       });
   }
@@ -360,6 +361,10 @@
     border-radius: 20px;
     padding: 6px 12px;
     font-size: 12px;
+  }
+  .close-btn {
+    left: auto;
+    right: 18px;
   }
 
   .page-history {
@@ -613,10 +618,10 @@
 
       </div>
     {/if}
-    {#if locations.length}
+    {#if locations.length && !loading}
       {#if !state.showAllLocations}
         <div
-          class="mini-map"
+          class="mini-map closed"
           on:click={() => {
             state.showAllLocations = !state.showAllLocations;
           }}>
@@ -624,14 +629,15 @@
         </div>
       {:else}
         <div class="mini-map opened">
+
           <NMap {locations} />
           <button
-            class="btn btn-sm btn-dark btn-round map-btn"
+            class="btn btn-sm btn-dark btn-icon zmdi zmdi-close btn-round
+            map-btn close-btn"
             on:click={() => {
               state.showAllLocations = !state.showAllLocations;
-            }}>
-            {Lang.t('history.close-map', 'Close Map')}
-          </button>
+            }} />
+
         </div>
       {/if}
     {/if}
