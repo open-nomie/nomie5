@@ -28,14 +28,7 @@
     "release:patch": "release-it patch --no-npm.publish",
     "release:minor": "release-it minor --no-npm.publish"
   },
-  "release-it": {
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "preset": "jshint",
-        "infile": "CHANGELOG.md"
-      }
-    }
-  },
+  "release-it": {},
   "devDependencies": {
     "@composi/gestures": "^1.0.8",
     "@kazzkiq/svelte-preprocess-scss": "^0.1.3",
