@@ -31,7 +31,7 @@
   "release-it": {
     "plugins": {
       "@release-it/conventional-changelog": {
-        "preset": "angular",
+        "preset": "jshint",
         "infile": "CHANGELOG.md"
       }
     }
