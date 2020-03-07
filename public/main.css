@@ -5625,11 +5625,11 @@ body.scrolling .mini-map {
   right: 26px;
   height: 100px;
   width: 100px;
+  transition: all 0.2s ease-in-out;
   border-radius: 20px;
   box-shadow: 0px 4px 9px -2px rgba(0, 0, 0, 0.4);
   background-color: var(--color-solid);
-  overflow: hidden;
-  transition: all 0.2s ease-in-out; }
+  overflow: hidden; }
   .mini-map .location-name {
     display: none !important; }
   @media (max-width: 400px) {
@@ -5645,6 +5645,14 @@ body.scrolling .mini-map {
     z-index: 10; }
     .mini-map .n-map-container .n-map-wrapper {
       bottom: 0px !important; }
+  .mini-map.closed::after {
+    content: "";
+    z-index: 20;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; }
   .mini-map.opened {
     transition: all 0.2s ease-in-out;
     display: flex;
@@ -5665,19 +5673,8 @@ body.scrolling .mini-map {
       font-size: 1.4rem; }
     .mini-map.opened .btn {
       position: absolute;
-      bottom: 16px;
-      left: 16px;
       z-index: 2000;
-      border-radius: 20px;
-      padding: 6px 20px; }
-  .mini-map::after {
-    content: "";
-    z-index: 20;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0; }
+      bottom: 16px; }
 
 .n-row {
   display: flex;
@@ -5924,7 +5921,7 @@ body.scrolling .n-tracker-button {
   border: none !important;
   background-color: var(--header-background);
   color: var(--color-inverse);
-  box-shadow: var(--box-shadow-float);
+  box-shadow: var(--box-shadow);
   border-radius: 1rem;
   width: 5.9rem;
   height: 5.9rem;
