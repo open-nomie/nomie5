@@ -362,6 +362,7 @@ const ledgerInit = () => {
      * Get a Book - with syncing
      * @param {String} date
      */
+
     async getBookWithSync(date) {
       const book = await Storage.get(`${config.data_root}/books/${date}`);
       // If no book and on blockstack
@@ -385,23 +386,7 @@ const ledgerInit = () => {
         return book;
       }
     }, // end update if out of sync
-    // async getBookWithSync(date) {
-    //   // OLD FUNCTION - this might have been the problem
-    //   // Get books last
-    //   let lastUpdate = await methods.getLastUpdate(date);
-    //   let book = base.books[date] || [];
 
-    //   if (lastUpdate) {
-    //     let lu = new Date(lastUpdate);
-    //     let bu = new Date(base.booksLastUpdate[date]);
-    //     if (lu > bu) {
-    //       book = await Storage.get(`${config.data_root}/books/${date}`);
-    //     }
-    //   } else {
-    //     console.log("Sync: No lastUpdate");
-    //   }
-    //   return book;
-    // }, // end update if out of sync
     async getLog(id, book) {
       let bookData = await Storage.get(`${config.data_root}/books/${book}`);
       let logRaw = bookData.find(row => row._id == id);
@@ -437,6 +422,7 @@ const ledgerInit = () => {
       // Update if out of sync with Server
 
       try {
+        // Get the Book - if its blockstack then make sure it exists
         let book = await methods.getBookWithSync(date);
         book.push(log); // push log
         // Save Book.
