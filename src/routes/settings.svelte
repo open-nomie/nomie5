@@ -128,6 +128,8 @@
             await localforage.clear();
             localStorage.clear();
             await Interact.alert("Done", "Your data has been destroyed.");
+
+            console.log("redirecting");
             window.location.href = "/";
           }
         } // end if confirmed
