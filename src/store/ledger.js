@@ -363,11 +363,26 @@ const ledgerInit = () => {
      * @param {String} date
      */
     async getBookWithSync(date) {
-      try {
-        const book = await Storage.get(`${config.data_root}/books/${date}`);
+      const book = await Storage.get(`${config.data_root}/books/${date}`);
+      // If no book and on blockstack
+      if (!book && Storage.storageType() == "blockstack") {
+        let bookMonth = dayjs(date).format("MMMM YYYY");
+        let confirm = await Interact.confirm(
+          `Create ${bookMonth} Book?`,
+          `Logs are stored in monthly files and a ${bookMonth} was not found. Would you like to create it?`
+        );
+        if (confirm) {
+          // User confirms to create a new blank book - godspeed
+          return [];
+        } else {
+          throw new Error("User stopped creation of book");
+        }
+      } else if (!book) {
+        // It's local - so we will assume they're creating a new book
+        return [];
+      } else {
+        // Else just return the book already
         return book;
-      } catch (e) {
-        alert(e.message);
       }
     }, // end update if out of sync
     // async getBookWithSync(date) {
@@ -420,41 +435,50 @@ const ledgerInit = () => {
       // Set Path
       let bookPath = `${config.data_root}/books/${date}`; // path to book
       // Update if out of sync with Server
-      let book = await methods.getBookWithSync(date);
-      book.push(log); // push log
-      // Save Book.
-      await Storage.put(bookPath, book); // put the content
-      currentState.books[date] = book; // update state
 
-      // Save Last Update to server
-      let timeString = new Date().toJSON();
-      let lastDatePath = methods.getLastUpdatePath(date);
-      await Storage.put(lastDatePath, timeString);
-      currentState.booksLastUpdate[date] = timeString;
+      try {
+        let book = await methods.getBookWithSync(date);
+        book.push(log); // push log
+        // Save Book.
+        await Storage.put(bookPath, book); // put the content
+        currentState.books[date] = book; // update state
 
-      // Set the Last Used for Trackers in this log
-      LastUsed.record(log);
+        // Save Last Update to server
+        let timeString = new Date().toJSON();
+        let lastDatePath = methods.getLastUpdatePath(date);
+        await Storage.put(lastDatePath, timeString);
+        currentState.booksLastUpdate[date] = timeString;
 
-      // Get Log Meta
-      const meta = log.getMeta();
-      // Save any new people to the People Store
-      PeopleStore.save(meta.people);
-      // Save any new Context to the Context Store
-      ContextStore.save(meta.context);
+        // Set the Last Used for Trackers in this log
+        LastUsed.record(log);
 
-      // Update Store
-      update(s => {
-        s.saving = false;
-        s.books = currentState.books;
-        return s;
-      });
+        // Get Log Meta
+        const meta = log.getMeta();
+        // Save any new people to the People Store
+        PeopleStore.save(meta.people);
+        // Save any new Context to the Context Store
+        ContextStore.save(meta.context);
 
-      /** Fire off Notifications and hooks Save */
-      Interact.toast(`Saved ${log.note}`); // show Alert
-      hooks.run("onLogSaved", log);
-      await tick(120);
-      methods.getToday(); // Get Today
-      return { log, date };
+        // Update Store
+        update(s => {
+          s.saving = false;
+          s.books = currentState.books;
+          return s;
+        });
+
+        /** Fire off Notifications and hooks Save */
+        Interact.toast(`Saved ${log.note}`); // show Alert
+        hooks.run("onLogSaved", log);
+        await tick(120);
+        methods.getToday(); // Get Today
+        return { log, date };
+      } catch (e) {
+        Interact.alert("Error", e.message);
+        update(s => {
+          s.saving = false;
+          return s;
+        });
+      } // end try catch
     },
 
     /**
