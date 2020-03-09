@@ -52,6 +52,9 @@ const interactInit = () => {
       boardSorter: {
         show: false
       },
+      people: {
+        active: null
+      },
       trackerSelector: {
         show: false,
         multiple: false,
@@ -193,6 +196,12 @@ const interactInit = () => {
     openStats(tag) {
       update(d => {
         d.stats.activeTag = tag;
+        return d;
+      });
+    },
+    person(username) {
+      update(d => {
+        d.people.active = username;
         return d;
       });
     },

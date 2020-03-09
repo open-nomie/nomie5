@@ -12,6 +12,7 @@
   import AppTabs from "./containers/layout/tabs.svelte";
   import Interactions from "./containers/interactions/interactions.svelte";
   import LibraryModal from "./containers/library/library.svelte";
+  import PersonModal from "./containers/people/person-modal.svelte";
   import Modal from "./components/modal/modal.svelte";
 
   // Utils
@@ -28,6 +29,7 @@
   import PluginsRoute from "./routes/plugins.svelte";
   import NomieAPIRoute from "./routes/nomie-api.svelte";
   import ExportRoute from "./routes/export.svelte";
+  import PeopleRoute from "./routes/people.svelte";
 
   // Stores
   import { UserStore } from "./store/user"; //  user auth and state
@@ -221,6 +223,7 @@
     <Route path="/history" component={HistoryRoute} />
     <Route path="/history/:date" component={HistoryRoute} />
     <Route path="/" component={TrackRoute} />
+    <Route path="/people" component={PeopleRoute} />
     <Route path="/settings" component={SettingsRoute} />
     <Route path="/board/:id" component={BoardEditorRoute} />
     <Route path="/faq" component={FAQRoute} />
@@ -246,6 +249,9 @@
 {/if}
 {#if $TrackerLibrary.show}
   <LibraryModal />
+{/if}
+{#if $Interact.people.active}
+  <PersonModal />
 {/if}
 <Interactions />
 {#if $UserStore.storageType == 'blockstack' && offline}

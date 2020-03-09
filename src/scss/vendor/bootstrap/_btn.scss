@@ -23,7 +23,7 @@ button:focus {
   justify-content: center;
   align-items: center;
   &.btn-lg {
-    border-radius: 1rem;
+    border-radius: 0.6rem;
   }
   &:active {
     transition: all 0.2s ease-in-out;
@@ -197,7 +197,7 @@ button:focus {
   &.btn-lg {
     min-height: 140px;
     min-width: 140px;
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
 }
 

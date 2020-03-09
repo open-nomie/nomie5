@@ -4879,7 +4879,7 @@ button:focus {
   justify-content: center;
   align-items: center; }
   .btn.btn-lg, .btn-group-lg > .btn {
-    border-radius: 1rem; }
+    border-radius: 0.6rem; }
   .btn:active {
     transition: all 0.2s ease-in-out;
     transform: scale(0.97) !important; }
@@ -5017,7 +5017,7 @@ button:focus {
   .btn.touchable.btn-lg, .btn-group-lg > .btn.touchable {
     min-height: 140px;
     min-width: 140px;
-    font-size: 3rem; }
+    font-size: 2.5rem; }
 
 .btn.btn-text {
   color: var(--color-primary); }
@@ -5922,7 +5922,7 @@ body.scrolling .n-tracker-button {
   background-color: var(--header-background);
   color: var(--color-inverse);
   box-shadow: var(--box-shadow);
-  border-radius: 1rem;
+  border-radius: 1.3rem;
   width: 5.9rem;
   height: 5.9rem;
   outline: none;

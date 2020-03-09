@@ -44,6 +44,9 @@ export default {
       close: "Close",
       today: "Today"
     },
+    people: {
+      with: "With {{person}}"
+    },
     stats: {
       when: "When",
       chart: "Chart",
@@ -56,10 +59,11 @@ export default {
       track: "Track",
       history: "History",
       settings: "Settings",
-      plugins: "Plugins"
+      plugins: "Plugins",
+      people: "People"
     },
     history: {
-      "no-records-found": "No Records Found"
+      "no-records-found": "🤷‍♂️ Nothing Found"
     },
     export: {
       csv: {

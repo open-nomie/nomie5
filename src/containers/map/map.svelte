@@ -1,6 +1,6 @@
 <script>
   //svelte
-  import { onMount, onUpdate } from "svelte";
+  import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
 
   // components
