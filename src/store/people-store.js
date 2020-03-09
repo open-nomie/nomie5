@@ -9,6 +9,7 @@ import { writable } from "svelte/store";
 // utils
 import Logger from "../utils/log/log";
 import math from "../utils/math/math";
+import snakeCase from "../utils/snake-case/snake-case";
 
 // Vendors
 import Storage from "../modules/storage/storage";
@@ -58,9 +59,11 @@ const normalizeUserMap = userMap => {
   return final;
 };
 
+let currentStats = {};
 const getRecentPeopleStats = async () => {
   let logs = await getPeopleLogs();
-  return normalizeUserMap(mapToUser(logs));
+  currentStats = normalizeUserMap(mapToUser(logs));
+  return currentStats;
 };
 
 /**
@@ -79,6 +82,9 @@ const PeopleInit = () => {
         update(d => people || {});
       });
     },
+    currentStats() {
+      return currentStats;
+    },
     async save(peopleArray) {
       update(people => {
         let changed = false;
@@ -93,6 +99,22 @@ const PeopleInit = () => {
         }
         return people;
       });
+    },
+    async add(username) {
+      let _state;
+      if (username) {
+        username = username.replace("@", "").trim();
+        username = snakeCase(username);
+        update(state => {
+          _state = state;
+          if (!state.hasOwnProperty(username)) {
+            state[username] = username;
+          }
+          return state;
+        });
+        await this.write(_state);
+        return username;
+      }
     },
     async write(payload) {
       return Storage.put(`${config.data_root}/people.json`, payload);

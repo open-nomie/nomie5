@@ -1,10 +1,12 @@
 <script>
   import Modal from "../../components/modal/modal.svelte";
   import { Interact } from "../../store/interact.js";
+  import { PeopleStore } from "../../store/people-store.js";
   import ButtonGroup from "../../components/button-group/button-group.svelte";
   import PersonCheckin from "./person-check-in.svelte";
   import Dymoji from "../../components/dymoji/dymoji.svelte";
   import tick from "../../utils/tick/tick";
+  import LogItem from "../../components/list-item-log/list-item-log.svelte";
 
   let domVisible = false;
 
@@ -16,6 +18,15 @@
     domVisible = false;
     await tick(200);
     Interact.person(null);
+  };
+
+  const getPersonLogs = () => {
+    let stats = PeopleStore.currentStats();
+    if (stats[$Interact.people.active]) {
+      return stats[$Interact.people.active].logs;
+    } else {
+      return [];
+    }
   };
 
   const state = {
@@ -57,7 +68,11 @@
     {#if state.view == 'check-in'}
       <PersonCheckin on:checkedIn={close} />
     {:else if state.view == 'logs'}
-      Logs
+      <div class="logs p-2">
+        {#each getPersonLogs() as log}
+          <LogItem {log} />
+        {/each}
+      </div>
     {:else if state.view == 'stats'}Stats{/if}
   </main>
 

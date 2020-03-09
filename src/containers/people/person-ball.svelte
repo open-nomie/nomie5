@@ -7,6 +7,8 @@
   export let score = 0;
   export let count = 0;
   export let last = null;
+  export let emoji = null;
+  export let note = null;
 </script>
 
 <style lang="scss">
@@ -22,6 +24,7 @@
     justify-content: center;
     position: relative;
     padding: 12px 8px;
+    overflow: hidden;
     .avatar {
       width: 72px;
       height: 72px;
@@ -52,6 +55,10 @@
     .username {
       font-weight: 500;
       margin-top: 6px;
+      width: 100%;
+      text-align: center;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
     &:active {
       transform: scale(0.9);
@@ -71,8 +78,14 @@
     <div class={`score ${score < 0 ? 'negative' : 'positive'}`}>{score}</div>
   {/if}
   <div class="avatar">
-    <Dymoji {username} size={66} />
+    <Dymoji {username} size={66} {emoji} />
   </div>
-  <div class="username text-inverse-2 text-sm">{username}</div>
-  <div class="last text-xs text-faded-3">{dayjs(last).fromNow()}</div>
+  <div class="username text-inverse-2 text-sm truncate-1">{username}</div>
+  {#if note}
+    <div class="last text-xs text-faded-3">{note}</div>
+  {:else if last}
+    <div class="last text-xs text-faded-3">{dayjs(last).fromNow()}</div>
+  {:else}
+    <div class="last text-xs text-faded-3">Unknown</div>
+  {/if}
 </div>

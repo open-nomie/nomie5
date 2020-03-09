@@ -5,7 +5,7 @@
   import NItem from "../components/list-item/list-item.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
   import PersonBall from "../containers/people/person-ball.svelte";
-
+  import dayjs from "dayjs";
   import Dymoji from "../components/dymoji/dymoji.svelte";
 
   import { Lang } from "../store/lang.js";
@@ -14,7 +14,7 @@
 
   let state = {
     people: [],
-    view: "positivity",
+    view: "time",
     stats: {}
   };
 
@@ -29,15 +29,28 @@
   $: if (state.view && $PeopleStore) {
     if (state.view == "name") {
       state.people = Object.keys($PeopleStore).sort((a, b) => {
-        return a > b ? 1 : -1;
+        return a.toLowerCase() > b.toLowerCase() ? 1 : -1;
       });
+      /**
+       * Sort by Time
+       */
     } else if (state.view == "time") {
+      const longTimeAgo = dayjs()
+        .subtract(100, "years")
+        .toDate();
       state.people = Object.keys($PeopleStore).sort((a, b) => {
-        return state.stats[a].last < state.stats[b].last ? 1 : -1;
+        return (state.stats[a] || { last: longTimeAgo }).last <
+          (state.stats[b] || { last: longTimeAgo }).last
+          ? 1
+          : -1;
       });
+      /**
+       * Sort by Positivity
+       */
     } else if (state.view == "positivity") {
       state.people = Object.keys($PeopleStore).sort((a, b) => {
-        return (state.stats[a] || {}).score < (state.stats[b] || {}).score
+        return (state.stats[a] || { score: -99 }).score <
+          (state.stats[b] || { score: -99 }).score
           ? 1
           : -1;
       });
@@ -72,13 +85,6 @@
 
   $: pageButtons = [
     {
-      label: "Positivity",
-      active: state.view === "positivity",
-      click() {
-        changeView("positivity");
-      }
-    },
-    {
       label: "Name",
       active: state.view === "name",
       click() {
@@ -90,6 +96,13 @@
       active: state.view === "time",
       click() {
         changeView("time");
+      }
+    },
+    {
+      label: "Positivity",
+      active: state.view === "positivity",
+      click() {
+        changeView("positivity");
       }
     }
   ];
@@ -133,6 +146,16 @@
               personClicked(person);
             }} />
         {/each}
+        <PersonBall
+          username={'Add'}
+          emoji="➕"
+          note="Add a Person"
+          on:click={() => {
+            let username = prompt('Username');
+            if (username) {
+              PeopleStore.add(username);
+            }
+          }} />
       </div>
     </div>
   </div>
