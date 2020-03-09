@@ -93,16 +93,6 @@ body.scrolling .n-tracker-button {
     }
   }
 
-  .one-tap {
-    position: absolute;
-    height: 4px;
-    border-radius: 2px;
-    background-color: var(--color-faded);
-    bottom: 2px;
-    left: 12%;
-    right: 12%;
-    z-index: 0;
-  }
   header {
     display: flex;
     justify-content: space-between;
@@ -139,22 +129,33 @@ body.scrolling .n-tracker-button {
     font-size: 0.8rem;
     z-index: 2;
   }
+}
+
+.tracker-ball {
   .countdown {
     position: absolute;
     top: 0;
-    left: 10%;
-    right: 10%;
     bottom: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2;
+    z-index: 202;
   }
   .balls {
     position: absolute;
     bottom: 2px;
     left: 12%;
     right: 12%;
-    z-index: 2;
+    z-index: 202;
+  }
+  .one-tap {
+    position: absolute;
+    height: 4px;
+    border-radius: 2px;
+    background-color: var(--color-faded);
+    bottom: 2px;
+    left: 12%;
+    right: 12%;
+    z-index: 0;
   }
 }

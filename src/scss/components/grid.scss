@@ -1,0 +1,12 @@
+.n-grid {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  max-width: 100%;
+  min-height: 30vh;
+  padding: 10px 0;
+  align-items: flex-start;
+  justify-content: space-evenly;
+}

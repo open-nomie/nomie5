@@ -4,6 +4,8 @@
   // svelte
   import { createEventDispatcher } from "svelte";
 
+  import TrackerBall from "../../components/tracker-ball/tracker-ball.svelte";
+
   // modules
   import Tracker from "../../modules/tracker/tracker";
   import TimeBalls from "../../components/time-balls/time-balls.svelte";
@@ -20,6 +22,7 @@
   export let disabled = undefined;
   export let hoursUsed = [];
   export let hideMore = false;
+  export let lastUsed = null; // or dayjs object
 
   // Define Dispatch
   const dispatch = createEventDispatcher();
@@ -60,11 +63,22 @@
 </script>
 
 <style lang="scss" type="text/scss">
+  .tracker-ball {
+    svg {
+      display: none;
+    }
+    .countdown {
+      z-index: 202;
+      font-size: 1rem;
+    }
+  }
+  .tracker-button-wrapper {
+    border-radius: 20px;
+  }
   // Moved to /scss/components/_tracker-button.scss
 </style>
 
-<button
-  {id}
+<div
   on:click={methods.click}
   on:longtap={methods.longPress}
   on:touchstart={methods.mousedown}
@@ -73,10 +87,35 @@
   on:contextmenu={methods.rightclick}
   on:mouseout={methods.mouseup}
   on:mouseup={methods.mouseup}
-  {disabled}
-  class="n-tracker-button tracker-{tracker.tag}
-  {data.pressing ? 'pressing' : ''}
-  {className}">
+  class={`tracker-button-wrapper tracker-${tracker.tag} ${data.pressing ? 'pressing' : ''} ${className}`}>
+  <TrackerBall
+    {id}
+    {disabled}
+    className={`${tracker.score < 0 ? 'negative' : ''} ${tracker.score > 0 ? 'positive' : ''}`}
+    emoji={tracker.emoji}
+    showCharacter={false}
+    score={value}
+    note={false}
+    username={tracker.label}>
+    {#if tracker.started}
+      <div class="center countdown">
+        <Counter started={tracker.started} />
+      </div>
+    {/if}
+    {#if hoursUsed.length}
+      <div class="balls">
+        <TimeBalls hours={hoursUsed} />
+      </div>
+    {/if}
+    {#if tracker.one_tap}
+      <div class="one-tap" />
+    {/if}
+  </TrackerBall>
+
+</div>
+<!-- last.log.end -->
+
+<!--
   <header>
     {#if value}
       <span class="value left">{value}</span>
@@ -104,4 +143,4 @@
       <TimeBalls hours={hoursUsed} />
     </div>
   {/if}
-</button>
+-->

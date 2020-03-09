@@ -269,6 +269,16 @@
       });
     },
 
+    getLastUsed(tracker) {
+      if ($LastUsed.hasOwnProperty(tracker.tag)) {
+        let last = $LastUsed[tracker.tag];
+        if (last) {
+          return dayjs(last.log.end);
+        }
+      }
+      return null;
+    },
+
     /**
      * Create a new board
      * This will prompt the user to input a name
@@ -695,6 +705,7 @@
                 {tracker}
                 value={methods.getTrackerValue(tracker)}
                 hoursUsed={methods.getHoursUsed(tracker)}
+                lastUsed={methods.getLastUsed(tracker)}
                 on:click={() => {
                   methods.trackerTapped(tracker);
                 }}
@@ -706,11 +717,14 @@
                 }} />
             {/each}
             {#if !data.searching}
-              <button
+              <NTrackerButton
+                tracker={{ label: 'Add', emoji: '➕' }}
+                note="Tracker" />
+              <!-- <button
                 class="n-tracker-button n-add-button"
                 on:click={methods.addButtonTap}>
                 <i class="emoji">+</i>
-              </button>
+              </button> -->
             {/if}
           </div>
 

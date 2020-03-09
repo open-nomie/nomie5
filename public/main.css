@@ -5978,15 +5978,6 @@ body.scrolling .n-tracker-button {
       .n-tracker-button .emoji {
         font-size: 2.2rem;
         font-style: normal; } }
-  .n-tracker-button .one-tap {
-    position: absolute;
-    height: 4px;
-    border-radius: 2px;
-    background-color: var(--color-faded);
-    bottom: 2px;
-    left: 12%;
-    right: 12%;
-    z-index: 0; }
   .n-tracker-button header {
     display: flex;
     justify-content: space-between;
@@ -6019,22 +6010,32 @@ body.scrolling .n-tracker-button {
     line-height: 100%;
     font-size: 0.8rem;
     z-index: 2; }
-  .n-tracker-button .countdown {
-    position: absolute;
-    top: 0;
-    left: 10%;
-    right: 10%;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2; }
-  .n-tracker-button .balls {
-    position: absolute;
-    bottom: 2px;
-    left: 12%;
-    right: 12%;
-    z-index: 2; }
+
+.tracker-ball .countdown {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 202; }
+
+.tracker-ball .balls {
+  position: absolute;
+  bottom: 2px;
+  left: 12%;
+  right: 12%;
+  z-index: 202; }
+
+.tracker-ball .one-tap {
+  position: absolute;
+  height: 4px;
+  border-radius: 2px;
+  background-color: var(--color-faded);
+  bottom: 2px;
+  left: 12%;
+  right: 12%;
+  z-index: 0; }
 
 .share-image-component {
   background-color: rgba(0, 0, 0, 0.8);
@@ -6242,6 +6243,18 @@ body.scrolling .n-tracker-button {
       opacity: 0.6; }
     .share-image-component.theme-dark .nomie-logo path, .share-image-component.theme-terminal .nomie-logo path {
       fill: var(--color-primary-bright); }
+
+.n-grid {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  max-width: 100%;
+  min-height: 30vh;
+  padding: 10px 0;
+  align-items: flex-start;
+  justify-content: space-evenly; }
 
 /**
 THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 

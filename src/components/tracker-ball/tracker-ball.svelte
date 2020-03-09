@@ -1,5 +1,5 @@
 <script>
-  import Dymoji from "../../components/dymoji/dymoji.svelte";
+  import Dymoji from "../dymoji/dymoji.svelte";
   import { createEventDispatcher } from "svelte";
   import dayjs from "dayjs";
   const dispatch = createEventDispatcher();
@@ -23,7 +23,7 @@
 
 <style lang="scss">
   @import "../../scss/utils/__utils.scss";
-  .player-ball {
+  .tracker-ball {
     transition: all 0.2s ease-in-out;
     display: inline-flex;
     width: 100px;
@@ -48,12 +48,17 @@
       align-items: center;
       justify-content: center;
     }
+    &.negative {
+      .score {
+        background-color: var(--color-red);
+      }
+    }
     .score {
       position: absolute;
       top: 9px;
       left: 9px;
       height: 16px;
-      min-width: 12px;
+      min-width: 16px;
       border-radius: 8px;
       padding: 0 4px;
       line-height: 16px;
@@ -69,6 +74,7 @@
     }
     .username {
       font-weight: 500;
+      //   white-space: nowrap;
       margin-top: 6px;
       width: 100%;
       text-align: center;
@@ -84,6 +90,10 @@
     }
     .last.today {
       color: var(--color-green);
+    }
+    .countdown {
+      z-index: 202;
+      font-size: 1rem;
     }
     .letter {
       position: absolute;
@@ -109,7 +119,7 @@
 
 <div
   {id}
-  class={`player-ball ${className}`}
+  class={`tracker-ball ${className}`}
   on:click={() => {
     dispatch('click', username);
   }}>
@@ -117,6 +127,7 @@
     <div class={`score ${score < 0 ? 'negative' : 'positive'}`}>{score}</div>
   {/if}
   <div class="avatar">
+    <slot />
     <div
       class={`letter ${emoji ? 'emoji-letter' : 'just-letter'}`}
       style={`font-size:${66 * 0.6}px`}>
@@ -125,6 +136,7 @@
     {#if showCharacter}
       <Dymoji {username} size={66} {emoji} />
     {/if}
+
   </div>
   <div class="username text-inverse-2 text-sm truncate-1">{username}</div>
   {#if note}
@@ -133,7 +145,7 @@
     <div class={`last text-xs text-faded-3 ${isToday ? 'today' : ''}`}>
       {dayjs(last).fromNow()}
     </div>
-  {:else}
+  {:else if note !== false}
     <div class="last text-xs text-faded-3">Unknown</div>
   {/if}
 </div>

@@ -4,7 +4,7 @@
   import ButtonGroup from "../components/button-group/button-group.svelte";
   import NItem from "../components/list-item/list-item.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
-  import PersonBall from "../containers/people/person-ball.svelte";
+  import TrackerBall from "../components/tracker-ball/tracker-ball.svelte";
   import dayjs from "dayjs";
   import Dymoji from "../components/dymoji/dymoji.svelte";
 
@@ -114,15 +114,7 @@
 </script>
 
 <style lang="scss">
-  .n-grid {
-    max-width: 600px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-  }
+
 </style>
 
 <AppLayout title="People">
@@ -133,11 +125,11 @@
     </NToolbar>
   </div>
 
-  <div slot="content">
-    <div class="page page-people">
-      <div class="container p-2 n-grid text-inverse">
+  <div slot="content" class="container">
+    <div class="n-board h-100">
+      <div class=" n-grid text-inverse">
         {#each state.people as person}
-          <PersonBall
+          <TrackerBall
             username={person}
             score={getStatItem(person).score}
             count={getStatItem(person).count}
@@ -146,7 +138,7 @@
               personClicked(person);
             }} />
         {/each}
-        <PersonBall
+        <TrackerBall
           username={'Add'}
           emoji="➕"
           note="Add a Person"
