@@ -5,6 +5,7 @@
   export let size = 42;
   export let radius = 0.12;
   export let emoji = null;
+  export let className = "";
 
   let svg = null;
 
@@ -26,14 +27,16 @@
     display: flex;
   }
   .dymoji-wrap {
-    display: inline-block;
+    display: inline-flex;
     vertical-align: middle;
     position: relative;
+    align-items: center;
+    justify-content: center;
     .letter {
       position: absolute;
       top: 0;
       right: 0;
-      bottom: 10%;
+      bottom: 0;
       left: 0;
       text-align: center;
       display: flex;
@@ -50,7 +53,7 @@
   }
 </style>
 
-<div class="dymoji-wrap">
+<div class={`dymoji-wrap ${className}`}>
   {@html svg}
   <div
     class={`letter ${emoji ? 'emoji-letter' : 'just-letter'}`}

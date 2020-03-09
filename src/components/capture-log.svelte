@@ -21,6 +21,8 @@
   import dayjs from "dayjs";
   import md5 from "md5";
   import domtoimage from "dom-to-image-chrome-fix";
+  import Dymoji from "../components/dymoji/dymoji.svelte";
+  import AutoComplete from "../components/auto-complete/auto-complete.svelte";
 
   // Utils
   import Logger from "../utils/log/log";
@@ -410,25 +412,6 @@
     }
   }
 
-  .photo-editor {
-    background-color: var(--color-solid);
-    border-radius: 8px;
-    box-shadow: 0px 10px 20px -6px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-    margin: 10px;
-    .photo {
-      width: 300px;
-      height: 300px;
-      overflow: hidden;
-      background-position: center center;
-      background-size: cover;
-    }
-    .n-row {
-      padding: 6px 16px 6px 6px;
-      color: var(--color-inverse);
-    }
-  }
-
   .save-button {
     padding: 0;
     width: 30px;
@@ -495,27 +478,9 @@
   on:swipeup={methods.swipeUp}
   on:swipedown={methods.swipeDown}>
 
-  <div
-    class="autocomplete-results animate {state.autocompleteResults ? 'visible' : 'hidden'}">
-    <div class="container p-0 tracker-list">
-      {#each state.autocompleteResults || [] as tracker (tracker.tag)}
-        <button
-          class="btn btn-tracker-inline"
-          on:click={() => {
-            if (tracker.type == 'person') {
-              methods.autocompleteText('@@' + tracker.tag);
-            } else if (tracker.type == 'context') {
-              methods.autocompleteText('+' + tracker.tag);
-            } else {
-              methods.autocompleteTracker(tracker);
-            }
-          }}>
-          {tracker.emoji} {tracker.tag}
-        </button>
-      {/each}
-      <div class="filler" />
-    </div>
-  </div>
+  <!-- 
+    AUTO COMPLETE RESULTS
+  -->
 
   <div class="capture-log">
     <div
@@ -524,7 +489,11 @@
     <div class="container p-0">
 
       <!-- Auto Complet e-->
-
+      <AutoComplete
+        input={$ActiveLogStore.note}
+        on:select={evt => {
+          console.log('Auto complete selected', evt.detail);
+        }} />
       <!-- Note Input -->
       <div
         class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 || $ActiveLogStore.photo ? 'populated' : 'empty'}">
