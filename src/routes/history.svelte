@@ -641,7 +641,7 @@
         </div>
       {/if}
     {/if}
-    {#if !isToday}
+    {#if !isToday && !searchMode}
       <button
         class="btn btn-sm btn-light btn-round map-btn"
         on:click={() => {
