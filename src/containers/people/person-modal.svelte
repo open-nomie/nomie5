@@ -7,6 +7,7 @@
   import Dymoji from "../../components/dymoji/dymoji.svelte";
   import tick from "../../utils/tick/tick";
   import LogItem from "../../components/list-item-log/list-item-log.svelte";
+  import FrappeChart from "../../components/charts/frappe.svelte";
 
   let domVisible = false;
 
@@ -73,7 +74,11 @@
           <LogItem {log} />
         {/each}
       </div>
-    {:else if state.view == 'stats'}Stats{/if}
+    {:else if state.view == 'stats'}
+      <div class="stats p-2">
+        <FrappeChart title={`@${$Interact.people.active}`} />
+      </div>
+    {/if}
   </main>
 
 </Modal>

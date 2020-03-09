@@ -252,7 +252,7 @@ Note: Your data will not automatically move over. You'll first need to export it
   //   trackers = tkrs || {};
   // });
 
-  const setTimeout = setTimeout;
+  // const setTimeout = setTimeout;
   onMount(() => {
     window.scrollTo(0, 0);
   });

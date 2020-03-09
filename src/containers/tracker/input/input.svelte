@@ -169,7 +169,7 @@
         <NTimer
           {value}
           tracker={data.tracker}
-          bind:value={data.value}
+          xbind:value={data.value}
           on:change={event => {
             data.value = event.detail;
           }} />

@@ -9,6 +9,13 @@
   export let last = null;
   export let emoji = null;
   export let note = null;
+
+  let isToday = false;
+  $: if (last) {
+    if (new Date(last).toDateString() == new Date().toDateString()) {
+      isToday = true;
+    }
+  }
 </script>
 
 <style lang="scss">
@@ -28,7 +35,7 @@
     .avatar {
       width: 72px;
       height: 72px;
-      border-radius: 30px;
+      border-radius: 24px;
       border: solid 3px var(--color-solid);
       overflow: hidden;
       box-shadow: var(--box-shadow-float);
@@ -59,12 +66,16 @@
       text-align: center;
       text-overflow: ellipsis;
       overflow: hidden;
+      color: var(--color-inverse);
     }
     &:active {
       transform: scale(0.9);
       .avatar {
         box-shadow: var(--box-shadow-tight);
       }
+    }
+    .last.today {
+      color: var(--color-green);
     }
   }
 </style>
@@ -84,7 +95,9 @@
   {#if note}
     <div class="last text-xs text-faded-3">{note}</div>
   {:else if last}
-    <div class="last text-xs text-faded-3">{dayjs(last).fromNow()}</div>
+    <div class={`last text-xs text-faded-3 ${isToday ? 'today' : ''}`}>
+      {dayjs(last).fromNow()}
+    </div>
   {:else}
     <div class="last text-xs text-faded-3">Unknown</div>
   {/if}

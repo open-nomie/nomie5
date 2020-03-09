@@ -4,6 +4,18 @@
   import { Link } from "svelte-routing";
   import { onMount } from "svelte";
 
+  //Import the Fusioncharts library
+  import FusionCharts from "fusioncharts";
+
+  //Import the chart modules
+  import Charts from "fusioncharts/fusioncharts.charts";
+
+  //Import the theme as fusion
+  import FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
+
+  //Import the Svelte component
+  import SvelteFC, { fcRoot } from "svelte-fusioncharts";
+
   // Vendors
   import Spinner from "./components/spinner/spinner.svelte";
   import { gestures } from "@composi/gestures";
