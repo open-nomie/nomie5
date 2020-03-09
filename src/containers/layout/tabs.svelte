@@ -85,7 +85,7 @@
     {/each} -->
 
     <Link to="/settings">
-      <i class="zmdi zmdi-menu" />
+      <i class="zmdi zmdi-settings" />
       <label>{Lang.t('tabs.settings')}</label>
     </Link>
 
