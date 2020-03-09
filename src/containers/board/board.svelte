@@ -522,7 +522,6 @@
     min-height: 50vh;
     display: flex;
     flex-direction: column;
-
     @include media-breakpoint-up(md) {
       padding-top: 20px;
     }
@@ -572,14 +571,14 @@
     color: var(--color-inverse);
   }
   .n-board .trackers {
-    max-width: 100%;
-    min-height: 30vh;
-    padding: 10px 0;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: space-evenly;
+    // max-width: 100%;
+    // min-height: 30vh;
+    // padding: 10px 0;
+    // display: flex;
+    // flex-direction: row;
+    // flex-wrap: wrap;
+    // align-items: flex-start;
+    // justify-content: center;
   }
 
   .board-actions {
@@ -691,7 +690,7 @@
           {/if}
 
           <!-- Loop over trackers -->
-          <div class="trackers">
+          <div class="trackers n-grid">
             {#if (foundTrackers || boardTrackers || []).length === 0}
               {#if foundTrackers != null}
                 <div class="no-trackers">

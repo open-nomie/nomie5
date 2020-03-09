@@ -178,7 +178,7 @@ const ledgerInit = () => {
      * Returns today's book
      */
     async getToday() {
-      let todayKey = dayjs().format("YYYY-MM");
+      let todayKey = dayjs().format(config.book_time_format);
       if (base.books[todayKey]) {
         return methods.todayReady();
       } else {
@@ -194,7 +194,7 @@ const ledgerInit = () => {
     async todayReady() {
       let start = dayjs().startOf("day");
       let end = dayjs().endOf("day");
-      let todayKey = dayjs().format("YYYY-MM");
+      let todayKey = dayjs().format(config.book_time_format);
       let allLogs = base.books[todayKey];
       // Extract just today's logs from the book
       let todaysLogs = methods.filterLogs(allLogs, {
@@ -415,7 +415,7 @@ const ledgerInit = () => {
       log = await methods.prepareLog(log);
 
       // Set the date for the book
-      let date = dayjs(new Date(log.end)).format("YYYY-MM");
+      let date = dayjs(new Date(log.end)).format(config.book_time_format);
 
       // Set Path
       let bookPath = `${config.data_root}/books/${date}`; // path to book
@@ -518,7 +518,7 @@ const ledgerInit = () => {
         base.books = {};
         rows.forEach(rawLog => {
           let log = rawLog instanceof NomieLog ? rawLog : new NomieLog(rawLog);
-          let bookKey = dayjs(new Date(log.end)).format("YYYY-MM");
+          let bookKey = dayjs(new Date(log.end)).format(config.book_time_format);
           base.books[bookKey] = base.books[bookKey] || [];
           base.books[bookKey].push(log);
         });
@@ -557,7 +557,7 @@ const ledgerInit = () => {
           base.books = {};
           payload.events.forEach(rawLog => {
             let log = new NomieLog(rawLog);
-            let bookKey = dayjs(new Date(log.end)).format("YYYY-MM");
+            let bookKey = dayjs(new Date(log.end)).format(config.book_time_format);
             base.books[bookKey] = base.books[bookKey] || [];
             base.books[bookKey].push(log);
           });
@@ -629,14 +629,14 @@ const ledgerInit = () => {
       // this will kill the annoying 404 console
 
       if (diff === 0) {
-        books_to_get.push(endMonth.format("YYYY-MM"));
+        books_to_get.push(endMonth.format(config.book_time_format));
       } else {
-        books_to_get.push(startMonth.format("YYYY-MM"));
+        books_to_get.push(startMonth.format(config.book_time_format));
         for (let i = 0; i < diff; i++) {
           books_to_get.push(
             dayjs(startMonth)
               .add(i + 1, "month")
-              .format("YYYY-MM")
+              .format(config.book_time_format)
           );
         }
       }

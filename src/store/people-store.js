@@ -22,11 +22,15 @@ import dayjs from "dayjs";
 
 const console = new Logger("🗺 $PeopleStore");
 
-const getPeopleLogs = async () => {
-  const logs = await LedgerStore.query({
+const getLogs = async () => {
+  return await LedgerStore.query({
     start: dayjs().subtract(6, "month"),
     end: new Date()
   });
+};
+
+const getPeopleLogs = async () => {
+  const logs = await getLogs();
   return logs.filter(log => log.note.search("@") > -1);
 };
 
@@ -64,6 +68,16 @@ const getRecentPeopleStats = async () => {
   let logs = await getPeopleLogs();
   currentStats = normalizeUserMap(mapToUser(logs));
   return currentStats;
+};
+
+const searchForPeople = async () => {
+  const logs = await getPeopleLogs();
+  let people = [];
+  logs.forEach(log => {
+    let meta = log.getMeta();
+    console.log("meta.people", meta.people);
+  });
+  return people;
 };
 
 /**
@@ -121,6 +135,10 @@ const PeopleInit = () => {
     },
     async stats(options = {}) {
       return await getRecentPeopleStats();
+    },
+    async searchForPeople() {
+      let people = await searchForPeople();
+      console.log("People!", people);
     }
   };
 

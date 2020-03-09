@@ -23,10 +23,14 @@
 
 <style lang="scss">
   @import "../../scss/utils/__utils.scss";
+
+  $size: 90px;
+
   .tracker-ball {
     transition: all 0.2s ease-in-out;
     display: inline-flex;
     width: 100px;
+    min-width: 100px;
     flex-grow: 0;
     flex-shrink: 0;
     flex-direction: column;
@@ -37,9 +41,9 @@
     overflow: hidden;
     .avatar {
       position: relative;
-      width: 72px;
-      height: 72px;
-      border-radius: 24px;
+      width: $size;
+      height: $size;
+      border-radius: $size * 0.34;
       border: solid 3px var(--color-solid);
       background-color: var(--color-solid);
       overflow: hidden;
@@ -91,10 +95,7 @@
     .last.today {
       color: var(--color-green);
     }
-    .countdown {
-      z-index: 202;
-      font-size: 1rem;
-    }
+
     .letter {
       position: absolute;
       top: 0;
@@ -134,7 +135,7 @@
       {#if emoji}{emoji}{:else}{username.substr(0, 1).toUpperCase()}{/if}
     </div>
     {#if showCharacter}
-      <Dymoji {username} size={66} {emoji} />
+      <Dymoji {username} size={86} {emoji} />
     {/if}
 
   </div>

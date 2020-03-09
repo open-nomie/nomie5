@@ -17,7 +17,7 @@
 <NPage className="stats" withBack={true}>
 
   <div slot="header" class="n-row">
-    <h1>Frequent Questions</h1>
+    <div class="text-inverse text-md">Frequent Questions</div>
     <div class="filler" />
   </div>
 

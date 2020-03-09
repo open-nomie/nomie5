@@ -121,7 +121,9 @@
   <div slot="header">
     <NToolbar>
       <!-- <h2 class="text-inverse mr-2">{Lang.t('tabs.people')}</h2> -->
-      <ButtonGroup size="sm" buttons={pageButtons} />
+      <div class="container container-sm">
+        <ButtonGroup size="sm" buttons={pageButtons} />
+      </div>
     </NToolbar>
   </div>
 

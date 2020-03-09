@@ -261,7 +261,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 <AppLayout title="Settings">
   <div slot="header">
     <NToolbar>
-      <h2 class="text-inverse">{Lang.t('settings.settings')}</h2>
+      <div class="text-md text-inverse">{Lang.t('settings.settings')}</div>
       <button on:click={methods.faq} class="btn btn-clear text-primary">
         {Lang.t('general.faq')}
       </button>

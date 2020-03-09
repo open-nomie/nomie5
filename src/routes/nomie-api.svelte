@@ -157,7 +157,7 @@
 <NPage className="stats" withBack={true}>
 
   <div slot="header" class="n-row">
-    <h1 class="text-inverse">Nomie API</h1>
+    <div class="text-md text-inverse">Nomie API</div>
     <div class="filler" />
     {#if state.registered}
       <button class="btn btn-clear btn-icon btn-sm" on:click={methods.getLogs}>
