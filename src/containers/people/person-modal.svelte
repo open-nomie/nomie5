@@ -21,6 +21,11 @@
     Interact.person(null);
   };
 
+  const closeAndRefresh = async () => {
+    await close();
+    PeopleStore.getStats();
+  };
+
   const getPersonLogs = () => {
     let stats = PeopleStore.currentStats();
     if (stats[$Interact.people.active]) {
@@ -67,7 +72,7 @@
 
   <main>
     {#if state.view == 'check-in'}
-      <PersonCheckin on:checkedIn={close} />
+      <PersonCheckin on:checkedIn={closeAndRefresh} />
     {:else if state.view == 'logs'}
       <div class="logs p-2">
         {#each getPersonLogs() as log}

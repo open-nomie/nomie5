@@ -7,6 +7,7 @@
   import TrackerBall from "../components/tracker-ball/tracker-ball.svelte";
   import dayjs from "dayjs";
   import Dymoji from "../components/dymoji/dymoji.svelte";
+  import NTip from "../components/tip/tip.svelte";
 
   import { Lang } from "../store/lang.js";
   import { PeopleStore } from "../store/people-store.js";
@@ -26,9 +27,10 @@
    * When PeopleStore Changes,
    * set state.people to the array of usernames
    */
-  $: if (state.view && $PeopleStore) {
+  $: if (state.view && $PeopleStore.people) {
+    let stats = $PeopleStore.stats;
     if (state.view == "name") {
-      state.people = Object.keys($PeopleStore).sort((a, b) => {
+      state.people = Object.keys($PeopleStore.people).sort((a, b) => {
         return a.toLowerCase() > b.toLowerCase() ? 1 : -1;
       });
       /**
@@ -38,9 +40,9 @@
       const longTimeAgo = dayjs()
         .subtract(100, "years")
         .toDate();
-      state.people = Object.keys($PeopleStore).sort((a, b) => {
-        return (state.stats[a] || { last: longTimeAgo }).last <
-          (state.stats[b] || { last: longTimeAgo }).last
+      state.people = Object.keys($PeopleStore.people).sort((a, b) => {
+        return (stats[a] || { last: longTimeAgo }).last <
+          (stats[b] || { last: longTimeAgo }).last
           ? 1
           : -1;
       });
@@ -48,14 +50,14 @@
        * Sort by Positivity
        */
     } else if (state.view == "positivity") {
-      state.people = Object.keys($PeopleStore).sort((a, b) => {
-        return (state.stats[a] || { score: -99 }).score <
-          (state.stats[b] || { score: -99 }).score
+      state.people = Object.keys($PeopleStore.people).sort((a, b) => {
+        return (stats[a] || { score: -99 }).score <
+          (stats[b] || { score: -99 }).score
           ? 1
           : -1;
       });
     } else {
-      state.people = Object.keys($PeopleStore);
+      state.people = Object.keys($PeopleStore.people);
     }
   }
   // Change Main View
@@ -64,7 +66,7 @@
   };
 
   const getStatItem = username => {
-    let stat = state.stats[username];
+    let stat = $PeopleStore.stats[username];
     if (stat) {
       return {
         count: stat.logs.count,
@@ -108,7 +110,6 @@
   ];
 
   onMount(async () => {
-    state.stats = await PeopleStore.stats();
     console.log("In OnMount Stats", state.stats);
   });
 </script>
@@ -128,6 +129,12 @@
   </div>
 
   <div slot="content" class="container">
+
+    <NTip
+      tip="Nomie now lets you track the people you interact with. Add them
+      manually here, and tap their name to 'check-in'. Or include their username
+      in a note. For example: Had dinner with @mom today." />
+
     <div class="n-board h-100">
       <div class=" n-grid text-inverse">
         {#each state.people as person}
@@ -141,11 +148,11 @@
             }} />
         {/each}
         <TrackerBall
-          username={'Add'}
+          username={'Add Person'}
           emoji="➕"
-          note="Add a Person"
+          note={false}
           on:click={() => {
-            let username = prompt('Username');
+            let username = prompt(`What's their name?`);
             if (username) {
               PeopleStore.add(username);
             }

@@ -18,6 +18,9 @@ import Storage from "../modules/storage/storage";
 import config from "../../config/global";
 
 import { LedgerStore } from "./ledger";
+import { Interact } from "./interact";
+import { Lang } from "./lang";
+
 import dayjs from "dayjs";
 
 const console = new Logger("🗺 $PeopleStore");
@@ -70,12 +73,18 @@ const getRecentPeopleStats = async () => {
   return currentStats;
 };
 
+const toUsername = username => {
+  username = username.replace("@", "").trim();
+  username = snakeCase(username);
+  return username;
+};
+
 const searchForPeople = async () => {
   const logs = await getPeopleLogs();
   let people = [];
   logs.forEach(log => {
     let meta = log.getMeta();
-    console.log("meta.people", meta.people);
+    people = [...people, ...meta.people];
   });
   return people;
 };
@@ -87,46 +96,62 @@ const searchForPeople = async () => {
  */
 
 const PeopleInit = () => {
-  const PeopleState = {};
+  const PeopleState = {
+    people: {},
+    stats: {}
+  };
   const { update, subscribe, set } = writable(PeopleState);
 
   const methods = {
     async init() {
-      Storage.get(`${config.data_root}/people.json`).then(people => {
-        update(d => people || {});
+      await methods.getPeople();
+      await methods.getStats();
+    },
+    async getPeople() {
+      let people = await Storage.get(`${config.data_root}/people.json`);
+      return update(state => {
+        state.people = people;
+        return state;
+      });
+    },
+    async getStats() {
+      let stats = await getRecentPeopleStats();
+      return update(state => {
+        state.stats = stats;
+        return state;
       });
     },
     currentStats() {
       return currentStats;
     },
     async save(peopleArray) {
-      update(people => {
+      update(state => {
         let changed = false;
         peopleArray.forEach(username => {
-          if (!people.hasOwnProperty(username)) {
+          if (!state.people.hasOwnProperty(username)) {
             changed = true;
-            people[username] = username;
+            state.people[username] = username;
           }
         });
         if (changed) {
-          this.write(people);
+          this.write(state.people);
         }
-        return people;
+        return state;
       });
     },
     async add(username) {
       let _state;
       if (username) {
-        username = username.replace("@", "").trim();
-        username = snakeCase(username);
+        username = toUsername(username);
         update(state => {
-          _state = state;
-          if (!state.hasOwnProperty(username)) {
-            state[username] = username;
+          if (!state.people.hasOwnProperty(username)) {
+            state.people[username] = username;
           }
+          _state = state;
           return state;
         });
-        await this.write(_state);
+        await this.write(_state.people);
+        console.log("Did you add them", _state.people);
         return username;
       }
     },
@@ -138,6 +163,15 @@ const PeopleInit = () => {
     },
     async searchForPeople() {
       let people = await searchForPeople();
+      if (people.length) {
+        const confirm = await Interact.confirm(`${people.length} @username's found`, "Add them to your People list?");
+        if (confirm) {
+          await methods.save(people);
+          Interact.confirm(Lang.t("general.saved"), "People list updated");
+        }
+      } else {
+        Interact.alert(`Sorry, no @username's found in the last 6 months`);
+      }
       console.log("People!", people);
     }
   };
