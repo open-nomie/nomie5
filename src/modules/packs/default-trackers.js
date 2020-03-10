@@ -18,19 +18,13 @@ export default {
           if: "value",
           is: "gte",
           v: "4",
-          sc: "2"
+          sc: "1"
         },
         {
           if: "value",
-          is: "eq",
+          is: "lte",
           v: "2",
           sc: "-1"
-        },
-        {
-          if: "value",
-          is: "eq",
-          v: "1",
-          sc: "-2"
         }
       ],
       goal: null,
