@@ -24,6 +24,7 @@
   import NHScroll from "../../components/h-scroller/h-scroller.svelte";
   import LogoType from "../../components/logo/logo.svelte";
   import LogoMark from "../../components/elephant.svelte";
+  import NTip from "../../components/tip/tip.svelte";
 
   import CaptureLog from "../../components/capture-log.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
@@ -691,6 +692,9 @@
 
           <!-- Loop over trackers -->
           <div class="trackers n-grid">
+
+            <NTip tip={Lang.t('board.welcome-tip')} />
+
             {#if (foundTrackers || boardTrackers || []).length === 0}
               {#if foundTrackers != null}
                 <div class="no-trackers">
@@ -717,6 +721,7 @@
             {/each}
             {#if !data.searching}
               <NTrackerButton
+                on:click={methods.addButtonTap}
                 tracker={{ label: 'Add', emoji: '➕' }}
                 note="Tracker" />
               <!-- <button

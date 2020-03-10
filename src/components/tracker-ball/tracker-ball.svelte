@@ -147,6 +147,6 @@
       {dayjs(last).fromNow()}
     </div>
   {:else if note !== false}
-    <div class="last text-xs text-faded-3">Unknown</div>
+    <div class="last text-xs text-faded-3" />
   {/if}
 </div>

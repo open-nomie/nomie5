@@ -49,7 +49,7 @@
   }
   .tracker-option {
     position: relative;
-    margin: 4px;
+    // margin: 4px;
     .badge {
       position: absolute;
       right: 8px;
@@ -74,7 +74,7 @@
     </div>
   {/if}
 
-  <div class="grid">
+  <div class="n-grid">
     {#each trackers as tracker, index (tracker.tag)}
       <div class="tracker-option">
         {#if TrackerStore.tagExists(tracker.tag) || installed.hasOwnProperty(tracker.tag)}
