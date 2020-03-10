@@ -259,7 +259,6 @@
       });
     }}
     on:add={event => {
-      ActiveLogStore.addTag(event.detail.tracker.tag, event.detail.value);
       if ($Interact.trackerInput.onInteract) {
         $Interact.trackerInput.onInteract(event.detail);
       }

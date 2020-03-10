@@ -4,6 +4,7 @@
   import { ContextStore } from "../../store/context-store";
   import Dymoji from "../../components/dymoji/dymoji.svelte";
   import tick from "../../utils/tick/tick";
+  import TrackerInputer from "../../modules/tracker/tracker-inputer";
 
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
@@ -19,6 +20,16 @@
     onInput(input);
   }
 
+  const getTrackerInput = async tracker => {
+    let inputer = new TrackerInputer(tracker);
+    return await inputer.getNoteString();
+  };
+
+  /**
+   * Auto Complete Search
+   * Searches trackers, people and context
+   *
+   **/
   const autoCompleteSearch = (searchTag, type = "tracker") => {
     // Search for Trackers
     if (type == "tracker") {
@@ -38,7 +49,11 @@
       });
       return people.length
         ? people.map(username => {
-            return { tag: username, emoji: "👤", type: "person" };
+            return {
+              tag: username,
+              emoji: "👤",
+              type: "person"
+            };
           })
         : null;
 
@@ -51,14 +66,34 @@
       });
       return context.length
         ? context.map(c => {
-            return { tag: c, emoji: "💡", type: "context" };
+            return { tag: c, emoji: "💡", type: "context", note: `+${c}` };
           })
         : null;
     }
   };
 
-  const onSelect = async item => {
-    dispatch("select", item);
+  const onSelect = async tracker => {
+    let note = "";
+
+    if (tracker.type === "person") {
+      // the Type is a Person - add the @
+      note = `@${tracker.tag} `;
+    } else if (tracker.type === "context") {
+      // The Type is Context - add a +
+      note = `+${tracker.tag} `;
+    } else {
+      // The Type is something else - use the TrackerInputer
+      note = await getTrackerInput(tracker);
+    }
+    // Split Input to in array
+    const inputParts = input.split(" ");
+    // Replace last part with NOTE
+    // TODO - could we use cursor position to make this
+    // smarter
+    inputParts[inputParts.length - 1] = note;
+
+    // Dispatch the Select
+    dispatch("select", { tracker, note: inputParts.join(" ") });
     await tick(120);
     state.partialTag = null;
     state.results = null;
@@ -98,7 +133,6 @@
 
 <style lang="scss">
   .autocomplete-results {
-    background-color: var(--color-solid-1);
     margin: 0px;
     border-radius: 2px;
     padding: 2px;
@@ -130,7 +164,7 @@
       flex-grow: 1;
       flex-shrink: 1;
       box-shadow: var(--box-shadow-tight);
-      background-color: var(--color-solid);
+      background-color: var(--color-bg);
       color: var(--color-inverse-2);
       margin: 3px;
       font-size: 0.82rem;
@@ -139,8 +173,9 @@
   }
 </style>
 
-<!-- {state.results ? 'visible' : 'hidden'} -->
-<div class="autocomplete-results animate ">
+<!--  -->
+<div
+  class="autocomplete-results animate {(state.results || []).length ? 'visible' : 'hidden'}">
   <div class="container p-0 tracker-list">
     {#each state.results || [] as tracker (tracker.tag)}
       <button

@@ -178,18 +178,18 @@
         textarea.focus();
       }
     },
-    autocompleteTracker(tracker) {
-      let inputer = new TrackerInputer(tracker);
-      inputer
-        .get({ replace: state.partialTag })
-        .then(() => {
-          // Replace the original search tag
-          methods.autoCompleteDone();
-        })
-        .catch(e => {
-          console.log("ERror caught", e.message);
-        });
-    },
+    // async autocompleteTracker(tracker) {
+    //   let inputer = new TrackerInputer(tracker);
+    //   inputer
+    //     .get({ replace: state.partialTag })
+    //     .then(() => {
+    //       // Replace the original search tag
+    //       methods.autoCompleteDone();
+    //     })
+    //     .catch(e => {
+    //       console.log("ERror caught", e.message);
+    //     });
+    // },
     keyPress(event) {
       if (event.key === "Enter" && event.getModifierState("Shift")) {
         event.preventDefault();
@@ -246,15 +246,7 @@
         }
       }, 120);
     },
-    removePhoto() {
-      let path = $ActiveLogStore.photo;
-      Storage.delete(path).then(() => {
-        ActiveLogStore.update(l => {
-          l.photo = null;
-          return l;
-        });
-      });
-    },
+
     ifPopulated() {
       return (
         $ActiveLogStore.lat ||
@@ -492,7 +484,10 @@
       <AutoComplete
         input={$ActiveLogStore.note}
         on:select={evt => {
-          console.log('Auto complete selected', evt.detail);
+          ActiveLogStore.updateNote(evt.detail.note);
+          setTimeout(() => {
+            methods.checkTextareaSize();
+          }, 120);
         }} />
       <!-- Note Input -->
       <div

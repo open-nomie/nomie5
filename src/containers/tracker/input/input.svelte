@@ -220,7 +220,8 @@
         </button>
       {/if}
 
-      {#if data.tracker.type != 'timer'}
+      <!-- Every Other Button -->
+      {#if data.tracker.type != 'timer' && $Interact.trackerInput.allowSave !== false}
         <button
           on:click={methods.onSave}
           aria-label="Save this log"

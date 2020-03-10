@@ -69,7 +69,8 @@ const interactInit = () => {
         show: false,
         tracker: null,
         onInteract: null,
-        value: null
+        value: null,
+        allowSave: true
       },
       logEditor: {
         show: false,
@@ -159,11 +160,14 @@ const interactInit = () => {
         return s;
       });
     },
-    trackerInput(tracker, value) {
+    async trackerInput(tracker, options = {}) {
+      let value = options.value || null;
+      let allowSave = options.allowSave === false ? false : true;
       return new Promise((resolve, reject) => {
-        update(s => {
+        return update(s => {
           s.trackerInput.show = true;
           s.trackerInput.tracker = tracker;
+          s.trackerInput.allowSave = allowSave;
           s.trackerInput.value = value;
           s.trackerInput.onInteract = tracker => {
             resolve(tracker);

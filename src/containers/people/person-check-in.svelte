@@ -4,7 +4,9 @@
   import { LedgerStore } from "../../store/ledger.js";
   import NomieLog from "../../modules/nomie-log/nomie-log";
   import Spinner from "../../components/spinner/spinner.svelte";
+  import AutoComplete from "../../components/auto-complete/auto-complete.svelte";
   import { createEventDispatcher } from "svelte";
+
   const dispatch = createEventDispatcher();
 
   const state = {
@@ -35,11 +37,19 @@
 
 <div class="person-checkin p-3">
   <div class="text-sm p-2 text-faded-2">{getPlaceholder()}</div>
-  <textarea
-    class="form-control text-md p-2"
-    rows="6"
-    placeholder={getPlaceholder()}
-    bind:value={state.note} />
+  <div class="text-area-holder">
+    <textarea
+      class="form-control text-md p-2"
+      rows="6"
+      placeholder={getPlaceholder()}
+      bind:value={state.note} />
+    <AutoComplete
+      input={state.note}
+      on:select={evt => {
+        let payload = evt.detail;
+        state.note = payload.note;
+      }} />
+  </div>
   {#if !state.checkingIn && !state.checkedIn}
     <button class="btn btn-block btn-primary mt-4" on:click={checkIn}>
       Check-In

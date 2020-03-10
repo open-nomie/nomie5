@@ -25,6 +25,52 @@ export default class TrackerInputer {
     });
   }
 
+  async getTrackerInputAsString(tracker, value) {
+    const response = await Interact.trackerInput(tracker, { value, allowSave: false });
+    if (response.tracker) {
+      return `#${response.tracker.tag}(${response.value}) `;
+    } else {
+      return ``;
+    }
+  }
+
+  async getNoteTrackerInputAsString(tracker) {
+    let note = [];
+    const trackerTags = extractor(tracker.note);
+    // Add tracker tag
+    note.push(`#${tracker.tag}`);
+
+    // Create array of items to pass to promise step
+    let items = Object.keys(trackerTags).map(tag => {
+      return {
+        tracker: $TrackerStore[tag] || new Tracker({ tag: tag }),
+        value: trackerTags[tag].value // not being used
+      };
+    });
+    console.log("Items", items);
+    for (let i = 0; i < items.length; i++) {
+      let response = await this.getTrackerInputAsString(items[i].tracker, items[i].value);
+      note.push(response);
+    }
+    return note.join(" ");
+  }
+
+  //
+  async getNoteString() {
+    let note = [];
+    if (this.tracker.type === "tick") {
+      note.push(`#${this.tracker.tag}`);
+    } else if (this.tracker.type === "note") {
+      let input = await this.getNoteTrackerInputAsString(this.tracker);
+      note.push(input);
+    } else {
+      let input = await this.getTrackerInputAsString(this.tracker);
+      note.push(input);
+    }
+    console.log("NOTE!", note.join(" "));
+    return note.join(" ");
+  }
+
   async get(options) {
     options = options || {};
 
@@ -91,7 +137,7 @@ export default class TrackerInputer {
             setTimeout(() => {
               // Show Tracker Input for this given tracker
               // then return the promise and move on to the next
-              Interact.trackerInput(item.tracker, item.value)
+              Interact.trackerInput(item.tracker, { value: item.value, allowSave: true })
                 .then(resolve)
                 .catch(reject);
             }, 12);
@@ -101,7 +147,7 @@ export default class TrackerInputer {
           .catch(finishedWithError);
       } else {
         // It's an input of some sort
-        Interact.trackerInput(this.tracker)
+        Interact.trackerInput(this.tracker, { allowSave: true })
           .then(finished)
           .catch(finishedWithError);
       } // end if tick or others
