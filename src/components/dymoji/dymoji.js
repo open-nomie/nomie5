@@ -55,6 +55,11 @@ export class Config {
   }
 }
 
+export function strToColor(str) {
+  let config = new Config();
+  return new Hash(str).pick(config.colors);
+}
+
 export default class Face {
   constructor(id, config = {}) {
     this.id = id;
