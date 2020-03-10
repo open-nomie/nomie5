@@ -33,7 +33,7 @@
 
       // Search for People
     } else if (type === "person") {
-      let people = Object.keys($PeopleStore).filter(person => {
+      let people = Object.keys($PeopleStore.people).filter(person => {
         return person.search(searchTag.toLowerCase()) > -1;
       });
       return people.length

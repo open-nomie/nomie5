@@ -34,6 +34,7 @@
   import { BoardStore } from "../store/boards";
   import { NomieAPI } from "../store/napi";
   import { Lang } from "../store/lang";
+  import { PeopleStore } from "../store/people-store";
 
   // Config
   import config from "../../config/global";
@@ -440,6 +441,11 @@ Note: Your data will not automatically move over. You'll first need to export it
             <MassEditor
               on:close={methods.closeMassEditor}
               show={data.showMassEditor} />
+
+            <NItem
+              className=""
+              title={Lang.t('settings.find-people', 'Find People')}
+              on:click={PeopleStore.searchForPeople} />
 
           </div>
           <NItem
