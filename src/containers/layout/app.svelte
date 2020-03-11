@@ -38,7 +38,7 @@
     background-color: var(--color-bg);
     -webkit-overflow-scrolling: touch;
     z-index: 0;
-    color: var(--color-bg);
+    // color: var(--color-bg);
     flex-grow: 1;
   }
 

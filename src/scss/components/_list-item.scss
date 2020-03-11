@@ -106,13 +106,15 @@
     flex-shrink: 1;
     // TODO: see if making main overflow hidden was a bad idea
     // overflow: hidden;
-    h4 {
-      font-size: 1.14rem;
+    h4,
+    .title {
+      font-size: 1.1rem;
       margin: 2px 0;
       line-height: 1.56rem;
     }
 
-    p {
+    p,
+    .description {
       margin: 2px 0;
       color: var(--color-inverse-3);
       line-height: 140%;

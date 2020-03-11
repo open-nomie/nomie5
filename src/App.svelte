@@ -38,10 +38,11 @@
   import StatsRoute from "./routes/stats.svelte";
   import BoardEditorRoute from "./routes/board-editor.svelte";
   import FAQRoute from "./routes/faq.svelte";
-  import PluginsRoute from "./routes/plugins.svelte";
+  // import PluginsRoute from "./routes/plugins.svelte";
   import NomieAPIRoute from "./routes/nomie-api.svelte";
   import ExportRoute from "./routes/export.svelte";
   import PeopleRoute from "./routes/people.svelte";
+  import TrackerDesigner from "./routes/tracker-designer.svelte";
 
   // Stores
   import { UserStore } from "./store/user"; //  user auth and state
@@ -239,13 +240,10 @@
     <Route path="/settings" component={SettingsRoute} />
     <Route path="/board/:id" component={BoardEditorRoute} />
     <Route path="/faq" component={FAQRoute} />
-    <!-- Plugin Coming Soon -->
-    <Route path="/plugins" component={PluginsRoute} />
-    <Route path="/plugins/settings/:pluginId" component={PluginsRoute} />
-    <Route path="/plugins/:pluginId" component={PluginsRoute} />
     <Route path="/api" component={NomieAPIRoute} />
     <Route path="/settings/export/:type" component={ExportRoute} />
     <Route path="/settings/export" component={ExportRoute} />
+    <Route path="/tracker/design" component={TrackerDesigner} />
   </Router>
 {:else if $UserStore.signedIn == undefined}
   <div class="empty-notice" style="height:calc(100vh - 75px)">
