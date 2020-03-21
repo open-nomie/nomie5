@@ -139,7 +139,7 @@
   className="tracker-input">
   <div class="input-toolbar n-row" slot="header">
     <div class="filler" />
-    <span class="animate notice-text {data.ready ? 'visible' : 'hidden'}">
+    <span class="animate up notice-text {data.ready ? 'visible' : 'hidden'}">
       {tracker.emoji} {tracker.label}
     </span>
     <div class="filler" />
