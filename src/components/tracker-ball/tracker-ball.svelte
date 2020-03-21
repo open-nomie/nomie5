@@ -80,13 +80,12 @@
     }
     .username {
       font-weight: 500;
-      //   white-space: nowrap;
-      margin-top: 6px;
       width: 100%;
       text-align: center;
       text-overflow: ellipsis;
       overflow: hidden;
       color: var(--color-inverse);
+      margin-top: 10px;
     }
     &:active {
       transform: scale(0.9);
@@ -127,9 +126,10 @@
   on:click={() => {
     dispatch('click', username);
   }}>
-  {#if score}
-    <div class={`score ${score < 0 ? 'negative' : 'positive'}`}>{score}</div>
-  {/if}
+  <div
+    class={`score animate up ${score < 0 ? 'negative' : 'positive'} ${score !== null ? 'visible' : 'hidden'}`}>
+    {score}
+  </div>
   <div class="avatar">
     <slot />
     <div class={`letter ${emoji ? 'emoji-letter' : 'just-letter'}`} style={``}>
