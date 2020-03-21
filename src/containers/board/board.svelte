@@ -345,6 +345,20 @@
       }
       return value ? NomieUOM.format(value, tracker.uom) : null;
     },
+    getPositivity(tracker) {
+      let value = methods.getTrackerValue(tracker);
+      if (value) {
+        let trackerResults = today[tracker.tag];
+        if (trackerResults && trackerResults.logs) {
+          let scores = trackerResults.logs.map(log => {
+            return log.score;
+          });
+          return math.sum(scores);
+        }
+      } else {
+        return 0;
+      }
+    },
     /**
      * Get Hours Used
      * Used for generating the time-balls on the trackers
@@ -708,26 +722,20 @@
                 value={methods.getTrackerValue(tracker)}
                 hoursUsed={methods.getHoursUsed(tracker)}
                 lastUsed={methods.getLastUsed(tracker)}
+                positivity={methods.getPositivity(tracker)}
                 on:click={() => {
                   methods.trackerTapped(tracker);
                 }}
                 disabled={data.savingTrackers.indexOf(tracker.tag) > -1}
                 className={`${data.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${data.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
                 on:longpress={() => {
-                  Interact.vibrate();
                   methods.showTrackerOptions(tracker);
                 }} />
             {/each}
             {#if !data.searching}
               <NTrackerButton
                 on:click={methods.addButtonTap}
-                tracker={{ label: 'Add', emoji: '➕' }}
-                note="Tracker" />
-              <!-- <button
-                class="n-tracker-button n-add-button"
-                on:click={methods.addButtonTap}>
-                <i class="emoji">+</i>
-              </button> -->
+                tracker={{ label: 'Add', emoji: '➕' }} />
             {/if}
           </div>
 
