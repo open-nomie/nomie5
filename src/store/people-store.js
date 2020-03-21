@@ -126,6 +126,7 @@ const PeopleInit = () => {
     },
     async save(peopleArray) {
       update(state => {
+        state.people = state.people || {};
         let changed = false;
         peopleArray.forEach(username => {
           if (!state.people.hasOwnProperty(username)) {
@@ -152,7 +153,6 @@ const PeopleInit = () => {
           return state;
         });
         await this.write(_state.people);
-        console.log("Did you add them", _state.people);
         return username;
       }
     },
@@ -173,7 +173,6 @@ const PeopleInit = () => {
       } else {
         Interact.alert(`Sorry, no @username's found in the last 6 months`);
       }
-      console.log("People!", people);
     }
   };
 
