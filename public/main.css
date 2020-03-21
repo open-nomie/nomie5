@@ -6036,9 +6036,10 @@ body.scrolling .n-tracker-button {
   height: 4px;
   border-radius: 2px;
   background-color: var(--color-faded);
+  opacity: 0.3;
   bottom: 2px;
-  left: 12%;
-  right: 12%;
+  left: 19%;
+  right: 19%;
   z-index: 0; }
 
 .share-image-component {

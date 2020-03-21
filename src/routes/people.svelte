@@ -131,9 +131,9 @@
   <div slot="content" class="container">
 
     <NTip
-      tip="Nomie now lets you track the people you interact with. Add them
-      manually here, and tap their name to 'check-in'. Or include their username
-      in a note. For example: Had dinner with @mom today." />
+      tip="Track the people you interact with the most. You can manually add
+      them, or include their username in a note. Example: Had dinner with @mom
+      today." />
 
     <div class="n-board h-100">
       <div class=" n-grid text-inverse">

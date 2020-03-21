@@ -144,6 +144,7 @@ const PeopleInit = () => {
       if (username) {
         username = toUsername(username);
         update(state => {
+          state.people = state.people || {};
           if (!state.people.hasOwnProperty(username)) {
             state.people[username] = username;
           }

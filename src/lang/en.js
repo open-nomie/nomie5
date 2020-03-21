@@ -87,7 +87,7 @@ export default {
       "add-a-board": "Add a Tab",
       "add-a-board-description": `Tabs help you organize your trackers. For example: social, food, and fitness can contain trackers specifically for those activies. You can have the same tracker on multiple tabs.`,
       "board-input-placeholder": "Tab name or Emoji 👍",
-      "welcome-tip": "Tap a tracker button to record, or press and hold to see additional options"
+      "welcome-tip": "Tap a tracker button to log data. Press & hold to see additional options"
     },
     settings: {
       language: "Language",
