@@ -32,13 +32,22 @@
 
 <style lang="scss">
   .search-bar {
+    position: relative;
     input {
       border-radius: 20px;
     }
   }
+  :global(.search-bar .btn-action-clear) {
+    font-size: 14px;
+  }
 </style>
 
 <NToolbar className="search-bar">
+  {#if searchTerm}
+    <button class="btn btn-sm btn-clear btn-action-clear" on:click={fireClear}>
+      <i class="zmdi zmdi-close" />
+    </button>
+  {/if}
   <input
     type="text"
     class="search-input"
@@ -46,10 +55,10 @@
     bind:value={searchTerm}
     placeholder="{Lang.t('general.search')}..." />
   {#if hasResults}
-    <button class="btn btn-sm text-red" on:click={fireClear}>Clear</button>
+
   {:else if searchTerm}
     <button class="btn btn-sm text-primary" on:click={fireSearch}>
-      Search
+      <i class="zmdi zmdi-search" />
     </button>
   {/if}
 </NToolbar>

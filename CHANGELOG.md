@@ -1,3 +1,16 @@
+#4.7.12
+
+- Update CHANGELOG.md (8afa96f)
+- Fixing Search (65b64a9)
+- Adding clear and search icons (fbf11a6)
+
+#4.7.11
+
+- Update service-worker.js (5389b70)
+- Updating board to automatically refresh if a tracker is added or removed. (3d02228)
+- Adding data on change listeners (5a0ae05)
+- Create CHANGELOG.md (5ebe48e)
+
 #4.7.10
 
 - Update service-worker.js (20a17d8)

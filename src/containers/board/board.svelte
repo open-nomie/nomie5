@@ -452,6 +452,7 @@
     trackerUnsub = TrackerStore.subscribe(trackerStore => {
       setTimeout(() => {
         boardTrackers = boardTrackers;
+        methods.setBoardTrackers();
       }, 120);
     });
 
