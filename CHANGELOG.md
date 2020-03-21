@@ -1,3 +1,9 @@
+#4.7.12
+
+- Update CHANGELOG.md (8afa96f)
+- Fixing Search (65b64a9)
+- Adding clear and search icons (fbf11a6)
+
 #4.7.11
 
 - Update service-worker.js (5389b70)
