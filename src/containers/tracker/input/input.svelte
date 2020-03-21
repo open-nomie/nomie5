@@ -167,7 +167,6 @@
         </div>
       {:else if tracker.type === 'timer'}
         <NTimer
-          {value}
           tracker={data.tracker}
           bind:value={data.value}
           on:change={event => {
