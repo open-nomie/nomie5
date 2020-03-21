@@ -23,6 +23,7 @@
   export let hoursUsed = [];
   export let hideMore = false;
   export let lastUsed = null; // or dayjs object
+  export let positivity = 0;
 
   // Define Dispatch
   const dispatch = createEventDispatcher();
@@ -90,11 +91,10 @@
   class={`tracker-button-wrapper tracker-${tracker.tag} ${data.pressing ? 'pressing' : ''} ${className}`}>
   <TrackerBall
     {id}
-    {disabled}
-    className={`${tracker.score < 0 ? 'negative' : ''} ${tracker.score > 0 ? 'positive' : ''}`}
     emoji={tracker.emoji}
     showCharacter={false}
     score={value}
+    {positivity}
     note={false}
     username={tracker.label}>
     {#if tracker.started}
