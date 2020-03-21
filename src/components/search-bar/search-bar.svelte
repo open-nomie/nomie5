@@ -46,7 +46,7 @@
     bind:value={searchTerm}
     placeholder="{Lang.t('general.search')}..." />
   {#if hasResults}
-    <button class="btn btn-sm" on:click={fireClear}>Clear</button>
+    <button class="btn btn-sm text-red" on:click={fireClear}>Clear</button>
   {:else if searchTerm}
     <button class="btn btn-sm text-primary" on:click={fireSearch}>
       Search

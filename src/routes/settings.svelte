@@ -259,10 +259,10 @@ Note: Your data will not automatically move over. You'll first need to export it
   });
 </script>
 
-<AppLayout title="Settings">
+<AppLayout>
   <div slot="header">
     <NToolbar>
-      <div class="text-md text-inverse">{Lang.t('settings.settings')}</div>
+      <div class="text-inverse text-bold">{Lang.t('settings.settings')}</div>
       <button on:click={methods.faq} class="btn btn-clear text-primary">
         {Lang.t('general.faq')}
       </button>
@@ -503,40 +503,6 @@ Note: Your data will not automatically move over. You'll first need to export it
             <span slot="right">{TrackerStore.getAsArray().length}</span>
           </NItem>
           <StorageManager />
-          <!-- {#if $UserStore.storageType === 'blockstack'}
-            <NItem title={Lang.t('settings.aggressive-sync')}>
-              <span
-                slot="left"
-                class="btn-icon zmdi text-primary {`${$UserStore.meta.aggressiveSync ? 'zmdi-refresh-sync' : 'zmdi-refresh-sync-off'}`}" />
-              <div slot="right">
-                <NToggle
-                  bind:value={$UserStore.meta.aggressiveSync}
-                  on:change={methods.settingChange} />
-              </div>
-            </NItem>
-            <NItem description={Lang.t('settings.aggressive-description')} />
-          {/if} -->
-
-          <!-- Stoage List - this is stupid I couldn't find it-->
-
-          <!-- End Storage List-->
-
-          <!-- <NItem title={Lang.t('settings.first-book')}>
-          <span
-            slot="left"
-            class="btn-icon zmdi text-primary zmdi-book"
-             />
-
-          <div slot="right" class="pr-2">
-            {#await LedgerStore.firstBook()}
-              <span>Loading...</span>
-            {:then value}
-              <span>{methods.bookAge(value)}</span>
-            {:catch error}
-              <span>{error}</span>
-            {/await}
-          </div>
-        </NItem> -->
 
           <div class="n-pop">
             <NItem

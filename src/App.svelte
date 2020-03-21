@@ -92,7 +92,7 @@
   const appVersion = "APP_VERSION";
 
   // Not sure if theese are needed
-  export let name = "nomie";
+  // export let name = "nomie";
   export let url = "";
 
   $: if (window && $TrackerStore) {

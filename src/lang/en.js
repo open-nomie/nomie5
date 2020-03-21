@@ -6,6 +6,7 @@ export default {
       location: "Location",
       remove: "Remove",
       error: "Error",
+      success: "Success",
       all: "All",
       sum: "Sum",
       avg: "Avg",
