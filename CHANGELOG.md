@@ -1,3 +1,14 @@
+#5.0.3
+
+- Adding Logs to today's payload - so positivity can be determined. (bd890a1)
+- Code cleanup (5191597)
+- Updating the default trackers (013cff4)
+- Update input.svelte (13f89d8)
+- Update tracker-button.svelte (4392cce)
+- Adding positivity lookup to the board (148bbc0)
+- Adding positivity coloring to the tracker-ball (4fda6aa)
+- Adding animation to the modal (a135330)
+
 #5.0.2
 
 - Tracker button work (1f1ae29)
