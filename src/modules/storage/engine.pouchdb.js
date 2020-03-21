@@ -16,6 +16,7 @@ import { Lang } from "../../store/lang";
 const console = new Logger("👨‍💻 engine.pouchdb");
 
 let listeners = [];
+let changeListeners = {};
 let syncer;
 let dbKey = "nomie4-v01";
 
@@ -62,6 +63,16 @@ export default {
   // If something has changed
   onChange(change) {
     this.syncing = true;
+    if (change.direction == "pull") {
+      // It's an update
+      let docs = change.change.docs.forEach(doc => {
+        if (changeListeners.hasOwnProperty(doc._id)) {
+          changeListeners[doc._id].forEach(func => {
+            func(doc.data);
+          });
+        }
+      });
+    }
   },
   onPaused(change) {
     this.syncing = false;
@@ -162,7 +173,11 @@ export default {
     } catch (e) {}
     return doc;
   },
-  async get(path) {
+  async get(path, onChange) {
+    if (onChange && (changeListeners[path] || []).indexOf(onChange) == -1) {
+      changeListeners[path] = changeListeners[path] || [];
+      changeListeners[path].push(onChange);
+    }
     let doc = null;
     try {
       let fullDoc = await this.getFullDoc(path);
