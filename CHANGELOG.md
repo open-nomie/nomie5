@@ -1,3 +1,17 @@
+#5.0.2
+
+- Tracker button work (1f1ae29)
+- Merge branch 'develop' into develop-v5 (355340b)
+- Update CHANGELOG.md (30225a3)
+- Release 4.7.12 (32163c8)
+- Update CHANGELOG.md (8afa96f)
+- Fixing Search (65b64a9)
+- Adding clear and search icons (fbf11a6)
+- Release 4.7.11 (42fa7b7)
+- Update service-worker.js (5389b70)
+- Updating board to automatically refresh if a tracker is added or removed. (3d02228)
+- Adding data on change listeners (5a0ae05)
+
 #4.7.12
 
 - Update CHANGELOG.md (8afa96f)

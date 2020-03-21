@@ -54,4 +54,4 @@
   }
 </style>
 
-<Board editMode={data.editMode} />
+<Board />
