@@ -191,7 +191,7 @@
           {#if button !== null}
             <button
               class="button button-{bindex}"
-              on:click={() => {
+              on:click|capture={() => {
                 methods.onPress(button);
                 return false;
               }}>
