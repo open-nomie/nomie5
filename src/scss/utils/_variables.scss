@@ -28,6 +28,8 @@ $progress-bar-bg: $primary !default;
 $progress-bar-animation-timing: 1s linear infinite !default;
 $progress-bar-transition: width 0.6s ease !default;
 
+$trackerBallSize: 105px;
+
 $grid-breakpoints: (
   xs: 0,
   sm: 350px,

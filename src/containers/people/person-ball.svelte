@@ -26,7 +26,7 @@
   .player-ball {
     transition: all 0.2s ease-in-out;
     display: inline-flex;
-    width: 100px;
+    width: $trackerBallSize;
     flex-grow: 0;
     flex-shrink: 0;
     flex-direction: column;
@@ -37,8 +37,8 @@
     overflow: hidden;
     .avatar {
       position: relative;
-      width: 72px;
-      height: 72px;
+      width: $trackerBallSize - 16px;
+      height: $trackerBallSize - 16px;
       border-radius: 24px;
       border: solid 3px var(--color-solid);
       background-color: var(--color-solid);

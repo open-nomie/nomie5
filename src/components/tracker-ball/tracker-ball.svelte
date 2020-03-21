@@ -24,13 +24,14 @@
 <style lang="scss">
   @import "../../scss/utils/__utils.scss";
 
-  $size: 90px;
+  $size: $trackerBallSize;
 
   .tracker-ball {
+    margin: 0 4px;
     transition: all 0.2s ease-in-out;
     display: inline-flex;
-    width: 100px;
-    min-width: 100px;
+    width: $size + 4px;
+    min-width: $size + 4px;
     flex-grow: 0;
     flex-shrink: 0;
     flex-direction: column;
@@ -58,16 +59,17 @@
       }
     }
     .score {
+      $scoreSize: $size * 0.25;
       position: absolute;
-      top: 9px;
-      left: 9px;
-      height: 16px;
-      min-width: 16px;
-      border-radius: 8px;
-      padding: 0 4px;
-      line-height: 16px;
+      top: 8px;
+      left: 4px;
+      height: $scoreSize;
+      min-width: $scoreSize;
+      border-radius: $scoreSize * 0.5;
+      padding: 0 6px;
+      line-height: $scoreSize;
       text-align: center;
-      font-size: 12px;
+      font-size: $scoreSize * 0.6;
       background-color: var(--color-green);
       font-weight: bold;
       color: #fff;
@@ -108,6 +110,7 @@
       justify-content: center;
       font-weight: bold;
       z-index: 102;
+      font-size: $size * 0.5;
       // text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
       color: rgba(0, 0, 0, 0.8);
       text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5);
@@ -129,13 +132,11 @@
   {/if}
   <div class="avatar">
     <slot />
-    <div
-      class={`letter ${emoji ? 'emoji-letter' : 'just-letter'}`}
-      style={`font-size:${66 * 0.6}px`}>
+    <div class={`letter ${emoji ? 'emoji-letter' : 'just-letter'}`} style={``}>
       {#if emoji}{emoji}{:else}{username.substr(0, 1).toUpperCase()}{/if}
     </div>
     {#if showCharacter}
-      <Dymoji {username} size={86} {emoji} />
+      <Dymoji {username} size={106} {emoji} />
     {/if}
 
   </div>

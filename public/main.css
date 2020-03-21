@@ -5916,104 +5916,12 @@ body.scrolling .mini-map {
 body.scrolling .n-tracker-button {
   pointer-events: none !important; }
 
-.n-tracker-button {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: none !important;
-  background-color: var(--header-background);
-  color: var(--color-inverse);
-  box-shadow: var(--box-shadow);
-  border-radius: 1.3rem;
-  width: 5.9rem;
-  height: 5.9rem;
-  outline: none;
-  transition: all 0.2s ease-in-out; }
-  .n-tracker-button:active, .n-tracker-button.pressing {
-    background-color: var(--tracker-background);
-    transition: all 0.2s ease-in-out;
-    transform: scale(0.95);
-    box-shadow: var(--box-shadow-tight); }
-  .n-tracker-button.added {
-    border: solid 1px rgba(56, 168, 63, 0.3); }
-  .n-tracker-button .emoji {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1; }
-  .n-tracker-button.saving {
-    transition: all 0.2s ease-in-out;
-    border: solid 2px rgba(56, 168, 63, 0.5); }
-  @media (min-width: 600px) {
-    .n-tracker-button {
-      width: 7.9rem;
-      height: 7.9rem;
-      margin: 12px 3px !important; }
-      .n-tracker-button .emoji {
-        font-size: 3.4rem;
-        font-style: normal; } }
-  @media (max-width: 979.98px) {
-    .n-tracker-button {
-      width: 6.8rem;
-      height: 6.8rem; }
-      .n-tracker-button .emoji {
-        font-size: 2.7rem;
-        font-style: normal; } }
-  @media (max-width: 599.98px) {
-    .n-tracker-button {
-      width: 6rem;
-      height: 6rem;
-      margin: 6px 3px !important; }
-      .n-tracker-button .emoji {
-        font-size: 2.2rem;
-        font-style: normal; } }
-  @media (max-width: 349.98px) {
-    .n-tracker-button {
-      width: 6.6rem !important;
-      height: 6.6rem !important;
-      margin: 12px 3px !important; }
-      .n-tracker-button .emoji {
-        font-size: 2.2rem;
-        font-style: normal; } }
-  .n-tracker-button header {
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
-    z-index: 20;
-    top: 0.4rem;
-    left: 6px;
-    right: 6px;
-    font-size: 11px;
-    line-height: 11px; }
-    .n-tracker-button header .value.left {
-      height: 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      line-height: 14px;
-      min-width: 16px;
-      position: absolute;
-      display: flex;
-      align-items: center;
-      font-weight: bold;
-      top: 0px;
-      left: 6px;
-      background: transparent; }
-  .n-tracker-button footer {
-    position: absolute;
-    bottom: 13px;
-    left: 4px;
-    right: 4px;
-    text-align: center;
-    line-height: 100%;
-    font-size: 0.8rem;
-    z-index: 2; }
+.tracker-ball .dymoji-wrap {
+  position: absolute !important;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0; }
 
 .tracker-ball .countdown {
   position: absolute;
@@ -6041,6 +5949,105 @@ body.scrolling .n-tracker-button {
   left: 19%;
   right: 19%;
   z-index: 0; }
+
+.n-tracker-button-xxx {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: none !important;
+  background-color: var(--header-background);
+  color: var(--color-inverse);
+  box-shadow: var(--box-shadow);
+  border-radius: 1.3rem;
+  width: 5.9rem;
+  height: 5.9rem;
+  outline: none;
+  transition: all 0.2s ease-in-out; }
+  .n-tracker-button-xxx:active, .n-tracker-button-xxx.pressing {
+    background-color: var(--tracker-background);
+    transition: all 0.2s ease-in-out;
+    transform: scale(0.95);
+    box-shadow: var(--box-shadow-tight); }
+  .n-tracker-button-xxx.added {
+    border: solid 1px rgba(56, 168, 63, 0.3); }
+  .n-tracker-button-xxx .emoji {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1; }
+  .n-tracker-button-xxx.saving {
+    transition: all 0.2s ease-in-out;
+    border: solid 2px rgba(56, 168, 63, 0.5); }
+  @media (min-width: 600px) {
+    .n-tracker-button-xxx {
+      width: 7.9rem;
+      height: 7.9rem;
+      margin: 12px 3px !important; }
+      .n-tracker-button-xxx .emoji {
+        font-size: 3.4rem;
+        font-style: normal; } }
+  @media (max-width: 979.98px) {
+    .n-tracker-button-xxx {
+      width: 6.8rem;
+      height: 6.8rem; }
+      .n-tracker-button-xxx .emoji {
+        font-size: 2.7rem;
+        font-style: normal; } }
+  @media (max-width: 599.98px) {
+    .n-tracker-button-xxx {
+      width: 6rem;
+      height: 6rem;
+      margin: 6px 3px !important; }
+      .n-tracker-button-xxx .emoji {
+        font-size: 2.2rem;
+        font-style: normal; } }
+  @media (max-width: 349.98px) {
+    .n-tracker-button-xxx {
+      width: 6.6rem !important;
+      height: 6.6rem !important;
+      margin: 12px 3px !important; }
+      .n-tracker-button-xxx .emoji {
+        font-size: 2.2rem;
+        font-style: normal; } }
+  .n-tracker-button-xxx header {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    z-index: 20;
+    top: 0.4rem;
+    left: 6px;
+    right: 6px;
+    font-size: 11px;
+    line-height: 11px; }
+    .n-tracker-button-xxx header .value.left {
+      height: 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 14px;
+      min-width: 16px;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      top: 0px;
+      left: 6px;
+      background: transparent; }
+  .n-tracker-button-xxx footer {
+    position: absolute;
+    bottom: 13px;
+    left: 4px;
+    right: 4px;
+    text-align: center;
+    line-height: 100%;
+    font-size: 0.8rem;
+    z-index: 2; }
 
 .share-image-component {
   background-color: rgba(0, 0, 0, 0.8);

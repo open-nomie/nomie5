@@ -5,7 +5,46 @@
 body.scrolling .n-tracker-button {
   pointer-events: none !important;
 }
-.n-tracker-button {
+
+.tracker-ball {
+  .dymoji-wrap {
+    position: absolute !important;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+
+  .countdown {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 202;
+  }
+  .balls {
+    position: absolute;
+    bottom: 2px;
+    left: 20%;
+    right: 20%;
+    z-index: 202;
+  }
+  .one-tap {
+    position: absolute;
+    height: 4px;
+    border-radius: 2px;
+    background-color: var(--color-faded);
+    opacity: 0.3;
+    bottom: 2px;
+    left: 19%;
+    right: 19%;
+    z-index: 0;
+  }
+}
+
+.n-tracker-button-xxx {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -128,35 +167,5 @@ body.scrolling .n-tracker-button {
     line-height: 100%;
     font-size: 0.8rem;
     z-index: 2;
-  }
-}
-
-.tracker-ball {
-  .countdown {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 202;
-  }
-  .balls {
-    position: absolute;
-    bottom: 2px;
-    left: 20%;
-    right: 20%;
-    z-index: 202;
-  }
-  .one-tap {
-    position: absolute;
-    height: 4px;
-    border-radius: 2px;
-    background-color: var(--color-faded);
-    opacity: 0.3;
-    bottom: 2px;
-    left: 19%;
-    right: 19%;
-    z-index: 0;
   }
 }
