@@ -475,7 +475,7 @@
           {#if searchMode}
             <div class="filler" />
             <div class="text-center n-text md text-inverse">
-              Search {state.date.format('YYYY')}
+              {Lang.t('general.search')} {state.date.format('YYYY')}
             </div>
             <div class="filler" />
           {:else}
@@ -612,8 +612,6 @@
             on:click={methods.previousSearch}
             title="Search {state.date.subtract(1, 'year').format('YYYY')}..." />
           <div class="gap" />
-        {:else if searchMode && !searchLogs}
-          <div class="empty-notice">Search {state.date.format('YYYY')}</div>
         {/if}
 
       </div>
