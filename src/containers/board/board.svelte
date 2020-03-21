@@ -694,8 +694,6 @@
           <!-- Loop over trackers -->
           <div class="trackers n-grid">
 
-            <NTip tip={Lang.t('board.welcome-tip')} />
-
             {#if (foundTrackers || boardTrackers || []).length === 0}
               {#if foundTrackers != null}
                 <div class="no-trackers">

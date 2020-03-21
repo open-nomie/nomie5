@@ -30,7 +30,7 @@
     padding: 18px;
     font-size: 0.8rem;
     margin: 16px;
-    border-radius: 1rem;
+    border-radius: 12px;
     text-align: center button {
       width: 120px;
       margin-top: 16px;
