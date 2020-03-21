@@ -12,6 +12,7 @@
   export let className = "";
   export let showCharacter = true;
   export let id = "";
+  export let positivity = 0;
 
   let isToday = false;
   $: if (last) {
@@ -53,10 +54,13 @@
       align-items: center;
       justify-content: center;
     }
-    &.negative {
-      .score {
-        background-color: var(--color-red);
-      }
+    .score.negative {
+      background-color: var(--color-red);
+      box-shadow: 0px 10px 10px -5px rgba($red, 0.4) !important;
+    }
+    .score.positive {
+      background-color: var(--color-green);
+      box-shadow: 0px 10px 10px -5px rgba($green, 0.4) !important;
     }
     .score {
       $scoreSize: $size * 0.25;
@@ -69,8 +73,9 @@
       padding: 0 6px;
       line-height: $scoreSize;
       text-align: center;
-      font-size: $scoreSize * 0.6;
-      background-color: var(--color-green);
+      font-size: $scoreSize * 0.5;
+      background-color: var(--color-primary-bright);
+      box-shadow: 0px 10px 10px -5px rgba($primaryBright, 0.4);
       font-weight: bold;
       color: #fff;
       z-index: 100;
@@ -127,7 +132,7 @@
     dispatch('click', username);
   }}>
   <div
-    class={`score animate up ${score < 0 ? 'negative' : 'positive'} ${score !== null ? 'visible' : 'hidden'}`}>
+    class={`score animate up ${positivity < 0 ? 'negative' : ''} ${positivity > 0 ? 'positive' : ''} ${score ? 'visible' : 'hidden'}`}>
     {score}
   </div>
   <div class="avatar">
