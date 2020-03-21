@@ -208,7 +208,7 @@
   class="n-modal-frame {className} type-{type}
   {domVisible ? 'visible' : 'hidden'}">
   <div
-    class="n-modal {fullscreen ? 'full-screen-modal' : ''}
+    class="n-modal animate up {fullscreen ? 'full-screen-modal' : ''}
     {domVisible ? 'visible' : 'hidden'}">
     {#if has_header || title}
       <div class="n-modal-header">
