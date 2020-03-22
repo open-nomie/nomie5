@@ -20,7 +20,7 @@
         bind:value={$TrackerDesignerStore.tracker.label}
         placeholder="Tracker Label"
         label="Tracker Label"
-        help="(e.g. Water, Walked, Sleep, Angry, Mood)" />
+        help="e.g. Water, Walked, Sleep, Angry, Mood." />
     </NItem>
 
     <!-- {#if tag.length}

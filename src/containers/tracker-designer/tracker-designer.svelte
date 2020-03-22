@@ -135,7 +135,6 @@
           label,
           emoji,
           color,
-
           uom,
           defaultValue,
           calc,

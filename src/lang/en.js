@@ -28,6 +28,7 @@ export default {
       set: "Set",
       edit: "Edit",
       created: "Created",
+      create: "Create",
       local: "Local",
       finished: "Finished",
       cloud: "Cloud",

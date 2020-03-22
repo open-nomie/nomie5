@@ -764,7 +764,6 @@
           {/if}
 
           <div class="board-actions">
-
             {#if $BoardStore.activeBoard}
               <button
                 on:click={methods.editBoard}

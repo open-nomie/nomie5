@@ -1,3 +1,20 @@
+#5.0.4
+
+- artifacts (a56a8d1)
+- UI Improvements (dbfe7fa)
+- Adding new NInput component (3269d6e)
+- Improving toTag regex (76aae32)
+- Replacing "edit tab" with "•••" (58f5b5d)
+- Adding more radius to tracker button (8bf69a7)
+- Updating Tracker type language (47f0bab)
+- Layout updates (e76e121)
+- Update en.js (87ac026)
+- Create Tracker Stepper work (07884e6)
+- CSS Work (c3f36e4)
+- Update user.js (4cdcb1c)
+- Create ordinal.js (4188ee9)
+- Update CHANGELOG.md (8ea39e9)
+
 #5.0.3
 
 - Adding Logs to today's payload - so positivity can be determined. (bd890a1)
