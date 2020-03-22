@@ -1,15 +1,15 @@
 export default {
   tick: {
-    label: "Simple",
-    description: "A single value tracker. Good for tracking pooping, gluten, and other one off trackers."
+    label: "Simple Tracker",
+    description: "Good for tracking pooping, gluten, and other one off trackers."
   },
   value: {
-    label: "Numeric",
-    description: "Manually enter a value. Great for tracking fluids, medicines, distance"
+    label: "Keypad",
+    description: "Enter a number value. Great for tracking fluids, medicines, distance"
   },
   range: {
     label: "Range",
-    description: "Great for any type of range selection - for example Mood."
+    description: "Select from X to X. E.g. Mood, Anxiety"
   },
   timer: {
     label: "Timer",
