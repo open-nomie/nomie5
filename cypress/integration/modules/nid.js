@@ -1,5 +1,5 @@
+// Nomie ID
 import nid from "../../../src/modules/nid/nid";
-
 describe("modules/nid", function() {
   it("empty nid generator", () => {
     expect(nid()).to.have.length.of(32);

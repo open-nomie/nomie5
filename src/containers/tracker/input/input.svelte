@@ -86,7 +86,7 @@
     // Set to local variable
     setTimeout(() => {
       // Set to not ready and the new tracker
-      data.ready = false;
+      data.ready = true; // TODO: make this lack janky
       data.tracker = tracker;
       setTimeout(() => {
         // Wait to set the value
@@ -167,7 +167,6 @@
         </div>
       {:else if tracker.type === 'timer'}
         <NTimer
-          {value}
           tracker={data.tracker}
           bind:value={data.value}
           on:change={event => {

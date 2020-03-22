@@ -10,15 +10,9 @@ import { writable } from "svelte/store";
 import Logger from "../utils/log/log";
 
 // Vendors
-
-import StartPack from "../modules/packs/default-trackers";
-import { TrackerStore } from "./trackers";
-import { Interact } from "./interact";
-import { Lang } from "./lang";
 import Storage from "../modules/storage/storage";
 
 import config from "../../config/global";
-import md5 from "md5";
 import Location from "../modules/locate/Location";
 
 // Stores

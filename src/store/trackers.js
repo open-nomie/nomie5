@@ -31,36 +31,32 @@ const trackerStoreInit = () => {
      * This takes place in the user store. Once the user is loaded, it will
      * initialize trackers and the boards. Then fire off the user ready command
      */
-    initialize(UserStore) {
-      return new Promise((resolve, reject) => {
-        return Storage.get(`${config.data_root}/trackers.json`).then(
-          trackers => {
-            // If the user doesn't have trackers
-            // Let's prompt them to install some
-            if (!trackers) {
-              setTimeout(() => {
-                TrackerLibrary.showFirst();
-              }, 10);
-              // Interact.confirm(
-              // 	`${StarterPack.label}`,
-              // 	`Install Default Trackers: ${startPackArray.map(t => t.label).join(', ')}? `
-              // ).then(res => {
-              // 	if (res === true) {
-              // 		methods.populate(StarterPack);
-              // 	}
-              // });
-              resolve({});
-              // Setup Default Trackers
-            } else {
-              update(t => {
-                let cleanedTrackers = methods.scrub(trackers);
-                resolve(cleanedTrackers);
-                return cleanedTrackers;
-              });
-            }
-          }
-        );
-      });
+    async initialize(UserStore) {
+      // Create standalone function to update the tracker data
+      let updateTrackers = trackers => {
+        update(t => {
+          // Clean the trackers
+          let cleanedTrackers = methods.scrub(trackers);
+          // Push up the cleaned tracker
+          return cleanedTrackers;
+        });
+      };
+      // Create a listener for if the data change remotely (pouchdb)
+      let onTrackersUpdated = data => {
+        updateTrackers(data);
+      };
+      // Get Trackers from Storage - pass Updated function if it updates later on.
+      let trackers = await Storage.get(`${config.data_root}/trackers.json`, onTrackersUpdated);
+      // If don't have trackers - show the selector
+      if (!trackers) {
+        /// It's their first time
+        setTimeout(() => {
+          TrackerLibrary.showFirst();
+        }, 10);
+      } else {
+        // We have trackers - so update them.
+        updateTrackers(trackers);
+      }
     },
     startTimer(tracker) {
       update(state => {
@@ -147,9 +143,7 @@ const trackerStoreInit = () => {
     // Get Tracker by Tag
     getByTag(tag) {
       let trackers = this.getAll();
-      return trackers.hasOwnProperty(tag)
-        ? trackers[tag]
-        : new Tracker({ tag: tag });
+      return trackers.hasOwnProperty(tag) ? trackers[tag] : new Tracker({ tag: tag });
     },
 
     tagExists(tag) {
@@ -213,11 +207,7 @@ const trackerStoreInit = () => {
     save(trackers) {
       if (trackers) {
         if (Object.keys(trackers || {}).length == 0) {
-          if (
-            confirm(
-              "You're about to save 0 trackers.. Should I continue? this might be a bug"
-            )
-          ) {
+          if (confirm("You're about to save 0 trackers.. Should I continue? this might be a bug")) {
             return Storage.put(`${config.data_root}/trackers.json`, trackers);
           }
         } else {

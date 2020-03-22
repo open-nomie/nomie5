@@ -24,7 +24,9 @@
     initialize() {
       state.files = [];
       return Storage.list().then(files => {
-        state.files = files;
+        state.files = files.sort((a, b) => {
+          return a > b ? 1 : -1;
+        });
         return state.files;
       });
     },
@@ -73,8 +75,8 @@
     {#if state.showFiles}
       {#each state.files as file (file)}
         <NItem>
-          <div class="truncate">
-            {file.substr(0, 20)}{file.length > 20 ? '...' : ''}
+          <div class="truncate text-sm">
+            {file.substr(0, 40)}{file.length > 40 ? '...' : ''}
           </div>
           <button
             class="btn btn-sm btn-clear text-danger"

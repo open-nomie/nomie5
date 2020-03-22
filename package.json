@@ -1,6 +1,6 @@
 {
   "name": "open-nomie",
-  "version": "4.6.23",
+  "version": "4.7.12",
   "homepage": "https://nomie.app",
   "bugs": {
     "url": "https://github.com/open-nomie/nomie/issues",
@@ -20,8 +20,6 @@
     "start": "sirv public --single",
     "start:og": "sirv public --cors --single --dev ",
     "start:dev": "sirv public --cors --single --dev --host 0.0.0.0",
-    "version_patch": "node build-tools/patch-version.js patch",
-    "version_minor": "node build-tools/patch-version.js minor",
     "test": "jest src/**/*.spec.js",
     "todo": "node build-tools/get-todo.js",
     "patch": "npm run version_patch && npm run todo",
@@ -30,9 +28,11 @@
     "release:patch": "release-it patch --no-npm.publish",
     "release:minor": "release-it minor --no-npm.publish"
   },
+  "release-it": {},
   "devDependencies": {
     "@composi/gestures": "^1.0.8",
     "@kazzkiq/svelte-preprocess-scss": "^0.1.3",
+    "@release-it/conventional-changelog": "^1.1.0",
     "@sveltejs/gestures": "0.0.1",
     "blockstack": "^19.2.5",
     "bootstrap": "^4.3.1",
@@ -56,7 +56,7 @@
     "nomie-uom": "^1.0.2",
     "npm-run-all": "^4.1.5",
     "pouchdb": "^7.1.1",
-    "release-it": "^12.4.3",
+    "release-it": "^12.6.3",
     "rollup": "^1.10.1",
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-copy": "^3.1.0",

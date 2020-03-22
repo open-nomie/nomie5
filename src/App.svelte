@@ -36,8 +36,9 @@
   import { TrackerStore } from "./store/trackers"; // tracker state and methods
   import { TrackerLibrary } from "./store/tracker-library";
   import { CommanderStore } from "./store/commander"; // commander - /?note=hi&lat=35&lng=-81.32
-  import { NomieAPI } from "./store/napi";
-  // import { TrackerLibrary } from './store/tracker-library';
+  import { NomieAPI } from "./store/napi"; // Store for interacting with the Nomie API
+  import { PeopleStore } from "./store/people-store"; // Store for holding People
+  import { ContextStore } from "./store/context-store"; // Store for holding Post Context (categories)
 
   import config from "../config/global";
 
@@ -76,7 +77,7 @@
   const appVersion = "APP_VERSION";
 
   // Not sure if theese are needed
-  export let name = "nomie";
+  // export let name = "nomie";
   export let url = "";
 
   $: if (window && $TrackerStore) {
@@ -201,6 +202,8 @@
   UserStore.onReady(() => {
     // Set the user if they're logged in
     ready = true;
+    PeopleStore.init();
+    ContextStore.init();
     // Run any commands if needed
     setTimeout(() => {
       // If there are any URL caommands, it will run here.

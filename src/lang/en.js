@@ -6,6 +6,7 @@ export default {
       location: "Location",
       remove: "Remove",
       error: "Error",
+      success: "Success",
       all: "All",
       sum: "Sum",
       avg: "Avg",
@@ -41,7 +42,8 @@ export default {
       year: "Year",
       map: "Map",
       time: "Time",
-      close: "Close"
+      close: "Close",
+      today: "Today"
     },
     stats: {
       when: "When",

@@ -400,7 +400,7 @@
         let last = $LastUsed[tracker.tag];
         if (last.log) {
           buttons.push({
-            title: `${Lang.t("board.last-used", "Last Used")} ${dayjs(
+            title: `${Lang.t("board.last-used", "Last used")} ${dayjs(
               last.date
             ).fromNow()}`,
             click: async () => {
@@ -441,6 +441,7 @@
     trackerUnsub = TrackerStore.subscribe(trackerStore => {
       setTimeout(() => {
         boardTrackers = boardTrackers;
+        methods.setBoardTrackers();
       }, 120);
     });
 

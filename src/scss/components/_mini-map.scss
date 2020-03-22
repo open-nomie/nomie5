@@ -64,6 +64,7 @@ body.scrolling {
   right: 26px;
   height: 100px;
   width: 100px;
+  transition: all 0.2s ease-in-out;
 
   .location-name {
     display: none !important;
@@ -92,33 +93,41 @@ body.scrolling {
       bottom: 0px !important;
     }
   }
+  &.closed {
+    &::after {
+      content: "";
+      z-index: 20;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
 
-  transition: all 0.2s ease-in-out;
   &.opened {
     transition: all 0.2s ease-in-out;
     display: flex;
     justify-content: center;
     align-items: center;
     color: var(--color-inverse);
-    height: 50px;
-    width: 120px;
-    left: 50%;
-    margin-left: -60px;
+    height: 50%;
+    min-height: 250;
+    max-height: 700px;
     border-radius: 25px;
     z-index: 2000;
+    left: 16px;
+    right: 16px;
+    width: calc(100% - 32px);
     bottom: 80px;
     border: solid 1px var(--color-faded-2);
     .zmdi {
       font-size: 1.4rem;
     }
-  }
-  &::after {
-    content: "";
-    z-index: 20;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    .btn {
+      position: absolute;
+      z-index: 2000;
+      bottom: 16px;
+    }
   }
 }

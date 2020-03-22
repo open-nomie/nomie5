@@ -1,7 +1,23 @@
+/**
+ * The Ledger!
+ *
+ * This is the core module for storing Nomie Logs.
+ * Ledgers store logs in a month file. /MM-YYYY.json for example
+ * this might change in the future, as it makes it
+ * easier to accidentally lose a month worth of data.
+ *
+ *
+ */
+
 // Modules
+
+// Nomie log is the base Log item that is saved in a ledger
 import NomieLog from "../modules/nomie-log/nomie-log";
+// Storage for generic access to local,blockstack,pouch
 import Storage from "../modules/storage/storage";
+// Hooks for firing off hooks
 import Hooky from "../modules/hooks/hooks";
+// Get the Geo Location module
 import locate from "../modules/locate/locate";
 
 // Utils
@@ -16,36 +32,26 @@ import tick from "../utils/tick/tick";
 import config from "../../config/global";
 
 // Stores
-// import { UserStore } from "./user";
 import { Interact } from "./interact";
 import { LastUsed } from "./last-used";
+import { PeopleStore } from "./people-store";
+import { ContextStore } from "./context-store";
 
 const console = new Logger("🧺 store/ledger.js");
 const hooks = new Hooky(); // Hooky is for firing off generic events
 
-// Work on making things able to save in bulk
-let savingQ = [];
-
-/**
- * Ledger Store
- * The ledger store is responsible for storing and getting logs, as well as maintaining what's
- * happened today.
- */
-
-let bulkSaving = []; // holder of logs to save - if the user gets all fast like
-let isSavingBulk = false;
-
+// initialize the Store
 const ledgerInit = () => {
   /**
    * Set base object for store
    */
   let base = {
-    books: {},
+    books: {}, // holder of books - YYYY-MM
     booksLastUpdate: {},
-    today: {},
-    count: 0,
-    saving: false,
-    hash: null
+    today: {}, // hold todays logs
+    count: 0, //
+    saving: false, // are we saving?
+    hash: null // hash for svelte auto reloading
   };
 
   const methods = {
@@ -81,9 +87,11 @@ const ledgerInit = () => {
      * @param {String} bookDateString
      */
     async getBook(bookDateString) {
+      // call any hooks
       hooks.run("onBeforeGetBook", bookDateString);
+      // Get the book from storage
       let book = await Storage.get(`${config.book_root}/${bookDateString}`);
-
+      // Return book with Nomie Logs
       return (book || [])
         .map(log => {
           return new NomieLog(log);
@@ -108,19 +116,13 @@ const ledgerInit = () => {
      * the user has. Good for figuring out
      * first track
      */
-    firstBook() {
-      return new Promise((resolve, reject) => {
-        methods
-          .listBooks()
-          .then(books => {
-            if (books.length) {
-              resolve(books[0].replace(config.book_root + "/", ""));
-            } else {
-              resolve("Unknown");
-            }
-          })
-          .catch(reject);
-      });
+    async firstBook() {
+      const books = await methods.listBooks();
+      if (books.length) {
+        return books[0].replace(config.book_root + "/", "");
+      } else {
+        return "Unknown";
+      }
     },
     /**
      * Filter Documents - Get the Books
@@ -160,13 +162,21 @@ const ledgerInit = () => {
       return trackers;
     },
 
+    /**
+     * Create a hash for Today
+     * This helps us monitor any changes on state.hash
+     * @param {Object} today
+     */
     hashTodayPayload(today) {
       let nodes = Object.keys(today).map(tag => {
         return `${tag}-${today[tag].values.join(",")}`;
       });
       return md5(nodes.join(","));
     },
-
+    /**
+     * Get Today
+     * Returns today's book
+     */
     async getToday() {
       let todayKey = dayjs().format("YYYY-MM");
       if (base.books[todayKey]) {
@@ -178,23 +188,27 @@ const ledgerInit = () => {
         return methods.todayReady();
       }
     },
-
+    /**
+     * Update Today
+     */
     async todayReady() {
       let start = dayjs().startOf("day");
       let end = dayjs().endOf("day");
       let todayKey = dayjs().format("YYYY-MM");
       let allLogs = base.books[todayKey];
+      // Extract just today's logs from the book
       let todaysLogs = methods.filterLogs(allLogs, {
         start: start.toDate(),
         end: end.toDate()
       });
+      // Extract Trackers
       let trackersUsed = methods.extractTrackerTagAndValues(todaysLogs);
+      // Setup data for update
       let data;
       update(d => {
         data = d;
         d.today = trackersUsed;
         d.hash = methods.hashTodayPayload(trackersUsed);
-        // d.count++;
         return d;
       });
       return data;
@@ -203,9 +217,7 @@ const ledgerInit = () => {
      * Get the Users location if it's needed
      */
     locateIfNeeded() {
-      let shouldLocate = JSON.parse(
-        localStorage.getItem(config.always_locate_key) || "false"
-      );
+      let shouldLocate = JSON.parse(localStorage.getItem(config.always_locate_key) || "false");
 
       return new Promise((resolve, reject) => {
         if (shouldLocate) {
@@ -258,9 +270,7 @@ const ledgerInit = () => {
 
       // Get Date for Book ID
       let bookDate = dayjs(new Date(log.end)).format(config.book_time_format);
-      let previousBookDate = dayjs(new Date(previousEndDate)).format(
-        config.book_time_format
-      );
+      let previousBookDate = dayjs(new Date(previousEndDate)).format(config.book_time_format);
       let isSameBook = bookDate === previousBookDate;
 
       // Get books
@@ -311,10 +321,14 @@ const ledgerInit = () => {
      * Prepare a log
      */
     async prepareLog(log) {
+      // Make sure start and end are setup
       log.end = log.end || new Date().getTime();
       log.start = log.start || new Date().getTime();
+      // If it's not a NomieLog - make it one.
       log = log instanceof NomieLog ? log : new NomieLog(log);
+      // Log is being prepared to save - on Before Save
       hooks.run("onBeforeSave", log);
+      // Clean the dirty dirty
       delete log._dirty;
       // Trim any white space from note
       log.note = log.note.trim();
@@ -322,34 +336,55 @@ const ledgerInit = () => {
       let location = await methods.locateIfNeeded();
       // If we have a location add to log
       if (location && !log.lat) {
+        // Add location Data
         log.lat = location.latitude;
         log.lng = location.longitude;
       }
       return log;
     },
-
+    /**
+     * Get the Last Updataed File Path
+     * Used to help make sure we don't overwrite any data
+     * @param {String} date YYYY-MM
+     */
     getLastUpdatePath(date) {
       return `${config.data_root}/books/${date}_last`;
     },
+    /**
+     * Get the Last Updataed Time for a book
+     * Used to help make sure we don't overwrite any data
+     * @param {String} date YYYY-MM
+     */
     async getLastUpdate(date) {
       return await Storage.get(methods.getLastUpdatePath(date));
     },
+    /**
+     * Get a Book - with syncing
+     * @param {String} date
+     */
 
     async getBookWithSync(date) {
-      console.log(`Sync: check if out of sync`);
-      let lastUpdate = await methods.getLastUpdate(date);
-      let book = base.books[date] || [];
-
-      if (lastUpdate) {
-        let lu = new Date(lastUpdate);
-        let bu = new Date(base.booksLastUpdate[date]);
-        if (lu > bu) {
-          book = await Storage.get(`${config.data_root}/books/${date}`);
+      const book = await Storage.get(`${config.data_root}/books/${date}`);
+      // If no book and on blockstack
+      if (!book && Storage.storageType() == "blockstack") {
+        let bookMonth = dayjs(date).format("MMMM YYYY");
+        let confirm = await Interact.confirm(
+          `Create ${bookMonth} Book?`,
+          `Logs are stored in monthly files and a ${bookMonth} was not found. Would you like to create it?`
+        );
+        if (confirm) {
+          // User confirms to create a new blank book - godspeed
+          return [];
+        } else {
+          throw new Error("User stopped creation of book");
         }
+      } else if (!book) {
+        // It's local - so we will assume they're creating a new book
+        return [];
       } else {
-        console.log("Sync: No lastUpdate");
+        // Else just return the book already
+        return book;
       }
-      return book;
     }, // end update if out of sync
 
     async getLog(id, book) {
@@ -375,6 +410,7 @@ const ledgerInit = () => {
         currentState = s;
         return s;
       });
+
       // Set the time
       log = await methods.prepareLog(log);
 
@@ -384,34 +420,51 @@ const ledgerInit = () => {
       // Set Path
       let bookPath = `${config.data_root}/books/${date}`; // path to book
       // Update if out of sync with Server
-      let book = await methods.getBookWithSync(date);
-      book.push(log); // push log
-      // Save Book.
-      await Storage.put(bookPath, book); // put the content
-      currentState.books[date] = book; // update state
 
-      // Save Last Update to server
-      let timeString = new Date().toJSON();
-      let lastDatePath = methods.getLastUpdatePath(date);
-      await Storage.put(lastDatePath, timeString);
-      currentState.booksLastUpdate[date] = timeString;
+      try {
+        // Get the Book - if its blockstack then make sure it exists
+        let book = await methods.getBookWithSync(date);
+        book.push(log); // push log
+        // Save Book.
+        await Storage.put(bookPath, book); // put the content
+        currentState.books[date] = book; // update state
 
-      // Set the Last Used for Trackers in this log
-      LastUsed.record(log);
+        // Save Last Update to server
+        let timeString = new Date().toJSON();
+        let lastDatePath = methods.getLastUpdatePath(date);
+        await Storage.put(lastDatePath, timeString);
+        currentState.booksLastUpdate[date] = timeString;
 
-      // Update Store
-      update(s => {
-        s.saving = false;
-        s.books = currentState.books;
-        return s;
-      });
+        // Set the Last Used for Trackers in this log
+        LastUsed.record(log);
 
-      /** Fire off Notifications and hooks Save */
-      Interact.toast(`Saved ${log.note}`); // show Alert
-      hooks.run("onLogSaved", log);
-      await tick(120);
-      methods.getToday(); // Get Today
-      return { log, date };
+        // Get Log Meta
+        const meta = log.getMeta();
+        // Save any new people to the People Store
+        PeopleStore.save(meta.people);
+        // Save any new Context to the Context Store
+        ContextStore.save(meta.context);
+
+        // Update Store
+        update(s => {
+          s.saving = false;
+          s.books = currentState.books;
+          return s;
+        });
+
+        /** Fire off Notifications and hooks Save */
+        Interact.toast(`Saved ${log.note}`); // show Alert
+        hooks.run("onLogSaved", log);
+        await tick(120);
+        methods.getToday(); // Get Today
+        return { log, date };
+      } catch (e) {
+        Interact.alert("Error", e.message);
+        update(s => {
+          s.saving = false;
+          return s;
+        });
+      } // end try catch
     },
 
     /**
@@ -551,7 +604,7 @@ const ledgerInit = () => {
               return (
                 JSON.stringify(row)
                   .toLowerCase()
-                  .search(term.toLowerCase()) > -1
+                  .indexOf(term.toLowerCase()) > -1
               );
             })
             .sort((a, b) => {

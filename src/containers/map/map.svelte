@@ -43,14 +43,12 @@
     showLocations: false
   };
 
-  // $: if (locations) {
-  // setTimeout(() => {
-  //   methods.init().then(() => {
-  //     methods.renderMap();
-  //   });
-  // });
-
-  // }
+  $: if (locations) {
+    setTimeout(async () => {
+      await methods.init();
+      methods.renderMap();
+    }, 12);
+  }
 
   $: if (picker && MAP && locations.length == 0) {
     locate().then(location => {
@@ -58,9 +56,6 @@
         lat: location.latitude,
         lng: location.longitude
       });
-
-      // data.lat = location.latitude;
-      // data.lng = location.longitutde;
       MAP.setView(L.latLng(location.latitude, location.longitude), 12);
     });
   }
@@ -198,7 +193,12 @@
         // Loop over locaitons provided in props
         locations.forEach(loc => {
           addMarker([loc.lat, loc.lng], loc.name, () => {
+            // On Marker Click
             data.activeLocation = loc;
+            // If a log exists - show the Share Log popup
+            if (loc.log) {
+              Interact.shareLog(loc.log);
+            }
           });
         });
 

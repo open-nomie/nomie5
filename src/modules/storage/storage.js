@@ -49,8 +49,8 @@ export default {
     return engineProfile;
   },
   // Get a file
-  async get(path) {
-    return await this.getEngine().get(path);
+  async get(path, onChange = null) {
+    return await this.getEngine().get(path, onChange);
   },
   // Put a file
   async put(path, content) {

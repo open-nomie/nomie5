@@ -28,6 +28,7 @@
   export let events = [];
   export let offDays = [[1, 7]];
   export let showHeader = true;
+  export let tracker = null;
 
   // Data
   let state = {
@@ -120,10 +121,34 @@
       state.date = dayjs();
     },
     getDayStyle(day) {
+      let score = undefined;
+
       let activeToday = events.find(row => {
         return day.toDate().toDateString() === new Date(row.end).toDateString();
       });
-      return activeToday ? `background-color:${color}; color:#FFF` : "";
+
+      // Lets extract the score for this tracker
+      if (activeToday) {
+        // Get the active Today log and pull meta from it.
+        let meta = activeToday.getMeta();
+        // Did we pass in a tracker?
+        if (tracker) {
+          // Get tracker value for this log
+          const trackerValue = meta.trackers.find(t => t.tag == tracker.tag);
+          // If we have a tracker value
+          if (trackerValue) {
+            // Calcuate the score just for this tracker
+            score = activeToday.calculateScore(
+              `#${trackerValue.tag}(${trackerValue.value})`
+            );
+          }
+        }
+        return `font-weight:bold; border:solid 2px ${
+          score > -1 ? "var(--color-green)" : "var(--color-red)"
+        }; color:${score > -1 ? "var(--color-green)" : "var(--color-red)"};`;
+      } else {
+        return ``;
+      }
     },
     getDayClass(day) {
       let activeToday = events.find(row => {

@@ -23,6 +23,7 @@
   import NDatePicker from "../components/date-picker/date-picker.svelte";
   import LogItem from "../components/list-item-log/list-item-log.svelte";
   import NDatePill from "../components/date-pill/date-pill.svelte";
+  import NSearchBar from "../components/search-bar/search-bar.svelte";
 
   // Containers
   import NMap from "../containers/map/map.svelte";
@@ -161,7 +162,8 @@
         return {
           lat: log.lat,
           lng: log.lng,
-          name: log.location
+          name: log.location,
+          log: log
         };
       });
   }
@@ -244,6 +246,20 @@
       event.stopPropagation();
       methods.search(state.searchTerm, state.date.format("YYYY"));
       searchMode = true;
+    },
+    searchChange(evt) {
+      console.log("history evt", evt);
+      state.searchTerm = evt.detail;
+      // if (state.searchTerm.length > 1) {
+      //   console.log("Searching");
+      //   methods.search(state.searchTerm, state.date.format("YYYY"));
+      // }
+    },
+    doSearch(evt) {
+      state.searchTerm = evt.detail;
+      if (state.searchTerm.length > 1) {
+        methods.search(state.searchTerm, state.date.format("YYYY"));
+      }
     },
     searchKeypress(event) {
       if (event.key === "Enter" || event.key === "Return") {
@@ -353,6 +369,27 @@
     border-bottom: none !important;
   }
 
+  .map-btn {
+    position: fixed;
+    left: 18px;
+    bottom: 68px;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  .close-btn {
+    left: auto;
+    right: 18px;
+  }
+
+  .page-history {
+    .show-map {
+      height: 200px;
+      min-height: 200px;
+      max-height: 400px;
+    }
+  }
+
   .history-toolbar-container {
     .btn {
       outline: none !important;
@@ -410,33 +447,35 @@
 <AppLayout title={appTitle}>
 
   <header slot="header">
+    <NSearchBar
+      searchTerm={state.searchTerm}
+      hasResults={(searchLogs || []).length > 0}
+      on:change={methods.searchChange}
+      on:clear={methods.clearSearch}
+      on:search={methods.doSearch} />
+
     <NToolbar>
       <div class="container history-toolbar-container">
         <div class="d-flex justify-content-stretch align-items-center w-100">
           {#if searchMode}
             <button
-              class="btn btn-clear btn-icon flex"
+              class="btn btn-clear text-inverse flex"
               on:click={methods.previousSearch}>
-              <i class="zmdi zmdi-arrow-left" />
+              <i class="zmdi zmdi-chevron-left mr-2" />
+              {state.date.subtract(1, 'year').format('YYYY')}
             </button>
           {:else}
             <button
               class="btn btn-clear btn-icon flex"
               on:click={methods.previous}>
-              <i class="zmdi zmdi-arrow-left" />
+              <i class="zmdi zmdi-chevron-left" />
             </button>
           {/if}
-          <!-- <div class="filler" /> -->
-          <!-- <button
-        class="btn btn-clear btn-icon flex {searchMode ? 'active text-primary-bright' : ''}"
-        on:click={methods.toggleSearch}>
-        <i class="zmdi zmdi-search" />
-      </button>
-      <div class="filler" /> -->
+
           {#if searchMode}
             <div class="filler" />
-            <div class="text-center n-text md">
-              Search {state.date.format('YYYY')}
+            <div class="text-center n-text md text-inverse">
+              {Lang.t('general.search')} {state.date.format('YYYY')}
             </div>
             <div class="filler" />
           {:else}
@@ -475,13 +514,14 @@
       </button> -->
           {#if searchMode}
             <button
-              class="btn btn-clear btn-icon flex"
+              class="btn btn-clear text-inverse flex"
               on:click={methods.nextSearch}>
-              <i class="zmdi zmdi-arrow-right " />
+              {state.date.add(1, 'year').format('YYYY')}
+              <i class="zmdi zmdi-chevron-right ml-2" />
             </button>
           {:else}
             <button class="btn btn-clear btn-icon flex" on:click={methods.next}>
-              <i class="zmdi zmdi-arrow-right" />
+              <i class="zmdi zmdi-chevron-right" />
             </button>
           {/if}
         </div>
@@ -489,27 +529,6 @@
       <!-- end toolbar div wrapper-->
     </NToolbar>
 
-    <NToolbar>
-      <div
-        class="d-flex d-row justify-content-between align-items-center w-100
-        search-bar">
-        <input
-          type="search"
-          bind:this={searchInput}
-          bind:value={state.searchTerm}
-          on:keypress={methods.searchKeypress}
-          placeholder="{Lang.t('general.search')}..."
-          class="search-input" />
-        {#if searchMode}
-          <button
-            class="btn btn-clear btn-sm btn-icon zmdi zmdi-search"
-            on:click={methods.refreshSearch} />
-          <button
-            class="btn btn-clear btn-sm btn-icon zmdi zmdi-close"
-            on:click={methods.clearSearch} />
-        {/if}
-      </div>
-    </NToolbar>
   </header>
   <!-- end header-content header -->
 
@@ -519,8 +538,6 @@
       <div class="empty-notice">
         <Spinner />
       </div>
-    {:else if state.showAllLocations}
-      <NMap {locations} />
     {:else}
       <div class="container p-0">
         <!-- If no Logs found -->
@@ -545,12 +562,20 @@
               on:locationClick={event => {
                 Interact.showLocations([log]);
               }}
+              on:textClick={event => {
+                state.searchTerm = event.detail.value;
+                methods.search(state.searchTerm);
+              }}
               show24Hour={$UserStore.meta.is24Hour}
               on:moreClick={event => {
                 Interact.logOptions(log).then(() => {});
               }} />
             <!-- Show the Log Item -->
           {/each}
+          <!--
+          Search Results
+          If Search Mode and We have Logs
+        -->
         {:else if searchMode && searchLogs}
           {#each searchLogs as log, i (log._id)}
             <LogItem
@@ -560,6 +585,10 @@
               on:trackerClick={event => {
                 methods.trackerTapped(event.detail.tracker, log);
               }}
+              on:textClick={event => {
+                state.searchTerm = event.detail.value;
+                methods.search(state.searchTerm);
+              }}
               on:locationClick={event => {
                 Interact.showLocations([log]);
               }}
@@ -568,40 +597,56 @@
               }} />
             <!-- Show the Log Item -->
           {/each}
+          <!-- We have No search results -->
           {#if !searchLogs.length}
             <div class="gap" />
-            <NItem title="No Results for {state.date.format('YYYY')}" />
+            <NItem className="text-center bg-transparent">
+              <span class="text-faded-3">
+                No Results for {state.date.format('YYYY')}
+              </span>
+            </NItem>
           {/if}
           <div class="gap" />
           <NItem
-            className="text-primary"
+            className="text-primary text-center"
             on:click={methods.previousSearch}
             title="Search {state.date.subtract(1, 'year').format('YYYY')}..." />
           <div class="gap" />
-        {:else if searchMode && !searchLogs}
-          <div class="empty-notice">Search {state.date.format('YYYY')}</div>
         {/if}
 
       </div>
     {/if}
-    {#if locations.length}
+    {#if locations.length && !loading}
       {#if !state.showAllLocations}
         <div
-          class="mini-map"
+          class="mini-map closed"
           on:click={() => {
             state.showAllLocations = !state.showAllLocations;
           }}>
           <NMap {locations} />
         </div>
       {:else}
-        <div
-          class="mini-map opened"
-          on:click={() => {
-            state.showAllLocations = !state.showAllLocations;
-          }}>
-          {Lang.t('history.close-map', 'Close Map')}
+        <div class="mini-map opened">
+
+          <NMap {locations} />
+          <button
+            class="btn btn-sm btn-dark btn-icon zmdi zmdi-close btn-round
+            map-btn close-btn"
+            on:click={() => {
+              state.showAllLocations = !state.showAllLocations;
+            }} />
+
         </div>
       {/if}
+    {/if}
+    {#if !isToday && !searchMode}
+      <button
+        class="btn btn-sm btn-light btn-round map-btn"
+        on:click={() => {
+          methods.goto(dayjs());
+        }}>
+        {Lang.t('general.today')}
+      </button>
     {/if}
   </main>
   <!-- end header-content content -->
