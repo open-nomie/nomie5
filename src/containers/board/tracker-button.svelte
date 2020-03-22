@@ -74,7 +74,7 @@
     }
   }
   .tracker-button-wrapper {
-    border-radius: 20px;
+    border-radius: 40px;
   }
   // Moved to /scss/components/_tracker-button.scss
 </style>
@@ -94,6 +94,7 @@
     emoji={tracker.emoji}
     showCharacter={false}
     score={value}
+    color={tracker.color}
     {positivity}
     note={false}
     username={tracker.label}>
