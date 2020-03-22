@@ -34,9 +34,7 @@ const userInit = () => {
     profile: {
       username: null
     },
-    alwaysLocate: JSON.parse(
-      localStorage.getItem(config.always_locate_key) || "false"
-    ),
+    alwaysLocate: JSON.parse(localStorage.getItem(config.always_locate_key) || "false"),
     theme: localStorage.getItem(config.theme_key) || "auto",
     location: null,
     autoImportApi: false,
@@ -104,8 +102,7 @@ const userInit = () => {
       // TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
     },
     setStorage(type) {
-      type =
-        ["blockstack", "local", "pouchdb"].indexOf(type) > -1 ? type : "local";
+      type = ["blockstack", "local", "pouchdb"].indexOf(type) > -1 ? type : "local";
       update(d => {
         d.storageType = type;
         Storage.local.put("root/storage_type", type);
@@ -196,15 +193,16 @@ const userInit = () => {
     /**
      * Load Meta for this user
      */
-    loadMeta() {
-      return Storage.get(config.user_meta_path).then(value => {
+    async loadMeta() {
+      let value;
+      try {
+        value = await Storage.get(config.user_meta_path);
+      } catch (e) {}
+      update(usr => {
         if (value) {
-          update(usr => {
-            usr.meta = value;
-            return usr;
-          });
+          usr.meta = value;
         }
-        return value;
+        return usr;
       });
     },
     /**
