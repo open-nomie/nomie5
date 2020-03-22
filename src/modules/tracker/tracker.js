@@ -99,7 +99,7 @@ export default class TrackerConfig {
   toTag(str) {
     // TODO : make this replace special characters too
     return (str || "")
-      .replace(/\!|\"|\?/g, "")
+      .replace(/[^\w\s]/gi, "")
       .trim()
       .replace(/( )/g, "_")
       .toLowerCase();
