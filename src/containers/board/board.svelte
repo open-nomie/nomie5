@@ -233,7 +233,8 @@
       buttons.push({
         title: Lang.t("board.create-custom-tracker"),
         click() {
-          methods.trackerEditor();
+          // methods.trackerEditor();
+          navigate("/tracker/design");
         }
       });
 
@@ -768,10 +769,7 @@
               <button
                 on:click={methods.editBoard}
                 class="btn btn btn-clear btn-sm icon-left">
-                <i class="zmdi zmdi-edit mr-2" />
-                {Lang.t('board.edit-board', {
-                  board: ($BoardStore.activeBoard || {}).label || null
-                })}
+                <span class="text-lg text-primary-bright">•••</span>
               </button>
             {/if}
           </div>
