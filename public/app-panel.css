@@ -13,6 +13,8 @@ aside.n-panel {
     border-right: solid 1px rgba(0, 0, 0, 0.1); }
   .n-panel.center-vertical {
     justify-content: center; }
+  .n-panel.center-horizontal {
+    align-items: center; }
   .n-panel.center-all {
     justify-content: center;
     align-items: center; }
