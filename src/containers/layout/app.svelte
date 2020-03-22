@@ -4,6 +4,7 @@
   import tick from "../../utils/tick/tick";
   export let title = "Welcome";
   export let refresh = undefined;
+  export let showTabs = true;
 
   let padBottomDom;
   let padTopDom;
@@ -54,6 +55,11 @@
     top: 0;
     left: 0;
     right: 0;
+    h1,
+    h2,
+    h3 {
+      font-size: 1rem;
+    }
   }
 
   .footer-slot {
@@ -81,5 +87,7 @@
 </div>
 <div class="footer-slot" bind:this={footerDom}>
   <slot name="footer" />
-  <AppTabs />
+  {#if showTabs}
+    <AppTabs />
+  {/if}
 </div>

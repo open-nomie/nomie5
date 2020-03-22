@@ -20,6 +20,7 @@
 <style>
   .title {
     color: var(--color-inverse);
+    font-size: 1rem;
   }
 </style>
 
