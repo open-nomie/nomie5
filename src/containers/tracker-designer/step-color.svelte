@@ -11,9 +11,12 @@
   }
 </style>
 
-<div class="step emoji app-panel">
-  <NItem class="mb-3">Pick a Color for this Tracker</NItem>
-  <div class="n-list color-grid app-panel scroll-y">
+<div
+  class="step emoji n-panel vertical color-grid n-panel scroll-y
+  center-horizontal">
+
+  <div class="container-sm">
     <ColorPicker grid={true} bind:value={$TrackerDesignerStore.tracker.color} />
   </div>
+
 </div>

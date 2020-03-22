@@ -12,6 +12,11 @@
 
   const selectType = type => {
     $TrackerDesignerStore.tracker.type = type._key;
+    if (type._key == "timer") {
+      $TrackerDesignerStore.tracker.uom = "timer";
+    } else {
+      $TrackerDesignerStore.tracker.uom = "num";
+    }
   };
 </script>
 
@@ -25,27 +30,32 @@
   }
 </style>
 
-<div class="step emoji">
-  <NItem class="mb-3">
-    What type of data are we collecting for {$TrackerDesignerStore.tracker.label}?
-  </NItem>
-  <div class="n-list">
-    {#each types as type}
-      <NItem
-        className="clickable"
-        on:click={() => {
-          selectType(type);
-        }}>
-        <div slot="left">
-          {#if $TrackerDesignerStore.tracker.type == type._key}
-            <span class="text-lg zmdi zmdi-dot-circle text-primary" />
-          {:else}
-            <span class="text-lg zmdi zmdi-circle-o" />
-          {/if}
-        </div>
-        <div class="title">{type.label}</div>
-        <div class="description">{type.description}</div>
-      </NItem>
-    {/each}
-  </div>
+<div class="step emoji n-panel vertical scroll-y">
+  <section class="container-xs">
+    <NItem className="my-2 text-sm">
+      Select the tracker type which fits best for '{$TrackerDesignerStore.tracker.label}'
+    </NItem>
+    <div class="n-list">
+      {#each types as type}
+        <NItem
+          className="clickable {$TrackerDesignerStore.tracker.type == type._key ? 'active' : ''}}"
+          on:click={() => {
+            selectType(type);
+          }}>
+          <div slot="left">
+            {#if $TrackerDesignerStore.tracker.type == type._key}
+              <span class="text-lg zmdi zmdi-dot-circle text-primary" />
+            {:else}
+              <span class="text-lg zmdi zmdi-circle-o" />
+            {/if}
+          </div>
+          <div
+            class={`title text-md ${$TrackerDesignerStore.tracker.type == type._key ? 'font-weight-bold' : ''}`}>
+            {type.label}
+          </div>
+          <div class="description text-sm text-faded-3">{type.description}</div>
+        </NItem>
+      {/each}
+    </div>
+  </section>
 </div>

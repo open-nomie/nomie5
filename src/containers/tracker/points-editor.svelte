@@ -7,6 +7,7 @@
   import NCell from "../../components/cell/cell.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NPoints from "../../components/points/points.svelte";
+  import NInput from "../../components/input/input.svelte";
 
   // Modules
   import Tracker from "../../modules/tracker/tracker";
@@ -15,6 +16,12 @@
   // Stores
   import { TrackerStore } from "../../store/trackers";
   import { UserStore } from "../../store/user";
+  import { Lang } from "../../store/lang";
+  import { Interact } from "../../store/interact";
+
+  import dayjs from "dayjs";
+
+  import { Ordinal } from "../../utils/ordinal/ordinal";
 
   // Prosp
   export let tracker = undefined;
@@ -34,6 +41,16 @@
   //   console.log("The Tracker is set", tracker);
   // }
 
+  const getTrackerInput = async () => {
+    const response = await Interact.trackerInput(tracker, {
+      value: state.genesisCalc.v,
+      allowSave: false
+    });
+    if (response.value) {
+      state.genesisCalc.v = response.value;
+    }
+  };
+
   const scoreOptions = {
     value: "Recorded Value",
     hour: "Hour of Day (24)",
@@ -42,12 +59,45 @@
   };
 
   const methods = {
+    change() {
+      console.log("Calling change with", tracker);
+      dispatch("trackerChange", tracker);
+    },
     newCondition() {
       state.showConditionForm = true;
+      methods.change();
+    },
+    getDays() {
+      let days = [];
+      for (let i = 0; i < 31; i++) {
+        days.push({
+          value: Ordinal(i + 1),
+          index: i + 1
+        });
+      }
+      return days;
+    },
+    getHours() {
+      let hours = [];
+      for (let i = 0; i < 24; i++) {
+        let date = dayjs()
+          .startOf("day")
+          .add(i, "hour");
+
+        hours.push({
+          value: $UserStore.meta.is24hour
+            ? date.format("HH:mm")
+            : date.format("h:mm a"),
+          index: i + 1
+        });
+      }
+      return hours;
     },
     saveCondition() {
       tracker.score_calc = tracker.score_calc || [];
       tracker.score_calc.push({ ...state.genesisCalc });
+      state.showConditionForm = false;
+      methods.change();
     },
     save() {
       TrackerStore.saveTracker(tracker).then(() => {
@@ -58,61 +108,36 @@
       tracker.score_calc = tracker.score_calc.filter((row, ind) => {
         return ind !== index;
       });
+      methods.change();
     }
   };
 </script>
 
 <style lang="scss">
-  .condition-form {
-    background-color: var(--color-solid-1) !important;
-    padding: 15px;
-    border-radius: 5px;
-    overflow: hidden;
-    font-weight: 600;
-    color: var(--color-inverse);
-    border-bottom: solid 1px var(--color-faded-3);
-    .form-control {
-      display: inline-block;
-      width: auto;
-      background-color: var(--color-solid) !important;
-      margin: 0 6px;
-      max-width: 75px;
-    }
-    .condition-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding-bottom: 10px;
-    }
-  }
-  :global(.condition-form .n-item) {
-    background-color: var(--color-solid-1) !important;
-  }
-  :global(.condition-form .n-item .right input, .condition-form
-      .n-item
-      .right
-      select) {
-    background-color: var(--color-solid) !important;
+  .pos-label {
+    font-size: 1.2rem;
+    display: none;
+    min-width: 70px;
+    text-transform: uppercase;
+    text-align: center;
   }
 </style>
 
 {#if tracker}
   <div class="points-editor">
     <div class="n-list mb-0">
-      <NItem title="Positivity" className="mb-2">
-        <div slot="right">
+      <NItem>
+        <NInput
+          type="select"
+          bind:value={tracker.score}
+          on:change={methods.change}
+          label="Tracker {Lang.t('tracker.positivity')}">
+          <option value="0" selected>🤷‍♂️ {Lang.t('tracker.neutral')}</option>
+          <option value="1">😊 {Lang.t('tracker.positive')}</option>
+          <option value="-1">😩 {Lang.t('tracker.negative')}</option>
+          <option value="custom">🛠 {Lang.t('general.customize')}</option>
+        </NInput>
 
-          <select class="form-control w-100" bind:value={tracker.score}>
-            <option value="3">Very Positive</option>
-            <option value="2">Somewhat Positive</option>
-            <option value="1">Positive</option>
-            <option value="" selected={tracker.score === null}>Neutral</option>
-            <option value="-1">Negative</option>
-            <option value="-2">Somewhat Negative</option>
-            <option value="-3">Very Negative</option>
-            <option value="custom">Custom...</option>
-          </select>
-        </div>
       </NItem>
 
       {#if tracker.score === 'custom'}
@@ -139,65 +164,107 @@
         {/each}
 
         {#if state.showConditionForm}
-          <div class="condition-form bg-faded">
+          <div class="condition-form mt-2">
 
-            <div class="condition-row">
-              {#if tracker.score_calc || [].length}else{/if}
-              if
-              <select class="form-control" bind:value={state.genesisCalc.if}>
-                <option value="value">Value</option>
-                <option value="hour">Hour</option>
-                <option value="month">Day</option>
-                <!-- <option value="total">Today's Total</option> -->
-              </select>
-              is
-              <select class="form-control" bind:value={state.genesisCalc.is}>
-                <option value="gt">></option>
-                <option value="gte">>=</option>
-                <option value="lt">&lt;</option>
-                <option value="lte">&lt;=</option>
-                <option value="eq">==</option>
-              </select>
-              <input
-                pattern="[0-9]*"
-                type="text"
-                placeholder={state.genesisCalc.if == 'value' ? 'value' : state.genesisCalc.if == 'hour' ? 'Hour of Day' : 'Day of Month'}
-                class="form-control"
-                bind:value={state.genesisCalc.v} />
-            </div>
-            <div class="condition-row">
-              Set Score to:
-              <input
-                type="text"
-                class="form-control"
-                bind:value={state.genesisCalc.sc} />
-            </div>
+            <NItem class="condition-row">
+              <NInput
+                type="select"
+                bind:value={state.genesisCalc.if}
+                label={tracker.score_calc || [].length == 0 ? 'IF' : 'ELSE'}>
+                <option value="value">Tracked Value</option>
+                <option value="hour">Hour of Day</option>
+                <option value="month">Day of Month</option>
+              </NInput>
+            </NItem>
 
-            <div class="n-row pt-3">
-              <button
-                class="btn btn-clear btn-sm"
-                on:click={() => {
-                  state.showConditionForm = false;
-                }}>
-                Cancel
-              </button>
-              <button
-                class="btn btn-primary btn-sm"
-                on:click={methods.saveCondition}>
-                Set Condition
-              </button>
-            </div>
+            <NItem>
+              <div class="n-row">
+                <NInput
+                  type="select"
+                  width="60%"
+                  className="mr-2"
+                  bind:value={state.genesisCalc.is}
+                  label="IS">
+                  <option value="gt">Greater</option>
+                  <option value="gte">Greater or Equal</option>
+                  <option value="lt">Less</option>
+                  <option value="lte">Less or Equal</option>
+                  <option value="eq">Equals</option>
+                </NInput>
 
+                {#if state.genesisCalc.if == 'hour'}
+                  <NInput
+                    type="select"
+                    placeholder="Than"
+                    bind:value={state.genesisCalc.v}>
+                    {#each methods.getHours() as hour}
+                      <option value={hour.index}>{hour.value}</option>
+                    {/each}
+                  </NInput>
+                {:else if state.genesisCalc.if == 'month'}
+                  <NInput
+                    type="select"
+                    placeholder="Than"
+                    bind:value={state.genesisCalc.v}>
+                    {#each methods.getDays() as day}
+                      <option value={day.index}>{day.value}</option>
+                    {/each}
+                  </NInput>
+                {:else}
+                  <NInput
+                    pattern="[0-9]*"
+                    type="text"
+                    on:focus={() => {
+                      getTrackerInput();
+                    }}
+                    label="Than"
+                    bind:value={state.genesisCalc.v} />
+                {/if}
+
+              </div>
+
+            </NItem>
+            <NItem>
+              <!-- <div slot="left">
+                <h1 class="pos-label">Score</h1>
+              </div> -->
+              <NInput
+                type="select"
+                label="Set Score To:"
+                bind:value={state.genesisCalc.sc}>
+                <option>{Lang.t('general.select', 'Select')}</option>
+                <option value="-2">😩 -2</option>
+                <option value="-1">😩 -1</option>
+                <option value="0">🤷‍♂️ 0</option>
+                <option value="1">😊 +1</option>
+                <option value="2">😊 +2</option>
+
+              </NInput>
+            </NItem>
+            <NItem>
+              <div class="n-row ">
+                <button
+                  class="btn btn-sm btn-dark"
+                  on:click={() => {
+                    state.showConditionForm = false;
+                  }}>
+                  {Lang.t('general.done', 'Done')}
+                </button>
+                <button
+                  class="btn btn-primary btn-sm"
+                  on:click={methods.saveCondition}>
+                  {Lang.t('general.add_condition', 'Add Condition')}
+                </button>
+              </div>
+            </NItem>
           </div>
         {:else}
-          <NItem className="item-divider compact" />
           <NItem
             title="Add a Condition..."
-            className="text-primary text-center"
+            className="text-primary text-center my-3"
             on:click={() => {
               state.showConditionForm = true;
             }} />
-          <NItem className="item-divider compact" />
         {/if}
       {/if}
     </div>

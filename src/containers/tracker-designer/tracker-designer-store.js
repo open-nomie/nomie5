@@ -11,6 +11,12 @@ class TrackerStore {
     this.subscribe = subscribe;
     this.set = set;
   }
+  clear() {
+    this.update(state => {
+      state.tracker = new TrackerConfig({});
+      return state;
+    });
+  }
 }
 
 export const TrackerDesignerStore = new TrackerStore();

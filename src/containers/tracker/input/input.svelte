@@ -168,7 +168,7 @@
       {:else if tracker.type === 'timer'}
         <NTimer
           tracker={data.tracker}
-          xbind:value={data.value}
+          bind:value={data.value}
           on:change={event => {
             data.value = event.detail;
           }} />
