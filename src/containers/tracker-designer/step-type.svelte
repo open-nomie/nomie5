@@ -32,9 +32,7 @@
 
 <div class="step emoji n-panel vertical scroll-y">
   <section class="container-xs">
-    <NItem className="my-2 text-sm">
-      Select the tracker type which fits best for '{$TrackerDesignerStore.tracker.label}'
-    </NItem>
+
     <div class="n-list">
       {#each types as type}
         <NItem
