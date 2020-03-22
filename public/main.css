@@ -5140,8 +5140,8 @@ body {
   --color-tabs: var(--color-primary);
   --color-faded: rgba(0, 0, 0, 0.06);
   --color-faded-inverse: rgba(255, 255, 255, 0.06);
-  --color-faded-1: rgba(0, 0, 0, 0.1);
-  --color-faded-2: rgba(0, 0, 0, 0.2);
+  --color-faded-1: rgba(0, 0, 0, 0.15);
+  --color-faded-2: rgba(0, 0, 0, 0.3);
   --color-faded-3: rgba(0, 0, 0, 0.4);
   --color-full-screen: rgba(0, 0, 0, 0.7);
   --color-background-selected: rgba(32, 105, 157, 0.1);
@@ -5679,7 +5679,8 @@ body.scrolling .mini-map {
     right: 16px;
     width: calc(100% - 32px);
     bottom: 80px;
-    border: solid 1px var(--color-faded-2); }
+    border: solid 1px var(--color-faded-2);
+    box-shadow: 0px 4px 20px -2px rgba(0, 0, 0, 0.4); }
     .mini-map.opened .zmdi {
       font-size: 1.4rem; }
     .mini-map.opened .btn {

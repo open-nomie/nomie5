@@ -695,7 +695,6 @@
 
                 <input
                   type="search"
-                  autofocus
                   bind:this={searchInput}
                   bind:value={data.searchTerm}
                   on:input={methods.searchKeypress}

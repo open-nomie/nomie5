@@ -30,7 +30,6 @@
             {$TrackerDesignerStore.tracker.displayValue($TrackerDesignerStore.tracker.default)}
           </span>
           <input
-            slot="right"
             style="min-width:100px; max-width:100px; text-align:center"
             type="number"
             pattern="[0-9\.\-]"
@@ -73,29 +72,30 @@
       <hr class="my-0" />
       <NItem>
         <span class="title">Min</span>
-        <div class="n-row" slot="right">
-          <input
-            slot="right"
-            style="min-width:100px; max-width:100px; text-align:center"
-            type="number"
-            pattern="[0-9\.\-]"
-            bind:value={$TrackerDesignerStore.tracker.min}
-            class="form-control input-lg pl-1"
-            placeholder="Value" />
-        </div>
+
+        <input
+          slot="right"
+          style="min-width:100px; max-width:100px; text-align:center"
+          type="number"
+          pattern="[0-9\.\-]"
+          bind:value={$TrackerDesignerStore.tracker.min}
+          class="form-control input-lg pl-1"
+          placeholder="Value" />
+
       </NItem>
+
       <NItem>
         <span class="title">Max</span>
-        <div class="n-row" slot="right">
-          <input
-            slot="right"
-            style="min-width:100px; max-width:100px; text-align:center"
-            type="number"
-            pattern="[0-9\.\-]"
-            bind:value={$TrackerDesignerStore.tracker.max}
-            class="form-control input-lg pl-1"
-            placeholder="Value" />
-        </div>
+
+        <input
+          slot="right"
+          style="min-width:100px; max-width:100px; text-align:center"
+          type="number"
+          pattern="[0-9\.\-]"
+          bind:value={$TrackerDesignerStore.tracker.max}
+          class="form-control input-lg pl-1"
+          placeholder="Value" />
+
       </NItem>
     {/if}
   </section>

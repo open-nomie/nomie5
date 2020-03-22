@@ -370,9 +370,9 @@
   }
 
   .map-btn {
-    position: fixed;
-    left: 18px;
-    bottom: 68px;
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
     border-radius: 20px;
     padding: 6px 12px;
     font-size: 12px;

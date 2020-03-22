@@ -1,7 +1,7 @@
 <script>
   export let label = undefined;
   export let value = undefined;
-  export let color = undefined;
+  // export let color = undefined;
   export let emoji = undefined;
 </script>
 

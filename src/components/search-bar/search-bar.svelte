@@ -6,7 +6,7 @@
   const dispatch = createEventDispatcher();
 
   export let searchTerm = null;
-  export let hasResults = false;
+  // export let hasResults = false;
 
   // FIre off changes when input changes
   const fireChange = () => {
@@ -54,9 +54,7 @@
     on:keypress={searchKeypress}
     bind:value={searchTerm}
     placeholder="{Lang.t('general.search')}..." />
-  {#if hasResults}
-
-  {:else if searchTerm}
+  {#if searchTerm}
     <button class="btn btn-sm text-primary" on:click={fireSearch}>
       <i class="zmdi zmdi-search" />
     </button>

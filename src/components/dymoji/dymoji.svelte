@@ -4,7 +4,7 @@
   export let username = "?";
   export let size = 42;
   export let radius = 0.12;
-  export let emoji = null;
+
   export let className = "";
 
   let svg = null;

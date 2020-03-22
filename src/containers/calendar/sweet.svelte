@@ -18,13 +18,13 @@
   const console = new Logger("📅 Sweet");
   const dispatch = createEventDispatcher();
 
-  export let name = "Calendar";
-  export let color = "#319ed7";
+  // export let name = "Calendar";
+  // export let color = "#319ed7";
 
   // Props
   export let initialDate = new Date();
   export let firstDayOfWeek = 1; // 1: Sunday, 2: Monday, etc
-  export let eventCategories = [];
+  // export let eventCategories = [];
   export let events = [];
   export let offDays = [[1, 7]];
   export let showHeader = true;

@@ -11,7 +11,7 @@
   import dayjs from "dayjs";
 
   // Props
-  export let started = undefined;
+  // export let started = undefined;
   export let className = "";
   export let value = 0;
 

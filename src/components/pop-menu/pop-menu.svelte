@@ -8,7 +8,7 @@
   export let title = undefined;
   export let description = undefined;
   export let buttons = [];
-  export let cancel = undefined;
+  // export let cancel = undefined;
   export let show = true;
 
   const methods = {

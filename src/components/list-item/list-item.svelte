@@ -5,10 +5,9 @@
   export let title = undefined;
   export let description = undefined;
   export let borderBottom = false;
-  export let icon = undefined;
+
   export let href = undefined;
   export let to = undefined;
-  export let click = undefined;
   export let id = null;
   export let className = "";
   export let itemDivider = undefined;

@@ -1,6 +1,6 @@
 <script>
   export let size = "sm";
-  export let color = undefined;
+  // export let color = undefined;
   export let bold = undefined;
   export let medium = undefined;
   export let tag = "span";

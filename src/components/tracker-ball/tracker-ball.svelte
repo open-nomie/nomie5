@@ -5,7 +5,7 @@
   const dispatch = createEventDispatcher();
   export let username = "Unknown";
   export let score = 0;
-  export let count = 0;
+  // export let count = 0;
   export let last = null;
   export let emoji = null;
   export let note = null;

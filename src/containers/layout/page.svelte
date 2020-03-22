@@ -24,7 +24,7 @@
   }
 </style>
 
-<AppLayout>
+<AppLayout {className}>
   <div slot="header">
     {#if hasHeader}
       <NToolbar>

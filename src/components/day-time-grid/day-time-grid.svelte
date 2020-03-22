@@ -8,7 +8,7 @@
   //   // Props
   export let rows = undefined;
   export let color = undefined;
-  export let flex = true;
+  // export let flex = true;
 
   // Consts
   const console = new Logger("⏰ Grid");

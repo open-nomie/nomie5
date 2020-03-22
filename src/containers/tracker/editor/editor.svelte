@@ -27,7 +27,7 @@
   const dispatch = createEventDispatcher();
 
   export let tracker = new Tracker();
-  export let show = false;
+  // export let show = false;
 
   let data = {
     groupedUOMs: NomieUOM.toGroupedArray(),

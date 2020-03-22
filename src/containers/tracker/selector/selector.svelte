@@ -14,7 +14,7 @@
 
   // Props
   export let show = false;
-  export let multiple = false;
+  // export let multiple = false;
 
   // Consts
   const dispatch = createEventDispatcher();
