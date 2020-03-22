@@ -13,6 +13,7 @@
   export let showCharacter = true;
   export let id = "";
   export let positivity = 0;
+  export let color = null;
 
   let isToday = false;
   $: if (last) {
@@ -82,6 +83,12 @@
       &.negative {
         background-color: var(--color-red);
       }
+      &.up {
+        &.hidden {
+          opacity: 0;
+          transform: translateY(20px) translateX(20px);
+        }
+      }
     }
     .username {
       font-weight: 500;
@@ -123,6 +130,9 @@
       }
     }
   }
+  :global(.letter.just-letter) {
+    font-size: $size * 0.4 !important;
+  }
 </style>
 
 <div
@@ -137,13 +147,14 @@
   </div>
   <div class="avatar">
     <slot />
-    <div class={`letter ${emoji ? 'emoji-letter' : 'just-letter'}`} style={``}>
-      {#if emoji}{emoji}{:else}{username.substr(0, 1).toUpperCase()}{/if}
+    <div
+      class={`letter ${emoji ? 'emoji-letter' : 'just-letter'}`}
+      style={color ? `color:${color}` : ''}>
+      {#if emoji}{emoji}{:else}{username.substr(0, 2).toUpperCase()}{/if}
     </div>
     {#if showCharacter}
       <Dymoji {username} size={106} {emoji} />
     {/if}
-
   </div>
   <div class="username text-inverse-2 text-sm truncate-1">{username}</div>
   {#if note}

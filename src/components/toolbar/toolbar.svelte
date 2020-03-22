@@ -4,7 +4,7 @@
 </script>
 
 <style lang="scss">
-  :global(.n-toolbar) {
+  .n-toolbar {
     min-height: 50px;
     display: flex;
     align-items: center;
@@ -15,7 +15,7 @@
     h1,
     h2,
     h3 {
-      font-size: 1rem;
+      font-size: 1rem !important;
       margin: 0;
     }
 
