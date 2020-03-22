@@ -150,13 +150,13 @@
     hidden = "webkitHidden";
     visibilityChange = "webkitvisibilitychange";
   }
-  document.addEventListener(
-    visibilityChange,
-    () => {
-      methods.setDocParams({ hidden });
-    },
-    false
-  );
+  // document.addEventListener(
+  //   visibilityChange,
+  //   () => {
+  //     methods.setDocParams({ hidden });
+  //   },
+  //   false
+  // );
 
   /**
    *

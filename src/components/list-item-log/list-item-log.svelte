@@ -118,7 +118,6 @@
     This really isn't special right now -->
     {#if displayLog.note.length}
       <NNoteTextualizer
-        item
         on:textClick={evt => {
           dispatch('textClick', evt.detail);
         }}

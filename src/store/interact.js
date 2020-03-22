@@ -361,18 +361,14 @@ const interactInit = () => {
               }
             });
           },
-          delete() {
-            setTimeout(() => {
-              methods.confirm("Are you sure?", "Deleting an log cannot be undone, only recreated").then(res => {
-                if (res === true) {
-                  LedgerStore.deleteLogs([log]).then(() => {
-                    setTimeout(() => {
-                      resolve({ action: "deleted" });
-                    }, 1000);
-                  });
-                }
-              });
-            }, 10);
+          async delete() {
+            let confirmed = await methods.confirm("Are you sure?", "Deleting a log cannot be undone.");
+            if (confirmed) {
+              await LedgerStore.deleteLogs([log]);
+              return { action: "deleted" };
+            } else {
+              return null;
+            }
           }
         };
         // let initial = [

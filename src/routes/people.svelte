@@ -141,7 +141,6 @@
           <TrackerBall
             username={person}
             score={getStatItem(person).score}
-            count={getStatItem(person).count}
             last={getStatItem(person).last}
             on:click={() => {
               personClicked(person);

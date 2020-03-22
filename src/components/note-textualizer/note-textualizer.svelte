@@ -11,7 +11,6 @@
 
   // Props
   export let note = "";
-  // export let item;
   export let trackers = {};
   export let className = undefined;
 

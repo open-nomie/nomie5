@@ -130,14 +130,19 @@
 
         // Search for People
       } else if (type === "person") {
-        let people = Object.keys($PeopleStore.people).filter(
-          person => person.toLowerCase().search(searchTag.replace("@", "")) > -1
-        );
-        return people.length
-          ? people.map(username => {
-              return { tag: username, emoji: "👤", type: "person" };
-            })
-          : null;
+        try {
+          let people = Object.keys($PeopleStore.people).filter(
+            person =>
+              person.toLowerCase().search(searchTag.replace("@", "")) > -1
+          );
+          return people.length
+            ? people.map(username => {
+                return { tag: username, emoji: "👤", type: "person" };
+              })
+            : null;
+        } catch (e) {
+          console.log("Error Caught", e.message);
+        }
 
         return null;
 

@@ -5,7 +5,7 @@
   const dispatch = createEventDispatcher();
   // Props
   export let padding = false;
-  export let title;
+  export let title = "Modal";
   export let allowClose = undefined;
   export let fullscreen = false;
   export let flexBody = undefined;

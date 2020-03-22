@@ -83,10 +83,10 @@
       &.negative {
         background-color: var(--color-red);
       }
-      &.up {
+      &.popin {
         &.hidden {
           opacity: 0;
-          transform: translateY(20px) translateX(20px);
+          transform: scale(0);
         }
       }
     }
@@ -142,7 +142,7 @@
     dispatch('click', username);
   }}>
   <div
-    class={`score animate up ${positivity < 0 ? 'negative' : ''} ${positivity > 0 ? 'positive' : ''} ${score ? 'visible' : 'hidden'}`}>
+    class={`score animate popin ${positivity < 0 ? 'negative' : ''} ${positivity > 0 ? 'positive' : ''} ${score ? 'visible' : 'hidden'}`}>
     {score}
   </div>
   <div class="avatar">
@@ -153,7 +153,7 @@
       {#if emoji}{emoji}{:else}{username.substr(0, 2).toUpperCase()}{/if}
     </div>
     {#if showCharacter}
-      <Dymoji {username} size={106} {emoji} />
+      <Dymoji {username} size={106} />
     {/if}
   </div>
   <div class="username text-inverse-2 text-sm truncate-1">{username}</div>

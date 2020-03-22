@@ -19,10 +19,10 @@
   // export let refreshing = false;
   export let id = undefined;
   export let className = undefined;
-  // export let disabled = undefined;
+  export let disabled = undefined;
   export let hoursUsed = [];
   // export let hideMore = false;
-  // export let lastUsed = null; // or dayjs object
+  export let lastUsed = null; // or dayjs object
   export let positivity = 0;
 
   // Define Dispatch
@@ -88,7 +88,10 @@
   on:contextmenu={methods.rightclick}
   on:mouseout={methods.mouseup}
   on:mouseup={methods.mouseup}
-  class={`tracker-button-wrapper tracker-${tracker.tag} ${data.pressing ? 'pressing' : ''} ${className}`}>
+  class="tracker-button-wrapper tracker-{tracker.tag}
+  {data.pressing ? 'pressing' : ''}
+  {className}
+  {disabled ? 'disabled' : ''}">
   <TrackerBall
     {id}
     emoji={tracker.emoji}
