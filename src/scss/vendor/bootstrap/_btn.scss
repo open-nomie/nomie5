@@ -15,6 +15,10 @@ button:focus {
   }
 }
 
+.btn:disabled {
+  opacity: 0.3;
+}
+
 .btn {
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -244,6 +248,10 @@ button:focus {
 
 .bg-faded {
   background-color: var(--color-faded) !important;
+}
+
+.bg-bg {
+  background-color: var(--color-bg);
 }
 
 .btn-round {

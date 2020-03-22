@@ -54,16 +54,16 @@
   font-size: 1.4rem;
 }
 .text-faded {
-  color: var(--color-faded);
+  color: var(--color-faded) !important;
 }
 .text-faded-1 {
-  color: var(--color-faded-1);
+  color: var(--color-faded-1) !important;
 }
 .text-faded-2 {
-  color: var(--color-faded-2);
+  color: var(--color-faded-2) !important;
 }
 .text-faded-3 {
-  color: var(--color-faded-3);
+  color: var(--color-faded-3) !important;
 }
 
 .text-xs {

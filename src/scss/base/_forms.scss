@@ -46,9 +46,11 @@ input[type="password"] {
     box-shadow: none !important;
   }
 }
-input.form-control {
-  background-color: var(--color-faded-1);
-  border-color: var(--color-solid-1);
+input.form-control,
+select.form-control {
+  border-radius: 0.4rem !important;
+  background-color: var(--color-faded-1) !important;
+  border-color: var(--color-solid-1) !important;
   color: var(--color-inverse-2);
   &:focus {
     background-color: var(--color-faded);
@@ -77,7 +79,6 @@ select {
   color: var(--color-inverse) !important;
   border: transparent !important;
   border-radius: 0 !important;
-  border-bottom: solid 1px var(--color-inverse-3) !important;
   position: relative;
 }
 

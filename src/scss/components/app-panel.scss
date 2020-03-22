@@ -22,6 +22,10 @@ aside.n-panel {
     justify-content: center;
   }
 
+  &.center-horizontal {
+    align-items: center;
+  }
+
   &.center-all {
     justify-content: center;
     align-items: center;

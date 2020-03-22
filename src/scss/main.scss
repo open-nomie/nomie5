@@ -51,8 +51,29 @@ TODO: Organize main into components or containers.
   text-decoration: underline !important;
 }
 
+.opacity-0 {
+  opacity: 0;
+}
+.opacity-1 {
+  opacity: 0.1;
+}
+.opacity-2 {
+  opacity: 0.2;
+}
+.opacity-3 {
+  opacity: 0.3;
+}
+
 .container-sm {
   max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.container-xs {
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
 }
 
 .click-thru {
@@ -211,6 +232,15 @@ $night: #311f62;
   }
 }
 
+.n-toolbar {
+  h1,
+  h2,
+  h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+}
+
 .card {
   $padding: 16px;
   border-radius: 0.5rem;
@@ -221,15 +251,28 @@ $night: #311f62;
     padding: $padding;
     min-height: 0;
   }
+  .footer {
+    padding: $padding !important;
+    button {
+      margin-right: $padding * 0.5 !important;
+      margin-left: $padding * 0.5 !important;
+      &:first-child {
+        margin-left: 0px !important;
+      }
+      &:last-child {
+        margin-right: 0px !important;
+      }
+    }
+  }
   p,
   .card-body {
     font-size: 0.9rem;
   }
   .card-title {
     $paddingTop: $padding * 0.7;
-    padding: $paddingTop $padding;
+    padding: $padding;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 }
 

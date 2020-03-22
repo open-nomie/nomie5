@@ -114,6 +114,7 @@
     }
 
     p,
+    .note,
     .description {
       margin: 2px 0;
       color: var(--color-inverse-3);
@@ -149,8 +150,8 @@
       font-size: 0.9rem;
     }
     select {
-      min-width: 190px;
-      width: 190px;
+      // min-width: 190px;
+      // width: 190px;
       text-align: right;
     }
     .form-control {
