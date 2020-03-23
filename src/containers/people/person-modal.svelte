@@ -1,6 +1,7 @@
 <script>
   import Modal from "../../components/modal/modal.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
+  import NInput from "../../components/input/input.svelte";
   import { Interact } from "../../store/interact.js";
   import { PeopleStore } from "../../store/people-store.js";
   import ButtonGroup from "../../components/button-group/button-group.svelte";
@@ -11,23 +12,34 @@
   import FrappeChart from "../../components/charts/frappe.svelte";
   import html2canvas from "html2canvas";
   import domtoimage from "dom-to-image-chrome-fix";
+  import Person from "../../modules/person/person";
 
   let domVisible = false;
 
   let avatarBase64 = null;
 
-  $: if ($Interact.people.active) {
+  let activePerson;
+  let lastActivePersonKey;
+
+  $: if (
+    $Interact.people.active &&
+    lastActivePersonKey !== $Interact.people.active
+  ) {
+    lastActivePersonKey = $Interact.people.active;
     domVisible = true;
+    activePerson = new Person($PeopleStore.people[$Interact.people.active]);
   }
 
   $: if (avatarBase64) {
     getAvatarImage(avatarBase64).then(smallAvatar64 => {
-      let person = PeopleStore.get($Interact.people.active);
-      person.setAvatar(smallAvatar64);
-      PeopleStore.savePerson(person);
+      activePerson.setAvatar(smallAvatar64);
       document.body.removeChild(document.getElementById("photo-holder"));
     });
   }
+
+  const saveActivePerson = async () => {
+    return await PeopleStore.savePerson(activePerson);
+  };
 
   const getAvatarImage = async imageBase64 => {
     let wrapper = document.createElement("div");
@@ -43,14 +55,11 @@
     wrapper.style.left = "10px";
     wrapper.style.zIndex = 3000;
     wrapper.style.filter = "grayscale(1)";
-
     document.body.appendChild(wrapper);
     try {
       await tick(1000);
       let canvas = await html2canvas(wrapper, { width: 90, height: 90 });
-
-      let avatar64 = canvas.toDataURL("image/webp", 0.2);
-
+      let avatar64 = canvas.toDataURL("image/jpeg", 0.2);
       return avatar64;
     } catch (e) {
       console.log("Error", e);
@@ -112,8 +121,8 @@
     <div class="n-row">
       <button class="btn btn-clear btn-icon zmdi zmdi-close" on:click={close} />
       <div class="title filler text-center font-weight-bold">
-        <Dymoji username={$Interact.people.active} size={26} radius={0.3} />
-        &nbsp; {$Interact.people.active}
+        <Dymoji person={activePerson} size={26} radius={0.3} />
+        &nbsp; {activePerson.getDisplayName()}
       </div>
       <button class="btn btn-sm btn-clear btn-icon zmdi zmdi-edit" />
     </div>
@@ -138,13 +147,29 @@
     {:else if state.view == 'edit'}
       <div class="edit pt-2">
         <NItem>
+          <NInput
+            type="text"
+            placeholder="Display Name"
+            bind:value={activePerson.displayName} />
+        </NItem>
+        <NItem>
           <div slot="left">
-            <Dymoji username={$Interact.people.active} size={50} radius={0.3} />
+            {#if activePerson.avatar}
+              <Dymoji avatar={activePerson.avatar} size={50} radius={0.3} />
+            {:else}
+              <Dymoji
+                username={activePerson.displayName}
+                size={50}
+                radius={0.3} />
+            {/if}
           </div>
-          <div class="title">Change Avatar</div>
           <input type="file" accept="png,jpeg,jpg" on:change={selectPhoto} />
         </NItem>
-        <NItem className="text-red">Delete User</NItem>
+        <NItem className="text-primary" on:click={saveActivePerson}>
+          Save Changes
+        </NItem>
+        <div class="filler mt-2" />
+        <NItem className="text-red">Delete User...</NItem>
       </div>
     {:else if state.view == 'logs'}
       <div class="logs p-2">

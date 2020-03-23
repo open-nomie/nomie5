@@ -92,15 +92,7 @@
   {data.pressing ? 'pressing' : ''}
   {className}
   {disabled ? 'disabled' : ''}">
-  <TrackerBall
-    {id}
-    emoji={tracker.emoji}
-    showCharacter={false}
-    score={value}
-    color={tracker.color}
-    {positivity}
-    note={false}
-    username={tracker.label}>
+  <TrackerBall {id} {tracker} score={value} {positivity}>
     {#if tracker.started}
       <div class="center countdown">
         <Counter started={tracker.started} />

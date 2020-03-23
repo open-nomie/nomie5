@@ -1,0 +1,124 @@
+@import "../../scss/utils/__utils.scss";
+
+$size: $trackerBallSize;
+
+.item-ball {
+  position: relative;
+  margin: 0 4px;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  width: $size + 4px;
+  min-width: $size + 4px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+  overflow: hidden;
+
+  .one-tap {
+    position: absolute;
+    height: 4px;
+    border-radius: 2px;
+    background-color: var(--color-faded-1);
+    opacity: 0.3;
+    bottom: 2px;
+    left: 19%;
+    right: 19%;
+    z-index: 0;
+  }
+
+  .avatar-ball {
+    position: relative;
+    width: $size;
+    height: $size;
+    border-radius: $size * 0.34;
+    border: solid 3px var(--color-solid);
+    background-color: var(--color-solid);
+    overflow: hidden;
+    box-shadow: var(--box-shadow-float);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .username {
+    font-weight: 500;
+    width: 100%;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: var(--color-inverse);
+    margin-top: 10px;
+  }
+  &:active {
+    transform: scale(0.9);
+    .avatar {
+      box-shadow: var(--box-shadow-tight);
+    }
+  }
+  .last.today {
+    color: var(--color-green);
+  }
+
+  .avatar {
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .letter {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 102;
+    font-size: $size * 0.5;
+    // text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    color: rgba(0, 0, 0, 0.8);
+    text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5);
+    &.emoji-letter {
+      color: rgba(0, 0, 0, 1);
+    }
+  }
+  .letter.just-letter {
+    font-size: $size * 0.4 !important;
+  }
+
+  .dymoji-wrap {
+    position: absolute !important;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+
+  .countdown {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 202;
+  }
+  .balls {
+    position: absolute;
+    bottom: 2px;
+    left: 20%;
+    right: 20%;
+    z-index: 202;
+  }
+}

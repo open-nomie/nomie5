@@ -5929,40 +5929,6 @@ body.scrolling .mini-map {
 body.scrolling .n-tracker-button {
   pointer-events: none !important; }
 
-.tracker-ball .dymoji-wrap {
-  position: absolute !important;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0; }
-
-.tracker-ball .countdown {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 202; }
-
-.tracker-ball .balls {
-  position: absolute;
-  bottom: 2px;
-  left: 20%;
-  right: 20%;
-  z-index: 202; }
-
-.tracker-ball .one-tap {
-  position: absolute;
-  height: 4px;
-  border-radius: 2px;
-  background-color: var(--color-faded-1);
-  opacity: 0.3;
-  bottom: 2px;
-  left: 19%;
-  right: 19%;
-  z-index: 0; }
-
 .n-tracker-button-xxx {
   position: relative;
   display: flex;
@@ -6325,6 +6291,106 @@ aside.n-panel {
     max-width: 20%; }
   .n-panel.n-panel-25 {
     max-width: 25%; }
+
+.item-ball {
+  position: relative;
+  margin: 0 4px;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  width: 106px;
+  min-width: 106px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+  overflow: hidden; }
+  .item-ball .one-tap {
+    position: absolute;
+    height: 4px;
+    border-radius: 2px;
+    background-color: var(--color-faded-1);
+    opacity: 0.3;
+    bottom: 2px;
+    left: 19%;
+    right: 19%;
+    z-index: 0; }
+  .item-ball .avatar-ball {
+    position: relative;
+    width: 102px;
+    height: 102px;
+    border-radius: 34.68px;
+    border: solid 3px var(--color-solid);
+    background-color: var(--color-solid);
+    overflow: hidden;
+    box-shadow: var(--box-shadow-float);
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+  .item-ball .username {
+    font-weight: 500;
+    width: 100%;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: var(--color-inverse);
+    margin-top: 10px; }
+  .item-ball:active {
+    transform: scale(0.9); }
+    .item-ball:active .avatar {
+      box-shadow: var(--box-shadow-tight); }
+  .item-ball .last.today {
+    color: var(--color-green); }
+  .item-ball .avatar {
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0; }
+  .item-ball .letter {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 102;
+    font-size: 51px;
+    color: rgba(0, 0, 0, 0.8);
+    text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5); }
+    .item-ball .letter.emoji-letter {
+      color: black; }
+  .item-ball .letter.just-letter {
+    font-size: 40.8px !important; }
+  .item-ball .dymoji-wrap {
+    position: absolute !important;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0; }
+  .item-ball .countdown {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 202; }
+  .item-ball .balls {
+    position: absolute;
+    bottom: 2px;
+    left: 20%;
+    right: 20%;
+    z-index: 202; }
 
 /**
 THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 

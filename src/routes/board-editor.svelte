@@ -11,6 +11,7 @@
   import Tracker from "../modules/tracker/tracker";
   // Components
   import NText from "../components/text/text.svelte";
+  import NInput from "../components/input/input.svelte";
   import NItem from "../components/list-item/list-item.svelte";
   import NTrackerButton from "../containers/board/tracker-button.svelte";
 
@@ -287,30 +288,20 @@
 
     <div slot="header" class="n-row">
       <h1 class="text-center flex-grow text-inverse">Edit Tab</h1>
-      <button class="btn btn btn-clear text-danger " on:click={methods.save}>
+      <button class="btn btn btn-clear text-primary" on:click={methods.save}>
         {Lang.t('general.save')}
       </button>
     </div>
-
-    <div slot="sub-header" class="py-1">
-      <NItem className="w-100 p-0 ">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Label</span>
-          </div>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Board Label"
-            aria-label="Board Label"
-            bind:value={data.updatedLabel}
-            aria-describedby="basic-addon1" />
-        </div>
-      </NItem>
-    </div>
     <!-- /.container -->
 
-    <div class="container pt-3 px-0 grid-container">
+    <div class="container px-0 grid-container">
+
+      <NItem className="py-2">
+        <NInput
+          type="text"
+          placeholder="Tab Label"
+          bind:value={data.updatedLabel} />
+      </NItem>
 
       <div class="n-list">
         {#each trackers as tracker, i (tracker.tag)}

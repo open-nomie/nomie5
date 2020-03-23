@@ -4,7 +4,8 @@
   import ButtonGroup from "../components/button-group/button-group.svelte";
   import NItem from "../components/list-item/list-item.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
-  import TrackerBall from "../components/tracker-ball/tracker-ball.svelte";
+  import PersonBall from "../components/tracker-ball/person-ball.svelte";
+  import ItemBall from "../components/tracker-ball/item-ball.svelte";
   import dayjs from "dayjs";
   import Dymoji from "../components/dymoji/dymoji.svelte";
   import NTip from "../components/tip/tip.svelte";
@@ -138,19 +139,16 @@
     <div class="n-board h-100">
       <div class=" n-grid text-inverse">
         {#each state.people as person}
-          <TrackerBall
-            username={person}
-            avatar={$PeopleStore.people[person].avatar}
-            score={getStatItem(person).score}
+          <PersonBall
+            person={$PeopleStore.people[person]}
             last={getStatItem(person).last}
             on:click={() => {
               personClicked(person);
             }} />
         {/each}
-        <TrackerBall
-          username={'Add Person'}
+        <ItemBall
+          label={'Add Person'}
           emoji="➕"
-          note={false}
           on:click={() => {
             let username = prompt(`What's their name?`);
             if (username) {

@@ -185,7 +185,7 @@
         }}>
         {#if tracker.type == 'person'}
           <Dymoji
-            username={tracker.tag}
+            person={$PeopleStore.people[tracker.tag]}
             className="mr-2"
             size={20}
             radius={0.3} />

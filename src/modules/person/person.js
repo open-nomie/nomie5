@@ -1,13 +1,14 @@
 export default class Person {
   constructor(starter = {}) {
+    console.log("Person constru", starter);
     if (typeof starter == "string") {
       this.username = starter;
       this.displayName = starter;
       this.avatar = null;
       starter = {};
     } else {
-      this.username = starter.tag || null;
-      this.displayName = starter.name || null;
+      this.username = starter.username || null;
+      this.displayName = starter.displayName || null;
       this.avatar = starter.avatar || null;
     }
   }
@@ -20,5 +21,14 @@ export default class Person {
   }
   setAvatar(avatar) {
     this.avatar = avatar;
+  }
+  getUsername() {
+    return this.username;
+  }
+  getDisplayName() {
+    return this.displayName || this.username;
+  }
+  getAvatar() {
+    return this.avatar;
   }
 }

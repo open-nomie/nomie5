@@ -127,7 +127,7 @@ const PeopleInit = () => {
       return person;
     },
     async getPeople() {
-      let people = await Storage.get(`${config.data_root}/people.json`);
+      let people = await Storage.get(`${config.data_root}/peopleV2.json`);
 
       return update(state => {
         if (people) {
@@ -135,7 +135,6 @@ const PeopleInit = () => {
             people[personKey] = new Person(people[personKey]);
           });
         }
-        console.log("Get People results", people);
         state.people = people;
         return state;
       });
