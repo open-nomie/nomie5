@@ -7,6 +7,7 @@
   export let score = 0;
   // export let count = 0;
   export let last = null;
+  export let avatar = null;
   export let emoji = null;
   export let note = null;
   export let className = "";
@@ -109,6 +110,10 @@
       color: var(--color-green);
     }
 
+    .avatar {
+      background-size: cover;
+      background-position: center;
+    }
     .letter {
       position: absolute;
       top: 0;
@@ -145,14 +150,16 @@
     class={`score animate popin ${positivity < 0 ? 'negative' : ''} ${positivity > 0 ? 'positive' : ''} ${score ? 'visible' : 'hidden'}`}>
     {score}
   </div>
-  <div class="avatar">
+  <div class="avatar" style={avatar ? `background-image:url(${avatar})` : ''}>
     <slot />
-    <div
-      class={`letter ${emoji ? 'emoji-letter' : 'just-letter'}`}
-      style={color ? `color:${color}` : ''}>
-      {#if emoji}{emoji}{:else}{username.substr(0, 2).toUpperCase()}{/if}
-    </div>
-    {#if showCharacter}
+    {#if !avatar}
+      <div
+        class={`letter ${emoji ? 'emoji-letter' : 'just-letter'}`}
+        style={color ? `color:${color}` : ''}>
+        {#if emoji}{emoji}{:else}{username.substr(0, 2).toUpperCase()}{/if}
+      </div>
+    {/if}
+    {#if showCharacter && !avatar}
       <Dymoji {username} size={106} />
     {/if}
   </div>

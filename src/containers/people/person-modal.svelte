@@ -1,5 +1,6 @@
 <script>
   import Modal from "../../components/modal/modal.svelte";
+  import NItem from "../../components/list-item/list-item.svelte";
   import { Interact } from "../../store/interact.js";
   import { PeopleStore } from "../../store/people-store.js";
   import ButtonGroup from "../../components/button-group/button-group.svelte";
@@ -8,12 +9,54 @@
   import tick from "../../utils/tick/tick";
   import LogItem from "../../components/list-item-log/list-item-log.svelte";
   import FrappeChart from "../../components/charts/frappe.svelte";
+  import html2canvas from "html2canvas";
+  import domtoimage from "dom-to-image-chrome-fix";
 
   let domVisible = false;
+
+  let avatarBase64 = null;
 
   $: if ($Interact.people.active) {
     domVisible = true;
   }
+
+  $: if (avatarBase64) {
+    getAvatarImage(avatarBase64).then(smallAvatar64 => {
+      let person = PeopleStore.get($Interact.people.active);
+      person.setAvatar(smallAvatar64);
+      PeopleStore.savePerson(person);
+      document.body.removeChild(document.getElementById("photo-holder"));
+    });
+  }
+
+  const getAvatarImage = async imageBase64 => {
+    let wrapper = document.createElement("div");
+    wrapper.id = "photo-holder";
+    wrapper.style.width = "100px";
+    wrapper.style.height = "100px";
+    wrapper.style.backgroundImage = `url(${imageBase64})`;
+    wrapper.style.backgroundSize = "cover";
+    wrapper.style.backgroundRepeat = "no-repeat";
+    wrapper.style.backgroundPosition = "center center";
+    wrapper.style.position = "fixed";
+    wrapper.style.bottom = "10px";
+    wrapper.style.left = "10px";
+    wrapper.style.zIndex = 3000;
+    wrapper.style.filter = "grayscale(1)";
+
+    document.body.appendChild(wrapper);
+    try {
+      await tick(1000);
+      let canvas = await html2canvas(wrapper, { width: 90, height: 90 });
+
+      let avatar64 = canvas.toDataURL("image/webp", 0.2);
+
+      return avatar64;
+    } catch (e) {
+      console.log("Error", e);
+      return null;
+    }
+  };
 
   const close = async () => {
     domVisible = false;
@@ -33,6 +76,23 @@
     } else {
       return [];
     }
+  };
+
+  const selectPhoto = async evt => {
+    console.log("Select Phioto", evt);
+
+    const toBase64 = file =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+
+    let input = evt.target;
+    let files = evt.target.files;
+    console.log("Select Phioto Change", files);
+    avatarBase64 = await toBase64(files[0]);
   };
 
   const state = {
@@ -66,6 +126,8 @@
               changeView('check-in');
             } }, { label: 'Stats', active: state.view === 'stats', click() {
               changeView('stats');
+            } }, { label: 'Edit', active: state.view === 'edit', click() {
+              changeView('edit');
             } }]} />
     </div>
   </header>
@@ -73,6 +135,17 @@
   <main>
     {#if state.view == 'check-in'}
       <PersonCheckin on:checkedIn={closeAndRefresh} />
+    {:else if state.view == 'edit'}
+      <div class="edit pt-2">
+        <NItem>
+          <div slot="left">
+            <Dymoji username={$Interact.people.active} size={50} radius={0.3} />
+          </div>
+          <div class="title">Change Avatar</div>
+          <input type="file" accept="png,jpeg,jpg" on:change={selectPhoto} />
+        </NItem>
+        <NItem className="text-red">Delete User</NItem>
+      </div>
     {:else if state.view == 'logs'}
       <div class="logs p-2">
         {#each getPersonLogs() as log}

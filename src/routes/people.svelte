@@ -15,7 +15,7 @@
 
   let state = {
     people: [],
-    view: "time",
+    view: "name",
     stats: {}
   };
 
@@ -140,6 +140,7 @@
         {#each state.people as person}
           <TrackerBall
             username={person}
+            avatar={$PeopleStore.people[person].avatar}
             score={getStatItem(person).score}
             last={getStatItem(person).last}
             on:click={() => {

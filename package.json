@@ -46,6 +46,7 @@
     "esri-leaflet-geocoder": "^2.2.14",
     "find-in-files": "^0.5.0",
     "git-release-notes": "^4.0.1",
+    "html2canvas": "^1.0.0-rc.5",
     "i18next": "^17.0.16",
     "jest": "^24.8.0",
     "leaflet": "^1.5.1",

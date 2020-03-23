@@ -23,6 +23,8 @@ import { Lang } from "./lang";
 
 import dayjs from "dayjs";
 
+import Person from "../modules/person/person";
+
 const console = new Logger("🗺 $PeopleStore");
 
 const getLogs = async () => {
@@ -107,9 +109,33 @@ const PeopleInit = () => {
       await methods.getPeople();
       await methods.getStats();
     },
+    savePerson(person) {
+      update(state => {
+        state.people[person.username] = person;
+        this.write(state.people);
+        return state;
+      });
+    },
+    get(name) {
+      let person = new Person(name);
+      update(state => {
+        if (state.people.hasOwnProperty(name)) {
+          person = state.people[name];
+        }
+        return state;
+      });
+      return person;
+    },
     async getPeople() {
       let people = await Storage.get(`${config.data_root}/people.json`);
+
       return update(state => {
+        if (people) {
+          Object.keys(people).forEach(personKey => {
+            people[personKey] = new Person(people[personKey]);
+          });
+        }
+        console.log("Get People results", people);
         state.people = people;
         return state;
       });
