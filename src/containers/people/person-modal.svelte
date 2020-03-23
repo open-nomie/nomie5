@@ -30,15 +30,24 @@
     activePerson = new Person($PeopleStore.people[$Interact.people.active]);
   }
 
-  $: if (avatarBase64) {
-    getAvatarImage(avatarBase64).then(smallAvatar64 => {
-      activePerson.setAvatar(smallAvatar64);
-      document.body.removeChild(document.getElementById("photo-holder"));
-    });
+  $: if (activePerson.avatar) {
+    console.log("Avatar Change");
   }
 
+  // $: if (avatarBase64) {
+  //   getAvatarImage(avatarBase64).then(smallAvatar64 => {
+  //     activePerson.setAvatar(smallAvatar64);
+  //     document.body.removeChild(document.getElementById("photo-holder"));
+  //   });
+  // }
+
   const saveActivePerson = async () => {
-    return await PeopleStore.savePerson(activePerson);
+    try {
+      await PeopleStore.savePerson(activePerson);
+      Interact.toast("Saved");
+    } catch (e) {
+      Interact.alert("Error", e.message);
+    }
   };
 
   const getAvatarImage = async imageBase64 => {
@@ -88,8 +97,6 @@
   };
 
   const selectPhoto = async evt => {
-    console.log("Select Phioto", evt);
-
     const toBase64 = file =>
       new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -100,8 +107,11 @@
 
     let input = evt.target;
     let files = evt.target.files;
-    console.log("Select Phioto Change", files);
     avatarBase64 = await toBase64(files[0]);
+    let smallAvatar64 = await getAvatarImage(avatarBase64);
+    document.body.removeChild(document.getElementById("photo-holder"));
+    await tick(10);
+    activePerson.avatar = smallAvatar64;
   };
 
   const state = {
@@ -153,7 +163,11 @@
             bind:value={activePerson.displayName} />
         </NItem>
         <NItem>
-          <div slot="left">
+          <div
+            slot="left"
+            on:click={() => {
+              document.getElementById('avatarFileInput').click();
+            }}>
             {#if activePerson.avatar}
               <Dymoji avatar={activePerson.avatar} size={50} radius={0.3} />
             {:else}
@@ -163,7 +177,13 @@
                 radius={0.3} />
             {/if}
           </div>
-          <input type="file" accept="png,jpeg,jpg" on:change={selectPhoto} />
+          <input
+            class="form-control"
+            id="avatarFileInput"
+            placeholder="Avatar"
+            type="file"
+            accept="png,jpeg,jpg"
+            on:change={selectPhoto} />
         </NItem>
         <NItem className="text-primary" on:click={saveActivePerson}>
           Save Changes

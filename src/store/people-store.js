@@ -127,7 +127,7 @@ const PeopleInit = () => {
       return person;
     },
     async getPeople() {
-      let people = await Storage.get(`${config.data_root}/peopleV2.json`);
+      let people = await Storage.get(`${config.data_root}/${config.data_people_key}.json`);
 
       return update(state => {
         if (people) {
@@ -156,7 +156,7 @@ const PeopleInit = () => {
         peopleArray.forEach(username => {
           if (!state.people.hasOwnProperty(username)) {
             changed = true;
-            state.people[username] = username;
+            state.people[username] = new Person(username);
           }
         });
         if (changed) {
@@ -165,24 +165,24 @@ const PeopleInit = () => {
         return state;
       });
     },
-    async add(username) {
+    async addByName(personName) {
       let _state;
-      if (username) {
-        username = toUsername(username);
+      if (personName) {
+        let username = toUsername(personName);
         update(state => {
           state.people = state.people || {};
           if (!state.people.hasOwnProperty(username)) {
-            state.people[username] = username;
+            state.people[username] = new Person(username);
           }
           _state = state;
           return state;
         });
         await this.write(_state.people);
-        return username;
+        return _state.people[username];
       }
     },
     async write(payload) {
-      return Storage.put(`${config.data_root}/people.json`, payload);
+      return Storage.put(`${config.data_root}/${config.data_people_key}.json`, payload);
     },
     async stats(options = {}) {
       return await getRecentPeopleStats();

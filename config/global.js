@@ -2,6 +2,7 @@ export default {
   storage_engine: "local", // local or blockstack
   book_time_format: "YYYY-MM",
   data_root: "data/v01",
+  data_people_key: "peopleV2",
   book_root: "data/v01/books",
   tracker_file: "trackers.json",
   board_file: "boards.json",

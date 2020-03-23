@@ -10,6 +10,8 @@
   import Dymoji from "../components/dymoji/dymoji.svelte";
   import NTip from "../components/tip/tip.svelte";
 
+  import Person from "../modules/person/person";
+
   import { Lang } from "../store/lang.js";
   import { PeopleStore } from "../store/people-store.js";
   import { Interact } from "../store/interact.js";
@@ -152,7 +154,7 @@
           on:click={() => {
             let username = prompt(`What's their name?`);
             if (username) {
-              PeopleStore.add(username);
+              PeopleStore.addByName(username);
             }
           }} />
       </div>

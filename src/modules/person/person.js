@@ -1,6 +1,5 @@
 export default class Person {
   constructor(starter = {}) {
-    console.log("Person constru", starter);
     if (typeof starter == "string") {
       this.username = starter;
       this.displayName = starter;
