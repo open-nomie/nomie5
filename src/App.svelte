@@ -269,3 +269,6 @@
     No connection to Blockstack. Avoid tracking while offline.
   </div>
 {/if}
+<div id="photo-holder">
+  <img id="photo-holder-image" alt="avatar-holder" />
+</div>

@@ -6407,6 +6407,28 @@ TODO: Organize main into components or containers.
 .text-underline {
   text-decoration: underline !important; }
 
+#photo-holder {
+  position: fixed;
+  bottom: -220px;
+  left: 20px;
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  #photo-holder img {
+    position: relative; }
+  #photo-holder[data-orientation="horizontal"] img {
+    width: auto;
+    height: 100%; }
+  #photo-holder[data-orientation="vertical"] img {
+    height: auto;
+    width: 100%; }
+  #photo-holder[data-orientation="square"] img {
+    width: 100%;
+    height: 100%; }
+
 .opacity-0 {
   opacity: 0; }
 

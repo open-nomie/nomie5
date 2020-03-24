@@ -51,27 +51,18 @@
   };
 
   const getAvatarImage = async imageBase64 => {
-    let wrapper = document.createElement("div");
-    wrapper.id = "photo-holder";
-    wrapper.style.width = "100px";
-    wrapper.style.height = "100px";
-    // wrapper.style.backgroundImage = `url(${imageBase64})`;
-    // wrapper.style.backgroundSize = "cover";
-    // wrapper.style.backgroundRepeat = "no-repeat";
-    // wrapper.style.backgroundPosition = "center center";
-    wrapper.style.position = "fixed";
-    wrapper.style.bottom = "10px";
-    wrapper.style.left = "10px";
-    wrapper.style.zIndex = 3000;
-    wrapper.style.overflow = "hidden";
-
-    let image = document.createElement("img");
+    let image = document.getElementById("photo-holder-image");
     image.src = imageBase64;
-    image.style.width = "100%";
-    image.style.height = "auto";
-    wrapper.appendChild(image);
-
-    document.body.appendChild(wrapper);
+    await tick(200);
+    console.log(`width ${image.naturalHeight}/${image.naturalWidth}`);
+    let wrapper = document.getElementById("photo-holder");
+    if (image.naturalHeight > image.naturalWidth) {
+      wrapper.setAttribute("data-orientation", "vertical");
+    } else if (image.naturalHeight < image.naturalWidth) {
+      wrapper.setAttribute("data-orientation", "horizontal");
+    } else {
+      wrapper.setAttribute("data-orientation", "square");
+    }
 
     try {
       await tick(400);
@@ -79,7 +70,7 @@
       let avatar64 = canvas.toDataURL("image/jpeg", 0.2);
       return avatar64;
     } catch (e) {
-      console.log("Error", e);
+      alert(e.message);
       return null;
     }
   };
@@ -115,9 +106,11 @@
 
     let input = evt.target;
     let files = evt.target.files;
+
     avatarBase64 = await toBase64(files[0]);
     let smallAvatar64 = await getAvatarImage(avatarBase64);
-    document.body.removeChild(document.getElementById("photo-holder"));
+
+    document.getElementById("photo-holder-image").src = null;
     await tick(10);
     activePerson.avatar = smallAvatar64;
   };
@@ -186,7 +179,7 @@
             {/if}
           </div>
           <input
-            class="form-control"
+            class="form-control pb-2"
             id="avatarFileInput"
             placeholder="Avatar"
             type="file"

@@ -8,8 +8,6 @@
   // export let count = 0;
   export let person = undefined;
   export let last = undefined;
-
-  console.log("Person ball", person);
 </script>
 
 {#if person}
