@@ -55,18 +55,26 @@
     wrapper.id = "photo-holder";
     wrapper.style.width = "100px";
     wrapper.style.height = "100px";
-    wrapper.style.backgroundImage = `url(${imageBase64})`;
-    wrapper.style.backgroundSize = "cover";
-    wrapper.style.backgroundRepeat = "no-repeat";
-    wrapper.style.backgroundPosition = "center center";
+    // wrapper.style.backgroundImage = `url(${imageBase64})`;
+    // wrapper.style.backgroundSize = "cover";
+    // wrapper.style.backgroundRepeat = "no-repeat";
+    // wrapper.style.backgroundPosition = "center center";
     wrapper.style.position = "fixed";
     wrapper.style.bottom = "10px";
     wrapper.style.left = "10px";
     wrapper.style.zIndex = 3000;
-    wrapper.style.filter = "grayscale(1)";
+    wrapper.style.overflow = "hidden";
+
+    let image = document.createElement("img");
+    image.src = imageBase64;
+    image.style.width = "100%";
+    image.style.height = "auto";
+    wrapper.appendChild(image);
+
     document.body.appendChild(wrapper);
+
     try {
-      await tick(1000);
+      await tick(400);
       let canvas = await html2canvas(wrapper, { width: 90, height: 90 });
       let avatar64 = canvas.toDataURL("image/jpeg", 0.2);
       return avatar64;
