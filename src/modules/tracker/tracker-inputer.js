@@ -4,6 +4,7 @@ import { Interact } from "../../store/interact";
 import extractor from "../../utils/extract-trackers/extract-trackers";
 import Tracker from "./tracker";
 import PromiseStep from "../../utils/promise-step/promise-step";
+
 export default class TrackerInputer {
   constructor(tracker) {
     this.tracker = tracker;
@@ -35,9 +36,11 @@ export default class TrackerInputer {
   }
 
   async getNoteTrackerInputAsString(tracker) {
+    // Set up the Note
     let note = [];
+    // Get Tracker tags from this trackers note
     const trackerTags = extractor(tracker.note);
-    // Add tracker tag
+    // Add this trackers tag for logging
     note.push(`#${tracker.tag}`);
 
     // Create array of items to pass to promise step
@@ -47,7 +50,7 @@ export default class TrackerInputer {
         value: trackerTags[tag].value // not being used
       };
     });
-    console.log("Items", items);
+    console.log("Note Tracker Input Items", items);
     for (let i = 0; i < items.length; i++) {
       let response = await this.getTrackerInputAsString(items[i].tracker, items[i].value);
       note.push(response);
@@ -57,6 +60,7 @@ export default class TrackerInputer {
 
   //
   async getNoteString() {
+    console.log("Get Note String");
     let note = [];
     if (this.tracker.type === "tick") {
       note.push(`#${this.tracker.tag}`);

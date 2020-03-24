@@ -316,13 +316,23 @@
       data.selectedTracker = tracker;
 
       // Inserting new TrackerInputer
+      console.log("Getting Tracker Input");
       let inputer = new TrackerInputer(tracker);
+      let payload = await inputer.get();
 
-      inputer.get().then(value => {
-        if (tracker.one_tap) {
-          LedgerStore.saveLog($ActiveLogStore);
-        }
-      });
+      if (payload instanceof Array) {
+        payload
+          .filter(item => item)
+          .forEach(item => {
+            ActiveLogStore.addTag(item.tracker.tag, item.value);
+          });
+      } else if (payload) {
+        ActiveLogStore.addTag(payload.tracker.tag, payload.value);
+      }
+
+      if (tracker.one_tap) {
+        LedgerStore.saveLog($ActiveLogStore);
+      }
     },
     /**
      * Get Tracker Value
