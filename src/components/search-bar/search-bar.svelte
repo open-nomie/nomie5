@@ -34,7 +34,7 @@
   .search-bar {
     position: relative;
     input {
-      border-radius: 20px;
+      border-radius: 6px;
     }
   }
   :global(.search-bar .btn-action-clear) {
@@ -44,8 +44,11 @@
 
 <NToolbar className="search-bar">
   {#if searchTerm}
-    <button class="btn btn-sm btn-clear btn-action-clear" on:click={fireClear}>
-      <i class="zmdi zmdi-close" />
+    <button
+      class="btn btn-sm btn-clear btn-action-clear"
+      on:click={fireClear}
+      style="margin-left:-10px;">
+      <i class="zmdi zmdi-close-circle text-sm" />
     </button>
   {/if}
   <input
@@ -56,7 +59,7 @@
     placeholder="{Lang.t('general.search')}..." />
   {#if searchTerm}
     <button class="btn btn-sm text-primary" on:click={fireSearch}>
-      <i class="zmdi zmdi-search" />
+      Search
     </button>
   {/if}
 </NToolbar>
