@@ -25,6 +25,8 @@ body {
   --color-darkest: #fff;
   --color-bg: #eeeeee;
 
+  --color-input-background: rgba(0, 0, 0, 0.1);
+
   --tracker-background: #fff;
   --color-inverse: #333;
   --color-inverse-1: #555;
@@ -91,6 +93,7 @@ body.test {
   --color-tabs: #000;
   --color-faded: rgba(255, 255, 255, 0.2);
   --color-faded-inverse: rgba(0, 0, 0, 0.06);
+  --color-input-background: rgba(255, 255, 255, 0.1);
   --color-faded-1: rgba(255, 255, 255, 0.1);
   --color-faded-2: rgba(255, 255, 255, 0.2);
   --color-faded-3: rgba(255, 255, 255, 0.4);

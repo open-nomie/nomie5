@@ -5118,6 +5118,7 @@ body.no-scroll {
 body {
   --color-darkest: #fff;
   --color-bg: #eeeeee;
+  --color-input-background: rgba(0, 0, 0, 0.1);
   --tracker-background: #fff;
   --color-inverse: #333;
   --color-inverse-1: #555;
@@ -5231,6 +5232,7 @@ body.theme-dark {
   --color-tabs: #000;
   --color-faded: rgba(255, 255, 255, 0.2);
   --color-faded-inverse: rgba(0, 0, 0, 0.06);
+  --color-input-background: rgba(255, 255, 255, 0.1);
   --color-faded-1: rgba(255, 255, 255, 0.1);
   --color-faded-2: rgba(255, 255, 255, 0.2);
   --color-faded-3: rgba(255, 255, 255, 0.4);
@@ -5382,7 +5384,7 @@ body.theme-dark {
 input[type="text"],
 input[type="number"],
 input[type="password"] {
-  background-color: var(--color-faded-1);
+  background-color: var(--color-input-background);
   border-color: var(--color-solid-1);
   color: var(--color-inverse-2);
   border: none;
@@ -5393,7 +5395,7 @@ input[type="password"] {
   input[type="text"]:focus,
   input[type="number"]:focus,
   input[type="password"]:focus {
-    background-color: var(--color-faded-1);
+    background-color: var(--color-input-background);
     color: var(--color-inverse); }
 
 .search-bar {
@@ -5433,7 +5435,7 @@ select.form-control {
     color: var(--color-inverse-2); }
 
 textarea.form-control {
-  background-color: var(--color-faded-1);
+  background-color: var(--color-input-background);
   border-color: var(--color-solid-1);
   color: var(--color-inverse-2);
   border: none;
@@ -5442,7 +5444,7 @@ textarea.form-control {
   font-size: 0.7rem;
   color: var(--color-inverse); }
   textarea.form-control:focus {
-    background-color: var(--color-faded);
+    background-color: var(--color-input-background);
     border-color: var(--color-solid);
     color: var(--color-inverse); }
 
@@ -5464,7 +5466,7 @@ select {
     margin-top: 0; }
   .input-group .input-group-text {
     border: none;
-    background-color: var(--color-faded); }
+    background-color: var(--color-input-background); }
 
 .input-group-prepend .input-group-prepend .input-group-text::after {
   content: normal;
@@ -5474,18 +5476,18 @@ select {
   padding-right: 6px; }
 
 .search-input {
-  border-radius: 40px !important;
+  border-radius: 8px !important;
   padding: 0px 16px !important;
   height: 36px;
   border: solid 1px transparent;
-  background-color: var(--color-faded);
+  background-color: var(--color-input-background);
   color: var(--color-inverse-2);
   flex-grow: 1;
   outline: none;
   transition: all 0.2s ease-in-out; }
   .search-input:focus {
     border: solid 1px var(--color-faded-1);
-    background-color: var(--color-faded); }
+    background-color: var(--color-input-background); }
 
 .justify-content-stretch {
   justify-content: stretch; }

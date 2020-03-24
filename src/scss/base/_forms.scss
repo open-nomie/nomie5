@@ -1,7 +1,7 @@
 input[type="text"],
 input[type="number"],
 input[type="password"] {
-  background-color: var(--color-faded-1);
+  background-color: var(--color-input-background);
   border-color: var(--color-solid-1);
   color: var(--color-inverse-2);
 
@@ -11,7 +11,7 @@ input[type="password"] {
   padding: 6px;
   color: var(--color-inverse);
   &:focus {
-    background-color: var(--color-faded-1);
+    background-color: var(--color-input-background);
     color: var(--color-inverse);
   }
 }
@@ -58,7 +58,7 @@ select.form-control {
   }
 }
 textarea.form-control {
-  background-color: var(--color-faded-1);
+  background-color: var(--color-input-background);
   border-color: var(--color-solid-1);
   color: var(--color-inverse-2);
   border: none;
@@ -67,7 +67,7 @@ textarea.form-control {
   font-size: 0.7rem;
   color: var(--color-inverse);
   &:focus {
-    background-color: var(--color-faded);
+    background-color: var(--color-input-background);
     border-color: var(--color-solid);
     color: var(--color-inverse);
   }
@@ -94,7 +94,7 @@ select {
   }
   .input-group-text {
     border: none;
-    background-color: var(--color-faded);
+    background-color: var(--color-input-background);
   }
 }
 
@@ -107,17 +107,17 @@ select {
 }
 
 .search-input {
-  border-radius: 40px !important;
+  border-radius: 8px !important;
   padding: 0px 16px !important;
   height: 36px;
   border: solid 1px transparent;
-  background-color: var(--color-faded);
+  background-color: var(--color-input-background);
   color: var(--color-inverse-2);
   flex-grow: 1;
   outline: none;
   transition: all 0.2s ease-in-out;
   &:focus {
     border: solid 1px var(--color-faded-1);
-    background-color: var(--color-faded);
+    background-color: var(--color-input-background);
   }
 }
