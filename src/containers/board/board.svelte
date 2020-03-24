@@ -314,9 +314,7 @@
     async trackerTapped(tracker) {
       // Set selected tracker to this one.
       data.selectedTracker = tracker;
-
       // Inserting new TrackerInputer
-      console.log("Getting Tracker Input");
       let inputer = new TrackerInputer(tracker);
       let payload = await inputer.get();
 
@@ -329,7 +327,8 @@
       } else if (payload) {
         ActiveLogStore.addTag(payload.tracker.tag, payload.value);
       }
-
+      // One Tap Trackers
+      // TODO move the adding to the activeLogStore here.
       if (tracker.one_tap) {
         LedgerStore.saveLog($ActiveLogStore);
       }

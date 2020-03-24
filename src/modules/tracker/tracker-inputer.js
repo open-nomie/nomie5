@@ -50,7 +50,7 @@ export default class TrackerInputer {
         value: trackerTags[tag].value // not being used
       };
     });
-    console.log("Note Tracker Input Items", items);
+
     for (let i = 0; i < items.length; i++) {
       let response = await this.getTrackerInputAsString(items[i].tracker, items[i].value);
       note.push(response);
@@ -60,7 +60,6 @@ export default class TrackerInputer {
 
   //
   async getNoteString() {
-    console.log("Get Note String");
     let note = [];
     if (this.tracker.type === "tick") {
       note.push(`#${this.tracker.tag}`);
@@ -71,7 +70,6 @@ export default class TrackerInputer {
       let input = await this.getTrackerInputAsString(this.tracker);
       note.push(input);
     }
-    console.log("NOTE!", note.join(" "));
     return note.join(" ");
   }
 

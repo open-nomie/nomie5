@@ -376,8 +376,8 @@ const ledgerInit = () => {
       if (!book && Storage.storageType() == "blockstack") {
         let bookMonth = dayjs(date).format("MMMM YYYY");
         let confirm = await Interact.confirm(
-          `Create ${bookMonth} Book?`,
-          `Logs are stored in monthly files and a ${bookMonth} was not found. Would you like to create it?`
+          `First Log of ${bookMonth}!`,
+          `Logs are stored in monthly files, and a ${bookMonth} was not found. Would you like to create it?`
         );
         if (confirm) {
           // User confirms to create a new blank book - godspeed
@@ -435,22 +435,23 @@ const ledgerInit = () => {
         // Save Book.
         await Storage.put(bookPath, book); // put the content
         currentState.books[date] = book; // update state
-
         // Save Last Update to server
         let timeString = new Date().toJSON();
         let lastDatePath = methods.getLastUpdatePath(date);
-        await Storage.put(lastDatePath, timeString);
-        currentState.booksLastUpdate[date] = timeString;
-
-        // Set the Last Used for Trackers in this log
-        LastUsed.record(log);
-
-        // Get Log Meta
-        const meta = log.getMeta();
-        // Save any new people to the People Store
-        PeopleStore.save(meta.people);
-        // Save any new Context to the Context Store
-        ContextStore.save(meta.context);
+        //await - removing to see if that speeds things up
+        // Split this off, so it doesn't slow down the rest
+        setTimeout(() => {
+          Storage.put(lastDatePath, timeString);
+          currentState.booksLastUpdate[date] = timeString;
+          // Set the Last Used for Trackers in this log
+          LastUsed.record(log);
+          // Get Log Meta information - context and people references
+          const meta = log.getMeta();
+          // Save any new people to the People Store
+          PeopleStore.save(meta.people);
+          // Save any new Context to the Context Store
+          ContextStore.save(meta.context);
+        }, 1);
 
         // Update Store
         update(s => {
