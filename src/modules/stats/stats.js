@@ -14,7 +14,7 @@ export default class StatsProcessor {
     caller = caller || "unknown";
     this.date = date || dayjs();
     this.rows = rows;
-    this.tracker = new Tracker(tracker);
+    this.tracker = tracker ? new Tracker(tracker) : null;
     this.valueMap = {}; // holder of days and array of values
     // Convert to Logs if not already
     this.initialize();
@@ -22,16 +22,18 @@ export default class StatsProcessor {
 
   initialize() {
     //('Load()');
-    this.rows = this.rows
-      .map(row => {
-        let log = new Log(row);
-        log.expand();
-        return log;
-      })
-      .filter(row => {
+    this.rows = this.rows.map(row => {
+      let log = new Log(row);
+      log.expand();
+      return log;
+    });
+    // If we have a tracker - filter results for only that tracker
+    if (this.tracker) {
+      this.rows = this.rows.filter(row => {
         return row.hasTracker(this.tracker.tag);
       });
-
+    }
+    // Setup Results Holder
     this.results = {
       year: {},
       month: {},
@@ -39,6 +41,10 @@ export default class StatsProcessor {
     };
 
     this.prepare();
+  }
+
+  useMath() {
+    return !this.tracker ? "sum" : this.tracker.math;
   }
 
   gotoDate(date) {
@@ -97,7 +103,8 @@ export default class StatsProcessor {
       let values = newMap.days[date];
       // If we should ignore zeros, then
       // filter them out.
-      if (this.tracker.ignore_zeros) {
+      let ignoreZeros = !this.tracker ? true : this.tracker.ignore_zeros;
+      if (ignoreZeros) {
         values = values.filter(v => {
           return v !== 0 ? true : false;
         });
@@ -105,7 +112,7 @@ export default class StatsProcessor {
       // Let's calcuate the days total
       if (values.length) {
         // If it's sum - add them all up
-        if (this.tracker.math === "sum") {
+        if (this.useMath() === "sum") {
           allValues.push(math.sum(values));
         } else {
           // Else add it to the array for average lating
@@ -133,12 +140,15 @@ export default class StatsProcessor {
       }
       let dayKey = dayjs(row.end).format("YYYY-MM-DD");
       valueMap[dayKey] = valueMap[dayKey] || [];
-      if (row.trackers[this.tracker.tag]) {
-        let value = row.trackers[this.tracker.tag].value;
-        value = isNaN(value) ? 0 : value;
-        valueMap[dayKey].push(value);
+      if (this.tracker) {
+        if (row.trackers[this.tracker.tag]) {
+          let value = row.trackers[this.tracker.tag].value;
+          value = isNaN(value) ? 0 : value;
+          valueMap[dayKey].push(value);
+        }
       } else {
-        //console.log(`row.trackers[${this.tracker.tag}] was not found`);
+        // No Tracker Provided - just count them as 1;
+        valueMap[dayKey].push(1);
       }
     });
     return valueMap;
@@ -174,10 +184,7 @@ export default class StatsProcessor {
             return false;
           }
         } else if (mode == "day") {
-          return (
-            this.date.toDate().toDateString() ===
-            new Date(row.end).toDateString()
-          );
+          return this.date.toDate().toDateString() === new Date(row.end).toDateString();
         } else {
           return true;
         }
@@ -193,7 +200,8 @@ export default class StatsProcessor {
     let valueArray = Object.keys(valueMap)
       .map(dateKey => {
         let value;
-        if (this.tracker.math === "sum") {
+
+        if (this.useMath() === "sum") {
           value = math.sum(valueMap[dateKey]);
         } else {
           value = math.average(valueMap[dateKey]);
@@ -254,9 +262,7 @@ export default class StatsProcessor {
         // Push label of day to labels
         chartData.labels.push(dayLabel);
         // Get value of the day
-        let dayValue = this.results.valueTotalMap.days[
-          thisDate.format("YYYY-MM-DD")
-        ];
+        let dayValue = this.results.valueTotalMap.days[thisDate.format("YYYY-MM-DD")];
         // Create a point object with date, value and label
         let point = {
           date: thisDate,
@@ -266,7 +272,7 @@ export default class StatsProcessor {
         // If we have a value
         if (dayValue) {
           // figure out if we should provided the sum or avg
-          point.y = this.tracker.math === "sum" ? dayValue.sum : dayValue.avg;
+          point.y = this.useMath() === "sum" ? dayValue.sum : dayValue.avg;
         }
         // Push Point to Chart data array.
         chartData.points.push(point);
@@ -280,21 +286,22 @@ export default class StatsProcessor {
       }
       this.rows.forEach(row => {
         let end = dayjs(row.end);
-        if (row.trackers[this.tracker.tag]) {
+        if (this.tracker) {
+          if (row.trackers[this.tracker.tag]) {
+            yearMap[end.format("YYYY-MM")] = yearMap[end.format("YYYY-MM")] || [];
+            yearMap[end.format("YYYY-MM")].push(row.trackers[this.tracker.tag].value);
+          }
+        } else {
+          // No Tracker Provided just count
           yearMap[end.format("YYYY-MM")] = yearMap[end.format("YYYY-MM")] || [];
-          yearMap[end.format("YYYY-MM")].push(
-            row.trackers[this.tracker.tag].value
-          );
+          yearMap[end.format("YYYY-MM")].push(1);
         }
       });
 
       Object.keys(yearMap).forEach(dateKey => {
         let point = {
           x: dateKey,
-          y:
-            this.tracker.math == "sum"
-              ? math.sum(yearMap[dateKey])
-              : math.average(yearMap[dateKey]),
+          y: this.useMath() == "sum" ? math.sum(yearMap[dateKey]) : math.average(yearMap[dateKey]),
           date: dayjs(`${dateKey}-01`)
         };
         chartData.labels.push(dateKey);
