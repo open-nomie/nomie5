@@ -108,7 +108,7 @@ const ledgerInit = () => {
      * @param {Array} rows
      */
     async putBook(bookDateString, rows) {
-      return Storage.put(`${config.data_root}/books/${bookDateString}`, rows);
+      return awaitStorage.put(`${config.data_root}/books/${bookDateString}`, rows);
     },
     /**
      * Get the First Book
@@ -620,6 +620,43 @@ const ledgerInit = () => {
             });
         });
     },
+
+    async queryPerson(username, start, end) {
+      let logs = await methods.query({ start, end });
+      return logs
+        .filter(record => {
+          if (record.note.search("@emily") > -1) {
+            console.log(dayjs(record.end).format("ddd MMM D YYYY h:mm a"));
+          }
+          return record.note.match(new RegExp(`@${username}`, "gi"));
+        })
+        .sort((a, b) => {
+          return a.end < b.end ? 1 : -1;
+        });
+    },
+
+    async queryTag(tag, start, end) {
+      let logs = await methods.query({ start, end });
+      return logs
+        .filter(record => {
+          return record.note.search(new RegExp(`#${tag}\s`, "gi")) > -1;
+        })
+        .sort((a, b) => {
+          return a.end < b.end ? 1 : -1;
+        });
+    },
+
+    async queryContext(context, start, end) {
+      let logs = await methods.query({ start, end });
+      return logs
+        .filter(record => {
+          return record.note.search(new RegExp(`+${context}\s`, "gi")) > -1;
+        })
+        .sort((a, b) => {
+          return a.end < b.end ? 1 : -1;
+        });
+    },
+
     /**
      * Main Ledger Query Function
      * @param {Object} options
