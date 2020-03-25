@@ -9,6 +9,8 @@
   import BarChart from "../../components/charts/bar-chart.svelte";
   import FrappeChart from "../../components/charts/frappe.svelte";
 
+  import ActivePersonStats from "./active-person-stats.svelte";
+
   // Container Items
   import PersonCheckin from "./person-check-in.svelte";
 
@@ -32,6 +34,7 @@
   let activePerson;
   let activeStats;
   let lastActivePersonKey;
+  let activeLogs;
 
   $: if (
     $Interact.people.active &&
@@ -50,16 +53,23 @@
     view: "check-in"
   };
 
-  const saveActivePerson = async () => {
+  // async function getActivePersonStats() {
+  //   let active = $Interact.people.active;
+  //   activePerson = new Person($PeopleStore.people[active]);
+  //   let logs = await LedgerStore.search(`@${active}`, dayjs().format("YYYY"));
+  //   activeStats = new StatsProcessor(logs, null);
+  // }
+
+  async function saveActivePerson() {
     try {
       await PeopleStore.savePerson(activePerson);
       Interact.toast("Saved");
     } catch (e) {
       Interact.alert("Error", e.message);
     }
-  };
+  }
 
-  const getAvatarImage = async imageBase64 => {
+  async function getAvatarImage(imageBase64) {
     let image = document.getElementById("photo-holder-image");
     image.src = imageBase64;
     await tick(200);
@@ -82,39 +92,31 @@
       alert(e.message);
       return null;
     }
-  };
+  }
 
-  const close = async () => {
+  async function close() {
     domVisible = false;
     await tick(200);
     Interact.person(null);
-  };
+  }
 
-  const closeAndRefresh = async () => {
+  async function closeAndRefresh() {
     await close();
     PeopleStore.getStats();
-  };
+  }
 
-  const getActivePersonStats = () => {
-    console.log("Get Active Person Stats");
-    let stats = PeopleStore.currentStats();
-    if (stats[$Interact.people.active]) {
-      console.log(
-        "stats[$Interact.people.active];",
-        stats[$Interact.people.active]
-      );
-      return stats[$Interact.people.active];
-    } else {
-      return null;
-    }
-  };
+  async function loadActiveLogs() {
+    let active = $Interact.people.active;
+    activePerson = new Person($PeopleStore.people[active]);
+    activeLogs = await LedgerStore.queryPerson(
+      active,
+      dayjs().subtract(1, "year"),
+      dayjs()
+    );
+    console.log("activeLogs", activeLogs);
+  }
 
-  const getPersonLogs = () => {
-    let stats = getActivePersonStats();
-    return stats ? stats.logs : [];
-  };
-
-  const selectPhoto = async evt => {
+  async function selectPhoto(evt) {
     const toBase64 = file =>
       new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -125,7 +127,6 @@
 
     let input = evt.target;
     let files = evt.target.files;
-
     let avatarBase64 = await toBase64(files[0]);
     await tick(20);
     let smallAvatar64 = await getAvatarImage(avatarBase64);
@@ -133,29 +134,14 @@
     document.getElementById("photo-holder-image").src = null;
     await tick(10);
     activePerson.avatar = smallAvatar64;
-  };
+  }
 
-  const getPersonStats = async () => {
-    let active = $Interact.people.active;
-    let logs = await LedgerStore.search(`@${active}`, dayjs().format("YYYY"));
-
-    return new StatsProcessor(logs, null);
-  };
-
-  const changeView = async view => {
+  async function changeView(view) {
     state.view = view;
-    if (view == "stats") {
-      activeStats = await getPersonStats();
-      console.log("active stats", activeStats);
-
-      // let personStatPayload = getActivePersonStats();
-      // if (personStatPayload) {
-      //   let logs = personStatPayload.logs;
-      //   let statProcessor = new StatsProcessor(logs, null);
-      //   console.log("Person Stats?", statProcessor);
-      // }
+    if (view == "logs") {
+      loadActiveLogs();
     }
-  };
+  }
 </script>
 
 <Modal className="stats-modal" show={domVisible} type="bottom-slideup">
@@ -228,21 +214,15 @@
       </div>
     {:else if state.view == 'logs'}
       <div class="logs p-2">
-        {#each getPersonLogs() as log}
-          <LogItem {log} />
-        {/each}
+        {#if activeLogs}
+          {#each activeLogs as log}
+            <LogItem {log} />
+          {/each}
+        {/if}
       </div>
     {:else if state.view == 'stats'}
       <div class="stats p-2">
-        {#if activeStats}
-          <BarChart
-            title={`title`}
-            height={100}
-            labels={activeStats.results.year.chart.labels}
-            points={activeStats.results.year.chart.points}
-            on:tap={event => {}}
-            activeIndex={0} />
-        {/if}
+        <ActivePersonStats />
       </div>
     {/if}
   </main>
