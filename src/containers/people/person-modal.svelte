@@ -1,24 +1,36 @@
 <script>
+  // Components
   import Modal from "../../components/modal/modal.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NInput from "../../components/input/input.svelte";
-  import { Interact } from "../../store/interact.js";
-  import { PeopleStore } from "../../store/people-store.js";
   import ButtonGroup from "../../components/button-group/button-group.svelte";
-  import PersonCheckin from "./person-check-in.svelte";
   import Dymoji from "../../components/dymoji/dymoji.svelte";
-  import tick from "../../utils/tick/tick";
   import LogItem from "../../components/list-item-log/list-item-log.svelte";
+  import BarChart from "../../components/charts/bar-chart.svelte";
   import FrappeChart from "../../components/charts/frappe.svelte";
+
+  // Container Items
+  import PersonCheckin from "./person-check-in.svelte";
+
+  // Modules / Utils
+  import tick from "../../utils/tick/tick";
+  import Person from "../../modules/person/person";
+  import StatsProcessor from "../../modules/stats/stats";
+
+  // Vendors
   import html2canvas from "html2canvas";
   import domtoimage from "dom-to-image-chrome-fix";
-  import Person from "../../modules/person/person";
+  import dayjs from "dayjs";
+
+  import { LedgerStore } from "../../store/ledger";
+  import { Interact } from "../../store/interact.js";
+  import { PeopleStore } from "../../store/people-store.js";
 
   let domVisible = false;
-
   let avatarBase64 = null;
 
   let activePerson;
+  let activeStats;
   let lastActivePersonKey;
 
   $: if (
@@ -34,12 +46,9 @@
     console.log("Avatar Change");
   }
 
-  // $: if (avatarBase64) {
-  //   getAvatarImage(avatarBase64).then(smallAvatar64 => {
-  //     activePerson.setAvatar(smallAvatar64);
-  //     document.body.removeChild(document.getElementById("photo-holder"));
-  //   });
-  // }
+  const state = {
+    view: "check-in"
+  };
 
   const saveActivePerson = async () => {
     try {
@@ -86,13 +95,23 @@
     PeopleStore.getStats();
   };
 
-  const getPersonLogs = () => {
+  const getActivePersonStats = () => {
+    console.log("Get Active Person Stats");
     let stats = PeopleStore.currentStats();
     if (stats[$Interact.people.active]) {
-      return stats[$Interact.people.active].logs;
+      console.log(
+        "stats[$Interact.people.active];",
+        stats[$Interact.people.active]
+      );
+      return stats[$Interact.people.active];
     } else {
-      return [];
+      return null;
     }
+  };
+
+  const getPersonLogs = () => {
+    let stats = getActivePersonStats();
+    return stats ? stats.logs : [];
   };
 
   const selectPhoto = async evt => {
@@ -107,20 +126,35 @@
     let input = evt.target;
     let files = evt.target.files;
 
-    avatarBase64 = await toBase64(files[0]);
+    let avatarBase64 = await toBase64(files[0]);
+    await tick(20);
     let smallAvatar64 = await getAvatarImage(avatarBase64);
-
+    await tick(20);
     document.getElementById("photo-holder-image").src = null;
     await tick(10);
     activePerson.avatar = smallAvatar64;
   };
 
-  const state = {
-    view: "check-in"
+  const getPersonStats = async () => {
+    let active = $Interact.people.active;
+    let logs = await LedgerStore.search(`@${active}`, dayjs().format("YYYY"));
+
+    return new StatsProcessor(logs, null);
   };
 
-  const changeView = view => {
+  const changeView = async view => {
     state.view = view;
+    if (view == "stats") {
+      activeStats = await getPersonStats();
+      console.log("active stats", activeStats);
+
+      // let personStatPayload = getActivePersonStats();
+      // if (personStatPayload) {
+      //   let logs = personStatPayload.logs;
+      //   let statProcessor = new StatsProcessor(logs, null);
+      //   console.log("Person Stats?", statProcessor);
+      // }
+    }
   };
 </script>
 
@@ -200,7 +234,15 @@
       </div>
     {:else if state.view == 'stats'}
       <div class="stats p-2">
-        <FrappeChart title={`@${$Interact.people.active}`} />
+        {#if activeStats}
+          <BarChart
+            title={`title`}
+            height={100}
+            labels={activeStats.results.year.chart.labels}
+            points={activeStats.results.year.chart.points}
+            on:tap={event => {}}
+            activeIndex={0} />
+        {/if}
       </div>
     {/if}
   </main>
