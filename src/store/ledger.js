@@ -108,7 +108,7 @@ const ledgerInit = () => {
      * @param {Array} rows
      */
     async putBook(bookDateString, rows) {
-      return awaitStorage.put(`${config.data_root}/books/${bookDateString}`, rows);
+      return await Storage.put(`${config.data_root}/books/${bookDateString}`, rows);
     },
     /**
      * Get the First Book
