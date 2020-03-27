@@ -188,8 +188,7 @@
       them, or include their username in a note. Example: Had dinner with @mom
       today." />
 
-    <div class="n-list">
-      <NItem className="compact" />
+    <div class="n-list mt-2">
       {#if !state.people.length && !state.searchTerm}
         <NItem>
           No @usernames found. You can manually add a user, or just type them in

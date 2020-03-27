@@ -3,6 +3,7 @@
   import Modal from "../../components/modal/modal.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NInput from "../../components/input/input.svelte";
+  import NToolbar from "../../components/toolbar/toolbar.svelte";
   import ButtonGroup from "../../components/button-group/button-group.svelte";
   import Dymoji from "../../components/dymoji/dymoji.svelte";
   import LogItem from "../../components/list-item-log/list-item-log.svelte";
@@ -206,11 +207,9 @@
             accept="png,jpeg,jpg"
             on:change={selectPhoto} />
         </NItem>
-        <NItem className="text-primary" on:click={saveActivePerson}>
-          Save Changes
-        </NItem>
-        <div class="filler mt-2" />
-        <NItem className="text-red">Delete User...</NItem>
+
+        <div class="filler mt-5 pt-2" />
+        <NItem className="text-red text-sm">Delete User...</NItem>
       </div>
     {:else if state.view == 'logs'}
       <div class="logs p-2">
@@ -226,5 +225,13 @@
       </div>
     {/if}
   </main>
+
+  <footer slot="footer" class="n-row w-100">
+    {#if state.view == 'edit'}
+      <button class="btn btn-block btn-secondary" on:click={saveActivePerson}>
+        Save Changes
+      </button>
+    {/if}
+  </footer>
 
 </Modal>
