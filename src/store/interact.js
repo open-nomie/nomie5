@@ -507,7 +507,7 @@ const interactInit = () => {
         return s;
       });
     },
-    prompt(title, message, options) {
+    prompt(title, message, options = {}) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           update(s => {
