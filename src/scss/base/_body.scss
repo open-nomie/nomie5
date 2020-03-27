@@ -66,9 +66,9 @@ body {
   --modal-border: solid 1px rgba(0, 0, 0, 0.12);
   --header-fade: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 1) 35%,
-    rgba(255, 255, 255, 0.5886729691876751) 76%,
-    rgba(255, 255, 255, 0) 100%
+    rgba(240, 240, 240, 1) 35%,
+    rgba(240, 240, 240, 0.5886729691876751) 76%,
+    rgba(240, 240, 240, 0) 100%
   );
 }
 
@@ -122,9 +122,6 @@ body.test {
   }
 
   .btn-light {
-    //$background, $border, $hover-background: darken($background, 7.5%),
-    // $hover-border: darken($border, 10%),
-    // $active-background: darken($background, 10%), $active-border: darken($border, 12.5%)
     @include button-variant(#333, darken(#333, 5%), darken(#333, 5%), darken(#333, 5%), rgba($primaryBright, 5%));
     &:hover {
       @include button-variant(#333, darken(#333, 10%), darken(#333, 10%), darken(#333, 10%), rgba($primaryBright, 10%));

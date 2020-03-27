@@ -4885,8 +4885,7 @@ button:focus {
     border-radius: 0.6rem; }
   .btn:active, .btn:hover {
     transition: all 0.2s ease-in-out;
-    transform: scale(0.97) !important;
-    color: var(--color-primary); }
+    transform: scale(0.97) !important; }
   .btn.btn-desc {
     text-align: left;
     align-items: flex-start;
@@ -5157,9 +5156,9 @@ body {
   --modal-border: solid 1px rgba(0, 0, 0, 0.12);
   --header-fade: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 1) 35%,
-    rgba(255, 255, 255, 0.5886729691876751) 76%,
-    rgba(255, 255, 255, 0) 100%
+    rgba(240, 240, 240, 1) 35%,
+    rgba(240, 240, 240, 0.5886729691876751) 76%,
+    rgba(240, 240, 240, 0) 100%
   ); }
 
 body.test * {

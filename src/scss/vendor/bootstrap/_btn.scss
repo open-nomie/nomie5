@@ -33,7 +33,7 @@ button:focus {
   &:hover {
     transition: all 0.2s ease-in-out;
     transform: scale(0.97) !important;
-    color: var(--color-primary);
+    // color: var(--color-primary);
   }
 
   &.btn-desc {
