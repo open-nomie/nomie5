@@ -625,9 +625,6 @@ const ledgerInit = () => {
       let logs = await methods.query({ start, end });
       return logs
         .filter(record => {
-          if (record.note.search("@emily") > -1) {
-            console.log(dayjs(record.end).format("ddd MMM D YYYY h:mm a"));
-          }
           return record.note.match(new RegExp(`@${username}`, "gi"));
         })
         .sort((a, b) => {
