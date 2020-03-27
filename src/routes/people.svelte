@@ -26,7 +26,6 @@
   };
 
   const personClicked = username => {
-    state.searchTerm = null;
     Interact.person(username);
   };
 
@@ -105,6 +104,22 @@
     }
   }
 
+  function clearSearch() {
+    state.searchTerm = null;
+  }
+
+  async function addPerson() {
+    try {
+      let username = await Interact.prompt(`What's their name?`);
+      if (username) {
+        await PeopleStore.addByName(username);
+        Interact.toast(`${username} added`);
+      }
+    } catch (e) {
+      Interact.alert("Error", e.message);
+    }
+  }
+
   function getPeople() {
     if (state.searchTerm) {
       return Object.keys($PeopleStore.people).filter(person => {
@@ -153,7 +168,12 @@
 
 <AppLayout title="People">
   <div slot="header">
-    <NSearchBar on:change={searchPeople} />
+    <NSearchBar on:change={searchPeople} on:clear={clearSearch} autocomplete>
+      <button
+        on:click={addPerson}
+        class="btn btn-icon btn-clear zmdi zmdi-account-add text-inverse"
+        slot="right" />
+    </NSearchBar>
     <!-- <NToolbar>
       <div class="container container-sm">
         <ButtonGroup size="sm" buttons={pageButtons} />
@@ -187,14 +207,14 @@
           <div slot="left">
             {#if $PeopleStore.people[person].avatar}
               <AvatarBall
-                size={45}
+                size={48}
                 avatar={$PeopleStore.people[person].avatar}
-                style={`border-radius:50%; overflow:hidden`} />
+                style={`border-radius:32%; overflow:hidden`} />
             {:else if $PeopleStore.people[person].displayName}
               <AvatarBall
-                size={45}
+                size={48}
                 username={$PeopleStore.people[person].displayName}
-                style={`border-radius:50%; overflow:hidden`} />
+                style={`border-radius:32%; overflow:hidden`} />
             {/if}
           </div>
           <div class="title">{$PeopleStore.people[person].displayName}</div>
