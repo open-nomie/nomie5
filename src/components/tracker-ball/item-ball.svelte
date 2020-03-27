@@ -2,6 +2,7 @@
   import Dymoji from "../dymoji/dymoji.svelte";
   import { createEventDispatcher } from "svelte";
   import dayjs from "dayjs";
+  import NBall from "./ball.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -22,6 +23,13 @@
 
 <style lang="scss">
   // Moved to scss/components/item-ball
+  :global(.item-ball .n-ball) {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+  }
 </style>
 
 <div
@@ -33,18 +41,7 @@
   <!-- -->
   <div class="avatar-ball">
     <slot />
-    {#if emoji}
-      <div class="letter emoji-letter" style={color ? `color:${color}` : ''}>
-        {emoji}
-      </div>
-    {:else if avatar}
-      <div class="avatar" style="background-image:url({avatar});" />
-    {:else if username}
-      <div class="letter just-letter" style={color ? `color:${color}` : ''}>
-        {username.substr(0, 2).toUpperCase()}
-      </div>
-      <Dymoji {username} size={106} />
-    {/if}
+    <NBall {username} {emoji} {avatar} {color} size={106} />
   </div>
 
   <div class="username text-inverse-2 text-sm truncate-1">{label}</div>

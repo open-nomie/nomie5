@@ -6361,39 +6361,6 @@ aside.n-panel {
       box-shadow: var(--box-shadow-tight); }
   .item-ball .last.today {
     color: var(--color-green); }
-  .item-ball .avatar {
-    background-size: cover;
-    background-position: center;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0; }
-  .item-ball .letter {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    z-index: 102;
-    font-size: 51px;
-    color: rgba(0, 0, 0, 0.8);
-    text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5); }
-    .item-ball .letter.emoji-letter {
-      color: black; }
-  .item-ball .letter.just-letter {
-    font-size: 40.8px !important; }
-  .item-ball .dymoji-wrap {
-    position: absolute !important;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0; }
   .item-ball .countdown {
     position: absolute;
     top: 0;
