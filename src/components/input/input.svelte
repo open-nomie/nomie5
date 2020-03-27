@@ -12,6 +12,7 @@
   export let inputClass = "";
   export let pattern = "";
   export let width = "";
+  export let disabled = false;
 
   let focused = false;
   let hit = false;
@@ -59,14 +60,19 @@
       padding: 6px;
     }
     .n-input-wrapper {
-      position: relative;
+      // position: relative;
       min-height: $height;
       display: flex;
-      flex-direction: column;
+      width: 100%;
+      min-width: 50px;
+      max-width: 100%;
+      flex-direction: row;
       align-items: center;
       flex-grow: 1;
       flex-shrink: 1;
       transition: all 0.2s ease-in-out;
+      background-color: var(--color-faded-1);
+      border-radius: 12px;
       &.has-input {
         .n-input {
           label {
@@ -78,6 +84,7 @@
           select {
             padding-top: 14px;
             padding-bottom: 0px;
+            font-size: 1.05rem;
           }
         }
       }
@@ -91,20 +98,22 @@
       }
 
       .n-input {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        bottom: 0;
+        // position: absolute;
+        // top: 0;
+        // right: 0;
+        // left: 0;
+        // bottom: 0;
         min-height: $height;
+        width: 100%;
+        min-width: 50px;
+        max-width: 100%;
         transition: all 0.2s ease-in-out;
         display: flex;
         flex-direction: column;
         flex-grow: 1;
         flex-shrink: 1;
-        background-color: var(--color-faded-1);
+
         color: var(--color-inverse);
-        border-radius: 12px;
 
         label {
           transition: all 0.2s ease-in-out;
@@ -144,6 +153,7 @@
       <label>{label || placeholder}</label>
       {#if type == 'email'}
         <input
+          {disabled}
           type="email"
           style={inputStyle}
           class={inputClass}
@@ -154,6 +164,7 @@
           on:blur={blur} />
       {:else if type == 'number'}
         <input
+          {disabled}
           type="number"
           style={inputStyle}
           class={inputClass}
@@ -163,11 +174,12 @@
           on:focus={focus}
           on:blur={blur} />
       {:else if type == 'select'}
-        <select on:change={change} bind:value>
+        <select {disabled} on:change={change} bind:value>
           <slot />
         </select>
       {:else}
         <input
+          {disabled}
           type="text"
           style={inputStyle}
           class={inputClass}
@@ -180,6 +192,7 @@
       {/if}
     </div>
     <slot name="right" />
+
   </div>
   {#if help}
     <div class="helper">{help}</div>

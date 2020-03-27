@@ -29,9 +29,11 @@ button:focus {
   &.btn-lg {
     border-radius: 0.6rem;
   }
-  &:active {
+  &:active,
+  &:hover {
     transition: all 0.2s ease-in-out;
     transform: scale(0.97) !important;
+    color: var(--color-primary);
   }
 
   &.btn-desc {

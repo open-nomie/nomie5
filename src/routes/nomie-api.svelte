@@ -10,9 +10,12 @@
   import NLog from "../modules/nomie-log/nomie-log";
   // Modules
   import NomieAPICli from "../modules/nomie-api-cli/nomie-api-cli";
+  import clipboard from "../utils/clipboard/clipboard";
 
   // Components
   import NText from "../components/text/text.svelte";
+  import NInput from "../components/input/input.svelte";
+  import NToolbar from "../components/toolbar/toolbar.svelte";
   import NItem from "../components/list-item/list-item.svelte";
   import NToggle from "../components/toggle-switch/toggle-switch.svelte";
 
@@ -49,6 +52,11 @@
       null,
       2
     );
+  }
+
+  function copy(key) {
+    clipboard(key);
+    Interact.toast("Copied");
   }
 
   const methods = {
@@ -166,14 +174,30 @@
     {/if}
   </div>
 
+  <div slot="sub-header" class="n-row">
+    {#if state.ready && state.registered}
+      <div class="btn-group flex-grow flex-shrink">
+        <button
+          on:click={() => methods.setView('settings')}
+          class="btn btn-sm btn-white-pop {state.view === 'settings' ? 'active' : ''}">
+          Settings
+        </button>
+        <button
+          on:click={() => methods.setView('captured')}
+          class="btn btn-sm btn-white-pop {state.view === 'captured' ? 'active' : ''}">
+          Captured
+        </button>
+      </div>
+    {/if}
+  </div>
+
   <div class="container">
+    <div item-divider />
     {#if !state.ready}
       <div class="empty-notice">
         <Spinner size="50" speed="750" color="#666" thickness="8" gap="40" />
       </div>
     {:else if state.ready && !state.registered}
-      <div item-divider />
-
       <NItem
         className="py-2"
         title={`Nomie API Setup`}
@@ -199,159 +223,150 @@
           calls.
         </p>
       </NItem>
-    {:else}
-      <div class="d-flex justify-content-center p-3">
-        <div class="btn-group flex-grow flex-shrink">
-          <button
-            on:click={() => methods.setView('settings')}
-            class="btn btn-sm btn-white-pop {state.view === 'settings' ? 'active' : ''}">
-            Settings
-          </button>
-          <button
-            on:click={() => methods.setView('captured')}
-            class="btn btn-sm btn-white-pop {state.view === 'captured' ? 'active' : ''}">
-            Captured
-          </button>
+    {:else if state.view === 'captured'}
+      {state.hidden}
+      <div class="n-list">
+        {#each state.logs as log, index}
+          {#if state.hidden.indexOf(log.id) === -1}
+            <NItem className="py-2">
+              <h3 class="n-title truncate-2">{log.note}</h3>
+              <div>
+                <small class="text-faded-3">
+                  {dayjs(log.date).format('ddd MMM D YYYY h:mm A')} from
+                  <strong>{log.source}</strong>
+                </small>
+              </div>
+              <button
+                class="btn-circle btn btn-primary"
+                slot="right"
+                disabled={state.capturingId === log.id}
+                on:click={() => {
+                  methods.capture(log);
+                }}>
+                {#if state.capturingId === log.id}
+                  <Spinner
+                    size="30"
+                    speed="750"
+                    color="#FFF"
+                    thickness="6"
+                    gap="40" />
+                {:else}
+                  <span class="zmdi zmdi-download" />
+                {/if}
+              </button>
+            </NItem>
+          {/if}
+        {/each}
 
-        </div>
       </div>
-      {#if state.view === 'captured'}
-        {state.hidden}
-        <div class="n-list">
-          {#each state.logs as log, index}
-            {#if state.hidden.indexOf(log.id) === -1}
-              <NItem className="py-2">
-                <h3 class="n-title truncate-2">{log.note}</h3>
-                <div>
-                  <small class="text-faded-3">
-                    {dayjs(log.date).format('ddd MMM D YYYY h:mm A')} from
-                    <strong>{log.source}</strong>
-                  </small>
-                </div>
-                <button
-                  class="btn-circle btn btn-primary"
-                  slot="right"
-                  disabled={state.capturingId === log.id}
-                  on:click={() => {
-                    methods.capture(log);
-                  }}>
-                  {#if state.capturingId === log.id}
-                    <Spinner
-                      size="30"
-                      speed="750"
-                      color="#FFF"
-                      thickness="6"
-                      gap="40" />
-                  {:else}
-                    <span class="zmdi zmdi-download" />
-                  {/if}
-                </button>
-              </NItem>
-            {/if}
-          {/each}
-
-        </div>
-        {#if state.logs.length > state.hidden.length}
-          <NItem
-            title="Clear Remaining Logs"
-            className="text-red"
-            on:click={methods.confirmClear} />
-        {/if}
-        {#if !state.logs.length}
-          <div class="empty-notice">No recent logs captured</div>
-        {/if}
-      {:else}
-        <!-- We're In the Settings Tab
-        -->
+      {#if state.logs.length > state.hidden.length}
         <NItem
-          title="Auto Import"
-          className="p-3"
-          description="Automatically import captured logs">
-          <div slot="right">
-            <NToggle
-              bind:value={autoImportAPI}
-              on:change={event => {
-                if (autoImportAPI === true) {
-                  NomieAPI.disableAutoImport();
-                } else {
-                  NomieAPI.enableAutoImport();
-                }
-              }} />
-          </div>
-        </NItem>
-        <div item-divider />
-        <NItem title="API Key" className="p-3">
-          <div>
-            <input type="text" class="form-control mt-1" value={state.apiKey} />
-          </div>
-        </NItem>
-
-        <div item-divider />
-        {#if state.showExample}
-          <NItem title="Example POST">
-            <button
-              slot="right"
-              class="btn btn-clear"
-              on:click={() => (state.showExample = !state.showExample)}>
-              Close
-            </button>
-          </NItem>
-          <NItem className="py-2">
-            <p class="text-sm">POST JSON to: https://nomieapi.com/log</p>
-            <textarea
-              class="form-control"
-              style="height:120px"
-              bind:value={state.apiExample} />
-            <p class="text-sm mt-1">
-              fields: note, api_key, lat, lng, date, source
-            </p>
-          </NItem>
-        {:else}
-          <NItem title="Example POST">
-            <button
-              class="btn btn-clear"
-              slot="right"
-              on:click={() => (state.showExample = !state.showExample)}>
-              Show
-            </button>
-          </NItem>
-        {/if}
-        <div item-divider />
-        {#if state.showPrivateKey}
-          <NItem title="Private Key">
-            <button
-              class="btn btn-clear"
-              slot="right"
-              on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
-              Hide
-            </button>
-          </NItem>
-          <NItem className="py-2 pb-3">
-            <div>
-              <textarea
-                type="text"
-                class="form-control text-sm mt-1"
-                style="min-height:100px;"
-                bind:value={state.privateKey} />
-            </div>
-          </NItem>
-        {:else}
-          <NItem title="Private Key">
-            <button
-              class="btn btn-clear"
-              slot="right"
-              on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
-              Show
-            </button>
-          </NItem>
-        {/if}
-        <div item-divider />
-        <NItem
+          title="Clear Remaining Logs"
           className="text-red"
-          title="Unregister this API"
-          on:click={methods.unregister} />
-        <div item-divider />
+          on:click={methods.confirmClear} />
       {/if}
+      {#if !state.logs.length}
+        <div class="empty-notice">No recent logs captured</div>
+      {/if}
+    {:else}
+      <!-- We're In the Settings Tab
+        -->
+      <NItem
+        title="Auto Import"
+        className="p-3"
+        description="Automatically import captured logs">
+        <div slot="right">
+          <NToggle
+            bind:value={autoImportAPI}
+            on:change={event => {
+              if (autoImportAPI === true) {
+                NomieAPI.disableAutoImport();
+              } else {
+                NomieAPI.enableAutoImport();
+              }
+            }} />
+        </div>
+      </NItem>
+      <div item-divider />
+      <NItem className="p-3">
+        <NInput label="Your API Key" bind:value={state.apiKey} disabled>
+          <button
+            class="btn btn-clear zmdi zmdi-copy"
+            slot="right"
+            on:click={() => {
+              copy(state.apiKey);
+            }} />
+        </NInput>
+        <!-- <div>
+          <input type="text" class="form-control mt-1" value={state.apiKey} />
+        </div> -->
+      </NItem>
+
+      <div item-divider />
+      {#if state.showExample}
+        <NItem title="Example POST">
+          <button
+            slot="right"
+            class="btn btn-clear"
+            on:click={() => (state.showExample = !state.showExample)}>
+            Close
+          </button>
+        </NItem>
+        <NItem className="py-2">
+          <p class="text-sm">POST JSON to: https://nomieapi.com/log</p>
+          <textarea
+            class="form-control"
+            style="height:120px"
+            bind:value={state.apiExample} />
+          <p class="text-sm mt-1">
+            fields: note, api_key, lat, lng, date, source
+          </p>
+        </NItem>
+      {:else}
+        <NItem title="Example POST">
+          <button
+            class="btn btn-clear"
+            slot="right"
+            on:click={() => (state.showExample = !state.showExample)}>
+            Show
+          </button>
+        </NItem>
+      {/if}
+      <div item-divider />
+      {#if state.showPrivateKey}
+        <NItem title="Private Key">
+          <button
+            class="btn btn-clear"
+            slot="right"
+            on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
+            Hide
+          </button>
+        </NItem>
+        <NItem className="py-2 pb-3">
+          <div>
+            <textarea
+              type="text"
+              class="form-control text-sm mt-1"
+              style="min-height:100px;"
+              bind:value={state.privateKey} />
+          </div>
+        </NItem>
+      {:else}
+        <NItem title="Private Key">
+          <button
+            class="btn btn-clear"
+            slot="right"
+            on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
+            Show
+          </button>
+        </NItem>
+      {/if}
+      <div item-divider />
+      <NItem
+        className="text-red"
+        title="Unregister this API"
+        on:click={methods.unregister} />
+      <div item-divider />
     {/if}
   </div>
 

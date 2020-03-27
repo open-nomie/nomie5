@@ -4883,9 +4883,10 @@ button:focus {
   align-items: center; }
   .btn.btn-lg, .btn-group-lg > .btn {
     border-radius: 0.6rem; }
-  .btn:active {
+  .btn:active, .btn:hover {
     transition: all 0.2s ease-in-out;
-    transform: scale(0.97) !important; }
+    transform: scale(0.97) !important;
+    color: var(--color-primary); }
   .btn.btn-desc {
     text-align: left;
     align-items: flex-start;
