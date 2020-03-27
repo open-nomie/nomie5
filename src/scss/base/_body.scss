@@ -83,7 +83,7 @@ body.test {
 }
 
 @mixin darkmode {
-  --header-fade: linear-gradient(180deg, rgba(0, 0, 0, 1) 35%, rgba(0, 0, 0, 0) 100%);
+  --header-fade: linear-gradient(180deg, rgba(20, 20, 20, 1) 35%, rgba(20, 20, 20, 0) 100%);
   --header-background: #111;
   --tabs-background: #111;
   --tracker-background: rgb(5, 5, 5);

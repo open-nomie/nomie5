@@ -5223,7 +5223,7 @@ body.offline .main-content:before {
   z-index: 2000; }
 
 body.theme-dark {
-  --header-fade: linear-gradient(180deg, rgba(0, 0, 0, 1) 35%, rgba(0, 0, 0, 0) 100%);
+  --header-fade: linear-gradient(180deg, rgba(20, 20, 20, 1) 35%, rgba(20, 20, 20, 0) 100%);
   --header-background: #111;
   --tabs-background: #111;
   --tracker-background: rgb(5, 5, 5);
@@ -5431,12 +5431,14 @@ input[type="password"] {
 .form-control:focus {
   box-shadow: none !important; }
 
+.form-control,
 input.form-control,
 select.form-control {
   border-radius: 0.4rem !important;
   background-color: var(--color-faded-1) !important;
   border-color: var(--color-solid-1) !important;
   color: var(--color-inverse-2); }
+  .form-control:focus,
   input.form-control:focus,
   select.form-control:focus {
     background-color: var(--color-faded);
@@ -6340,7 +6342,6 @@ aside.n-panel {
     width: 102px;
     height: 102px;
     border-radius: 34.68px;
-    border: solid 3px var(--color-solid);
     background-color: var(--color-solid);
     overflow: hidden;
     box-shadow: var(--box-shadow-float);
