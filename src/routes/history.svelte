@@ -248,7 +248,6 @@
       searchMode = true;
     },
     searchChange(evt) {
-      console.log("history evt", evt);
       state.searchTerm = evt.detail;
       // if (state.searchTerm.length > 1) {
       //   console.log("Searching");
@@ -600,10 +599,8 @@
           <!-- We have No search results -->
           {#if !searchLogs.length}
             <div class="gap" />
-            <NItem className="text-center bg-transparent">
-              <span class="text-faded-3">
-                No Results for {state.date.format('YYYY')}
-              </span>
+            <NItem className="text-center bg-transparent py-5">
+              <span class="text-faded-3">No Results found</span>
             </NItem>
           {/if}
           <div class="gap" />
