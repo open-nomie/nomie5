@@ -62,6 +62,11 @@
 <nav id="app-tabs" class="">
   <div class="n-row mw-500px mx-auto">
 
+    <Link to="/history">
+      <i class="zmdi zmdi-calendar" />
+      <label>{Lang.t('tabs.history')}</label>
+    </Link>
+
     <Link to="/">
       <i class="zmdi zmdi-grid" />
       <label>{Lang.t('tabs.track')}</label>
@@ -70,11 +75,6 @@
     <Link to="/people">
       <i class="zmdi zmdi-face" />
       <label>{Lang.t('tabs.people')}</label>
-    </Link>
-
-    <Link to="/history">
-      <i class="zmdi zmdi-calendar" />
-      <label>{Lang.t('tabs.history')}</label>
     </Link>
 
     <!-- {#each Plugins.filter(p => p.tab) as plugin}
