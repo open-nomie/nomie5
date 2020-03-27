@@ -135,6 +135,10 @@
           padding: 10px 10px;
           background-color: transparent !important;
           outline: none;
+          &:disabled {
+            background-color: transparent !important;
+            color: var(--color-inverse-2);
+          }
           // border: none;
         }
       }
