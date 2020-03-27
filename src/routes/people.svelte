@@ -5,7 +5,9 @@
   import NItem from "../components/list-item/list-item.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
   import PersonBall from "../components/tracker-ball/person-ball.svelte";
+  import AvatarBall from "../components/tracker-ball/ball.svelte";
   import ItemBall from "../components/tracker-ball/item-ball.svelte";
+  import NSearchBar from "../components/search-bar/search-bar.svelte";
   import dayjs from "dayjs";
   import Dymoji from "../components/dymoji/dymoji.svelte";
   import NTip from "../components/tip/tip.svelte";
@@ -18,13 +20,23 @@
 
   let state = {
     people: [],
-    view: "name",
-    stats: {}
+    view: "time",
+    stats: {},
+    searchTerm: null
   };
 
   const personClicked = username => {
+    state.searchTerm = null;
     Interact.person(username);
   };
+
+  function lastContact(date) {
+    if (date) {
+      return dayjs(date).fromNow();
+    } else {
+      return "Never";
+    }
+  }
 
   /**
    * When PeopleStore Changes,
@@ -33,7 +45,7 @@
   $: if (state.view && $PeopleStore.people) {
     let stats = $PeopleStore.stats;
     if (state.view == "name") {
-      state.people = Object.keys($PeopleStore.people).sort((a, b) => {
+      state.people = getPeople().sort((a, b) => {
         return a.toLowerCase() > b.toLowerCase() ? 1 : -1;
       });
       /**
@@ -43,7 +55,7 @@
       const longTimeAgo = dayjs()
         .subtract(100, "years")
         .toDate();
-      state.people = Object.keys($PeopleStore.people).sort((a, b) => {
+      state.people = getPeople().sort((a, b) => {
         return (stats[a] || { last: longTimeAgo }).last <
           (stats[b] || { last: longTimeAgo }).last
           ? 1
@@ -53,14 +65,14 @@
        * Sort by Positivity
        */
     } else if (state.view == "positivity") {
-      state.people = Object.keys($PeopleStore.people).sort((a, b) => {
+      state.people = getPeople().sort((a, b) => {
         return (stats[a] || { score: -99 }).score <
           (stats[b] || { score: -99 }).score
           ? 1
           : -1;
       });
     } else {
-      state.people = Object.keys($PeopleStore.people);
+      state.people = getPeople();
     }
   }
   // Change Main View
@@ -84,6 +96,24 @@
       };
     }
   };
+
+  function searchPeople(evt) {
+    if (evt.detail) {
+      state.searchTerm = evt.detail;
+    } else {
+      state.searchTerm = null;
+    }
+  }
+
+  function getPeople() {
+    if (state.searchTerm) {
+      return Object.keys($PeopleStore.people).filter(person => {
+        return person.toLowerCase().search(state.searchTerm) > -1;
+      });
+    } else {
+      return Object.keys($PeopleStore.people);
+    }
+  }
 
   const filterPeople = () => {};
   //
@@ -123,12 +153,12 @@
 
 <AppLayout title="People">
   <div slot="header">
-    <NToolbar>
-      <!-- <h2 class="text-inverse mr-2">{Lang.t('tabs.people')}</h2> -->
+    <NSearchBar on:change={searchPeople} />
+    <!-- <NToolbar>
       <div class="container container-sm">
         <ButtonGroup size="sm" buttons={pageButtons} />
       </div>
-    </NToolbar>
+    </NToolbar> -->
   </div>
 
   <div slot="content" class="container">
@@ -138,26 +168,39 @@
       them, or include their username in a note. Example: Had dinner with @mom
       today." />
 
-    <div class="n-board h-100">
-      <div class=" n-grid text-inverse">
-        {#each state.people as person}
-          <PersonBall
-            person={$PeopleStore.people[person]}
-            last={getStatItem(person).last}
-            on:click={() => {
-              personClicked(person);
-            }} />
-        {/each}
-        <ItemBall
-          label={'Add Person'}
-          emoji="➕"
+    <div class="n-list">
+      <NItem className="compact" />
+      {#if !state.people.length && !state.searchTerm}
+        <NItem>
+          No @usernames found. You can manually add a user, or just type them in
+          a note using @username.
+        </NItem>
+      {:else if !state.people.length && state.searchTerm}
+        <NItem>Nothing found for @{state.searchTerm}</NItem>
+      {/if}
+      {#each state.people as person}
+        <NItem
+          className="py-2 clickable"
           on:click={() => {
-            let username = prompt(`What's their name?`);
-            if (username) {
-              PeopleStore.addByName(username);
-            }
-          }} />
-      </div>
+            personClicked(person);
+          }}>
+          <div slot="left">
+            {#if $PeopleStore.people[person].avatar}
+              <AvatarBall
+                size={45}
+                avatar={$PeopleStore.people[person].avatar}
+                style={`border-radius:50%; overflow:hidden`} />
+            {:else if $PeopleStore.people[person].displayName}
+              <AvatarBall
+                size={45}
+                username={$PeopleStore.people[person].displayName}
+                style={`border-radius:50%; overflow:hidden`} />
+            {/if}
+          </div>
+          <div class="title">{$PeopleStore.people[person].displayName}</div>
+          <div class="note">{lastContact(getStatItem(person).last)}</div>
+        </NItem>
+      {/each}
     </div>
   </div>
 </AppLayout>

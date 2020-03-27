@@ -9,25 +9,27 @@
   // export let hasResults = false;
 
   // FIre off changes when input changes
-  const fireChange = () => {
+  function fireChange() {
     dispatch("change", searchTerm);
-  };
+  }
   // Fire off when search is hit
-  const fireSearch = () => {
+  function fireSearch() {
     dispatch("search", searchTerm);
-  };
+  }
   // Fire off clearing
-  const fireClear = () => {
+  function fireClear() {
     dispatch("clear");
     searchTerm = null;
-  };
+  }
   // Watch for enter keys
-  const searchKeypress = event => {
+  function searchKeypress(event) {
     if (event.key === "Enter" || event.key === "Return") {
       fireSearch();
       return false;
+    } else {
+      fireChange();
     }
-  };
+  }
 </script>
 
 <style lang="scss">
@@ -54,7 +56,7 @@
   <input
     type="text"
     class="search-input"
-    on:keypress={searchKeypress}
+    on:keyup={searchKeypress}
     bind:value={searchTerm}
     placeholder="{Lang.t('general.search')}..." />
   {#if searchTerm}
