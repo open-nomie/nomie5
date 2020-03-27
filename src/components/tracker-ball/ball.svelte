@@ -4,7 +4,7 @@
   export let avatar = null;
   export let emoji = null;
   export let username = null;
-  export let size = 106;
+  export let size = 102;
   export let color = "#000";
   export let className = "";
   export let style = "";
@@ -40,7 +40,7 @@
     }
   }
   .letter.just-letter {
-    font-size: $size * 0.4 !important;
+    // font-size: $size * 0.4 !important;
   }
 
   .dymoji-wrap {
@@ -55,7 +55,9 @@
   }
 </style>
 
-<div class="n-ball {className}" {style}>
+<div
+  class="n-ball {className}"
+  style="width:{size}px; height:{size}px; {style}">
   {#if avatar}
     <div
       class=" avatar"
@@ -68,7 +70,9 @@
     </div>
   {:else if username}
     <div class="dymoji-wrapper">
-      <div class="letter just-letter" style={color ? `color:${color}` : ''}>
+      <div
+        class="letter just-letter"
+        style="font-size: {size * 0.5}px; {color ? `color:${color}` : ''}">
         {username.substr(0, 2).toUpperCase()}
       </div>
       <Dymoji {username} {size} />

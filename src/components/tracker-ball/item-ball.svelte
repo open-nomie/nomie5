@@ -41,7 +41,7 @@
   <!-- -->
   <div class="avatar-ball">
     <slot />
-    <NBall {username} {emoji} {avatar} {color} size={106} />
+    <NBall {username} {emoji} {avatar} {color} size={102} />
   </div>
 
   <div class="username text-inverse-2 text-sm truncate-1">{label}</div>

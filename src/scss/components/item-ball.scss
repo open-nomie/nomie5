@@ -34,7 +34,6 @@ $size: $trackerBallSize;
     width: $size;
     height: $size;
     border-radius: $size * 0.34;
-    border: solid 3px var(--color-solid);
     background-color: var(--color-solid);
     overflow: hidden;
     box-shadow: var(--box-shadow-float);
