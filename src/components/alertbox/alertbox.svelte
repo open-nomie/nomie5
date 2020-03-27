@@ -44,6 +44,7 @@
 
 <style lang="scss" type="text/scss">
   :global(.alert-dialog) {
+    min-height: 200px;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -88,6 +89,9 @@
       .card-title {
         line-height: 115%;
         color: var(--color-inverse);
+        &.message {
+          padding-bottom: 6px;
+        }
       }
       .card-body {
         flex-grow: 1;
@@ -135,16 +139,18 @@
 
     <!-- -->
 
-    <div class="p-2 d-flex flex-row footer">
+    <div class="p-1 d-flex flex-row footer">
       {#if cancel}
         <button
-          class="btn btn-light mr-1 flex-grow"
+          class="btn btn-lg btn-light mr-1 flex-grow"
           on:click={methods.onCancel}>
           {cancel}
         </button>
       {/if}
 
-      <button class="btn btn-primary ml-1 flex-grow" on:click={methods.onOk}>
+      <button
+        class="btn btn-lg btn-primary ml-1 flex-grow"
+        on:click={methods.onOk}>
         {ok}
       </button>
     </div>

@@ -98,7 +98,7 @@
 
   function searchPeople(evt) {
     if (evt.detail) {
-      state.searchTerm = evt.detail;
+      state.searchTerm = evt.detail.toLowerCase();
     } else {
       state.searchTerm = null;
     }

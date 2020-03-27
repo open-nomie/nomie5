@@ -159,6 +159,10 @@ TODO: Organize main into components or containers.
   }
 }
 
+.align-top {
+  align-items: flex-start;
+}
+
 .loading-screen {
   position: fixed;
   top: 0;
@@ -278,6 +282,7 @@ $night: #311f62;
 
 .card {
   $padding: 16px;
+  $footerPadding: 8px;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -287,10 +292,10 @@ $night: #311f62;
     min-height: 0;
   }
   .footer {
-    padding: $padding !important;
+    padding: $footerPadding !important;
     button {
-      margin-right: $padding * 0.5 !important;
-      margin-left: $padding * 0.5 !important;
+      margin-right: $footerPadding * 0.5 !important;
+      margin-left: $footerPadding * 0.5 !important;
       &:first-child {
         margin-left: 0px !important;
       }

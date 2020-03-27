@@ -28,7 +28,10 @@
   let stepCount = 0;
 
   const cancel = async () => {
-    let confirmed = await Interact.confirm("Cancel creating this tracker?");
+    let confirmed = await Interact.confirm(
+      "Are you sure?",
+      "Any changes will be lost"
+    );
     if (confirmed) {
       TrackerDesignerStore.clear();
       navigate("/");
@@ -176,8 +179,8 @@
       style="background-color:{$TrackerDesignerStore.tracker.color};
       box-shadow:0px 10px 10px -9px {$TrackerDesignerStore.tracker.color}">
 
-      <div class="n-row">
-        <button class="btn btn-clear text-solid" on:click={cancel}>
+      <div class="n-row align-top">
+        <button class="btn btn-clear text-solid mt-2 ml-2" on:click={cancel}>
           <i class="zmdi zmdi-close text-lg" />
         </button>
         <div class=" text-bold filler text-center">

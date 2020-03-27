@@ -4877,7 +4877,7 @@ button:focus {
 .btn {
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  border-radius: 0.4rem;
+  border-radius: 14px;
   display: flex;
   justify-content: center;
   align-items: center; }
@@ -6471,6 +6471,9 @@ TODO: Organize main into components or containers.
       bottom: 1000px;
       opacity: 0; }
 
+.align-top {
+  align-items: flex-start; }
+
 .loading-screen {
   position: fixed;
   top: 0;
@@ -6565,10 +6568,10 @@ TODO: Organize main into components or containers.
     padding: 16px;
     min-height: 0; }
   .card .footer {
-    padding: 16px !important; }
+    padding: 8px !important; }
     .card .footer button {
-      margin-right: 8px !important;
-      margin-left: 8px !important; }
+      margin-right: 4px !important;
+      margin-left: 4px !important; }
       .card .footer button:first-child {
         margin-left: 0px !important; }
       .card .footer button:last-child {

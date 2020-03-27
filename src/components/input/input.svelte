@@ -90,11 +90,9 @@
       }
 
       &.has-focus {
-        .n-input {
-          border: solid 1px rgba($primaryBright, 0.6);
-          box-shadow: var(--box-shadow-float);
-          background-color: var(--color-solid);
-        }
+        border: solid 1px rgba($primaryBright, 0.6);
+        box-shadow: var(--box-shadow-float);
+        background-color: var(--color-solid);
       }
 
       .n-input {

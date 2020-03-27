@@ -91,7 +91,9 @@
 </style>
 
 <div class="header-slot" bind:this={headerDom}>
-  <div class="header-fade" />
+  {#if showTabs}
+    <div class="header-fade" />
+  {/if}
   <slot name="header" />
 </div>
 <div class="content-slot" bind:this={contentDom}>

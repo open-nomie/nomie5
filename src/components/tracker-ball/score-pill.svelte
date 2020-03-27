@@ -18,7 +18,7 @@
     $scoreSize: 26px;
     position: absolute;
     top: 8px;
-    left: 4px;
+    left: 8px;
     height: $scoreSize;
     min-width: $scoreSize;
     border-radius: $scoreSize * 0.5;
