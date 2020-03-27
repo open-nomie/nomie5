@@ -43,13 +43,19 @@
     flex-grow: 1;
   }
 
+  :global(.header-slot .n-toolbar) {
+    z-index: 10;
+    position: relative;
+  }
   .header-slot {
     padding-top: env(safe-area-inset-top);
-    background-color: var(--header-background);
+    // background-color: var(--color-bg);
+    // background: transparent;
+    background: transparent;
 
     flex-grow: 0;
     flex-shrink: 0;
-    box-shadow: var(--box-shadow-float);
+    // box-shadow: var(--box-shadow-float);
     z-index: 1200;
     position: fixed;
     top: 0;
@@ -59,6 +65,16 @@
     h2,
     h3 {
       font-size: 1rem;
+    }
+    .header-fade {
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: -40px;
+      background: var(--header-fade);
     }
   }
 
@@ -75,6 +91,7 @@
 </style>
 
 <div class="header-slot" bind:this={headerDom}>
+  <div class="header-fade" />
   <slot name="header" />
 </div>
 <div class="content-slot" bind:this={contentDom}>

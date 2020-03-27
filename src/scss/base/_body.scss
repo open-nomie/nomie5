@@ -64,6 +64,12 @@ body {
 
   --header-background: #fff;
   --modal-border: solid 1px rgba(0, 0, 0, 0.12);
+  --header-fade: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 1) 35%,
+    rgba(255, 255, 255, 0.5886729691876751) 76%,
+    rgba(255, 255, 255, 0) 100%
+  );
 }
 
 body.test {
@@ -77,6 +83,7 @@ body.test {
 }
 
 @mixin darkmode {
+  --header-fade: linear-gradient(180deg, rgba(0, 0, 0, 1) 35%, rgba(0, 0, 0, 0) 100%);
   --header-background: #111;
   --tabs-background: #111;
   --tracker-background: rgb(5, 5, 5);

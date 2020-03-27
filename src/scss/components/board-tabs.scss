@@ -1,5 +1,6 @@
+@import "../utils/variables";
 .n-board-tabs {
-  background-color: var(--header-background);
+  // background-color: var(--header-background);
   // backdrop-filter: saturate(180%) blur(20px);
   width: 100%;
   min-height: 50px;
@@ -8,7 +9,12 @@
   box-shadow: inset 3px 0px 4px rgba(0, 0, 0, 0);
   transition: all 0.2s ease-in-out;
   &:not([data-scroll="0"]) {
-    box-shadow: inset 3px 0px 4px var(--color-faded-1);
+    box-shadow: inset 2px 0px 1px var(--color-faded);
+  }
+
+  .zmdi {
+    color: var(--color-inverse-2);
+    z-index: 10;
   }
 
   .tab {
@@ -26,7 +32,19 @@
     justify-content: center;
     align-items: center;
     &.active {
-      border-bottom: solid 2px var(--color-primary-bright);
+      // border-bottom: solid 2px var(--color-primary-bright);
+      &:before {
+        content: "";
+        position: absolute;
+        top: 45px;
+        z-index: 100;
+        left: 0;
+        right: 0;
+        height: 4px;
+        border-radius: 2px;
+        background-color: var(--color-primary-bright);
+        box-shadow: 0px 2px 10px rgba($primaryBright, 0.4);
+      }
     }
     &:last-child {
       &.active {
@@ -46,8 +64,6 @@
     }
     &:active {
       &:after {
-        background-color: var(--color-primary-bright);
-        opacity: 0.5;
         transition: all 0.2s ease-in-out;
       }
     }

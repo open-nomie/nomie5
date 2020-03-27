@@ -594,6 +594,7 @@
     z-index: 1000;
   }
   .zmdi-search {
+    z-index: 10;
     color: var(--color-inverse);
   }
   .n-board .trackers {
@@ -685,6 +686,23 @@
           class="zmdi zmdi-tab clickable ml-2 text-xs text-faded-2" />
       </NToolbar>
     {/if}
+    {#if data.searching}
+      <NToolbar className="mt-3 bg-transparent">
+        <div
+          class="d-flex d-row justify-content-between align-items-center w-100
+          search-bar">
+
+          <input
+            type="search"
+            bind:this={searchInput}
+            bind:value={data.searchTerm}
+            on:input={methods.searchKeypress}
+            placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}..."
+            class="search-input" />
+
+        </div>
+      </NToolbar>
+    {/if}
   </div>
   <!-- end header-->
   <div slot="content" class="container board-container">
@@ -695,24 +713,6 @@
         </div>
       {:else}
         <main class="n-board h-100">
-
-          {#if data.searching}
-            <NToolbar className="mt-3 bg-transparent">
-              <div
-                class="d-flex d-row justify-content-between align-items-center
-                w-100 search-bar">
-
-                <input
-                  type="search"
-                  bind:this={searchInput}
-                  bind:value={data.searchTerm}
-                  on:input={methods.searchKeypress}
-                  placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}..."
-                  class="search-input" />
-
-              </div>
-            </NToolbar>
-          {/if}
 
           <!-- Loop over trackers -->
           <div class="trackers n-grid">
