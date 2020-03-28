@@ -223,6 +223,9 @@ const userInit = () => {
       });
       return d;
     },
+    getTheme() {
+      return localStorage.getItem(config.theme_key) || "auto";
+    },
     // Set Dark Mode for User
     setTheme(theme) {
       theme = ["auto", "light", "dark"].indexOf(theme) > -1 ? theme : "auto";

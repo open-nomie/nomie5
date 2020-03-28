@@ -28,7 +28,7 @@
     typeof window.orientation !== "undefined" ||
     navigator.userAgent.indexOf("IEMobile") !== -1;
 
-  const data = {
+  const state = {
     ready: false,
     showMore: false,
     activeSlide: 0,
@@ -36,34 +36,40 @@
     transitioning: false,
     isTiny: false,
     redirecting: false,
-    timeFormat: "is12"
+    timeFormat: "is12",
+    theme: UserStore.getTheme()
   };
+
+  let testValue = 0;
+  function testTrackerTap() {
+    testValue++;
+  }
 
   const methods = {
     blockstackLogin() {
-      data.redirecting = true;
+      state.redirecting = true;
       UserSession.redirectToSignIn();
     },
 
     next() {
-      if (data.activeSlide == 3 && $UserStore.storageType) {
+      if (state.activeSlide == 3 && $UserStore.storageType) {
         if ($UserStore.storageType == "local") {
           window.location.href = "/";
         } else {
           methods.blockstackLogin();
         }
       } else {
-        data.activeSlide = data.activeSlide + 1;
+        state.activeSlide = state.activeSlide + 1;
       }
     },
     back() {
-      data.activeSlide = data.activeSlide - 1;
+      state.activeSlide = state.activeSlide - 1;
     }
   };
   onMount(() => {
     setTimeout(() => {
       if (window.document.body.offsetHeight < 640) {
-        data.isTiny = true;
+        state.isTiny = true;
       }
     }, 12);
   });
@@ -72,24 +78,17 @@
 <style lang="scss">
   @import "../../scss/utils/_utils";
   .page-setup.page {
-    background-color: var(--color-solid);
+    --local-background: var(--color-bg);
+
+    background-color: var(--local-background);
     min-height: calc(100vh);
     max-height: calc(100vh);
-    color: #fff;
+    color: var(--color-inverse);
     justify-content: center;
     display: flex;
     flex-direction: column;
     justify-content: stretch;
-    &:before {
-      // content: "";
-      // z-index: 0;
-      // position: absolute;
-      // top: 0;
-      // height: 50vh;
-      // left: 0;
-      // right: 0;
-      // background-color: var(--color-primary);
-    }
+
     .logo {
       margin-bottom: 10px;
     }
@@ -101,7 +100,7 @@
       justify-content: center;
       flex-direction: column;
       a {
-        color: #fff;
+        color: var(--color-inverse);
         border-bottom: dotted 1px #ccc;
       }
     }
@@ -114,7 +113,7 @@
       flex-direction: column;
       height: 100%;
       transition: all 0.3s ease-in-out;
-      background-color: rgb(15, 15, 15);
+      background-color: var(--local-background);
 
       &.active {
       }
@@ -203,8 +202,14 @@
       }
 
       .btn-content {
-        color: #fff;
-        border: solid 1px rgba(255, 255, 255, 0.5);
+        color: var(--color-inverse);
+        box-shadow: var(--box-shadow-float);
+        background-color: var(--color-solid);
+        border: none;
+        &.active {
+          background-color: var(--color-primary-bright);
+          color: #fff;
+        }
       }
 
       .top {
@@ -273,7 +278,7 @@
     min-height: 50px;
     left: 0;
     right: 0;
-    background-color: var(--color-solid);
+    background-color: var(--local-background);
     padding: 10px 20px;
     @include media-breakpoint-up(md) {
       padding: 20px 30px;
@@ -302,36 +307,33 @@
 
 <main class="page page-setup">
   <div class="logo-holder">
-    <Logo size={16} color="#FFFFFF" />
+    <Logo size={16} color="#CCC" />
   </div>
   <section
-    class="slide slide-1 slide-welcome {data.activeSlide === 0 ? 'active' : 'hidden'}
-    {data.isTiny ? 'is-tiny' : 'is-normal'}
-    {data.transitioning ? 'move' : ''}">
+    class="slide slide-1 slide-welcome {state.activeSlide === 0 ? 'active' : 'hidden'}
+    {state.isTiny ? 'is-tiny' : 'is-normal'}
+    {state.transitioning ? 'move' : ''}">
     <div class="top center-grow">
-      <h1 style="max-width:400px;">
-        Track & monitor your life, with the tap of a button.
+      <TrackerButton
+        on:click={testTrackerTap}
+        tracker={{ label: 'Tap Me!', emoji: '😊' }}
+        value={testValue} />
+      <h1 style="max-width:400px; mt-3">
+        Track your mood & habits with the tap of a button.
       </h1>
       <p>
-        <strong>
-          The
-          <a
-            href="https://nomie.app"
-            target="_blank"
-            aria-label="Learn more about Nomie">
-            100% private life tracker
-          </a>
-          that's
-          <a href="https://github.com/open-nomie/nomie">Open Source too!</a>
-        </strong>
+        <strong>100% private</strong>
+        &
+        <a href="https://github.com/open-nomie/nomie">open source.</a>
+
       </p>
     </div>
   </section>
 
   <section
-    class="slide slide-2 slide-welcome {data.activeSlide === 1 ? 'active' : 'hidden'}
-    {data.isTiny ? 'is-tiny' : 'is-normal'}
-    {data.transitioning ? 'move' : ''}">
+    class="slide slide-2 slide-welcome {state.activeSlide === 1 ? 'active' : 'hidden'}
+    {state.isTiny ? 'is-tiny' : 'is-normal'}
+    {state.transitioning ? 'move' : ''}">
     <div class="top center-grow">
       <div class="bottom-pop phone-frame mt-2">
         <img
@@ -339,20 +341,55 @@
           alt="Nomie stats view"
           src="/images/onboard/nomie4.2.3.stats.png" />
       </div>
-      <h1 style="max-width:400px;" class="mt-3">Charts, streaks & maps.</h1>
-      <p>See the patterns that make you, you.</p>
+      <h1 style="max-width:400px;" class="mt-3">Charts, Streaks, Maps</h1>
+      <p>Your life visualized</p>
     </div>
 
   </section>
 
   <section
-    class="slide slide-3 slide-welcome {data.activeSlide === 2 ? 'active' : 'hidden'}
-    {data.isTiny ? 'is-tiny' : 'is-normal'}
-    {data.transitioning ? 'move' : ''}">
+    class="slide slide-3 slide-welcome {state.activeSlide === 2 ? 'active' : 'hidden'}
+    {state.isTiny ? 'is-tiny' : 'is-normal'}
+    {state.transitioning ? 'move' : ''}">
+    <div class="top center-grow pt-3">
+
+      <h1 class="mt-4">{Lang.t('setup.choose-theme', `Choose your Theme`)}</h1>
+      <button
+        class="btn-block my-3 btn btn-content {state.theme == 'light' ? 'active' : ''}"
+        on:click={() => {
+          UserStore.setTheme('light');
+          state.theme = 'light';
+        }}>
+        <div class="text-lg">Light</div>
+      </button>
+      <button
+        class="btn-block my-3 btn btn-content {state.theme == 'dark' ? 'active' : ''}"
+        on:click={() => {
+          UserStore.setTheme('dark');
+          state.theme = 'dark';
+        }}>
+        <div class="text-lg">Dark</div>
+      </button>
+      <button
+        class="btn-block my-3 btn btn-content {state.theme == 'auto' ? 'active' : ''}"
+        on:click={() => {
+          UserStore.setTheme('auto');
+          state.theme = 'auto';
+        }}>
+        <div class="text-lg">Automatic</div>
+      </button>
+    </div>
+
+  </section>
+
+  <section
+    class="slide slide-3 slide-welcome {state.activeSlide === 3 ? 'active' : 'hidden'}
+    {state.isTiny ? 'is-tiny' : 'is-normal'}
+    {state.transitioning ? 'move' : ''}">
     <div class="top center-grow pt-3">
 
       <h1 class="mt-4">
-        {Lang.t('setup.choose-time-format', `Choose your time format...`)}
+        {Lang.t('setup.choose-time-format', `Choose Time Format`)}
       </h1>
       <button
         class="btn-block my-3 btn btn-content {$UserStore.meta.is24Hour ? 'active' : ''}"
@@ -375,19 +412,13 @@
   </section>
 
   <section
-    class="slide slide-4 slide-welcome {data.activeSlide === 3 ? 'active' : 'hidden'}
-    {data.transitioning ? 'move' : ''}">
+    class="slide slide-4 slide-welcome {state.activeSlide === 4 ? 'active' : 'hidden'}
+    {state.transitioning ? 'move' : ''}">
     <div class="top center-grow">
 
       <h1 class="mt-4">
         {Lang.t('setup.pick-data-storage', `Choose your data's location...`)}
       </h1>
-      <p class="text-faded-3">
-        You can always change this later.
-        <a href="https://blockstack.com" class="text-white" target="_blank">
-          Learn more about Blockstack
-        </a>
-      </p>
       <button
         class=" btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
         on:click={() => {
@@ -409,7 +440,12 @@
           <strong>by Blockstack.</strong>
         </div>
       </button>
-
+      <p class="text-faded-3">
+        You can always change this later.
+        <a href="https://blockstack.com" target="_blank">
+          Learn more about Blockstack
+        </a>
+      </p>
     </div>
 
   </section>
@@ -417,12 +453,12 @@
 </main>
 
 <div class="footer-buttons n-row">
-  {#if data.activeSlide > 0}
+  {#if state.activeSlide > 0}
     <button class="btn btn-clear " on:click={methods.back}>BACK</button>
   {/if}
   <div class="filler" />
-  {#if (data.activeSlide == 3 && $UserStore.storageType) || data.activeSlide != 3}
-    {#if !data.redirecting}
+  {#if (state.activeSlide == 4 && $UserStore.storageType) || state.activeSlide != 4}
+    {#if !state.redirecting}
       <button class="btn btn-clear " on:click={methods.next}>
         <strong>NEXT</strong>
       </button>
@@ -433,25 +469,3 @@
     {/if}
   {/if}
 </div>
-<!-- 
-<button
-  class="my-3 mt-4 btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
-  on:click={() => {
-    UserStore.setStorage('blockstack');
-  }}>
-  <NText size="lg" className="text-white">Encrypted in the Cloud</NText>
-  <NText size="sm" className="text-white">
-    Access your data on multiple devices using end-to-end encryption.
-    <strong>Powered by Blockstack.</strong>
-  </NText>
-</button>
-<button
-  class="my-3 btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
-  on:click={() => {
-    UserStore.setStorage('local');
-  }}>
-  <NText size="lg" className="text-white">This Device Only</NText>
-  <NText size="sm" className="text-white">
-    All data is stored unencrypted, but ONLY on your device.
-  </NText>
-</button> -->
