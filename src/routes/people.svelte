@@ -168,7 +168,11 @@
 
 <AppLayout title="People">
   <div slot="header">
-    <NSearchBar on:change={searchPeople} on:clear={clearSearch} autocomplete>
+    <NSearchBar
+      on:change={searchPeople}
+      on:clear={clearSearch}
+      placehoder="Search People..."
+      autocomplete>
       <button
         on:click={addPerson}
         class="btn btn-icon btn-clear zmdi zmdi-account-add text-inverse"
@@ -183,20 +187,22 @@
 
   <div slot="content" class="container">
 
-    <NTip
-      tip="Track the people you interact with the most. You can manually add
-      them, or include their username in a note. Example: Had dinner with @mom
-      today." />
-
-    <div class="n-list mt-2">
+    <div class="n-list">
       {#if !state.people.length && !state.searchTerm}
-        <NItem>
-          No @usernames found. You can manually add a user, or just type them in
-          a note using @username.
+        <NItem className=" py-3">
+          <div class="text-md">
+            Use Nomie to track and monitor how you interact with others
+          </div>
+          <div class="text-sm mt-2">
+            <span class="fake-link" on:click={addPerson}>Add a person</span>
+            or type @username in a note to auto create people.
+          </div>
+
         </NItem>
       {:else if !state.people.length && state.searchTerm}
         <NItem>Nothing found for @{state.searchTerm}</NItem>
       {/if}
+
       {#each state.people as person}
         <NItem
           className="py-2 clickable"
