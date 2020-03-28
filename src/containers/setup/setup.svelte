@@ -52,7 +52,7 @@
     },
 
     next() {
-      if (state.activeSlide == 3 && $UserStore.storageType) {
+      if (state.activeSlide == 4 && $UserStore.storageType) {
         if ($UserStore.storageType == "local") {
           window.location.href = "/";
         } else {
