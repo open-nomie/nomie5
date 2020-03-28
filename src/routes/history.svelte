@@ -450,6 +450,7 @@
   <header slot="header">
     <NSearchBar
       searchTerm={state.searchTerm}
+      style={showSearch ? 'height:105px;' : ''}
       hasResults={(searchLogs || []).length > 0}
       on:change={methods.searchChange}
       on:clear={methods.clearSearch}

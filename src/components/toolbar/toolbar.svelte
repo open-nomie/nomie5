@@ -1,10 +1,12 @@
 <script>
   export let pinTop = undefined;
   export let className = "";
+  export let style = "";
 </script>
 
 <style lang="scss">
   .n-toolbar {
+    transition: all 0.2s ease-in-out;
     min-height: 50px;
     display: flex;
     align-items: center;
@@ -67,7 +69,7 @@
   }
 </style>
 
-<div class="n-toolbar {pinTop ? 'pin-top' : ''} {className}">
+<div class="n-toolbar {pinTop ? 'pin-top' : ''} {className}" {style}>
   <div class="container n-row px-0">
     <slot />
   </div>

@@ -8,11 +8,14 @@
   export let type = "text";
   export let help = null;
   export let className = "";
+  export let style = "";
   export let inputStyle = "";
   export let inputClass = "";
   export let pattern = "";
   export let width = "";
   export let disabled = false;
+  export let solo = false;
+  export let compact = false;
 
   let focused = false;
   let hit = false;
@@ -25,7 +28,10 @@
     focused = true;
     dispatch("focus");
   };
-  let change = () => {
+  let change = evt => {
+    if (evt.key == "Enter") {
+      dispatch("enter", value);
+    }
     dispatch("change", value);
   };
 
@@ -59,9 +65,64 @@
       opacity: 0.5;
       padding: 6px;
     }
+
+    &.with-label {
+      // background-color: pink !important;
+      .n-input-wrapper {
+        input,
+        select {
+          min-height: $height - 1;
+        }
+        &.has-input {
+          .n-input {
+            label {
+              transition: all 0.2s ease-in-out;
+              opacity: 0.4;
+              transform: translateY(0);
+            }
+            input,
+            select {
+              padding-top: 14px;
+              padding-bottom: 0px;
+              font-size: 1.05rem;
+            }
+          }
+        }
+      }
+    } // end with-label
+
+    &.solo {
+      // background-color: blue !important;
+      .n-input-wrapper {
+        height: $height;
+        .n-input {
+          height: $height;
+          input,
+          select {
+            height: $height - 1;
+          }
+        }
+      }
+    }
+
+    &.solo.compact {
+      // background-color: blue !important;
+      .n-input-wrapper {
+        height: 36px;
+        .n-input {
+          height: 36px;
+          input,
+          select {
+            height: 35px;
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+
     .n-input-wrapper {
       // position: relative;
-      min-height: $height;
+      height: $height;
       display: flex;
       width: 100%;
       min-width: 50px;
@@ -71,37 +132,16 @@
       flex-grow: 1;
       flex-shrink: 1;
       transition: all 0.2s ease-in-out;
-      background-color: var(--color-faded-1);
+      background-color: var(--input-background);
       border-radius: 12px;
-      &.has-input {
-        .n-input {
-          label {
-            transition: all 0.2s ease-in-out;
-            opacity: 0.4;
-            transform: translateY(0);
-          }
-          input,
-          select {
-            padding-top: 14px;
-            padding-bottom: 0px;
-            font-size: 1.05rem;
-          }
-        }
-      }
 
       &.has-focus {
-        border: solid 1px rgba($primaryBright, 0.6);
+        border: solid 1px rgba($primaryBright, 0.2);
         box-shadow: var(--box-shadow-float);
-        background-color: var(--color-solid);
+        background-color: var(--color-solid-2);
       }
 
       .n-input {
-        // position: absolute;
-        // top: 0;
-        // right: 0;
-        // left: 0;
-        // bottom: 0;
-        min-height: $height;
         width: 100%;
         min-width: 50px;
         max-width: 100%;
@@ -128,9 +168,9 @@
         input,
         select {
           transition: all 0.2s ease-in-out;
-          min-height: $height - 1;
           margin: 0;
-          padding: 10px 10px;
+          padding-left: 10px;
+          padding-right: 10px;
           background-color: transparent !important;
           outline: none;
           &:disabled {
@@ -145,8 +185,11 @@
 </style>
 
 <div
-  class="n-input-container {className}"
-  style={width ? `max-width:${width}; width:${width}; ` : ``}>
+  class="n-input-container {className}
+  {compact ? 'compact' : ''}
+  {solo ? 'solo' : 'with-label'}"
+  style="{width ? `max-width:${width}; width:${width}; ` : ``}
+  {style}">
   <div
     class="n-input-wrapper {hasInput ? 'has-input' : 'no-input'}
     {focused ? 'has-focus' : 'no-focus'}">
@@ -161,7 +204,7 @@
           class={inputClass}
           bind:value
           {placeholder}
-          on:change={change}
+          on:keyup={change}
           on:focus={focus}
           on:blur={blur} />
       {:else if type == 'number'}
@@ -172,7 +215,7 @@
           class={inputClass}
           bind:value
           {placeholder}
-          on:change={change}
+          on:keyup={change}
           on:focus={focus}
           on:blur={blur} />
       {:else if type == 'select'}
@@ -188,7 +231,7 @@
           {pattern}
           bind:value
           {placeholder}
-          on:change={change}
+          on:keyup={change}
           on:focus={focus}
           on:blur={blur} />
       {/if}

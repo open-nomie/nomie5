@@ -44,6 +44,7 @@ input[type="password"] {
 .form-control {
   &:focus {
     box-shadow: none !important;
+    background-color: var(--color-solid);
   }
 }
 .form-control,

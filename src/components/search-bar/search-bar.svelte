@@ -1,5 +1,6 @@
 <script>
   import NToolbar from "../toolbar/toolbar.svelte";
+  import NInput from "../input/input.svelte";
 
   import { Lang } from "../../store/lang";
   import { createEventDispatcher } from "svelte";
@@ -8,6 +9,7 @@
   export let searchTerm = null;
   export let autocomplete = false;
   export let placeholder = `${Lang.t("general.search")}...`;
+  export let style = "";
   // export let hasResults = false;
 
   // FIre off changes when input changes
@@ -40,23 +42,13 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    .input-wrapper {
-      border-radius: 6px;
-      background-color: var(--color-faded-1) !important;
-      flex-grow: 1;
-      flex-shrink: 1;
-      input {
-        border: none;
-        background-color: transparent;
-      }
-    }
   }
   :global(.search-bar .btn-action-clear) {
     font-size: 14px;
   }
 </style>
 
-<NToolbar className="search-bar">
+<NToolbar className="search-bar" {style}>
   {#if searchTerm}
     <button
       class="btn btn-sm btn-clear btn-action-clear"
@@ -65,13 +57,14 @@
       <i class="zmdi zmdi-close-circle text-sm" />
     </button>
   {/if}
-  <div class="input-wrapper n-row">
+  <div class="n-row">
     <slot name="left" />
-    <input
-      type="text"
-      class="search-input"
-      on:keyup={searchKeypress}
+    <NInput
+      solo
+      compact
       bind:value={searchTerm}
+      on:change={fireChange}
+      on:enter={fireSearch}
       {placeholder} />
     <slot name="right" />
     {#if searchTerm && !autocomplete}
