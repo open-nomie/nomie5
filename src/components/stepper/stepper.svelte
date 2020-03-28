@@ -1,6 +1,7 @@
 <script>
   export let steps = 0;
   export let current = 0;
+  export let dark = false;
 
   let _steps = [];
   $: if (steps || current) {
@@ -33,10 +34,19 @@
         height: 6px;
       }
     }
+    &.dark {
+      .step {
+        background-color: var(--color-primary);
+        opacity: 0.2;
+        &.active {
+          opacity: 1;
+        }
+      }
+    }
   }
 </style>
 
-<div class="n-stepper">
+<div class="n-stepper {dark ? 'dark' : 'light'}">
   {#each _steps as step}
     <div class="step {step ? 'active' : 'inactive'}" />
   {/each}

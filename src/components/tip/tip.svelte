@@ -1,8 +1,10 @@
 <script>
   import { Lang } from "../../store/lang";
   import Storage from "../../modules/storage/storage";
+  import NStepper from "../../components/stepper/stepper.svelte";
+  import { Interact } from "../../store/interact";
   import md5 from "md5";
-  export let tip = null;
+  export let tips = [];
   export let className = "";
 
   let hiddenTips = Storage.local.get("hidden-tips") || [];
@@ -10,46 +12,91 @@
   let id = null;
   let show = false;
 
-  $: if (tip) {
-    id = md5(tip);
+  const state = {
+    activeTip: 0
+  };
+
+  $: if (tips) {
+    id = md5(JSON.stringify(tips));
     show = hiddenTips.indexOf(id) == -1;
+  } else {
+    show = false;
   }
 
-  const hideTip = () => {
-    hiddenTips.push(id);
-    Storage.local.put("hidden-tips", hiddenTips);
-    show = false;
-  };
+  async function hideTips() {
+    let confirmed = await Interact.confirm("Hide these tips?");
+    if (confirmed) {
+      hiddenTips.push(id);
+      Storage.local.put("hidden-tips", hiddenTips);
+      show = false;
+    }
+  }
+
+  function nextTip() {
+    if (state.activeTip == tips.length - 1) {
+      state.activeTip = 0;
+    } else {
+      state.activeTip++;
+    }
+  }
+  function previousTip() {
+    if (state.activeTip == 0) {
+      state.activeTip = tips.length - 1;
+    } else {
+      state.activeTip--;
+    }
+  }
 </script>
 
 <style lang="scss">
-  .tip {
-    box-shadow: var(--box-shadow-float);
-    max-width: 700px;
-    border: solid 1px rgba(155, 155, 155, 0.4);
-    padding: 18px;
-    font-size: 0.8rem;
+  .n-tips {
     margin: 16px;
-    border-radius: 12px;
-    text-align: center button {
-      width: 120px;
-      margin-top: 16px;
+    width: 280px;
+    padding: 16px;
+    padding-bottom: 6px;
+    position: relative;
+    border-radius: 6px;
+    background-color: var(--color-solid);
+    box-shadow: var(--box-shadow-float);
+    .btn-close {
+      position: absolute;
+
+      top: -10px;
+      left: -8px;
+      background-color: var(--color-solid);
+      color: var(--color-inverse);
+      width: 18px;
+      height: 18px;
+      border-radius: 10px;
+      border: none;
+      display: flex;
+      appearance: none;
+    }
+    .tip {
+      font-size: 0.9rem;
+      line-height: 1.2rem;
+      text-align: center;
+      color: var(--color-inverse);
     }
   }
 </style>
 
 {#if show}
-  <div class="tip {className} pulse">
-    <div class="text text-inverse">
-      {tip}
-      <slot />
-    </div>
-    <div class="n-row">
+  <div class="n-tips">
+    <div class="n-row mb-2">
+      <div class="btn-close text-lg flex-grow-off" on:click={hideTips}>
+        <i class="text-lg zmdi zmdi-close-circle" />
+      </div>
       <button
-        class="btn block w-100 btn-sm mt-2 btn-primary"
-        on:click={hideTip}>
-        {Lang.t('general.hide-tip', 'Hide Tip')}
-      </button>
+        class="btn btn-clear btn-icon zmdi zmdi-chevron-left"
+        on:click={previousTip} />
+      <div class="tip filler">{tips[state.activeTip]}</div>
+      <div class="d-flex flex-row arrows">
+        <button
+          class="btn btn-clear btn-icon zmdi zmdi-chevron-right"
+          on:click={nextTip} />
+      </div>
     </div>
+    <NStepper steps={tips.length} current={state.activeTip} dark />
   </div>
 {/if}
