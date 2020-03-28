@@ -130,7 +130,7 @@ const PeopleInit = () => {
     async getPeople() {
       let people = await Storage.get(`${config.data_root}/${config.data_people_key}.json`);
 
-      return update(state => {
+      update(state => {
         if (people) {
           Object.keys(people).forEach(personKey => {
             people[personKey] = new Person(people[personKey]);
@@ -139,6 +139,7 @@ const PeopleInit = () => {
         state.people = people;
         return state;
       });
+      return people;
     },
     async getStats() {
       let stats = await getRecentPeopleStats();
