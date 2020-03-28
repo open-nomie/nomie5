@@ -5374,16 +5374,16 @@ body.theme-dark {
   color: var(--color-faded-3) !important; }
 
 .text-xs {
-  font-size: 0.5rem !important;
-  line-height: 0.7rem; }
+  font-size: 0.6rem !important;
+  line-height: 0.8rem; }
 
 .text-sm {
-  font-size: 0.81rem !important;
-  line-height: 0.98rem; }
+  font-size: 0.85rem !important;
+  line-height: 1.2rem; }
 
 .text-md {
   font-size: 1rem !important;
-  line-height: 1.2rem; }
+  line-height: 1.3rem; }
 
 .text-lg {
   font-size: 1.3rem !important; }
@@ -6557,6 +6557,10 @@ TODO: Organize main into components or containers.
 .n-toolbar h3 {
   font-size: 1.1rem;
   margin-bottom: 0; }
+
+.fake-link {
+  color: var(--color-primary-bright);
+  border-bottom: dotted 1px var(--color-primary-bright); }
 
 .card {
   border-radius: 0.5rem;

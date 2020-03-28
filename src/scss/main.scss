@@ -280,6 +280,11 @@ $night: #311f62;
   }
 }
 
+.fake-link {
+  color: var(--color-primary-bright);
+  border-bottom: dotted 1px var(--color-primary-bright);
+}
+
 .card {
   $padding: 16px;
   $footerPadding: 8px;
