@@ -27,6 +27,7 @@
   export let focus = false;
   export let fullDate = false;
   export let show24Hour = false;
+  export let showMore = true;
   // consts
   const dispatch = createEventDispatcher();
 
@@ -103,16 +104,18 @@
         {time.fromNow(displayLog.end)}
       </div>
       <!-- Janky - fix this -->
-      <button
-        on:click={event => {
-          dispatch('moreClick', displayLog);
-        }}
-        class="btn btn-sm btn-clear pl-2 pr-2 more-button"
-        style="">
-        <i
-          class="zmdi zmdi-more text-primary-bright"
-          style="height:30px; line-height:30px;" />
-      </button>
+      {#if showMore === true}
+        <button
+          on:click={event => {
+            dispatch('moreClick', displayLog);
+          }}
+          class="btn btn-sm btn-clear pl-2 pr-2 more-button"
+          style="">
+          <i
+            class="zmdi zmdi-more text-primary-bright"
+            style="height:30px; line-height:30px;" />
+        </button>
+      {/if}
     </div>
     <!-- Process the Note Content with the Textualizer 
     This really isn't special right now -->
