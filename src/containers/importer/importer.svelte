@@ -22,6 +22,7 @@
   import { LedgerStore } from "../../store/ledger";
   import { TrackerStore } from "../../store/trackers";
   import { BoardStore } from "../../store/boards";
+  import { PeopleStore } from "../../store/people-store";
   import { Lang } from "../../store/lang";
 
   let fileInput; // holder of dom element self
@@ -30,13 +31,15 @@
   let archive = {
     trackers: null,
     records: null,
-    boards: null
+    boards: null,
+    people: null
   };
   // Status of imports
   let importing = {
     boards: { running: false, done: false },
     records: { running: false, done: false, progress: 0 },
     trackers: { running: false, done: false },
+    people: { running: false, done: false },
     all: { running: false, done: false }
   };
 
@@ -156,31 +159,45 @@
     },
 
     // Import All Things
-    _importAll() {
+    async _importAll() {
       importing.all.running = true;
-      return methods._importTrackers().then(() => {
-        methods._importBoards().then(() => {
-          methods._importRecords().then(() => {
-            importing.all.running = false;
-            importing.all.done = true;
-            Interact.toast("Import Complete. Reloading...");
-            // window.location.reload();
-            window.location.href = "/";
-            return true;
-          });
-        });
-      });
+      await methods._importTrackers();
+      await methods._importRecords();
+      await methods._importPeople();
+      importing.all.running = false;
+      importing.all.done = true;
+      Interact.toast("Import Complete. Reloading...");
+      // window.location.reload();
+      window.location.href = "/";
+      return true;
     },
     // Confirm Import All
-    importAll() {
-      return Interact.confirm(
+    async importAll() {
+      let confirmed = await Interact.confirm(
         "Confirm",
         "Are you sure? Importing cannot be undone."
-      ).then(res => {
-        if (res === true) {
-          return methods._importAll();
-        }
-      });
+      );
+      if (confirmed === true) {
+        return methods._importAll();
+      }
+    },
+
+    async importPeople() {
+      let confirmed = await Interact.confirm(
+        "Import People?",
+        "Importing boards be undone."
+      );
+      if (confirmed) {
+        return await methods._importPeople();
+      }
+    },
+
+    async _importPeople() {
+      let people = await PeopleStore.getPeople();
+      await PeopleStore.write({ ...archive.people, ...people });
+      importing.people.running = false;
+      importing.people.done = true;
+      return importing.people;
     },
 
     // Import Boards
@@ -472,11 +489,11 @@
   {#if !fileData}
     <div class="empty-notice" style="opacity:1; max-height:80%">
       <div class="text-center d-flex flex-column justify-content-center">
-        <p class="text-sm text-faded-3 mb-2">
+        <p class="text-sm text-faded-3 mb-4">
           Import backups (not CSVs) from Nomie 1, Nomie 2 and Nomie 3.
         </p>
         <button
-          class="btn btn-primary"
+          class="btn btn-block btn-primary"
           on:click={() => {
             fileInput.click();
           }}>
@@ -548,6 +565,28 @@
               class="btn text-primary btn-clear"
               on:click={methods.importBoards}>
               Import Boards ({(archive.boards || []).length})
+            </button>
+          {/if}
+        </div>
+      </NItem>
+      <!-- People -->
+      <NItem title="People">
+        <div slot="right">
+          {#if importing.people.running}
+            <Spinner
+              size="40"
+              speed="750"
+              color="#CCC"
+              thickness="8"
+              gap="40" />
+          {:else if importing.people.done}
+            Imported
+            <i class="zmdi zmdi-check-circle" />
+          {:else}
+            <button
+              class="btn text-primary btn-clear"
+              on:click={methods.importPeople}>
+              Import People ({(archive.people || []).length})
             </button>
           {/if}
         </div>
