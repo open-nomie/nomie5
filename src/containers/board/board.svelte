@@ -113,12 +113,17 @@
    **/
 
   let tips = [
-    "Press and hold a tracker button for more options",
+    "Tap a button to track, press and hold for additional options",
     "The History tab shows you everything you've done",
-    "Check out the settings to change the theme",
-    "Enable auto location in the Settings for deeper data",
-    "Click the nomie logo above to enable Tabs",
-    "Want to auto import data?  Settings -> Nomie API"
+    "Enable location tracking in the Settings for more data",
+    "Tap the Tab icon in the upper right to enable Tracker Tabs",
+    "You can manually track by writing a note. For example: Today is awesome! #mood(8) with @brandon",
+    "Use @username in notes to tag people",
+    "Include @username in a note to automatically tag that user.",
+    "Include +context to add additional context to your log",
+    "Tap the clock icon in the notes field to back date a log",
+    "Tap the Location pin in the notes field to set a specific location",
+    "Import data from places like IFTTT. Tap Settings, then Nomie API"
   ];
 
   // Wait for the User to be ready
@@ -164,20 +169,7 @@
         );
       }
     },
-    nextTip() {
-      if (data.activeTip == tips.length - 1) {
-        data.activeTip = 0;
-      } else {
-        data.activeTip++;
-      }
-    },
-    previousTip() {
-      if (data.activeTip == 0) {
-        data.activeTip = tips.length - 1;
-      } else {
-        data.activeTip--;
-      }
-    },
+
     // When user starts searching
     searchKeypress() {
       // Find trackers matching query
@@ -749,8 +741,9 @@
           </div>
 
           <!-- Include User Tips - shit should be a component -->
+          <NTip {tips} />
           {#if $UserStore.launchCount < 5 && data.hideTips !== true && $BoardStore.active == 'all'}
-            <div class="new-user tip n-row mb-3">
+            <!-- <div class="new-user tip n-row mb-3">
               <button
                 class="text-md btn btn-clear btn-sm p-0 btn-icon flex-grow-off"
                 on:click={() => {
@@ -768,7 +761,7 @@
                   zmdi-chevron-right"
                   on:click={methods.nextTip} />
               </div>
-            </div>
+            </div> -->
           {/if}
 
           <div class="board-actions">
