@@ -5527,6 +5527,9 @@ select {
   .animate.notice-text.hidden {
     color: var(--color-primary-bright) !important;
     transform: scale(1.1); }
+  .animate.in.hidden {
+    opacity: 0;
+    transform: scale(0.8); }
   .animate.up.hidden {
     opacity: 0;
     transform: translateY(200px); }
