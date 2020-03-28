@@ -1,6 +1,7 @@
 export default {
   storage_engine: "local", // local or blockstack
   book_time_format: "YYYY-MM",
+  book_time_unit: "month",
   data_root: "data/v01",
   data_people_key: "peopleV2",
   book_root: "data/v01/books",
