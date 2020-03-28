@@ -7,6 +7,7 @@
 
   export let searchTerm = null;
   export let autocomplete = false;
+  export let placeholder = `${Lang.t("general.search")}...`;
   // export let hasResults = false;
 
   // FIre off changes when input changes
@@ -71,7 +72,7 @@
       class="search-input"
       on:keyup={searchKeypress}
       bind:value={searchTerm}
-      placeholder="{Lang.t('general.search')}..." />
+      {placeholder} />
     <slot name="right" />
     {#if searchTerm && !autocomplete}
       <button class="btn btn-sm text-inverse-2" on:click={fireSearch}>

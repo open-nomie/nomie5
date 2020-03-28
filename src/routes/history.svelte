@@ -17,6 +17,7 @@
   import NText from "../components/text/text.svelte";
   import NPoints from "../components/points/points.svelte";
   import NNoteTextualizer from "../components/note-textualizer/note-textualizer.svelte";
+  import NLogListLoader from "../components/log-list/log-list-loader.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
   import NModal from "../components/modal/modal.svelte";
   import Spinner from "../components/spinner/spinner.svelte";
@@ -50,6 +51,7 @@
   let datePicker;
   let searchInput;
   let appTitle = null;
+  let showSearch = false;
 
   const state = {
     date: dayjs(new Date()),
@@ -205,10 +207,8 @@
       });
     },
     clearSearch() {
-      state.searchResults = null;
-      searchMode = false;
+      showSearch = false;
       state.searchTerm = "";
-      searchLogs = null;
     },
     previous() {
       methods.getDate(state.date.subtract(1, "day"));
@@ -256,9 +256,10 @@
     },
     doSearch(evt) {
       state.searchTerm = evt.detail;
-      if (state.searchTerm.length > 1) {
-        methods.search(state.searchTerm, state.date.format("YYYY"));
-      }
+      showSearch = true;
+      // if (state.searchTerm.length > 1) {
+      //   methods.search(state.searchTerm, state.date.format("YYYY"));
+      // }
     },
     searchKeypress(event) {
       if (event.key === "Enter" || event.key === "Return") {
@@ -271,6 +272,7 @@
     },
     search(key, year) {
       searchMode = true;
+      showSearch = true;
       if ((key || "").length > 1) {
         state.searchResults = [];
         loading = true;
@@ -453,31 +455,16 @@
       on:clear={methods.clearSearch}
       on:search={methods.doSearch} />
 
-    <NToolbar>
-      <div class="container history-toolbar-container">
-        <div class="d-flex justify-content-stretch align-items-center w-100">
-          {#if searchMode}
-            <button
-              class="btn btn-clear text-inverse flex"
-              on:click={methods.previousSearch}>
-              <i class="zmdi zmdi-chevron-left mr-2" />
-              {state.date.subtract(1, 'year').format('YYYY')}
-            </button>
-          {:else}
+    {#if !showSearch}
+      <NToolbar>
+        <div class="container history-toolbar-container">
+          <div class="d-flex justify-content-stretch align-items-center w-100">
             <button
               class="btn btn-clear btn-icon flex"
               on:click={methods.previous}>
               <i class="zmdi zmdi-chevron-left" />
             </button>
-          {/if}
 
-          {#if searchMode}
-            <div class="filler" />
-            <div class="text-center n-text md text-inverse">
-              {Lang.t('general.search')} {state.date.format('YYYY')}
-            </div>
-            <div class="filler" />
-          {:else}
             <div class="filler" />
 
             <div
@@ -507,26 +494,16 @@
             <!-- end header-date-control -->
 
             <div class="filler" />
-          {/if}
-          <!-- <button class="btn btn-clear btn-icon" on:click={methods.selectDate}>
-        <i class="zmdi zmdi-calendar" />
-      </button> -->
-          {#if searchMode}
-            <button
-              class="btn btn-clear text-inverse flex"
-              on:click={methods.nextSearch}>
-              {state.date.add(1, 'year').format('YYYY')}
-              <i class="zmdi zmdi-chevron-right ml-2" />
-            </button>
-          {:else}
+
             <button class="btn btn-clear btn-icon flex" on:click={methods.next}>
               <i class="zmdi zmdi-chevron-right" />
             </button>
-          {/if}
+
+          </div>
         </div>
-      </div>
-      <!-- end toolbar div wrapper-->
-    </NToolbar>
+        <!-- end toolbar div wrapper-->
+      </NToolbar>
+    {/if}
 
   </header>
   <!-- end header-content header -->
@@ -540,7 +517,7 @@
     {:else}
       <div class="container p-0">
         <!-- If no Logs found -->
-        {#if logs.length === 0}
+        {#if logs.length === 0 && !showSearch}
           {#if !searchMode}
             <div class="empty-notice">{Lang.t('history.no-records-found')}</div>
           {:else}
@@ -549,7 +526,7 @@
             </div>
           {/if}
           <!-- If Logs and Not refreshing  -->
-        {:else if !searchMode}
+        {:else if !showSearch}
           <!-- Loop over logs -->
           {#each logs as log, i (log._id)}
             <LogItem
@@ -575,40 +552,22 @@
           Search Results
           If Search Mode and We have Logs
         -->
-        {:else if searchMode && searchLogs}
-          {#each searchLogs as log, i (log._id)}
-            <LogItem
-              {log}
-              fullDate={true}
-              trackers={$TrackerStore}
-              on:trackerClick={event => {
-                methods.trackerTapped(event.detail.tracker, log);
-              }}
-              on:textClick={event => {
-                state.searchTerm = event.detail.value;
-                methods.search(state.searchTerm);
-              }}
-              on:locationClick={event => {
-                Interact.showLocations([log]);
-              }}
-              on:moreClick={event => {
-                Interact.logOptions(log).then(() => {});
-              }} />
-            <!-- Show the Log Item -->
-          {/each}
+        {:else if showSearch && state.searchTerm}
+          <NLogListLoader term={state.searchTerm} limit={20} />
+
           <!-- We have No search results -->
-          {#if !searchLogs.length}
+          <!-- {#if !searchLogs.length}
             <div class="gap" />
             <NItem className="text-center bg-transparent py-5">
               <span class="text-faded-3">No Results found</span>
             </NItem>
-          {/if}
-          <div class="gap" />
+          {/if} -->
+          <!-- <div class="gap" />
           <NItem
             className="text-primary text-center"
             on:click={methods.previousSearch}
             title="Search {state.date.subtract(1, 'year').format('YYYY')}..." />
-          <div class="gap" />
+          <div class="gap" /> -->
         {/if}
 
       </div>
