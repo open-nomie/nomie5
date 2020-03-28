@@ -3,6 +3,7 @@
   import config from "../../../config/global";
   import LogList from "./log-list.svelte";
   import NItem from "../list-item/list-item.svelte";
+  import NSpinner from "../spinner/spinner.svelte";
   import { LedgerStore } from "../../store/ledger";
   import tick from "../../utils/tick/tick";
 
@@ -33,6 +34,7 @@
   }
 
   async function getNextBook() {
+    await tick(1);
     loading = true;
     let lookupDate;
 
@@ -73,12 +75,19 @@
 </script>
 
 <div class="log-list-loader">
-  <LogList {loading} {logs} />
+  <LogList {logs} />
   <NItem className="py-2">
-    {#if !theEnd}
+    {#if !theEnd && !loading}
       <button class="btn btn-outline btn-light btn-block" on:click={findMore}>
         Find more...
       </button>
+    {:else if loading}
+      <NItem className="py-2">
+        <div slot="left">
+          <NSpinner size={24} />
+        </div>
+        Searching {lastBookDate.format('MMM YYYY')}...
+      </NItem>
     {:else}
       <div class="text-center">That's All Folks!</div>
     {/if}
