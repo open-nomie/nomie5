@@ -565,15 +565,10 @@ Note: Your data will not automatically move over. You'll first need to export it
 
           <NItem className="compact item-divider" />
 
-          <NItem title="Reset Nomie">
-            <button
-              class="btn btn-sm btn-clear text-red"
-              slot="right"
-              on:click={() => {
-                methods.deleteEverything();
-              }}>
-              Reset
-            </button>
+          <NItem
+            className="text-red text-center"
+            on:click={methods.deleteEverything}>
+            Reset & Delete all Nomie Data...
           </NItem>
 
           <NItem className="compact item-divider" />
