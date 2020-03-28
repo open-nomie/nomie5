@@ -103,7 +103,7 @@
   }
 
   async function closeAndRefresh() {
-    this.refresh();
+    refresh();
     await close();
   }
 
@@ -119,7 +119,6 @@
       dayjs().subtract(1, "year"),
       dayjs()
     );
-    console.log("activeLogs", activeLogs);
   }
 
   async function selectPhoto(evt) {

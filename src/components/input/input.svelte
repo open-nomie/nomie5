@@ -134,10 +134,11 @@
       transition: all 0.2s ease-in-out;
       background-color: var(--input-background);
       border-radius: 12px;
+      border: solid 1px var(--color-faded-1);
 
       &.has-focus {
         border: solid 1px rgba($primaryBright, 0.2);
-        box-shadow: 0px 0px 30px rgba($primaryBright, 0.3);
+        box-shadow: 0px 2px 10px rgba($primaryBright, 0.2);
         background-color: var(--input-background);
       }
 

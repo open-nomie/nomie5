@@ -6361,7 +6361,8 @@ aside.n-panel {
     text-overflow: ellipsis;
     overflow: hidden;
     color: var(--color-inverse);
-    margin-top: 10px; }
+    margin-top: 10px;
+    line-height: 1rem; }
   .item-ball:active {
     transform: scale(0.9); }
     .item-ball:active .avatar {

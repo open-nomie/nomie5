@@ -19,6 +19,7 @@
   // Components
   import NTrackerButton from "./tracker-button.svelte";
   import NToolbar from "../../components/toolbar/toolbar.svelte";
+  import NSearchBar from "../../components/search-bar/search-bar.svelte";
   import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
   import NModal from "../../components/modal/modal.svelte";
   import NHScroll from "../../components/h-scroller/h-scroller.svelte";
@@ -172,6 +173,7 @@
 
     // When user starts searching
     searchKeypress() {
+      console.log("Search term", data.searchTerm);
       // Find trackers matching query
       foundTrackers = Object.keys($TrackerStore)
         .map(tag => {
@@ -179,7 +181,7 @@
         })
         .filter(tracker => {
           // Search the tag and the label
-          let regex = new RegExp(data.searchTerm.trim(), "gi");
+          let regex = new RegExp((data.searchTerm || "").trim(), "gi");
           return `${tracker.tag}-${tracker.label}`.search(regex) > -1;
         });
     },
@@ -679,7 +681,17 @@
       </NToolbar>
     {/if}
     {#if data.searching}
-      <NToolbar className="mt-3 bg-transparent">
+      <NSearchBar
+        className="mt-2"
+        autocomplete
+        on:clear={() => {
+          data.searchTerm = null;
+        }}
+        on:change={value => {
+          data.searchTerm = value;
+        }}
+        placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}..." />
+      <!-- <NToolbar className="mt-3 bg-transparent">
         <div
           class="d-flex d-row justify-content-between align-items-center w-100
           search-bar">
@@ -693,7 +705,7 @@
             class="search-input" />
 
         </div>
-      </NToolbar>
+      </NToolbar> -->
     {/if}
   </div>
   <!-- end header-->

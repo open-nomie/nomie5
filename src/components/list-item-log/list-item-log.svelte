@@ -72,7 +72,7 @@
 
 <!--glow glow-{time.dateToDesc(displayLog.end)}-->
 {#if displayLog}
-  <NItem className="{className} my-3 mx-2 border pb-0 n-item-log ">
+  <NItem className="{className} my-3 mx-2 border pb-0 n-item-log">
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row time-row">
       <div class="time font-bold truncate">

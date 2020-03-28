@@ -50,6 +50,7 @@ $size: $trackerBallSize;
     overflow: hidden;
     color: var(--color-inverse);
     margin-top: 10px;
+    line-height: 1rem;
   }
   &:active {
     transform: scale(0.9);

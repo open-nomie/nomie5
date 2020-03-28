@@ -442,9 +442,11 @@
     min-height: 40px;
     max-height: 200px;
     border-radius: 20px;
-    background-color: var(--color-solid-2);
+    background-color: var(--color-darkest);
+    box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     transition: all 0.2s ease-in-out;
+    border: solid 1px var(--color-faded-1);
 
     .save-button {
       display: none;
