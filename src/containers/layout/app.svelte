@@ -78,8 +78,20 @@
     }
   }
 
+  .footer-fade {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: -40px;
+    background: var(--footer-fade);
+    // background-color: red;
+  }
+
   .footer-slot {
-    box-shadow: 0px -6px 15px rgba(0, 0, 0, 0.09);
+    // box-shadow: 0px -6px 15px rgba(0, 0, 0, 0.09);
     z-index: 1200;
     flex-grow: 0;
     flex-shrink: 0;
@@ -107,6 +119,7 @@
 <div class="footer-slot" bind:this={footerDom}>
   <slot name="footer" />
   {#if showTabs}
+    <div class="footer-fade" />
     <AppTabs />
   {/if}
 </div>

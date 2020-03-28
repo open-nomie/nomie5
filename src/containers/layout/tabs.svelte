@@ -14,15 +14,19 @@
 <style lang="scss">
   @import "../../scss/utils/__utils.scss";
   #app-tabs {
-    height: calc(50px + env(safe-area-inset-bottom));
+    height: calc(60px + env(safe-area-inset-bottom));
     padding-bottom: calc(env(safe-area-inset-bottom));
-    background-color: var(--tabs-background);
+    // background-color: var(--tabs-background);
     // backdrop-filter: saturate(180%) blur(20px);
     color: rgba(255, 255, 255, 0.5);
     display: flex;
     justify-content: space-between;
     align-items: stretch;
     z-index: 1200;
+
+    .n-row {
+      z-index: 10;
+    }
   }
 
   :global(#app-tabs svg) {
@@ -33,28 +37,44 @@
   }
 
   :global(#app-tabs a) {
-    color: #fff;
+    color: var(--color-inverse-2);
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-
+    position: relative;
     padding: 4px 10px 0;
     font-size: 0.7rem;
     text-decoration: none;
-    opacity: 0.6;
+    // opacity: 0.6;
     transition: all 0.2s ease-in-out;
     min-width: 30px;
     width: 100%;
     i {
       font-size: 1.2rem;
+      transition: all 0.2s ease-in-out;
     }
     label {
       margin-bottom: 0;
     }
 
     // When Active
-    &[aria-current] {
-      opacity: 1;
+    &[aria-current="page"] {
+      color: var(--color-inverse);
+      i {
+        color: var(--color-primary-bright);
+        transform: scale(1.1);
+        transition: all 0.2s ease-in-out;
+      }
+      &:after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 20%;
+        right: 20%;
+        height: 2px;
+        border-radius: 1px;
+        background-color: var(--color-primary-bright);
+      }
     }
   }
 </style>

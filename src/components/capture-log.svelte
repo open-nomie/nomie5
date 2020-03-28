@@ -300,11 +300,11 @@
     border-radius: 4px;
   }
   .capture-log {
-    border-top: solid 1px rgba(0, 0, 0, 0.1);
+    // border-top: solid 1px rgba(0, 0, 0, 0.1);
     padding: 10px;
-    background-color: var(--header-background);
+    // background-color: var(--header-background);
     // backdrop-filter: saturate(180%) blur(20px);
-    border-top: solid 1px var(--header-background);
+    // border-top: solid 1px var(--header-background);
     position: relative;
     z-index: 1;
   }
@@ -354,7 +354,7 @@
     z-index: 130;
     padding: 0px 10px 10px;
     margin-top: -12px;
-    background-color: var(--header-background);
+    // background-color: var(--header-background);
 
     .advanced-options-list {
       transition: all 0.2s ease-in-out;
@@ -442,7 +442,7 @@
     min-height: 40px;
     max-height: 200px;
     border-radius: 20px;
-    background-color: var(--color-faded-1);
+    background-color: var(--color-solid-2);
     overflow: hidden;
     transition: all 0.2s ease-in-out;
 
