@@ -3,6 +3,7 @@
   import Modal from "../../components/modal/modal.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NInput from "../../components/input/input.svelte";
+  import NLogListLoader from "../../components/log-list/log-list-loader.svelte";
   import NToolbar from "../../components/toolbar/toolbar.svelte";
   import ButtonGroup from "../../components/button-group/button-group.svelte";
   import Dymoji from "../../components/dymoji/dymoji.svelte";
@@ -214,10 +215,9 @@
     {:else if state.view == 'logs'}
       <div class="logs p-2">
         {#if activeLogs}
-          {#each activeLogs as log}
-            <LogItem {log} />
-          {/each}
-        {/if}
+          <NLogListLoader term={`@${activePerson.username}`} />
+          <!-- <NLogList logs={activeLogs} /> -->
+        {:else}Loading...{/if}
       </div>
     {:else if state.view == 'stats'}
       <div class="stats p-2">
