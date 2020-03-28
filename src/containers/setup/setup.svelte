@@ -81,14 +81,14 @@
     flex-direction: column;
     justify-content: stretch;
     &:before {
-      content: "";
-      z-index: 0;
-      position: absolute;
-      top: 0;
-      height: 50vh;
-      left: 0;
-      right: 0;
-      background-color: var(--color-primary);
+      // content: "";
+      // z-index: 0;
+      // position: absolute;
+      // top: 0;
+      // height: 50vh;
+      // left: 0;
+      // right: 0;
+      // background-color: var(--color-primary);
     }
     .logo {
       margin-bottom: 10px;
@@ -99,6 +99,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-direction: column;
+      a {
+        color: #fff;
+        border-bottom: dotted 1px #ccc;
+      }
     }
 
     .slide {
@@ -109,6 +114,7 @@
       flex-direction: column;
       height: 100%;
       transition: all 0.3s ease-in-out;
+      background-color: rgb(15, 15, 15);
 
       &.active {
       }
@@ -127,7 +133,6 @@
         .phone-frame {
           max-width: 146px !important;
           width: 146px !important;
-          margin-bottom: -30px !important;
         }
         .bottom {
           max-height: 271px;
@@ -158,29 +163,25 @@
         @include media-breakpoint-up(md) {
           width: 220px;
           max-width: 220px;
-          margin-bottom: -70px;
           .filler {
             max-height: 20px;
           }
         }
         @include media-breakpoint-down(sm) {
           max-width: 180px;
-          margin-bottom: -50px;
           flex-grow: 0;
           flex-shrink: 0;
         }
 
         @include media-breakpoint-down(xs) {
           max-width: 120px;
-          margin-bottom: -30px;
           flex-grow: 0;
           flex-shrink: 0;
         }
 
         z-index: 10;
         position: relative;
-        margin-bottom: -70px;
-        background-color: black;
+        background-color: var(--color-primary);
         .gif,
         .image {
           background-color: black;
@@ -201,15 +202,21 @@
         }
       }
 
+      .btn-content {
+        color: #fff;
+        border: solid 1px rgba(255, 255, 255, 0.5);
+      }
+
       .top {
         flex-direction: column;
-        padding: 0px 35px 0;
+        padding: 20px 35px 0;
         padding-top: env(safe-area-inset-top) !important;
-        height: calc(50vh - 6px);
         flex-grow: 0;
         flex-shrink: 0;
-        justify-content: flex-end;
-        background-color: var(--color-primary);
+        justify-content: center;
+        align-items: center;
+        height: calc(100vh - 50px);
+        // background-color: var(--color-primary);
         h1 {
           text-align: center;
           padding-top: env(safe-area-inset-top);
@@ -231,8 +238,8 @@
         flex-grow: 0;
         flex-shrink: 0;
         height: calc(50vh - 20px);
-        background-color: var(--color-solid);
-        color: var(--color-inverse);
+        // background-color: var(--color-solid);
+
         flex-direction: column;
         padding: 0 16px;
 
@@ -302,33 +309,21 @@
     {data.isTiny ? 'is-tiny' : 'is-normal'}
     {data.transitioning ? 'move' : ''}">
     <div class="top center-grow">
-      <div class="bottom-pop phone-frame mt-2 fade-left">
-        <img
-          alt="Nomie Homescreen"
-          class="image gif"
-          src="https://shareking.s3.amazonaws.com/nomie-4.2-homescreen.gif"
-          defer />
-      </div>
-    </div>
-    <div class="bottom center-grow">
       <h1 style="max-width:400px;">
-        Understand your mood, your sleep, your ... well, anything.
+        Track & monitor your life, with the tap of a button.
       </h1>
       <p>
         <strong>
-          Nomie is 100% private and open.
+          The
           <a
             href="https://nomie.app"
             target="_blank"
             aria-label="Learn more about Nomie">
-            Learn more
+            100% private life tracker
           </a>
+          that's
+          <a href="https://github.com/open-nomie/nomie">Open Source too!</a>
         </strong>
-      </p>
-      <p class="text-faded-2 mobile-message">
-        For the best experience, hit share,
-        <br />
-        select "add to homescreen"
       </p>
     </div>
   </section>
@@ -344,13 +339,10 @@
           alt="Nomie stats view"
           src="/images/onboard/nomie4.2.3.stats.png" />
       </div>
+      <h1 style="max-width:400px;" class="mt-3">Charts, streaks & maps.</h1>
+      <p>See the patterns that make you, you.</p>
     </div>
-    <div class="bottom center-grow">
-      <h1 style="max-width:400px;">
-        Visualize your life with charts, streaks & maps.
-      </h1>
-      <p>Discover the patterns that make you, you.</p>
-    </div>
+
   </section>
 
   <section
@@ -358,13 +350,10 @@
     {data.isTiny ? 'is-tiny' : 'is-normal'}
     {data.transitioning ? 'move' : ''}">
     <div class="top center-grow pt-3">
-      <div class="filler" />
+
       <h1 class="mt-4">
         {Lang.t('setup.choose-time-format', `Choose your time format...`)}
       </h1>
-      <div class="filler" />
-    </div>
-    <div class="bottom center-grow">
       <button
         class="btn-block my-3 btn btn-content {$UserStore.meta.is24Hour ? 'active' : ''}"
         on:click={() => {
@@ -382,13 +371,14 @@
         <div class="text-lg">{dayjs().format('h:mm a')}</div>
       </button>
     </div>
+
   </section>
 
   <section
     class="slide slide-4 slide-welcome {data.activeSlide === 3 ? 'active' : 'hidden'}
     {data.transitioning ? 'move' : ''}">
-    <div class="top center-grow pt-3" style="max-height:45vh;">
-      <div class="filler" />
+    <div class="top center-grow">
+
       <h1 class="mt-4">
         {Lang.t('setup.pick-data-storage', `Choose your data's location...`)}
       </h1>
@@ -398,11 +388,6 @@
           Learn more about Blockstack
         </a>
       </p>
-      <div class="filler" />
-    </div>
-    <div class="bottom center-grow">
-      <div class="filler" />
-
       <button
         class=" btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
         on:click={() => {
@@ -424,8 +409,9 @@
           <strong>by Blockstack.</strong>
         </div>
       </button>
-      <div class="filler" />
+
     </div>
+
   </section>
 
 </main>
