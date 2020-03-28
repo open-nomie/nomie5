@@ -86,20 +86,34 @@ const ledgerInit = () => {
      *
      * @param {String} bookDateString
      */
-    async getBook(bookDateString) {
-      // call any hooks
-      hooks.run("onBeforeGetBook", bookDateString);
+    async getBook(bookDateString, realResponse = false) {
       // Get the book from storage
       let book = await Storage.get(`${config.book_root}/${bookDateString}`);
       // Return book with Nomie Logs
-      return (book || [])
-        .map(log => {
-          return new NomieLog(log);
-        })
-        .filter(log => {
-          // Remove invalid Logs
-          return log.isValid();
-        });
+      if (realResponse) {
+        // return a real response - if no book return null
+        // otherwise return array
+        if (book) {
+          return (book || [])
+            .map(log => {
+              return new NomieLog(log);
+            })
+            .filter(log => {
+              return log.isValid();
+            });
+        } else {
+          return null;
+        }
+      } else {
+        // Return an array even if no book is found
+        return (book || [])
+          .map(log => {
+            return new NomieLog(log);
+          })
+          .filter(log => {
+            return log.isValid();
+          });
+      }
     },
     /**
      * Put a Book
@@ -626,6 +640,17 @@ const ledgerInit = () => {
       return logs
         .filter(record => {
           return record.note.match(new RegExp(`@${username}`, "gi"));
+        })
+        .sort((a, b) => {
+          return a.end < b.end ? 1 : -1;
+        });
+    },
+
+    async queryAll(term, start, end) {
+      let logs = await methods.query({ start, end });
+      return logs
+        .filter(record => {
+          return record.note.match(new RegExp(`${term}`, "gi"));
         })
         .sort((a, b) => {
           return a.end < b.end ? 1 : -1;
