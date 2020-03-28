@@ -40,6 +40,7 @@
   <div class="text-area-holder">
     <textarea
       class="form-control text-md p-2"
+      id="textarea-note"
       rows="6"
       placeholder={getPlaceholder()}
       bind:value={state.note} />
@@ -48,6 +49,7 @@
       on:select={evt => {
         let payload = evt.detail;
         state.note = payload.note;
+        document.getElementById('textarea-note').focus();
       }} />
   </div>
   {#if !state.checkingIn && !state.checkedIn}

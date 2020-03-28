@@ -29,6 +29,7 @@
   import time from "../utils/time/time";
   import CalculateScore from "../utils/calculate-score/calculate-score";
   import TrackerInputer from "../modules/tracker/tracker-inputer";
+  import tick from "../utils/tick/tick";
 
   // Stores
   import { Interact } from "../store/interact";
@@ -103,11 +104,12 @@
     },
     checkTextareaSize() {
       if (textarea) {
-        let height = (textarea || {}).scrollHeight || 40;
+        textarea.style.height = "42px";
+        let height = (textarea || {}).scrollHeight || 42;
         if (textarea && $ActiveLogStore.note.length > 0) {
           textarea.style.height = (height > 300 ? 300 : height) + "px";
         } else {
-          textarea.style.height = 40;
+          textarea.style.height = "42px";
         }
         // Cal
         methods.calculateScore();
@@ -168,20 +170,23 @@
       await LedgerStore.saveLog($ActiveLogStore); // TODO: Make ledger task instead
       methods.clear();
     },
-    autocompleteText(text) {
+    async autocompleteText(text) {
       ActiveLogStore.update(s => {
         s.note = s.note.replace(state.partialTag, text + " ");
         return s;
       });
+      await tick(1);
+      document.getElementById("textarea-capture-note").focus();
+      console.log(
+        "Auto COmplete Done",
+        document.getElementById("textarea-capture-note")
+      );
       methods.autoCompleteDone();
     },
-    autoCompleteDone() {
+    async autoCompleteDone() {
       state.partialTag = null;
       state.cursorIndex = null;
       state.autocompleteResults = null;
-      if (textarea) {
-        textarea.focus();
-      }
     },
     // async autocompleteTracker(tracker) {
     //   let inputer = new TrackerInputer(tracker);
@@ -454,6 +459,7 @@
     }
 
     textarea {
+      // transition: all 0.2s ease-in-out;
       border: none;
       background-color: transparent;
       width: 100%;
@@ -488,16 +494,18 @@
       <!-- Auto Complet e-->
       <AutoComplete
         input={$ActiveLogStore.note}
-        on:select={evt => {
+        on:select={async evt => {
           ActiveLogStore.updateNote(evt.detail.note);
-          setTimeout(() => {
-            methods.checkTextareaSize();
-          }, 120);
+          methods.checkTextareaSize();
+          await tick(100);
+          textarea.focus();
+          textarea.setSelectionRange(textarea.value.length, textarea.value.length);
         }} />
       <!-- Note Input -->
       <div
         class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 || $ActiveLogStore.photo ? 'populated' : 'empty'}">
         <textarea
+          id="textarea-capture-note"
           style="overflow:hidden"
           disabled={saving || saved}
           bind:value={$ActiveLogStore.note}
