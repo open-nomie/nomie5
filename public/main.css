@@ -5161,7 +5161,8 @@ body {
     rgba(240, 240, 240, 0.5886729691876751) 76%,
     rgba(240, 240, 240, 0) 100%
   );
-  --footer-fade: linear-gradient(180deg, rgba(240, 240, 240, 0) 10%, rgba(240, 240, 240, 0.9) 30%, rgba(240, 240, 240, 1) 100%); }
+  --footer-fade: linear-gradient(180deg, rgba(240, 240, 240, 0) 10%, rgba(240, 240, 240, 0.9) 30%, rgba(240, 240, 240, 1) 100%);
+  --footer-background: rgba(254, 254, 254, 1); }
 
 body.test * {
   border: solid 1px rgba(255, 0, 0, 0.6) !important; }
@@ -5225,6 +5226,7 @@ body.offline .main-content:before {
 
 body.theme-dark {
   --header-fade: linear-gradient(180deg, rgba(20, 20, 20, 1) 35%, rgba(20, 20, 20, 0) 100%);
+  --footer-background: rgba(10, 10, 10, 1);
   --footer-fade: linear-gradient(0deg, rgba(10, 10, 10, 1) 52%, rgba(10, 10, 10, 0.711922268907563) 72%, rgba(10, 10, 10, 0) 100%);
   --header-background: #111;
   --tabs-background: #111;

@@ -85,8 +85,10 @@
     bottom: 0;
     left: 0;
     right: 0;
-    top: -40px;
-    background: var(--footer-fade);
+    top: 0px;
+    border-top: solid 1px var(--color-faded-1);
+    // background: var(--footer-fade);
+    background-color: var(--footer-background);
     // background-color: red;
   }
 
