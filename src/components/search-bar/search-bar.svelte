@@ -46,6 +46,9 @@
   :global(.search-bar .btn-action-clear) {
     font-size: 14px;
   }
+  :global(.search-bar input) {
+    width: calc(100% - 30px); // account for icon pushing it out.
+  }
 </style>
 
 <NToolbar className="search-bar" {style}>
