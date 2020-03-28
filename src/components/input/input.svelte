@@ -137,8 +137,8 @@
 
       &.has-focus {
         border: solid 1px rgba($primaryBright, 0.2);
-        box-shadow: var(--box-shadow-float);
-        background-color: var(--color-solid-2);
+        box-shadow: 0px 0px 30px rgba($primaryBright, 0.3);
+        background-color: var(--input-background);
       }
 
       .n-input {
