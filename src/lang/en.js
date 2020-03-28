@@ -68,7 +68,7 @@ export default {
       people: "People"
     },
     history: {
-      "no-records-found": "🤷‍♂️ Nothing Found"
+      "no-records-found": "No logs found"
     },
     export: {
       csv: {

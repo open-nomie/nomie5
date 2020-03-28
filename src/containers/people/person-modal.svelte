@@ -103,8 +103,12 @@
   }
 
   async function closeAndRefresh() {
+    this.refresh();
     await close();
-    PeopleStore.getStats();
+  }
+
+  async function refresh() {
+    return await PeopleStore.getStats();
   }
 
   async function loadActiveLogs() {
@@ -140,9 +144,6 @@
 
   async function changeView(view) {
     state.view = view;
-    if (view == "logs") {
-      loadActiveLogs();
-    }
   }
 </script>
 
@@ -214,10 +215,7 @@
       </div>
     {:else if state.view == 'logs'}
       <div class="logs p-2">
-        {#if activeLogs}
-          <NLogListLoader term={`@${activePerson.username}`} />
-          <!-- <NLogList logs={activeLogs} /> -->
-        {:else}Loading...{/if}
+        <NLogListLoader term={`@${activePerson.username}`} />
       </div>
     {:else if state.view == 'stats'}
       <div class="stats p-2">

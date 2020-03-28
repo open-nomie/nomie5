@@ -143,10 +143,11 @@ const PeopleInit = () => {
     },
     async getStats() {
       let stats = await getRecentPeopleStats();
-      return update(state => {
+      update(state => {
         state.stats = stats;
         return state;
       });
+      return stats;
     },
     currentStats() {
       return currentStats;

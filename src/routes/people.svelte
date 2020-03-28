@@ -8,6 +8,7 @@
   import AvatarBall from "../components/tracker-ball/ball.svelte";
   import ItemBall from "../components/tracker-ball/item-ball.svelte";
   import NSearchBar from "../components/search-bar/search-bar.svelte";
+  import tick from "../utils/tick/tick";
   import dayjs from "dayjs";
   import Dymoji from "../components/dymoji/dymoji.svelte";
   import NTip from "../components/tip/tip.svelte";
@@ -22,7 +23,8 @@
     people: [],
     view: "time",
     stats: {},
-    searchTerm: null
+    searchTerm: null,
+    initialized: false
   };
 
   const personClicked = username => {
@@ -33,7 +35,7 @@
     if (date) {
       return dayjs(date).fromNow();
     } else {
-      return "Never";
+      return null;
     }
   }
 
@@ -42,6 +44,11 @@
    * set state.people to the array of usernames
    */
   $: if (state.view && $PeopleStore.people) {
+    loadPeople();
+    state.initialized = true;
+  }
+
+  function loadPeople() {
     let stats = $PeopleStore.stats;
     if (state.view == "name") {
       state.people = getPeople().sort((a, b) => {
@@ -70,10 +77,9 @@
           ? 1
           : -1;
       });
-    } else {
-      state.people = getPeople();
     }
   }
+
   // Change Main View
   const changeView = viewStr => {
     state.view = viewStr;
@@ -158,7 +164,7 @@
   ];
 
   onMount(async () => {
-    console.log("In OnMount Stats", state.stats);
+    await PeopleStore.getStats();
   });
 </script>
 
@@ -171,7 +177,7 @@
     <NSearchBar
       on:change={searchPeople}
       on:clear={clearSearch}
-      placehoder="Search People..."
+      placeholder="Search People..."
       autocomplete>
       <button
         on:click={addPerson}
@@ -223,7 +229,9 @@
             {/if}
           </div>
           <div class="title">{$PeopleStore.people[person].displayName}</div>
-          <div class="note">{lastContact(getStatItem(person).last)}</div>
+          {#if lastContact(getStatItem(person).last)}
+            <div class="note">{lastContact(getStatItem(person).last)}</div>
+          {/if}
         </NItem>
       {/each}
     </div>
