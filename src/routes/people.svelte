@@ -195,13 +195,12 @@
 
     <div class="n-list">
       {#if !state.people.length && !state.searchTerm}
-        <NItem className=" py-3">
-          <div class="text-md">
-            Use Nomie to track and monitor how you interact with others
+        <NItem className=" py-3 bg-transparent">
+          <div class="text-md text-center">
+            Track and monitor how you interact with your friends and family.
           </div>
-          <div class="text-sm mt-2">
+          <div class="text-sm mt-2 text-center">
             <span class="fake-link" on:click={addPerson}>Add a person</span>
-            or type @username in a note to auto create people.
           </div>
 
         </NItem>
