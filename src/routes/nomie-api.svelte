@@ -362,10 +362,9 @@
         </NItem>
       {/if}
       <div item-divider />
-      <NItem
-        className="text-red"
-        title="Unregister this API"
-        on:click={methods.unregister} />
+      <NItem className="text-red text-center" on:click={methods.unregister}>
+        Unregister this API...
+      </NItem>
       <div item-divider />
     {/if}
   </div>
