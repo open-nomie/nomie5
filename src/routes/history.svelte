@@ -448,63 +448,61 @@
 <AppLayout title={appTitle}>
 
   <header slot="header">
+    <NToolbar className="animate in {showSearch ? 'hidden' : 'visible'}">
+      <div class="container history-toolbar-container">
+        <div class="d-flex justify-content-stretch align-items-center w-100">
+          <button
+            class="btn btn-clear btn-icon flex"
+            on:click={methods.previous}>
+            <i class="zmdi zmdi-chevron-left" />
+          </button>
+
+          <div class="filler" />
+
+          <div
+            class="header-date-control justify-content-center flex-grow
+            text-center"
+            on:click={methods.selectDate}>
+            <div class="text-center text-md n-row">
+              {#if dayScore}
+                <NPoints points={dayScore} className="mr-2" />
+              {:else}
+                <i class="zmdi mr-4 text-faded-3 text-xs" />
+              {/if}
+              <div class="col">
+                <div
+                  class="{isToday ? 'text-inverse' : 'not-today text-primary-bright'}
+                  text-md text-inverse font-weight-bold md">
+                  {state.date.format('dddd')}
+                </div>
+                <div class="text-sm text-inverse-2">
+                  {state.date.format('MMM D YYYY')}
+                </div>
+              </div>
+              <i class="zmdi zmdi-calendar mx-2 text-faded-3 text-xs" />
+            </div>
+            <!-- end text middle -->
+          </div>
+          <!-- end header-date-control -->
+
+          <div class="filler" />
+
+          <button class="btn btn-clear btn-icon flex" on:click={methods.next}>
+            <i class="zmdi zmdi-chevron-right" />
+          </button>
+
+        </div>
+      </div>
+      <!-- end toolbar div wrapper-->
+    </NToolbar>
+
     <NSearchBar
       searchTerm={state.searchTerm}
-      style={showSearch ? 'height:105px;' : ''}
+      style={showSearch ? 'margin-top:-20px;' : ''}
       hasResults={(searchLogs || []).length > 0}
       on:change={methods.searchChange}
       on:clear={methods.clearSearch}
       on:search={methods.doSearch} />
-
-    {#if !showSearch}
-      <NToolbar>
-        <div class="container history-toolbar-container">
-          <div class="d-flex justify-content-stretch align-items-center w-100">
-            <button
-              class="btn btn-clear btn-icon flex"
-              on:click={methods.previous}>
-              <i class="zmdi zmdi-chevron-left" />
-            </button>
-
-            <div class="filler" />
-
-            <div
-              class="header-date-control justify-content-center flex-grow
-              text-center"
-              on:click={methods.selectDate}>
-              <div class="text-center text-md n-row">
-                {#if dayScore}
-                  <NPoints points={dayScore} className="mr-2" />
-                {:else}
-                  <i class="zmdi mr-4 text-faded-3 text-xs" />
-                {/if}
-                <div class="col">
-                  <div
-                    class="{isToday ? 'text-inverse' : 'not-today text-primary-bright'}
-                    text-md text-inverse font-weight-bold md">
-                    {state.date.format('dddd')}
-                  </div>
-                  <div class="text-sm text-inverse-2">
-                    {state.date.format('MMM D YYYY')}
-                  </div>
-                </div>
-                <i class="zmdi zmdi-calendar mx-2 text-faded-3 text-xs" />
-              </div>
-              <!-- end text middle -->
-            </div>
-            <!-- end header-date-control -->
-
-            <div class="filler" />
-
-            <button class="btn btn-clear btn-icon flex" on:click={methods.next}>
-              <i class="zmdi zmdi-chevron-right" />
-            </button>
-
-          </div>
-        </div>
-        <!-- end toolbar div wrapper-->
-      </NToolbar>
-    {/if}
 
   </header>
   <!-- end header-content header -->
