@@ -58,15 +58,20 @@
     </button>
   {/if}
   <div class="n-row">
-    <slot name="left" />
     <NInput
       solo
       compact
       bind:value={searchTerm}
       on:change={fireChange}
       on:enter={fireSearch}
-      {placeholder} />
-    <slot name="right" />
+      {placeholder}>
+
+      <i
+        class="zmdi zmdi-search ml-2 text-inverse opacity-3"
+        style="font-size:1rem !important"
+        slot="left" />
+
+    </NInput>
     {#if searchTerm && !autocomplete}
       <button class="btn btn-sm text-inverse-2" on:click={fireSearch}>
         Search

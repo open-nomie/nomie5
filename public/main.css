@@ -6429,6 +6429,12 @@ TODO: Organize main into components or containers.
 .opacity-3 {
   opacity: 0.3; }
 
+.opacity-4 {
+  opacity: 0.4; }
+
+.opacity-5 {
+  opacity: 0.5; }
+
 .container-sm {
   max-width: 800px;
   margin-left: auto;
