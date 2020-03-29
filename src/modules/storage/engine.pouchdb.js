@@ -52,8 +52,8 @@ export default {
     let remote = this.getRemote();
     if (remote.isValid()) {
       let parsed = remote.url;
-      parsed.username = remote.username ? remote.username || "".length : null;
-      parsed.password = remote.password ? remote.password || "".length : null;
+      // parsed.username = remote.username ? remote.username || "".length : null;
+      // parsed.password = remote.password ? remote.password || "".length : null;
       parsed.pathname = `/${remote.database}`;
       return parsed.toString();
     } else {
@@ -92,6 +92,7 @@ export default {
     }
   },
   startSync() {
+    let remote = this.getRemote();
     let errorCount = 0;
     let syncURL = this.remoteToUrl();
     console.log("Sync URL", syncURL);
@@ -99,7 +100,11 @@ export default {
     if (syncURL) {
       this.syncer = PouchDB.sync(dbKey, syncURL, {
         live: true,
-        retry: true
+        retry: true,
+        auth: {
+          username: remote.username,
+          password: remote.password
+        }
       });
 
       this.syncer

@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import NItem from "../list-item/list-item.svelte";
   import NInput from "../input/input.svelte";
+  import NSpinner from "../spinner/spinner.svelte";
   import NToggle from "../../components/toggle-switch/toggle-switch.svelte";
   import { UserStore } from "../../store/user";
   import { Lang } from "../../store/lang";
@@ -11,6 +12,7 @@
   import URLParser from "../../utils/url-parser/url-parser"; // Get URL Parser
 
   let pouchEngine; // Holder for the pouchEngine
+  let connecting = false;
 
   let state = {
     engine: null,
@@ -62,9 +64,15 @@
       pouchEngine.stopSync();
     },
     async connect() {
+      connecting = true;
       let connection = methods.getConnectionURL();
       // Make a connection to pouch
-      let testPouch = new PouchDB(connection);
+      let testPouch = new PouchDB(connection, {
+        auth: {
+          username: state.form.username,
+          password: state.form.password
+        }
+      });
       testPouch
         .info()
         .then(async info => {
@@ -82,6 +90,7 @@
               state.syncing = true;
             }, 120);
           }
+          connecting = false;
         })
         .catch(e => {
           console.log("error connecting", e.message);
@@ -89,6 +98,7 @@
             Lang.t("general.error-connecting", "Error Connecting"),
             Lang.t("storage.pouchdb.credentials-failed", e.message)
           );
+          connecting = false;
         });
     },
     /**
@@ -105,7 +115,6 @@
       try {
         // let urlDetails = new URL(state.form.host);
         let urlDetails = URLParser(state.form.host);
-
         state.isValidSyncURL = urlDetails.valid;
         let connection = null;
         if (mask) {
@@ -113,7 +122,7 @@
             state.form.password
           )}@${urlDetails.host}${urlDetails.pathname}${state.form.database}`;
         } else {
-          connection = `${urlDetails.protocol}//${state.form.username}:${state.form.password}@${urlDetails.host}/${state.form.database}`;
+          connection = `${urlDetails.protocol}//${urlDetails.host}/${state.form.database}`;
         }
         return connection;
       } catch (e) {
@@ -277,11 +286,20 @@
 
         <NItem className="text-xs text-faded-3">{connectionString}</NItem>
         {#if state.isValidSyncURL}
-          <NItem
-            className="clickable text-primary text-center"
-            on:click={methods.connect}>
-            Connect...
-          </NItem>
+          {#if !connecting}
+            <NItem
+              className="clickable text-primary text-center"
+              on:click={methods.connect}>
+              Connect...
+            </NItem>
+          {:else}
+            <NItem
+              className="clickable text-primary text-center"
+              on:click={methods.connect}>
+              <NSpinner size={20} />
+              Connecting...
+            </NItem>
+          {/if}
         {/if}
 
       </div>
