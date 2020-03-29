@@ -33,7 +33,9 @@ function bundleCSS() {
 }
 
 function main() {
+  console.log("Bundling Vendor JS....");
   bundleJS();
+  console.log("Bundling Vendor CSS....");
   bundleCSS();
 }
 

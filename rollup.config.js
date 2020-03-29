@@ -16,14 +16,6 @@ const { generateSW, injectManifest } = require("rollup-plugin-workbox");
 
 const production = !process.env.ROLLUP_WATCH;
 
-// Replace Local Host with whatever the domain is
-// let manifestFile = fs.readFileSync('./public/manifest.json', 'UTF-8');
-// if (process.env.URL) {
-// 	manifestFile = manifestFile.replace(/http\:\/\/localhost\:5000/gi, process.env.URL);
-// 	fs.writeFileSync('./public/manifest.json', manifestFile, 'UTF-8');
-// }
-// let manifest = JSON.parse(manifestFile);
-
 export default [
   {
     input: "src/main.js",
@@ -67,11 +59,11 @@ export default [
       resolve(),
       commonjs(),
 
-      generateSW({
-        swDest: "/dist/sw.js",
-        globDirectory: "/glob",
-        cleanupOutdatedCaches: true
-      }),
+      // generateSW({
+      //   swDest: "./public/sw.js",
+      //   globDirectory: "/glob",
+      //   cleanupOutdatedCaches: true
+      // }),
 
       // Remove Moe
       // visualizer(),

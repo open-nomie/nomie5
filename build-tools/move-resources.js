@@ -23,6 +23,8 @@ let move = [
   }
 ];
 
+console.log("Moving Vendor Resources....");
+
 let copyp = (to, from) => {
   return new Promise((resolve, reject) => {
     copy(to, from, (err, files) => {
