@@ -20,6 +20,14 @@ const RUNTIME = "runtime-APP_VERSION";
 // A list of local resources we always want to be cached.
 const PRECACHE_URLS = [
   "index.html",
+  "manifest.json",
+  "favicon.png",
+  "images/icons/nomie-android-192.png",
+  "/fonts/Material-Design-Iconic-Font.eot",
+  "/fonts/Material-Design-Iconic-Font.svg",
+  "/fonts/Material-Design-Iconic-Font.ttf",
+  "/fonts/Material-Design-Iconic-Font.woff",
+  "/fonts/Material-Design-Iconic-Font.woff2",
   "./" // Alias for index.html
 ];
 
