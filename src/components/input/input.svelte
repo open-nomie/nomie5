@@ -17,6 +17,10 @@
   export let solo = false;
   export let compact = false;
 
+  export let autocomplete = undefined;
+  export let autocorrect = undefined;
+  export let autocapitalize = undefined;
+
   let focused = false;
   let hit = false;
   let hasInput = false;
@@ -137,15 +141,14 @@
       border: solid 1px var(--color-faded-1);
 
       &.has-focus {
-        border: solid 1px rgba($primaryBright, 0.2);
         box-shadow: 0px 2px 10px rgba($primaryBright, 0.2);
-        background-color: var(--input-background);
+        background-color: var(--input-focus-background);
       }
 
       .n-input {
-        width: 100%;
-        min-width: 50px;
-        max-width: 100%;
+        // width: 100%;
+        // min-width: 50px;
+        // max-width: 100%;
         transition: all 0.2s ease-in-out;
         display: flex;
         flex-direction: column;
@@ -168,6 +171,7 @@
         }
         input,
         select {
+          width: 100%;
           transition: all 0.2s ease-in-out;
           margin: 0;
           padding-left: 10px;
@@ -203,7 +207,26 @@
           type="email"
           style={inputStyle}
           class={inputClass}
+          {pattern}
           bind:value
+          {autocomplete}
+          {autocorrect}
+          {autocapitalize}
+          {placeholder}
+          on:keyup={change}
+          on:focus={focus}
+          on:blur={blur} />
+      {:else if type == 'password'}
+        <input
+          {disabled}
+          type="password"
+          style={inputStyle}
+          class={inputClass}
+          {pattern}
+          bind:value
+          {autocomplete}
+          {autocorrect}
+          {autocapitalize}
           {placeholder}
           on:keyup={change}
           on:focus={focus}
@@ -215,6 +238,9 @@
           style={inputStyle}
           class={inputClass}
           bind:value
+          {autocomplete}
+          {autocorrect}
+          {autocapitalize}
           {placeholder}
           on:keyup={change}
           on:focus={focus}
@@ -231,6 +257,9 @@
           class={inputClass}
           {pattern}
           bind:value
+          {autocomplete}
+          {autocorrect}
+          {autocapitalize}
           {placeholder}
           on:keyup={change}
           on:focus={focus}
