@@ -75,6 +75,7 @@
         slot="left" />
 
     </NInput>
+    <slot name="right" />
     {#if searchTerm && !autocomplete}
       <button class="btn btn-sm text-inverse-2" on:click={fireSearch}>
         Search

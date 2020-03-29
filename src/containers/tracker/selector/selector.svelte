@@ -14,22 +14,24 @@
 
   // Props
   export let show = false;
+  export let multiple = false;
   // export let multiple = false;
 
   // Consts
   const dispatch = createEventDispatcher();
 
   // State
-  let data = {
+  let state = {
     selected: {},
-    trackers: []
+    trackers: [],
+    multiple
   };
 
   // Holder of the alphabet for the list
   let alphaGroup = {};
 
   // When tracker store loads. Turn trackers into array sorted by label
-  $: data.trackers = Object.keys($TrackerStore || {})
+  $: state.trackers = Object.keys($TrackerStore || {})
     .map(tag => {
       return $TrackerStore[tag];
     })
@@ -41,25 +43,25 @@
     });
 
   // When selected, auto create an array of selected trackers
-  $: data.selectedArray = Object.keys(data.selected).map(tag => {
+  $: state.selectedArray = Object.keys(state.selected).map(tag => {
     alphaGroup = {};
-    return data.selected[tag];
+    return state.selected[tag];
   });
 
   // If show changes, set selected to notihng
   $: if (show) {
-    data.selected = {};
+    state.selected = {};
     alphaGroup = {};
   }
 
   // Methods
   const methods = {
     toggle(tracker) {
-      if (data.selected.hasOwnProperty(tracker.tag)) {
-        delete data.selected[tracker.tag];
+      if (state.selected.hasOwnProperty(tracker.tag)) {
+        delete state.selected[tracker.tag];
         data = data;
       } else {
-        data.selected[tracker.tag] = tracker;
+        state.selected[tracker.tag] = tracker;
       }
     },
     close() {
@@ -67,7 +69,7 @@
     },
     // Check if a letter has been shown
     alphaGroupExists(tracker) {
-      if (data.trackers.length > 10) {
+      if (state.trackers.length > 10) {
         // get first letter
         let alpha = tracker.label.substr(0, 1).toLowerCase();
         // If it has value - return true...
@@ -101,7 +103,7 @@
     allowClose={true}
     on:close={methods.close}>
     <div class="list">
-      {#each data.trackers as tracker}
+      {#each state.trackers as tracker}
         {#if !methods.alphaGroupExists(tracker)}
           <NItem
             className="bg-light text-faded sticky-top"
@@ -109,7 +111,7 @@
         {/if}
         <NItem
           borderBottom
-          className={data.selected.hasOwnProperty(tracker.tag) ? 'bg-selected' : ''}
+          className={state.selected.hasOwnProperty(tracker.tag) ? 'bg-selected' : ''}
           title={tracker.label}
           on:click={() => {
             methods.toggle(tracker);
@@ -118,7 +120,7 @@
             <NText size="lg">{tracker.emoji}</NText>
           </span>
           <span slot="right">
-            {#if data.selected.hasOwnProperty(tracker.tag)}
+            {#if state.selected.hasOwnProperty(tracker.tag)}
               <i class="zmdi zmdi-check-circle text-primary" />
             {/if}
           </span>
@@ -129,12 +131,12 @@
       <button class="btn btn-light btn-lg w-100 mr-2" on:click={methods.close}>
         {Lang.t('general.close')}
       </button>
-      {#if data.selectedArray.length > 0}
+      {#if state.selectedArray.length > 0}
         <button
           transition:fade
           class="btn btn-primary btn-lg w-100"
           on:click={() => {
-            dispatch('select', data.selectedArray);
+            dispatch('select', state.selectedArray);
           }}>
           Select
         </button>
