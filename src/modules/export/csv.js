@@ -8,18 +8,7 @@ export default class CSV {
   constructor() {}
 
   logsToCSV(logs, trackersToInclude) {
-    let header = [
-      "epoch",
-      "start",
-      "end",
-      "tracker",
-      "value",
-      "note",
-      "lat",
-      "lng",
-      "location",
-      "score"
-    ];
+    let header = ["epoch", "start", "end", "tracker", "value", "note", "lat", "lng", "location", "score"];
     let rows = [header];
     // Get an array of tag names from the trackers
     let tagsToInclude = trackersToInclude.map(tracker => tracker.tag);
@@ -27,6 +16,7 @@ export default class CSV {
     logs.forEach(log => {
       // Extract log tracker tags
       let logTrackers = Object.keys(log.trackers);
+      console.log("LogTrackers", logTrackers.length);
       // Loop over tracker tags
       logTrackers.forEach(trackerTag => {
         // Is it a match?
@@ -45,7 +35,22 @@ export default class CSV {
             log.score
           ]);
         }
-      });
+      }); // end looping over logTrackers
+      // TODO: Make this output notes
+      if (!logTrackers.length) {
+        rows.push([
+          log.end,
+          new Date(log.start).toISOString(),
+          new Date(log.end).toISOString(),
+          "note",
+          1,
+          log.note.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
+          log.lat,
+          log.lng,
+          log.location.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
+          log.score
+        ]);
+      }
     });
     return rows;
   }
@@ -62,13 +67,9 @@ export default class CSV {
 
     if (navigator.msSaveBlob) {
       // IE 10+
-      navigator.msSaveBlob(
-        new Blob([file], { type: "text/csv;charset=utf-8;" }),
-        filename
-      );
+      navigator.msSaveBlob(new Blob([file], { type: "text/csv;charset=utf-8;" }), filename);
     } else {
-      let encodedUri =
-        "data:text/csv;charset=UTF-8," + encodeURIComponent(file);
+      let encodedUri = "data:text/csv;charset=UTF-8," + encodeURIComponent(file);
       let link = document.createElement("a");
       link.setAttribute("href", encodedUri);
       link.setAttribute("download", filename);
@@ -100,34 +101,24 @@ export default class CSV {
     // Get the logs for the provided time period
     console.log("Going to get query with from ledger store", { start, end });
     let logs = await LedgerStore.query({
-      start,
-      end
+      start: dayjs(start).startOf("day"),
+      end: dayjs(end).endOf("day")
       // end TODO: See why end date is not working in query
     });
     console.log(`Ledger returned ${logs.length} records`);
     // Expand and filter the logs
-    logs = logs
-      .map(record => {
-        record.expand(); // get more data like trackers and values
-        return record;
-      })
-      .filter(log => {
-        // remove anything that doesn't match the trackers provided
-        let hasMatchingTracker = false;
-        let logTrackerTags = Object.keys(log.trackers);
-        // loop over trackers provided to see if they match
-        trackers.forEach(tracker => {
-          if (logTrackerTags.indexOf(tracker.tag) > -1) {
-            hasMatchingTracker = true;
-          }
-        });
-        return hasMatchingTracker;
-      });
+    logs = logs.map(record => {
+      record.expand(); // get more data like trackers and values
+      return record;
+    });
+
     // generate CSV array
     let csvArray = this.logsToCSV(logs, trackers);
-    let filename = `n-${dayjs(start).format("YYYY-MM-DD")}-${dayjs(end).format(
-      "YYYY-MM-DD"
-    )}.${md5(trackers).substr(0, 5)}.APP_VERSION.csv`;
+    console.log("CSV Array", csvArray);
+    let filename = `n-${dayjs(start).format("YYYY-MM-DD")}-${dayjs(end).format("YYYY-MM-DD")}.${md5(trackers).substr(
+      0,
+      5
+    )}.APP_VERSION.csv`;
     this.download(filename, csvArray);
   }
 }
