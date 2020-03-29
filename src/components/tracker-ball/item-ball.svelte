@@ -6,8 +6,8 @@
 
   const dispatch = createEventDispatcher();
 
-  export let score = 0;
-  export let last = null;
+  // export let score = 0;
+  // export let last = null;
 
   export let avatar = null;
   export let emoji = null;

@@ -90,7 +90,7 @@
 </style>
 
 {#if show}
-  <section class="n-tip-wrapper">
+  <section class="n-tip-wrapper {className}">
     <div class="n-tips">
       <div class="n-row mb-2">
         <div class="btn-close text-lg flex-grow-off" on:click={hideTips}>

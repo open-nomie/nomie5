@@ -22,7 +22,7 @@
   export let disabled = undefined;
   export let hoursUsed = [];
   // export let hideMore = false;
-  export let lastUsed = null; // or dayjs object
+  // export let lastUsed = null; // or dayjs object
   export let positivity = 0;
 
   // Define Dispatch

@@ -20,7 +20,7 @@
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="APP_URL" />
-    <meta property="og:title" content="Nomie 4" />
+    <meta property="og:title" content="Nomie 5" />
     <meta property="og:description" content="Private Mood and Life Tracking" />
     <meta property="og:image" content="" />
 
@@ -34,34 +34,21 @@
     <base href="/" />
 
     <!-- main is from scss/main.scss -->
-    <link rel="stylesheet" href="/main.css?v=4.7.3" />
+    <link rel="stylesheet" href="/main.css?v=APP_VERSION" />
   </head>
 
   <body>
     <noscript>
-      Sorry. Nomie 4 requires Javascript to run.
+      Sorry. Nomie requires Javascript to run.
     </noscript>
 
     <div class="loading-screen delete-on-app">
-      <div class="version">v4.7.3</div>
+      <div class="version">vAPP_VERSION</div>
     </div>
 
-    <!-- Javascript Includes -->
-    <script src="/vendors/pouchdb/pouchdb.min.js"></script>
-    <script src="/vendors/blockstack/blockstack.js"></script>
-    <script src="/vendors/leaflet/leaflet.js"></script>
-    <script src="/vendors/leaflet/esri/esri-leaflet.js"></script>
-    <script src="/vendors/leaflet/geocoder/esri-leaflet-geocoder.js"></script>
-
-    <!-- App Bundle -->
-    <script src="/bundle.js?v=4.7.3"></script>
-
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="vendors/leaflet/leaflet.css" />
-    <link rel="stylesheet" href="vendors/leaflet/geocoder/esri-leaflet-geocoder.css" />
-    <!-- ZMDI for icons -->
-    <link rel="stylesheet" href="/vendors/material-design-iconic-font/css/material-design-iconic-font.min.css" />
-    <!-- bundle is all the styles from the app and components-->
-    <link rel="stylesheet" href="/bundle.css?v=4.7.3" />
+    <script src="/js/vendors.js"></script>
+    <script src="/bundle.js?v=APP_VERSION"></script>
+    <link rel="stylesheet" href="/css/vendors.css" defer />
+    <link rel="stylesheet" href="/bundle.css?v=APP_VERSION" />
   </body>
 </html>
