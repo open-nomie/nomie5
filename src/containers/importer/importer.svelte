@@ -164,6 +164,7 @@
       await methods._importTrackers();
       await methods._importRecords();
       await methods._importPeople();
+      await methods._importBoards();
       importing.all.running = false;
       importing.all.done = true;
       Interact.toast("Import Complete. Reloading...");
@@ -178,7 +179,7 @@
         "Are you sure? Importing cannot be undone."
       );
       if (confirmed === true) {
-        return methods._importAll();
+        return await methods._importAll();
       }
     },
 
@@ -201,29 +202,23 @@
     },
 
     // Import Boards
-    _importBoards() {
+    async _importBoards() {
       importing.boards.running = true;
       let existingBoards = BoardStore.data().boards || [];
-      return BoardStore.save([...archive.boards, ...existingBoards]).then(
-        () => {
-          importing.boards.running = false;
-          importing.boards.done = true;
-          return importing.boards;
-        }
-      );
+      let save = await BoardStore.save([...archive.boards, ...existingBoards]);
+      importing.boards.running = false;
+      importing.boards.done = true;
+      return importing.boards;
     },
     // Confirm Import Boards
-    importBoards() {
-      return new Promise((resolve, reject) => {
-        return Interact.confirm(
-          "Confirm",
-          "Are you sure? Importing boards be undone."
-        ).then(res => {
-          if (res === true) {
-            return methods._importBoards();
-          }
-        });
-      });
+    async importBoards() {
+      let res = await Interact.confirm(
+        "Confirm",
+        "Are you sure? Importing boards be undone."
+      );
+      if (res === true) {
+        return methods._importBoards();
+      }
     },
 
     // Import Records
