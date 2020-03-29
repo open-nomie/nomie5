@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import NItem from "../list-item/list-item.svelte";
+  import NInput from "../input/input.svelte";
   import NToggle from "../../components/toggle-switch/toggle-switch.svelte";
   import { UserStore } from "../../store/user";
   import { Lang } from "../../store/lang";
@@ -11,13 +12,14 @@
 
   let pouchEngine; // Holder for the pouchEngine
 
-  let data = {
+  let state = {
     engine: null,
     isValidSyncURL: false,
     form: {
       username: null,
       password: null,
-      host: null
+      host: null,
+      database: null
     },
     success: false,
     syncing: false
@@ -27,14 +29,15 @@
     // Initialize Pouch DB
     init() {
       // Get Remote from Local STorage.
-      if (data.remote.isValid()) {
-        data.form.host = data.remote.url.toString();
-        data.form.username = data.remote.username;
-        data.form.password = data.remote.password;
+      if (state.remote.isValid()) {
+        state.form.host = state.remote.url.toString();
+        state.form.username = state.remote.username;
+        state.form.password = state.remote.password;
+        state.form.database = state.remote.database;
       }
     },
     isValidURL() {
-      let url = URLParser(data.form.host);
+      let url = URLParser(state.form.host);
       return url.valid;
     },
     isSyncing() {
@@ -42,19 +45,20 @@
     },
     saveRemote() {
       let remote = new Remote({
-        url: data.form.host,
-        username: data.form.username || "".length ? data.form.username : null,
-        password: data.form.password || "".length ? data.form.password : null,
+        url: state.form.host,
+        database: state.form.database,
+        username: state.form.username || "".length ? state.form.username : null,
+        password: state.form.password || "".length ? state.form.password : null,
         syncEnabled: true
       });
       pouchEngine.saveRemote(remote);
     },
     startSync() {
-      data.syncing = true;
+      state.syncing = true;
       pouchEngine.startSync();
     },
     stopSync() {
-      data.syncing = false;
+      state.syncing = false;
       pouchEngine.stopSync();
     },
     async connect() {
@@ -75,7 +79,7 @@
             methods.saveRemote();
             setTimeout(() => {
               methods.startSync();
-              data.syncing = true;
+              state.syncing = true;
             }, 120);
           }
         })
@@ -99,21 +103,21 @@
       };
       // Parse the current URL
       try {
-        // let urlDetails = new URL(data.form.host);
-        let urlDetails = URLParser(data.form.host);
-        data.isValidSyncURL = urlDetails.valid;
+        // let urlDetails = new URL(state.form.host);
+        let urlDetails = URLParser(state.form.host);
+        state.isValidSyncURL = urlDetails.valid;
         if (mask) {
-          return `${urlDetails.protocol}//${data.form.username}:${dotted(
-            data.form.password
-          )}@${urlDetails.host}${urlDetails.pathname}${pouchEngine.dbKey}`;
+          return `${urlDetails.protocol}//${state.form.username}:${dotted(
+            state.form.password
+          )}@${urlDetails.host}${urlDetails.pathname}${state.form.database}`;
         } else {
-          return `${urlDetails.protocol}//${data.form.username}:${data.form.password}@${urlDetails.host}${urlDetails.pathname}${pouchEngine.dbKey}`;
+          return `${urlDetails.protocol}//${state.form.username}:${state.form.password}@${urlDetails.host}${urlDetails.pathname}${state.form.database}`;
         }
       } catch (e) {
         console.log("Thrown error on urlparser", e);
         // alert(e.message);
         // It's an invalid URL
-        data.isValidSyncURL = false;
+        state.isValidSyncURL = false;
         return "";
       }
     }
@@ -123,20 +127,26 @@
   let connectionString = null;
 
   let lastHost = null;
-  $: if (data.form.host && data.form.host !== lastHost) {
-    lastHost = data.form.host;
+  $: if (state.form.host && state.form.host !== lastHost) {
+    lastHost = state.form.host;
+    connectionString = methods.getConnectionURL(true);
+  }
+
+  let lastDatabase = null;
+  $: if (state.form.database && state.form.database !== lastDatabase) {
+    lastDatabase = state.form.database;
     connectionString = methods.getConnectionURL(true);
   }
 
   let lastUsername = null;
-  $: if (data.form.username && data.form.username !== lastUsername) {
-    lastUsername = data.form.username;
+  $: if (state.form.username && state.form.username !== lastUsername) {
+    lastUsername = state.form.username;
     connectionString = methods.getConnectionURL(true);
   }
 
   let lastPassword = null;
-  $: if (data.form.password && data.form.password !== lastPassword) {
-    lastPassword = data.form.password;
+  $: if (state.form.password && state.form.password !== lastPassword) {
+    lastPassword = state.form.password;
     connectionString = methods.getConnectionURL(true);
   }
 
@@ -144,13 +154,13 @@
     // Get Pouch ENgine
     pouchEngine = Storage.getEngine();
     // Get Remote Settings
-    data.remote = pouchEngine.getRemote();
+    state.remote = pouchEngine.getRemote();
     // Wait for it to be ready
     pouchEngine.onReady(() => {
       // Wait for syncer to turn on
       setTimeout(() => {
         // are we syncing?
-        data.syncing = pouchEngine.syncer !== null;
+        state.syncing = pouchEngine.syncer !== null;
       }, 500);
     });
     // Fire of Initialization
@@ -167,7 +177,7 @@
       <div class="title truncate">Sync to CouchDB</div>
       <div slot="right">
         <NToggle
-          bind:value={data.remote.syncEnabled}
+          bind:value={state.remote.syncEnabled}
           on:change={event => {
             if (event.detail == false) {
               methods.stopSync();
@@ -178,7 +188,7 @@
       </div>
     </NItem>
 
-    {#if data.syncing}
+    {#if state.syncing}
       <div class="data-syncing">
         <NItem
           title="Syncing"
@@ -194,81 +204,86 @@
       </div>
     {/if}
 
-    {#if data.remote.syncEnabled}
-      {#if !data.syncing}
-        <div class="data-sync-enabled">
-          <NItem
-            description="Host your own CouchDB server and to sync your data in
-            near-real time across multiple devices." />
+    {#if !state.syncing}
+      <div class="data-sync-enabled">
+        <NItem
+          description="Host your own CouchDB server and to sync your data in
+          near-real time across multiple devices." />
 
-          <NItem className="input">
-            <input
-              class="form-control"
-              type="text"
-              bind:value={data.form.host}
-              placeholder="https://my-couch-server:12345"
-              autocomplete="off"
-              autocorrect="false"
-              autocapitalize="off" />
+        <NItem className="input">
+          <NInput
+            type="text"
+            bind:value={state.form.host}
+            placeholder="https://my-couch-server:12345"
+            autocomplete="off"
+            autocorrect="false"
+            autocapitalize="off" />
 
-            {#if !methods.isValidURL()}
-              <div class="n-row text-xs text-red">{data.form.host || ''}</div>
-            {:else}
-              <div class="n-row text-sm">{connectionString}</div>
-            {/if}
-
-            {#if data.urlDetails}
-              <div class="n-row text-xs" style="flex-wrap:wrap">
-                <div class="mr-1">
-                  <strong>
-                    {data.urlDetails.protocol == 'https:' ? 'Secure' : 'Not Secure'}:
-                  </strong>
-                  {data.urlDetails.protocol == 'https:' ? '★' : '✗'}
-                </div>
-                <div class="mr-1">
-                  <strong>Host:</strong>
-                  {data.urlDetails.hostname}
-                </div>
-                <div class="mr-1">
-                  <strong>Port:</strong>
-                  {data.urlDetails.port ? data.urlDetails.port : '80'}
-                </div>
-                <div class="mr-1">
-                  <strong>Path:</strong>
-                  {data.urlDetails.pathname}
-                </div>
-                <div class="filler" />
+          <!-- {#if state.urlDetails}
+            <div class="n-row text-xs" style="flex-wrap:wrap">
+              <div class="mr-1">
+                <strong>
+                  {state.urlDetails.protocol == 'https:' ? 'Secure' : 'Not Secure'}:
+                </strong>
+                {state.urlDetails.protocol == 'https:' ? '★' : '✗'}
               </div>
-            {/if}
-          </NItem>
-          <NItem>
-            <input
+              <div class="mr-1">
+                <strong>Host:</strong>
+                {state.urlDetails.hostname}
+              </div>
+              <div class="mr-1">
+                <strong>Port:</strong>
+                {state.urlDetails.port ? state.urlDetails.port : '80'}
+              </div>
+              <div class="mr-1">
+                <strong>Path:</strong>
+                {state.urlDetails.pathname}
+              </div>
+              <div class="filler" />
+            </div>
+          {/if} -->
+        </NItem>
+
+        <NItem>
+          <NInput
+            type="text"
+            bind:value={state.form.database}
+            placeholder="Database Name"
+            autocomplete="off"
+            autocorrect="false"
+            autocapitalize="off" />
+        </NItem>
+
+        <NItem>
+          <div class="n-row">
+            <NInput
+              className="mr-1 w-50"
               autocomplete="off"
               autocorrect="false"
               autocapitalize="off"
-              class="form-control"
               type="email"
               placeholder="Username"
-              bind:value={data.form.username} />
-          </NItem>
-          <NItem>
-            <input
-              class="form-control"
+              bind:value={state.form.username} />
+            <NInput
+              className="ml-1 w-50"
               type="password"
               placeholder="Password"
-              bind:value={data.form.password} />
-          </NItem>
-          {#if data.isValidSyncURL}
-            <NItem
-              className="clickable text-primary text-center"
-              on:click={methods.connect}>
-              Connect...
-            </NItem>
-          {/if}
+              bind:value={state.form.password} />
+          </div>
+        </NItem>
 
-        </div>
-      {/if}
-      <!-- end data-sync-enabled-->
+        <NItem className="text-xs text-faded-3">{connectionString}</NItem>
+        {#if state.isValidSyncURL}
+          <NItem
+            className="clickable text-primary text-center"
+            on:click={methods.connect}>
+            Connect...
+          </NItem>
+        {/if}
+
+      </div>
     {/if}
+    <!-- end data-sync-enabled-->
+
   </div>
 {/if}

@@ -54,7 +54,7 @@ export default {
       let parsed = remote.url;
       parsed.username = remote.username ? remote.username || "".length : null;
       parsed.password = remote.password ? remote.password || "".length : null;
-      parsed.pathname = `/${remote.dbPrefix || ""}${this.dbKey}`;
+      parsed.pathname = `/${remote.database}`;
       return parsed.toString();
     } else {
       return null;
@@ -94,6 +94,7 @@ export default {
   startSync() {
     let errorCount = 0;
     let syncURL = this.remoteToUrl();
+    console.log("Sync URL", syncURL);
     let self = this;
     if (syncURL) {
       this.syncer = PouchDB.sync(dbKey, syncURL, {
