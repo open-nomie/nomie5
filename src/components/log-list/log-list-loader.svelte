@@ -21,6 +21,7 @@
   let lastBookDate = null;
   let theEnd = false;
   let emptyBookCount = 0;
+  let canceled = false;
 
   $: if (logs) {
     // console.log("Logs change in log-list-loader", logs);
@@ -34,38 +35,47 @@
   }
 
   async function getNextBook() {
-    await tick(1);
-    loading = true;
-    let lookupDate;
+    if (!canceled) {
+      loading = true;
+      let lookupDate;
 
-    if (!lastBookDate) {
-      lastBookDate = dayjs();
-      lookupDate = lastBookDate;
-    } else {
-      lookupDate = lastBookDate.subtract(1, config.book_time_unit);
-      lastBookDate = dayjs(lookupDate);
-    }
-
-    let book = await LedgerStore.getBook(
-      lookupDate.format(config.book_time_format),
-      true
-    );
-    if (book) {
-      book = book.filter(log => {
-        return log.note.match(new RegExp(`${term}`, "gi"));
-      });
-      books[lookupDate.format(config.book_time_format)] = book;
-      logs = [...logs, ...book];
-      if (logs.length < limit * step) {
-        getNextBook();
+      if (!lastBookDate) {
+        lastBookDate = dayjs();
+        lookupDate = lastBookDate;
+      } else {
+        lookupDate = lastBookDate.subtract(1, config.book_time_unit);
+        lastBookDate = dayjs(lookupDate);
       }
-    } else if (emptyBookCount < 6) {
-      emptyBookCount++;
-      getNextBook();
+
+      let book = await LedgerStore.getBook(
+        lookupDate.format(config.book_time_format),
+        true
+      );
+      if (book) {
+        book = book.filter(log => {
+          return log.note.match(new RegExp(`${term}`, "gi"));
+        });
+        books[lookupDate.format(config.book_time_format)] = book;
+        logs = [...logs, ...book];
+        if (logs.length < limit * step) {
+          getNextBook();
+        }
+      } else if (emptyBookCount < 6) {
+        emptyBookCount++;
+        getNextBook();
+      } else {
+        loading = false;
+        theEnd = true;
+      }
     } else {
-      theEnd = true;
+      loading = false;
+      canceled = false;
     }
-    loading = false;
+  }
+
+  function cancelSearch() {
+    console.log("Cancel Search");
+    canceled = true;
   }
 
   onMount(() => {
@@ -76,17 +86,23 @@
 
 <div class="log-list-loader">
   <LogList {logs} />
-  <NItem className="py-2">
+  <NItem className="py-2 bg-transparent">
     {#if !theEnd && !loading}
       <button class="btn btn-outline btn-light btn-block" on:click={findMore}>
         Find more...
       </button>
     {:else if loading}
-      <NItem className="py-2">
+      <NItem className="py-2 bg-transparent">
         <div slot="left">
           <NSpinner size={24} />
         </div>
         Searching {lastBookDate.format('MMM YYYY')}...
+        <button
+          class="btn btn-clear text-red"
+          slot="right"
+          on:click={cancelSearch}>
+          Cancel
+        </button>
       </NItem>
     {:else}
       <div class="text-center">That's All Folks!</div>
