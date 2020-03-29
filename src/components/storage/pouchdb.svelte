@@ -105,14 +105,17 @@
       try {
         // let urlDetails = new URL(state.form.host);
         let urlDetails = URLParser(state.form.host);
+
         state.isValidSyncURL = urlDetails.valid;
+        let connection = null;
         if (mask) {
-          return `${urlDetails.protocol}//${state.form.username}:${dotted(
+          connection = `${urlDetails.protocol}//${state.form.username}:${dotted(
             state.form.password
           )}@${urlDetails.host}${urlDetails.pathname}${state.form.database}`;
         } else {
-          return `${urlDetails.protocol}//${state.form.username}:${state.form.password}@${urlDetails.host}${urlDetails.pathname}${state.form.database}`;
+          connection = `${urlDetails.protocol}//${state.form.username}:${state.form.password}@${urlDetails.host}/${state.form.database}`;
         }
+        return connection;
       } catch (e) {
         console.log("Thrown error on urlparser", e);
         // alert(e.message);
