@@ -443,7 +443,7 @@
     max-height: 200px;
     border-radius: 20px;
     background-color: var(--input-background);
-    box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.15);
+    // box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     transition: all 0.2s ease-in-out;
     border: solid 1px var(--color-faded-1);

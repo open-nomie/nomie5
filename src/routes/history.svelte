@@ -378,6 +378,14 @@
     padding: 6px 12px;
     font-size: 12px;
   }
+  .today-btn {
+    position: fixed;
+    left: 10px;
+    bottom: 10px;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
   .close-btn {
     left: auto;
     right: 18px;
@@ -596,7 +604,7 @@
     {/if}
     {#if !isToday && !searchMode}
       <button
-        class="btn btn-sm btn-light btn-round map-btn"
+        class="btn btn-sm btn-light btn-round today-btn"
         on:click={() => {
           methods.goto(dayjs());
         }}>
