@@ -49,9 +49,17 @@
 </script>
 
 <style lang="scss">
+  .n-tip-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 0 16px;
+  }
   .n-tips {
     margin: 16px;
-    width: 280px;
+    width: 100%;
+    max-width: 400px;
     padding: 16px;
     padding-bottom: 6px;
     position: relative;
@@ -82,21 +90,23 @@
 </style>
 
 {#if show}
-  <div class="n-tips">
-    <div class="n-row mb-2">
-      <div class="btn-close text-lg flex-grow-off" on:click={hideTips}>
-        <i class="text-lg zmdi zmdi-close-circle" />
-      </div>
-      <button
-        class="btn btn-clear btn-icon zmdi zmdi-chevron-left"
-        on:click={previousTip} />
-      <div class="tip filler">{tips[state.activeTip]}</div>
-      <div class="d-flex flex-row arrows">
+  <section class="n-tip-wrapper">
+    <div class="n-tips">
+      <div class="n-row mb-2">
+        <div class="btn-close text-lg flex-grow-off" on:click={hideTips}>
+          <i class="text-lg zmdi zmdi-close-circle" />
+        </div>
         <button
-          class="btn btn-clear btn-icon zmdi zmdi-chevron-right"
-          on:click={nextTip} />
+          class="btn btn-clear btn-icon zmdi zmdi-chevron-left"
+          on:click={previousTip} />
+        <div class="tip filler">{tips[state.activeTip]}</div>
+        <div class="d-flex flex-row arrows">
+          <button
+            class="btn btn-clear btn-icon zmdi zmdi-chevron-right"
+            on:click={nextTip} />
+        </div>
       </div>
+      <NStepper steps={tips.length} current={state.activeTip} dark />
     </div>
-    <NStepper steps={tips.length} current={state.activeTip} dark />
-  </div>
+  </section>
 {/if}
