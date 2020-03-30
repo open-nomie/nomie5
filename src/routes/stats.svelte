@@ -424,9 +424,6 @@
     align-items: center;
     flex-wrap: nowrap;
   }
-  .border-bottom {
-    border-bottom: solid 1px var(--color-faded-1) !important;
-  }
 
   .stat-view-body {
     flex-grow: 1;

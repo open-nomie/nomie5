@@ -300,9 +300,6 @@
     align-items: space-evenly;
     flex-wrap: wrap;
   }
-  .border-bottom {
-    border-bottom: solid 1px var(--color-faded-1) !important;
-  }
 
   .sticky-header {
     background: var(--color-bg);
