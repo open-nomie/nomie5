@@ -17,21 +17,26 @@
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import time from "../../utils/time/time";
 
+  import { TrackerStore } from "../../store/trackers";
+  import { UserStore } from "../../store/user";
+  import { Interact } from "../../store/interact";
+
   // vendors
   import dayjs from "dayjs";
 
   // props
   export let log = undefined;
-  export let trackers = {};
+  // export let trackers = {};
   export let className = "";
   export let focus = false;
   export let fullDate = false;
-  export let show24Hour = false;
   export let showMore = true;
   // consts
   const dispatch = createEventDispatcher();
 
   let displayLog;
+
+  let trackers = $TrackerStore;
 
   let state = {
     showPhoto: false
@@ -46,7 +51,7 @@
       ? true
       : false;
 
-  $: timeFormat = show24Hour ? "HH:mm" : "h:mm a";
+  $: timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
 </script>
 
 <style lang="scss">
@@ -83,11 +88,7 @@
       {#if displayLog.lat}
         <button
           on:click={event => {
-            dispatch('locationClick', {
-              location: displayLog.location,
-              lat: displayLog.lat,
-              lng: displayLog.lng
-            });
+            Interact.showLocations([displayLog]);
             event.stopPropagation();
           }}
           class="btn btn-sm btn-clear pl-2 pr-2 ">
