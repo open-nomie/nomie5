@@ -9,21 +9,16 @@
   // svelte
   import { navigate } from "svelte-routing";
   import { onMount } from "svelte";
-  import { fly } from "svelte/transition";
 
   // components
   import NItem from "../components/list-item/list-item.svelte";
-  import NCell from "../components/cell/cell.svelte";
-  import NText from "../components/text/text.svelte";
   import NPoints from "../components/points/points.svelte";
-  import NNoteTextualizer from "../components/note-textualizer/note-textualizer.svelte";
   import NLogListLoader from "../components/log-list/log-list-loader.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
   import NModal from "../components/modal/modal.svelte";
   import Spinner from "../components/spinner/spinner.svelte";
   import NDatePicker from "../components/date-picker/date-picker.svelte";
   import LogItem from "../components/list-item-log/list-item-log.svelte";
-  import NDatePill from "../components/date-pill/date-pill.svelte";
   import NSearchBar from "../components/search-bar/search-bar.svelte";
 
   // Containers
@@ -31,7 +26,6 @@
   import AppLayout from "../containers/layout/app.svelte";
 
   // Utils
-  import NomieUOM from "../utils/nomie-uom/nomie-uom";
   import dayjs from "dayjs";
 
   // Stores
@@ -135,11 +129,18 @@
   $: if ($LedgerStore.books[state.date.format("YYYY-MM")] && !searchMode) {
     loading = true;
     book = $LedgerStore.books[state.date.format("YYYY-MM")] || [];
-    logs = (book || [])
+
+    let results = book || [];
+
+    logs = results
       .filter(log => filterActiveDate(log))
       .sort((a, b) => {
         return a.end < b.end ? 1 : -1;
       });
+
+    logs = Array.from(new Set(logs.map(a => a._id))).map(id => {
+      return logs.find(a => a._id === id);
+    });
 
     dayScore = 0;
     logs
@@ -412,13 +413,6 @@
     }
   }
 
-  .n-date-pill-container {
-    position: fixed;
-    bottom: 70px;
-    left: 0;
-    right: 0;
-  }
-
   .header-date-control {
     line-height: 100%;
     flex-grow: 1;
@@ -504,10 +498,11 @@
       <!-- end toolbar div wrapper-->
     </NToolbar>
 
+    <!-- hasResults={(searchLogs || []).length > 0} -->
+
     <NSearchBar
       searchTerm={state.searchTerm}
       style={showSearch ? 'margin-top:-20px;' : ''}
-      hasResults={(searchLogs || []).length > 0}
       on:change={methods.searchChange}
       on:clear={methods.clearSearch}
       on:search={methods.doSearch} />
@@ -535,21 +530,16 @@
           <!-- If Logs and Not refreshing  -->
         {:else if !showSearch}
           <!-- Loop over logs -->
-          {#each logs as log, i (log._id)}
+          {#each logs as log, i (`${log._id}-${log.end}`)}
             <LogItem
               {log}
-              trackers={$TrackerStore}
               on:trackerClick={event => {
                 methods.trackerTapped(event.detail.tracker, log);
-              }}
-              on:locationClick={event => {
-                Interact.showLocations([log]);
               }}
               on:textClick={event => {
                 state.searchTerm = event.detail.value;
                 methods.search(state.searchTerm);
               }}
-              show24Hour={$UserStore.meta.is24Hour}
               on:moreClick={event => {
                 Interact.logOptions(log).then(() => {});
               }} />
@@ -560,21 +550,19 @@
           If Search Mode and We have Logs
         -->
         {:else if showSearch && state.searchTerm}
-          <NLogListLoader term={state.searchTerm} limit={20} />
-
-          <!-- We have No search results -->
-          <!-- {#if !searchLogs.length}
-            <div class="gap" />
-            <NItem className="text-center bg-transparent py-5">
-              <span class="text-faded-3">No Results found</span>
-            </NItem>
-          {/if} -->
-          <!-- <div class="gap" />
-          <NItem
-            className="text-primary text-center"
-            on:click={methods.previousSearch}
-            title="Search {state.date.subtract(1, 'year').format('YYYY')}..." />
-          <div class="gap" /> -->
+          <NLogListLoader
+            term={state.searchTerm}
+            limit={20}
+            on:trackerClick={event => {
+              methods.trackerTapped(event.detail.tracker, event.detail.log);
+            }}
+            on:textClick={event => {
+              state.searchTerm = event.detail.value;
+              methods.search(state.searchTerm);
+            }}
+            on:moreClick={event => {
+              Interact.logOptions(event.detail).then(() => {});
+            }} />
         {/if}
 
       </div>
