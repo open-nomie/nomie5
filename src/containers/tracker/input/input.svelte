@@ -68,6 +68,7 @@
       data.tracker.started = new Date().getTime();
       // Start the Timer for this tracker
       TrackerStore.startTimer(data.tracker);
+      methods.onCancel();
     },
     // Stop the Timer
     stopTimer() {
@@ -205,7 +206,7 @@
           class="btn btn-clear btn-lg mr-2 {data.value ? 'w-25' : 'w-100'}">
           {#if data.value}
             <span class=" zmdi zmdi-close" />
-          {:else}Close{/if}
+          {:else}{Lang.t('general.close', 'Close')}{/if}
         </button>
       {/if}
 
@@ -235,7 +236,7 @@
           on:click={methods.startTimer}
           aria-label="Start Timer"
           class="btn btn-success btn-lg w-100">
-          Start
+          {Lang.t('general.start', 'Start')}
         </button>
       {/if}
 
@@ -244,7 +245,7 @@
           on:click={methods.stopTimer}
           aria-label="Stop Timer"
           class="btn btn-danger btn-lg btn-block {data.tracker.started > 0 ? '' : 'd-none'}">
-          Stop
+          {Lang.t('general.stop', 'Stop')}
         </button>
       {/if}
 
