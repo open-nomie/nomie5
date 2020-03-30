@@ -76,7 +76,8 @@
     "style-loader": "^0.23.1",
     "svelte": "^3.20.1",
     "svelte-preprocess-css-global": "0.0.1",
-    "svelte-routing": "^1.4.2"
+    "svelte-routing": "^1.4.2",
+    "svelte-sortable-list": "^1.1.0"
   },
   "dependencies": {
     "d3-scale": "^3.0.0",
@@ -84,6 +85,7 @@
     "dom-to-image-more": "^2.8.0",
     "fusioncharts": "^3.15.1",
     "md5": "^2.2.1",
+    "sortablejs": "^1.10.2",
     "svelte-awesome": "^1.4.1",
     "svelte-fusioncharts": "^1.0.0",
     "svelte-loader": "^2.13.4",

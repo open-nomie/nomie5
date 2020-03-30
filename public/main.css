@@ -5889,7 +5889,15 @@ body.scrolling .mini-map {
     padding-bottom: 0; }
 
 .n-list {
-  margin-bottom: 16px; }
+  margin-bottom: 16px;
+  border-radius: 6px;
+  overflow: hidden; }
+  .n-list .n-item:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px; }
+  .n-list .n-item:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px; }
 
 .border-bottom {
   border-color: var(--color-faded-2) !important; }

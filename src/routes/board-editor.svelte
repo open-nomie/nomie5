@@ -2,11 +2,13 @@
   //Vendors
   import { navigate, Router, Route } from "svelte-routing";
   import { tap } from "@sveltejs/gestures";
+
   import { onMount, onDestroy } from "svelte";
 
   // Utils
   import Logger from "../utils/log/log";
   import arrayUtils from "../utils/array/array_utils";
+  import tick from "../utils/tick/tick";
   // Modules
   import Tracker from "../modules/tracker/tracker";
   // Components
@@ -14,6 +16,9 @@
   import NInput from "../components/input/input.svelte";
   import NItem from "../components/list-item/list-item.svelte";
   import NTrackerButton from "../containers/board/tracker-button.svelte";
+  import NBall from "../components/tracker-ball/ball.svelte";
+
+  import NSortableList from "../components/sortable-list/sortable-list.svelte";
 
   // containers
   import NPage from "../containers/layout/page.svelte";
@@ -75,24 +80,31 @@
     },
     initialize() {},
     getTrackers() {},
-    save() {
-      $BoardStore.activeBoard.label = data.updatedLabel;
-      BoardStore.saveBoard($BoardStore.activeBoard).then(() => {
-        window.history.back();
-      });
+    async save() {
+      try {
+        BoardStore.update(state => {
+          state.activeBoard.label = data.updatedLabel;
+          state.activeBoard.trackers = trackers.map(tracker => tracker.tag);
+          return state;
+        });
+        await tick(10);
+        let saved = await BoardStore.saveBoard($BoardStore.activeBoard);
+        Interact.toast(Lang.t("general.saved", "Saved"));
+      } catch (e) {
+        Interact.alert(Lang.t("general.error", "Error"), e.message);
+      }
     },
-    deleteBoard() {
-      Interact.confirm(
+    async deleteBoard() {
+      let confirmed = await Interact.confirm(
         "Delete " + $BoardStore.activeBoard.label + " tab?",
         "You can recreate it later, but it's not super easy."
-      ).then(res => {
-        if (res === true) {
-          data.refreshing = true;
-          BoardStore.deleteBoard($BoardStore.activeBoard.id).then(() => {
-            navigate("/");
-          });
-        }
-      });
+      );
+      if (confirmed === true) {
+        data.refreshing = true;
+        await BoardStore.deleteBoard($BoardStore.activeBoard.id);
+        navigate("/");
+        Interact.toast("Deleted");
+      }
     },
     removeTracker(event, tracker) {
       event.preventDefault();
@@ -151,6 +163,13 @@
     }
   };
 
+  function trackersSorted(evt) {
+    setTimeout(() => {
+      trackers = evt.detail;
+      console.log("Trackers", trackers.map(tracker => tracker.tag));
+    }, 10);
+  }
+
   let boardUnsub;
 
   onMount(() => {
@@ -172,6 +191,15 @@
   UserStore.onReady(() => {
     methods.initialize();
   });
+
+  let list = [
+    { id: 1, name: "First Item" },
+    { id: 2, name: "Second Item" },
+    { id: 3, name: "Third Item" }
+  ];
+  const sortList = ev => {
+    trackers = ev.detail;
+  };
 </script>
 
 <style lang="scss">
@@ -294,17 +322,34 @@
     </div>
     <!-- /.container -->
 
-    <div class="container px-0 grid-container">
-
-      <NItem className="py-2">
-        <NInput
-          type="text"
-          placeholder="Tab Label"
-          bind:value={data.updatedLabel} />
-      </NItem>
+    <div class="container px-0 grid-container pt-2">
 
       <div class="n-list">
-        {#each trackers as tracker, i (tracker.tag)}
+        <NItem className="py-2">
+          <NInput
+            type="text"
+            placeholder="Tab Label"
+            bind:value={data.updatedLabel} />
+        </NItem>
+
+        {#if trackers}
+          <NSortableList
+            bind:items={trackers}
+            handle=".zmdi-menu"
+            key="tag"
+            on:update={trackersSorted}
+            let:item>
+            <NItem>
+              <div slot="left">
+                <NBall emoji={item.emoji} size={32} />
+              </div>
+              {item.label}
+              <i class="zmdi zmdi-menu" slot="right" />
+            </NItem>
+          </NSortableList>
+        {/if}
+
+        <!-- {#each trackers as tracker, i (tracker.tag)}
           <NItem>
             <div slot="right" class="n-row">
               <button
@@ -335,46 +380,8 @@
               </button>
             </div>
           </NItem>
-        {/each}
+        {/each} -->
       </div>
-
-      <!-- <div
-        class="grid"
-        id="edit-grid"
-        on:drop={methods.drag.drop}
-        on:touchend={methods.drag.touchend}
-        on:dragover={methods.drag.over}
-        on:dragleave={methods.drag.leave}>
-        {#each methods.getTrackers() as tracker, i (tracker.tag)}
-          <NItem>
-            <div class="emoji" slot="left" />
-            <h1 class="title">{tracker.label}</h1>
-          </NItem> -->
-
-      <!-- <div
-            class="tracker-grabber {data.hoverTag == tracker.tag ? 'hovered' : ''}"
-            data-id={tracker.tag}
-            id={tracker.tag}
-            draggable={true}
-            on:touchmove={event => methods.drag.touchmove(event, i)}
-            on:touchend={methods.drag.touchend}
-            xon:touchstart={event => methods.drag.start(event, i, 'touch')}
-            on:dragstart={event => methods.drag.start(event, i)}>
-            {#if showDeletes}
-              <button
-                class="btn-delete zmdi zmdi-close"
-                on:click={event => {
-                  methods.removeTracker(event, tracker);
-                }} />
-            {/if}
-            <NTrackerButton
-              {tracker}
-              className={i % 2 ? 'wiggle' : 'wiggle-other'} />
-          </div> -->
-      <!-- {/each}
-        <div id="ball" />
-      </div>
-      <div class="filler" /> -->
 
     </div>
     <div class="n-row p-2">
