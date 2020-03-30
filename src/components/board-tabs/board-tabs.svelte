@@ -32,7 +32,11 @@
 </script>
 
 <style lang="scss">
-
+  .add-board {
+    &:before {
+      display: none;
+    }
+  }
 </style>
 
 <NHScroller activeIndex={data.activeIndex} className="n-board-tabs">
@@ -49,10 +53,14 @@
     </button>
   {/each}
   <button
-    class="btn btn-clear btn-icon add-board zmdi zmdi-plus"
+    class="tab add-board text-inverse"
     on:click={() => {
       dispatch('create');
-    }} />
+    }}>
+    <i
+      class="zmdi zmdi-plus text-bold text-lg {boards.length == 1 ? 'mr-2' : ''}" />
+    {#if boards.length == 1}Add a Tab{/if}
+  </button>
   <slot />
   <slot name="right" />
 </NHScroller>

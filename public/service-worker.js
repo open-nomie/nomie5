@@ -16,12 +16,20 @@
 // Names of the two caches used in this version of the service worker.
 // Change to v2, etc. when you update any of the local resources, which will
 // in turn trigger the install event again.
-const PRECACHE = "precache-5.0.33";
-const RUNTIME = "runtime-5.0.33";
+const PRECACHE = "precache-5.0.35";
+const RUNTIME = "runtime-5.0.35";
 
 // A list of local resources we always want to be cached.
 const PRECACHE_URLS = [
   "index.html",
+  "manifest.json",
+  "favicon.png",
+  "images/icons/nomie-android-192.png",
+  "/fonts/Material-Design-Iconic-Font.eot",
+  "/fonts/Material-Design-Iconic-Font.svg",
+  "/fonts/Material-Design-Iconic-Font.ttf",
+  "/fonts/Material-Design-Iconic-Font.woff",
+  "/fonts/Material-Design-Iconic-Font.woff2",
   "./" // Alias for index.html
 ];
 
