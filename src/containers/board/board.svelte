@@ -728,13 +728,12 @@
                 </div>
               {/if}
             {/if}
-
+            <!-- lastUsed={methods.getLastUsed(tracker)} -->
             {#each foundTrackers || boardTrackers as tracker (tracker.tag)}
               <NTrackerButton
                 {tracker}
                 value={methods.getTrackerValue(tracker)}
                 hoursUsed={methods.getHoursUsed(tracker)}
-                lastUsed={methods.getLastUsed(tracker)}
                 positivity={methods.getPositivity(tracker)}
                 on:click={() => {
                   methods.trackerTapped(tracker);
