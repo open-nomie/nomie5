@@ -57,9 +57,16 @@
     max-width: 95vw;
   }
 
-  &.border-bottom,
-  &[border-bottom] {
-    border-bottom: solid 1px rgba(0, 0, 0, 0.1);
+  &.bottom-line,
+  &[bottom-line] {
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      border-bottom: solid 1px var(--color-faded-1);
+      left: 16px;
+      right: 0;
+    }
   }
 
   .left {
@@ -207,10 +214,6 @@
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
   }
-}
-
-.border-bottom {
-  border-color: var(--color-faded-2) !important;
 }
 
 .bg-selected {

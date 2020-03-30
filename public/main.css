@@ -5260,8 +5260,6 @@ body.theme-dark {
   --input-background: #111;
   --input-focus-background: #000;
   --color-translucent: rgba(0, 0, 0, 0.79); }
-  body.theme-dark .n-item.border-bottom {
-    border-bottom: solid 1px rgba(255, 255, 255, 0.15) !important; }
   body.theme-dark .btn-light {
     color: #fff;
     background-color: #333;
@@ -5805,8 +5803,13 @@ body.scrolling .mini-map {
     border-radius: 0.9rem;
     overflow: hidden;
     max-width: 95vw; }
-  .n-item.border-bottom, .n-item[border-bottom] {
-    border-bottom: solid 1px rgba(0, 0, 0, 0.1); }
+  .n-item.bottom-line:after, .n-item[bottom-line]:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    border-bottom: solid 1px var(--color-faded-1);
+    left: 16px;
+    right: 0; }
   .n-item .left {
     padding-right: 16px; }
   .n-item .right {
@@ -5898,9 +5901,6 @@ body.scrolling .mini-map {
   .n-list .n-item:last-child {
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px; }
-
-.border-bottom {
-  border-color: var(--color-faded-2) !important; }
 
 .bg-selected {
   background-color: var(--color-background-selected) !important; }
@@ -6588,8 +6588,8 @@ TODO: Organize main into components or containers.
   margin-bottom: 0; }
 
 .fake-link {
-  color: var(--color-primary-bright);
-  border-bottom: dotted 1px var(--color-primary-bright); }
+  border-bottom: dotted 1px var(--color-primary-bright);
+  color: var(--color-primary-bright); }
 
 .card {
   border-radius: 0.5rem;
