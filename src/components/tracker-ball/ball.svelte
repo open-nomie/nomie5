@@ -65,7 +65,8 @@
   {:else if emoji}
     <div
       class=" letter emoji-letter"
-      style="{color ? `color:${color}` : ''}; width:{size}px; height:{size}px">
+      style="font-size: {size * 0.5}px; width:{size}px; height:{size}px; {color ? `color:${color}` : ''}
+      ">
       {emoji}
     </div>
   {:else if username}
