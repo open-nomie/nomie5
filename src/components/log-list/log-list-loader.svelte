@@ -6,6 +6,8 @@
   import NSpinner from "../spinner/spinner.svelte";
   import { LedgerStore } from "../../store/ledger";
   import tick from "../../utils/tick/tick";
+  import { createEventDispatcher } from "svelte";
+  const dispatch = createEventDispatcher();
 
   // vendor
   import dayjs from "dayjs";
@@ -85,7 +87,20 @@
 </script>
 
 <div class="log-list-loader">
-  <LogList {logs} />
+  <LogList
+    {logs}
+    on:trackerClick={event => {
+      dispatch('trackerClick', event.detail);
+    }}
+    on:locationClick={event => {
+      dispatch('locationClick', event.detail);
+    }}
+    on:textClick={event => {
+      dispatch('textClick', event.detail);
+    }}
+    on:moreClick={event => {
+      dispatch('moreClick', event.detail);
+    }} />
   <NItem className="py-2 bg-transparent">
     {#if !theEnd && !loading}
       <button class="btn btn-outline btn-light btn-block" on:click={findMore}>
