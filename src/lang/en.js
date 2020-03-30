@@ -24,6 +24,7 @@ export default {
       hide: "Hide",
       customize: "Customize",
       start: "Start",
+      stop: "Stop",
       end: "End",
       set: "Set",
       edit: "Edit",
