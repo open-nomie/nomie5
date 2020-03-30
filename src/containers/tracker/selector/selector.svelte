@@ -110,8 +110,7 @@
             title={tracker.label.substr(0, 1).toUpperCase()} />
         {/if}
         <NItem
-          borderBottom
-          className={state.selected.hasOwnProperty(tracker.tag) ? 'bg-selected' : ''}
+          className="bottom-line {state.selected.hasOwnProperty(tracker.tag) ? 'bg-selected' : ''}"
           title={tracker.label}
           on:click={() => {
             methods.toggle(tracker);
