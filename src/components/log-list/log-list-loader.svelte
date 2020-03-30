@@ -120,7 +120,7 @@
         </button>
       </NItem>
     {:else}
-      <div class="text-center">That's All Folks!</div>
+      <div class="text-center text-md text-faded-2">No more results</div>
     {/if}
   </NItem>
 </div>

@@ -7,10 +7,16 @@
   const dispatch = createEventDispatcher();
 
   export let logs = null;
+
+  function sort(logs) {
+    return logs.sort((a, b) => {
+      return a.end < b.end ? 1 : -1;
+    });
+  }
 </script>
 
 <div class="n-list">
-  {#each logs as log}
+  {#each sort(logs) as log}
     <LogItem
       {log}
       on:trackerClick={event => {
