@@ -5,6 +5,8 @@
 
   //Utils
   import extractTrackers from "../../utils/extract-trackers/extract-trackers";
+  import extractPeople from "../../utils/extract-trackers/extract-people";
+  import regexs from "../../utils/regex";
 
   // Modules
   import Tracker from "../../modules/tracker/tracker";
@@ -34,18 +36,23 @@
     },
     parse_tracker_str(str) {
       let extractedTrackers = extractTrackers(str);
+
+      let remainder = str.replace(regexs.tag, "").trim();
+
       let keys = Object.keys(extractedTrackers);
       if (keys.length) {
         return {
           type: "tracker",
           tracker: methods.tracker_get(extractedTrackers[keys[0]].tracker),
-          value: extractedTrackers[keys[0]].value
+          value: extractedTrackers[keys[0]].value,
+          remainder: remainder
         };
       } else {
         return {
           type: "tracker",
           tracker: new Tracker(),
-          value: null
+          value: null,
+          remainder: remainder
         };
       }
     },
@@ -59,10 +66,28 @@
         word = word.trim();
         const first = word.substr(0, 1);
         if (first === "#") {
-          noteArray.push(methods.parse_tracker_str(word));
+          let trackerMatch = methods.parse_tracker_str(word);
+          noteArray.push(trackerMatch);
+          if (trackerMatch.remainder.length) {
+            noteArray.push({
+              type: "remainder",
+              value: trackerMatch.remainder
+            });
+          }
         } else if (first === "@") {
-          people.push(word);
-          noteArray.push({ type: "person", value: word });
+          let persons = extractPeople(word);
+          let person = persons[0];
+          if ((persons || []).length) {
+            people.push(persons[0]);
+            noteArray.push({ type: "person", value: "@" + persons[0] });
+            let remainder = word
+              .replace(persons[0], "")
+              .replace("@", "")
+              .trim();
+            if (remainder.length) {
+              noteArray.push({ type: "remainder", value: remainder });
+            }
+          }
           actual++;
         } else if (first === "+") {
           context.push(word);
@@ -109,6 +134,13 @@
       text-align: center;
       display: inline-block;
     }
+    .string {
+      padding-right: 5px;
+    }
+    .remainder {
+      padding-right: 5px;
+      margin-left: -2px;
+    }
     span {
       display: inline;
     }
@@ -142,8 +174,11 @@
           }}>
           {word.value}
         </span>
-      {:else}{word.value}{/if}
-      {' '}
+      {:else if word.type == 'remainder'}
+        <span class="remainder">{word.value.trim()}</span>
+      {:else}
+        <span class="string">{word.value}</span>
+      {/if}
     {/each}
   </div>
 {/if}
