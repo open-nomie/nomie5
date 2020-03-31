@@ -119,10 +119,16 @@
   <div class="n-note-textualized {className}">
     {#each data.words as word}
       {#if word.type === 'tracker'}
-        <span class="tracker font-weight-bold">#{word.tracker.tag}</span>
+        <span
+          class="tracker font-weight-bold clickable text-primary-bright"
+          on:click={() => {
+            methods.textElementClick(word);
+          }}>
+          #{word.tracker.tag}
+        </span>
       {:else if word.type == 'person'}
         <span
-          class="person font-weight-bold clickable text-primary"
+          class="person font-weight-bold clickable text-primary-bright"
           on:click={() => {
             methods.textElementClick(word);
           }}>
@@ -130,7 +136,7 @@
         </span>
       {:else if word.type == 'context'}
         <span
-          class="context font-weight-bold clickable text-primary"
+          class="context font-weight-bold clickable text-primary-bright"
           on:click={() => {
             methods.textElementClick(word);
           }}>
