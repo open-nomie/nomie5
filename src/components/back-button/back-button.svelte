@@ -8,12 +8,14 @@
   const onClick = event => {
     if (to) {
       navigate(to);
+    } else {
+      history.back();
     }
     dispatch("click", event);
   };
 </script>
 
-<button class="btn btn-clear text-faded" on:click={onClick}>
-  <i class="zmdi zmdi-chevron-left mr-2 " />
+<button class="btn" on:click={onClick}>
+  <i class="zmdi zmdi-chevron-left mr-2" />
   Back
 </button>
