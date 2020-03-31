@@ -7,6 +7,7 @@
   // Components
   import NText from "../components/text/text.svelte";
   import NItem from "../components/list-item/list-item.svelte";
+  import NBackButton from "../components/back-button/back-button.svelte";
   // containers
   import NPage from "../containers/layout/page.svelte";
 
@@ -14,11 +15,14 @@
   import faq from "../../config/faq";
 </script>
 
-<NPage className="stats" withBack={true}>
+<NPage className="stats">
 
-  <div slot="header" class="n-row">
-    <div class="text-inverse text-md">Frequent Questions</div>
-    <div class="filler" />
+  <div slot="header" class="n-toolbar-grid">
+    <div class="left">
+      <NBackButton />
+    </div>
+    <div class="main title">Q&A</div>
+    <div class="right" />
   </div>
 
   <div class="container">

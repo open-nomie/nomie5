@@ -23,6 +23,7 @@
 
   // Components
   import ButtonGroup from "../components/button-group/button-group.svelte";
+  import LogListLoader from "../components/log-list/log-list-loader.svelte";
   import Spinner from "../components/spinner/spinner.svelte";
   import NText from "../components/text/text.svelte";
   import NCell from "../components/cell/cell.svelte";
@@ -765,10 +766,14 @@
         </div>
       {:else if state.subview === 'logs'}
         <div class="n-list">
-          {#if state.stats.getRows(state.view).length === 0}
+          <!-- {#if state.stats.getRows(state.view).length === 0}
             <div class="empty-notice sm">No logs found on this day.</div>
-          {/if}
-          {#each state.stats.getRows(state.view) as log, index}
+          {/if} -->
+          <LogListLoader
+            term={`#${state.tracker.tag}`}
+            limit={10}
+            compact={true} />
+          <!-- {#each state.stats.getRows(state.view) as log, index}
             {#if log.trackers[state.tracker.tag]}
               <NLogItem
                 {log}
@@ -784,7 +789,7 @@
                 trackers={$TrackerStore}
                 focus={state.tracker.tag} />
             {/if}
-          {/each}
+          {/each} -->
         </div>
       {:else if state.subview === 'all-logs'}
         <div class="n-list">

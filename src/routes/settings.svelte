@@ -260,13 +260,14 @@ Note: Your data will not automatically move over. You'll first need to export it
 </script>
 
 <AppLayout>
-  <div slot="header">
-    <NToolbar>
-      <div class="text-inverse text-bold">{Lang.t('settings.settings')}</div>
-      <button on:click={methods.faq} class="btn btn-clear text-primary">
+  <div slot="header" class="n-toolbar-grid">
+    <div class="left" />
+    <div class="main title">{Lang.t('settings.settings')}</div>
+    <div class="right">
+      <button on:click={methods.faq} class="btn text-primary-bright">
         {Lang.t('general.faq')}
       </button>
-    </NToolbar>
+    </div>
   </div>
 
   <div slot="content">
@@ -474,13 +475,13 @@ Note: Your data will not automatically move over. You'll first need to export it
               </button>
               <!-- {#if $UserStore.storageType === 'local'}
                 <button
-                  class="btn btn-clear text-primary"
+                  class="btn btn-clear text-primary-bright"
                   on:click={methods.switchToCloud}>
                   {Lang.t('settings.use-cloud')}
                 </button>
               {:else}
                 <button
-                  class="btn btn-clear text-primary"
+                  class="btn btn-clear text-primary-bright"
                   on:click={methods.switchToLocal}>
                   {Lang.t('settings.use-local')}
                 </button>
@@ -512,7 +513,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               <span slot="right">
                 <a
                   href="https://nomie.app?s=dap"
-                  class="btn btn-clear text-primary"
+                  class="btn btn-clear text-primary-bright"
                   target="_system">
                   Website
                 </a>
@@ -522,7 +523,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               <span slot="right">
                 <a
                   href="https://reddit.com/r/nomie"
-                  class="btn btn-clear text-primary"
+                  class="btn btn-clear text-primary-bright"
                   target="_system">
                   r/nomie
                 </a>
@@ -533,7 +534,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               <span slot="right">
                 <a
                   href="https://github.com/open-nomie/nomie"
-                  class="btn btn-clear text-primary"
+                  class="btn btn-clear text-primary-bright"
                   target="_system">
                   Github
                 </a>
@@ -556,8 +557,8 @@ Note: Your data will not automatically move over. You'll first need to export it
           <NItem title={Lang.t('general.questions')}>
             <span slot="right">
               <a
-                class="btn btn-clear text-primary"
-                href={`mailto:${config.support_email}?subject=Open Nomie Support`}>
+                class="btn btn-clear text-primary-bright"
+                href={`mailto:${config.support_email}?subject=Nomie vAPP_VERSION`}>
                 {config.support_contact}
               </a>
             </span>

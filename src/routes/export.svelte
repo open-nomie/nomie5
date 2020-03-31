@@ -10,6 +10,7 @@
   // Components
   import NText from "../components/text/text.svelte";
   import NItem from "../components/list-item/list-item.svelte";
+  import NBackButton from "../components/back-button/back-button.svelte";
   // containers
   import NPage from "../containers/layout/page.svelte";
   // config
@@ -84,8 +85,14 @@
   onMount(() => {});
 </script>
 
-<NPage className="Export" title="Export" withBack={true}>
-
+<NPage className="Export">
+  <div class="n-toolbar-grid" slot="header">
+    <div class="left">
+      <NBackButton />
+    </div>
+    <div class="title main">Export</div>
+    <div class="right" />
+  </div>
   <div class="btn-group w-100" slot="sub-header">
     <button
       class="btn btn-sm {type == 'backup' ? 'active' : ''}"

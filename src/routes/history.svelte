@@ -250,17 +250,10 @@
     },
     searchChange(evt) {
       state.searchTerm = evt.detail;
-      // if (state.searchTerm.length > 1) {
-      //   console.log("Searching");
-      //   methods.search(state.searchTerm, state.date.format("YYYY"));
-      // }
     },
     doSearch(evt) {
       state.searchTerm = evt.detail;
       showSearch = true;
-      // if (state.searchTerm.length > 1) {
-      //   methods.search(state.searchTerm, state.date.format("YYYY"));
-      // }
     },
     searchKeypress(event) {
       if (event.key === "Enter" || event.key === "Return") {
@@ -537,7 +530,11 @@
                 methods.trackerTapped(event.detail.tracker, log);
               }}
               on:textClick={event => {
-                state.searchTerm = event.detail.value;
+                if (event.detail.type == 'tracker') {
+                  state.searchTerm = `#${event.detail.tracker.tag}`;
+                } else {
+                  state.searchTerm = event.detail.value;
+                }
                 methods.search(state.searchTerm);
               }}
               on:moreClick={event => {

@@ -18,6 +18,7 @@
   import NToolbar from "../components/toolbar/toolbar.svelte";
   import NItem from "../components/list-item/list-item.svelte";
   import NToggle from "../components/toggle-switch/toggle-switch.svelte";
+  import NBackButton from "../components/back-button/back-button.svelte";
 
   // containers
   import NPage from "../containers/layout/page.svelte";
@@ -162,16 +163,22 @@
   }
 </style>
 
-<NPage className="stats" withBack={true}>
+<NPage className="stats">
 
-  <div slot="header" class="n-row">
-    <div class="text-md text-inverse">Nomie API</div>
-    <div class="filler" />
-    {#if state.registered}
-      <button class="btn btn-clear btn-icon btn-sm" on:click={methods.getLogs}>
-        <i class="zmdi zmdi-refresh text-inverse-3" />
-      </button>
-    {/if}
+  <div slot="header" class="n-toolbar-grid">
+    <div class="left">
+      <NBackButton />
+    </div>
+    <div class="main title">Nomie API</div>
+    <div class="right">
+      {#if state.registered}
+        <button
+          class="btn btn-clear btn-icon btn-sm"
+          on:click={methods.getLogs}>
+          <i class="zmdi zmdi-refresh text-inverse-3" />
+        </button>
+      {/if}
+    </div>
   </div>
 
   <div slot="sub-header" class="n-row">
@@ -195,7 +202,7 @@
     <div item-divider />
     {#if !state.ready}
       <div class="empty-notice">
-        <Spinner size="50" speed="750" color="#666" thickness="8" gap="40" />
+        <Spinner size="50" speed="750" color="#666" gap="40" />
       </div>
     {:else if state.ready && !state.registered}
       <NItem
@@ -217,7 +224,7 @@
           your content is encrypted with the public key. Only your private key
           can decrypt the content.
         </p>
-        <p>
+        <p class="mt-2">
           FREE Plans have 10 slots to hold data. Each time you import into Nomie
           it will clear all the slots. This will help limit run away web service
           calls.
@@ -289,7 +296,7 @@
       </NItem>
       <div item-divider />
       <NItem className="p-3">
-        <NInput label="Your API Key" bind:value={state.apiKey} disabled>
+        <NInput label="Your API Key" bind:value={state.apiKey}>
           <button
             class="btn btn-clear zmdi zmdi-copy"
             slot="right"

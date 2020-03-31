@@ -47,6 +47,16 @@
     z-index: 10;
     position: relative;
   }
+  :global(.header-slot .n-toolbar-grid) {
+    z-index: 10;
+    position: relative;
+    min-height: 50px;
+  }
+  :global(.header-slot .btn) {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
   .header-slot {
     padding-top: env(safe-area-inset-top);
     // background-color: var(--color-bg);
