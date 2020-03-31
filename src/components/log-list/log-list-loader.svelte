@@ -14,6 +14,7 @@
 
   export let term = null;
   export let limit = 20;
+  export let compact = false;
 
   let loading = false;
   let step = 1;
@@ -24,12 +25,6 @@
   let theEnd = false;
   let emptyBookCount = 0;
   let canceled = false;
-
-  $: if (logs) {
-    // console.log("Logs change in log-list-loader", logs);
-  }
-
-  //return record.note.match(new RegExp(`${term}`, "gi"));
 
   function findMore() {
     step++;
@@ -76,18 +71,17 @@
   }
 
   function cancelSearch() {
-    console.log("Cancel Search");
     canceled = true;
   }
 
   onMount(() => {
-    console.log("Log List Loader Loaded");
     getNextBook();
   });
 </script>
 
 <div class="log-list-loader">
   <LogList
+    {compact}
     {logs}
     on:trackerClick={event => {
       dispatch('trackerClick', event.detail);

@@ -7,6 +7,7 @@
   const dispatch = createEventDispatcher();
 
   export let logs = null;
+  export let compact = false;
 
   function sort(logs) {
     return logs.sort((a, b) => {
@@ -18,6 +19,7 @@
 <div class="n-list">
   {#each sort(logs) as log}
     <LogItem
+      className={compact ? 'compact' : ''}
       {log}
       on:trackerClick={event => {
         dispatch('trackerClick', event.detail);
