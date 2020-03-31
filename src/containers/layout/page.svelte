@@ -26,8 +26,9 @@
 
 <AppLayout {className}>
   <div slot="header">
+    <slot name="header" />
     {#if hasHeader}
-      <NToolbar>
+      <!-- <NToolbar>
         {#if withBack}
           <button
             class="btn btn-clear pl-0 pr-3"
@@ -42,7 +43,7 @@
           <div class="title filler">{title}</div>
         {/if}
         <slot name="header" />
-      </NToolbar>
+      </NToolbar> -->
     {/if}
     {#if hasSubHeader}
       <NToolbar className="sub-header">

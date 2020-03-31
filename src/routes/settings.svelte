@@ -262,9 +262,11 @@ Note: Your data will not automatically move over. You'll first need to export it
 <AppLayout>
   <div slot="header" class="n-toolbar-grid">
     <div class="left" />
-    <div class="main title">{Lang.t('settings.settings')}</div>
+    <div class="main">
+      <h1>{Lang.t('settings.settings')}</h1>
+    </div>
     <div class="right">
-      <button on:click={methods.faq} class="btn text-primary-bright">
+      <button on:click={methods.faq} class="btn">
         {Lang.t('general.faq')}
       </button>
     </div>

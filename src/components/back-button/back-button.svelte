@@ -15,7 +15,13 @@
   };
 </script>
 
+<style>
+  button {
+    margin-left: -4px;
+  }
+</style>
+
 <button class="btn" on:click={onClick}>
-  <i class="zmdi zmdi-chevron-left mr-2" />
+  <i class="zmdi zmdi-chevron-left mr-2 text-lg" />
   Back
 </button>

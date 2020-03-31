@@ -169,14 +169,12 @@
     <div class="left">
       <NBackButton />
     </div>
-    <div class="main title">Nomie API</div>
+    <div class="main">
+      <h1 class="title">Nomie API</h1>
+    </div>
     <div class="right">
       {#if state.registered}
-        <button
-          class="btn btn-clear btn-icon btn-sm"
-          on:click={methods.getLogs}>
-          <i class="zmdi zmdi-refresh text-inverse-3" />
-        </button>
+        <button class="btn btn-clear" on:click={methods.getLogs}>Check</button>
       {/if}
     </div>
   </div>

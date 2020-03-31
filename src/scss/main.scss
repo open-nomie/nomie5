@@ -27,6 +27,7 @@
 @import "./components/grid";
 @import "./components/app-panel";
 @import "./components/item-ball";
+@import "./components/toolbar-grid";
 
 /**
 THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 
@@ -291,49 +292,8 @@ $night: #311f62;
   color: var(--color-primary-bright);
 }
 
-.n-toolbar-grid {
-  display: grid;
-  height: 100%;
-  width: 100%;
-  grid-template-columns: 1fr 3fr 1fr;
-  grid-template-rows: 1fr;
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-  margin-left: -10px;
-  margin-right: -10px;
-  color: var(--color-inverse);
-
-  .btn {
-    color: var(--color-inverse-1);
-  }
-
-  .left {
-    grid-area: 1 / 1 / 2 / 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    grid-area: 1 / 2 / 2 / 3;
-    &.title,
-    .title {
-      text-align: center;
-      font-weight: bold;
-      font-size: 1.1rem;
-    }
-  }
-  .right {
-    grid-area: 1 / 3 / 2 / 4;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: center;
-  }
+.n-toolbar-grid .btn {
+  color: var(--color-inverse-1);
 }
 
 .card {
