@@ -602,6 +602,18 @@
     // justify-content: center;
   }
 
+  .board-edit-button {
+    min-width: 40px;
+    min-height: 40px;
+    width: 40px;
+    height: 40px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    border-radius: 20px;
+    font-size: 22px;
+    background-color: var(--color-faded-1);
+    color: var(--color-inverse) !important;
+  }
   .board-actions {
     display: flex;
     align-items: center;
@@ -609,32 +621,6 @@
     margin: 16px;
     margin-bottom: 32px;
     padding: 0 10px;
-    .btn {
-      min-width: 220px;
-      margin-left: 10px;
-      margin-right: 10px;
-      max-width: 200px;
-    }
-
-    @include media-breakpoint-down(sm) {
-      min-width: 300px;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-
-      flex-direction: column;
-      .btn {
-        flex-grow: 1;
-        width: 100%;
-        display: block;
-        margin-bottom: 6px;
-      }
-    }
-
-    padding-top: 16px;
-    > * {
-      margin: 0 4px;
-    }
   }
 </style>
 
@@ -779,8 +765,8 @@
             {#if $BoardStore.activeBoard}
               <button
                 on:click={methods.editBoard}
-                class="btn btn btn-clear btn-sm icon-left">
-                <span class="text-lg text-primary-bright">•••</span>
+                class="btn btn btn-round board-edit-button clickable">
+                <i class="zmdi zmdi-more" />
               </button>
             {/if}
           </div>
