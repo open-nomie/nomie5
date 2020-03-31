@@ -16,7 +16,10 @@ export default class CSV {
     logs.forEach(log => {
       // Extract log tracker tags
       let logTrackers = Object.keys(log.trackers);
-      console.log("LogTrackers", logTrackers.length);
+      const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+      const localStart = new Date(log.start - tzoffset).toISOString().slice(0, -1);
+      const localEnd = new Date(log.end - tzoffset).toISOString().slice(0, -1);
+
       // Loop over tracker tags
       logTrackers.forEach(trackerTag => {
         // Is it a match?
@@ -24,8 +27,8 @@ export default class CSV {
           // Include it..
           rows.push([
             log.end,
-            new Date(log.start).toISOString(),
-            new Date(log.end).toISOString(),
+            localStart,
+            localEnd,
             trackerTag,
             log.trackers[trackerTag].value,
             log.note.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
@@ -40,8 +43,8 @@ export default class CSV {
       if (!logTrackers.length) {
         rows.push([
           log.end,
-          new Date(log.start).toISOString(),
-          new Date(log.end).toISOString(),
+          localStart,
+          localEnd,
           "note",
           1,
           log.note.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
@@ -99,13 +102,12 @@ export default class CSV {
       }
     });
     // Get the logs for the provided time period
-    console.log("Going to get query with from ledger store", { start, end });
+
     let logs = await LedgerStore.query({
       start: dayjs(start).startOf("day"),
       end: dayjs(end).endOf("day")
       // end TODO: See why end date is not working in query
     });
-    console.log(`Ledger returned ${logs.length} records`);
     // Expand and filter the logs
     logs = logs.map(record => {
       record.expand(); // get more data like trackers and values
@@ -114,7 +116,6 @@ export default class CSV {
 
     // generate CSV array
     let csvArray = this.logsToCSV(logs, trackers);
-    console.log("CSV Array", csvArray);
     let filename = `n-${dayjs(start).format("YYYY-MM-DD")}-${dayjs(end).format("YYYY-MM-DD")}.${md5(trackers).substr(
       0,
       5
