@@ -4868,8 +4868,10 @@ button:focus {
 .btn:focus, .btn.focus {
   box-shadow: inherit; }
 
-.btn-group .btn:active {
-  color: var(--color-primary) !important; }
+.btn-group .btn {
+  font-size: 0.75rem !important; }
+  .btn-group .btn:active {
+    color: var(--color-primary) !important; }
 
 .btn:disabled {
   opacity: 0.3; }
@@ -5895,12 +5897,6 @@ body.scrolling .mini-map {
   margin-bottom: 16px;
   border-radius: 6px;
   overflow: hidden; }
-  .n-list .n-item:first-child {
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px; }
-  .n-list .n-item:last-child {
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px; }
 
 .bg-selected {
   background-color: var(--color-background-selected) !important; }
@@ -6590,6 +6586,43 @@ TODO: Organize main into components or containers.
 .fake-link {
   border-bottom: dotted 1px var(--color-primary-bright);
   color: var(--color-primary-bright); }
+
+.n-toolbar-grid {
+  display: grid;
+  height: 100%;
+  width: 100%;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  margin-left: -10px;
+  margin-right: -10px;
+  color: var(--color-inverse); }
+  .n-toolbar-grid .btn {
+    color: var(--color-inverse-1); }
+  .n-toolbar-grid .left {
+    grid-area: 1 / 1 / 2 / 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; }
+  .n-toolbar-grid .main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    grid-area: 1 / 2 / 2 / 3; }
+    .n-toolbar-grid .main.title,
+    .n-toolbar-grid .main .title {
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.1rem; }
+  .n-toolbar-grid .right {
+    grid-area: 1 / 3 / 2 / 4;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center; }
 
 .card {
   border-radius: 0.5rem;
