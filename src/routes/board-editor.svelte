@@ -17,6 +17,7 @@
   import NItem from "../components/list-item/list-item.svelte";
   import NTrackerButton from "../containers/board/tracker-button.svelte";
   import NBall from "../components/tracker-ball/ball.svelte";
+  import NBackButton from "../components/back-button/back-button.svelte";
 
   import NSortableList from "../components/sortable-list/sortable-list.svelte";
 
@@ -129,37 +130,6 @@
     },
     trackerIndex(tracker) {
       return trackers.indexOf(tracker);
-    },
-    moveUp(tracker) {
-      let index = methods.trackerIndex(tracker);
-      console.log("Move Up", index);
-      if (index > 0) {
-        setTimeout(() => {
-          BoardStore.update(b => {
-            b.activeBoard.trackers = arrayUtils
-              .move(trackers, index, index - 1)
-              .map(r => r.tag);
-            return b;
-          });
-        }, 120);
-        // BoardStore.update(b => {
-        //   b.activeBoard.trackers = arr;
-        //   return b;
-        // });
-      }
-    },
-    moveDown(tracker) {
-      let index = methods.trackerIndex(tracker);
-      if (index < trackers.length - 1) {
-        setTimeout(() => {
-          BoardStore.update(b => {
-            b.activeBoard.trackers = arrayUtils
-              .move(trackers, index, index + 1)
-              .map(r => r.tag);
-            return b;
-          });
-        }, 120);
-      }
     }
   };
 
@@ -203,79 +173,63 @@
 </script>
 
 <style lang="scss">
-  .input-group {
-    .input-group-text {
-      color: var(--color-inverse-2);
-      background-color: var(--color-faded-1);
-    }
-    input {
-      padding-left: 16px;
-    }
-  }
-  div.tracker-grabber {
-    position: relative;
-    padding: 8px;
-    margin: 0px;
-    .btn-delete {
-      $size: 30px;
-      width: $size;
-      max-width: $size;
-      height: $size;
-      padding: 0;
-      border-radius: $size * 0.5;
-      background-color: #fff;
-      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
-      font-size: $size * 0.6;
-      line-height: $size;
-      border: none;
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 100;
-    }
-    // transition: all 0.4s ease-in-out;
-    &.hovered {
-      // transition: all 0.8s ease-in-out;
-      padding-left: 120px;
-      position: relative;
-      &:after {
-        content: "Here";
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--color-faded-2);
-        background-color: var(--color-faded);
-        border: dotted 3px var(--color-faded-3);
-        border-radius: 12px;
-        top: 12px;
-        left: 12px;
-        right: 55%;
-        bottom: 6px;
-        position: absolute;
-      }
-    }
-  }
+  // div.tracker-grabber {
+  //   position: relative;
+  //   padding: 8px;
+  //   margin: 0px;
+  //   .btn-delete {
+  //     $size: 30px;
+  //     width: $size;
+  //     max-width: $size;
+  //     height: $size;
+  //     padding: 0;
+  //     border-radius: $size * 0.5;
+  //     background-color: #fff;
+  //     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+  //     font-size: $size * 0.6;
+  //     line-height: $size;
+  //     border: none;
+  //     position: absolute;
+  //     top: 10px;
+  //     right: 10px;
+  //     z-index: 100;
+  //   }
+  //   // transition: all 0.4s ease-in-out;
+  //   &.hovered {
+  //     // transition: all 0.8s ease-in-out;
+  //     padding-left: 120px;
+  //     position: relative;
+  //     &:after {
+  //       content: "Here";
+  //       display: flex;
+  //       align-items: center;
+  //       justify-content: center;
+  //       color: var(--color-faded-2);
+  //       background-color: var(--color-faded);
+  //       border: dotted 3px var(--color-faded-3);
+  //       border-radius: 12px;
+  //       top: 12px;
+  //       left: 12px;
+  //       right: 55%;
+  //       bottom: 6px;
+  //       position: absolute;
+  //     }
+  //   }
+  // }
 
-  :global(div.tracker-grabber .n-tracker-button) {
-    pointer-events: none;
-    &:after {
-      position: absolute;
-      z-index: 1200;
-      content: "";
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-  } // end global
+  // :global(div.tracker-grabber .n-tracker-button) {
+  //   pointer-events: none;
+  //   &:after {
+  //     position: absolute;
+  //     z-index: 1200;
+  //     content: "";
+  //     top: 0;
+  //     left: 0;
+  //     right: 0;
+  //     bottom: 0;
+  //   }
+  // } // end global
 
-  .grid {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-  }
   .grid-container {
     display: flex;
     flex-direction: column;
@@ -283,48 +237,35 @@
     min-height: 50vh;
   }
 
-  #ball {
-    background-color: red;
-    height: 20px;
-    width: 20px;
-    position: fixed;
-    z-index: 3000;
-    border-radius: 10px;
-    display: none;
-  }
-
   .btn-group {
     .btn {
       width: 36px;
     }
-  }
-  .notice {
-    position: fixed;
-    bottom: 70px;
-    left: 10px;
-    right: 10px;
-    padding: 5px;
-    border: solid 1px blue;
-    color: blue;
   }
 
   // Animation from https://www.kirupa.com/html5/creating_the_ios_icon_jiggle_wobble_effect_in_css.htm
 </style>
 
 {#if $BoardStore.activeBoard}
-  <NPage className="stats" withBack={true}>
+  <NPage className="stats">
 
-    <div slot="header" class="n-row">
-      <h1 class="text-center flex-grow text-inverse">Edit Tab</h1>
-      <button class="btn btn btn-clear text-primary" on:click={methods.save}>
-        {Lang.t('general.save')}
-      </button>
+    <div class="n-toolbar-grid" slot="header">
+      <div class="left">
+        <NBackButton />
+      </div>
+      <div class="main title">Edit Tab</div>
+      <div class="right">
+        <button class="btn text-primary-bright" on:click={methods.save}>
+          {Lang.t('general.save')}
+        </button>
+      </div>
+
     </div>
     <!-- /.container -->
 
-    <div class="container px-0 grid-container pt-2">
+    <div class="container px-0 grid-container">
 
-      <div class="n-list">
+      <div class="n-list pt-2">
         <NItem className="py-2">
           <NInput
             type="text"
@@ -339,12 +280,17 @@
             key="tag"
             on:update={trackersSorted}
             let:item>
-            <NItem>
-              <div slot="left">
-                <NBall emoji={item.emoji} size={32} />
+            <NItem className="py-2 bottom-line">
+              <div slot="left" class="n-row">
+                <button
+                  class="btn btn-icon zmdi zmdi-minus-circle text-red mr-2"
+                  on:click={evt => {
+                    methods.removeTracker(evt, item);
+                  }} />
+                <NBall className="frame" emoji={item.emoji} size={40} />
               </div>
               {item.label}
-              <i class="zmdi zmdi-menu" slot="right" />
+              <i class="zmdi zmdi-menu text-faded-3" slot="right" />
             </NItem>
           </NSortableList>
         {/if}
