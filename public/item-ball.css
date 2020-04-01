@@ -16,11 +16,11 @@
     position: absolute;
     height: 4px;
     border-radius: 2px;
-    background-color: var(--color-faded-1);
+    background-color: var(--color-faded-2);
     opacity: 0.3;
-    bottom: 2px;
-    left: 19%;
-    right: 19%;
+    bottom: 4px;
+    left: 25%;
+    right: 25%;
     z-index: 0; }
   .item-ball .avatar-ball {
     position: relative;
