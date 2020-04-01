@@ -237,7 +237,7 @@
               <h3 class="n-title truncate-2">{log.note}</h3>
               <div>
                 <small class="text-faded-3">
-                  {dayjs(log.date).format('ddd MMM D YYYY h:mm A')} from
+                  {dayjs(log.date).format('ddd MMM Do YYYY h:mm A')} from
                   <strong>{log.source}</strong>
                 </small>
               </div>

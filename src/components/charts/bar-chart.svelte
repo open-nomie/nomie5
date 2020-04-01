@@ -210,7 +210,7 @@
     {#if activeIndex && points[activeIndex - 1]}
       <div class="active-item">
         <label>
-          {points[activeIndex - 1].date.format(points.length == 12 ? 'MMM YYYY' : 'ddd MMM D')}
+          {points[activeIndex - 1].date.format(points.length == 12 ? 'MMM YYYY' : 'ddd MMM Do')}
         </label>
         <div class="value" style="background-color:{color}">
           {yFormat(points[activeIndex - 1].y)}
