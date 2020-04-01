@@ -24,7 +24,7 @@
   }
 
   async function hideTips() {
-    let confirmed = await Interact.confirm("Hide these tips?");
+    let confirmed = await Interact.confirm("Hide?");
     if (confirmed) {
       hiddenTips.push(id);
       Storage.local.put("hidden-tips", hiddenTips);
