@@ -162,9 +162,9 @@
     async _importAll() {
       importing.all.running = true;
       await methods._importTrackers();
-      await methods._importRecords();
       await methods._importPeople();
       await methods._importBoards();
+      await methods._importRecords();
       importing.all.running = false;
       importing.all.done = true;
       Interact.toast("Import Complete. Reloading...");
