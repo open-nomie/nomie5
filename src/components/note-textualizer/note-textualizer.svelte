@@ -110,6 +110,8 @@
     font-size: 1.1rem;
     line-height: 1.5rem;
     opacity: 0.8;
+    display: flex;
+    flex-wrap: wrap;
     margin-top: 6px;
 
     &.inherit {
@@ -134,13 +136,16 @@
       text-align: center;
       display: inline-block;
     }
-    .string {
+    .string,
+    .person,
+    .context {
       padding-right: 5px;
     }
     .remainder {
       padding-right: 5px;
       margin-left: -2px;
     }
+
     span {
       display: inline;
     }
