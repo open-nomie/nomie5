@@ -29,7 +29,7 @@ const console = new Logger("🗺 $PeopleStore");
 
 const getLogs = async () => {
   return await LedgerStore.query({
-    start: dayjs().subtract(6, "month"),
+    start: dayjs().subtract(2, "week"),
     end: new Date()
   });
 };

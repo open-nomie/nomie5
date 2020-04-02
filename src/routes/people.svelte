@@ -201,6 +201,10 @@
           </div>
           <div class="text-sm mt-2 text-center">
             <span class="fake-link" on:click={addPerson}>Add a person</span>
+            or
+            <span class="fake-link" on:click={PeopleStore.searchForPeople}>
+              Find recent @people
+            </span>
           </div>
 
         </NItem>
