@@ -83,6 +83,7 @@ export default class Export {
       let finished = [];
       let loadNext = () => {
         if (finished.length < books.length) {
+          this.fireChange(`${config.book_time_unit} ${finished.length} of ${books.length}`);
           Storage.get(books[finished.length]).then(book => {
             finished.push(book);
             loadNext();
