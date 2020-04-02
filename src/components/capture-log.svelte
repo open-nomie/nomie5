@@ -120,47 +120,49 @@
      */
     autoCompleteSearch(searchTag, type = "tracker") {
       // Search for Trackers
-      if (type == "tracker") {
-        let tkrs = Object.keys($TrackerStore || {})
-          .map(tag => {
-            return $TrackerStore[tag];
-          })
-          .filter(trk => {
-            return trk.tag.search(searchTag.replace("#", "")) > -1;
-          });
-        return tkrs.length ? tkrs : null;
+      try {
+        if (type == "tracker") {
+          let tkrs = Object.keys($TrackerStore || {})
+            .map(tag => {
+              return $TrackerStore[tag];
+            })
+            .filter(trk => {
+              return trk.tag.search(searchTag.replace("#", "")) > -1;
+            });
+          return tkrs.length ? tkrs : null;
 
-        // Search for People
-      } else if (type === "person") {
-        try {
-          let people = Object.keys($PeopleStore.people).filter(
-            person =>
-              person.toLowerCase().search(searchTag.replace("@", "")) > -1
-          );
-          return people.length
-            ? people.map(username => {
-                return { tag: username, emoji: "👤", type: "person" };
+          // Search for People
+        } else if (type === "person") {
+          try {
+            let people = Object.keys($PeopleStore.people).filter(
+              person =>
+                person.toLowerCase().search(searchTag.replace("@", "")) > -1
+            );
+            return people.length
+              ? people.map(username => {
+                  return { tag: username, emoji: "👤", type: "person" };
+                })
+              : null;
+          } catch (e) {
+            console.log("Error Caught", e.message);
+          }
+
+          return null;
+
+          // Search for Context
+        } else if (type === "context") {
+          let context = $ContextStore.filter(term => {
+            let text = searchTag.replace("+", "").toLowerCase();
+            term = term.toLowerCase();
+            return term.search(text.toLowerCase()) > -1;
+          });
+          return context.length
+            ? context.map(c => {
+                return { tag: c, emoji: "💡", type: "context" };
               })
             : null;
-        } catch (e) {
-          console.log("Error Caught", e.message);
         }
-
-        return null;
-
-        // Search for Context
-      } else if (type === "context") {
-        let context = $ContextStore.filter(term => {
-          let text = searchTag.replace("+", "").toLowerCase();
-          term = term.toLowerCase();
-          return term.search(text.toLowerCase()) > -1;
-        });
-        return context.length
-          ? context.map(c => {
-              return { tag: c, emoji: "💡", type: "context" };
-            })
-          : null;
-      }
+      } catch (e) {}
     },
     calculateScore() {
       $ActiveLogStore.score = CalculateScore($ActiveLogStore.note);
