@@ -388,10 +388,9 @@ const ledgerInit = () => {
       const book = await Storage.get(`${config.data_root}/books/${date}`);
       // If no book and on blockstack
       if (!book && Storage.storageType() == "blockstack") {
-        let bookMonth = dayjs(date).format("MMMM YYYY");
         let confirm = await Interact.confirm(
-          `First Log of ${bookMonth}!`,
-          `Logs are stored in monthly files, and a ${bookMonth} was not found. Would you like to create it?`
+          `First Log of the ${config.book_time_format}!`,
+          `Logs are stored in ${config.book_time_unit}ly files, and this ${config.book_time_format}s was not found. Would you like to create it?`
         );
         if (confirm) {
           // User confirms to create a new blank book - godspeed
@@ -471,6 +470,7 @@ const ledgerInit = () => {
         update(s => {
           s.saving = false;
           s.books = currentState.books;
+
           return s;
         });
 
@@ -686,9 +686,9 @@ const ledgerInit = () => {
     async query(options) {
       options = options || {};
       options.fresh = options.fresh ? options.fresh : false;
-      let startMonth = dayjs(options.start || new Date()).startOf("month");
-      let endMonth = dayjs(options.end || new Date()).endOf("month");
-      let diff = endMonth.diff(startMonth, "month");
+      let startMonth = dayjs(options.start || new Date()).startOf(config.book_time_unit);
+      let endMonth = dayjs(options.end || new Date()).endOf(config.book_time_unit);
+      let diff = endMonth.diff(startMonth, config.book_time_unit);
 
       let books_to_get = [];
 
@@ -702,7 +702,7 @@ const ledgerInit = () => {
         for (let i = 0; i < diff; i++) {
           books_to_get.push(
             dayjs(startMonth)
-              .add(i + 1, "month")
+              .add(i + 1, config.book_time_unit)
               .format(config.book_time_format)
           );
         }

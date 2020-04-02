@@ -21,6 +21,8 @@
   import LogItem from "../components/list-item-log/list-item-log.svelte";
   import NSearchBar from "../components/search-bar/search-bar.svelte";
 
+  import config from "../../config/global";
+
   // Containers
   import NMap from "../containers/map/map.svelte";
   import AppLayout from "../containers/layout/app.svelte";
@@ -49,7 +51,7 @@
 
   const state = {
     date: dayjs(new Date()),
-    time_format: "YYYY-MM",
+    time_format: config.book_time_format,
     logs: null,
     trackers: {},
     ledger: null,
@@ -126,9 +128,12 @@
   };
 
   // Dynamically assign book
-  $: if ($LedgerStore.books[state.date.format("YYYY-MM")] && !searchMode) {
+  $: if (
+    $LedgerStore.books[state.date.format(config.book_time_format)] &&
+    !searchMode
+  ) {
     loading = true;
-    book = $LedgerStore.books[state.date.format("YYYY-MM")] || [];
+    book = $LedgerStore.books[state.date.format(config.book_time_format)] || [];
 
     let results = book || [];
 
