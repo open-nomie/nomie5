@@ -59,7 +59,6 @@
         book = book.filter(log => {
           return log.note.match(new RegExp(`${term}`, "gi"));
         });
-        console.log("Book", book);
         if (book.length == 0) {
           emptyBookCount++;
         } else {
@@ -86,7 +85,6 @@
 
   function cancelSearch() {
     canceled = true;
-    console.log("Cancel!", canceled);
   }
 
   onMount(() => {
@@ -116,15 +114,6 @@
     on:moreClick={event => {
       dispatch('moreClick', event.detail);
     }} />
-  <NItem className="py-2 bg-transparent">
-    {#if !theEnd && !loading}
-      <button class="btn btn-outline btn-light btn-block" on:click={findMore}>
-        Find more...
-      </button>
-    {:else if theEnd}
-      <div class="text-center text-md text-faded-2">No more results</div>
-    {/if}
-  </NItem>
   {#if loading}
     <NItem className="py-2 bg-transparent loading-bar">
       <div slot="left">
@@ -139,4 +128,17 @@
       </button>
     </NItem>
   {/if}
+
+  {#if !theEnd && !loading}
+    <NItem className="py-2 bg-transparent">
+      <button class="btn btn-outline btn-light btn-block" on:click={findMore}>
+        Find more...
+      </button>
+    </NItem>
+  {:else if theEnd}
+    <NItem className="py-2 bg-transparent">
+      <div class="text-center text-md text-faded-2">No more results</div>
+    </NItem>
+  {/if}
+
 </div>

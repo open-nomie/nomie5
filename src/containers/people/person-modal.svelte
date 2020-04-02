@@ -213,7 +213,7 @@
         <NItem className="text-red text-sm">Delete User...</NItem>
       </div>
     {:else if state.view == 'logs'}
-      <div class="logs p-2">
+      <div class="logs">
         <NLogListLoader term={`@${activePerson.username}`} />
       </div>
     {:else if state.view == 'stats'}

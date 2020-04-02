@@ -73,6 +73,9 @@
     min-width: 40px;
     line-height: 30px;
   }
+  .time {
+    font-size: 0.9rem;
+  }
 </style>
 
 <!--glow glow-{time.dateToDesc(displayLog.end)}-->
@@ -81,7 +84,7 @@
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row time-row">
       <div class="time font-bold truncate">
-        {dayjs(displayLog.end).format(fullDate ? `MMM Do YYYY ${timeFormat}` : timeFormat)}
+        {dayjs(displayLog.end).format(fullDate ? `MMM D YYYY ${timeFormat}` : timeFormat)}
       </div>
 
       <!-- If they have location-->
