@@ -69,8 +69,7 @@
     },
     locations: [],
     loading: true,
-    showAllLocations: false,
-    searchYear: dayjs().format("YYYY")
+    showAllLocations: false
   }; // Assign State to compiled history page
 
   let refreshing = false;
@@ -228,11 +227,11 @@
     },
     previousSearch() {
       state.date = state.date.subtract(1, "year").startOf("year");
-      methods.search(state.searchTerm, state.date.format("YYYY"));
+      // methods.search(state.searchTerm, state.date.format("YYYY"));
     },
     nextSearch() {
       state.date = state.date.add(1, "year").startOf("year");
-      methods.search(state.searchTerm, state.date.format("YYYY"));
+      // methods.search(state.searchTerm, state.date.format("YYYY"));
     },
     headerExists(date) {
       // let dformat = dayjs(date).format("YYYY-MM-DD");
@@ -250,7 +249,7 @@
     formSubmit(event) {
       event.preventDefault();
       event.stopPropagation();
-      methods.search(state.searchTerm, state.date.format("YYYY"));
+      // methods.search(state.searchTerm, state.date.format("YYYY"));
       searchMode = true;
     },
     searchChange(evt) {
@@ -262,12 +261,12 @@
     },
     searchKeypress(event) {
       if (event.key === "Enter" || event.key === "Return") {
-        methods.search(state.searchTerm, state.date.format("YYYY"));
+        // methods.search(state.searchTerm, state.date.format("YYYY"));
         return false;
       }
     },
     refreshSearch() {
-      methods.search(state.searchTerm, state.date.format("YYYY"));
+      // methods.search(state.searchTerm, state.date.format("YYYY"));
     },
     search(key, year) {
       searchMode = true;
@@ -540,7 +539,7 @@
                 } else {
                   state.searchTerm = event.detail.value;
                 }
-                methods.search(state.searchTerm);
+                showSearch = true;
               }}
               on:moreClick={event => {
                 Interact.logOptions(log).then(() => {});
@@ -569,7 +568,7 @@
 
       </div>
     {/if}
-    {#if locations.length && !loading}
+    {#if locations.length && !loading && !state.searchTerm}
       {#if !state.showAllLocations}
         <div
           class="mini-map closed"
