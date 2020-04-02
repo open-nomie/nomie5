@@ -24,9 +24,13 @@
   let lastBookDate = null;
   let theEnd = false;
   let emptyBookCount = 0;
+  let NoBookFoundCount = 0;
   let canceled = false;
 
   function findMore() {
+    canceled = false;
+    emptyBookCount = 0;
+    NoBookFoundCount = 0;
     step++;
     getNextBook();
   }
@@ -48,36 +52,53 @@
         lookupDate.format(config.book_time_format),
         true
       );
-      if (book) {
+
+      if (!book) {
+        NoBookFoundCount++;
+      } else if (book.length > 0) {
         book = book.filter(log => {
           return log.note.match(new RegExp(`${term}`, "gi"));
         });
-        books[lookupDate.format(config.book_time_format)] = book;
-        logs = [...logs, ...book];
-        if (logs.length < limit * step) {
-          getNextBook();
+        console.log("Book", book);
+        if (book.length == 0) {
+          emptyBookCount++;
+        } else {
+          books[lookupDate.format(config.book_time_format)] = book;
+          logs = [...logs, ...book];
         }
-      } else if (emptyBookCount < 6) {
+      } else if (book.length == 0) {
         emptyBookCount++;
+      }
+
+      if (
+        NoBookFoundCount < 3 &&
+        emptyBookCount < 6 &&
+        logs.length < limit * step
+      ) {
         getNextBook();
       } else {
         loading = false;
-        theEnd = true;
       }
     } else {
       loading = false;
-      canceled = false;
     }
   }
 
   function cancelSearch() {
     canceled = true;
+    console.log("Cancel!", canceled);
   }
 
   onMount(() => {
     getNextBook();
   });
 </script>
+
+<style lang="scss">
+  .log-list-loader {
+    position: relative;
+  }
+</style>
 
 <div class="log-list-loader">
   <LogList
@@ -100,21 +121,22 @@
       <button class="btn btn-outline btn-light btn-block" on:click={findMore}>
         Find more...
       </button>
-    {:else if loading}
-      <NItem className="py-2 bg-transparent">
-        <div slot="left">
-          <NSpinner size={24} />
-        </div>
-        Searching {lastBookDate.format('MMM YYYY')}...
-        <button
-          class="btn btn-clear text-red"
-          slot="right"
-          on:click={cancelSearch}>
-          Cancel
-        </button>
-      </NItem>
-    {:else}
+    {:else if theEnd}
       <div class="text-center text-md text-faded-2">No more results</div>
     {/if}
   </NItem>
+  {#if loading}
+    <NItem className="py-2 bg-transparent loading-bar">
+      <div slot="left">
+        <NSpinner size={24} />
+      </div>
+      Searching...
+      <button
+        class="btn btn-clear text-red"
+        slot="right"
+        on:click={cancelSearch}>
+        Cancel
+      </button>
+    </NItem>
+  {/if}
 </div>
