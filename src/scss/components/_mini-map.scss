@@ -61,7 +61,7 @@ body.scrolling {
 .mini-map {
   position: fixed;
   bottom: 70px;
-  right: 26px;
+  left: 26px;
   height: 100px;
   width: 100px;
   transition: all 0.2s ease-in-out;
@@ -76,7 +76,7 @@ body.scrolling {
   }
 
   border-radius: 20px;
-  box-shadow: 0px 4px 9px -2px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--box-shadow-float);
 
   background-color: var(--color-solid);
   overflow: hidden;
