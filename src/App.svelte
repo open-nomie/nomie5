@@ -43,6 +43,7 @@
   import ExportRoute from "./routes/export.svelte";
   import PeopleRoute from "./routes/people.svelte";
   import TrackerDesigner from "./routes/tracker-designer.svelte";
+  import FileBrowser from "./routes/file-browser.svelte";
 
   // Stores
   import { UserStore } from "./store/user"; //  user auth and state
@@ -244,6 +245,9 @@
     <Route path="/settings/export/:type" component={ExportRoute} />
     <Route path="/settings/export" component={ExportRoute} />
     <Route path="/tracker/design" component={TrackerDesigner} />
+    <Route path="/files" component={FileBrowser} />
+    <Route path="/files/:file" component={FileBrowser} />
+
   </Router>
 {:else if $UserStore.signedIn == undefined}
   <div class="empty-notice" style="height:calc(100vh - 75px)">
