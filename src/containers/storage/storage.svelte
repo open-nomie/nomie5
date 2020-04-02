@@ -1,6 +1,7 @@
 <script>
   // Svelte
   import { onMount } from "svelte";
+  import { navigate } from "svelte-routing";
 
   // Vendors
   import localforage from "localforage";
@@ -53,9 +54,9 @@
     }
   };
 
-  onMount(() => {
-    methods.initialize();
-  });
+  // onMount(() => {
+  //   // methods.initialize();
+  // });
 </script>
 
 <div class="n-storage">
@@ -63,7 +64,7 @@
     <NItem
       title="Files ({state.files.length})"
       on:click={() => {
-        state.showFiles = !state.showFiles;
+        navigate('/files');
       }}
       className="clickable">
       <span slot="left" class="zmdi zmdi-folder text-primary btn-icon" />
