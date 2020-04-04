@@ -525,7 +525,7 @@
         {:else if showSearch && state.searchTerm}
           <NLogListLoader
             term={state.searchTerm}
-            limit={20}
+            limit={5}
             on:trackerClick={event => {
               methods.trackerTapped(event.detail.tracker, event.detail.log);
             }}
