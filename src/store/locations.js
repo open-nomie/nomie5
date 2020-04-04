@@ -54,6 +54,11 @@ const LocationsInit = () => {
     async write(payload) {
       return Storage.put(`${config.data_root}/locations.json`, payload);
     },
+    async loadLocations() {
+      const locations = await Storage.get(`${config.data_root}/locations.json`);
+      update(d => locations || []);
+      return locations;
+    },
     deleteByID(id) {
       update(d => {
         let data = d.filter(row => row.id !== id);
@@ -65,9 +70,7 @@ const LocationsInit = () => {
 
   // Get storage
   Storage.onReady(() => {
-    Storage.get(`${config.data_root}/locations.json`).then(locations => {
-      update(d => locations || []);
-    });
+    methods.loadLocations();
   });
 
   return {
