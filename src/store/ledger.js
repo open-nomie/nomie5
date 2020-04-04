@@ -27,6 +27,9 @@ import { writable } from "svelte/store";
 import PromiseStep from "../utils/promise-step/promise-step";
 import md5 from "md5";
 import tick from "../utils/tick/tick";
+import regex from "../utils/regex";
+
+import tokenizer from "search-text-tokenizer";
 
 // Config
 import config from "../../config/global";
@@ -62,6 +65,33 @@ const ledgerInit = () => {
      */
     filterLogs(logs, filter) {
       filter = filter || {};
+      filter.term = filter.term || null;
+
+      if (filter.search) {
+        const tokens = tokenizer(filter.search.toLowerCase());
+        // Filter Logs by tokens
+        let filtered = logs.filter(log => {
+          // Tokenize the note
+          let note = tokenizer(log.note.toLowerCase()).map(token => token.term);
+          // Holder of matches
+          let match = [];
+          // Loop over tokenized search term
+          tokens.forEach(token => {
+            // If we should exclude it
+            if (token.exlcude) {
+              // Does it have this term?
+              match.push(note.indexOf(token.term) === -1);
+            } else {
+              // It's a normal search - look at the note completely
+              match.push(note.join(" ").search(regex.escape(token.term)) > -1);
+            }
+          });
+          return match.indexOf(false) === -1;
+        });
+
+        logs = filtered;
+      } // end if we have a search term
+
       return logs.filter(log => {
         let pass = false;
         if (filter.start && filter.end) {
@@ -82,37 +112,50 @@ const ledgerInit = () => {
 
     /**
      * getBook
-     * Get a Book for a given month-year (2019-09)
+     * Get a Book for a given unit-year (month-year)
+     * It will save the book to the ledger so future requests
      *
      * @param {String} bookDateString
      */
     async getBook(bookDateString, realResponse = false) {
       // Get the book from storage
-      let book = await Storage.get(`${config.book_root}/${bookDateString}`);
+      let bookRaw = await Storage.get(`${config.book_root}/${bookDateString}`);
+      let book = null;
       // Return book with Nomie Logs
       if (realResponse) {
         // return a real response - if no book return null
         // otherwise return array
-        if (book) {
-          return (book || [])
+        if (bookRaw) {
+          book = (bookRaw || [])
             .map(log => {
               return new NomieLog(log);
             })
             .filter(log => {
               return log.isValid();
             });
+
+          // update(state => {
+          //   state.books[bookDateString] = book || [];
+          // });
+          return book;
         } else {
           return null;
         }
       } else {
         // Return an array even if no book is found
-        return (book || [])
+        book = (bookRaw || [])
           .map(log => {
             return new NomieLog(log);
           })
           .filter(log => {
             return log.isValid();
           });
+        // Add book to ledger Store
+        // update(state => {
+        //   state.books[bookDateString] = book || [];
+        // });
+
+        return book;
       }
     },
     /**
@@ -572,7 +615,7 @@ const ledgerInit = () => {
      * @param {String} term
      * @param {Number} year
      */
-    search(term, year) {
+    async search(term, year) {
       year = year || dayjs().format("YYYY");
       let start = dayjs()
         .year(year)
@@ -583,28 +626,22 @@ const ledgerInit = () => {
         .endOf("year")
         .toDate();
 
-      return methods
-        .query({
-          start,
-          end
+      let rows = await methods.query({ start, end, search: term });
+      return rows
+        .filter(row => {
+          return (
+            JSON.stringify(row)
+              .toLowerCase()
+              .indexOf(term.toLowerCase()) > -1
+          );
         })
-        .then(rows => {
-          return rows
-            .filter(row => {
-              return (
-                JSON.stringify(row)
-                  .toLowerCase()
-                  .indexOf(term.toLowerCase()) > -1
-              );
-            })
-            .sort((a, b) => {
-              return a.end > b.end ? -1 : 1;
-            });
+        .sort((a, b) => {
+          return a.end > b.end ? -1 : 1;
         });
     },
 
     async queryPerson(username, start, end) {
-      let logs = await methods.query({ start, end });
+      let logs = await methods.query({ start, end, search: `@${username}` });
       return logs
         .filter(record => {
           return record.note.match(new RegExp(`@${username}`, "gi"));
@@ -615,7 +652,7 @@ const ledgerInit = () => {
     },
 
     async queryAll(term, start, end) {
-      let logs = await methods.query({ start, end });
+      let logs = await methods.query({ start, end, search: term });
       return logs
         .filter(record => {
           return record.note.match(new RegExp(`${term}`, "gi"));
@@ -626,7 +663,7 @@ const ledgerInit = () => {
     },
 
     async queryTag(tag, start, end) {
-      let logs = await methods.query({ start, end });
+      let logs = await methods.query({ start, end, search: `#${tag}` });
       return logs
         .filter(record => {
           return record.note.search(new RegExp(`#${tag}\s`, "gi")) > -1;
@@ -637,7 +674,7 @@ const ledgerInit = () => {
     },
 
     async queryContext(context, start, end) {
-      let logs = await methods.query({ start, end });
+      let logs = await methods.query({ start, end, search: `+${context}` });
       return logs
         .filter(record => {
           return record.note.search(new RegExp(`+${context}\s`, "gi")) > -1;
@@ -663,9 +700,10 @@ const ledgerInit = () => {
     async query(options) {
       options = options || {};
       options.fresh = options.fresh ? options.fresh : false;
-      let startMonth = dayjs(options.start || new Date()).startOf(config.book_time_unit);
-      let endMonth = dayjs(options.end || new Date()).endOf(config.book_time_unit);
-      let diff = endMonth.diff(startMonth, config.book_time_unit);
+      let startTime = dayjs(options.start || new Date()).startOf(config.book_time_unit);
+      let endTime = dayjs(options.end || new Date()).endOf(config.book_time_unit);
+      let diff = endTime.diff(startTime, config.book_time_unit);
+      console.log("Query?", options);
 
       // Define array of "book paths" to get
       let books_to_get = [];
@@ -674,30 +712,17 @@ const ledgerInit = () => {
       // this will kill the annoying 404 console
 
       if (diff === 0) {
-        books_to_get.push(endMonth.format(config.book_time_format));
+        books_to_get.push(endTime.format(config.book_time_format));
       } else {
-        books_to_get.push(startMonth.format(config.book_time_format));
+        books_to_get.push(startTime.format(config.book_time_format));
         for (let i = 0; i < diff; i++) {
           books_to_get.push(
-            dayjs(startMonth)
+            dayjs(startTime)
               .add(i + 1, config.book_time_unit)
               .format(config.book_time_format)
           );
         }
       }
-
-      let getBookIfNeeded = async (state, dateKey) => {
-        let book;
-        if (state.books.hasOwnProperty(dateKey)) {
-          if (state.books[dateKey].length > 0) {
-            book = state.books[dateKey];
-          }
-        }
-        if (!book) {
-          book = await methods.getBook(dateKey);
-        }
-        return book;
-      };
 
       /** Get all  */
       let get_all = async () => {
@@ -713,9 +738,9 @@ const ledgerInit = () => {
           if (state.books[date].length === 0) {
             state.books[date] = await methods.getBook(date);
             state.books[date] = state.books[date] || [];
-            console.log(`${date} DOES NOT exist, or is empty. Adding it with ${state.books[date].length} records`);
+            // console.log(`${date} DOES NOT exist, or is empty. Adding it with ${state.books[date].length} records`);
           } else {
-            console.log(`${date} book already exists with ${state.books[date].length} records`);
+            // console.log(`${date} book already exists with ${state.books[date].length} records`);
           }
           // Loop over book, and
           state.books[date].forEach(log => {
@@ -726,33 +751,12 @@ const ledgerInit = () => {
           });
         } // end forloop
 
-        // Get ready to extract and update the state
-        // update(async state => {
-        //   // Async loop over books to get
-        //   state.books = state.books || {};
-        //   for (let i = 0; i < books_to_get.length; i++) {
-        //     let date = books_to_get[i];
-        //     // Preset the book if it doesn't exist
-        //     state.books[date] = state.books[date] || [];
-        //     // If it's empty - lets get it from the datastore
-        //     // Otherwise, we;ll use what's there.
-        //     if (state.books[date].length === 0) {
-        //       state.books[date] = await methods.getBook(date);
-        //       state.books[date] = state.books[date] || [];
-        //     }
-        //     state.books[date].forEach(log => {
-        //       rows.push(new NomieLog(log));
-        //     });
-        //   } // end forloop
-        //   return state;
-        // }); // end update
-
         return methods.filterLogs(rows, options);
       }; // end get_all()
 
       try {
         let rows = await get_all();
-        return rows.sort((a, b) => (a.end > b.end ? 1 : -1));
+        return rows.sort((a, b) => (a.end < b.end ? 1 : -1));
       } catch (e) {
         console.log("Error caught ", e);
       }
