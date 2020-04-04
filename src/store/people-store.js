@@ -87,7 +87,11 @@ const searchForPeople = async () => {
   let people = [];
   logs.forEach(log => {
     let meta = log.getMeta();
-    people = [...people, ...meta.people];
+    console.log("Meta People", meta.people);
+    meta.people.forEach(username => {
+      people.push({ username, last: log.end });
+    });
+    // people = [...people, ...meta.people];
   });
   return people;
 };
@@ -129,12 +133,14 @@ const PeopleInit = () => {
     },
     async getPeople() {
       let people = await Storage.get(`${config.data_root}/${config.data_people_key}.json`);
-
+      console.log("PEOPLE got", people);
       update(state => {
         if (people) {
-          Object.keys(people).forEach(personKey => {
-            people[personKey] = new Person(people[personKey]);
-          });
+          Object.keys(people)
+            .filter(row => row)
+            .forEach(personKey => {
+              people[personKey] = new Person(people[personKey]);
+            });
         }
         state.people = people;
         return state;
@@ -156,13 +162,21 @@ const PeopleInit = () => {
       update(state => {
         state.people = state.people || {};
         let changed = false;
-        peopleArray.forEach(username => {
-          if (!state.people.hasOwnProperty(username)) {
-            changed = true;
-            state.people[username] = new Person(username);
+        peopleArray.forEach(person => {
+          if (typeof person == "string") {
+            if (!state.people.hasOwnProperty(person)) {
+              changed = true;
+              state.people[person] = new Person({ username: person, displayName: person });
+            }
+          } else {
+            if (!state.people.hasOwnProperty(person.username)) {
+              changed = true;
+              state.people[person.username] = new Person(person);
+            }
           }
         });
         if (changed) {
+          console.log("Saving ", state.people);
           this.write(state.people);
         }
         return state;
