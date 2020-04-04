@@ -60,7 +60,7 @@
     z-index: 202; }
   .item-ball .balls {
     position: absolute;
-    bottom: 2px;
+    bottom: 4px;
     left: 20%;
     right: 20%;
     z-index: 202; }

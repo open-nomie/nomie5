@@ -67,6 +67,11 @@
       left: 16px;
       right: 0;
     }
+    &:last-child {
+      &:after {
+        display: none;
+      }
+    }
   }
 
   .left {
@@ -204,7 +209,9 @@
 
 .n-list {
   margin-bottom: 16px;
-  border-radius: 6px;
+  @include media-breakpoint-up(sm) {
+    border-radius: 6px;
+  }
   overflow: hidden;
   .n-item:first-child {
     // border-top-left-radius: 6px;

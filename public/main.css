@@ -5107,7 +5107,7 @@ body {
   margin: 0;
   padding: 0;
   font-size: 18px;
-  background-color: var(--color-solid); }
+  background-color: var(--color-bg); }
 
 body.no-scroll {
   overflow: hidden;
@@ -5235,11 +5235,11 @@ body.theme-dark {
   --tabs-background: #111;
   --tracker-background: rgb(5, 5, 5);
   --color-darkest: #000;
-  --color-bg: rgb(30, 30, 30);
-  --color-solid: rgb(15, 15, 15);
-  --color-solid-1: rgb(25, 25, 25);
-  --color-solid-2: rgb(35, 35, 35);
-  --color-solid-3: rgb(45, 45, 45);
+  --color-bg: rgb(5, 5, 5);
+  --color-solid: rgb(25, 25, 25);
+  --color-solid-1: rgb(35, 35, 35);
+  --color-solid-2: rgb(45, 45, 45);
+  --color-solid-3: rgb(55, 55, 55);
   --color-inverse: #fff;
   --color-inverse-1: #eee;
   --color-inverse-2: #ccc;
@@ -5812,6 +5812,8 @@ body.scrolling .mini-map {
     border-bottom: solid 1px var(--color-faded-1);
     left: 16px;
     right: 0; }
+  .n-item.bottom-line:last-child:after, .n-item[bottom-line]:last-child:after {
+    display: none; }
   .n-item .left {
     padding-right: 16px; }
   .n-item .right {
@@ -5895,8 +5897,10 @@ body.scrolling .mini-map {
 
 .n-list {
   margin-bottom: 16px;
-  border-radius: 6px;
   overflow: hidden; }
+  @media (min-width: 350px) {
+    .n-list {
+      border-radius: 6px; } }
 
 .bg-selected {
   background-color: var(--color-background-selected) !important; }
@@ -5966,105 +5970,6 @@ body.scrolling .mini-map {
 
 body.scrolling .n-tracker-button {
   pointer-events: none !important; }
-
-.n-tracker-button-xxx {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: none !important;
-  background-color: var(--header-background);
-  color: var(--color-inverse);
-  box-shadow: var(--box-shadow);
-  border-radius: 1.3rem;
-  width: 5.9rem;
-  height: 5.9rem;
-  outline: none;
-  transition: all 0.2s ease-in-out; }
-  .n-tracker-button-xxx:active, .n-tracker-button-xxx.pressing {
-    background-color: var(--tracker-background);
-    transition: all 0.2s ease-in-out;
-    transform: scale(0.95);
-    box-shadow: var(--box-shadow-tight); }
-  .n-tracker-button-xxx.added {
-    border: solid 1px rgba(56, 168, 63, 0.3); }
-  .n-tracker-button-xxx .emoji {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1; }
-  .n-tracker-button-xxx.saving {
-    transition: all 0.2s ease-in-out;
-    border: solid 2px rgba(56, 168, 63, 0.5); }
-  @media (min-width: 600px) {
-    .n-tracker-button-xxx {
-      width: 7.9rem;
-      height: 7.9rem;
-      margin: 12px 3px !important; }
-      .n-tracker-button-xxx .emoji {
-        font-size: 3.4rem;
-        font-style: normal; } }
-  @media (max-width: 979.98px) {
-    .n-tracker-button-xxx {
-      width: 6.8rem;
-      height: 6.8rem; }
-      .n-tracker-button-xxx .emoji {
-        font-size: 2.7rem;
-        font-style: normal; } }
-  @media (max-width: 599.98px) {
-    .n-tracker-button-xxx {
-      width: 6rem;
-      height: 6rem;
-      margin: 6px 3px !important; }
-      .n-tracker-button-xxx .emoji {
-        font-size: 2.2rem;
-        font-style: normal; } }
-  @media (max-width: 349.98px) {
-    .n-tracker-button-xxx {
-      width: 6.6rem !important;
-      height: 6.6rem !important;
-      margin: 12px 3px !important; }
-      .n-tracker-button-xxx .emoji {
-        font-size: 2.2rem;
-        font-style: normal; } }
-  .n-tracker-button-xxx header {
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
-    z-index: 20;
-    top: 0.4rem;
-    left: 6px;
-    right: 6px;
-    font-size: 11px;
-    line-height: 11px; }
-    .n-tracker-button-xxx header .value.left {
-      height: 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      line-height: 14px;
-      min-width: 16px;
-      position: absolute;
-      display: flex;
-      align-items: center;
-      font-weight: bold;
-      top: 0px;
-      left: 6px;
-      background: transparent; }
-  .n-tracker-button-xxx footer {
-    position: absolute;
-    bottom: 13px;
-    left: 4px;
-    right: 4px;
-    text-align: center;
-    line-height: 100%;
-    font-size: 0.8rem;
-    z-index: 2; }
 
 .share-image-component {
   background-color: rgba(0, 0, 0, 0.8);
@@ -6391,7 +6296,7 @@ aside.n-panel {
     z-index: 202; }
   .item-ball .balls {
     position: absolute;
-    bottom: 2px;
+    bottom: 4px;
     left: 20%;
     right: 20%;
     z-index: 202; }

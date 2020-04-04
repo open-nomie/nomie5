@@ -8,7 +8,7 @@ body {
   margin: 0;
   padding: 0;
   font-size: 18px;
-  background-color: var(--color-solid);
+  background-color: var(--color-bg);
   // padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
@@ -97,11 +97,11 @@ body.test {
   --tabs-background: #111;
   --tracker-background: rgb(5, 5, 5);
   --color-darkest: #000;
-  --color-bg: rgb(30, 30, 30);
-  --color-solid: rgb(15, 15, 15);
-  --color-solid-1: rgb(25, 25, 25);
-  --color-solid-2: rgb(35, 35, 35);
-  --color-solid-3: rgb(45, 45, 45);
+  --color-bg: rgb(5, 5, 5);
+  --color-solid: rgb(25, 25, 25);
+  --color-solid-1: rgb(35, 35, 35);
+  --color-solid-2: rgb(45, 45, 45);
+  --color-solid-3: rgb(55, 55, 55);
   --color-inverse: #fff;
   --color-inverse-1: #eee;
   --color-inverse-2: #ccc;
