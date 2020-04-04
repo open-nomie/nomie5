@@ -10,8 +10,7 @@
   const dispatch = createEventDispatcher();
 
   const state = {
-    note:
-      Lang.t("people.with", { person: `@${$Interact.people.active}` }) + " ",
+    note: ` @${$Interact.people.active} `,
     checkingIn: false,
     checkedIn: false
   };
