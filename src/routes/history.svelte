@@ -83,6 +83,7 @@
   // $: searchMode = (state.searchTerm || "").length ? true : false;
   let searchMode = false;
   $: if (state.searchTerm && !searchMode) {
+    console.log("searchmode = true");
     searchMode = true;
   }
 
@@ -210,7 +211,7 @@
       refreshing = true;
       setTimeout(() => {
         refreshing = false;
-      });
+      }, 10);
     },
     clearSearch() {
       showSearch = false;
@@ -226,23 +227,6 @@
     next() {
       methods.getDate(state.date.add(1, "day"));
     },
-    previousSearch() {
-      state.date = state.date.subtract(1, "year").startOf("year");
-      // methods.search(state.searchTerm, state.date.format("YYYY"));
-    },
-    nextSearch() {
-      state.date = state.date.add(1, "year").startOf("year");
-      // methods.search(state.searchTerm, state.date.format("YYYY"));
-    },
-    headerExists(date) {
-      // let dformat = dayjs(date).format("YYYY-MM-DD");
-      // if (checks.list_date.hasOwnProperty(dformat)) {
-      //   return true;
-      // } else {
-      //   checks.list_date[dformat] = true;
-      //   return false;
-      // }
-    },
     goto(date) {
       state.date = date;
       methods.getLogs();
@@ -255,35 +239,15 @@
     },
     searchChange(evt) {
       state.searchTerm = evt.detail;
+      showSearch = false;
     },
-    doSearch(evt) {
-      state.searchTerm = evt.detail;
-      showSearch = true;
-    },
-    searchKeypress(event) {
-      if (event.key === "Enter" || event.key === "Return") {
-        // methods.search(state.searchTerm, state.date.format("YYYY"));
-        return false;
-      }
-    },
-    refreshSearch() {
-      // methods.search(state.searchTerm, state.date.format("YYYY"));
-    },
-    search(key, year) {
-      // searchMode = true;
-      // showSearch = true;
-      // if ((key || "").length > 1) {
-      //   state.searchResults = [];
-      //   loading = true;
-      //   LedgerStore.search(state.searchTerm, year).then(searchResults => {
-      //     loading = false;
-      //     searchLogs = searchResults;
-      //   });
-      // }
+    onSearchEnter(evt) {
+      setTimeout(() => {
+        state.searchTerm = evt.detail;
+        showSearch = true;
+      }, 1);
     },
     trackerTapped(tracker, log) {
-      // let trackerId = ($TrackerStore[tracker.tag] || {}).id;
-      // navigate(`/stats/${tracker.tag}`);
       Interact.openStats(tracker.tag);
     },
     showLogOptions(log) {
@@ -508,7 +472,7 @@
       style={showSearch ? 'margin-top:-20px;' : ''}
       on:change={methods.searchChange}
       on:clear={methods.clearSearch}
-      on:search={methods.doSearch} />
+      on:search={methods.onSearchEnter} />
 
   </header>
   <!-- end header-content header -->
