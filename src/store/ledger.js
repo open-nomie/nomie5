@@ -461,6 +461,7 @@ const ledgerInit = () => {
           // Get Log Meta information - context and people references
           const meta = log.getMeta();
           // Save any new people to the People Store
+          // Passing an Array of USERNAMES - people store should convert it to the right thing
           PeopleStore.save(meta.people);
           // Save any new Context to the Context Store
           ContextStore.save(meta.context);
@@ -567,39 +568,6 @@ const ledgerInit = () => {
       });
     },
     /**
-     * Import Nomie 3 Backup
-     * This will take a nomie 3 backup file and import it to Nomie 4
-     */
-    import_3_old(payload) {
-      return new Promise((resolve, reject) => {
-        payload = payload || {};
-        payload.nomie = payload.nomie || {};
-        payload.nomie.number = payload.nomie.number || "";
-        if (parseInt(payload.nomie.number.substr(0, 1)) >= 3) {
-          base.books = {};
-          payload.events.forEach(rawLog => {
-            let log = new NomieLog(rawLog);
-            let bookKey = dayjs(new Date(log.end)).format(config.book_time_format);
-            base.books[bookKey] = base.books[bookKey] || [];
-            base.books[bookKey].push(log);
-          });
-
-          let promises = [];
-          Object.keys(base.books).forEach(date => {
-            let rows = base.books[date];
-            promises.push(methods.putBook(date, rows));
-          });
-
-          Promise.all(promises)
-            .then(resolve)
-            .catch(reject);
-        } else {
-          alert("Currently Nomie DAP only supports importing Nomie 3 data");
-          reject({ message: "Only nomie 3 is supported" });
-        }
-      });
-    },
-    /**
      * Search for a Given term in a users nomie dataset
      * @param {String} term
      * @param {Number} year
@@ -679,6 +647,15 @@ const ledgerInit = () => {
         });
     },
 
+    getState() {
+      let state;
+      update(s => {
+        state = s;
+        return s;
+      });
+      return state;
+    },
+
     /**
      * Main Ledger Query Function
      * @param {Object} options
@@ -690,9 +667,10 @@ const ledgerInit = () => {
       let endMonth = dayjs(options.end || new Date()).endOf(config.book_time_unit);
       let diff = endMonth.diff(startMonth, config.book_time_unit);
 
+      // Define array of "book paths" to get
       let books_to_get = [];
 
-      // TODO: Make this use listBooks() array to only look for books that exist
+      // ✅ TODO: Make this use listBooks() array to only look for books that exist
       // this will kill the annoying 404 console
 
       if (diff === 0) {
@@ -708,51 +686,80 @@ const ledgerInit = () => {
         }
       }
 
-      let get_all = () => {
-        let rows = [];
-        let promises = [];
-
-        books_to_get.forEach(date => {
-          let bookGet = d => {
-            return new Promise((resolve, reject) => {
-              methods
-                .getBook(d)
-                .then(book => {
-                  update(b => {
-                    b.books[d] = book;
-                    return b;
-                  });
-                  resolve(book || []);
-                })
-                .catch(e => {
-                  resolve([]);
-                });
-            });
-          };
-          promises.push(bookGet(date));
-        });
-
-        return Promise.all(promises)
-          .then(books => {
-            books.forEach(book => {
-              book.forEach(log => {
-                rows.push(new NomieLog(log));
-              });
-            });
-            return methods.filterLogs(rows, options);
-          })
-          .catch(e => {
-            console.error("error", e.message);
-          });
+      let getBookIfNeeded = async (state, dateKey) => {
+        let book;
+        if (state.books.hasOwnProperty(dateKey)) {
+          if (state.books[dateKey].length > 0) {
+            book = state.books[dateKey];
+          }
+        }
+        if (!book) {
+          book = await methods.getBook(dateKey);
+        }
+        return book;
       };
 
-      return get_all().then(rows => {
+      /** Get all  */
+      let get_all = async () => {
+        let rows = [];
+        let state = methods.getState(); // get ledger state;
+        // Loop over books to get (async using for lop)
+        for (let i = 0; i < books_to_get.length; i++) {
+          let date = books_to_get[i];
+          // Preset the book if it doesn't exist
+          state.books[date] = state.books[date] || [];
+          // If it's empty - lets get it from the datastore
+          // Otherwise, we;ll use what's there.
+          if (state.books[date].length === 0) {
+            state.books[date] = await methods.getBook(date);
+            state.books[date] = state.books[date] || [];
+            console.log(`${date} DOES NOT exist, or is empty. Adding it with ${state.books[date].length} records`);
+          } else {
+            console.log(`${date} book already exists with ${state.books[date].length} records`);
+          }
+          // Loop over book, and
+          state.books[date].forEach(log => {
+            rows.push(new NomieLog(log));
+          });
+          update(s => {
+            return state;
+          });
+        } // end forloop
+
+        // Get ready to extract and update the state
+        // update(async state => {
+        //   // Async loop over books to get
+        //   state.books = state.books || {};
+        //   for (let i = 0; i < books_to_get.length; i++) {
+        //     let date = books_to_get[i];
+        //     // Preset the book if it doesn't exist
+        //     state.books[date] = state.books[date] || [];
+        //     // If it's empty - lets get it from the datastore
+        //     // Otherwise, we;ll use what's there.
+        //     if (state.books[date].length === 0) {
+        //       state.books[date] = await methods.getBook(date);
+        //       state.books[date] = state.books[date] || [];
+        //     }
+        //     state.books[date].forEach(log => {
+        //       rows.push(new NomieLog(log));
+        //     });
+        //   } // end forloop
+        //   return state;
+        // }); // end update
+
+        return methods.filterLogs(rows, options);
+      }; // end get_all()
+
+      try {
+        let rows = await get_all();
         return rows.sort((a, b) => (a.end > b.end ? 1 : -1));
-      });
+      } catch (e) {
+        console.log("Error caught ", e);
+      }
     }
   };
 
-  const { subscribe, set, update } = writable(base);
+  const { subscribe, set, get, update } = writable(base);
 
   return {
     methods,
