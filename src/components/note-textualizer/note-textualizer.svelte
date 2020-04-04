@@ -165,7 +165,6 @@
   <div class="n-note-textualized {className}">
     {#each data.words as word}
       {#if word.type === 'tracker'}
-        tracker
         <span
           class="tracker font-weight-bold clickable text-primary-bright"
           on:click={() => {
