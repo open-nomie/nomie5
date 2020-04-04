@@ -22,13 +22,6 @@
   let lastFrom;
   let lastTo;
 
-  function findMore() {
-    canceled = false;
-    emptyBookCount = 0;
-    NoBookFoundCount = 0;
-    search();
-  }
-
   async function search() {
     // Set from and to date
     loading = true;
@@ -86,25 +79,17 @@
     on:moreClick={event => {
       dispatch('moreClick', event.detail);
     }} />
-  {#if loading}
-    <NItem className="py-2 bg-transparent loading-bar">
-      <div slot="left">
-        <NSpinner size={24} />
-      </div>
-      Searching...
-      <button
-        class="btn btn-clear text-red"
-        slot="right"
-        on:click={cancelSearch}>
-        Cancel
-      </button>
-    </NItem>
-  {/if}
 
   {#if !loading && lastTo}
     <NItem className="py-2 bg-transparent mb-2">
-      <button class="btn btn-outline btn-light btn-block" on:click={findMore}>
+      <button class="btn btn-outline btn-light btn-block" on:click={search}>
         Search past {lastFrom.format('MMM Do YYYY')}...
+      </button>
+    </NItem>
+  {:else if loading}
+    <NItem className="py-2 bg-transparent mb-2">
+      <button class="btn btn-outline btn-light btn-block" disabled>
+        Searching...
       </button>
     </NItem>
   {/if}
