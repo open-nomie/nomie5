@@ -61,9 +61,9 @@
       const longTimeAgo = dayjs()
         .subtract(100, "years")
         .toDate();
+
       state.people = getPeople().sort((a, b) => {
-        return (stats[a] || { last: longTimeAgo }).last <
-          (stats[b] || { last: longTimeAgo }).last
+        return $PeopleStore.people[a].last < $PeopleStore.people[b].last
           ? 1
           : -1;
       });
@@ -164,7 +164,7 @@
   ];
 
   onMount(async () => {
-    await PeopleStore.getStats();
+    // await PeopleStore.getStats();
   });
 </script>
 
