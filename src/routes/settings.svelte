@@ -283,7 +283,9 @@ Note: Your data will not automatically move over. You'll first need to export it
             title={Lang.t('settings.share-nomie', 'Share Nomie w/ Friends')}
             description="It'd be super helpful"
             on:click={methods.share}>
-            <span slot="left" class="btn-icon zmdi text-primary zmdi-share" />
+            <span
+              slot="left"
+              class="btn-icon zmdi text-primary-bright zmdi-share" />
             <span slot="right" class="icon zmdi zmdi-more" />
           </NItem>
 
@@ -294,7 +296,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             <NItem title={Lang.t('settings.theme')}>
               <span
                 slot="left"
-                class="btn-icon zmdi text-primary zmdi-invert-colors" />
+                class="btn-icon zmdi text-primary-bright zmdi-invert-colors" />
               <div slot="right">
                 <select
                   class="form-control"
@@ -314,7 +316,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             <NItem title={Lang.t('settings.use-location')}>
               <span
                 slot="left"
-                class="btn-icon zmdi text-primary zmdi-my-location" />
+                class="btn-icon zmdi text-primary-bright zmdi-my-location" />
               <div slot="right">
                 <NToggle
                   bind:value={$UserStore.alwaysLocate}
@@ -326,7 +328,9 @@ Note: Your data will not automatically move over. You'll first need to export it
             <!-- Tracker Board Tabs -->
             {#if $BoardStore.boards.length == 0}
               <NItem title={Lang.t('settings.enable-boards')}>
-                <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />
+                <span
+                  slot="left"
+                  class="btn-icon zmdi text-primary-bright zmdi-tab" />
                 <div slot="right">
                   <NToggle
                     bind:value={$UserStore.meta.boardsEnabled}
@@ -337,7 +341,9 @@ Note: Your data will not automatically move over. You'll first need to export it
               <NItem
                 title={Lang.t('settings.enable-boards')}
                 className="disabled">
-                <span slot="left" class="btn-icon zmdi text-primary zmdi-tab" />
+                <span
+                  slot="left"
+                  class="btn-icon zmdi text-primary-bright zmdi-tab" />
                 <div slot="right">
                   <NToggle value={true} locked={true} />
                 </div>
@@ -345,7 +351,9 @@ Note: Your data will not automatically move over. You'll first need to export it
             {/if}
             <!-- Pin Code -->
             <NItem title={Lang.t('settings.require-pin')}>
-              <span slot="left" class="btn-icon zmdi text-primary zmdi-apps" />
+              <span
+                slot="left"
+                class="btn-icon zmdi text-primary-bright zmdi-apps" />
               <div slot="right">
                 <NToggle
                   bind:value={$UserStore.meta.lock}
@@ -354,7 +362,9 @@ Note: Your data will not automatically move over. You'll first need to export it
             </NItem>
             <!-- 24 Hour -->
             <NItem title={Lang.t('settings.24-hour-clock')}>
-              <span slot="left" class="btn-icon zmdi text-primary zmdi-time" />
+              <span
+                slot="left"
+                class="btn-icon zmdi text-primary-bright zmdi-time" />
               <div slot="right">
                 <NToggle
                   bind:value={$UserStore.meta.is24Hour}
@@ -365,7 +375,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             <NItem title={Lang.t('settings.language')}>
               <span
                 slot="left"
-                class="btn-icon zmdi text-primary zmdi-translate" />
+                class="btn-icon zmdi text-primary-bright zmdi-translate" />
               <div slot="right">
                 <select
                   class="form-control"
@@ -392,7 +402,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               on:click={() => navigate('/api')}>
               <span
                 slot="left"
-                class="btn-icon zmdi text-primary zmdi-code-setting" />
+                class="btn-icon zmdi text-primary-bright zmdi-code-setting" />
               <span slot="right" class="icon zmdi zmdi-chevron-right" />
             </NItem>
             <NItem
@@ -403,7 +413,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               }}>
               <span
                 slot="left"
-                class="btn-icon zmdi text-primary zmdi-cloud-download" />
+                class="btn-icon zmdi text-primary-bright zmdi-cloud-download" />
               <span slot="right" class="icon zmdi zmdi-chevron-right" />
               <input
                 slot="right"
@@ -419,14 +429,16 @@ Note: Your data will not automatically move over. You'll first need to export it
               to="/settings/export/backup">
               <span
                 slot="left"
-                class="btn-icon zmdi text-primary zmdi-cloud-upload" />
+                class="btn-icon zmdi text-primary-bright zmdi-cloud-upload" />
               <span slot="right" class="icon zmdi zmdi-chevron-right" />
             </NItem>
             <NItem
               className="clickable"
               title={Lang.t('settings.generate-csv')}
               to="/settings/export/csv">
-              <span slot="left" class="btn-icon zmdi text-primary zmdi-grid" />
+              <span
+                slot="left"
+                class="btn-icon zmdi text-primary-bright zmdi-grid" />
               <span slot="right" class="icon zmdi zmdi-chevron-right" />
             </NItem>
             <NItem
@@ -437,7 +449,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               }}>
               <span
                 slot="left"
-                class="btn-icon zmdi text-primary zmdi-search-replace" />
+                class="btn-icon zmdi text-primary-bright zmdi-search-replace" />
               <span slot="right" class="icon zmdi zmdi-chevron-right" />
             </NItem>
 
@@ -459,7 +471,9 @@ Note: Your data will not automatically move over. You'll first need to export it
             <div class="title truncate">
               <strong>{Lang.t('general.type', 'Type')}</strong>
             </div>
-            <span slot="left" class="btn-icon zmdi text-primary zmdi-storage" />
+            <span
+              slot="left"
+              class="btn-icon zmdi text-primary-bright zmdi-storage" />
 
             <div slot="right">
 
