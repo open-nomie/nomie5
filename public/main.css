@@ -5047,6 +5047,13 @@ button:focus {
       border-radius: 1.2rem !important; }
     .btn-group .btn i.zmdi {
       font-size: 1.4rem; }
+  .btn-group.inverse {
+    background-color: transparent; }
+    .btn-group.inverse .btn {
+      opacity: 0.4; }
+      .btn-group.inverse .btn.active {
+        opacity: 1;
+        background-color: var(--color-solid-2) !important; }
 
 .btn-clear {
   background-color: none;
@@ -5395,6 +5402,9 @@ body.theme-dark {
 
 .text-lg {
   font-size: 1.3rem !important; }
+
+.text-xl {
+  font-size: 1.6rem !important; }
 
 input[type="text"],
 input[type="email"],
