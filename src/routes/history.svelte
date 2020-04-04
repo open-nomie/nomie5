@@ -240,6 +240,7 @@
     searchChange(evt) {
       state.searchTerm = evt.detail;
       showSearch = false;
+      window.scrollTo(0, 0);
     },
     onSearchEnter(evt) {
       setTimeout(() => {
@@ -469,6 +470,7 @@
 
     <NSearchBar
       searchTerm={state.searchTerm}
+      placeholder="Search History..."
       style={showSearch ? 'margin-top:-20px;' : ''}
       on:change={methods.searchChange}
       on:clear={methods.clearSearch}
@@ -497,7 +499,7 @@
           <!-- If Logs and Not refreshing  -->
         {:else if !showSearch}
           <!-- Loop over logs -->
-          {#each logs as log, i (`${log._id}-${log.end}`)}
+          {#each logs as log}
             <LogItem
               {log}
               on:trackerClick={event => {
