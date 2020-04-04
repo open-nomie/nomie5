@@ -31,14 +31,6 @@
     Interact.person(username);
   };
 
-  function lastContact(date) {
-    if (date) {
-      return dayjs(date).fromNow();
-    } else {
-      return null;
-    }
-  }
-
   /**
    * When PeopleStore Changes,
    * set state.people to the array of usernames
@@ -49,58 +41,14 @@
   }
 
   function loadPeople() {
-    let stats = $PeopleStore.stats;
-    if (state.view == "name") {
-      state.people = getPeople().sort((a, b) => {
-        return a.toLowerCase() > b.toLowerCase() ? 1 : -1;
-      });
-      /**
-       * Sort by Time
-       */
-    } else if (state.view == "time") {
-      const longTimeAgo = dayjs()
-        .subtract(100, "years")
-        .toDate();
+    const longTimeAgo = dayjs()
+      .subtract(100, "years")
+      .toDate();
 
-      state.people = getPeople().sort((a, b) => {
-        return $PeopleStore.people[a].last < $PeopleStore.people[b].last
-          ? 1
-          : -1;
-      });
-      /**
-       * Sort by Positivity
-       */
-    } else if (state.view == "positivity") {
-      state.people = getPeople().sort((a, b) => {
-        return (stats[a] || { score: -99 }).score <
-          (stats[b] || { score: -99 }).score
-          ? 1
-          : -1;
-      });
-    }
+    state.people = getPeople().sort((a, b) => {
+      return $PeopleStore.people[a].last < $PeopleStore.people[b].last ? 1 : -1;
+    });
   }
-
-  // Change Main View
-  const changeView = viewStr => {
-    state.view = viewStr;
-  };
-
-  const getStatItem = username => {
-    let stat = $PeopleStore.stats[username];
-    if (stat) {
-      return {
-        count: stat.logs.count,
-        score: stat.score,
-        last: stat.last
-      };
-    } else {
-      return {
-        count: 0,
-        score: 0,
-        last: null
-      };
-    }
-  };
 
   function searchPeople(evt) {
     if (evt.detail) {
@@ -135,37 +83,6 @@
       return Object.keys($PeopleStore.people);
     }
   }
-
-  const filterPeople = () => {};
-  //
-
-  $: pageButtons = [
-    {
-      label: "Name",
-      active: state.view === "name",
-      click() {
-        changeView("name");
-      }
-    },
-    {
-      label: "Time",
-      active: state.view === "time",
-      click() {
-        changeView("time");
-      }
-    },
-    {
-      label: "Positivity",
-      active: state.view === "positivity",
-      click() {
-        changeView("positivity");
-      }
-    }
-  ];
-
-  onMount(async () => {
-    // await PeopleStore.getStats();
-  });
 </script>
 
 <style lang="scss">
@@ -184,16 +101,11 @@
         class="btn btn-icon btn-clear zmdi zmdi-account-add text-inverse"
         slot="right" />
     </NSearchBar>
-    <!-- <NToolbar>
-      <div class="container container-sm">
-        <ButtonGroup size="sm" buttons={pageButtons} />
-      </div>
-    </NToolbar> -->
   </div>
 
   <div slot="content" class="container">
     <div class="n-list my-2">
-      {#if !state.people.length && !state.searchTerm}
+      {#if !state.people.length && !state.searchTerm && state.initialized}
         <NItem className=" py-3 bg-transparent">
           <div class="text-md text-center">
             Track and monitor how you interact with your friends and family.
@@ -207,6 +119,8 @@
           </div>
 
         </NItem>
+      {:else if !state.initialized}
+        <NItem>Loading...</NItem>
       {:else if !state.people.length && state.searchTerm}
         <NItem>Nothing found for @{state.searchTerm}</NItem>
       {/if}
@@ -241,26 +155,3 @@
     </div>
   </div>
 </AppLayout>
-
-<!--
-     // On User Click
-//   const personClicked = person => {
-//     Interact.popmenu({
-//       title: person,
-//       buttons: [
-//         {
-//           title: "Check-In",
-//           click: () => {
-//             console.log("Do Checkin");
-//           }
-//         },
-//         {
-//           title: "Stats",
-//           click: () => {
-//             console.log("Do Stats");
-//           }
-//         }
-//       ]
-//     });
-//   };
--->

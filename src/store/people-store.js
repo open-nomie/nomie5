@@ -126,10 +126,11 @@ const PeopleInit = () => {
       });
     },
     get(name) {
-      let person = new Person(name);
       update(state => {
         if (state.people.hasOwnProperty(name)) {
           person = state.people[name];
+        } else {
+          person = new Person(name);
         }
         return state;
       });
@@ -145,7 +146,7 @@ const PeopleInit = () => {
           Object.keys(people)
             .filter(row => row)
             .forEach(personKey => {
-              people[personKey] = new Person(people[personKey]);
+              people[personKey.toLowerCase()] = new Person(people[personKey]);
             });
         }
         state.people = people;
@@ -175,12 +176,19 @@ const PeopleInit = () => {
           if (typeof person == "string") {
             if (!state.people.hasOwnProperty(person)) {
               changed = true;
-              state.people[person] = new Person({ username: person, displayName: person });
+              state.people[person] = new Person({ username: person, displayName: person, last: new Date() });
+            } else {
+              changed = true;
+              state.people[person].last = new Date();
             }
           } else {
             if (!state.people.hasOwnProperty(person.username)) {
               changed = true;
               state.people[person.username] = new Person(person);
+              state.people[person.username].last = new Date();
+            } else {
+              changed = true;
+              state.person.last = new Date();
             }
           }
         });

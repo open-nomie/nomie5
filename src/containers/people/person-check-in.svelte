@@ -4,7 +4,9 @@
   import { LedgerStore } from "../../store/ledger.js";
   import NomieLog from "../../modules/nomie-log/nomie-log";
   import Spinner from "../../components/spinner/spinner.svelte";
+  import NItem from "../../components/list-item/list-item.svelte";
   import AutoComplete from "../../components/auto-complete/auto-complete.svelte";
+  import NButtonGroup from "../../components/button-group/button-group.svelte";
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -12,7 +14,8 @@
   const state = {
     note: ` @${$Interact.people.active} `,
     checkingIn: false,
-    checkedIn: false
+    checkedIn: false,
+    score: 0
   };
   const getPlaceholder = () => {
     return `What are you and @${$Interact.people.active} up to?`;
@@ -23,6 +26,7 @@
       let log = new NomieLog({
         note: state.note
       });
+      log.score = state.score;
       let saved = await LedgerStore.saveLog(log);
       state.checkingIn = false;
       state.checkedIn = true;
@@ -51,6 +55,22 @@
         document.getElementById('textarea-note').focus();
       }} />
   </div>
+  <div class="mt-2">
+    <NButtonGroup
+      inverse
+      labelClass="text-xl"
+      buttons={[{ label: '😩', active: state.score === -2, click: () => {
+            state.score = -2;
+          } }, { label: '😞', active: state.score === -1, click: () => {
+            state.score = -1;
+          } }, { label: '😐', active: state.score === 0, click: () => {
+            state.score = 0;
+          } }, { label: '🙂', active: state.score === 1, click: () => {
+            state.score = 1;
+          } }, { label: '😁', active: state.score === 2, click: () => {
+            state.score = 2;
+          } }]} />
+  </div>
   {#if !state.checkingIn && !state.checkedIn}
     <button class="btn btn-block btn-primary mt-4" on:click={checkIn}>
       Check-In
@@ -58,7 +78,7 @@
   {:else if state.checkingIn}
     <button class="btn btn-block btn-light mt-4" disabled>
       <Spinner size={24} className="mr-3" />
-      Checking In...
+      <div class="ml-2">Checking In...</div>
     </button>
   {:else if state.checkedIn}
     <button class="btn btn-block btn-green mt-4">

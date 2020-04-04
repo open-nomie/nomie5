@@ -35,7 +35,7 @@ export default class Record {
     // If a score is set, use it - if not, calculate it.
     // If a score is 0 or not set
     //starter.score ||
-    this.score = _calculateScore(this.note, this.end);
+    this.score = starter.score || _calculateScore(this.note, this.end);
 
     // Get location
     this.lat = starter.lat || null;
