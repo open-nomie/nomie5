@@ -88,7 +88,9 @@ const searchForPeople = async () => {
   logs.forEach(log => {
     let meta = log.getMeta();
     console.log("Meta People", meta.people);
+    // Array of usernames.
     meta.people.forEach(username => {
+      username = username.toLowerCase();
       people.push({ username, last: log.end });
     });
     // people = [...people, ...meta.people];
