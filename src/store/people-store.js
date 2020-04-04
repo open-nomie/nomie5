@@ -29,7 +29,7 @@ const console = new Logger("🗺 $PeopleStore");
 
 const getLogs = async () => {
   return await LedgerStore.query({
-    start: dayjs().subtract(2, "week"),
+    start: dayjs().subtract(16, "week"),
     end: new Date()
   });
 };
@@ -83,6 +83,7 @@ const toUsername = username => {
 };
 
 const searchForPeople = async () => {
+  let loadingFinished = Interact.loading("Finding @usernames...");
   const logs = await getPeopleLogs();
   let people = [];
   logs.forEach(log => {
@@ -95,6 +96,7 @@ const searchForPeople = async () => {
     });
     // people = [...people, ...meta.people];
   });
+  loadingFinished();
   return people;
 };
 
