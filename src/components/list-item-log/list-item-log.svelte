@@ -84,7 +84,10 @@
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row time-row">
       <div class="time font-bold truncate">
-        {dayjs(displayLog.end).format(fullDate ? `MMM D YYYY ${timeFormat}` : timeFormat)}
+        <div class="text-xs text-faded-2">
+          {dayjs(displayLog.end).format(`dddd ${timeFormat}`)}
+        </div>
+        <div class="text-sm">{dayjs(displayLog.end).format('MMM Do YYYY')}</div>
       </div>
 
       <!-- If they have location-->
@@ -99,11 +102,12 @@
         </button>
       {/if}
 
-      <div class="filler" />
       <!-- SCORE display -->
       {#if displayLog.score}
         <NPoints points={displayLog.score} />
       {/if}
+
+      <div class="filler" />
       <div class="time-ago text-faded-2 ml-3">
         {time.fromNow(displayLog.end)}
       </div>
@@ -144,7 +148,7 @@
         <!-- Tracker List Item  -->
         <NItem
           borderBottom
-          className="pl-0 large clickable"
+          className="pl-0 clickable"
           on:click={event => {
             event.preventDefault();
             event.stopPropagation();

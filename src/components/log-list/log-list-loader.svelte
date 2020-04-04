@@ -17,7 +17,7 @@
   export let compact = false;
 
   let loading = false;
-  let step = 1;
+  let step = 0;
   let logs = [];
   let hasMore = true;
   let books = {};
@@ -27,71 +27,122 @@
   let NoBookFoundCount = 0;
   let canceled = false;
 
+  let lastFrom;
+  let lastTo;
+
+  const maxRequests = 20;
+  const maxNoBooksFound = 10;
+  const maxWeeks = 10;
+
   function findMore() {
     canceled = false;
     emptyBookCount = 0;
     NoBookFoundCount = 0;
-    step++;
-    getNextBook();
+    search();
   }
 
-  async function getNextBook() {
-    if (!canceled) {
-      loading = true;
-      let lookupDate;
+  async function search() {
+    let from = !lastFrom
+      ? dayjs().subtract(maxWeeks, config.book_time_unit)
+      : dayjs(lastFrom).subtract(maxWeeks, config.book_time_unit);
+    let to = !lastTo
+      ? dayjs()
+      : dayjs(lastTo).subtract(maxWeeks, config.book_time_unit);
 
-      if (!lastBookDate) {
-        lastBookDate = dayjs();
-        lookupDate = lastBookDate;
-      } else {
-        lookupDate = lastBookDate.subtract(1, config.book_time_unit);
-        lastBookDate = dayjs(lookupDate);
-      }
-
-      let book = await LedgerStore.getBook(
-        lookupDate.format(config.book_time_format),
-        true
-      );
-
-      if (!book) {
-        NoBookFoundCount++;
-      } else if (book.length > 0) {
-        book = book.filter(log => {
-          return log.note.match(new RegExp(`${term}`, "gi"));
-        });
-        if (book.length == 0) {
-          emptyBookCount++;
-        } else {
-          books[lookupDate.format(config.book_time_format)] = book;
-          logs = [...logs, ...book];
-        }
-      } else if (book.length == 0) {
-        emptyBookCount++;
-      }
-
-      // If < 6 404's on the book lookups
-      // And less than 12 book with no matches
-      // and the current limit is not met
-      if (
-        NoBookFoundCount < 6 &&
-        emptyBookCount < 12 &&
-        logs.length < limit * step
-      ) {
-        getNextBook();
-      } else {
-        loading = false;
-      }
-    } else {
-      loading = false;
-    }
+    let book = await LedgerStore.query({
+      start: from.toDate(),
+      end: to.toDate(),
+      search: term
+    });
+    console.log(
+      `log-list-loader search(${term}) returned ${book.length} results`,
+      from.format("ddd MMM Do YYYY"),
+      to.format("ddd MMM Do YYYY")
+    );
+    logs = [...logs, ...book].sort((a, b) => {
+      return a.end > b.end ? 1 : -1;
+    });
+    lastFrom = from;
+    lastTo = to;
   }
+
+  // async function getNextBook() {
+  //   if(!canceled) {
+  //     let lookupDate;
+  //     loading = true;
+  //     // If we don't have a lookup date - lets assume it's the first and use today
+  //     if (!lastBookDate) {
+  //       lastBookDate = dayjs();
+  //       lookupDate = lastBookDate;
+  //     } else {
+  //       lookupDate = lastBookDate.subtract(1, config.book_time_unit);
+  //       lastBookDate = dayjs(lookupDate);
+  //     }
+
+  //   } else {
+  //     console.log("Searching was canceled");
+  //     await tick(100);
+  //     // Reset Canceld;
+  //     canceled = false;
+  //     loading = false;
+  //   }
+  // }
+
+  // async function getNextBook() {
+  //   if (!canceled) {
+  //     loading = true;
+  //     let lookupDate;
+
+  //     if (!lastBookDate) {
+  //       lastBookDate = dayjs();
+  //       lookupDate = lastBookDate;
+  //     } else {
+  //       lookupDate = lastBookDate.subtract(1, config.book_time_unit);
+  //       lastBookDate = dayjs(lookupDate);
+  //     }
+
+  //     let book = await LedgerStore.getBook(
+  //       lookupDate.format(config.book_time_format),
+  //       true
+  //     );
+
+  //     if (!book) {
+  //       NoBookFoundCount++;
+  //     } else if (book.length > 0) {
+  //       book = LedgerStore.filterLogs(log, term);
+  //       if (book.length == 0) {
+  //         emptyBookCount++;
+  //       } else {
+  //         books[lookupDate.format(config.book_time_format)] = book;
+  //         logs = [...logs, ...book];
+  //       }
+  //     } else if (book.length == 0) {
+  //       emptyBookCount++;
+  //     }
+
+  //     // If < 6 404's on the book lookups
+  //     // And less than 12 book with no matches
+  //     // and the current limit is not met
+  //     if (
+  //       NoBookFoundCount < 6 &&
+  //       emptyBookCount < 22 &&
+  //       logs.length < limit * step
+  //     ) {
+  //       getNextBook();
+  //     } else {
+  //       loading = false;
+  //     }
+  //   } else {
+  //     loading = false;
+  //   }
+  // }
 
   function cancelSearch() {
     canceled = true;
   }
 
   onMount(() => {
-    getNextBook();
+    search();
   });
 </script>
 
@@ -132,10 +183,10 @@
     </NItem>
   {/if}
 
-  {#if !theEnd && !loading}
-    <NItem className="py-2 bg-transparent">
+  {#if !theEnd && !loading && lastTo}
+    <NItem className="py-2 bg-transparent mb-2">
       <button class="btn btn-outline btn-light btn-block" on:click={findMore}>
-        Search More...
+        Search past {lastFrom.format('MMM Do YYYY')}...
       </button>
     </NItem>
   {:else if theEnd}
