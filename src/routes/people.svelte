@@ -192,8 +192,7 @@
   </div>
 
   <div slot="content" class="container">
-
-    <div class="n-list">
+    <div class="n-list my-2">
       {#if !state.people.length && !state.searchTerm}
         <NItem className=" py-3 bg-transparent">
           <div class="text-md text-center">
@@ -214,7 +213,7 @@
 
       {#each state.people as person}
         <NItem
-          className="py-2 clickable"
+          className="py-2 clickable bottom-line"
           on:click={() => {
             personClicked(person);
           }}>

@@ -112,7 +112,7 @@ const PeopleInit = () => {
   const methods = {
     async init() {
       await methods.getPeople();
-      await methods.getStats();
+      // await methods.getStats();
     },
     savePerson(person) {
       update(state => {
@@ -132,10 +132,12 @@ const PeopleInit = () => {
       return person;
     },
     async getPeople() {
+      // Get people from storage
       let people = await Storage.get(`${config.data_root}/${config.data_people_key}.json`);
-      console.log("PEOPLE got", people);
+      // Update State
       update(state => {
         if (people) {
+          // Turn it in to a Person Object
           Object.keys(people)
             .filter(row => row)
             .forEach(personKey => {
@@ -147,6 +149,9 @@ const PeopleInit = () => {
       });
       return people;
     },
+    /**
+     * getStats is deprecated
+     */
     async getStats() {
       let stats = await getRecentPeopleStats();
       update(state => {
