@@ -133,10 +133,6 @@ const ledgerInit = () => {
             .filter(log => {
               return log.isValid();
             });
-
-          // update(state => {
-          //   state.books[bookDateString] = book || [];
-          // });
           return book;
         } else {
           return null;
@@ -150,11 +146,6 @@ const ledgerInit = () => {
           .filter(log => {
             return log.isValid();
           });
-        // Add book to ledger Store
-        // update(state => {
-        //   state.books[bookDateString] = book || [];
-        // });
-
         return book;
       }
     },
@@ -738,18 +729,16 @@ const ledgerInit = () => {
           if (state.books[date].length === 0) {
             state.books[date] = await methods.getBook(date);
             state.books[date] = state.books[date] || [];
-            // console.log(`${date} DOES NOT exist, or is empty. Adding it with ${state.books[date].length} records`);
-          } else {
-            // console.log(`${date} book already exists with ${state.books[date].length} records`);
           }
           // Loop over book, and
           state.books[date].forEach(log => {
             rows.push(new NomieLog(log));
           });
-          update(s => {
-            return state;
-          });
         } // end forloop
+
+        update(s => {
+          return state;
+        });
 
         return methods.filterLogs(rows, options);
       }; // end get_all()
@@ -763,7 +752,7 @@ const ledgerInit = () => {
     }
   };
 
-  const { subscribe, set, get, update } = writable(base);
+  const { subscribe, set, update } = writable(base);
 
   return {
     methods,
