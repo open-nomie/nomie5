@@ -5,6 +5,7 @@ import config from "../../../config/global";
 import { LedgerStore } from "../../store/ledger";
 import { Interact } from "../../store/interact";
 import { PeopleStore } from "../../store/people-store";
+import { Locations } from "../../store/locations";
 
 //vendors
 import dayjs from "dayjs";
@@ -24,28 +25,37 @@ export default class Export {
       boards: [],
       events: [],
       trackers: {},
-      people: {}
+      people: {},
+      locations: []
     };
   }
 
   async start() {
     try {
-      this.fireChange("Starting...");
+      this.fireChange("People...");
       // Get People
       let people = await PeopleStore.getPeople();
       this.backup.people = people || {};
+
+      this.fireChange("Locations...");
+      let locations = await Locations.loadLocations();
+      if (locations.length) {
+        this.backup.locations = locations;
+      }
+
       // Get Trackers
+      this.fireChange("Trackers...");
       let trackers = await this.getTrackers();
-      this.fireChange("Trackers Loaded");
+
       if (trackers) {
         this.backup.trackers = trackers;
       }
       // Get Boards
-      this.fireChange("Getting Boards");
+      this.fireChange("Boards...");
       let boards = await this.getBoards();
       this.backup.boards = boards;
       // Get Events
-      this.fireChange("Getting Events...");
+      this.fireChange("Events...");
       let events = await this.getEvents();
       this.backup.events = events;
       this.fireChange(`${events.length} events loaded`);
@@ -60,6 +70,12 @@ export default class Export {
   }
 
   getTrackers() {
+    return Storage.get(`${config.data_root}/${config.tracker_file}`).then(res => {
+      return res;
+    });
+  }
+
+  getPeople() {
     return Storage.get(`${config.data_root}/${config.tracker_file}`).then(res => {
       return res;
     });
