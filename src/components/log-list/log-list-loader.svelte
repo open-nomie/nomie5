@@ -69,9 +69,12 @@
         emptyBookCount++;
       }
 
+      // If < 6 404's on the book lookups
+      // And less than 12 book with no matches
+      // and the current limit is not met
       if (
-        NoBookFoundCount < 3 &&
-        emptyBookCount < 6 &&
+        NoBookFoundCount < 6 &&
+        emptyBookCount < 12 &&
         logs.length < limit * step
       ) {
         getNextBook();
@@ -132,7 +135,7 @@
   {#if !theEnd && !loading}
     <NItem className="py-2 bg-transparent">
       <button class="btn btn-outline btn-light btn-block" on:click={findMore}>
-        Find more...
+        Search More...
       </button>
     </NItem>
   {:else if theEnd}
