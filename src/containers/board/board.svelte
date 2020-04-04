@@ -674,24 +674,11 @@
           data.searchTerm = null;
         }}
         on:change={value => {
-          data.searchTerm = value;
+          data.searchTerm = value.detail;
+          methods.searchKeypress();
+          console.log('On Change?', value.detail);
         }}
         placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}..." />
-      <!-- <NToolbar className="mt-3 bg-transparent">
-        <div
-          class="d-flex d-row justify-content-between align-items-center w-100
-          search-bar">
-
-          <input
-            type="search"
-            bind:this={searchInput}
-            bind:value={data.searchTerm}
-            on:input={methods.searchKeypress}
-            placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}..."
-            class="search-input" />
-
-        </div>
-      </NToolbar> -->
     {/if}
   </div>
   <!-- end header-->
@@ -739,27 +726,6 @@
 
           <!-- Include User Tips - shit should be a component -->
           <NTip {tips} />
-          {#if $UserStore.launchCount < 5 && data.hideTips !== true && $BoardStore.active == 'all'}
-            <!-- <div class="new-user tip n-row mb-3">
-              <button
-                class="text-md btn btn-clear btn-sm p-0 btn-icon flex-grow-off"
-                on:click={() => {
-                  data.hideTips = true;
-                }}>
-                <i class="text-md zmdi zmdi-close-circle" />
-              </button>
-              <div class="main filler m-1 ml-2">{tips[data.activeTip]}</div>
-              <div class="d-flex flex-row arrows">
-                <button
-                  class="btn btn-clear btn-icon zmdi px-1 zmdi-chevron-left"
-                  on:click={methods.previousTip} />
-                <button
-                  class="btn btn-clear btn-icon zmdi px-1 pl-2
-                  zmdi-chevron-right"
-                  on:click={methods.nextTip} />
-              </div>
-            </div> -->
-          {/if}
 
           <div class="board-actions">
             {#if $BoardStore.activeBoard}
