@@ -269,16 +269,16 @@
       // methods.search(state.searchTerm, state.date.format("YYYY"));
     },
     search(key, year) {
-      searchMode = true;
-      showSearch = true;
-      if ((key || "").length > 1) {
-        state.searchResults = [];
-        loading = true;
-        LedgerStore.search(state.searchTerm, year).then(searchResults => {
-          loading = false;
-          searchLogs = searchResults;
-        });
-      }
+      // searchMode = true;
+      // showSearch = true;
+      // if ((key || "").length > 1) {
+      //   state.searchResults = [];
+      //   loading = true;
+      //   LedgerStore.search(state.searchTerm, year).then(searchResults => {
+      //     loading = false;
+      //     searchLogs = searchResults;
+      //   });
+      // }
     },
     trackerTapped(tracker, log) {
       // let trackerId = ($TrackerStore[tracker.tag] || {}).id;
@@ -295,24 +295,29 @@
     selectDate() {
       let ranges = [
         {
-          days: 90,
-          title: "90 Days Back"
+          time: 90,
+          title: "90 Days Back",
+          unit: "day"
         },
         {
-          days: 180,
-          title: "6 Months Back"
+          time: 180,
+          title: "6 Months Back",
+          unit: "day"
         },
         {
-          days: 365,
-          title: "1 Year Back"
+          time: 1,
+          title: "1 Year Back",
+          unit: "year"
         },
         {
-          days: 730,
-          title: "2 Years Back"
+          time: 2,
+          title: "2 Years Back",
+          unit: "year"
         },
         {
-          days: -1,
-          title: "Select Date..."
+          time: -1,
+          title: "Select Date...",
+          unit: "day"
         }
       ];
 
@@ -333,7 +338,7 @@
               } else if (range.days === 0) {
                 methods.goto(dayjs());
               } else {
-                methods.goto(state.date.subtract(range.days, "days"));
+                methods.goto(state.date.subtract(range.time, range.unit));
               }
             }
           };
