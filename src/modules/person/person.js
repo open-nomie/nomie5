@@ -4,12 +4,22 @@ export default class Person {
       this.username = starter;
       this.displayName = starter;
       this.avatar = null;
+      this.last = new Date();
       starter = {};
     } else {
       this.username = starter.username || null;
-      this.displayName = starter.displayName || null;
+      this.displayName = starter.displayName || starter.username || null;
       this.avatar = starter.avatar || null;
+      this.last = starter.last ? new Date(starter.last) : new Date();
     }
+  }
+
+  setLast(date) {
+    date = date || new Date();
+    this.last = date;
+  }
+  getLast() {
+    return this.last;
   }
 
   setUsername(username) {
