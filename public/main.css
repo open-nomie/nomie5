@@ -5909,7 +5909,10 @@ body.scrolling .mini-map {
   background-color: var(--color-solid) !important; }
 
 .n-item-log.compact {
-  margin: 2px !important; }
+  margin: 10px 4px !important; }
+  .n-item-log.compact .trackers-list .main div,
+  .n-item-log.compact .trackers-list .main .left {
+    font-size: 0.9rem !important; }
   .n-item-log.compact .time-row {
     padding: 2px;
     display: flex;
@@ -5926,7 +5929,7 @@ body.scrolling .mini-map {
     min-height: 30px; }
 
 .n-item-log .time-row {
-  padding-top: 12px; }
+  padding-top: 7px; }
 
 .n-modal-frame.tracker-input .n-modal-body {
   border-radius: 0;

@@ -233,7 +233,17 @@
 
 .n-item-log {
   &.compact {
-    margin: 2px !important;
+    margin: 10px 4px !important;
+
+    .trackers-list {
+      .main {
+        div,
+        .left {
+          font-size: 0.9rem !important;
+        }
+      }
+    }
+
     .time-row {
       padding: 2px;
       display: flex;
@@ -256,6 +266,6 @@
   }
 
   .time-row {
-    padding-top: 12px;
+    padding-top: 7px;
   }
 }
