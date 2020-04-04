@@ -107,6 +107,10 @@
     state.date = dayjs();
   }
 
+  async function getStats() {
+    let from = state.date.subtract();
+  }
+
   const methods = {
     showHistory() {
       navigate("/history");
@@ -765,31 +769,11 @@
             events={methods.getCalendarData('month')} />
         </div>
       {:else if state.subview === 'logs'}
-        <div class="n-list">
-          <!-- {#if state.stats.getRows(state.view).length === 0}
-            <div class="empty-notice sm">No logs found on this day.</div>
-          {/if} -->
+        <div class="p-2">
           <LogListLoader
             term={`#${state.tracker.tag}`}
             limit={10}
             compact={true} />
-          <!-- {#each state.stats.getRows(state.view) as log, index}
-            {#if log.trackers[state.tracker.tag]}
-              <NLogItem
-                {log}
-                className="compact"
-                fullDate={true}
-                on:locationClick={event => {
-                  Interact.showLocations([log]);
-                }}
-                on:moreClick={event => {
-                  Interact.logOptions(log).then(() => {});
-                }}
-                show24Hour={$UserStore.meta.is24Hour}
-                trackers={$TrackerStore}
-                focus={state.tracker.tag} />
-            {/if}
-          {/each} -->
         </div>
       {:else if state.subview === 'all-logs'}
         <div class="n-list">
