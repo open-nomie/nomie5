@@ -347,6 +347,7 @@
       methods.refreshSearch();
     }
     window.scrollTo(0, 0);
+    methods.getLogs();
   });
 
   /**
@@ -354,7 +355,6 @@
    * This will call the ledger and load up the right book
    * once the book is loaded, the logs var will be automaticallly filtered
    */
-  methods.getLogs();
 </script>
 
 <style lang="scss" type="text/scss">
