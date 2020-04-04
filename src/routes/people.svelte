@@ -232,8 +232,10 @@
             {/if}
           </div>
           <div class="title">{$PeopleStore.people[person].displayName}</div>
-          {#if lastContact(getStatItem(person).last)}
-            <div class="note">{lastContact(getStatItem(person).last)}</div>
+          {#if $PeopleStore.people[person].last}
+            <div class="note">
+              {dayjs($PeopleStore.people[person].last).fromNow()}
+            </div>
           {/if}
         </NItem>
       {/each}
