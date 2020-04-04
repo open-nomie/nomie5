@@ -127,53 +127,53 @@
   };
 
   // Dynamically assign book
-  $: if (
-    $LedgerStore.books[state.date.format(config.book_time_format)] &&
-    !searchMode
-  ) {
-    loading = true;
-    book = $LedgerStore.books[state.date.format(config.book_time_format)] || [];
+  // $: if (
+  //   $LedgerStore.books[state.date.format(config.book_time_format)] &&
+  //   !searchMode
+  // ) {
+  //   loading = true;
+  //   book = $LedgerStore.books[state.date.format(config.book_time_format)] || [];
 
-    let results = book || [];
+  //   let results = book || [];
 
-    logs = results
-      .filter(log => filterActiveDate(log))
-      .sort((a, b) => {
-        return a.end < b.end ? 1 : -1;
-      });
+  //   logs = results
+  //     .filter(log => filterActiveDate(log))
+  //     .sort((a, b) => {
+  //       return a.end < b.end ? 1 : -1;
+  //     });
 
-    logs = Array.from(new Set(logs.map(a => a._id))).map(id => {
-      return logs.find(a => a._id === id);
-    });
+  //   logs = Array.from(new Set(logs.map(a => a._id))).map(id => {
+  //     return logs.find(a => a._id === id);
+  //   });
 
-    dayScore = 0;
-    logs
-      .filter(log => {
-        return log.score;
-      })
-      .forEach(log => {
-        dayScore = dayScore + parseInt(log.score);
-      });
+  //   dayScore = 0;
+  //   logs
+  //     .filter(log => {
+  //       return log.score;
+  //     })
+  //     .forEach(log => {
+  //       dayScore = dayScore + parseInt(log.score);
+  //     });
 
-    loading = false;
-  }
+  //   loading = false;
+  // }
 
   $: appTitle = `History ${state.date.format("YYYY-MM-DD")}`;
 
-  $: if (searchLogs || logs) {
-    locations = (searchLogs || logs)
-      .filter(log => {
-        return log.lat;
-      })
-      .map(log => {
-        return {
-          lat: log.lat,
-          lng: log.lng,
-          name: log.location,
-          log: log
-        };
-      });
-  }
+  // $: if (searchLogs || logs) {
+  //   locations = (searchLogs || logs)
+  //     .filter(log => {
+  //       return log.lat;
+  //     })
+  //     .map(log => {
+  //       return {
+  //         lat: log.lat,
+  //         lng: log.lng,
+  //         name: log.location,
+  //         log: log
+  //       };
+  //     });
+  // }
 
   // Methods
   const methods = {
@@ -186,7 +186,7 @@
         searchMode = true;
       }
     },
-    getLogs(fresh) {
+    async getLogs(fresh) {
       fresh = fresh ? fresh : false;
 
       loading = true;
@@ -194,11 +194,12 @@
       // checks.list_date = {};
 
       // Query the Ledger for Posts on this day.
-      return LedgerStore.query({
+      logs = await LedgerStore.query({
         start: state.date.startOf("day").toDate(),
         end: state.date.endOf("day").toDate(),
         fresh: fresh
       });
+      loading = false;
     },
     clearLocation() {
       state.location.name = null;
