@@ -13,26 +13,14 @@
   import dayjs from "dayjs";
 
   export let term = null;
-  export let limit = 20;
+  export let limit = 5;
   export let compact = false;
 
   let loading = false;
-  let step = 0;
   let logs = [];
-  let hasMore = true;
-  let books = {};
-  let lastBookDate = null;
-  let theEnd = false;
-  let emptyBookCount = 0;
-  let NoBookFoundCount = 0;
-  let canceled = false;
 
   let lastFrom;
   let lastTo;
-
-  const maxRequests = 20;
-  const maxNoBooksFound = 10;
-  const maxWeeks = 10;
 
   function findMore() {
     canceled = false;
@@ -45,11 +33,11 @@
     // Set from and to date
     loading = true;
     let from = !lastFrom
-      ? dayjs().subtract(maxWeeks, config.book_time_unit)
-      : dayjs(lastFrom).subtract(maxWeeks, config.book_time_unit);
+      ? dayjs().subtract(limit, config.book_time_unit)
+      : dayjs(lastFrom).subtract(limit, config.book_time_unit);
     let to = !lastTo
       ? dayjs()
-      : dayjs(lastTo).subtract(maxWeeks, config.book_time_unit);
+      : dayjs(lastTo).subtract(limit, config.book_time_unit);
 
     // Query the ledger
     let book = await LedgerStore.query({
@@ -113,15 +101,11 @@
     </NItem>
   {/if}
 
-  {#if !theEnd && !loading && lastTo}
+  {#if !loading && lastTo}
     <NItem className="py-2 bg-transparent mb-2">
       <button class="btn btn-outline btn-light btn-block" on:click={findMore}>
         Search past {lastFrom.format('MMM Do YYYY')}...
       </button>
-    </NItem>
-  {:else if theEnd}
-    <NItem className="py-2 bg-transparent">
-      <div class="text-center text-md text-faded-2">No more results</div>
     </NItem>
   {/if}
 
