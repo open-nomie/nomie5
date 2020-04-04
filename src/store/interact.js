@@ -134,6 +134,21 @@ const interactInit = () => {
         });
       });
     },
+    loading(message) {
+      let cancel = () => {
+        update(state => {
+          state.toast.show = false;
+          state.toast.message = null;
+          return state;
+        });
+      };
+      update(state => {
+        state.toast.show = true;
+        state.toast.message = message;
+        return state;
+      });
+      return cancel;
+    },
     vibrate(ms) {
       // ms = ms || 90;
       // if (navigator.vibrate) {
