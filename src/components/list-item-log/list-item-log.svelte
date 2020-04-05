@@ -84,12 +84,18 @@
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row time-row">
       <div class="time font-bold truncate">
-        <div class="text-xs text-faded-2">
-          {dayjs(displayLog.end).format(`dddd ${timeFormat}`)}
+
+        <div class="text-sm text-inverse-1">
+          {dayjs(displayLog.end).format(`ddd ${timeFormat}`)}
         </div>
-        <div class="text-sm">{dayjs(displayLog.end).format('MMM Do YYYY')}</div>
+        <div class="text-xs text-inverse-2">
+          {dayjs(displayLog.end).format('MMM Do YYYY')}
+          <span class="text-faded-2">{dayjs(displayLog.end).fromNow()}</span>
+        </div>
+
       </div>
 
+      <div class="filler" />
       <!-- If they have location-->
       {#if displayLog.lat}
         <button
@@ -106,11 +112,9 @@
       {#if displayLog.score}
         <NPoints points={displayLog.score} />
       {/if}
-
-      <div class="filler" />
-      <div class="time-ago text-faded-2 ml-3">
+      <!-- <div class="time-ago text-faded-2 ml-3">
         {time.fromNow(displayLog.end)}
-      </div>
+      </div> -->
       <!-- Janky - fix this -->
       {#if showMore === true}
         <button
