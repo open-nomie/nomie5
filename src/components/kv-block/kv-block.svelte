@@ -3,6 +3,7 @@
   export let value = undefined;
   export let onClick = undefined;
   export let type = "text";
+  export let className = "";
 </script>
 
 <style lang="scss">
@@ -38,11 +39,30 @@
       border-radius: 20px;
       padding: 10px;
     }
+    &.type-row {
+      background-color: var(--color-faded);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      border-radius: 6px;
+      min-height: 40px;
+      .value {
+        font-size: 1.1rem !important;
+        small {
+          font-size: 1.1rem !important;
+        }
+      }
+      .label {
+        font-size: 0.9rem;
+      }
+    }
   }
 </style>
 
 <div
-  class="{onClick ? 'clickable' : ''} type-{type} block"
+  class="{onClick ? 'clickable' : ''} type-{type} block {className}"
   on:click={() => {
     if (onClick) {
       onClick();
