@@ -34,8 +34,6 @@
   $: if (points && JSON.stringify(points) !== JSON.stringify(lastPoints)) {
     lastPoints = JSON.stringify(points);
 
-    console.log("Bar Chart Points Changed", points);
-
     if (points.length) {
       let values = points.map(point => point.y);
 
@@ -80,10 +78,7 @@
     }
   };
 
-  onMount(() => {
-    console.log("Bar Chart Mounted Labels", points.map(p => p.x));
-    console.log("Bar Chart Mounted values", points.map(p => p.y));
-  });
+  onMount(() => {});
 </script>
 
 <style lang="scss">

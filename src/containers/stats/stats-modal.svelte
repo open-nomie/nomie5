@@ -22,6 +22,11 @@
   import NSpinner from "../../components/spinner/spinner.svelte";
   import NKVBlock from "../../components/kv-block/kv-block.svelte";
   import NBarChart from "../../components/charts/bar-chart.svelte";
+  import NLogList from "../../components/log-list/log-list.svelte";
+
+  // Containers
+  import NMap from "../../containers/map/map.svelte";
+  import NCalendar from "../../containers/calendar/sweet.svelte";
 
   // Stores
   import { LedgerStore } from "../../store/ledger";
@@ -37,6 +42,13 @@
     y: { id: "y", label: "Y", title: "Year", unit: "year" }
   };
 
+  const dataViews = {
+    overview: { id: "overview", label: "Overview" },
+    map: { id: "map", label: "Map" },
+    streak: { id: "streak", label: "Streak" },
+    logs: { id: "logs", label: "Logs" }
+  };
+
   const types = {
     tracker: { prefix: "#" },
     person: { prefix: "@" },
@@ -47,25 +59,44 @@
   const state = {
     date: dayjs(),
     timeSpan: "w",
-    viewOptions: [],
+    dataView: "overview",
+    timeOption: [],
+    viewOption: [],
     loading: true,
     stats: null
   };
 
-  function setView(timeSpan) {
-    state.timeSpan = timeSpan.id;
+  function setTimeView(option) {
+    state.timeSpan = option.id;
+  }
+
+  function setView(option) {
+    state.dataView = option.id;
   }
 
   function getTimeSpan() {
     return timeSpans[state.timeSpan];
   }
 
-  function getViewOptionButtons() {
+  function getTimeViewButtons() {
     return Object.keys(timeSpans).map(optionId => {
       let option = timeSpans[optionId];
       return {
         label: option.label,
         active: state.timeSpan === optionId,
+        click: () => {
+          setTimeView(option);
+        }
+      };
+    });
+  }
+
+  function getDataViewButtons() {
+    return Object.keys(dataViews).map(optionId => {
+      let option = dataViews[optionId];
+      return {
+        label: option.label,
+        active: state.dataView === optionId,
         click: () => {
           setView(option);
         }
@@ -81,16 +112,16 @@
     let title = "Stats";
     switch ($Interact.stats.activeType) {
       case "tracker":
-        title = `#${$Interact.stats.activeTag} Stats`;
+        title = `#${$Interact.stats.activeTag}`;
         break;
       case "person":
-        title = `@${$Interact.stats.activeTag} Stats`;
+        title = `@${$Interact.stats.activeTag}`;
         break;
       case "context":
-        title = `+${$Interact.stats.activeTag} Stats`;
+        title = `+${$Interact.stats.activeTag}`;
         break;
       case "location":
-        title = `Location Stats`;
+        title = `Location`;
         break;
     }
     return title;
@@ -172,6 +203,36 @@
     }
   }
 
+  function getCalendarData() {
+    let rows = state.stats.rows
+      .filter(row => {
+        return new Date(row.end).getMonth() == state.date.toDate().getMonth();
+      })
+      .map(row => {
+        row.start = new Date(row.start);
+        row.end = new Date(row.end);
+        row.repeat = "never";
+        return row;
+      });
+    return rows;
+  }
+
+  function getLocations() {
+    return state.stats.rows
+      .map(row => {
+        if (row.lat) {
+          return {
+            lat: row.lat,
+            lng: row.lng,
+            name: row.location
+          };
+        } else {
+          return null;
+        }
+      })
+      .filter(row => row);
+  }
+
   function formatValue(value, includeUnit) {
     let tracker = getTracker();
     return tracker.displayValue(value, includeUnit);
@@ -181,6 +242,12 @@
     const from = getFromDate();
     const to = getToDate();
     return `${from.format("MMM D")} - ${to.format("MMM D YYYY")}`;
+  }
+
+  function getYearRange() {
+    const from = getFromDate();
+    const to = getToDate();
+    return `${from.format("MMM D YYYY")} - ${to.format("MMM D YYYY")}`;
   }
 
   function getDateRangeText() {
@@ -196,7 +263,7 @@
         range = getMonthRange();
         break;
       case "y":
-        range = getMonthRange();
+        range = getYearRange();
         break;
     }
     return range;
@@ -204,7 +271,8 @@
 
   async function main() {
     state.range = getDateRangeText();
-    state.viewOptions = getViewOptionButtons();
+    state.timeOption = getTimeViewButtons();
+    state.viewOption = getDataViewButtons();
     getStats();
   }
 
@@ -215,9 +283,14 @@
   /** Reactive Functions and Variables **/
   let lastTimeSpan = state.timeSpan;
   $: if (state.timeSpan && state.timeSpan !== lastTimeSpan) {
-    console.log("Load Stats Again");
     lastTimeSpan = state.timeSpan;
     main();
+  }
+
+  let lastDataView = state.dataView;
+  $: if (state.dataView && state.dataView != lastDataView) {
+    lastDataView = state.dataView;
+    state.viewOption = getDataViewButtons();
   }
 
   $: timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
@@ -229,10 +302,16 @@
     max-width: 100vw;
     overflow: hidden;
   }
+  .time-range {
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1rem;
+  }
 </style>
 
 <NModal className="stats-modal" fullscreen>
-  <div slot="raw-header">
+  <header slot="raw-header" class="box-shadow-float">
     <NToolbarGrid>
       <button
         class="btn btn-clear zmdi zmdi-close"
@@ -242,7 +321,7 @@
       <button class="btn btn-clear zmdi zmdi-edit" slot="right" />
     </NToolbarGrid>
     <div class="n-row pb-2 px-2">
-      <NButtonGroup size="sm" buttons={state.viewOptions} />
+      <NButtonGroup size="sm" buttons={state.timeOption} />
     </div>
 
     <NToolbarGrid>
@@ -254,6 +333,24 @@
         <i class="zmdi zmdi-chevron-right" />
       </button>
     </NToolbarGrid>
+
+    {#if state.stats && !state.loading}
+      <NBarChart
+        height={120}
+        color={getTracker().color}
+        labels={state.stats.chart.values.map(point => point.x)}
+        points={state.stats.chart.values}
+        on:tap={event => {
+          let newDate;
+          state.date = dayjs(event.detail.point.date);
+          console.log('Tapped Date');
+        }}
+        activeIndex={0} />
+    {/if}
+  </header>
+
+  <div slot="footer" class="w-100">
+    <NButtonGroup buttons={state.viewOption} />
   </div>
 
   {#if state.loading}
@@ -263,61 +360,62 @@
       </div>
     </div>
   {:else}
-    <div class="container">
+    <div class="container" style="min-height:100%">
       {#if state.stats}
-        <NBarChart
-          height={150}
-          color={getTracker().color}
-          labels={state.stats.chart.values.map(point => point.x)}
-          points={state.stats.chart.values}
-          on:tap={event => {
-            let newDate;
-            state.date = dayjs(event.detail.point.date);
-            console.log('Tapped Date');
-          }}
-          activeIndex={0} />
-
-        <!--
-            xFormat={x => {
-            console.log('X Format', x);
-            return x;
-          }}
-          yFormat={y => {
-            return NomieUOM.format(y, getTracker().uom);
-          }}
-          -->
-
-        {#if state.stats}
-          {#if state.stats.math == 'sum'}
-            <NItem>
+        {#if state.dataView == 'overview'}
+          <div class="overview py-2">
+            {#if state.stats.math == 'sum'}
+              <NItem>
+                <NKVBlock
+                  label="Total"
+                  value={formatValue(state.stats.sum)}
+                  type="row" />
+              </NItem>
+            {/if}
+            <NItem className="py-0">
               <NKVBlock
-                label="Total"
-                value={formatValue(state.stats.sum)}
+                label="Avg"
+                value={formatValue(state.stats.avg)}
                 type="row" />
             </NItem>
-          {/if}
-          <NItem className="py-0">
-            <NKVBlock
-              label="Avg"
-              value={formatValue(state.stats.avg)}
-              type="row" />
-          </NItem>
-          {#if state.stats.max.value > state.stats.min.value}
-            <NItem>
-              <NKVBlock
-                label="Range"
-                className="filler"
-                value={`${formatValue(state.stats.min.value, false)} to ${formatValue(state.stats.max.value)}`}
-                type="row" />
-            </NItem>
-            <NItem>
-              <NKVBlock
-                label="Variance"
-                className="filler"
-                value={`${formatValue(state.stats.max.value - state.stats.min.value)}`}
-                type="row" />
-            </NItem>
-          {/if}
+            {#if state.stats.max.value > state.stats.min.value}
+              <NItem>
+                <NKVBlock
+                  label="Range"
+                  className="filler"
+                  value={`${formatValue(state.stats.min.value, false)} to ${formatValue(state.stats.max.value)}`}
+                  type="row" />
+              </NItem>
+              <NItem>
+                <NKVBlock
+                  label="Variance"
+                  className="filler"
+                  value={`${formatValue(state.stats.max.value - state.stats.min.value)}`}
+                  type="row" />
+              </NItem>
+            {/if}
+          </div>
+        {:else if state.dataView == 'streak'}
+          <!--on:dayClick={event => {
+              state.date = dayjs(event.detail);
+              methods.refresh();
+            }}-->
+          <div class="calendar p-2">
+            <NCalendar
+              color={getTracker().color}
+              tracker={getTracker()}
+              showHeader={true}
+              initialDate={state.date}
+              events={getCalendarData()} />
+          </div>
+        {:else if state.dataView == 'logs'}
+          <NLogList
+            compact
+            logs={state.stats.rows}
+            style="min-height:100%"
+            className="bg-solid-1 p-2" />
+        {:else if state.dataView == 'map'}
+          <NMap small locations={getLocations()} height={250} />
         {/if}
       {/if}
     </div>

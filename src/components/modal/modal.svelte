@@ -161,6 +161,10 @@
     }
   }
 
+  .n-modal-raw-header {
+    z-index: 2;
+  }
+
   .n-modal-header {
     padding: 10px 16px;
     min-height: 40px;

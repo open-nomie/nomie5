@@ -8,6 +8,8 @@
 
   export let logs = null;
   export let compact = false;
+  export let style = "";
+  export let className = "";
 
   function sort(logs) {
     return logs.sort((a, b) => {
@@ -16,7 +18,7 @@
   }
 </script>
 
-<div class="n-list">
+<div class="n-list mh-100 {className}" {style}>
   {#each sort(logs) as log}
     <LogItem
       className={compact ? 'compact' : ''}

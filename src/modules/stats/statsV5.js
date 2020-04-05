@@ -25,6 +25,18 @@ export default class StatsProcessor {
     return this.generateResults();
   }
 
+  getUnitFormat() {
+    let unitFormat;
+    if (this.mode == "d") {
+      unitFormat = "HH";
+    } else if (this.mode == "w" || this.mode == "m") {
+      unitFormat = "YYYY-MM-DD";
+    } else if (this.mode == "y") {
+      unitFormat = "YYYY-MM";
+    }
+    return unitFormat;
+  }
+
   /**
    * Generate a Value Map
    * {
@@ -35,20 +47,27 @@ export default class StatsProcessor {
    */
   getValueMap(rows) {
     let valueMap = {};
+
+    // Loop Over each Row
     rows.forEach((row) => {
       if (!row.trackers) {
         row.expand();
       }
-      let unitFormat = this.mode == "d" ? "hh" : "YYYY-MM-DD";
-      let dayKey = dayjs(row.end).format(unitFormat);
-      valueMap[dayKey] = valueMap[dayKey] || [];
+      let unitFormat = this.getUnitFormat(); // get unit for time format
+      let unitKey = dayjs(row.end).format(unitFormat); // generate unit Key
+      // Fill in the Value Map with an empty array if not exist
+      valueMap[unitKey] = valueMap[unitKey] || [];
+      // If it's a person or context, just count 1
       if (this.tracker.type == "person" || this.tracker.type == "context") {
-        valueMap[dayKey].push(1);
+        valueMap[unitKey].push(1);
       } else {
+        // It's a tracker
         if (row.trackers[this.tracker.tag]) {
           let value = row.trackers[this.tracker.tag].value;
           value = isNaN(value) ? 0 : value;
-          valueMap[dayKey].push(value);
+          valueMap[unitKey].push(value);
+        } else {
+          valueMap[unitKey].push(1);
         }
       }
     });
@@ -114,7 +133,7 @@ export default class StatsProcessor {
       }
     }
 
-    console.log("getChartDataByType", { diff, timeFormat, labelFormat, valueMapTotals });
+    console.log("getChartDataByType", { diff, timeFormat, labelFormat, unitValues, timeExample: dayjs().format(timeFormat) });
     return {
       labels,
       values,
