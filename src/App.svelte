@@ -26,6 +26,7 @@
   import LibraryModal from "./containers/library/library.svelte";
   import PersonModal from "./containers/people/person-modal.svelte";
   import Modal from "./components/modal/modal.svelte";
+  import StatsModal from "./containers/stats/stats-modal.svelte";
 
   // Utils
   import Logger from "./utils/log/log";
@@ -35,7 +36,7 @@
   import HistoryRoute from "./routes/history.svelte";
   import SetupRoute from "./routes/setup.svelte";
   import SettingsRoute from "./routes/settings.svelte";
-  import StatsRoute from "./routes/stats.svelte";
+
   import BoardEditorRoute from "./routes/board-editor.svelte";
   import FAQRoute from "./routes/faq.svelte";
   // import PluginsRoute from "./routes/plugins.svelte";
@@ -247,7 +248,6 @@
     <Route path="/tracker/design" component={TrackerDesigner} />
     <Route path="/files" component={FileBrowser} />
     <Route path="/files/:file" component={FileBrowser} />
-
   </Router>
 {:else if $UserStore.signedIn == undefined}
   <div class="empty-notice" style="height:calc(100vh - 75px)">
@@ -259,7 +259,7 @@
 
 <!-- Global Modals, alerts, menus, etc-->
 {#if $Interact.stats.activeTag}
-  <StatsRoute id={$Interact.stats.activeTag} />
+  <StatsModal />
 {/if}
 {#if $TrackerLibrary.show}
   <LibraryModal />
