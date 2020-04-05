@@ -28,6 +28,7 @@ import PromiseStep from "../utils/promise-step/promise-step";
 import md5 from "md5";
 import tick from "../utils/tick/tick";
 import regex from "../utils/regex";
+import arrayUtils from "../utils/array/array_utils";
 
 import tokenizer from "search-text-tokenizer";
 
@@ -692,9 +693,7 @@ const ledgerInit = () => {
 
       // Define array of "book paths" to get
       let books_to_get = [];
-
-      // ✅ TODO: Make this use listBooks() array to only look for books that exist
-      // this will kill the annoying 404 console
+      let state = methods.getState(); // get ledger state;
 
       if (diff === 0) {
         books_to_get.push(endTime.format(config.book_time_format));
@@ -709,26 +708,46 @@ const ledgerInit = () => {
         }
       }
 
+      // Batch the Book Lookups
+      // This wil make blockstack looksup much faster.
+      const batch_all = async () => {
+        let rows = [];
+        let maxPerBatch = 10;
+        let chunks = arrayUtils.chunk(books_to_get, maxPerBatch);
+        for (var i = 0; i < chunks.length; i++) {
+          let books = await get_batch(chunks[i]);
+          books.forEach((book) => {
+            book.forEach((row) => {
+              rows.push(row);
+            });
+          });
+        }
+        return rows;
+      };
+
+      // Get a Specific Batch of Books
+      const get_batch = async (booksChunk) => {
+        let gets = [];
+        booksChunk.forEach((bookPath) => {
+          state.books[bookPath] = state.books[bookPath] || [];
+          if (state.books[bookPath].length == 0) {
+            let getBook = methods.getBook(bookPath);
+            getBook.then((rows) => {
+              state.books[bookPath] = rows;
+            });
+            gets.push(getBook);
+          } else {
+            gets.push(Promise.resolve(state.books[bookPath]));
+          }
+        });
+        return Promise.all(gets);
+      };
+
       /** Get all  */
       let get_all = async () => {
-        let rows = [];
-        let state = methods.getState(); // get ledger state;
-        // Loop over books to get (async using for lop)
-        for (let i = 0; i < books_to_get.length; i++) {
-          let date = books_to_get[i];
-          // Preset the book if it doesn't exist
-          state.books[date] = state.books[date] || [];
-          // If it's empty - lets get it from the datastore
-          // Otherwise, we;ll use what's there.
-          if (state.books[date].length === 0) {
-            state.books[date] = await methods.getBook(date);
-            state.books[date] = state.books[date] || [];
-          }
-          // Loop over book, and
-          state.books[date].forEach((log) => {
-            rows.push(new NomieLog(log));
-          });
-        } // end forloop
+        let rows = await batch_all();
+
+        console.log("Get_all Batched Books", rows);
 
         update((s) => {
           return state;
