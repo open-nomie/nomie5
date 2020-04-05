@@ -55,13 +55,13 @@
   .n-toolbar.stretch {
     justify-content: stretch;
   }
-  :global(.n-toolbar .btn-clear) {
+  :global(.n-toolbar .btn-clear, .n-toolbar-grid .btn-clear) {
     border-radius: 0 !important;
     outline: none !important;
     padding: 0 10px;
     font-size: 1rem;
   }
-  :global(.n-toolbar .zmdi) {
+  :global(.n-toolbar .zmdi, .n-toolbar-grid .zmdi) {
     font-size: 1.6rem !important;
     &.text-xs {
       font-size: 18px !important;

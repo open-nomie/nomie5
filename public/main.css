@@ -6324,7 +6324,11 @@ aside.n-panel {
   height: 100%;
   margin-left: 10px;
   margin-right: 10px;
-  width: calc(100% - 20px); }
+  width: calc(100% - 20px);
+  min-height: 50px; }
+
+.n-toolbar-grid.lg {
+  min-height: 50px; }
 
 .n-toolbar-grid .left {
   align-items: center;
