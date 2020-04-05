@@ -22,14 +22,14 @@ export default class StatsProcessor {
 
   initialize() {
     //('Load()');
-    this.rows = this.rows.map(row => {
+    this.rows = this.rows.map((row) => {
       let log = new Log(row);
       log.expand();
       return log;
     });
     // If we have a tracker - filter results for only that tracker
     if (this.tracker) {
-      this.rows = this.rows.filter(row => {
+      this.rows = this.rows.filter((row) => {
         return row.hasTracker(this.tracker.tag);
       });
     }
@@ -37,7 +37,7 @@ export default class StatsProcessor {
     this.results = {
       year: {},
       month: {},
-      day: {}
+      day: {},
     };
 
     this.prepare();
@@ -66,7 +66,7 @@ export default class StatsProcessor {
     this.results.year.chart = this.toChartData("year");
     this.results.year = {
       ...this.results.year,
-      ...this.getMinMaxFromValueMap(this.results.valueMap)
+      ...this.getMinMaxFromValueMap(this.results.valueMap),
     };
 
     // Year is finished
@@ -93,19 +93,19 @@ export default class StatsProcessor {
       sum: 0,
       avg: 0,
       days: {
-        ...valueMap // put the valuemap in this new map
-      }
+        ...valueMap, // put the valuemap in this new map
+      },
     };
     // Hold all values for total sum and avg
     let allValues = [];
     // Loop over the days provided
-    Object.keys(newMap.days).forEach(date => {
+    Object.keys(newMap.days).forEach((date) => {
       let values = newMap.days[date];
       // If we should ignore zeros, then
       // filter them out.
       let ignoreZeros = !this.tracker ? true : this.tracker.ignore_zeros;
       if (ignoreZeros) {
-        values = values.filter(v => {
+        values = values.filter((v) => {
           return v !== 0 ? true : false;
         });
       }
@@ -122,7 +122,7 @@ export default class StatsProcessor {
       // Sum and Avg this day
       newMap.days[date] = {
         sum: math.sum(values),
-        avg: math.average(values)
+        avg: math.average(values),
       };
     }); // end loop over each day
 
@@ -134,7 +134,7 @@ export default class StatsProcessor {
 
   getValueMap(rows) {
     let valueMap = {};
-    rows.forEach(row => {
+    rows.forEach((row) => {
       if (!row.trackers) {
         row.expand();
       }
@@ -157,7 +157,7 @@ export default class StatsProcessor {
   getLocations(mode) {
     mode = mode || "year";
     let locations = {};
-    this.getRows(mode).forEach(row => {
+    this.getRows(mode).forEach((row) => {
       if (row.lat) {
         let key;
         if (mode === "year") {
@@ -168,14 +168,14 @@ export default class StatsProcessor {
         locations[key] = locations[key] || { lat: row.lat, lng: row.lng };
       }
     });
-    return Object.keys(locations).map(key => {
+    return Object.keys(locations).map((key) => {
       return locations[key];
     });
   }
 
   getRows(mode) {
     return this.rows
-      .filter(row => {
+      .filter((row) => {
         if (mode == "month") {
           let monthKey = new Date(row.end).getMonth();
           if (monthKey === this.date.month()) {
@@ -198,7 +198,7 @@ export default class StatsProcessor {
     let min = { value: null, dateKey: null, date: null };
     let max = { value: null, dateKey: null, date: null };
     let valueArray = Object.keys(valueMap)
-      .map(dateKey => {
+      .map((dateKey) => {
         let value;
 
         if (this.useMath() === "sum") {
@@ -209,7 +209,7 @@ export default class StatsProcessor {
         return {
           dateKey,
           value,
-          date: dayjs(dateKey)
+          date: dayjs(dateKey),
         };
       })
       .sort((a, b) => {
@@ -229,7 +229,7 @@ export default class StatsProcessor {
     // Chart needs an array of Pointsa nd Labels
     let chartData = {
       labels: [],
-      points: []
+      points: [],
     };
 
     // Set Start to Null
@@ -237,7 +237,7 @@ export default class StatsProcessor {
     let dayCount = 0;
 
     let hourMap = {};
-    this.rows.forEach(row => {
+    this.rows.forEach((row) => {
       let rowDate = dayjs(row.end);
       if (rowDate.format("YYYY-MM-DD") == this.date.format("YYYY-MM-DD")) {
         hourMap[rowDate.format("H")] = hourMap[rowDate.format("H")] || [];
@@ -247,12 +247,10 @@ export default class StatsProcessor {
     // If we're in a month
     if (mode === "month") {
       // Get number of days in month
-      dayCount = this.date
-        .endOf("month")
-        .toDate()
-        .getDate();
+      dayCount = this.date.endOf("month").toDate().getDate();
       // set start to start of month
-      start = this.date.startOf("month");
+      start = dayjs(this.date).subtract(1, "month");
+      dayCount = start.diff(this.date, "day");
       // loop over days
       for (let i = 0; i < dayCount; i++) {
         // setup loop date
@@ -267,7 +265,7 @@ export default class StatsProcessor {
         let point = {
           date: thisDate,
           x: dayLabel,
-          y: 0
+          y: 0,
         };
         // If we have a value
         if (dayValue) {
@@ -284,7 +282,7 @@ export default class StatsProcessor {
         let month = dayjs(start).month(i);
         yearMap[month.format("YYYY-MM")] = [];
       }
-      this.rows.forEach(row => {
+      this.rows.forEach((row) => {
         let end = dayjs(row.end);
         if (this.tracker) {
           if (row.trackers[this.tracker.tag]) {
@@ -298,11 +296,11 @@ export default class StatsProcessor {
         }
       });
 
-      Object.keys(yearMap).forEach(dateKey => {
+      Object.keys(yearMap).forEach((dateKey) => {
         let point = {
           x: dateKey,
           y: this.useMath() == "sum" ? math.sum(yearMap[dateKey]) : math.average(yearMap[dateKey]),
-          date: dayjs(`${dateKey}-01`)
+          date: dayjs(`${dateKey}-01`),
         };
         chartData.labels.push(dateKey);
         chartData.points.push(point);
@@ -326,7 +324,7 @@ export default class StatsProcessor {
       sum: valueMapTotals.sum,
       ...this.getMinMaxFromValueMap(valueMap),
       count: rows.length,
-      chart: this.toChartData(mode)
+      chart: this.toChartData(mode),
     };
 
     // console.log(mode + ' Response', response);
