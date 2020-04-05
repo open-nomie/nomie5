@@ -249,7 +249,9 @@
       }, 1);
     },
     trackerTapped(tracker, log) {
-      Interact.openStats(tracker.tag);
+      // console.log("Tracker Tapped", tracker);
+      Interact.openStats(tracker.tag, "tracker");
+      // navigate(`/stats/tracker/${$TrackerStore[tracker].getUID()}`);
     },
     showLogOptions(log) {
       Interact.logOptions(log).then(action => {
