@@ -14,6 +14,9 @@
   export let type = "normal"; // cover, fullscreen, bottom, bottom-slide-up
 
   const has_header = (arguments[1].$$slots || {}).hasOwnProperty("header");
+  const has_raw_header = (arguments[1].$$slots || {}).hasOwnProperty(
+    "raw-header"
+  );
   const has_footer = (arguments[1].$$slots || {}).hasOwnProperty("footer");
 
   let domVisible = false;
@@ -157,6 +160,7 @@
       }
     }
   }
+
   .n-modal-header {
     padding: 10px 16px;
     min-height: 40px;
@@ -210,7 +214,24 @@
   <div
     class="n-modal animate up {fullscreen ? 'full-screen-modal' : ''}
     {domVisible ? 'visible' : 'hidden'}">
-    {#if has_header || title}
+    <!-- {#if has_header_grid}
+      <div class="n-modal-header n-toolbar-grid">
+        <div class="left">
+          <slot name="left" />
+        </div>
+        <div class="main">
+          <slot name="main" />
+        </div>
+        <div class="right">
+          <slot name="right" />
+        </div>
+      </div>
+    {/if} -->
+    {#if has_raw_header}
+      <div class="n-modal-raw-header">
+        <slot name="raw-header" />
+      </div>
+    {:else if has_header || title}
       <div class="n-modal-header">
         {#if has_header}
           <slot name="header" />
