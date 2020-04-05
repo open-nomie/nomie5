@@ -13,7 +13,7 @@ import { navigate } from "svelte-routing";
 
 // vendors
 import dayjs from "dayjs";
-import math from "../utils/math/math";
+import md5 from "md5";
 
 // utils
 import Logger from "../utils/log/log";
@@ -27,15 +27,11 @@ import { LedgerStore } from "../store/ledger";
 
 const console = new Logger("✋ Interact");
 
-let fakeNote =
-  "#water(43) #mood(5) This is a very long note that I would like to show off, and it should be able to be cut off at some point or another but never too early or late if you know what I mean. Shit it needs to be even longer than that! I must go on! Carry this axe and grind the stones of the forever more!";
-let randomLength = math.random_range(19, 300);
-
 const interactInit = () => {
   let getBaseState = () => {
     return {
       stats: {
-        activeTag: null
+        activeTag: null,
       },
       alert: {
         show: false,
@@ -43,76 +39,76 @@ const interactInit = () => {
         message: null,
         ok: "Ok",
         cancel: null,
-        onInteract: null
+        onInteract: null,
       },
       shareImage: {
         log: null,
-        color: null
+        color: null,
       },
       boardSorter: {
-        show: false
+        show: false,
       },
       people: {
-        active: null
+        active: null,
       },
       trackerSelector: {
         show: false,
         multiple: false,
-        onInteract: null
+        onInteract: null,
       },
       trackerEditor: {
         show: false,
         tracker: null,
-        onInteract: null
+        onInteract: null,
       },
       trackerInput: {
         show: false,
         tracker: null,
         onInteract: null,
         value: null,
-        allowSave: true
+        allowSave: true,
       },
       logEditor: {
         show: false,
         log: null,
         onInteract: null,
         tag: null,
-        value: null
+        value: null,
       },
       toast: {
         show: false,
-        message: null
+        message: null,
       },
       popmenu: {
         show: false,
         title: null,
         description: null,
-        buttons: []
+        buttons: [],
       },
       locationFinder: {
         show: false,
         onInteract: null,
-        location: null
+        location: null,
       },
       locationViewer: {
         show: false,
-        locations: null
+        locations: null,
       },
       prompt: {
         show: false,
         placeholder: null,
         message: null,
-        title: null
+        title: null,
       },
       trackerInput: {
         show: false,
         tracker: null,
-        onInteract: null
+        onInteract: null,
       },
       camera: {
         show: false,
-        onInteract: null
-      }
+        onInteract: null,
+      },
     };
   };
 
@@ -122,8 +118,8 @@ const interactInit = () => {
 
   const methods = {
     alert(title, message, ok) {
-      return new Promise(resolve => {
-        update(s => {
+      return new Promise((resolve) => {
+        update((s) => {
           s.alert.show = true;
           s.alert.title = title;
           s.alert.message = message;
@@ -136,13 +132,13 @@ const interactInit = () => {
     },
     loading(message) {
       let cancel = () => {
-        update(state => {
+        update((state) => {
           state.toast.show = false;
           state.toast.message = null;
           return state;
         });
       };
-      update(state => {
+      update((state) => {
         state.toast.show = true;
         state.toast.message = message;
         return state;
@@ -157,10 +153,10 @@ const interactInit = () => {
     },
     editTracker(tracker) {
       return new Promise((resolve, reject) => {
-        update(s => {
+        update((s) => {
           s.trackerEditor.show = true;
           s.trackerEditor.tracker = tracker;
-          s.trackerEditor.onInteract = event => {
+          s.trackerEditor.onInteract = (event) => {
             resolve(event.detail);
           };
           return s;
@@ -168,7 +164,7 @@ const interactInit = () => {
       });
     },
     dismissEditTracker() {
-      update(s => {
+      update((s) => {
         s.trackerEditor.show = false;
         s.trackerEditor.tracker = null;
         s.trackerEditor.onInteract = null;
@@ -179,12 +175,12 @@ const interactInit = () => {
       let value = options.value || null;
       let allowSave = options.allowSave === false ? false : true;
       return new Promise((resolve, reject) => {
-        return update(s => {
+        return update((s) => {
           s.trackerInput.show = true;
           s.trackerInput.tracker = tracker;
           s.trackerInput.allowSave = allowSave;
           s.trackerInput.value = value;
-          s.trackerInput.onInteract = tracker => {
+          s.trackerInput.onInteract = (tracker) => {
             resolve(tracker);
           };
           return s;
@@ -192,7 +188,7 @@ const interactInit = () => {
       });
     },
     dismissTrackerInput() {
-      update(d => {
+      update((d) => {
         d.trackerInput.show = false;
         d.trackerInput.tracker = null;
         d.trackerInput.onInteract = null;
@@ -200,51 +196,52 @@ const interactInit = () => {
       });
     },
     openShareImage(log) {
-      update(d => {
+      update((d) => {
         d.shareImage.log = log;
         return d;
       });
     },
     closeShareImage() {
-      update(d => {
+      update((d) => {
         d.shareImage.color = null;
         d.shareImage.log = null;
         return d;
       });
     },
-    openStats(tag) {
-      update(d => {
+    openStats(tag, type = "tracker") {
+      update((d) => {
         d.stats.activeTag = tag;
+        d.stats.activeType = type;
         return d;
       });
     },
     person(username) {
-      update(d => {
+      update((d) => {
         d.people.active = username;
         return d;
       });
     },
     closeStats() {
-      update(d => {
+      update((d) => {
         d.stats.activeTag = null;
         return d;
       });
     },
     toggleBoardSorter() {
-      update(s => {
+      update((s) => {
         s.boardSorter.show = !s.boardSorter.show;
         return s;
       });
     },
     openCamera(onSave) {
-      update(s => {
+      update((s) => {
         s.camera.show = true;
         s.camera.onInteract = onSave;
         return s;
       });
     },
     closeCamera() {
-      update(s => {
+      update((s) => {
         s.camera.show = false;
         s.camera.onInteract = null;
         return s;
@@ -258,10 +255,10 @@ const interactInit = () => {
      */
     selectTracker() {
       return new Promise((resolve, reject) => {
-        update(s => {
+        update((s) => {
           s.trackerSelector.show = true;
           s.trackerSelector.multiple = false;
-          s.trackerSelector.onInteract = trackerArray => {
+          s.trackerSelector.onInteract = (trackerArray) => {
             resolve(trackerArray.length ? trackerArray[0] : null);
           };
           return s;
@@ -273,10 +270,10 @@ const interactInit = () => {
      */
     selectTrackers() {
       return new Promise((resolve, reject) => {
-        update(s => {
+        update((s) => {
           s.trackerSelector.show = true;
           s.trackerSelector.multiple = true;
-          s.trackerSelector.onInteract = trackerArray => {
+          s.trackerSelector.onInteract = (trackerArray) => {
             resolve(trackerArray);
           };
           return s;
@@ -284,7 +281,7 @@ const interactInit = () => {
       });
     },
     dismissTrackerSelector() {
-      update(s => {
+      update((s) => {
         s.trackerSelector.show = false;
         s.trackerSelector.multiple = false;
         s.trackerSelector.onInteract = null;
@@ -295,7 +292,7 @@ const interactInit = () => {
       log = new NomieLog(log);
       log.expanded();
       return new Promise((resolve, reject) => {
-        update(s => {
+        update((s) => {
           s.logEditor.show = true;
           s.logEditor.log = log;
           s.logEditor.onInteract = resolve;
@@ -304,7 +301,7 @@ const interactInit = () => {
       });
     },
     dismissEditLog() {
-      update(s => {
+      update((s) => {
         s.logEditor.show = false;
         s.logEditor.log = null;
         s.logEditor.onInteract = null;
@@ -322,24 +319,24 @@ const interactInit = () => {
             methods
               .prompt("Update Content", null, {
                 value: log.note,
-                valueType: "textarea"
+                valueType: "textarea",
               })
-              .then(content => {
+              .then((content) => {
                 log.note = content;
-                LedgerStore.updateLog(log).then(res => {
+                LedgerStore.updateLog(log).then((res) => {
                   resolve({ action: "updated" });
                 });
               });
           },
           updateData() {
-            Interact.editLog(log).then(log => {
+            Interact.editLog(log).then((log) => {
               setTimeout(() => {
                 resolve({ action: "data-updated" });
               }, 10);
             });
           },
           editLog() {
-            Interact.editLog(log).then(log => {
+            Interact.editLog(log).then((log) => {
               setTimeout(() => {
                 resolve({ action: "data-updated" });
               }, 10);
@@ -351,25 +348,25 @@ const interactInit = () => {
           updateDate() {
             Interact.prompt("New Date / Time", null, {
               valueType: "datetime",
-              value: dayjs(new Date(log.end)).format("YYYY-MM-DDTHH:mm")
-            }).then(date => {
+              value: dayjs(new Date(log.end)).format("YYYY-MM-DDTHH:mm"),
+            }).then((date) => {
               let localizedDate = time.datetimeLocal(date);
               log.start = localizedDate.getTime();
               log.end = localizedDate.getTime();
               setTimeout(() => {
-                LedgerStore.updateLog(log).then(res => {
+                LedgerStore.updateLog(log).then((res) => {
                   resolve({ action: "date-updated" });
                 });
               }, 10);
             });
           },
           updateLocation() {
-            methods.pickLocation().then(location => {
+            methods.pickLocation().then((location) => {
               if (location) {
                 log.lat = location.lat;
                 log.lng = location.lng;
                 setTimeout(() => {
-                  LedgerStore.updateLog(log).then(res => {
+                  LedgerStore.updateLog(log).then((res) => {
                     resolve({ action: "updated" });
                   });
                 }, 10);
@@ -384,7 +381,7 @@ const interactInit = () => {
             } else {
               return null;
             }
-          }
+          },
         };
         // let initial = [
         // 	{
@@ -411,37 +408,37 @@ const interactInit = () => {
         let initial = [
           {
             title: "Share...",
-            click: actions.shareLog
+            click: actions.shareLog,
           },
           {
             title: "Edit...",
-            click: actions.editLog
+            click: actions.editLog,
           },
           {
             title: "Delete...",
-            click: actions.delete
-          }
+            click: actions.delete,
+          },
         ];
 
         methods.popmenu({ title: "Log Options", buttons: initial });
       }); // end return promise
     },
     showLocations(locations) {
-      update(s => {
+      update((s) => {
         s.locationViewer.locations = locations;
         s.locationViewer.show = true;
         return s;
       });
     },
     dismissLocations() {
-      update(s => {
+      update((s) => {
         s.locationViewer.locations = null;
         s.locationViewer.show = false;
         return s;
       });
     },
     dismissToast() {
-      update(s => {
+      update((s) => {
         s.toast.message = null;
         s.toast.show = false;
         return s;
@@ -449,14 +446,14 @@ const interactInit = () => {
     },
     toast(message, perm) {
       perm = perm === true ? true : false;
-      update(s => {
+      update((s) => {
         s.toast.message = message;
         s.toast.show = true;
         return s;
       });
       if (!perm) {
         setTimeout(() => {
-          update(s => {
+          update((s) => {
             s.toast.message = null;
             s.toast.show = false;
             return s;
@@ -467,7 +464,7 @@ const interactInit = () => {
     confirm(title, message, ok, cancel) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          update(s => {
+          update((s) => {
             s.alert.show = true;
             s.alert.title = title;
             s.alert.message = message;
@@ -487,7 +484,7 @@ const interactInit = () => {
     popmenu(options) {
       // console.log("Popmenu", options);
       setTimeout(() => {
-        update(s => {
+        update((s) => {
           s.popmenu.show = true;
           s.popmenu.buttons = options.buttons;
           s.popmenu.title = options.title;
@@ -499,9 +496,9 @@ const interactInit = () => {
     },
     pickLocation() {
       return new Promise((resolve, reject) => {
-        update(s => {
+        update((s) => {
           s.locationFinder.show = true;
-          s.locationFinder.onInteract = event => {
+          s.locationFinder.onInteract = (event) => {
             resolve(event);
           };
           return s;
@@ -509,14 +506,14 @@ const interactInit = () => {
       });
     },
     dismissPickLocation() {
-      update(s => {
+      update((s) => {
         s.locationFinder.show = false;
         s.locationFinder.onInteract = null;
         return s;
       });
     },
     clearPrompt() {
-      update(s => {
+      update((s) => {
         s.prompt.show = false;
         s.prompt.onInteract = null;
         return s;
@@ -525,7 +522,7 @@ const interactInit = () => {
     prompt(title, message, options = {}) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          update(s => {
+          update((s) => {
             s.prompt.show = true;
             s.prompt.message = message;
             s.prompt.title = title;
@@ -533,7 +530,7 @@ const interactInit = () => {
             s.prompt.valueType = options.valueType || "text";
             s.prompt.cancel = "Cancel";
             s.prompt.placeholder = options.placeholder || "";
-            s.prompt.onInteract = res => {
+            s.prompt.onInteract = (res) => {
               resolve(s.prompt.value);
             };
             return s;
@@ -542,20 +539,20 @@ const interactInit = () => {
       });
     },
     dismiss() {
-      update(s => {
+      update((s) => {
         s.alert.show = false;
         s.popmenu.show = false;
         s.prompt.show = false;
         return s;
       });
-    }
+    },
   };
 
   return {
     update,
     subscribe,
     set,
-    ...methods
+    ...methods,
   };
 };
 

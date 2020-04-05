@@ -3,7 +3,7 @@ import time from "../time/time";
 import regexs from "../regex";
 import Log from "../log/log";
 const log = new Log("utils/extract-trackers");
-export default function(text) {
+export default function (text) {
   // Get all trackers from the text
   // Including #this and #this(123)
   // let trackers = text.match(/(#[a-z0-9_]+\((.+?\))|#[a-z0-9_]+)/gi) || [];
@@ -12,23 +12,24 @@ export default function(text) {
   let map = {};
   // Loop over each of the trackers found
 
-  trackers.map(tracker => {
+  trackers.map((tracker) => {
+    // Remove a trailing . - if it exists.
+    // Why would this exist? Becdause I can't get the regex to stop at a period, and also allow #tracker(1.3) values
+    let punct = [".", "?", ",", "!", ":", "$", "%", "^", "&"];
+    if (punct.indexOf(tracker.substr(tracker.length - 1, 1)) > -1) {
+      tracker = tracker.substr(0, tracker.length - 1);
+    }
     // Reaplace and # or )
     tracker = tracker.replace(/(\#|\))/gi, "");
-
     // Split it on (  to see if it's a value based tracker
     let trackerArr = tracker.split("(");
     // Get name from TrackerArr - even if its not a value based, it will be at 0 index
-    let trackerName = trackerArr[0]
-      .replace("#", "")
-      .replace("\n", "")
-      .toLowerCase();
+    let trackerName = trackerArr[0].replace("#", "").replace("\n", "").toLowerCase();
     // Default the value to 1
     let value = 1;
     // It's trackerArr is more than 1, its a value based
     if (trackerArr.length > 1) {
       // Get the value from the 2nd part *asdfasdf* of the #key(asdfasdf)
-
       let raw = trackerArr[1].trim();
       let timeStringCheck = raw.match(/\d{2}:\d{2}:\d{2}/);
       // Lets make sure there's no time in here 00:44:33..
@@ -42,7 +43,7 @@ export default function(text) {
     // Add this to the map
     map[trackerName] = map[trackerName] || {
       tracker: trackerName,
-      values: []
+      values: [],
     };
     // Push the Value to this tracker names values
     map[trackerName].values.push(value);
@@ -56,7 +57,7 @@ export default function(text) {
     map[i].value = math.sum(map[i].values);
     final[i] = {
       tracker: map[i].tracker,
-      value: isNaN(map[i].value) ? 0 : map[i].value
+      value: isNaN(map[i].value) ? 0 : map[i].value,
     };
   }
 

@@ -62,6 +62,10 @@
     state.searchTerm = null;
   }
 
+  function openStats(person) {
+    Interact.openStats(person, "person");
+  }
+
   async function addPerson() {
     try {
       let username = await Interact.prompt(`What's their name?`);
@@ -150,6 +154,15 @@
               {dayjs($PeopleStore.people[person].last).fromNow()}
             </div>
           {/if}
+          <div slot="right">
+            <button
+              class="btn btn-clear"
+              on:click|stopPropagation={() => {
+                openStats(person);
+              }}>
+              <i class="zmdi zmdi-chart text-primary-bright" />
+            </button>
+          </div>
         </NItem>
       {/each}
     </div>
