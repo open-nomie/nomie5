@@ -71,7 +71,7 @@ export default class TrackerConfig {
 
     if (starter.reminders) {
       if (starter.reminders.length) {
-        starter.reminders.forEach(reminder => {
+        starter.reminders.forEach((reminder) => {
           this.reminders.push(new Reminder(reminder));
         });
       }
@@ -85,12 +85,16 @@ export default class TrackerConfig {
     }
   }
 
+  getUID() {
+    return md5(this.tag);
+  }
+
   // Make the tag look good if no label is provided
   displayTag() {
     return this.tag
       .replace(/_/g, " ")
       .split(" ")
-      .map(word => {
+      .map((word) => {
         return word.charAt(0).toUpperCase() + word.slice(1);
       })
       .join(" ");
@@ -105,9 +109,9 @@ export default class TrackerConfig {
       .toLowerCase();
   }
 
-  displayValue(value) {
+  displayValue(value, unit = true) {
     let v = parseFloat(value) || 0;
     //return value;
-    return NomieUOM.format(Math.round(v * 100) / 100, this.uom);
+    return NomieUOM.format(Math.round(v * 100) / 100, this.uom, unit);
   }
 }
