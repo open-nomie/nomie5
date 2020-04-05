@@ -83,14 +83,14 @@
   <NItem className="{className} my-3 mx-2 border pb-0 n-item-log">
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row time-row">
-      <div class="time font-bold truncate">
+      <div class="time truncate">
 
-        <div class="text-sm text-inverse-1">
+        <div class="text-sm text-inverse-1 font-bold ">
           {dayjs(displayLog.end).format(`ddd ${timeFormat}`)}
         </div>
         <div class="text-xs text-inverse-2">
           {dayjs(displayLog.end).format('MMM Do YYYY')}
-          <span class="text-faded-2">{dayjs(displayLog.end).fromNow()}</span>
+          <span class="text-faded-2">{time.fromNow(displayLog.end)} ago</span>
         </div>
 
       </div>

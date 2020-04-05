@@ -39,6 +39,7 @@
       let extractedTrackers = extractTrackers(str);
 
       let remainder = str.replace(regexs.tag, "").trim();
+      console.log("Remainder", remainder);
 
       let keys = Object.keys(extractedTrackers);
       if (keys.length) {

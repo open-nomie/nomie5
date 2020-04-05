@@ -22,6 +22,5 @@
 </style>
 
 <button class="btn" on:click={onClick}>
-  <i class="zmdi zmdi-chevron-left mr-2 text-lg" />
-  Back
+  <i class="zmdi zmdi-arrow-back mr-2 text-lg" />
 </button>
