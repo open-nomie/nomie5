@@ -40,7 +40,7 @@
   }
 
   &.compact {
-    min-height: 20px;
+    min-height: 30px;
     .n-text.md {
       font-size: 0.8rem;
       line-height: 1rem;
@@ -248,7 +248,7 @@
       padding: 2px;
       display: flex;
       align-items: center;
-      height: 24px;
+      height: 32px;
       margin-top: 3px;
       margin-bottom: -2px;
 
@@ -257,8 +257,9 @@
       }
     }
     .n-note-textualized {
-      font-size: 0.9rem;
-      line-height: 1.1rem;
+      padding-top: 4px;
+      font-size: 0.9rem !important;
+      line-height: 1.1rem !important;
     }
     .n-item {
       min-height: 30px;

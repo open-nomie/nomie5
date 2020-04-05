@@ -5343,6 +5343,12 @@ body.theme-dark {
 .bg-solid {
   background-color: var(--color-solid); }
 
+.bg-solid-1 {
+  background-color: var(--color-solid-1); }
+
+.bg-solid-2 {
+  background-color: var(--color-solid-2); }
+
 .bg-inverse {
   background-color: var(--color-inverse); }
 
@@ -5804,7 +5810,7 @@ body.scrolling .mini-map {
   .n-item.large {
     min-height: 56px; }
   .n-item.compact {
-    min-height: 20px; }
+    min-height: 30px; }
     .n-item.compact .n-text.md {
       font-size: 0.8rem;
       line-height: 1rem; }
@@ -5927,14 +5933,15 @@ body.scrolling .mini-map {
     padding: 2px;
     display: flex;
     align-items: center;
-    height: 24px;
+    height: 32px;
     margin-top: 3px;
     margin-bottom: -2px; }
     .n-item-log.compact .time-row .time {
       font-size: 0.8rem; }
   .n-item-log.compact .n-note-textualized {
-    font-size: 0.9rem;
-    line-height: 1.1rem; }
+    padding-top: 4px;
+    font-size: 0.9rem !important;
+    line-height: 1.1rem !important; }
   .n-item-log.compact .n-item {
     min-height: 30px; }
 
