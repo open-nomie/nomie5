@@ -62,6 +62,10 @@ export default class Record {
     return _calculateScore(note || this.note, this.end);
   }
 
+  setScore(score) {
+    this.score = score;
+  }
+
   // Get it as an object
   toObject() {
     return {
@@ -72,7 +76,7 @@ export default class Record {
       score: this.score,
       lat: this.lat,
       lng: this.lng,
-      location: this.location
+      location: this.location,
     };
   }
 
@@ -125,7 +129,7 @@ export default class Record {
       trackers: extractTrackers(this.note),
       duration: this.end - this.start,
       startDate: new Date(this.start),
-      endDate: new Date(this.end)
+      endDate: new Date(this.end),
     });
   }
 
@@ -133,7 +137,7 @@ export default class Record {
     return {
       people: this.getPeople(),
       context: this.getContext(),
-      trackers: this.trackersArray()
+      trackers: this.trackersArray(),
     };
   }
 
@@ -149,10 +153,10 @@ export default class Record {
   trackersArray() {
     let tks = extractTrackers(this.note);
 
-    let res = Object.keys(tks).map(key => {
+    let res = Object.keys(tks).map((key) => {
       return {
         tag: tks[key].tracker,
-        value: tks[key].value
+        value: tks[key].value,
       };
     });
     if (Array.isArray(res)) {
@@ -171,7 +175,7 @@ export default class Record {
       endDate: new Date(this.end),
       start: new Date(this.start),
       end: new Date(this.end),
-      value: (this.trackers[tag] || {}).value || 0
+      value: (this.trackers[tag] || {}).value || 0,
     };
   }
 }
