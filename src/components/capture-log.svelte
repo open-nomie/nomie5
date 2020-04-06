@@ -534,7 +534,7 @@
           on:paste={methods.keyPress} />
 
         <button
-          class="btn btn-clear btn-icon zmdi zmdi-more {state.advanced ? 'text-green' : ''}"
+          class="btn btn-clear btn-icon zmdi zmdi-more mr-1 {state.advanced ? 'text-green' : 'text-inverse'}"
           on:click={toggleAdvanced} />
 
         <!-- <button
