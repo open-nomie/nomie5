@@ -62,10 +62,9 @@
     font-size: 1rem;
   }
   :global(.n-toolbar .zmdi, .n-toolbar-grid .zmdi) {
-    font-size: 1.6rem !important;
-    &.text-xs {
-      font-size: 18px !important;
-    }
+    // &.text-xs {
+    //   font-size: 18px !important;
+    // }
   }
 </style>
 
