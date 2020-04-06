@@ -7,6 +7,7 @@
   import NItem from "../../components/list-item/list-item.svelte";
   import AutoComplete from "../../components/auto-complete/auto-complete.svelte";
   import NButtonGroup from "../../components/button-group/button-group.svelte";
+  import NPositivitySelector from "../../components/positivity-selector/positivity-selector.svelte";
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -56,7 +57,13 @@
       }} />
   </div>
   <div class="mt-2">
-    <NButtonGroup
+    <NPositivitySelector
+      score={state.score}
+      size="xl"
+      on:change={evt => {
+        state.score = evt.detail;
+      }} />
+    <!-- <NButtonGroup
       inverse
       labelClass="text-xl"
       buttons={[{ label: '😩', active: state.score === -2, click: () => {
@@ -69,7 +76,7 @@
             state.score = 1;
           } }, { label: '😁', active: state.score === 2, click: () => {
             state.score = 2;
-          } }]} />
+          } }]} /> -->
   </div>
   {#if !state.checkingIn && !state.checkedIn}
     <button class="btn btn-block btn-primary mt-4" on:click={checkIn}>

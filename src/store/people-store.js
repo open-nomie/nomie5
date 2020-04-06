@@ -10,6 +10,7 @@ import { writable } from "svelte/store";
 import Logger from "../utils/log/log";
 import math from "../utils/math/math";
 import snakeCase from "../utils/snake-case/snake-case";
+import NomieLog from "../modules/nomie-log/nomie-log";
 
 // Vendors
 import Storage from "../modules/storage/storage";
@@ -30,20 +31,21 @@ const console = new Logger("🗺 $PeopleStore");
 const getLogs = async () => {
   return await LedgerStore.query({
     start: dayjs().subtract(16, "week"),
-    end: new Date()
+    end: new Date(),
   });
 };
 
 const getPeopleLogs = async () => {
   const logs = await getLogs();
-  return logs.filter(log => log.note.search("@") > -1);
+  return logs.filter((log) => log.note.search("@") > -1);
 };
 
-const mapToUser = logs => {
+const mapToUser = (logs) => {
   const users = {};
-  logs.forEach(log => {
+  logs.forEach((log) => {
+    log = log instanceof NomieLog ? log : new NomieLog(log);
     const meta = log.getMeta();
-    meta.people.forEach(username => {
+    meta.people.forEach((username) => {
       users[username] = users[username] || [];
       users[username].push(log);
     });
@@ -51,9 +53,9 @@ const mapToUser = logs => {
   return users;
 };
 
-const normalizeUserMap = userMap => {
+const normalizeUserMap = (userMap) => {
   const final = {};
-  Object.keys(userMap).forEach(username => {
+  Object.keys(userMap).forEach((username) => {
     let logs = userMap[username];
     final[username] = final[username] || {};
     final[username].logs = logs;
@@ -61,7 +63,7 @@ const normalizeUserMap = userMap => {
     final[username].last = null;
     if (logs.length) {
       final[username].last = new Date(logs.sort((a, b) => (a.end < b.end ? 1 : -1))[0].end);
-      final[username].score = math.sum(logs.map(log => log.score));
+      final[username].score = math.sum(logs.map((log) => log.score));
     } else {
     }
   });
@@ -75,7 +77,7 @@ const getRecentPeopleStats = async () => {
   return currentStats;
 };
 
-const toUsername = username => {
+const toUsername = (username) => {
   username = username.replace("@", "").trim();
   username = username.toLowerCase();
   username = snakeCase(username);
@@ -86,11 +88,11 @@ const searchForPeople = async () => {
   let loadingFinished = Interact.loading("Finding @usernames...");
   const logs = await getPeopleLogs();
   let people = [];
-  logs.forEach(log => {
+  logs.forEach((log) => {
     let meta = log.getMeta();
     console.log("Meta People", meta.people);
     // Array of usernames.
-    meta.people.forEach(username => {
+    meta.people.forEach((username) => {
       username = username.toLowerCase();
       people.push({ username, last: log.end });
     });
@@ -109,7 +111,7 @@ const searchForPeople = async () => {
 const PeopleInit = () => {
   const PeopleState = {
     people: {},
-    stats: {}
+    stats: {},
   };
   const { update, subscribe, set } = writable(PeopleState);
 
@@ -119,14 +121,14 @@ const PeopleInit = () => {
       // await methods.getStats();
     },
     savePerson(person) {
-      update(state => {
+      update((state) => {
         state.people[person.username] = person;
         this.write(state.people);
         return state;
       });
     },
     get(name) {
-      update(state => {
+      update((state) => {
         if (state.people.hasOwnProperty(name)) {
           person = state.people[name];
         } else {
@@ -140,12 +142,12 @@ const PeopleInit = () => {
       // Get people from storage
       let people = await Storage.get(`${config.data_root}/${config.data_people_key}.json`);
       // Update State
-      update(state => {
+      update((state) => {
         if (people) {
           // Turn it in to a Person Object
           Object.keys(people)
-            .filter(row => row)
-            .forEach(personKey => {
+            .filter((row) => row)
+            .forEach((personKey) => {
               people[personKey.toLowerCase()] = new Person(people[personKey]);
             });
         }
@@ -159,7 +161,7 @@ const PeopleInit = () => {
      */
     async getStats() {
       let stats = await getRecentPeopleStats();
-      update(state => {
+      update((state) => {
         state.stats = stats;
         return state;
       });
@@ -169,10 +171,10 @@ const PeopleInit = () => {
       return currentStats;
     },
     async save(peopleArray) {
-      update(state => {
+      update((state) => {
         state.people = state.people || {};
         let changed = false;
-        peopleArray.forEach(person => {
+        peopleArray.forEach((person) => {
           if (typeof person == "string") {
             if (!state.people.hasOwnProperty(person)) {
               changed = true;
@@ -204,7 +206,7 @@ const PeopleInit = () => {
       if (personName) {
         let username = toUsername(personName);
         let added = false;
-        update(state => {
+        update((state) => {
           state.people = state.people || {};
           if (!state.people.hasOwnProperty(username)) {
             state.people[username] = new Person({ username, displayName: personName });
@@ -238,14 +240,14 @@ const PeopleInit = () => {
       } else {
         Interact.alert(`Sorry, no @username's found in the last 6 months`);
       }
-    }
+    },
   };
 
   return {
     update,
     subscribe,
     set,
-    ...methods
+    ...methods,
   };
 };
 
