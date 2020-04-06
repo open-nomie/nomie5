@@ -426,7 +426,7 @@
           <button
             class="btn btn-clear btn-icon flex text-xl"
             on:click={methods.previous}>
-            <i class="zmdi zmdi-chevron-left" />
+            <i class="zmdi zmdi-chevron-left tap-icon" />
           </button>
 
           <div class="filler" />
@@ -466,7 +466,7 @@
           <button
             class="btn btn-clear btn-icon flex text-xl"
             on:click={methods.next}>
-            <i class="zmdi zmdi-chevron-right" />
+            <i class="zmdi zmdi-chevron-right tap-icon" />
           </button>
 
         </div>
