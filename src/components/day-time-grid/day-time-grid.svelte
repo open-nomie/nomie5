@@ -5,9 +5,13 @@
   import Logger from "../../utils/log/log";
   import math from "../../utils/math/math";
 
+  import { UserStore } from "../../store/user";
+
   //   // Props
   export let rows = undefined;
   export let color = undefined;
+  export let style = "";
+  export let className = "";
   // export let flex = true;
 
   // Consts
@@ -23,6 +27,15 @@
     return grid;
   };
 
+  const hours = [];
+  const dateStart = dayjs().startOf("day");
+  for (var i = 0; i < 24; i++) {
+    let date = dateStart.add(i, "hour");
+    hours.push(
+      trimHour($UserStore.meta.is24Hour ? date.format("H") : date.format("ha"))
+    );
+  }
+
   const getGridMax = () => {
     let max = 0;
     days.forEach((day, di) => {
@@ -32,6 +45,16 @@
     });
     return max;
   };
+
+  function trimHour(hour) {
+    if (hour.length == 4) {
+      return hour.substr(0, 3);
+    } else if (hour.length == 3) {
+      return hour.substr(0, 2);
+    } else {
+      return hour;
+    }
+  }
 
   // Local Variables
   let days = emptyGrid();
@@ -43,6 +66,11 @@
       let date = new Date(row.end);
       let day = date.getDay();
       let hour = date.getHours();
+
+      // TODO look at making start time populate with time differences
+      // let startTime = dayjs(row.start);
+      // let endTime = dayjs(row.end);
+
       days[day][hour] = days[day][hour] + 1;
     });
     maxValue = getGridMax();
@@ -71,17 +99,28 @@
     flex-direction: column;
     position: relative;
     flex-grow: 1;
-    height: 100%;
+    min-height: 100%;
     flex-shrink: 1;
+
+    .hour-header {
+      padding-left: 25px;
+      padding-top: 4px;
+      padding-bottom: 2px;
+      display: flex;
+      flex-direction: row;
+      .hour {
+        width: calc(100% / 24);
+        font-size: 0.4rem;
+      }
+    }
 
     label {
       margin: 0;
-      width: 40px;
       font-size: 0.6rem;
       text-align: right;
       color: var(--color-inverse);
       padding-right: 4px;
-      width: 60px;
+      width: 36px;
       font-weight: bold;
       text-transform: uppercase;
     }
@@ -104,13 +143,15 @@
   }
 </style>
 
-<div class="time-grid">
+<div class="time-grid {className}" {style}>
+
   {#each days as day, index}
     <div class="day">
       <label>
         {dayjs(new Date())
           .day(index)
-          .format('ddd')}
+          .format('ddd')
+          .substr(0, 2)}
       </label>
       {#each day as hour, hi}
         <div
@@ -119,4 +160,9 @@
       {/each}
     </div>
   {/each}
+  <div class="hour-header">
+    {#each hours as hour, index}
+      <div class="hour hour-{index} header">{hour}</div>
+    {/each}
+  </div>
 </div>
