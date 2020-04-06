@@ -13,7 +13,7 @@
   import dayjs from "dayjs";
 
   export let term = null;
-  export let limit = 12;
+  export let limit = 20;
   export let compact = false;
 
   let loading = false;

@@ -56,7 +56,7 @@ button:focus {
 .btn-primary {
   background-color: var(--color-primary-bright);
   &:hover {
-    background-color: --color-primary;
+    // background-color: --color-primary;
   }
 }
 
@@ -107,8 +107,8 @@ button:focus {
   color: var(--color-primary);
   transition: all 0.2s ease-in-out;
   &:hover {
-    color: var(--color-primary);
-    transform: scale(1.06);
+    // color: var(--color-primary);
+    // transform: scale(1.06);
   }
   .text-md {
     font-weight: bold;

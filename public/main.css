@@ -4902,8 +4902,6 @@ button:focus {
 
 .btn-primary {
   background-color: var(--color-primary-bright); }
-  .btn-primary:hover {
-    background-color: --color-primary; }
 
 .btn-outline-dark {
   border-color: var(--color-solid-2) !important; }
@@ -4944,9 +4942,6 @@ button:focus {
     .btn-content {
       max-width: 280px;
       width: 280px; } }
-  .btn-content:hover {
-    color: var(--color-primary);
-    transform: scale(1.06); }
   .btn-content .text-md {
     font-weight: bold;
     margin-bottom: 6px; }
