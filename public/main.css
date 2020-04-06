@@ -6332,9 +6332,7 @@ aside.n-panel {
   grid-template-columns: 1fr 3fr 1fr;
   grid-template-rows: 1fr;
   height: 100%;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: calc(100% - 20px);
+  width: 100%;
   min-height: 50px; }
 
 .n-toolbar-grid.lg {
@@ -6563,6 +6561,19 @@ TODO: Organize main into components or containers.
 
 .n-toolbar-grid .btn {
   color: var(--color-inverse-1); }
+
+.tap-icon {
+  font-size: 1.6rem !important;
+  color: var(--color-primary-bright); }
+  .tap-icon.sm {
+    font-size: 1.5rem !important; }
+
+.tap-text {
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  color: var(--color-primary-bright) !important; }
+  .tap-text.sm {
+    font-size: 1.5rem !important; }
 
 .card {
   border-radius: 0.5rem;

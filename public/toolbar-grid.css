@@ -6,9 +6,7 @@
   grid-template-columns: 1fr 3fr 1fr;
   grid-template-rows: 1fr;
   height: 100%;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: calc(100% - 20px);
+  width: 100%;
   min-height: 50px; }
 
 .n-toolbar-grid.lg {

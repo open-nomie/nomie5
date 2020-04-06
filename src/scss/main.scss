@@ -296,6 +296,23 @@ $night: #311f62;
   color: var(--color-inverse-1);
 }
 
+.tap-icon {
+  font-size: 1.6rem !important;
+  color: var(--color-primary-bright);
+  &.sm {
+    font-size: 1.5rem !important;
+  }
+}
+
+.tap-text {
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  color: var(--color-primary-bright) !important;
+  &.sm {
+    font-size: 1.5rem !important;
+  }
+}
+
 .card {
   $padding: 16px;
   $footerPadding: 8px;
