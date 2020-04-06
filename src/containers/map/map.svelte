@@ -76,12 +76,12 @@
           MAP.removeLayer(layer);
         });
 
-        if (locations.length) {
-          methods.getLocation(locations[0].lat, locations[0].lng).then(loc => {
-            data.locationName = loc.Match_addr;
-            data.locating = false;
-          });
-        }
+        // if (locations.length) {
+        //   methods.getLocation(locations[0].lat, locations[0].lng).then(loc => {
+        //     data.locationName = loc.Match_addr;
+        //     data.locating = false;
+        //   });
+        // }
         if (picker) {
           MAP.on("moveend", () => {
             let center = MAP.getCenter();
@@ -251,21 +251,21 @@
   };
 
   // Reactive Location Lookup
-  $: getLocation = () => {
-    return new Promise(resolve => {
-      // If activeLocation is not null
-      if (data.activeLocation) {
-        // Look up lat long
-        methods
-          .getLocation(data.activeLocation.lat, data.activeLocation.lng)
-          .then(address => {
-            resolve(address);
-          });
-      } else {
-        resolve(null);
-      }
-    });
-  };
+  // $: getLocation = () => {
+  //   return new Promise(resolve => {
+  //     // If activeLocation is not null
+  //     if (data.activeLocation) {
+  //       // Look up lat long
+  //       methods
+  //         .getLocation(data.activeLocation.lat, data.activeLocation.lng)
+  //         .then(address => {
+  //           resolve(address);
+  //         });
+  //     } else {
+  //       resolve(null);
+  //     }
+  //   });
+  // };
 
   let check = 1;
 
