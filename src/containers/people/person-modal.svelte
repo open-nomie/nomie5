@@ -55,12 +55,17 @@
     view: "check-in"
   };
 
-  // async function getActivePersonStats() {
-  //   let active = $Interact.people.active;
-  //   activePerson = new Person($PeopleStore.people[active]);
-  //   let logs = await LedgerStore.search(`@${active}`, dayjs().format("YYYY"));
-  //   activeStats = new StatsProcessor(logs, null);
-  // }
+  async function deleteUser() {
+    let confirmed = await Interact.confirm(
+      `Remove ${activePerson.username}?`,
+      "This only deletes them from your list, NO log data will be deleted."
+    );
+    if (confirmed) {
+      await PeopleStore.deletePerson(activePerson);
+      Interact.toast(`${activePerson.username} removed`);
+      closeAndRefresh();
+    }
+  }
 
   async function saveActivePerson() {
     try {
@@ -75,7 +80,6 @@
     let image = document.getElementById("photo-holder-image");
     image.src = imageBase64;
     await tick(200);
-    console.log(`width ${image.naturalHeight}/${image.naturalWidth}`);
     let wrapper = document.getElementById("photo-holder");
     if (image.naturalHeight > image.naturalWidth) {
       wrapper.setAttribute("data-orientation", "vertical");
@@ -212,7 +216,9 @@
         </NItem>
 
         <div class="filler mt-5 pt-2" />
-        <NItem className="text-red text-sm">Delete User...</NItem>
+        <NItem className="text-red text-sm" on:click={deleteUser}>
+          Delete User...
+        </NItem>
       </div>
     {:else if state.view == 'logs'}
       <div class="logs bg-solid-1" style="min-height:45vh">

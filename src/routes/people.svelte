@@ -100,10 +100,10 @@
       on:clear={clearSearch}
       placeholder="Search People..."
       autocomplete>
-      <button
-        on:click={addPerson}
-        class="btn btn-icon btn-clear zmdi zmdi-account-add text-inverse"
-        slot="right" />
+      <button on:click={addPerson} slot="right" class="btn btn-icon btn-clear">
+        <i class=" zmdi zmdi-account-add tap-icon sm" />
+      </button>
+
     </NSearchBar>
   </div>
 

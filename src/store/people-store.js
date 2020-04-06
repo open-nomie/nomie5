@@ -127,6 +127,18 @@ const PeopleInit = () => {
         return state;
       });
     },
+    async deletePerson(person) {
+      update((state) => {
+        if (typeof person == "string") {
+          delete state.people[person];
+        } else {
+          delete state.people[person.username];
+        }
+        console.log("Updated State", person, state);
+        return state;
+      });
+      return methods.writeState();
+    },
     get(name) {
       update((state) => {
         if (state.people.hasOwnProperty(name)) {
@@ -222,6 +234,12 @@ const PeopleInit = () => {
           throw new Error("That username is already taken, please try another name.");
         }
       }
+    },
+    async writeState() {
+      update((state) => {
+        methods.write(state.people);
+        return state;
+      });
     },
     async write(payload) {
       return Storage.put(`${config.data_root}/${config.data_people_key}.json`, payload);
