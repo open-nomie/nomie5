@@ -11,6 +11,7 @@
   export let id = null;
   export let className = "";
   export let itemDivider = undefined;
+  export let compact = false;
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty("left");
   const has_right = (arguments[1].$$slots || {}).hasOwnProperty("right");
@@ -50,6 +51,7 @@
   on:click={methods.clicked}
   item-divider={itemDivider}
   class="n-item {borderBottom ? 'border-bottom' : 'no-border'}
+  {compact ? 'compact' : ''}
   {className}"
   :alt="title">
   {#if has_left}
