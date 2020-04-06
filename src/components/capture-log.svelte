@@ -288,6 +288,7 @@
       setTimeout(() => {
         state.date = null;
         state.autocompleteResults = null;
+        state.advanced = false;
         state.cursorIndex = null;
         state.dateStarter = dayjs().format("YYYY-MM-DDTHH:mm");
         if (textarea) {
@@ -600,7 +601,7 @@
           <div slot="left" class="text-sm text-bold">
             <i
               style="width:10px"
-              class="zmdi zmdi-star mr-2 text-primary-bright" />
+              class="zmdi zmdi-star mr-2 text-primary-bright mr-2" />
             Score
           </div>
           <div slot="right" class="text-sm">
@@ -615,48 +616,48 @@
         <!-- Location -->
         <NItem
           compact
-          className="bg-transparent clickable"
+          className="bg-transparent clickable mr-2"
           on:click={methods.toggleCustomLocation}>
           <div slot="left" class="text-sm text-bold">
             <i
               style="width:10px"
-              class="zmdi zmdi-pin mr-2 text-primary-bright" />
+              class="zmdi zmdi-pin text-primary-bright mr-2" />
             Location
           </div>
           <div slot="right" class="text-sm">
             {#if $ActiveLogStore.lat}
-              <label class="text-sm mr-2">
+              <label class="text-sm ">
                 {math.round($ActiveLogStore.lat, 100)},{math.round($ActiveLogStore.lng, 100)}
               </label>
               <button
-                class="btn btn-clear btn-icon zmdi zmdi-close text-red"
+                class="btn btn-clear btn-icon zmdi zmdi-close text-sm text-red"
                 on:click|stopPropagation={methods.clearLocation} />
             {:else if $UserStore.alwaysLocate}
-              <label class="text-sm text-faded-3 mr-2">Current Location</label>
+              <label class="text-sm text-faded-3 ">Current Location</label>
             {:else}
-              <label class="text-sm text-faded-3 mr-2">None</label>
+              <label class="text-sm text-faded-3 ">None</label>
             {/if}
           </div>
         </NItem>
         <!-- Date / Time -->
         <NItem
           compact
-          className="bg-transparent mt-1 mb-2"
+          className="bg-transparent mt-1 mb-2 mr-2"
           on:click={methods.selectDate}>
           <div slot="left" class="text-sm text-bold">
             <i
               style="width:10px"
-              class="zmdi zmdi-time mr-2 text-primary-bright" />
+              class="zmdi zmdi-time text-primary-bright mr-2" />
             Date/Time
           </div>
           <div slot="right">
             {#if $ActiveLogStore.end}
-              <label class="text-sm mr-2">{state.dateFormated}</label>
+              <label class="text-sm">{state.dateFormated}</label>
               <button
-                class="btn btn-clear btn-icon zmdi zmdi-close text-red"
+                class="btn btn-clear btn-icon zmdi zmdi-close text-sm text-red"
                 on:click|stopPropagation={methods.clearDate} />
             {:else}
-              <label class="text-sm text-faded-3 mr-2">Now</label>
+              <label class="text-sm text-faded-3">Now</label>
             {/if}
           </div>
         </NItem>

@@ -25,6 +25,23 @@
     margin-bottom: 0;
   }
 
+  .trackers-list .n-item {
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    border-bottom-color: rgba(0, 0, 0, 0.05) !important;
+    .main {
+      // font-size: 1rem;
+    }
+  }
+
+  .trackers-list {
+    .n-item:last-child {
+      border-bottom: none !important;
+    }
+  }
+
   &.item-divider {
     background-color: var(--color-bg);
   }

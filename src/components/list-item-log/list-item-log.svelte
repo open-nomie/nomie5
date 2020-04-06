@@ -64,6 +64,7 @@
     background-color: var(--color-faded-1);
     margin-bottom: 20px;
   }
+
   .more-button {
     margin-left: 10px;
     margin-right: -10px;
@@ -139,6 +140,8 @@
         note={displayLog.note}
         {trackers}
         className={displayLog.trackersArray().length ? '' : 'pb-2'} />
+    {:else}
+      <div class="pb-2" />
     {/if}
     <div class="trackers-list">
       <!-- Loop over the trackers within this log -->

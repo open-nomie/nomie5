@@ -5684,7 +5684,7 @@ body.scrolling .mini-map {
 .mini-map {
   position: fixed;
   bottom: 70px;
-  left: 26px;
+  right: 26px;
   height: 100px;
   width: 100px;
   transition: all 0.2s ease-in-out;
@@ -5800,6 +5800,14 @@ body.scrolling .mini-map {
     margin: 8px 0; }
   .n-item label {
     margin-bottom: 0; }
+  .n-item .trackers-list .n-item {
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    border-bottom-color: rgba(0, 0, 0, 0.05) !important; }
+  .n-item .trackers-list .n-item:last-child {
+    border-bottom: none !important; }
   .n-item.item-divider {
     background-color: var(--color-bg); }
   .n-item.disabled {

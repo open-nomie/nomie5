@@ -127,54 +127,22 @@
     );
   };
 
-  // Dynamically assign book
-  // $: if (
-  //   $LedgerStore.books[state.date.format(config.book_time_format)] &&
-  //   !searchMode
-  // ) {
-  //   loading = true;
-  //   book = $LedgerStore.books[state.date.format(config.book_time_format)] || [];
-
-  //   let results = book || [];
-
-  //   logs = results
-  //     .filter(log => filterActiveDate(log))
-  //     .sort((a, b) => {
-  //       return a.end < b.end ? 1 : -1;
-  //     });
-
-  //   logs = Array.from(new Set(logs.map(a => a._id))).map(id => {
-  //     return logs.find(a => a._id === id);
-  //   });
-
-  //   dayScore = 0;
-  //   logs
-  //     .filter(log => {
-  //       return log.score;
-  //     })
-  //     .forEach(log => {
-  //       dayScore = dayScore + parseInt(log.score);
-  //     });
-
-  //   loading = false;
-  // }
-
   $: appTitle = `History ${state.date.format("YYYY-MM-DD")}`;
 
-  // $: if (searchLogs || logs) {
-  //   locations = (searchLogs || logs)
-  //     .filter(log => {
-  //       return log.lat;
-  //     })
-  //     .map(log => {
-  //       return {
-  //         lat: log.lat,
-  //         lng: log.lng,
-  //         name: log.location,
-  //         log: log
-  //       };
-  //     });
-  // }
+  $: if (searchLogs || logs) {
+    locations = (searchLogs || logs)
+      .filter(log => {
+        return log.lat;
+      })
+      .map(log => {
+        return {
+          lat: log.lat,
+          lng: log.lng,
+          name: log.location,
+          log: log
+        };
+      });
+  }
 
   // Methods
   const methods = {
@@ -189,11 +157,7 @@
     },
     async getLogs(fresh) {
       fresh = fresh ? fresh : false;
-
       loading = true;
-      // state.refreshing = true;
-      // checks.list_date = {};
-
       // Query the Ledger for Posts on this day.
       logs = await LedgerStore.query({
         start: state.date.startOf("day").toDate(),
@@ -230,12 +194,6 @@
     goto(date) {
       state.date = date;
       methods.getLogs();
-    },
-    formSubmit(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      // methods.search(state.searchTerm, state.date.format("YYYY"));
-      searchMode = true;
     },
     searchChange(evt) {
       state.searchTerm = evt.detail;
@@ -337,9 +295,9 @@
     padding: 0;
     border-top: solid 1px rgba(0, 0, 0, 0.2);
   }
-  :global(.trackers-list .border-bottom:last-child) {
-    border-bottom: none !important;
-  }
+  // :global(.trackers-list .border-bottom:last-child) {
+  //   border-bottom: none !important;
+  // }
 
   .map-btn {
     position: absolute;
@@ -370,18 +328,18 @@
     }
   }
 
-  .history-toolbar-container {
-    .btn {
-      outline: none !important;
-    }
-    .btn.active {
-      color: var(--color-primary-bright) !important;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      border-radius: 20% !important;
-      outline: none !important;
-    }
-  }
+  // .history-toolbar-container {
+  //   .btn {
+  //     outline: none !important;
+  //   }
+  //   .btn.active {
+  //     color: var(--color-primary-bright) !important;
+  //     padding-top: 5px;
+  //     padding-bottom: 5px;
+  //     border-radius: 20% !important;
+  //     outline: none !important;
+  //   }
+  // }
 
   .header-date-control {
     line-height: 100%;
@@ -389,28 +347,28 @@
     flex-shrin: 1;
   }
 
-  :global(.trackers-list) {
-    border-bottom: solid 1px rgba(0, 0, 0, 0.06);
-    border-top: solid 1px rgba(0, 0, 0, 0.06);
-    margin-top: 10px;
-  }
-  :global(.trackers-list .n-item) {
-    margin-left: -16px;
-    margin-right: -16px;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-    border-bottom-color: rgba(0, 0, 0, 0.05) !important;
-  }
-  :global(.trackers-list .main div) {
-    font-size: 1.1rem !important;
-  }
-  :global(.trackers-list .emoji) {
-    font-size: 1.2rem !important;
-  }
-  .btn.flex {
-    display: flex;
-    align-items: center;
-  }
+  // :global(.trackers-list) {
+  //   border-bottom: solid 1px rgba(0, 0, 0, 0.06);
+  //   border-top: solid 1px rgba(0, 0, 0, 0.06);
+  //   margin-top: 10px;
+  // }
+  // :global(.trackers-list .n-item) {
+  //   margin-left: -16px;
+  //   margin-right: -16px;
+  //   padding-left: 16px !important;
+  //   padding-right: 16px !important;
+  //   border-bottom-color: rgba(0, 0, 0, 0.05) !important;
+  // }
+  // :global(.trackers-list .main div) {
+  //   font-size: 1.1rem !important;
+  // }
+  // :global(.trackers-list .emoji) {
+  //   font-size: 1.2rem !important;
+  // }
+  // .btn.flex {
+  //   display: flex;
+  //   align-items: center;
+  // }
 
   :global(.page-history .n-item .n-item:last-child) {
     border-bottom: none !important;
@@ -559,7 +517,6 @@
         </div>
       {:else}
         <div class="mini-map opened">
-
           <NMap {locations} />
           <button
             class="btn btn-sm btn-dark btn-icon zmdi zmdi-close btn-round
