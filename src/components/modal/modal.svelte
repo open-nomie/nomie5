@@ -71,7 +71,8 @@
       }
       .n-modal {
         transition: all 0.4s ease-in-out;
-        max-height: 70vh;
+        max-height: 87vh;
+        min-width: 95vw;
         margin-bottom: 0px;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
