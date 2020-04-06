@@ -20,6 +20,8 @@
   export let small = undefined;
   export let picker = undefined;
   export let height = undefined;
+  export let className = "";
+  export let style = "";
 
   // consts
   const dispatch = createEventDispatcher();
@@ -393,8 +395,8 @@
 </style>
 
 <div
-  class="n-map-container {small ? 'small ' : ''}"
-  style="height:{height ? height + 'px' : ''}">
+  class="{className} n-map-container {small ? 'small ' : ''}"
+  style="{style} height:{height ? height + 'px' : ''}">
   {#if picker}
     <div class="picker-cover">
       <div class="picker-target">
