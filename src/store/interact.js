@@ -288,6 +288,14 @@ const interactInit = () => {
         return s;
       });
     },
+    async selectDate(date = new Date()) {
+      let selectedDate = await Interact.prompt("Date / Time", null, {
+        valueType: "datetime",
+        value: dayjs(new Date(date)).format("YYYY-MM-DDTHH:mm"),
+      });
+      let localizedDate = time.datetimeLocal(selectedDate);
+      return localizedDate.getTime();
+    },
     editLog(log) {
       log = new NomieLog(log);
       log.expanded();
@@ -345,6 +353,7 @@ const interactInit = () => {
           shareLog() {
             Interact.openShareImage(log);
           },
+
           updateDate() {
             Interact.prompt("New Date / Time", null, {
               valueType: "datetime",
