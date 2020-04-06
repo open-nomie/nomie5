@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 // Modules
 import Tracker from "../tracker/tracker";
+import NomieLog from "../../modules/nomie-log/nomie-log";
 import Log from "../nomie-log/nomie-log";
 // Utils
 import Logger from "../../utils/log/log";
@@ -51,6 +52,7 @@ export default class StatsProcessor {
     // Loop Over each Row
     rows.forEach((row) => {
       // Expand Row if not expanded
+      row = row instanceof NomieLog ? row : new NomieLog(row);
       if (!row.trackers) {
         row.expand();
       }
@@ -72,7 +74,6 @@ export default class StatsProcessor {
         }
       }
     });
-    console.log("valueMap", valueMap);
     return valueMap;
   }
 
@@ -134,7 +135,6 @@ export default class StatsProcessor {
       }
     }
 
-    console.log("getChartDataByType", { diff, timeFormat, labelFormat, unitValues, timeExample: dayjs().format(timeFormat) });
     return {
       labels,
       values,

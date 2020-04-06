@@ -746,13 +746,9 @@ const ledgerInit = () => {
       /** Get all  */
       let get_all = async () => {
         let rows = await batch_all();
-
-        console.log("Get_all Batched Books", rows);
-
         update((s) => {
           return state;
         });
-
         return methods.filterLogs(rows, options);
       }; // end get_all()
 
