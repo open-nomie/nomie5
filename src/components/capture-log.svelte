@@ -68,11 +68,21 @@
     autocompleteResults: null,
     cursorIndex: null,
     partialTag: null,
-    advanced: false
+    advanced: false,
+    dateFormated: null
   };
 
   function toggleAdvanced() {
     state.advanced = !state.advanced;
+  }
+
+  $: if ($ActiveLogStore.end) {
+    console.log("Setting date Foramted");
+    let timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
+    let dateFormat = $UserStore.meta.is24Hour ? "MM/DD/YYYY" : "MMM D YYYY";
+    state.dateFormated = dayjs($ActiveLogStore.end).format(
+      `${dateFormat} ${timeFormat}`
+    );
   }
 
   // TODO: Add a media/photo type of thing that can be added to a log..
@@ -84,11 +94,29 @@
       $ActiveLogStore.end = state.date.getTime();
       state.showCustomDate = false;
     },
+    async selectDate() {
+      let date = await Interact.selectDate(
+        $ActiveLogStore.end ? new Date($ActiveLogStore.end) : new Date()
+      );
+      console.log("Date Selected?", date);
+      if (date) {
+        await tick(10);
+        ActiveLogStore.update(log => {
+          log.end = date;
+          return log;
+        });
+      }
+    },
     clearDate() {
       state.date = null;
       $ActiveLogStore.start = null;
       $ActiveLogStore.end = null;
       state.showCustomDate = false;
+    },
+    clearLocation() {
+      $ActiveLogStore.lat = null;
+      $ActiveLogStore.lng = null;
+      $ActiveLogStore.location = null;
     },
     toggleCustomDate() {
       if (state.date) {
@@ -600,6 +628,9 @@
               <label class="text-sm mr-2">
                 {math.round($ActiveLogStore.lat, 100)},{math.round($ActiveLogStore.lng, 100)}
               </label>
+              <button
+                class="btn btn-clear btn-icon zmdi zmdi-close text-red"
+                on:click|stopPropagation={methods.clearLocation} />
             {:else if $UserStore.alwaysLocate}
               <label class="text-sm text-faded-3 mr-2">Current Location</label>
             {:else}
@@ -608,7 +639,10 @@
           </div>
         </NItem>
         <!-- Date / Time -->
-        <NItem compact className="bg-transparent mt-1 mb-2">
+        <NItem
+          compact
+          className="bg-transparent mt-1 mb-2"
+          on:click={methods.selectDate}>
           <div slot="left" class="text-sm text-bold">
             <i
               style="width:10px"
@@ -616,7 +650,14 @@
             Date/Time
           </div>
           <div slot="right">
-            <label class="text-sm text-faded-3 mr-2">Now</label>
+            {#if $ActiveLogStore.end}
+              <label class="text-sm mr-2">{state.dateFormated}</label>
+              <button
+                class="btn btn-clear btn-icon zmdi zmdi-close text-red"
+                on:click|stopPropagation={methods.clearDate} />
+            {:else}
+              <label class="text-sm text-faded-3 mr-2">Now</label>
+            {/if}
           </div>
         </NItem>
       </div>
