@@ -424,7 +424,7 @@
       <div class="container history-toolbar-container">
         <div class="d-flex justify-content-stretch align-items-center w-100">
           <button
-            class="btn btn-clear btn-icon flex"
+            class="btn btn-clear btn-icon flex text-xl"
             on:click={methods.previous}>
             <i class="zmdi zmdi-chevron-left" />
           </button>
@@ -437,21 +437,25 @@
             on:click={methods.selectDate}>
             <div class="text-center text-md n-row">
               {#if dayScore}
-                <NPoints points={dayScore} className="mr-2" />
+
               {:else}
-                <i class="zmdi mr-4 text-faded-3 text-xs" />
+                <i class="zmdi mr-4 text-faded-3 " />
               {/if}
-              <div class="col">
+              <div class="n-row">
                 <div
-                  class="{isToday ? 'text-inverse' : 'not-today text-primary-bright'}
-                  text-md text-inverse font-weight-bold md">
-                  {state.date.format('dddd')}
-                </div>
-                <div class="text-sm text-inverse-2">
+                  class="text-md d-flex flex-row align-items-center
+                  text-inverse-2 {isToday ? 'text-inverse-2' : 'not-today text-red'}">
+                  {#if dayScore}
+                    <NPoints points={dayScore} className="mr-2" />
+                  {/if}
+                  <span class="font-weight-bold mx-1">
+                    {state.date.format('ddd')}
+                  </span>
                   {state.date.format('MMM Do YYYY')}
+                  <i class="zmdi zmdi-chevron-down ml-1" />
                 </div>
               </div>
-              <i class="zmdi zmdi-calendar mx-2 text-faded-3 text-xs" />
+
             </div>
             <!-- end text middle -->
           </div>
@@ -459,7 +463,9 @@
 
           <div class="filler" />
 
-          <button class="btn btn-clear btn-icon flex" on:click={methods.next}>
+          <button
+            class="btn btn-clear btn-icon flex text-xl"
+            on:click={methods.next}>
             <i class="zmdi zmdi-chevron-right" />
           </button>
 
