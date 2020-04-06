@@ -50,6 +50,7 @@ export default class StatsProcessor {
 
     // Loop Over each Row
     rows.forEach((row) => {
+      // Expand Row if not expanded
       if (!row.trackers) {
         row.expand();
       }
