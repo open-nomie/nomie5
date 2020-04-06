@@ -7,7 +7,7 @@ export default class Person {
       this.last = new Date();
       starter = {};
     } else {
-      this.username = starter.username || null;
+      this.username = starter.username ? starter.username.toLowerCase() : "unknown";
       this.displayName = starter.displayName || starter.username || null;
       this.avatar = starter.avatar || null;
       this.last = starter.last ? new Date(starter.last) : new Date();
