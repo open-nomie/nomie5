@@ -21,6 +21,10 @@
     margin: 8px 0;
   }
 
+  label {
+    margin-bottom: 0;
+  }
+
   &.item-divider {
     background-color: var(--color-bg);
   }

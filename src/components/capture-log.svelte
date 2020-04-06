@@ -23,6 +23,8 @@
   import domtoimage from "dom-to-image-chrome-fix";
   import Dymoji from "../components/dymoji/dymoji.svelte";
   import AutoComplete from "../components/auto-complete/auto-complete.svelte";
+  import NPositivitySelector from "../components/positivity-selector/positivity-selector.svelte";
+  import NSpinner from "../components/spinner/spinner.svelte";
 
   // Utils
   import Logger from "../utils/log/log";
@@ -30,6 +32,7 @@
   import CalculateScore from "../utils/calculate-score/calculate-score";
   import TrackerInputer from "../modules/tracker/tracker-inputer";
   import tick from "../utils/tick/tick";
+  import math from "../utils/math/math";
 
   // Stores
   import { Interact } from "../store/interact";
@@ -64,8 +67,13 @@
     showCustomDate: false,
     autocompleteResults: null,
     cursorIndex: null,
-    partialTag: null
+    partialTag: null,
+    advanced: false
   };
+
+  function toggleAdvanced() {
+    state.advanced = !state.advanced;
+  }
 
   // TODO: Add a media/photo type of thing that can be added to a log..
 
@@ -112,7 +120,7 @@
           textarea.style.height = "42px";
         }
         // Cal
-        methods.calculateScore();
+        // methods.calculateScore();
       }
     },
     /**
@@ -165,7 +173,8 @@
       } catch (e) {}
     },
     calculateScore() {
-      $ActiveLogStore.score = CalculateScore($ActiveLogStore.note);
+      $ActiveLogStore.score =
+        $ActiveLogStore.score || CalculateScore($ActiveLogStore.note);
     },
     async logSave() {
       methods.calculateScore();
@@ -309,6 +318,11 @@
     // border-top: solid 1px var(--header-background);
     position: relative;
     z-index: 1;
+  }
+
+  .advanced {
+    position: relative;
+    z-index: 1200;
   }
   .autocomplete-results {
     background-color: var(--color-solid-1);
@@ -508,6 +522,7 @@
       <!-- Note Input -->
       <div
         class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 || $ActiveLogStore.photo ? 'populated' : 'empty'}">
+
         <textarea
           id="textarea-capture-note"
           style="overflow:hidden"
@@ -519,19 +534,25 @@
           on:paste={methods.keyPress} />
 
         <button
+          class="btn btn-clear btn-icon zmdi zmdi-more {state.advanced ? 'text-green' : ''}"
+          on:click={toggleAdvanced} />
+
+        <!-- <button
           class="btn btn-clear btn-icon zmdi zmdi-time px-1 {state.date ? 'text-green' : ''}"
-          on:click={methods.toggleCustomDate} />
-        <button
+          on:click={methods.toggleCustomDate} /> -->
+        <!-- <button
           class="btn btn-clear btn-icon zmdi zmdi-my-location px-1 {$ActiveLogStore.lat ? 'text-green' : ''}
           mr-1"
-          on:click={methods.toggleCustomLocation} />
+          on:click={methods.toggleCustomLocation} /> -->
 
         {#if !saving}
           <button class="save-button" on:click={methods.logSave}>
-            <i class="zmdi zmdi-long-arrow-up" />
+            <i style="width:10px" class="zmdi zmdi-long-arrow-up" />
           </button>
         {:else}
-          <button class="save-button">•••</button>
+          <button class="save-button">
+            <NSpinner size={20} color="#FFFFFF" />
+          </button>
         {/if}
       </div>
     </div>
@@ -543,6 +564,62 @@
     {/if}
 
   </div>
+  {#if state.advanced}
+    <div class="advanced">
+      <div class="container">
+        <NItem compact className="bg-transparent">
+          <div slot="left" class="text-sm text-bold">
+            <i
+              style="width:10px"
+              class="zmdi zmdi-star mr-2 text-primary-bright" />
+            Score
+          </div>
+          <div slot="right" class="text-sm">
+            <NPositivitySelector
+              size="sm"
+              score={$ActiveLogStore.score}
+              on:change={evt => {
+                $ActiveLogStore.score = evt.detail;
+              }} />
+          </div>
+        </NItem>
+        <NItem
+          compact
+          className="bg-transparent clickable"
+          on:click={methods.toggleCustomLocation}>
+          <div slot="left" class="text-sm text-bold">
+            <i
+              style="width:10px"
+              class="zmdi zmdi-pin mr-2 text-primary-bright" />
+            Location
+          </div>
+          <div slot="right" class="text-sm">
+            {#if $ActiveLogStore.lat}
+              <label class="text-sm mr-2">
+                {math.round($ActiveLogStore.lat, 100)},{math.round($ActiveLogStore.lng, 100)}
+              </label>
+            {:else if $UserStore.alwaysLocate}
+              <label class="text-sm text-faded-3 mr-2">Current Location</label>
+            {:else}
+              <label class="text-sm text-faded-3 mr-2">None</label>
+            {/if}
+          </div>
+        </NItem>
+        <NItem compact className="bg-transparent mt-1 mb-2">
+          <div slot="left" class="text-sm text-bold">
+            <i
+              style="width:10px"
+              class="zmdi zmdi-time mr-2 text-primary-bright" />
+            Date/Time
+          </div>
+          <div slot="right">
+            <label class="text-sm text-faded-3 mr-2">Now</label>
+          </div>
+        </NItem>
+      </div>
+    </div>
+  {/if}
+
   <div class="more-options">
     <div
       class="advanced-options-list {state.showCustomDate ? 'visible' : 'hidden'}">

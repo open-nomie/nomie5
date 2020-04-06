@@ -5328,6 +5328,12 @@ body.theme-dark {
   overflow: hidden !important;
   display: -webkit-box; }
 
+.text-bold {
+  font-weight: 600; }
+
+.text-bolder {
+  font-weight: 800; }
+
 .text-primary-bright {
   color: #319ed7 !important; }
 
@@ -5797,6 +5803,8 @@ body.scrolling .mini-map {
   .n-item select,
   .n-item input {
     margin: 8px 0; }
+  .n-item label {
+    margin-bottom: 0; }
   .n-item.item-divider {
     background-color: var(--color-bg); }
   .n-item.disabled {
