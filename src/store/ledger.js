@@ -343,6 +343,7 @@ const ledgerInit = () => {
         // Update the row
         book[foundIndex] = log;
       } else {
+        console.log("Saving Log", log);
         // We didn't find it in the first book - so it must be a different book
         book.push(log);
       }
@@ -459,6 +460,8 @@ const ledgerInit = () => {
       // Set up a holder for current state
       let currentState;
 
+      // log = log instanceof NomieLog ? log : new NomieLog(log);
+
       // extract current state
       update((s) => {
         s.saving = true;
@@ -479,6 +482,7 @@ const ledgerInit = () => {
       try {
         // Get the Book - if its blockstack then make sure it exists
         let book = await methods.getBookWithSync(date);
+        console.log("Log being saved", log);
         book.push(log); // push log
         // Save Book.
         await Storage.put(bookPath, book); // put the content
@@ -718,6 +722,7 @@ const ledgerInit = () => {
           let books = await get_batch(chunks[i]);
           books.forEach((book) => {
             book.forEach((row) => {
+              row = row instanceof NomieLog ? row : new NomieLog(row);
               rows.push(row);
             });
           });
