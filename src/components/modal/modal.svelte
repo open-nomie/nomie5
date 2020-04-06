@@ -2,6 +2,9 @@
   import NText from "../text/text.svelte";
   import { fly } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
+
+  import NToolbarGrid from "../toolbar/toolbar-grid.svelte";
+
   const dispatch = createEventDispatcher();
   // Props
   export let padding = false;
@@ -167,7 +170,6 @@
   }
 
   .n-modal-header {
-    padding: 10px 16px;
     min-height: 40px;
     border-bottom: solid 1px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -241,21 +243,19 @@
         {#if has_header}
           <slot name="header" />
         {:else}
-          {#if allowClose}
-            <button
-              class="btn btn-clear btn-icon zmdi zmdi-close"
-              on:click={() => {
-                dispatch('close');
-              }} />
-          {/if}
-          <NText tag="div" bold size="lg" className="text-center w-100 py-1">
-            {title}
-          </NText>
-          {#if allowClose}
-            <button class="btn btn-clear btn-icon zmdi" on:click={() => {}} />
-          {/if}
+          <NToolbarGrid>
+            <div slot="left">
+              {#if allowClose}
+                <button
+                  class="btn btn-clear btn-icon zmdi zmdi-close tap-icon"
+                  on:click={() => {
+                    dispatch('close');
+                  }} />
+              {/if}
+            </div>
+            <h1 slot="main">{title}</h1>
+          </NToolbarGrid>
         {/if}
-
       </div>
     {/if}
     <div

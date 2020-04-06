@@ -266,7 +266,7 @@ Note: Your data will not automatically move over. You'll first need to export it
       <h1>{Lang.t('settings.settings')}</h1>
     </div>
     <div class="right">
-      <button on:click={methods.faq} class="btn">
+      <button on:click={methods.faq} class="btn tap-text">
         {Lang.t('general.faq')}
       </button>
     </div>

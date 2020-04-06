@@ -174,7 +174,9 @@
     </div>
     <div class="right">
       {#if state.registered}
-        <button class="btn btn-clear" on:click={methods.getLogs}>Check</button>
+        <button class="btn btn-clear tap-text mr-2" on:click={methods.getLogs}>
+          Check
+        </button>
       {/if}
     </div>
   </div>
