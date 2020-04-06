@@ -567,6 +567,7 @@
   {#if state.advanced}
     <div class="advanced">
       <div class="container">
+        <!-- Score -->
         <NItem compact className="bg-transparent">
           <div slot="left" class="text-sm text-bold">
             <i
@@ -583,6 +584,7 @@
               }} />
           </div>
         </NItem>
+        <!-- Location -->
         <NItem
           compact
           className="bg-transparent clickable"
@@ -605,6 +607,7 @@
             {/if}
           </div>
         </NItem>
+        <!-- Date / Time -->
         <NItem compact className="bg-transparent mt-1 mb-2">
           <div slot="left" class="text-sm text-bold">
             <i
@@ -620,7 +623,7 @@
     </div>
   {/if}
 
-  <div class="more-options">
+  <!-- <div class="more-options">
     <div
       class="advanced-options-list {state.showCustomDate ? 'visible' : 'hidden'}">
       <div class="container pt-3 pb-1" style="max-width:520px">
@@ -643,14 +646,12 @@
             on:click={methods.setDate}>
             {Lang.t('general.set')}
           </button>
-          <!-- end input-group -->
-          <!-- And cancel button-->
-
+   
         </div>
 
       </div>
-    </div>
-    <!-- advacned options list -->
+    </div> -->
+  <!-- advacned options list -->
 
-  </div>
+  <!-- </div> -->
 </div>
