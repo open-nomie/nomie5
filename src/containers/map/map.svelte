@@ -14,6 +14,8 @@
   import { Interact } from "../../store/interact";
   import { Lang } from "../../store/lang";
 
+  import tick from "../../utils/tick/tick";
+
   // props
   export let locations = [];
 
@@ -268,10 +270,10 @@
   let check = 1;
 
   // On Mount
-  onMount(() => {
-    methods.init().then(map => {
-      methods.renderMap();
-    });
+  onMount(async () => {
+    await tick(120);
+    await methods.init();
+    methods.renderMap();
   });
 </script>
 

@@ -4,6 +4,7 @@
   export let onClick = undefined;
   export let type = "text";
   export let className = "";
+  export let inverse = false;
 </script>
 
 <style lang="scss">
@@ -27,6 +28,13 @@
     }
     &.clickable {
       border-bottom: dotted 1px var(--color-faded);
+    }
+
+    &.inverse {
+      &.type-box,
+      &.type-row {
+        background-color: var(--color-darkest);
+      }
     }
     &.type-box {
       background-color: var(--color-faded);
@@ -62,7 +70,8 @@
 </style>
 
 <div
-  class="{onClick ? 'clickable' : ''} type-{type} block {className}"
+  class="{onClick ? 'clickable' : ''} type-{type} block {className}
+  {inverse ? 'inverse' : ''}"
   on:click={() => {
     if (onClick) {
       onClick();

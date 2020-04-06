@@ -417,27 +417,30 @@
       </div>
     </div>
   {:else}
-    <div class="container d-flex" style="min-height:100%">
+    <div class="container d-flex bg-solid-1" style="min-height:100%">
       {#if state.stats}
         {#if state.dataView == 'overview'}
           <div class="overview py-2 flex-grow flex-shrink">
             {#if state.stats.math == 'sum'}
-              <NItem>
+              <NItem className="bg-transparent">
                 <NKVBlock
+                  inverse
                   label="Total"
                   value={formatValue(state.stats.sum)}
                   type="row" />
               </NItem>
             {/if}
-            <NItem className="py-0">
+            <NItem className="py-0 bg-transparent">
               <NKVBlock
+                inverse
                 label="Avg"
                 value={formatValue(state.stats.avg)}
                 type="row" />
             </NItem>
             {#if state.stats.max.value > state.stats.min.value}
-              <NItem>
+              <NItem className="bg-transparent">
                 <NKVBlock
+                  inverse
                   label="Range"
                   className="filler"
                   value={`${formatValue(state.stats.min.value, false)} to ${formatValue(state.stats.max.value)}`}
@@ -451,8 +454,9 @@
                   type="row" />
               </NItem> -->
             {/if}
-            <NItem>
+            <NItem className="bg-transparent">
               <NKVBlock
+                inverse
                 label="Score"
                 className="filler"
                 value={getScore()}
