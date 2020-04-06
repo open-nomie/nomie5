@@ -12,6 +12,7 @@
 
   // Utils
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
+  import math from "../../utils/math/math";
 
   // Components
   import NModal from "../../components/modal/modal.svelte";
@@ -23,10 +24,10 @@
   import NKVBlock from "../../components/kv-block/kv-block.svelte";
   import NBarChart from "../../components/charts/bar-chart.svelte";
   import NLogList from "../../components/log-list/log-list.svelte";
+  import NTimeGrid from "../../components/day-time-grid/day-time-grid.svelte";
 
   // Containers
   import NMap from "../../containers/map/map.svelte";
-  import NCalendar from "../../containers/calendar/sweet.svelte";
 
   // Stores
   import { LedgerStore } from "../../store/ledger";
@@ -45,8 +46,8 @@
   const dataViews = {
     overview: { id: "overview", label: "Overview" },
     map: { id: "map", label: "Map" },
-    streak: { id: "streak", label: "Streak" },
-    logs: { id: "logs", label: "Logs" }
+    time: { id: "time", label: "Time" },
+    logs: { id: "logs", label: "Logs", excludeFrom: ["y"] }
   };
 
   const types = {
@@ -91,17 +92,41 @@
     });
   }
 
-  function getDataViewButtons() {
-    return Object.keys(dataViews).map(optionId => {
-      let option = dataViews[optionId];
-      return {
-        label: option.label,
-        active: state.dataView === optionId,
-        click: () => {
-          setView(option);
-        }
-      };
+  function getScore() {
+    let scores = [];
+    state.stats.rows.forEach(row => {
+      let score = row.score || row.calculateScore();
+      scores.push(score);
     });
+    let score = math.sum(scores);
+    let final = 0;
+
+    if (score > 0) {
+      return `${score} 😄`;
+    } else if (score < 0) {
+      return `${score} 😞`;
+    } else {
+      return `0 😐`;
+    }
+  }
+
+  function getDataViewButtons() {
+    return Object.keys(dataViews)
+      .map(optionId => {
+        let option = dataViews[optionId];
+        if ((option.excludeFrom || []).indexOf(state.timeSpan) == -1) {
+          return {
+            label: option.label,
+            active: state.dataView === optionId,
+            click: () => {
+              setView(option);
+            }
+          };
+        } else {
+          return null;
+        }
+      })
+      .filter(row => row);
   }
 
   function close() {
@@ -142,6 +167,28 @@
     } else {
       return $Interact.stats.activeTag;
     }
+  }
+
+  function onMoreTap() {
+    let buttons = [];
+    const startOfMonth = {
+      title: "Go to start of month",
+      click: () => {
+        changeDate(state.date.startOf("month"));
+      }
+    };
+    const startOfYear = {
+      title: "Go to start of year",
+      click: () => {
+        changeDate(state.date.startOf("year"));
+        state.date = state.date.startOf("year");
+      }
+    };
+    buttons.push(startOfMonth);
+    buttons.push(startOfYear);
+    if (["d", "w", "m"].indexOf(state.timeSpan) > -1) {
+    }
+    Interact.popmenu({ title: "More", buttons });
   }
 
   function getTracker() {
@@ -190,6 +237,11 @@
 
   function loadNextDate() {
     state.date = dayjs(state.date).add(1, getTimeSpan().unit);
+    lastTimeSpan = null;
+  }
+
+  function changeDate(date) {
+    state.date = date;
     lastTimeSpan = null;
   }
 
@@ -243,6 +295,8 @@
     const to = getToDate();
     return `${from.format("MMM D")} - ${to.format("MMM D YYYY")}`;
   }
+
+  function getTimeGridRows() {}
 
   function getYearRange() {
     const from = getFromDate();
@@ -318,7 +372,10 @@
         on:click={close}
         slot="left" />
       <h1 class="title" slot="main">{getTitle()}</h1>
-      <button class="btn btn-clear zmdi zmdi-edit" slot="right" />
+      <button
+        class="btn btn-clear zmdi zmdi-more"
+        slot="right"
+        on:click={onMoreTap} />
     </NToolbarGrid>
     <div class="n-row pb-2 px-2">
       <NButtonGroup size="sm" buttons={state.timeOption} />
@@ -360,10 +417,10 @@
       </div>
     </div>
   {:else}
-    <div class="container" style="min-height:100%">
+    <div class="container d-flex" style="min-height:100%">
       {#if state.stats}
         {#if state.dataView == 'overview'}
-          <div class="overview py-2">
+          <div class="overview py-2 flex-grow flex-shrink">
             {#if state.stats.math == 'sum'}
               <NItem>
                 <NKVBlock
@@ -386,36 +443,40 @@
                   value={`${formatValue(state.stats.min.value, false)} to ${formatValue(state.stats.max.value)}`}
                   type="row" />
               </NItem>
-              <NItem>
+              <!-- <NItem>
                 <NKVBlock
                   label="Variance"
                   className="filler"
                   value={`${formatValue(state.stats.max.value - state.stats.min.value)}`}
                   type="row" />
-              </NItem>
+              </NItem> -->
             {/if}
+            <NItem>
+              <NKVBlock
+                label="Score"
+                className="filler"
+                value={getScore()}
+                type="row" />
+            </NItem>
           </div>
-        {:else if state.dataView == 'streak'}
-          <!--on:dayClick={event => {
-              state.date = dayjs(event.detail);
-              methods.refresh();
-            }}-->
-          <div class="calendar p-2">
-            <NCalendar
-              color={getTracker().color}
-              tracker={getTracker()}
-              showHeader={true}
-              initialDate={state.date}
-              events={getCalendarData()} />
-          </div>
+        {:else if state.dataView == 'time'}
+          <NTimeGrid
+            color={getTracker().color}
+            rows={state.stats.rows}
+            className="flex-grow flex-shrink"
+            style="min-height:100%" />
         {:else if state.dataView == 'logs'}
           <NLogList
             compact
             logs={state.stats.rows}
             style="min-height:100%"
-            className="bg-solid-1 p-2" />
+            className="bg-solid-1 p-2 flex-grow flex-shrink" />
         {:else if state.dataView == 'map'}
-          <NMap small locations={getLocations()} height={250} />
+          <NMap
+            small
+            locations={getLocations()}
+            className="flex-grow flex-shrink"
+            style=" min-height:100%; height:100%" />
         {/if}
       {/if}
     </div>
