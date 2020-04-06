@@ -59,7 +59,7 @@
       class="btn btn-sm btn-clear btn-action-clear"
       on:click={fireClear}
       style="margin-left:-10px;">
-      <i class="zmdi zmdi-close-circle text-sm" />
+      <i class="zmdi zmdi-close-circle text-xl" />
     </button>
   {/if}
   <div class="n-row">
