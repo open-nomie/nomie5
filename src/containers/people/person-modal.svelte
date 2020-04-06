@@ -146,18 +146,22 @@
   }
 </script>
 
-<Modal className="stats-modal" show={domVisible} type="bottom-slideup">
-  <header
-    slot="header"
-    class="n-column w-100 stats-header"
-    on:swipedown={close}>
+<Modal className="person-modal" show={domVisible} type="bottom-slideup">
+  <header slot="header" class="n-column w-100" on:swipedown={close}>
     <div class="n-row">
       <button class="btn btn-clear btn-icon zmdi zmdi-close" on:click={close} />
       <div class="title filler text-center font-weight-bold">
         <Dymoji person={activePerson} size={26} radius={0.3} />
         &nbsp; {activePerson.getDisplayName()}
       </div>
-      <button class="btn btn-sm btn-clear btn-icon zmdi zmdi-edit" />
+      <button
+        class="btn btn-sm btn-clear text-xl"
+        on:click={() => {
+          close();
+          Interact.openStats(activePerson.getUsername(), 'person');
+        }}>
+        <i class=" zmdi zmdi-chart" />
+      </button>
     </div>
     <div class="stat-header n-row f-grow pt-2">
       <ButtonGroup
@@ -166,8 +170,6 @@
               changeView('logs');
             } }, { label: 'Check-In', active: state.view === 'check-in', click() {
               changeView('check-in');
-            } }, { label: 'Stats', active: state.view === 'stats', click() {
-              changeView('stats');
             } }, { label: 'Edit', active: state.view === 'edit', click() {
               changeView('edit');
             } }]} />
@@ -213,12 +215,8 @@
         <NItem className="text-red text-sm">Delete User...</NItem>
       </div>
     {:else if state.view == 'logs'}
-      <div class="logs">
-        <NLogListLoader term={`@${activePerson.username}`} />
-      </div>
-    {:else if state.view == 'stats'}
-      <div class="stats p-2">
-        <ActivePersonStats />
+      <div class="logs bg-solid-1" style="min-height:45vh">
+        <NLogListLoader compact term={`@${activePerson.username}`} />
       </div>
     {/if}
   </main>
