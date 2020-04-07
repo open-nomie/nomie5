@@ -30,7 +30,7 @@
   export let className = "";
   export let focus = false;
   export let fullDate = false;
-  export let showMore = true;
+  export let hideMore = false;
   // consts
   const dispatch = createEventDispatcher();
 
@@ -117,7 +117,7 @@
         {time.fromNow(displayLog.end)}
       </div> -->
       <!-- Janky - fix this -->
-      {#if showMore === true}
+      {#if hideMore != true}
         <button
           on:click={event => {
             dispatch('moreClick', displayLog);
@@ -130,7 +130,7 @@
         </button>
       {/if}
     </div>
-    <!-- Process the Note Content with the Textualizer 
+    <!-- Process the Note Content wi th the Textualizer 
     This really isn't special right now -->
     {#if displayLog.note.length}
       <NNoteTextualizer
