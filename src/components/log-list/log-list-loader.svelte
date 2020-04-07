@@ -22,7 +22,22 @@
   let lastFrom;
   let lastTo;
 
+  // React to Term Change
+  let lastTerm;
+  $: if (lastTerm !== term) {
+    lastTerm = term;
+    reset();
+    search();
+  }
+
+  function reset() {
+    logs = [];
+    lastTo = null;
+    lastFrom = null;
+  }
+
   async function search() {
+    console.log("Searching");
     // Set from and to date
     loading = true;
     let from = !lastFrom
