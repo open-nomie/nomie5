@@ -60,7 +60,7 @@
   const state = {
     date: dayjs(),
     timeSpan: "w",
-    dataView: "time",
+    dataView: "overview",
     timeOption: [],
     viewOption: [],
     loading: true,
@@ -447,9 +447,15 @@
               <NKVBlock
                 inverse
                 label="Range"
+                value=""
                 className="filler"
-                value={`${formatValue(state.stats.min.value, false)} to ${formatValue(state.stats.max.value)}`}
-                type="row" />
+                type="row">
+                <div slot="value">
+                  {formatValue(state.stats.min.value, false)}
+                  <span class="text-faded-2 font-weight-normal">to</span>
+                  {formatValue(state.stats.max.value)}
+                </div>
+              </NKVBlock>
             </NItem>
             <!-- <NItem>
                 <NKVBlock
@@ -477,6 +483,7 @@
       {:else if state.dataView == 'logs'}
         <NLogList
           compact
+          hideMore
           logs={state.stats.rows}
           style="min-height:100%"
           className="bg-solid-1 p-2 flex-grow flex-shrink" />
