@@ -61,7 +61,7 @@
   }
 
   &.compact {
-    min-height: 30px;
+    min-height: 35px;
     .n-text.md {
       font-size: 0.8rem;
       line-height: 1rem;
@@ -257,6 +257,7 @@
     margin: 10px 4px !important;
 
     .trackers-list {
+      margin-top: 8px;
       .main {
         div,
         .left {
