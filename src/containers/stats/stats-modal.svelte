@@ -60,7 +60,7 @@
   const state = {
     date: dayjs(),
     timeSpan: "w",
-    dataView: "overview",
+    dataView: "time",
     timeOption: [],
     viewOption: [],
     loading: true,
@@ -364,7 +364,7 @@
   }
 </style>
 
-<NModal className="stats-modal" fullscreen>
+<NModal className="stats-modal" bodyClass="bg-solid-1" fullscreen>
   <header slot="raw-header" class="box-shadow-float">
     <NToolbarGrid>
       <button
@@ -417,72 +417,70 @@
       </div>
     </div>
   {:else}
-    <div class="container d-flex bg-solid-1" style="min-height:100%">
-      {#if state.stats}
-        {#if state.dataView == 'overview'}
-          <div class="overview py-2 flex-grow flex-shrink">
-            {#if state.stats.math == 'sum'}
-              <NItem className="bg-transparent">
-                <NKVBlock
-                  inverse
-                  label="Total"
-                  value={formatValue(state.stats.sum)}
-                  type="row" />
-              </NItem>
-            {/if}
-            <NItem className="py-0 bg-transparent">
+    {#if state.dataView == 'map'}
+      <NMap
+        small
+        locations={getLocations()}
+        className="flex-grow flex-shrink" />
+    {/if}
+    {#if state.stats}
+      {#if state.dataView == 'overview'}
+        <div class="overview py-2 flex-grow flex-shrink">
+          {#if state.stats.math == 'sum'}
+            <NItem className="bg-transparent">
               <NKVBlock
                 inverse
-                label="Avg"
-                value={formatValue(state.stats.avg)}
+                label="Total"
+                value={formatValue(state.stats.sum)}
                 type="row" />
             </NItem>
-            {#if state.stats.max.value > state.stats.min.value}
-              <NItem className="bg-transparent">
-                <NKVBlock
-                  inverse
-                  label="Range"
-                  className="filler"
-                  value={`${formatValue(state.stats.min.value, false)} to ${formatValue(state.stats.max.value)}`}
-                  type="row" />
-              </NItem>
-              <!-- <NItem>
+          {/if}
+          <NItem className="py-0 bg-transparent">
+            <NKVBlock
+              inverse
+              label="Avg"
+              value={formatValue(state.stats.avg)}
+              type="row" />
+          </NItem>
+          {#if state.stats.max.value > state.stats.min.value}
+            <NItem className="bg-transparent">
+              <NKVBlock
+                inverse
+                label="Range"
+                className="filler"
+                value={`${formatValue(state.stats.min.value, false)} to ${formatValue(state.stats.max.value)}`}
+                type="row" />
+            </NItem>
+            <!-- <NItem>
                 <NKVBlock
                   label="Variance"
                   className="filler"
                   value={`${formatValue(state.stats.max.value - state.stats.min.value)}`}
                   type="row" />
               </NItem> -->
-            {/if}
-            <NItem className="bg-transparent">
-              <NKVBlock
-                inverse
-                label="Score"
-                className="filler"
-                value={getScore()}
-                type="row" />
-            </NItem>
-          </div>
-        {:else if state.dataView == 'time'}
-          <NTimeGrid
-            color={getTracker().color}
-            rows={state.stats.rows}
-            className="flex-grow flex-shrink"
-            style="min-height:100%" />
-        {:else if state.dataView == 'logs'}
-          <NLogList
-            compact
-            logs={state.stats.rows}
-            style="min-height:100%"
-            className="bg-solid-1 p-2 flex-grow flex-shrink" />
-        {:else if state.dataView == 'map'}
-          <NMap
-            small
-            locations={getLocations()}
-            className="flex-grow flex-shrink"
-            style=" min-height:100%; height:100%" />
-        {/if}
+          {/if}
+          <NItem className="bg-transparent">
+            <NKVBlock
+              inverse
+              label="Score"
+              className="filler"
+              value={getScore()}
+              type="row" />
+          </NItem>
+        </div>
+      {:else if state.dataView == 'time'}
+        <NTimeGrid
+          color={getTracker().color}
+          rows={state.stats.rows}
+          className="flex-grow flex-shrink"
+          style="min-height:100%" />
+      {:else if state.dataView == 'logs'}
+        <NLogList
+          compact
+          logs={state.stats.rows}
+          style="min-height:100%"
+          className="bg-solid-1 p-2 flex-grow flex-shrink" />
       {/if}
-    </div>
+    {/if}
   {/if}
 </NModal>

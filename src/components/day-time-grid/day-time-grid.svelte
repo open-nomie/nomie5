@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   // vendors
   import dayjs from "dayjs";
   // Utils
@@ -13,6 +14,9 @@
   export let style = "";
   export let className = "";
   // export let flex = true;
+
+  let _el;
+  let height = 200;
 
   // Consts
   const console = new Logger("⏰ Grid");
@@ -82,6 +86,10 @@
     });
   }
 
+  function main() {
+    height = _el.parentElement.clientHeight;
+  }
+
   const methods = {
     hourStyle(value) {
       return {
@@ -89,6 +97,10 @@
       };
     }
   };
+
+  onMount(() => {
+    main();
+  });
 </script>
 
 <style type="scss">
@@ -143,7 +155,10 @@
   }
 </style>
 
-<div class="time-grid {className}" {style}>
+<div
+  class="time-grid {className}"
+  style="height:{height}px; {style}"
+  bind:this={_el}>
 
   {#each days as day, index}
     <div class="day">

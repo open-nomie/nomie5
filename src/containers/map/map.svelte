@@ -36,6 +36,7 @@
 
   // Leaflet Map Holder
   let MAP = undefined;
+  let _el;
 
   // Local State
   let data = {
@@ -44,7 +45,8 @@
     locating: false,
     lat: null,
     lng: null,
-    showLocations: false
+    showLocations: false,
+    height: `100px`
   };
 
   $: if (locations) {
@@ -67,6 +69,13 @@
   // methods
   let methods = {
     init() {
+      console.log(`Map init`, {
+        el: _el,
+        parent: _el.parentElement.clientHeight
+      });
+
+      data.height = _el.parentElement.clientHeight;
+
       /** Initialize map **/
       return new Promise((resolve, reject) => {
         if (!MAP) {
@@ -397,8 +406,10 @@
 </style>
 
 <div
+  bind:this={_el}
   class="{className} n-map-container {small ? 'small ' : ''}"
-  style="{style} height:{height ? height + 'px' : ''}">
+  style="{height ? `height: ${height}px;` : `min-height: ${data.height}px;`}
+  {style}">
   {#if picker}
     <div class="picker-cover">
       <div class="picker-target">

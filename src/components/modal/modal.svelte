@@ -15,6 +15,7 @@
   export let show = true; // Defaulted to true so it can be controlled by a parent component
   export let className = undefined;
   export let type = "normal"; // cover, fullscreen, bottom, bottom-slide-up
+  export let bodyClass = "";
 
   const has_header = (arguments[1].$$slots || {}).hasOwnProperty("header");
   const has_raw_header = (arguments[1].$$slots || {}).hasOwnProperty(
@@ -260,7 +261,8 @@
     {/if}
     <div
       class="n-modal-body {padding ? 'padding' : 'no-padding'}
-      {flexBody ? 'flex-body' : 'no-flex-body'}">
+      {flexBody ? 'flex-body' : 'no-flex-body'}
+      {bodyClass}">
       <slot />
     </div>
     {#if has_footer}
