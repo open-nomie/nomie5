@@ -5,6 +5,7 @@
   import NInput from "../../components/input/input.svelte";
   import NLogListLoader from "../../components/log-list/log-list-loader.svelte";
   import NToolbar from "../../components/toolbar/toolbar.svelte";
+  import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import ButtonGroup from "../../components/button-group/button-group.svelte";
   import Dymoji from "../../components/dymoji/dymoji.svelte";
   import LogItem from "../../components/list-item-log/list-item-log.svelte";
@@ -151,14 +152,20 @@
 </script>
 
 <Modal className="person-modal" show={domVisible} type="bottom-slideup">
-  <header slot="header" class="n-column w-100" on:swipedown={close}>
-    <div class="n-row">
-      <button class="btn btn-clear btn-icon zmdi zmdi-close" on:click={close} />
-      <div class="title filler text-center font-weight-bold">
-        <Dymoji person={activePerson} size={26} radius={0.3} />
-        &nbsp; {activePerson.getDisplayName()}
+  <header class="w-100" slot="header" on:swipedown={close}>
+    <NToolbarGrid>
+      <button
+        slot="left"
+        class="btn btn-clear btn-icon zmdi zmdi-close"
+        on:click={close} />
+      <div class="main">
+        <div class="n-row">
+          <Dymoji person={activePerson} size={26} radius={0.3} />
+          &nbsp; {activePerson.getDisplayName()}
+        </div>
       </div>
       <button
+        slot="right"
         class="btn btn-sm btn-clear text-xl"
         on:click={() => {
           close();
@@ -166,8 +173,8 @@
         }}>
         <i class=" zmdi zmdi-chart" />
       </button>
-    </div>
-    <div class="stat-header n-row f-grow pt-2">
+    </NToolbarGrid>
+    <NToolbar>
       <ButtonGroup
         size="sm"
         buttons={[{ label: 'Logs', active: state.view === 'logs', click() {
@@ -177,7 +184,7 @@
             } }, { label: 'Edit', active: state.view === 'edit', click() {
               changeView('edit');
             } }]} />
-    </div>
+    </NToolbar>
   </header>
 
   <main>

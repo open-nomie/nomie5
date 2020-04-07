@@ -37,7 +37,6 @@
   }
 
   async function search() {
-    console.log("Searching");
     // Set from and to date
     loading = true;
     let from = !lastFrom

@@ -212,24 +212,28 @@ Note: Your data will not automatically move over. You'll first need to export it
     //   $UserStore.meta.boardsEnabled = !$UserStore.meta.boardsEnabled;
     //   UserStore.saveMeta();
     // },
-    lockToggle() {
+    async lockToggle() {
       if ($UserStore.meta.lock === true) {
         if (($UserStore.meta.pin || "").length == 0) {
           // TODO: figure out how to handle a cancel in the interact prompt
-          Interact.prompt(Lang.t("settings.pin-details"), null, {
-            value: "",
-            valueType: "number"
-          }).then(pin => {
-            if (!pin) {
-              $UserStore.meta.lock = false;
-              $UserStore.meta.pin = null;
-              UserStore.saveMeta();
-            } else {
-              $UserStore.meta.lock = true;
-              $UserStore.meta.pin = pin;
-              UserStore.saveMeta();
+          let pin = await Interact.prompt(
+            Lang.t("settings.pin-details"),
+            null,
+            {
+              value: "",
+              valueType: "number"
             }
-          });
+          );
+
+          if (!pin) {
+            $UserStore.meta.lock = false;
+            $UserStore.meta.pin = null;
+            UserStore.saveMeta();
+          } else {
+            $UserStore.meta.lock = true;
+            $UserStore.meta.pin = pin;
+            UserStore.saveMeta();
+          }
         }
       } else {
         $UserStore.meta.lock = false;
@@ -238,20 +242,6 @@ Note: Your data will not automatically move over. You'll first need to export it
       }
     }
   };
-
-  // LedgerStore.subscribe(ldgr => {
-  //   ledger = ldgr;
-  // });
-
-  // UserStore.subscribe(u => {
-  //   if (u.signedIn) {
-  //     user = u;
-  //   }
-  // });
-
-  // TrackerStore.subscribe(tkrs => {
-  //   trackers = tkrs || {};
-  // });
 
   // const setTimeout = setTimeout;
   onMount(() => {
