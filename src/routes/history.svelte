@@ -29,6 +29,7 @@
 
   // Utils
   import dayjs from "dayjs";
+  import tick from "../utils/tick/tick";
 
   // Stores
   import { UserStore } from "../store/user";
@@ -155,6 +156,18 @@
         searchMode = true;
       }
     },
+    async textClick(event) {
+      console.log("textClick", event);
+      state.searchTerm = null;
+      tick(100);
+      if (event.detail.type == "tracker") {
+        state.searchTerm = `#${event.detail.tracker.tag}`;
+      } else {
+        state.searchTerm = `${event.detail.value}`;
+      }
+      showSearch = true;
+      methods.onSearchEnter();
+    },
     async getLogs(fresh) {
       fresh = fresh ? fresh : false;
       loading = true;
@@ -200,11 +213,10 @@
       showSearch = false;
       window.scrollTo(0, 0);
     },
-    onSearchEnter(evt) {
-      setTimeout(() => {
-        state.searchTerm = evt.detail;
-        showSearch = true;
-      }, 1);
+    async onSearchEnter(evt) {
+      await tick(100);
+      window.scrollTo(0, 0);
+      showSearch = true;
     },
     trackerTapped(tracker, log) {
       // console.log("Tracker Tapped", tracker);
@@ -472,12 +484,7 @@
                 methods.trackerTapped(event.detail.tracker, log);
               }}
               on:textClick={event => {
-                if (event.detail.type == 'tracker') {
-                  state.searchTerm = `#${event.detail.tracker.tag}`;
-                } else {
-                  state.searchTerm = event.detail.value;
-                }
-                showSearch = true;
+                methods.textClick(event);
               }}
               on:moreClick={event => {
                 Interact.logOptions(log).then(() => {});
@@ -491,13 +498,12 @@
         {:else if showSearch && state.searchTerm}
           <NLogListLoader
             term={state.searchTerm}
-            limit={20}
+            limit={12}
             on:trackerClick={event => {
               methods.trackerTapped(event.detail.tracker, event.detail.log);
             }}
             on:textClick={event => {
-              state.searchTerm = event.detail.value;
-              methods.search(state.searchTerm);
+              methods.textClick(event);
             }}
             on:moreClick={event => {
               Interact.logOptions(event.detail).then(() => {});
