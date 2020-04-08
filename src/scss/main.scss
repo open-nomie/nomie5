@@ -28,6 +28,7 @@
 @import "./components/app-panel";
 @import "./components/item-ball";
 @import "./components/toolbar-grid";
+@import "./components/n-log-item";
 
 /**
 THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 
@@ -297,6 +298,7 @@ $night: #311f62;
 }
 
 .tap-icon {
+  transition: all 0.2s ease-in-out;
   z-index: 10;
   position: relative;
   font-size: 1.6rem !important;
@@ -304,6 +306,14 @@ $night: #311f62;
   fill: var(--color-primary-bright) !important;
   &.sm {
     font-size: 1.5rem !important;
+  }
+  svg {
+    height: 32px;
+    width: 32px;
+  }
+  &:focus,
+  &:active {
+    transform: scale(0.9) !important;
   }
 }
 
@@ -389,13 +399,16 @@ $night: #311f62;
 
 .clickable,
 [clickable] {
+  transition: all 0.2s ease-in-out;
   position: relative;
   cursor: pointer;
   touch-action: manipulation;
 }
-.clickable:hover,
-.clickable:focus {
-  background-color: rgba($primaryBright, 0.09);
+.clickable:focus,
+.clickable:active {
+  outline: none;
+  box-shadow: inset 0px 0px 40px rgba($primaryBright, 0.2);
+  transform: scale(0.99);
 }
 .btn,
 a,
