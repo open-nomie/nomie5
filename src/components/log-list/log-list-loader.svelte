@@ -24,6 +24,7 @@
 
   // React to Term Change
   let lastTerm;
+
   $: if (lastTerm !== term) {
     lastTerm = term;
     reset();
@@ -67,6 +68,7 @@
   }
 
   onMount(() => {
+    reset();
     search();
   });
 </script>
@@ -93,7 +95,9 @@
     on:moreClick={event => {
       dispatch('moreClick', event.detail);
     }} />
-
+  {#if !loading && logs.length == 0}
+    <div class="p-2 text-center text-faded-2">0 results</div>
+  {/if}
   {#if !loading && lastTo}
     <NItem className="py-2 bg-transparent mb-2">
       <button class="btn btn-outline btn-light btn-block" on:click={search}>

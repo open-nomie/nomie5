@@ -119,12 +119,6 @@
 
 <style lang="scss">
   .n-note-textualized {
-    font-size: 1rem;
-    line-height: 1.2rem;
-    opacity: 0.8;
-    margin-top: 6px;
-    margin-bottom: 2px;
-
     &.inherit {
       font-size: inherit;
       line-height: inherit;
@@ -161,7 +155,9 @@
 </style>
 
 {#if actual}
-  <div class="n-note-textualized {className}">
+  <div
+    class="n-note-textualized {className}
+    {data.words.length > 20 ? 'long-note' : 'short-note'}">
     {#each data.words as word}
       {#if word.type === 'tracker'}
         <span

@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: stretch;
   padding: 4px 16px;
+
   min-height: 50px;
   max-width: 100vw;
   position: relative;
@@ -15,6 +16,13 @@
   font-size: 1rem;
   flex-shrink: 0;
   background-color: var(--color-solid);
+
+  &.solo,
+  &[solo] {
+    width: calc(100% - 16pt);
+    margin: 8pt;
+    border-radius: 8pt;
+  }
 
   select,
   input {
@@ -26,19 +34,10 @@
   }
 
   .trackers-list .n-item {
-    margin-left: -16px;
-    margin-right: -16px;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-    border-bottom-color: rgba(0, 0, 0, 0.05) !important;
+    padding-left: 16pt !important;
+    padding-right: 16pt !important;
     .main {
       // font-size: 1rem;
-    }
-  }
-
-  .trackers-list {
-    .n-item:last-child {
-      border-bottom: none !important;
     }
   }
 
@@ -250,41 +249,4 @@
 
 .bg-light {
   background-color: var(--color-solid) !important;
-}
-
-.n-item-log {
-  &.compact {
-    margin: 10px 4px !important;
-
-    .trackers-list {
-      margin-top: 8px;
-      .main {
-        div,
-        .left {
-          font-size: 0.9rem !important;
-        }
-      }
-    }
-
-    .time-row {
-      padding: 2px;
-      display: flex;
-      align-items: center;
-      height: 32px;
-      // margin-top: 3px;
-      margin-bottom: -2px;
-
-      .time {
-        font-size: 0.8rem;
-      }
-    }
-    .n-note-textualized {
-      padding-top: 4px;
-      font-size: 0.9rem !important;
-      line-height: 1.1rem !important;
-    }
-    .n-item {
-      min-height: 30px;
-    }
-  }
 }

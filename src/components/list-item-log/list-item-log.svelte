@@ -66,28 +66,23 @@
     margin-bottom: 20px;
   }
   .more-button {
-    margin-right: -6px;
-  }
-
-  .time {
-    font-size: 0.9rem;
+    margin-right: -8pt;
   }
 </style>
 
 <!--glow glow-{time.dateToDesc(displayLog.end)}-->
 {#if displayLog}
-  <NItem className="{className} my-3 mx-2 border pb-0 n-item-log">
+  <NItem className="{className} n-item-log">
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row time-row">
-      <div class="time truncate">
-        <div class="text-sm text-inverse-1 font-bold ">
+      <div class="time">
+        <div class="day-time">
           {dayjs(displayLog.end).format(`ddd ${timeFormat}`)}
         </div>
-        <div class="text-xs text-inverse-2">
+        <div class="date-ago">
           {dayjs(displayLog.end).format('MMM Do YYYY')}
-          <span class="text-faded-2">{time.fromNow(displayLog.end)} ago</span>
+          <span class="ago">{time.fromNow(displayLog.end)} ago</span>
         </div>
-
       </div>
 
       <div class="filler" />
@@ -116,7 +111,7 @@
           on:click={event => {
             dispatch('moreClick', displayLog);
           }}
-          class="btn btn-sm btn-clear pr-0 more-button">
+          class="btn btn-clear btn-sm more-button ml-1">
           <NIcon name="more" className="fill-primary-bright" size="32" />
         </button>
       {/if}
@@ -131,8 +126,6 @@
         note={displayLog.note}
         {trackers}
         className={displayLog.trackersArray().length ? '' : 'pb-2'} />
-    {:else}
-      <div class="pb-2" />
     {/if}
     <div class="trackers-list">
       <!-- Loop over the trackers within this log -->
@@ -146,7 +139,7 @@
         <!-- Tracker List Item  -->
         <NItem
           borderBottom
-          className="pl-0 clickable"
+          className="clickable"
           on:click={event => {
             event.preventDefault();
             event.stopPropagation();
