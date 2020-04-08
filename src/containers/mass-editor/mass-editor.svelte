@@ -3,6 +3,7 @@
   const dispatch = createEventDispatcher();
 
   import NModal from "../../components/modal/modal.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NProgress from "../../components/progress-bar/progress-bar.svelte";
 
@@ -13,7 +14,7 @@
   import Logger from "../../utils/log/log";
 
   //vendors
-  import Spinner from "svelte-spinner";
+  import Spinner from "../../components/spinner/spinner.svelte";
 
   // Stores
   import { LedgerStore } from "../../store/ledger";
@@ -38,6 +39,17 @@
   };
 
   const methods = {
+    back() {
+      state.found = null;
+      state.error = null;
+      state.finding = false;
+      state.replacing = false;
+      state.foundCount = 0;
+      state.finishedFinding = false;
+      state.example = null;
+      state.replacedCount = 0;
+    },
+
     async find() {
       // Clear errors
       state.error = null;
@@ -216,14 +228,9 @@
           <NProgress percentage={state.replacingProgress} />
           <span slot="left">
             {#if state.finishedReplacing}
-              <i class="zmdi zmdi-check-circle text-lg text-green" />
+              <NIcon name="checkmarkOutline" className="fill-green" />
             {:else}
-              <Spinner
-                size="30"
-                speed="750"
-                color="#ccc"
-                thickness="6"
-                gap="40" />
+              <Spinner size="30" />
             {/if}
           </span>
         </NItem>
@@ -233,39 +240,37 @@
           title={`${state.finishedFinding ? 'Find Complete' : 'Finding...'}`}>
           <span slot="left">
             {#if state.finishedFinding}
-              <i class="zmdi zmdi-check-circle text-lg text-green" />
+              <NIcon name="checkmarkOutline" className="fill-green" />
             {:else}
-              <Spinner
-                size="30"
-                speed="750"
-                color="#ccc"
-                thickness="6"
-                gap="40" />
+              <Spinner size="30" />
             {/if}
           </span>
           <span slot="right">{state.foundCount} Found</span>
-          <NProgress percentage={state.findingProgress} />
+          <div class="pt-1">
+            <NProgress percentage={state.findingProgress} />
+          </div>
         </NItem>
         {#if state.found.length > 0 && state.example !== null}
           <div class="p-1 mt-2">
             <NItem>
-              <div>
-                <small class="text-faded-2">
-                  Sample {state.example + 1} of {state.found.length}
-                </small>
-                <br />
-                <small>
-                  <strong>{state.found[state.example || 0].log.note}</strong>
-                </small>
+              <div class="text-md">
+                Sample {state.example + 1} of {state.found.length}
+                <div class="note">
+                  {state.found[state.example || 0].log.note}
+                </div>
               </div>
               <button
-                class="btn btn-clear btn-icon zmdi zmdi-arrow-left"
+                class="btn btn-clear btn-icon tap-icon"
                 slot="left"
-                on:click={methods.previousSample} />
+                on:click={methods.previousSample}>
+                <NIcon name="chevronLeft" />
+              </button>
               <button
-                class="btn btn-clear btn-icon zmdi zmdi-arrow-right"
+                class="btn btn-clear btn-icon tap-icon"
                 slot="right"
-                on:click={methods.nextSample} />
+                on:click={methods.nextSample}>
+                <NIcon name="chevronRight" />
+              </button>
             </NItem>
           </div>
         {/if}
@@ -274,12 +279,14 @@
     </div>
 
     <div slot="footer" class="n-row">
-      <button class="btn btn-clear" on:click={methods.close}>Cancel</button>
+
       {#if state.finding && state.finishedFinding}
+        <button class="btn btn-clear" on:click={methods.back}>Back</button>
         <button class="btn btn-primary" on:click={methods.replace}>
           Replace All...
         </button>
       {:else if !state.finding && !state.found}
+        <button class="btn btn-clear" on:click={methods.close}>Cancel</button>
         <button class="btn btn-primary" on:click={methods.find}>
           Find All...
         </button>
