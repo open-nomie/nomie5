@@ -24,6 +24,7 @@
   // Containers
   import NMap from "../map/map.svelte";
   import TrackerSelector from "../tracker/selector/selector.svelte";
+  import NSelector from "../selector/selector.svelte";
   import NTrackerEditor from "../tracker/editor/editor.svelte";
   import TrackerInput from "../tracker/input/input.svelte";
   import LogEditor from "../log-editor/log-editor.svelte";
@@ -235,6 +236,22 @@
       Interact.dismissTrackerSelector();
     } else {
       Interact.dismissTrackerSelector();
+    }
+  }} />
+
+<NSelector
+  show={$Interact.selector.show}
+  multiple={$Interact.selector.multiple}
+  on:cancel={() => {
+    Interact.dismissSelector();
+  }}
+  on:select={event => {
+    let trackers = event.detail;
+    if ($Interact.selector.onInteract) {
+      $Interact.selector.onInteract(trackers);
+      Interact.dismissSelector();
+    } else {
+      Interact.dismissSelector();
     }
   }} />
 
