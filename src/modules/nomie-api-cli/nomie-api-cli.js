@@ -7,6 +7,9 @@
  */
 
 import Storage from "../storage/storage";
+import Config from "../../../config/global";
+
+const NAPI_STORE_PATH = `${Config.data_root}/napi.json`;
 
 export default class NomieCaptureCli {
   constructor(options) {
@@ -17,7 +20,7 @@ export default class NomieCaptureCli {
     this.plan = "free"; // what's the plan? (this doesn't do anything currently)
 
     // Get Config Storage
-    Storage.get("nomie-capture").then(captureConfig => {
+    Storage.get(NAPI_STORE_PATH).then((captureConfig) => {
       // We have an api capture configure
       if (captureConfig) {
         this.apiKey = captureConfig.apiKey; // api key
@@ -47,15 +50,13 @@ export default class NomieCaptureCli {
    * Private Fire Ready
    */
   fireReady() {
-    this.listeners.forEach(func => {
+    this.listeners.forEach((func) => {
       func(this);
     });
   }
 
   baseUrl() {
-    return this.domain.search("localhost") > -1
-      ? `http://${this.domain}`
-      : `https://${this.domain}`;
+    return this.domain.search("localhost") > -1 ? `http://${this.domain}` : `https://${this.domain}`;
   }
 
   isRegistered() {
@@ -71,7 +72,7 @@ export default class NomieCaptureCli {
   async post(url, payload, additionalHeaders) {
     // Set headers for json
     let headers = {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     };
     // Setup Calling URL
     let callingURL = `${this.baseUrl()}${url}`;
@@ -82,7 +83,7 @@ export default class NomieCaptureCli {
     let results = await fetch(callingURL, {
       method: "POST",
       headers: finalHeaders,
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
 
     // Get Payload back
@@ -90,12 +91,37 @@ export default class NomieCaptureCli {
 
     // The key is no longer valid
     if (cbPayload.results.destroy) {
-      Storage.delete("nomie-capture").then(() => {
-        window.location.href = window.location.href;
-      });
+      await Storage.delete(NAPI_STORE_PATH);
+      throw new Error("invalid-key-combination");
     }
 
     return cbPayload;
+  }
+
+  /**
+   * Test a valid api private key combo
+   * @param {String} api_key
+   * @param {String} private_key
+   */
+
+  async test(api_key, private_key) {
+    let success;
+    try {
+      const headers = { api_key, private_key: btoa(private_key) };
+      let response = await this.post("/logs", {}, headers);
+      success = response.success;
+      return success;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async testAndSave(api_key, private_key) {
+    let success = await this.test(api_key, private_key);
+    if (success) {
+      await this.saveKeys(api_key, private_key);
+    }
+    return success;
   }
 
   logs() {
@@ -104,9 +130,9 @@ export default class NomieCaptureCli {
       {},
       {
         api_key: this.apiKey,
-        private_key: btoa(this.privateKey)
+        private_key: btoa(this.privateKey),
       }
-    ).then(payload => {
+    ).then((payload) => {
       if (payload.success) {
         return payload.results;
       } else {
@@ -115,54 +141,62 @@ export default class NomieCaptureCli {
     });
   }
 
-  unregister() {
-    return this.post(
+  async forget() {
+    return await Storage.delete(NAPI_STORE_PATH);
+  }
+
+  async unregister() {
+    let payload = await this.post(
       "/unregister",
       {},
       {
         api_key: this.apiKey,
-        private_key: btoa(this.privateKey)
+        private_key: btoa(this.privateKey),
       }
-    ).then(payload => {
-      if (payload.success) {
-        Storage.delete("nomie-capture");
-        return payload.results;
-      } else {
-        alert(payload.results.message);
-      }
-    });
+    );
+    if (payload.success) {
+      await Storage.delete(NAPI_STORE_PATH);
+      return payload.results;
+    } else {
+      alert(payload.results.message);
+      return null;
+    }
   }
 
-  clear() {
-    return this.post(
+  async clear() {
+    let payload = await this.post(
       "/clear",
       {},
       {
         api_key: this.apiKey,
-        private_key: btoa(this.privateKey)
+        private_key: btoa(this.privateKey),
       }
-    ).then(payload => {
-      if (payload.success) {
-        return payload.results;
-      } else {
-        alert(payload.results.message);
-      }
-    });
+    );
+    if (payload.success) {
+      return payload.results;
+    } else {
+      alert(payload.results.message);
+    }
   }
 
-  register() {
-    return new Promise((resolve, reject) => {
-      this.post("/register").then(payload => {
-        if (payload.success) {
-          this.apiKey = payload.results.apiKey;
-          this.privateKey = payload.results.privateKey;
-          Storage.put("nomie-capture", payload.results).then(() => {
-            resolve(payload.results);
-          });
-        } else {
-          alert(payload.results.message);
-        }
-      });
-    });
+  async saveKeys(apiKey, privateKey) {
+    this.apiKey = apiKey;
+    this.privateKey = privateKey;
+    const payload = { apiKey: apiKey, privateKey, plan: "free" };
+    let saved = await Storage.put("nomie-capture", payload);
+    return true;
+  }
+
+  async register() {
+    let payload = await this.post("/register");
+    if (payload.success) {
+      this.apiKey = payload.results.apiKey;
+      this.privateKey = payload.results.privateKey;
+      await Storage.put("nomie-capture", payload.results);
+      return payload.results;
+    } else {
+      alert(payload.results.message);
+    }
+    return payload.success;
   }
 }
