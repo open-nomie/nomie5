@@ -56,6 +56,12 @@ const interactInit = () => {
         multiple: false,
         onInteract: null,
       },
+      selector: {
+        show: false,
+        multiple: false,
+        onInteract: null,
+        type: "tracker",
+      },
       trackerEditor: {
         show: false,
         tracker: null,
@@ -250,6 +256,20 @@ const interactInit = () => {
     shareLog(log) {
       Interact.openShareImage(log);
     },
+
+    select(type = "tracker") {
+      return new Promise((resolve, reject) => {
+        update((state) => {
+          state.selector.multiple = false;
+          state.selector.show = true;
+          state.selector.type = type;
+          state.selector.onInteract = (itemArray) => {
+            resolve(itemArray.length ? itemArray[0] : null);
+          };
+          return state;
+        });
+      });
+    },
     /**
      * Select a Single Tracker
      */
@@ -285,6 +305,14 @@ const interactInit = () => {
         s.trackerSelector.show = false;
         s.trackerSelector.multiple = false;
         s.trackerSelector.onInteract = null;
+        return s;
+      });
+    },
+    dismissSelector() {
+      update((s) => {
+        s.selector.show = false;
+        s.selector.multiple = false;
+        s.selector.onInteract = null;
         return s;
       });
     },
