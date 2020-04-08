@@ -247,7 +247,9 @@
     <Route path="/settings/export" component={ExportRoute} />
     <Route path="/tracker/design" component={TrackerDesigner} />
     <Route path="/files" component={FileBrowser} />
-    <Route path="/files/:file" component={FileBrowser} />
+    <Route path="/files/*file" let:params>
+      <FileBrowser file={params.file} />
+    </Route>
   </Router>
 {:else if $UserStore.signedIn == undefined}
   <div class="empty-notice" style="height:calc(100vh - 75px)">

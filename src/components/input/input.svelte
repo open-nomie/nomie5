@@ -25,6 +25,12 @@
   let hit = false;
   let hasInput = false;
 
+  let _elInput;
+
+  export function doFocus() {
+    _elInput.focus();
+  }
+
   let blur = () => {
     focused = false;
   };
@@ -141,7 +147,7 @@
       border: solid 1px var(--color-faded-1);
 
       &.has-focus {
-        box-shadow: 0px 2px 10px rgba($primaryBright, 0.2);
+        box-shadow: 0px 3px 7px -2px rgba($primaryBright, 0.1);
         background-color: var(--input-focus-background);
       }
 
@@ -203,6 +209,7 @@
       <label>{label || placeholder}</label>
       {#if type == 'email'}
         <input
+          bind:this={_elInput}
           {disabled}
           type="email"
           style={inputStyle}
@@ -218,6 +225,7 @@
           on:blur={blur} />
       {:else if type == 'password'}
         <input
+          bind:this={_elInput}
           {disabled}
           type="password"
           style={inputStyle}
@@ -233,6 +241,7 @@
           on:blur={blur} />
       {:else if type == 'number'}
         <input
+          bind:this={_elInput}
           {disabled}
           type="number"
           style={inputStyle}
@@ -246,11 +255,12 @@
           on:focus={focus}
           on:blur={blur} />
       {:else if type == 'select'}
-        <select {disabled} on:change={change} bind:value>
+        <select bind:this={_elInput} {disabled} on:change={change} bind:value>
           <slot />
         </select>
       {:else}
         <input
+          bind:this={_elInput}
           {disabled}
           type="text"
           style={inputStyle}
