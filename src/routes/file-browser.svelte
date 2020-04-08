@@ -15,7 +15,7 @@
   // config
   import faq from "../../config/faq";
 
-  export let location = undefined;
+  export let path = null;
 </script>
 
-<NFileBrowser />
+<NFileBrowser {path} />

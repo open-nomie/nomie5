@@ -246,9 +246,9 @@
     <Route path="/settings/export/:type" component={ExportRoute} />
     <Route path="/settings/export" component={ExportRoute} />
     <Route path="/tracker/design" component={TrackerDesigner} />
-    <Route path="/files" component={FileBrowser} />
-    <Route path="/files/*file" let:params>
-      <FileBrowser file={params.file} />
+    <!-- <Route path="/files" component={FileBrowser} /> -->
+    <Route path="/files/*path" let:params>
+      <FileBrowser path={params.path} />
     </Route>
   </Router>
 {:else if $UserStore.signedIn == undefined}

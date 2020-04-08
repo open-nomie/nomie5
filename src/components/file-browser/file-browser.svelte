@@ -20,53 +20,58 @@
     files: [],
     animateForward: false,
     animateBack: false,
-    file: null
+    file: null,
+    loading: true,
+    root: true
   };
 
   // Not working
-  export let file = undefined;
+  export let path = undefined;
   // Old fashion way is working
-  let path = window.location.href.split("/");
-  path.splice(0, 4);
 
-  if (path.length > 0) {
-    state.file = path.join("/");
+  let lastPath = null;
+
+  $: if (path && path !== lastPath) {
+    init();
   }
 
-  let lastPath = [];
-  // Shitty Animation
-  $: if (state.path && state.path.join("") !== lastPath.join("")) {
-    if (state.path.length < lastPath.length) {
-      state.animateBack = true;
-      setTimeout(() => {
-        state.animateForward = true;
-        state.animateBack = false;
-        setTimeout(() => {
-          state.animateForward = false;
-        }, 200);
-        lastPath = [...state.path];
-      }, 200);
-    } else {
-      state.animateForward = true;
-      setTimeout(() => {
-        state.animateForward = false;
-        state.animateBack = true;
-        setTimeout(() => {
-          state.animateBack = false;
-        }, 200);
-        lastPath = [...state.path];
-      }, 200);
+  async function init() {
+    state.file = null;
+    lastPath = path;
+    if (path.substr(0, 1) == "/") {
+      path = path.replace("/", "");
     }
+    console.log("File browser got a path!!", path);
+    let ogPath = path.split("/");
+    console.log("OgPath", ogPath);
+    state.root = ogPath.length == 1;
+    if (ogPath.length > 0) {
+      let fileName = ogPath[ogPath.length - 1];
+      if (isFile(fileName)) {
+        state.file = fileName;
+        state.path = ogPath;
+      } else {
+        state.path = ogPath;
+        console.log("It's a directory!");
+        state.files = extractFiles();
+        console.log("State files", state.files);
+      }
+    }
+    state.title = ogPath.join("/");
+    state.path = ogPath;
   }
 
   async function back() {
-    if (state.path.length) {
-      state.path.pop();
-      await tick(10);
-      state.files = extractFiles();
-    } else {
-      history.back();
-    }
+    history.back();
+    await tick(100);
+    init();
+    // if (state.path.length) {
+    //   state.path.pop();
+    //   await tick(10);
+    //   state.files = extractFiles();
+    // } else {
+    //   history.back();
+    // }
   }
 
   function extractFiles() {
@@ -116,16 +121,14 @@
     return fileTree;
   }
 
-  function goto(path) {
-    state.path.push(path);
-    state.files = extractFiles(state.path);
-  }
-
   onMount(async () => {
+    state.loading = true;
+    console.log("On Mount?");
     Storage.getEngine().onReady(async () => {
       let files = await Storage.list();
       state.tree = Treeify(files);
       state.files = extractFiles();
+      state.loading = false;
     });
     await Storage.init();
   });
@@ -144,12 +147,12 @@
   }
 
   async function readFile() {
-    let content = await Storage.get(state.file);
+    let content = await Storage.get(state.path.join("/"));
     return JSON.stringify(content, null, 2);
   }
 
   function isFile(name) {
-    const filesArray = ["last-usage"];
+    const filesArray = ["last-usage", "nomie-capture"];
     if (name.split(".").length > 1) {
       return true;
     } else if (filesArray.indexOf(name) > -1) {
@@ -176,16 +179,20 @@
       opacity: 0;
     }
   }
+
+  .code-view {
+    background-color: var(--color-solid-1);
+    color: var(--color-inverse-1);
+  }
   pre {
     font-size: 12px;
-    color: var(--color-inverse);
     padding: 10px;
   }
 </style>
 
 {#if !state.file}
   <NPage className="n-file-browser">
-    <div class="n-toolbar-grid" slot="header">
+    <div class="n-toolbar-grid container" slot="header">
       <div class="left">
         <button class="btn" on:click={back}>
           <NIcon name="arrowBack" />
@@ -196,18 +203,24 @@
       </div>
     </div>
     <div class="content n-panel vertical scroll-y">
-      <div
-        class="n-list mt-2 container animate {state.animateForward ? 'animate-forward' : ''}
-        {state.animateBack ? 'animate-back' : ''}">
+      <div class="n-list mt-2 container">
+
+        {#if state.loading}
+          <div class="p-4 n-panel center-all">
+            <NSpinner />
+          </div>
+        {/if}
         {#each state.files as file}
           {#if !isFile(file)}
             <NItem
               className="clickable bottom-line"
               on:click={() => {
-                goto(file);
+                console.log('Click', state.path, file);
+                navigate(`files/${state.path.length > 1 ? state.path.join('/') : state.path[0]}/${file}`);
               }}>
               {file}
               <div slot="right">
+                <span class="text-sm text-faded-1">Folder</span>
                 <NIcon name="chevronRight" className="fill-faded-2" />
               </div>
             </NItem>
@@ -215,9 +228,13 @@
             <NItem
               className="clickable bottom-line"
               on:click={() => {
-                navigate(`files/${state.path.join('/')}/${file}`);
+                navigate(`files/${state.path.length > 1 ? state.path.join('/') : state.path[0]}/${file}`);
               }}>
               {file}
+              <div slot="right">
+                <span class="text-sm text-faded-1">File</span>
+                <NIcon name="chevronRight" className="fill-faded-2" />
+              </div>
             </NItem>
           {/if}
         {/each}
@@ -226,7 +243,7 @@
   </NPage>
 {:else}
   <NPage className="n-file-browser">
-    <div class="n-toolbar-grid" slot="header">
+    <div class="n-toolbar-grid container" slot="header">
       <div class="left">
         <button class="btn" on:click={back}>
           <NIcon name="arrowBack" />
@@ -245,16 +262,18 @@
         </button>
       </div>
     </div>
-    <div class="content n-panel vertical scroll-y">
-
-      {#await readFile()}
-        <NSpinner />
-      {:then content}
-        <pre>{content}</pre>
-      {:catch error}
-        <div class="text-red">{error.message}</div>
-      {/await}
-
+    <div class="content code-view">
+      <div class="container">
+        {#await readFile()}
+          <div class="n-panel center-all">
+            <NSpinner />
+          </div>
+        {:then content}
+          <pre>{content}</pre>
+        {:catch error}
+          <div class="text-red">{error.message}</div>
+        {/await}
+      </div>
     </div>
   </NPage>
 {/if}
