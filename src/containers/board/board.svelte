@@ -15,10 +15,13 @@
   import { navigate } from "svelte-routing";
   import { onMount, onDestroy } from "svelte";
   import dayjs from "dayjs";
+  import tick from "../../utils/tick/tick";
 
   // Components
   import NTrackerButton from "./tracker-button.svelte";
   import NToolbar from "../../components/toolbar/toolbar.svelte";
+  import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
   import NSearchBar from "../../components/search-bar/search-bar.svelte";
   import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
   import NModal from "../../components/modal/modal.svelte";
@@ -68,6 +71,7 @@
 
   // Browser Title
   let appTitle = "(Loading)";
+  let _elSearchBar;
 
   // Data Storage
   let data = {
@@ -186,11 +190,15 @@
         });
     },
     // Toggle if the user is searching or not.
-    toggleSearch() {
+    async toggleSearch() {
       if (data.searching) {
         methods.stopSearch();
       } else {
         data.searching = true;
+        await tick(200);
+        if (_elSearchBar) {
+          _elSearchBar.focus();
+        }
       }
     },
     stopSearch() {
@@ -297,12 +305,9 @@
     },
     // Settings Shortcut - enable boards - tap on logo
     async enableBoards() {
-      let res = await Interact.confirm(
-        "Enable tabs?",
-        "This will allow you to organize a bunch of trackers."
-      );
-      $UserStore.meta.boardsEnabled = res;
-      UserStore.saveMeta();
+      $UserStore.meta.boardsEnabled = true;
+      await UserStore.saveMeta();
+      methods.newBoard();
     },
     // User Tapped a Tracker
     async trackerTapped(tracker) {
@@ -630,11 +635,13 @@
     {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
       <div class="container p-0 n-row h-100">
         {#if TrackerStore.getAsArray().length > 13}
-          <button
-            style="margin:2px; border-radius:8px; padding:0 12px;"
-            class="btn btn-icon zmdi zmdi-search py-2 {data.searching ? 'active' : 'btn-clear'}"
-            on:click={methods.toggleSearch} />
+          <button class="btn tap-icon px-2" on:click={methods.toggleSearch}>
+            <NIcon
+              name="search"
+              className={data.searching ? 'fill-primary-bright' : 'fill-faded-2'} />
+          </button>
         {/if}
+
         <NBoardTabs
           boards={methods.injectAllBoard($BoardStore.boards || [])}
           active={$BoardStore.active}
@@ -645,29 +652,31 @@
           }}>
           {#if $BoardStore.boards.length > 1}
             <button
-              class="btn btn-clear btn-icon zmdi zmdi-sort-amount-desc"
+              class="btn btn-clear tap-icon px-2 pl-1"
               on:click={() => {
                 Interact.toggleBoardSorter();
-              }} />
+              }}>
+              <NIcon name="sort" className="fill-primary-bright" />
+            </button>
           {/if}
         </NBoardTabs>
       </div>
     {:else}
-      <NToolbar>
-        <i
-          on:click={methods.enableBoards}
-          class="zmdi zmdi-tab clickable ml-2 text-xs"
-          style="opacity:0" />
-        <div class="filler" />
-        <LogoType size={20} on:click={methods.enableBoards} />
-        <div class="filler" />
-        <i
-          on:click={methods.enableBoards}
-          class="zmdi zmdi-tab clickable ml-2 text-xs text-faded-2" />
-      </NToolbar>
+      <NToolbarGrid>
+        <div slot="main" class="align-items-center">
+          <LogoType size={20} on:click={methods.enableBoards} />
+        </div>
+        <button
+          slot="right"
+          class="btn btn-clear btn-icon tap-icon"
+          on:click={methods.enableBoards}>
+          <NIcon name="newTab" size="20" />
+        </button>
+      </NToolbarGrid>
     {/if}
     {#if data.searching}
       <NSearchBar
+        bind:this={_elSearchBar}
         className="mt-2"
         autocomplete
         on:clear={() => {
@@ -678,7 +687,14 @@
           methods.searchKeypress();
           console.log('On Change?', value.detail);
         }}
-        placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}..." />
+        placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}...">
+        <button
+          slot="right-inside"
+          class="btn btn-clear"
+          on:click={methods.toggleSearch}>
+          <NIcon name="close" className="fill-faded-2" />
+        </button>
+      </NSearchBar>
     {/if}
   </div>
   <!-- end header-->

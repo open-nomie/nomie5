@@ -2,6 +2,7 @@
   import { Lang } from "../../store/lang";
   import Storage from "../../modules/storage/storage";
   import NStepper from "../../components/stepper/stepper.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
   import { Interact } from "../../store/interact";
   import md5 from "md5";
   export let tips = [];
@@ -24,7 +25,7 @@
   }
 
   async function hideTips() {
-    let confirmed = await Interact.confirm("Hide?");
+    let confirmed = await Interact.confirm("Hide Tips?");
     if (confirmed) {
       hiddenTips.push(id);
       Storage.local.put("hidden-tips", hiddenTips);
@@ -96,14 +97,14 @@
         <div class="btn-close text-lg flex-grow-off" on:click={hideTips}>
           <i class="text-lg zmdi zmdi-close-circle" />
         </div>
-        <button
-          class="btn btn-clear btn-icon zmdi zmdi-chevron-left"
-          on:click={previousTip} />
+        <button class="btn btn-clear btn-icon" on:click={previousTip}>
+          <NIcon name="chevronLeft" />
+        </button>
         <div class="tip filler">{tips[state.activeTip]}</div>
         <div class="d-flex flex-row arrows">
-          <button
-            class="btn btn-clear btn-icon zmdi zmdi-chevron-right"
-            on:click={nextTip} />
+          <button class="btn btn-clear btn-icon" on:click={nextTip}>
+            <NIcon name="chevronRight" />
+          </button>
         </div>
       </div>
       <NStepper steps={tips.length} current={state.activeTip} dark />

@@ -8,6 +8,7 @@
 
   // components
   import NItem from "../list-item/list-item.svelte";
+  import NIcon from "../icon/icon.svelte";
   import NPoints from "../points/points.svelte";
   import NText from "../text/text.svelte";
   import NNoteTextualizer from "../note-textualizer/note-textualizer.svelte";
@@ -64,16 +65,10 @@
     background-color: var(--color-faded-1);
     margin-bottom: 20px;
   }
-
   .more-button {
-    margin-left: 10px;
-    margin-right: -10px;
-    margin-top: -10px;
-    font-size: 32px;
-    height: 30px;
-    min-width: 40px;
-    line-height: 30px;
+    margin-right: -6px;
   }
+
   .time {
     font-size: 0.9rem;
   }
@@ -85,7 +80,6 @@
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row time-row">
       <div class="time truncate">
-
         <div class="text-sm text-inverse-1 font-bold ">
           {dayjs(displayLog.end).format(`ddd ${timeFormat}`)}
         </div>
@@ -105,7 +99,7 @@
             event.stopPropagation();
           }}
           class="btn btn-sm btn-clear pl-2 pr-2 ">
-          <i class="zmdi zmdi-globe text-primary-bright" />
+          <NIcon name="pin" className="fill-primary-bright" size="16" />
         </button>
       {/if}
 
@@ -122,11 +116,8 @@
           on:click={event => {
             dispatch('moreClick', displayLog);
           }}
-          class="btn btn-sm btn-clear pl-2 pr-2 more-button"
-          style="">
-          <i
-            class="zmdi zmdi-more text-primary-bright"
-            style="height:30px; line-height:30px;" />
+          class="btn btn-sm btn-clear pr-0 more-button">
+          <NIcon name="more" className="fill-primary-bright" size="32" />
         </button>
       {/if}
     </div>

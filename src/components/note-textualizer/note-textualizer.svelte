@@ -119,10 +119,11 @@
 
 <style lang="scss">
   .n-note-textualized {
-    font-size: 1.1rem;
-    line-height: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.2rem;
     opacity: 0.8;
     margin-top: 6px;
+    margin-bottom: 2px;
 
     &.inherit {
       font-size: inherit;
@@ -145,7 +146,7 @@
     .tracker,
     .person,
     .context {
-      padding-right: 5px;
+      padding-right: 3px;
       flex-shrink: 0;
     }
     .remainder {

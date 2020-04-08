@@ -5344,6 +5344,21 @@ body.theme-dark {
 .bg-solid {
   background-color: var(--color-solid); }
 
+.fill-primary-bright {
+  fill: var(--color-primary-bright) !important; }
+
+.fill-green {
+  fill: var(--color-green) !important; }
+
+.fill-red {
+  fill: var(--color-red) !important; }
+
+.fill-inverse {
+  fill: var(--color-inverse) !important; }
+
+.fill-primary {
+  fill: var(--color-primary) !important; }
+
 .bg-solid-1 {
   background-color: var(--color-solid-1); }
 
@@ -5382,6 +5397,21 @@ body.theme-dark {
 
 .font-140 {
   font-size: 1.4rem; }
+
+.fill-faded {
+  fill: var(--color-faded) !important; }
+
+.fill-faded-1 {
+  fill: var(--color-faded-1) !important; }
+
+.fill-white {
+  fill: #fff !important; }
+
+.fill-faded-2 {
+  fill: var(--color-faded-2) !important; }
+
+.fill-faded-3 {
+  fill: var(--color-faded-3) !important; }
 
 .text-faded {
   color: var(--color-faded) !important; }
@@ -5570,7 +5600,8 @@ select {
   box-shadow: inset 3px 0px 4px rgba(0, 0, 0, 0);
   transition: all 0.2s ease-in-out; }
   .n-board-tabs:not([data-scroll="0"]) {
-    box-shadow: inset 2px 0px 1px var(--color-faded); }
+    box-shadow: inset 2px 0px 1px var(--color-faded) !important;
+    z-index: 10; }
   .n-board-tabs .zmdi {
     color: var(--color-inverse-2);
     z-index: 10; }
@@ -5947,7 +5978,6 @@ body.scrolling .mini-map {
     display: flex;
     align-items: center;
     height: 32px;
-    margin-top: 3px;
     margin-bottom: -2px; }
     .n-item-log.compact .time-row .time {
       font-size: 0.8rem; }
@@ -5957,9 +5987,6 @@ body.scrolling .mini-map {
     line-height: 1.1rem !important; }
   .n-item-log.compact .n-item {
     min-height: 30px; }
-
-.n-item-log .time-row {
-  padding-top: 7px; }
 
 .n-modal-frame.tracker-input .n-modal-body {
   border-radius: 0;
@@ -6047,7 +6074,7 @@ body.scrolling .n-tracker-button {
     align-items: center;
     align-content: center;
     justify-content: center;
-    margin-top: -40px; }
+    margin-top: -70px; }
     .share-image-component.no-note .trackers .emoji-value {
       margin: 5px;
       min-width: calc(30% - 5px);
@@ -6573,8 +6600,11 @@ TODO: Organize main into components or containers.
   color: var(--color-inverse-1); }
 
 .tap-icon {
+  z-index: 10;
+  position: relative;
   font-size: 1.6rem !important;
-  color: var(--color-primary-bright); }
+  color: var(--color-primary-bright);
+  fill: var(--color-primary-bright) !important; }
   .tap-icon.sm {
     font-size: 1.5rem !important; }
 

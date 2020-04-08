@@ -81,6 +81,7 @@
     "svelte-sortable-list": "^1.1.0"
   },
   "dependencies": {
+    "carbon-icons-svelte": "^10.9.3",
     "d3-scale": "^3.0.0",
     "dayjs": "^1.8.23",
     "dom-to-image-more": "^2.8.0",

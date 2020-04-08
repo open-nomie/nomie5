@@ -162,13 +162,6 @@
 
 <div class="n-counter-manual {className}">
   <div class="unit hours">
-    <!-- <button
-      class="btn btn-sm p-1 h-auto btn-square"
-      on:click={() => {
-        methods.add('hours');
-      }}>
-      <i class="zmdi zmdi-chevron-up" />
-    </button> -->
     <select
       value={methods.getUnitValue('hours')}
       on:change={event => {
@@ -178,24 +171,12 @@
         <option value={unit}>{unit}</option>
       {/each}
     </select>
-    <!-- <button
-      class="btn btn-sm p-1 h-auto btn-square"
-      on:click={() => {
-        methods.subtract('hours');
-      }}>
-      <i class="zmdi zmdi-chevron-down" />
-    </button> -->
+
     <label>Hour</label>
   </div>
   <!-- Minutes -->
   <div class="unit hours">
-    <!-- <button
-      class="btn btn-sm p-1 h-auto btn-square"
-      on:click={() => {
-        methods.add('minutes');
-      }}>
-      <i class="zmdi zmdi-chevron-up" />
-    </button> -->
+
     <select
       value={methods.getUnitValue('minutes')}
       on:change={event => {
@@ -205,24 +186,12 @@
         <option value={unit}>{unit}</option>
       {/each}
     </select>
-    <!-- <button
-      class="btn btn-sm p-1 h-auto btn-square"
-      on:click={() => {
-        methods.subtract('minutes');
-      }}>
-      <i class="zmdi zmdi-chevron-down" />
-    </button> -->
+
     <label>Min</label>
   </div>
   <!-- SEconds -->
   <div class="unit seconds">
-    <!-- <button
-      class="btn btn-sm p-1 h-auto btn-square"
-      on:click={() => {
-        methods.add('seconds');
-      }}>
-      <i class="zmdi zmdi-chevron-up" />
-    </button> -->
+
     <select
       value={methods.getUnitValue('seconds')}
       on:change={event => {
@@ -232,13 +201,7 @@
         <option value={unit}>{unit}</option>
       {/each}
     </select>
-    <!-- <button
-      class="btn btn-sm p-1 h-auto btn-square"
-      on:click={() => {
-        methods.subtract('seconds');
-      }}>
-      <i class="zmdi zmdi-chevron-down" />
-    </button> -->
+
     <label>Sec</label>
   </div>
 </div>

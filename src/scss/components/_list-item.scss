@@ -271,7 +271,7 @@
       display: flex;
       align-items: center;
       height: 32px;
-      margin-top: 3px;
+      // margin-top: 3px;
       margin-bottom: -2px;
 
       .time {
@@ -286,9 +286,5 @@
     .n-item {
       min-height: 30px;
     }
-  }
-
-  .time-row {
-    padding-top: 7px;
   }
 }

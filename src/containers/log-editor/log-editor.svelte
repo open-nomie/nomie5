@@ -106,7 +106,7 @@
 
 {#if state.log}
   <NModal title="Log Options" className="log-editor">
-    <div class="btn-group w-100" slot="header">
+    <div class="btn-group w-100 m-2" slot="header">
       <button
         class="btn -text {state.view === 'note' ? 'active' : ''}"
         on:click={() => {

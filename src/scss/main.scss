@@ -297,8 +297,11 @@ $night: #311f62;
 }
 
 .tap-icon {
+  z-index: 10;
+  position: relative;
   font-size: 1.6rem !important;
   color: var(--color-primary-bright);
+  fill: var(--color-primary-bright) !important;
   &.sm {
     font-size: 1.5rem !important;
   }

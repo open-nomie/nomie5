@@ -16,6 +16,7 @@
 
   //Components
   import NItem from "../components/list-item/list-item.svelte";
+  import NIcon from "../components/icon/icon.svelte";
   import NCell from "../components/cell/cell.svelte";
   import NPoints from "../components/points/points.svelte";
   import dayjs from "dayjs";
@@ -563,20 +564,15 @@
           on:paste={methods.keyPress} />
 
         <button
-          class="btn btn-clear btn-icon zmdi zmdi-more mr-1 {state.advanced ? 'text-green' : 'text-inverse'}"
-          on:click={toggleAdvanced} />
-
-        <!-- <button
-          class="btn btn-clear btn-icon zmdi zmdi-time px-1 {state.date ? 'text-green' : ''}"
-          on:click={methods.toggleCustomDate} /> -->
-        <!-- <button
-          class="btn btn-clear btn-icon zmdi zmdi-my-location px-1 {$ActiveLogStore.lat ? 'text-green' : ''}
-          mr-1"
-          on:click={methods.toggleCustomLocation} /> -->
-
+          class="btn btn-clear btn-icon mr-1 {state.advanced ? 'text-green' : 'text-inverse'}"
+          on:click={toggleAdvanced}>
+          <NIcon
+            name="more"
+            className={state.advanced ? 'fill-green' : 'fill-inverse'} />
+        </button>
         {#if !saving}
           <button class="save-button" on:click={methods.logSave}>
-            <i style="width:10px" class="zmdi zmdi-long-arrow-up" />
+            <NIcon name="sendFilled" style="fill: #FFF;" size="16" />
           </button>
         {:else}
           <button class="save-button">
@@ -599,9 +595,7 @@
         <!-- Score -->
         <NItem compact className="bg-transparent">
           <div slot="left" class="text-sm text-bold">
-            <i
-              style="width:10px"
-              class="zmdi zmdi-star mr-2 text-primary-bright mr-2" />
+            <NIcon name="star" className="mr-2 fill-primary-bright" size="16" />
             Score
           </div>
           <div slot="right" class="text-sm">
@@ -619,19 +613,19 @@
           className="bg-transparent clickable mr-2"
           on:click={methods.toggleCustomLocation}>
           <div slot="left" class="text-sm text-bold">
-            <i
-              style="width:10px"
-              class="zmdi zmdi-pin text-primary-bright mr-2" />
+            <NIcon name="pin" className="mr-2 fill-primary-bright" size="16" />
             Location
           </div>
-          <div slot="right" class="text-sm">
+          <div slot="right" class="n-row">
             {#if $ActiveLogStore.lat}
               <label class="text-sm ">
                 {math.round($ActiveLogStore.lat, 100)},{math.round($ActiveLogStore.lng, 100)}
               </label>
               <button
-                class="btn btn-clear btn-icon zmdi zmdi-close text-sm text-red"
-                on:click|stopPropagation={methods.clearLocation} />
+                class="btn btn-clear btn-icon"
+                on:click|stopPropagation={methods.clearLocation}>
+                <NIcon name="close" className="fill-red" size="16" />
+              </button>
             {:else if $UserStore.alwaysLocate}
               <label class="text-sm text-faded-3 ">Current Location</label>
             {:else}
@@ -645,17 +639,17 @@
           className="bg-transparent mt-1 mb-2 mr-2"
           on:click={methods.selectDate}>
           <div slot="left" class="text-sm text-bold">
-            <i
-              style="width:10px"
-              class="zmdi zmdi-time text-primary-bright mr-2" />
+            <NIcon name="time" className="mr-2 fill-primary-bright" size="16" />
             Date/Time
           </div>
-          <div slot="right">
+          <div slot="right" class="n-row">
             {#if $ActiveLogStore.end}
               <label class="text-sm">{state.dateFormated}</label>
               <button
-                class="btn btn-clear btn-icon zmdi zmdi-close text-sm text-red"
-                on:click|stopPropagation={methods.clearDate} />
+                class="btn btn-clear btn-icon"
+                on:click|stopPropagation={methods.clearDate}>
+                <NIcon name="close" className="fill-red" size="16" />
+              </button>
             {:else}
               <label class="text-sm text-faded-3">Now</label>
             {/if}
@@ -665,35 +659,4 @@
     </div>
   {/if}
 
-  <!-- <div class="more-options">
-    <div
-      class="advanced-options-list {state.showCustomDate ? 'visible' : 'hidden'}">
-      <div class="container pt-3 pb-1" style="max-width:520px">
-        <div class="n-row">
-          <button
-            class="btn btn-white btn-sm mr-1 btn-icon zmdi zmdi-chevron-left
-            box-shadow-float"
-            on:click={() => {
-              state.date = null;
-              state.showCustomDate = false;
-            }} />
-          <input
-            name="note"
-            type="datetime-local"
-            class="form-control mt-0 filler"
-            style="font-size:16px;"
-            bind:value={state.dateStarter} />
-          <button
-            class="btn btn-primary btn-sm mr-1 ml-2 px-3"
-            on:click={methods.setDate}>
-            {Lang.t('general.set')}
-          </button>
-   
-        </div>
-
-      </div>
-    </div> -->
-  <!-- advacned options list -->
-
-  <!-- </div> -->
 </div>

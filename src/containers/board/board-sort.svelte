@@ -2,7 +2,7 @@
   import Modal from "../../components/modal/modal.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NSortableList from "../../components/sortable-list/sortable-list.svelte";
-
+  import NIcon from "../../components/icon/icon.svelte";
   // Utils
   import arrayUtils from "../../utils/array/array_utils";
 
@@ -41,12 +41,14 @@
   <div class="n-list">
     <NSortableList
       bind:items={$BoardStore.boards}
-      handle=".zmdi-menu"
+      handle=".menu-handle"
       key="label"
       on:update={boardsSorted}
       let:item>
       <NItem className="bottom-line" title={item.label}>
-        <i class="zmdi zmdi-menu" slot="right" />
+        <div slot="right" class="menu-handle">
+          <NIcon className="fill-faded-2" name="sort" />
+        </div>
       </NItem>
     </NSortableList>
   </div>

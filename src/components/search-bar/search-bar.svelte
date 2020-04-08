@@ -4,17 +4,27 @@
 
   import { Lang } from "../../store/lang";
   import { createEventDispatcher } from "svelte";
+  import NIcon from "../icon/icon.svelte";
   const dispatch = createEventDispatcher();
 
   export let searchTerm = null;
   export let autocomplete = false;
   export let placeholder = `${Lang.t("general.search")}...`;
   export let style = "";
+  export let className = "";
+
+  let _elInput;
   // export let hasResults = false;
 
   // FIre off changes when input changes
   function fireChange() {
     dispatch("change", searchTerm);
+  }
+
+  export function focus() {
+    if (_elInput.doFocus) {
+      _elInput.doFocus();
+    }
   }
   // Fire off when search is hit
   function fireSearch() {
@@ -53,29 +63,32 @@
   }
 </style>
 
-<NToolbar className="search-bar" {style}>
+<NToolbar className="search-bar {className}" {style}>
   {#if searchTerm}
     <button
       class="btn btn-sm btn-clear btn-action-clear"
       on:click={fireClear}
       style="margin-left:-10px;">
-      <i class="zmdi zmdi-close-circle text-xl" />
+      <NIcon name="close" className="fill-red" />
     </button>
   {/if}
   <div class="n-row">
     <NInput
       solo
       compact
+      bind:this={_elInput}
       bind:value={searchTerm}
       on:change={fireChange}
       on:enter={fireSearch}
       {placeholder}>
-
-      <i
-        class="zmdi zmdi-search ml-2 text-inverse opacity-3"
-        style="font-size:1rem !important"
-        slot="left" />
-
+      <div slot="left" class="pl-2">
+        <NIcon
+          name="search"
+          style="height:20px; width: 20px; opacity:0.3; margin-top:-4px;" />
+      </div>
+      <div slot="right">
+        <slot name="right-inside" />
+      </div>
     </NInput>
     <slot name="right" />
     {#if searchTerm && !autocomplete}

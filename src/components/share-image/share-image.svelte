@@ -9,6 +9,7 @@
   import Tracker from "../../modules/tracker/tracker";
   import TrackerButton from "../../containers/board/tracker-button.svelte";
   import Logo from "../logo/logo.svelte";
+  import NIcon from "../icon/icon.svelte";
   import dayjs from "dayjs";
   import domtoimage from "dom-to-image-more";
   import regex from "../../utils/regex";
@@ -174,13 +175,13 @@
       <button
         class="btn btn-clear clickable"
         on:click={Interact.closeShareImage}>
-        <i class="zmdi zmdi-close" />
+        <NIcon name="close" className="fill-white" />
       </button>
       <button class="btn btn-primary clickable" on:click={methods.capture}>
-        <i class="zmdi zmdi-download" />
+        <NIcon name="download" className="fill-white" />
       </button>
       <button class="btn btn-clear clickable" on:click={methods.randomTheme}>
-        <i class="zmdi zmdi-refresh" />
+        <NIcon name="refresh" className="fill-white" />
       </button>
     </div>
   </div>

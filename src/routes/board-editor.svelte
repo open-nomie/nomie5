@@ -12,6 +12,7 @@
   // Modules
   import Tracker from "../modules/tracker/tracker";
   // Components
+  import NIcon from "../components/icon/icon.svelte";
   import NText from "../components/text/text.svelte";
   import NInput from "../components/input/input.svelte";
   import NItem from "../components/list-item/list-item.svelte";
@@ -222,21 +223,25 @@
         {#if trackers}
           <NSortableList
             bind:items={trackers}
-            handle=".zmdi-menu"
+            handle=".menu-handle"
             key="tag"
             on:update={trackersSorted}
             let:item>
             <NItem className="py-2 bottom-line">
               <div slot="left" class="n-row">
                 <button
-                  class="btn btn-icon zmdi zmdi-minus-circle text-red mr-2"
+                  class="btn btn-icon fill-red mr-2"
                   on:click={evt => {
                     methods.removeTracker(evt, item);
-                  }} />
+                  }}>
+                  <NIcon name="remove" className="fill-red" />
+                </button>
                 <NBall className="frame" emoji={item.emoji} size={40} />
               </div>
               {item.label}
-              <i class="zmdi zmdi-menu text-faded-3" slot="right" />
+              <div slot="right" class="menu-handle">
+                <NIcon className="fill-inverse" name="sort" />
+              </div>
             </NItem>
           </NSortableList>
         {/if}

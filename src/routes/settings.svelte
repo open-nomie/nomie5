@@ -7,7 +7,8 @@
   import Storage from "../modules/storage/storage";
   // Components
   import NItem from "../components/list-item/list-item.svelte";
-  import NText from "../components/text/text.svelte";
+
+  import NIcon from "../components/icon/icon.svelte";
   import NToggle from "../components/toggle-switch/toggle-switch.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
 
@@ -273,10 +274,12 @@ Note: Your data will not automatically move over. You'll first need to export it
             title={Lang.t('settings.share-nomie', 'Share Nomie w/ Friends')}
             description="It'd be super helpful"
             on:click={methods.share}>
-            <span
-              slot="left"
-              class="btn-icon zmdi text-primary-bright zmdi-share" />
-            <span slot="right" class="icon zmdi zmdi-more" />
+            <span slot="left" class="btn-icon tap-icon">
+              <NIcon name="share" />
+            </span>
+            <span slot="right" class="icon">
+              <NIcon name="more" />
+            </span>
           </NItem>
 
           <div class="n-pop">
@@ -284,9 +287,6 @@ Note: Your data will not automatically move over. You'll first need to export it
               title={Lang.t('general.customize')}
               className="n-item-divider" />
             <NItem title={Lang.t('settings.theme')}>
-              <span
-                slot="left"
-                class="btn-icon zmdi text-primary-bright zmdi-invert-colors" />
               <div slot="right">
                 <select
                   class="form-control"
@@ -304,9 +304,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             </NItem>
             <!-- Use Location -->
             <NItem title={Lang.t('settings.use-location')}>
-              <span
-                slot="left"
-                class="btn-icon zmdi text-primary-bright zmdi-my-location" />
+
               <div slot="right">
                 <NToggle
                   bind:value={$UserStore.alwaysLocate}
@@ -318,9 +316,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             <!-- Tracker Board Tabs -->
             {#if $BoardStore.boards.length == 0}
               <NItem title={Lang.t('settings.enable-boards')}>
-                <span
-                  slot="left"
-                  class="btn-icon zmdi text-primary-bright zmdi-tab" />
+
                 <div slot="right">
                   <NToggle
                     bind:value={$UserStore.meta.boardsEnabled}
@@ -331,9 +327,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               <NItem
                 title={Lang.t('settings.enable-boards')}
                 className="disabled">
-                <span
-                  slot="left"
-                  class="btn-icon zmdi text-primary-bright zmdi-tab" />
+
                 <div slot="right">
                   <NToggle value={true} locked={true} />
                 </div>
@@ -341,9 +335,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             {/if}
             <!-- Pin Code -->
             <NItem title={Lang.t('settings.require-pin')}>
-              <span
-                slot="left"
-                class="btn-icon zmdi text-primary-bright zmdi-apps" />
+
               <div slot="right">
                 <NToggle
                   bind:value={$UserStore.meta.lock}
@@ -352,9 +344,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             </NItem>
             <!-- 24 Hour -->
             <NItem title={Lang.t('settings.24-hour-clock')}>
-              <span
-                slot="left"
-                class="btn-icon zmdi text-primary-bright zmdi-time" />
+
               <div slot="right">
                 <NToggle
                   bind:value={$UserStore.meta.is24Hour}
@@ -363,9 +353,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             </NItem>
             <!-- Language -->
             <NItem title={Lang.t('settings.language')}>
-              <span
-                slot="left"
-                class="btn-icon zmdi text-primary-bright zmdi-translate" />
+
               <div slot="right">
                 <select
                   class="form-control"
@@ -390,10 +378,11 @@ Note: Your data will not automatically move over. You'll first need to export it
               className="clickable"
               title={Lang.t('settings.nomie-api')}
               on:click={() => navigate('/api')}>
-              <span
-                slot="left"
-                class="btn-icon zmdi text-primary-bright zmdi-code-setting" />
-              <span slot="right" class="icon zmdi zmdi-chevron-right" />
+
+              <span slot="right">
+                <NIcon name="chevronRight" className="fill-faded-2" />
+              </span>
+
             </NItem>
             <NItem
               className="clickable"
@@ -401,10 +390,10 @@ Note: Your data will not automatically move over. You'll first need to export it
               on:click={() => {
                 showImporter = true;
               }}>
-              <span
-                slot="left"
-                class="btn-icon zmdi text-primary-bright zmdi-cloud-download" />
-              <span slot="right" class="icon zmdi zmdi-chevron-right" />
+
+              <span slot="right">
+                <NIcon name="chevronRight" className="fill-faded-2" />
+              </span>
               <input
                 slot="right"
                 class="d-none"
@@ -417,19 +406,18 @@ Note: Your data will not automatically move over. You'll first need to export it
               className="clickable"
               title={Lang.t('settings.generate-backup')}
               to="/settings/export/backup">
-              <span
-                slot="left"
-                class="btn-icon zmdi text-primary-bright zmdi-cloud-upload" />
-              <span slot="right" class="icon zmdi zmdi-chevron-right" />
+
+              <span slot="right">
+                <NIcon name="chevronRight" className="fill-faded-2" />
+              </span>
             </NItem>
             <NItem
               className="clickable"
               title={Lang.t('settings.generate-csv')}
               to="/settings/export/csv">
-              <span
-                slot="left"
-                class="btn-icon zmdi text-primary-bright zmdi-grid" />
-              <span slot="right" class="icon zmdi zmdi-chevron-right" />
+              <span slot="right">
+                <NIcon name="chevronRight" className="fill-faded-2" />
+              </span>
             </NItem>
             <NItem
               className="clickable"
@@ -437,10 +425,9 @@ Note: Your data will not automatically move over. You'll first need to export it
               on:click={() => {
                 data.showMassEditor = true;
               }}>
-              <span
-                slot="left"
-                class="btn-icon zmdi text-primary-bright zmdi-search-replace" />
-              <span slot="right" class="icon zmdi zmdi-chevron-right" />
+              <span slot="right">
+                <NIcon name="chevronRight" className="fill-faded-2" />
+              </span>
             </NItem>
 
             <MassEditor
@@ -461,9 +448,6 @@ Note: Your data will not automatically move over. You'll first need to export it
             <div class="title truncate">
               <strong>{Lang.t('general.type', 'Type')}</strong>
             </div>
-            <span
-              slot="left"
-              class="btn-icon zmdi text-primary-bright zmdi-storage" />
 
             <div slot="right">
 
@@ -473,11 +457,11 @@ Note: Your data will not automatically move over. You'll first need to export it
                 {#if $UserStore.storageType === 'local'}
                   {Lang.t('storage.local', 'Local')}
                 {:else if $UserStore.storageType === 'pouchdb'}
-                  {Lang.t('storage.pouchdb', 'Local + CouchDB')}
+                  f {Lang.t('storage.pouchdb', 'Local + CouchDB')}
                 {:else if $UserStore.storageType === 'blockstack'}
                   {Lang.t('storage.blockstack', 'Blockstack')}
                 {/if}
-                <i class="zmdi zmdi-chevron-down ml-2" />
+                <NIcon name="chevronDown" size="16" className="ml-2" />
               </button>
               <!-- {#if $UserStore.storageType === 'local'}
                 <button

@@ -13,8 +13,10 @@
   // components
   import NItem from "../components/list-item/list-item.svelte";
   import NPoints from "../components/points/points.svelte";
+  import NIcon from "../components/icon/icon.svelte";
   import NLogListLoader from "../components/log-list/log-list-loader.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
+  import NToolbarGrid from "../components/toolbar/toolbar-grid.svelte";
   import NModal from "../components/modal/modal.svelte";
   import Spinner from "../components/spinner/spinner.svelte";
   import NDatePicker from "../components/date-picker/date-picker.svelte";
@@ -390,59 +392,29 @@
 <AppLayout title={appTitle}>
 
   <header slot="header">
-    <NToolbar className="animate in {showSearch ? 'hidden' : 'visible'}">
-      <div class="container history-toolbar-container">
-        <div class="d-flex justify-content-stretch align-items-center w-100">
-          <button
-            class="btn btn-clear btn-icon flex text-xl"
-            on:click={methods.previous}>
-            <i class="zmdi zmdi-chevron-left tap-icon" />
-          </button>
-
-          <div class="filler" />
-
-          <div
-            class="header-date-control justify-content-center flex-grow
-            text-center"
-            on:click={methods.selectDate}>
-            <div class="text-center text-md n-row">
-              {#if dayScore}
-
-              {:else}
-                <i class="zmdi mr-4 text-faded-3 " />
-              {/if}
-              <div class="n-row">
-                <div
-                  class="text-md d-flex flex-row align-items-center
-                  text-inverse-2 {isToday ? 'text-inverse-2' : 'not-today text-red'}">
-                  {#if dayScore}
-                    <NPoints points={dayScore} className="mr-2" />
-                  {/if}
-                  <span class="font-weight-bold mx-1">
-                    {state.date.format('ddd')}
-                  </span>
-                  {state.date.format('MMM Do YYYY')}
-                  <i class="zmdi zmdi-chevron-down ml-1" />
-                </div>
-              </div>
-
-            </div>
-            <!-- end text middle -->
-          </div>
-          <!-- end header-date-control -->
-
-          <div class="filler" />
-
-          <button
-            class="btn btn-clear btn-icon flex text-xl"
-            on:click={methods.next}>
-            <i class="zmdi zmdi-chevron-right tap-icon" />
-          </button>
-
-        </div>
+    <NToolbarGrid className="animate in {showSearch ? 'hidden' : 'visible'}">
+      <button
+        slot="left"
+        class="btn btn-clear btn-icon flex text-xl tap-icon"
+        on:click={methods.previous}>
+        <NIcon name="chevronLeft" />
+      </button>
+      <div
+        slot="main"
+        class={isToday ? 'text-inverse-2' : 'not-today text-red'}
+        on:click={methods.selectDate}>
+        <span class="font-weight-bold mx-1">{state.date.format('ddd')}</span>
+        {state.date.format('MMM Do YYYY')}
+        <NIcon name="chevronDown" size="16" style="margin-top:-2px;" />
+        <!-- end text middle -->
       </div>
-      <!-- end toolbar div wrapper-->
-    </NToolbar>
+      <button
+        slot="right"
+        class="btn btn-clear btn-icon flex text-xl tap-icon"
+        on:click={methods.next}>
+        <NIcon name="chevronRight" />
+      </button>
+    </NToolbarGrid>
 
     <!-- hasResults={(searchLogs || []).length > 0} -->
 

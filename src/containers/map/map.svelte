@@ -69,12 +69,9 @@
   // methods
   let methods = {
     init() {
-      console.log(`Map init`, {
-        el: _el,
-        parent: _el.parentElement.clientHeight
-      });
-
-      data.height = _el.parentElement.clientHeight;
+      if (_el) {
+        data.height = _el.parentElement.clientHeight;
+      }
 
       /** Initialize map **/
       return new Promise((resolve, reject) => {

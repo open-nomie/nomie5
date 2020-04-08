@@ -67,29 +67,8 @@
         navigate('/files');
       }}
       className="clickable">
-      <span slot="left" class="zmdi zmdi-folder text-primary btn-icon" />
-      <span slot="right" class="text-primary">
-        {#if state.showFiles}Hide{:else}Show Files{/if}
-      </span>
+      <span slot="right" class="text-primary">Browse Files...</span>
     </NItem>
-
-    {#if state.showFiles}
-      {#each state.files as file (file)}
-        <NItem>
-          <div class="truncate text-sm">
-            {file.substr(0, 40)}{file.length > 40 ? '...' : ''}
-          </div>
-          <button
-            class="btn btn-sm btn-clear text-danger"
-            slot="right"
-            on:click={() => {
-              methods.deleteFile(file);
-            }}>
-            Delete
-          </button>
-        </NItem>
-      {/each}
-    {/if}
 
   </div>
 </div>

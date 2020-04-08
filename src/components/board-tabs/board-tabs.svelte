@@ -3,6 +3,7 @@
 
   // components
   import NHScroller from "../h-scroller/h-scroller.svelte";
+  import NIcon from "../icon/icon.svelte";
   import Elephant from "../elephant.svelte";
 
   export let boards = [];
@@ -53,13 +54,11 @@
     </button>
   {/each}
   <button
-    class="tab add-board text-inverse"
+    class="tap-icon btn btn-clear px-2"
     on:click={() => {
       dispatch('create');
     }}>
-    <i
-      class="zmdi zmdi-plus text-bold text-lg {boards.length == 1 ? 'mr-2' : ''}" />
-    {#if boards.length == 1}Add a Tab{/if}
+    <NIcon name="newTab" className="fill-primary-bright" size={20} />
   </button>
   <slot />
   <slot name="right" />

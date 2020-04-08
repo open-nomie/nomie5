@@ -3,7 +3,7 @@
   import { Link } from "svelte-routing";
 
   // Components
-  import Icon from "../../components/icon.svelte";
+  import Icon from "../../components/icon/icon.svelte";
 
   // Plugins
   import Plugins from "../../plugins/plugins";
@@ -30,10 +30,26 @@
   }
 
   :global(#app-tabs svg) {
-    fill: #fff;
-    height: 18px;
-    flex-shrink: 0;
-    margin-bottom: 4px;
+    // fill: #fff;
+    // height: 18px;
+    // flex-shrink: 0;
+    // margin-bottom: 4px;
+  }
+
+  :global(#app-tabs a svg) {
+    height: 24px !important;
+    width: 24px !important;
+    margin-bottom: 3px;
+  }
+
+  :global(#app-tabs a[aria-current="page"] svg) {
+    fill: var(--color-primary-bright) !important;
+    transform: scale(1.1);
+    transition: all 0.2s ease-in-out;
+  }
+
+  :global(#app-tabs a[aria-current="page"] svg .fill) {
+    fill: var(--color-primary-bright) !important;
   }
 
   :global(#app-tabs a) {
@@ -60,8 +76,8 @@
     // When Active
     &[aria-current="page"] {
       color: var(--color-inverse);
-      i {
-        color: var(--color-primary-bright);
+      svg {
+        fill: var(--color-primary-bright);
         transform: scale(1.1);
         transition: all 0.2s ease-in-out;
       }
@@ -83,17 +99,18 @@
   <div class="n-row mw-500px mx-auto">
 
     <Link to="/history">
-      <i class="zmdi zmdi-calendar" />
+      <Icon name="calendar" />
+      <!-- <i class="zmdi zmdi-calendar" /> -->
       <label>{Lang.t('tabs.history')}</label>
     </Link>
 
     <Link to="/">
-      <i class="zmdi zmdi-grid" />
-      <label>{Lang.t('tabs.track')}</label>
+      <Icon name="tracker" />
+      <label>{Lang.t('general.trackers', 'Trackers')}</label>
     </Link>
 
     <Link to="/people">
-      <i class="zmdi zmdi-face" />
+      <Icon name="people" />
       <label>{Lang.t('tabs.people')}</label>
     </Link>
 
@@ -105,7 +122,7 @@
     {/each} -->
 
     <Link to="/settings">
-      <i class="zmdi zmdi-settings" />
+      <Icon name="settings" />
       <label>{Lang.t('tabs.settings')}</label>
     </Link>
 

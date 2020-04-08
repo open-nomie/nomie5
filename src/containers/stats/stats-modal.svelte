@@ -25,6 +25,7 @@
   import NBarChart from "../../components/charts/bar-chart.svelte";
   import NLogList from "../../components/log-list/log-list.svelte";
   import NTimeGrid from "../../components/day-time-grid/day-time-grid.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
 
   // Containers
   import NMap from "../../containers/map/map.svelte";
@@ -367,15 +368,13 @@
 <NModal className="stats-modal" bodyClass="bg-solid-1" fullscreen>
   <header slot="raw-header" class="box-shadow-float">
     <NToolbarGrid>
-      <button
-        class="btn btn-clear zmdi zmdi-close"
-        on:click={close}
-        slot="left" />
+      <button class="btn btn-clear tap-icon" on:click={close} slot="left">
+        <NIcon name="close" />
+      </button>
       <h1 class="title" slot="main">{getTitle()}</h1>
-      <button
-        class="btn btn-clear zmdi zmdi-more"
-        slot="right"
-        on:click={onMoreTap} />
+      <button class="btn btn-clear tap-icon" slot="right" on:click={onMoreTap}>
+        <NIcon name="more" />
+      </button>
     </NToolbarGrid>
     <div class="n-row pb-2 px-2">
       <NButtonGroup size="sm" buttons={state.timeOption} />

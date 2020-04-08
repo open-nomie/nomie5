@@ -8,8 +8,10 @@
   height: 50px;
   box-shadow: inset 3px 0px 4px rgba(0, 0, 0, 0);
   transition: all 0.2s ease-in-out;
+
   &:not([data-scroll="0"]) {
-    box-shadow: inset 2px 0px 1px var(--color-faded);
+    box-shadow: inset 2px 0px 1px var(--color-faded) !important;
+    z-index: 10;
   }
 
   .zmdi {

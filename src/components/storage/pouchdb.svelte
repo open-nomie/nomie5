@@ -183,9 +183,6 @@
 {#if pouchEngine}
   <div class="pouchdb storage-option">
     <NItem>
-      <span
-        slot="left"
-        class="btn-icon zmdi text-primary zmdi-assignment-account" />
       <div class="title truncate">Sync to CouchDB</div>
       <div slot="right">
         <NToggle
@@ -206,9 +203,6 @@
           title="Syncing"
           className="text-red clickable"
           on:click={methods.stopSync}>
-          <span
-            slot="left"
-            class="btn-icon zmdi text-primary zmdi-refresh-sync" />
           <div slot="right">
             <span class="fake-link text-red">Stop Sync</span>
           </div>

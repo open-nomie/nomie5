@@ -5,6 +5,7 @@
   import NInput from "../../components/input/input.svelte";
   import NLogListLoader from "../../components/log-list/log-list-loader.svelte";
   import NToolbar from "../../components/toolbar/toolbar.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
   import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import ButtonGroup from "../../components/button-group/button-group.svelte";
   import Dymoji from "../../components/dymoji/dymoji.svelte";
@@ -156,8 +157,10 @@
     <NToolbarGrid>
       <button
         slot="left"
-        class="btn btn-clear btn-icon zmdi zmdi-close"
-        on:click={close} />
+        class="btn btn-clear btn-icon tap-icon"
+        on:click={close}>
+        <NIcon name="close" />
+      </button>
       <div class="main">
         <div class="n-row">
           <Dymoji person={activePerson} size={26} radius={0.3} />
@@ -166,13 +169,14 @@
       </div>
       <button
         slot="right"
-        class="btn btn-sm btn-clear text-xl"
+        class="btn btn-sm tap-icon"
         on:click={() => {
           close();
           Interact.openStats(activePerson.getUsername(), 'person');
         }}>
-        <i class=" zmdi zmdi-chart" />
+        <NIcon name="chart" />
       </button>
+
     </NToolbarGrid>
     <NToolbar>
       <ButtonGroup

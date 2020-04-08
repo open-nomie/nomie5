@@ -2,6 +2,8 @@
   import { createEventDispatcher } from "svelte";
   import { navigate } from "svelte-routing";
 
+  import NIcon from "../../components/icon/icon.svelte";
+
   export let to = undefined;
 
   const dispatch = createEventDispatcher();
@@ -21,6 +23,6 @@
   }
 </style>
 
-<button class="btn" on:click={onClick}>
-  <i class="zmdi zmdi-arrow-back mr-2 text-lg tap-icon" />
+<button class="btn tap-icon" on:click={onClick}>
+  <NIcon name="arrowBack" />
 </button>

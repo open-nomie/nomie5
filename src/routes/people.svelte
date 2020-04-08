@@ -4,6 +4,7 @@
   import ButtonGroup from "../components/button-group/button-group.svelte";
   import NItem from "../components/list-item/list-item.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
+  import NIcon from "../components/icon/icon.svelte";
   import PersonBall from "../components/tracker-ball/person-ball.svelte";
   import AvatarBall from "../components/tracker-ball/ball.svelte";
   import ItemBall from "../components/tracker-ball/item-ball.svelte";
@@ -80,13 +81,18 @@
 
   function getPeople() {
     if (state.searchTerm) {
-      return Object.keys($PeopleStore.people).filter(person => {
+      return Object.keys(($PeopleStore || {}).people || {}).filter(person => {
         return person.toLowerCase().search(state.searchTerm) > -1;
       });
     } else {
-      return Object.keys($PeopleStore.people);
+      return Object.keys(($PeopleStore || {}).people || {});
     }
   }
+
+  onMount(() => {
+    loadPeople();
+    state.initialized = true;
+  });
 </script>
 
 <style lang="scss">
@@ -101,7 +107,7 @@
       placeholder="Search People..."
       autocomplete>
       <button on:click={addPerson} slot="right" class="btn btn-icon btn-clear">
-        <i class=" zmdi zmdi-account-add tap-icon sm" />
+        <NIcon name="userAdd" className="fill-primary-bright" />
       </button>
 
     </NSearchBar>
@@ -160,7 +166,7 @@
               on:click|stopPropagation={() => {
                 openStats(person);
               }}>
-              <i class="zmdi zmdi-chart text-primary-bright" />
+              <NIcon name="chart" className="fill-primary-bright" size={18} />
             </button>
           </div>
         </NItem>

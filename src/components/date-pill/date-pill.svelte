@@ -1,4 +1,10 @@
 <script>
+  /**
+   *
+   * DEPRECATED!
+   *
+   */
+
   // svelte
   import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
