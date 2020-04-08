@@ -22,6 +22,7 @@
     width: calc(100% - 16pt);
     margin: 8pt;
     border-radius: 8pt;
+    box-shadow: var(--box-shadow);
   }
 
   select,
@@ -228,6 +229,13 @@
 }
 
 .n-list {
+  &.solo,
+  [solo] {
+    width: calc(100% - 16pt);
+    margin: 8pt;
+    box-shadow: var(--box-shadow);
+  }
+
   margin-bottom: 16px;
   @include media-breakpoint-up(sm) {
     border-radius: 6px;

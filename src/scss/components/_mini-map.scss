@@ -32,9 +32,10 @@ body.scrolling {
       border-right: solid 1px var(--color-faded-2) !important;
     }
   }
-  @include media-breakpoint-down(xs) {
-    display: none;
-  }
+  display: none;
+}
+.leaflet-container {
+  background-color: var(--color-solid) !important;
 }
 .leaflet-control-attribution {
   background: transparent !important;

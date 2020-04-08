@@ -20,14 +20,14 @@
     padding: 16pt !important;
     font-size: 1.1rem;
     line-height: 126%;
-    border-top: solid 1px rgba(0, 0, 0, 0.1);
+    border-top: solid 1px var(--color-solid-2);
     &.long-note {
       font-size: 0.97rem;
     }
   }
 
   .trackers-list {
-    border-top: solid 1px rgba(0, 0, 0, 0.1);
+    border-top: solid 1px var(--color-solid-1);
     .n-item {
       padding: 0 16px;
     }

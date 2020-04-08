@@ -1,3 +1,5 @@
+@import "../../scss/utils/_utils";
+
 .n-toolbar-grid {
   color: var(--color-inverse);
   display: grid;
@@ -6,8 +8,15 @@
   grid-template-columns: 1fr 3fr 1fr;
   grid-template-rows: 1fr;
   height: 100%;
-  width: 100%;
+  width: calc(100% - 16pt);
   min-height: 50px;
+  margin-left: 8pt;
+  margin-right: 8pt;
+
+  @include media-breakpoint-up(md) {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .n-toolbar-grid.lg {
@@ -15,11 +24,15 @@
 }
 
 .n-toolbar-grid .left {
-  align-items: center;
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
   grid-area: 1 / 1 / 2 / 2;
   justify-content: center;
+  .btn-clear,
+  .tap-icon {
+    padding-left: 0;
+  }
 }
 .n-toolbar-grid .main {
   align-items: center;
@@ -38,9 +51,13 @@
   text-align: center;
 }
 .n-toolbar-grid .right {
-  align-items: stretch;
+  align-items: flex-end;
   display: flex;
   flex-direction: column;
   grid-area: 1 / 3 / 2 / 4;
   justify-content: center;
+  .btn-clear,
+  .tap-icon {
+    padding-right: 0;
+  }
 }

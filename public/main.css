@@ -5830,7 +5830,8 @@ body.scrolling .mini-map {
   .n-item.solo, .n-item[solo] {
     width: calc(100% - 16pt);
     margin: 8pt;
-    border-radius: 8pt; }
+    border-radius: 8pt;
+    box-shadow: var(--box-shadow); }
   .n-item select,
   .n-item input {
     margin: 8px 0; }
@@ -5956,6 +5957,11 @@ body.scrolling .mini-map {
 .n-list {
   margin-bottom: 16px;
   overflow: hidden; }
+  .n-list.solo,
+  .n-list [solo] {
+    width: calc(100% - 16pt);
+    margin: 8pt;
+    box-shadow: var(--box-shadow); }
   @media (min-width: 350px) {
     .n-list {
       border-radius: 6px; } }
@@ -6411,11 +6417,11 @@ aside.n-panel {
     padding: 16pt !important;
     font-size: 1.1rem;
     line-height: 126%;
-    border-top: solid 1px rgba(0, 0, 0, 0.1); }
+    border-top: solid 1px var(--color-solid-2); }
     .n-item-log .n-note-textualized.long-note {
       font-size: 0.97rem; }
   .n-item-log .trackers-list {
-    border-top: solid 1px rgba(0, 0, 0, 0.1); }
+    border-top: solid 1px var(--color-solid-1); }
     .n-item-log .trackers-list .n-item {
       padding: 0 16px; }
     .n-item-log .trackers-list .n-item:last-child {
