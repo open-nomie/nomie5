@@ -7,7 +7,7 @@
 
 </style>
 
-<div class="n-toolbar-grid {className}" {style}>
+<div class="n-toolbar-grid container {className}" {style}>
   <div class="left">
     <slot name="left" />
   </div>

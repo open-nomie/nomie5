@@ -12,7 +12,7 @@
     align-items: center;
     justify-content: stretch;
 
-    padding: 0 16px;
+    padding: 0 8pt;
 
     h1,
     h2,
@@ -46,7 +46,7 @@
       }
     }
     .container {
-      padding: 0px 10px;
+      // padding: 0px 10px;
     }
     [slot="sub-header"] {
       width: 100%;
