@@ -119,9 +119,9 @@
   class="full-screen dark-glass pop-menu {show === true ? 'visible' : 'hidden'}">
   <div class="card">
     {#if title || description}
-      <div class="pb-4 pt-2 text-center">
+      <div class="pb-3 pt-2 text-center">
         {#if title}
-          <h5 class="text-center m-0 p-0">{title}</h5>
+          <h5 class="text-center m-0 p-0 text-md text-inverse-2">{title}</h5>
         {/if}
         {#if description}
           <p class="text-center m-0 p-0">{description}</p>
