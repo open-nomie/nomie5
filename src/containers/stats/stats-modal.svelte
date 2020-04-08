@@ -10,6 +10,8 @@
   import StatsProcessor from "../../modules/stats/stats";
   import StatsV5 from "../../modules/stats/statsV5";
 
+  import { strToColor } from "../../components/dymoji/dymoji";
+
   // Utils
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import math from "../../utils/math/math";
@@ -58,6 +60,52 @@
     location: { prefix: "" }
   };
 
+  class CompareModel {
+    constructor(starter = {}) {
+      this.type = starter.type;
+      this.key = starter.key;
+      this.base = starter.base;
+      this.label = starter.label;
+      this.stats = null;
+    }
+
+    getTracker() {
+      // We have to force everything to kinda a tracker
+      if (this.type == "tracker") {
+        return this.base;
+      } else {
+        return new Tracker({
+          math: "sum",
+          tag: this.key,
+          color: strToColor(this.key)
+        });
+      }
+    }
+
+    async getStats() {
+      let searchTerm = getSearchTerm(this.type, this.key);
+      let payload = {
+        search: searchTerm,
+        start: getFromDate(),
+        end: getToDate()
+      };
+
+      let results = await LedgerStore.query(payload);
+      const statsV5 = new StatsV5({ is24Hour: $UserStore.meta.is24Hour });
+      this.stats = statsV5.generate({
+        rows: results,
+        fromDate: getFromDate(),
+        toDate: getToDate(),
+        mode: state.timeSpan,
+        tracker: this.getTracker()
+      });
+
+      //
+
+      return this.stats;
+    }
+  }
+
   const state = {
     date: dayjs(),
     timeSpan: "w",
@@ -65,7 +113,8 @@
     timeOption: [],
     viewOption: [],
     loading: true,
-    stats: null
+    stats: null,
+    compare: []
   };
 
   function setTimeView(option) {
@@ -134,22 +183,30 @@
     Interact.closeStats();
   }
 
-  function getTitle() {
-    let title = "Stats";
-    switch ($Interact.stats.activeType) {
+  function getSearchTerm(type, text) {
+    let response = "";
+    switch (type) {
       case "tracker":
-        title = `#${$Interact.stats.activeTag}`;
+        response = `#${text}`;
         break;
       case "person":
-        title = `@${$Interact.stats.activeTag}`;
+        response = `@${text}`;
         break;
       case "context":
-        title = `+${$Interact.stats.activeTag}`;
+        response = `+${text}`;
         break;
-      case "location":
-        title = `Location`;
+      default:
+        response = text;
         break;
     }
+    return response;
+  }
+
+  function getTitle() {
+    let title = getSearchTerm(
+      $Interact.stats.activeType,
+      $Interact.stats.activeTag
+    );
     return title;
   }
 
@@ -162,6 +219,12 @@
     return dayjs(state.date);
   }
 
+  function removeCompare(compare) {
+    state.compare = state.compare.filter(row => {
+      return row != compare;
+    });
+  }
+
   function getQueryTerm() {
     if (types.hasOwnProperty($Interact.stats.activeType)) {
       return `${types[$Interact.stats.activeType].prefix}${$Interact.stats.activeTag}`;
@@ -170,26 +233,131 @@
     }
   }
 
+  async function compareTracker() {
+    let item = await Interact.select("tracker");
+    if (item) {
+      let compareObj = new CompareModel({
+        type: "tracker",
+        key: item.tag,
+        label: item.label,
+        base: item
+      });
+      await compareObj.getStats();
+      state.compare.push(compareObj);
+    }
+    state.compare = state.compare;
+  }
+
+  async function comparePerson() {
+    let item = await Interact.select("person");
+    if (item) {
+      let compareObj = new CompareModel({
+        type: "person",
+        key: item.username,
+        label: item.displayName,
+        base: item
+      });
+      await compareObj.getStats();
+      state.compare.push(compareObj);
+    }
+    state.compare = state.compare;
+  }
+
+  async function compareContext() {
+    let item = await Interact.select("context");
+    if (item) {
+      let compareObj = new CompareModel({
+        type: "context",
+        key: item,
+        label: item,
+        base: item
+      });
+      await compareObj.getStats();
+      state.compare.push(compareObj);
+    }
+    state.compare = state.compare;
+  }
+
+  async function compareSearchTerm() {
+    let item = await Interact.prompt("Term");
+    if (item) {
+      let compareObj = new CompareModel({
+        type: "search",
+        key: item,
+        label: item,
+        base: item
+      });
+      await compareObj.getStats();
+      state.compare.push(compareObj);
+    }
+    state.compare = state.compare;
+  }
+
+  async function compareType() {
+    let types = ["Tracker", "Person", "Context", "Search Term"];
+    Interact.popmenu({
+      buttons: types.map(type => {
+        return {
+          title: `${type}...`,
+          click() {
+            switch (type) {
+              case "Tracker":
+                compareTracker();
+                break;
+              case "Person":
+                comparePerson();
+                break;
+              case "Context":
+                compareContext();
+                break;
+              case "Search Term":
+                compareSearchTerm();
+                break;
+            }
+          }
+        };
+      })
+    });
+  }
+
   function onMoreTap() {
     let buttons = [];
+    const compare = {
+      title: "Compare to...",
+      click() {
+        compareType();
+      }
+    };
     const startOfMonth = {
-      title: "Go to start of month",
+      title: "Start of month",
       click: () => {
         changeDate(state.date.startOf("month"));
       }
     };
     const startOfYear = {
-      title: "Go to start of year",
+      title: "Start of year",
       click: () => {
         changeDate(state.date.startOf("year"));
-        state.date = state.date.startOf("year");
       }
     };
-    buttons.push(startOfMonth);
-    buttons.push(startOfYear);
+    const startOfWeek = {
+      title: "Start of week",
+      click: () => {
+        changeDate(state.date.startOf("week"));
+      }
+    };
+    buttons.push(compare);
+    if (state.timeSpan == "m") {
+      buttons.push(startOfMonth);
+    } else if (state.timeSpan == "y") {
+      buttons.push(startOfYear);
+    } else if (state.timeSpan == "w") {
+      buttons.push(startOfWeek);
+    }
+
     if (["d", "w", "m"].indexOf(state.timeSpan) > -1) {
     }
-    Interact.popmenu({ title: "More", buttons });
+    Interact.popmenu({ title: "Stat Options", buttons });
   }
 
   function getTracker() {
@@ -213,7 +381,6 @@
     };
     let results = await LedgerStore.query(payload);
     const statsV5 = new StatsV5({ is24Hour: $UserStore.meta.is24Hour });
-
     state.stats = statsV5.generate({
       rows: results,
       fromDate: getFromDate(),
@@ -222,7 +389,9 @@
       tracker: getTracker()
     });
 
-    console.log("These Stats", state.stats);
+    for (let i = 0; i < state.compare.length; i++) {
+      await state.compare[i].getStats();
+    }
 
     state.loading = false;
   }
@@ -352,7 +521,7 @@
   $: dateFormat = $UserStore.meta.is24Hour ? "DD/MM/YYYY" : "MMM Do YYYY";
 </script>
 
-<style>
+<style lang="scss">
   .n-list {
     max-width: 100vw;
     overflow: hidden;
@@ -362,6 +531,14 @@
     font-weight: 500;
     text-align: center;
     line-height: 1rem;
+  }
+  .compare-chart {
+    position: relative;
+    .btn-close {
+      position: absolute;
+      top: -6px;
+      right: 0px;
+    }
   }
 </style>
 
@@ -399,24 +576,54 @@
     </NToolbarGrid>
 
     {#if state.stats && !state.loading}
-      <NBarChart
-        height={120}
-        color={getTracker().color}
-        labels={state.stats.chart.values.map(point => point.x)}
-        points={state.stats.chart.values}
-        on:swipeLeft={loadNextDate}
-        on:swipeRight={loadPreviousDate}
-        xFormat={(x, index) => {
-          console.log('X Format?', x, index);
-          return x;
-        }}
-        on:tap={event => {
-          let newDate;
-          state.date = dayjs(event.detail.point.date);
-          console.log('Tapped Date');
-        }}
-        activeIndex={0} />
+      <div class="main-chart px-2 pb-1">
+        <NBarChart
+          height={110}
+          color={getTracker().color}
+          labels={state.stats.chart.values.map(point => point.x)}
+          points={state.stats.chart.values}
+          on:swipeLeft={loadNextDate}
+          on:swipeRight={loadPreviousDate}
+          xFormat={(x, index) => {
+            return x;
+          }}
+          yFormat={y => {
+            return getTracker().displayValue(y);
+          }}
+          on:tap={event => {
+            let newDate;
+            state.date = dayjs(event.detail.point.date);
+          }}
+          activeIndex={0} />
+      </div>
+      {#each state.compare as compare}
+        <div class="compare-chart px-2 py-1">
+          <NBarChart
+            height={90}
+            title={getSearchTerm(compare.type, compare.label)}
+            color={compare.getTracker().color}
+            labels={compare.stats.chart.values.map(point => point.x)}
+            points={compare.stats.chart.values}
+            on:swipeLeft={loadNextDate}
+            on:swipeRight={loadPreviousDate}
+            xFormat={(x, index) => {
+              return x;
+            }}
+            yFormat={y => {
+              return compare.getTracker().displayValue(y);
+            }}
+            activeIndex={0} />
+          <button
+            class="btn btn-clear btn-close"
+            on:click={() => {
+              removeCompare(compare);
+            }}>
+            <NIcon name="closeFilled" size="16" />
+          </button>
+        </div>
+      {/each}
     {/if}
+
   </header>
 
   <div slot="footer" class="w-100">

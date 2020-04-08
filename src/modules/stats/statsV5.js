@@ -130,7 +130,6 @@ export default class StatsProcessor {
 
   // Generate Chart Data
   getChartDataByType(unit, timeFormat, labelFormat, valueMapTotals) {
-    console.log("Get Chart by Type", labelFormat);
     let labels = [];
     let values = [];
     let unitValues = valueMapTotals.days;
@@ -139,14 +138,11 @@ export default class StatsProcessor {
     let to = unit == "hour" ? this.fromDate.endOf("day") : this.toDate;
     let diff = to.diff(from, unit);
 
-    console.log(`Diff of from and to: ${diff}`);
-    console.log(`${from.format("DD MMM YYYY")} to ${to.format("DD MMM YYYY")}`);
-
     for (var i = 1; i <= diff; i++) {
       const unitDate = dayjs(from).add(i, unit);
       let key = unitDate.format(timeFormat);
       let label = unitDate.format(labelFormat);
-      console.log("Unit Date", unitDate.format(labelFormat));
+
       if (unitValues.hasOwnProperty(key)) {
         const value = this.getMath() == "sum" ? unitValues[key].sum : unitValues[key].avg;
         labels.push({ x: label });
@@ -165,7 +161,6 @@ export default class StatsProcessor {
 
   getChartData(valueMapTotals) {
     if (this.mode == "d") {
-      console.log(`## ITS A DAY... is this 23hour? : ${this.is24Hour ? "Yes!" : "No... wtf"}`);
       let { labels, values } = this.getChartDataByType("hour", "H", this.is24Hour ? "H" : "ha", valueMapTotals);
       return {
         mode: this.mode,
