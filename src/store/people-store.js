@@ -90,7 +90,6 @@ const searchForPeople = async () => {
   let people = [];
   logs.forEach((log) => {
     let meta = log.getMeta();
-    console.log("Meta People", meta.people);
     // Array of usernames.
     meta.people.forEach((username) => {
       username = username.toLowerCase();
@@ -134,7 +133,6 @@ const PeopleInit = () => {
         } else {
           delete state.people[person.username];
         }
-        console.log("Updated State", person, state);
         return state;
       });
       return methods.writeState();
@@ -202,12 +200,11 @@ const PeopleInit = () => {
               state.people[person.username].last = new Date();
             } else {
               changed = true;
-              state.person.last = new Date();
+              state.people[person.username].last = new Date();
             }
           }
         });
         if (changed) {
-          console.log("Saving ", state.people);
           this.write(state.people);
         }
         return state;
