@@ -88,26 +88,5 @@
 </style>
 
 <div class="n-date-pill">
-  <div class="btn-group">
-    <button class="btn btn-icon clickable" on:click={methods.previous}>
-      <i class="zmdi zmdi-arrow-left" />
-    </button>
-    <button class="btn btn-icon" on:click={methods.onSearchPress}>
-      <i class="zmdi zmdi-search" />
-    </button>
-    <button class="btn date-btn clickable px-1" on:click={methods.datePress}>
-      {#if timeUnit == 'day'}
-        <div class="day">{date.format('dddd')}</div>
-        <div class="date">{date.format('MMMM D YYYY')}</div>
-      {:else}
-        <div class="day">{date.format(buttonFormat)}</div>
-      {/if}
-    </button>
-    <button class="btn btn-icon" on:click={methods.onLocationPress}>
-      <i class="zmdi zmdi-map" />
-    </button>
-    <button class="btn btn-icon clickable" on:click={methods.next}>
-      <i class="zmdi zmdi-arrow-right" />
-    </button>
-  </div>
+  <!--  -->
 </div>

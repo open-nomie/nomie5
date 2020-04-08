@@ -8,24 +8,41 @@ import Logger from "../../utils/log/log";
 import math from "../../utils/math/math";
 import regex from "../../utils/regex";
 
+const console = new Logger("📊 V5 Stats");
+
 export default class StatsProcessor {
   constructor(starter = {}) {
+    // Set Defaults
     this.rows = starter.rows || [];
     this.fromDate = starter.fromDate || dayjs().subtract(1, "week");
     this.toDate = starter.toDate || dayjs();
     this.mode = starter.mode || "w";
     this.tracker = starter.tracker || null;
+    this.is24Hour = starter.is24Hour || false;
   }
 
-  generate(config = {}) {
+  init(config) {
     this.rows = config.rows || this.rows;
     this.fromDate = config.fromDate || this.fromDate;
     this.toDate = config.toDate || this.toDate;
     this.mode = config.mode || this.mode;
     this.tracker = config.tracker || this.tracker;
+    this.is24Hour = config.is24Hour || this.is24Hour;
+  }
+
+  /**
+   * Generate Results from a Config
+   * @param {Object} config
+   */
+  generate(config = {}) {
+    this.init(config);
     return this.generateResults();
   }
 
+  /**
+   * getUnitFormat
+   * Get Unit dayjs Format
+   */
   getUnitFormat() {
     let unitFormat;
     if (this.mode == "d") {
@@ -113,6 +130,7 @@ export default class StatsProcessor {
 
   // Generate Chart Data
   getChartDataByType(unit, timeFormat, labelFormat, valueMapTotals) {
+    console.log("Get Chart by Type", labelFormat);
     let labels = [];
     let values = [];
     let unitValues = valueMapTotals.days;
@@ -121,10 +139,14 @@ export default class StatsProcessor {
     let to = unit == "hour" ? this.fromDate.endOf("day") : this.toDate;
     let diff = to.diff(from, unit);
 
-    for (var i = 0; i < diff; i++) {
+    console.log(`Diff of from and to: ${diff}`);
+    console.log(`${from.format("DD MMM YYYY")} to ${to.format("DD MMM YYYY")}`);
+
+    for (var i = 1; i <= diff; i++) {
       const unitDate = dayjs(from).add(i, unit);
       let key = unitDate.format(timeFormat);
       let label = unitDate.format(labelFormat);
+      console.log("Unit Date", unitDate.format(labelFormat));
       if (unitValues.hasOwnProperty(key)) {
         const value = this.getMath() == "sum" ? unitValues[key].sum : unitValues[key].avg;
         labels.push({ x: label });
@@ -143,14 +165,22 @@ export default class StatsProcessor {
 
   getChartData(valueMapTotals) {
     if (this.mode == "d") {
-      let { labels, values } = this.getChartDataByType("hour", "H", "H", valueMapTotals);
+      console.log(`## ITS A DAY... is this 23hour? : ${this.is24Hour ? "Yes!" : "No... wtf"}`);
+      let { labels, values } = this.getChartDataByType("hour", "H", this.is24Hour ? "H" : "ha", valueMapTotals);
       return {
         mode: this.mode,
         labels,
         values,
       };
-    } else if (this.mode == "w" || this.mode == "m") {
+    } else if (this.mode == "w") {
       let { labels, values } = this.getChartDataByType("day", "YYYY-MM-DD", "Do", valueMapTotals);
+      return {
+        mode: this.mode,
+        labels,
+        values,
+      };
+    } else if (this.mode == "m") {
+      let { labels, values } = this.getChartDataByType("day", "YYYY-MM-DD", "M/D", valueMapTotals);
       return {
         mode: this.mode,
         labels,

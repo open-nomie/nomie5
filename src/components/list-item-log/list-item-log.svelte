@@ -138,8 +138,7 @@
       }) as tracker (`${tracker.tag}-${displayLog._id}`)}
         <!-- Tracker List Item  -->
         <NItem
-          borderBottom
-          className="clickable"
+          className="clickable bottom-line"
           on:click={event => {
             event.preventDefault();
             event.stopPropagation();

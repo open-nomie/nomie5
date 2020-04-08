@@ -21,8 +21,7 @@
     animateForward: false,
     animateBack: false,
     file: null,
-    loading: true,
-    root: true
+    loading: true
   };
 
   // Not working
@@ -41,10 +40,7 @@
     if (path.substr(0, 1) == "/") {
       path = path.replace("/", "");
     }
-    console.log("File browser got a path!!", path);
     let ogPath = path.split("/");
-    console.log("OgPath", ogPath);
-    state.root = ogPath.length == 1;
     if (ogPath.length > 0) {
       let fileName = ogPath[ogPath.length - 1];
       if (isFile(fileName)) {
@@ -52,9 +48,8 @@
         state.path = ogPath;
       } else {
         state.path = ogPath;
-        console.log("It's a directory!");
+
         state.files = extractFiles();
-        console.log("State files", state.files);
       }
     }
     state.title = ogPath.join("/");
@@ -215,7 +210,6 @@
             <NItem
               className="clickable bottom-line"
               on:click={() => {
-                console.log('Click', state.path, file);
                 navigate(`files/${state.path.length > 1 ? state.path.join('/') : state.path[0]}/${file}`);
               }}>
               {file}

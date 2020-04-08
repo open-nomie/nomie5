@@ -73,9 +73,10 @@
       top: -10px;
       left: -8px;
       background-color: var(--color-solid);
+      box-shadow: var(--box-shadow-tight);
       color: var(--color-inverse);
-      width: 18px;
-      height: 18px;
+      width: 24px;
+      height: 24px;
       border-radius: 10px;
       border: none;
       display: flex;
@@ -95,14 +96,14 @@
     <div class="n-tips">
       <div class="n-row mb-2">
         <div class="btn-close text-lg flex-grow-off" on:click={hideTips}>
-          <i class="text-lg zmdi zmdi-close-circle" />
+          <NIcon name="close" />
         </div>
-        <button class="btn btn-clear btn-icon" on:click={previousTip}>
+        <button class="btn btn-clear btn-icon tap-icon" on:click={previousTip}>
           <NIcon name="chevronLeft" />
         </button>
         <div class="tip filler">{tips[state.activeTip]}</div>
         <div class="d-flex flex-row arrows">
-          <button class="btn btn-clear btn-icon" on:click={nextTip}>
+          <button class="btn btn-clear btn-icon tap-icon" on:click={nextTip}>
             <NIcon name="chevronRight" />
           </button>
         </div>

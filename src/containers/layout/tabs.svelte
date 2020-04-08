@@ -16,9 +16,6 @@
   #app-tabs {
     height: calc(60px + env(safe-area-inset-bottom));
     padding-bottom: calc(env(safe-area-inset-bottom));
-    // background-color: var(--tabs-background);
-    // backdrop-filter: saturate(180%) blur(20px);
-    color: rgba(255, 255, 255, 0.5);
     display: flex;
     justify-content: space-between;
     align-items: stretch;
@@ -27,13 +24,6 @@
     .n-row {
       z-index: 10;
     }
-  }
-
-  :global(#app-tabs svg) {
-    // fill: #fff;
-    // height: 18px;
-    // flex-shrink: 0;
-    // margin-bottom: 4px;
   }
 
   :global(#app-tabs a svg) {
@@ -100,7 +90,6 @@
 
     <Link to="/history">
       <Icon name="calendar" />
-      <!-- <i class="zmdi zmdi-calendar" /> -->
       <label>{Lang.t('tabs.history')}</label>
     </Link>
 
@@ -113,13 +102,6 @@
       <Icon name="people" />
       <label>{Lang.t('tabs.people')}</label>
     </Link>
-
-    <!-- {#each Plugins.filter(p => p.tab) as plugin}
-      <Link to="/plugins/{plugin.id}">
-        <i class="zmdi zmdi-{plugin.tab.icon}" />
-        <label>{plugin.tab.label}</label>
-      </Link>
-    {/each} -->
 
     <Link to="/settings">
       <Icon name="settings" />

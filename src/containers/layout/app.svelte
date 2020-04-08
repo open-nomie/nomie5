@@ -53,7 +53,7 @@
     min-height: 50px;
   }
   :global(.header-slot .btn) {
-    text-transform: uppercase;
+    // text-transform: uppercase;
     font-weight: bold;
     font-size: 0.9rem;
   }

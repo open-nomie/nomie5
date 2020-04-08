@@ -110,33 +110,3 @@
 
 </div>
 <!-- last.log.end -->
-
-<!--
-  <header>
-    {#if value}
-      <span class="value left">{value}</span>
-    {/if}
-    <div class="filler" />
-    {#if !hideMore}
-      <button
-        class="btn btn-xs btn-round zmdi zmdi-more text-faded-2 clickable py-1
-        px-2"
-        on:click={methods.moreClicked} />
-    {/if}
-  </header>
-  {#if tracker.started}
-    <div class="center countdown">
-      <Counter started={tracker.started} />
-    </div>
-  {/if}
-  <i class="emoji">{tracker.emoji}</i>
-  <footer>{tracker.label}</footer>
-  {#if tracker.one_tap}
-    <div class="one-tap" />
-  {/if}
-  {#if hoursUsed.length}
-    <div class="balls">
-      <TimeBalls hours={hoursUsed} />
-    </div>
-  {/if}
--->

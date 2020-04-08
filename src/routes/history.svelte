@@ -358,7 +358,7 @@
   .header-date-control {
     line-height: 100%;
     flex-grow: 1;
-    flex-shrin: 1;
+    flex-shrink: 1;
   }
 
   // :global(.trackers-list) {

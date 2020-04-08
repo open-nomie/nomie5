@@ -11,6 +11,7 @@
 
   // Components
   import NModal from "../../../components/modal/modal.svelte";
+  import NIcon from "../../../components/icon/icon.svelte";
 
   //Container for Slider (range), Keypad and Timer
   import SliderInput from "./slider.svelte";
@@ -195,7 +196,8 @@
           aria-label="Cancel"
           on:click={methods.onCancel}
           class="btn btn-clear btn-lg w-25 {data.tracker.type == 'timer' && !data.tracker.started ? 'd-none' : ''}">
-          <span class=" zmdi zmdi-close" />
+
+          <NIcon name="close" size="32" />
         </button>
       {/if}
 
@@ -205,7 +207,7 @@
           aria-label="Cancel"
           class="btn btn-clear btn-lg mr-2 {data.value ? 'w-25' : 'w-100'}">
           {#if data.value}
-            <span class=" zmdi zmdi-close" />
+            <NIcon name="close" size="32" />
           {:else}{Lang.t('general.close', 'Close')}{/if}
         </button>
       {/if}
@@ -255,7 +257,7 @@
           title="Add this to the note, but don't save yet"
           class="btn btn-clear btn-lg w-25 {tracker.started ? 'd-none' : ''}">
           <!-- local hack to make plus match with close-->
-          <span class="zmdi zmdi-plus" />
+          <NIcon name="add" size="32" />
         </button>
       {/if}
     {/if}

@@ -16,7 +16,7 @@
   const keys = [
     [1, 2, 3, "c"],
     [4, 5, 6, "±"],
-    [7, 8, 9, null],
+    [7, 8, 9, "⌫"],
     [null, 0, ".", null]
   ];
   const data = {
@@ -27,6 +27,9 @@
   // Methods
   const methods = {
     onPress(key) {
+      if (key == "⌫") {
+        key = "delete";
+      }
       // Confirm if the data has changed
       if (!data.changed) {
         data.tempValue = "";
@@ -191,7 +194,7 @@
           {#if button !== null}
             <button
               class="button button-{bindex}"
-              on:click|capture={() => {
+              on:mousedown|capture={() => {
                 methods.onPress(button);
                 return false;
               }}>

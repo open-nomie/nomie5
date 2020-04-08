@@ -17,7 +17,7 @@
 
 <NPage className="stats">
 
-  <div slot="header" class="n-toolbar-grid">
+  <div slot="header" class="n-toolbar-grid container">
     <div class="left">
       <NBackButton />
     </div>

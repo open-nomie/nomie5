@@ -25,6 +25,12 @@
   import ArrowLeft24 from "carbon-icons-svelte/lib/ArrowLeft24";
   import Download24 from "carbon-icons-svelte/lib/Download24";
   import Renew24 from "carbon-icons-svelte/lib/Renew24";
+  import Copy24 from "carbon-icons-svelte/lib/Copy24";
+  import Checkmark24 from "carbon-icons-svelte/lib/Checkmark24";
+  import CheckmarkFilled24 from "carbon-icons-svelte/lib/CheckmarkFilled24";
+  import CheckmarkOutline24 from "carbon-icons-svelte/lib/CheckmarkOutline24";
+  import RadioButton24 from "carbon-icons-svelte/lib/RadioButton24";
+  import RadioButtonChecked24 from "carbon-icons-svelte/lib/RadioButtonChecked24";
 
   export let name = "add";
   export let style = undefined;
@@ -58,7 +64,13 @@
     share: Share24,
     arrowBack: ArrowLeft24,
     download: Download24,
-    refresh: Renew24
+    refresh: Renew24,
+    copy: Copy24,
+    checkmark: Checkmark24,
+    checkmarkFilled: CheckmarkFilled24,
+    checkmarkOutline: CheckmarkOutline24,
+    radio: RadioButton24,
+    radioFilled: RadioButtonChecked24
   };
 
   function getStyle() {

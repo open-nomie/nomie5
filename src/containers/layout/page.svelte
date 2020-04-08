@@ -27,24 +27,6 @@
 <AppLayout {className}>
   <div slot="header">
     <slot name="header" />
-    {#if hasHeader}
-      <!-- <NToolbar>
-        {#if withBack}
-          <button
-            class="btn btn-clear pl-0 pr-3"
-            on:click={() => {
-              window.history.back();
-            }}>
-            <i class="zmdi zmdi-chevron-left mr-2" />
-            Back
-          </button>
-        {/if}
-        {#if title}
-          <div class="title filler">{title}</div>
-        {/if}
-        <slot name="header" />
-      </NToolbar> -->
-    {/if}
     {#if hasSubHeader}
       <NToolbar className="sub-header">
         <slot name="sub-header" />

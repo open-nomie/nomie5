@@ -3,6 +3,7 @@
 
   import TrackerButton from "../../containers/board/tracker-button.svelte";
   import NText from "../../components/text/text.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
   // Stores
   import { TrackerStore } from "../../store/trackers";
   import { Lang } from "../../store/lang";
@@ -79,7 +80,7 @@
       <div class="tracker-option">
         {#if TrackerStore.tagExists(tracker.tag) || installed.hasOwnProperty(tracker.tag)}
           <div class="badge badge-green">
-            <i class="zmdi zmdi-check" />
+            <NIcon class="checkmark" color="#FFF" />
           </div>
         {/if}
         <TrackerButton

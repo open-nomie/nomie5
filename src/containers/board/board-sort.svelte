@@ -3,6 +3,7 @@
   import NItem from "../../components/list-item/list-item.svelte";
   import NSortableList from "../../components/sortable-list/sortable-list.svelte";
   import NIcon from "../../components/icon/icon.svelte";
+  import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   // Utils
   import arrayUtils from "../../utils/array/array_utils";
 
@@ -10,6 +11,8 @@
   import { Lang } from "../../store/lang";
   import { BoardStore } from "../../store/boards";
   import { Interact } from "../../store/interact";
+
+  import is from "../../utils/is/is";
 
   function boardsSorted(evt) {
     if (evt.detail instanceof Array) {
@@ -23,6 +26,9 @@
   .btn-group .btn {
     width: 36px;
   }
+  .emoji-only {
+    font-size: 2.4rem;
+  }
 </style>
 
 <Modal
@@ -30,13 +36,19 @@
   type="fullscreen"
   allowClose={true}
   on:close={Interact.toggleBoardSorter}>
-  <div slot="modal-header" class="n-row w-100">
-    <button
-      class="btn btn-icon btn-clear zmdi zmdi-close"
-      on:click={Interact.toggleBoardSorter} />
-    {Lang.t('board.sort-tabs', 'Sort Tabs')}
-    <button class="btn btn-clear">{Lang.t('general.save')}</button>
-    <button class="btn btn-icon btn-clear" />
+  <div slot="modal-header">
+    <NToolbarGrid>
+      <button
+        slot="left"
+        class="btn btn-icon btn-clear tap-icon"
+        on:click={Interact.toggleBoardSorter}>
+        <NIcon name="close" />
+      </button>
+      <div slot="main">{Lang.t('board.sort-tabs', 'Sort Tabs')}</div>
+      <button class="btn btn-clear" slot="right">
+        {Lang.t('general.save')}
+      </button>
+    </NToolbarGrid>
   </div>
   <div class="n-list">
     <NSortableList
@@ -45,10 +57,15 @@
       key="label"
       on:update={boardsSorted}
       let:item>
-      <NItem className="bottom-line" title={item.label}>
+      <NItem className="bottom-line">
         <div slot="right" class="menu-handle">
-          <NIcon className="fill-faded-2" name="sort" />
+          <NIcon name="sort" />
         </div>
+        {#if is.emoji(item.label)}
+          <div class="emoji-only text-center">{item.label}</div>
+        {:else}
+          <div class="name-only text-center">{item.label}</div>
+        {/if}
       </NItem>
     </NSortableList>
   </div>

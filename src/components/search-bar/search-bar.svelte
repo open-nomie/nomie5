@@ -47,14 +47,22 @@
 </script>
 
 <style lang="scss">
+  @import "../../scss/utils/_utils";
   :global(.search-bar) {
+    padding: 0 16pt;
     position: relative;
-    display: flex;
+    îdisplay: flex;
     flex-direction: row;
     align-items: center;
     flex-shrink: 0;
     flex-grow: 1;
+    width: calc(100% - 16pt);
+    margin: 0 8pt;
+    @include media-breakpoint-up(sm) {
+      margin: 0 auto;
+    }
   }
+
   :global(.search-bar .btn-action-clear) {
     font-size: 14px;
   }
@@ -63,7 +71,7 @@
   }
 </style>
 
-<NToolbar className="search-bar {className}" {style}>
+<NToolbar className="search-bar container {className}" {style}>
   {#if searchTerm}
     <button
       class="btn btn-sm btn-clear btn-action-clear"

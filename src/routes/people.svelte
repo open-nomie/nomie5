@@ -137,7 +137,7 @@
 
       {#each state.people as person}
         <NItem
-          className="py-2 clickable bottom-line"
+          className="py-2 clickable solo box-shadow"
           on:click={() => {
             personClicked(person);
           }}>
@@ -171,6 +171,13 @@
           </div>
         </NItem>
       {/each}
+      {#if state.people.length}
+        <div class="p-2 text-center">
+          <span class="fake-link" on:click={PeopleStore.searchForPeople}>
+            Find recent @people
+          </span>
+        </div>
+      {/if}
     </div>
   </div>
 </AppLayout>

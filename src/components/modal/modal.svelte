@@ -77,7 +77,11 @@
       .n-modal {
         transition: all 0.4s ease-in-out;
         max-height: 87vh;
-        min-width: 95vw;
+        width: 95vw;
+        max-width: 600px;
+        flex-grow: 1;
+        flex-shrink: 1;
+        height: 70vh;
         margin-bottom: 0px;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;

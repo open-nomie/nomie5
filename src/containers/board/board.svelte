@@ -583,31 +583,11 @@
     justify-content: center;
     align-items: center;
   }
-
-  .zmdi-search.active {
-    transform: scale(1.5);
-    background-color: var(--color-solid) !important;
-    color: var(--color-green) !important;
-    box-shadow: var(--box-shadow-float) !important;
-    border-radius: 50% !important;
-    z-index: 1000;
-  }
-  .zmdi-search {
-    z-index: 10;
-    color: var(--color-inverse);
-  }
-  .n-board .trackers {
-    // max-width: 100%;
-    // min-height: 30vh;
-    // padding: 10px 0;
-    // display: flex;
-    // flex-direction: row;
-    // flex-wrap: wrap;
-    // align-items: flex-start;
-    // justify-content: center;
-  }
-
   .board-edit-button {
+    display: flex;
+    align-items: center;
+    padding: 0px;
+    justify-content: center;
     min-width: 40px;
     min-height: 40px;
     width: 40px;
@@ -638,6 +618,7 @@
           <button class="btn tap-icon px-2" on:click={methods.toggleSearch}>
             <NIcon
               name="search"
+              size={22}
               className={data.searching ? 'fill-primary-bright' : 'fill-faded-2'} />
           </button>
         {/if}
@@ -656,7 +637,7 @@
               on:click={() => {
                 Interact.toggleBoardSorter();
               }}>
-              <NIcon name="sort" className="fill-primary-bright" />
+              <NIcon name="sort" size="22" className="fill-primary-bright" />
             </button>
           {/if}
         </NBoardTabs>
@@ -748,7 +729,7 @@
               <button
                 on:click={methods.editBoard}
                 class="btn btn btn-round board-edit-button clickable">
-                <i class="zmdi zmdi-more" />
+                <NIcon name="more" size="32" />
               </button>
             {/if}
           </div>

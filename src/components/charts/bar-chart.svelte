@@ -5,7 +5,7 @@
 
   // Svelte
   import { createEventDispatcher, onMount } from "svelte";
-
+  const dispatch = createEventDispatcher();
   // Utils
 
   import math from "../../utils/math/math";
@@ -26,7 +26,6 @@
   const xTicks = labels;
   let yTicks = [0, 5, 10, 20];
   const padding = { top: 30, right: 15, bottom: 25, left: 25 };
-  const dispatch = createEventDispatcher();
 
   let finalPoints = [];
   let lastPoints = null;
@@ -61,6 +60,21 @@
 
   $: innerWidth = width - (padding.left + padding.right);
   $: barWidth = innerWidth / xTicks.length;
+
+  function showValue(value, index) {
+    console.log("Value", value, index);
+    return true;
+  }
+
+  function showLabel(label, index) {
+    if (labels.length > 12 && labels.length < 24) {
+      return index % 2;
+    } else if (labels.length >= 24) {
+      return index % 4 != 0 ? false : true;
+    } else {
+      return true;
+    }
+  }
 
   const methods = {
     onTap(event, data) {
@@ -164,29 +178,44 @@
 </style>
 
 {#if points}
-  <div class="n-chart" bind:clientWidth={width} bind:clientHeight={height}>
+  <div
+    class="n-chart"
+    bind:clientWidth={width}
+    bind:clientHeight={height}
+    on:swiperight={() => {
+      console.log('Swiping');
+      dispatch('swipeRight');
+    }}
+    on:swipeleft={() => {
+      console.log('Swiping');
+      dispatch('swipeLeft');
+    }}>
     {#if title}
       <div class="title">{title}</div>
     {/if}
     <svg height={`${height}px`}>
       <!-- y axis -->
       <g class="axis y-axis" transform="translate(0,{padding.top})">
-        {#each yTicks as tick}
-          <g
-            class="tick tick-{tick}"
-            transform="translate(0, {yScale(tick) - padding.bottom})">
-            <line x2="100%" />
-            <text y="-4">{yFormat(tick)} {tick === 20 ? '' : ''}</text>
-          </g>
+        {#each yTicks as tick, index}
+          {#if showValue(tick, index)}
+            <g
+              class="tick tick-{tick}"
+              transform="translate(0, {yScale(tick) - padding.bottom})">
+              <line x2="100%" />
+              <text y="-4">{yFormat(tick)} {tick === 20 ? '' : ''}</text>
+            </g>
+          {/if}
         {/each}
       </g>
 
       <!-- x axis -->
       <g class="axis x-axis">
         {#each points as point, i}
-          <g class="tick" transform="translate({xScale(i)},{height})">
-            <text x={barWidth / 2} y="-4">{xFormat(point.x)}</text>
-          </g>
+          {#if showLabel(points, i)}
+            <g class="tick" transform="translate({xScale(i)},{height})">
+              <text x={barWidth / 2} y="-4">{xFormat(point.x)}</text>
+            </g>
+          {/if}
         {/each}
       </g>
 

@@ -174,7 +174,7 @@
           close();
           Interact.openStats(activePerson.getUsername(), 'person');
         }}>
-        <NIcon name="chart" />
+        <NIcon name="chart" size="22" />
       </button>
 
     </NToolbarGrid>
@@ -225,10 +225,16 @@
             accept="png,jpeg,jpg"
             on:change={selectPhoto} />
         </NItem>
-
+        <NItem>
+          <button
+            class="btn btn-block btn-secondary"
+            on:click={saveActivePerson}>
+            Save @{activePerson.username}
+          </button>
+        </NItem>
         <div class="filler mt-5 pt-2" />
         <NItem className="text-red text-sm" on:click={deleteUser}>
-          Delete User...
+          Delete @{activePerson.username}...
         </NItem>
       </div>
     {:else if state.view == 'logs'}
@@ -237,13 +243,5 @@
       </div>
     {/if}
   </main>
-
-  <footer slot="footer" class="n-row w-100">
-    {#if state.view == 'edit'}
-      <button class="btn btn-block btn-secondary" on:click={saveActivePerson}>
-        Save Changes
-      </button>
-    {/if}
-  </footer>
 
 </Modal>

@@ -86,7 +86,7 @@
 </script>
 
 <NPage className="Export">
-  <div class="n-toolbar-grid" slot="header">
+  <div class="n-toolbar-grid container" slot="header">
     <div class="left">
       <NBackButton />
     </div>

@@ -212,7 +212,7 @@
       end: getToDate()
     };
     let results = await LedgerStore.query(payload);
-    const statsV5 = new StatsV5();
+    const statsV5 = new StatsV5({ is24Hour: $UserStore.meta.is24Hour });
 
     state.stats = statsV5.generate({
       rows: results,
@@ -381,12 +381,20 @@
     </div>
 
     <NToolbarGrid>
-      <button class="btn btn-clear" slot="left" on:click={loadPreviousDate}>
-        <i class="zmdi zmdi-chevron-left" />
+      <button
+        class="btn btn-clear text-primary-bright"
+        slot="left"
+        on:click={loadPreviousDate}>
+        <NIcon name="chevronLeft" className="fill-primary-bright" />
+        Prev
       </button>
       <div class="time-range" slot="main">{state.range}</div>
-      <button class="btn btn-clear" slot="right" on:click={loadNextDate}>
-        <i class="zmdi zmdi-chevron-right" />
+      <button
+        class="btn btn-clear text-primary-bright"
+        slot="right"
+        on:click={loadNextDate}>
+        Next
+        <NIcon name="chevronRight" className="fill-primary-bright" />
       </button>
     </NToolbarGrid>
 
@@ -396,6 +404,12 @@
         color={getTracker().color}
         labels={state.stats.chart.values.map(point => point.x)}
         points={state.stats.chart.values}
+        on:swipeLeft={loadNextDate}
+        on:swipeRight={loadPreviousDate}
+        xFormat={(x, index) => {
+          console.log('X Format?', x, index);
+          return x;
+        }}
         on:tap={event => {
           let newDate;
           state.date = dayjs(event.detail.point.date);
@@ -406,7 +420,10 @@
   </header>
 
   <div slot="footer" class="w-100">
-    <NButtonGroup buttons={state.viewOption} />
+    <NButtonGroup
+      inverse
+      color={getTracker().color}
+      buttons={state.viewOption} />
   </div>
 
   {#if state.loading}

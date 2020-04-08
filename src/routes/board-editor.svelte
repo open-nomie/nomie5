@@ -191,7 +191,7 @@
 {#if $BoardStore.activeBoard}
   <NPage>
 
-    <div class="n-toolbar-grid" slot="header">
+    <div class="n-toolbar-grid container" slot="header">
       <div class="left">
         <NBackButton />
       </div>
@@ -286,7 +286,8 @@
       <button
         class="btn btn btn-clear text-danger "
         on:click={methods.deleteBoard}>
-        Delete this Tab
+        <NIcon name="delete" className="fill-red" />
+        Delete Tab
       </button>
       <div class="filler" />
     </div>

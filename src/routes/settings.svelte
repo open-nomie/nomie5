@@ -251,7 +251,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 </script>
 
 <AppLayout>
-  <div slot="header" class="n-toolbar-grid">
+  <div slot="header" class="n-toolbar-grid container">
     <div class="left" />
     <div class="main">
       <h1>{Lang.t('settings.settings')}</h1>
@@ -266,11 +266,11 @@ Note: Your data will not automatically move over. You'll first need to export it
   <div slot="content">
     {#if $UserStore.meta}
       <div class="page page-settings">
-        <div class="container p-0 n-list">
+        <div class="container p-0">
 
           <NItem className="n-item-divider compact" />
           <NItem
-            className="clickable pt-2"
+            className="clickable solo p-2"
             title={Lang.t('settings.share-nomie', 'Share Nomie w/ Friends')}
             description="It'd be super helpful"
             on:click={methods.share}>
@@ -282,10 +282,10 @@ Note: Your data will not automatically move over. You'll first need to export it
             </span>
           </NItem>
 
-          <div class="n-pop">
-            <NItem
-              title={Lang.t('general.customize')}
-              className="n-item-divider" />
+          <NItem
+            title={Lang.t('general.customize')}
+            className="n-item-divider" />
+          <div class="n-list solo">
             <NItem title={Lang.t('settings.theme')}>
               <div slot="right">
                 <select
@@ -316,20 +316,10 @@ Note: Your data will not automatically move over. You'll first need to export it
             <!-- Tracker Board Tabs -->
             {#if $BoardStore.boards.length == 0}
               <NItem title={Lang.t('settings.enable-boards')}>
-
                 <div slot="right">
                   <NToggle
                     bind:value={$UserStore.meta.boardsEnabled}
                     on:change={methods.settingChange} />
-                </div>
-              </NItem>
-            {:else}
-              <NItem
-                title={Lang.t('settings.enable-boards')}
-                className="disabled">
-
-                <div slot="right">
-                  <NToggle value={true} locked={true} />
                 </div>
               </NItem>
             {/if}
@@ -372,8 +362,9 @@ Note: Your data will not automatically move over. You'll first need to export it
 
           </div>
 
-          <div class="n-pop">
-            <NItem title={Lang.t('settings.data')} className="n-item-divider" />
+          <NItem title={Lang.t('settings.data')} className="n-item-divider" />
+          <div class="n-list solo">
+
             <NItem
               className="clickable"
               title={Lang.t('settings.nomie-api')}
@@ -436,30 +427,32 @@ Note: Your data will not automatically move over. You'll first need to export it
               show={data.showMassEditor} />
 
           </div>
+
           <NItem
             title={Lang.t('settings.storage')}
             className="n-item-divider" />
 
-          <NItem>
-            <div class="title truncate">
-              <strong>{Lang.t('general.type', 'Type')}</strong>
-            </div>
+          <div class="n-list solo">
+            <NItem>
+              <div class="title truncate">
+                <strong>{Lang.t('general.type', 'Type')}</strong>
+              </div>
 
-            <div slot="right">
+              <div slot="right">
 
-              <button
-                class="btn btn-clear icon-right"
-                on:click={methods.storageMenu}>
-                {#if $UserStore.storageType === 'local'}
-                  {Lang.t('storage.local', 'Local')}
-                {:else if $UserStore.storageType === 'pouchdb'}
-                  f {Lang.t('storage.pouchdb', 'Local + CouchDB')}
-                {:else if $UserStore.storageType === 'blockstack'}
-                  {Lang.t('storage.blockstack', 'Blockstack')}
-                {/if}
-                <NIcon name="chevronDown" size="16" className="ml-2" />
-              </button>
-              <!-- {#if $UserStore.storageType === 'local'}
+                <button
+                  class="btn btn-clear icon-right"
+                  on:click={methods.storageMenu}>
+                  {#if $UserStore.storageType === 'local'}
+                    {Lang.t('storage.local', 'Local')}
+                  {:else if $UserStore.storageType === 'pouchdb'}
+                    f {Lang.t('storage.pouchdb', 'Local + CouchDB')}
+                  {:else if $UserStore.storageType === 'blockstack'}
+                    {Lang.t('storage.blockstack', 'Blockstack')}
+                  {/if}
+                  <NIcon name="chevronDown" size="16" className="ml-2" />
+                </button>
+                <!-- {#if $UserStore.storageType === 'local'}
                 <button
                   class="btn btn-clear text-primary-bright"
                   on:click={methods.switchToCloud}>
@@ -472,27 +465,28 @@ Note: Your data will not automatically move over. You'll first need to export it
                   {Lang.t('settings.use-local')}
                 </button>
               {/if} -->
-            </div>
-          </NItem>
+              </div>
+            </NItem>
 
-          {#if $UserStore.storageType === 'blockstack'}
-            <BlockstackOptions />
-          {/if}
-          {#if $UserStore.storageType === 'local'}
-            <LocalstorageOptions />
-          {/if}
-          {#if $UserStore.storageType === 'pouchdb'}
-            <PouchDBOptions />
-          {/if}
-          <StorageManager />
-          <NItem title={Lang.t('general.trackers', 'Tracker Count')}>
-            <span slot="right">{TrackerStore.getAsArray().length}</span>
-          </NItem>
+            {#if $UserStore.storageType === 'blockstack'}
+              <BlockstackOptions />
+            {/if}
+            {#if $UserStore.storageType === 'local'}
+              <LocalstorageOptions />
+            {/if}
+            {#if $UserStore.storageType === 'pouchdb'}
+              <PouchDBOptions />
+            {/if}
+            <StorageManager />
 
-          <div class="n-pop">
-            <NItem
-              title={Lang.t('settings.about-nomie')}
-              className="n-item-divider" />
+          </div>
+
+          <NItem
+            title={Lang.t('settings.about-nomie')}
+            className="n-item-divider" />
+
+          <div class="n-list solo">
+
             <NItem title="Learn More">
               <span slot="right">
                 <a
@@ -524,21 +518,9 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </a>
               </span>
             </NItem>
-
-            <NItem className="compact item-divider" />
-
-            <NItem title="Version">
-              <span slot="right" class="pr-2 text-sm">APP_VERSION</span>
-            </NItem>
-            <NItem title="Built">
-              <span slot="right" class="pr-2 text-sm">APP_BUILD_DATE</span>
-            </NItem>
-
           </div>
 
-          <NItem className="compact item-divider" />
-
-          <NItem title={Lang.t('general.questions')}>
+          <NItem title={Lang.t('general.questions')} className="solo">
             <span slot="right">
               <a
                 class="btn btn-clear text-primary-bright"
@@ -548,10 +530,34 @@ Note: Your data will not automatically move over. You'll first need to export it
             </span>
           </NItem>
 
-          <NItem className="compact item-divider" />
+          <NItem
+            title={Lang.t('settings.general-stats', 'General Stats')}
+            className="n-item-divider" />
+
+          <div class="n-list solo">
+            <NItem title={Lang.t('general.trackers', 'Tracker Count')}>
+              <span slot="right">{TrackerStore.getAsArray().length}</span>
+            </NItem>
+            <NItem title={Lang.t('general.launch-count', 'Launch Count')}>
+              <div class="n-row" slot="right">
+                <button
+                  class="btn btn-clear"
+                  on:click={UserStore.resetLaunchCount}>
+                  <NIcon name="delete" className="fill-red" size="18" />
+                </button>
+                {$UserStore.launchCount}
+              </div>
+            </NItem>
+            <NItem title="Version">
+              <span slot="right">APP_VERSION</span>
+            </NItem>
+            <NItem title="Built">
+              <span slot="right">APP_BUILD_DATE</span>
+            </NItem>
+          </div>
 
           <NItem
-            className="text-red text-center"
+            className="solo text-red text-center mt-4"
             on:click={methods.deleteEverything}>
             Reset & Delete all Nomie Data...
           </NItem>
@@ -568,9 +574,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                 Happy Data, LLC
               </a>
             </div>
-            <div class="text-sm pb-2" on:click={UserStore.resetLaunchCount}>
-              Launch Count {$UserStore.launchCount}
-            </div>
+
           </NItem>
 
         </div>

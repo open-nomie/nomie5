@@ -16,6 +16,7 @@
   // components
   import NModal from "../../components/modal/modal.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
 
   // Stores
   import { Interact } from "../../store/interact";
@@ -532,7 +533,7 @@
               gap="40" />
           {:else if importing.trackers.done}
             Imported
-            <i class="zmdi zmdi-check-circle" />
+            <NIcon name="checkmarkFilled" />
           {:else}
             <button
               class="btn text-primary btn-clear"
@@ -554,7 +555,7 @@
               gap="40" />
           {:else if importing.boards.done}
             Imported
-            <i class="zmdi zmdi-check-circle" />
+            <NIcon name="checkmarkFilled" />
           {:else}
             <button
               class="btn text-primary btn-clear"
@@ -576,7 +577,7 @@
               gap="40" />
           {:else if importing.people.done}
             Imported
-            <i class="zmdi zmdi-check-circle" />
+            <NIcon name="checkmarkFilled" />
           {:else}
             <button
               class="btn text-primary btn-clear"
@@ -601,7 +602,7 @@
             </div>
           {:else if importing.records.done}
             Imported
-            <i class="zmdi zmdi-check-circle" />
+            <NIcon name="checkmarkFilled" />
           {:else}
             <button
               class="btn text-primary btn-clear"
