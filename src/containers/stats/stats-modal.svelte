@@ -77,7 +77,7 @@
         return new Tracker({
           math: "sum",
           tag: this.key,
-          color: strToColor(this.key)
+          color: strToColor(this.label)
         });
       }
     }
