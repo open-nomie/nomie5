@@ -8,6 +8,7 @@
 
   // Modules
   import Storage from "../../modules/storage/storage";
+  import NIcon from "../../components/icon/icon.svelte";
 
   // Components
   import NItem from "../../components/list-item/list-item.svelte";
@@ -62,12 +63,14 @@
 <div class="n-storage">
   <div class="list">
     <NItem
-      title="Files ({state.files.length})"
+      title="Browse Storage..."
       on:click={() => {
         navigate('/files');
       }}
       className="clickable">
-      <span slot="right" class="text-primary">Browse Files...</span>
+      <span slot="right">
+        <NIcon name="chevronRight" className="fill-faded-2" />
+      </span>
     </NItem>
 
   </div>

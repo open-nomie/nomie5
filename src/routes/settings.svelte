@@ -430,14 +430,10 @@ Note: Your data will not automatically move over. You'll first need to export it
               </span>
             </NItem>
 
+            <!-- Find and Replace -->
             <MassEditor
               on:close={methods.closeMassEditor}
               show={data.showMassEditor} />
-
-            <NItem
-              className=""
-              title={Lang.t('settings.find-people', 'Find People')}
-              on:click={PeopleStore.searchForPeople} />
 
           </div>
           <NItem
@@ -488,12 +484,10 @@ Note: Your data will not automatically move over. You'll first need to export it
           {#if $UserStore.storageType === 'pouchdb'}
             <PouchDBOptions />
           {/if}
-
-          <NItem title="DB Stats" className="n-item-divider" />
-          <NItem title={Lang.t('general.trackers', 'Trackers')}>
+          <StorageManager />
+          <NItem title={Lang.t('general.trackers', 'Tracker Count')}>
             <span slot="right">{TrackerStore.getAsArray().length}</span>
           </NItem>
-          <StorageManager />
 
           <div class="n-pop">
             <NItem
