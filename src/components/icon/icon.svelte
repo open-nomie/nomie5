@@ -1,5 +1,6 @@
 <script>
   import Add24 from "carbon-icons-svelte/lib/Add24";
+  import AddAlt24 from "carbon-icons-svelte/lib/AddAlt24";
   import Calendar24 from "carbon-icons-svelte/lib/Calendar24";
   import Events24 from "carbon-icons-svelte/lib/Events24";
   import Settings24 from "carbon-icons-svelte/lib/Settings24";
@@ -43,6 +44,7 @@
 
   const icons = {
     add: Add24,
+    addOutline: AddAlt24,
     calendar: Calendar24,
     people: Events24,
     settings: Settings24,
