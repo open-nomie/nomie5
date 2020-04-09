@@ -9,7 +9,7 @@
 
   function getStyle(active) {
     if (inverse && color && active) {
-      return `background-color:${color} !important; color:#FFF;`;
+      return `background-color:${color} !important; color:#FFF; box-shadow: 0px 3px 10px -3px ${color};`;
     } else {
       return ``;
     }
