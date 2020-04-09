@@ -83,12 +83,6 @@
           MAP.removeLayer(layer);
         });
 
-        // if (locations.length) {
-        //   methods.getLocation(locations[0].lat, locations[0].lng).then(loc => {
-        //     data.locationName = loc.Match_addr;
-        //     data.locating = false;
-        //   });
-        // }
         if (picker) {
           MAP.on("moveend", () => {
             let center = MAP.getCenter();
@@ -204,6 +198,7 @@
         // Loop over locaitons provided in props
         locations.forEach(loc => {
           addMarker([loc.lat, loc.lng], loc.name, () => {
+            console.log("Tapped!?", loc);
             // On Marker Click
             data.activeLocation = loc;
             // If a log exists - show the Share Log popup
@@ -233,6 +228,9 @@
             locations[0].name,
             () => {
               data.activeLocation = locations[0];
+              if (data.activeLocation.log) {
+                Interact.shareLog(data.activeLocation.log);
+              }
             }
           );
         }
