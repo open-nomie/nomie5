@@ -40,6 +40,7 @@
     if (path.substr(0, 1) == "/") {
       path = path.replace("/", "");
     }
+    path = path.replace(/\/\//g, "/");
     let ogPath = path.split("/");
     if (ogPath.length > 0) {
       let fileName = ogPath[ogPath.length - 1];
@@ -158,6 +159,19 @@
       return false;
     }
   }
+  function getPath(file) {
+    let path;
+    if (state.path.length == 1) {
+      let root = state.path[0];
+      if (root.substr(0, 1) == "/") {
+        root = root.substr(1, root.length - 2);
+      }
+      path = `/files/${root}/${file}`;
+    } else {
+      path = `/files/${state.path.join("/")}/${file}`;
+    }
+    return path.replace("//", "/");
+  }
 </script>
 
 <style lang="scss">
@@ -210,7 +224,7 @@
             <NItem
               className="clickable bottom-line"
               on:click={() => {
-                navigate(`files/${state.path.length > 1 ? state.path.join('/') : state.path[0]}/${file}`);
+                navigate(getPath(file));
               }}>
               {file}
               <div slot="right">
@@ -222,7 +236,7 @@
             <NItem
               className="clickable bottom-line"
               on:click={() => {
-                navigate(`files/${state.path.length > 1 ? state.path.join('/') : state.path[0]}/${file}`);
+                navigate(getPath(file));
               }}>
               {file}
               <div slot="right">
