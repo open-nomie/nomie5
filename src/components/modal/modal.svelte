@@ -1,7 +1,8 @@
 <script>
   import NText from "../text/text.svelte";
+
   import { fly } from "svelte/transition";
-  import { createEventDispatcher } from "svelte";
+  import { onDestroy, createEventDispatcher } from "svelte";
 
   import NToolbarGrid from "../toolbar/toolbar-grid.svelte";
   import NIcon from "../icon/icon.svelte";
@@ -29,16 +30,24 @@
 
   // Stagger showing and dom showing for CSS effects
   $: if (show) {
+    document.body.classList.add("no-scroll");
     showModal = true;
     setTimeout(() => {
       domVisible = true;
     }, 100);
-  } else {
+  }
+
+  $: if (show == false) {
+    document.body.classList.remove("no-scroll");
     domVisible = false;
     setTimeout(() => {
       showModal = false;
     }, 400);
   }
+
+  onDestroy(() => {
+    document.body.classList.remove("no-scroll");
+  });
 </script>
 
 <style lang="scss">
@@ -227,19 +236,6 @@
   <div
     class="n-modal animate up {fullscreen ? 'full-screen-modal' : ''}
     {domVisible ? 'visible' : 'hidden'}">
-    <!-- {#if has_header_grid}
-      <div class="n-modal-header n-toolbar-grid">
-        <div class="left">
-          <slot name="left" />
-        </div>
-        <div class="main">
-          <slot name="main" />
-        </div>
-        <div class="right">
-          <slot name="right" />
-        </div>
-      </div>
-    {/if} -->
     {#if has_raw_header}
       <div class="n-modal-raw-header">
         <slot name="raw-header" />
