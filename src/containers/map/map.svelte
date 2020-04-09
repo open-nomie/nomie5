@@ -5,6 +5,7 @@
 
   // components
   import Item from "../../components/list-item/list-item.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
   // modules
   import locate from "../../modules/locate/locate";
   import distance from "../../modules/locate/distance";
@@ -455,8 +456,12 @@
               data.showLocations = !data.showLocations;
             }}>
 
-            <i
-              class="zmdi {data.showLocations ? 'zmdi-chevron-down' : 'zmdi-chevron-up'}" />
+            {#if data.showLocations}
+              <NIcon name="chevronDown" />
+            {:else}
+              <NIcon name="menu" />
+            {/if}
+
           </button>
         </div>
 
@@ -494,7 +499,8 @@
                 on:click={() => {
                   methods.setLocation(location);
                 }}>
-                <i class="zmdi zmdi-pin" />
+
+                <NIcon name="radio" />
               </button>
               <div
                 class="text-md text-inverse font-weight-bold"
@@ -505,18 +511,18 @@
               </div>
               <div slot="right" class="n-row" style="min-width:50px;">
                 <button
-                  class="btn btn-clear btn-icon mr-2"
+                  class="btn btn-clear mr-2"
                   on:click={evt => {
                     methods.editName(location);
                   }}>
-                  <i class="zmdi zmdi-edit" />
+                  <NIcon name="edit" size="24" />
                 </button>
                 <button
-                  class="btn btn-clear btn-icon px-0"
+                  class="btn btn-clear"
                   on:click={evt => {
                     methods.deleteLocation(location);
                   }}>
-                  <i class="zmdi zmdi-delete" />
+                  <NIcon name="delete" className="fill-red" />
                 </button>
               </div>
 

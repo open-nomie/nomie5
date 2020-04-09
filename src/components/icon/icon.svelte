@@ -30,7 +30,10 @@
   import CheckmarkFilled24 from "carbon-icons-svelte/lib/CheckmarkFilled24";
   import CheckmarkOutline24 from "carbon-icons-svelte/lib/CheckmarkOutline24";
   import RadioButton24 from "carbon-icons-svelte/lib/RadioButton24";
+  import ChevronUp24 from "carbon-icons-svelte/lib/ChevronUp24";
+  import Edit24 from "carbon-icons-svelte/lib/Edit24";
   import RadioButtonChecked24 from "carbon-icons-svelte/lib/RadioButtonChecked24";
+  import Menu24 from "carbon-icons-svelte/lib/Menu24";
 
   export let name = "add";
   export let style = undefined;
@@ -49,6 +52,7 @@
     close: Close24,
     closeFilled: CloseFilled24,
     more: OverflowMenuHorizontal24,
+    chevronUp: ChevronUp24,
     chevronDown: ChevronDown24,
     chevronLeft: ChevronLeft24,
     chevronRight: ChevronRight24,
@@ -70,7 +74,9 @@
     checkmarkFilled: CheckmarkFilled24,
     checkmarkOutline: CheckmarkOutline24,
     radio: RadioButton24,
-    radioFilled: RadioButtonChecked24
+    radioFilled: RadioButtonChecked24,
+    edit: Edit24,
+    menu: Menu24
   };
 
   function getStyle() {
