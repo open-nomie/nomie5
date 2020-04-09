@@ -158,8 +158,8 @@
         searchMode = true;
       }
     },
-    async textClick(event) {
-      console.log("textClick", event);
+
+    async doSearch(event) {
       state.searchTerm = null;
       tick(100);
       if (event.detail.type == "tracker") {
@@ -169,6 +169,31 @@
       }
       showSearch = true;
       methods.onSearchEnter();
+    },
+
+    async textClick(event) {
+      let isTracker = event.detail.tracker ? true : false;
+      Interact.popmenu({
+        buttons: [
+          {
+            title: `Search ${
+              isTracker ? event.detail.tracker.label : event.detail.value
+            }...`,
+            click: () => {
+              methods.doSearch(event);
+            }
+          },
+          {
+            title: `View Stats`,
+            click: () => {
+              Interact.openStats(
+                event.detail.value.replace(/(\+|\#|\@)/g, ""),
+                event.detail.type
+              );
+            }
+          }
+        ]
+      });
     },
     async getLogs(fresh) {
       fresh = fresh ? fresh : false;
