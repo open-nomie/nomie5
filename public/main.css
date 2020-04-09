@@ -6100,7 +6100,8 @@ body.scrolling .n-tracker-button {
     flex-grow: 1;
     padding: 0px 16px;
     word-spacing: 0.09rem;
-    align-items: center; }
+    align-items: center;
+    margin-top: -40px; }
     .share-image-component .note .n-note-textualized {
       flex-grow: 1;
       text-align: center; }
