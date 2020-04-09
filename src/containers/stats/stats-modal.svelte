@@ -446,7 +446,8 @@
           return {
             lat: row.lat,
             lng: row.lng,
-            name: row.location
+            name: row.location,
+            log: row
           };
         } else {
           return null;

@@ -331,7 +331,8 @@
   }
   .close-btn {
     left: auto;
-    right: 18px;
+    right: 0px;
+    bottom: 0px !important;
   }
 
   .page-history {
@@ -341,48 +342,11 @@
       max-height: 400px;
     }
   }
-
-  // .history-toolbar-container {
-  //   .btn {
-  //     outline: none !important;
-  //   }
-  //   .btn.active {
-  //     color: var(--color-primary-bright) !important;
-  //     padding-top: 5px;
-  //     padding-bottom: 5px;
-  //     border-radius: 20% !important;
-  //     outline: none !important;
-  //   }
-  // }
-
   .header-date-control {
     line-height: 100%;
     flex-grow: 1;
     flex-shrink: 1;
   }
-
-  // :global(.trackers-list) {
-  //   border-bottom: solid 1px rgba(0, 0, 0, 0.06);
-  //   border-top: solid 1px rgba(0, 0, 0, 0.06);
-  //   margin-top: 10px;
-  // }
-  // :global(.trackers-list .n-item) {
-  //   margin-left: -16px;
-  //   margin-right: -16px;
-  //   padding-left: 16px !important;
-  //   padding-right: 16px !important;
-  //   border-bottom-color: rgba(0, 0, 0, 0.05) !important;
-  // }
-  // :global(.trackers-list .main div) {
-  //   font-size: 1.1rem !important;
-  // }
-  // :global(.trackers-list .emoji) {
-  //   font-size: 1.2rem !important;
-  // }
-  // .btn.flex {
-  //   display: flex;
-  //   align-items: center;
-  // }
 
   :global(.page-history .n-item .n-item:last-child) {
     border-bottom: none !important;
@@ -497,11 +461,12 @@
         <div class="mini-map opened">
           <NMap {locations} />
           <button
-            class="btn btn-sm btn-dark btn-icon zmdi zmdi-close btn-round
-            map-btn close-btn"
+            class="btn btn-icon btn-round map-btn close-btn"
             on:click={() => {
               state.showAllLocations = !state.showAllLocations;
-            }} />
+            }}>
+            <NIcon name="closeFilled" size="48" />
+          </button>
 
         </div>
       {/if}
