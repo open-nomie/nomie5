@@ -128,26 +128,6 @@
         }}>
         When
       </button>
-      <!-- <button
-        class="btn btn-icon zmdi zmdi-collection-text {state.view === 'note' ? 'active' : ''}"
-        on:click={() => {
-          methods.setView('note');
-        }} />
-      <button
-        class="btn btn-icon zmdi zmdi-my-location {state.view === 'where' ? 'active' : ''}"
-        on:click={() => {
-          methods.setView('where');
-        }} />
-      <button
-        class="btn btn-icon zmdi zmdi-time {state.view === 'when' ? 'active' : ''}"
-        on:click={() => {
-          methods.setView('when');
-        }} /> -->
-      <!-- <button
-        class="btn btn-icon zmdi zmdi-format-list-numbered {state.view === 'data' ? 'active' : ''}"
-        on:click={() => {
-          methods.setView('data');
-        }} /> -->
     </div>
 
     <div class="view-port">
