@@ -16,6 +16,17 @@
   }
 </script>
 
+<style lang="scss">
+  .btn-group {
+    &.inverse {
+      button {
+        color: var(--color-inverse-2);
+        opacity: 0.8;
+      }
+    }
+  }
+</style>
+
 {#if buttons.length}
   <div class="btn-group w-100 {inverse ? 'inverse' : ''}">
     {#each buttons as button, index (button.label + button.icon)}
