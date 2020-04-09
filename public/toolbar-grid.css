@@ -24,9 +24,6 @@
   flex-direction: column;
   grid-area: 1 / 1 / 2 / 2;
   justify-content: center; }
-  .n-toolbar-grid .left .btn-clear,
-  .n-toolbar-grid .left .tap-icon {
-    padding-left: 0; }
 
 .n-toolbar-grid .main {
   align-items: center;
@@ -50,6 +47,3 @@
   flex-direction: column;
   grid-area: 1 / 3 / 2 / 4;
   justify-content: center; }
-  .n-toolbar-grid .right .btn-clear,
-  .n-toolbar-grid .right .tap-icon {
-    padding-right: 0; }

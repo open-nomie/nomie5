@@ -403,11 +403,29 @@ $night: #311f62;
   position: relative;
   cursor: pointer;
   touch-action: manipulation;
+  &:after {
+    transition: all 0.2s ease-in-out;
+    content: "";
+    pointer-events: none;
+    background-color: rgba($primaryBright, 0);
+    transform: scale(0.1);
+    border-radius: 8pt;
+  }
 }
 .clickable:focus,
 .clickable:active {
   outline: none;
-  box-shadow: inset 0px 0px 40px rgba($primaryBright, 0.2);
+  overflow: hidden;
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    transform: scale(1);
+    background-color: rgba($primaryBright, 0.2);
+  }
   transform: scale(0.99);
 }
 .btn,
