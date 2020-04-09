@@ -3,6 +3,7 @@
   import NText from "../../../components/text/text.svelte";
   import NModal from "../../../components/modal/modal.svelte";
   import NItem from "../../../components/list-item/list-item.svelte";
+  import NIcon from "../../../components/icon/icon.svelte";
 
   //Utils
   import { createEventDispatcher } from "svelte";
@@ -120,7 +121,7 @@
           </span>
           <span slot="right">
             {#if state.selected.hasOwnProperty(tracker.tag)}
-              <i class="zmdi zmdi-check-circle text-primary" />
+              <NIcon name="checkmarkOutline" className="fill-primary-bright" />
             {/if}
           </span>
         </NItem>

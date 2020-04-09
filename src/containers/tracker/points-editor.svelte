@@ -5,6 +5,7 @@
   // components
   import NText from "../../components/text/text.svelte";
   import NCell from "../../components/cell/cell.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NPoints from "../../components/points/points.svelte";
   import NInput from "../../components/input/input.svelte";
@@ -153,8 +154,10 @@
               on:click={() => {
                 methods.removeCondition(index);
               }}
-              class="btn btn-sm btn-clear btn-icon zmdi zmdi-minus-circle
-              text-danger" />
+              class="btn btn-sm btn-clear btn-icon text-danger"
+              aria-label="Remove Condition">
+              <NIcon name="remove" className="fill-red" />
+            </button>
             <span slot="right">
               <NCell gap="true">
                 <NPoints points={condition.sc} />
@@ -214,16 +217,21 @@
                   <NInput
                     pattern="[0-9]*"
                     type="text"
-                    on:focus={() => {
-                      getTrackerInput();
-                    }}
                     label="Than"
-                    bind:value={state.genesisCalc.v} />
+                    bind:value={state.genesisCalc.v}>
+                    <button
+                      slot="right"
+                      class="btn btn-clear tap-icon"
+                      on:click={getTrackerInput}>
+                      <NIcon name="addOutline" />
+                    </button>
+                  </NInput>
                 {/if}
 
               </div>
 
             </NItem>
+
             <NItem>
               <!-- <div slot="left">
                 <h1 class="pos-label">Score</h1>
@@ -253,7 +261,7 @@
                 <button
                   class="btn btn-primary btn-sm"
                   on:click={methods.saveCondition}>
-                  {Lang.t('general.add_condition', 'Add Condition')}
+                  {Lang.t('general.save_condition', 'Save Condition')}
                 </button>
               </div>
             </NItem>
