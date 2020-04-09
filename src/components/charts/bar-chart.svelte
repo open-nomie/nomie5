@@ -62,7 +62,6 @@
   $: barWidth = innerWidth / xTicks.length;
 
   function showValue(value, index) {
-    console.log("Value", value, index);
     return true;
   }
 
@@ -183,11 +182,9 @@
     bind:clientWidth={width}
     bind:clientHeight={height}
     on:swiperight={() => {
-      console.log('Swiping');
       dispatch('swipeRight');
     }}
     on:swipeleft={() => {
-      console.log('Swiping');
       dispatch('swipeLeft');
     }}>
     {#if title}
