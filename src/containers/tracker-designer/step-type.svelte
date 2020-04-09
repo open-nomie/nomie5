@@ -3,6 +3,7 @@
   import math from "../../utils/math/math";
   import TrackerTypes from "../../modules/tracker-types/tracker-types";
   import NItem from "../../components/list-item/list-item.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
 
   const types = Object.keys(TrackerTypes).map(key => {
     let type = TrackerTypes[key];
@@ -42,9 +43,9 @@
           }}>
           <div slot="left">
             {#if $TrackerDesignerStore.tracker.type == type._key}
-              <span class="text-lg zmdi zmdi-dot-circle text-primary" />
+              <NIcon name="radioFilled" />
             {:else}
-              <span class="text-lg zmdi zmdi-circle-o" />
+              <NIcon name="radio" />
             {/if}
           </div>
           <div

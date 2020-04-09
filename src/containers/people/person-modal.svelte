@@ -13,15 +13,12 @@
   import BarChart from "../../components/charts/bar-chart.svelte";
   import FrappeChart from "../../components/charts/frappe.svelte";
 
-  import ActivePersonStats from "./active-person-stats.svelte";
-
   // Container Items
   import PersonCheckin from "./person-check-in.svelte";
 
   // Modules / Utils
   import tick from "../../utils/tick/tick";
   import Person from "../../modules/person/person";
-  import StatsProcessor from "../../modules/stats/stats";
 
   // Vendors
   import html2canvas from "html2canvas";
