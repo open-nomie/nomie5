@@ -4,18 +4,6 @@
   import { Link } from "svelte-routing";
   import { onMount } from "svelte";
 
-  //Import the Fusioncharts library
-  import FusionCharts from "fusioncharts";
-
-  //Import the chart modules
-  import Charts from "fusioncharts/fusioncharts.charts";
-
-  //Import the theme as fusion
-  import FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
-
-  //Import the Svelte component
-  import SvelteFC, { fcRoot } from "svelte-fusioncharts";
-
   // Vendors
   import Spinner from "./components/spinner/spinner.svelte";
   import { gestures } from "@composi/gestures";
@@ -268,6 +256,12 @@
 {/if}
 {#if $Interact.people.active}
   <PersonModal />
+{/if}
+{#if $Interact.blocker.show}
+  <div id="ui-blocker" class="full-screen bg-translucent n-panel center-all">
+    <Spinner size="16" />
+    <span class="text-white ml-2">{$Interact.blocker.message}</span>
+  </div>
 {/if}
 <Interactions />
 {#if $UserStore.storageType == 'blockstack' && offline}

@@ -41,6 +41,10 @@ const interactInit = () => {
         cancel: null,
         onInteract: null,
       },
+      blocker: {
+        show: false,
+        message: null,
+      },
       shareImage: {
         log: null,
         color: null,
@@ -134,6 +138,20 @@ const interactInit = () => {
           s.alert.onInteract = resolve;
           return s;
         });
+      });
+    },
+    blocker(message) {
+      update((state) => {
+        state.blocker.show = true;
+        state.blocker.message = message;
+        return state;
+      });
+    },
+    stopBlocker() {
+      update((state) => {
+        state.blocker.show = false;
+        state.blocker.message = null;
+        return state;
       });
     },
     loading(message) {

@@ -6698,8 +6698,7 @@ TODO: Organize main into components or containers.
 .clickable:focus,
 .clickable:active {
   outline: none;
-  overflow: hidden;
-  transform: scale(0.99); }
+  overflow: hidden; }
   .clickable:focus:after,
   .clickable:active:after {
     content: "";
