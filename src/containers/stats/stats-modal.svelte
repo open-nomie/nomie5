@@ -104,7 +104,7 @@
 
       return this.stats;
     }
-  }
+  } // End Compare Model - TODO : move
 
   const state = {
     date: dayjs(),
@@ -379,6 +379,11 @@
       start: getFromDate(),
       end: getToDate()
     };
+    // if day - normalize start and end
+    if (state.timeSpan == "d") {
+      payload.start = dayjs(state.date).startOf("day");
+      payload.end = dayjs(state.date).endOf("day");
+    }
     let results = await LedgerStore.query(payload);
     const statsV5 = new StatsV5({ is24Hour: $UserStore.meta.is24Hour });
     state.stats = statsV5.generate({
@@ -388,6 +393,8 @@
       mode: state.timeSpan,
       tracker: getTracker()
     });
+
+    console.log("Stats", state.stats);
 
     for (let i = 0; i < state.compare.length; i++) {
       await state.compare[i].getStats();

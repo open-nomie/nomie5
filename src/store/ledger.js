@@ -93,17 +93,26 @@ const ledgerInit = () => {
         logs = filtered;
       } // end if we have a search term
 
-      return logs.filter((log) => {
+      logs = logs.filter((log) => {
         let pass = false;
         if (filter.start && filter.end) {
-          pass = log.start >= filter.start && log.end <= filter.end;
+          pass = log.end >= filter.start && log.end <= filter.end;
         } else if (filter.start) {
-          pass = log.start >= filter.start;
+          pass = log.end >= filter.start;
         } else if (filter.end) {
           pass = log.end <= filter.end;
         }
         return pass;
       });
+
+      console.log(
+        `Filter logs between ${dayjs(filter.start).format("ddd MMM D YYYY h:mm a")} and ${dayjs(filter.end).format(
+          "ddd MMM D YYYY h:mm a"
+        )}`,
+        logs
+      );
+
+      return logs;
     },
     // Connect to hooks
     hook(type, func) {
@@ -689,9 +698,9 @@ const ledgerInit = () => {
       options = options || {};
       options.fresh = options.fresh ? options.fresh : false;
       // Start
-      let startTime = dayjs(options.start || new Date()).startOf(config.book_time_unit);
+      let startTime = dayjs(options.start || new Date()).startOf("day");
       // End Time
-      let endTime = dayjs(options.end || new Date()).endOf(config.book_time_unit);
+      let endTime = dayjs(options.end || new Date()).endOf("day");
       // Diff Betwen the two
       let diff = endTime.diff(startTime, config.book_time_unit);
 

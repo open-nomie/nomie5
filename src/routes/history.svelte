@@ -176,20 +176,24 @@
       Interact.popmenu({
         buttons: [
           {
+            title: `View Stats`,
+            click: () => {
+              if (isTracker) {
+                Interact.openStats(event.detail.tracker.tag, "tracker");
+              } else {
+                Interact.openStats(
+                  event.detail.value.replace(/(\+|\#|\@)/g, ""),
+                  event.detail.type
+                );
+              }
+            }
+          },
+          {
             title: `Search ${
               isTracker ? event.detail.tracker.label : event.detail.value
             }...`,
             click: () => {
               methods.doSearch(event);
-            }
-          },
-          {
-            title: `View Stats`,
-            click: () => {
-              Interact.openStats(
-                event.detail.value.replace(/(\+|\#|\@)/g, ""),
-                event.detail.type
-              );
             }
           }
         ]

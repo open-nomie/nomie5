@@ -46,7 +46,7 @@ export default class StatsProcessor {
   getUnitFormat() {
     let unitFormat;
     if (this.mode == "d") {
-      unitFormat = "HH";
+      unitFormat = "H";
     } else if (this.mode == "w" || this.mode == "m") {
       unitFormat = "YYYY-MM-DD";
     } else if (this.mode == "y") {
