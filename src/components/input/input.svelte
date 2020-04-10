@@ -16,6 +16,7 @@
   export let disabled = false;
   export let solo = false;
   export let compact = false;
+  export let rows = 2;
 
   export let autocomplete = undefined;
   export let autocorrect = undefined;
@@ -70,6 +71,8 @@
     flex-direction: column;
     flex-grow: 1;
     flex-shrink: 1;
+    margin-bottom: 8pt;
+
     .helper {
       font-size: 0.65rem;
       opacity: 0.5;
@@ -96,6 +99,11 @@
               padding-bottom: 0px;
               font-size: 1.05rem;
             }
+            textarea {
+              padding-top: 22px;
+              padding-bottom: 0px;
+              font-size: 1.05rem;
+            }
           }
         }
       }
@@ -108,7 +116,8 @@
         .n-input {
           height: $height;
           input,
-          select {
+          select,
+          textarea {
             height: $height - 1;
           }
         }
@@ -122,7 +131,8 @@
         .n-input {
           height: 36px;
           input,
-          select {
+          select,
+          textarea {
             height: 35px;
             font-size: 1rem;
           }
@@ -132,7 +142,7 @@
 
     .n-input-wrapper {
       // position: relative;
-      height: $height;
+      min-height: $height;
       display: flex;
       width: 100%;
       min-width: 50px;
@@ -149,6 +159,10 @@
       &.has-focus {
         box-shadow: 0px 3px 7px -2px rgba($primaryBright, 0.1);
         background-color: var(--input-focus-background);
+      }
+
+      textarea {
+        border: none;
       }
 
       .n-input {
@@ -176,12 +190,13 @@
           padding: 0;
         }
         input,
-        select {
+        select,
+        textarea {
           width: 100%;
           transition: all 0.2s ease-in-out;
           margin: 0;
-          padding-left: 10px;
-          padding-right: 10px;
+          padding-left: 8pt;
+          padding-right: 8pt;
           background-color: transparent !important;
           outline: none;
           &:disabled {
@@ -189,6 +204,10 @@
             color: var(--color-inverse-2);
           }
           // border: none;
+        }
+        textarea {
+          min-height: 90px;
+          padding-top: 8pt;
         }
       }
     }
@@ -258,6 +277,22 @@
         <select bind:this={_elInput} {disabled} on:change={change} bind:value>
           <slot />
         </select>
+      {:else if type == 'textarea'}
+        <textarea
+          bind:this={_elInput}
+          {disabled}
+          {rows}
+          style={inputStyle}
+          class={inputClass}
+          {autocomplete}
+          {autocorrect}
+          {autocapitalize}
+          {placeholder}
+          on:keyup={change}
+          on:focus={focus}
+          on:blur={blur}
+          bind:value />
+        <slot />
       {:else}
         <input
           bind:this={_elInput}
