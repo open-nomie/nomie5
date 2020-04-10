@@ -22,10 +22,12 @@
   let lastFrom;
   let lastTo;
 
+  let searchCount = 0;
+
   // React to Term Change
   let lastTerm;
 
-  $: if (lastTerm !== term) {
+  $: if (term && lastTerm !== term) {
     lastTerm = term;
     reset();
     search();
@@ -35,9 +37,11 @@
     logs = [];
     lastTo = null;
     lastFrom = null;
+    lastTerm = null;
   }
 
   async function search() {
+    searchCount++;
     // Set from and to date
     loading = true;
     let from = !lastFrom
@@ -69,7 +73,6 @@
 
   onMount(() => {
     reset();
-    search();
   });
 </script>
 
