@@ -132,15 +132,14 @@
   });
 
   async function deleteFile(file) {
+    let filepath = `${state.path.join("/")}`;
     let confirm = await Interact.confirm(
       `Really delete ${file}?`,
-      `This can cause serious issues if you don't know what you're doing. File to delete: ${state.path.join(
-        "/"
-      )}${file}`,
+      `This can cause serious issues if you don't know what you're doing. File to delete: ${filepath}`,
       "Yes, Delete"
     );
     if (confirm) {
-      await Storage.delete(file);
+      await Storage.delete(filepath);
       Interact.toast("Deleted");
       back();
     }
