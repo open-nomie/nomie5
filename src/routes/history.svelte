@@ -246,7 +246,7 @@
     searchChange(evt) {
       state.searchTerm = evt.detail;
       showSearch = false;
-      // window.scrollTo(0, 0);
+      window.scrollTo(0, 0);
     },
     async onSearchEnter(evt) {
       await tick(100);
@@ -254,9 +254,7 @@
       showSearch = true;
     },
     trackerTapped(tracker, log) {
-      // console.log("Tracker Tapped", tracker);
       Interact.openStats(`#${tracker.tag}`);
-      // navigate(`/stats/tracker/${$TrackerStore[tracker].getUID()}`);
     },
     showLogOptions(log) {
       Interact.logOptions(log).then(action => {
