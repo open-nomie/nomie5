@@ -3,6 +3,23 @@ import Tracker from "../tracker/tracker";
 
 import { TrackerStore } from "../../store/trackers";
 
+export function generate(str, type) {
+  switch (type) {
+    case "tracker":
+      return `#${str}`;
+      break;
+    case "person":
+      return `@${str}`;
+      break;
+    case "context":
+      return `+${str}`;
+      break;
+    default:
+      return str;
+      break;
+  }
+}
+
 export function parse(str) {
   if (str.search(regex.escape("@")) > -1) {
     let username = str.replace(regex.escape("@"), "");

@@ -289,7 +289,7 @@ export default class StatsProcessor {
     }); // end loop over each day
 
     newMap.sum = math.sum(allValues);
-    newMap.avg = math.average(allValues);
+    newMap.avg = math.round(math.sum(allValues) / Object.keys(newMap.days).length, 100);
 
     return newMap;
   }

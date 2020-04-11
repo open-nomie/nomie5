@@ -9,11 +9,13 @@
   import NLog from "../../modules/nomie-log/nomie-log";
   import StatsProcessor from "../../modules/stats/stats";
   import StatsV5 from "../../modules/stats/statsV5";
+  import StatsRef from "../../modules/stats/stats-ref";
 
   import { strToColor } from "../../components/dymoji/dymoji";
 
   // Utils
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
+  import tick from "../../utils/tick/tick";
   import math from "../../utils/math/math";
   import Storage from "../../modules/storage/storage";
   import regex from "../../utils/regex";
@@ -66,49 +68,6 @@
     context: { prefix: "+" },
     location: { prefix: "" }
   };
-
-  class CompareModel {
-    constructor(starter = {}) {
-      this.type = starter.type;
-      this.key = starter.key;
-      this.base = starter.base;
-      this.label = starter.label;
-      this.stats = null;
-    }
-
-    getTracker() {
-      // We have to force everything to kinda a tracker
-      if (this.type == "tracker") {
-        return this.base;
-      } else {
-        return new Tracker({
-          math: "sum",
-          tag: this.key,
-          color: strToColor(this.label)
-        });
-      }
-    }
-
-    async getStats() {
-      let searchTerm = getSearchTerm(this.type, this.key);
-      let payload = {
-        search: searchTerm,
-        start: getFromDate(),
-        end: getToDate()
-      };
-      let results = await LedgerStore.query(payload);
-      const statsV5 = new StatsV5({ is24Hour: $UserStore.meta.is24Hour });
-      this.stats = statsV5.generate({
-        rows: results,
-        fromDate: getFromDate(),
-        toDate: getToDate(),
-        mode: state.timeSpan,
-        tracker: this.getTracker()
-      });
-
-      return this.stats;
-    }
-  } // End Compare Model - TODO : move\
 
   const viewMemory = new Storage.SideStore("stats-memory");
 
@@ -250,12 +209,12 @@
     state.compare = state.compare.filter(row => {
       return row != compare;
     });
+    rememberCompare();
   }
 
   function getQueryTerm() {
     let rawTerm = getLastTerm();
     let type = getType(rawTerm);
-    console.log(`Term Type Type`, type);
     return rawTerm;
     // if (state.lookupStack.length) {
     //   return state.lookupStack[state.lookupStack.length - 1];
@@ -278,18 +237,24 @@
     if (trackers.length) {
       for (var i = 0; i < trackers.length; i++) {
         const tracker = trackers[i];
-        let compareObj = new CompareModel({
+        let compareObj = new StatsRef({
           type: "tracker",
           key: tracker.tag,
           label: tracker.label,
-          base: tracker
+          base: tracker,
+          is24Hour: $UserStore.meta.is24Hour
         });
-        await compareObj.getStats();
+        await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
         state.compare.push(compareObj);
       }
-
       state.compare = state.compare;
+      rememberCompare();
     }
+  }
+
+  function rememberCompare() {
+    let comparing = state.compare.map(statRef => statRef.getSearchTerm());
+    remember("compare", comparing);
   }
 
   async function comparePerson() {
@@ -297,16 +262,18 @@
     if (people.length) {
       for (var i = 0; i < people.length; i++) {
         const person = people[i];
-        let compareObj = new CompareModel({
+        let compareObj = new StatsRef({
           type: "person",
           key: person.username,
           label: person.displayName,
-          base: person
+          base: person,
+          is24Hour: $UserStore.meta.is24Hour
         });
-        await compareObj.getStats();
+        await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
         state.compare.push(compareObj);
       }
       state.compare = state.compare;
+      rememberCompare();
     }
   }
 
@@ -315,32 +282,36 @@
     if (contexts.length) {
       for (var i = 0; i < contexts.length; i++) {
         const context = contexts[i];
-        let compareObj = new CompareModel({
+        let compareObj = new StatsRef({
           type: "context",
           key: context,
           label: context,
-          base: context
+          base: context,
+          is24Hour: $UserStore.meta.is24Hour
         });
-        await compareObj.getStats();
+        await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
         state.compare.push(compareObj);
       }
       state.compare = state.compare;
+      rememberCompare();
     }
   }
 
   async function compareSearchTerm() {
     let item = await Interact.prompt("Term");
     if (item) {
-      let compareObj = new CompareModel({
+      let compareObj = new StatsRef({
         type: "search",
         key: item,
         label: item,
-        base: item
+        base: item,
+        is24Hour: $UserStore.meta.is24Hour
       });
-      await compareObj.getStats();
+      await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
       state.compare.push(compareObj);
     }
     state.compare = state.compare;
+    rememberCompare();
   }
 
   async function compareType() {
@@ -428,6 +399,7 @@
       payload.start = dayjs(state.date).startOf("day");
       payload.end = dayjs(state.date).endOf("day");
     }
+
     let results = await LedgerStore.query(payload);
     const statsV5 = new StatsV5({ is24Hour: $UserStore.meta.is24Hour });
     state.stats = statsV5.generate({
@@ -438,16 +410,39 @@
       tracker: getTracker()
     });
 
-    if (state.timeSpan !== "y") {
-      state.related = statsV5.getRelated(results);
-    } else {
-      // don't  do related for the the year - too heavy.
-      state.related = [];
+    // if (state.timeSpan !== "y") {
+
+    // } else {
+    //   // don't  do related for the the year - too heavy.
+    //   state.related = [];
+    // }
+    let savedCompares = remember("compare");
+    if (state.compare.length == 0 && savedCompares) {
+      savedCompares.forEach(searchTerm => {
+        let type = NoteDataTypes.parse(searchTerm);
+        state.compare.push(
+          new StatsRef({
+            type: type.type,
+            key: type.tracker.tag,
+            label: type.tracker.label,
+            base: type.tracker,
+            is24Hour: $UserStore.meta.is24Hour
+          })
+        );
+      });
     }
 
     for (let i = 0; i < state.compare.length; i++) {
-      await state.compare[i].getStats();
+      let stats = await state.compare[i].getStats(
+        state.timeSpan,
+        payload.start,
+        payload.end
+      );
     }
+
+    state.related = statsV5.getRelated(results);
+    await tick(100);
+    state.compare = state.compare;
 
     state.loading = false;
   }
@@ -578,7 +573,6 @@
     setTimeout(() => {
       state.showAnimation = false;
     }, 200);
-    console.log("Transitioning Stat View");
   }
 
   let lastDataView = state.dataView;
@@ -733,7 +727,6 @@
                 return x;
               }}
               on:titleClick={event => {
-                console.log('Title Click');
                 Interact.openStats(getSearchTerm(compare.type, compare.label));
               }}
               on:tap={event => {
@@ -754,9 +747,13 @@
         {/each}
       </div>
 
-      <div class="p-2 pt-4">
+      {#if state.compare.length == 0}
+        <div class="p-2" />
+      {/if}
+
+      <div class="p-2 pt-2">
         <button class="btn btn-light btn-block" on:click={compareType}>
-          {Lang.t('general.select')}...
+          {Lang.t('stats.select-comparison', 'Select Comparison')}...
         </button>
       </div>
     {/if}
