@@ -105,47 +105,6 @@
       } // end if we have something to replace
     },
 
-    async xfind() {
-      // Clear errors
-      state.error = null;
-      // If replace is set
-      if (state.replace) {
-        // Clear previously found results
-        state.found = [];
-        // Set finding and progress
-        state.finding = true;
-        state.findingProgress = 0;
-        // Get all user books
-        let books = await LedgerStore.listBooks();
-        // Step over (one at a time) each book, and search it.
-        PromiseStep(books, async bookPath => {
-          // Get this paths book by index
-          let index = books.indexOf(bookPath) + 1;
-          let book = await Storage.get(bookPath);
-          // Set progress to index / length of books
-          state.findingProgress = Math.round((index / books.length) * 100);
-          // Loop over each log in the book
-          book.forEach(log => {
-            // If log.note has the search term
-            if (log.note.search(state.replace) > -1) {
-              state.foundCount++;
-              state.found = state.found || [];
-              // Push found results
-              state.found.push({
-                book: bookPath,
-                log: log
-              });
-            }
-          });
-          return Promise.resolve(true);
-        }).then(finishedFinding => {
-          state.example = 0;
-          state.finishedFinding = true;
-        });
-      } else {
-        state.error = "Both 'replace' and 'with' are required";
-      }
-    },
     clear() {
       state.replace = null;
       state.with = null;
