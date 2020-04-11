@@ -12,7 +12,9 @@
   export let show = true;
 
   const methods = {
-    backgroundClicked(event) {}
+    backgroundClicked(event) {
+      dispatch("close");
+    }
   };
   let escListener;
   $: if (show) {
@@ -99,6 +101,12 @@
           border-radius: $radius;
           margin-top: 10px;
         }
+        &:active {
+          transform: scale(0.98);
+        }
+        &:hover {
+          transform: none;
+        }
       }
 
       .card-body {
@@ -116,7 +124,8 @@
 </style>
 
 <div
-  class="full-screen dark-glass pop-menu {show === true ? 'visible' : 'hidden'}">
+  class="full-screen dark-glass pop-menu {show === true ? 'visible' : 'hidden'}"
+  on:click={methods.backgroundClicked}>
   <div class="card">
     {#if title || description}
       <div class="pb-3 pt-2 text-center">
@@ -132,7 +141,7 @@
       {#each buttons as button}
         <button
           class="btn btn-block btn-light btn-lg {button.description ? 'btn-desc' : ''}"
-          on:click={() => {
+          on:click|stopPropagation={() => {
             button.click();
             dispatch('close');
           }}>
@@ -144,7 +153,7 @@
       {/each}
       <button
         class="btn btn-block btn-danger btn-lg"
-        on:click={() => {
+        on:click|stopPropagation={() => {
           dispatch('close');
         }}>
         {Lang.t('general.cancel')}
