@@ -4,6 +4,7 @@
 
   import NModal from "../../components/modal/modal.svelte";
   import NIcon from "../../components/icon/icon.svelte";
+  import NInput from "../../components/input/input.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NProgress from "../../components/progress-bar/progress-bar.svelte";
 
@@ -208,18 +209,20 @@
         <NItem
           description="Find and replace specific content from all of your notes.
           For example renaming a tag." />
-        <NItem title="Replace this:">
-          <input
+        <NItem>
+          <NInput
             class="form-control"
             bind:value={state.replace}
-            placeholder="#sleep_time" />
+            placeholder="Replace this:"
+            help="e.g. #sleep_time" />
         </NItem>
 
-        <NItem title="... with this:">
-          <input
+        <NItem>
+          <NInput
             class="form-control"
             bind:value={state.with}
-            placeholder="#sleep" />
+            placeholder="with this:"
+            help="e.g. #sleep" />
         </NItem>
       {/if}
 
@@ -290,6 +293,8 @@
         <button class="btn btn-primary" on:click={methods.find}>
           Find All...
         </button>
+      {:else}
+        <button class="btn btn-clear" on:click={methods.back}>Back</button>
       {/if}
     </div>
 
