@@ -5,9 +5,6 @@
   // Components
   import Icon from "../../components/icon/icon.svelte";
 
-  // Plugins
-  import Plugins from "../../plugins/plugins";
-
   import { Lang } from "../../store/lang";
 </script>
 
