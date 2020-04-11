@@ -7,6 +7,7 @@
   import NInput from "../../components/input/input.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NProgress from "../../components/progress-bar/progress-bar.svelte";
+  import regex from "../../utils/regex";
 
   // Utils
   import PromiseStep from "../../utils/promise-step/promise-step";
@@ -55,7 +56,8 @@
 
     findInBook(bookPath, logs) {
       logs.forEach(log => {
-        if (log.note.search(state.replace) > -1) {
+        let searchReg = new RegExp(regex.escape(state.replace), "g");
+        if (log.note.search(searchReg) > -1) {
           state.foundCount++;
           state.found = state.found || [];
           // Push found results
@@ -142,7 +144,7 @@
       let map = methods.foundToMap();
       let bookPaths = Object.keys(map);
       // Set Searching Regex
-      let searchReg = new RegExp(`${state.replace}`, "g");
+      let searchReg = new RegExp(regex.escape(state.replace), "g");
       //Step over each replacing within the books
       PromiseStep(bookPaths, path => {
         return new Promise(resolve => {
