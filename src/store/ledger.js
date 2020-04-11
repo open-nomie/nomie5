@@ -67,8 +67,8 @@ const ledgerInit = () => {
      */
     filterLogs(logs, filter) {
       filter = filter || {};
-      filter.term = filter.term || null;
 
+      // First filter on search if it exists
       if (filter.search) {
         const tokens = tokenizer(filter.search.toLowerCase());
         // Filter Logs by tokens
@@ -94,6 +94,7 @@ const ledgerInit = () => {
         logs = filtered;
       } // end if we have a search term
 
+      //. Now filter logs on start and end date
       logs = logs.filter((log) => {
         let pass = false;
         if (filter.start && filter.end) {
@@ -644,35 +645,23 @@ const ledgerInit = () => {
 
     async queryAll(term, start, end) {
       let logs = await methods.query({ start, end, search: term });
-      return logs
-        .filter((record) => {
-          return record.note.match(new RegExp(`${term}`, "gi"));
-        })
-        .sort((a, b) => {
-          return a.end < b.end ? 1 : -1;
-        });
+      return logs.sort((a, b) => {
+        return a.end < b.end ? 1 : -1;
+      });
     },
 
     async queryTag(tag, start, end) {
       let logs = await methods.query({ start, end, search: `#${tag}` });
-      return logs
-        .filter((record) => {
-          return record.note.search(new RegExp(`#${tag}\s`, "gi")) > -1;
-        })
-        .sort((a, b) => {
-          return a.end < b.end ? 1 : -1;
-        });
+      return logs.sort((a, b) => {
+        return a.end < b.end ? 1 : -1;
+      });
     },
 
     async queryContext(context, start, end) {
       let logs = await methods.query({ start, end, search: `+${context}` });
-      return logs
-        .filter((record) => {
-          return record.note.search(new RegExp(`+${context}\s`, "gi")) > -1;
-        })
-        .sort((a, b) => {
-          return a.end < b.end ? 1 : -1;
-        });
+      return logs.sort((a, b) => {
+        return a.end < b.end ? 1 : -1;
+      });
     },
 
     getState() {
