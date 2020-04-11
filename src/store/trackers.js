@@ -250,7 +250,6 @@ const trackerStoreInit = () => {
         response = methods.save(t);
 
         if (board.id !== "all") {
-          console.log("What's this? Add trackers to Board?", tracker);
           BoardStore.addTrackersToActiveBoard([tracker]);
         }
 

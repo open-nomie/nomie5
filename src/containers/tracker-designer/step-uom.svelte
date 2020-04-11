@@ -7,8 +7,6 @@
   const groupedUOMs = NomieUOM.toGroupedArray();
   delete groupedUOMs.Timer;
 
-  console.log("GroupedUOM", groupedUOMs);
-
   let tag = "";
   $: if ($TrackerDesignerStore.tracker) {
     tag = $TrackerDesignerStore.tracker.toTag(

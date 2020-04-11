@@ -46,10 +46,6 @@
     activePerson = new Person($PeopleStore.people[$Interact.people.active]);
   }
 
-  $: if (activePerson.avatar) {
-    console.log("Avatar Change");
-  }
-
   const state = {
     view: "check-in"
   };

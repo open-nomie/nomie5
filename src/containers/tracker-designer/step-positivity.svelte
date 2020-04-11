@@ -7,12 +7,7 @@
 
   let positivity = "0";
 
-  $: if (positivity) {
-    console.log("positivity change", positivity);
-  }
-
   const pointsChange = evt => {
-    console.log("Tracker", evt.detail);
     setTimeout(() => {
       TrackerDesignerStore.update(state => {
         state.tracker = evt.detail;

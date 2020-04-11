@@ -306,7 +306,7 @@ export default class StatsProcessor {
         chartData.points.push(point);
       });
     }
-    //console.log(`Chart data is done for ${mode}`, chartData);
+
     return chartData;
   } // end toChartData()
 
@@ -327,53 +327,6 @@ export default class StatsProcessor {
       chart: this.toChartData(mode),
     };
 
-    // console.log(mode + ' Response', response);
-
     return response;
-    // let calendar = CalendarMap({
-    // 	start: dayjs(this.date)
-    // 		.startOf('month')
-    // 		.toDate()
-    // 		.getTime(),
-    // 	end: dayjs(this.date)
-    // 		.endOf('month')
-    // 		.toDate()
-    // 		.getTime(),
-    // 	mode: 'day',
-    // });
-
-    // calendar.label.forEach((dayKey, index) => {
-    // 	if (valueMap[dayKey]) {
-    // 		if (this.tracker.math === 'sum') {
-    // 			calendar.value[index] = math.sum(valueMap[dayKey]);
-    // 		} else {
-    // 			calendar.value[index] = math.average(valueMap[dayKey]);
-    // 		}
-    // 	}
-    // });
-
-    // let labels = calendar.label.map((dayKey, index) => {
-    // 	return dayjs(dayKey).format('D');
-    // });
-    // // TODO: Implement IgnoreZeros
-    // // Day Totals
-
-    // let results = {};
-
-    // results.day.total = math.sum(valueMap[date.format('YYYY-MM-DD')] || [0]);
-    // results.day.avg = math.average(valueMap[date.format('YYYY-MM-DD')] || [0]);
-    // // Month Totals
-
-    // results.month.total = math.round(math.sum(calendar.value.filter(v => v !== 0)));
-    // results.month.avg = math.average(calendar.value.filter(v => v !== 0));
-    // results.month.chart = {
-    // 	labels: labels,
-    // 	points: calendar.value.map((value, index) => {
-    // 		return {
-    // 			x: labels[index],
-    // 			y: value,
-    // 		};
-    // 	}),
-    // };
   }
 }

@@ -51,7 +51,6 @@ export default class Face {
   svg() {
     let base = [];
     //const assetKeys = Object.keys(this.assets);
-    // console.log("assetKeys", assetKeys);
     const assetKeys = ["c-wear"];
     base = assetKeys.map((layer) => {
       return this.hash.pick(this.assets[layer], layer);

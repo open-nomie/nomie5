@@ -56,7 +56,6 @@
     if (type == "select") {
       hasInput = true;
     }
-    // console.log("Input mounted", hasInput, value);
   });
 </script>
 

@@ -19,7 +19,7 @@ class Remote {
       this.url = new URL(url);
       this._dirty = false;
     } catch (e) {
-      console.log("Set URL error", e.message);
+      console.error("Set URL error", e.message);
     }
     return this;
   }

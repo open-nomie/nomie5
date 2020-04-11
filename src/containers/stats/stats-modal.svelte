@@ -48,10 +48,10 @@
   import { PeopleStore } from "../../store/people-store";
 
   const timeSpans = {
-    d: { id: "d", label: "D", title: "Day", unit: "day" },
-    w: { id: "w", label: "W", title: "Week", unit: "week" },
-    m: { id: "m", label: "M", title: "Month", unit: "month" },
-    y: { id: "y", label: "Y", title: "Year", unit: "year" }
+    d: { id: "d", label: "D", title: "Day", unit: "hour" },
+    w: { id: "w", label: "W", title: "Week", unit: "day" },
+    m: { id: "m", label: "M", title: "Month", unit: "day" },
+    y: { id: "y", label: "Y", title: "Year", unit: "month" }
   };
 
   const dataViews = {

@@ -93,7 +93,7 @@
           connecting = false;
         })
         .catch(e => {
-          console.log("error connecting", e.message);
+          console.error("error connecting", e.message);
           Interact.alert(
             Lang.t("general.error-connecting", "Error Connecting"),
             Lang.t("storage.pouchdb.credentials-failed", e.message)
@@ -126,7 +126,7 @@
         }
         return connection;
       } catch (e) {
-        console.log("Thrown error on urlparser", e);
+        console.error("Thrown error on urlparser", e);
         // alert(e.message);
         // It's an invalid URL
         state.isValidSyncURL = false;

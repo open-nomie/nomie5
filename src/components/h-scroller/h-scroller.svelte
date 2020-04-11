@@ -62,9 +62,7 @@
         }
 
         child.classList.add(activeClass);
-      } catch (e) {
-        console.log("error", e.message);
-      }
+      } catch (e) {}
       ready = true;
     }
   };

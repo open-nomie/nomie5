@@ -754,7 +754,7 @@ const ledgerInit = () => {
         let rows = await get_all();
         return rows.sort((a, b) => (a.end < b.end ? 1 : -1));
       } catch (e) {
-        console.log("Error caught ", e);
+        console.error("Error caught ", e);
       }
     },
   };

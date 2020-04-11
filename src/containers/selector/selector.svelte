@@ -56,7 +56,7 @@
 
       case "person":
         state.title = multiple ? "Select People" : "Select a Person";
-        console.log("$PeopleStore.people", $PeopleStore.people);
+
         state.items = Object.keys($PeopleStore.people || {})
           .map(username => {
             return $PeopleStore.people[username];
@@ -68,7 +68,7 @@
 
       case "context":
         state.title = "Select Context";
-        console.log("$PeopleStore.people", $ContextStore);
+
         state.items = Object.keys($ContextStore || {})
           .map(tag => {
             return $ContextStore[tag];
@@ -80,7 +80,6 @@
     }
   } else if ($Interact.selector.show == false && isShown) {
     isShown = false;
-    console.log("Closing Selector");
     state.selected = [];
   }
 

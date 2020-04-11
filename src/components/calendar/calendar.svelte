@@ -86,7 +86,6 @@
     // Merge the arrays
     days = emptyDays.concat(nonEmptyDays);
     state.percentage = nonEmptyDays / (emptyDays + nonEmptyDays);
-    console.log("Cal");
   }
 
   // Methods

@@ -32,7 +32,7 @@ const userInit = () => {
     signedIn: undefined,
     launchCount: Storage.local.get("root/launch_count") || 0,
     profile: {
-      username: null
+      username: null,
     },
     alwaysLocate: JSON.parse(localStorage.getItem(config.always_locate_key) || "false"),
     theme: localStorage.getItem(config.theme_key) || "auto",
@@ -42,9 +42,9 @@ const userInit = () => {
       lock: false,
       pin: null,
       aggressiveSync: false,
-      is24Hour: false
+      is24Hour: false,
     },
-    locked: true
+    locked: true,
   };
 
   const { subscribe, set, update } = writable(state);
@@ -65,7 +65,7 @@ const userInit = () => {
         // If no storage type selected
         // they're not signed in - this should trigger onboarding
         // in App.svelte
-        update(p => {
+        update((p) => {
           p.signedIn = false;
           p.launchCount = 0;
           return p;
@@ -76,7 +76,7 @@ const userInit = () => {
           methods
             .bootstrap()
             .then(() => {
-              update(d => {
+              update((d) => {
                 d.ready = true;
                 d.signedIn = true;
                 d.profile = Storage.getProfile();
@@ -84,7 +84,7 @@ const userInit = () => {
                 return d;
               });
             })
-            .catch(e => {
+            .catch((e) => {
               console.error(e.message);
             });
         }); // end storage on Ready
@@ -103,7 +103,7 @@ const userInit = () => {
     },
     setStorage(type) {
       type = ["blockstack", "local", "pouchdb"].indexOf(type) > -1 ? type : "local";
-      update(d => {
+      update((d) => {
         d.storageType = type;
         Storage.local.put("root/storage_type", type);
         d.launchCount = state.launchCount;
@@ -114,7 +114,7 @@ const userInit = () => {
     resetLaunchCount() {
       if (confirm("Reset Launch Count to zero?") === true) {
         Storage.local.put("root/launch_count", 0);
-        update(d => {
+        update((d) => {
           d.launchCount = 0;
           return d;
         });
@@ -131,13 +131,7 @@ const userInit = () => {
     /**
      * Set Profile and Signin
      */
-    setProfile(profile) {
-      console.log("user.setProfile()", profile);
-
-      // Fire off the remaining bootstrap items.
-
-      // Update store with new profile.
-    },
+    setProfile(profile) {},
     bootstrap() {
       // First lets get the TrackerStore loaded
       let promises = [];
@@ -147,13 +141,13 @@ const userInit = () => {
         .then(() => {
           return methods.fireReady(state);
         })
-        .catch(e => {
+        .catch((e) => {
           console.error("bootstrap", e.message);
           alert(e.message);
         });
     },
     loadTrackersAndBoards() {
-      return TrackerStore.initialize(this).then(trackers => {
+      return TrackerStore.initialize(this).then((trackers) => {
         // Now lets load the BoardStore and pass these trackers
         return BoardStore.initialize(this, trackers).then(() => {
           // Now let's fire off that we're ready
@@ -165,20 +159,20 @@ const userInit = () => {
       });
     },
     reset() {
-      update(u => state);
+      update((u) => state);
     },
     redirectToSignIn() {
       UserSession.redirectToSignIn();
     },
     setAlwaysLocate(bool) {
       localStorage.setItem(config.always_locate_key, JSON.stringify(bool));
-      update(u => {
+      update((u) => {
         u.alwaysLocate = bool;
         return u;
       });
     },
     unlock() {
-      update(usr => {
+      update((usr) => {
         usr.locked = false;
         return usr;
       });
@@ -198,7 +192,7 @@ const userInit = () => {
       try {
         value = await Storage.get(config.user_meta_path);
       } catch (e) {}
-      update(usr => {
+      update((usr) => {
         if (value) {
           usr.meta = value;
         }
@@ -217,7 +211,7 @@ const userInit = () => {
     // Get the current state
     data() {
       let d;
-      update(usr => {
+      update((usr) => {
         d = usr;
         return usr;
       });
@@ -235,7 +229,7 @@ const userInit = () => {
       document.body.classList.remove(`theme-auto`);
       document.body.classList.add(`theme-${theme}`);
 
-      update(u => {
+      update((u) => {
         u.theme = theme;
         return u;
       });
@@ -256,11 +250,11 @@ const userInit = () => {
     },
     // Fire when Ready!
     fireReady(payload) {
-      update(b => {
+      update((b) => {
         b.ready = true;
         return b;
       });
-      listeners.forEach(func => {
+      listeners.forEach((func) => {
         func(payload);
       });
       listeners = [];
@@ -299,7 +293,7 @@ const userInit = () => {
       // 		alert('No storage type found for ' + data.storageType);
       // 	}
       // });
-    }
+    },
   };
 
   return {
@@ -308,7 +302,7 @@ const userInit = () => {
     update,
     ...methods,
     boards: BoardStore,
-    trackers: TrackerStore
+    trackers: TrackerStore,
   };
 };
 

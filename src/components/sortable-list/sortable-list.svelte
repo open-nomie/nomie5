@@ -27,12 +27,6 @@
         return item !== tempItem ? item : movedItem;
       });
 
-    console.log({
-      movedItem,
-      tempItem,
-      newList
-    });
-
     dispatch("update", newList);
   };
 
@@ -45,7 +39,6 @@
         let sortable = Sortable.create(sortableList, {
           handle: handle,
           onEnd: function(evt) {
-            console.log("onSort", evt);
             reorder(evt.newDraggableIndex, evt.oldDraggableIndex);
           }
         });

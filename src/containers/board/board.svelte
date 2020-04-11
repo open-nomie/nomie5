@@ -224,7 +224,7 @@
           title: Lang.t("board.add-existing-tracker"),
           click: async () => {
             let trackers = await Interact.selectTrackers();
-            console.log("Selected Trackers", trackers);
+
             BoardStore.addTrackersToActiveBoard(trackers);
             setTimeout(() => {
               data = data;
@@ -673,7 +673,6 @@
         on:change={value => {
           data.searchTerm = value.detail;
           methods.searchKeypress();
-          console.log('On Change?', value.detail);
         }}
         placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}...">
         <button

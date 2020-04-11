@@ -60,7 +60,6 @@
     },
     onCameraPhoto(photo) {
       const path = `camera/${md5(photo)}`;
-      // console.log(`Write payload ${payload.length} to ${path}`);
       Storage.put(path, photo).then(() => {
         if ($Interact.camera.onInteract) {
           $Interact.camera.onInteract(path);

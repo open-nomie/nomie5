@@ -47,8 +47,8 @@ const Storage = {
     try {
       return this.engines[this.storageType()];
     } catch (e) {
-      console.log("Error getting Engine");
-      console.log("e", e.message);
+      console.error("Error getting Engine");
+      console.error("e", e.message);
       return null;
     }
   },

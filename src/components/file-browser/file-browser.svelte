@@ -122,7 +122,6 @@
 
   onMount(async () => {
     state.loading = true;
-    console.log("On Mount?");
     Storage.getEngine().onReady(async () => {
       let files = await Storage.list();
       state.tree = Treeify(files);
@@ -153,7 +152,6 @@
   }
 
   async function download(file) {
-    console.log("File to download", file);
     let filename = state.path[state.path.length - 1];
     let content = await Storage.get(state.path.join("/"));
     Downloader.json(filename, content);

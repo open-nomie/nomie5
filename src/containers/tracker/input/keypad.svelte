@@ -86,7 +86,7 @@
         // This is for every other key press
       } else {
         data.tempValue = (data.tempValue || "").toString();
-        // console.log("## KEYPAD ## GENERAL KEY ", key, data.tempValue, typeof data.tempValue);
+
         if (data.tempValue.substr(data.tempValue.length, 2) == ".0") {
           data.tempValue = data.tempValue.replace(".0", ".") + key;
         } else {

@@ -78,7 +78,6 @@
   }
 
   $: if ($ActiveLogStore.end) {
-    console.log("Setting date Foramted");
     let timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
     let dateFormat = $UserStore.meta.is24Hour ? "MM/DD/YYYY" : "MMM D YYYY";
     state.dateFormated = dayjs($ActiveLogStore.end).format(
@@ -99,7 +98,7 @@
       let date = await Interact.selectDate(
         $ActiveLogStore.end ? new Date($ActiveLogStore.end) : new Date()
       );
-      console.log("Date Selected?", date);
+
       if (date) {
         await tick(10);
         ActiveLogStore.update(log => {
@@ -181,7 +180,7 @@
                 })
               : null;
           } catch (e) {
-            console.log("Error Caught", e.message);
+            console.error("Error Caught", e.message);
           }
 
           return null;
@@ -217,10 +216,6 @@
       });
       await tick(1);
       document.getElementById("textarea-capture-note").focus();
-      console.log(
-        "Auto COmplete Done",
-        document.getElementById("textarea-capture-note")
-      );
       methods.autoCompleteDone();
     },
     async autoCompleteDone() {
@@ -228,18 +223,7 @@
       state.cursorIndex = null;
       state.autocompleteResults = null;
     },
-    // async autocompleteTracker(tracker) {
-    //   let inputer = new TrackerInputer(tracker);
-    //   inputer
-    //     .get({ replace: state.partialTag })
-    //     .then(() => {
-    //       // Replace the original search tag
-    //       methods.autoCompleteDone();
-    //     })
-    //     .catch(e => {
-    //       console.log("ERror caught", e.message);
-    //     });
-    // },
+
     keyPress(event) {
       if (event.key === "Enter" && event.getModifierState("Shift")) {
         event.preventDefault();

@@ -193,7 +193,7 @@ export default class NomieCaptureCli {
       this.apiKey = payload.results.apiKey;
       this.privateKey = payload.results.privateKey;
       let saved = await Storage.put(NAPI_STORE_PATH, payload.results);
-      console.log("Saved?", saved);
+
       return payload.results;
     } else {
       alert(payload.results.message);

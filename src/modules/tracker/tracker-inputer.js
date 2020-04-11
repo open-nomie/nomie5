@@ -11,7 +11,7 @@ export default class TrackerInputer {
     this.value = 0;
     this.listeners = {
       cancel: [],
-      value: []
+      value: [],
     };
   }
 
@@ -21,7 +21,7 @@ export default class TrackerInputer {
     }
   }
   fire(type) {
-    this.listeners[type].forEach(func => {
+    this.listeners[type].forEach((func) => {
       func(this);
     });
   }
@@ -44,10 +44,10 @@ export default class TrackerInputer {
     note.push(`#${tracker.tag}`);
 
     // Create array of items to pass to promise step
-    let items = Object.keys(trackerTags).map(tag => {
+    let items = Object.keys(trackerTags).map((tag) => {
       return {
         tracker: $TrackerStore[tag] || new Tracker({ tag: tag }),
-        value: trackerTags[tag].value // not being used
+        value: trackerTags[tag].value, // not being used
       };
     });
 
@@ -78,11 +78,11 @@ export default class TrackerInputer {
 
     // If it's a plain old tick tracker
     return new Promise((resolve, reject) => {
-      let finished = payload => {
+      let finished = (payload) => {
         resolve(payload);
       };
-      let finishedWithError = err => {
-        console.log("error", err);
+      let finishedWithError = (err) => {
+        console.error("error", err);
         reject(err);
       };
       if (options.replace) {
@@ -116,10 +116,10 @@ export default class TrackerInputer {
         ActiveLogStore.addTag(this.tracker.tag);
 
         // Create array of items to pass to promise step
-        let items = Object.keys(trackerTags).map(tag => {
+        let items = Object.keys(trackerTags).map((tag) => {
           return {
             tracker: $TrackerStore[tag] || new Tracker({ tag: tag }),
-            value: trackerTags[tag].value // not being used
+            value: trackerTags[tag].value, // not being used
           };
         });
 
@@ -129,7 +129,7 @@ export default class TrackerInputer {
          * If this is a multiple tracker request we will show each of the
          * tracker inputs one at a time using the promise step function
          */
-        PromiseStep(items, item => {
+        PromiseStep(items, (item) => {
           return new Promise((resolve, reject) => {
             // testing if going direct works
             //   $Interact.trackerInput.show = false;
@@ -139,9 +139,7 @@ export default class TrackerInputer {
             setTimeout(() => {
               // Show Tracker Input for this given tracker
               // then return the promise and move on to the next
-              Interact.trackerInput(item.tracker, { value: item.value, allowSave: true })
-                .then(resolve)
-                .catch(reject);
+              Interact.trackerInput(item.tracker, { value: item.value, allowSave: true }).then(resolve).catch(reject);
             }, 12);
           });
         })
@@ -149,9 +147,7 @@ export default class TrackerInputer {
           .catch(finishedWithError);
       } else {
         // It's an input of some sort
-        Interact.trackerInput(this.tracker, { allowSave: true })
-          .then(finished)
-          .catch(finishedWithError);
+        Interact.trackerInput(this.tracker, { allowSave: true }).then(finished).catch(finishedWithError);
       } // end if tick or others
     }); // end return promise
   }

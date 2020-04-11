@@ -40,7 +40,6 @@
       dispatch("click", {});
     },
     moreClicked(evt) {
-      console.log("more clicked");
       evt.stopPropagation();
       evt.preventDefault();
 

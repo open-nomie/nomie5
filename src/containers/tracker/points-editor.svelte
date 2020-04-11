@@ -37,11 +37,6 @@
     selectedIndex: -1
   };
 
-  // $: if (tracker && !tracker) {
-  //   tracker = new Tracker(tracker);
-  //   console.log("The Tracker is set", tracker);
-  // }
-
   const getTrackerInput = async () => {
     const response = await Interact.trackerInput(tracker, {
       value: state.genesisCalc.v,
@@ -61,7 +56,6 @@
 
   const methods = {
     change() {
-      console.log("Calling change with", tracker);
       dispatch("trackerChange", tracker);
     },
     newCondition() {

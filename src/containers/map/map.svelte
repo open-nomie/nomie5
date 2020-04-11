@@ -198,7 +198,6 @@
         // Loop over locaitons provided in props
         locations.forEach(loc => {
           addMarker([loc.lat, loc.lng], loc.name, () => {
-            console.log("Tapped!?", loc);
             // On Marker Click
             data.activeLocation = loc;
             // If a log exists - show the Share Log popup

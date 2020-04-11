@@ -99,7 +99,6 @@ const nomieApiInit = () => {
     startAutoImporting() {
       if (!autoImporterInterval) {
         autoImporterInterval = setInterval(() => {
-          console.log("Checking for Logs");
           methods.autoImport();
         }, 1000 * 60 * 4);
         methods.autoImport();

@@ -86,12 +86,10 @@
   // $: searchMode = (state.searchTerm || "").length ? true : false;
   let searchMode = false;
   $: if (state.searchTerm && !searchMode) {
-    console.log("searchmode = true");
     searchMode = true;
   }
 
   $: if ($LedgerStore.logs) {
-    console.log("Ledger Store log change detected");
   }
 
   let logs = undefined; // holder of the logs

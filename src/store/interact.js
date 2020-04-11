@@ -515,18 +515,16 @@ const interactInit = () => {
       });
     },
     reload() {
-      // console.log("Going to reload the app");
       document.location.reload(true);
     },
     popmenu(options) {
-      // console.log("Popmenu", options);
       setTimeout(() => {
         update((s) => {
           s.popmenu.show = true;
           s.popmenu.buttons = options.buttons;
           s.popmenu.title = options.title;
           s.popmenu.description = options.description;
-          // console.log("Description", s.popmenu.description);
+
           return s;
         });
       }, 1);

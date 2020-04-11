@@ -155,8 +155,8 @@ export default class StatsProcessor {
           processMetaUnit("context", context);
         });
       } catch (e) {
-        console.log("Error with", meta);
-        console.log(e.message);
+        console.error("Error with", meta);
+        console.error(e.message);
       }
     };
 
