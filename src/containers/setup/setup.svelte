@@ -10,7 +10,10 @@
 
   // components
   import TrackerButton from "../../containers/board/tracker-button.svelte";
+  import NToggle from "../../components/toggle-switch/toggle-switch.svelte";
+  import NItem from "../../components/list-item/list-item.svelte";
   import NText from "../../components/text/text.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
   import Logo from "../../components/logo/logo.svelte";
 
   import dayjs from "dayjs";
@@ -52,7 +55,7 @@
     },
 
     next() {
-      if (state.activeSlide == 4 && $UserStore.storageType) {
+      if (state.activeSlide == 5 && $UserStore.storageType) {
         if ($UserStore.storageType == "local") {
           window.location.href = "/";
         } else {
@@ -214,7 +217,7 @@
 
       .top {
         flex-direction: column;
-        padding: 20px 35px 0;
+        padding: 20px 25px 0;
         padding-top: env(safe-area-inset-top) !important;
         flex-grow: 0;
         flex-shrink: 0;
@@ -309,6 +312,9 @@
   <div class="logo-holder">
     <Logo size={16} color="#CCC" />
   </div>
+
+  <!-- Welcome screen -->
+
   <section
     class="slide slide-1 slide-welcome {state.activeSlide === 0 ? 'active' : 'hidden'}
     {state.isTiny ? 'is-tiny' : 'is-normal'}
@@ -330,6 +336,8 @@
     </div>
   </section>
 
+  <!-- STATS ARE GOOD!-->
+
   <section
     class="slide slide-2 slide-welcome {state.activeSlide === 1 ? 'active' : 'hidden'}
     {state.isTiny ? 'is-tiny' : 'is-normal'}
@@ -346,6 +354,8 @@
     </div>
 
   </section>
+
+  <!-- THEME PICKER -->
 
   <section
     class="slide slide-3 slide-welcome {state.activeSlide === 2 ? 'active' : 'hidden'}
@@ -382,6 +392,8 @@
 
   </section>
 
+  <!-- Hour Format -->
+
   <section
     class="slide slide-3 slide-welcome {state.activeSlide === 3 ? 'active' : 'hidden'}
     {state.isTiny ? 'is-tiny' : 'is-normal'}
@@ -411,8 +423,40 @@
 
   </section>
 
+  <!-- Location Enable -->
+
   <section
-    class="slide slide-4 slide-welcome {state.activeSlide === 4 ? 'active' : 'hidden'}
+    class="slide slide-3 slide-welcome {state.activeSlide === 4 ? 'active' : 'hidden'}
+    {state.isTiny ? 'is-tiny' : 'is-normal'}
+    {state.transitioning ? 'move' : ''}">
+    <div class="top center-grow pt-3">
+
+      <h1 class="mt-4">
+        {Lang.t('setup.use-location', `Enable Location data when you track?`)}
+      </h1>
+      <div style="max-width:400px; margin:8pt auto;">
+        <NItem className="solo mx-0 w-100">
+          <div slot="left">
+            <NIcon name="pin" />
+          </div>
+          Location Tracking
+          <div slot="right">
+            <NToggle
+              bind:value={$UserStore.alwaysLocate}
+              on:change={event => {
+                UserStore.setAlwaysLocate(event.detail);
+              }} />
+          </div>
+        </NItem>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Storage Type -->
+
+  <section
+    class="slide slide-4 slide-welcome {state.activeSlide === 5 ? 'active' : 'hidden'}
     {state.transitioning ? 'move' : ''}">
     <div class="top center-grow">
 
@@ -457,7 +501,7 @@
     <button class="btn btn-clear " on:click={methods.back}>BACK</button>
   {/if}
   <div class="filler" />
-  {#if (state.activeSlide == 4 && $UserStore.storageType) || state.activeSlide != 4}
+  {#if (state.activeSlide == 5 && $UserStore.storageType) || state.activeSlide != 5}
     {#if !state.redirecting}
       <button class="btn btn-clear " on:click={methods.next}>
         <strong>NEXT</strong>
