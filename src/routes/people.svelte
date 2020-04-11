@@ -87,6 +87,7 @@
   }
 
   function getPeople() {
+    // The $PeopleStore.peple is a map - username is the key
     if (state.searchTerm) {
       return Object.keys(($PeopleStore || {}).people || {}).filter(person => {
         return person.toLowerCase().search(state.searchTerm) > -1;
@@ -144,7 +145,7 @@
 
       {#each state.people as person}
         <NItem
-          className="py-2 clickable solo box-shadow"
+          className="py-2 clickable solo box-shadow mb-3"
           on:click={() => {
             personClicked(person);
           }}>
@@ -178,13 +179,13 @@
           </div>
         </NItem>
       {/each}
-      <!-- {#if state.people.length}
+      {#if state.people.length}
         <div class="p-2 text-center">
           <span class="fake-link" on:click={PeopleStore.searchForPeople}>
-            Search notes for @people
+            Find recent @people
           </span>
         </div>
-      {/if} -->
+      {/if}
     </div>
   </div>
 </AppLayout>

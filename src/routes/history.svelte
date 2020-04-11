@@ -178,9 +178,12 @@
     async textClick(event) {
       let isTracker = event.detail.tracker ? true : false;
       Interact.popmenu({
+        title: `${
+          isTracker ? event.detail.tracker.label : event.detail.value
+        } Options`,
         buttons: [
           {
-            title: `View Stats...`,
+            title: `Open Stats`,
             click: () => {
               if (isTracker) {
                 Interact.openStats(event.detail.tracker.tag, "tracker");
@@ -195,7 +198,7 @@
           {
             title: `Search ${
               isTracker ? event.detail.tracker.label : event.detail.value
-            }...`,
+            }`,
             click: () => {
               methods.doSearch(event);
             }

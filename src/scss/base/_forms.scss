@@ -31,8 +31,8 @@ input[type="password"] {
 input.form-control,
 select.form-control {
   border-radius: 0.4rem !important;
-  background-color: var(--color-faded-1) !important;
-  border-color: var(--color-solid-1) !important;
+  background-color: var(--color-solid-half) !important;
+  border: solid 1px var(--color-solid-1) !important;
   color: var(--color-inverse-2);
   &:focus {
     background-color: var(--color-faded);
@@ -40,7 +40,7 @@ select.form-control {
   }
 }
 textarea.form-control {
-  background-color: var(--color-input-background);
+  background-color: var(--color-solid-half);
   border-color: var(--color-solid-1);
   color: var(--color-inverse-2);
   border: none;
