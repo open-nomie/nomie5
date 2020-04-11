@@ -263,9 +263,9 @@
       </div>
     {/if}
     <div
-      class="n-modal-body {padding ? 'padding' : 'no-padding'}
+      class="{bodyClass} n-modal-body {padding ? 'padding' : 'no-padding'}
       {flexBody ? 'flex-body' : 'no-flex-body'}
-      {bodyClass}">
+      ">
       <slot />
     </div>
     {#if has_footer}
