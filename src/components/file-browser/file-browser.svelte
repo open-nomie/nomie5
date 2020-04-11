@@ -7,6 +7,9 @@
   import NIcon from "../icon/icon.svelte";
   import NBackButton from "../back-button/back-button.svelte";
   import NPage from "../../containers/layout/page.svelte";
+
+  // Utils and Modules
+  import Downloader from "../../modules/download/download";
   import tick from "../../utils/tick/tick";
 
   import Storage from "../../modules/storage/storage";
@@ -132,7 +135,9 @@
   async function deleteFile(file) {
     let confirm = await Interact.confirm(
       `Really delete ${file}?`,
-      `This can cause serious issues if you don't know what you're doing.`,
+      `This can cause serious issues if you don't know what you're doing. File to delete: ${state.path.join(
+        "/"
+      )}${file}`,
       "Yes, Delete"
     );
     if (confirm) {
@@ -145,6 +150,13 @@
   async function readFile() {
     let content = await Storage.get(state.path.join("/"));
     return JSON.stringify(content, null, 2);
+  }
+
+  async function download(file) {
+    console.log("File to download", file);
+    let filename = state.path[state.path.length - 1];
+    let content = await Storage.get(state.path.join("/"));
+    Downloader.json(filename, content);
   }
 
   function isFile(name) {
@@ -208,8 +220,9 @@
         </button>
       </div>
       <div class="main">
-        <h1>{state.title}</h1>
+        <h1 class="truncate">{state.title}</h1>
       </div>
+      <div class="right" />
     </div>
     <div class="content n-panel vertical scroll-y">
       <div class="n-list mt-2 container">
@@ -260,7 +273,14 @@
       <div class="main">
         <h1 class="truncate">{state.file}</h1>
       </div>
-      <div class="right">
+      <div class="right toolbar-buttons">
+        <button
+          class="btn btn-clear"
+          on:click={() => {
+            download(state.file);
+          }}>
+          <NIcon name="download" className="fill-primary-bright" />
+        </button>
         <button
           class="btn btn-clear"
           on:click={() => {

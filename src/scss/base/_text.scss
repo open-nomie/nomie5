@@ -1,5 +1,6 @@
 .truncate {
   @include truncate(1);
+  max-width: 100%;
 }
 .truncate-2 {
   @include truncate(2);

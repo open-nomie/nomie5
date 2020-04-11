@@ -5319,7 +5319,8 @@ body.theme-dark {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden !important;
-  display: block; }
+  display: block;
+  max-width: 100%; }
 
 .truncate-2 {
   display: -webkit-box;
@@ -5556,6 +5557,13 @@ select {
 
 .flex-shrink-off {
   flex-shrink: 0; }
+
+.toolbar-buttons {
+  display: flex;
+  flex-direction: row !important;
+  align-items: center !important; }
+  .toolbar-buttons .btn {
+    padding: 0 4px; }
 
 .animate {
   transition: all 0.2s ease-in-out; }
