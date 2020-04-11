@@ -155,8 +155,8 @@ export default class StatsProcessor {
           processMetaUnit("context", context);
         });
       } catch (e) {
-        console.error("Error with", meta);
-        console.error(e.message);
+        console.log("Error with", meta);
+        console.log(e.message);
       }
     };
 
@@ -289,7 +289,7 @@ export default class StatsProcessor {
     }); // end loop over each day
 
     newMap.sum = math.sum(allValues);
-    newMap.avg = math.round(math.sum(allValues) / Object.keys(newMap.days).length, 100);
+    newMap.avg = math.average(allValues);
 
     return newMap;
   }
