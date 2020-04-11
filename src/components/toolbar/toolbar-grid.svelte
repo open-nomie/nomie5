@@ -11,7 +11,7 @@
   <div class="left">
     <slot name="left" />
   </div>
-  <div class="main">
+  <div class="main truncate">
     <slot name="main" />
     <slot />
   </div>

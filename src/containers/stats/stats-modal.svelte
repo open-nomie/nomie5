@@ -92,7 +92,7 @@
     loading: true,
     stats: null,
     compare: [],
-    selectedIndex: null,
+    selected: { index: undefined, rows: null },
     lookupStack: [],
     related: []
   };
@@ -275,6 +275,12 @@
       state.compare = state.compare;
       rememberCompare();
     }
+  }
+
+  async function getLogsForSelected() {
+    console.log();
+
+    return [];
   }
 
   async function compareContext() {
@@ -545,6 +551,37 @@
     return range;
   }
 
+  function clearSelected() {
+    state.selected = { index: undefined, rows: null };
+  }
+
+  async function setSelected(selected) {
+    console.log("setSelected", selected);
+    state.selected = selected;
+
+    let payload = {
+      start: dayjs(state.selected.point.date).startOf("day"),
+      end: dayjs(state.selected.point.date).endOf("day")
+    };
+    // if day - normalize start and end
+    if (state.timeSpan == "d") {
+      payload.start = dayjs(state.selected.point.date).startOf("hour");
+      payload.end = dayjs(state.selected.point.date).endOf("hour");
+    }
+    let rows = await LedgerStore.query(payload);
+    state.selected.rows = rows;
+    console.log("Rows", rows);
+    return rows;
+  }
+
+  function getLogs() {
+    if (state.selected.rows) {
+      return state.selected.rows;
+    } else {
+      return state.stats.rows;
+    }
+  }
+
   async function main() {
     state.range = getDateRangeText();
     state.timeOption = getTimeViewButtons();
@@ -663,7 +700,9 @@
         <NIcon name="chevronLeft" className="fill-primary-bright" />
         Prev
       </button>
-      <div class="time-range" slot="main">{state.range}</div>
+      <div class="time-range truncate" slot="main">
+        <div class="truncate">{state.range}</div>
+      </div>
       <button
         class="btn btn-clear text-primary-bright pr-0"
         slot="right"
@@ -689,10 +728,24 @@
             return getTracker().displayValue(y);
           }}
           on:tap={event => {
-            state.selectedIndex = event.detail.index;
+            setSelected(event.detail);
           }}
-          activeIndex={state.selectedIndex} />
+          activeIndex={state.selected.index} />
       </div>
+    {/if}
+
+    {#if state.selected.rows && state.dataView == 'logs'}
+      <NToolbar className="text-center">
+        <div class="filler" />
+        <span class="text-sm text-inverse-2">
+          All Logs for {state.selected.point.date.format('MMM Do YYYY')}
+        </span>
+        <button class="btn btn-light btn-sm ml-2" on:click={clearSelected}>
+          <NIcon name="close" size="16" />
+          Close
+        </button>
+        <div class="filler" />
+      </NToolbar>
     {/if}
 
   </header>
@@ -730,12 +783,12 @@
                 Interact.openStats(getSearchTerm(compare.type, compare.label));
               }}
               on:tap={event => {
-                state.selectedIndex = event.detail.index;
+                setSelected(event.detail);
               }}
               yFormat={y => {
                 return compare.getTracker().displayValue(y);
               }}
-              activeIndex={state.selectedIndex} />
+              activeIndex={state.selected.index} />
             <button
               class="btn btn-clear btn-close"
               on:click={() => {
@@ -849,7 +902,7 @@
           rows={state.stats.rows}
           className="flex-grow flex-shrink"
           style="min-height:100%" />
-      {:else if state.dataView == 'logs'}
+      {:else}
         <NLogList
           compact
           hideMore
@@ -863,7 +916,7 @@
           on:trackerClick={evt => {
             Interact.openStats(`#${evt.detail.tracker.tag}`);
           }}
-          logs={state.stats.rows}
+          logs={state.selected.rows || state.stats.rows}
           style="min-height:100%"
           className="bg-solid-1 flex-grow flex-shrink" />
       {/if}
