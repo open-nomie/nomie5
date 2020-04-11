@@ -9,12 +9,27 @@
 import LocalForageEngine from "./engine.localforage";
 import BlockStackEngine from "./engine.blockstack";
 import PouchDBEngine from "./engine.pouchdb";
+import Config from "../../../config/global";
 
-export default {
+class SideStore {
+  constructor(path) {
+    this.dbPath = `${Config.data_root}/localDB/${path}`;
+    this.data = JSON.parse(localStorage.getItem(this.dbPath) || "{}");
+  }
+  get(key) {
+    return this.data.hasOwnProperty(key) ? this.data[key] : null;
+  }
+  put(key, value) {
+    this.data[key] = value;
+    localStorage.setItem(this.dbPath, JSON.stringify(this.data));
+  }
+}
+
+const Storage = {
   engines: {
     blockstack: BlockStackEngine,
     local: LocalForageEngine,
-    pouchdb: PouchDBEngine
+    pouchdb: PouchDBEngine,
   },
   engine: null,
   // Get user storage type
@@ -80,6 +95,9 @@ export default {
     },
     put(path, value) {
       return localStorage.setItem(`n4/storage/${path}`, JSON.stringify(value));
-    }
-  }
+    },
+  },
+  SideStore,
 };
+
+export default Storage;
