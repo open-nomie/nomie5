@@ -14,6 +14,8 @@
   import math from "../../utils/math/math";
   import Logger from "../../utils/log/log";
 
+  import arrayUtils from "../../utils/array/array_utils";
+
   //vendors
   import Spinner from "../../components/spinner/spinner.svelte";
 
@@ -51,7 +53,59 @@
       state.replacedCount = 0;
     },
 
+    findInBook(bookPath, logs) {
+      logs.forEach(log => {
+        if (log.note.search(state.replace) > -1) {
+          state.foundCount++;
+          state.found = state.found || [];
+          // Push found results
+          state.found.push({
+            book: bookPath,
+            log: log
+          });
+        }
+      });
+      return state.found;
+    },
+
+    async getAndFindChunks(bookPaths) {
+      let promises = [];
+      for (var i = 0; i < bookPaths.length; i++) {
+        let path = bookPaths[i];
+        let getBook = Storage.get(path);
+        promises.push(getBook);
+        getBook.then(logs => {
+          methods.findInBook(path, logs);
+        });
+      }
+      return Promise.all(promises);
+    },
+
     async find() {
+      if (state.replace) {
+        state.found = [];
+        state.finding = true;
+        state.findingProress = 0;
+        // Let all books
+        let bookPaths = await LedgerStore.listBooks();
+        // Break them into chunks of 10
+        let chunkedBookPaths = arrayUtils.chunk(bookPaths, 10);
+        // Loop over (using for loop for await)
+        for (var i = 0; i < chunkedBookPaths.length; i++) {
+          let thisBatch = chunkedBookPaths[i];
+          // Check this chunk
+          let processed = await methods.getAndFindChunks(thisBatch);
+          // Update the pgoress bar
+          state.findingProgress = Math.round(
+            (i / chunkedBookPaths.length) * 100
+          );
+        }
+        state.example = 0;
+        state.finishedFinding = true;
+      } // end if we have something to replace
+    },
+
+    async xfind() {
       // Clear errors
       state.error = null;
       // If replace is set
