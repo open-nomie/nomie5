@@ -197,7 +197,14 @@
       dispatch('swipeLeft');
     }}>
     {#if title}
-      <div class="title">{title}</div>
+      <div
+        class="title clickable"
+        style="z-index:120;"
+        on:click={() => {
+          dispatch('titleClick', title);
+        }}>
+        {title}
+      </div>
     {/if}
     <svg height={`${height}px`}>
       <!-- y axis -->
