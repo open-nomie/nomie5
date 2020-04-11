@@ -76,8 +76,7 @@
       if (username) {
         let person = await PeopleStore.addByName(username);
         if (person) {
-          Interact.toast(`${person.displayName} (@${person.username}) added`);
-          await LedgerStore.fastLog(`Added @${person.username} to +nomie`);
+          LedgerStore.fastLog(`Added @${person.username} to +nomie`);
           personClicked(person.username);
         }
       }

@@ -212,7 +212,7 @@ const PeopleInit = () => {
           return state;
         });
         if (added) {
-          await this.write(_state.people);
+          this.write(_state.people);
           return _state.people[username];
         } else {
           throw new Error("That username is already taken, please try another name.");
