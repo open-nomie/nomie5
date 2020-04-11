@@ -1,5 +1,7 @@
 import Assets from "./svg/svgs.json";
 
+import { base as colors } from "../../modules/colors/colors";
+
 class Hash {
   constructor(id) {
     this.hash = this.fh5(id);
@@ -23,29 +25,6 @@ class Hash {
     return arr.length ? arr[parseInt(digit2) % arr.length] : null;
   }
 }
-
-const colors = [
-  "#CBC0D3",
-  "#EFD3D7",
-  "#FEEAFA",
-  "#DEE2FF",
-  "#EDEEC9",
-  "#DDE7C7",
-  "#BFD8BD",
-  "#DEE2FF",
-  "#A0E8AF",
-  "#FFCF56",
-  "#F9E784",
-  "#E58F65",
-  "#F1E8B8",
-  "#9BBDF9",
-  "#B95F89",
-  "#C4E0F9",
-  "#5EB1BF",
-  "#7CFEF0",
-  "#EF959D",
-  "#E0C879"
-];
 
 export class Config {
   constructor(starter = {}) {
@@ -74,7 +53,7 @@ export default class Face {
     //const assetKeys = Object.keys(this.assets);
     // console.log("assetKeys", assetKeys);
     const assetKeys = ["c-wear"];
-    base = assetKeys.map(layer => {
+    base = assetKeys.map((layer) => {
       return this.hash.pick(this.assets[layer], layer);
     });
     // Define Style
@@ -83,7 +62,7 @@ export default class Face {
       `border-radius: ${this.config.size * this.config.radius}px;`,
       `position:relative; background-color: ${this.color};`,
       `width:${this.config.size}px; height:${this.config.size}px;`,
-      `box-shadow:inset 0px -4px 10px rgba(0,0,0,0.2),inset 0px 4px 10px 3px rgba(255,255,255,0.1)`
+      `box-shadow:inset 0px -4px 10px rgba(0,0,0,0.2),inset 0px 4px 10px 3px rgba(255,255,255,0.1)`,
     ];
     //${pickedWear}
     const svg = `<div class="dymoji-character" style="${style.join(" ")}">

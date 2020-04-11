@@ -41,6 +41,8 @@
   }
   .letter.just-letter {
     // font-size: $size * 0.4 !important;
+    color: #fff !important;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
   }
 
   .dymoji-wrap {

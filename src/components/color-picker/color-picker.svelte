@@ -1,10 +1,10 @@
 <script>
   import NHScroller from "../h-scroller/h-scroller.svelte";
-  import DefaultColors from "../../modules/colors/colors";
+  import { base } from "../../modules/colors/colors";
 
   export let value = "#20699d";
   export let grid = false;
-  export let colors = DefualtColors;
+  export let colors = base;
 
   $: selectedIndex = colors.indexOf(value) || 0;
 </script>
