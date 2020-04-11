@@ -560,7 +560,8 @@
 
     let payload = {
       start: dayjs(state.selected.point.date).startOf("day"),
-      end: dayjs(state.selected.point.date).endOf("day")
+      end: dayjs(state.selected.point.date).endOf("day"),
+      limit: 100
     };
     // if day - normalize start and end
     if (state.timeSpan == "d") {

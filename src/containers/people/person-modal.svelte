@@ -167,7 +167,7 @@
         class="btn btn-sm tap-icon"
         on:click={() => {
           close();
-          Interact.openStats(activePerson.getUsername(), 'person');
+          Interact.openStats(`@${activePerson.getUsername()}`);
         }}>
         <NIcon name="chart" size="22" />
       </button>

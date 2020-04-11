@@ -152,6 +152,7 @@
     border: var(--modal-border);
     box-shadow: var(--box-shadow-float);
     transition: all 0.2s ease-in-out;
+
     .n-modal-body {
       flex-grow: 1;
       @include media-breakpoint-up(md) {
@@ -168,6 +169,14 @@
       width: 96vw;
       max-width: 700px;
       max-height: 700px;
+
+      @include media-breakpoint-down(sm) {
+        height: 100vh;
+        width: 100vw;
+        max-height: 100vh;
+        max-width: 100vh;
+        margin: 0 !important;
+      }
 
       .n-modal-body {
         &.flex-body {
