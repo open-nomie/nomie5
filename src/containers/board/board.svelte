@@ -388,13 +388,19 @@
       // Define buttons
       let buttons = [
         {
-          title: "Stats",
+          title: Lang.t("tracker.stats", "Stats"),
           click() {
             Interact.openStats(tracker.tag);
           }
         },
         {
-          title: "Edit Tracker",
+          title: Lang.t("tracker.streak", "Streak"),
+          click() {
+            Interact.openStreak(tracker.tag);
+          }
+        },
+        {
+          title: Lang.t("tracker.edit-tracker", "Edit Tracker"),
           click() {
             Interact.editTracker(tracker);
           }
