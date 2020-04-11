@@ -19,7 +19,7 @@
   const methods = {
     init() {
       // looop over children - apply a click event
-      if (wrapper) {
+      if (wrapper && wrapper.children) {
         for (let i = 0; i < wrapper.children.length; i++) {
           let child = wrapper.children[i];
           child.addEventListener("click", event => {

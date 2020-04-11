@@ -50,7 +50,7 @@
             return $TrackerStore[tag];
           })
           .sort((a, b) => {
-            return a.label > b.label ? 1 : -1;
+            return a.label.toLowerCase() > b.label.toLowerCase() ? 1 : -1;
           });
         break;
 
@@ -62,7 +62,7 @@
             return $PeopleStore.people[username];
           })
           .sort((a, b) => {
-            return a.username > b.username ? 1 : -1;
+            return a.username.toLowerCase() > b.username.toLowerCase() ? 1 : -1;
           });
         break;
 

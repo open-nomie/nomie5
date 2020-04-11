@@ -239,7 +239,6 @@
         {#each points as point, i}
           <rect
             on:click={event => {
-              console.log('Event Click', event, i, point);
               methods.onTap(event, { index: i, point: point });
             }}
             rx="4"
