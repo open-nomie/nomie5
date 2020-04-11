@@ -107,6 +107,12 @@ const ledgerInit = () => {
         return pass;
       });
 
+      if (filter.limit) {
+        logs = logs.filter((row, i) => {
+          return i <= filter.limit;
+        });
+      }
+
       return logs;
     },
     // Connect to hooks

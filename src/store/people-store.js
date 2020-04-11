@@ -83,6 +83,15 @@ const toUsername = (username) => {
   return username.toLowerCase();
 };
 
+function getState() {
+  let returnState;
+  update((state) => {
+    returnState = state;
+    return state;
+  });
+  return returnState;
+}
+
 const searchForPeople = async () => {
   let loadingFinished = Interact.loading("Finding @usernames...");
   const logs = await LedgerStore.query({ search: `@`, start: dayjs().subtract(3, "month") });
@@ -92,7 +101,7 @@ const searchForPeople = async () => {
     // Array of usernames.
     meta.people.forEach((username) => {
       username = username.toLowerCase();
-      people.push({ username, last: log.end });
+      people.push({ username, last: new Date(log.end) });
     });
     // people = [...people, ...meta.people];
   });
@@ -182,10 +191,10 @@ const PeopleInit = () => {
             if (!state.people.hasOwnProperty(person.username)) {
               changed = true;
               state.people[person.username] = new Person(person);
-              state.people[person.username].last = new Date();
+              state.people[person.username].last = person.last || new Date();
             } else {
               changed = true;
-              state.people[person.username].last = new Date();
+              state.people[person.username].last = person.last || new Date();
             }
           }
         });
