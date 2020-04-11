@@ -5,18 +5,14 @@ const vendors = {
     "./vendors/blockstack/blockstack.js",
     "./vendors/leaflet/leaflet.js",
     "./vendors/leaflet/esri/esri-leaflet.js",
-    "./vendors/leaflet/geocoder/esri-leaflet-geocoder.js"
+    "./vendors/leaflet/geocoder/esri-leaflet-geocoder.js",
   ],
-  css: [
-    "./vendors/leaflet/leaflet.css",
-    "./vendors/leaflet/geocoder/esri-leaflet-geocoder.css",
-    "./vendors/material-design-iconic-font/css/material-design-iconic-font.min.css"
-  ]
+  css: ["./vendors/leaflet/leaflet.css", "./vendors/leaflet/geocoder/esri-leaflet-geocoder.css"],
 };
 
 function bundleJS() {
   let content = [];
-  vendors.js.forEach(path => {
+  vendors.js.forEach((path) => {
     content.push(`// import ${path}`);
     content.push(fs.readFileSync(path, "UTF-8"));
   });
@@ -25,7 +21,7 @@ function bundleJS() {
 
 function bundleCSS() {
   let content = [];
-  vendors.css.forEach(path => {
+  vendors.css.forEach((path) => {
     content.push(`/* import ${path} */`);
     content.push(fs.readFileSync(path, "UTF-8"));
   });
