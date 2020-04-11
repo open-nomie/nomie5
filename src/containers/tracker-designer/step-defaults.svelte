@@ -1,6 +1,8 @@
 <script>
   import { TrackerDesignerStore } from "./tracker-designer-store";
   import NItem from "../../components/list-item/list-item.svelte";
+  import NInput from "../../components/input/input.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
   import NToggle from "../../components/toggle-switch/toggle-switch.svelte";
   import trackerTypes from "../../modules/tracker-types/tracker-types";
   import { Lang } from "../../store/lang";
@@ -11,9 +13,8 @@
       $TrackerDesignerStore.tracker,
       { value: $TrackerDesignerStore.tracker.default, allowSave: false }
     );
-    console.log("Got input from tracker", response);
-    if (response.value) {
-      $TrackerDesignerStore.tracker.default = response.value;
+    if (response && response.value) {
+      $TrackerDesignerStore.tracker[target] = response.value;
     }
   };
 </script>
@@ -24,21 +25,29 @@
 
     {#if ['tick', 'note'].indexOf($TrackerDesignerStore.tracker.type) == -1}
       <NItem>
-        <span class="title text-md">Default Value</span>
-        <div class="n-row" slot="right">
-          <span class="text-faded-3 mr-2">
-            {$TrackerDesignerStore.tracker.displayValue($TrackerDesignerStore.tracker.default)}
-          </span>
-          <input
-            style="min-width:100px; max-width:100px; text-align:center"
+        <div class="title text-md flex-grow w-100">
+          Default
+          {#if $TrackerDesignerStore.tracker.default}
+            <span class="text-faded">
+              {$TrackerDesignerStore.tracker.displayValue($TrackerDesignerStore.tracker.default)}
+            </span>
+          {/if}
+        </div>
+        <div slot="right">
+          <NInput
             type="number"
             pattern="[0-9\.\-]"
-            on:click={() => {
-              getTrackerInput('default');
-            }}
             bind:value={$TrackerDesignerStore.tracker.default}
-            class="form-control input-lg pl-1"
-            placeholder="Default" />
+            placeholder="Default Value">
+            <button
+              class="btn btn-icon clickable mr-2"
+              slot="right"
+              on:click={() => {
+                getTrackerInput('default');
+              }}>
+              <NIcon name="addOutline" class="fill-primary-bright" />
+            </button>
+          </NInput>
         </div>
       </NItem>
     {/if}
@@ -72,30 +81,42 @@
       <hr class="my-0" />
       <NItem>
         <span class="title">Min</span>
-
-        <input
-          slot="right"
-          style="min-width:100px; max-width:100px; text-align:center"
-          type="number"
-          pattern="[0-9\.\-]"
-          bind:value={$TrackerDesignerStore.tracker.min}
-          class="form-control input-lg pl-1"
-          placeholder="Value" />
-
+        <div slot="right">
+          <NInput
+            type="number"
+            pattern="[0-9\.\-]"
+            bind:value={$TrackerDesignerStore.tracker.min}
+            placeholder="Min Value">
+            <button
+              class="btn btn-icon clickable mr-2"
+              slot="right"
+              on:click={() => {
+                getTrackerInput('min');
+              }}>
+              <NIcon name="addOutline" class="fill-primary-bright" />
+            </button>
+          </NInput>
+        </div>
       </NItem>
 
       <NItem>
         <span class="title">Max</span>
-
-        <input
-          slot="right"
-          style="min-width:100px; max-width:100px; text-align:center"
-          type="number"
-          pattern="[0-9\.\-]"
-          bind:value={$TrackerDesignerStore.tracker.max}
-          class="form-control input-lg pl-1"
-          placeholder="Value" />
-
+        <div slot="right">
+          <NInput
+            type="number"
+            pattern="[0-9\.\-]"
+            bind:value={$TrackerDesignerStore.tracker.max}
+            placeholder="Max Value">
+            <button
+              class="btn btn-icon clickable mr-2"
+              slot="right"
+              on:click={() => {
+                getTrackerInput('max');
+              }}>
+              <NIcon name="addOutline" class="fill-primary-bright" />
+            </button>
+          </NInput>
+        </div>
       </NItem>
     {/if}
   </section>

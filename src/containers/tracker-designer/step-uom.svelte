@@ -1,6 +1,7 @@
 <script>
   import { TrackerDesignerStore } from "./tracker-designer-store";
   import NItem from "../../components/list-item/list-item.svelte";
+  import NInput from "../../components/input/input.svelte";
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
 
   const groupedUOMs = NomieUOM.toGroupedArray();
@@ -26,9 +27,10 @@
     </NItem>
     <NItem className="pad">
       {#if $TrackerDesignerStore.tracker.type !== 'timer' && $TrackerDesignerStore.tracker.type !== 'note' && $TrackerDesignerStore.tracker.type !== 'tick'}
-        <select
-          bind:value={$TrackerDesignerStore.tracker.uom}
-          class="form-control">
+        <NInput
+          type="select"
+          placeholder="Measurement"
+          bind:value={$TrackerDesignerStore.tracker.uom}>
           {#each Object.keys(groupedUOMs) as groupKey (groupKey)}
             <option disabled>-- {groupKey}</option>
             {#each groupedUOMs[groupKey] as uom (`${groupKey}-${uom.key}`)}
@@ -39,7 +41,7 @@
               </option>
             {/each}
           {/each}
-        </select>
+        </NInput>
       {:else if $TrackerDesignerStore.tracker.type == 'timer'}
         <input type="form-control" disabled value="Time (hh:mm:ss)" />
       {:else if $TrackerDesignerStore.tracker.type == 'tick'}

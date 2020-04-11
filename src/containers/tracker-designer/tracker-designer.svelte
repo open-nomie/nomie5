@@ -7,7 +7,7 @@
 
   import NTrackerButton from "../../containers/board/tracker-button.svelte";
   import NStepper from "../../components/stepper/stepper.svelte";
-
+  import NIcon from "../../components/icon/icon.svelte";
   import StepLabel from "./step-label.svelte";
   import StepEmoji from "./step-emoji.svelte";
   import StepType from "./step-type.svelte";
@@ -93,7 +93,7 @@
       }
     };
     const color = {
-      title: "Pick a Color for this tracker",
+      title: "Pick a Tracker Color",
       component: StepColor,
       validate() {
         return $TrackerDesignerStore.tracker.color;
@@ -163,67 +163,74 @@
 </script>
 
 <style lang="scss">
-  .tracker-preview {
-    border-bottom-left-radius: 20%;
-    border-bottom-right-radius: 20%;
+  @import "../../scss/utils/_utils";
+  :global(.tracker-preview) {
     margin-bottom: 10px;
+  }
+  :global(.tracker-preview .n-stepper) {
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  :global(.tracker-preview .item-ball .username) {
+    display: none;
+  }
+  .main-body {
+    @include media-breakpoint-up(md) {
+      padding-top: 100px !important;
+    }
   }
 </style>
 
 <AppLayout showTabs={false}>
 
-  <main slot="content" class="n-panel bg-solid scroll-y vertical n-panel-fixed">
+  <div
+    slot="header"
+    class="bg-bg pt-1 tracker-preview"
+    style="background-color:{$TrackerDesignerStore.tracker.color};
+    box-shadow:0px 10px 10px -9px {$TrackerDesignerStore.tracker.color}">
 
-    <div
-      class="bg-bg pt-1 tracker-preview"
-      style="background-color:{$TrackerDesignerStore.tracker.color};
-      box-shadow:0px 10px 10px -9px {$TrackerDesignerStore.tracker.color}">
-
-      <div class="n-row align-top">
-        <button class="btn btn-clear text-solid mt-2 ml-2" on:click={cancel}>
-          <i class="zmdi zmdi-close text-lg" />
-        </button>
-        <div class=" text-bold filler text-center">
-          <NTrackerButton tracker={$TrackerDesignerStore.tracker} />
-
-        </div>
-        <button class="btn btn-clear">
-          <i class="zmdi zmdi-close text-lg opacity-0" />
-        </button>
-      </div>
-      <div class="n-row text-white">
-        <div class="filler" />
-        {activeStep.title}
-        <div class="filler" />
-      </div>
-
-      <div class="p-2 px-5 mx-auto" style="max-width:80%;">
+    <div class="n-toolbar-grid">
+      <button class="btn btn-clear text-white left" on:click={cancel}>
+        <NIcon name="close" className="fill-white" size="32" />
+      </button>
+      <div class="main text-white text-center">
+        <div>#{step + 1}. {activeStep.title}</div>
         <NStepper steps={stepCount} current={step} />
       </div>
-
     </div>
 
+    <div class="n-row align-top">
+      <div class="text-bold filler text-center mb-2">
+        <NTrackerButton tracker={$TrackerDesignerStore.tracker} />
+      </div>
+    </div>
+
+  </div>
+
+  <main slot="content" class="bg-solid main-body pt-4 pb-4">
     {#if activeStep}
       <svelte:component this={activeStep.component} />
     {/if}
-    <NToolbar />
   </main>
 
-  <footer slot="footer">
-    <NToolbar>
-      <button
-        on:click={previousStep}
-        disabled={step == 0}
-        class="btn btn-block btn-dark mr-1 my-0">
-        Previous
-      </button>
-      <button
-        on:click={nextStep}
-        class="btn btn-block ml-1 my-0 btn-primary"
-        disabled={!canGoNext}>
-        {step == getSteps().length - 1 ? Lang.t('general.create', 'Create') : Lang.t('general.next', 'Next')}
-      </button>
-    </NToolbar>
+  <footer slot="footer" class="bg-solid">
+    <div class="container-sm">
+      <NToolbar className="">
+        <button
+          on:click={previousStep}
+          disabled={step == 0}
+          class="btn btn-block btn-dark mr-1 my-0">
+          Previous
+        </button>
+        <button
+          on:click={nextStep}
+          class="btn btn-block ml-1 my-0 btn-primary"
+          disabled={!canGoNext}>
+          {step == getSteps().length - 1 ? Lang.t('general.create', 'Create') : Lang.t('general.next', 'Next')}
+        </button>
+      </NToolbar>
+    </div>
   </footer>
 
 </AppLayout>
