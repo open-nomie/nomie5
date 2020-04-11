@@ -246,7 +246,7 @@
     searchChange(evt) {
       state.searchTerm = evt.detail;
       showSearch = false;
-      window.scrollTo(0, 0);
+      // window.scrollTo(0, 0);
     },
     async onSearchEnter(evt) {
       await tick(100);
