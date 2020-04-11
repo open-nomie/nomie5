@@ -14,6 +14,8 @@ context("App", () => {
     cy.wait(400);
     cy.get(".footer-buttons > :nth-child(3)").click();
     cy.wait(400);
+    cy.get(".footer-buttons > :nth-child(3)").click();
+    cy.wait(400);
     cy.get(".slide-4 > .top > :nth-child(2)").click();
     cy.wait(400);
     cy.get(".footer-buttons > :nth-child(3)").click();
@@ -21,21 +23,13 @@ context("App", () => {
   };
 
   const selectStarters = () => {
-    cy.get(".n-modal-frame .tracker-option")
-      .eq(0)
-      .click();
+    cy.get(".n-modal-frame .tracker-option").eq(0).click();
     cy.wait(200);
-    cy.get(".n-modal-frame .tracker-option")
-      .eq(1)
-      .click();
+    cy.get(".n-modal-frame .tracker-option").eq(1).click();
     cy.wait(200);
-    cy.get(".n-modal-frame .tracker-option")
-      .eq(2)
-      .click();
+    cy.get(".n-modal-frame .tracker-option").eq(2).click();
     cy.wait(200);
-    cy.get(".n-modal-frame .tracker-option")
-      .eq(3)
-      .click();
+    cy.get(".n-modal-frame .tracker-option").eq(3).click();
     cy.wait(200);
     cy.get('.n-modal-footer button[slot="footer"]').click();
   };
@@ -59,16 +53,12 @@ context("App", () => {
 
   const createSimpleTracker = () => {
     const next = () => {
-      cy.get(".footer-slot button")
-        .eq(1)
-        .click();
+      cy.get(".footer-slot button").eq(1).click();
     };
 
     cy.get(".tracker-undefined").click();
     cy.wait(300);
-    cy.get(".pop-menu button")
-      .eq(1)
-      .click();
+    cy.get(".pop-menu button").eq(1).click();
     next();
     cy.get(".n-input input").type("Simple Tracker");
     next();
@@ -78,10 +68,7 @@ context("App", () => {
     next();
     cy.get(".onoffswitch-label").click();
     next();
-    cy.get("select")
-      .as("select")
-      .invoke("val", "1")
-      .trigger("change");
+    cy.get("select").as("select").invoke("val", "1").trigger("change");
     next();
     cy.get(".tracker-simple_tracker").should("exist");
     cy.get(".tracker-simple_tracker").click();
@@ -92,19 +79,14 @@ context("App", () => {
   const trackMood = (addOrSave = "save") => {
     cy.get(".tracker-mood").click();
     cy.wait(500);
-    cy.get(".tracker-input.slider input")
-      .as("range")
-      .invoke("val", 8)
-      .trigger("change");
+    cy.get(".tracker-input.slider input").as("range").invoke("val", 8).trigger("change");
     cy.wait(100);
     if (addOrSave == "save") {
       cy.get(".n-modal-footer > .footer > .btn-primary").click();
       cy.wait(100);
       cy.get(".tracker-mood .score").should("contain", "8");
     } else {
-      cy.get(".n-modal-footer > .footer > .btn")
-        .eq(2)
-        .click();
+      cy.get(".n-modal-footer > .footer > .btn").eq(2).click();
     }
     // cy.get(".n-modal-footer > .footer > .btn-primary").click();
   };
@@ -138,7 +120,7 @@ context("App", () => {
   const testCaptureForm = () => {
     trackMood("add");
     cy.get("#textarea-capture-note").should("contain.value", "#mood(8)");
-    cy.get(".n-points .number").should("contain", "1");
+    // cy.get(".n-points .number").should("contain", "1");
     cy.get(".save-button").click();
     cy.wait(200);
     cy.get("#textarea-capture-note").should("contain.value", "");
@@ -149,9 +131,9 @@ context("App", () => {
     window.indexedDB.deleteDatabase("localforage");
     onboard();
     selectStarters();
-    // testTips();
-    // useTrackers();
-    // createTrackers();
+    testTips();
+    useTrackers();
+    createTrackers();
     testCaptureForm();
   });
 });
