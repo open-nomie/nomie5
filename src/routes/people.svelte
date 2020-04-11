@@ -19,6 +19,7 @@
   import { Lang } from "../store/lang.js";
   import { PeopleStore } from "../store/people-store.js";
   import { Interact } from "../store/interact.js";
+  import { LedgerStore } from "../store/ledger.js";
 
   let state = {
     people: [],
@@ -69,10 +70,16 @@
 
   async function addPerson() {
     try {
-      let username = await Interact.prompt(`What's their name?`);
+      let username = await Interact.prompt(
+        Lang.t("people.person-name", "Person Name")
+      );
       if (username) {
-        await PeopleStore.addByName(username);
-        Interact.toast(`${username} added`);
+        let person = await PeopleStore.addByName(username);
+        if (person) {
+          Interact.toast(`${person.displayName} (@${person.username}) added`);
+          await LedgerStore.fastLog(`Added @${person.username} to +nomie`);
+          personClicked(person.username);
+        }
       }
     } catch (e) {
       Interact.alert("Error", e.message);
@@ -171,13 +178,13 @@
           </div>
         </NItem>
       {/each}
-      {#if state.people.length}
+      <!-- {#if state.people.length}
         <div class="p-2 text-center">
           <span class="fake-link" on:click={PeopleStore.searchForPeople}>
-            Find recent @people
+            Search notes for @people
           </span>
         </div>
-      {/if}
+      {/if} -->
     </div>
   </div>
 </AppLayout>
