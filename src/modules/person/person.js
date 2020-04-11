@@ -5,12 +5,14 @@ export default class Person {
       this.displayName = starter;
       this.avatar = null;
       this.last = new Date();
+      this.notes = "";
       starter = {};
     } else {
       this.username = starter.username ? starter.username.toLowerCase() : "unknown";
       this.displayName = starter.displayName || starter.username || null;
       this.avatar = starter.avatar || null;
       this.last = starter.last ? new Date(starter.last) : new Date();
+      this.notes = starter.notes || "";
     }
   }
 

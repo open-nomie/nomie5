@@ -149,7 +149,18 @@
   }
 </script>
 
-<Modal className="person-modal" show={domVisible} type="bottom-slideup">
+<style lang="scss">
+  .file-input-wraper {
+    height: 1px;
+    overflow: hidden;
+  }
+</style>
+
+<Modal
+  className="person-modal"
+  bodyClass="bg-solid-1"
+  show={domVisible}
+  type="bottom-slideup">
   <header class="w-100" slot="header" on:swipedown={close}>
     <NToolbarGrid>
       <button
@@ -192,16 +203,20 @@
     {#if state.view == 'check-in'}
       <PersonCheckin on:checkedIn={closeAndRefresh} />
     {:else if state.view == 'edit'}
-      <div class="edit pt-2">
-        <NItem>
-          <NInput
-            type="text"
-            placeholder="Display Name"
-            bind:value={activePerson.displayName} />
-        </NItem>
-        <NItem>
+      <div class="edit p-3">
+
+        <NInput
+          type="text"
+          placeholder="Display Name"
+          bind:value={activePerson.displayName} />
+
+        <NInput
+          type="textarea"
+          placeholder="Notes"
+          bind:value={activePerson.notes} />
+
+        <div class="n-row">
           <div
-            slot="left"
             on:click={() => {
               document.getElementById('avatarFileInput').click();
             }}>
@@ -214,23 +229,34 @@
                 radius={0.3} />
             {/if}
           </div>
-          <input
-            class="form-control pb-2"
-            id="avatarFileInput"
-            placeholder="Avatar"
-            type="file"
-            accept="png,jpeg,jpg"
-            on:change={selectPhoto} />
-        </NItem>
-        <NItem>
-          <button
-            class="btn btn-block btn-secondary"
-            on:click={saveActivePerson}>
-            Save @{activePerson.username}
-          </button>
-        </NItem>
-        <div class="filler mt-5 pt-2" />
-        <NItem className="text-red text-sm" on:click={deleteUser}>
+          <div class="main ml-2">
+            <button
+              class="btn btn-fill btn-light btn-block"
+              on:click={() => {
+                document.getElementById('avatarFileInput').click();
+              }}>
+              Select Photo...
+            </button>
+            <div class="file-input-wraper">
+              <input
+                class="form-control pb-2"
+                id="avatarFileInput"
+                placeholder="Avatar"
+                type="file"
+                accept="png,jpeg,jpg"
+                on:change={selectPhoto} />
+            </div>
+          </div>
+        </div>
+        <button
+          class="btn btn-block btn-secondary my-4"
+          on:click={saveActivePerson}>
+          Save @{activePerson.username}
+        </button>
+
+        <NItem
+          className="bg-transparent text-red text-sm text-center"
+          on:click={deleteUser}>
           Delete @{activePerson.username}...
         </NItem>
       </div>

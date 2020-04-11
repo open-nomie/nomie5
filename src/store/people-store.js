@@ -79,9 +79,8 @@ const getRecentPeopleStats = async () => {
 
 const toUsername = (username) => {
   username = username.replace("@", "").trim();
-  username = username.toLowerCase();
   username = snakeCase(username);
-  return username;
+  return username.toLowerCase();
 };
 
 const searchForPeople = async () => {
@@ -211,6 +210,7 @@ const PeopleInit = () => {
       });
     },
     async addByName(personName) {
+      let person;
       let _state;
       if (personName) {
         let username = toUsername(personName);
@@ -218,7 +218,8 @@ const PeopleInit = () => {
         update((state) => {
           state.people = state.people || {};
           if (!state.people.hasOwnProperty(username)) {
-            state.people[username] = new Person({ username, displayName: personName });
+            person = new Person({ username: username.toLowerCase(), displayName: personName });
+            state.people[username] = person;
             added = true;
           }
           _state = state;
@@ -231,6 +232,7 @@ const PeopleInit = () => {
           throw new Error("That username is already taken, please try another name.");
         }
       }
+      return person;
     },
     async writeState() {
       update((state) => {

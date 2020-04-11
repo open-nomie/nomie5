@@ -7,6 +7,7 @@
 
   // Components
   import Spinner from "../../components/spinner/spinner.svelte";
+  import NInput from "../../components/input/input.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import AutoComplete from "../../components/auto-complete/auto-complete.svelte";
   import NIcon from "../../components/icon/icon.svelte";
@@ -50,12 +51,11 @@
 </script>
 
 <div class="person-checkin p-3">
-  <div class="text-sm p-2 text-faded-2">{getPlaceholder()}</div>
   <div class="text-area-holder">
-    <textarea
-      class="form-control text-md p-2"
-      id="textarea-note"
-      rows="6"
+
+    <NInput
+      type="textarea"
+      rows={6}
       placeholder={getPlaceholder()}
       bind:value={state.note} />
     <AutoComplete
