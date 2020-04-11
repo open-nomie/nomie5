@@ -3,6 +3,7 @@ import { TrackerStore } from "../../store/trackers";
 import Tracker from "../../modules/tracker/tracker";
 import dayjs from "dayjs";
 import md5 from "md5";
+import download from "../download/download";
 
 export default class CSV {
   constructor() {}
@@ -11,9 +12,9 @@ export default class CSV {
     let header = ["epoch", "start", "end", "tracker", "value", "note", "lat", "lng", "location", "score"];
     let rows = [header];
     // Get an array of tag names from the trackers
-    let tagsToInclude = trackersToInclude.map(tracker => tracker.tag);
+    let tagsToInclude = trackersToInclude.map((tracker) => tracker.tag);
     // Loop over logs
-    logs.forEach(log => {
+    logs.forEach((log) => {
       // Extract log tracker tags
       let logTrackers = Object.keys(log.trackers);
       const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
@@ -21,7 +22,7 @@ export default class CSV {
       const localEnd = new Date(log.end - tzoffset).toISOString().slice(0, -1);
 
       // Loop over tracker tags
-      logTrackers.forEach(trackerTag => {
+      logTrackers.forEach((trackerTag) => {
         // Is it a match?
         if (tagsToInclude.indexOf(trackerTag) > -1) {
           // Include it..
@@ -35,7 +36,7 @@ export default class CSV {
             log.lat,
             log.lng,
             log.location.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
-            log.score
+            log.score,
           ]);
         }
       }); // end looping over logTrackers
@@ -51,7 +52,7 @@ export default class CSV {
           log.lat,
           log.lng,
           log.location.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
-          log.score
+          log.score,
         ]);
       }
     });
@@ -64,22 +65,22 @@ export default class CSV {
    * @param {String} filename
    * @param {Array} rows
    */
-  download(filename, rows) {
-    let file = rows.join("\r\n");
-    this.filename = filename || "nomie4.csv";
+  // download(filename, rows) {
+  //   let file = rows.join("\r\n");
+  //   this.filename = filename || "nomie4.csv";
 
-    if (navigator.msSaveBlob) {
-      // IE 10+
-      navigator.msSaveBlob(new Blob([file], { type: "text/csv;charset=utf-8;" }), filename);
-    } else {
-      let encodedUri = "data:text/csv;charset=UTF-8," + encodeURIComponent(file);
-      let link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", filename);
-      document.body.appendChild(link); // Firefox
-      link.click();
-    }
-  }
+  //   if (navigator.msSaveBlob) {
+  //     // IE 10+
+  //     navigator.msSaveBlob(new Blob([file], { type: "text/csv;charset=utf-8;" }), filename);
+  //   } else {
+  //     let encodedUri = "data:text/csv;charset=UTF-8," + encodeURIComponent(file);
+  //     let link = document.createElement("a");
+  //     link.setAttribute("href", encodedUri);
+  //     link.setAttribute("download", filename);
+  //     document.body.appendChild(link); // Firefox
+  //     link.click();
+  //   }
+  // }
 
   /**
    * Generate the CSV
@@ -94,7 +95,7 @@ export default class CSV {
     let trackers = options.trackers;
 
     // Loop over provided trackers - make them real trackers
-    trackers.map(tracker => {
+    trackers.map((tracker) => {
       if (typeof tracker == "string") {
         return new Tracker({ tag: tracker });
       } else {
@@ -105,11 +106,11 @@ export default class CSV {
 
     let logs = await LedgerStore.query({
       start: dayjs(start).startOf("day"),
-      end: dayjs(end).endOf("day")
+      end: dayjs(end).endOf("day"),
       // end TODO: See why end date is not working in query
     });
     // Expand and filter the logs
-    logs = logs.map(record => {
+    logs = logs.map((record) => {
       record.expand(); // get more data like trackers and values
       return record;
     });
@@ -120,6 +121,7 @@ export default class CSV {
       0,
       5
     )}.APP_VERSION.csv`;
-    this.download(filename, csvArray);
+    download.csv(filename, csvArray.join("\r\n"));
+    // this.download(filename, csvArray.join("\r\n"));
   }
 }
