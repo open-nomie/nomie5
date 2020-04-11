@@ -61,6 +61,12 @@
   $: innerWidth = width - (padding.left + padding.right);
   $: barWidth = innerWidth / xTicks.length;
 
+  let lastActiveIndex;
+
+  $: if (activeIndex != lastActiveIndex) {
+    lastActiveIndex = activeIndex;
+  }
+
   function showValue(value, index) {
     return true;
   }
@@ -134,15 +140,18 @@
   }
   .title {
     position: absolute;
-    top: 0px;
+    top: -2px;
+    right: 0px;
+    text-align: center;
     left: 0px;
     font-size: 0.67rem;
-    color: var(--color-inverse);
+    color: var(--color-inverse-2);
+    opacity: 0.5;
   }
   .active-item {
     position: absolute;
-    top: -4px;
-    right: -4px;
+    top: 2px;
+    right: 0px;
     // background-color: var(--color-solid);
     color: var(--color-inverse);
     // border-radius: 4px;
@@ -151,10 +160,10 @@
     padding: 4px 10px;
     font-size: 0.67rem;
     display: flex;
-    opacity: 0.6;
+
     .value {
       color: #fff;
-      background-color: rgba(0, 0, 0, 0.5);
+      text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
       border-radius: 10px;
       padding: 0 6px;
     }
@@ -220,14 +229,10 @@
         {#each points as point, i}
           <rect
             on:click={event => {
-              methods.onTap(event, {
-                index: i,
-                point: points[i],
-                label: labels[i]
-              });
+              methods.onTap(event, { index: i, point: point });
             }}
             rx="4"
-            class="bar {activeIndex === i + 1 ? 'active' : ''}"
+            class="bar {activeIndex === i ? 'active' : ''}"
             ry="4"
             style="fill: {color}"
             x={xScale(i) + 2}
@@ -237,13 +242,13 @@
         {/each}
       </g>
     </svg>
-    {#if activeIndex && points[activeIndex - 1]}
+    {#if activeIndex && points[activeIndex]}
       <div class="active-item">
         <label>
-          {points[activeIndex - 1].date.format(points.length == 12 ? 'MMM YYYY' : 'ddd MMM Do')}
+          <!-- {points[activeIndex].date.format(points.length == 12 ? 'MMM YYYY' : 'ddd MMM Do')} -->
         </label>
         <div class="value" style="background-color:{color}">
-          {yFormat(points[activeIndex - 1].y)}
+          {yFormat(points[activeIndex].y)}
         </div>
       </div>
     {/if}
