@@ -39,14 +39,12 @@
   // When tracker store loads. Turn trackers into array sorted by label
   $: type = $Interact.selector.type;
 
-  $: if ($Interact.selector.show) {
-    state.selected = [];
-    alphaGroup = {};
-    console.log("Show the selector! (me)");
-    console.log("set type to ", $Interact.selector.type);
+  let isShown = false;
+  $: if ($Interact.selector.show && !isShown) {
+    isShown = true;
     switch ($Interact.selector.type) {
       case "tracker":
-        state.title = "Select a Tracker";
+        state.title = multiple ? "Select Trackers" : "Select a Tracker";
         state.items = Object.keys($TrackerStore || {})
           .map(tag => {
             return $TrackerStore[tag];
@@ -57,7 +55,7 @@
         break;
 
       case "person":
-        state.title = "Select a Person";
+        state.title = multiple ? "Select People" : "Select a Person";
         console.log("$PeopleStore.people", $PeopleStore.people);
         state.items = Object.keys($PeopleStore.people || {})
           .map(username => {
@@ -80,24 +78,21 @@
           });
         break;
     }
+  } else if ($Interact.selector.show == false && isShown) {
+    isShown = false;
+    console.log("Closing Selector");
+    state.selected = [];
   }
 
-  //   $: state.items = Object.keys($TrackerStore || {})
-  //     .map(tag => {
-  //       return $TrackerStore[tag];
-  //     })
-  //     .sort((a, b) => {
-  //       return a.label.substr(0, 1).toLowerCase() >=
-  //         b.label.substr(0, 1).toLowerCase()
-  //         ? 1
-  //         : -1;
-  //     });
-
   // When selected, auto create an array of selected trackers
-  $: state.selectedArray = Object.keys(state.selected).map(tag => {
+  // $: state.selectedArray = Object.keys(state.selected).map(tag => {
+  //   alphaGroup = {};
+  //   return state.selected[tag];
+  // });
+
+  $: if (state.selected) {
     alphaGroup = {};
-    return state.selected[tag];
-  });
+  }
 
   // If show changes, set selected to notihng
 
@@ -115,27 +110,28 @@
       } else {
         state.selected = [item];
       }
+      state.selected = state.selected;
     },
     close() {
       dispatch("cancel");
     },
     // Check if a letter has been shown
     alphaGroupExists(item) {
-      //   if (state.items.length > 10) {
-      //     // get first letter
-      //     let alpha = tracker.label.substr(0, 1).toLowerCase();
-      //     // If it has value - return true...
-      //     if (alphaGroup.hasOwnProperty(alpha)) {
-      //       return true;
-      //     } else {
-      //       // Else - populate the alphaGroup, then return false
-      //       alphaGroup[alpha] = true;
-      //       return false;
-      //     }
-      //   } else {
-      //     // if it's less than 10 trackers - just show them without the letters
-      //     return true;
-      //   }
+      if (state.items.length > 10) {
+        // get first letter
+        let alpha = item.substr(0, 1).toLowerCase();
+        // If it has value - return true...
+        if (alphaGroup.hasOwnProperty(alpha)) {
+          return true;
+        } else {
+          // Else - populate the alphaGroup, then return false
+          alphaGroup[alpha] = true;
+          return false;
+        }
+      } else {
+        // if it's less than 10 trackers - just show them without the letters
+        return true;
+      }
     }
   };
 </script>
@@ -160,10 +156,15 @@
     {/if}
 
     {#if type == 'tracker'}
-      <div class="list">
+      <div class="list trackers">
         {#each state.items as item}
+          {#if !methods.alphaGroupExists(item.label)}
+            <NItem
+              className="bg-light text-faded sticky-top"
+              title={item.label.substr(0, 1).toUpperCase()} />
+          {/if}
           <NItem
-            className="bottom-line {state.selected.hasOwnProperty(item) ? 'bg-selected' : ''}"
+            className="bottom-line"
             title={item.label}
             on:click={() => {
               methods.toggle(item);
@@ -173,7 +174,9 @@
             </span>
             <span slot="right">
               {#if state.selected.indexOf(item) > -1}
-                <NIcon name="checkmarkFilled" className="fill-primary-bright" />
+                <NIcon name="radioFilled" className="fill-primary-bright" />
+              {:else}
+                <NIcon name="radio" className="fill-primary-bright" />
               {/if}
             </span>
           </NItem>
@@ -181,8 +184,13 @@
       </div>
     {:else if type == 'person'}
       <!-- It's a person list -->
-      <div class="list">
+      <div class="list people">
         {#each state.items as person}
+          {#if !methods.alphaGroupExists(person.displayName)}
+            <NItem
+              className="bg-light text-faded sticky-top"
+              title={person.displayName.substr(0, 1).toUpperCase()} />
+          {/if}
           <NItem
             className="bottom-line {state.selected.indexOf(person) > -1 ? 'bg-selected' : ''}"
             title={person.displayName}
@@ -194,15 +202,22 @@
             </span>
             <span slot="right">
               {#if state.selected.indexOf(person) > -1}
-                <NIcon name="checkmarkFilled" className="fill-primary-bright" />
+                <NIcon name="radioFilled" className="fill-primary-bright" />
+              {:else}
+                <NIcon name="radio" className="fill-primary-bright" />
               {/if}
             </span>
           </NItem>
         {/each}
       </div>
     {:else if type == 'context'}
-      <div class="list">
+      <div class="list context">
         {#each state.items as context}
+          {#if !methods.alphaGroupExists(context)}
+            <NItem
+              className="bg-light text-faded sticky-top"
+              title={context.substr(0, 1).toUpperCase()} />
+          {/if}
           <NItem
             className="bottom-line {state.selected.indexOf(context) > -1 ? 'bg-selected' : ''}"
             title={'+' + context}
@@ -211,7 +226,9 @@
             }}>
             <span slot="right">
               {#if state.selected.indexOf(context) > -1}
-                <NIcon name="checkmarkFilled" className="fill-primary-bright" />
+                <NIcon name="radioFilled" className="fill-primary-bright" />
+              {:else}
+                <NIcon name="radio" className="fill-primary-bright" />
               {/if}
             </span>
           </NItem>
@@ -222,14 +239,14 @@
       <button class="btn btn-light btn-lg w-100 mr-2" on:click={methods.close}>
         {Lang.t('general.close')}
       </button>
-      {#if state.selectedArray.length > 0}
+      {#if state.selected.length > 0}
         <button
           transition:fade
           class="btn btn-primary btn-lg w-100"
           on:click={() => {
-            dispatch('select', state.selectedArray);
+            dispatch('select', state.selected);
           }}>
-          Select
+          {Lang.t('general.done', 'Done')}
         </button>
       {/if}
     </div>

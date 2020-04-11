@@ -113,7 +113,7 @@
   const viewMemory = new Storage.SideStore("stats-memory");
 
   function remember(key, value) {
-    let base = `${$Interact.stats.activeTag}-${key}`;
+    let base = `${getLastTerm()}-${key}`;
     if (key && value !== undefined) {
       viewMemory.put(base, value);
       return value;
@@ -274,48 +274,58 @@
   }
 
   async function compareTracker() {
-    let item = await Interact.select("tracker");
-    if (item) {
-      let compareObj = new CompareModel({
-        type: "tracker",
-        key: item.tag,
-        label: item.label,
-        base: item
-      });
-      await compareObj.getStats();
-      state.compare.push(compareObj);
+    let trackers = await Interact.select("tracker", true);
+    if (trackers.length) {
+      for (var i = 0; i < trackers.length; i++) {
+        const tracker = trackers[i];
+        let compareObj = new CompareModel({
+          type: "tracker",
+          key: tracker.tag,
+          label: tracker.label,
+          base: tracker
+        });
+        await compareObj.getStats();
+        state.compare.push(compareObj);
+      }
+
+      state.compare = state.compare;
     }
-    state.compare = state.compare;
   }
 
   async function comparePerson() {
-    let item = await Interact.select("person");
-    if (item) {
-      let compareObj = new CompareModel({
-        type: "person",
-        key: item.username,
-        label: item.displayName,
-        base: item
-      });
-      await compareObj.getStats();
-      state.compare.push(compareObj);
+    let people = await Interact.select("person", true);
+    if (people.length) {
+      for (var i = 0; i < people.length; i++) {
+        const person = people[i];
+        let compareObj = new CompareModel({
+          type: "person",
+          key: person.username,
+          label: person.displayName,
+          base: person
+        });
+        await compareObj.getStats();
+        state.compare.push(compareObj);
+      }
+      state.compare = state.compare;
     }
-    state.compare = state.compare;
   }
 
   async function compareContext() {
-    let item = await Interact.select("context");
-    if (item) {
-      let compareObj = new CompareModel({
-        type: "context",
-        key: item,
-        label: item,
-        base: item
-      });
-      await compareObj.getStats();
-      state.compare.push(compareObj);
+    let contexts = await Interact.select("context", true);
+    if (contexts.length) {
+      for (var i = 0; i < contexts.length; i++) {
+        const context = contexts[i];
+        let compareObj = new CompareModel({
+          type: "context",
+          key: context,
+          label: context,
+          base: context
+        });
+        await compareObj.getStats();
+        state.compare.push(compareObj);
+      }
+      state.compare = state.compare;
     }
-    state.compare = state.compare;
   }
 
   async function compareSearchTerm() {
@@ -619,15 +629,17 @@
     <div
       class="mock-card-animation animate up {state.showAnimation ? 'visible' : 'hidden'}" />
     <NToolbarGrid>
-      <div slot="left" style="min-width:30vw">
+      <div slot="left" className="truncate" style="min-width:100px;">
         {#if $Interact.stats.terms.length == 1}
           <button class="btn btn-clear tap-icon" on:click={close}>
             <NIcon name="close" size="22" />
           </button>
         {:else}
-          <button class="btn btn-clear tap-icon" on:click={back}>
+          <button class="btn btn-clear tap-icon pl-1" on:click={back}>
             <NIcon name="arrowBack" size="22" />
-            <small class="text-sm text-inverse-2 ml-1 truncate">
+            <small
+              class="text-sm text-inverse-2 ml-1 truncate"
+              style="max-width:60px;">
               {$Interact.stats.terms[$Interact.stats.terms.length - 2]}
             </small>
           </button>
@@ -638,7 +650,7 @@
 
       <div
         slot="right"
-        style="min-width:30vw"
+        style="min-width:100px"
         class="toolbar-buttons align-right">
         <button class="btn btn-clear tap-icon" on:click={onMoreTap}>
           <NIcon name="more" />
@@ -806,7 +818,7 @@
           </NItem>
 
           {#if state.related.length}
-            <HScroller className="related-items p-2">
+            <HScroller className="related-items p-2 px-3">
               {#each state.related as item}
                 {#if item.search != state.currentTerm}
                   <button

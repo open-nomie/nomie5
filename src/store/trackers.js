@@ -19,7 +19,7 @@ import Logger from "../utils/log/log";
 
 const console = new Logger("🌟 TrackerStore 🌟");
 
-const startPackArray = Object.keys(StarterPack.trackers).map(key => {
+const startPackArray = Object.keys(StarterPack.trackers).map((key) => {
   return StarterPack.trackers[key];
 });
 const trackerStoreInit = () => {
@@ -33,8 +33,8 @@ const trackerStoreInit = () => {
      */
     async initialize(UserStore) {
       // Create standalone function to update the tracker data
-      let updateTrackers = trackers => {
-        update(t => {
+      let updateTrackers = (trackers) => {
+        update((t) => {
           // Clean the trackers
           let cleanedTrackers = methods.scrub(trackers);
           // Push up the cleaned tracker
@@ -42,7 +42,7 @@ const trackerStoreInit = () => {
         });
       };
       // Create a listener for if the data change remotely (pouchdb)
-      let onTrackersUpdated = data => {
+      let onTrackersUpdated = (data) => {
         updateTrackers(data);
       };
       // Get Trackers from Storage - pass Updated function if it updates later on.
@@ -59,7 +59,7 @@ const trackerStoreInit = () => {
       }
     },
     startTimer(tracker) {
-      update(state => {
+      update((state) => {
         if (state[tracker.tag]) {
           state[tracker.tag].started = new Date().getTime();
         }
@@ -68,7 +68,7 @@ const trackerStoreInit = () => {
       return methods.put();
     },
     stopTimer(tracker) {
-      update(state => {
+      update((state) => {
         if (state[tracker.tag]) {
           state[tracker.tag].started = null;
         }
@@ -78,7 +78,7 @@ const trackerStoreInit = () => {
     },
     getAll() {
       let data = {};
-      update(state => {
+      update((state) => {
         data = state;
         return state;
       });
@@ -87,8 +87,8 @@ const trackerStoreInit = () => {
     getById(id) {
       let trackers = methods.getAll();
       let tracker = Object.keys(trackers)
-        .map(tag => trackers[tag])
-        .find(tracker => {
+        .map((tag) => trackers[tag])
+        .find((tracker) => {
           return tracker.id === id;
         });
       return new Tracker(tracker);
@@ -107,7 +107,7 @@ const trackerStoreInit = () => {
     },
     // Clean up any messy trackers
     scrub(trackers) {
-      Object.keys(trackers).forEach(key => {
+      Object.keys(trackers).forEach((key) => {
         if (!trackers[key].tag) {
           delete trackers[key];
         } else {
@@ -121,7 +121,7 @@ const trackerStoreInit = () => {
      */
     data() {
       let d = null;
-      update(trks => {
+      update((trks) => {
         d = trks;
         return trks;
       });
@@ -133,7 +133,7 @@ const trackerStoreInit = () => {
     getAsArray() {
       let all = this.getAll();
       return Object.keys(all)
-        .map(tag => {
+        .map((tag) => {
           return all[tag];
         })
         .sort((a, b) => {
@@ -165,7 +165,7 @@ const trackerStoreInit = () => {
         // Set a map to layout board trackers
         let boards = {};
         // Loop over each of the tracker object keys
-        Object.keys(pack.trackers).forEach(tag => {
+        Object.keys(pack.trackers).forEach((tag) => {
           // if the tracker has a board attribute
           if (pack.trackers[tag].board) {
             let boardName = pack.trackers[tag].board;
@@ -179,14 +179,14 @@ const trackerStoreInit = () => {
         // Save trackers from pack
         methods.save(pack.trackers).then(() => {
           // Loop over the boards Map
-          Object.keys(boards).forEach(boardName => {
+          Object.keys(boards).forEach((boardName) => {
             // Add the board to BoardStore
             promises.push(BoardStore.addBoard(boardName, boards[boardName]));
           });
         });
         // Wait for boards to be saved
         Promise.all(promises)
-          .then(res => {
+          .then((res) => {
             // Reinitalize the board with the new trackers
             BoardStore.initialize(this.data());
             resolve(res);
@@ -212,9 +212,9 @@ const trackerStoreInit = () => {
           }
         } else {
           let merger;
-          update(b => {
+          update((b) => {
             merger = { ...b, ...trackers };
-            Object.keys(merger).forEach(tag => {
+            Object.keys(merger).forEach((tag) => {
               merger[tag] = new Tracker(merger[tag]);
             });
             return merger;
@@ -223,12 +223,9 @@ const trackerStoreInit = () => {
         }
       } else {
         return new Promise((resolve, reject) => {
-          update(b => {
+          update((b) => {
             // Save
-            methods
-              .save(b)
-              .then(resolve)
-              .catch(reject);
+            methods.save(b).then(resolve).catch(reject);
             return b;
           });
         });
@@ -236,7 +233,7 @@ const trackerStoreInit = () => {
     },
     deleteTracker(tracker) {
       let response;
-      update(t => {
+      update((t) => {
         t = t || {};
         delete t[tracker.tag];
         response = methods.save(t);
@@ -247,25 +244,26 @@ const trackerStoreInit = () => {
     saveTracker(tracker) {
       let response;
       let board = BoardStore.data();
-      update(t => {
+      update((t) => {
         t = t || {};
         t[tracker.tag] = tracker;
         response = methods.save(t);
 
         if (board.id !== "all") {
+          console.log("What's this? Add trackers to Board?", tracker);
           BoardStore.addTrackersToActiveBoard([tracker]);
         }
 
         return t;
       });
       return response;
-    }
+    },
   };
   return {
     update,
     subscribe,
     set,
-    ...methods
+    ...methods,
   };
 };
 

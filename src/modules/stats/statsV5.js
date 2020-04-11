@@ -205,10 +205,10 @@ export default class StatsProcessor {
       if (unitValues.hasOwnProperty(key)) {
         const value = this.getMath() == "sum" ? unitValues[key].sum : unitValues[key].avg;
         labels.push({ x: label });
-        values.push({ x: label, y: value });
+        values.push({ x: label, y: value, date: unitDate, unit });
       } else {
         labels.push({ x: label });
-        values.push({ x: label, y: 0 });
+        values.push({ x: label, y: 0, date: unitDate, unit });
       }
     }
 

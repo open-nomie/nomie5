@@ -222,13 +222,13 @@
         // Add "Existing Tracker" button
         buttons.push({
           title: Lang.t("board.add-existing-tracker"),
-          click() {
-            Interact.selectTrackers().then(tkrs => {
-              BoardStore.addTrackersToActiveBoard(tkrs);
-              setTimeout(() => {
-                data = data;
-              }, 100);
-            });
+          click: async () => {
+            let trackers = await Interact.selectTrackers();
+            console.log("Selected Trackers", trackers);
+            BoardStore.addTrackersToActiveBoard(trackers);
+            setTimeout(() => {
+              data = data;
+            }, 100);
           }
         });
       }

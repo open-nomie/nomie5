@@ -94,7 +94,7 @@
 
   let props = {};
   $: props = {
-    class: `n-icon ${className}`,
+    class: `n-icon ${className} icon-${name}`,
     title,
     style: getStyle()
   };
@@ -119,7 +119,7 @@
     width="24"
     {style}
     {title}
-    class="n-icon-extra {className}"
+    class="n-icon-extra {className} icon-{name}"
     height="24"
     viewBox="0 0 32 32"
     fill="none"

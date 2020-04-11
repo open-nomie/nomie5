@@ -297,14 +297,14 @@ const interactInit = () => {
       Interact.openShareImage(log);
     },
 
-    select(type = "tracker") {
+    select(type = "tracker", multiple = false) {
       return new Promise((resolve, reject) => {
         update((state) => {
-          state.selector.multiple = false;
+          state.selector.multiple = multiple;
           state.selector.show = true;
           state.selector.type = type;
           state.selector.onInteract = (itemArray) => {
-            resolve(itemArray.length ? itemArray[0] : null);
+            resolve(itemArray);
           };
           return state;
         });
@@ -313,32 +313,14 @@ const interactInit = () => {
     /**
      * Select a Single Tracker
      */
-    selectTracker() {
-      return new Promise((resolve, reject) => {
-        update((s) => {
-          s.trackerSelector.show = true;
-          s.trackerSelector.multiple = false;
-          s.trackerSelector.onInteract = (trackerArray) => {
-            resolve(trackerArray.length ? trackerArray[0] : null);
-          };
-          return s;
-        });
-      });
+    async selectTracker() {
+      return methods.select("tracker");
     },
     /**
      * Select a Multiple Tracker
      */
     selectTrackers() {
-      return new Promise((resolve, reject) => {
-        update((s) => {
-          s.trackerSelector.show = true;
-          s.trackerSelector.multiple = true;
-          s.trackerSelector.onInteract = (trackerArray) => {
-            resolve(trackerArray);
-          };
-          return s;
-        });
-      });
+      return methods.select("tracker", true);
     },
     dismissTrackerSelector() {
       update((s) => {
