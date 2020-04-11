@@ -81,7 +81,6 @@
     main();
   }
   $: if (!$Interact.streak.show) {
-    console.log("CLosing");
     lastDate = null;
   }
 </script>
