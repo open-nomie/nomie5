@@ -15,6 +15,7 @@
   import PersonModal from "./containers/people/person-modal.svelte";
   import Modal from "./components/modal/modal.svelte";
   import StatsModal from "./containers/stats/stats-modal.svelte";
+  import StreakModal from "./containers/steak/streak-modal.svelte";
 
   // Utils
   import Logger from "./utils/log/log";
@@ -264,6 +265,7 @@
   </div>
 {/if}
 <Interactions />
+<StreakModal />
 {#if $UserStore.storageType == 'blockstack' && offline}
   <div class="offline-notice">
     No connection to Blockstack. Avoid tracking while offline.

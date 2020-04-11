@@ -47,6 +47,9 @@ const interactInit = () => {
         show: false,
         message: null,
       },
+      streak: {
+        show: null,
+      },
       shareImage: {
         log: null,
         color: null,
@@ -153,6 +156,18 @@ const interactInit = () => {
       update((state) => {
         state.blocker.show = false;
         state.blocker.message = null;
+        return state;
+      });
+    },
+    openStreak(term) {
+      update((state) => {
+        state.streak.show = term;
+        return state;
+      });
+    },
+    closeStreak(term) {
+      update((state) => {
+        state.streak.show = false;
         return state;
       });
     },

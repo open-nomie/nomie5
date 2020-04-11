@@ -11,6 +11,8 @@
 @import "./base/forms";
 @import "./base/flex";
 @import "./base/animate";
+@import "./base/opacity";
+@import "./base/clickable";
 
 // Components
 @import "./components/board-tabs";
@@ -29,6 +31,7 @@
 @import "./components/item-ball";
 @import "./components/toolbar-grid";
 @import "./components/n-log-item";
+@import "./components/badge";
 
 /**
 THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 
@@ -86,25 +89,6 @@ TODO: Organize main into components or containers.
       height: 100%;
     }
   }
-}
-
-.opacity-0 {
-  opacity: 0;
-}
-.opacity-1 {
-  opacity: 0.1;
-}
-.opacity-2 {
-  opacity: 0.2;
-}
-.opacity-3 {
-  opacity: 0.3;
-}
-.opacity-4 {
-  opacity: 0.4;
-}
-.opacity-5 {
-  opacity: 0.5;
 }
 
 .container-sm {
@@ -397,36 +381,6 @@ $night: #311f62;
   // background-color: red !important;
 }
 
-.clickable,
-[clickable] {
-  transition: all 0.2s ease-in-out;
-  position: relative;
-  cursor: pointer;
-  touch-action: manipulation;
-  &:after {
-    transition: all 0.2s ease-in-out;
-    content: "";
-    pointer-events: none;
-    background-color: rgba($primaryBright, 0);
-    transform: scale(0.1);
-    border-radius: 8pt;
-  }
-}
-.clickable:focus,
-.clickable:active {
-  outline: none;
-  overflow: hidden;
-  &:after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    transform: scale(1);
-    background-color: rgba($primaryBright, 0.2);
-  }
-}
 .btn,
 a,
 input,
@@ -453,68 +407,6 @@ button {
   background-color: var(--color-bg);
 }
 
-@keyframes keyframes1 {
-  0% {
-    transform: rotate(-1.2deg);
-    animation-timing-function: ease-in-out;
-  }
-  50% {
-    transform: rotate(1.7deg);
-    animation-timing-function: ease-in-out;
-  }
-}
-
-@keyframes keyframes2 {
-  0% {
-    transform: rotate(1.2deg);
-    animation-timing-function: ease-in-out;
-  }
-  50% {
-    transform: rotate(-1.7deg);
-    animation-timing-function: ease-in-out;
-  }
-}
-
-@keyframes shadow-pulse {
-  0% {
-    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
-  }
-  100% {
-    box-shadow: 0 0 0 35px rgba(0, 0, 0, 0);
-  }
-}
-
-.wiggle {
-  animation: keyframes2 infinite 0.6s ease-out;
-  transform-origin: 50% 10%;
-}
-.wiggle-other {
-  animation: keyframes2 infinite 0.6s ease-in;
-  transform-origin: 50% 10%;
-}
-
-.pulse {
-  transform: scale(1);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    // transform: scale3d(0.95);
-    box-shadow: 0 0 0 0 rgba($green, 0.3);
-  }
-
-  70% {
-    // transform: scale3d(1);
-    box-shadow: 0 0 0 10px rgba($green, 0);
-  }
-
-  100% {
-    // transform: scale3d(0.95);
-    box-shadow: 0 0 0 0 rgba($green, 0);
-  }
-}
-
 .offline-notice {
   background-color: $red;
   color: #fff;
@@ -525,46 +417,4 @@ button {
   left: 0;
   right: 0;
   z-index: 5000;
-}
-
-.badge {
-  height: 22px;
-  border-radius: 11px;
-  padding: 0 12px;
-  line-height: 22px;
-  background-color: var(--color-primary);
-  color: #000;
-  font-size: 11px;
-  border: var(--color-primary);
-
-  &.badge-lg {
-    font-size: 1rem;
-    height: 2rem;
-    border-radius: 1rem;
-    line-height: 2rem;
-    padding: 0 18px;
-  }
-  &.badge-md {
-    font-size: 0.8rem;
-    height: 1.6rem;
-    border-radius: 0.8rem;
-    line-height: 1.6rem;
-    padding: 0 14px;
-  }
-}
-.badge-primary {
-  background-color: var(--color-primary);
-  color: #fff;
-}
-.badge-blue {
-  background-color: var(--color-blue);
-  color: #fff;
-}
-.badge-green {
-  background-color: var(--color-green);
-  color: #fff;
-}
-.badge-light {
-  background-color: var(--color-solid-2);
-  color: var(--color-inverse-2);
 }
