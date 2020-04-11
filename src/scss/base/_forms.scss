@@ -19,27 +19,6 @@ input[type="password"] {
 
 .search-bar {
   position: relative;
-  .btn.zmdi-close {
-    position: absolute;
-    right: 12px;
-    top: 8px;
-    font-size: 10px !important;
-    display: flex !important;
-    width: 20px;
-    height: 20px;
-    border-radius: 10px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-inverse-3);
-    color: var(--color-solid);
-  }
-  .btn.zmdi-search {
-    position: absolute;
-    right: 32px;
-    top: 5px;
-    font-size: 24px !important;
-  }
 }
 
 .form-control {

@@ -22,6 +22,9 @@
       button {
         color: var(--color-inverse-2);
         opacity: 0.8;
+        &.active {
+          // border: solid 1px var(--color-primary-faded);
+        }
       }
     }
   }

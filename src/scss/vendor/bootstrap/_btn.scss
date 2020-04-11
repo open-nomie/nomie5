@@ -16,6 +16,10 @@ button:focus {
   }
 }
 
+.btn-sm {
+  border-radius: 6pt !important;
+}
+
 .btn:disabled {
   opacity: 0.3;
 }

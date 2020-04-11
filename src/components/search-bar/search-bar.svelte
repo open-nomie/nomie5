@@ -69,6 +69,12 @@
   :global(.search-bar input) {
     width: calc(100% - 30px); // account for icon pushing it out.
   }
+  :global(.search-bar .n-input-wrapper) {
+    min-height: 40px !important;
+  }
+  :global(.search-bar .n-input-container) {
+    margin-bottom: 0 !important;
+  }
 </style>
 
 <NToolbar className="search-bar container {className}" {style}>
@@ -77,7 +83,7 @@
       class="btn btn-sm btn-clear btn-action-clear"
       on:click={fireClear}
       style="margin-left:-10px;">
-      <NIcon name="close" className="fill-red" />
+      <NIcon name="close" size="32" />
     </button>
   {/if}
   <div class="n-row">

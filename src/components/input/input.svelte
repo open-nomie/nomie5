@@ -71,7 +71,8 @@
     flex-direction: column;
     flex-grow: 1;
     flex-shrink: 1;
-    margin-bottom: 8pt;
+    margin-bottom: 4pt;
+    margin-top: 4pt;
 
     .helper {
       font-size: 0.65rem;
@@ -152,7 +153,7 @@
       flex-grow: 1;
       flex-shrink: 1;
       transition: all 0.2s ease-in-out;
-      background-color: var(--input-background);
+      background-color: var(--color-solid-half);
       border-radius: 12px;
       border: solid 1px var(--color-faded-1);
 
@@ -208,6 +209,7 @@
         textarea {
           min-height: 90px;
           padding-top: 8pt;
+          color: var(--color-inverse);
         }
       }
     }

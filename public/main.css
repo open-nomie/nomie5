@@ -4873,6 +4873,9 @@ button:focus {
   .btn-group .btn:active {
     color: var(--color-primary) !important; }
 
+.btn-sm, .btn-group-sm > .btn {
+  border-radius: 6pt !important; }
+
 .btn:disabled {
   opacity: 0.3; }
 
@@ -5130,6 +5133,7 @@ body {
   --color-inverse-3: #999;
   --color-solid: #fff;
   --color-white: #fff;
+  --color-solid-half: #f8f8f8;
   --color-solid-1: #eee;
   --color-solid-2: rgb(223, 223, 223);
   --color-solid-3: #666;
@@ -5239,6 +5243,7 @@ body.theme-dark {
   --color-darkest: #000;
   --color-bg: rgb(5, 5, 5);
   --color-solid: rgb(25, 25, 25);
+  --color-solid-half: rgb(30, 30, 30);
   --color-solid-1: rgb(35, 35, 35);
   --color-solid-2: rgb(45, 45, 45);
   --color-solid-3: rgb(55, 55, 55);
@@ -5464,25 +5469,6 @@ input[type="password"] {
 
 .search-bar {
   position: relative; }
-  .search-bar .btn.zmdi-close {
-    position: absolute;
-    right: 12px;
-    top: 8px;
-    font-size: 10px !important;
-    display: flex !important;
-    width: 20px;
-    height: 20px;
-    border-radius: 10px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-inverse-3);
-    color: var(--color-solid); }
-  .search-bar .btn.zmdi-search {
-    position: absolute;
-    right: 32px;
-    top: 5px;
-    font-size: 24px !important; }
 
 .form-control:focus {
   box-shadow: none !important;

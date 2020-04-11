@@ -61,11 +61,6 @@
     padding: 0 10px;
     font-size: 1rem;
   }
-  :global(.n-toolbar .zmdi, .n-toolbar-grid .zmdi) {
-    // &.text-xs {
-    //   font-size: 18px !important;
-    // }
-  }
 </style>
 
 <div class="n-toolbar {pinTop ? 'pin-top' : ''} {className}" {style}>
