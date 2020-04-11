@@ -245,39 +245,6 @@
             </NItem>
           </NSortableList>
         {/if}
-
-        <!-- {#each trackers as tracker, i (tracker.tag)}
-          <NItem>
-            <div slot="right" class="n-row">
-              <button
-                class="btn btn-icon zmdi zmdi-close text-red"
-                on:click={evt => {
-                  methods.removeTracker(evt, tracker);
-                }} />
-            </div>
-            <div class="n-row filler">
-              <div class="emoji text-lg mr-2">{tracker.emoji}</div>
-              {tracker.label}
-              <div class="filler" />
-            </div>
-            <div class="btn-group flex-shrink-off" slot="left">
-              <button
-                class="btn px-2 btn-lg btn-light {i === 0 ? 'disabled' : ''}"
-                on:click={() => {
-                  methods.moveUp(tracker);
-                }}>
-                <i class="zmdi zmdi-long-arrow-up" />
-              </button>
-              <button
-                class="btn px-2 btn-lg btn-light {i === trackers.length - 1 ? 'disabled' : ''}"
-                on:click={() => {
-                  methods.moveDown(tracker);
-                }}>
-                <i class="zmdi zmdi-long-arrow-down" />
-              </button>
-            </div>
-          </NItem>
-        {/each} -->
       </div>
 
     </div>

@@ -310,15 +310,16 @@
     on:close={() => {
       Interact.dismissEditLog();
     }}
-    on:save={evt => {
-      let log = evt.detail;
-      LedgerStore.updateLog(log, $Interact.logEditor.log.end)
-        .then(() => {
-          Interact.dismissEditLog();
-        })
-        .catch(e => {
-          Interact.alert(e.message);
-          Interact.dismissEditLog();
-        });
+    on:save={async evt => {
+      try {
+        let log = evt.detail;
+        let updatedLog = await LedgerStore.updateLog(log, $Interact.logEditor.log.end);
+        if ($Interact.logEditor.onInteract) {
+          $Interact.logEditor.onInteract(log);
+        }
+        Interact.dismissEditLog();
+      } catch (e) {
+        Interact.alert(e.message);
+      }
     }} />
 {/if}

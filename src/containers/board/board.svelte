@@ -138,7 +138,9 @@
     // Setup Hooks These will fire on before safe, and onLogSave
     LedgerStore.hook("onBeforeSave", log => {
       data.savingTrackers = log.trackersArray().map(t => t.tag);
-    }).hook("onLogSaved", log => {
+    });
+
+    LedgerStore.hook("onLogSaved", log => {
       // Clear saving states
       data.savingTrackers = [];
       data.searching = false;
@@ -177,7 +179,6 @@
 
     // When user starts searching
     searchKeypress() {
-      console.log("Search term", data.searchTerm);
       // Find trackers matching query
       foundTrackers = Object.keys($TrackerStore)
         .map(tag => {
