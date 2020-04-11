@@ -59,7 +59,7 @@
     compare: { id: "compare", label: "Compare" },
     map: { id: "map", label: "Map" },
     time: { id: "time", label: "Time" },
-    logs: { id: "logs", label: "Logs", excludeFrom: ["y"] }
+    logs: { id: "logs", label: "Logs" }
   };
 
   const types = {
@@ -556,7 +556,6 @@
   }
 
   async function setSelected(selected) {
-    console.log("setSelected", selected);
     state.selected = selected;
 
     let payload = {
@@ -570,7 +569,7 @@
     }
     let rows = await LedgerStore.query(payload);
     state.selected.rows = rows;
-    console.log("Rows", rows);
+
     return rows;
   }
 
@@ -700,9 +699,7 @@
         <NIcon name="chevronLeft" className="fill-primary-bright" />
         Prev
       </button>
-      <div class="time-range truncate" slot="main">
-        <div class="truncate">{state.range}</div>
-      </div>
+      <div class="time-range truncate" slot="main">{state.range}</div>
       <button
         class="btn btn-clear text-primary-bright pr-0"
         slot="right"
@@ -770,7 +767,7 @@
           <NItem className="solo chart-item">
             <NBarChart
               height={110}
-              title={getSearchTerm(compare.type, compare.label)}
+              title={compare.getSearchTerm()}
               color={compare.getTracker().color}
               labels={compare.stats.chart.values.map(point => point.x)}
               points={compare.stats.chart.values}
@@ -780,7 +777,7 @@
                 return x;
               }}
               on:titleClick={event => {
-                Interact.openStats(getSearchTerm(compare.type, compare.label));
+                Interact.openStats(compare.getSearchTerm());
               }}
               on:tap={event => {
                 setSelected(event.detail);
@@ -902,7 +899,7 @@
           rows={state.stats.rows}
           className="flex-grow flex-shrink"
           style="min-height:100%" />
-      {:else}
+      {:else if state.dataView == 'logs'}
         <NLogList
           compact
           hideMore
