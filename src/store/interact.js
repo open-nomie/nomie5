@@ -21,6 +21,8 @@ import time from "../utils/time/time";
 
 // modules
 import NomieLog from "../modules/nomie-log/nomie-log";
+import Hooky from "../modules/hooks/hooks";
+const hooks = new Hooky();
 
 // Stores
 import { LedgerStore } from "../store/ledger";
@@ -382,24 +384,23 @@ const interactInit = () => {
                 });
               });
           },
-          updateData() {
-            Interact.editLog(log).then((log) => {
-              setTimeout(() => {
-                resolve({ action: "data-updated" });
-              }, 10);
-            });
+          async updateData() {
+            const log = await Interact.editLog(log);
+            setTimeout(() => {
+              LedgerStore.hooks.run("onLogUpdate", log);
+            }, 10);
+            return { action: "data-updated" };
           },
-          editLog() {
-            Interact.editLog(log).then((log) => {
-              setTimeout(() => {
-                resolve({ action: "data-updated" });
-              }, 10);
-            });
+          async editLog() {
+            const updatedLog = await Interact.editLog(log);
+            setTimeout(() => {
+              LedgerStore.hooks.run("onLogUpdate", updatedLog);
+            }, 10);
+            return { action: "data-updated" };
           },
           shareLog() {
             Interact.openShareImage(log);
           },
-
           updateDate() {
             Interact.prompt("New Date / Time", null, {
               valueType: "datetime",
@@ -438,27 +439,6 @@ const interactInit = () => {
             }
           },
         };
-        // let initial = [
-        // 	{
-        // 		title: 'Note',
-        // 		click: actions.updateContent,
-        // 	},
-        // 	{
-        // 		title: 'Location',
-        // 		click: actions.updateLocation,
-        // 	},
-        // 	{
-        // 		title: 'Date & Time',
-        // 		click: actions.updateDate,
-        // 	},
-        // ];
-
-        // if (Object.keys(log.trackers).length) {
-        // 	initial.push({
-        // 		title: 'Tracker Data',
-        // 		click: actions.updateData,
-        // 	});
-        // }
 
         let initial = [
           {

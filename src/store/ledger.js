@@ -42,7 +42,7 @@ import { PeopleStore } from "./people-store";
 import { ContextStore } from "./context-store";
 
 const console = new Logger("🧺 store/ledger.js");
-const hooks = new Hooky(); // Hooky is for firing off generic events
+// Hooky is for firing off generic events
 
 // initialize the Store
 const ledgerInit = () => {
@@ -59,6 +59,7 @@ const ledgerInit = () => {
   };
 
   const methods = {
+    hooks: new Hooky(),
     /**
      * Filter Logs by start and end dates
      * @param {Array} logs
@@ -105,19 +106,11 @@ const ledgerInit = () => {
         return pass;
       });
 
-      console.log(
-        `Filter logs between ${dayjs(filter.start).format("ddd MMM D YYYY h:mm a")} and ${dayjs(filter.end).format(
-          "ddd MMM D YYYY h:mm a"
-        )}`,
-        logs
-      );
-
       return logs;
     },
     // Connect to hooks
     hook(type, func) {
-      hooks.hook(type, func);
-      return this;
+      return methods.hooks.hook(type, func);
     },
 
     /**
@@ -323,7 +316,7 @@ const ledgerInit = () => {
      */
     async updateLog(log, previousEndDate) {
       // Fire hooks
-      hooks.run("onBeforeUpdate", log);
+      methods.hooks.run("onBeforeUpdate", log);
       // Set saving
       update((bs) => {
         bs.saving = true;
@@ -352,7 +345,6 @@ const ledgerInit = () => {
         // Update the row
         book[foundIndex] = log;
       } else {
-        console.log("Saving Log", log);
         // We didn't find it in the first book - so it must be a different book
         book.push(log);
       }
@@ -393,7 +385,7 @@ const ledgerInit = () => {
       // If it's not a NomieLog - make it one.
       log = log instanceof NomieLog ? log : new NomieLog(log);
       // Log is being prepared to save - on Before Save
-      hooks.run("onBeforeSave", log);
+      methods.hooks.run("onBeforeSave", log);
       // Clean the dirty dirty
       delete log._dirty;
       // Trim any white space from note
@@ -458,6 +450,11 @@ const ledgerInit = () => {
       return logRaw ? new NomieLog(logRaw) : null;
     },
 
+    async fastLog(note) {
+      let log = new NomieLog({ note });
+      return methods.saveLog(log);
+    },
+
     /**
      * Save A Log!
      *
@@ -491,7 +488,6 @@ const ledgerInit = () => {
       try {
         // Get the Book - if its blockstack then make sure it exists
         let book = await methods.getBookWithSync(date);
-        console.log("Log being saved", log);
         book.push(log); // push log
         // Save Book.
         await Storage.put(bookPath, book); // put the content
@@ -519,14 +515,13 @@ const ledgerInit = () => {
         update((s) => {
           s.saving = false;
           s.books = currentState.books;
-
           return s;
         });
-
         /** Fire off Notifications and hooks Save */
         Interact.toast(`Saved ${log.note}`); // show Alert
-        hooks.run("onLogSaved", log);
-        await tick(120);
+        // Fire off the onLogSaved
+        methods.hooks.run("onLogSaved", log);
+        tick(100, methods.getToday);
         methods.getToday(); // Get Today
         return { log, date };
       } catch (e) {

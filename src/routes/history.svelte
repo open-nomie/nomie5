@@ -90,6 +90,10 @@
     searchMode = true;
   }
 
+  $: if ($LedgerStore.logs) {
+    console.log("Ledger Store log change detected");
+  }
+
   let logs = undefined; // holder of the logs
   let searchLogs = undefined; // hodler of searched logs
   let loading = true;
@@ -176,7 +180,7 @@
       Interact.popmenu({
         buttons: [
           {
-            title: `View Stats`,
+            title: `View Stats...`,
             click: () => {
               if (isTracker) {
                 Interact.openStats(event.detail.tracker.tag, "tracker");
@@ -316,6 +320,12 @@
     }
   };
 
+  // If a new Log is added, or changed update the list.
+  LedgerStore.hook("onLogUpdate", log => {
+    methods.getLogs();
+  });
+
+  // WHen mounted.
   onMount(() => {
     if ((state.searchTerm || "").length > 1 && !searchLogs) {
       methods.refreshSearch();
