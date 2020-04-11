@@ -12,6 +12,7 @@
 
   // vendor
   import { scaleLinear } from "d3-scale";
+  import { UserStore } from "../../store/user";
 
   export let labels = [];
   export let height = 200;
@@ -29,6 +30,8 @@
 
   let finalPoints = [];
   let lastPoints = null;
+
+  $: hourFormat = $UserStore.meta.is24Hour ? "ddd HH" : "ddd ha";
 
   $: if (points && JSON.stringify(points) !== JSON.stringify(lastPoints)) {
     lastPoints = JSON.stringify(points);
@@ -236,6 +239,7 @@
         {#each points as point, i}
           <rect
             on:click={event => {
+              console.log('Event Click', event, i, point);
               methods.onTap(event, { index: i, point: point });
             }}
             rx="4"
@@ -249,10 +253,16 @@
         {/each}
       </g>
     </svg>
-    {#if activeIndex && points[activeIndex]}
+    {#if activeIndex !== undefined && points[activeIndex] !== undefined}
       <div class="active-item">
         <label>
-          <!-- {points[activeIndex].date.format(points.length == 12 ? 'MMM YYYY' : 'ddd MMM Do')} -->
+          {#if points[activeIndex].unit == 'hour'}
+            {points[activeIndex].date.format(hourFormat)}
+          {:else if points[activeIndex].unit == 'day'}
+            {points[activeIndex].date.format('ddd MMM Do')}
+          {:else if points[activeIndex].unit == 'month'}
+            {points[activeIndex].date.format('MMM YYYY')}
+          {/if}
         </label>
         <div class="value" style="background-color:{color}">
           {yFormat(points[activeIndex].y)}
