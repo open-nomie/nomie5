@@ -70,12 +70,12 @@ const normalizeUserMap = (userMap) => {
   return final;
 };
 
-let currentStats = {};
-const getRecentPeopleStats = async () => {
-  let logs = await getPeopleLogs();
-  currentStats = normalizeUserMap(mapToUser(logs));
-  return currentStats;
-};
+// let currentStats = {};
+// const getRecentPeopleStats = async () => {
+//   let logs = await getPeopleLogs();
+//   currentStats = normalizeUserMap(mapToUser(logs));
+//   return currentStats;
+// };
 
 const toUsername = (username) => {
   username = username.replace("@", "").trim();
@@ -85,7 +85,7 @@ const toUsername = (username) => {
 
 const searchForPeople = async () => {
   let loadingFinished = Interact.loading("Finding @usernames...");
-  const logs = await getPeopleLogs();
+  const logs = await LedgerStore.query({ search: `@`, start: dayjs().subtract(3, "month") });
   let people = [];
   logs.forEach((log) => {
     let meta = log.getMeta();
@@ -165,20 +165,6 @@ const PeopleInit = () => {
       });
       return people;
     },
-    /**
-     * getStats is deprecated
-     */
-    async getStats() {
-      let stats = await getRecentPeopleStats();
-      update((state) => {
-        state.stats = stats;
-        return state;
-      });
-      return stats;
-    },
-    currentStats() {
-      return currentStats;
-    },
     async save(peopleArray) {
       update((state) => {
         state.people = state.people || {};
@@ -243,16 +229,16 @@ const PeopleInit = () => {
     async write(payload) {
       return Storage.put(`${config.data_root}/${config.data_people_key}.json`, payload);
     },
-    async stats(options = {}) {
-      return await getRecentPeopleStats();
-    },
+    // async stats(options = {}) {
+    //   return await getRecentPeopleStats();
+    // },
     async searchForPeople() {
       let people = await searchForPeople();
       if (people.length) {
         const confirm = await Interact.confirm(`${people.length} @username's found`, "Add them to your People list?");
         if (confirm) {
           await methods.save(people);
-          Interact.confirm(Lang.t("general.saved"), "People list updated");
+          Interact.toast("People list updated");
         }
       } else {
         Interact.alert(`Sorry, no @username's found in the last 6 months`);
