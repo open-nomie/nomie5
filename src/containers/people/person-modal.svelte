@@ -62,7 +62,7 @@
     if (confirmed) {
       await PeopleStore.deletePerson(activePerson);
       Interact.toast(`${activePerson.username} removed`);
-      closeAndRefresh();
+      close();
     }
   }
 
@@ -103,15 +103,6 @@
     domVisible = false;
     await tick(200);
     Interact.person(null);
-  }
-
-  async function closeAndRefresh() {
-    refresh();
-    await close();
-  }
-
-  async function refresh() {
-    return await PeopleStore.getStats();
   }
 
   async function loadActiveLogs() {
@@ -201,7 +192,7 @@
 
   <main>
     {#if state.view == 'check-in'}
-      <PersonCheckin on:checkedIn={closeAndRefresh} />
+      <PersonCheckin on:checkedIn={close} />
     {:else if state.view == 'edit'}
       <div class="edit p-3">
 
