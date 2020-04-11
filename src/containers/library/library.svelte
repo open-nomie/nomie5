@@ -80,7 +80,7 @@
       <div class="tracker-option">
         {#if TrackerStore.tagExists(tracker.tag) || installed.hasOwnProperty(tracker.tag)}
           <div class="badge badge-green">
-            <NIcon class="checkmark" color="#FFF" />
+            <NIcon name="checkmark" className="fill-white" />
           </div>
         {/if}
         <TrackerButton
