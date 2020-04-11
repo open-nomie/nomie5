@@ -100,7 +100,7 @@
       }
     };
     const type = {
-      title: "Pick the tracker type",
+      title: "Pick the Tracker Type",
       component: StepType,
       validate() {
         return $TrackerDesignerStore.tracker.type;

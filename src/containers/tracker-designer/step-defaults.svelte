@@ -45,7 +45,7 @@
               on:click={() => {
                 getTrackerInput('default');
               }}>
-              <NIcon name="addOutline" class="fill-primary-bright" />
+              <NIcon name="addOutline" />
             </button>
           </NInput>
         </div>
@@ -93,7 +93,7 @@
               on:click={() => {
                 getTrackerInput('min');
               }}>
-              <NIcon name="addOutline" class="fill-primary-bright" />
+              <NIcon name="addOutline" />
             </button>
           </NInput>
         </div>
@@ -113,7 +113,7 @@
               on:click={() => {
                 getTrackerInput('max');
               }}>
-              <NIcon name="addOutline" class="fill-primary-bright" />
+              <NIcon name="addOutline" />
             </button>
           </NInput>
         </div>
