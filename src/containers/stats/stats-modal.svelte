@@ -15,6 +15,7 @@
   // Utils
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import math from "../../utils/math/math";
+  import Storage from "../../modules/storage/storage";
 
   // Components
   import NModal from "../../components/modal/modal.svelte";
@@ -36,7 +37,7 @@
   import { LedgerStore } from "../../store/ledger";
   import { Interact } from "../../store/interact";
   import { UserStore } from "../../store/user";
-  import { NomieAPI } from "../../store/napi";
+  import { Lang } from "../../store/lang";
   import { TrackerStore } from "../../store/trackers";
 
   const timeSpans = {
@@ -47,7 +48,8 @@
   };
 
   const dataViews = {
-    overview: { id: "overview", label: "Overview" },
+    overview: { id: "overview", label: "Home" },
+    compare: { id: "compare", label: "Compare" },
     map: { id: "map", label: "Map" },
     time: { id: "time", label: "Time" },
     logs: { id: "logs", label: "Logs", excludeFrom: ["y"] }
@@ -89,7 +91,6 @@
         start: getFromDate(),
         end: getToDate()
       };
-
       let results = await LedgerStore.query(payload);
       const statsV5 = new StatsV5({ is24Hour: $UserStore.meta.is24Hour });
       this.stats = statsV5.generate({
@@ -99,29 +100,43 @@
         mode: state.timeSpan,
         tracker: this.getTracker()
       });
-
-      //
-
       return this.stats;
     }
-  } // End Compare Model - TODO : move
+  } // End Compare Model - TODO : move\
+
+  const viewMemory = new Storage.SideStore("stats-memory");
+
+  function remember(key, value) {
+    let base = `${$Interact.stats.activeTag}-${key}`;
+    console.log("remember", base);
+    if (key && value !== undefined) {
+      viewMemory.put(base, value);
+      return value;
+    } else {
+      console.log("Get value for", base, viewMemory.get(base));
+      return viewMemory.get(base);
+    }
+  }
 
   const state = {
     date: dayjs(),
-    timeSpan: "w",
-    dataView: "overview",
+    timeSpan: remember("timeSpan") || "w",
+    dataView: remember("dataView") || "overview",
     timeOption: [],
     viewOption: [],
     loading: true,
     stats: null,
-    compare: []
+    compare: [],
+    selectedIndex: null
   };
 
   function setTimeView(option) {
+    remember("timeSpan", option.id);
     state.timeSpan = option.id;
   }
 
   function setView(option) {
+    remember("dataView", option.id);
     state.dataView = option.id;
   }
 
@@ -299,19 +314,23 @@
       buttons: types.map(type => {
         return {
           title: `${type}...`,
-          click() {
+          async click() {
             switch (type) {
               case "Tracker":
-                compareTracker();
+                await compareTracker();
+                setView(dataViews.compare);
                 break;
               case "Person":
-                comparePerson();
+                await comparePerson();
+                setView(dataViews.compare);
                 break;
               case "Context":
-                compareContext();
+                await compareContext();
+                setView(dataViews.compare);
                 break;
               case "Search Term":
-                compareSearchTerm();
+                await compareSearchTerm();
+                setView(dataViews.compare);
                 break;
             }
           }
@@ -347,16 +366,10 @@
       }
     };
     buttons.push(compare);
-    if (state.timeSpan == "m") {
-      buttons.push(startOfMonth);
-    } else if (state.timeSpan == "y") {
-      buttons.push(startOfYear);
-    } else if (state.timeSpan == "w") {
-      buttons.push(startOfWeek);
-    }
+    buttons.push(startOfWeek);
+    buttons.push(startOfMonth);
+    buttons.push(startOfYear);
 
-    if (["d", "w", "m"].indexOf(state.timeSpan) > -1) {
-    }
     Interact.popmenu({ title: "Stat Options", buttons });
   }
 
@@ -534,18 +547,23 @@
     max-width: 100vw;
     overflow: hidden;
   }
+
   .time-range {
     font-size: 0.9rem;
     font-weight: 500;
     text-align: center;
     line-height: 1rem;
   }
-  .compare-chart {
+  :global(.chart-item) {
     position: relative;
     .btn-close {
       position: absolute;
-      top: -6px;
-      right: 0px;
+      top: -4px;
+      right: -6px;
+      padding: 0;
+      height: 24px;
+      width: 24px;
+      background-color: #000;
     }
   }
 </style>
@@ -554,7 +572,7 @@
   <header slot="raw-header" class="box-shadow-float">
     <NToolbarGrid>
       <button class="btn btn-clear tap-icon" on:click={close} slot="left">
-        <NIcon name="close" />
+        <NIcon name="close" size="22" />
       </button>
       <h1 class="title" slot="main">{getTitle()}</h1>
       <button class="btn btn-clear tap-icon" slot="right" on:click={onMoreTap}>
@@ -567,7 +585,7 @@
 
     <NToolbarGrid>
       <button
-        class="btn btn-clear text-primary-bright"
+        class="btn btn-clear text-primary-bright pl-0"
         slot="left"
         on:click={loadPreviousDate}>
         <NIcon name="chevronLeft" className="fill-primary-bright" />
@@ -575,7 +593,7 @@
       </button>
       <div class="time-range" slot="main">{state.range}</div>
       <button
-        class="btn btn-clear text-primary-bright"
+        class="btn btn-clear text-primary-bright pr-0"
         slot="right"
         on:click={loadNextDate}>
         Next
@@ -586,7 +604,7 @@
     {#if state.stats && !state.loading}
       <div class="main-chart px-2 pb-1">
         <NBarChart
-          height={110}
+          height={140}
           color={getTracker().color}
           labels={state.stats.chart.values.map(point => point.x)}
           points={state.stats.chart.values}
@@ -599,37 +617,10 @@
             return getTracker().displayValue(y);
           }}
           on:tap={event => {
-            let newDate;
-            state.date = dayjs(event.detail.point.date);
+            state.selectedIndex = event.detail.index;
           }}
-          activeIndex={0} />
+          activeIndex={state.selectedIndex} />
       </div>
-      {#each state.compare as compare}
-        <div class="compare-chart px-2 py-1">
-          <NBarChart
-            height={90}
-            title={getSearchTerm(compare.type, compare.label)}
-            color={compare.getTracker().color}
-            labels={compare.stats.chart.values.map(point => point.x)}
-            points={compare.stats.chart.values}
-            on:swipeLeft={loadNextDate}
-            on:swipeRight={loadPreviousDate}
-            xFormat={(x, index) => {
-              return x;
-            }}
-            yFormat={y => {
-              return compare.getTracker().displayValue(y);
-            }}
-            activeIndex={0} />
-          <button
-            class="btn btn-clear btn-close"
-            on:click={() => {
-              removeCompare(compare);
-            }}>
-            <NIcon name="closeFilled" size="16" />
-          </button>
-        </div>
-      {/each}
     {/if}
 
   </header>
@@ -648,6 +639,45 @@
       </div>
     </div>
   {:else}
+    {#if state.dataView == 'compare'}
+      <div class="charts">
+        {#each state.compare as compare}
+          <NItem className="solo chart-item">
+            <NBarChart
+              height={110}
+              title={getSearchTerm(compare.type, compare.label)}
+              color={compare.getTracker().color}
+              labels={compare.stats.chart.values.map(point => point.x)}
+              points={compare.stats.chart.values}
+              on:swipeLeft={loadNextDate}
+              on:swipeRight={loadPreviousDate}
+              xFormat={(x, index) => {
+                return x;
+              }}
+              on:tap={event => {
+                state.selectedIndex = event.detail.index;
+              }}
+              yFormat={y => {
+                return compare.getTracker().displayValue(y);
+              }}
+              activeIndex={state.selectedIndex} />
+            <button
+              class="btn btn-clear btn-close"
+              on:click={() => {
+                removeCompare(compare);
+              }}>
+              <NIcon name="close" className="fill-white" size="16" />
+            </button>
+          </NItem>
+        {/each}
+      </div>
+
+      <div class="p-2 pt-4">
+        <button class="btn btn-light btn-block" on:click={compareType}>
+          {Lang.t('general.select')}...
+        </button>
+      </div>
+    {/if}
     {#if state.dataView == 'map'}
       <NMap
         small
@@ -704,6 +734,7 @@
               value={getScore()}
               type="row" />
           </NItem>
+
         </div>
       {:else if state.dataView == 'time'}
         <NTimeGrid
@@ -717,7 +748,7 @@
           hideMore
           logs={state.stats.rows}
           style="min-height:100%"
-          className="bg-solid-1 p-2 flex-grow flex-shrink" />
+          className="bg-solid-1 flex-grow flex-shrink" />
       {/if}
     {/if}
   {/if}
