@@ -19,22 +19,24 @@
   const methods = {
     init() {
       // looop over children - apply a click event
-      for (let i = 0; i < wrapper.children.length; i++) {
-        let child = wrapper.children[i];
-        child.addEventListener("click", event => {
-          let selectedIndex = Array.prototype.indexOf.call(
-            wrapper.children,
-            event.target
-          );
-          methods.selectIndex(selectedIndex);
+      if (wrapper) {
+        for (let i = 0; i < wrapper.children.length; i++) {
+          let child = wrapper.children[i];
+          child.addEventListener("click", event => {
+            let selectedIndex = Array.prototype.indexOf.call(
+              wrapper.children,
+              event.target
+            );
+            methods.selectIndex(selectedIndex);
+          });
+        }
+
+        scroller.addEventListener("scroll", evt => {
+          scroller.setAttribute("data-scroll", evt.target.scrollLeft);
         });
+
+        ready = true;
       }
-
-      scroller.addEventListener("scroll", evt => {
-        scroller.setAttribute("data-scroll", evt.target.scrollLeft);
-      });
-
-      ready = true;
     },
     // Clear currently selected index
     clearSelected() {
@@ -68,10 +70,9 @@
   };
   // when component mounts
   onMount(() => {
-    methods.init();
-    // if (activeIndex) {
-    //   methods.selectIndex(activeIndex);
-    // }
+    setTimeout(() => {
+      methods.init();
+    }, 10);
   });
 </script>
 

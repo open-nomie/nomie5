@@ -186,12 +186,9 @@
             title: `Open Stats`,
             click: () => {
               if (isTracker) {
-                Interact.openStats(event.detail.tracker.tag, "tracker");
+                Interact.openStats(`#${event.detail.tracker.tag}`);
               } else {
-                Interact.openStats(
-                  event.detail.value.replace(/(\+|\#|\@)/g, ""),
-                  event.detail.type
-                );
+                Interact.openStats(event.detail.value);
               }
             }
           },
@@ -258,7 +255,7 @@
     },
     trackerTapped(tracker, log) {
       // console.log("Tracker Tapped", tracker);
-      Interact.openStats(tracker.tag, "tracker");
+      Interact.openStats(`#${tracker.tag}`);
       // navigate(`/stats/tracker/${$TrackerStore[tracker].getUID()}`);
     },
     showLogOptions(log) {

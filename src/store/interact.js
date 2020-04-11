@@ -34,6 +34,7 @@ const interactInit = () => {
     return {
       stats: {
         activeTag: null,
+        terms: [],
       },
       alert: {
         show: false,
@@ -249,10 +250,14 @@ const interactInit = () => {
         return d;
       });
     },
-    openStats(tag, type = "tracker") {
+    openStats(term) {
       update((d) => {
-        d.stats.activeTag = tag;
-        d.stats.activeType = type;
+        d.stats.terms = d.stats.terms || [];
+        // if the term isn't the last one - then allow it.
+        // otherwise don't - this will allow them to add it later in the stack
+        if (d.stats.terms[d.stats.terms.length] !== term) {
+          d.stats.terms.push(term);
+        }
         return d;
       });
     },
@@ -264,7 +269,7 @@ const interactInit = () => {
     },
     closeStats() {
       update((d) => {
-        d.stats.activeTag = null;
+        d.stats.terms = [];
         return d;
       });
     },

@@ -128,6 +128,65 @@ export default class StatsProcessor {
     return { min, max };
   }
 
+  getRelated(rows) {
+    let people = {};
+    let context = {};
+    let tags = {};
+
+    const processMetaUnit = (type, unit) => {
+      if (type == "tracker") {
+        tags[unit.tag] = tags[unit.tag] ? tags[unit.tag] + 1 : 1;
+      } else if (type == "people") {
+        people[unit] = people[unit] ? people[unit] + 1 : 1;
+      } else if (type == "context") {
+        context[unit] = context[unit] ? context[unit] + 1 : 1;
+      }
+    };
+
+    const processMeta = (meta) => {
+      try {
+        meta.people.forEach((person) => {
+          processMetaUnit("people", person);
+        });
+        meta.trackers.forEach((tracker) => {
+          processMetaUnit("tracker", tracker);
+        });
+        meta.context.forEach((context) => {
+          processMetaUnit("context", context);
+        });
+      } catch (e) {
+        console.log("Error with", meta);
+        console.log(e.message);
+      }
+    };
+
+    rows.forEach((log) => {
+      const logMeta = log.getMeta();
+      processMeta(logMeta);
+    });
+
+    const returnMap = (base, type, prefix) => {
+      return Object.keys(base).map((tag) => {
+        return {
+          count: base[tag],
+          type: type,
+          value: tag,
+          search: `${prefix}${tag}`,
+        };
+      });
+    };
+
+    let peopleArr = returnMap(people, "person", "@");
+    let tagArr = returnMap(tags, "tracker", "#");
+    let contextArr = returnMap(context, "context", "+");
+
+    let relatedArr = [...peopleArr, ...tagArr, ...contextArr].sort((a, b) => {
+      return a.count < b.count ? 1 : -1;
+    });
+
+    return relatedArr;
+  }
+
   // Generate Chart Data
   getChartDataByType(unit, timeFormat, labelFormat, valueMapTotals) {
     let labels = [];

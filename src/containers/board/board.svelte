@@ -390,7 +390,7 @@
         {
           title: Lang.t("tracker.stats", "Stats"),
           click() {
-            Interact.openStats(tracker.tag);
+            Interact.openStats(`#${tracker.tag}`);
           }
         },
         {

@@ -16,10 +16,14 @@
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import math from "../../utils/math/math";
   import Storage from "../../modules/storage/storage";
+  import regex from "../../utils/regex";
+  import NoteDataTypes from "../../modules/note-data-type/note-data-type";
 
   // Components
   import NModal from "../../components/modal/modal.svelte";
+  import Dymoji from "../../components/dymoji/dymoji.svelte";
   import NButtonGroup from "../../components/button-group/button-group.svelte";
+  import HScroller from "../../components/h-scroller/h-scroller.svelte";
   import NToolbar from "../../components/toolbar/toolbar.svelte";
   import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
@@ -39,6 +43,7 @@
   import { UserStore } from "../../store/user";
   import { Lang } from "../../store/lang";
   import { TrackerStore } from "../../store/trackers";
+  import { PeopleStore } from "../../store/people-store";
 
   const timeSpans = {
     d: { id: "d", label: "D", title: "Day", unit: "day" },
@@ -100,6 +105,7 @@
         mode: state.timeSpan,
         tracker: this.getTracker()
       });
+
       return this.stats;
     }
   } // End Compare Model - TODO : move\
@@ -108,17 +114,17 @@
 
   function remember(key, value) {
     let base = `${$Interact.stats.activeTag}-${key}`;
-    console.log("remember", base);
     if (key && value !== undefined) {
       viewMemory.put(base, value);
       return value;
     } else {
-      console.log("Get value for", base, viewMemory.get(base));
       return viewMemory.get(base);
     }
   }
 
   const state = {
+    currentTerm: null,
+    currentColor: "#444",
     date: dayjs(),
     timeSpan: remember("timeSpan") || "w",
     dataView: remember("dataView") || "overview",
@@ -127,7 +133,9 @@
     loading: true,
     stats: null,
     compare: [],
-    selectedIndex: null
+    selectedIndex: null,
+    lookupStack: [],
+    related: []
   };
 
   function setTimeView(option) {
@@ -198,6 +206,14 @@
     Interact.closeStats();
   }
 
+  function back() {
+    Interact.update(state => {
+      state.stats.terms.pop();
+      return state;
+    });
+    main();
+  }
+
   function getSearchTerm(type, text) {
     let response = "";
     switch (type) {
@@ -218,11 +234,7 @@
   }
 
   function getTitle() {
-    let title = getSearchTerm(
-      $Interact.stats.activeType,
-      $Interact.stats.activeTag
-    );
-    return title;
+    return getLastTerm();
   }
 
   function getFromDate() {
@@ -241,11 +253,24 @@
   }
 
   function getQueryTerm() {
-    if (types.hasOwnProperty($Interact.stats.activeType)) {
-      return `${types[$Interact.stats.activeType].prefix}${$Interact.stats.activeTag}`;
-    } else {
-      return $Interact.stats.activeTag;
-    }
+    let rawTerm = getLastTerm();
+    let type = getType(rawTerm);
+    console.log(`Term Type Type`, type);
+    return rawTerm;
+    // if (state.lookupStack.length) {
+    //   return state.lookupStack[state.lookupStack.length - 1];
+    // } else {
+    //   // Get the Base One
+    //   if (types.hasOwnProperty($Interact.stats.activeType)) {
+    //     return `${types[$Interact.stats.activeType].prefix}${$Interact.stats.activeTag}`;
+    //   } else {
+    //     return $Interact.stats.activeTag;
+    //   }
+    // }
+  }
+
+  function getType(str) {
+    return NoteDataTypes.parse(str);
   }
 
   async function compareTracker() {
@@ -374,15 +399,11 @@
   }
 
   function getTracker() {
-    if ($Interact.stats.activeType == "tracker") {
-      return TrackerStore.getByTag($Interact.stats.activeTag);
-    } else {
-      return new Tracker({
-        tag: $Interact.stats.activeTag,
-        math: "sum",
-        type: $Interact.stats.activeType
-      });
-    }
+    return getType(getLastTerm()).tracker;
+  }
+
+  function getLastTerm() {
+    return $Interact.stats.terms[$Interact.stats.terms.length - 1];
   }
 
   async function getStats() {
@@ -407,7 +428,12 @@
       tracker: getTracker()
     });
 
-    console.log("Stats", state.stats);
+    if (state.timeSpan !== "y") {
+      state.related = statsV5.getRelated(results);
+    } else {
+      // don't  do related for the the year - too heavy.
+      state.related = [];
+    }
 
     for (let i = 0; i < state.compare.length; i++) {
       await state.compare[i].getStats();
@@ -532,6 +558,19 @@
     main();
   }
 
+  let lastTerms;
+  $: if ($Interact.stats.terms.join(",") !== lastTerms) {
+    lastTerms = $Interact.stats.terms.join(",");
+    main();
+    state.currentTerm = getLastTerm();
+    state.currentColor = getTracker().color;
+    state.showAnimation = true;
+    setTimeout(() => {
+      state.showAnimation = false;
+    }, 200);
+    console.log("Transitioning Stat View");
+  }
+
   let lastDataView = state.dataView;
   $: if (state.dataView && state.dataView != lastDataView) {
     lastDataView = state.dataView;
@@ -568,16 +607,43 @@
   }
 </style>
 
-<NModal className="stats-modal" bodyClass="bg-solid-1" fullscreen>
+<NModal className="stats-modal" bodyClass="bg-solid-1 " fullscreen>
   <header slot="raw-header" class="box-shadow-float">
+    {#if $Interact.stats.terms.length > 1}
+      {#each $Interact.stats.terms as term}
+        <div class="mock-header mock-header">
+          <span>{term}</span>
+        </div>
+      {/each}
+    {/if}
+    <div
+      class="mock-card-animation animate up {state.showAnimation ? 'visible' : 'hidden'}" />
     <NToolbarGrid>
-      <button class="btn btn-clear tap-icon" on:click={close} slot="left">
-        <NIcon name="close" size="22" />
-      </button>
-      <h1 class="title" slot="main">{getTitle()}</h1>
-      <button class="btn btn-clear tap-icon" slot="right" on:click={onMoreTap}>
-        <NIcon name="more" />
-      </button>
+      <div slot="left" style="min-width:30vw">
+        {#if $Interact.stats.terms.length == 1}
+          <button class="btn btn-clear tap-icon" on:click={close}>
+            <NIcon name="close" size="22" />
+          </button>
+        {:else}
+          <button class="btn btn-clear tap-icon" on:click={back}>
+            <NIcon name="arrowBack" size="22" />
+            <small class="text-sm text-inverse-2 ml-1 truncate">
+              {$Interact.stats.terms[$Interact.stats.terms.length - 2]}
+            </small>
+          </button>
+        {/if}
+      </div>
+
+      <h1 class="title truncate" slot="main">{state.currentTerm}</h1>
+
+      <div
+        slot="right"
+        style="min-width:30vw"
+        class="toolbar-buttons align-right">
+        <button class="btn btn-clear tap-icon" on:click={onMoreTap}>
+          <NIcon name="more" />
+        </button>
+      </div>
     </NToolbarGrid>
     <div class="n-row pb-2 px-2">
       <NButtonGroup size="sm" buttons={state.timeOption} />
@@ -605,7 +671,7 @@
       <div class="main-chart px-2 pb-1">
         <NBarChart
           height={140}
-          color={getTracker().color}
+          color={state.currentColor}
           labels={state.stats.chart.values.map(point => point.x)}
           points={state.stats.chart.values}
           on:swipeLeft={loadNextDate}
@@ -628,7 +694,7 @@
   <div slot="footer" class="w-100">
     <NButtonGroup
       inverse
-      color={getTracker().color}
+      color={state.currentColor}
       buttons={state.viewOption} />
   </div>
 
@@ -653,6 +719,10 @@
               on:swipeRight={loadPreviousDate}
               xFormat={(x, index) => {
                 return x;
+              }}
+              on:titleClick={event => {
+                console.log('Title Click');
+                Interact.openStats(getSearchTerm(compare.type, compare.label));
               }}
               on:tap={event => {
                 state.selectedIndex = event.detail.index;
@@ -735,10 +805,38 @@
               type="row" />
           </NItem>
 
+          {#if state.related.length}
+            <HScroller className="related-items p-2">
+              {#each state.related as item}
+                {#if item.search != state.currentTerm}
+                  <button
+                    class="btn btn-badge"
+                    on:click={() => {
+                      Interact.openStats(item.search);
+                    }}>
+                    {#if item.type == 'person'}
+                      <Dymoji
+                        person={$PeopleStore.people[item.value]}
+                        className="mr-2"
+                        size={20}
+                        radius={0.3} />
+                    {/if}
+                    {#if item.type == 'tracker'}
+                      {TrackerStore.getByTag(item.value).emoji}
+                    {/if}
+                    {item.search}
+                    <span class="count">{item.count}</span>
+                  </button>
+                {/if}
+              {/each}
+            </HScroller>
+          {/if}
+
         </div>
+        <!-- end over view -->
       {:else if state.dataView == 'time'}
         <NTimeGrid
-          color={getTracker().color}
+          color={state.currentColor}
           rows={state.stats.rows}
           className="flex-grow flex-shrink"
           style="min-height:100%" />
@@ -746,6 +844,16 @@
         <NLogList
           compact
           hideMore
+          on:textClick={evt => {
+            if (evt.detail.type == 'tracker') {
+              Interact.openStats(`#${evt.detail.tracker.tag}`);
+            } else {
+              Interact.openStats(`${evt.detail.value}`);
+            }
+          }}
+          on:trackerClick={evt => {
+            Interact.openStats(`#${evt.detail.tracker.tag}`);
+          }}
           logs={state.stats.rows}
           style="min-height:100%"
           className="bg-solid-1 flex-grow flex-shrink" />

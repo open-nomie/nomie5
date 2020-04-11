@@ -142,6 +142,7 @@
     min-height: 200px;
     max-height: 90vh;
     max-width: 400px;
+    position: relative;
     margin: 10px;
     border-radius: 1.2rem;
     display: flex;

@@ -22,4 +22,7 @@
   .btn {
     padding: 0 4px;
   }
+  &.align-right {
+    justify-content: flex-end;
+  }
 }

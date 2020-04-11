@@ -64,10 +64,6 @@
     state.searchTerm = null;
   }
 
-  function openStats(person) {
-    Interact.openStats(person, "person");
-  }
-
   async function addPerson() {
     try {
       let username = await Interact.prompt(
@@ -171,7 +167,7 @@
             <button
               class="btn btn-clear"
               on:click|stopPropagation={() => {
-                openStats(person);
+                Interact.openStats(`@${person}`);
               }}>
               <NIcon name="chart" className="fill-primary-bright" size={18} />
             </button>

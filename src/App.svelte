@@ -249,7 +249,7 @@
 {/if}
 
 <!-- Global Modals, alerts, menus, etc-->
-{#if $Interact.stats.activeTag}
+{#if $Interact.stats.terms.length}
   <StatsModal />
 {/if}
 {#if $TrackerLibrary.show}

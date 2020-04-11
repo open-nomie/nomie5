@@ -7,6 +7,25 @@ button:focus {
   box-shadow: inherit;
 }
 
+.btn-badge {
+  font-size: 0.8rem;
+  padding: 3pt 6pt 3pt 6pt;
+  background-color: var(--color-solid);
+  color: var(--color-inverse-1);
+  box-shadow: var(--box-shadow-tight);
+  margin: 4pt 2pt;
+  .count {
+    background-color: var(--color-solid-1);
+    font-size: 12px;
+    line-height: 20px;
+    padding: 0 4px;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    margin-left: 4px;
+  }
+}
+
 .btn-group {
   .btn {
     &:active {
