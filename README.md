@@ -1,18 +1,21 @@
-# Nomie 4.6
+# Nomie 5 Preview
 
-## Open Source Mood Tracker / Life Tracker / Data Journal
+## Open Source Life Tracker / Mood Tracker / Data Journal
 
-![](https://shareking.s3.amazonaws.com/nomie-header.png?2)
+![](https://shareking.s3.amazonaws.com/pb-l3LHnDdC5H-1586728691.png)
 
 ## Try it out
 
-- https://open.nomie.app **Production** (master)
+- https://v5.nomie.app **Production** (v5-prod)
 
 If you like to live dangerously you can run the dev branch
 
-- https://dev.nomie.app **Development** (develop)
+- https://v5-dev.nomie.app **Development** (v5-dev)
 
-## Watch the [Nomie Podcast](https://www.youtube.com/channel/UCBDutSGTIQIO7cX3ZaJXv9Q)
+---
+
+Version 4 will main accessible at https://open.nomie.app
+And on the /v4 branch
 
 ---
 
@@ -61,17 +64,12 @@ npm run dev
 npm run cypress
 ```
 
-Deploy straight to Netlify to test it out quickly.
-
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://app.netlify.com/start/deploy?repository=https://github.com/open-nomie/nomie)
-
 ## Structure Overview
 
 - **/src**
 - **/src/components** - simple single ui components to build the user interfact
 - **/src/containers** - complicated components
 - **/src/modules** - models and commonly used functions
-- **/src/plugins** - holder of plugins (coming soon)
 - **/src/routes** - nomie app's primary routes
 - **/src/lang** - holder of languages
 - **/src/scss** - global SCSS styling, variables, bootstrap
@@ -85,12 +83,6 @@ Deploy straight to Netlify to test it out quickly.
 - **Board** - a board is specific group of trackers.
 - **Board Tabs** - how you switch boards on the track tab
 - **Log** - a record event. A lot contains a note, a note can contain unlimited numbers of tags; e.g: #mood(4) #pizza #beer(12). Logs can contain a lat and long. Tracker Objects and their values are parsed out of the logs in real time.
-
-## Stores
-
-- ** /src/store/lang ** - Language Controls
-- ** /src/store/trackers ** -- Tracker Data and interactions
-  -- TODO: finish this
 
 ## Data Storage - NEEDS UPDATING
 
