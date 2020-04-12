@@ -146,13 +146,20 @@
             );
           }
         }
-        return `font-weight:bold; border:solid 2px ${
-          score || 0 > -1 ? "var(--color-green)" : "var(--color-red)"
-        }; color:${
-          score || 0 > -1 ? "var(--color-green)" : "var(--color-red)"
-        };`;
+        return methods.getDayBorder(score);
       } else {
         return ``;
+      }
+    },
+    getDayBorder(score) {
+      if (score) {
+        if (score > 0) {
+          return `font-weight:bold; border:solid 2px var(--color-green)`;
+        } else {
+          return `font-weight:bold; border:solid 2px var(--color-red)`;
+        }
+      } else {
+        return `font-weight:bold; border:solid 2px var(--color-primary-bright)`;
       }
     },
     getDayClass(day) {
