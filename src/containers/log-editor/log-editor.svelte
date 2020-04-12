@@ -14,10 +14,18 @@
 
   // Components
   import NModal from "../../components/modal/modal.svelte";
+  import NPositivitySelector from "../../components/positivity-selector/positivity-selector.svelte";
+  import AutoComplete from "../../components/auto-complete/auto-complete.svelte";
+  import HScroller from "../../components/h-scroller/h-scroller.svelte";
   import NMap from "../../containers/map/map.svelte";
   import NCell from "../../components/cell/cell.svelte";
+  import NInput from "../../components/input/input.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
+
   // Props
   export let log = undefined;
+
+  let textarea;
   // consts
   const console = new Logger("log-editor.svelte");
   const dispatch = createEventDispatcher();
@@ -77,13 +85,20 @@
   :global(.log-editor .view-port .n-map-container) {
     height: 300px;
   }
+
+  :global(.log-editor .n-modal) {
+    max-width: 300px;
+    width: 300px;
+  }
+
   .view-port {
     min-height: 200px;
     textarea {
-      font-size: 16px !important;
+      font-size: 1rem;
       height: 275px;
     }
-    .date-time {
+
+    .center-content {
       display: flex;
       width: 100%;
       flex-grow: 1;
@@ -92,6 +107,8 @@
       align-items: center;
       padding: 16px;
       height: 200px;
+    }
+    .date-time {
       input {
         border: none;
         border-bottom: solid 2px var(--color-primary);
@@ -115,6 +132,13 @@
         Note
       </button>
       <button
+        class="btn -text {state.view === 'score' ? 'active' : ''}"
+        on:click={() => {
+          methods.setView('score');
+        }}>
+        Score
+      </button>
+      <button
         class="btn -location {state.view === 'where' ? 'active' : ''}"
         on:click={() => {
           methods.setView('where');
@@ -133,7 +157,18 @@
     <div class="view-port">
       {#if state.view == 'note'}
         <div class="p-2">
-          <textarea class="form-control" bind:value={state.log.note} />
+          <textarea
+            class="form-control"
+            bind:this={textarea}
+            bind:value={state.log.note} />
+          <AutoComplete
+            scroller
+            input={state.log.note}
+            on:select={evt => {
+              state.log.note = evt.detail.note;
+              textarea.focus();
+              textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+            }} />
         </div>
       {:else if state.view == 'where'}
         <NMap
@@ -144,8 +179,17 @@
             state.log.lng = event.detail.lng;
             state.log.location = event.detail.location;
           }} />
+      {:else if state.view == 'score'}
+        <div class="score center-content">
+          <NPositivitySelector
+            size="xl"
+            score={state.log.score}
+            on:change={evt => {
+              state.log.score = evt.detail;
+            }} />
+        </div>
       {:else if state.view == 'when'}
-        <div class="date-time">
+        <div class="date-time center-content">
           <input
             name="value"
             title="input value"
