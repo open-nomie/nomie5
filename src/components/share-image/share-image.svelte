@@ -13,6 +13,8 @@
   import dayjs from "dayjs";
   import domtoimage from "dom-to-image-more";
   import regex from "../../utils/regex";
+  import tick from "../../utils/tick/tick";
+  import copyToClipboard from "../../utils/clipboard/clipboard";
 
   let boxDom;
   let noteDom;
@@ -41,24 +43,36 @@
         generating = false;
       }, 10);
     },
+    async copy() {
+      try {
+        // Get Image as Base64
+        const base64Image = await methods.toImage();
+        // Fetch the base64 - as a blob
+        const res = await fetch(base64Image);
+        const blob = await res.blob();
+        const item = new ClipboardItem({ "image/png": blob });
+        // Copy to clipboard
+        navigator.clipboard.write([item]);
+        // Fire toast
+        Interact.toast("Copied");
+      } catch (e) {
+        Interact.alert(Lang.t("general.error", "Error"), e.message);
+      }
+    },
+    async toImage() {
+      downloading = true;
+      await tick(120);
+      return await domtoimage.toPng(boxDom);
+    },
     async capture() {
       downloading = true;
-
-      setTimeout(() => {
-        domtoimage
-          .toPng(boxDom)
-          .then(function(dataUrl) {
-            var link = document.createElement("a");
-            link.download = `nomie-${dayjs().format("YYYY-DD-MM-H-mm")}.png`;
-            link.href = dataUrl;
-            link.click();
-            downloading = false;
-            Interact.closeShareImage();
-          })
-          .catch(function(error) {
-            console.error("oops, something went wrong!", error);
-          });
-      }, 120);
+      let image = await methods.toImage();
+      var link = document.createElement("a");
+      link.download = `nomie-${dayjs().format("YYYY-DD-MM-H-mm")}.png`;
+      link.href = dataUrl;
+      link.click();
+      downloading = false;
+      Interact.closeShareImage();
     },
     getIcons() {
       let logTrackers = $Interact.shareImage.log.trackersArray();
@@ -178,7 +192,10 @@
         <NIcon name="close" className="fill-white" />
       </button>
       <button class="btn btn-primary clickable" on:click={methods.capture}>
-        <NIcon name="download" className="fill-white" />
+        <NIcon name="share" className="fill-white" />
+      </button>
+      <button class="btn btn-primary clickable" on:click={methods.copy}>
+        <NIcon name="copy" className="fill-white" />
       </button>
       <button class="btn btn-clear clickable" on:click={methods.randomTheme}>
         <NIcon name="refresh" className="fill-white" />
