@@ -396,7 +396,7 @@
         {
           title: Lang.t("tracker.streak", "Streak"),
           click() {
-            Interact.openStreak(`#{${tracker.tag}}`);
+            Interact.openStreak(`#${tracker.tag}`);
           }
         },
         {
