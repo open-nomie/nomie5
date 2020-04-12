@@ -317,7 +317,7 @@
   }
 
   :global(.capture-log .tracker-list) {
-    margin-top: -10px;
+    margin-top: -10px !important;
   }
 
   .post-score {
@@ -531,12 +531,14 @@
       <!-- Auto Complet e-->
       <AutoComplete
         input={$ActiveLogStore.note}
-        on:select={async evt => {
+        scroller
+        on:select={evt => {
           ActiveLogStore.updateNote(evt.detail.note);
-          methods.checkTextareaSize();
-          await tick(100);
           textarea.focus();
           textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+          tick(100).then(() => {
+            methods.checkTextareaSize();
+          });
         }} />
       <!-- Note Input -->
       <div

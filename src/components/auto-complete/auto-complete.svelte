@@ -4,12 +4,14 @@
   import { ContextStore } from "../../store/context-store";
   import Dymoji from "../../components/dymoji/dymoji.svelte";
   import tick from "../../utils/tick/tick";
+  import NIcon from "../../components/icon/icon.svelte";
   import TrackerInputer from "../../modules/tracker/tracker-inputer";
 
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
 
   export let input = null;
+  export let scroller = false;
 
   let state = {
     partialTag: null,
@@ -20,10 +22,14 @@
     onInput(input);
   }
 
-  const getTrackerInput = async tracker => {
+  async function getTrackerInput(tracker) {
     let inputer = new TrackerInputer(tracker);
     return await inputer.getNoteString();
-  };
+  }
+
+  function close() {
+    state.results = [];
+  }
 
   /**
    * Auto Complete Search
@@ -156,6 +162,8 @@
         transform: translateY(60px);
       }
     }
+    &.scroller {
+    }
 
     .tracker-list {
       display: flex;
@@ -172,8 +180,11 @@
 
 <!--  -->
 <div
-  class="autocomplete-results animate {(state.results || []).length ? 'visible' : 'hidden'}">
+  class="{scroller ? 'scroller' : 'no-scroller'} autocomplete-results animate {(state.results || []).length ? 'visible' : 'hidden'}">
   <div class="container p-0 tracker-list">
+    <button class="btn btn-round btn-icon px-0" on:click={close}>
+      <NIcon name="close" />
+    </button>
     {#each state.results || [] as tracker (tracker.tag)}
       <button
         class="btn btn-badge bg-solid-1 clickable"
@@ -187,7 +198,13 @@
             size={20}
             radius={0.3} />
         {:else}{tracker.emoji}{/if}
-        {tracker.tag}
+        <div style="max-width:120px;" class="ml-1 truncate">
+          {#if tracker.type == 'person'}
+            {$PeopleStore.people[tracker.tag].displayName}
+          {:else if tracker.type == 'context'}
+            {tracker.tag}
+          {:else}{tracker.label}{/if}
+        </div>
       </button>
     {/each}
     <div class="filler" />
