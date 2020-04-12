@@ -106,6 +106,7 @@
         }
         &:hover {
           transform: none;
+          background-color: var(--color-faded) !important;
         }
       }
 
