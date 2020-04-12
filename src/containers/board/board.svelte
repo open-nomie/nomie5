@@ -396,7 +396,7 @@
         {
           title: Lang.t("tracker.streak", "Streak"),
           click() {
-            Interact.openStreak(tracker.tag);
+            Interact.openStreak(`#{${tracker.tag}}`);
           }
         },
         {
@@ -437,28 +437,13 @@
       };
 
       // If a Last Used is present
+      let subtitle;
       if ($LastUsed.hasOwnProperty(tracker.tag)) {
         let last = $LastUsed[tracker.tag];
         if (last.log) {
-          buttons.push({
-            title: `${Lang.t("board.last-used", "Last used")} ${dayjs(
-              last.date
-            ).fromNow()}`,
-            click: async () => {
-              let log = await LedgerStore.getLog(last.log, last.book);
-              if (log) {
-                Interact.openShareImage(log);
-              } else {
-                Interact.alert(
-                  Lang.t("general.error", "Error"),
-                  Lang.t(
-                    "general.log-not-found",
-                    "Sorry, that log was not found, was it deleted?"
-                  )
-                );
-              }
-            }
-          });
+          subtitle = `${Lang.t("board.last-used", "Last used")} ${dayjs(
+            last.date
+          ).fromNow()}`;
         }
       }
       // Add Remove button to array
@@ -467,6 +452,7 @@
       // Fire Pop menu
       Interact.popmenu({
         title: `${tracker.emoji || "⚪️"} ${tracker.label || tracker.tag}`,
+        description: subtitle,
         buttons: buttons
       });
     } // end showTrackerOptions
