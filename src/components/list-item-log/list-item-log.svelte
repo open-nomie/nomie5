@@ -75,11 +75,11 @@
   <NItem className="{className} n-item-log">
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row time-row">
-      <div class="time">
-        <div class="day-time">
+      <div class="time truncate" style="max-width:60%;">
+        <div class="day-time truncate">
           {dayjs(displayLog.end).format(`ddd ${timeFormat}`)}
         </div>
-        <div class="date-ago">
+        <div class="date-ago truncate">
           {dayjs(displayLog.end).format('MMM Do YYYY')}
           <span class="ago">{time.fromNow(displayLog.end)} ago</span>
         </div>
