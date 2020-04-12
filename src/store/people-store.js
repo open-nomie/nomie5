@@ -198,20 +198,23 @@ const PeopleInit = () => {
 
         // Loop over array of people { username: x, last: date }
         peopleArray.forEach((person) => {
-          if (typeof person == "string") {
-            if (!state.people.hasOwnProperty(person)) {
-              changed = true;
-              state.people[person] = new Person({ username: person, displayName: person, last: new Date() });
-            } else {
-              changed = true;
-              state.people[person].last = new Date();
-            }
-          } else {
+          if (typeof person != "string") {
+            // If this is a new person
             if (!state.people.hasOwnProperty(person.username)) {
-              changed = true;
               state.people[person.username] = new Person(person.username);
               state.people[person.username].last = person.last || new Date();
+              changed = true;
+            } else {
+              // If the current LAST date is less than (older) than the one provided
+              // use the one provided, otherwise do nothing.
+              if (state.people[person.username].last < person.last) {
+                state.people[person.username].last = person.last;
+                changed = true;
+              }
             }
+          } else {
+            // Should no longer ever happen
+            Interact.alert("Error", "Sorry savePeople was called with just a string. Please report this!");
           }
         });
 
