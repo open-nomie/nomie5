@@ -513,7 +513,14 @@ const ledgerInit = () => {
           const meta = log.getMeta();
           // Save any new people to the People Store
           // Passing an Array of USERNAMES - people store should convert it to the right thing
-          PeopleStore.save(meta.people);
+          PeopleStore.saveFoundPeople(
+            meta.people.map((username) => {
+              return {
+                username,
+                last: log.end,
+              };
+            })
+          );
           // Save any new Context to the Context Store
           ContextStore.save(meta.context);
         }, 1);
@@ -582,7 +589,14 @@ const ledgerInit = () => {
           promises.push(methods.putBook(date, newBook));
         });
         // Wait for all promises to be finished, then resolve
-        Promise.all(promises).then(resolve);
+        Promise.all(promises)
+          .then((results) => {
+            // Delete them from the local logs
+            // methods.deleteCachedLogsById(logIds);
+            methods.hooks.run("onLogsDeleted", results);
+            resolve(promises);
+          })
+          .catch(reject);
       });
     },
     import(rows, statusFunc) {
