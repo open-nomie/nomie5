@@ -82,6 +82,9 @@
 </script>
 
 <style lang="scss">
+  :global(.log-editor) {
+    z-index: 1200 !important;
+  }
   :global(.log-editor .view-port .n-map-container) {
     height: 300px;
   }
