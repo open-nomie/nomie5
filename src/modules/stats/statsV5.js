@@ -227,7 +227,7 @@ export default class StatsProcessor {
         values,
       };
     } else if (this.mode == "w") {
-      let { labels, values } = this.getChartDataByType("day", "YYYY-MM-DD", "Do", valueMapTotals);
+      let { labels, values } = this.getChartDataByType("day", "YYYY-MM-DD", "dd Do", valueMapTotals);
       return {
         mode: this.mode,
         labels,
