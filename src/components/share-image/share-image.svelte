@@ -69,7 +69,7 @@
       let image = await methods.toImage();
       var link = document.createElement("a");
       link.download = `nomie-${dayjs().format("YYYY-DD-MM-H-mm")}.png`;
-      link.href = dataUrl;
+      link.href = image;
       link.click();
       downloading = false;
       Interact.closeShareImage();
