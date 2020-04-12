@@ -321,6 +321,11 @@
     methods.getLogs();
   });
 
+  LedgerStore.hook("onLogsDeleted", async () => {
+    await tick(600);
+    methods.getLogs();
+  });
+
   // WHen mounted.
   onMount(() => {
     if ((state.searchTerm || "").length > 1 && !searchLogs) {
