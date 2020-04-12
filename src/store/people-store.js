@@ -105,8 +105,25 @@ const searchForPeople = async () => {
     });
     // people = [...people, ...meta.people];
   });
+
+  let map = {};
+  people.forEach((person) => {
+    map[person.username] = map[person.username] || { username: person.username, dates: [] };
+    map[person.username].dates.push(person.last);
+  });
+
+  let final = Object.keys(map).map((username) => {
+    let dates = map[username].dates.sort((a, b) => {
+      a > b ? 1 : -1;
+    });
+    return {
+      username,
+      last: dates[0],
+    };
+  });
+
   loadingFinished();
-  return people;
+  return final;
 };
 
 /**
@@ -174,10 +191,12 @@ const PeopleInit = () => {
       });
       return people;
     },
-    async save(peopleArray) {
+    async saveFoundPeople(peopleArray) {
       update((state) => {
         state.people = state.people || {};
         let changed = false;
+
+        // Loop over array of people { username: x, last: date }
         peopleArray.forEach((person) => {
           if (typeof person == "string") {
             if (!state.people.hasOwnProperty(person)) {
@@ -190,17 +209,17 @@ const PeopleInit = () => {
           } else {
             if (!state.people.hasOwnProperty(person.username)) {
               changed = true;
-              state.people[person.username] = new Person(person);
-              state.people[person.username].last = person.last || new Date();
-            } else {
-              changed = true;
+              state.people[person.username] = new Person(person.username);
               state.people[person.username].last = person.last || new Date();
             }
           }
         });
+
+        // Has Changes?
         if (changed) {
           this.write(state.people);
         }
+        // Return state to update
         return state;
       });
     },
@@ -208,12 +227,12 @@ const PeopleInit = () => {
       let person;
       let _state;
       if (personName) {
-        let username = toUsername(personName);
+        let username = toUsername(personName).toLowerCase();
         let added = false;
         update((state) => {
           state.people = state.people || {};
           if (!state.people.hasOwnProperty(username)) {
-            person = new Person({ username: username.toLowerCase(), displayName: personName });
+            person = new Person({ username: username, displayName: personName });
             state.people[username] = person;
             added = true;
           }
@@ -246,7 +265,7 @@ const PeopleInit = () => {
       if (people.length) {
         const confirm = await Interact.confirm(`${people.length} @username's found`, "Add them to your People list?");
         if (confirm) {
-          await methods.save(people);
+          await methods.saveFoundPeople(people);
           Interact.toast("People list updated");
         }
       } else {
