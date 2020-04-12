@@ -610,6 +610,9 @@
     setTimeout(() => {
       state.showAnimation = false;
     }, 200);
+    setTimeout(() => {
+      state.showAnimation = false;
+    }, 1000);
   }
 
   let lastDataView = state.dataView;
@@ -662,11 +665,11 @@
     <NToolbarGrid>
       <div slot="left" className="truncate" style="min-width:100px;">
         {#if $Interact.stats.terms.length == 1}
-          <button class="btn btn-clear tap-icon" on:click={close}>
+          <button class="btn btn-clear tap-icon clickable" on:click={close}>
             <NIcon name="close" size="22" />
           </button>
         {:else}
-          <button class="btn btn-clear tap-icon pl-1" on:click={back}>
+          <button class="btn btn-clear tap-icon clickable pl-1" on:click={back}>
             <NIcon name="arrowBack" size="22" />
             <small
               class="text-sm text-inverse-2 ml-1 truncate"
@@ -683,7 +686,7 @@
         slot="right"
         style="min-width:100px"
         class="toolbar-buttons align-right">
-        <button class="btn btn-clear tap-icon" on:click={onMoreTap}>
+        <button class="btn btn-clear tap-icon clickable" on:click={onMoreTap}>
           <NIcon name="more" />
         </button>
       </div>
@@ -694,7 +697,7 @@
 
     <NToolbarGrid>
       <button
-        class="btn btn-clear text-primary-bright pl-0"
+        class="btn btn-clear text-primary-bright clickable pr-1 pl-1"
         slot="left"
         on:click={loadPreviousDate}>
         <NIcon name="chevronLeft" className="fill-primary-bright" />
@@ -702,7 +705,7 @@
       </button>
       <div class="time-range truncate" slot="main">{state.range}</div>
       <button
-        class="btn btn-clear text-primary-bright pr-0"
+        class="btn btn-clear text-primary-bright clickable pl-1 pr-1"
         slot="right"
         on:click={loadNextDate}>
         Next
