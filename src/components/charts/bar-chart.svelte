@@ -130,7 +130,7 @@
   }
 
   .tick text {
-    fill: #ccc;
+    fill: var(--color-inverse-3);
     text-anchor: start;
   }
 
