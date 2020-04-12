@@ -359,6 +359,12 @@
         compareType();
       }
     };
+    const gotoToday = {
+      title: "Today",
+      click: () => {
+        changeDate(dayjs());
+      }
+    };
     const startOfMonth = {
       title: "Start of month",
       click: () => {
@@ -378,6 +384,9 @@
       }
     };
     buttons.push(compare);
+    if (dayjs().format("DD-MM-YYYY") !== state.date.format("DD-MM-YYYY")) {
+      buttons.push(gotoToday);
+    }
     buttons.push(startOfWeek);
     buttons.push(startOfMonth);
     buttons.push(startOfYear);
