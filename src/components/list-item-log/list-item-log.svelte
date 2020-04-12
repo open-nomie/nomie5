@@ -93,7 +93,7 @@
             Interact.showLocations([displayLog]);
             event.stopPropagation();
           }}
-          class="btn btn-sm btn-clear pl-2 pr-2 ">
+          class="btn btn-sm btn-clear pl-2 pr-2 clickable">
           <NIcon name="pin" className="fill-primary-bright" size="16" />
         </button>
       {/if}
@@ -111,7 +111,7 @@
           on:click={event => {
             dispatch('moreClick', displayLog);
           }}
-          class="btn btn-clear btn-sm more-button ml-1">
+          class="btn btn-clear btn-sm more-button clickable ml-1">
           <NIcon name="more" className="fill-primary-bright" size="32" />
         </button>
       {/if}
