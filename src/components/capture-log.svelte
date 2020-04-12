@@ -316,6 +316,10 @@
     background-color: var(--color-solid);
   }
 
+  :global(.capture-log .tracker-list) {
+    margin-top: -10px;
+  }
+
   .post-score {
     position: absolute;
     top: -10px;
@@ -338,6 +342,7 @@
     position: relative;
     z-index: 1200;
   }
+
   .autocomplete-results {
     background-color: var(--color-solid-1);
     margin: 0px;

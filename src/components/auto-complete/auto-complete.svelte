@@ -165,12 +165,7 @@
     .btn {
       flex-grow: 1;
       flex-shrink: 1;
-      box-shadow: var(--box-shadow-tight);
-      background-color: var(--color-bg);
-      color: var(--color-inverse-2);
-      margin: 3px;
-      font-size: 0.82rem;
-      padding: 5px 6px;
+      max-width: 120px;
     }
   }
 </style>
@@ -181,7 +176,7 @@
   <div class="container p-0 tracker-list">
     {#each state.results || [] as tracker (tracker.tag)}
       <button
-        class="btn btn-tracker-inline"
+        class="btn btn-badge bg-solid-1 clickable"
         on:click={() => {
           onSelect(tracker);
         }}>
