@@ -22,7 +22,6 @@
 <div class="n-list {className}" {style}>
   {#each sort(logs) as log}
     <LogItem
-      hideMore
       className={compact ? 'compact' : ''}
       {log}
       on:trackerClick={event => {
