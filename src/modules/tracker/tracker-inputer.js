@@ -4,6 +4,7 @@ import { Interact } from "../../store/interact";
 import extractor from "../../utils/extract-trackers/extract-trackers";
 import Tracker from "./tracker";
 import PromiseStep from "../../utils/promise-step/promise-step";
+import NomieLog from "../../modules/nomie-log/nomie-log";
 
 export default class TrackerInputer {
   constructor(tracker) {
@@ -108,18 +109,32 @@ export default class TrackerInputer {
          * each type of note
          **/
 
-        // Get Trackers from the Note
-        let trackerTags = extractor(this.tracker.note);
-
-        // Add Note Tracker Tag to the note first...
         // This way we can look up some stats on it too
         ActiveLogStore.addTag(this.tracker.tag);
 
+        // Setup a temp log with the tracker note
+        const tempLog = new NomieLog({ note: this.tracker.note });
+        // Extract the meta data from the note
+        const meta = tempLog.getMeta();
+        // Get tag, context, people
+        let tagAndValue = meta.trackers;
+        let contexts = meta.context;
+        let people = meta.people;
+        // Loop over people add to log
+        people.forEach((person) => {
+          ActiveLogStore.addElement(`@${person}`);
+        });
+        // Loop over context add to log
+        contexts.forEach((context) => {
+          ActiveLogStore.addElement(`+${context}`);
+        });
+        // Add Note Tracker Tag to the note first...
+
         // Create array of items to pass to promise step
-        let items = Object.keys(trackerTags).map((tag) => {
+        let items = tagAndValue.map((tv) => {
           return {
-            tracker: $TrackerStore[tag] || new Tracker({ tag: tag }),
-            value: trackerTags[tag].value, // not being used
+            tracker: $TrackerStore[tv.tag] || new Tracker({ tag: tv.tag }),
+            value: tv.value, // not being used
           };
         });
 
