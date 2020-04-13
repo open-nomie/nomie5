@@ -107,9 +107,10 @@
       </div> -->
       <!-- Janky - fix this -->
       {#if hideMore != true}
+        <!--dispatch('moreClick', displayLog);-->
         <button
           on:click={event => {
-            dispatch('moreClick', displayLog);
+            Interact.logOptions(displayLog);
           }}
           class="btn btn-clear btn-sm more-button clickable ml-1">
           <NIcon name="more" className="fill-primary-bright" size="32" />
