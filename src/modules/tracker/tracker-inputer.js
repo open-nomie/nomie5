@@ -28,6 +28,7 @@ export default class TrackerInputer {
   }
 
   async getTrackerInputAsString(tracker, value) {
+    console.log("getTrackerInputAsSTring", tracker);
     const response = await Interact.trackerInput(tracker, { value, allowSave: false });
     if (response.tracker) {
       return `#${response.tracker.tag}(${response.value}) `;
@@ -131,10 +132,16 @@ export default class TrackerInputer {
         // Add Note Tracker Tag to the note first...
 
         // Create array of items to pass to promise step
+
         let items = tagAndValue.map((tv) => {
+          let realTracker = $TrackerStore[tv.tag];
+          let value = tv.value;
+          if (realTracker.type == "timer") {
+            value = 0;
+          }
           return {
-            tracker: $TrackerStore[tv.tag] || new Tracker({ tag: tv.tag }),
-            value: tv.value, // not being used
+            tracker: realTracker || new Tracker({ tag: tv.tag }),
+            value: value, // not being used
           };
         });
 
