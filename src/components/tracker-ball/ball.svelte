@@ -36,6 +36,7 @@
     color: rgba(0, 0, 0, 0.8);
     text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5);
     &.emoji-letter {
+      white-space: pre;
       color: rgba(0, 0, 0, 1);
     }
   }
