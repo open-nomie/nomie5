@@ -25,8 +25,8 @@ export default function (text) {
     let trackerArr = tracker.split("(");
     // Get name from TrackerArr - even if its not a value based, it will be at 0 index
     let trackerName = trackerArr[0].replace("#", "").replace("\n", "").toLowerCase();
-    // Default the value to 1
-    let value = 1;
+    // Default the value to 0 - changing from 1 caused problems with timer trackers
+    let value = 0;
     // It's trackerArr is more than 1, its a value based
     if (trackerArr.length > 1) {
       // Get the value from the 2nd part *asdfasdf* of the #key(asdfasdf)
