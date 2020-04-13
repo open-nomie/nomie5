@@ -19,7 +19,7 @@ const activeLogInit = () => {
 
   const methods = {
     clear() {
-      return update(n => {
+      return update((n) => {
         n = new NomieLog().toObject();
         n.start = null;
         n.end = null;
@@ -31,7 +31,7 @@ const activeLogInit = () => {
       hooky.hook(hookType, func);
     },
     updateNote(note) {
-      update(b => {
+      update((b) => {
         b.note = note;
         // this.runHook('onUpdate', b);
         hooky.run("onUpdate", b);
@@ -40,7 +40,7 @@ const activeLogInit = () => {
     },
     asLog() {
       let log;
-      update(b => {
+      update((b) => {
         log = new NomieLog(b);
         return b;
       });
@@ -50,18 +50,25 @@ const activeLogInit = () => {
       return CalculateScore(note, new Date().getTime());
     },
     removeStr(str) {
-      update(b => {
+      update((b) => {
         b.note = b.note
           .split(" ")
-          .filter(word => {
+          .filter((word) => {
             return word !== str;
           })
           .join(" ");
         return b;
       });
     },
+    addElement(element) {
+      update((state) => {
+        state.note = `${state.note} ${element} `;
+        hooky.run("onAddElement", { element });
+        return state;
+      });
+    },
     addTag(tag, value) {
-      update(b => {
+      update((b) => {
         if (!isNaN(value)) {
           b.note = `${b.note} #${tag}(${value}) `;
         } else {
@@ -70,14 +77,14 @@ const activeLogInit = () => {
         hooky.run("onAddTag", { tag, value });
         return b;
       });
-    }
+    },
   };
 
   return {
     subscribe,
     update,
     set,
-    ...methods
+    ...methods,
   };
 };
 
