@@ -147,12 +147,14 @@
       events={state.logs} />
     <div class="n-panel py-2 center-all">
       <div class="n-panel w-50 center-all vertical">
-        <h1>
+        <h1 class="text-inverse">
           {state.daysHit}
           <span class="text-inverse-3">of</span>
           {state.daysTotal}
         </h1>
-        <small>{math.round(state.percentage, 0)}% of the Days</small>
+        <small class="text-inverse-2">
+          {math.round(state.percentage, 0)}% of the Days
+        </small>
       </div>
       <div class="n-panel w-50 center-all py-2">
         <div class="spinner-container">
