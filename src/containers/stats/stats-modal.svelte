@@ -635,6 +635,10 @@
 </script>
 
 <style lang="scss">
+  :global(.stats-modal) {
+    z-index: 1000 !important;
+  }
+
   .n-list {
     max-width: 100vw;
     overflow: hidden;
@@ -915,7 +919,6 @@
       {:else if state.dataView == 'logs'}
         <NLogList
           compact
-          hideMore
           on:textClick={evt => {
             if (evt.detail.type == 'tracker') {
               Interact.openStats(`#${evt.detail.tracker.tag}`);
