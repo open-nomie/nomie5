@@ -19,6 +19,7 @@
   };
 
   $: if (input) {
+    console.log("input change", input);
     onInput(input);
   }
 
@@ -82,24 +83,22 @@
 
   const onSelect = async tracker => {
     let note = "";
-
+    let partialTag = "";
     if (tracker.type === "person") {
-      // the Type is a Person - add the @
       note = `@${tracker.tag} `;
+      partialTag = `@${state.partialTag}`;
     } else if (tracker.type === "context") {
-      // The Type is Context - add a +
       note = `+${tracker.tag} `;
+      partialTag = `+${state.partialTag}`;
     } else {
-      // The Type is something else - use the TrackerInputer
       note = await getTrackerInput(tracker);
+      partialTag = `#${state.partialTag.replace("#", "")}`;
     }
     // Split Input to in array
-    const inputParts = input.split(" ");
-    // Replace last part with NOTE
-    // TODO - could we use cursor position to make this
-    // smarter
-    inputParts[inputParts.length - 1] = note;
-
+    const inputParts = input.split(" ").filter(word => {
+      return word != partialTag;
+    });
+    inputParts.push(note + " ");
     // Dispatch the Select
     dispatch("select", { tracker, note: inputParts.join(" ") });
     await tick(120);
@@ -174,6 +173,7 @@
       flex-grow: 1;
       flex-shrink: 1;
       max-width: 120px;
+      white-space: pre;
     }
   }
 </style>
@@ -187,7 +187,7 @@
     </button>
     {#each state.results || [] as tracker (tracker.tag)}
       <button
-        class="btn btn-badge bg-solid-1 clickable"
+        class="btn btn-badge bg-solid-1"
         on:click={() => {
           onSelect(tracker);
         }}>
