@@ -54,12 +54,6 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/images/icons/nomie-400.png",
-      "sizes": "400x400",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
       "src": "/images/icons/nomie-512.png",
       "sizes": "512x512",
       "type": "image/png",
