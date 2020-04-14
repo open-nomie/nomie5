@@ -48,10 +48,10 @@ export default {
       map: "Map",
       time: "Time",
       close: "Close",
-      today: "Today"
+      today: "Today",
     },
     people: {
-      with: "With {{person}}"
+      with: "With {{person}}",
     },
     stats: {
       when: "When",
@@ -59,28 +59,28 @@ export default {
       where: "Where",
       streak: "Streak",
       logs: "Logs",
-      "all-logs": "All Logs"
+      "all-logs": "All Logs",
     },
     tabs: {
       track: "Track",
       history: "History",
       settings: "Settings",
       plugins: "Plugins",
-      people: "People"
+      people: "People",
     },
     history: {
-      "no-records-found": "No logs found"
+      "no-records-found": "No logs found",
     },
     export: {
       csv: {
         download: "Download CSV...",
         description:
-          "Export your individual tracker data to CSV. Only one year at a time is supported. Please note, that CSV exports cannot currently be imported back into Nomie. "
+          "Export your individual tracker data to CSV. Only one year at a time is supported. Please note, that CSV exports cannot currently be imported back into Nomie. ",
       },
       backup: {
         description: `Create an importable backup file. This allows you to transfer your data from one device to another using a single JSON file that contains ALL of you Nomie data.`,
-        download: "Download Backup File..."
-      }
+        download: "Download Backup File...",
+      },
     },
     board: {
       "board-empty": "Sure is Empty!",
@@ -92,7 +92,7 @@ export default {
       "add-a-board": "Add a Tab",
       "add-a-board-description": `Tabs help you organize your trackers. For example: social, food, and fitness can contain trackers specifically for those activies. You can have the same tracker on multiple tabs.`,
       "board-input-placeholder": "Tab name or Emoji 👍",
-      "welcome-tip": "Tap a tracker button to log data. Press & hold to see additional options"
+      "welcome-tip": "Tap a tracker button to log data. Press & hold to see additional options",
     },
     settings: {
       language: "Language",
@@ -130,7 +130,7 @@ export default {
       "pin-details": "Enter 1 to 6 digit pin",
       "aggressive-sync": "Aggressive Sync",
       "aggressive-description": `Using Nomie on multiple devices? Enable Aggressive Sync
-            to sync more frequently`
+            to sync more frequently`,
     },
     tracker: {
       "things-to-track": "Tracker Library",
@@ -144,6 +144,7 @@ export default {
       tag: "Tag",
       type: "Type",
       "save-on-tap": "Save on Tap",
+      "save-on-tap-description": "Automatically save the value when you tap the button.",
       "measure-by": "Measure By",
       calculate: "Calculate",
       count: "Count",
@@ -158,7 +159,7 @@ export default {
       "note-description": `Combine multiple trackers together using their
             #hashtags. For example, #mood #sleep_quality. Nomie will then ask
             for values one by one.`,
-      "delete-description": `You can always recreate it later. No historic data will be deleted deleted.`
-    }
-  }
+      "delete-description": `You can always recreate it later. No historic data will be deleted deleted.`,
+    },
+  },
 };
