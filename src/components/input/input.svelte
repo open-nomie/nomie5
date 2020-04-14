@@ -4,6 +4,7 @@
 
   export let label = null;
   export let placeholder = null;
+  export let inputmode = undefined;
   export let value = null;
   export let type = "text";
   export let help = null;
@@ -35,9 +36,9 @@
   let blur = () => {
     focused = false;
   };
-  let focus = () => {
+  let focus = event => {
     focused = true;
-    dispatch("focus");
+    dispatch("focus", event);
   };
   let change = evt => {
     if (evt.key == "Enter") {
@@ -231,6 +232,7 @@
         <input
           bind:this={_elInput}
           {disabled}
+          {inputmode}
           type="email"
           style={inputStyle}
           class={inputClass}
@@ -247,6 +249,7 @@
         <input
           bind:this={_elInput}
           {disabled}
+          {inputmode}
           type="password"
           style={inputStyle}
           class={inputClass}
@@ -263,6 +266,7 @@
         <input
           bind:this={_elInput}
           {disabled}
+          {inputmode}
           type="number"
           style={inputStyle}
           class={inputClass}
@@ -299,6 +303,7 @@
           bind:this={_elInput}
           {disabled}
           type="text"
+          {inputmode}
           style={inputStyle}
           class={inputClass}
           {pattern}
