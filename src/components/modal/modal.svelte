@@ -30,7 +30,7 @@
 
   // Stagger showing and dom showing for CSS effects
   $: if (show) {
-    document.body.classList.add("no-scroll");
+    // document.body.classList.add("no-scroll");
     showModal = true;
     setTimeout(() => {
       domVisible = true;
@@ -38,7 +38,7 @@
   }
 
   $: if (show == false) {
-    document.body.classList.remove("no-scroll");
+    // document.body.classList.remove("no-scroll");
     domVisible = false;
     setTimeout(() => {
       showModal = false;
@@ -46,7 +46,7 @@
   }
 
   onDestroy(() => {
-    document.body.classList.remove("no-scroll");
+    // document.body.classList.remove("no-scroll");
   });
 </script>
 
