@@ -636,7 +636,7 @@
 
 <style lang="scss">
   :global(.stats-modal) {
-    z-index: 1000 !important;
+    z-index: 1300 !important;
   }
 
   .n-list {
