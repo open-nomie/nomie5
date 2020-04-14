@@ -534,6 +534,12 @@
   @import "../../scss/utils/_utils";
   @import "../../scss/vendor/bootstrap/base";
 
+  :global(.n-board .tracker-button-wrapper) {
+    @include media-breakpoint-up(md) {
+      margin: 8pt;
+    }
+  }
+
   .n-board {
     padding: 0px 0px;
     background-color: var(--color-bg);
@@ -721,7 +727,7 @@
               <button
                 on:click={methods.editBoard}
                 class="btn btn btn-round board-edit-button clickable">
-                <NIcon name="more" size="32" />
+                <NIcon name="more" size="32" className="fill-white" />
               </button>
             {/if}
           </div>

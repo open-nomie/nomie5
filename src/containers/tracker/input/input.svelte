@@ -32,7 +32,6 @@
   export let value = undefined; // If a valid is provided
   export let hideAdd = undefined; // If the Add button should be hidden
   export let saveLabel = Lang.t("general.save", "Save"); // The label of the save Button
-
   // Consts
   const dispatch = createEventDispatcher(); // Setup the dispatcher
 
