@@ -3,12 +3,16 @@
 
   import NItem from "../../../components/list-item/list-item.svelte";
   import NModal from "../../../components/modal/modal.svelte";
+  import NIcon from "../../../components/icon/icon.svelte";
   import NToggle from "../../../components/toggle-switch/toggle-switch.svelte";
+  import NInput from "../../../components/input/input.svelte";
   import ColorPicker from "../../../components/color-picker/color-picker.svelte";
+  import AutoComplete from "../../../components/auto-complete/auto-complete.svelte";
 
   // Utils
   import { createEventDispatcher } from "svelte";
   import NomieUOM from "../../../utils/nomie-uom/nomie-uom";
+  import tick from "../../../utils/tick/tick";
 
   // modules
   import Tracker from "../../../modules/tracker/tracker";
@@ -48,6 +52,21 @@
   } else if (tracker.type === "range" && isNaN(tracker.min)) {
     tracker.min = 1;
     tracker.max = 10;
+  }
+
+  const getTrackerInput = async target => {
+    const response = await Interact.trackerInput(tracker, {
+      value: tracker.default,
+      allowSave: false
+    });
+    if (response && response.value) {
+      tracker[target] = response.value;
+    }
+  };
+
+  async function duplicate() {
+    let duplicated = await TrackerStore.duplicateTracker(tracker);
+    console.log("Duplicated", duplicated);
   }
 
   const methods = {
@@ -113,9 +132,6 @@
     .item-divider.compact {
       background-color: var(--color-solid);
     }
-    textarea.form-control {
-      font-size: 16px;
-    }
   }
 </style>
 
@@ -131,101 +147,108 @@
       <NItem className="item-divider compact" />
       <ColorPicker bind:value={tracker.color} />
       <NItem className="item-divider compact" />
-      <NItem title="Label">
-        <div slot="right">
-          <input
-            type="text"
-            name="label"
-            class="form-control"
-            bind:value={tracker.label}
-            on:keyup={methods.labelChanged} />
-        </div>
+      <NItem>
+        <NInput
+          type="text"
+          name="label"
+          placeholder="Tracker Label"
+          bind:value={tracker.label}
+          on:keyup={methods.labelChanged} />
       </NItem>
-      <NItem title="Emoji">
-        <div slot="right">
-          <input
-            type="text"
-            name="emoji"
-            on:focus={event => {
-              event.target.select();
-            }}
-            class="form-control text-center"
-            bind:value={tracker.emoji} />
-        </div>
-      </NItem>
-      {#if tracker._dirty}
-        <NItem title={Lang.t('tracker.tag')}>
-          <div slot="right">
-            <input
-              type="text"
-              name="tag"
-              class="form-control"
-              bind:value={tracker.tag}
-              autocomplete="off"
-              autocorrect="off"
-              maxlength="10"
-              autocapitalize="off"
-              spellcheck="false" />
-          </div>
-        </NItem>
-      {:else}
-        <NItem title={Lang.t('tracker.tag')} on:click={methods.editTag}>
-          <div slot="right">
-            <div class="n-row">
-              {tracker.tag}
-              <button class="btn-link btn" on:click={methods.editTag}>
-                {Lang.t('general.edit')}
-              </button>
-            </div>
-          </div>
-        </NItem>
-      {/if}
-      <NItem className="item-divider compact" />
-      <NItem title={Lang.t('tracker.type')}>
-        <div slot="right">
-          <select
-            class="form-control w-100"
-            name="type"
-            bind:value={tracker.type}>
-            {#each data.types as type}
-              <option value={type.id}>{type.label}</option>
-            {/each}
-          </select>
-        </div>
+      <NItem>
+        <NInput
+          solo
+          type="text"
+          name="emoji"
+          on:focus={event => {
+            event.detail.target.select();
+          }}
+          inputClass="text-lg"
+          class="form-control text-center"
+          bind:value={tracker.emoji}>
+          <div slot="left" class="mr-2 ml-2">Emoji</div>
+
+        </NInput>
 
       </NItem>
+      {#if tracker._dirty}
+        <NItem>
+          <NInput
+            type="text"
+            name="tag"
+            placeholder={Lang.t('tracker.tag')}
+            bind:value={tracker.tag}
+            autocomplete="off"
+            autocorrect="off"
+            maxlength="10"
+            autocapitalize="off"
+            spellcheck="false" />
+        </NItem>
+      {/if}
+
+      <NItem>
+        <NInput
+          type="select"
+          name="type"
+          placeholder={Lang.t('tracker.type')}
+          bind:value={tracker.type}>
+          {#each data.types as type}
+            <option value={type.id}>{type.label}</option>
+          {/each}
+        </NInput>
+      </NItem>
+
       {#if tracker.type == 'tick'}
-        <NItem title={Lang.t('tracker.save-on-tap')}>
+        <NItem
+          title={Lang.t('tracker.save-on-tap')}
+          className="p-3"
+          description={Lang.t('tracker.save-on-tap-description', 'Automatically save the value when you tap the button.')}>
           <div slot="right">
             <NToggle bind:value={tracker.one_tap} />
           </div>
         </NItem>
       {/if}
       {#if tracker.type == 'range'}
-        <NItem title={Lang.t('tracker.min-max')}>
-          <div slot="right" class="">
-            <div class="n-row">
-              <input
-                pattern="[0-9]*"
-                inputmode="numeric"
-                class="form-control mr-2"
-                style="width:90px;"
-                name="min"
-                placeholder={Lang.t('general.min')}
-                on:focus={e => {
-                  e.target.select();
-                }}
-                bind:value={tracker.min} />
-              <input
-                pattern="[0-9]*"
-                inputmode="numeric"
-                class="form-control"
-                style="width:90px;"
-                name="max"
-                placeholder={Lang.t('general.max')}
-                on:focus={e => e.target.select()}
-                bind:value={tracker.max} />
-            </div>
+        <NItem>
+          <div class="n-row">
+            <NInput
+              pattern="[0-9]*"
+              inputmode="numeric"
+              className="mr-2"
+              style="width:45%;"
+              name="min"
+              placeholder={Lang.t('tracker.min', 'Min value in range')}
+              on:focus={e => {
+                e.detail.target.select();
+              }}
+              bind:value={tracker.min}>
+              <button
+                class="btn btn-icon clickable mr-2"
+                slot="right"
+                on:click={() => {
+                  getTrackerInput('min');
+                }}>
+                <NIcon name="addOutline" />
+              </button>
+            </NInput>
+            <NInput
+              pattern="[0-9]*"
+              inputmode="numeric"
+              className=""
+              style="width:45%;"
+              name="max"
+              placeholder={Lang.t('tracker.max', 'Max value in range')}
+              on:focus={e => e.detail.target.select()}
+              bind:value={tracker.max}>
+              <button
+                class="btn btn-icon clickable mr-2"
+                slot="right"
+                on:click={() => {
+                  getTrackerInput('max');
+                }}>
+                <NIcon name="addOutline" />
+              </button>
+            </NInput>
           </div>
         </NItem>
       {/if}
@@ -233,55 +256,83 @@
 
       {#if tracker.type !== 'timer' && tracker.type !== 'note'}
         <NItem>
-          <div class="title truncate">{Lang.t('tracker.measure-by')}</div>
-          <div slot="right">
-            <select bind:value={tracker.uom} class="form-control">
-              {#each Object.keys(data.groupedUOMs) as groupKey (groupKey)}
-                <option disabled>-- {groupKey}</option>
-                {#each data.groupedUOMs[groupKey] as uom (`${groupKey}-${uom.key}`)}
-                  <option
-                    value={uom.key}
-                    disabled={uom.key == 'time' && tracker.type != 'timer'}>
-                    {NomieUOM.plural(uom.key)}
-                  </option>
-                {/each}
+          <NInput
+            placeholder={Lang.t('tracker.measure-by')}
+            type="select"
+            bind:value={tracker.uom}
+            class="form-control">
+            {#each Object.keys(data.groupedUOMs) as groupKey (groupKey)}
+              <option disabled>-- {groupKey}</option>
+              {#each data.groupedUOMs[groupKey] as uom (`${groupKey}-${uom.key}`)}
+                <option
+                  value={uom.key}
+                  disabled={uom.key == 'time' && tracker.type != 'timer'}>
+                  {NomieUOM.plural(uom.key)}
+                </option>
               {/each}
-            </select>
-          </div>
+            {/each}
+          </NInput>
+
         </NItem>
       {/if}
       {#if tracker.type !== 'note'}
-        <NItem title={Lang.t('tracker.calculate')}>
-          <div slot="right">
-            <select class="form-control" name="math" bind:value={tracker.math}>
-              {#each ['sum', 'avg'] as math_key}
-                <option value={math_key}>{math_key}</option>
-              {/each}
-            </select>
-          </div>
+        <NItem>
+          <NInput
+            type="select"
+            class="form-control"
+            name="math"
+            placeholder={Lang.t('tracker.calculate-total', 'Calculate Totals using:')}
+            bind:value={tracker.math}>
+            {#each ['sum', 'avg'] as math_key}
+              <option value={math_key}>{math_key}</option>
+            {/each}
+          </NInput>
         </NItem>
       {:else}
         <NItem>
-          <textarea
+          <NInput
+            type="textarea"
             bind:value={tracker.note}
             placeholder={Lang.t('tracker.note-placeholder')}
             class="form-control w-100 mt-2" />
         </NItem>
+        <AutoComplete
+          input={tracker.note}
+          scroller
+          on:select={async evt => {
+            tracker.note = evt.detail.note + '';
+          }} />
         <NItem description={Lang.t('tracker.note-description')} />
       {/if}
       <NItem className="item-divider compact" />
       <PointsEditor {tracker} />
       <NItem className="item-divider bg-solid compact" />
-      <NItem title={Lang.t('tracker.default')}>
-        <div slot="right">
-          <input
+      {#if tracker.type !== 'note'}
+        <NItem>
+          <NInput
             pattern="[0-9]*"
             inputmode="numeric"
-            class="form-control"
-            bind:value={tracker.default} />
+            label="Default Tracker Value"
+            placeholder="Default Tracker Value"
+            bind:value={tracker.default}>
+            <button
+              class="btn btn-icon clickable mr-2"
+              slot="right"
+              on:click={() => {
+                getTrackerInput('default');
+              }}>
+              <NIcon name="addOutline" />
+            </button>
+          </NInput>
+        </NItem>
+        <NItem className="item-divider bg-solid compact" />
+      {/if}
+
+      <NItem on:click={duplicate}>
+        <div class="text-sm text-center text-primary-bright">
+          Duplicate Tracker
         </div>
       </NItem>
-      <NItem className="item-divider bg-solid compact" />
 
       <button
         slot="footer"

@@ -9,19 +9,20 @@ import StarterPack from "../modules/packs/default-trackers";
 // Config
 import config from "../../config/global";
 
+import snakeCase from "../utils/snake-case/snake-case";
+import tick from "../utils/tick/tick";
+
 // Stores
 import { Interact } from "../store/interact";
 import { BoardStore } from "../store/boards";
 import { TrackerLibrary } from "../store/tracker-library";
+import { Lang } from "../store/lang";
 
 // Utils
 import Logger from "../utils/log/log";
 
 const console = new Logger("🌟 TrackerStore 🌟");
 
-const startPackArray = Object.keys(StarterPack.trackers).map((key) => {
-  return StarterPack.trackers[key];
-});
 const trackerStoreInit = () => {
   const { update, subscribe, set, get } = writable({});
   const methods = {
@@ -83,6 +84,10 @@ const trackerStoreInit = () => {
         return state;
       });
       return data || {};
+    },
+    tagExists(tag) {
+      let trackers = methods.getAll();
+      return trackers[tag] !== undefined;
     },
     getById(id) {
       let trackers = methods.getAll();
@@ -231,6 +236,40 @@ const trackerStoreInit = () => {
         });
       }
     },
+    async duplicateTracker(tracker) {
+      const label = await Interact.prompt(
+        "New Label",
+        `This will create a duplicate tracker with ${tracker.label}'s settings, but a new tag and label`
+      );
+      if (label) {
+        let newTag = snakeCase(label).toLowerCase();
+        let existing = methods.tagExists(newTag);
+        if (existing) {
+          Interact.alert(Lang.t("general.error"), `A tracker with #${newTag} already exists. Try another`);
+        } else {
+          // Create new one
+          let newTracker = new Tracker(tracker);
+          newTracker.tag = newTag;
+          newTracker.label = label;
+          // Save the Tracker
+          let saved = await methods.saveTracker(newTracker);
+          if (saved) {
+            // Edit it?
+            let editConfirm = await Interact.confirm(
+              Lang.t("tracker.duplication-complete", "Duplication Complete"),
+              Lang.t("tracker.edit-tracker-now", "Would you like to edit the new tracker?")
+            );
+            if (editConfirm) {
+              Interact.dismissEditTracker();
+              await tick(300);
+              Interact.editTracker(newTracker);
+            }
+          } else {
+            Interact.alert(Lang.t("general.error"), "Sorry, duplication failed");
+          }
+        }
+      }
+    },
     deleteTracker(tracker) {
       let response;
       update((t) => {
@@ -241,20 +280,21 @@ const trackerStoreInit = () => {
       });
       return response;
     },
-    saveTracker(tracker) {
+    async saveTracker(tracker) {
       let response;
       let board = BoardStore.data();
+      let trackers;
       update((t) => {
         t = t || {};
+        trackers = t;
         t[tracker.tag] = tracker;
-        response = methods.save(t);
-
-        if (board.id !== "all") {
-          BoardStore.addTrackersToActiveBoard([tracker]);
-        }
-
         return t;
       });
+      response = await methods.save(trackers);
+
+      if (board.id !== "all") {
+        BoardStore.addTrackersToActiveBoard([tracker]);
+      }
       return response;
     },
   };
