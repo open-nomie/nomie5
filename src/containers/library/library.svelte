@@ -92,7 +92,15 @@
               installed[tracker.tag] = true;
               Interact.toast(`${tracker.label} added`);
             } else {
-              Interact.toast(`${tracker.label} already installed`);
+              TrackerStore.deleteTracker(tracker);
+              /**
+               * Svelte doesn't trigger render after deleting object property,
+               * so we must reassign `installed` to itself to update the DOM.
+               * See: https://github.com/sveltejs/svelte/issues/3211
+               */
+              delete installed[tracker.tag];
+              installed = installed;
+              Interact.toast(`${tracker.label} removed`);
             }
           }} />
       </div>
