@@ -245,7 +245,7 @@ const trackerStoreInit = () => {
         let newTag = snakeCase(label).toLowerCase();
         let existing = methods.tagExists(newTag);
         if (existing) {
-          Interact.alert(Lang.t("general.error"), `A tracker with #${newTag} already exists. Try another`);
+          Interact.alert(Lang.t("general.error"), `#${newTag} already exists.`);
         } else {
           // Create new one
           let newTracker = new Tracker(tracker);
