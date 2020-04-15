@@ -27,6 +27,7 @@ class TrackerStoreState {
   constructor() {
     this.trackers = {};
     this.showTimers = false;
+    this.timers = [];
   }
   tagExists(tag) {
     return this.trackers.hasOwnProperty(tag.toLowerCase);
@@ -67,6 +68,12 @@ const trackerStoreInit = () => {
         update((state) => {
           // Clean the trackers
           state.trackers = methods.scrub(trackers);
+          // Get Running Timers
+          state.timers = Object.keys(trackers)
+            .map((tag) => {
+              return state.trackers[tag];
+            })
+            .filter((tracker) => tracker.started);
           // Push up the cleaned tracker
           return state;
         });
@@ -77,7 +84,6 @@ const trackerStoreInit = () => {
       };
       // Get Trackers from Storage - pass Updated function if it updates later on.
       let trackers = await Storage.get(`${config.data_root}/trackers.json`, onTrackersUpdated);
-      console.log("Trackers", trackers);
       // If don't have trackers - show the selector
       if (!trackers) {
         /// It's their first time
@@ -111,6 +117,9 @@ const trackerStoreInit = () => {
       update((state) => {
         if (state.trackers[tracker.tag]) {
           state.trackers[tracker.tag].started = new Date().getTime();
+          if (state.timers.indexOf(tracker) == -1) {
+            state.timers.push(tracker);
+          }
         }
         return state;
       });
@@ -120,6 +129,9 @@ const trackerStoreInit = () => {
       update((state) => {
         if (state.trackers[tracker.tag]) {
           state.trackers[tracker.tag].started = null;
+          state.timers = state.timers.filter((tkr) => {
+            return tkr.tag != tracker.tag;
+          });
         }
         return state;
       });
@@ -317,7 +329,7 @@ const trackerStoreInit = () => {
       let response;
       update((state) => {
         state.trackers = state.trackers || {};
-        delete state[tracker.tag];
+        delete state.trackers[tracker.tag];
         response = methods.save(state.trackers);
         return state;
       });

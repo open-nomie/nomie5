@@ -46,7 +46,7 @@
   }
 </style>
 
-<NHScroller activeIndex={state.activeIndex} className="n-board-tabs">
+<NHScroller activeIndex={state.activeIndex} className="n-board-tabs pl-1">
   {#each boards as board}
     <button
       class="tab board-{board.id}
@@ -54,8 +54,9 @@
       on:click={() => {
         dispatch('tabTap', board);
       }}>
-      {#if board.label == 'All'}
-        <Elephant size={18} />
+      {#if board.id == 'all'}
+        <!-- <Elephant size={18} /> -->
+        <NIcon name="grid" className="fill-primary-bright" size="18" />
       {:else}{board.label}{/if}
     </button>
   {/each}

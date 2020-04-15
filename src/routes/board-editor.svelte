@@ -68,23 +68,27 @@
     // If ALL board and not ready...
     ready = true;
     // Set up the all board
-    data.board = BoardStore.boardById("all");
+    data.board = BoardStore.boardById("all") || {
+      id: "all",
+      trackers: [],
+      label: "All"
+    };
     // Set trackers to ALL trackers, sorted by the ALL board tracker list.
-    trackers = Object.keys($TrackerStore.trackers)
-      .sort((a, b) => {
-        if (data.board.trackers.indexOf(a) > data.board.trackers.indexOf(b)) {
-          return 1;
-        } else if (
-          data.board.trackers.indexOf(a) < data.board.trackers.indexOf(b)
-        ) {
-          return -1;
-        } else {
-          return a > b ? 1 : -1;
-        }
-      })
-      .map(tag => {
-        return $TrackerStore.trackers[tag];
-      });
+    data.board.trackers = Object.keys($TrackerStore.trackers).sort((a, b) => {
+      if (data.board.trackers.indexOf(a) > data.board.trackers.indexOf(b)) {
+        return 1;
+      } else if (
+        data.board.trackers.indexOf(a) < data.board.trackers.indexOf(b)
+      ) {
+        return -1;
+      } else {
+        return a > b ? 1 : -1;
+      }
+    });
+    trackers = data.board.trackers
+      .map(tag => $TrackerStore.trackers[tag])
+      .filter(t => t);
+    console.log("All Board Trackers", data.board);
   }
 
   let titleChange = false;
@@ -162,10 +166,8 @@
   };
 
   async function trackersSorted(evt) {
-    console.log("Event?", evt.detail);
     trackers = evt.detail;
     data.board.trackers = trackers.map(tracker => tracker.tag);
-    console.log("new Tracker oder", data.board.trackers);
     await tick(100);
     methods.save({ silent: true });
   }

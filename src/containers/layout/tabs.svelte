@@ -22,6 +22,15 @@
     .n-row {
       z-index: 10;
     }
+    .notification {
+      position: absolute;
+      top: 0;
+      right: calc(50% - 15px);
+      width: 6px;
+      height: 6px;
+      background-color: var(--color-red);
+      border-radius: 3px;
+    }
   }
 
   :global(#app-tabs a svg) {
@@ -103,7 +112,7 @@
     </Link>
 
     <Link to="/">
-      {#if TrackerStore.state.runningTimers().length}
+      {#if $TrackerStore.timers.length}
         <div class="notification" />
       {/if}
       <Icon name="tracker" />

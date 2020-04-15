@@ -49,6 +49,22 @@
   }
 }
 
+.fill-red-pulse {
+  animation: redPulseFill 3s infinite;
+}
+
+@keyframes redPulseFill {
+  0% {
+    fill: var(--color-red);
+  }
+  50% {
+    fill: var(--color-inverse);
+  }
+  100% {
+    fill: var(--color-red);
+  }
+}
+
 @keyframes keyframes1 {
   0% {
     transform: rotate(-1.2deg);
