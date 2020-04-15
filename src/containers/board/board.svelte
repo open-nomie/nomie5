@@ -151,19 +151,42 @@
   // Component Methods
   const methods = {
     editBoard() {
-      navigate(`/board/${$BoardStore.activeBoard.id}`);
+      if (!$BoardStore.activeBoard) {
+        navigate(`/board/all`);
+      } else {
+        navigate(`/board/${$BoardStore.activeBoard.id}`);
+      }
     },
+    // Set the Board Trackers
     setBoardTrackers() {
+      /** If its the ALL Board we need to handle it different **/
       if ($BoardStore.active == "all") {
         appTitle = "All";
-        // Convert trackers to array
+        // Get the All Board
+        let allBoard = $BoardStore.boards.find(b => b.id == "all");
+        let boardSort = allBoard ? allBoard.trackers : [];
+        // // Loop over Tracker store - sorting by boardSort
         boardTrackers = Object.keys($TrackerStore)
+          .sort((a, b) => {
+            if (boardSort.indexOf(a) > boardSort.indexOf(b)) {
+              return 1;
+            } else if (boardSort.indexOf(a) < boardSort.indexOf(b)) {
+              return -1;
+            } else {
+              return a > b ? 1 : -1;
+            }
+          })
           .map(tag => {
             return $TrackerStore[tag] || new Tracker({ tag: tag });
+          });
+      }
+      if ($BoardStore.active == "_timers") {
+        boardTrackers = Object.keys($TrackerStore)
+          .filter(tag => {
+            return $TrackerStore[tag].started;
           })
-          // Sort ALL by label
-          .sort((a, b) => {
-            return a.label > b.label ? 1 : -1;
+          .map(tag => {
+            return $TrackerStore[tag] || new Tracker({ tag: tag });
           });
       } else {
         // Get Board Trackers from active Board
@@ -255,13 +278,15 @@
       // Get boards passed
       boards = boards || [];
       // Clone the board;
-      let b = boards.slice(0);
-      // Add All to beginning
-      b.unshift({
+
+      let allBoard = $BoardStore.boards.find(b => b.id == "all") || {
         id: "all",
         label: "All",
         trackers: Object.keys($TrackerStore || {})
-      });
+      };
+      let b = boards.filter(b => b.id !== "all");
+      console.log("All board Inejcted", allBoard);
+      b.unshift(allBoard);
       return b;
     },
 
@@ -299,9 +324,13 @@
       );
       if (res) {
         let label = res.trim();
-        BoardStore.addBoard(label).then(board => {
-          BoardStore.setActive(board.id);
-        });
+        if (label.toLowerCase() !== "all") {
+          BoardStore.addBoard(label).then(board => {
+            BoardStore.setActive(board.id);
+          });
+        } else {
+          Interact.alert("Error", "Sorry, All is a reserved named");
+        }
       }
     },
     // Settings Shortcut - enable boards - tap on logo
@@ -488,7 +517,8 @@
        **/
       if (
         boardPayload.boards.map(b => b.id).indexOf(boardPayload.active) == -1 &&
-        boardPayload.active !== "all"
+        boardPayload.active !== "all" &&
+        boardPayload.active !== "_timers"
       ) {
         setTimeout(() => {
           BoardStore.setActive("all");
@@ -628,7 +658,7 @@
           on:create={methods.newBoard}
           on:tabTap={event => {
             methods.stopSearch();
-            BoardStore.setActive(event.detail.id);
+            BoardStore.setActive(event.detail.id, event.detail);
           }}>
           {#if $BoardStore.boards.length > 1}
             <button
@@ -712,7 +742,7 @@
                   methods.showTrackerOptions(tracker);
                 }} />
             {/each}
-            {#if !data.searching}
+            {#if !data.searching && $BoardStore.active !== '_timers'}
               <NTrackerButton
                 on:click={methods.addButtonTap}
                 tracker={{ label: 'Add', emoji: '➕' }} />
@@ -723,13 +753,11 @@
           <NTip {tips} />
 
           <div class="board-actions">
-            {#if $BoardStore.activeBoard}
-              <button
-                on:click={methods.editBoard}
-                class="btn btn btn-round board-edit-button clickable">
-                <NIcon name="more" size="32" className="fill-white" />
-              </button>
-            {/if}
+            <button
+              on:click={methods.editBoard}
+              class="btn btn btn-round board-edit-button clickable">
+              <NIcon name="more" size="32" className="fill-white" />
+            </button>
           </div>
 
         </main>
