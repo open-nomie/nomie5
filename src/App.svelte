@@ -86,8 +86,8 @@
   // export let name = "nomie";
   export let url = "";
 
-  $: if (window && $TrackerStore) {
-    window.$TrackerStore = $TrackerStore;
+  $: if (window && $TrackerStore.tags) {
+    window.$TrackerStore.tags = $TrackerStore.tags;
   }
 
   // Offline monitor

@@ -4889,8 +4889,8 @@ button:focus {
   flex-grow: 0;
   flex-shrink: 0; }
   .btn-close svg {
-    width: 24px !important;
-    height: 24px !important; }
+    width: 20px !important;
+    height: 20px !important; }
 
 .btn-badge {
   font-size: 0.8rem;
@@ -5637,6 +5637,17 @@ select {
   100% {
     background-color: var(--color-red); } }
 
+.fill-red-pulse {
+  animation: redPulseFill 3s infinite; }
+
+@keyframes redPulseFill {
+  0% {
+    fill: var(--color-red); }
+  50% {
+    fill: var(--color-inverse); }
+  100% {
+    fill: var(--color-red); } }
+
 @keyframes keyframes1 {
   0% {
     transform: rotate(-1.2deg);
@@ -6377,10 +6388,11 @@ body.scrolling .n-tracker-button {
 
 .n-grid.framed {
   background-color: var(--color-solid-2);
-  width: 100%;
+  width: calc(100% - 16pt);
   border-radius: 8pt;
   padding: 8pt;
-  position: relative; }
+  position: relative;
+  margin: 8pt; }
   .n-grid.framed .btn-close {
     left: auto;
     right: 10px;
@@ -6626,7 +6638,7 @@ TODO: Organize main into components or containers.
 
 .timer-bar {
   position: fixed;
-  animation: redPulse 1s infinite;
+  animation: redPulse 3s infinite;
   top: 0;
   left: 0;
   right: 0;
