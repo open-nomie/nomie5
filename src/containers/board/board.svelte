@@ -651,7 +651,7 @@
         {/if}
         {#if Object.keys($TrackerStore.trackers).length > 13}
           <button
-            class="btn tap-icon pr-2 pl-1"
+            class="btn tap-icon pr-2 pl-2"
             on:click={methods.toggleSearch}>
             <NIcon
               name="search"
