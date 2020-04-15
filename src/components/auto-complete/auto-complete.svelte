@@ -24,7 +24,7 @@
   }
 
   async function getTrackerInput(tracker) {
-    let inputer = new TrackerInputer(tracker);
+    let inputer = new TrackerInputer(tracker, $TrackerStore);
     return await inputer.getNoteString();
   }
 

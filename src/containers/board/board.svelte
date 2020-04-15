@@ -344,7 +344,7 @@
       // Set selected tracker to this one.
       state.selectedTracker = tracker;
       // Inserting new TrackerInputer
-      let inputer = new TrackerInputer(tracker);
+      let inputer = new TrackerInputer(tracker, $TrackerStore);
       let payload = await inputer.get();
 
       if (payload instanceof Array) {

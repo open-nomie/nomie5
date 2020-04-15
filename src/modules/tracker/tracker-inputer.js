@@ -7,13 +7,14 @@ import PromiseStep from "../../utils/promise-step/promise-step";
 import NomieLog from "../../modules/nomie-log/nomie-log";
 
 export default class TrackerInputer {
-  constructor(tracker) {
+  constructor(tracker, $TrackerStore) {
     this.tracker = tracker;
     this.value = 0;
     this.listeners = {
       cancel: [],
       value: [],
     };
+    this.$TrackerStore = $TrackerStore;
   }
 
   on(type, func) {
@@ -134,7 +135,7 @@ export default class TrackerInputer {
         // Create array of items to pass to promise step
 
         let items = tagAndValue.map((tv) => {
-          let realTracker = $TrackerStore.trackers[tv.tag];
+          let realTracker = this.$TrackerStore.trackers[tv.tag];
           let value = tv.value;
           if (realTracker.type == "timer") {
             value = 0;
