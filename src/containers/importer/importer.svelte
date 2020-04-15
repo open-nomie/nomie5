@@ -486,7 +486,9 @@
     <div class="empty-notice" style="opacity:1; max-height:80%">
       <div class="text-center d-flex flex-column justify-content-center">
         <p class="text-sm text-faded-3 mb-4">
-          Import backups (not CSVs) from Nomie 1, Nomie 2 and Nomie 3.
+          Import backups (not CSVs)
+          <br />
+          from Nomie 1, 2, 3 and 4!
         </p>
         <button
           class="btn btn-block btn-primary"
