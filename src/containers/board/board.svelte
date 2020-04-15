@@ -517,8 +517,7 @@
        **/
       if (
         boardPayload.boards.map(b => b.id).indexOf(boardPayload.active) == -1 &&
-        boardPayload.active !== "all" &&
-        boardPayload.active !== "_timers"
+        boardPayload.active !== "all"
       ) {
         setTimeout(() => {
           BoardStore.setActive("all");
@@ -645,7 +644,7 @@
       <div class="container p-0 n-row h-100">
         {#if $TrackerStore.timers.length}
           <button
-            class="btn tap-icon pl-2 pr-1"
+            class="btn tap-icon pl-3 pr-1"
             on:click={TrackerStore.toggleTimers}>
             <NIcon name="time" size={22} className="fill-red-pulse" />
           </button>
@@ -685,7 +684,7 @@
         <div slot="left">
           {#if $TrackerStore.timers.length}
             <button
-              class="btn tap-icon px-2"
+              class="btn tap-icon pl-3"
               on:click={TrackerStore.toggleTimers}>
               <NIcon name="time" size={22} className="fill-red-pulse" />
             </button>
