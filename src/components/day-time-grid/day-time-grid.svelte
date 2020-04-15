@@ -144,6 +144,9 @@
       font-weight: bold;
       text-transform: uppercase;
     }
+    .hour {
+      color: var(--color-inverse);
+    }
     .day {
       display: flex;
       flex-direction: row;
