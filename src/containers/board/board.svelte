@@ -54,7 +54,7 @@
   import { LedgerStore } from "../../store/ledger";
   import { UserStore } from "../../store/user";
   import { BoardStore } from "../../store/boards";
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
   import { Interact } from "../../store/interact";
   import { Lang } from "../../store/lang";
   import { TrackerLibrary } from "../../store/tracker-library";
@@ -103,7 +103,7 @@
   // Check if it's ready
   const checkIfReady = requester => {
     if (isReady.done == false) {
-      if (isReady.boards && $TrackerStore && isReady.ledger) {
+      if (isReady.boards && $TrackerStore.trackers && isReady.ledger) {
         isReady.done = true;
         setTimeout(() => {
           methods.setBoardTrackers();
@@ -166,7 +166,7 @@
         let allBoard = $BoardStore.boards.find(b => b.id == "all");
         let boardSort = allBoard ? allBoard.trackers : [];
         // // Loop over Tracker store - sorting by boardSort
-        boardTrackers = Object.keys($TrackerStore)
+        boardTrackers = Object.keys($TrackerStore.trackers)
           .sort((a, b) => {
             if (boardSort.indexOf(a) > boardSort.indexOf(b)) {
               return 1;
@@ -177,16 +177,17 @@
             }
           })
           .map(tag => {
-            return $TrackerStore[tag] || new Tracker({ tag: tag });
+            return $TrackerStore.trackers[tag] || new Tracker({ tag: tag });
           });
+        console.log("All Board should be here", boardTrackers);
       }
       if ($BoardStore.active == "_timers") {
-        boardTrackers = Object.keys($TrackerStore)
+        boardTrackers = Object.keys($TrackerStore.trackers)
           .filter(tag => {
-            return $TrackerStore[tag].started;
+            return $TrackerStore.trackers[tag].started;
           })
           .map(tag => {
-            return $TrackerStore[tag] || new Tracker({ tag: tag });
+            return $TrackerStore.trackers[tag] || new Tracker({ tag: tag });
           });
       } else {
         // Get Board Trackers from active Board
@@ -194,7 +195,7 @@
         // Get trackers from activeBoard
         boardTrackers = (($BoardStore.activeBoard || {}).trackers || []).map(
           tag => {
-            return $TrackerStore[tag] || new Tracker({ tag: tag });
+            return $TrackerStore.trackers[tag] || new Tracker({ tag: tag });
           }
         );
       }
@@ -203,9 +204,9 @@
     // When user starts searching
     searchKeypress() {
       // Find trackers matching query
-      foundTrackers = Object.keys($TrackerStore)
+      foundTrackers = Object.keys($TrackerStore.trackers)
         .map(tag => {
-          return $TrackerStore[tag];
+          return $TrackerStore.trackers[tag];
         })
         .filter(tracker => {
           // Search the tag and the label
@@ -282,7 +283,7 @@
       let allBoard = $BoardStore.boards.find(b => b.id == "all") || {
         id: "all",
         label: "All",
-        trackers: Object.keys($TrackerStore || {})
+        trackers: Object.keys($TrackerStore.trackers || {})
       };
       let b = boards.filter(b => b.id !== "all");
       console.log("All board Inejcted", allBoard);
@@ -641,9 +642,13 @@
 <!-- Start App Layout -->
 <AppLayout title={appTitle}>
   <div slot="header">
+    {#if TrackerStore.state.runningTimers().length}
+      <div class="timer-bar clickable" on:click={TrackerStore.toggleTimers} />
+      <div class="pt-1" />
+    {/if}
     {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
       <div class="container p-0 n-row h-100">
-        {#if TrackerStore.getAsArray().length > 13}
+        {#if Object.keys($TrackerStore.trackers).length > 13}
           <button class="btn tap-icon px-2" on:click={methods.toggleSearch}>
             <NIcon
               name="search"
@@ -716,6 +721,28 @@
       {:else}
         <main class="n-board h-100">
 
+          {#if $TrackerStore.showTimers && TrackerStore.state.runningTimers().length}
+            <div class="trackers n-grid framed mt-2" style="min-height:auto">
+              {#each TrackerStore.state.runningTimers() as tracker}
+                <NTrackerButton
+                  {tracker}
+                  value={methods.getTrackerValue(tracker)}
+                  hoursUsed={methods.getHoursUsed(tracker)}
+                  positivity={methods.getPositivity(tracker)}
+                  on:click={() => {
+                    methods.trackerTapped(tracker);
+                  }}
+                  disabled={data.savingTrackers.indexOf(tracker.tag) > -1}
+                  className={`${data.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${data.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
+                  on:longpress={() => {
+                    methods.showTrackerOptions(tracker);
+                  }} />
+              {/each}
+              <button class="btn-close" on:click={TrackerStore.hideTimers}>
+                <NIcon name="close" className="fill-inverse" />
+              </button>
+            </div>
+          {/if}
           <!-- Loop over trackers -->
           <div class="trackers n-grid">
 

@@ -6,7 +6,7 @@
   import NIcon from "../icon/icon.svelte";
   import Elephant from "../elephant.svelte";
 
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
 
   export let boards = [];
   export let active = undefined;
@@ -21,30 +21,14 @@
 
   // When board size changes
   $: if (boards.length && active) {
-    console.log("Boards active changed", active);
     boards.forEach((b, index) => {
       if (b.id == active && b.id !== "all" && b.id !== "_timers") {
-        console.log("Setting activeindex", index);
         state.activeIndex = index; // all
       }
     });
   }
 
-  $: if ($TrackerStore) {
-    toggleTimerBoard();
-  }
-
-  function toggleTimerBoard() {
-    let timers = Object.keys($TrackerStore).filter(tag => {
-      let tracker = $TrackerStore[tag];
-      return tracker.started;
-    });
-    state.hasTimers = timers.length ? true : false;
-  }
-
-  onMount(() => {
-    toggleTimerBoard();
-  });
+  onMount(() => {});
 
   const methods = {
     asArray() {
@@ -60,41 +44,8 @@
       display: none;
     }
   }
-  @keyframes pulse {
-    0% {
-      background-color: var(--color-red);
-      opacity: 0.55;
-    }
-    50% {
-      background-color: var(--color-red);
-      opacity: 1;
-    }
-    100% {
-      background-color: var(--color-red);
-      opacity: 0.55;
-    }
-  }
-  .timer-bar {
-    position: fixed;
-    animation: pulse 1s infinite;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 6px;
-    font-size: 12px;
-    background-color: var(--color-red);
-    z-index: 2000;
-  }
 </style>
 
-{#if state.hasTimers}
-  <div
-    class="timer-bar clickable"
-    on:click={() => {
-      console.log('Show Timers');
-    }} />
-  <div class="pt-2" />
-{/if}
 <NHScroller activeIndex={state.activeIndex} className="n-board-tabs">
   {#each boards as board}
     <button
