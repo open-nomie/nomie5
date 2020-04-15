@@ -48,7 +48,7 @@ export default class TrackerInputer {
     // Create array of items to pass to promise step
     let items = Object.keys(trackerTags).map((tag) => {
       return {
-        tracker: $TrackerStore[tag] || new Tracker({ tag: tag }),
+        tracker: $TrackerStore.trackers[tag] || new Tracker({ tag: tag }),
         value: trackerTags[tag].value, // not being used
       };
     });
@@ -134,7 +134,7 @@ export default class TrackerInputer {
         // Create array of items to pass to promise step
 
         let items = tagAndValue.map((tv) => {
-          let realTracker = $TrackerStore[tv.tag];
+          let realTracker = $TrackerStore.trackers[tv.tag];
           let value = tv.value;
           if (realTracker.type == "timer") {
             value = 0;

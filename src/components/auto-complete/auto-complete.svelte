@@ -1,5 +1,5 @@
 <script>
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
   import { PeopleStore } from "../../store/people-store";
   import { ContextStore } from "../../store/context-store";
   import Dymoji from "../../components/dymoji/dymoji.svelte";
@@ -41,9 +41,9 @@
     // Search for Trackers
     try {
       if (type == "tracker") {
-        let tkrs = Object.keys($TrackerStore || {})
+        let tkrs = Object.keys($TrackerStore.trackers || {})
           .map(tag => {
-            return $TrackerStore[tag];
+            return $TrackerStore.trackers[tag];
           })
           .filter(trk => {
             return trk.tag.search(searchTag.replace("#", "")) > -1;

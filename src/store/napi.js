@@ -78,7 +78,7 @@ const nomieApiInit = () => {
         (log) => {
           log.end = new Date(log.date);
           let nLog = new NomieLog(log);
-          nLog.score = calculateScore(nLog.note, $TrackerStore);
+          nLog.score = calculateScore(nLog.note, $TrackerStore.trackers);
           return LedgerStore.saveLog(nLog);
         },
         (status) => {

@@ -37,7 +37,7 @@
 
   // Stores
   import { Interact } from "../store/interact";
-  import { TrackerStore } from "../store/trackers";
+  import { TrackerStore } from "../store/tracker-store";
   import { LedgerStore } from "../store/ledger";
   import { ActiveLogStore } from "../store/active-log";
   import { UserStore } from "../store/user";
@@ -158,9 +158,9 @@
       // Search for Trackers
       try {
         if (type == "tracker") {
-          let tkrs = Object.keys($TrackerStore || {})
+          let tkrs = Object.keys($TrackerStore.trackers || {})
             .map(tag => {
-              return $TrackerStore[tag];
+              return $TrackerStore.trackers[tag];
             })
             .filter(trk => {
               return trk.tag.search(searchTag.replace("#", "")) > -1;

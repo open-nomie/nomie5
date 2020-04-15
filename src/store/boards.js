@@ -11,7 +11,7 @@ import Storage from "../modules/storage/storage";
 
 // Stores
 import config from "../../config/global";
-import { TrackerStore } from "../store/trackers";
+import { TrackerStore } from "../store/tracker-store";
 
 // Utils
 import md5 from "md5";

@@ -13,7 +13,7 @@ import Storage from "../modules/storage/storage";
 import locate from "../modules/locate/locate";
 
 // Stores
-import { TrackerStore } from "./trackers";
+import { TrackerStore } from "./tracker-store";
 import { BoardStore } from "./boards";
 
 import config from "../../config/global";

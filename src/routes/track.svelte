@@ -12,7 +12,7 @@
 
   // Stores
   import { UserStore } from "../store/user";
-  import { TrackerStore } from "../store/trackers";
+  import { TrackerStore } from "../store/tracker-store";
 
   const data = {
     editMode: false,
@@ -26,7 +26,7 @@
   };
 
   TrackerStore.subscribe(t => {
-    if (Object.keys(t || {}).length) {
+    if (Object.keys(t.trackers || {}).length) {
       data.hasTrackers = true;
     } else {
       data.hasTrackers = false;

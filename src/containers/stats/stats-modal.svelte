@@ -44,7 +44,7 @@
   import { Interact } from "../../store/interact";
   import { UserStore } from "../../store/user";
   import { Lang } from "../../store/lang";
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
   import { PeopleStore } from "../../store/people-store";
 
   const timeSpans = {

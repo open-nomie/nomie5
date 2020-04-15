@@ -4868,6 +4868,30 @@ button:focus {
 .btn:focus, .btn.focus {
   box-shadow: inherit; }
 
+.btn-close {
+  position: absolute;
+  padding: 0px;
+  top: -10px;
+  left: -8px;
+  background-color: var(--color-solid);
+  box-shadow: var(--box-shadow-tight);
+  color: var(--color-inverse);
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
+  border-radius: 12px;
+  border: none;
+  display: flex;
+  appearance: none;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 0;
+  flex-shrink: 0; }
+  .btn-close svg {
+    width: 24px !important;
+    height: 24px !important; }
+
 .btn-badge {
   font-size: 0.8rem;
   padding: 3pt 6pt 3pt 6pt;
@@ -5604,6 +5628,14 @@ select {
   .animate.down.hidden {
     opacity: 0;
     transform: translateY(-200px); }
+
+@keyframes redPulse {
+  0% {
+    background-color: var(--color-red); }
+  50% {
+    background-color: #890000; }
+  100% {
+    background-color: var(--color-red); } }
 
 @keyframes keyframes1 {
   0% {
@@ -6343,6 +6375,17 @@ body.scrolling .n-tracker-button {
   align-items: flex-start;
   justify-content: space-evenly; }
 
+.n-grid.framed {
+  background-color: var(--color-solid-2);
+  width: 100%;
+  border-radius: 8pt;
+  padding: 8pt;
+  position: relative; }
+  .n-grid.framed .btn-close {
+    left: auto;
+    right: 10px;
+    top: 10px; }
+
 aside.n-panel {
   width: 20%;
   max-width: 320px !important;
@@ -6580,6 +6623,17 @@ TODO: Organize main into components or containers.
     display: none; }
   .input-model.type-value .tracker-input.slider {
     display: none; }
+
+.timer-bar {
+  position: fixed;
+  animation: redPulse 1s infinite;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  font-size: 12px;
+  background-color: var(--color-red);
+  z-index: 2000; }
 
 .text-underline {
   text-decoration: underline !important; }

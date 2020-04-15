@@ -13,18 +13,47 @@ import snakeCase from "../utils/snake-case/snake-case";
 import tick from "../utils/tick/tick";
 
 // Stores
-import { Interact } from "../store/interact";
-import { BoardStore } from "../store/boards";
-import { TrackerLibrary } from "../store/tracker-library";
-import { Lang } from "../store/lang";
+import { Interact } from "./interact";
+import { BoardStore } from "./boards";
+import { TrackerLibrary } from "./tracker-library";
+import { Lang } from "./lang";
 
 // Utils
 import Logger from "../utils/log/log";
 
 const console = new Logger("🌟 TrackerStore 🌟");
 
+class TrackerStoreState {
+  constructor() {
+    this.trackers = {};
+    this.showTimers = false;
+  }
+  tagExists(tag) {
+    return this.trackers.hasOwnProperty(tag.toLowerCase);
+  }
+  byTag(tag) {
+    if (this.tagExists(tag)) {
+      return this.trackers[tag];
+    } else {
+      return new Tracker({ tag });
+    }
+  }
+  asArray() {
+    return Object.keys(this.trackers).map((tag) => {
+      return this.trackers[tag];
+    });
+  }
+  runningTimers() {
+    return this.asArray().filter((tracker) => {
+      return tracker.started;
+    });
+  }
+}
+
+const trackerStoreState = new TrackerStoreState();
+
 const trackerStoreInit = () => {
-  const { update, subscribe, set, get } = writable({});
+  const { update, subscribe, set, get } = writable(trackerStoreState);
   const methods = {
     /**
      * Initialization
@@ -35,11 +64,11 @@ const trackerStoreInit = () => {
     async initialize(UserStore) {
       // Create standalone function to update the tracker data
       let updateTrackers = (trackers) => {
-        update((t) => {
+        update((state) => {
           // Clean the trackers
-          let cleanedTrackers = methods.scrub(trackers);
+          state.trackers = methods.scrub(trackers);
           // Push up the cleaned tracker
-          return cleanedTrackers;
+          return state;
         });
       };
       // Create a listener for if the data change remotely (pouchdb)
@@ -48,6 +77,7 @@ const trackerStoreInit = () => {
       };
       // Get Trackers from Storage - pass Updated function if it updates later on.
       let trackers = await Storage.get(`${config.data_root}/trackers.json`, onTrackersUpdated);
+      console.log("Trackers", trackers);
       // If don't have trackers - show the selector
       if (!trackers) {
         /// It's their first time
@@ -59,10 +89,28 @@ const trackerStoreInit = () => {
         updateTrackers(trackers);
       }
     },
+    toggleTimers() {
+      update((state) => {
+        state.showTimers = !state.showTimers;
+        return state;
+      });
+    },
+    showTimers() {
+      update((state) => {
+        state.showTimers = true;
+        return state;
+      });
+    },
+    hideTimers() {
+      update((state) => {
+        state.showTimers = false;
+        return state;
+      });
+    },
     startTimer(tracker) {
       update((state) => {
-        if (state[tracker.tag]) {
-          state[tracker.tag].started = new Date().getTime();
+        if (state.trackers[tracker.tag]) {
+          state.trackers[tracker.tag].started = new Date().getTime();
         }
         return state;
       });
@@ -70,8 +118,8 @@ const trackerStoreInit = () => {
     },
     stopTimer(tracker) {
       update((state) => {
-        if (state[tracker.tag]) {
-          state[tracker.tag].started = null;
+        if (state.trackers[tracker.tag]) {
+          state.trackers[tracker.tag].started = null;
         }
         return state;
       });
@@ -80,7 +128,7 @@ const trackerStoreInit = () => {
     getAll() {
       let data = {};
       update((state) => {
-        data = state;
+        data = state.trackers;
         return state;
       });
       return data || {};
@@ -201,7 +249,7 @@ const trackerStoreInit = () => {
     },
     put() {
       let data = methods.data();
-      return Storage.put(`${config.data_root}/trackers.json`, data);
+      return Storage.put(`${config.data_root}/trackers.json`, data.trackers);
     },
     /**
      * Save The Tracker Store
@@ -211,27 +259,22 @@ const trackerStoreInit = () => {
      */
     save(trackers) {
       if (trackers) {
-        if (Object.keys(trackers || {}).length == 0) {
-          if (confirm("You're about to save 0 trackers.. Should I continue? this might be a bug")) {
-            return Storage.put(`${config.data_root}/trackers.json`, trackers);
-          }
-        } else {
-          let merger;
-          update((b) => {
-            merger = { ...b, ...trackers };
-            Object.keys(merger).forEach((tag) => {
-              merger[tag] = new Tracker(merger[tag]);
-            });
-            return merger;
+        let mergedTrackers;
+        update((state) => {
+          mergedTrackers = { ...state.trackers, ...trackers };
+          Object.keys(mergedTrackers).forEach((tag) => {
+            mergedTrackers[tag] = new Tracker(mergedTrackers[tag]);
           });
-          return Storage.put(`${config.data_root}/trackers.json`, merger);
-        }
+          state.trackers = mergedTrackers;
+          return state;
+        });
+        return Storage.put(`${config.data_root}/trackers.json`, mergedTrackers);
       } else {
         return new Promise((resolve, reject) => {
-          update((b) => {
+          update((state) => {
             // Save
-            methods.save(b).then(resolve).catch(reject);
-            return b;
+            methods.save(state.trackers).then(resolve).catch(reject);
+            return state;
           });
         });
       }
@@ -272,11 +315,11 @@ const trackerStoreInit = () => {
     },
     deleteTracker(tracker) {
       let response;
-      update((t) => {
-        t = t || {};
-        delete t[tracker.tag];
-        response = methods.save(t);
-        return t;
+      update((state) => {
+        state.trackers = state.trackers || {};
+        delete state[tracker.tag];
+        response = methods.save(state.trackers);
+        return state;
       });
       return response;
     },
@@ -284,11 +327,10 @@ const trackerStoreInit = () => {
       let response;
       let board = BoardStore.data();
       let trackers;
-      update((t) => {
-        t = t || {};
-        trackers = t;
-        t[tracker.tag] = tracker;
-        return t;
+      update((state) => {
+        trackers = state.trackers;
+        state.trackers[tracker.tag] = tracker;
+        return state;
       });
       response = await methods.save(trackers);
 
@@ -299,6 +341,7 @@ const trackerStoreInit = () => {
     },
   };
   return {
+    state: trackerStoreState,
     update,
     subscribe,
     set,

@@ -28,7 +28,7 @@
   //store
   import { BoardStore } from "../store/boards";
   import { UserStore } from "../store/user";
-  import { TrackerStore } from "../store/trackers";
+  import { TrackerStore } from "../store/tracker-store";
   import { Interact } from "../store/interact";
   import { Lang } from "../store/lang";
 
@@ -70,7 +70,7 @@
     // Set up the all board
     data.board = BoardStore.boardById("all");
     // Set trackers to ALL trackers, sorted by the ALL board tracker list.
-    trackers = Object.keys($TrackerStore)
+    trackers = Object.keys($TrackerStore.trackers)
       .sort((a, b) => {
         if (data.board.trackers.indexOf(a) > data.board.trackers.indexOf(b)) {
           return 1;
@@ -83,7 +83,7 @@
         }
       })
       .map(tag => {
-        return $TrackerStore[tag];
+        return $TrackerStore.trackers[tag];
       });
   }
 
@@ -176,7 +176,7 @@
     boardUnsub = BoardStore.subscribe(b => {
       if (b.activeBoard) {
         trackers = b.activeBoard.trackers.map(tag => {
-          return $TrackerStore[tag] || new Tracker({ tag: tag });
+          return $TrackerStore.trackers[tag] || new Tracker({ tag: tag });
         });
       } else {
         // navigate("/");

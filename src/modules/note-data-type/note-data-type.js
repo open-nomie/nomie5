@@ -1,7 +1,7 @@
 import regex from "../../utils/regex";
 import Tracker from "../tracker/tracker";
 
-import { TrackerStore } from "../../store/trackers";
+import { TrackerStore } from "../../store/tracker-store";
 
 export function generate(str, type) {
   switch (type) {

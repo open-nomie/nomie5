@@ -37,6 +37,18 @@
   }
 }
 
+@keyframes redPulse {
+  0% {
+    background-color: var(--color-red);
+  }
+  50% {
+    background-color: rgb(137, 0, 0);
+  }
+  100% {
+    background-color: var(--color-red);
+  }
+}
+
 @keyframes keyframes1 {
   0% {
     transform: rotate(-1.2deg);

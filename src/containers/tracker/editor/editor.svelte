@@ -25,7 +25,7 @@
   import config from "../../../../config/global";
   import { UserStore } from "../../../store/user";
   import { Interact } from "../../../store/interact";
-  import { TrackerStore } from "../../../store/trackers";
+  import { TrackerStore } from "../../../store/tracker-store";
   import { Lang } from "../../../store/lang";
 
   const dispatch = createEventDispatcher();

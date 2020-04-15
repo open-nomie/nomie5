@@ -5,7 +5,7 @@
   import NText from "../../components/text/text.svelte";
   import NIcon from "../../components/icon/icon.svelte";
   // Stores
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
   import { Lang } from "../../store/lang";
   import { TrackerLibrary } from "../../store/tracker-library";
   import { Interact } from "../../store/interact";
@@ -93,11 +93,6 @@
               Interact.toast(`${tracker.label} added`);
             } else {
               TrackerStore.deleteTracker(tracker);
-              /**
-               * Svelte doesn't trigger render after deleting object property,
-               * so we must reassign `installed` to itself to update the DOM.
-               * See: https://github.com/sveltejs/svelte/issues/3211
-               */
               delete installed[tracker.tag];
               installed = installed;
               Interact.toast(`${tracker.label} removed`);

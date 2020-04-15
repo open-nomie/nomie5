@@ -14,7 +14,7 @@
   // containers
   import NPage from "../containers/layout/page.svelte";
   // config
-  import { TrackerStore } from "../store/trackers";
+  import { TrackerStore } from "../store/tracker-store";
   import { Interact } from "../store/interact";
   import { Lang } from "../store/lang";
   import dayjs from "dayjs";
@@ -119,7 +119,7 @@
       <div class="gap" />
       <NItem title="Trackers" on:click={methods.selectTrackers}>
         <div slot="right">
-          {#if state.trackers.length == Object.keys($TrackerStore).length}
+          {#if state.trackers.length == Object.keys($TrackerStore.trackers).length}
             <div class="text-primary">All Trackers</div>
           {:else}
             {#each state.trackers as tracker}{tracker.emoji}{/each}

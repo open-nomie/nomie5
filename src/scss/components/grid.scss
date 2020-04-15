@@ -10,3 +10,16 @@
   align-items: flex-start;
   justify-content: space-evenly;
 }
+
+.n-grid.framed {
+  background-color: var(--color-solid-2);
+  width: 100%;
+  border-radius: 8pt;
+  padding: 8pt;
+  position: relative;
+  .btn-close {
+    left: auto;
+    right: 10px;
+    top: 10px;
+  }
+}

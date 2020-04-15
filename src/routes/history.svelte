@@ -36,7 +36,7 @@
   // Stores
   import { UserStore } from "../store/user";
   import { Interact } from "../store/interact";
-  import { TrackerStore } from "../store/trackers";
+  import { TrackerStore } from "../store/tracker-store";
   import { LedgerStore } from "../store/ledger";
   import { Lang } from "../store/lang";
 
