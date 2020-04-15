@@ -5,6 +5,7 @@
   // Utils
   import Logger from "../../utils/log/log";
   import math from "../../utils/math/math";
+  import { parse as termParser } from "../../modules/note-data-type/note-data-type";
 
   import { UserStore } from "../../store/user";
 
@@ -13,6 +14,7 @@
   export let color = undefined;
   export let style = "";
   export let className = "";
+  export let term = undefined;
   // export let flex = true;
 
   let _el;
@@ -65,17 +67,23 @@
   let maxValue = 0;
 
   $: if (rows) {
+    let parsedTerm = termParser(term);
+
     days = emptyGrid();
     rows.forEach(row => {
       let date = new Date(row.end);
       let day = date.getDay();
       let hour = date.getHours();
-
-      // TODO look at making start time populate with time differences
-      // let startTime = dayjs(row.start);
-      // let endTime = dayjs(row.end);
-
-      days[day][hour] = days[day][hour] + 1;
+      let value;
+      // If a tracker, use the value to highlight the date/time
+      // if it's not a tracker, it will just be a value of 1 so the overall
+      // useage of time will be displayed.
+      if (parsedTerm.type == "tracker") {
+        value = row.getTrackerValue(parsedTerm.tracker.tag);
+      } else {
+        value = 1;
+      }
+      days[day][hour] = days[day][hour] + value;
     });
     maxValue = getGridMax();
     // Convert to percentage

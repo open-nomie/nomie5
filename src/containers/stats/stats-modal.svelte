@@ -912,6 +912,7 @@
         <!-- end over view -->
       {:else if state.dataView == 'time'}
         <NTimeGrid
+          term={state.currentTerm}
           color={state.currentColor}
           rows={state.stats.rows}
           className="flex-grow flex-shrink"

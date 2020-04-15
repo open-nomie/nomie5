@@ -133,6 +133,12 @@ export default class Record {
     });
   }
 
+  getTrackerValue(tag) {
+    let match = this.trackersArray().find((t) => t.tag == tag);
+    let value = match ? match.value : 1;
+    return value;
+  }
+
   getMeta() {
     return {
       people: this.getPeople(),
