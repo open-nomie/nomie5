@@ -5306,7 +5306,7 @@ body.theme-dark {
   --box-shadow-float: 0px 2px 2px rgba(255, 255, 255, 0.06), 0px 6px 10px -1px rgba(0, 0, 0, 0.1);
   --box-shadow-neu: 4px 4px 8px rgba(255, 255, 255, 0.1), -4px -4px 8px rgba(0, 0, 0, 0.3);
   --box-shadow-neu-tight: 2px 2px 4px rgba(255, 255, 255, 0.1), -2px -2px 4px rgba(0, 0, 0, 0.3);
-  --modal-border: solid 1px rgba(255, 255, 255, 0.12);
+  --modal-border: solid 1px rgba(255, 255, 255, 0.08);
   --input-background: #111;
   --input-focus-background: #000;
   --color-translucent: rgba(0, 0, 0, 0.79); }
