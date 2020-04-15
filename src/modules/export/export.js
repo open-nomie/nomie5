@@ -55,8 +55,8 @@ export default class Export {
       // Get Events
       this.fireChange("Events...");
       let events = await this.getEvents();
-      this.backup.events = events;
-      this.fireChange(`${events.length} events loaded`);
+      this.backup.events = events || [];
+      this.fireChange(`${(events || []).length} events loaded`);
       // Setup a Document to Download
       let downloadButton = document.createElement("a");
       downloadButton.setAttribute("href", URL.createObjectURL(new Blob([JSON.stringify(this.backup)], { type: "text/json" })));
