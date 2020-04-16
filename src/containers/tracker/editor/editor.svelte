@@ -334,10 +334,9 @@
         <NItem className="item-divider bg-solid compact" />
         <NItem>
           <NInput
-            pattern="[0-9]*"
-            inputmode="numeric"
-            label={Lang.t('tracker.include', 'Include additional trackers or people')}
-            placeholder={Lang.t('tracker.include-placeholder', 'Include additional trackers or people')}
+            type="text"
+            label={Lang.t('tracker.include', 'Additional trackers or people to include')}
+            placeholder={Lang.t('tracker.include-placeholder', 'Additional trackers or people to include')}
             bind:value={data.tracker.include} />
           <AutoComplete
             input={data.tracker.include}
