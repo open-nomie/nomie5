@@ -30,7 +30,7 @@ export default class TrackerInputer {
 
   async getTrackerInputAsString(tracker, value) {
     const response = await Interact.trackerInput(tracker, { value, allowSave: false });
-    if (response.tracker) {
+    if (response && response.tracker) {
       return `#${response.tracker.tag}(${response.value}) `;
     } else {
       return ``;
