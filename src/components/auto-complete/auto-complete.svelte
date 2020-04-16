@@ -18,7 +18,9 @@
     results: []
   };
 
-  $: if (input) {
+  let lastInput;
+  $: if (input && lastInput != input) {
+    lastInput = input;
     onInput(input);
   }
 
