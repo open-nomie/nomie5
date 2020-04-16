@@ -46,7 +46,7 @@
   }
 </style>
 
-<NHScroller activeIndex={state.activeIndex} className="n-board-tabs pl-1">
+<NHScroller activeIndex={state.activeIndex} className="n-board-tabs">
   {#each boards as board}
     <button
       class="tab board-{board.id}

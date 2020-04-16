@@ -15,7 +15,8 @@
   import { navigate } from "svelte-routing";
   import { onMount, onDestroy } from "svelte";
   import dayjs from "dayjs";
-  import tick from "../../utils/tick/tick";
+
+  import { fade, fly } from "svelte/transition";
 
   // Components
   import NTrackerButton from "./tracker-button.svelte";
@@ -46,7 +47,7 @@
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import extractor from "../../utils/extract/extract-trackers";
   import promiseStep from "../../utils/promise-step/promise-step";
-
+  import tick from "../../utils/tick/tick";
   import TrackerInputer from "../../modules/tracker/tracker-inputer";
 
   //Stores
@@ -646,6 +647,7 @@
       <div class="container p-0 n-row h-100">
         {#if $TrackerStore.timers.length}
           <button
+            transition:fade
             class="btn tap-icon pl-3 pr-1"
             on:click={TrackerStore.toggleTimers}>
             <NIcon name="time" size={22} className="fill-red-pulse" />
@@ -653,7 +655,7 @@
         {/if}
         {#if Object.keys($TrackerStore.trackers).length > 13}
           <button
-            class="btn tap-icon pr-2 pl-2"
+            class="btn tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}"
             on:click={methods.toggleSearch}>
             <NIcon
               name="search"
@@ -686,9 +688,10 @@
         <div slot="left">
           {#if $TrackerStore.timers.length}
             <button
-              class="btn tap-icon pl-3"
+              transition:fade
+              class="btn tap-icon pl-2"
               on:click={TrackerStore.toggleTimers}>
-              <NIcon name="time" size={22} className="fill-red-pulse" />
+              <NIcon name="time" size={20} className="fill-red-pulse" />
             </button>
           {/if}
         </div>
@@ -704,25 +707,27 @@
       </NToolbarGrid>
     {/if}
     {#if state.searching}
-      <NSearchBar
-        bind:this={_elSearchBar}
-        className="mt-2"
-        autocomplete
-        on:clear={() => {
-          state.searchTerm = null;
-        }}
-        on:change={value => {
-          state.searchTerm = value.detail;
-          methods.searchKeypress();
-        }}
-        placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}...">
-        <button
-          slot="right-inside"
-          class="btn btn-clear"
-          on:click={methods.toggleSearch}>
-          <NIcon name="close" className="fill-faded-2" />
-        </button>
-      </NSearchBar>
+      <div transition:fly={{ y: -20, duration: 200 }}>
+        <NSearchBar
+          bind:this={_elSearchBar}
+          className="mt-2"
+          autocomplete
+          on:clear={() => {
+            state.searchTerm = null;
+          }}
+          on:change={value => {
+            state.searchTerm = value.detail;
+            methods.searchKeypress();
+          }}
+          placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}...">
+          <button
+            slot="right-inside"
+            class="btn btn-clear"
+            on:click={methods.toggleSearch}>
+            <NIcon name="close" className="fill-faded-2" />
+          </button>
+        </NSearchBar>
+      </div>
     {/if}
   </div>
   <!-- end header-->
@@ -734,9 +739,11 @@
         </div>
       {:else}
         <main class="n-board h-100">
-
           {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
-            <div class="trackers n-grid framed mt-2" style="min-height:auto">
+            <div
+              class="trackers n-grid framed mt-2"
+              style="min-height:auto"
+              transition:fly={{ y: -20, duration: 200 }}>
               {#each TrackerStore.state.runningTimers() as tracker}
                 <NTrackerButton
                   {tracker}
@@ -753,7 +760,7 @@
                   }} />
               {/each}
               <button class="btn-close" on:click={TrackerStore.hideTimers}>
-                <NIcon name="close" className="fill-inverse" />
+                <NIcon name="chevronUp" className="fill-inverse" />
               </button>
             </div>
           {/if}
