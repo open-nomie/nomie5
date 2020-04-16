@@ -443,7 +443,7 @@
         <!-- If no Logs found -->
         {#if logs.length === 0 && !showSearch}
           {#if !searchMode}
-            <div class="empty-notice h-50">
+            <div class="empty-notice" style="max-height:200px;">
               {Lang.t('history.no-records-found')}
             </div>
           {:else}
