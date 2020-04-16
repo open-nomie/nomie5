@@ -56,6 +56,7 @@ const ledgerInit = () => {
     count: 0, //
     saving: false, // are we saving?
     hash: null, // hash for svelte auto reloading
+    memories: [],
   };
 
   const methods = {
@@ -244,6 +245,7 @@ const ledgerInit = () => {
      */
     async getToday() {
       let todayKey = dayjs().format(config.book_time_format);
+
       if (base.books[todayKey]) {
         return methods.todayReady();
       } else {
@@ -681,6 +683,36 @@ const ledgerInit = () => {
       let logs = await methods.query({ start, end, search: `+${context}` });
       return logs.sort((a, b) => {
         return a.end < b.end ? 1 : -1;
+      });
+    },
+    async getDay(date) {
+      return methods.query({
+        start: dayjs(date).startOf("day"),
+        end: dayjs(date).endOf("day"),
+      });
+    },
+    async getMemories() {
+      const date = new Date();
+      let logs1 = methods.getDay(dayjs(date).subtract(1, "year"));
+      let logs2 = methods.getDay(dayjs(date).subtract(2, "year"));
+      let logs3 = methods.getDay(dayjs(date).subtract(3, "year"));
+      let years = await Promise.all([logs1, logs2, logs3]);
+      let memories = [];
+      years.forEach((day) => {
+        day = day
+          .filter((log) => {
+            return log.getScrubbedNote().length;
+          })
+          .sort((a, b) => {
+            return a.note.length < b.note.length ? 1 : -1;
+          });
+
+        if (day.length) {
+          memories.push(day[0]);
+        }
+      });
+      update((state) => {
+        state.memories = memories;
       });
     },
 

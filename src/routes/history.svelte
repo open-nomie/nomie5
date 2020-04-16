@@ -89,9 +89,6 @@
     searchMode = true;
   }
 
-  $: if ($LedgerStore.logs) {
-  }
-
   let logs = undefined; // holder of the logs
   let searchLogs = undefined; // hodler of searched logs
   let loading = true;
@@ -210,6 +207,7 @@
         end: state.date.endOf("day").toDate(),
         fresh: fresh
       });
+
       loading = false;
     },
     clearLocation() {
@@ -333,6 +331,7 @@
     }
     window.scrollTo(0, 0);
     methods.getLogs();
+    // LedgerStore.getMemories();
   });
 
   /**
