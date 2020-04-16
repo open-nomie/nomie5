@@ -19,7 +19,6 @@
   };
 
   $: if (input) {
-    console.log("input change", input);
     onInput(input);
   }
 

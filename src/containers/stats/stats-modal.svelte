@@ -277,12 +277,6 @@
     }
   }
 
-  async function getLogsForSelected() {
-    console.log();
-
-    return [];
-  }
-
   async function compareContext() {
     let contexts = await Interact.select("context", true);
     if (contexts.length) {

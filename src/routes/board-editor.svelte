@@ -88,7 +88,6 @@
     trackers = data.board.trackers
       .map(tag => $TrackerStore.trackers[tag])
       .filter(t => t);
-    console.log("All Board Trackers", data.board);
   }
 
   let titleChange = false;
