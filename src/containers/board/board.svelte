@@ -353,12 +353,16 @@
           .filter(item => item)
           .forEach(item => {
             ActiveLogStore.addTag(item.tracker.tag, item.value);
+            let includeStr = $TrackerStore.trackers[tag].getIncluded(
+              item.value
+            );
+            ActiveLogStore.addElement(includeStr);
           });
       } else if (payload) {
         ActiveLogStore.addTag(payload.tracker.tag, payload.value);
+        let includeStr = tracker.getIncluded(payload.value);
+        ActiveLogStore.addElement(includeStr);
       }
-      let includeStr = tracker.getIncluded(payload.value);
-      ActiveLogStore.addElement(includeStr);
       // One Tap Trackers
       // TODO move the adding to the activeLogStore here.
       if (tracker.one_tap) {

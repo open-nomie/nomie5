@@ -5203,6 +5203,7 @@ body {
   --box-shadow-float: 0 4px 8px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.08), 0 0 2px rgba(0, 0, 0, 0.14);
   --box-shadow-neu: 4px 0px 8px rgba(0, 0, 0, 0.2), -4px 0px 8px rgba(255, 255, 255, 0.9);
   --box-shadow-neu-tight: 2px 2px 4px rgba(0, 0, 0, 0.2), -2px -2px 4px rgba(255, 255, 255, 0.9);
+  --box-shadow-inset-huge: inset 0px 0px 70px rgba(0, 0, 0, 0.2);
   --header-background: #fff;
   --modal-border: solid 1px rgba(0, 0, 0, 0.12);
   --header-fade: linear-gradient(
@@ -5239,6 +5240,9 @@ body {
 
 .box-shadow {
   box-shadow: var(--box-shadow); }
+
+.box-shadow-inset-huge {
+  box-shadow: var(--box-shadow-inset-huge); }
 
 body.hidden {
   background-color: var(--color-primary);
@@ -5306,6 +5310,7 @@ body.theme-dark {
   --box-shadow-float: 0px 2px 2px rgba(255, 255, 255, 0.06), 0px 6px 10px -1px rgba(0, 0, 0, 0.1);
   --box-shadow-neu: 4px 4px 8px rgba(255, 255, 255, 0.1), -4px -4px 8px rgba(0, 0, 0, 0.3);
   --box-shadow-neu-tight: 2px 2px 4px rgba(255, 255, 255, 0.1), -2px -2px 4px rgba(0, 0, 0, 0.3);
+  --box-shadow-inset-huge: inset 0px 0px 60px rgba(0, 0, 0, 0.6);
   --modal-border: solid 1px rgba(255, 255, 255, 0.08);
   --input-background: #111;
   --input-focus-background: #000;
