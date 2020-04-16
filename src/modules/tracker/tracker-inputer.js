@@ -95,7 +95,7 @@ export default class TrackerInputer {
       if (this.tracker.type === "tick") {
         // Just add the tag to the note
         ActiveLogStore.addTag(this.tracker.tag);
-        let includeStr = tracker.getIncluded(1);
+        let includeStr = this.tracker.getIncluded(1);
         ActiveLogStore.addElement(includeStr);
         // If it's one_tap - then save it
         finished();

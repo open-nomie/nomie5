@@ -713,6 +713,7 @@ const ledgerInit = () => {
       });
       update((state) => {
         state.memories = memories;
+        return state;
       });
     },
 
