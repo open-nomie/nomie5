@@ -100,8 +100,22 @@ export default class Record {
 
   // Get note length without tags
   noteTextLength() {
-    let scrubbed = this.note.replace(new RegExp(regexs.tag, "gi"), "").trim();
-    return scrubbed.length;
+    return this.getScrubbedNote().length;
+  }
+
+  getScrubbedNote() {
+    let results = this.note
+      .split(" ")
+      .filter((word) => {
+        if (word.length > 1 && word.substr(0, 1) == "#") {
+          return false;
+        } else {
+          return true;
+        }
+      })
+      .join(" ");
+    
+    return results;
   }
 
   // Get the score
