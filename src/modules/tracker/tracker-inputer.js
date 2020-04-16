@@ -1,7 +1,7 @@
 import { ActiveLogStore } from "../../store/active-log";
 import { LedgerStore } from "../../store/ledger";
 import { Interact } from "../../store/interact";
-import extractor from "../../utils/extract-trackers/extract-trackers";
+import extractor from "../../utils/extract/extract-trackers";
 import Tracker from "./tracker";
 import PromiseStep from "../../utils/promise-step/promise-step";
 import NomieLog from "../../modules/nomie-log/nomie-log";
@@ -29,7 +29,6 @@ export default class TrackerInputer {
   }
 
   async getTrackerInputAsString(tracker, value) {
-    console.log("getTrackerInputAsSTring", tracker);
     const response = await Interact.trackerInput(tracker, { value, allowSave: false });
     if (response.tracker) {
       return `#${response.tracker.tag}(${response.value}) `;
@@ -96,11 +95,9 @@ export default class TrackerInputer {
       if (this.tracker.type === "tick") {
         // Just add the tag to the note
         ActiveLogStore.addTag(this.tracker.tag);
+        let includeStr = tracker.getIncluded(1);
+        ActiveLogStore.addElement(includeStr);
         // If it's one_tap - then save it
-        if (this.tracker.one_tap === true) {
-          // Make the note
-          //   let note = $ActiveLogStore.note + "";
-        }
         finished();
         // If it's a note (combined trackers)
       } else if (this.tracker.type === "note") {

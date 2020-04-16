@@ -44,7 +44,7 @@
   import math from "../../utils/math/math";
   import Logger from "../../utils/log/log";
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
-  import extractor from "../../utils/extract-trackers/extract-trackers";
+  import extractor from "../../utils/extract/extract-trackers";
   import promiseStep from "../../utils/promise-step/promise-step";
 
   import TrackerInputer from "../../modules/tracker/tracker-inputer";
@@ -285,7 +285,7 @@
         trackers: Object.keys($TrackerStore.trackers || {})
       };
       let b = boards.filter(b => b.id !== "all");
-      console.log("All board Inejcted", allBoard);
+
       b.unshift(allBoard);
       return b;
     },
@@ -356,6 +356,8 @@
       } else if (payload) {
         ActiveLogStore.addTag(payload.tracker.tag, payload.value);
       }
+      let includeStr = tracker.getIncluded(payload.value);
+      ActiveLogStore.addElement(includeStr);
       // One Tap Trackers
       // TODO move the adding to the activeLogStore here.
       if (tracker.one_tap) {

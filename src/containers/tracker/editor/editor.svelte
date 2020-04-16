@@ -66,7 +66,6 @@
 
   async function duplicate() {
     let duplicated = await TrackerStore.duplicateTracker(tracker);
-    console.log("Duplicated", duplicated);
   }
 
   const methods = {
@@ -312,8 +311,8 @@
           <NInput
             pattern="[0-9]*"
             inputmode="numeric"
-            label="Default Tracker Value"
-            placeholder="Default Tracker Value"
+            label={Lang.t('tracker.default-tracker-value', 'Default Tracker Value')}
+            placeholder={Lang.t('tracker.default-tracker-value', 'Default Tracker Value')}
             bind:value={tracker.default}>
             <button
               class="btn btn-icon clickable mr-2"
@@ -326,6 +325,26 @@
           </NInput>
         </NItem>
         <NItem className="item-divider bg-solid compact" />
+        <NItem>
+          <NInput
+            pattern="[0-9]*"
+            inputmode="numeric"
+            label={Lang.t('tracker.include', 'Include additional trackers or people')}
+            placeholder={Lang.t('tracker.include-placeholder', 'Include additional trackers or people')}
+            bind:value={tracker.include} />
+          <AutoComplete
+            input={tracker.include}
+            scroller
+            on:select={async evt => {
+              tracker.include = evt.detail.note + '';
+            }} />
+        </NItem>
+        <NItem className="item-divider bg-transparent mb-4">
+          <div class="text-sm text-inverse-2">
+            Automatically include trackers, people or context when using this
+            tracker.
+          </div>
+        </NItem>
       {/if}
 
       <NItem on:click={duplicate}>

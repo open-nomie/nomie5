@@ -4,9 +4,9 @@
   import NTagBadge from "../tag-badge/tag-badge.svelte";
 
   //Utils
-  import extractTrackers from "../../utils/extract-trackers/extract-trackers";
-  import extractPeople from "../../utils/extract-trackers/extract-people";
-  import extractContext from "../../utils/extract-trackers/extract-context";
+  import extractTrackers from "../../utils/extract/extract-trackers";
+  import extractPeople from "../../utils/extract/extract-people";
+  import extractContext from "../../utils/extract/extract-context";
   import regexs from "../../utils/regex";
 
   // Modules

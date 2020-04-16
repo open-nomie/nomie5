@@ -1,11 +1,11 @@
 import nid from "../../modules/nid/nid";
 
 // Modules
-import extractTrackers from "../../utils/extract-trackers/extract-trackers"; // extract tracker function
+import extractTrackers from "../../utils/extract/extract-trackers"; // extract tracker function
 import _calculateScore from "../../utils/calculate-score/calculate-score"; // Score calculator
 import regexs from "../../utils/regex"; // Regex to find data points in the note
-import extractPeople from "../../utils/extract-trackers/extract-people";
-import extractContext from "../../utils/extract-trackers/extract-context";
+import extractPeople from "../../utils/extract/extract-people";
+import extractContext from "../../utils/extract/extract-context";
 
 /**
  * Nomie Log / Record
