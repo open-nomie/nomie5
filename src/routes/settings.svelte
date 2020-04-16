@@ -537,6 +537,18 @@ Note: Your data will not automatically move over. You'll first need to export it
             <NItem title={Lang.t('general.trackers', 'Tracker Count')}>
               <span slot="right">{TrackerStore.getAsArray().length}</span>
             </NItem>
+            <NItem title={Lang.t('general.first_log', 'First Log')}>
+              <div class="" slot="right">
+                {#await LedgerStore.getFirstDate()}
+                  Loading...
+                {:then date}
+                  <div class="text-sm">
+                    {date.format('MMMM YYYY')} ({date.fromNow()})
+                  </div>
+                {/await}
+                <!--  -->
+              </div>
+            </NItem>
             <NItem title={Lang.t('general.launch-count', 'Launch Count')}>
               <div class="n-row" slot="right">
                 <button
