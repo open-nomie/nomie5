@@ -353,9 +353,9 @@
           .filter(item => item)
           .forEach(item => {
             ActiveLogStore.addTag(item.tracker.tag, item.value);
-            let includeStr = $TrackerStore.trackers[tag].getIncluded(
-              item.value
-            );
+            let includeStr = $TrackerStore.trackers[
+              item.tracker.tag
+            ].getIncluded(item.value);
             ActiveLogStore.addElement(includeStr);
           });
       } else if (payload) {
