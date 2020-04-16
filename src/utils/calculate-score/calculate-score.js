@@ -1,4 +1,4 @@
-import ExtractTrackers from "../extract-trackers/extract-trackers";
+import ExtractTrackers from "../extract/extract-trackers";
 
 // Simple isTrue comparison function
 const isTrue = (condition, baseValue) => {
