@@ -175,12 +175,24 @@ const ledgerInit = () => {
      * the user has. Good for figuring out
      * first track
      */
-    async firstBook() {
-      const books = await methods.listBooks();
-      if (books.length) {
-        return books[0].replace(config.book_root + "/", "");
+    async getFirstDate(fresh = false) {
+      let defaultPayload = { date: null, lastChecked: null };
+      let bookDetails = Storage.local.get(`firstBook`) || defaultPayload;
+      let age = bookDetails.lastChecked ? Math.abs(dayjs(bookDetails.lastChecked).diff(dayjs(), "day")) : 100;
+      if (age > 2 || fresh) {
+        // Get list of books
+        const books = await methods.listBooks();
+        const firstBook = books[0].replace(config.book_root + "/", "");
+        // Create date from book name
+        let date = dayjs(firstBook, config.book_time_format);
+        // Store it locally so we don't have to look it up all the time.
+        Storage.local.put("firstBook", {
+          date: date.toDate().getTime(),
+          lastChecked: new Date().getTime(),
+        });
+        return date;
       } else {
-        return "Unknown";
+        return dayjs(bookDetails.date);
       }
     },
     /**

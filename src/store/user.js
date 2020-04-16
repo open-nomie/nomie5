@@ -17,6 +17,7 @@ import { TrackerStore } from "./tracker-store";
 import { BoardStore } from "./boards";
 
 import config from "../../config/global";
+import { LedgerStore } from "./ledger";
 
 // Consts
 const console = new Logger("🤠 userStore");
@@ -60,6 +61,9 @@ const userInit = () => {
       // Count launch
       state.launchCount++;
       Storage.local.put("root/launch_count", state.launchCount);
+
+      // Load up the first date found.
+      LedgerStore.getFirstDate();
 
       if (!Storage._storageType()) {
         // If no storage type selected
