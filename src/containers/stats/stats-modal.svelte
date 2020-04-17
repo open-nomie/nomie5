@@ -59,7 +59,7 @@
     compare: { id: "compare", label: "Compare" },
     map: { id: "map", label: "Map" },
     time: { id: "time", label: "Time" },
-    logs: { id: "logs", label: "Logs" }
+    logs: { id: "logs", label: "Logs", focused: true }
   };
 
   const types = {
@@ -112,17 +112,44 @@
   }
 
   function getTimeViewButtons() {
-    return Object.keys(timeSpans).map(optionId => {
-      let option = timeSpans[optionId];
-      return {
-        label: option.label,
-        active: state.timeSpan === optionId,
-        click: () => {
-          setTimeView(option);
-        }
-      };
-    });
+    return;
   }
+
+  $: timeViewButtons = Object.keys(timeSpans).map(optionId => {
+    let option = timeSpans[optionId];
+    return {
+      label: option.label,
+      active: state.timeSpan === optionId,
+      click: () => {
+        setTimeView(option);
+      }
+    };
+  });
+
+  $: logViewButtons = [
+    {
+      label: `Only ${state.currentTerm}`,
+      id: "focused",
+      active: dataViews.logs.focused,
+      click() {
+        dataViews.logs.focused = true;
+        if (state.selected) {
+          setSelected(state.selected);
+        }
+      }
+    },
+    {
+      label: `All Logs`,
+      id: "all",
+      active: !dataViews.logs.focused,
+      click() {
+        dataViews.logs.focused = false;
+        if (state.selected) {
+          setSelected(state.selected);
+        }
+      }
+    }
+  ];
 
   function getScore() {
     let scores = [];
@@ -572,9 +599,16 @@
       payload.end = dayjs(state.selected.point.date).endOf("hour");
     }
     let rows = await LedgerStore.query(payload);
-    state.selected.rows = rows;
 
-    return rows;
+    if (dataViews.logs.focused) {
+      state.selected.rows = rows.filter(row => {
+        return row.note.match(regex.escape(getQueryTerm()));
+      });
+    } else {
+      state.selected.rows = rows;
+    }
+
+    return state.selected.rows;
   }
 
   function getLogs() {
@@ -587,7 +621,6 @@
 
   async function main() {
     state.range = getDateRangeText();
-    state.timeOption = getTimeViewButtons();
     state.viewOption = getDataViewButtons();
     getStats();
   }
@@ -699,7 +732,7 @@
       </div>
     </NToolbarGrid>
     <div class="n-row pb-2 px-2">
-      <NButtonGroup size="sm" buttons={state.timeOption} />
+      <NButtonGroup size="sm" buttons={timeViewButtons} />
     </div>
 
     <NToolbarGrid>
@@ -740,20 +773,6 @@
           }}
           activeIndex={state.selected.index} />
       </div>
-    {/if}
-
-    {#if state.selected.rows && state.dataView == 'logs'}
-      <NToolbar className="text-center">
-        <div class="filler" />
-        <span class="text-sm text-inverse-2">
-          All Logs for {state.selected.point.date.format('MMM Do YYYY')}
-        </span>
-        <button class="btn btn-light btn-sm ml-2" on:click={clearSelected}>
-          <NIcon name="close" size="16" />
-          Close
-        </button>
-        <div class="filler" />
-      </NToolbar>
     {/if}
 
   </header>
@@ -912,6 +931,25 @@
           className="flex-grow flex-shrink"
           style="min-height:100%" />
       {:else if state.dataView == 'logs'}
+        {#if state.selected.rows}
+          <NToolbar className="text-center mt-2">
+            <div class="filler" />
+            <NButtonGroup buttons={logViewButtons} />
+            <div class="filler" />
+          </NToolbar>
+          <NToolbarGrid className="sm">
+            <div slot="main" class="text-inverse-3">
+              Focused on {state.selected.point.x}
+            </div>
+            <button
+              slot="right"
+              class="btn btn-clear tap-icon clickable"
+              on:click={clearSelected}>
+              <NIcon name="close" size="22" />
+            </button>
+          </NToolbarGrid>
+        {/if}
+
         <NLogList
           compact
           on:textClick={evt => {
