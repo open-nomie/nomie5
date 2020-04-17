@@ -13,6 +13,7 @@
 
 // Nomie log is the base Log item that is saved in a ledger
 import NomieLog from "../modules/nomie-log/nomie-log";
+import NoteDataType from "../modules/note-data-type/note-data-type";
 // Storage for generic access to local,blockstack,pouch
 import Storage from "../modules/storage/storage";
 // Hooks for firing off hooks
@@ -71,6 +72,9 @@ const ledgerInit = () => {
 
       // First filter on search if it exists
       if (filter.search) {
+        const searchType = NoteDataType.parse(filter.search);
+        console.log("Search Type", searchType);
+
         const tokens = tokenizer(filter.search.toLowerCase());
         // Filter Logs by tokens
         let filtered = logs.filter((log) => {

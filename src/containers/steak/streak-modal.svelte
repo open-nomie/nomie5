@@ -38,11 +38,9 @@
     state.date = state.date.subtract(1, "month");
   }
 
-  function getTracker() {
-    return $TrackerStore.trackers.hasOwnProperty($Interact.streak.show)
-      ? $TrackerStore.trackers[$Interact.streak.show]
-      : new Tracker({ tag: $Interact.streak.show });
-  }
+  $: tracker = $TrackerStore.trackers.hasOwnProperty($Interact.streak.show)
+    ? $TrackerStore.trackers[$Interact.streak.show]
+    : new Tracker({ tag: $Interact.streak.show });
 
   function getPercentage(rows) {
     let start = dayjs(state.date).startOf("month");
@@ -70,8 +68,14 @@
       start: state.date.startOf("month"),
       end: state.date.endOf("month")
     };
+    let type = NoteDataType.parse($Interact.streak.show);
+    console.log(
+      "$Interact.streak.show",
+      $Interact.streak.show,
+      NoteDataType.toSearchString($Interact.streak.show)
+    );
     let logs = await LedgerStore.query({
-      search: `${$Interact.streak.show}`,
+      search: NoteDataType.toSearchString($Interact.streak.show),
       start: payload.start,
       end: payload.end
     });
@@ -136,8 +140,8 @@
   <div class="p-3">
     <NCalendar
       bind:this={_elCalendar}
-      color={getTracker().color}
-      tracker={getTracker()}
+      color={tracker.color}
+      {tracker}
       showHeader={false}
       on:dayClick={event => {
         state.date = dayjs(event.detail);
