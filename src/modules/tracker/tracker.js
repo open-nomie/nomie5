@@ -2,6 +2,8 @@
 // import { Reminder } from '../services/reminders/reminders.module'
 // import CardModel from './card.class'
 import NomieUOM from "../../utils/nomie-uom/nomie-uom";
+import extract from "../../utils/extract/extract";
+
 import md5 from "md5";
 
 export default class TrackerConfig {
@@ -47,6 +49,9 @@ export default class TrackerConfig {
     // one tap
     this.one_tap = starter.one_tap === true ? true : false;
 
+    // include
+    this.include = starter.include || "";
+    // Primary NOte
     this.note = starter.note || null;
 
     this.hidden = starter.hidden === true ? true : false;
@@ -87,6 +92,12 @@ export default class TrackerConfig {
 
   getUID() {
     return md5(this.tag);
+  }
+
+  getIncluded(value) {
+    let includedStr = (this.include || "").replace(/\*/g, value);
+    let includedNote = extract.asNote(includedStr);
+    return includedNote;
   }
 
   // Make the tag look good if no label is provided

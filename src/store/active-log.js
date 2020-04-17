@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import NomieLog from "../modules/nomie-log/nomie-log";
-import ExtractTrackers from "../utils/extract-trackers/extract-trackers";
+import ExtractTrackers from "../utils/extract/extract-trackers";
 import Logger from "../utils/log/log";
 import Hooky from "../modules/hooks/hooks";
 import dayjs from "dayjs";

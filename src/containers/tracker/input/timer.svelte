@@ -19,7 +19,7 @@
   import Logger from "../../../utils/log/log";
 
   // Stores
-  import { TrackerStore } from "../../../store/trackers";
+  import { TrackerStore } from "../../../store/tracker-store";
 
   // Consts
   const dispatch = createEventDispatcher();

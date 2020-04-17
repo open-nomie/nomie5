@@ -1,4 +1,5 @@
 <script>
+  import NIcon from "../icon/icon.svelte";
   import { createEventDispatcher, onMount } from "svelte";
   const dispatch = createEventDispatcher();
 
@@ -78,6 +79,10 @@
       font-size: 0.65rem;
       opacity: 0.5;
       padding: 6px;
+    }
+
+    .select-arrow {
+      margin-left: -50px;
     }
 
     &.with-label {
@@ -317,7 +322,13 @@
           on:blur={blur} />
       {/if}
     </div>
-    <slot name="right" />
+    <slot name="right">
+      {#if type == 'select'}
+        <button class="btn btn-clear select-arrow">
+          <NIcon name="chevronDown" />
+        </button>
+      {/if}
+    </slot>
 
   </div>
   {#if help}

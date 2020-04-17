@@ -22,7 +22,7 @@
   import NomieUOM from "../../../utils/nomie-uom/nomie-uom";
 
   // Stores
-  import { TrackerStore } from "../../../store/trackers";
+  import { TrackerStore } from "../../../store/tracker-store";
   import { Interact } from "../../../store/interact";
   import { Lang } from "../../../store/lang";
 

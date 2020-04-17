@@ -7,6 +7,32 @@ button:focus {
   box-shadow: inherit;
 }
 
+.btn-close {
+  position: absolute;
+  padding: 0px;
+  top: -10px;
+  left: -8px;
+  background-color: var(--color-solid);
+  box-shadow: var(--box-shadow-tight);
+  color: var(--color-inverse);
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
+  border-radius: 12px;
+  border: none;
+  display: flex;
+  appearance: none;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 0;
+  flex-shrink: 0;
+  svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
 .btn-badge {
   font-size: 0.8rem;
   padding: 3pt 6pt 3pt 6pt;

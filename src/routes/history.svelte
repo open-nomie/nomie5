@@ -36,7 +36,7 @@
   // Stores
   import { UserStore } from "../store/user";
   import { Interact } from "../store/interact";
-  import { TrackerStore } from "../store/trackers";
+  import { TrackerStore } from "../store/tracker-store";
   import { LedgerStore } from "../store/ledger";
   import { Lang } from "../store/lang";
 
@@ -87,9 +87,6 @@
   let searchMode = false;
   $: if (state.searchTerm && !searchMode) {
     searchMode = true;
-  }
-
-  $: if ($LedgerStore.logs) {
   }
 
   let logs = undefined; // holder of the logs
@@ -210,6 +207,7 @@
         end: state.date.endOf("day").toDate(),
         fresh: fresh
       });
+
       loading = false;
     },
     clearLocation() {
@@ -333,6 +331,7 @@
     }
     window.scrollTo(0, 0);
     methods.getLogs();
+    LedgerStore.getMemories();
   });
 
   /**
@@ -444,7 +443,9 @@
         <!-- If no Logs found -->
         {#if logs.length === 0 && !showSearch}
           {#if !searchMode}
-            <div class="empty-notice">{Lang.t('history.no-records-found')}</div>
+            <div class="empty-notice" style="max-height:200px;">
+              {Lang.t('history.no-records-found')}
+            </div>
           {:else}
             <div class="empty-notice">
               {state.date.format('YYYY')} {Lang.t('history.no-records-found')}
@@ -453,7 +454,7 @@
           <!-- If Logs and Not refreshing  -->
         {:else if !showSearch}
           <!-- Loop over logs -->
-          {#each logs as log}
+          {#each logs as log, index}
             <LogItem
               {log}
               on:trackerClick={event => {
@@ -467,6 +468,7 @@
               }} />
             <!-- Show the Log Item -->
           {/each}
+
           <!--
           Search Results
           If Search Mode and We have Logs
@@ -485,6 +487,43 @@
               Interact.logOptions(event.detail).then(() => {});
             }} />
         {/if}
+
+        <!-- Show History if exists -->
+        {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
+          <div class="p-2 pt-3">
+            {#each $LedgerStore.memories as log}
+              <div
+                class="text-center text-inverse text-sm text-faded-3 n-row"
+                style="margin-bottom:-12px;">
+                <div class="filler" />
+                <div
+                  class="clickable d-flex flex-row align-items-center"
+                  on:click={() => {
+                    methods.goto(dayjs(log.end));
+                  }}>
+                  From {dayjs(log.end).fromNow()}
+                  <button class="btn btn-clear p-0 tap-icon">
+                    <NIcon name="chevronRight" size="16" />
+                  </button>
+                </div>
+                <div class="filler" />
+              </div>
+              <LogItem
+                className="aged"
+                {log}
+                on:trackerClick={event => {
+                  methods.trackerTapped(event.detail.tracker, log);
+                }}
+                on:textClick={event => {
+                  methods.textClick(event);
+                }}
+                on:moreClick={event => {
+                  Interact.logOptions(log).then(() => {});
+                }} />
+            {/each}
+          </div>
+        {/if}
+        <!-- end history -->
 
       </div>
     {/if}

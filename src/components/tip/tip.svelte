@@ -67,21 +67,7 @@
     border-radius: 6px;
     background-color: var(--color-solid);
     box-shadow: var(--box-shadow-float);
-    .btn-close {
-      position: absolute;
 
-      top: -10px;
-      left: -8px;
-      background-color: var(--color-solid);
-      box-shadow: var(--box-shadow-tight);
-      color: var(--color-inverse);
-      width: 24px;
-      height: 24px;
-      border-radius: 10px;
-      border: none;
-      display: flex;
-      appearance: none;
-    }
     .tip {
       font-size: 0.9rem;
       line-height: 1.2rem;

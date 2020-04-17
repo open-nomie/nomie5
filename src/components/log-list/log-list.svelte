@@ -20,7 +20,7 @@
 </script>
 
 <div class="n-list {className}" {style}>
-  {#each sort(logs) as log}
+  {#each sort(logs) as log (log._id)}
     <LogItem
       className={compact ? 'compact' : ''}
       {log}

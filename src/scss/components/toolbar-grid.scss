@@ -7,7 +7,7 @@
   grid-row-gap: 0px;
   grid-template-columns: 1fr 3fr 1fr;
   grid-template-rows: 1fr;
-  height: 100%;
+  height: 50px;
   width: calc(100% - 16pt);
   min-height: 50px;
   margin-left: 8pt;
@@ -21,6 +21,11 @@
 
 .n-toolbar-grid.lg {
   min-height: 50px;
+}
+.n-toolbar-grid.sm {
+  min-height: 30px;
+  height: 30px;
+  font-size: 0.9rem;
 }
 
 .n-toolbar-grid .left {
@@ -40,6 +45,7 @@
   flex-direction: column;
   grid-area: 1 / 2 / 2 / 3;
   justify-content: center;
+  font-weight: 700;
 }
 .n-toolbar-grid .main h1,
 .n-toolbar-grid .main .title {

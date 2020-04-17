@@ -1,11 +1,11 @@
 import nid from "../../modules/nid/nid";
 
 // Modules
-import extractTrackers from "../../utils/extract-trackers/extract-trackers"; // extract tracker function
+import extractTrackers from "../../utils/extract/extract-trackers"; // extract tracker function
 import _calculateScore from "../../utils/calculate-score/calculate-score"; // Score calculator
 import regexs from "../../utils/regex"; // Regex to find data points in the note
-import extractPeople from "../../utils/extract-trackers/extract-people";
-import extractContext from "../../utils/extract-trackers/extract-context";
+import extractPeople from "../../utils/extract/extract-people";
+import extractContext from "../../utils/extract/extract-context";
 
 /**
  * Nomie Log / Record
@@ -100,8 +100,22 @@ export default class Record {
 
   // Get note length without tags
   noteTextLength() {
-    let scrubbed = this.note.replace(new RegExp(regexs.tag, "gi"), "").trim();
-    return scrubbed.length;
+    return this.getScrubbedNote().length;
+  }
+
+  getScrubbedNote() {
+    let results = this.note
+      .split(" ")
+      .filter((word) => {
+        if (word.length > 1 && word.substr(0, 1) == "#") {
+          return false;
+        } else {
+          return true;
+        }
+      })
+      .join(" ");
+    
+    return results;
   }
 
   // Get the score
@@ -131,6 +145,12 @@ export default class Record {
       startDate: new Date(this.start),
       endDate: new Date(this.end),
     });
+  }
+
+  getTrackerValue(tag) {
+    let match = this.trackersArray().find((t) => t.tag == tag);
+    let value = match ? match.value : 1;
+    return value;
   }
 
   getMeta() {

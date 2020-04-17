@@ -12,7 +12,7 @@
   import { fade } from "svelte/transition";
 
   // Stores
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
   import { PeopleStore } from "../../store/people-store";
   import { Interact } from "../../store/interact";
   import { ContextStore } from "../../store/context-store";
@@ -45,9 +45,9 @@
     switch ($Interact.selector.type) {
       case "tracker":
         state.title = multiple ? "Select Trackers" : "Select a Tracker";
-        state.items = Object.keys($TrackerStore || {})
+        state.items = Object.keys($TrackerStore.trackers || {})
           .map(tag => {
-            return $TrackerStore[tag];
+            return $TrackerStore.trackers[tag];
           })
           .sort((a, b) => {
             return a.label.toLowerCase() > b.label.toLowerCase() ? 1 : -1;

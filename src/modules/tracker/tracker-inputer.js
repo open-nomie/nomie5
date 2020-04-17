@@ -1,19 +1,20 @@
 import { ActiveLogStore } from "../../store/active-log";
 import { LedgerStore } from "../../store/ledger";
 import { Interact } from "../../store/interact";
-import extractor from "../../utils/extract-trackers/extract-trackers";
+import extractor from "../../utils/extract/extract-trackers";
 import Tracker from "./tracker";
 import PromiseStep from "../../utils/promise-step/promise-step";
 import NomieLog from "../../modules/nomie-log/nomie-log";
 
 export default class TrackerInputer {
-  constructor(tracker) {
+  constructor(tracker, $TrackerStore) {
     this.tracker = tracker;
     this.value = 0;
     this.listeners = {
       cancel: [],
       value: [],
     };
+    this.$TrackerStore = $TrackerStore;
   }
 
   on(type, func) {
@@ -28,9 +29,8 @@ export default class TrackerInputer {
   }
 
   async getTrackerInputAsString(tracker, value) {
-    console.log("getTrackerInputAsSTring", tracker);
     const response = await Interact.trackerInput(tracker, { value, allowSave: false });
-    if (response.tracker) {
+    if (response && response.tracker) {
       return `#${response.tracker.tag}(${response.value}) `;
     } else {
       return ``;
@@ -48,7 +48,7 @@ export default class TrackerInputer {
     // Create array of items to pass to promise step
     let items = Object.keys(trackerTags).map((tag) => {
       return {
-        tracker: $TrackerStore[tag] || new Tracker({ tag: tag }),
+        tracker: $TrackerStore.trackers[tag] || new Tracker({ tag: tag }),
         value: trackerTags[tag].value, // not being used
       };
     });
@@ -95,11 +95,9 @@ export default class TrackerInputer {
       if (this.tracker.type === "tick") {
         // Just add the tag to the note
         ActiveLogStore.addTag(this.tracker.tag);
+        let includeStr = this.tracker.getIncluded(1);
+        ActiveLogStore.addElement(includeStr);
         // If it's one_tap - then save it
-        if (this.tracker.one_tap === true) {
-          // Make the note
-          //   let note = $ActiveLogStore.note + "";
-        }
         finished();
         // If it's a note (combined trackers)
       } else if (this.tracker.type === "note") {
@@ -134,7 +132,7 @@ export default class TrackerInputer {
         // Create array of items to pass to promise step
 
         let items = tagAndValue.map((tv) => {
-          let realTracker = $TrackerStore[tv.tag];
+          let realTracker = this.$TrackerStore.trackers[tv.tag];
           let value = tv.value;
           if (realTracker.type == "timer") {
             value = 0;

@@ -28,14 +28,14 @@
   //store
   import { BoardStore } from "../store/boards";
   import { UserStore } from "../store/user";
-  import { TrackerStore } from "../store/trackers";
+  import { TrackerStore } from "../store/tracker-store";
   import { Interact } from "../store/interact";
   import { Lang } from "../store/lang";
 
   const console = new Logger("🎲 Board Editor");
   let trackers = [];
 
-  let data = {
+  const data = {
     board: null,
     updatedLabel: null,
     trackers: null,
@@ -51,18 +51,47 @@
   let ready = false;
   let path = window.location.href.split("/");
   let id = path[path.length - 1];
-  let showDeletes = true;
-  let isMobile =
-    typeof window.orientation !== "undefined" ||
-    navigator.userAgent.indexOf("IEMobile") !== -1;
 
-  $: if ($BoardStore.activeBoard && ready == false) {
+  let showDeletes = true;
+
+  // Reactive Moments!
+  $: if (
+    // If board is active and not ready, and not ALL Board
+    $BoardStore.activeBoard &&
+    ready == false &&
+    $BoardStore.activeBoard.id != "all"
+  ) {
     ready = true;
     data.updatedLabel = $BoardStore.activeBoard.label;
+    data.board = $BoardStore.activeBoard;
+  } else if (id == "all" && ready == false) {
+    // If ALL board and not ready...
+    ready = true;
+    // Set up the all board
+    data.board = BoardStore.boardById("all") || {
+      id: "all",
+      trackers: [],
+      label: "All"
+    };
+    // Set trackers to ALL trackers, sorted by the ALL board tracker list.
+    data.board.trackers = Object.keys($TrackerStore.trackers).sort((a, b) => {
+      if (data.board.trackers.indexOf(a) > data.board.trackers.indexOf(b)) {
+        return 1;
+      } else if (
+        data.board.trackers.indexOf(a) < data.board.trackers.indexOf(b)
+      ) {
+        return -1;
+      } else {
+        return a > b ? 1 : -1;
+      }
+    });
+    trackers = data.board.trackers
+      .map(tag => $TrackerStore.trackers[tag])
+      .filter(t => t);
   }
 
   let titleChange = false;
-  $: if (data.updatedLabel !== $BoardStore.activeBoard.lable) {
+  $: if (data.updatedLabel !== (data.board || {}).label) {
     titleChange = true;
   } else {
     titleChange = false;
@@ -75,18 +104,24 @@
         data.refreshing = false;
       }, 100);
     },
-    initialize() {},
-    getTrackers() {},
+    /**
+     * Save the Current Active Board
+     */
     async save(options = {}) {
       options.silent = options.silent == false ? false : true;
       try {
-        BoardStore.update(state => {
-          state.activeBoard.label = data.updatedLabel;
-          state.activeBoard.trackers = trackers.map(tracker => tracker.tag);
-          return state;
-        });
+        // If the Active Board is set...
+        if ($BoardStore.activeBoard) {
+          BoardStore.update(state => {
+            state.activeBoard.label = data.updatedLabel;
+            state.activeBoard.trackers = trackers.map(tracker => tracker.tag);
+            return state;
+          });
+        }
+        // Wait 10ms then Save
         await tick(10);
-        let saved = await BoardStore.saveBoard($BoardStore.activeBoard);
+        let saved = await BoardStore.saveBoard(data.board);
+        // If not silent show toast
         if (!options.silent) {
           Interact.toast(Lang.t("general.saved", "Saved"));
         }
@@ -96,12 +131,12 @@
     },
     async deleteBoard() {
       let confirmed = await Interact.confirm(
-        "Delete " + $BoardStore.activeBoard.label + " tab?",
+        "Delete " + data.board.label + " tab?",
         "You can recreate it later, but it's not super easy."
       );
       if (confirmed === true) {
         data.refreshing = true;
-        await BoardStore.deleteBoard($BoardStore.activeBoard.id);
+        await BoardStore.deleteBoard(data.board.id);
         navigate("/");
         Interact.toast("Deleted");
       }
@@ -110,15 +145,12 @@
       event.preventDefault();
       event.stopPropagation();
       Interact.confirm(
-        `Remove ${tracker.label} from ${$BoardStore.activeBoard.label}?`,
+        `Remove ${tracker.label} from ${data.board.label}?`,
         "You can always add it later."
       ).then(res => {
         if (res === true) {
           event.preventDefault();
-          BoardStore.removeTrackerFromBoard(
-            tracker,
-            $BoardStore.activeBoard.id
-          ).then(() => {
+          BoardStore.removeTrackerFromBoard(tracker, data.board.id).then(() => {
             data.refreshing = true;
             setTimeout(() => {
               data.refreshing = false;
@@ -132,11 +164,11 @@
     }
   };
 
-  function trackersSorted(evt) {
-    setTimeout(() => {
-      trackers = evt.detail;
-      methods.save({ silent: true });
-    }, 10);
+  async function trackersSorted(evt) {
+    trackers = evt.detail;
+    data.board.trackers = trackers.map(tracker => tracker.tag);
+    await tick(100);
+    methods.save({ silent: true });
   }
 
   let boardUnsub;
@@ -145,10 +177,10 @@
     boardUnsub = BoardStore.subscribe(b => {
       if (b.activeBoard) {
         trackers = b.activeBoard.trackers.map(tag => {
-          return $TrackerStore[tag] || new Tracker({ tag: tag });
+          return $TrackerStore.trackers[tag] || new Tracker({ tag: tag });
         });
       } else {
-        navigate("/");
+        // navigate("/");
       }
     });
   });
@@ -158,7 +190,7 @@
   });
 
   UserStore.onReady(() => {
-    methods.initialize();
+    // methods.initialize();
   });
 
   let list = [
@@ -188,7 +220,7 @@
   // Animation from https://www.kirupa.com/html5/creating_the_ios_icon_jiggle_wobble_effect_in_css.htm
 </style>
 
-{#if $BoardStore.activeBoard}
+{#if data.board}
   <NPage>
 
     <div class="n-toolbar-grid container" slot="header">
@@ -196,7 +228,11 @@
         <NBackButton />
       </div>
       <div class="main">
-        <h1 class="title">Edit Tab</h1>
+        <h1 class="title">
+          {#if data.board.id == 'all'}
+            All Tab Sorting
+          {:else}Edit {data.board.label}{/if}
+        </h1>
       </div>
     </div>
     <!-- /.container -->
@@ -204,22 +240,25 @@
     <div class="container px-0">
 
       <div class="n-list pt-2">
-        <NItem className="py-2">
-          <NInput
-            type="text"
-            placeholder="Tab Label"
-            bind:value={data.updatedLabel}>
-            <div slot="right">
-              {#if data.updatedLabel != $BoardStore.activeBoard.label}
-                <button class="btn text-primary-bright" on:click={methods.save}>
-                  {Lang.t('general.save')}
-                </button>
-              {/if}
-            </div>
+        {#if data.board.id !== 'all'}
+          <NItem className="py-2">
+            <NInput
+              type="text"
+              placeholder="Tab Label"
+              bind:value={data.updatedLabel}>
+              <div slot="right">
+                {#if data.updatedLabel != data.board.label}
+                  <button
+                    class="btn text-primary-bright"
+                    on:click={methods.save}>
+                    {Lang.t('general.save')}
+                  </button>
+                {/if}
+              </div>
 
-          </NInput>
-        </NItem>
-
+            </NInput>
+          </NItem>
+        {/if}
         {#if trackers}
           <NSortableList
             bind:items={trackers}
@@ -248,16 +287,18 @@
       </div>
 
     </div>
-    <div class="n-row p-2">
-      <div class="filler" />
-      <button
-        class="btn btn btn-clear text-danger "
-        on:click={methods.deleteBoard}>
-        <NIcon name="delete" className="fill-red" />
-        Delete Tab
-      </button>
-      <div class="filler" />
-    </div>
+    {#if data.board.id != 'all'}
+      <div class="n-row p-2">
+        <div class="filler" />
+        <button
+          class="btn btn btn-clear text-danger "
+          on:click={methods.deleteBoard}>
+          <NIcon name="delete" className="fill-red" />
+          Delete Tab
+        </button>
+        <div class="filler" />
+      </div>
+    {/if}
   </NPage>
 {:else}
   <NPage>

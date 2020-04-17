@@ -35,6 +35,7 @@
   import Edit24 from "carbon-icons-svelte/lib/Edit24";
   import RadioButtonChecked24 from "carbon-icons-svelte/lib/RadioButtonChecked24";
   import Menu24 from "carbon-icons-svelte/lib/Menu24";
+  import Grid24 from "carbon-icons-svelte/lib/Grid24";
 
   export let name = "add";
   export let style = undefined;
@@ -78,7 +79,8 @@
     radio: RadioButton24,
     radioFilled: RadioButtonChecked24,
     edit: Edit24,
-    menu: Menu24
+    menu: Menu24,
+    grid: Grid24
   };
 
   function getStyle() {

@@ -15,7 +15,7 @@
   import PositivityCondition from "../../modules/tracker/positivity-condition";
 
   // Stores
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
   import { UserStore } from "../../store/user";
   import { Lang } from "../../store/lang";
   import { Interact } from "../../store/interact";

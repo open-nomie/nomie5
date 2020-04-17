@@ -6,6 +6,7 @@
   import Icon from "../../components/icon/icon.svelte";
 
   import { Lang } from "../../store/lang";
+  import { TrackerStore } from "../../store/tracker-store";
 </script>
 
 <style lang="scss">
@@ -20,6 +21,15 @@
 
     .n-row {
       z-index: 10;
+    }
+    .notification {
+      position: absolute;
+      top: 0;
+      right: calc(50% - 15px);
+      width: 6px;
+      height: 6px;
+      background-color: var(--color-red);
+      border-radius: 3px;
     }
   }
 
@@ -102,6 +112,9 @@
     </Link>
 
     <Link to="/">
+      {#if $TrackerStore.timers.length}
+        <div class="notification" />
+      {/if}
       <Icon name="tracker" />
       <label>{Lang.t('general.trackers', 'Trackers')}</label>
     </Link>

@@ -16,7 +16,7 @@
   import { UserStore } from "../../store/user";
   import { Interact } from "../../store/interact";
   import { LedgerStore } from "../../store/ledger";
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
 
   const timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
   const dateFormat = $UserStore.meta.is24Hour ? "MM/DD/YYYY" : "MMM D YYYY";
@@ -39,8 +39,8 @@
   }
 
   function getTracker() {
-    return $TrackerStore.hasOwnProperty($Interact.streak.show)
-      ? $TrackerStore[$Interact.streak.show]
+    return $TrackerStore.trackers.hasOwnProperty($Interact.streak.show)
+      ? $TrackerStore.trackers[$Interact.streak.show]
       : new Tracker({ tag: $Interact.streak.show });
   }
 

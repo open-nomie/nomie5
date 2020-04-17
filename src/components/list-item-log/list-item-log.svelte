@@ -18,7 +18,7 @@
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import time from "../../utils/time/time";
 
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
   import { UserStore } from "../../store/user";
   import { Interact } from "../../store/interact";
 
@@ -37,7 +37,7 @@
 
   let displayLog;
 
-  let trackers = $TrackerStore;
+  let trackers = $TrackerStore.trackers;
 
   let state = {
     showPhoto: false

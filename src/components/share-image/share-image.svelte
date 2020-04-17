@@ -4,7 +4,7 @@
   import { Lang } from "../../store/lang";
   import math from "../../utils/math/math";
   import { UserStore } from "../../store/user";
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
   import NNoteTextualizer from "../note-textualizer/note-textualizer.svelte";
   import Tracker from "../../modules/tracker/tracker";
   import TrackerButton from "../../containers/board/tracker-button.svelte";
@@ -123,7 +123,7 @@
   };
   let trackUnsub;
   onMount(() => {
-    trackers = $TrackerStore;
+    trackers = $TrackerStore.trackers;
     ready = true;
     setTimeout(() => {
       methods.resize();

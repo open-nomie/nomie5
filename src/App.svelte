@@ -39,7 +39,7 @@
   import { UserStore } from "./store/user"; //  user auth and state
   import { Interact } from "./store/interact"; //  global alerts, popmenus, confirms, etc
   import { BoardStore } from "./store/boards"; // board state  and methods
-  import { TrackerStore } from "./store/trackers"; // tracker state and methods
+  import { TrackerStore } from "./store/tracker-store"; // tracker state and methods
   import { TrackerLibrary } from "./store/tracker-library";
   import { CommanderStore } from "./store/commander"; // commander - /?note=hi&lat=35&lng=-81.32
   import { NomieAPI } from "./store/napi"; // Store for interacting with the Nomie API
@@ -86,8 +86,8 @@
   // export let name = "nomie";
   export let url = "";
 
-  $: if (window && $TrackerStore) {
-    window.$TrackerStore = $TrackerStore;
+  $: if (window && $TrackerStore.tags) {
+    window.$TrackerStore.tags = $TrackerStore.tags;
   }
 
   // Offline monitor

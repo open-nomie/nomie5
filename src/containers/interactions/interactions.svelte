@@ -34,7 +34,7 @@
   import { ActiveLogStore } from "../../store/active-log";
   import { LedgerStore } from "../../store/ledger";
   import { BoardStore } from "../../store/boards";
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
 
   let promptInput;
   let logEditorTracker;
@@ -51,12 +51,12 @@
         return {
           value: log.trackers[tag].value || 0,
           tag: tag,
-          tracker: $TrackerStore[tag] || new Tracker({ tag: tag })
+          tracker: $TrackerStore.trackers[tag] || new Tracker({ tag: tag })
         };
       });
     },
     getTracker(tag) {
-      return $TrackerStore[tag] || new Tracker({ tag: tag });
+      return $TrackerStore.trackers[tag] || new Tracker({ tag: tag });
     },
     onCameraPhoto(photo) {
       const path = `camera/${md5(photo)}`;
@@ -269,7 +269,9 @@
       }
       Interact.dismissTrackerInput();
       ActiveLogStore.addTag(event.detail.tracker.tag, event.detail.value);
-      $ActiveLogStore.score = ActiveLogStore.calculateScore($ActiveLogStore.note, $TrackerStore);
+      let includeStr = event.detail.tracker.getIncluded(event.detail.value);
+      ActiveLogStore.addElement(includeStr);
+      $ActiveLogStore.score = ActiveLogStore.calculateScore($ActiveLogStore.note, $TrackerStore.trackers);
       LedgerStore.saveLog($ActiveLogStore).then(() => {
         ActiveLogStore.clear();
       });

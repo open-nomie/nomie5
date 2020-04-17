@@ -1,4 +1,4 @@
-import ExtractTrackers from "../extract-trackers/extract-trackers";
+import ExtractTrackers from "../extract/extract-trackers";
 
 // Simple isTrue comparison function
 const isTrue = (condition, baseValue) => {
@@ -21,7 +21,7 @@ const isTrue = (condition, baseValue) => {
 export default (note, endTime) => {
   endTime = endTime || new Date().getTime();
 
-  let trackers = window.$TrackerStore; // hack - fucking hell
+  let trackers = (window.$TrackerStore || {}).trackers; // hack - fucking hell
   let score = 0;
   // Extract Trackers
   let trackersInNotes = ExtractTrackers(note || "");
@@ -32,7 +32,7 @@ export default (note, endTime) => {
     let response = {
       true: false,
       next: true,
-      score: 0
+      score: 0,
     };
     switch (condition.if) {
       case "hour":
@@ -57,7 +57,7 @@ export default (note, endTime) => {
   };
 
   // Loop over tags array
-  tkrKeys.forEach(tag => {
+  tkrKeys.forEach((tag) => {
     // If trackers has this tag
     if ((trackers || {})[tag]) {
       // If the tracker has a score of custom
@@ -65,7 +65,7 @@ export default (note, endTime) => {
         let calc = trackers[tag].score_calc || [];
         let met = false;
         let value = trackersInNotes[tag].value;
-        calc.forEach(condition => {
+        calc.forEach((condition) => {
           if (!met) {
             let passes = checkCondition(condition, value);
             if (passes.true) {
@@ -75,11 +75,7 @@ export default (note, endTime) => {
             }
           }
         });
-      } else if (
-        trackers[tag].score !== "" &&
-        trackers[tag].score !== null &&
-        trackers[tag].score !== "0"
-      ) {
+      } else if (trackers[tag].score !== "" && trackers[tag].score !== null && trackers[tag].score !== "0") {
         // Else if the tracker has a set value
         let thisScore = parseInt(trackers[tag].score);
         score = score + thisScore;

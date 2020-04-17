@@ -4868,6 +4868,30 @@ button:focus {
 .btn:focus, .btn.focus {
   box-shadow: inherit; }
 
+.btn-close {
+  position: absolute;
+  padding: 0px;
+  top: -10px;
+  left: -8px;
+  background-color: var(--color-solid);
+  box-shadow: var(--box-shadow-tight);
+  color: var(--color-inverse);
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
+  border-radius: 12px;
+  border: none;
+  display: flex;
+  appearance: none;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 0;
+  flex-shrink: 0; }
+  .btn-close svg {
+    width: 20px !important;
+    height: 20px !important; }
+
 .btn-badge {
   font-size: 0.8rem;
   padding: 3pt 6pt 3pt 6pt;
@@ -5179,6 +5203,7 @@ body {
   --box-shadow-float: 0 4px 8px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.08), 0 0 2px rgba(0, 0, 0, 0.14);
   --box-shadow-neu: 4px 0px 8px rgba(0, 0, 0, 0.2), -4px 0px 8px rgba(255, 255, 255, 0.9);
   --box-shadow-neu-tight: 2px 2px 4px rgba(0, 0, 0, 0.2), -2px -2px 4px rgba(255, 255, 255, 0.9);
+  --box-shadow-inset-huge: inset 0px 0px 70px rgba(0, 0, 0, 0.2);
   --header-background: #fff;
   --modal-border: solid 1px rgba(0, 0, 0, 0.12);
   --header-fade: linear-gradient(
@@ -5215,6 +5240,9 @@ body {
 
 .box-shadow {
   box-shadow: var(--box-shadow); }
+
+.box-shadow-inset-huge {
+  box-shadow: var(--box-shadow-inset-huge); }
 
 body.hidden {
   background-color: var(--color-primary);
@@ -5282,7 +5310,8 @@ body.theme-dark {
   --box-shadow-float: 0px 2px 2px rgba(255, 255, 255, 0.06), 0px 6px 10px -1px rgba(0, 0, 0, 0.1);
   --box-shadow-neu: 4px 4px 8px rgba(255, 255, 255, 0.1), -4px -4px 8px rgba(0, 0, 0, 0.3);
   --box-shadow-neu-tight: 2px 2px 4px rgba(255, 255, 255, 0.1), -2px -2px 4px rgba(0, 0, 0, 0.3);
-  --modal-border: solid 1px rgba(255, 255, 255, 0.12);
+  --box-shadow-inset-huge: inset 0px 0px 60px rgba(0, 0, 0, 0.6);
+  --modal-border: solid 1px rgba(255, 255, 255, 0.08);
   --input-background: #111;
   --input-focus-background: #000;
   --color-translucent: rgba(0, 0, 0, 0.79); }
@@ -5604,6 +5633,25 @@ select {
   .animate.down.hidden {
     opacity: 0;
     transform: translateY(-200px); }
+
+@keyframes redPulse {
+  0% {
+    background-color: var(--color-red); }
+  50% {
+    background-color: #890000; }
+  100% {
+    background-color: var(--color-red); } }
+
+.fill-red-pulse {
+  animation: redPulseFill 3s infinite; }
+
+@keyframes redPulseFill {
+  0% {
+    fill: var(--color-red); }
+  50% {
+    fill: var(--color-inverse); }
+  100% {
+    fill: var(--color-red); } }
 
 @keyframes keyframes1 {
   0% {
@@ -6343,6 +6391,18 @@ body.scrolling .n-tracker-button {
   align-items: flex-start;
   justify-content: space-evenly; }
 
+.n-grid.framed {
+  background-color: var(--color-solid-2);
+  width: calc(100% - 16pt);
+  border-radius: 8pt;
+  padding: 8pt;
+  position: relative;
+  margin: 8pt; }
+  .n-grid.framed .btn-close {
+    left: auto;
+    right: 10px;
+    top: 10px; }
+
 aside.n-panel {
   width: 20%;
   max-width: 320px !important;
@@ -6462,7 +6522,7 @@ aside.n-panel {
   grid-row-gap: 0px;
   grid-template-columns: 1fr 3fr 1fr;
   grid-template-rows: 1fr;
-  height: 100%;
+  height: 50px;
   width: calc(100% - 16pt);
   min-height: 50px;
   margin-left: 8pt;
@@ -6474,6 +6534,11 @@ aside.n-panel {
 
 .n-toolbar-grid.lg {
   min-height: 50px; }
+
+.n-toolbar-grid.sm {
+  min-height: 30px;
+  height: 30px;
+  font-size: 0.9rem; }
 
 .n-toolbar-grid .left {
   align-items: flex-start;
@@ -6487,7 +6552,8 @@ aside.n-panel {
   display: flex;
   flex-direction: column;
   grid-area: 1 / 2 / 2 / 3;
-  justify-content: center; }
+  justify-content: center;
+  font-weight: 700; }
 
 .n-toolbar-grid .main h1,
 .n-toolbar-grid .main .title {
@@ -6580,6 +6646,17 @@ TODO: Organize main into components or containers.
     display: none; }
   .input-model.type-value .tracker-input.slider {
     display: none; }
+
+.timer-bar {
+  position: fixed;
+  animation: redPulse 3s infinite;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  font-size: 12px;
+  background-color: var(--color-red);
+  z-index: 2000; }
 
 .text-underline {
   text-decoration: underline !important; }

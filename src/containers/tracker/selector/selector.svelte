@@ -10,7 +10,7 @@
   import { fade } from "svelte/transition";
 
   // Stores
-  import { TrackerStore } from "../../../store/trackers";
+  import { TrackerStore } from "../../../store/tracker-store";
   import { Lang } from "../../../store/lang";
 
   // Props
@@ -32,9 +32,9 @@
   let alphaGroup = {};
 
   // When tracker store loads. Turn trackers into array sorted by label
-  $: state.trackers = Object.keys($TrackerStore || {})
+  $: state.trackers = Object.keys($TrackerStore.trackers || {})
     .map(tag => {
-      return $TrackerStore[tag];
+      return $TrackerStore.trackers[tag];
     })
     .sort((a, b) => {
       return a.label.substr(0, 1).toLowerCase() >=

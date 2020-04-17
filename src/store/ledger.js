@@ -56,6 +56,7 @@ const ledgerInit = () => {
     count: 0, //
     saving: false, // are we saving?
     hash: null, // hash for svelte auto reloading
+    memories: [],
   };
 
   const methods = {
@@ -174,12 +175,24 @@ const ledgerInit = () => {
      * the user has. Good for figuring out
      * first track
      */
-    async firstBook() {
-      const books = await methods.listBooks();
-      if (books.length) {
-        return books[0].replace(config.book_root + "/", "");
+    async getFirstDate(fresh = false) {
+      let defaultPayload = { date: null, lastChecked: null };
+      let bookDetails = Storage.local.get(`firstBook`) || defaultPayload;
+      let age = bookDetails.lastChecked ? Math.abs(dayjs(bookDetails.lastChecked).diff(dayjs(), "day")) : 100;
+      if (age > 2 || fresh) {
+        // Get list of books
+        const books = await methods.listBooks();
+        const firstBook = books[0].replace(config.book_root + "/", "");
+        // Create date from book name
+        let date = dayjs(firstBook, config.book_time_format);
+        // Store it locally so we don't have to look it up all the time.
+        Storage.local.put("firstBook", {
+          date: date.toDate().getTime(),
+          lastChecked: new Date().getTime(),
+        });
+        return date;
       } else {
-        return "Unknown";
+        return dayjs(bookDetails.date);
       }
     },
     /**
@@ -244,6 +257,7 @@ const ledgerInit = () => {
      */
     async getToday() {
       let todayKey = dayjs().format(config.book_time_format);
+
       if (base.books[todayKey]) {
         return methods.todayReady();
       } else {
@@ -681,6 +695,37 @@ const ledgerInit = () => {
       let logs = await methods.query({ start, end, search: `+${context}` });
       return logs.sort((a, b) => {
         return a.end < b.end ? 1 : -1;
+      });
+    },
+    async getDay(date) {
+      return methods.query({
+        start: dayjs(date).startOf("day"),
+        end: dayjs(date).endOf("day"),
+      });
+    },
+    async getMemories() {
+      const date = new Date();
+      let logs1 = methods.getDay(dayjs(date).subtract(1, "year"));
+      let logs2 = methods.getDay(dayjs(date).subtract(2, "year"));
+      let logs3 = methods.getDay(dayjs(date).subtract(3, "year"));
+      let years = await Promise.all([logs1, logs2, logs3]);
+      let memories = [];
+      years.forEach((day) => {
+        day = day
+          .filter((log) => {
+            return log.getScrubbedNote().length;
+          })
+          .sort((a, b) => {
+            return a.note.length < b.note.length ? 1 : -1;
+          });
+
+        if (day.length) {
+          memories.push(day[0]);
+        }
+      });
+      update((state) => {
+        state.memories = memories;
+        return state;
       });
     },
 

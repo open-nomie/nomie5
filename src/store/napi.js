@@ -20,6 +20,7 @@ import NomieAPICli from "../modules/nomie-api-cli/nomie-api-cli";
 // Stores
 import { LedgerStore } from "./ledger";
 import { Interact } from "./interact";
+import { TrackerStore } from "./tracker-store";
 
 const console = new Logger("🚦 Nomie API");
 const NAPI = new NomieAPICli({ domain: "nomieapi.com" });
@@ -78,7 +79,7 @@ const nomieApiInit = () => {
         (log) => {
           log.end = new Date(log.date);
           let nLog = new NomieLog(log);
-          nLog.score = calculateScore(nLog.note, $TrackerStore);
+          nLog.score = calculateScore(nLog.note, TrackerStore.state.trackers);
           return LedgerStore.saveLog(nLog);
         },
         (status) => {

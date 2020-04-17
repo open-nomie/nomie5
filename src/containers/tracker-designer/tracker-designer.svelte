@@ -20,7 +20,7 @@
   // Stores
   import { Lang } from "../../store/lang";
   import { Interact } from "../../store/interact";
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
 
   let step = 0;
   let maxSteps = 4;
