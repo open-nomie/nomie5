@@ -1,11 +1,10 @@
 import nid from "../../modules/nid/nid";
 
 // Modules
-import extractTrackers from "../../utils/extract/extract-trackers"; // extract tracker function
+import extractor from "../../utils/extract/extract";
 import _calculateScore from "../../utils/calculate-score/calculate-score"; // Score calculator
-import regexs from "../../utils/regex"; // Regex to find data points in the note
-import extractPeople from "../../utils/extract/extract-people";
-import extractContext from "../../utils/extract/extract-context";
+import dayjs from "dayjs";
+import math from "../../utils/math/math";
 
 /**
  * Nomie Log / Record
@@ -87,15 +86,25 @@ export default class Record {
     } else {
       this.note = `${this.note} #${tag}`;
     }
-    if (this.trackers) {
-      this.expand();
-    }
+    this.getMeta();
     return this;
   }
 
   // Does it have a specific  tracker?
   hasTracker(trackerTag) {
-    return this.trackers.hasOwnProperty(trackerTag);
+    if (!this.trackers) {
+      this.getMeta();
+    }
+    return this.trackers.find((trackerElement) => trackerElement.id == trackerTag) ? true : false;
+  }
+
+  getTrackerValues(trackerTag) {
+    return this.trackers
+      .filter((trackerElement) => trackerElement.id == trackerTag)
+      .map((trackerElement) => {
+        console.log(`Mapping`, trackerElement, trackerElement.value);
+        return trackerElement.value;
+      });
   }
 
   // Get note length without tags
@@ -114,23 +123,8 @@ export default class Record {
         }
       })
       .join(" ");
-    
-    return results;
-  }
 
-  // Get the score
-  positivityScore() {
-    if (this.score === 1) {
-      return -2;
-    } else if (this.score === 2) {
-      return -1;
-    } else if (this.score === 4) {
-      return 1;
-    } else if (this.score === 5) {
-      return 2;
-    } else {
-      return 0;
-    }
+    return results;
   }
 
   // Expand for more data
@@ -140,62 +134,33 @@ export default class Record {
 
   expanded() {
     return Object.assign(this, {
-      trackers: extractTrackers(this.note),
+      trackableElements: extractor.parse(this.note),
       duration: this.end - this.start,
       startDate: new Date(this.start),
       endDate: new Date(this.end),
     });
   }
 
-  getTrackerValue(tag) {
-    let match = this.trackersArray().find((t) => t.tag == tag);
-    let value = match ? match.value : 1;
-    return value;
-  }
-
-  getMeta() {
-    return {
-      people: this.getPeople(),
-      context: this.getContext(),
-      trackers: this.trackersArray(),
-    };
-  }
-
-  getPeople() {
-    return extractPeople(this.note || "");
-  }
-
-  getContext() {
-    return extractContext(this.note || "");
-  }
-
-  // Get trackers as array
-  trackersArray() {
-    let tks = extractTrackers(this.note);
-
-    let res = Object.keys(tks).map((key) => {
-      return {
-        tag: tks[key].tracker,
-        value: tks[key].value,
-      };
-    });
-    if (Array.isArray(res)) {
-      return res;
+  getTrackerValue(tag, calculateBy = "sum") {
+    let values = this.getMeta()
+      .trackers.filter((t) => t.id == tag)
+      .map((trackableElements) => trackableElements.value);
+    if (calculateBy == "sum") {
+      return math.sum(values);
     } else {
-      return [res];
+      return math.average(values);
     }
   }
 
-  // Get public verion - WTF IS THIS EVEN? I don't remember
-  public(tag) {
-    return {
+  getMeta() {
+    let trackableElements = extractor.parse(this.note);
+    return Object.assign(this, {
       duration: this.end - this.start,
-      geo: this.lat ? [this.lat, this.lng] : null,
-      startDate: new Date(this.start),
-      endDate: new Date(this.end),
-      start: new Date(this.start),
-      end: new Date(this.end),
-      value: (this.trackers[tag] || {}).value || 0,
-    };
+      startDate: dayjs(this.start),
+      endDate: dayjs(this.end),
+      people: trackableElements.filter((te) => te.type == "person"),
+      context: trackableElements.filter((te) => te.type == "context"),
+      trackers: trackableElements.filter((te) => te.type == "tracker"),
+    });
   }
 }

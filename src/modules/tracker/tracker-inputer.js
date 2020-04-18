@@ -1,7 +1,7 @@
 import { ActiveLogStore } from "../../store/active-log";
 import { LedgerStore } from "../../store/ledger";
 import { Interact } from "../../store/interact";
-import extractor from "../../utils/extract/extract-trackers";
+import extractor from "../../utils/extract/extract";
 import Tracker from "./tracker";
 import PromiseStep from "../../utils/promise-step/promise-step";
 import NomieLog from "../../modules/nomie-log/nomie-log";
@@ -41,17 +41,20 @@ export default class TrackerInputer {
     // Set up the Note
     let note = [];
     // Get Tracker tags from this trackers note
-    const trackerTags = extractor(tracker.note);
+    const trackerElements = extractor.trackers(tracker.note);
     // Add this trackers tag for logging
     note.push(`#${tracker.tag}`);
 
     // Create array of items to pass to promise step
-    let items = Object.keys(trackerTags).map((tag) => {
+    let items = trackerElements.map((trackerElement) => {
+      let tag = trackerElement.id;
       return {
         tracker: $TrackerStore.trackers[tag] || new Tracker({ tag: tag }),
-        value: trackerTags[tag].value, // not being used
+        value: trackerElement.value, // not being used?
       };
     });
+
+    console.log("Items", items);
 
     for (let i = 0; i < items.length; i++) {
       let response = await this.getTrackerInputAsString(items[i].tracker, items[i].value);
@@ -116,7 +119,7 @@ export default class TrackerInputer {
         // Extract the meta data from the note
         const meta = tempLog.getMeta();
         // Get tag, context, people
-        let tagAndValue = meta.trackers;
+        let trackerElements = meta.trackers;
         let contexts = meta.context;
         let people = meta.people;
         // Loop over people add to log
@@ -131,15 +134,15 @@ export default class TrackerInputer {
 
         // Create array of items to pass to promise step
 
-        let items = tagAndValue.map((tv) => {
-          let realTracker = this.$TrackerStore.trackers[tv.tag];
-          let value = tv.value;
+        let items = trackerElements.map((trackerElement) => {
+          let realTracker = this.$TrackerStore.trackers[trackerElement.id];
+          let value = trackerElement.value;
           if (realTracker.type == "timer") {
             value = 0;
           }
           return {
-            tracker: realTracker || new Tracker({ tag: tv.tag }),
-            value: value, // not being used
+            tracker: realTracker || new Tracker({ tag: trackerElement.id }),
+            value: value, // not being used ??
           };
         });
 
