@@ -7,7 +7,6 @@
   // Modules
   import Tracker from "../../modules/tracker/tracker";
   import NLog from "../../modules/nomie-log/nomie-log";
-  import StatsProcessor from "../../modules/stats/stats";
   import StatsV5 from "../../modules/stats/statsV5";
   import StatsRef from "../../modules/stats/stats-ref";
 
@@ -18,8 +17,8 @@
   import tick from "../../utils/tick/tick";
   import math from "../../utils/math/math";
   import Storage from "../../modules/storage/storage";
-  import regex from "../../utils/regex";
-  import NoteDataTypes from "../../modules/note-data-type/note-data-type";
+
+  import extractor from "../../utils/extract/extract";
 
   // Components
   import NModal from "../../components/modal/modal.svelte";
@@ -239,24 +238,12 @@
     rememberCompare();
   }
 
-  function getQueryTerm() {
-    let rawTerm = getLastTerm();
-    let type = getType(rawTerm);
-    return rawTerm;
-    // if (state.lookupStack.length) {
-    //   return state.lookupStack[state.lookupStack.length - 1];
-    // } else {
-    //   // Get the Base One
-    //   if (types.hasOwnProperty($Interact.stats.activeType)) {
-    //     return `${types[$Interact.stats.activeType].prefix}${$Interact.stats.activeTag}`;
-    //   } else {
-    //     return $Interact.stats.activeTag;
-    //   }
-    // }
-  }
-
-  function getType(str) {
-    return NoteDataTypes.parse(str);
+  function getTrackableElement(str) {
+    let type = extractor.toElement(str);
+    if (type.type == "tracker") {
+      type.obj = $TrackerStore.trackers[type.id];
+    }
+    return type;
   }
 
   async function compareTracker() {
@@ -415,53 +402,53 @@
     Interact.popmenu({ title: "Stat Options", buttons });
   }
 
-  function getTracker() {
-    return getType(getLastTerm()).tracker;
-  }
-
   function getLastTerm() {
-    return $Interact.stats.terms[$Interact.stats.terms.length - 1];
+    let lastTerm = $Interact.stats.terms[$Interact.stats.terms.length - 1];
+    return lastTerm;
   }
 
   async function getStats() {
     state.loading = true;
-    let payload = {
-      search: getQueryTerm(),
+    let queryPayload = {
+      search: state.trackableElement,
       start: getFromDate(),
       end: getToDate()
     };
     // if day - normalize start and end
     if (state.timeSpan == "d") {
-      payload.start = dayjs(state.date).startOf("day");
-      payload.end = dayjs(state.date).endOf("day");
+      queryPayload.start = dayjs(state.date).startOf("day");
+      queryPayload.end = dayjs(state.date).endOf("day");
     }
 
-    let results = await LedgerStore.query(payload);
-    const statsV5 = new StatsV5({ is24Hour: $UserStore.meta.is24Hour });
+    let results = await LedgerStore.query(queryPayload);
+
+    console.log("Stats Tracker", state.tracker);
+
+    const statsV5 = new StatsV5({
+      is24Hour: $UserStore.meta.is24Hour,
+      math: state.tracker.math
+    });
+
     state.stats = statsV5.generate({
       rows: results,
       fromDate: getFromDate(),
       toDate: getToDate(),
       mode: state.timeSpan,
-      tracker: getTracker()
+      math: state.tracker.math,
+      trackableElement: state.trackableElement
     });
 
-    // if (state.timeSpan !== "y") {
-
-    // } else {
-    //   // don't  do related for the the year - too heavy.
-    //   state.related = [];
-    // }
     let savedCompares = remember("compare");
     if (state.compare.length == 0 && savedCompares) {
       savedCompares.forEach(searchTerm => {
-        let type = NoteDataTypes.parse(searchTerm);
+        let type = extractor.toElement(searchTerm);
+        type.obj = type.type == "tracker" ? TrackerStore.byTag(type.id) : {};
         state.compare.push(
           new StatsRef({
             type: type.type,
-            key: type.tracker.tag,
-            label: type.tracker.label,
-            base: type.tracker,
+            key: type.id,
+            label: type.id,
+            base: type.obj,
             is24Hour: $UserStore.meta.is24Hour
           })
         );
@@ -471,17 +458,17 @@
     for (let i = 0; i < state.compare.length; i++) {
       let stats = await state.compare[i].getStats(
         state.timeSpan,
-        payload.start,
-        payload.end
+        queryPayload.start,
+        queryPayload.end
       );
     }
 
-    state.related = statsV5.getRelated(results);
+    state.related = statsV5.getRelated();
     await tick(100);
     state.compare = state.compare;
 
     state.loading = false;
-  }
+  } // end getStats()
 
   function getDayRange() {
     return state.date.format("ddd MMM D, YYYY");
@@ -544,8 +531,11 @@
   }
 
   function formatValue(value, includeUnit) {
-    let tracker = getTracker();
-    return tracker.displayValue(value, includeUnit);
+    let tracker = state.tracker;
+    if (state.tracker) {
+      return state.tracker.displayValue(value, includeUnit);
+    }
+    return value;
   }
 
   function getMonthRange() {
@@ -602,7 +592,7 @@
 
     if (dataViews.logs.focused) {
       state.selected.rows = rows.filter(row => {
-        return row.note.match(regex.escape(getQueryTerm()));
+        return row.note.match(state.trackableElement.toSearchTerm());
       });
     } else {
       state.selected.rows = rows;
@@ -620,8 +610,17 @@
   }
 
   async function main() {
+    // Get term from Interact Store
+    state.currentTerm = $Interact.stats.terms[$Interact.stats.terms.length - 1];
+    // Get range and view options
     state.range = getDateRangeText();
     state.viewOption = getDataViewButtons();
+    // Get trackable element from the latest term
+    state.trackableElement = extractor.toElement(state.currentTerm);
+    // Get Tracker - make a fake one if a person, or context
+    state.tracker = TrackerStore.byTag(state.trackableElement.id);
+    state.currentColor = state.tracker.color;
+    console.log("Stats MAIN", state);
     getStats();
   }
 
@@ -636,12 +635,15 @@
     main();
   }
 
+  /**
+   * IMPORTANT
+   * When the term changes - we must show the new stats
+   * Don't sleep on this one.
+   */
   let lastTerms;
   $: if ($Interact.stats.terms.join(",") !== lastTerms) {
     lastTerms = $Interact.stats.terms.join(",");
     main();
-    state.currentTerm = getLastTerm();
-    state.currentColor = getTracker().color;
     state.showAnimation = true;
     setTimeout(() => {
       state.showAnimation = false;
@@ -766,7 +768,7 @@
             return x;
           }}
           yFormat={y => {
-            return getTracker().displayValue(y);
+            return state.tracker.displayValue(y);
           }}
           on:tap={event => {
             setSelected(event.detail);
@@ -911,7 +913,7 @@
                         radius={0.3} />
                     {/if}
                     {#if item.type == 'tracker'}
-                      {TrackerStore.getByTag(item.value).emoji}
+                      {TrackerStore.byTag(item.value).emoji}
                     {/if}
                     {item.search}
                     <span class="count">{item.count}</span>
@@ -954,13 +956,13 @@
           compact
           on:textClick={evt => {
             if (evt.detail.type == 'tracker') {
-              Interact.openStats(`#${evt.detail.tracker.tag}`);
+              Interact.openStats(`#${evt.detail.id}`);
             } else {
-              Interact.openStats(`${evt.detail.value}`);
+              Interact.openStats(`${evt.detail.raw}`);
             }
           }}
           on:trackerClick={evt => {
-            Interact.openStats(`#${evt.detail.tracker.tag}`);
+            Interact.openStats(`#${evt.detail.tag}`);
           }}
           logs={state.selected.rows || state.stats.rows}
           style="min-height:100%"

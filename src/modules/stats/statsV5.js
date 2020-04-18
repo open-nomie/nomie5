@@ -3,10 +3,11 @@ import dayjs from "dayjs";
 import Tracker from "../tracker/tracker";
 import NomieLog from "../../modules/nomie-log/nomie-log";
 import Log from "../nomie-log/nomie-log";
+import logFilter from "../log-filter/log-filter";
 // Utils
 import Logger from "../../utils/log/log";
-import math from "../../utils/math/math";
-import regex from "../../utils/regex";
+import _math from "../../utils/math/math";
+import TrackableElement from "../trackable-element/trackable-element";
 
 const console = new Logger("📊 V5 Stats");
 
@@ -17,17 +18,26 @@ export default class StatsProcessor {
     this.fromDate = starter.fromDate || dayjs().subtract(1, "week");
     this.toDate = starter.toDate || dayjs();
     this.mode = starter.mode || "w";
-    this.tracker = starter.tracker || null;
+    this.trackableElement = starter.trackableElement || null;
     this.is24Hour = starter.is24Hour || false;
+    this.math = starter.math || "sum";
   }
 
   init(config) {
-    this.rows = config.rows || this.rows;
     this.fromDate = config.fromDate || this.fromDate;
     this.toDate = config.toDate || this.toDate;
     this.mode = config.mode || this.mode;
-    this.tracker = config.tracker || this.tracker;
+    this.trackableElement = config.trackableElement || this.trackableElement;
     this.is24Hour = config.is24Hour || this.is24Hour;
+    this.rows = config.rows || this.rows;
+    if (config.math !== this.math && config.math) {
+      this.math = config.math;
+    }
+    try {
+      this.rows = logFilter(this.rows, { search: this.trackableElement.toSearchTerm() });
+    } catch (e) {
+      console.error(`Filtering logs failed, is a trackableElement provided?`, this.trackableElement);
+    }
   }
 
   /**
@@ -63,7 +73,8 @@ export default class StatsProcessor {
    * }
    * @param {Array} rows
    */
-  getValueMap(rows) {
+  getValueMap(overrideRows) {
+    let rows = overrideRows || this.rows;
     let valueMap = {};
 
     // Loop Over each Row
@@ -71,24 +82,25 @@ export default class StatsProcessor {
       // Expand Row if not expanded
       row = row instanceof NomieLog ? row : new NomieLog(row);
       if (!row.trackers) {
-        row.expand();
+        row.getMeta();
       }
       let unitFormat = this.getUnitFormat(); // get unit for time format
       let unitKey = dayjs(row.end).format(unitFormat); // generate unit Key
       // Fill in the Value Map with an empty array if not exist
       valueMap[unitKey] = valueMap[unitKey] || [];
       // If it's a person or context, just count 1
-      if (this.tracker.type == "person" || this.tracker.type == "context") {
+      if (this.trackableElement.type == "person" || this.trackableElement.type == "context") {
         valueMap[unitKey].push(1);
       } else {
         // It's a tracker
-        if (row.trackers[this.tracker.tag]) {
-          let value = row.trackers[this.tracker.tag].value;
-          value = isNaN(value) ? 0 : value;
-          valueMap[unitKey].push(value);
-        } else {
-          valueMap[unitKey].push(1);
-        }
+        row.trackers
+          // filter only matches for thie trackableElement
+          .filter((te) => {
+            return te.id == this.trackableElement.id;
+          })
+          .forEach((trackerElement) => {
+            valueMap[unitKey].push(trackerElement.value);
+          });
       }
     });
     return valueMap;
@@ -101,77 +113,57 @@ export default class StatsProcessor {
    */
   getMinMaxFromValueMap(valueMap) {
     let min = { value: null, dateKey: null, date: null };
-    let max = { value: null, dateKey: null, date: null };
-    let valueArray = Object.keys(valueMap)
-      .map((dateKey) => {
-        let value;
-
-        if (this.getMath() === "sum") {
-          value = math.sum(valueMap[dateKey]);
-        } else {
-          value = math.average(valueMap[dateKey]);
-        }
-        return {
-          dateKey,
-          value,
-          date: dayjs(dateKey),
-        };
-      })
-      .sort((a, b) => {
-        return a.value < b.value ? -1 : 1;
-      });
-
-    if (valueArray.length) {
-      min = valueArray[0];
-      max = valueArray[valueArray.length - 1];
-    }
+    let max = { value: 0, dateKey: null, date: null };
+    let values = [];
+    Object.keys(valueMap).map((dateKey) => {
+      let value;
+      if (this.math === "sum") {
+        value = _math.sum(valueMap[dateKey]);
+      } else {
+        value = _math.average(valueMap[dateKey]);
+      }
+      values.push(value);
+    });
+    min.value = _math.min(values, false);
+    max.value = _math.max(values);
     return { min, max };
   }
 
-  getRelated(rows) {
+  /**
+   * Get Related Items
+   * @param {Array} rows NomieLog
+   */
+  getRelated(overrideRows) {
+    let rows = overrideRows || this.rows;
     let people = {};
     let context = {};
     let tags = {};
 
-    const processMetaUnit = (type, unit) => {
-      if (type == "tracker") {
-        tags[unit.tag] = tags[unit.tag] ? tags[unit.tag] + 1 : 1;
-      } else if (type == "people") {
-        people[unit] = people[unit] ? people[unit] + 1 : 1;
-      } else if (type == "context") {
-        context[unit] = context[unit] ? context[unit] + 1 : 1;
+    this.rows.forEach((row) => {
+      if (!row.trackers) {
+        row.getMeta();
       }
-    };
-
-    const processMeta = (meta) => {
-      try {
-        meta.people.forEach((person) => {
-          processMetaUnit("people", person);
-        });
-        meta.trackers.forEach((tracker) => {
-          processMetaUnit("tracker", tracker);
-        });
-        meta.context.forEach((context) => {
-          processMetaUnit("context", context);
-        });
-      } catch (e) {
-        console.log("Error with", meta);
-        console.log(e.message);
-      }
-    };
-
-    rows.forEach((log) => {
-      const logMeta = log.getMeta();
-      processMeta(logMeta);
+      row.trackers.forEach((trackerElement) => {
+        tags[trackerElement.id] = tags[trackerElement.id] || 0;
+        tags[trackerElement.id]++;
+      });
+      row.people.forEach((personElement) => {
+        people[personElement.id] = people[personElement.id] || 0;
+        people[personElement.id]++;
+      });
+      row.context.forEach((contextElement) => {
+        context[contextElement.id] = context[contextElement.id] || 0;
+        context[contextElement.id]++;
+      });
     });
 
     const returnMap = (base, type, prefix) => {
-      return Object.keys(base).map((tag) => {
+      return Object.keys(base).map((elementId) => {
         return {
-          count: base[tag],
+          count: base[elementId],
           type: type,
-          value: tag,
-          search: `${prefix}${tag}`,
+          value: elementId,
+          search: `${prefix}${elementId}`,
         };
       });
     };
@@ -196,14 +188,13 @@ export default class StatsProcessor {
     let from = unit == "hour" ? this.fromDate.startOf("day") : this.fromDate;
     let to = unit == "hour" ? this.fromDate.endOf("day") : this.toDate;
     let diff = to.diff(from, unit);
-
     for (var i = 1; i <= diff; i++) {
       const unitDate = dayjs(from).add(i, unit);
       let key = unitDate.format(timeFormat);
       let label = unitDate.format(labelFormat);
 
       if (unitValues.hasOwnProperty(key)) {
-        const value = this.getMath() == "sum" ? unitValues[key].sum : unitValues[key].avg;
+        const value = this.math == "sum" ? unitValues[key].sum : unitValues[key].avg;
         labels.push({ x: label });
         values.push({ x: label, y: value, date: unitDate, unit });
       } else {
@@ -250,6 +241,14 @@ export default class StatsProcessor {
     }
   } // end to Chart Data;
 
+  getTracker() {
+    if (this.trackableElement.obj) {
+      return new Tracker(this.trackableElement.obj);
+    } else {
+      return new Tracker({ tag: this.trackableElement.id });
+    }
+  }
+
   getValueMapTotals(valueMap) {
     let newMap = {
       sum: 0,
@@ -265,7 +264,7 @@ export default class StatsProcessor {
       let values = newMap.days[date];
       // If we should ignore zeros, then
       // filter them out.
-      let ignoreZeros = !this.tracker ? true : this.tracker.ignore_zeros;
+      let ignoreZeros = this.getTracker().ignore_zeros;
       if (ignoreZeros) {
         values = values.filter((v) => {
           return v !== 0 ? true : false;
@@ -274,8 +273,8 @@ export default class StatsProcessor {
       // Let's calcuate the days total
       if (values.length) {
         // If it's sum - add them all up
-        if (this.getMath() === "sum") {
-          allValues.push(math.sum(values));
+        if (this.math === "sum") {
+          allValues.push(_math.sum(values));
         } else {
           // Else add it to the array for average lating
           allValues = [...allValues, ...values];
@@ -283,19 +282,14 @@ export default class StatsProcessor {
       }
       // Sum and Avg this day
       newMap.days[date] = {
-        sum: math.sum(values),
-        avg: math.average(values),
+        sum: _math.sum(values),
+        avg: _math.average(values),
       };
     }); // end loop over each day
 
-    newMap.sum = math.sum(allValues);
-    newMap.avg = math.average(allValues);
-
+    newMap.sum = _math.sum(allValues);
+    newMap.avg = _math.average(allValues);
     return newMap;
-  }
-
-  getMath() {
-    return this.tracker.math || "sum";
   }
 
   generateResults() {
@@ -303,10 +297,9 @@ export default class StatsProcessor {
     let valueMapTotals = this.getValueMapTotals(valueMap);
     let minMax = this.getMinMaxFromValueMap(valueMap);
     let chart = this.getChartData(valueMapTotals);
-    return {
-      tracker: this.tracker,
-      type: this.tracker.type,
-      math: this.getMath(),
+    this.results = {
+      type: this.trackableElement.type,
+      math: this.math,
       rows: this.rows,
       chart: chart,
       avg: valueMapTotals.avg,
@@ -314,5 +307,6 @@ export default class StatsProcessor {
       min: minMax.min,
       max: minMax.max,
     };
+    return this.results;
   }
 }

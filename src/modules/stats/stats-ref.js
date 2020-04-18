@@ -1,8 +1,8 @@
 //Modules utils
 import { strToColor } from "../../components/dymoji/dymoji";
 import Tracker from "../../modules/tracker/tracker";
-import { generate as generateSearchTerm } from "../note-data-type/note-data-type";
 import StatsV5 from "./statsV5";
+import extractor from "../../utils/extract/extract";
 
 // Stores
 import { LedgerStore } from "../../store/ledger";
@@ -18,7 +18,7 @@ class StatsReference {
   }
 
   getSearchTerm() {
-    return generateSearchTerm(this.key, this.type);
+    return extractor.generateRaw(this.key, this.type);
   }
 
   getTracker() {
@@ -55,6 +55,7 @@ class StatsReference {
         toDate: toDate,
         mode: timeSpan,
         tracker: this.getTracker(),
+        trackableElement: extractor.toElement(searchTerm),
       });
       return this.stats;
     } catch (e) {
