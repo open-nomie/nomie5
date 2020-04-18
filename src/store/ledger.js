@@ -250,8 +250,8 @@ const ledgerInit = () => {
       let allLogs = base.books[todayKey];
       // Extract just today's logs from the book
       let todaysLogs = methods.filterLogs(allLogs, {
-        startDate: start.toDate(),
-        endDate: end.toDate(),
+        start: start.toDate(),
+        end: end.toDate(),
       });
 
       console.log(`Todays logs ${todaysLogs.length}`);
