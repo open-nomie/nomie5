@@ -1,11 +1,11 @@
 // Nomie ID
 import nid from "../../../src/modules/nid/nid";
-describe("modules/nid", function() {
+describe("modules/nid", function () {
   it("empty nid generator", () => {
-    expect(nid()).to.have.length.of(32);
+    expect(nid().length).to.equal(32);
   });
   it("nid(4) should generate a length of 4", () => {
-    expect(nid(4)).to.have.length.of(4);
+    expect(nid(4).length).to.equal(4);
   });
   it("two nid()s should generate unique values", () => {
     let nid1 = nid();
