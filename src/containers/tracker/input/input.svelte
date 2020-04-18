@@ -97,6 +97,11 @@
     }, 12);
   }
 
+  function editTracker() {
+    Interact.editTracker(tracker);
+    Interact.dismissTrackerInput();
+  }
+
   // When Component Mounts
   onMount(() => {
     // If the value changes, and no data.value exists.
@@ -138,12 +143,15 @@
   show={show || $Interact.trackerInput.show}
   type="fullscreen"
   className="tracker-input">
-  <div class="input-toolbar n-row" slot="header">
-    <div class="filler" />
-    <span class="animate up notice-text {data.ready ? 'visible' : 'hidden'}">
-      {tracker.emoji} {tracker.label}
-    </span>
-    <div class="filler" />
+  <div class="n-toolbar-grid n-row" slot="header">
+    <div class="main">
+      <span class="animate up text-lg {data.ready ? 'visible' : 'hidden'}">
+        {tracker.emoji} {tracker.label}
+      </span>
+    </div>
+    <button class="btn btn-clear tap-icon right" on:click={editTracker}>
+      <NIcon name="edit" />
+    </button>
   </div>
   <!-- Is the data ready -->
   {#if data.ready === true}

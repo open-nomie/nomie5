@@ -13,6 +13,8 @@
 
 // Nomie log is the base Log item that is saved in a ledger
 import NomieLog from "../modules/nomie-log/nomie-log";
+import logFilter from "../modules/log-filter/log-filter.js";
+import extractor from "../utils/extract/extract";
 // Storage for generic access to local,blockstack,pouch
 import Storage from "../modules/storage/storage";
 // Hooks for firing off hooks
@@ -67,54 +69,7 @@ const ledgerInit = () => {
      * @param {Object} filter
      */
     filterLogs(logs, filter) {
-      filter = filter || {};
-
-      // First filter on search if it exists
-      if (filter.search) {
-        const tokens = tokenizer(filter.search.toLowerCase());
-        // Filter Logs by tokens
-        let filtered = logs.filter((log) => {
-          // Tokenize the note
-          let note = tokenizer(log.note.toLowerCase()).map((token) => token.term);
-          // Holder of matches
-          let match = [];
-          // Loop over tokenized search term
-          tokens.forEach((token) => {
-            // If we should exclude it
-            if (token.exlcude) {
-              // Does it have this term?
-              match.push(note.indexOf(token.term) === -1);
-            } else {
-              // It's a normal search - look at the note completely
-              match.push(note.join(" ").search(regex.escape(token.term)) > -1);
-            }
-          });
-          return match.indexOf(false) === -1;
-        });
-
-        logs = filtered;
-      } // end if we have a search term
-
-      //. Now filter logs on start and end date
-      logs = logs.filter((log) => {
-        let pass = false;
-        if (filter.start && filter.end) {
-          pass = log.end >= filter.start && log.end <= filter.end;
-        } else if (filter.start) {
-          pass = log.end >= filter.start;
-        } else if (filter.end) {
-          pass = log.end <= filter.end;
-        }
-        return pass;
-      });
-
-      if (filter.limit) {
-        logs = logs.filter((row, i) => {
-          return i <= filter.limit;
-        });
-      }
-
-      return logs;
+      return logFilter(logs, filter || {});
     },
     // Connect to hooks
     hook(type, func) {
@@ -215,9 +170,10 @@ const ledgerInit = () => {
       logs.forEach((log) => {
         if (!log.trackers) {
           log = new NomieLog(log);
-          log.expanded();
+          log.getMeta();
         }
-        Object.keys(log.trackers || {}).forEach((tag) => {
+        log.trackers.forEach((trackerElement) => {
+          let tag = trackerElement.id;
           trackers[tag] = trackers[tag] || {
             values: [],
             tag: tag,
@@ -225,7 +181,7 @@ const ledgerInit = () => {
             logs: [],
           };
           // Push the value to values array
-          trackers[tag].values.push(log.trackers[tag].value);
+          trackers[tag].values.push(trackerElement.value);
           // Add the Logs for Today - so we can calcuate the score
           if (trackers[tag].logs.indexOf(log) == -1) {
             trackers[tag].logs.push(log);
@@ -668,13 +624,9 @@ const ledgerInit = () => {
 
     async queryPerson(username, start, end) {
       let logs = await methods.query({ start, end, search: `@${username}` });
-      return logs
-        .filter((record) => {
-          return record.note.match(new RegExp(`@${username}`, "gi"));
-        })
-        .sort((a, b) => {
-          return a.end < b.end ? 1 : -1;
-        });
+      return logs.sort((a, b) => {
+        return a.end < b.end ? 1 : -1;
+      });
     },
 
     async queryAll(term, start, end) {
@@ -705,6 +657,8 @@ const ledgerInit = () => {
     },
     async getMemories() {
       const date = new Date();
+      let times = [null, null, null];
+
       let logs1 = methods.getDay(dayjs(date).subtract(1, "year"));
       let logs2 = methods.getDay(dayjs(date).subtract(2, "year"));
       let logs3 = methods.getDay(dayjs(date).subtract(3, "year"));

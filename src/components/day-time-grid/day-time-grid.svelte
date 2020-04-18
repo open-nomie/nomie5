@@ -5,9 +5,10 @@
   // Utils
   import Logger from "../../utils/log/log";
   import math from "../../utils/math/math";
-  import { parse as termParser } from "../../modules/note-data-type/note-data-type";
+  import extractor from "../../utils/extract/extract";
 
   import { UserStore } from "../../store/user";
+  import { TrackerStore } from "../../store/tracker-store";
 
   //   // Props
   export let rows = undefined;
@@ -67,7 +68,7 @@
   let maxValue = 0;
 
   $: if (rows) {
-    let parsedTerm = termParser(term);
+    let trackableElement = extractor.toElement(term);
 
     days = emptyGrid();
     rows.forEach(row => {
@@ -78,8 +79,9 @@
       // If a tracker, use the value to highlight the date/time
       // if it's not a tracker, it will just be a value of 1 so the overall
       // useage of time will be displayed.
-      if (parsedTerm.type == "tracker") {
-        value = row.getTrackerValue(parsedTerm.tracker.tag);
+      if (trackableElement.type == "tracker") {
+        let tracker = TrackerStore.byTag(trackableElement.id);
+        value = row.getTrackerValue(trackableElement.id, tracker.math);
       } else {
         value = 1;
       }

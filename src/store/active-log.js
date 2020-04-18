@@ -1,6 +1,5 @@
 import { writable } from "svelte/store";
 import NomieLog from "../modules/nomie-log/nomie-log";
-import ExtractTrackers from "../utils/extract/extract-trackers";
 import Logger from "../utils/log/log";
 import Hooky from "../modules/hooks/hooks";
 import dayjs from "dayjs";
@@ -8,7 +7,7 @@ import CalculateScore from "../utils/calculate-score/calculate-score";
 const console = new Logger("✴️ store/active-log.js");
 
 const activeLogInit = () => {
-  let base = new NomieLog().toObject();
+  let base = new NomieLog();
   // Start with empty time - let ledger set it one.
   base.end = null;
   base.start = null;
@@ -20,7 +19,7 @@ const activeLogInit = () => {
   const methods = {
     clear() {
       return update((n) => {
-        n = new NomieLog().toObject();
+        n = new NomieLog();
         n.start = null;
         n.end = null;
         return n;

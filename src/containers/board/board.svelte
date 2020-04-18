@@ -15,7 +15,6 @@
   import { navigate } from "svelte-routing";
   import { onMount, onDestroy } from "svelte";
   import dayjs from "dayjs";
-
   import { fade, fly } from "svelte/transition";
 
   // Components
@@ -24,15 +23,12 @@
   import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import NIcon from "../../components/icon/icon.svelte";
   import NSearchBar from "../../components/search-bar/search-bar.svelte";
-  import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
   import NModal from "../../components/modal/modal.svelte";
-
   import LogoType from "../../components/logo/logo.svelte";
-  import LogoMark from "../../components/elephant.svelte";
   import NTip from "../../components/tip/tip.svelte";
-
   import CaptureLog from "../../components/capture-log.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
+  import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
 
   // Containers
   import AppLayout from "../../containers/layout/app.svelte";
@@ -45,8 +41,6 @@
   import math from "../../utils/math/math";
   import Logger from "../../utils/log/log";
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
-  import extractor from "../../utils/extract/extract-trackers";
-  import promiseStep from "../../utils/promise-step/promise-step";
   import tick from "../../utils/tick/tick";
   import TrackerInputer from "../../modules/tracker/tracker-inputer";
 
@@ -138,7 +132,7 @@
     user = $UserStore; // Kick off
     // Setup Hooks These will fire on before safe, and onLogSave
     LedgerStore.hook("onBeforeSave", log => {
-      state.savingTrackers = log.trackersArray().map(t => t.tag);
+      state.savingTrackers = log.getMeta().trackers.map(t => t.id);
     });
 
     LedgerStore.hook("onLogSaved", log => {
@@ -348,20 +342,29 @@
       let inputer = new TrackerInputer(tracker, $TrackerStore);
       let payload = await inputer.get();
 
+      /**
+       * Payload could be an array of, or single { tracker, value }
+       */
       if (payload instanceof Array) {
-        payload
-          .filter(item => item)
-          .forEach(item => {
-            ActiveLogStore.addTag(item.tracker.tag, item.value);
-            let includeStr = $TrackerStore.trackers[
-              item.tracker.tag
-            ].getIncluded(item.value);
-            ActiveLogStore.addElement(includeStr);
-          });
+        let items = payload.filter(item => item);
+        items.forEach(item => {
+          // ActiveLogStore.addTag(item.tracker.tag, item.value);
+          let tracker = TrackerStore.getByTag(item.tracker.tag);
+          // Get any additional content to pull along with this tracker
+          let includeStr = tracker.getIncluded(item.value) || "";
+          includeStr = includeStr.length ? ` ${includeStr}` : "";
+          ActiveLogStore.addElement(
+            `#${tracker.tag}(${item.value})${includeStr}`
+          );
+        });
       } else if (payload) {
-        ActiveLogStore.addTag(payload.tracker.tag, payload.value);
-        let includeStr = tracker.getIncluded(payload.value);
-        ActiveLogStore.addElement(includeStr);
+        let tracker = payload.tracker;
+        // Get any additional content to pull along with this tracker
+        let includeStr = tracker.getIncluded(payload.value) || "";
+        includeStr = includeStr.length ? ` ${includeStr}` : "";
+        ActiveLogStore.addElement(
+          `#${tracker.tag}(${payload.value})${includeStr}`
+        );
       }
       // One Tap Trackers
       // TODO move the adding to the activeLogStore here.
@@ -553,7 +556,7 @@
        * When the log changes, extract the trackers so we can
        * make them pulse
        */
-      state.addedTrackers = new NomieLog(log).trackersArray().map(t => t.tag);
+      state.addedTrackers = new NomieLog(log).getMeta().trackers.map(t => t.id);
     });
     LedgerStore.getToday();
   }); // end onMount
@@ -646,17 +649,18 @@
 
 <!-- Start App Layout -->
 <AppLayout title={appTitle}>
-  <div slot="header">
+  <header slot="header">
     {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
       <div class="container p-0 n-row h-100">
         {#if $TrackerStore.timers.length}
           <button
-            transition:fade
+            xtransition:fade
             class="btn tap-icon pl-3 pr-1"
             on:click={TrackerStore.toggleTimers}>
             <NIcon name="time" size={22} className="fill-red-pulse" />
           </button>
         {/if}
+        <!-- IF MORE THAN 13 TRACKERS - SHOW SEARCH ICON-->
         {#if Object.keys($TrackerStore.trackers).length > 13}
           <button
             class="btn tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}"
@@ -692,7 +696,7 @@
         <div slot="left">
           {#if $TrackerStore.timers.length}
             <button
-              transition:fade
+              xtransition:fade
               class="btn tap-icon pl-2"
               on:click={TrackerStore.toggleTimers}>
               <NIcon name="time" size={20} className="fill-red-pulse" />
@@ -711,7 +715,7 @@
       </NToolbarGrid>
     {/if}
     {#if state.searching}
-      <div transition:fly={{ y: -20, duration: 200 }}>
+      <div>
         <NSearchBar
           bind:this={_elSearchBar}
           className="mt-2"
@@ -733,7 +737,7 @@
         </NSearchBar>
       </div>
     {/if}
-  </div>
+  </header>
   <!-- end header-->
   <div slot="content" class="container board-container">
     {#if user}
@@ -816,6 +820,7 @@
       {/if}
     {/if}
   </div>
+  <!-- End -->
   <div slot="footer">
     <div id="note-capture">
       <CaptureLog />

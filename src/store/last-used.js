@@ -21,16 +21,15 @@ const LastUsedStore = () => {
 
   const methods = {
     async init() {
-      let fromStore =
-        (await NStorage.get(`${config.data_root}/${lastUsedKey}`)) || {};
-      update(d => {
+      let fromStore = (await NStorage.get(`${config.data_root}/${lastUsedKey}`)) || {};
+      update((d) => {
         d = fromStore;
         return d;
       });
     },
     data() {
       let data;
-      update(d => {
+      update((d) => {
         data = d;
         return d;
       });
@@ -42,17 +41,17 @@ const LastUsedStore = () => {
      */
     async record(log) {
       // Get tracker tags as array
-      let trackers = log.trackersArray().map(ta => ta.tag);
+      let trackers = log.getMeta().trackers.map((ta) => ta.tag);
       let data;
       // Get from the store
-      update(d => {
+      update((d) => {
         // Loop over tracekrs
-        trackers.forEach(tracker => {
+        trackers.forEach((tracker) => {
           // Push updated info to object
           d[tracker] = {
             log: log._id,
             book: dayjs(log.end).format("YYYY-MM"),
-            date: new Date()
+            date: new Date(),
           };
         });
         data = d;
@@ -60,7 +59,7 @@ const LastUsedStore = () => {
       });
       // Write to storage
       return await NStorage.put(`${config.data_root}/${lastUsedKey}`, data);
-    }
+    },
   };
 
   setTimeout(() => {
@@ -71,7 +70,7 @@ const LastUsedStore = () => {
     update,
     subscribe,
     set,
-    ...methods
+    ...methods,
   };
 };
 

@@ -10,7 +10,7 @@
   import math from "../../utils/math/math";
   import Tracker from "../../modules/tracker/tracker";
   import dayjs from "dayjs";
-  import NoteDataType from "../../modules/note-data-type/note-data-type";
+  import extractor from "../../utils/extract/extract";
 
   // Stores
   import { UserStore } from "../../store/user";
@@ -38,11 +38,9 @@
     state.date = state.date.subtract(1, "month");
   }
 
-  function getTracker() {
-    return $TrackerStore.trackers.hasOwnProperty($Interact.streak.show)
-      ? $TrackerStore.trackers[$Interact.streak.show]
-      : new Tracker({ tag: $Interact.streak.show });
-  }
+  $: tracker = $TrackerStore.trackers.hasOwnProperty($Interact.streak.show)
+    ? $TrackerStore.trackers[$Interact.streak.show]
+    : new Tracker({ tag: $Interact.streak.show });
 
   function getPercentage(rows) {
     let start = dayjs(state.date).startOf("month");
@@ -70,8 +68,10 @@
       start: state.date.startOf("month"),
       end: state.date.endOf("month")
     };
+    let type = extractor.toElement($Interact.streak.show);
+    console.log("$Interact.streak.show", $Interact.streak.show, type);
     let logs = await LedgerStore.query({
-      search: `${$Interact.streak.show}`,
+      search: type.toSearchTerm($Interact.streak.show),
       start: payload.start,
       end: payload.end
     });
@@ -136,8 +136,8 @@
   <div class="p-3">
     <NCalendar
       bind:this={_elCalendar}
-      color={getTracker().color}
-      tracker={getTracker()}
+      color={tracker.color}
+      {tracker}
       showHeader={false}
       on:dayClick={event => {
         state.date = dayjs(event.detail);

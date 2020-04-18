@@ -1,4 +1,4 @@
-import ExtractTrackers from "../extract/extract-trackers";
+import extractor from "../extract/extract";
 
 // Simple isTrue comparison function
 const isTrue = (condition, baseValue) => {
@@ -24,8 +24,8 @@ export default (note, endTime) => {
   let trackers = (window.$TrackerStore || {}).trackers; // hack - fucking hell
   let score = 0;
   // Extract Trackers
-  let trackersInNotes = ExtractTrackers(note || "");
-  let tkrKeys = Object.keys(trackersInNotes);
+  let trackersInNotes = extractor.trackers(note || "");
+  // let tkrKeys = Object.keys(trackersInNotes);
 
   // Check if condition is true
   const checkCondition = (condition, value) => {
@@ -57,14 +57,15 @@ export default (note, endTime) => {
   };
 
   // Loop over tags array
-  tkrKeys.forEach((tag) => {
+  trackersInNotes.forEach((trackerElement) => {
     // If trackers has this tag
+    let tag = trackerElement.id;
     if ((trackers || {})[tag]) {
       // If the tracker has a score of custom
       if (trackers[tag].score === "custom") {
         let calc = trackers[tag].score_calc || [];
         let met = false;
-        let value = trackersInNotes[tag].value;
+        let value = trackerElement.value;
         calc.forEach((condition) => {
           if (!met) {
             let passes = checkCondition(condition, value);
