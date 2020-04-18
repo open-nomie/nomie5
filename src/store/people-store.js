@@ -94,13 +94,14 @@ function getState() {
 
 const searchForPeople = async () => {
   let loadingFinished = Interact.loading("Finding @usernames...");
-  const logs = await LedgerStore.query({ search: `@`, start: dayjs().subtract(3, "month") });
+  const logs = await LedgerStore.query({ start: dayjs().subtract(3, "month") });
+  console.log("logs", logs);
   let people = [];
   logs.forEach((log) => {
     let meta = log.getMeta();
     // Array of usernames.
-    meta.people.forEach((username) => {
-      username = username.toLowerCase();
+    meta.people.forEach((personElement) => {
+      let username = personElement.id.toLowerCase();
       people.push({ username, last: new Date(log.end) });
     });
     // people = [...people, ...meta.people];
