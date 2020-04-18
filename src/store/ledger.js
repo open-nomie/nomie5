@@ -140,8 +140,11 @@ const ledgerInit = () => {
         const books = await methods.listBooks();
         if (books.length) {
           const firstBook = books[0].replace(config.book_root + "/", "");
+          let bookYearWeekSplit = firstBook.split("-");
+          let day = 1 + (bookYearWeekSplit[1] - 1) * 7; // 1st of January + 7 days for each week
+          let frankenDate = new Date(bookYearWeekSplit[0], 0, day);
           // Create date from book name
-          let date = dayjs(firstBook, config.book_time_format);
+          let date = dayjs(frankenDate, config.book_time_format);
           // Store it locally so we don't have to look it up all the time.
           Storage.local.put("firstBook", {
             date: date.toDate().getTime(),
@@ -230,10 +233,8 @@ const ledgerInit = () => {
       let todayKey = dayjs().format(config.book_time_format);
 
       if (base.books[todayKey]) {
-        console.log("Get Today cached");
         return methods.todayReady();
       } else {
-        console.log("Get Today Freish");
         let book = await methods.getBook(todayKey);
         base.books[todayKey] = book || [];
         base.booksLastUpdate[todayKey] = await methods.getLastUpdate(todayKey);
@@ -254,10 +255,9 @@ const ledgerInit = () => {
         end: end.toDate(),
       });
 
-      console.log(`Todays logs ${todaysLogs.length}`);
       // Extract Trackers
       let trackersUsed = methods.extractTrackerTagAndValues(todaysLogs);
-      console.log("Get Today", trackersUsed);
+
       // Setup data for update
       let data;
       update((d) => {
@@ -682,13 +682,26 @@ const ledgerInit = () => {
       });
     },
     async getMemories() {
-      const date = new Date();
       let times = [null, null, null];
+      let firstDate = await methods.getFirstDate();
+      let yearsDiff = dayjs().diff(firstDate, "year");
+      if (yearsDiff > 1 && yearsDiff < 2) {
+        times[0] = dayjs().subtract(6, "month");
+        times[1] = dayjs().subtract(1, "year");
+      } else if (yearsDiff >= 3) {
+        times[0] = dayjs().subtract(1, "year");
+        times[2] = dayjs().subtract(3, "year");
+        times[3] = dayjs().subtract(yearsDiff, "year");
+      }
 
-      let logs1 = methods.getDay(dayjs(date).subtract(1, "year"));
-      let logs2 = methods.getDay(dayjs(date).subtract(2, "year"));
-      let logs3 = methods.getDay(dayjs(date).subtract(3, "year"));
-      let years = await Promise.all([logs1, logs2, logs3]);
+      let lookupPromises = [];
+      times
+        .filter((time) => time)
+        .forEach((time) => {
+          lookupPromises.push(methods.getDay(time));
+        });
+
+      let years = await Promise.all(lookupPromises);
       let memories = [];
       years.forEach((day) => {
         day = day
