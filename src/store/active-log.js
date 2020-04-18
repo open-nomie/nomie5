@@ -61,7 +61,9 @@ const activeLogInit = () => {
     },
     addElement(element) {
       update((state) => {
-        state.note = `${state.note} ${element} `;
+        let note = (state.note || "").trim().split(" ");
+        note.push(element);
+        state.note = note.join(" ");
         hooky.run("onAddElement", { element });
         return state;
       });

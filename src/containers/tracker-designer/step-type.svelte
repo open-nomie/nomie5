@@ -37,7 +37,7 @@
     <div class="n-list">
       {#each types as type}
         <NItem
-          className="clickable {$TrackerDesignerStore.tracker.type == type._key ? 'active' : ''}}"
+          className="type-{type._key} clickable {$TrackerDesignerStore.tracker.type == type._key ? 'active' : ''}}"
           on:click={() => {
             selectType(type);
           }}>

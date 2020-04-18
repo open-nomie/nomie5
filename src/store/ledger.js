@@ -138,15 +138,19 @@ const ledgerInit = () => {
       if (age > 2 || fresh) {
         // Get list of books
         const books = await methods.listBooks();
-        const firstBook = books[0].replace(config.book_root + "/", "");
-        // Create date from book name
-        let date = dayjs(firstBook, config.book_time_format);
-        // Store it locally so we don't have to look it up all the time.
-        Storage.local.put("firstBook", {
-          date: date.toDate().getTime(),
-          lastChecked: new Date().getTime(),
-        });
-        return date;
+        if (books.length) {
+          const firstBook = books[0].replace(config.book_root + "/", "");
+          // Create date from book name
+          let date = dayjs(firstBook, config.book_time_format);
+          // Store it locally so we don't have to look it up all the time.
+          Storage.local.put("firstBook", {
+            date: date.toDate().getTime(),
+            lastChecked: new Date().getTime(),
+          });
+          return date;
+        } else {
+          return dayjs();
+        }
       } else {
         return dayjs(bookDetails.date);
       }

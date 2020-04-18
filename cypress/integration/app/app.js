@@ -3,6 +3,10 @@
 context("App", () => {
   beforeEach(() => {});
 
+  const visit = () => {
+    cy.visit("http://localhost:5000");
+    cy.wait(1000);
+  };
   const onboard = () => {
     cy.visit("http://localhost:5000");
     cy.wait(1000);
@@ -55,7 +59,6 @@ context("App", () => {
     const next = () => {
       cy.get(".footer-slot button").eq(1).click();
     };
-
     cy.get(".tracker-undefined").click();
     cy.wait(300);
     cy.get(".pop-menu button").eq(1).click();
@@ -76,6 +79,38 @@ context("App", () => {
     cy.get(".tracker-simple_tracker .score").should("be", "1");
   };
 
+  const createMultiTracker = () => {
+    const next = () => {
+      cy.get(".footer-slot button").eq(1).click();
+    };
+    cy.get(".tracker-undefined").click();
+    cy.wait(300);
+    cy.get(".pop-menu button").eq(1).click();
+    cy.wait(300);
+    cy.get(".step .type-note").click();
+    next();
+    cy.wait(300);
+    cy.get(".n-input input").type("Check up");
+    next();
+    cy.get(".input-emoji").type("✅");
+    next();
+    cy.get('[style="background-color: rgb(165, 214, 167);"]').click();
+    next();
+    cy.get("textarea").type("#mood #sleep_quality");
+    next();
+    trackMulti();
+    cy.wait(400);
+
+    // cy.get(".onoffswitch-label").click();
+    // next();
+    // cy.get("select").as("select").invoke("val", "1").trigger("change");
+    // next();
+    // cy.get(".tracker-simple_tracker").should("exist");
+    // cy.get(".tracker-simple_tracker").click();
+    // cy.wait(400);
+    // cy.get(".tracker-simple_tracker .score").should("be", "1");
+  };
+
   const trackMood = (addOrSave = "save") => {
     cy.get(".tracker-mood").click();
     cy.wait(500);
@@ -88,6 +123,22 @@ context("App", () => {
     } else {
       cy.get(".n-modal-footer > .footer > .btn").eq(2).click();
     }
+    // cy.get(".n-modal-footer > .footer > .btn-primary").click();
+  };
+
+  const trackMulti = (addOrSave = "save") => {
+    cy.get(".tracker-check_up").click();
+    cy.wait(500);
+    cy.get(".tracker-input.slider input").as("range").invoke("val", 8).trigger("change");
+    cy.wait(100);
+    cy.get(".n-modal-footer > .footer > .btn").eq(2).click();
+    cy.wait(500);
+    cy.get(".tracker-input.slider input").as("range").invoke("val", 5).trigger("change");
+    cy.wait(100);
+    cy.get(".n-modal-footer > .footer > .btn").eq(2).click();
+    cy.wait(500);
+    cy.get("#textarea-capture-note").should("contain.value", "#check_up #mood(8) #sleep_quality(10)");
+    cy.get(".save-button").click();
     // cy.get(".n-modal-footer > .footer > .btn-primary").click();
   };
 
@@ -133,8 +184,9 @@ context("App", () => {
     selectStarters();
     testTips();
     useTrackers();
+    createMultiTracker();
     createTrackers();
-    // testCaptureForm();
+    testCaptureForm();
   });
 });
 
