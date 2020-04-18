@@ -28,55 +28,6 @@ import Person from "../modules/person/person";
 
 const console = new Logger("🗺 $PeopleStore");
 
-const getLogs = async () => {
-  return await LedgerStore.query({
-    start: dayjs().subtract(16, "week"),
-    end: new Date(),
-  });
-};
-
-const getPeopleLogs = async () => {
-  const logs = await getLogs();
-  return logs.filter((log) => log.note.search("@") > -1);
-};
-
-const mapToUser = (logs) => {
-  const users = {};
-  logs.forEach((log) => {
-    log = log instanceof NomieLog ? log : new NomieLog(log);
-    const meta = log.getMeta();
-    meta.people.forEach((username) => {
-      users[username] = users[username] || [];
-      users[username].push(log);
-    });
-  });
-  return users;
-};
-
-const normalizeUserMap = (userMap) => {
-  const final = {};
-  Object.keys(userMap).forEach((username) => {
-    let logs = userMap[username];
-    final[username] = final[username] || {};
-    final[username].logs = logs;
-    final[username].score = 0;
-    final[username].last = null;
-    if (logs.length) {
-      final[username].last = new Date(logs.sort((a, b) => (a.end < b.end ? 1 : -1))[0].end);
-      final[username].score = math.sum(logs.map((log) => log.score));
-    } else {
-    }
-  });
-  return final;
-};
-
-// let currentStats = {};
-// const getRecentPeopleStats = async () => {
-//   let logs = await getPeopleLogs();
-//   currentStats = normalizeUserMap(mapToUser(logs));
-//   return currentStats;
-// };
-
 const toUsername = (username) => {
   username = username.replace("@", "").trim();
   username = snakeCase(username);
@@ -95,7 +46,7 @@ function getState() {
 const searchForPeople = async () => {
   let loadingFinished = Interact.loading("Finding @usernames...");
   const logs = await LedgerStore.query({ start: dayjs().subtract(3, "month") });
-  console.log("logs", logs);
+
   let people = [];
   logs.forEach((log) => {
     let meta = log.getMeta();
