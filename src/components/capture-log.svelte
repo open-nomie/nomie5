@@ -170,7 +170,7 @@
           // Search for People
         } else if (type === "person") {
           try {
-            let people = Object.keys($PeopleStore.people).filter(
+            let people = Object.keys($PeopleStore.people || []).filter(
               person =>
                 person.toLowerCase().search(searchTag.replace("@", "")) > -1
             );

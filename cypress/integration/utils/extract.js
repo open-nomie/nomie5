@@ -5,7 +5,7 @@ let note =
 
 describe("utils/extractor", function () {
   it("Should be able extract Element from string", () => {
-    expect(extractor.toElement("#mood").type).to.equal("tracker");
+    expect(extractor.toElement(" #mood").type).to.equal("tracker");
     expect(extractor.toElement("#mood(43)").value).to.equal(43);
     expect(extractor.toElement("#语(43.324321234321233oz)").value).to.equal(43.324321234321233);
     expect(extractor.toElement("#语(43)").id).to.equal("语");
@@ -20,7 +20,7 @@ describe("utils/extractor", function () {
   });
 
   it("Should handle #test_time: #hj #bj", () => {
-    let note = "#test_time: #hj #bj";
+    let note = " #test_time: #hj #bj";
     let parsed = extractor.parse(note);
     expect(parsed[0].id).to.equal("test_time");
   });

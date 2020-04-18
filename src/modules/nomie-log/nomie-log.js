@@ -48,6 +48,22 @@ export default class Record {
     this.source = starter.source || null;
   }
 
+  // Get it as an object
+  toObject() {
+    return {
+      _id: this._id,
+      note: this.note,
+      end: this.end,
+      start: this.start,
+      score: this.score,
+      lat: this.lat,
+      lng: this.lng,
+      location: this.location,
+      source: this.source,
+      modified: this.modified,
+    };
+  }
+
   // Get a hash of this note
   hash() {
     return nid([this.note, this.start, this.end, this.lat, this.lng].join(""));
@@ -63,20 +79,6 @@ export default class Record {
 
   setScore(score) {
     this.score = score;
-  }
-
-  // Get it as an object
-  toObject() {
-    return {
-      _id: this._id,
-      note: this.note,
-      end: this.end,
-      start: this.start,
-      score: this.score,
-      lat: this.lat,
-      lng: this.lng,
-      location: this.location,
-    };
   }
 
   // add a tag to the note

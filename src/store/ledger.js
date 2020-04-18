@@ -15,6 +15,7 @@
 import NomieLog from "../modules/nomie-log/nomie-log";
 import logFilter from "../modules/log-filter/log-filter.js";
 import extractor from "../utils/extract/extract";
+import TrackableElement from "../modules/trackable-element/trackable-element";
 // Storage for generic access to local,blockstack,pouch
 import Storage from "../modules/storage/storage";
 // Hooks for firing off hooks
@@ -166,13 +167,23 @@ const ledgerInit = () => {
     },
     extractTrackerTagAndValues(logs) {
       logs = logs || [];
+
+      // Setup Tracker Map
       let trackers = {};
+      // Loop over each log
       logs.forEach((log) => {
+        // If log is not expanded, expand it
         if (!log.trackers) {
           log = new NomieLog(log);
           log.getMeta();
         }
+        // Loop over each tracker
+        console.log(
+          "Log Trackers",
+          log.trackers.map((tracker) => tracker)
+        );
         log.trackers.forEach((trackerElement) => {
+          trackerElement = trackerElement instanceof TrackableElement ? trackerElement : new TrackableElement(trackerElement);
           let tag = trackerElement.id;
           trackers[tag] = trackers[tag] || {
             values: [],
@@ -215,8 +226,10 @@ const ledgerInit = () => {
       let todayKey = dayjs().format(config.book_time_format);
 
       if (base.books[todayKey]) {
+        console.log("Get Today cached");
         return methods.todayReady();
       } else {
+        console.log("Get Today Freish");
         let book = await methods.getBook(todayKey);
         base.books[todayKey] = book || [];
         base.booksLastUpdate[todayKey] = await methods.getLastUpdate(todayKey);
@@ -233,11 +246,14 @@ const ledgerInit = () => {
       let allLogs = base.books[todayKey];
       // Extract just today's logs from the book
       let todaysLogs = methods.filterLogs(allLogs, {
-        start: start.toDate(),
-        end: end.toDate(),
+        startDate: start.toDate(),
+        endDate: end.toDate(),
       });
+
+      console.log(`Todays logs ${todaysLogs.length}`);
       // Extract Trackers
       let trackersUsed = methods.extractTrackerTagAndValues(todaysLogs);
+      console.log("Get Today", trackersUsed);
       // Setup data for update
       let data;
       update((d) => {
@@ -365,6 +381,12 @@ const ledgerInit = () => {
       methods.hooks.run("onBeforeSave", log);
       // Clean the dirty dirty
       delete log._dirty;
+      delete log.trackers;
+      delete log.endDate;
+      delete log.startDate;
+      delete log.people;
+      delete log.context;
+      delete log.duration;
       // Trim any white space from note
       log.note = log.note.trim();
       // Get location if it's needed
@@ -484,9 +506,9 @@ const ledgerInit = () => {
           // Save any new people to the People Store
           // Passing an Array of USERNAMES - people store should convert it to the right thing
           PeopleStore.saveFoundPeople(
-            meta.people.map((username) => {
+            meta.people.map((peopleElement) => {
               return {
-                username,
+                username: peopleElement.id,
                 last: log.end,
               };
             })
