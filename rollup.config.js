@@ -24,7 +24,8 @@ export default [
       format: "iife",
       name: "nomie",
       file: "public/bundle.js",
-      globals: {}
+      globals: {},
+      indent: false,
     },
     plugins: [
       builtins(),
@@ -34,30 +35,30 @@ export default [
         APP_BRANCH: process.env.BRANCH,
         APP_URL: process.env.URL,
         APP_CONTEXT: process.env.CONTEXT,
-        APP_BUILD_DATE: dayjs().format("ddd MMM D YYYY h:mma")
+        APP_BUILD_DATE: dayjs().format("ddd MMM D YYYY h:mma"),
       }),
       scss({
         input: "./scss/main.scss",
-        output: function(styles, styleNodes) {
+        output: function (styles, styleNodes) {
           writeFileSync("./public/main.css", styles);
-        }
+        },
       }),
       svelte({
         // enable run-time checks when not in production
         dev: !production,
         preprocess: {
-          style: scss({ all: true })
+          style: scss({ all: true }),
         },
         // we'll extract any component CSS out into
         // a separate file — better for performance
-        css: css => {
+        css: (css) => {
           css.write("public/bundle.css");
-        }
+        },
       }),
 
       json(),
       resolve(),
-      commonjs(),
+      commonjs({ sourceMap: false }),
 
       // generateSW({
       //   swDest: "./public/sw.js",
@@ -74,18 +75,18 @@ export default [
 
       // If we're building for production (npm run build
       // instead of npm run dev), minify
-      production && terser()
+      production && terser(),
     ],
     watch: {
-      clearScreen: true
-    }
+      clearScreen: true,
+    },
   },
   {
     input: "src/service-worker.js",
     output: {
       sourcemap: false,
       format: "cjs",
-      file: "public/service-worker.js"
+      file: "public/service-worker.js",
     },
     plugins: [
       builtins(),
@@ -95,8 +96,8 @@ export default [
         APP_URL: process.env.URL,
         APP_SERVICE_URL: !production ? "http://localhost:8888" : "",
         APP_CONTEXT: process.env.CONTEXT,
-        APP_BUILD_DATE: dayjs().format("ddd MMM D YYYY h:mma")
-      })
-    ]
-  }
+        APP_BUILD_DATE: dayjs().format("ddd MMM D YYYY h:mma"),
+      }),
+    ],
+  },
 ];
