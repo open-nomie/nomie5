@@ -160,37 +160,38 @@
 
     async doSearch(event) {
       state.searchTerm = null;
+      let trackableElement = event.detail;
       tick(100);
-      if (event.detail.type == "tracker") {
-        state.searchTerm = `#${event.detail.tracker.tag}`;
+      if (trackableElement.type == "tracker") {
+        state.searchTerm = `#${trackableElement.id}`;
       } else {
-        state.searchTerm = `${event.detail.value}`;
+        state.searchTerm = `${trackableElement.raw}`;
       }
       showSearch = true;
       methods.onSearchEnter();
     },
 
     async textClick(event) {
-      let isTracker = event.detail.tracker ? true : false;
+      let trackableElement = event.detail;
+      let tracker =
+        trackableElement.type == "tracker"
+          ? TrackerStore.getByTag(trackableElement.id)
+          : null;
       Interact.popmenu({
-        title: `${
-          isTracker ? event.detail.tracker.label : event.detail.value
-        } Options`,
+        title: `${tracker ? tracker.label : trackableElement.raw} Options`,
         buttons: [
           {
             title: `Open Stats`,
             click: () => {
-              if (isTracker) {
-                Interact.openStats(`#${event.detail.tracker.tag}`);
+              if (tracker) {
+                Interact.openStats(`#${trackableElement.id}`);
               } else {
-                Interact.openStats(event.detail.value);
+                Interact.openStats(trackableElement.raw);
               }
             }
           },
           {
-            title: `Search ${
-              isTracker ? event.detail.tracker.label : event.detail.value
-            }`,
+            title: `Search ${tracker ? tracker.label : trackableElement.raw}`,
             click: () => {
               methods.doSearch(event);
             }
