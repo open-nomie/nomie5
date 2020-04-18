@@ -624,7 +624,6 @@
     // Get Tracker - make a fake one if a person, or context
     state.tracker = TrackerStore.byTag(state.trackableElement.id);
     state.currentColor = state.tracker.color;
-    console.log("Stats MAIN", state);
     getStats();
   }
 
