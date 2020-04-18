@@ -342,20 +342,29 @@
       let inputer = new TrackerInputer(tracker, $TrackerStore);
       let payload = await inputer.get();
 
+      /**
+       * Payload could be an array of, or single { tracker, value }
+       */
       if (payload instanceof Array) {
-        payload
-          .filter(item => item)
-          .forEach(item => {
-            ActiveLogStore.addTag(item.tracker.tag, item.value);
-            let includeStr = $TrackerStore.trackers[
-              item.tracker.tag
-            ].getIncluded(item.value);
-            ActiveLogStore.addElement(includeStr);
-          });
+        let items = payload.filter(item => item);
+        items.forEach(item => {
+          // ActiveLogStore.addTag(item.tracker.tag, item.value);
+          let tracker = TrackerStore.getByTag(item.tracker.tag);
+          // Get any additional content to pull along with this tracker
+          let includeStr = tracker.getIncluded(item.value) || "";
+          includeStr = includeStr.length ? ` ${includeStr}` : "";
+          ActiveLogStore.addElement(
+            `#${tracker.tag}(${item.value})${includeStr}`
+          );
+        });
       } else if (payload) {
-        ActiveLogStore.addTag(payload.tracker.tag, payload.value);
-        let includeStr = tracker.getIncluded(payload.value);
-        ActiveLogStore.addElement(includeStr);
+        let tracker = payload.tracker;
+        // Get any additional content to pull along with this tracker
+        let includeStr = tracker.getIncluded(payload.value) || "";
+        includeStr = includeStr.length ? ` ${includeStr}` : "";
+        ActiveLogStore.addElement(
+          `#${tracker.tag}(${payload.value})${includeStr}`
+        );
       }
       // One Tap Trackers
       // TODO move the adding to the activeLogStore here.

@@ -407,39 +407,11 @@
     return lastTerm;
   }
 
-  async function getStats() {
-    state.loading = true;
-    let queryPayload = {
-      search: state.trackableElement,
-      start: getFromDate(),
-      end: getToDate()
-    };
-    // if day - normalize start and end
-    if (state.timeSpan == "d") {
-      queryPayload.start = dayjs(state.date).startOf("day");
-      queryPayload.end = dayjs(state.date).endOf("day");
-    }
-
-    let results = await LedgerStore.query(queryPayload);
-
-    console.log("Stats Tracker", state.tracker);
-
-    const statsV5 = new StatsV5({
-      is24Hour: $UserStore.meta.is24Hour,
-      math: state.tracker.math
-    });
-
-    state.stats = statsV5.generate({
-      rows: results,
-      fromDate: getFromDate(),
-      toDate: getToDate(),
-      mode: state.timeSpan,
-      math: state.tracker.math,
-      trackableElement: state.trackableElement
-    });
-
+  async function loadSavedCompares() {
     let savedCompares = remember("compare");
+    // If we do - then lets load them each up
     if (state.compare.length == 0 && savedCompares) {
+      // Loop over compares
       savedCompares.forEach(searchTerm => {
         let type = extractor.toElement(searchTerm);
         type.obj = type.type == "tracker" ? TrackerStore.byTag(type.id) : {};
@@ -454,7 +426,7 @@
         );
       });
     }
-
+    // Get Stats for Compares
     for (let i = 0; i < state.compare.length; i++) {
       let stats = await state.compare[i].getStats(
         state.timeSpan,
@@ -462,6 +434,38 @@
         queryPayload.end
       );
     }
+  } // end load saved compares
+
+  async function getStats() {
+    state.loading = true;
+    let queryPayload = {
+      search: state.trackableElement,
+      start: getFromDate(),
+      end: getToDate()
+    };
+    // if day - normalize start and end
+    if (state.timeSpan == "d") {
+      queryPayload.start = dayjs(state.date).startOf("day");
+      queryPayload.end = dayjs(state.date).endOf("day");
+    }
+
+    // Get Logs from the Ledger Store
+    let results = await LedgerStore.query(queryPayload);
+
+    // Prep Stats
+    const statsV5 = new StatsV5();
+
+    // Generate Stats
+    state.stats = statsV5.generate({
+      rows: results,
+      fromDate: getFromDate(),
+      toDate: getToDate(),
+      mode: state.timeSpan,
+      math: state.tracker.math,
+      trackableElement: state.trackableElement
+    });
+    // See if we have any saved compares
+    loadSavedCompares();
 
     state.related = statsV5.getRelated();
     await tick(100);
