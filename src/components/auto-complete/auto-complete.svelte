@@ -36,6 +36,7 @@
   /**
    * Auto Complete Search
    * Searches trackers, people and context
+   * THIS IS A MESS
    *
    **/
   const autoCompleteSearch = (searchTag, type = "tracker") => {
@@ -90,7 +91,7 @@
       partialTag = `@${state.partialTag}`;
     } else if (tracker.type === "context") {
       note = `+${tracker.tag} `;
-      partialTag = `+${state.partialTag}`;
+      partialTag = `${state.partialTag}`;
     } else {
       note = await getTrackerInput(tracker);
       partialTag = `#${state.partialTag.replace("#", "")}`;
