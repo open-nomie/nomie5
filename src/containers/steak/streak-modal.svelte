@@ -38,9 +38,15 @@
     state.date = state.date.subtract(1, "month");
   }
 
-  $: tracker = $TrackerStore.trackers.hasOwnProperty($Interact.streak.show)
-    ? $TrackerStore.trackers[$Interact.streak.show]
-    : new Tracker({ tag: $Interact.streak.show });
+  let lastStreakShow = null;
+  let trackableElement = null;
+  let tracker = null;
+
+  $: if ($Interact.streak.show && $Interact.streak.show !== lastStreakShow) {
+    lastStreakShow = $Interact.streak.show;
+    trackableElement = extractor.toElement($Interact.streak.show);
+    tracker = TrackerStore.getByTag(trackableElement.id);
+  }
 
   function getPercentage(rows) {
     let start = dayjs(state.date).startOf("month");
@@ -133,17 +139,19 @@
     </NToolbarGrid>
   </div>
   <div class="p-3">
-    <NCalendar
-      bind:this={_elCalendar}
-      color={tracker.color}
-      {tracker}
-      showHeader={false}
-      on:dayClick={event => {
-        state.date = dayjs(event.detail);
-        main();
-      }}
-      initialDate={state.date}
-      events={state.logs} />
+    {#if tracker}
+      <NCalendar
+        bind:this={_elCalendar}
+        color={tracker.color}
+        {tracker}
+        showHeader={false}
+        on:dayClick={event => {
+          state.date = dayjs(event.detail);
+          main();
+        }}
+        initialDate={state.date}
+        events={state.logs} />
+    {/if}
     <div class="n-panel py-2 center-all">
       <div class="n-panel w-50 center-all vertical">
         <h1 class="text-inverse">
