@@ -36,6 +36,7 @@
   import { NomieAPI } from "../store/napi";
   import { Lang } from "../store/lang";
   import { PeopleStore } from "../store/people-store";
+  import { Browser } from "../store/browser-store";
 
   // Config
   import config from "../../config/global";
@@ -537,6 +538,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             <NItem title={Lang.t('general.trackers', 'Tracker Count')}>
               <span slot="right">{TrackerStore.getAsArray().length}</span>
             </NItem>
+
             <NItem title={Lang.t('general.first_log', 'First Log')}>
               <div class="" slot="right">
                 {#await LedgerStore.getFirstDate()}
@@ -558,6 +560,15 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </button>
                 {$UserStore.launchCount}
               </div>
+            </NItem>
+            <NItem title={Lang.t('general.device', 'Device')}>
+              <span slot="right">{$Browser.device}</span>
+            </NItem>
+            <NItem title={Lang.t('general.platform', 'Platform')}>
+              <span slot="right">{$Browser.platform}</span>
+            </NItem>
+            <NItem title={Lang.t('general.pwa', 'PWA')}>
+              <span slot="right">{$Browser.pwa}</span>
             </NItem>
             <NItem title="Version">
               <span slot="right">APP_VERSION</span>
