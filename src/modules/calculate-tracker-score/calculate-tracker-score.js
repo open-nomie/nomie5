@@ -15,7 +15,7 @@ function isConditionTrue(condition, baseValue) {
   return response;
 }
 
-function checkCondition(condition, value) {
+function checkCondition(condition, value, endTime) {
   let response = {
     true: false,
     next: true,
@@ -33,25 +33,19 @@ function checkCondition(condition, value) {
     case "value":
       response.true = isConditionTrue(condition, parseFloat(value));
       break;
-    case "today":
-      console.log("TODAY"); // TODO
-      // let todayValue = this.props.user.today.byTracker[tracker.tag] || 0;
-      // response.true = this.isTrue(condition, todayValue);
-      break;
   }
   response.next = !response.true;
   response.score = condition.sc;
   return response;
 }
 
-function main(value, tracker, todaysTrackers) {
-  console.log("Today's Trackers", todaysTrackers);
+function main(value, tracker, time = new Date()) {
   let score = 0;
   if (tracker.score && !tracker.score_calc) {
     score = parseInt(tracker.score);
   } else if (tracker.score_calc) {
     let conditionsMet = tracker.score_calc.map((condition) => {
-      return checkCondition(condition, value);
+      return checkCondition(condition, value, time);
     });
     let met = conditionsMet.filter((condition) => condition.true);
     score = met.length ? parseFloat(met[0].score) : score;

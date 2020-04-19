@@ -1,5 +1,6 @@
 import extractor from "../extract/extract";
-
+import calcTrackerScore from "../../modules/calculate-tracker-score/calculate-tracker-score";
+import math from "../math/math";
 // Simple isTrue comparison function
 const isTrue = (condition, baseValue) => {
   let response = false;
@@ -20,68 +21,17 @@ const isTrue = (condition, baseValue) => {
 
 export default (note, endTime) => {
   endTime = endTime || new Date().getTime();
-
-  let trackers = (window.$TrackerStore || {}).trackers; // hack - fucking hell
-  let score = 0;
+  let trackers = (window.$TrackerStore || {}).trackers || {}; // hack - fucking hell
   // Extract Trackers
-  let trackersInNotes = extractor.trackers(note || "");
-  // let tkrKeys = Object.keys(trackersInNotes);
-
-  // Check if condition is true
-  const checkCondition = (condition, value) => {
-    let response = {
-      true: false,
-      next: true,
-      score: 0,
-    };
-    switch (condition.if) {
-      case "hour":
-        let hour = new Date(endTime).getHours();
-        response.true = isTrue(condition, parseInt(hour));
-        break;
-      case "month":
-        let dayOfMonth = parseInt(dayjs(endTime).format("DD"));
-        response.true = isTrue(condition, parseInt(dayOfMonth));
-        break;
-      case "value":
-        response.true = isTrue(condition, parseFloat(value));
-        break;
-      case "today":
-        // let todayValue = this.props.user.today.byTracker[tracker.tag] || 0;
-        // response.true = this.isTrue(condition, todayValue);
-        break;
-    }
-    response.next = false;
-    response.score = condition.sc;
-    return response;
-  };
-
-  // Loop over tags array
-  trackersInNotes.forEach((trackerElement) => {
-    // If trackers has this tag
-    let tag = trackerElement.id;
-    if ((trackers || {})[tag]) {
-      // If the tracker has a score of custom
-      if (trackers[tag].score === "custom") {
-        let calc = trackers[tag].score_calc || [];
-        let met = false;
-        let value = trackerElement.value;
-        calc.forEach((condition) => {
-          if (!met) {
-            let passes = checkCondition(condition, value);
-            if (passes.true) {
-              // set met to stop others
-              met = true;
-              score = score + parseInt(condition.sc);
-            }
-          }
-        });
-      } else if (trackers[tag].score !== "" && trackers[tag].score !== null && trackers[tag].score !== "0") {
-        // Else if the tracker has a set value
-        let thisScore = parseInt(trackers[tag].score);
-        score = score + thisScore;
-      }
+  let trackerElements = extractor.trackers(note || "");
+  // Extract Scores to total for this note
+  let scores = trackerElements.map((tElement) => {
+    if (trackers[tElement.id]) {
+      return calcTrackerScore(tElement.value, trackers[tElement.id], endTime);
+    } else {
+      return 0;
     }
   });
-  return isNaN(score) ? 0 : score;
+
+  return math.sum(scores);
 };
