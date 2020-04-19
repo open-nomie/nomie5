@@ -1,5 +1,5 @@
 import Tracker from "../../../src/modules/tracker/tracker";
-import calcTrackerScore from "../../../src/modules/calculate-tracker-score/calculate-tracker-score";
+import calcTrackerScore from "../../../src/modules/scoring/score-tracker";
 
 const mood = new Tracker({
   tag: "mood",
