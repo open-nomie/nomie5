@@ -10,19 +10,17 @@ context("App", () => {
   const onboard = () => {
     cy.visit("http://localhost:5000");
     cy.wait(1000);
-    cy.get(".footer-buttons > .btn").click();
-    cy.wait(400);
-    cy.get(".footer-buttons > :nth-child(3)").click();
-    cy.wait(400);
-    cy.get(".footer-buttons > :nth-child(3)").click();
-    cy.wait(400);
-    cy.get(".footer-buttons > :nth-child(3)").click();
-    cy.wait(400);
-    cy.get(".footer-buttons > :nth-child(3)").click();
-    cy.wait(400);
-    cy.get(".slide-4 > .top > :nth-child(2)").click();
-    cy.wait(400);
-    cy.get(".footer-buttons > :nth-child(3)").click();
+    cy.get(".n-toolbar-grid > .btn").eq(0).click();
+    cy.wait(200);
+    cy.get(".n-toolbar-grid > .btn").eq(1).click();
+    cy.wait(200);
+    cy.get(".n-toolbar-grid > .btn").eq(1).click();
+    cy.wait(200);
+    cy.get(".n-toolbar-grid > .btn").eq(1).click();
+    cy.wait(200);
+    cy.get(".top > :nth-child(2)").click();
+    cy.wait(200);
+    cy.get(".n-toolbar-grid > .btn").eq(1).click();
     cy.wait(1000);
   };
 
