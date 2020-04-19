@@ -172,8 +172,8 @@
       flex-wrap: wrap;
     }
     .btn {
-      flex-grow: 1;
-      flex-shrink: 1;
+      flex-grow: 0;
+      flex-shrink: 0;
       max-width: 120px;
       white-space: pre;
     }

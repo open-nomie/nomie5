@@ -59,11 +59,11 @@
       placeholder={getPlaceholder()}
       bind:value={state.note} />
     <AutoComplete
+      scroller
       input={state.note}
       on:select={evt => {
         let payload = evt.detail;
         state.note = payload.note;
-        document.getElementById('textarea-note').focus();
       }} />
   </div>
   <div class="mt-2">
