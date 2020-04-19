@@ -93,14 +93,14 @@
       }
     };
     const color = {
-      title: "Pick a Tracker Color",
+      title: "Pick Tracker Color",
       component: StepColor,
       validate() {
         return $TrackerDesignerStore.tracker.color;
       }
     };
     const type = {
-      title: "Pick the Tracker Type",
+      title: "Pick Tracker Type",
       component: StepType,
       validate() {
         return $TrackerDesignerStore.tracker.type;
