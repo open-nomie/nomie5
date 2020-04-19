@@ -26,7 +26,11 @@ const BrowserStoreInit = () => {
     pwa: window.matchMedia("(display-mode: standalone)").matches,
   });
 
-  const methods = {};
+  const methods = {
+    iOS() {
+      return (navigator.platform || "").toLowerCase().match(/iphone|ipad|ipod/gi) ? true : false;
+    },
+  };
 
   //   window.onresize = (evt) => {
   //     update((state) => {

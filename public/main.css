@@ -6647,6 +6647,83 @@ TODO: Organize main into components or containers.
   .input-model.type-value .tracker-input.slider {
     display: none; }
 
+.page-setup .center-grow {
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column; }
+  .page-setup .center-grow a {
+    color: var(--color-inverse);
+    border-bottom: dotted 1px #ccc; }
+
+.page-setup .slide {
+  z-index: 10;
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: all 0.3s ease-in-out;
+  background-color: var(--local-background); }
+  .page-setup .slide .btn-content {
+    color: var(--color-inverse);
+    box-shadow: var(--box-shadow-float);
+    background-color: var(--color-solid);
+    border: none; }
+    .page-setup .slide .btn-content.active {
+      background-color: var(--color-primary-bright);
+      color: #fff; }
+  .page-setup .slide a {
+    color: var(--color-primary-bright) !important;
+    text-decoration: underline;
+    border-bottom: none !important; }
+  .page-setup .slide p {
+    max-width: 400px; }
+  .page-setup .slide .top {
+    flex-direction: column;
+    padding: 20px 25px 0;
+    padding-top: env(safe-area-inset-top) !important;
+    flex-grow: 0;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 50px); }
+    .page-setup .slide .top h1 {
+      text-align: center;
+      padding-top: env(safe-area-inset-top); }
+    .page-setup .slide .top p {
+      font-size: 0.8rem;
+      line-height: 1rem;
+      opacity: 0.7;
+      text-align: center; }
+  @media (min-width: 600px) {
+    .page-setup .slide .mobile-message {
+      display: none; } }
+  .page-setup .slide .bottom {
+    z-index: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: calc(50vh - 20px);
+    flex-direction: column;
+    padding: 0 16px; }
+    .page-setup .slide .bottom h1 {
+      font-size: 1.5rem;
+      font-weight: bolder;
+      text-align: center; }
+      @media (max-width: 349.98px) {
+        .page-setup .slide .bottom h1 {
+          font-size: 1.2rem; } }
+    .page-setup .slide .bottom p {
+      font-size: 0.8rem;
+      line-height: 120%;
+      text-align: center;
+      color: var(--color-inverse-3); }
+      @media (max-width: 349.98px) {
+        .page-setup .slide .bottom p {
+          font-size: 0.7rem; } }
+
 .timer-bar {
   position: fixed;
   animation: redPulse 3s infinite;
