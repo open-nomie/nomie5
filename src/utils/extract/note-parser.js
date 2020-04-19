@@ -74,7 +74,7 @@ export default function (str = "") {
               return toElement("context", scrubbed.word, valueStr, scrubbed.remainder);
               break;
             default:
-              return toElement("generic", word, valueStr, scrubbed.remainder);
+              return toElement("generic", word, "");
               break;
           }
         })
