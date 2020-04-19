@@ -185,10 +185,6 @@ const ledgerInit = () => {
           log.getMeta();
         }
         // Loop over each tracker
-        console.log(
-          "Log Trackers",
-          log.trackers.map((tracker) => tracker)
-        );
         log.trackers.forEach((trackerElement) => {
           trackerElement = trackerElement instanceof TrackableElement ? trackerElement : new TrackableElement(trackerElement);
           let tag = trackerElement.id;

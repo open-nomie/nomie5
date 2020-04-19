@@ -69,7 +69,6 @@
       end: state.date.endOf("month")
     };
     let type = extractor.toElement($Interact.streak.show);
-    console.log("$Interact.streak.show", $Interact.streak.show, type);
     let logs = await LedgerStore.query({
       search: type.toSearchTerm($Interact.streak.show),
       start: payload.start,

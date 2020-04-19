@@ -54,8 +54,6 @@ export default class TrackerInputer {
       };
     });
 
-    console.log("Items", items);
-
     for (let i = 0; i < items.length; i++) {
       let response = await this.getTrackerInputAsString(items[i].tracker, items[i].value);
       note.push(response);

@@ -104,7 +104,6 @@ export default class Record {
     return this.trackers
       .filter((trackerElement) => trackerElement.id == trackerTag)
       .map((trackerElement) => {
-        console.log(`Mapping`, trackerElement, trackerElement.value);
         return trackerElement.value;
       });
   }
