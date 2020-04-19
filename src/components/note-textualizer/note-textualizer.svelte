@@ -35,7 +35,7 @@
     note_to_array(str) {
       let parsed = extractor.parse(str, { includeGeneric: true });
       actual = parsed.filter(trackableElement => {
-        return trackableElement.type == "generic";
+        return trackableElement.type !== "tracker";
       }).length;
       return parsed;
     }
