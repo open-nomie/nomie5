@@ -1,6 +1,7 @@
 import TrackableElement from "../../modules/trackable-element/trackable-element";
 import snakeCase from "../snake-case/snake-case";
 import stringToValue from "../string-to-value/string-to-value";
+import noteParser from "./note-parser";
 
 /**
  * Parse a string into an array of Trackable Items
@@ -9,73 +10,20 @@ import stringToValue from "../string-to-value/string-to-value";
  * @param {Object} options
  */
 function parse(str = "", options = {}) {
-  return (
-    str
-      .split(" ") // Convert to Array
-      .map((word) => {
-        // Loop over each word
-        let scrubbed = scrub(word); // Scrub it clean
-        let wordSplit = word.replace("#", "").split("(");
-        let valueStr = wordSplit.length == 2 ? wordSplit[1].replace(")", "") : 1;
-        let id = scrub(wordSplit[0]).word;
-
-        switch (
-          word.trim().substr(0, 1) // switch to match of first character
-        ) {
-          // Tracker Type
-          case "#":
-            // Split for value gathering
-            return new TrackableElement({
-              id,
-              raw: scrubbed.word,
-              prefix: "#",
-              type: "tracker",
-              value: stringToValue(valueStr), // convert to value
-              remainder: scrubbed.remainder,
-              obj: window && window.$TrackerStore ? window.$TrackerStore.trackers[id] : null,
-            });
-            break;
-          // People Type
-          case "@":
-            return new TrackableElement({
-              id: id.replace("@", ""),
-              raw: scrubbed.word,
-              prefix: "@",
-              type: "person",
-              value: stringToValue(valueStr),
-              remainder: scrubbed.remainder,
-            });
-            break;
-          // Context Types
-          case "+":
-            return new TrackableElement({
-              id: id.replace("+", ""),
-              raw: scrubbed.word,
-              prefix: "+",
-              type: "context",
-              value: stringToValue(valueStr),
-              remainder: scrubbed.remainder,
-            });
-            break;
-          // Default Type
-          default:
-            if (options.includeGeneric) {
-              return new TrackableElement({
-                id: word,
-                raw: word,
-                type: "generic",
-                value: 1,
-              });
-            } else {
-              return null;
-            }
-            break;
-        }
-      })
-      .filter((word) => word) || []
-  );
+  return noteParser(str)
+    .map((elementObj) => {
+      let element = new TrackableElement(elementObj);
+      element.value = stringToValue(element.value);
+      return element;
+    })
+    .filter((element) => {
+      if (options.includeGeneric) {
+        return true;
+      } else {
+        return element.type !== "generic";
+      }
+    });
 }
-
 /**
  * Converts a single trackable element like #tag or @people to a TrackableElement
  * @param {String} str
