@@ -407,7 +407,7 @@
     return lastTerm;
   }
 
-  async function loadSavedCompares() {
+  async function loadSavedCompares(queryPayload) {
     let savedCompares = remember("compare");
     // If we do - then lets load them each up
     if (state.compare.length == 0 && savedCompares) {
@@ -465,7 +465,7 @@
       trackableElement: state.trackableElement
     });
     // See if we have any saved compares
-    loadSavedCompares();
+    loadSavedCompares(queryPayload);
 
     state.related = statsV5.getRelated();
     await tick(100);

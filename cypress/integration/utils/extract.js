@@ -36,6 +36,14 @@ describe("utils/extractor", function () {
     expect(extractor.parse().length).to.equal(0);
   });
 
+  it("should handle new lines with the first tag", () => {
+    let note = `do this man. 
+ 
+#mood(4) #energy(4) #motivation(2) #stress(8) #sd(3)`;
+    let parsed = extractor.parse(note);
+    expect(parsed[0].id).to.equal("mood");
+  });
+
   it("Should do fine with something like +covid19.", () => {
     let note = `This is a note  +covid19.\n\t\r +covid14 
     `;

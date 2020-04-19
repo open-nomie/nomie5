@@ -20,7 +20,7 @@ function parse(str = "", options = {}) {
         let id = scrub(wordSplit[0]).word;
 
         switch (
-          word.substr(0, 1) // switch to match of first character
+          word.trim().substr(0, 1) // switch to match of first character
         ) {
           // Tracker Type
           case "#":
@@ -95,7 +95,7 @@ function toElement(str = {}) {
  * @param {string} word
  */
 function scrub(word) {
-  let cleanedWord = word.replace(/(\'|\,|\.|\!|’|\?|:)/gi, "");
+  let cleanedWord = word.replace(/(\'|\,|\.|\!|’|\?|:)/gi, "").trim();
   return {
     word: cleanedWord.trim(),
     remainder: word.replace(cleanedWord, ""),

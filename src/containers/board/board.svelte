@@ -397,20 +397,8 @@
     },
     getPositivity(tracker) {
       let value = methods.getTrackerValue(tracker);
-
       value = value || 0;
       return calcTrackerScore(value, tracker);
-      // if (value) {
-      //   let trackerResults = today[tracker.tag];
-      //   if (trackerResults && trackerResults.logs) {
-      //     let scores = trackerResults.logs.map(log => {
-      //       return log.score;
-      //     });
-      //     return math.sum(scores);
-      //   }
-      // } else {
-      //   return 0;
-      // }
     },
     /**
      * Get Hours Used
