@@ -43,7 +43,8 @@
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import tick from "../../utils/tick/tick";
   import TrackerInputer from "../../modules/tracker/tracker-inputer";
-  import calcTrackerScore from "../../modules/calculate-tracker-score/calculate-tracker-score";
+
+  import ScoreTracker from "../../modules/scoring/score-tracker";
 
   //Stores
   import { ActiveLogStore } from "../../store/active-log";
@@ -398,7 +399,7 @@
     getPositivity(tracker) {
       let value = methods.getTrackerValue(tracker);
       value = value || 0;
-      return calcTrackerScore(value, tracker);
+      return ScoreTracker(value, tracker);
     },
     /**
      * Get Hours Used

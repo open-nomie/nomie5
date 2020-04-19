@@ -10,7 +10,7 @@
   export let compact = false;
   export let style = "";
   export let className = "";
-  export let hideMore = false;
+  // export let hideMore = false;
 
   function sort(logs) {
     return logs.sort((a, b) => {

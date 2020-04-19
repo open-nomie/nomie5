@@ -82,19 +82,20 @@
 
   const appVersion = "APP_VERSION";
 
-  // Not sure if theese are needed
-  // export let name = "nomie";
   export let url = "";
 
-  $: if (window && $TrackerStore.tags) {
-    window.$TrackerStore.tags = $TrackerStore.tags;
+  // This should be reworked
+  $: if (window && $TrackerStore && !window.$TrackerStore) {
+    window.$TrackerStore = $TrackerStore;
   }
 
   // Offline monitor
   let offline = false;
 
   const methods = {
-    routerChange(event) {},
+    routerChange(event) {
+      console.log("Router Change?", event);
+    },
     hideSplashScreen() {
       document.querySelectorAll(".delete-on-app").forEach(d => {
         d.classList.add("deleted");

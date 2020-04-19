@@ -9,7 +9,7 @@ import { writable } from "svelte/store";
 // utils
 import Logger from "../utils/log/log";
 import PromiseStep from "../utils/promise-step/promise-step";
-import calculateScore from "../utils/calculate-score/calculate-score";
+import ScoreNote from "../modules/scoring/score-note";
 
 // Modules
 import Storage from "../modules/storage/storage";
@@ -79,7 +79,7 @@ const nomieApiInit = () => {
         (log) => {
           log.end = new Date(log.date);
           let nLog = new NomieLog(log);
-          nLog.score = calculateScore(nLog.note, TrackerStore.state.trackers);
+          nLog.score = ScoreNote(nLog.note, TrackerStore.state.trackers);
           return LedgerStore.saveLog(nLog);
         },
         (status) => {

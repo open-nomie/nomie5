@@ -2,7 +2,7 @@ import nid from "../../modules/nid/nid";
 
 // Modules
 import extractor from "../../utils/extract/extract";
-import _calculateScore from "../../utils/calculate-score/calculate-score"; // Score calculator
+import ScoreNote from "../../modules/scoring/score-note";
 import dayjs from "dayjs";
 import math from "../../utils/math/math";
 
@@ -34,7 +34,7 @@ export default class Record {
     // If a score is set, use it - if not, calculate it.
     // If a score is 0 or not set
     //starter.score ||
-    this.score = starter.score || _calculateScore(this.note, this.end);
+    this.score = starter.score || ScoreNote(this.note, this.end);
 
     // Get location
     this.lat = starter.lat || null;
@@ -74,7 +74,7 @@ export default class Record {
   }
 
   calculateScore(note = null) {
-    return _calculateScore(note || this.note, this.end);
+    return ScoreNote(note || this.note, this.end);
   }
 
   setScore(score) {

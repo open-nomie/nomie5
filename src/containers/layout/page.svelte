@@ -6,13 +6,11 @@
   import AppLayout from "../layout/app.svelte";
   //props
   export let className = undefined;
-  export let withBack = false;
+  // export let withBack = false;
   export let title = undefined;
   // Dynamic
   $: hasHeader = (arguments[1].$$slots || {}).hasOwnProperty("header") || title;
   $: hasSubHeader = (arguments[1].$$slots || {}).hasOwnProperty("sub-header");
-  $: if (hasSubHeader) {
-  }
 
   // methods
 </script>

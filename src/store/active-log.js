@@ -3,7 +3,7 @@ import NomieLog from "../modules/nomie-log/nomie-log";
 import Logger from "../utils/log/log";
 import Hooky from "../modules/hooks/hooks";
 import dayjs from "dayjs";
-import CalculateScore from "../utils/calculate-score/calculate-score";
+import ScoreNote from "../modules/scoring/score-note";
 const console = new Logger("✴️ store/active-log.js");
 
 const activeLogInit = () => {
@@ -46,7 +46,7 @@ const activeLogInit = () => {
       return log;
     },
     calculateScore(note) {
-      return CalculateScore(note, new Date().getTime());
+      return ScoreNote(note, new Date().getTime());
     },
     removeStr(str) {
       update((b) => {

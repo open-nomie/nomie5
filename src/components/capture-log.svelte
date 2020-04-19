@@ -30,7 +30,7 @@
   // Utils
   import Logger from "../utils/log/log";
   import time from "../utils/time/time";
-  import CalculateScore from "../utils/calculate-score/calculate-score";
+  import ScoreNote from "../modules/scoring/score-note";
   import TrackerInputer from "../modules/tracker/tracker-inputer";
   import tick from "../utils/tick/tick";
   import math from "../utils/math/math";
@@ -202,7 +202,7 @@
     },
     calculateScore() {
       $ActiveLogStore.score =
-        $ActiveLogStore.score || CalculateScore($ActiveLogStore.note);
+        $ActiveLogStore.score || ScoreNote($ActiveLogStore.note);
     },
     async logSave() {
       methods.calculateScore();
