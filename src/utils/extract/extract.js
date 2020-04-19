@@ -86,36 +86,4 @@ export default {
       return trackableElement.type == "context";
     });
   },
-  all(str) {
-    return {
-      people: extractPeople(str),
-      trackers: extractTrackers(str),
-      context: extractContext(str),
-    };
-  },
-  // asArray(str) {
-  //   let all = this.all(str);
-  //   console.log(all.trackers);
-  //   return [...all.trackers, ...all.people, ...all.context];
-  // },
-  // asNote(str) {
-  //   let note = [];
-  //   let all = this.all(str);
-
-  //   Object.keys(all.trackers || []).forEach((tag) => {
-  //     let tkr = all.trackers[tag];
-  //     if (tkr.value) {
-  //       note.push(`#${tag}(${tkr.value})`);
-  //     } else {
-  //       note.push(`#${tag}`);
-  //     }
-  //   });
-  //   (all.people || []).forEach((person) => {
-  //     note.push(`@${person}`);
-  //   });
-  //   (all.context || []).forEach((context) => {
-  //     note.push(`+${context}`);
-  //   });
-  //   return note.join(" ");
-  // },
 };

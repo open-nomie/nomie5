@@ -6,6 +6,7 @@ export default function (str = "") {
    */
   function getValueString(word) {
     const wordSplit = word.split("(");
+    // if it's has a (value) use it, otherwise default to 1
     const valueStr = wordSplit.length == 2 ? wordSplit[1].replace(")", "") : 1;
     return valueStr;
   }
@@ -52,9 +53,9 @@ export default function (str = "") {
    */
   function parse(str = "") {
     // Split to array
-    const strArr = str.split(" ");
-    return (
-      strArr
+    const parsedNote =
+      str
+        .split(" ")
         .map((word) => {
           // Loop over each word
           let scrubbed = scrub(word); // Scrub it clean
@@ -77,8 +78,10 @@ export default function (str = "") {
               break;
           }
         })
-        .filter((word) => word) || []
-    );
+        .filter((word) => word) || [];
+
+    // Return parsed note
+    return parsedNote;
   }
   /**
    * Main Return for the function
