@@ -397,6 +397,7 @@ const ledgerInit = () => {
         log.lat = location.latitude;
         log.lng = location.longitude;
       }
+      log.source = log.source || "n5";
       return log;
     },
     /**
