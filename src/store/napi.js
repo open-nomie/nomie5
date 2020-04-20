@@ -74,6 +74,7 @@ const nomieApiInit = () => {
     },
     async import(logs) {
       Interact.blocker(`Importing ${logs.length} notes from the API...`);
+      await 1000;
       let finished = await PromiseStep(
         logs,
         (log) => {
