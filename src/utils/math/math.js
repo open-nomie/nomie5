@@ -1,3 +1,4 @@
+import calculate from "../calculate/calculate";
 export default {
   // Sum an array
   sum: (arr) => {
@@ -81,5 +82,17 @@ export default {
   },
   trustfulNumber(number, def) {
     return isNaN(number) ? def : number;
+  },
+  isNumber(check) {
+    return !isNaN(check) && check !== null && check !== undefined;
+  },
+  isInt(n) {
+    return Number(n) === n && n % 1 === 0;
+  },
+  isFloat(n) {
+    return Number(n) === n && n % 1 !== 0;
+  },
+  calculate(calcArray) {
+    return calculate(calcArray);
   },
 };

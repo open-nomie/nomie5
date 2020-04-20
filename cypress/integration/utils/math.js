@@ -1,6 +1,15 @@
 import math from "../../../src/utils/math/math";
 import NomieUOM from "../../../src/utils/nomie-uom/nomie-uom";
 
+describe("utils/math/calc", () => {
+  it("should add a calculator buffer", () => {
+    expect(math.calculate([2, "+", 2])).to.equal(4);
+    expect(math.calculate([2, "+", 2, "+", 4, "+", 4])).to.equal(12);
+    expect(math.calculate([10, "*", 2])).to.equal(20);
+    expect(math.calculate([5, ".", 5, "*", 2])).to.equal(11);
+  });
+});
+
 describe("utils/math", function () {
   it("math.sum", () => {
     expect(math.sum([1, 2])).to.equal(3);
@@ -10,7 +19,7 @@ describe("utils/math", function () {
   });
 
   it("should generate percentages", () => {
-    let positivity = [10, 30, 14];
+    let positivity = [10, 5, 2];
     console.log("Positivity", positivity);
     expect(JSON.stringify(math.percentile(positivity))).to.equal(JSON.stringify([100, 50, 20]));
   });
