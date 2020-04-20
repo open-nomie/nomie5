@@ -31,7 +31,7 @@
   export let className = "";
   export let focus = false;
   export let fullDate = false;
-  // export let hideMore = false;
+  export let hideMore = undefined;
   // consts
   const dispatch = createEventDispatcher();
 
@@ -109,13 +109,15 @@
         <NPoints points={displayLog.score} />
       {/if}
 
-      <button
-        on:click={event => {
-          Interact.logOptions(displayLog);
-        }}
-        class="btn btn-clear btn-sm more-button clickable ml-1">
-        <NIcon name="more" className="fill-primary-bright" size="32" />
-      </button>
+      {#if hideMore !== true}
+        <button
+          on:click={event => {
+            Interact.logOptions(displayLog);
+          }}
+          class="btn btn-clear btn-sm more-button clickable ml-1">
+          <NIcon name="more" className="fill-primary-bright" size="32" />
+        </button>
+      {/if}
 
     </div>
     <!-- Process the Note Content wi th the Textualizer 
