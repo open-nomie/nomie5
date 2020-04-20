@@ -391,6 +391,24 @@
         changeDate(state.date.startOf("week"));
       }
     };
+    const viewStreak = {
+      title: "View Streak",
+      click: () => {
+        Interact.openStreak(state.currentTerm);
+      }
+    };
+
+    const editElement = {
+      title: `Edit ${state.currentTerm}`,
+      click: () => {
+        if (state.trackableElement.type == "tracker") {
+          Interact.editTracker(TrackerStore.byTag(state.trackableElement.id));
+        } else if (state.trackableElement.type == "person") {
+          Interact.person(state.trackableElement.id);
+        }
+      }
+    };
+
     buttons.push(compare);
     if (dayjs().format("DD-MM-YYYY") !== state.date.format("DD-MM-YYYY")) {
       buttons.push(gotoToday);
@@ -398,7 +416,13 @@
     buttons.push(startOfWeek);
     buttons.push(startOfMonth);
     buttons.push(startOfYear);
+    buttons.push(viewStreak);
+    // If it's a person or tracker
+    if (state.trackableElement.type.search(/tracker|person/) > -1) {
+      buttons.push(editElement);
+    }
 
+    //state.trackableElement
     Interact.popmenu({ title: "Stat Options", buttons });
   }
 
