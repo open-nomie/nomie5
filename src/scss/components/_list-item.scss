@@ -108,6 +108,12 @@
   .main {
     flex-grow: 1;
     flex-shrink: 1;
+    max-width: 100%;
+  }
+
+  .n-note-textualized {
+    max-width: 100%;
+    overflow-x: auto;
   }
 
   .left,

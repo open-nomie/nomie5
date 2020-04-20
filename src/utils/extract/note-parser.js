@@ -32,12 +32,12 @@ export default function (str = "") {
    * @param {String} value
    * @param {String} remainder
    */
-  function toElement(type, word, value, remainder) {
+  function toElement(type, word, value, remainder, raw) {
     const prefixes = { context: "+", person: "@", tracker: "#" };
     const prefix = prefixes[type] || "";
     return {
       id: word.replace(prefix, "").split("(")[0], // key/id
-      raw: word, // Raw word
+      raw: raw || word, // Raw word
       prefix, // #,@,+
       type, // type of trackableElement
       value, // value of the tracker
@@ -74,7 +74,17 @@ export default function (str = "") {
               return toElement("context", scrubbed.word, valueStr, scrubbed.remainder);
               break;
             default:
-              return toElement("generic", word, "");
+              if (
+                word
+                  .trim()
+                  .substr(0, 6)
+                  .match(/https:|http:/)
+              ) {
+                let link = word.trim().replace(/(https|http):\/\//gi, "");
+                return toElement("link", link, null, null, word.trim());
+              } else {
+                return toElement("generic", word, "");
+              }
               break;
           }
         })

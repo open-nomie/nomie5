@@ -32,6 +32,9 @@
     textElementClick(element) {
       dispatch("textClick", element);
     },
+    linkClick(link) {
+      window.open(link, "_system");
+    },
     note_to_array(str) {
       let parsed = extractor.parse(str, { includeGeneric: true });
       actual = parsed.filter(trackableElement => {
@@ -111,6 +114,14 @@
             methods.textElementClick(word);
           }}>
           {` ${word.raw} `}
+        </span>
+      {:else if word.type == 'link'}
+        <span
+          class="context font-weight-bold clickable text-primary-bright"
+          on:click={() => {
+            methods.linkClick(word.raw);
+          }}>
+          {` ${word.id} `}
         </span>
       {:else if word.raw}{word.raw + ' '}{/if}
       {#if word.remainder}
