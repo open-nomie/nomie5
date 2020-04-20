@@ -852,51 +852,28 @@
       {#if state.dataView == 'overview'}
         <div class="overview py-2 flex-grow flex-shrink">
           {#if state.stats.math == 'sum'}
-            <NItem className="bg-transparent">
-              <NKVBlock
-                inverse
-                label="Total"
-                value={formatValue(state.stats.sum)}
-                type="row" />
+            <NItem className="solo" title="Total">
+              <div slot="right" class="text-lg text-inverse">
+                {formatValue(state.stats.sum)}
+              </div>
             </NItem>
           {/if}
-          <NItem className="py-0 bg-transparent">
-            <NKVBlock
-              inverse
-              label="Avg"
-              value={formatValue(state.stats.avg)}
-              type="row" />
+          <NItem className="solo" title="Average">
+            <div slot="right" class="text-lg text-inverse">
+              {formatValue(state.stats.avg)}
+            </div>
           </NItem>
           {#if state.stats.max.value > state.stats.min.value}
-            <NItem className="bg-transparent">
-              <NKVBlock
-                inverse
-                label="Range"
-                value=""
-                className="filler"
-                type="row">
-                <div slot="value">
-                  {formatValue(state.stats.min.value, false)}
-                  <span class="text-faded-2 font-weight-normal">to</span>
-                  {formatValue(state.stats.max.value)}
-                </div>
-              </NKVBlock>
+            <NItem className="solo" title="Range">
+              <div slot="right" class="text-lg text-inverse value">
+                {formatValue(state.stats.min.value, false)}
+                <span class="text-faded-2 font-weight-normal">to</span>
+                {formatValue(state.stats.max.value)}
+              </div>
             </NItem>
-            <!-- <NItem>
-                <NKVBlock
-                  label="Variance"
-                  className="filler"
-                  value={`${formatValue(state.stats.max.value - state.stats.min.value)}`}
-                  type="row" />
-              </NItem> -->
           {/if}
-          <NItem className="bg-transparent">
-            <NKVBlock
-              inverse
-              label="Score"
-              className="filler"
-              value={getScore()}
-              type="row" />
+          <NItem className="solo" title="Score">
+            <div slot="right" class="text-lg text-inverse">{getScore()}</div>
           </NItem>
 
           {#if state.related.length}
