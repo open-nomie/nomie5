@@ -15,7 +15,6 @@
 
   //Container for Slider (range), Keypad and Timer
   import SliderInput from "./slider.svelte";
-  import NKeypad from "./keypad.svelte";
   import NTimer from "./timer.svelte";
   import NCalculator from "../../../components/calculator/calculator.svelte";
 
@@ -188,9 +187,12 @@
           }} />
       {:else}
         <div id="keypad-holder">
-          <NKeypad
-            {tracker}
-            value={data.value}
+          <NCalculator
+            {value}
+            displayFormat={input => {
+              console.log('Display Input', input);
+              return tracker.displayValue(input || '');
+            }}
             on:change={value => {
               data.value = value.detail;
             }} />

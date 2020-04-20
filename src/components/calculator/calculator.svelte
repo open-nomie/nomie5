@@ -1,7 +1,9 @@
 <script>
   // Inspirated by https://codepen.io/ethanryan/details/MryqXv
 
+  // Math will do the calculatng
   import math from "../../utils/math/math";
+
   import { tick, createEventDispatcher, onMount } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -53,8 +55,9 @@
   function isNumber(input) {
     return !isNaN(input) && input !== null;
   }
+
+  // Insert a key or operator into the buffer
   function insertBuffer(insert) {
-    console.log("insert", insert);
     // Set last buffer
     let lastBuffer = buffer.length ? buffer[buffer.length - 1] : null;
 
