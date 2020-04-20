@@ -6045,7 +6045,11 @@ body.scrolling .mini-map {
     flex-wrap: nowrap; }
   .n-item .main {
     flex-grow: 1;
-    flex-shrink: 1; }
+    flex-shrink: 1;
+    max-width: 100%; }
+  .n-item .n-note-textualized {
+    max-width: 100%;
+    overflow-x: auto; }
   .n-item .left,
   .n-item .right {
     color: var(--color-inverse-2);
