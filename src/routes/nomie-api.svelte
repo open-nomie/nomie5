@@ -9,6 +9,8 @@
   // Modules
   import Tracker from "../modules/tracker/tracker";
   import NLog from "../modules/nomie-log/nomie-log";
+  import tick from "../utils/tick/tick";
+
   // Modules
   import NomieAPICli from "../modules/nomie-api-cli/nomie-api-cli";
   import clipboard from "../utils/clipboard/clipboard";
@@ -22,6 +24,7 @@
   import NItem from "../components/list-item/list-item.svelte";
   import NToggle from "../components/toggle-switch/toggle-switch.svelte";
   import NBackButton from "../components/back-button/back-button.svelte";
+  import NLogItem from "../components/list-item-log/list-item-log.svelte";
 
   // containers
   import NPage from "../containers/layout/page.svelte";
@@ -172,19 +175,17 @@
         }
       });
     },
-    capture(log) {
+    async capture(log) {
       state.capturingId = log.id;
-      log.end = new Date(log.date);
-      let nLog = new NLog(log);
-
-      LedgerStore.saveLog(nLog).then(res => {
-        state.hidden.push(log.id);
-        state.hidden = state.hidden;
-        if (state.logs.length == state.hidden.length) {
-          // They've done all of them - clear it.
-          methods.clear();
-        }
-      });
+      await tick(1000);
+      let nLog = toLog(log); // convert to log
+      let response = LedgerStore.saveLog(nLog);
+      state.hidden.push(log.id);
+      state.hidden = state.hidden;
+      if (state.logs.length == state.hidden.length) {
+        // They've done all of them - clear it.
+        methods.clear();
+      }
     },
     setView(view) {
       state.view = view;
@@ -193,6 +194,12 @@
       }
     }
   };
+
+  function toLog(apiLog) {
+    let log = new NLog(apiLog);
+    log.end = apiLog.date;
+    return log;
+  }
 
   onMount(() => {
     methods.init();
@@ -229,7 +236,7 @@
       <NButtonGroup
         buttons={[{ label: 'Settings', active: state.view == 'settings', click() {
               methods.setView('settings');
-            } }, { label: 'Captured', active: state.view == 'captured', click() {
+            } }, { label: `Captured (${state.logs.length})`, active: state.view == 'captured', click() {
               methods.setView('captured');
             } }]} />
 
@@ -284,9 +291,28 @@
         title="Manually set API/Private Key..." />
     {:else if state.view === 'captured'}
       <div class="n-list">
-        {#each state.logs as log, index}
-          {#if state.hidden.indexOf(log.id) === -1}
-            <NItem className="py-2">
+        {#each state.logs as apiLog, index}
+          {#if state.hidden.indexOf(apiLog.id) === -1}
+            <NLogItem log={toLog(apiLog)} hideMore={true} />
+            <div class="n-row px-2">
+
+              <button
+                class="btn btn-outlined btn-success ml-2 btn-block my-0"
+                disabled={state.capturingId === apiLog.id}
+                on:click={() => {
+                  methods.capture(apiLog);
+                }}>
+                {#if state.capturingId === apiLog.id}
+                  <Spinner color="#FFF" size="24" />
+                  Saving
+                {:else}
+                  <NIcon name="checkmarkOutline" className="fill-white mr-2" />
+                  Accept
+                {/if}
+              </button>
+            </div>
+
+            <!-- <NItem className="py-2">
               <h3 class="n-title truncate-2">{log.note}</h3>
               <div>
                 <small class="text-faded-3">
@@ -307,16 +333,20 @@
                   <NIcon name="download" className="fill-white" />
                 {/if}
               </button>
-            </NItem>
+            </NItem> -->
           {/if}
         {/each}
 
       </div>
       {#if state.logs.length > state.hidden.length}
-        <NItem
-          title="Clear Remaining Logs"
-          className="text-red"
-          on:click={methods.confirmClear} />
+        <NItem>
+          <button
+            on:click={methods.confirmClear}
+            class="btn btn-outlined btn-danger mr-1 btn-block my-0">
+            <NIcon name="closeOutline" className="fill-white mr-2" />
+            Clear Remaining
+          </button>
+        </NItem>
       {/if}
       {#if !state.logs.length}
         <div class="empty-notice">No recent logs captured</div>
@@ -325,9 +355,9 @@
       <!-- We're In the Settings Tab
         -->
       <NItem
-        title="Auto Import"
+        title="Auto Accept"
         className="p-3"
-        description="Automatically import captured logs">
+        description="Automatically import and accept API logs">
         <div slot="right">
           <NToggle
             bind:value={autoImportAPI}
