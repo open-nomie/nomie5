@@ -5,6 +5,7 @@
   import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import NProgressBar from "../../components/progress-bar/progress-bar.svelte";
   import NSpinner from "../../components/spinner/spinner.svelte";
+  import NPositivityBar from "../../components/positivity-bar/positivity-bar.svelte";
 
   // Modules and Utils
   import math from "../../utils/math/math";
@@ -80,6 +81,7 @@
       start: payload.start,
       end: payload.end
     });
+
     logs = logs.map(row => {
       row.start = new Date(row.start);
       row.end = new Date(row.end);
@@ -115,31 +117,32 @@
   }
 </style>
 
-<NModal show={$Interact.streak.show} type="bottom-slideup">
-  <div slot="header" class="w-100">
-    <NToolbarGrid>
-      <button
-        class="btn btn-clear tap-icon"
-        slot="left"
-        on:click={Interact.closeStreak}>
-        <NIcon name="close" />
-      </button>
-      <main slot="main">{$Interact.streak.show}</main>
-    </NToolbarGrid>
-    <NToolbarGrid>
-      <button class="btn btn-clear tap-icon" slot="left" on:click={prev}>
-        <NIcon name="chevronLeft" />
-      </button>
-      <main slot="main" class="w-100 text-center">
-        {state.date.format('MMM YYYY')}
-      </main>
-      <button class="btn btn-clear tap-icon" slot="right" on:click={next}>
-        <NIcon name="chevronRight" />
-      </button>
-    </NToolbarGrid>
-  </div>
-  <div class="p-3">
-    {#if tracker}
+{#if tracker}
+  <NModal show={$Interact.streak.show} type="bottom-slideup">
+    <div slot="header" class="w-100">
+      <NToolbarGrid>
+        <button
+          class="btn btn-clear tap-icon"
+          slot="left"
+          on:click={Interact.closeStreak}>
+          <NIcon name="close" />
+        </button>
+        <main slot="main">{$Interact.streak.show}</main>
+      </NToolbarGrid>
+      <NToolbarGrid>
+        <button class="btn btn-clear tap-icon" slot="left" on:click={prev}>
+          <NIcon name="chevronLeft" />
+        </button>
+        <main slot="main" class="w-100 text-center">
+          {state.date.format('MMM YYYY')}
+        </main>
+        <button class="btn btn-clear tap-icon" slot="right" on:click={next}>
+          <NIcon name="chevronRight" />
+        </button>
+      </NToolbarGrid>
+    </div>
+    <div class="p-3">
+
       <NCalendar
         bind:this={_elCalendar}
         color={tracker.color}
@@ -151,24 +154,25 @@
         }}
         initialDate={state.date}
         events={state.logs} />
-    {/if}
-    <div class="n-panel py-2 center-all">
-      <div class="n-panel w-50 center-all vertical">
-        <h1 class="text-inverse">
-          {state.daysHit}
-          <span class="text-inverse-3">of</span>
-          {state.daysTotal}
-        </h1>
-        <small class="text-inverse-2">
-          {math.round(state.percentage, 0)}% of the Days
-        </small>
-      </div>
-      <div class="n-panel w-50 center-all py-2">
-        <div class="spinner-container">
-          <NSpinner size="120" speed="0" gap={100 - state.percentage} />
+
+      <div class="n-panel center-all">
+
+        <div class="n-panel w-50 center-all vertical">
+          <h1 class="text-inverse">
+            {state.daysHit}
+            <span class="text-inverse-3">of</span>
+            {state.daysTotal}
+          </h1>
+          <small class="text-inverse-2">
+            {math.round(state.percentage, 0)}% of the Days
+          </small>
+        </div>
+        <div class="n-panel w-50 center-all py-2">
+          <div class="spinner-container">
+            <NSpinner size="120" speed="0" gap={100 - state.percentage} />
+          </div>
         </div>
       </div>
-
     </div>
-  </div>
-</NModal>
+  </NModal>
+{/if}

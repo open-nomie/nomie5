@@ -16,6 +16,7 @@
   // Utils
   import Logger from "../../utils/log/log";
   import NIcon from "../../components/icon/icon.svelte";
+  import NPositivityBar from "../../components/positivity-bar/positivity-bar.svelte";
 
   import calcTrackerScore from "../../modules/scoring/score-tracker";
 
@@ -41,7 +42,12 @@
     date: dayjs(initialDate),
     today: new Date(),
     weekdays: null,
-    percentage: null
+    percentage: null,
+    totals: {
+      positive: 0,
+      negative: 0,
+      neutral: 0
+    }
   };
 
   let mounted = false;
@@ -83,7 +89,14 @@
   }
 
   // If date change - do the magic.
-  $: if (state.date) {
+  let lastDate = null;
+  $: if (state.date && state.date != lastDate) {
+    lastDate = state.date;
+
+    state.totals.neutral = 0;
+    state.totals.positive = 0;
+    state.totals.negative = 0;
+
     startWeekDayOfMonth =
       state.date
         .startOf("month")
@@ -179,10 +192,16 @@
       if (total) {
         score = calcTrackerScore(total, tracker);
       }
-
       // Lets extract the score for this tracker
       if (values.length) {
         // Did we pass in a tracker?
+        if (score == 0) {
+          state.totals.neutral = state.totals.neutral + 1;
+        } else if (score > 0) {
+          state.totals.positive = state.totals.positive + 1;
+        } else if (score < 0) {
+          state.totals.negative = state.totals.negative + 1;
+        }
         return methods.getDayBorder(score);
       } else {
         return ``;
@@ -370,4 +389,8 @@
       </div>
     </div>
   </div>
+  <NPositivityBar
+    positive={state.totals.positive}
+    neutral={state.totals.neutral}
+    negative={state.totals.negative} />
 {:else}Loading{/if}
