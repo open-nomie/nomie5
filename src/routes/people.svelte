@@ -139,40 +139,40 @@
       {/if}
 
       {#each state.people as person}
-        <NItem
-          className="py-2 clickable solo box-shadow mb-3"
-          on:click={() => {
-            personClicked(person);
-          }}>
-          <div slot="left">
-            {#if $PeopleStore.people[person].avatar}
-              <AvatarBall
-                size={48}
-                avatar={$PeopleStore.people[person].avatar}
-                style={`border-radius:32%; overflow:hidden`} />
-            {:else if $PeopleStore.people[person].displayName}
-              <AvatarBall
-                size={48}
-                username={$PeopleStore.people[person].displayName}
-                style={`border-radius:32%; overflow:hidden`} />
-            {/if}
-          </div>
-          <div class="title">{$PeopleStore.people[person].displayName}</div>
-          {#if $PeopleStore.people[person].last}
-            <div class="note">
-              {dayjs($PeopleStore.people[person].last).fromNow()}
+        <div class="n-row">
+          <NItem
+            className="pt-2 pb-2 clickable solo box-shadow mb-3 mr-0 filler"
+            on:click={() => {
+              personClicked(person);
+            }}>
+            <div slot="left">
+              {#if $PeopleStore.people[person].avatar}
+                <AvatarBall
+                  size={48}
+                  avatar={$PeopleStore.people[person].avatar}
+                  style={`border-radius:32%; overflow:hidden`} />
+              {:else if $PeopleStore.people[person].displayName}
+                <AvatarBall
+                  size={48}
+                  username={$PeopleStore.people[person].displayName}
+                  style={`border-radius:32%; overflow:hidden`} />
+              {/if}
             </div>
-          {/if}
-          <div slot="right">
-            <button
-              class="btn btn-clear"
-              on:click|stopPropagation={() => {
-                Interact.openStats(`@${person}`);
-              }}>
-              <NIcon name="chart" className="fill-primary-bright" size={18} />
-            </button>
-          </div>
-        </NItem>
+            <div class="title">{$PeopleStore.people[person].displayName}</div>
+            {#if $PeopleStore.people[person].last}
+              <div class="note">
+                {dayjs($PeopleStore.people[person].last).fromNow()}
+              </div>
+            {/if}
+          </NItem>
+          <button
+            class="btn btn-clear"
+            on:click|stopPropagation={() => {
+              Interact.openStats(`@${person}`);
+            }}>
+            <NIcon name="chart" className="fill-primary-bright" size={18} />
+          </button>
+        </div>
       {/each}
       {#if state.people.length}
         <div class="p-2 text-center">
