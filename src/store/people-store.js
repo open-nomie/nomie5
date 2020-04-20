@@ -94,7 +94,11 @@ const PeopleInit = () => {
   const methods = {
     async init() {
       await methods.getPeople();
-      // await methods.getStats();
+      // Refresh the people every minute
+      // This should help with blockstack users
+      setInterval(() => {
+        methods.getPeople();
+      }, 1000 * 60 * 5);
     },
     savePerson(person) {
       update((state) => {
@@ -130,15 +134,16 @@ const PeopleInit = () => {
       let people = await Storage.get(`${config.data_root}/${config.data_people_key}.json`);
       // Update State
       update((state) => {
+        let statePeople = state.people;
         if (people) {
           // Turn it in to a Person Object
           Object.keys(people)
             .filter((row) => row)
             .forEach((personKey) => {
-              people[personKey.toLowerCase()] = new Person(people[personKey]);
+              statePeople[personKey.toLowerCase()] = new Person(people[personKey]);
             });
         }
-        state.people = people;
+        state.people = statePeople;
         return state;
       });
       return people;
