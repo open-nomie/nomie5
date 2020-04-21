@@ -71,8 +71,6 @@
 
   const appVersion = "APP_VERSION";
 
-  export let url = "";
-
   // This should be reworked
   $: if (window && $TrackerStore && !window.$TrackerStore) {
     window.$TrackerStore = $TrackerStore;

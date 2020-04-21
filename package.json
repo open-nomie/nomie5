@@ -79,7 +79,8 @@
     "svelte": "^3.20.1",
     "svelte-preprocess-css-global": "0.0.1",
     "svelte-routing": "^1.4.2",
-    "svelte-sortable-list": "^1.1.0"
+    "svelte-sortable-list": "^1.1.0",
+    "svelte-spa-router": "^2.1.0"
   },
   "dependencies": {
     "carbon-icons-svelte": "^10.9.3",

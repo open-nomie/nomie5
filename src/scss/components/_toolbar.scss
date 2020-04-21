@@ -1,5 +1,17 @@
 @import "../../scss/utils/_utils";
 
+.n-toolbar {
+  h1,
+  h2,
+  h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+}
+.n-toolbar-grid .btn {
+  color: var(--color-inverse-1);
+}
+
 .n-toolbar-grid {
   color: var(--color-inverse);
   display: grid;

@@ -1,0 +1,83 @@
+.loading-screen {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.deleted {
+  }
+
+  &:before {
+    transition: all 0.5s ease-in-out;
+    content: "";
+    background-color: #fff;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 300;
+  }
+  &:after {
+    transition: all 0.5s ease-in-out;
+    content: "";
+    background-image: url(/images/nomie-splash.svg);
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 400;
+    background-position: center;
+  }
+
+  // svg {
+  // 	transition: all 0.3s ease-in-out;
+  // }
+}
+.version {
+  position: absolute;
+  width: 100px;
+  bottom: 50px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: -50px;
+  left: 50%;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 12px;
+  text-align: center;
+}
+
+.delete-on-app {
+  transition: all 1s ease-in-out;
+  .version {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: var(--color-primary);
+    font-weight: bold;
+    z-index: 3000;
+  }
+
+  &.deleted {
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+    transform: scale(1.7);
+
+    .version {
+      bottom: 1000px;
+      opacity: 0;
+    }
+    svg {
+      // transition: all 0.3s ease-in-out;
+      // transform: scale(2);
+    }
+  }
+}

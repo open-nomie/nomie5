@@ -1,0 +1,22 @@
+.btn,
+a,
+input,
+header,
+footer,
+button {
+  touch-action: manipulation;
+}
+
+.click-thru {
+  display: block;
+  width: 100%;
+  border: none;
+  background: none;
+  -webkit-appearance: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pointer {
+  cursor: pointer;
+}

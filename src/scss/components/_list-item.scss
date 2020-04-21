@@ -1,5 +1,6 @@
 // The component was getting to big... Needed some breathing room
 
+
 .n-item {
   text-align: left;
   display: flex;
@@ -16,6 +17,12 @@
   font-size: 1rem;
   flex-shrink: 0;
   background-color: var(--color-solid);
+
+  &.bg-light {
+    background-color: var(--color-bg) !important;
+    &.text-faded {
+      color: var(--color-inverse-3) !important;
+    }
 
   &.solo,
   &[solo] {

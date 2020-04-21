@@ -311,29 +311,6 @@
                 {/if}
               </button>
             </div>
-
-            <!-- <NItem className="py-2">
-              <h3 class="n-title truncate-2">{log.note}</h3>
-              <div>
-                <small class="text-faded-3">
-                  {dayjs(log.date).format('ddd MMM Do YYYY h:mm A')} from
-                  <strong>{log.source}</strong>
-                </small>
-              </div>
-              <button
-                class="btn-circle btn btn-primary"
-                slot="right"
-                disabled={state.capturingId === log.id}
-                on:click={() => {
-                  methods.capture(log);
-                }}>
-                {#if state.capturingId === log.id}
-                  <Spinner />
-                {:else}
-                  <NIcon name="download" className="fill-white" />
-                {/if}
-              </button>
-            </NItem> -->
           {/if}
         {/each}
 

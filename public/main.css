@@ -6731,10 +6731,12 @@ TODO: Organize main into components or containers.
 .memories {
   background-color: var(--color-primary-bright);
   border-radius: 16pt;
+  margin: 0 8pt 8pt;
   padding: 8pt; }
   @media (max-width: 599.98px) {
     .memories {
-      border-radius: 0; } }
+      border-radius: 0;
+      margin: 0; } }
   .memories .memories-log-header {
     padding: 4pt 0;
     font-size: 0.7rem; }

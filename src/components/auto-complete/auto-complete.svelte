@@ -141,6 +141,18 @@
 </script>
 
 <style lang="scss">
+  :global(autocomplete-results .scroller) {
+    max-height: 48px;
+    overflow: scroll;
+    .tracker-list {
+      margin-top: 0px;
+      margin-bottom: 2px;
+      max-height: 40px;
+      display: flex;
+      flex-wrap: nowrap !important;
+      width: fit-content;
+    }
+  }
   .autocomplete-results {
     margin: 0px;
     border-radius: 2px;
@@ -162,8 +174,6 @@
         pointer-events: none;
         transform: translateY(60px);
       }
-    }
-    &.scroller {
     }
 
     .tracker-list {

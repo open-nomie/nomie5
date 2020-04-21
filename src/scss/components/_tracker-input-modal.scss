@@ -36,3 +36,18 @@
     font-weight: 600;
   }
 }
+
+.input-model {
+  flex-grow: 1;
+  height: 100%;
+  &.type-range {
+    .keypad-holder {
+      display: none;
+    }
+  }
+  &.type-value {
+    .tracker-input.slider {
+      display: none;
+    }
+  }
+}
