@@ -125,22 +125,17 @@
   .buttons {
     display: grid;
     justify-content: center;
-
     grid-template-areas:
       "main main main main"
       "main main main main"
       "main main main main"
       "main main main main"
       "main main main main";
-
     grid-template-columns: 70px 70px 70px 70px;
     grid-template-rows: 70px 70px;
   }
   @include media-breakpoint-down(xs) {
-    .calc-screen {
-      width: 240px;
-    }
-    .container {
+    .buttons {
       grid-template-columns: 60px 60px 60px 60px;
       grid-template-rows: 60px 60px;
       .btn {
@@ -149,11 +144,8 @@
       }
     }
   }
-  @include media-breakpoint-up(md) {
-    .calc-screen {
-      width: 240px;
-    }
-    .container {
+  @include media-breakpoint-up(sm) {
+    .buttons {
       grid-template-columns: 80px 80px 80px 80px;
       grid-template-rows: 80px 80px;
       .btn {
@@ -173,22 +165,20 @@
     border-radius: 4pt;
     padding: 4pt 8pt;
     padding-bottom: 4pt;
-    width: 280px;
+    width: 100%;
     margin: 0 auto 8pt;
     .value {
       line-height: 100%;
       height: 50px;
-      display: flex;
-      flex-grow: 1;
-      align-items: center;
       text-align: right;
-      justify-content: flex-end;
     }
     .preview {
       position: absolute;
       top: 4pt;
       left: 8pt;
       opacity: 0.8;
+      color: #999;
+      font-size: 0.8rem;
     }
     .buffer {
       height: 20px;
@@ -198,13 +188,10 @@
     }
   }
   .btn {
+    touch-action: manipulation;
     background-color: dimgray;
     border: none;
     color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
     margin: 4px;
     border-radius: 50%;
     line-height: 100%;
@@ -218,6 +205,10 @@
   }
   .btn.b-3 {
     background-color: var(--color-orange);
+    color: #fff;
+  }
+  .btn.b-0.r-0 {
+    background-color: var(--color-red);
     color: #fff;
   }
 </style>
@@ -241,7 +232,7 @@
       {#each buttonRow as button, bIndex}
         {#if button !== null}
           <button
-            class="btn r-{rIndex} b-{bIndex}"
+            class="clickable btn r-{rIndex} b-{bIndex}"
             on:click={() => {
               click(button);
             }}>
@@ -253,5 +244,4 @@
       {/each}
     {/each}
   </div>
-
 </div>
