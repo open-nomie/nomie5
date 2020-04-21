@@ -8,6 +8,7 @@
   export let color = "#000";
   export let className = "";
   export let style = "";
+  export let radius = 0;
 </script>
 
 <style lang="scss">
@@ -67,7 +68,8 @@
 
 <div
   class="n-ball {className}"
-  style="width:{size}px; height:{size}px; {style}">
+  style="width:{size}px; height:{size}px; {radius ? `border-radius:${size * radius}px; overflow:hidden;` : ''}
+  {style}">
   {#if avatar}
     <div
       class=" avatar"
