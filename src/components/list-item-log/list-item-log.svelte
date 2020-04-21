@@ -8,6 +8,8 @@
 
   // components
   import NItem from "../list-item/list-item.svelte";
+  import NBall from "../tracker-ball/ball.svelte";
+  import Dymoji from "../dymoji/dymoji.svelte";
   import NIcon from "../icon/icon.svelte";
   import NPoints from "../points/points.svelte";
   import NText from "../text/text.svelte";
@@ -130,6 +132,13 @@
         note={displayLog.note}
         {trackers}
         className={logMeta.trackers.length ? '' : 'pb-2'} />
+    {/if}
+    {#if displayLog.people.length}
+      <div class="people pb-2 px-2">
+        {#each displayLog.people as person}
+          <NBall size="20" username={person.id} className="ml-2" />
+        {/each}
+      </div>
     {/if}
     <div class="trackers-list">
       <!-- Loop over the trackers within this log -->
