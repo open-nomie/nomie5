@@ -1,7 +1,8 @@
 import extractor from "../../../src/utils/extract/extract";
 
-let note =
-  "This is a #test of +context @person #语 @语 +语 @brandon Nomies #extractor(4)! #home(0)? #coffee(3), #sleep(01:00:00) and #cheese #cheese #cheese";
+let note = `This is a #test of +context @person #语 @语 +语 @brandon Nomies 
+  
+  #extractor(4)! #home(0)? #coffee(3), #sleep(01:00:00) and #cheese #cheese #cheese`;
 
 describe("utils/extractor", function () {
   it("Should be able extract Element from string", () => {
@@ -33,16 +34,16 @@ describe("utils/extractor", function () {
     return new Date().getTime() - start;
   };
 
-  it("should be fast! parse 100,000 records in less than 3 seconds", () => {
+  it("should be fast! parse 60,000 complicated notes in less than 2.5 seconds", () => {
     let notes = [];
     let parsed = tester({
       name: "baseline",
-      count: 100000,
+      count: 60000,
       function() {
         notes.push(extractor.parse(note));
       },
     });
-    expect(parsed).to.be.lessThan(3000);
+    expect(parsed).to.be.lessThan(2500);
   });
 
   it("Should handle #test_time: #hj #bj", () => {

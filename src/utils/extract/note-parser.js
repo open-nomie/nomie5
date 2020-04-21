@@ -5,10 +5,8 @@ export default function (str = "") {
    * @param {String} word
    */
   function getValueString(word) {
-    // if it's has a (value) use it, otherwise default to 1
     const wordSplit = word.split("(");
-    const valueStr = wordSplit.length == 2 ? wordSplit[1].replace(")", "") : 1;
-    return valueStr;
+    return wordSplit.length == 2 ? wordSplit[1].replace(")", "") : 1;
   }
 
   /**
@@ -33,10 +31,10 @@ export default function (str = "") {
    * @param {String} remainder
    */
   const prefixes = { context: "+", person: "@", tracker: "#" };
-  function toElement(type, word, value, remainder, raw) {
+  function toElement(type, word = "", value = "", remainder = "", raw) {
     const prefix = prefixes[type] || "";
     const id = word.search(/\(/) > -1 ? word.replace(prefix, "").split("(")[0] : word.replace(prefix, "");
-    const raw = raw || word || "";
+    raw = raw || word || "";
     return {
       id,
       raw, // Raw word
@@ -62,9 +60,12 @@ export default function (str = "") {
       // Extract
       let elements = parseStr(line);
       // Loop over the elements in this line
-      for (var e = 0; e < elements.length; e++) {
-        final.push(elements[e]);
-      }
+      // for (var e = 0; e < elements.length; e++) {
+      //   final.push(elements[e]);
+      // }
+      elements.forEach((element) => {
+        final.push(element);
+      });
       // Add the line Break
       if (lines.length > 1) {
         final.push(toElement("line-break", ""));
@@ -85,23 +86,26 @@ export default function (str = "") {
         .split(" ") // Split on the space
         .map((word) => {
           // Loop over each word
-          word = word.trim();
           let scrubbed = scrub(word); // Scrub it clean
           let valueStr = getValueString(word);
-          let firstChar = word.substr(0, 1);
-          // Switch for type
+          let firstChar = word.trim().substr(0, 1);
+          // switch on first character
           if (firstChar === "#") {
             return toElement("tracker", scrubbed.word, valueStr, scrubbed.remainder.replace(word, ""));
-          } else if (firstChar == "@") {
+          } else if (firstChar === "@") {
             return toElement("person", scrubbed.word, valueStr, scrubbed.remainder);
-          } else if (firstChar == "+") {
+          } else if (firstChar === "+") {
             return toElement("context", scrubbed.word, valueStr, scrubbed.remainder);
-          } else {
-            if (word.search(/https:|http:/) > -1) {
-              return toElement("link", word.replace(/(https|http):\/\//gi, ""), null, null, word);
-            } else if (word) {
-              return toElement("generic", word, "");
-            }
+          } else if (word.search(/https:|http:/) > -1) {
+            return toElement("link", word.trim().replace(/(https|http):\/\//gi, ""), null, null, word.trim());
+          } else if (word) {
+            return {
+              id: `${word}`,
+              type: "generic",
+              raw: `${word}`,
+              prefix: null,
+              remainder: null,
+            };
           }
         })
         .filter((word) => word) || []
