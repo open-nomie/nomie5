@@ -679,16 +679,18 @@ const ledgerInit = () => {
       });
     },
     async getMemories() {
-      let times = [null, null, null];
+      let times = [];
       let firstDate = await methods.getFirstDate();
       let yearsDiff = dayjs().diff(firstDate, "year");
-      if (yearsDiff > 1 && yearsDiff < 2) {
-        times[0] = dayjs().subtract(6, "month");
-        times[1] = dayjs().subtract(1, "year");
-      } else if (yearsDiff >= 3) {
-        times[0] = dayjs().subtract(1, "year");
-        times[2] = dayjs().subtract(3, "year");
-        times[3] = dayjs().subtract(yearsDiff, "year");
+
+      if (yearsDiff > 1) {
+        for (var y = 0; y < yearsDiff; y++) {
+          if (y !== 0 && y < 5) {
+            times.push(dayjs().subtract(y, "year"));
+          }
+        }
+      } else if (dayjs().diff(firstDate, "month") > 5) {
+        times.push(dayjs().subtract(6, "month"));
       }
 
       let lookupPromises = [];
@@ -742,16 +744,19 @@ const ledgerInit = () => {
       let endTime = dayjs(options.end || new Date()).endOf("day");
       // Diff Betwen the two
       let diff = endTime.diff(startTime, config.book_time_unit);
-
       // Define array of "book paths" to get
       let books_to_get = [];
       let state = methods.getState(); // get ledger state;
 
+      // If there's no diff, no need get multiple books
       if (diff === 0) {
         books_to_get.push(endTime.format(config.book_time_format));
       } else {
+        // We need to get multiple books.
         books_to_get.push(startTime.format(config.book_time_format));
+        diff = diff + 1; // add one book for good measure
         for (let i = 0; i < diff; i++) {
+          // Push each of the formated dates YYYY-w to an array
           books_to_get.push(
             dayjs(startTime)
               .add(i + 1, config.book_time_unit)
