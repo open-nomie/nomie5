@@ -141,6 +141,9 @@
     height: 1px;
     overflow: hidden;
   }
+  :global(.person-checkin .btn-group .active div) {
+    font-size: 2rem !important;
+  }
 </style>
 
 <Modal
@@ -192,18 +195,23 @@
     {:else if state.view == 'edit'}
       <div class="edit p-3">
 
-        <NInput
-          type="text"
-          placeholder="Display Name"
-          bind:value={activePerson.displayName} />
+        <NItem className="bg-transparent">
+          <NInput
+            type="text"
+            placeholder="Display Name"
+            bind:value={activePerson.displayName} />
+        </NItem>
 
-        <NInput
-          type="textarea"
-          placeholder="Notes"
-          bind:value={activePerson.notes} />
+        <NItem className="bg-transparent">
+          <NInput
+            type="textarea"
+            placeholder="Notes"
+            bind:value={activePerson.notes} />
+        </NItem>
 
-        <div class="n-row">
+        <NItem className="bg-transparent">
           <div
+            slot="left"
             on:click={() => {
               document.getElementById('avatarFileInput').click();
             }}>
@@ -216,30 +224,33 @@
                 radius={0.3} />
             {/if}
           </div>
-          <div class="main ml-2">
-            <button
-              class="btn btn-fill btn-light btn-block"
-              on:click={() => {
-                document.getElementById('avatarFileInput').click();
-              }}>
-              Select Photo...
-            </button>
-            <div class="file-input-wraper">
-              <input
-                class="form-control pb-2"
-                id="avatarFileInput"
-                placeholder="Avatar"
-                type="file"
-                accept="png,jpeg,jpg"
-                on:change={selectPhoto} />
-            </div>
+
+          <button
+            class="btn btn-fill btn-light btn-block"
+            on:click={() => {
+              document.getElementById('avatarFileInput').click();
+            }}>
+            Select Photo...
+          </button>
+          <div class="file-input-wraper">
+            <input
+              class="form-control pb-2"
+              id="avatarFileInput"
+              placeholder="Avatar"
+              type="file"
+              accept="png,jpeg,jpg"
+              on:change={selectPhoto} />
           </div>
-        </div>
-        <button
-          class="btn btn-block btn-secondary my-4"
-          on:click={saveActivePerson}>
-          Save @{activePerson.username}
-        </button>
+
+        </NItem>
+
+        <NItem className="bg-transparent">
+          <button
+            class="btn btn-block btn-secondary my-4"
+            on:click={saveActivePerson}>
+            Save @{activePerson.username}
+          </button>
+        </NItem>
 
         <NItem
           className="bg-transparent text-red text-sm text-center"
@@ -248,9 +259,7 @@
         </NItem>
       </div>
     {:else if state.view == 'logs'}
-      <div class="logs bg-solid-1" style="min-height:45vh">
-        <NLogListLoader compact term={`@${activePerson.username}`} />
-      </div>
+      <NLogListLoader compact term={`@${activePerson.username}`} />
     {/if}
   </main>
 
