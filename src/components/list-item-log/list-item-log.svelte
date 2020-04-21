@@ -138,13 +138,14 @@
       <div class="people pb-2 px-2">
         {#each displayLog.people as person}
           {#if $PeopleStore.people[person.id]}
-            <Dymoji
+            <NBall
               size="20"
               radius="0.3"
-              person={$PeopleStore.people[person.id]}
+              avatar={$PeopleStore.people[person.id].avatar}
+              username={person.id}
               className="ml-2" />
           {:else}
-            <Dymoji
+            <NBall
               size="20"
               username={person.id}
               className="ml-2"
