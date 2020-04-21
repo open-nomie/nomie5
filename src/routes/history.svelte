@@ -179,26 +179,36 @@
         trackableElement.type == "tracker"
           ? TrackerStore.getByTag(trackableElement.id)
           : null;
-      Interact.popmenu({
-        title: `${tracker ? tracker.label : trackableElement.raw} Options`,
-        buttons: [
-          {
-            title: `Open Stats`,
-            click: () => {
-              if (tracker) {
-                Interact.openStats(`#${trackableElement.id}`);
-              } else {
-                Interact.openStats(trackableElement.raw);
-              }
-            }
-          },
-          {
-            title: `Search ${tracker ? tracker.label : trackableElement.raw}`,
-            click: () => {
-              methods.doSearch(event);
+
+      const buttons = [
+        {
+          title: `View stats`,
+          click: () => {
+            if (tracker) {
+              Interact.openStats(`#${trackableElement.id}`);
+            } else {
+              Interact.openStats(trackableElement.raw);
             }
           }
-        ]
+        },
+        {
+          title: `Search for ${tracker ? tracker.label : trackableElement.raw}`,
+          click: () => {
+            methods.doSearch(event);
+          }
+        }
+      ];
+      if (trackableElement.type == "person") {
+        buttons.push({
+          title: `Check-In`,
+          click: () => {
+            Interact.person(trackableElement.id);
+          }
+        });
+      }
+      Interact.popmenu({
+        title: `${tracker ? tracker.label : trackableElement.raw} options`,
+        buttons: buttons
       });
     },
     async getLogs(fresh) {
