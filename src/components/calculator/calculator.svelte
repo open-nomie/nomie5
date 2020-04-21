@@ -136,11 +136,11 @@
   }
   @include media-breakpoint-down(xs) {
     .buttons {
-      grid-template-columns: 60px 60px 60px 60px;
-      grid-template-rows: 60px 60px;
+      grid-template-columns: 50px 50px 50px 50px;
+      grid-template-rows: 50px 50px;
       .btn {
-        width: 55px;
-        height: 55px;
+        width: 45px;
+        height: 45px;
       }
     }
   }

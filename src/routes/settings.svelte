@@ -251,7 +251,7 @@ Note: Your data will not automatically move over. You'll first need to export it
   });
 </script>
 
-<NLayout>
+<NLayout pageTitle="Settings">
   <div slot="header" class="n-toolbar-grid container">
     <div class="left" />
     <div class="main">
