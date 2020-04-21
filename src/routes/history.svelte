@@ -491,23 +491,17 @@
 
         <!-- Show History if exists -->
         {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
-          <div class="p-2 pt-3">
+          <div class="memories">
             {#each $LedgerStore.memories as log}
-              <div
-                class="text-center text-inverse text-sm text-faded-3 n-row"
-                style="margin-bottom:-12px;">
-                <div class="filler" />
-                <div
-                  class="clickable d-flex flex-row align-items-center"
+              <div class="memories-log-header">
+                <button
+                  class="btn btn-clear"
                   on:click={() => {
                     methods.goto(dayjs(log.end));
                   }}>
                   From {dayjs(log.end).fromNow()}
-                  <button class="btn btn-clear p-0 tap-icon">
-                    <NIcon name="chevronRight" size="16" />
-                  </button>
-                </div>
-                <div class="filler" />
+                  <NIcon name="chevronRight" className="fill-white" />
+                </button>
               </div>
               <LogItem
                 className="aged"

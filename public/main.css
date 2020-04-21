@@ -6639,18 +6639,6 @@ aside.n-panel {
   background-color: var(--color-solid-2);
   color: var(--color-inverse-2); }
 
-/**
-THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 
-TODO: Organize main into components or containers. 
-**/
-.input-model {
-  flex-grow: 1;
-  height: 100%; }
-  .input-model.type-range .keypad-holder {
-    display: none; }
-  .input-model.type-value .tracker-input.slider {
-    display: none; }
-
 .page-setup .center-grow {
   flex-grow: 1;
   flex-shrink: 1;
@@ -6727,6 +6715,36 @@ TODO: Organize main into components or containers.
       @media (max-width: 349.98px) {
         .page-setup .slide .bottom p {
           font-size: 0.7rem; } }
+
+/**
+THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 
+TODO: Organize main into components or containers. 
+**/
+.input-model {
+  flex-grow: 1;
+  height: 100%; }
+  .input-model.type-range .keypad-holder {
+    display: none; }
+  .input-model.type-value .tracker-input.slider {
+    display: none; }
+
+.memories {
+  background-color: var(--color-primary-bright);
+  border-radius: 16pt;
+  padding: 8pt; }
+  @media (max-width: 599.98px) {
+    .memories {
+      border-radius: 0; } }
+  .memories .memories-log-header {
+    padding: 4pt 0;
+    font-size: 0.7rem; }
+    .memories .memories-log-header button {
+      margin: 0 auto;
+      font-size: 0.9rem;
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.1); }
+  .memories .n-item {
+    margin-top: 0pt; }
 
 .timer-bar {
   position: fixed;
