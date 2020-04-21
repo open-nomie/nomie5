@@ -26,6 +26,8 @@
   import NBackButton from "../components/back-button/back-button.svelte";
   import NLogItem from "../components/list-item-log/list-item-log.svelte";
 
+  import NLayout from "../containers/layout/layout.svelte";
+
   // containers
   import NPage from "../containers/layout/page.svelte";
   // config
@@ -213,47 +215,37 @@
   }
 </style>
 
-<NPage className="stats">
+<NLayout className="stats" pageTitle="Nomie API" showTabs={false}>
 
-  <div slot="header" class="n-toolbar-grid container">
-    <div class="left">
-      <NBackButton />
+  <header slot="header">
+    <div class="n-toolbar-grid">
+      <div class="left">
+        <NBackButton />
+      </div>
+      <div class="main">
+        <h1 class="title">Nomie API</h1>
+      </div>
+      <div class="right">
+        {#if state.registered}
+          <button
+            class="btn btn-clear tap-text mr-2"
+            on:click={methods.getLogs}>
+            Check
+          </button>
+        {/if}
+      </div>
     </div>
-    <div class="main">
-      <h1 class="title">Nomie API</h1>
-    </div>
-    <div class="right">
-      {#if state.registered}
-        <button class="btn btn-clear tap-text mr-2" on:click={methods.getLogs}>
-          Check
-        </button>
+    <div class="n-row">
+      {#if state.ready && state.registered}
+        <NButtonGroup
+          buttons={[{ label: 'Settings', active: state.view == 'settings', click() {
+                methods.setView('settings');
+              } }, { label: `Captured (${state.logs.length})`, active: state.view == 'captured', click() {
+                methods.setView('captured');
+              } }]} />
       {/if}
     </div>
-  </div>
-
-  <div slot="sub-header" class="n-row">
-    {#if state.ready && state.registered}
-      <NButtonGroup
-        buttons={[{ label: 'Settings', active: state.view == 'settings', click() {
-              methods.setView('settings');
-            } }, { label: `Captured (${state.logs.length})`, active: state.view == 'captured', click() {
-              methods.setView('captured');
-            } }]} />
-
-      <!-- <div class="btn-group flex-grow flex-shrink">
-        <button
-          on:click={() => methods.setView('settings')}
-          class="btn btn-sm {state.view === 'settings' ? 'active' : ''}">
-          Settings
-        </button>
-        <button
-          on:click={() => methods.setView('captured')}
-          class="btn btn-sm {state.view === 'captured' ? 'active' : ''}">
-          Captured
-        </button>
-      </div> -->
-    {/if}
-  </div>
+  </header>
 
   <div class="container">
     <div item-divider />
@@ -263,7 +255,7 @@
       </div>
     {:else if state.ready && !state.registered}
       <NItem
-        className="clickable text-primary"
+        className="clickable text-primary solo text-center"
         on:click={methods.register}
         title="Generate API Key..." />
 
@@ -286,7 +278,7 @@
       </NItem>
 
       <NItem
-        className="clickable text-primary mt-4"
+        className="clickable text-primary mt-4 solo text-center"
         on:click={installAPI}
         title="Manually set API/Private Key..." />
     {:else if state.view === 'captured'}
@@ -333,8 +325,8 @@
         -->
       <NItem
         title="Auto Accept"
-        className="p-3"
-        description="Automatically import and accept API logs">
+        className="solo py-2"
+        description="Auto import and accept API logs">
         <div slot="right">
           <NToggle
             bind:value={autoImportAPI}
@@ -347,8 +339,8 @@
             }} />
         </div>
       </NItem>
-      <div item-divider />
-      <NItem className="p-3">
+
+      <NItem className="bg-transparent">
         <NInput label="Your API Key" bind:value={state.apiKey}>
           <button
             class="btn btn-clear tap-icon"
@@ -366,7 +358,7 @@
 
       <div item-divider />
       {#if state.showExample}
-        <NItem title="Example POST">
+        <NItem title="Example POST" className="solo">
           <button
             slot="right"
             class="btn btn-clear"
@@ -374,7 +366,7 @@
             Close
           </button>
         </NItem>
-        <NItem className="py-2">
+        <NItem className="px-3 pb-2 bg-transparent">
           <p class="text-sm">POST JSON to: https://nomieapi.com/log</p>
           <textarea
             class="form-control"
@@ -385,7 +377,7 @@
           </p>
         </NItem>
       {:else}
-        <NItem title="Example POST">
+        <NItem title="Example POST" className="solo">
           <button
             class="btn btn-clear text-primary-bright"
             slot="right"
@@ -396,7 +388,7 @@
       {/if}
       <div item-divider />
       {#if state.showPrivateKey}
-        <NItem title="Private Key">
+        <NItem title="Private Key" className="solo">
           <button
             class="btn btn-clear text-primary-bright"
             slot="right"
@@ -404,7 +396,7 @@
             Hide
           </button>
         </NItem>
-        <NItem className="py-2 pb-3">
+        <NItem className="px-3 pb-3 bg-transparent">
           <div>
             <textarea
               type="text"
@@ -425,7 +417,7 @@
           </div>
         </NItem>
       {:else}
-        <NItem title="Private Key">
+        <NItem title="Private Key" className="solo">
           <button
             class="btn btn-clear text-primary-bright"
             slot="right"
@@ -434,16 +426,20 @@
           </button>
         </NItem>
       {/if}
-      <div item-divider />
-      <NItem className="text-red text-center" on:click={methods.forget}>
+
+      <NItem
+        className="text-red text-center solo mt-4"
+        on:click={methods.forget}>
         Forget API Key...
       </NItem>
       <div item-divider />
-      <NItem className="text-red text-center" on:click={methods.unregister}>
+      <NItem
+        className="text-red text-center solo"
+        on:click={methods.unregister}>
         Destroy API Key...
       </NItem>
       <div item-divider />
     {/if}
   </div>
 
-</NPage>
+</NLayout>

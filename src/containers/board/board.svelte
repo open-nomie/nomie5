@@ -31,7 +31,6 @@
   import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
 
   // Containers
-  import AppLayout from "../../containers/layout/app.svelte";
   import NLayout from "../../containers/layout/layout.svelte";
   import BoardSortModal from "../../containers/board/board-sort.svelte";
 

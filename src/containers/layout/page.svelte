@@ -3,7 +3,7 @@
   import { navigate } from "svelte-routing";
   // components
   import NToolbar from "../../components/toolbar/toolbar.svelte";
-  import AppLayout from "../layout/app.svelte";
+  import NLayout from "../layout/layout.svelte";
   //props
   export let className = undefined;
   // export let withBack = false;
@@ -22,7 +22,7 @@
   }
 </style>
 
-<AppLayout {className}>
+<NLayout pageTitle={title} {className}>
   <div slot="header">
     <slot name="header" />
     {#if hasSubHeader}
@@ -34,4 +34,4 @@
   <div slot="content">
     <slot />
   </div>
-</AppLayout>
+</NLayout>

@@ -23,14 +23,11 @@
   import LogItem from "../components/list-item-log/list-item-log.svelte";
   import NSearchBar from "../components/search-bar/search-bar.svelte";
 
-  import NLayout from "../containers/layout/layout.svelte";
-
   import config from "../../config/global";
 
   // Containers
   import NMap from "../containers/map/map.svelte";
-  import AppLayout from "../containers/layout/app.svelte";
-
+  import NLayout from "../containers/layout/layout.svelte";
   // Utils
   import dayjs from "dayjs";
   import tick from "../utils/tick/tick";

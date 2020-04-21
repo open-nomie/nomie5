@@ -5177,6 +5177,7 @@ body.no-scroll {
   right: 0; }
 
 body {
+  overflow: hidden;
   --color-darkest: #fff;
   --color-bg: #eeeeee;
   --space-gap: 8pt;

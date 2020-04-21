@@ -23,6 +23,7 @@ body.no-scroll {
 }
 
 body {
+  overflow: hidden;
   --color-darkest: #fff;
   --color-bg: #eeeeee;
   --space-gap: #{$gap};

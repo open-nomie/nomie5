@@ -21,7 +21,6 @@
   import ImporterModal from "../containers/importer/importer.svelte";
   import MassEditor from "../containers/mass-editor/mass-editor.svelte";
 
-  import AppLayout from "../containers/layout/app.svelte";
   import NLayout from "../containers/layout/layout.svelte";
 
   // Vendors
