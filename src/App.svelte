@@ -17,23 +17,12 @@
   import StatsModal from "./containers/stats/stats-modal.svelte";
   import StreakModal from "./containers/steak/streak-modal.svelte";
 
+  import SetupRoute from "./routes/setup.svelte";
+
   // Utils
   import Logger from "./utils/log/log";
 
-  // Routes
-  import TrackRoute from "./routes/track.svelte";
-  import HistoryRoute from "./routes/history.svelte";
-  import SetupRoute from "./routes/setup.svelte";
-  import SettingsRoute from "./routes/settings.svelte";
-
-  import BoardEditorRoute from "./routes/board-editor.svelte";
-  import FAQRoute from "./routes/faq.svelte";
-  // import PluginsRoute from "./routes/plugins.svelte";
-  import NomieAPIRoute from "./routes/nomie-api.svelte";
-  import ExportRoute from "./routes/export.svelte";
-  import PeopleRoute from "./routes/people.svelte";
-  import TrackerDesigner from "./routes/tracker-designer.svelte";
-  import FileBrowser from "./routes/file-browser.svelte";
+  import RouterView from "./routes/routes.svelte";
 
   // Stores
   import { UserStore } from "./store/user"; //  user auth and state
@@ -93,9 +82,6 @@
   let offline = false;
 
   const methods = {
-    routerChange(event) {
-      console.log("Router Change?", event);
-    },
     hideSplashScreen() {
       document.querySelectorAll(".delete-on-app").forEach(d => {
         d.classList.add("deleted");
@@ -224,23 +210,7 @@
 </script>
 
 {#if $UserStore.signedIn === true}
-  <Router {url} on:change={methods.routerChange} bind:this={router}>
-    <Route path="/history" component={HistoryRoute} />
-    <Route path="/history/:date" component={HistoryRoute} />
-    <Route path="/" component={TrackRoute} />
-    <Route path="/people" component={PeopleRoute} />
-    <Route path="/settings" component={SettingsRoute} />
-    <Route path="/board/:id" component={BoardEditorRoute} />
-    <Route path="/faq" component={FAQRoute} />
-    <Route path="/api" component={NomieAPIRoute} />
-    <Route path="/settings/export/:type" component={ExportRoute} />
-    <Route path="/settings/export" component={ExportRoute} />
-    <Route path="/tracker/design" component={TrackerDesigner} />
-    <!-- <Route path="/files" component={FileBrowser} /> -->
-    <Route path="/files/*path" let:params>
-      <FileBrowser path={params.path} />
-    </Route>
-  </Router>
+  <RouterView />
 {:else if $UserStore.signedIn == undefined}
   <div class="empty-notice" style="height:calc(100vh - 75px)">
     <Spinner />
