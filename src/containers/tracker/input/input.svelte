@@ -142,7 +142,7 @@
   type="fullscreen"
   className="tracker-input">
   <div class="n-toolbar-grid n-row" slot="header">
-    <div class="left truncate">
+    <div class="left truncate pl-2">
       <span class="animate truncate up {data.ready ? 'visible' : 'hidden'}">
         {tracker.label}
       </span>
