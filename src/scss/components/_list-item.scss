@@ -1,12 +1,11 @@
 // The component was getting to big... Needed some breathing room
 
-
 .n-item {
   text-align: left;
   display: flex;
   align-items: center;
   justify-content: stretch;
-  padding: 4px 16px;
+  padding: 4px 8pt;
 
   min-height: 50px;
   max-width: 100vw;
@@ -23,6 +22,7 @@
     &.text-faded {
       color: var(--color-inverse-3) !important;
     }
+  }
 
   &.solo,
   &[solo] {
@@ -102,11 +102,18 @@
     }
   }
 
+  .left,
+  [slot="left"] {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+  }
   .left {
-    padding-right: 16px;
+    padding-right: 8pt;
   }
   .right {
-    padding-left: 16px;
+    padding-left: 8pt;
     text-align: right;
     display: flex;
     flex-wrap: nowrap;
@@ -232,14 +239,14 @@
   }
   .main,
   .n-text {
-    @extend .n-title;
+    // @extend .n-title;
   }
 }
 
-[item-divider],
-.item-divider {
-  @extend .n-item-divider.compact;
-}
+// [item-divider],
+// .item-divider {
+//   @extend .n-item-divider.compact;
+// }
 
 .n-list {
   &.solo,

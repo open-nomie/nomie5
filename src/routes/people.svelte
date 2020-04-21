@@ -1,18 +1,19 @@
 <script>
   import { onMount } from "svelte";
-  import AppLayout from "../containers/layout/app.svelte";
+  import AvatarBall from "../components/tracker-ball/ball.svelte";
   import ButtonGroup from "../components/button-group/button-group.svelte";
+  import Dymoji from "../components/dymoji/dymoji.svelte";
+  import ItemBall from "../components/tracker-ball/item-ball.svelte";
   import NItem from "../components/list-item/list-item.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
   import NIcon from "../components/icon/icon.svelte";
   import PersonBall from "../components/tracker-ball/person-ball.svelte";
-  import AvatarBall from "../components/tracker-ball/ball.svelte";
-  import ItemBall from "../components/tracker-ball/item-ball.svelte";
   import NSearchBar from "../components/search-bar/search-bar.svelte";
+  import NLayout from "../containers/layout/layout.svelte";
+  import NTip from "../components/tip/tip.svelte";
+
   import tick from "../utils/tick/tick";
   import dayjs from "dayjs";
-  import Dymoji from "../components/dymoji/dymoji.svelte";
-  import NTip from "../components/tip/tip.svelte";
 
   import Person from "../modules/person/person";
 
@@ -102,7 +103,7 @@
 
 </style>
 
-<AppLayout title="People">
+<NLayout pageTitle="People">
   <div slot="header">
     <NSearchBar
       on:change={searchPeople}
@@ -139,40 +140,47 @@
       {/if}
 
       {#each state.people as person}
-        <div class="n-row">
-          <NItem
-            className="pt-2 pb-2 clickable solo box-shadow mb-3 mr-0 filler"
-            on:click={() => {
-              personClicked(person);
-            }}>
-            <div slot="left">
-              {#if $PeopleStore.people[person].avatar}
-                <AvatarBall
-                  size={48}
-                  avatar={$PeopleStore.people[person].avatar}
-                  style={`border-radius:32%; overflow:hidden`} />
-              {:else if $PeopleStore.people[person].displayName}
-                <AvatarBall
-                  size={48}
-                  username={$PeopleStore.people[person].displayName}
-                  style={`border-radius:32%; overflow:hidden`} />
-              {/if}
-            </div>
-            <div class="title">{$PeopleStore.people[person].displayName}</div>
-            {#if $PeopleStore.people[person].last}
-              <div class="note">
-                {dayjs($PeopleStore.people[person].last).fromNow()}
-              </div>
+        <NItem
+          className="pt-1 pb-1 clickable solo box-shadow mb-3 mr-0 filler"
+          on:click={() => {
+            personClicked(person);
+          }}>
+          <div slot="left">
+            <button class="btn btn-clear tap-icon p-1 mr-1">
+              <NIcon
+                name="addOutline"
+                className="fill-primary-bright"
+                size={18} />
+            </button>
+            {#if $PeopleStore.people[person].avatar}
+              <AvatarBall
+                size={48}
+                avatar={$PeopleStore.people[person].avatar}
+                style={`border-radius:32%; overflow:hidden`} />
+            {:else if $PeopleStore.people[person].displayName}
+              <AvatarBall
+                size={48}
+                username={$PeopleStore.people[person].displayName}
+                style={`border-radius:32%; overflow:hidden`} />
             {/if}
-          </NItem>
-          <button
-            class="btn btn-clear"
-            on:click|stopPropagation={() => {
-              Interact.openStats(`@${person}`);
-            }}>
-            <NIcon name="chart" className="fill-primary-bright" size={18} />
-          </button>
-        </div>
+          </div>
+          <div class="title">{$PeopleStore.people[person].displayName}</div>
+          {#if $PeopleStore.people[person].last}
+            <div class="note">
+              {dayjs($PeopleStore.people[person].last).fromNow()}
+            </div>
+          {/if}
+          <div slot="right" class="n-row">
+
+            <button
+              class="btn btn-clear tap-icon "
+              on:click|stopPropagation={() => {
+                Interact.openStats(`@${person}`);
+              }}>
+              <NIcon name="chart" className="fill-primary-bright" size={18} />
+            </button>
+          </div>
+        </NItem>
       {/each}
       {#if state.people.length}
         <div class="p-2 text-center">
@@ -183,4 +191,4 @@
       {/if}
     </div>
   </div>
-</AppLayout>
+</NLayout>

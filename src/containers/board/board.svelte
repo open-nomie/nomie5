@@ -32,6 +32,7 @@
 
   // Containers
   import AppLayout from "../../containers/layout/app.svelte";
+  import NLayout from "../../containers/layout/layout.svelte";
   import BoardSortModal from "../../containers/board/board-sort.svelte";
 
   // Modules/Libs/Utils
@@ -641,7 +642,7 @@
 </style>
 
 <!-- Start App Layout -->
-<AppLayout title={appTitle}>
+<NLayout pageTitle={appTitle}>
   <header slot="header">
     {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
       <div class="container p-0 n-row h-100">
@@ -820,7 +821,7 @@
     </div>
   </div>
   <!-- end content-->
-</AppLayout>
+</NLayout>
 
 {#if $Interact.boardSorter.show}
   <BoardSortModal />

@@ -12,15 +12,21 @@
 <style lang="scss">
   @import "../../scss/utils/__utils.scss";
   #app-tabs {
-    height: calc(60px + env(safe-area-inset-bottom));
+    height: calc(62px + env(safe-area-inset-bottom));
     padding-bottom: calc(env(safe-area-inset-bottom));
+    background-color: var(--footer-background);
     display: flex;
     justify-content: space-between;
     align-items: stretch;
     z-index: 1200;
+    flex-shrink: 0;
 
     .n-row {
       z-index: 10;
+      max-height: 60px;
+      min-height: 60px;
+      height: 60px;
+      flex-shrink: 0;
     }
     .notification {
       position: absolute;

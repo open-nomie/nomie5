@@ -22,6 +22,7 @@
   import MassEditor from "../containers/mass-editor/mass-editor.svelte";
 
   import AppLayout from "../containers/layout/app.svelte";
+  import NLayout from "../containers/layout/layout.svelte";
 
   // Vendors
   import dayjs from "dayjs";
@@ -250,7 +251,7 @@ Note: Your data will not automatically move over. You'll first need to export it
   });
 </script>
 
-<AppLayout>
+<NLayout>
   <div slot="header" class="n-toolbar-grid container">
     <div class="left" />
     <div class="main">
@@ -268,7 +269,6 @@ Note: Your data will not automatically move over. You'll first need to export it
       <div class="page page-settings">
         <div class="container p-0">
 
-          <NItem className="n-item-divider compact" />
           <NItem
             className="clickable solo p-2"
             title={Lang.t('settings.share-nomie', 'Share Nomie w/ Friends')}
@@ -607,7 +607,7 @@ Note: Your data will not automatically move over. You'll first need to export it
   </div>
   <!-- end content slot-->
 
-</AppLayout>
+</NLayout>
 
 {#if showImporter}
   <ImporterModal on:dismiss={() => (showImporter = false)} />

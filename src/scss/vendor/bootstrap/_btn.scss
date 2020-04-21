@@ -37,7 +37,6 @@ button:focus {
   font-size: 0.8rem;
   padding: 3pt 6pt 3pt 6pt;
   background-color: var(--color-solid);
-  color: var(--color-inverse-1);
   box-shadow: var(--box-shadow-tight);
   margin: 4pt 2pt;
   .count {
@@ -49,6 +48,12 @@ button:focus {
     height: 20px;
     border-radius: 10px;
     margin-left: 4px;
+  }
+  &.btn-xs {
+    font-size: 0.7rem !important;
+    padding: 2pt 6pt 2pt 6pt;
+    text-transform: uppercase;
+    font-weight: bold;
   }
 }
 

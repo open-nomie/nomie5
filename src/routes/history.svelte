@@ -23,6 +23,8 @@
   import LogItem from "../components/list-item-log/list-item-log.svelte";
   import NSearchBar from "../components/search-bar/search-bar.svelte";
 
+  import NLayout from "../containers/layout/layout.svelte";
+
   import config from "../../config/global";
 
   // Containers
@@ -393,7 +395,7 @@
   }
 </style>
 
-<AppLayout title={appTitle}>
+<NLayout pageTitle={appTitle}>
 
   <header slot="header">
     <NToolbarGrid className="animate in {showSearch ? 'hidden' : 'visible'}">
@@ -557,7 +559,7 @@
   </main>
   <!-- end header-content content -->
 
-</AppLayout>
+</NLayout>
 
 {#if state.location.lat}
   <NModal show={true} title={state.location.name || 'Location'}>

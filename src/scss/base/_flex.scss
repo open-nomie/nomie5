@@ -34,8 +34,8 @@
 .filler {
   flex-grow: 1;
   flex-shrink: 1;
-  max-width: 100%;
-  min-width: 0;
+  max-width: 100% !important;
+  min-width: 0 !important;
 }
 
 .justify-content-between {

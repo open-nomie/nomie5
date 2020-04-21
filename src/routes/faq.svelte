@@ -11,11 +11,13 @@
   // containers
   import NPage from "../containers/layout/page.svelte";
 
+  import NLayout from "../containers/layout/layout.svelte";
+
   // config
   import faq from "../../config/faq";
 </script>
 
-<NPage className="stats">
+<NLayout className="faq" pageTitle="Common Questions about Nomie">
 
   <div slot="header" class="n-toolbar-grid container">
     <div class="left">
@@ -35,4 +37,4 @@
     </div>
   </div>
 
-</NPage>
+</NLayout>
