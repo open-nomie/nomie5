@@ -748,11 +748,11 @@
       <div slot="left" className="truncate" style="min-width:100px;">
         {#if $Interact.stats.terms.length == 1}
           <button class="btn btn-clear tap-icon clickable" on:click={close}>
-            <NIcon name="close" size="22" />
+            <NIcon name="close" />
           </button>
         {:else}
           <button class="btn btn-clear tap-icon clickable pl-1" on:click={back}>
-            <NIcon name="arrowBack" size="22" />
+            <NIcon name="arrowBack" size="28" />
             <small
               class="text-sm text-inverse-2 ml-1 truncate"
               style="max-width:60px;">
@@ -795,6 +795,14 @@
       </button>
     </NToolbarGrid>
 
+    {#if state.loading}
+      <div class="container n-panel center-all" style="height:140px;">
+        <div>
+          <NSpinner size={46} />
+        </div>
+      </div>
+    {/if}
+
     {#if state.stats && !state.loading}
       <div class="main-chart px-2 pb-1">
         <NBarChart
@@ -826,13 +834,7 @@
       buttons={state.viewOption} />
   </div>
 
-  {#if state.loading}
-    <div class="container n-panel center-all">
-      <div style="margin-top:-50px;">
-        <NSpinner size={46} />
-      </div>
-    </div>
-  {:else}
+  {#if !state.loading}
     {#if state.dataView == 'compare'}
       <div class="charts">
         {#each state.compare as compare}
