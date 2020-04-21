@@ -52,10 +52,31 @@ export default function (str = "") {
    * @param {String} str
    */
   function parse(str = "") {
-    // Split to array
-    const parsedNote =
+    // Split it into an array of lines
+    let lines = str.split(/\r?\n/);
+    let final = [];
+    // Loop over each line
+    lines.forEach((line) => {
+      // Extract
+      let elements = parseStr(line);
+      // Loop over the elements in this line
+      elements.forEach((element) => {
+        final.push(element);
+      });
+      // Add the line Break
+      if (lines.length > 1) {
+        final.push(toElement("line-break", ""));
+      }
+    });
+    // Return parsed note
+    return final;
+  }
+
+  function parseStr(str) {
+    return (
       str
-        .split(" ")
+        .trim()
+        .split(" ") // Split on the space
         .map((word) => {
           // Loop over each word
           let scrubbed = scrub(word); // Scrub it clean
@@ -65,7 +86,7 @@ export default function (str = "") {
           switch (firstChar) {
             // Tracker Type
             case "#":
-              return toElement("tracker", scrubbed.word, valueStr, scrubbed.remainder);
+              return toElement("tracker", scrubbed.word, valueStr, scrubbed.remainder.replace(word, ""));
               break;
             case "@":
               return toElement("person", scrubbed.word, valueStr, scrubbed.remainder);
@@ -83,16 +104,17 @@ export default function (str = "") {
                 let link = word.trim().replace(/(https|http):\/\//gi, "");
                 return toElement("link", link, null, null, word.trim());
               } else {
-                return toElement("generic", word, "");
+                if (word) {
+                  return toElement("generic", word, "");
+                }
               }
               break;
           }
         })
-        .filter((word) => word) || [];
-
-    // Return parsed note
-    return parsedNote;
+        .filter((word) => word) || []
+    );
   }
+
   /**
    * Main Return for the function
    */

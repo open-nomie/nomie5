@@ -37,9 +37,12 @@
     },
     note_to_array(str) {
       let parsed = extractor.parse(str, { includeGeneric: true });
-      actual = parsed.filter(trackableElement => {
-        return trackableElement.type !== "tracker";
-      }).length;
+      let matches = parsed.filter(trackableElement => {
+        return (
+          ("person", "context", "generic").indexOf(trackableElement.type) > -1
+        );
+      });
+      actual = matches.length;
       return parsed;
     }
   };
@@ -123,6 +126,8 @@
           }}>
           {` ${word.id} `}
         </span>
+      {:else if word.type == 'line-break'}
+        <br />
       {:else if word.raw}{word.raw + ' '}{/if}
       {#if word.remainder}
         <span class="remainder">{word.remainder.trim()}</span>

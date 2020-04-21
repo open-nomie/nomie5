@@ -20,7 +20,7 @@ function parse(str = "", options = {}) {
       if (options.includeGeneric) {
         return true;
       } else {
-        return element.type !== "generic";
+        return element.type !== "generic" && element.type !== "line-break";
       }
     });
 }
