@@ -23,6 +23,7 @@
   import { TrackerStore } from "../../store/tracker-store";
   import { UserStore } from "../../store/user";
   import { Interact } from "../../store/interact";
+  import { PeopleStore } from "../../store/people-store";
 
   // vendors
   import dayjs from "dayjs";
@@ -136,7 +137,19 @@
     {#if displayLog.people.length}
       <div class="people pb-2 px-2">
         {#each displayLog.people as person}
-          <NBall size="20" username={person.id} className="ml-2" />
+          {#if $PeopleStore.people[person.id]}
+            <Dymoji
+              size="20"
+              radius="0.3"
+              person={$PeopleStore.people[person.id]}
+              className="ml-2" />
+          {:else}
+            <Dymoji
+              size="20"
+              username={person.id}
+              className="ml-2"
+              radius="0.3" />
+          {/if}
         {/each}
       </div>
     {/if}

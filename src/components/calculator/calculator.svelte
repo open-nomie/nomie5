@@ -232,7 +232,7 @@
       {#each buttonRow as button, bIndex}
         {#if button !== null}
           <button
-            class="clickable btn r-{rIndex} b-{bIndex}"
+            class="btn r-{rIndex} b-{bIndex}"
             on:click={() => {
               click(button);
             }}>
