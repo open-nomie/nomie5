@@ -4914,10 +4914,13 @@ button:focus {
     border-radius: 10px;
     margin-left: 4px; }
   .btn-badge.btn-xs {
-    font-size: 0.7rem !important;
-    padding: 2pt 6pt 2pt 6pt;
+    font-size: 0.6rem !important;
+    padding: 0pt 8pt 0pt 8pt;
     text-transform: uppercase;
     font-weight: bold; }
+    .btn-badge.btn-xs svg {
+      width: 20px !important;
+      margin-right: -4px; }
 
 .btn-group .btn {
   font-size: 0.75rem !important; }
