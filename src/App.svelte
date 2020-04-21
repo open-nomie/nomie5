@@ -61,13 +61,6 @@
     }
   }, 1000 * 60 * 30);
   //
-  /**
-   * Check for App Updates
-   * Will hit the version.json and compare it to the known
-   * version
-   *
-   * TODO: this is not working - why?
-   **/
 
   const appVersion = "APP_VERSION";
 
