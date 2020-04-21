@@ -89,11 +89,9 @@
       // Set to not ready and the new tracker
       data.ready = true; // TODO: make this lack janky
       data.tracker = tracker;
-      setTimeout(() => {
-        // Wait to set the value
-        data.value = tracker.default || 0;
-        data.ready = true;
-      }, 200);
+      console.log("Data Tracker", data.tracker);
+      data.value = tracker.default || 0;
+      data.ready = true;
     }, 12);
   }
 
@@ -144,9 +142,15 @@
   type="fullscreen"
   className="tracker-input">
   <div class="n-toolbar-grid n-row" slot="header">
+    <div class="left truncate">
+      <span class="animate truncate up {data.ready ? 'visible' : 'hidden'}">
+        {tracker.label}
+      </span>
+    </div>
     <div class="main">
       <span class="animate up text-lg {data.ready ? 'visible' : 'hidden'}">
-        {tracker.emoji} {tracker.label}
+        {tracker.emoji}
+        {#if data.tracker}{data.tracker.displayValue(data.value)}{/if}
       </span>
     </div>
     <button class="btn btn-clear tap-icon right" on:click={editTracker}>

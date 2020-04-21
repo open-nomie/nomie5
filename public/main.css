@@ -5721,7 +5721,7 @@ select {
   100% {
     box-shadow: 0 0 0 0 rgba(56, 168, 63, 0); } }
 
-mock-card-animation {
+.mock-card-animation {
   z-index: 3000;
   background-color: var(--color-solid);
   position: absolute;
@@ -6271,8 +6271,7 @@ body.scrolling .mini-map {
   font-weight: 600; }
 
 .input-model {
-  flex-grow: 1;
-  height: 100%; }
+  flex-grow: 1; }
   .input-model.type-range .keypad-holder {
     display: none; }
   .input-model.type-value .tracker-input.slider {

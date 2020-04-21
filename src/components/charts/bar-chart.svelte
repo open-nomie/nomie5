@@ -13,6 +13,7 @@
   // vendor
   import { scaleLinear } from "d3-scale";
   import { UserStore } from "../../store/user";
+  import NIcon from "../icon/icon.svelte";
 
   export let labels = [];
   export let height = 200;
@@ -144,12 +145,12 @@
   .title {
     position: absolute;
     top: -2px;
-    right: 0px;
+    right: 60px;
     text-align: center;
-    left: 0px;
-    font-size: 0.67rem;
+    left: 60px;
+    font-size: 0.72rem;
     color: var(--color-inverse-2);
-    opacity: 0.5;
+    opacity: 0.75;
   }
   .active-item {
     position: absolute;
@@ -201,12 +202,13 @@
     }}>
     {#if title}
       <div
-        class="title clickable"
+        class="title clickable truncate"
         style="z-index:120;"
         on:click={() => {
           dispatch('titleClick', title);
         }}>
         {title}
+        <NIcon name="chevronRight" size="14" />
       </div>
     {/if}
     <svg height={`${height}px`}>
