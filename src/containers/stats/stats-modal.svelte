@@ -469,13 +469,12 @@
     };
     // if day - normalize start and end
     if (state.timeSpan == "d") {
-      queryPayload.start = dayjs(state.date).startOf("day");
-      queryPayload.end = dayjs(state.date).endOf("day");
     }
+    queryPayload.start = dayjs(getFromDate()).startOf("day");
+    queryPayload.end = dayjs(getToDate()).endOf("day");
 
     // Get Logs from the Ledger Store
     let results = await LedgerStore.query(queryPayload);
-
     // Prep Stats
     const statsV5 = new StatsV5();
 
@@ -603,6 +602,10 @@
     state.selected = { index: undefined, rows: null };
   }
 
+  /**
+   * Set Selected ({point})
+   * User Selected a Specific Date from the Cart
+   */
   async function setSelected(selected) {
     state.selected = selected;
 
@@ -615,6 +618,12 @@
     if (state.timeSpan == "d") {
       payload.start = dayjs(state.selected.point.date).startOf("hour");
       payload.end = dayjs(state.selected.point.date).endOf("hour");
+    } else if (state.timeSpan == "w" || state.timeSpan == "m") {
+      payload.start = dayjs(state.selected.point.date).startOf("day");
+      payload.end = dayjs(state.selected.point.date).endOf("day");
+    } else if (state.timeSpan == "y") {
+      payload.start = dayjs(state.selected.point.date).startOf("month");
+      payload.end = dayjs(state.selected.point.date).endOf("month");
     }
     let rows = await LedgerStore.query(payload);
 
@@ -706,6 +715,10 @@
     text-align: center;
     line-height: 1rem;
   }
+  :global(.stats-modal .n-modal) {
+    max-width: 500px !important;
+  }
+
   :global(.chart-item) {
     position: relative;
     .btn-close {
@@ -943,34 +956,64 @@
             <NButtonGroup buttons={logViewButtons} />
             <div class="filler" />
           </NToolbar>
-          <NToolbarGrid className="sm">
-            <div slot="main" class="text-inverse-3">
-              Focused on {state.selected.point.x}
-            </div>
+          <NToolbar className="text-sm">
+            <div class="filler" />
+            Focused on {state.selected.point.x}
             <button
-              slot="right"
-              class="btn btn-clear tap-icon clickable"
+              class="btn btn-badge btn-xs clickable ml-2"
               on:click={clearSelected}>
+              Close
               <NIcon name="close" size="22" />
             </button>
-          </NToolbarGrid>
+            <div class="filler" />
+          </NToolbar>
         {/if}
 
-        <NLogList
-          compact
-          on:textClick={evt => {
-            if (evt.detail.type == 'tracker') {
-              Interact.openStats(`#${evt.detail.id}`);
-            } else {
-              Interact.openStats(`${evt.detail.raw}`);
-            }
-          }}
-          on:trackerClick={evt => {
-            Interact.openStats(`#${evt.detail.tag}`);
-          }}
-          logs={state.selected.rows || state.stats.rows}
-          style="min-height:100%"
-          className="bg-solid-1 flex-grow flex-shrink" />
+        {#if state.dataView == 'logs'}
+          {#if state.timeSpan == 'y' && state.selected.index === undefined}
+            <div class="p-4 text-sm text-center">
+              Select a chart month to see the logs.
+            </div>
+          {:else}
+            <NLogList
+              compact
+              on:textClick={evt => {
+                if (evt.detail.type == 'tracker') {
+                  Interact.openStats(`#${evt.detail.id}`);
+                } else {
+                  Interact.openStats(`${evt.detail.raw}`);
+                }
+              }}
+              on:trackerClick={evt => {
+                Interact.openStats(`#${evt.detail.tag}`);
+              }}
+              logs={state.selected.rows || state.stats.rows}
+              style="min-height:100%"
+              className="bg-solid-1 flex-grow flex-shrink" />
+          {/if}
+        {/if}
+
+        <!-- {#if state.dataView == 'logs' && (state.timeSpan != 'y' && state.selected.index !== undefined)}
+          <NLogList
+            compact
+            on:textClick={evt => {
+              if (evt.detail.type == 'tracker') {
+                Interact.openStats(`#${evt.detail.id}`);
+              } else {
+                Interact.openStats(`${evt.detail.raw}`);
+              }
+            }}
+            on:trackerClick={evt => {
+              Interact.openStats(`#${evt.detail.tag}`);
+            }}
+            logs={state.selected.rows || state.stats.rows}
+            style="min-height:100%"
+            className="bg-solid-1 flex-grow flex-shrink" />
+        {:else if state.dataView == 'logs' && state.timeSpan == 'y'}
+          <div class="p-4 text-sm text-center">
+            Select a chart month to see the logs.
+          </div>
+        {/if} -->
       {/if}
     {/if}
   {/if}
