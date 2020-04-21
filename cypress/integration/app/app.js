@@ -39,11 +39,12 @@ context("App", () => {
   const trackWater = () => {
     cy.get(".tracker-water").click();
     cy.wait(500);
-    cy.get(".row-0 > .button-0").click();
+    cy.get(".r-0.b-0").click();
+    cy.get(".r-3.b-0").click();
     cy.wait(300);
-    cy.get(".row-0 > .button-0").click();
-    cy.get(".n-modal-footer > .footer > .btn-primary").click();
-    cy.wait(100);
+    cy.get(".r-3.b-0").click();
+    cy.get(".main > .btn").click();
+    cy.wait(600);
     cy.get(".tracker-water .score").should("contain", "11");
   };
 
@@ -111,15 +112,15 @@ context("App", () => {
 
   const trackMood = (addOrSave = "save") => {
     cy.get(".tracker-mood").click();
-    cy.wait(500);
+    cy.wait(1000);
     cy.get(".tracker-input.slider input").as("range").invoke("val", 8).trigger("change");
-    cy.wait(100);
+    cy.wait(400);
     if (addOrSave == "save") {
-      cy.get(".n-modal-footer > .footer > .btn-primary").click();
-      cy.wait(100);
+      cy.get(".main > .btn").click();
+      cy.wait(400);
       cy.get(".tracker-mood .score").should("contain", "8");
     } else {
-      cy.get(".n-modal-footer > .footer > .btn").eq(2).click();
+      cy.get(".right .btn").eq(2).click();
     }
     // cy.get(".n-modal-footer > .footer > .btn-primary").click();
   };
