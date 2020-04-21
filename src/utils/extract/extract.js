@@ -12,7 +12,9 @@ import noteParser from "./note-parser";
 function parse(str = "", options = {}) {
   return noteParser(str)
     .map((elementObj) => {
+      // Create a Trackable Element
       let element = new TrackableElement(elementObj);
+      // Convert String to Number
       element.value = stringToValue(element.value);
       return element;
     })

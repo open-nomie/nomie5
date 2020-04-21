@@ -5,8 +5,8 @@ export default function (str = "") {
    * @param {String} word
    */
   function getValueString(word) {
-    const wordSplit = word.split("(");
     // if it's has a (value) use it, otherwise default to 1
+    const wordSplit = word.split("(");
     const valueStr = wordSplit.length == 2 ? wordSplit[1].replace(")", "") : 1;
     return valueStr;
   }
@@ -17,9 +17,9 @@ export default function (str = "") {
    * @param {String} word
    */
   function scrub(word) {
-    const cleanedWord = word.replace(/(\'|\,|\.|\!|’|\?|:)/gi, "").trim();
+    const cleanedWord = word.replace(/(\'|\,|\.|\!|’|\?|:)/gi, "");
     return {
-      word: cleanedWord.trim(),
+      word: cleanedWord,
       remainder: word.replace(cleanedWord, ""),
     };
   }
@@ -32,12 +32,14 @@ export default function (str = "") {
    * @param {String} value
    * @param {String} remainder
    */
+  const prefixes = { context: "+", person: "@", tracker: "#" };
   function toElement(type, word, value, remainder, raw) {
-    const prefixes = { context: "+", person: "@", tracker: "#" };
     const prefix = prefixes[type] || "";
+    const id = word.search(/\(/) > -1 ? word.replace(prefix, "").split("(")[0] : word.replace(prefix, "");
+    const raw = raw || word || "";
     return {
-      id: word.replace(prefix, "").split("(")[0], // key/id
-      raw: raw || word, // Raw word
+      id,
+      raw, // Raw word
       prefix, // #,@,+
       type, // type of trackableElement
       value, // value of the tracker
@@ -60,9 +62,9 @@ export default function (str = "") {
       // Extract
       let elements = parseStr(line);
       // Loop over the elements in this line
-      elements.forEach((element) => {
-        final.push(element);
-      });
+      for (var e = 0; e < elements.length; e++) {
+        final.push(elements[e]);
+      }
       // Add the line Break
       if (lines.length > 1) {
         final.push(toElement("line-break", ""));
@@ -72,6 +74,10 @@ export default function (str = "") {
     return final;
   }
 
+  /**
+   * Parse a Line to an array.
+   * @param {String} str
+   */
   function parseStr(str) {
     return (
       str
@@ -79,41 +85,28 @@ export default function (str = "") {
         .split(" ") // Split on the space
         .map((word) => {
           // Loop over each word
+          word = word.trim();
           let scrubbed = scrub(word); // Scrub it clean
           let valueStr = getValueString(word);
-          let firstChar = word.trim().substr(0, 1);
+          let firstChar = word.substr(0, 1);
           // Switch for type
-          switch (firstChar) {
-            // Tracker Type
-            case "#":
-              return toElement("tracker", scrubbed.word, valueStr, scrubbed.remainder.replace(word, ""));
-              break;
-            case "@":
-              return toElement("person", scrubbed.word, valueStr, scrubbed.remainder);
-              break;
-            case "+":
-              return toElement("context", scrubbed.word, valueStr, scrubbed.remainder);
-              break;
-            default:
-              if (
-                word
-                  .trim()
-                  .substr(0, 6)
-                  .match(/https:|http:/)
-              ) {
-                let link = word.trim().replace(/(https|http):\/\//gi, "");
-                return toElement("link", link, null, null, word.trim());
-              } else {
-                if (word) {
-                  return toElement("generic", word, "");
-                }
-              }
-              break;
+          if (firstChar === "#") {
+            return toElement("tracker", scrubbed.word, valueStr, scrubbed.remainder.replace(word, ""));
+          } else if (firstChar == "@") {
+            return toElement("person", scrubbed.word, valueStr, scrubbed.remainder);
+          } else if (firstChar == "+") {
+            return toElement("context", scrubbed.word, valueStr, scrubbed.remainder);
+          } else {
+            if (word.search(/https:|http:/) > -1) {
+              return toElement("link", word.replace(/(https|http):\/\//gi, ""), null, null, word);
+            } else if (word) {
+              return toElement("generic", word, "");
+            }
           }
         })
         .filter((word) => word) || []
     );
-  }
+  } // end parse string
 
   /**
    * Main Return for the function

@@ -19,6 +19,32 @@ describe("utils/extractor", function () {
     expect(extractor.toElement("#timer(02:00)").value).to.equal(7200);
   });
 
+  const tester = (options = {}) => {
+    let defaultFunc = () => {};
+    options.count = options.count || 400;
+    options.name = options.name || "Unknown";
+    options.function = options.function || defaultFunc;
+    console.log(`🎬 Starting ${options.name}`);
+    let start = new Date().getTime();
+    for (var i = 0; i < options.count; i++) {
+      options.function();
+    }
+    console.log(`🎬 Finished: ${name} in ${new Date().getTime() - start}ms`);
+    return new Date().getTime() - start;
+  };
+
+  it("should be fast! parse 100,000 records in less than 3 seconds", () => {
+    let notes = [];
+    let parsed = tester({
+      name: "baseline",
+      count: 100000,
+      function() {
+        notes.push(extractor.parse(note));
+      },
+    });
+    expect(parsed).to.be.lessThan(3000);
+  });
+
   it("Should handle #test_time: #hj #bj", () => {
     let note = " #test_time: #hj #bj";
     let parsed = extractor.parse(note);
