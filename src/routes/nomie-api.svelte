@@ -235,7 +235,7 @@
         {/if}
       </div>
     </div>
-    <div class="n-row">
+    <div class="n-row px-3">
       {#if state.ready && state.registered}
         <NButtonGroup
           buttons={[{ label: 'Settings', active: state.view == 'settings', click() {
@@ -340,32 +340,62 @@
         </div>
       </NItem>
 
-      <NItem className="bg-transparent">
-        <NInput label="Your API Key" bind:value={state.apiKey}>
-          <button
-            class="btn btn-clear tap-icon"
-            slot="right"
-            on:click={() => {
-              copy(state.apiKey);
-            }}>
-            <NIcon name="copy" className="fill-primary-bright" />
-          </button>
-        </NInput>
-        <!-- <div>
+      <div class="n-list solo mt-3">
+        <NItem className="">
+          <NInput label="Your API Key" bind:value={state.apiKey}>
+            <button
+              class="btn btn-clear tap-icon"
+              slot="right"
+              on:click={() => {
+                copy(state.apiKey);
+              }}>
+              <NIcon name="copy" className="fill-primary-bright" />
+            </button>
+          </NInput>
+          <!-- <div>
           <input type="text" class="form-control mt-1" value={state.apiKey} />
         </div> -->
-      </NItem>
-
-      <div item-divider />
-      {#if state.showExample}
-        <NItem title="Example POST" className="solo">
-          <button
-            slot="right"
-            class="btn btn-clear"
-            on:click={() => (state.showExample = !state.showExample)}>
-            Close
+        </NItem>
+        <NItem
+          title="Private Key"
+          on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
+          <button class="btn btn-clear text-primary-bright" slot="right">
+            <NIcon name="chevron{state.showPrivateKey ? 'Up' : 'Down'}" />
           </button>
         </NItem>
+        {#if state.showPrivateKey}
+          <NItem className="px-3 pb-3">
+            <div>
+              <textarea
+                type="text"
+                class="form-control text-sm mt-1"
+                style="min-height:100px;"
+                value={state.privateKey} />
+              <div
+                class="p-2 text-center text-primary-bright text-sm"
+                on:click={() => {
+                  copy(state.privateKey);
+                }}>
+                <NIcon
+                  name="copy"
+                  size={20}
+                  className="fill-primary-bright mr-2" />
+                Copy Private Key
+              </div>
+            </div>
+          </NItem>
+        {/if}
+      </div>
+
+      <NItem
+        title="Example POST"
+        className="solo mt-3"
+        on:click={() => (state.showExample = !state.showExample)}>
+        <button slot="right" class="btn btn-clear">
+          <NIcon name="chevron{state.showExample ? 'Up' : 'Down'}" />
+        </button>
+      </NItem>
+      {#if state.showExample}
         <NItem className="px-3 pb-2 bg-transparent">
           <p class="text-sm">POST JSON to: https://nomieapi.com/log</p>
           <textarea
@@ -376,56 +406,8 @@
             fields: note, api_key, lat, lng, date, source
           </p>
         </NItem>
-      {:else}
-        <NItem title="Example POST" className="solo">
-          <button
-            class="btn btn-clear text-primary-bright"
-            slot="right"
-            on:click={() => (state.showExample = !state.showExample)}>
-            Show
-          </button>
-        </NItem>
       {/if}
       <div item-divider />
-      {#if state.showPrivateKey}
-        <NItem title="Private Key" className="solo">
-          <button
-            class="btn btn-clear text-primary-bright"
-            slot="right"
-            on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
-            Hide
-          </button>
-        </NItem>
-        <NItem className="px-3 pb-3 bg-transparent">
-          <div>
-            <textarea
-              type="text"
-              class="form-control text-sm mt-1"
-              style="min-height:100px;"
-              value={state.privateKey} />
-            <div
-              class="p-2 text-center text-primary-bright text-sm"
-              on:click={() => {
-                copy(state.privateKey);
-              }}>
-              <NIcon
-                name="copy"
-                size={20}
-                className="fill-primary-bright mr-2" />
-              Copy Private Key
-            </div>
-          </div>
-        </NItem>
-      {:else}
-        <NItem title="Private Key" className="solo">
-          <button
-            class="btn btn-clear text-primary-bright"
-            slot="right"
-            on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
-            Show
-          </button>
-        </NItem>
-      {/if}
 
       <NItem
         className="text-red text-center solo mt-4"
