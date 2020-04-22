@@ -19,7 +19,7 @@
   function sort(logs) {
     return logs
       .map((log, i) => {
-        log._id = log._id + i;
+        log._key = log._id + i;
         return log;
       })
       .sort((a, b) => {
@@ -38,7 +38,7 @@
   </div>
 {:else}
   <div class="n-list {className}" {style}>
-    {#each internalLogs as log (log._id)}
+    {#each internalLogs as log (log._key)}
       <LogItem
         className={compact ? 'compact' : ''}
         {log}

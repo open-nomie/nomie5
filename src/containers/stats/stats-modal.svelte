@@ -963,7 +963,7 @@
           style="min-height:100%" />
       {:else if state.dataView == 'logs'}
         {#if state.timeSpan == 'y'}
-          <div class="p-4 text-sm text-center">
+          <div class="p-4 text-sm text-center text-inverse-2">
             Logs not yet available for a full year
           </div>
         {:else}
