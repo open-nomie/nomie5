@@ -6,7 +6,8 @@ export default function (str = "") {
    */
   function getValueString(word) {
     const wordSplit = word.split("(");
-    return wordSplit.length == 2 ? wordSplit[1].replace(")", "") : 1;
+    let value = wordSplit.length == 2 ? wordSplit[1].replace(")", "") : "1";
+    return value.length ? value : "1";
   }
 
   /**

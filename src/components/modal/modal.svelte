@@ -105,7 +105,7 @@
         border-bottom-right-radius: 0;
         padding-bottom: env(safe-area-inset-bottom);
         box-shadow: var(--box-shadow);
-        border: solid 1px var(--color-inverse-3);
+        border: solid 1px var(--color-faded-1);
       }
     }
     &.type-fullscreen {

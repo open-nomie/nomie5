@@ -2,7 +2,7 @@ import extractor from "../../../src/utils/extract/extract";
 
 let note = `This is a #test of +context @person #语 @语 +语 @brandon Nomies 
   
-  #extractor(4)! #home(0)? #coffee(3), #sleep(01:00:00) and #cheese #cheese #cheese`;
+  #extractor(4)! #home(0)? #coffee(3), #sleep(01:00:00) #taco[b32] and #cheese #cheese #cheese`;
 
 describe("utils/extractor", function () {
   it("Should be able extract Element from string", () => {
@@ -18,6 +18,7 @@ describe("utils/extractor", function () {
     expect(extractor.toElement("+😁").id).to.equal("😁");
     expect(extractor.toElement("#timer(02:00:00)").value).to.equal(7200);
     expect(extractor.toElement("#timer(02:00)").value).to.equal(7200);
+    expect(extractor.toElement("#timer()").value).to.equal(1);
   });
 
   const tester = (options = {}) => {
