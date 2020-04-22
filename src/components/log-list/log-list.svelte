@@ -17,17 +17,18 @@
   let internalLogs = [];
 
   function sort(logs) {
-    return logs.sort((a, b) => {
-      return a.end < b.end ? 1 : -1;
-    });
+    return logs
+      .map((log, i) => {
+        log._id = log._id + i;
+        return log;
+      })
+      .sort((a, b) => {
+        return a.end < b.end ? 1 : -1;
+      });
   }
 
   $: if (logs) {
-    loading = true;
-    setTimeout(() => {
-      internalLogs = sort(logs);
-      loading = false;
-    }, 100);
+    internalLogs = sort(logs);
   }
 </script>
 
@@ -37,7 +38,7 @@
   </div>
 {:else}
   <div class="n-list {className}" {style}>
-    {#each internalLogs as log}
+    {#each internalLogs as log (log._id)}
       <LogItem
         className={compact ? 'compact' : ''}
         {log}
