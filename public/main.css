@@ -5821,6 +5821,9 @@ select {
   margin-right: auto;
   width: 100%; }
 
+.container {
+  max-width: 800px !important; }
+
 .btn,
 a,
 input,
@@ -6209,6 +6212,8 @@ body.scrolling .mini-map {
     line-height: 0.9rem !important; }
   .n-item.text-primary .n-text {
     color: var(--color-primary); }
+  .n-item.text-primary-bright .n-text {
+    color: var(--color-primary-bright); }
 
 .n-item-divider {
   min-height: 60px !important;
@@ -6229,7 +6234,9 @@ body.scrolling .mini-map {
   .n-list [solo] {
     width: calc(100% - 16pt);
     margin: 8pt;
-    box-shadow: var(--box-shadow); }
+    box-shadow: var(--box-shadow);
+    border-radius: 6pt;
+    overflow: hidden; }
   @media (min-width: 350px) {
     .n-list {
       border-radius: 6px; } }

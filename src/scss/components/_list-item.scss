@@ -222,6 +222,11 @@
       color: var(--color-primary);
     }
   }
+  &.text-primary-bright {
+    .n-text {
+      color: var(--color-primary-bright);
+    }
+  }
 } // end .n-item
 
 .n-item-divider {
@@ -254,6 +259,8 @@
     width: calc(100% - 16pt);
     margin: 8pt;
     box-shadow: var(--box-shadow);
+    border-radius: 6pt;
+    overflow: hidden;
   }
 
   margin-bottom: 16px;
