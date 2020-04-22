@@ -64,9 +64,10 @@ export default class Face {
       `box-shadow:inset 0px -4px 10px rgba(0,0,0,0.2),inset 0px 4px 10px 3px rgba(255,255,255,0.1)`,
     ];
     //${pickedWear}
+    // ${base.join("")}
     const svg = `<div class="dymoji-character" style="${style.join(" ")}">
       <svg height="${this.config.size}px" viewBox="0 0 252 252" fill="none" xmlns="http://www.w3.org/2000/svg">
-        ${base.join("")}
+        
       </svg>
     </div>`;
     return svg;
