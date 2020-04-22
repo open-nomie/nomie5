@@ -142,7 +142,7 @@
   type="fullscreen"
   className="tracker-input">
   <div class="n-toolbar-grid n-row" slot="header">
-    <div class="left truncate pl-2">
+    <div class="left truncate pl-3">
       <span class="animate truncate up {data.ready ? 'visible' : 'hidden'}">
         {tracker.label}
       </span>
@@ -154,7 +154,7 @@
       </span>
     </div>
     <button class="btn btn-clear tap-icon right" on:click={editTracker}>
-      <NIcon name="edit" />
+      <NIcon name="edit" size="26" />
     </button>
   </div>
   <!-- Is the data ready -->

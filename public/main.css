@@ -6151,7 +6151,8 @@ body.scrolling .mini-map {
   .n-item .main {
     flex-grow: 1;
     flex-shrink: 1;
-    max-width: 100%; }
+    max-width: 100%;
+    padding-left: 4pt; }
   .n-item .n-note-textualized {
     max-width: 100%;
     overflow-x: auto; }
@@ -6902,8 +6903,8 @@ aside.n-panel {
   .n-layout .layout-header-fade {
     background: var(--header-fade);
     z-index: 3;
-    height: 70px;
-    margin-top: -40px; }
+    height: 80px;
+    margin-top: -60px; }
   .n-layout header.layout-header {
     min-height: 50px;
     flex-grow: 0;
