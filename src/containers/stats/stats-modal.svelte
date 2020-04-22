@@ -697,6 +697,10 @@
 
   $: timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
   $: dateFormat = $UserStore.meta.is24Hour ? "DD/MM/YYYY" : "MMM Do YYYY";
+
+  function onSwipeDown(e) {
+    console.log("swipe down", e);
+  }
 </script>
 
 <style lang="scss">
@@ -733,7 +737,13 @@
   }
 </style>
 
-<NModal className="stats-modal" bodyClass="bg-solid-1 " fullscreen>
+<NModal
+  className="stats-modal"
+  bodyClass="bg-solid-1 "
+  fullscreen
+  closeOnBackgroundTap
+  on:close={close}
+  on:swipeDown={onSwipeDown}>
   <header slot="raw-header" class="box-shadow-float">
     {#if $Interact.stats.terms.length > 1}
       {#each $Interact.stats.terms as term}
@@ -952,47 +962,40 @@
           className="flex-grow flex-shrink"
           style="min-height:100%" />
       {:else if state.dataView == 'logs'}
-        {#if state.selected.rows}
-          <NToolbar className="text-center mt-2">
-            <div class="filler" />
-            <NButtonGroup buttons={logViewButtons} />
-            <div class="filler" />
-          </NToolbar>
-          <NToolbar className="text-sm">
-            <div class="filler" />
-            Focused on {state.selected.point.x}
-            <button
-              class="btn btn-badge btn-xs clickable ml-2"
-              on:click={clearSelected}>
-              Close
-              <NIcon name="close" size="22" />
-            </button>
-            <div class="filler" />
-          </NToolbar>
-        {/if}
-
-        {#if state.dataView == 'logs'}
-          {#if state.timeSpan == 'y' && state.selected.index === undefined}
-            <div class="p-4 text-sm text-center">
-              Select a chart month to see the logs.
-            </div>
-          {:else}
-            <NLogList
-              compact
-              on:textClick={evt => {
-                if (evt.detail.type == 'tracker') {
-                  Interact.openStats(`#${evt.detail.id}`);
-                } else {
-                  Interact.openStats(`${evt.detail.raw}`);
-                }
-              }}
-              on:trackerClick={evt => {
-                Interact.openStats(`#${evt.detail.tag}`);
-              }}
-              logs={state.selected.rows || state.stats.rows}
-              style="min-height:100%"
-              className="bg-solid-1 flex-grow flex-shrink" />
+        {#if state.timeSpan == 'y'}
+          <div class="p-4 text-sm text-center">
+            Logs not yet available for a full year
+          </div>
+        {:else}
+          {#if state.selected.rows}
+            <NToolbar className="text-center mt-2">
+              <div class="filler" />
+              <NButtonGroup buttons={logViewButtons} />
+              <button
+                class="btn btn-badge btn-xs clickable ml-2"
+                on:click={clearSelected}>
+                {state.selected.point.x}
+                <NIcon name="close" size="22" />
+              </button>
+              <div class="filler" />
+            </NToolbar>
           {/if}
+
+          <NLogList
+            compact
+            on:textClick={evt => {
+              if (evt.detail.type == 'tracker') {
+                Interact.openStats(`#${evt.detail.id}`);
+              } else {
+                Interact.openStats(`${evt.detail.raw}`);
+              }
+            }}
+            on:trackerClick={evt => {
+              Interact.openStats(`#${evt.detail.tag}`);
+            }}
+            logs={state.selected.rows || state.stats.rows}
+            style="min-height:100%"
+            className="bg-solid-1 flex-grow flex-shrink" />
         {/if}
 
         <!-- {#if state.dataView == 'logs' && (state.timeSpan != 'y' && state.selected.index !== undefined)}

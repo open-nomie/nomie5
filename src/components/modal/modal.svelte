@@ -18,6 +18,7 @@
   export let className = undefined;
   export let type = "normal"; // cover, fullscreen, bottom, bottom-slide-up
   export let bodyClass = "";
+  export let closeOnBackgroundTap = false;
 
   const has_header = (arguments[1].$$slots || {}).hasOwnProperty("header");
   const has_raw_header = (arguments[1].$$slots || {}).hasOwnProperty(
@@ -43,6 +44,14 @@
     setTimeout(() => {
       showModal = false;
     }, 400);
+  }
+
+  function backgroundTap() {
+    console.log("Background Tap");
+    if (closeOnBackgroundTap == true) {
+      console.log("Closing");
+      dispatch("close");
+    }
   }
 
   onDestroy(() => {
@@ -241,9 +250,11 @@
 </style>
 
 <div
+  on:click={backgroundTap}
   class="n-modal-frame {className} type-{type}
   {domVisible ? 'visible' : 'hidden'}">
   <div
+    on:click|stopPropagation={() => {}}
     class="n-modal animate up {fullscreen ? 'full-screen-modal' : ''}
     {domVisible ? 'visible' : 'hidden'}">
     {#if has_raw_header}
