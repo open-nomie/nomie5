@@ -58,7 +58,9 @@
         archive.records = methods.getRecords();
       }
     },
-    finish() {
+    async finish() {
+      // Get a new latest book
+      await LedgerStore.getFirstDate(true);
       document.location.href = "/";
     },
     // On Import File
@@ -169,7 +171,7 @@
       importing.all.running = false;
       importing.all.done = true;
       Interact.toast("Import Complete. Reloading...");
-      // window.location.reload();
+      await LedgerStore.getFirstDate(true);
       window.location.href = "/";
       return true;
     },

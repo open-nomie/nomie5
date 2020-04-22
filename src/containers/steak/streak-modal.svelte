@@ -5,12 +5,13 @@
   import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import NProgressBar from "../../components/progress-bar/progress-bar.svelte";
   import NSpinner from "../../components/spinner/spinner.svelte";
+  import NPositivityBar from "../../components/positivity-bar/positivity-bar.svelte";
 
   // Modules and Utils
   import math from "../../utils/math/math";
   import Tracker from "../../modules/tracker/tracker";
   import dayjs from "dayjs";
-  import NoteDataType from "../../modules/note-data-type/note-data-type";
+  import extractor from "../../utils/extract/extract";
 
   // Stores
   import { UserStore } from "../../store/user";
@@ -38,10 +39,14 @@
     state.date = state.date.subtract(1, "month");
   }
 
-  function getTracker() {
-    return $TrackerStore.trackers.hasOwnProperty($Interact.streak.show)
-      ? $TrackerStore.trackers[$Interact.streak.show]
-      : new Tracker({ tag: $Interact.streak.show });
+  let lastStreakShow = null;
+  let trackableElement = null;
+  let tracker = null;
+
+  $: if ($Interact.streak.show && $Interact.streak.show !== lastStreakShow) {
+    lastStreakShow = $Interact.streak.show;
+    trackableElement = extractor.toElement($Interact.streak.show);
+    tracker = TrackerStore.getByTag(trackableElement.id);
   }
 
   function getPercentage(rows) {
@@ -70,11 +75,13 @@
       start: state.date.startOf("month"),
       end: state.date.endOf("month")
     };
+    let type = extractor.toElement($Interact.streak.show);
     let logs = await LedgerStore.query({
-      search: `${$Interact.streak.show}`,
+      search: type.toSearchTerm($Interact.streak.show),
       start: payload.start,
       end: payload.end
     });
+
     logs = logs.map(row => {
       row.start = new Date(row.start);
       row.end = new Date(row.end);
@@ -110,58 +117,62 @@
   }
 </style>
 
-<NModal show={$Interact.streak.show} type="bottom-slideup">
-  <div slot="header" class="w-100">
-    <NToolbarGrid>
-      <button
-        class="btn btn-clear tap-icon"
-        slot="left"
-        on:click={Interact.closeStreak}>
-        <NIcon name="close" />
-      </button>
-      <main slot="main">{$Interact.streak.show}</main>
-    </NToolbarGrid>
-    <NToolbarGrid>
-      <button class="btn btn-clear tap-icon" slot="left" on:click={prev}>
-        <NIcon name="chevronLeft" />
-      </button>
-      <main slot="main" class="w-100 text-center">
-        {state.date.format('MMM YYYY')}
-      </main>
-      <button class="btn btn-clear tap-icon" slot="right" on:click={next}>
-        <NIcon name="chevronRight" />
-      </button>
-    </NToolbarGrid>
-  </div>
-  <div class="p-3">
-    <NCalendar
-      bind:this={_elCalendar}
-      color={getTracker().color}
-      tracker={getTracker()}
-      showHeader={false}
-      on:dayClick={event => {
-        state.date = dayjs(event.detail);
-        main();
-      }}
-      initialDate={state.date}
-      events={state.logs} />
-    <div class="n-panel py-2 center-all">
-      <div class="n-panel w-50 center-all vertical">
-        <h1 class="text-inverse">
-          {state.daysHit}
-          <span class="text-inverse-3">of</span>
-          {state.daysTotal}
-        </h1>
-        <small class="text-inverse-2">
-          {math.round(state.percentage, 0)}% of the Days
-        </small>
-      </div>
-      <div class="n-panel w-50 center-all py-2">
-        <div class="spinner-container">
-          <NSpinner size="120" speed="0" gap={100 - state.percentage} />
+{#if tracker}
+  <NModal show={$Interact.streak.show} type="bottom-slideup">
+    <div slot="header" class="w-100">
+      <NToolbarGrid>
+        <button
+          class="btn btn-clear tap-icon"
+          slot="left"
+          on:click={Interact.closeStreak}>
+          <NIcon name="close" />
+        </button>
+        <main slot="main">{$Interact.streak.show}</main>
+      </NToolbarGrid>
+      <NToolbarGrid>
+        <button class="btn btn-clear tap-icon" slot="left" on:click={prev}>
+          <NIcon name="chevronLeft" />
+        </button>
+        <main slot="main" class="w-100 text-center">
+          {state.date.format('MMM YYYY')}
+        </main>
+        <button class="btn btn-clear tap-icon" slot="right" on:click={next}>
+          <NIcon name="chevronRight" />
+        </button>
+      </NToolbarGrid>
+    </div>
+    <div class="p-3">
+
+      <NCalendar
+        bind:this={_elCalendar}
+        color={tracker.color}
+        {tracker}
+        showHeader={false}
+        on:dayClick={event => {
+          state.date = dayjs(event.detail);
+          main();
+        }}
+        initialDate={state.date}
+        events={state.logs} />
+
+      <div class="n-panel center-all">
+
+        <div class="n-panel w-50 center-all vertical">
+          <h1 class="text-inverse">
+            {state.daysHit}
+            <span class="text-inverse-3">of</span>
+            {state.daysTotal}
+          </h1>
+          <small class="text-inverse-2">
+            {math.round(state.percentage, 0)}% of the Days
+          </small>
+        </div>
+        <div class="n-panel w-50 center-all py-2">
+          <div class="spinner-container">
+            <NSpinner size="120" speed="0" gap={100 - state.percentage} />
+          </div>
         </div>
       </div>
-
     </div>
-  </div>
-</NModal>
+  </NModal>
+{/if}

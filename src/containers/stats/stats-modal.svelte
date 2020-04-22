@@ -7,7 +7,6 @@
   // Modules
   import Tracker from "../../modules/tracker/tracker";
   import NLog from "../../modules/nomie-log/nomie-log";
-  import StatsProcessor from "../../modules/stats/stats";
   import StatsV5 from "../../modules/stats/statsV5";
   import StatsRef from "../../modules/stats/stats-ref";
 
@@ -18,8 +17,8 @@
   import tick from "../../utils/tick/tick";
   import math from "../../utils/math/math";
   import Storage from "../../modules/storage/storage";
-  import regex from "../../utils/regex";
-  import NoteDataTypes from "../../modules/note-data-type/note-data-type";
+
+  import extractor from "../../utils/extract/extract";
 
   // Components
   import NModal from "../../components/modal/modal.svelte";
@@ -239,24 +238,12 @@
     rememberCompare();
   }
 
-  function getQueryTerm() {
-    let rawTerm = getLastTerm();
-    let type = getType(rawTerm);
-    return rawTerm;
-    // if (state.lookupStack.length) {
-    //   return state.lookupStack[state.lookupStack.length - 1];
-    // } else {
-    //   // Get the Base One
-    //   if (types.hasOwnProperty($Interact.stats.activeType)) {
-    //     return `${types[$Interact.stats.activeType].prefix}${$Interact.stats.activeTag}`;
-    //   } else {
-    //     return $Interact.stats.activeTag;
-    //   }
-    // }
-  }
-
-  function getType(str) {
-    return NoteDataTypes.parse(str);
+  function getTrackableElement(str) {
+    let type = extractor.toElement(str);
+    if (type.type == "tracker") {
+      type.obj = $TrackerStore.trackers[type.id];
+    }
+    return type;
   }
 
   async function compareTracker() {
@@ -404,6 +391,24 @@
         changeDate(state.date.startOf("week"));
       }
     };
+    const viewStreak = {
+      title: "View Streak",
+      click: () => {
+        Interact.openStreak(state.currentTerm);
+      }
+    };
+
+    const editElement = {
+      title: `Edit ${state.currentTerm}`,
+      click: () => {
+        if (state.trackableElement.type == "tracker") {
+          Interact.editTracker(TrackerStore.byTag(state.trackableElement.id));
+        } else if (state.trackableElement.type == "person") {
+          Interact.person(state.trackableElement.id);
+        }
+      }
+    };
+
     buttons.push(compare);
     if (dayjs().format("DD-MM-YYYY") !== state.date.format("DD-MM-YYYY")) {
       buttons.push(gotoToday);
@@ -411,77 +416,86 @@
     buttons.push(startOfWeek);
     buttons.push(startOfMonth);
     buttons.push(startOfYear);
+    buttons.push(viewStreak);
+    // If it's a person or tracker
+    if (state.trackableElement.type.search(/tracker|person/) > -1) {
+      buttons.push(editElement);
+    }
 
+    //state.trackableElement
     Interact.popmenu({ title: "Stat Options", buttons });
   }
 
-  function getTracker() {
-    return getType(getLastTerm()).tracker;
-  }
-
   function getLastTerm() {
-    return $Interact.stats.terms[$Interact.stats.terms.length - 1];
+    let lastTerm = $Interact.stats.terms[$Interact.stats.terms.length - 1];
+    return lastTerm;
   }
 
-  async function getStats() {
-    state.loading = true;
-    let payload = {
-      search: getQueryTerm(),
-      start: getFromDate(),
-      end: getToDate()
-    };
-    // if day - normalize start and end
-    if (state.timeSpan == "d") {
-      payload.start = dayjs(state.date).startOf("day");
-      payload.end = dayjs(state.date).endOf("day");
-    }
-
-    let results = await LedgerStore.query(payload);
-    const statsV5 = new StatsV5({ is24Hour: $UserStore.meta.is24Hour });
-    state.stats = statsV5.generate({
-      rows: results,
-      fromDate: getFromDate(),
-      toDate: getToDate(),
-      mode: state.timeSpan,
-      tracker: getTracker()
-    });
-
-    // if (state.timeSpan !== "y") {
-
-    // } else {
-    //   // don't  do related for the the year - too heavy.
-    //   state.related = [];
-    // }
+  async function loadSavedCompares(queryPayload) {
     let savedCompares = remember("compare");
+    // If we do - then lets load them each up
     if (state.compare.length == 0 && savedCompares) {
+      // Loop over compares
       savedCompares.forEach(searchTerm => {
-        let type = NoteDataTypes.parse(searchTerm);
+        let type = extractor.toElement(searchTerm);
+        type.obj = type.type == "tracker" ? TrackerStore.byTag(type.id) : {};
         state.compare.push(
           new StatsRef({
             type: type.type,
-            key: type.tracker.tag,
-            label: type.tracker.label,
-            base: type.tracker,
+            key: type.id,
+            label: type.id,
+            base: type.obj,
             is24Hour: $UserStore.meta.is24Hour
           })
         );
       });
     }
-
+    // Get Stats for Compares
     for (let i = 0; i < state.compare.length; i++) {
       let stats = await state.compare[i].getStats(
         state.timeSpan,
-        payload.start,
-        payload.end
+        queryPayload.start,
+        queryPayload.end
       );
     }
+  } // end load saved compares
 
-    state.related = statsV5.getRelated(results);
+  async function getStats() {
+    state.loading = true;
+    let queryPayload = {
+      search: state.trackableElement,
+      start: getFromDate(),
+      end: getToDate()
+    };
+    // if day - normalize start and end
+    if (state.timeSpan == "d") {
+    }
+    queryPayload.start = dayjs(getFromDate()).startOf("day");
+    queryPayload.end = dayjs(getToDate()).endOf("day");
+
+    // Get Logs from the Ledger Store
+    let results = await LedgerStore.query(queryPayload);
+    // Prep Stats
+    const statsV5 = new StatsV5();
+
+    // Generate Stats
+    state.stats = statsV5.generate({
+      rows: results,
+      fromDate: getFromDate(),
+      toDate: getToDate(),
+      mode: state.timeSpan,
+      math: state.tracker.math,
+      trackableElement: state.trackableElement
+    });
+    // See if we have any saved compares
+    loadSavedCompares(queryPayload);
+
+    state.related = statsV5.getRelated();
     await tick(100);
     state.compare = state.compare;
 
     state.loading = false;
-  }
+  } // end getStats()
 
   function getDayRange() {
     return state.date.format("ddd MMM D, YYYY");
@@ -544,8 +558,11 @@
   }
 
   function formatValue(value, includeUnit) {
-    let tracker = getTracker();
-    return tracker.displayValue(value, includeUnit);
+    let tracker = state.tracker;
+    if (state.tracker) {
+      return state.tracker.displayValue(value, includeUnit);
+    }
+    return value;
   }
 
   function getMonthRange() {
@@ -585,6 +602,10 @@
     state.selected = { index: undefined, rows: null };
   }
 
+  /**
+   * Set Selected ({point})
+   * User Selected a Specific Date from the Cart
+   */
   async function setSelected(selected) {
     state.selected = selected;
 
@@ -597,12 +618,18 @@
     if (state.timeSpan == "d") {
       payload.start = dayjs(state.selected.point.date).startOf("hour");
       payload.end = dayjs(state.selected.point.date).endOf("hour");
+    } else if (state.timeSpan == "w" || state.timeSpan == "m") {
+      payload.start = dayjs(state.selected.point.date).startOf("day");
+      payload.end = dayjs(state.selected.point.date).endOf("day");
+    } else if (state.timeSpan == "y") {
+      payload.start = dayjs(state.selected.point.date).startOf("month");
+      payload.end = dayjs(state.selected.point.date).endOf("month");
     }
     let rows = await LedgerStore.query(payload);
 
     if (dataViews.logs.focused) {
       state.selected.rows = rows.filter(row => {
-        return row.note.match(regex.escape(getQueryTerm()));
+        return row.note.match(state.trackableElement.toSearchTerm());
       });
     } else {
       state.selected.rows = rows;
@@ -620,8 +647,16 @@
   }
 
   async function main() {
+    // Get term from Interact Store
+    state.currentTerm = $Interact.stats.terms[$Interact.stats.terms.length - 1];
+    // Get range and view options
     state.range = getDateRangeText();
     state.viewOption = getDataViewButtons();
+    // Get trackable element from the latest term
+    state.trackableElement = extractor.toElement(state.currentTerm);
+    // Get Tracker - make a fake one if a person, or context
+    state.tracker = TrackerStore.byTag(state.trackableElement.id);
+    state.currentColor = state.tracker.color;
     getStats();
   }
 
@@ -636,12 +671,15 @@
     main();
   }
 
+  /**
+   * IMPORTANT
+   * When the term changes - we must show the new stats
+   * Don't sleep on this one.
+   */
   let lastTerms;
   $: if ($Interact.stats.terms.join(",") !== lastTerms) {
     lastTerms = $Interact.stats.terms.join(",");
     main();
-    state.currentTerm = getLastTerm();
-    state.currentColor = getTracker().color;
     state.showAnimation = true;
     setTimeout(() => {
       state.showAnimation = false;
@@ -659,6 +697,10 @@
 
   $: timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
   $: dateFormat = $UserStore.meta.is24Hour ? "DD/MM/YYYY" : "MMM Do YYYY";
+
+  function onSwipeDown(e) {
+    console.log("swipe down", e);
+  }
 </script>
 
 <style lang="scss">
@@ -677,6 +719,10 @@
     text-align: center;
     line-height: 1rem;
   }
+  :global(.stats-modal .n-modal) {
+    max-width: 500px !important;
+  }
+
   :global(.chart-item) {
     position: relative;
     .btn-close {
@@ -691,7 +737,13 @@
   }
 </style>
 
-<NModal className="stats-modal" bodyClass="bg-solid-1 " fullscreen>
+<NModal
+  className="stats-modal"
+  bodyClass="bg-solid-1 "
+  fullscreen
+  closeOnBackgroundTap
+  on:close={close}
+  on:swipeDown={onSwipeDown}>
   <header slot="raw-header" class="box-shadow-float">
     {#if $Interact.stats.terms.length > 1}
       {#each $Interact.stats.terms as term}
@@ -706,11 +758,11 @@
       <div slot="left" className="truncate" style="min-width:100px;">
         {#if $Interact.stats.terms.length == 1}
           <button class="btn btn-clear tap-icon clickable" on:click={close}>
-            <NIcon name="close" size="22" />
+            <NIcon name="close" />
           </button>
         {:else}
           <button class="btn btn-clear tap-icon clickable pl-1" on:click={back}>
-            <NIcon name="arrowBack" size="22" />
+            <NIcon name="arrowBack" size="28" />
             <small
               class="text-sm text-inverse-2 ml-1 truncate"
               style="max-width:60px;">
@@ -753,6 +805,14 @@
       </button>
     </NToolbarGrid>
 
+    {#if state.loading}
+      <div class="container n-panel center-all" style="height:140px;">
+        <div>
+          <NSpinner size={46} />
+        </div>
+      </div>
+    {/if}
+
     {#if state.stats && !state.loading}
       <div class="main-chart px-2 pb-1">
         <NBarChart
@@ -766,7 +826,7 @@
             return x;
           }}
           yFormat={y => {
-            return getTracker().displayValue(y);
+            return state.tracker.displayValue(y);
           }}
           on:tap={event => {
             setSelected(event.detail);
@@ -784,13 +844,7 @@
       buttons={state.viewOption} />
   </div>
 
-  {#if state.loading}
-    <div class="container n-panel center-all">
-      <div style="margin-top:-50px;">
-        <NSpinner size={46} />
-      </div>
-    </div>
-  {:else}
+  {#if !state.loading}
     {#if state.dataView == 'compare'}
       <div class="charts">
         {#each state.compare as compare}
@@ -847,51 +901,28 @@
       {#if state.dataView == 'overview'}
         <div class="overview py-2 flex-grow flex-shrink">
           {#if state.stats.math == 'sum'}
-            <NItem className="bg-transparent">
-              <NKVBlock
-                inverse
-                label="Total"
-                value={formatValue(state.stats.sum)}
-                type="row" />
+            <NItem className="solo" title="Total">
+              <div slot="right" class="text-lg text-inverse">
+                {formatValue(state.stats.sum)}
+              </div>
             </NItem>
           {/if}
-          <NItem className="py-0 bg-transparent">
-            <NKVBlock
-              inverse
-              label="Avg"
-              value={formatValue(state.stats.avg)}
-              type="row" />
+          <NItem className="solo" title="Average">
+            <div slot="right" class="text-lg text-inverse">
+              {formatValue(state.stats.avg)}
+            </div>
           </NItem>
           {#if state.stats.max.value > state.stats.min.value}
-            <NItem className="bg-transparent">
-              <NKVBlock
-                inverse
-                label="Range"
-                value=""
-                className="filler"
-                type="row">
-                <div slot="value">
-                  {formatValue(state.stats.min.value, false)}
-                  <span class="text-faded-2 font-weight-normal">to</span>
-                  {formatValue(state.stats.max.value)}
-                </div>
-              </NKVBlock>
+            <NItem className="solo" title="Range">
+              <div slot="right" class="text-lg text-inverse value">
+                {formatValue(state.stats.min.value, false)}
+                <span class="text-faded-2 font-weight-normal">to</span>
+                {formatValue(state.stats.max.value)}
+              </div>
             </NItem>
-            <!-- <NItem>
-                <NKVBlock
-                  label="Variance"
-                  className="filler"
-                  value={`${formatValue(state.stats.max.value - state.stats.min.value)}`}
-                  type="row" />
-              </NItem> -->
           {/if}
-          <NItem className="bg-transparent">
-            <NKVBlock
-              inverse
-              label="Score"
-              className="filler"
-              value={getScore()}
-              type="row" />
+          <NItem className="solo" title="Score">
+            <div slot="right" class="text-lg text-inverse">{getScore()}</div>
           </NItem>
 
           {#if state.related.length}
@@ -911,7 +942,7 @@
                         radius={0.3} />
                     {/if}
                     {#if item.type == 'tracker'}
-                      {TrackerStore.getByTag(item.value).emoji}
+                      {TrackerStore.byTag(item.value).emoji}
                     {/if}
                     {item.search}
                     <span class="count">{item.count}</span>
@@ -931,40 +962,63 @@
           className="flex-grow flex-shrink"
           style="min-height:100%" />
       {:else if state.dataView == 'logs'}
-        {#if state.selected.rows}
-          <NToolbar className="text-center mt-2">
-            <div class="filler" />
-            <NButtonGroup buttons={logViewButtons} />
-            <div class="filler" />
-          </NToolbar>
-          <NToolbarGrid className="sm">
-            <div slot="main" class="text-inverse-3">
-              Focused on {state.selected.point.x}
-            </div>
-            <button
-              slot="right"
-              class="btn btn-clear tap-icon clickable"
-              on:click={clearSelected}>
-              <NIcon name="close" size="22" />
-            </button>
-          </NToolbarGrid>
+        {#if state.timeSpan == 'y'}
+          <div class="p-4 text-sm text-center">
+            Logs not yet available for a full year
+          </div>
+        {:else}
+          {#if state.selected.rows}
+            <NToolbar className="text-center mt-2">
+              <div class="filler" />
+              <NButtonGroup buttons={logViewButtons} />
+              <button
+                class="btn btn-badge btn-xs clickable ml-2"
+                on:click={clearSelected}>
+                {state.selected.point.x}
+                <NIcon name="close" size="22" />
+              </button>
+              <div class="filler" />
+            </NToolbar>
+          {/if}
+
+          <NLogList
+            compact
+            on:textClick={evt => {
+              if (evt.detail.type == 'tracker') {
+                Interact.openStats(`#${evt.detail.id}`);
+              } else {
+                Interact.openStats(`${evt.detail.raw}`);
+              }
+            }}
+            on:trackerClick={evt => {
+              Interact.openStats(`#${evt.detail.tag}`);
+            }}
+            logs={state.selected.rows || state.stats.rows}
+            style="min-height:100%"
+            className="bg-solid-1 flex-grow flex-shrink" />
         {/if}
 
-        <NLogList
-          compact
-          on:textClick={evt => {
-            if (evt.detail.type == 'tracker') {
-              Interact.openStats(`#${evt.detail.tracker.tag}`);
-            } else {
-              Interact.openStats(`${evt.detail.value}`);
-            }
-          }}
-          on:trackerClick={evt => {
-            Interact.openStats(`#${evt.detail.tracker.tag}`);
-          }}
-          logs={state.selected.rows || state.stats.rows}
-          style="min-height:100%"
-          className="bg-solid-1 flex-grow flex-shrink" />
+        <!-- {#if state.dataView == 'logs' && (state.timeSpan != 'y' && state.selected.index !== undefined)}
+          <NLogList
+            compact
+            on:textClick={evt => {
+              if (evt.detail.type == 'tracker') {
+                Interact.openStats(`#${evt.detail.id}`);
+              } else {
+                Interact.openStats(`${evt.detail.raw}`);
+              }
+            }}
+            on:trackerClick={evt => {
+              Interact.openStats(`#${evt.detail.tag}`);
+            }}
+            logs={state.selected.rows || state.stats.rows}
+            style="min-height:100%"
+            className="bg-solid-1 flex-grow flex-shrink" />
+        {:else if state.dataView == 'logs' && state.timeSpan == 'y'}
+          <div class="p-4 text-sm text-center">
+            Select a chart month to see the logs.
+          </div>
+        {/if} -->
       {/if}
     {/if}
   {/if}

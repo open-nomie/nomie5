@@ -268,9 +268,6 @@
         $Interact.trackerInput.onInteract(event.detail);
       }
       Interact.dismissTrackerInput();
-      ActiveLogStore.addTag(event.detail.tracker.tag, event.detail.value);
-      let includeStr = event.detail.tracker.getIncluded(event.detail.value);
-      ActiveLogStore.addElement(includeStr);
       $ActiveLogStore.score = ActiveLogStore.calculateScore($ActiveLogStore.note, $TrackerStore.trackers);
       LedgerStore.saveLog($ActiveLogStore).then(() => {
         ActiveLogStore.clear();

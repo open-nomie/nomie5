@@ -8,6 +8,8 @@
 
   // components
   import NItem from "../list-item/list-item.svelte";
+  import NBall from "../tracker-ball/ball.svelte";
+  import Dymoji from "../dymoji/dymoji.svelte";
   import NIcon from "../icon/icon.svelte";
   import NPoints from "../points/points.svelte";
   import NText from "../text/text.svelte";
@@ -21,6 +23,7 @@
   import { TrackerStore } from "../../store/tracker-store";
   import { UserStore } from "../../store/user";
   import { Interact } from "../../store/interact";
+  import { PeopleStore } from "../../store/people-store";
 
   // vendors
   import dayjs from "dayjs";
@@ -31,11 +34,12 @@
   export let className = "";
   export let focus = false;
   export let fullDate = false;
-  export let hideMore = false;
+  export let hideMore = undefined;
   // consts
   const dispatch = createEventDispatcher();
 
   let displayLog;
+  let logMeta;
 
   let trackers = $TrackerStore.trackers;
 
@@ -45,6 +49,11 @@
 
   $: if (log) {
     displayLog = new NomieLog(log);
+    logMeta = displayLog.getMeta();
+    logMeta.trackers = logMeta.trackers.map(trackerElement => {
+      trackerElement.obj = TrackerStore.getByTag(trackerElement.id);
+      return trackerElement;
+    });
   }
 
   $: fullDate =
@@ -77,11 +86,11 @@
     <div class="n-row time-row">
       <div class="time truncate" style="max-width:60%;">
         <div class="day-time truncate">
-          {dayjs(displayLog.end).format(`ddd ${timeFormat}`)}
+          {logMeta.endDate.format(`ddd ${timeFormat}`)}
         </div>
         <div class="date-ago truncate">
-          {dayjs(displayLog.end).format('MMM Do YYYY')}
-          <span class="ago">{time.fromNow(displayLog.end)} ago</span>
+          {logMeta.endDate.format('MMM Do YYYY')}
+          <span class="ago">{time.fromNow(logMeta.endDate)} ago</span>
         </div>
       </div>
 
@@ -102,12 +111,8 @@
       {#if displayLog.score}
         <NPoints points={displayLog.score} />
       {/if}
-      <!-- <div class="time-ago text-faded-2 ml-3">
-        {time.fromNow(displayLog.end)}
-      </div> -->
-      <!-- Janky - fix this -->
-      {#if hideMore != true}
-        <!--dispatch('moreClick', displayLog);-->
+
+      {#if hideMore !== true}
         <button
           on:click={event => {
             Interact.logOptions(displayLog);
@@ -116,6 +121,7 @@
           <NIcon name="more" className="fill-primary-bright" size="32" />
         </button>
       {/if}
+
     </div>
     <!-- Process the Note Content wi th the Textualizer 
     This really isn't special right now -->
@@ -126,32 +132,52 @@
         }}
         note={displayLog.note}
         {trackers}
-        className={displayLog.trackersArray().length ? '' : 'pb-2'} />
+        className={logMeta.trackers.length ? '' : 'pb-2'} />
+    {/if}
+    {#if displayLog.people.length}
+      <div class="people pb-2 px-2">
+        {#each displayLog.people as person}
+          {#if $PeopleStore.people[person.id]}
+            <NBall
+              size="20"
+              radius="0.3"
+              avatar={$PeopleStore.people[person.id].avatar}
+              username={person.id}
+              className="ml-2" />
+          {:else}
+            <NBall
+              size="20"
+              username={person.id}
+              className="ml-2"
+              radius="0.3" />
+          {/if}
+        {/each}
+      </div>
     {/if}
     <div class="trackers-list">
       <!-- Loop over the trackers within this log -->
-      {#each displayLog.trackersArray().filter(trk => {
+      {#each logMeta.trackers.filter(trk => {
         if (focus) {
-          return trk.tag == focus;
+          return trk.id == focus;
         } else {
           return true;
         }
-      }) as tracker (`${tracker.tag}-${displayLog._id}`)}
+      }) as trackerElement}
         <!-- Tracker List Item  -->
         <NItem
           className="clickable bottom-line"
           on:click={event => {
             event.preventDefault();
             event.stopPropagation();
-            dispatch('trackerClick', { tracker, log });
+            dispatch('trackerClick', { tracker: trackerElement.obj, log });
             return false;
           }}>
           <div class="emoji" slot="left">
-            {(trackers[tracker.tag] || {}).emoji || '⚪️'}
+            {(trackerElement.obj || {}).emoji || '⚪️'}
           </div>
-          <div>{(trackers[tracker.tag] || {}).label || tracker.tag}</div>
+          <div>{(trackerElement.obj || {}).label || trackerElement.id}</div>
           <div class="value" slot="right">
-            {NomieUOM.format(tracker.value, (trackers[tracker.tag] || {}).uom)}
+            {NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom)}
           </div>
         </NItem>
       {/each}

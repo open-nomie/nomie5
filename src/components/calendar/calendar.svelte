@@ -3,11 +3,12 @@
   // https://github.com/maryayi/vue-sweet-calendar/blob/master/src/components/Calendar.vue
 
   // svelte
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { createEventDispatcher } from "svelte";
 
   // Local
   import DateTime from "./date-time.js";
+  import math from "../../utils/math/math";
 
   // vendors
   import dayjs from "dayjs";
@@ -15,8 +16,13 @@
   // Utils
   import Logger from "../../utils/log/log";
   import NIcon from "../../components/icon/icon.svelte";
+  import NPositivityBar from "../../components/positivity-bar/positivity-bar.svelte";
 
-  const console = new Logger("📅 Sweet");
+  import calcTrackerScore from "../../modules/scoring/score-tracker";
+
+  import { TrackerStore } from "../../store/tracker-store";
+
+  const console = new Logger("📅 calendar/calendar");
   const dispatch = createEventDispatcher();
 
   // export let name = "Calendar";
@@ -36,8 +42,23 @@
     date: dayjs(initialDate),
     today: new Date(),
     weekdays: null,
-    percentage: null
+    percentage: null,
+    totals: {
+      positive: 0,
+      negative: 0,
+      neutral: 0
+    }
   };
+
+  let mounted = false;
+
+  onMount(() => {
+    mounted = true;
+  });
+
+  onDestroy(() => {
+    mounted = false;
+  });
 
   let days = null;
   let day = null;
@@ -54,14 +75,28 @@
   let monthStartDate = dayjs(state.date).startOf("month");
   let refreshing = false;
 
+  let positiveCount = 0;
+  let negativeCount = 0;
+  let neutralCount = 0;
+
   // If the initial date is set, convert to dayjs date
   $: if (initialDate) {
     state.date = dayjs(initialDate);
     state.weekdays = methods.generateWeekdayNames(firstDayOfWeek);
+    let positiveCount = 0;
+    let negativeCount = 0;
+    let neutralCount = 0;
   }
 
   // If date change - do the magic.
-  $: if (state.date) {
+  let lastDate = null;
+  $: if (state.date && state.date != lastDate) {
+    lastDate = state.date;
+
+    state.totals.neutral = 0;
+    state.totals.positive = 0;
+    state.totals.negative = 0;
+
     startWeekDayOfMonth =
       state.date
         .startOf("month")
@@ -126,25 +161,46 @@
     getDayStyle(day) {
       let score = undefined;
 
-      let activeToday = events.find(row => {
-        return day.toDate().toDateString() === new Date(row.end).toDateString();
-      });
+      // let activeToday = events.find(row => {
+      //   return day.toDate().toDateString() === new Date(row.end).toDateString();
+      // });
 
-      // Lets extract the score for this tracker
-      if (activeToday) {
-        // Get the active Today log and pull meta from it.
-        let meta = activeToday.getMeta();
-        // Did we pass in a tracker?
-        if (tracker) {
-          // Get tracker value for this log
-          const trackerValue = meta.trackers.find(t => t.tag == tracker.tag);
-          // If we have a tracker value
-          if (trackerValue) {
-            // Calcuate the score just for this tracker
-            score = activeToday.calculateScore(
-              `#${trackerValue.tag}(${trackerValue.value})`
-            );
+      let values = events
+        .filter(row => {
+          return (
+            day.toDate().toDateString() === new Date(row.end).toDateString()
+          );
+        })
+        .map(row => {
+          if (!row.trackers) {
+            row.getMeta();
           }
+          if (tracker.math == "sum") {
+            return math.sum(row.getTrackerValues(tracker.tag));
+          } else {
+            return math.average(row.getTrackerValues(tracker.tag));
+          }
+        });
+      let total = 0;
+      if (values.length) {
+        if (tracker.math == "sum") {
+          total = math.sum(values);
+        } else {
+          total = math.average(values);
+        }
+      }
+      if (total) {
+        score = calcTrackerScore(total, tracker);
+      }
+      // Lets extract the score for this tracker
+      if (values.length) {
+        // Did we pass in a tracker?
+        if (score == 0) {
+          state.totals.neutral = state.totals.neutral + 1;
+        } else if (score > 0) {
+          state.totals.positive = state.totals.positive + 1;
+        } else if (score < 0) {
+          state.totals.negative = state.totals.negative + 1;
         }
         return methods.getDayBorder(score);
       } else {
@@ -293,7 +349,7 @@
   }
 </style>
 
-{#if state.date}
+{#if state.date && mounted}
   <div class="sweet-calendar">
     <div class="sweet-container calendar">
       {#if showHeader}
@@ -333,4 +389,8 @@
       </div>
     </div>
   </div>
+  <NPositivityBar
+    positive={state.totals.positive}
+    neutral={state.totals.neutral}
+    negative={state.totals.negative} />
 {:else}Loading{/if}

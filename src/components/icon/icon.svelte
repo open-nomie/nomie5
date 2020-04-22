@@ -15,6 +15,7 @@
   import Location24 from "carbon-icons-svelte/lib/Location24";
   import NewTab24 from "carbon-icons-svelte/lib/NewTab24";
   import CloseFilled24 from "carbon-icons-svelte/lib/CloseFilled24";
+  import CloseOutline24 from "carbon-icons-svelte/lib/CloseOutline24";
   import ChevronLeft24 from "carbon-icons-svelte/lib/ChevronLeft24";
   import ChevronRight24 from "carbon-icons-svelte/lib/ChevronRight24";
   import ChevronDown24 from "carbon-icons-svelte/lib/ChevronDown24";
@@ -54,6 +55,7 @@
     chart: ChartBar24,
     close: Close24,
     closeFilled: CloseFilled24,
+    closeOutline: CloseOutline24,
     more: OverflowMenuHorizontal24,
     chevronUp: ChevronUp24,
     chevronDown: ChevronDown24,

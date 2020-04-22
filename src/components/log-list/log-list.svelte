@@ -10,31 +10,50 @@
   export let compact = false;
   export let style = "";
   export let className = "";
-  export let hideMore = false;
+
+  let loading = false;
+  // export let hideMore = false;
+
+  let internalLogs = [];
 
   function sort(logs) {
-    return logs.sort((a, b) => {
-      return a.end < b.end ? 1 : -1;
-    });
+    return logs
+      .map((log, i) => {
+        log._id = log._id + i;
+        return log;
+      })
+      .sort((a, b) => {
+        return a.end < b.end ? 1 : -1;
+      });
+  }
+
+  $: if (logs) {
+    internalLogs = sort(logs);
   }
 </script>
 
-<div class="n-list {className}" {style}>
-  {#each sort(logs) as log (log._id)}
-    <LogItem
-      className={compact ? 'compact' : ''}
-      {log}
-      on:trackerClick={event => {
-        dispatch('trackerClick', event.detail);
-      }}
-      on:locationClick={event => {
-        dispatch('locationClick', event.detail);
-      }}
-      on:textClick={event => {
-        dispatch('textClick', event.detail);
-      }}
-      on:moreClick={event => {
-        dispatch('moreClick', event.detail);
-      }} />
-  {/each}
-</div>
+{#if loading}
+  <div class="n-panel center-all h-100 flex-grow">
+    <NSpinner />
+  </div>
+{:else}
+  <div class="n-list {className}" {style}>
+    {#each internalLogs as log (log._id)}
+      <LogItem
+        className={compact ? 'compact' : ''}
+        {log}
+        on:trackerClick={event => {
+          dispatch('trackerClick', event.detail);
+        }}
+        on:locationClick={event => {
+          dispatch('locationClick', event.detail);
+        }}
+        on:textClick={event => {
+          dispatch('textClick', event.detail);
+        }}
+        on:moreClick={event => {
+          dispatch('moreClick', event.detail);
+        }} />
+    {/each}
+  </div>
+{/if}

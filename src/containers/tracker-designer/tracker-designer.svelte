@@ -3,7 +3,7 @@
   import { navigate } from "svelte-routing";
   import NPage from "../../containers/layout/page.svelte";
   import NToolbar from "../../components/toolbar/toolbar.svelte";
-  import AppLayout from "../layout/app.svelte";
+  import NLayout from "../layout/layout.svelte";
 
   import NTrackerButton from "../../containers/board/tracker-button.svelte";
   import NStepper from "../../components/stepper/stepper.svelte";
@@ -93,14 +93,14 @@
       }
     };
     const color = {
-      title: "Pick a Tracker Color",
+      title: "Pick Tracker Color",
       component: StepColor,
       validate() {
         return $TrackerDesignerStore.tracker.color;
       }
     };
     const type = {
-      title: "Pick the Tracker Type",
+      title: "Pick Tracker Type",
       component: StepType,
       validate() {
         return $TrackerDesignerStore.tracker.type;
@@ -182,7 +182,7 @@
   }
 </style>
 
-<AppLayout showTabs={false}>
+<NLayout showTabs={false}>
 
   <div
     slot="header"
@@ -233,4 +233,4 @@
     </div>
   </footer>
 
-</AppLayout>
+</NLayout>

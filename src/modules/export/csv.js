@@ -16,13 +16,14 @@ export default class CSV {
     // Loop over logs
     logs.forEach((log) => {
       // Extract log tracker tags
-      let logTrackers = Object.keys(log.trackers);
+
       const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
       const localStart = new Date(log.start - tzoffset).toISOString().slice(0, -1);
       const localEnd = new Date(log.end - tzoffset).toISOString().slice(0, -1);
 
       // Loop over tracker tags
-      logTrackers.forEach((trackerTag) => {
+      log.trackers.forEach((trackerElement) => {
+        let trackerTag = trackerElement.id;
         // Is it a match?
         if (tagsToInclude.indexOf(trackerTag) > -1) {
           // Include it..
@@ -31,7 +32,7 @@ export default class CSV {
             localStart,
             localEnd,
             trackerTag,
-            log.trackers[trackerTag].value,
+            trackerElement.value,
             log.note.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
             log.lat,
             log.lng,
@@ -41,7 +42,7 @@ export default class CSV {
         }
       }); // end looping over logTrackers
       // TODO: Make this output notes
-      if (!logTrackers.length) {
+      if (!log.trackers.length) {
         rows.push([
           log.end,
           localStart,
@@ -111,7 +112,7 @@ export default class CSV {
     });
     // Expand and filter the logs
     logs = logs.map((record) => {
-      record.expand(); // get more data like trackers and values
+      record.getMeta(); // get more data like trackers and values
       return record;
     });
 

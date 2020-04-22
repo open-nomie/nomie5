@@ -1,0 +1,18 @@
+.main-content {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-height: calc(100vh - 50px) !important;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 50px;
+
+  // background-color: var(--color-bg);
+  // background-color: red !important;
+}

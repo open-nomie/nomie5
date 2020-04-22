@@ -27,8 +27,7 @@
 
   // Containers
   import NMap from "../containers/map/map.svelte";
-  import AppLayout from "../containers/layout/app.svelte";
-
+  import NLayout from "../containers/layout/layout.svelte";
   // Utils
   import dayjs from "dayjs";
   import tick from "../utils/tick/tick";
@@ -160,42 +159,53 @@
 
     async doSearch(event) {
       state.searchTerm = null;
+      let trackableElement = event.detail;
       tick(100);
-      if (event.detail.type == "tracker") {
-        state.searchTerm = `#${event.detail.tracker.tag}`;
+      if (trackableElement.type == "tracker") {
+        state.searchTerm = `#${trackableElement.id}`;
       } else {
-        state.searchTerm = `${event.detail.value}`;
+        state.searchTerm = `${trackableElement.raw}`;
       }
       showSearch = true;
       methods.onSearchEnter();
     },
 
     async textClick(event) {
-      let isTracker = event.detail.tracker ? true : false;
-      Interact.popmenu({
-        title: `${
-          isTracker ? event.detail.tracker.label : event.detail.value
-        } Options`,
-        buttons: [
-          {
-            title: `Open Stats`,
-            click: () => {
-              if (isTracker) {
-                Interact.openStats(`#${event.detail.tracker.tag}`);
-              } else {
-                Interact.openStats(event.detail.value);
-              }
-            }
-          },
-          {
-            title: `Search ${
-              isTracker ? event.detail.tracker.label : event.detail.value
-            }`,
-            click: () => {
-              methods.doSearch(event);
+      let trackableElement = event.detail;
+      let tracker =
+        trackableElement.type == "tracker"
+          ? TrackerStore.getByTag(trackableElement.id)
+          : null;
+
+      const buttons = [
+        {
+          title: `View stats`,
+          click: () => {
+            if (tracker) {
+              Interact.openStats(`#${trackableElement.id}`);
+            } else {
+              Interact.openStats(trackableElement.raw);
             }
           }
-        ]
+        },
+        {
+          title: `Search for ${tracker ? tracker.label : trackableElement.raw}`,
+          click: () => {
+            methods.doSearch(event);
+          }
+        }
+      ];
+      if (trackableElement.type == "person") {
+        buttons.push({
+          title: `Check-In`,
+          click: () => {
+            Interact.person(trackableElement.id);
+          }
+        });
+      }
+      Interact.popmenu({
+        title: `${tracker ? tracker.label : trackableElement.raw} options`,
+        buttons: buttons
       });
     },
     async getLogs(fresh) {
@@ -392,7 +402,7 @@
   }
 </style>
 
-<AppLayout title={appTitle}>
+<NLayout pageTitle={appTitle}>
 
   <header slot="header">
     <NToolbarGrid className="animate in {showSearch ? 'hidden' : 'visible'}">
@@ -490,23 +500,17 @@
 
         <!-- Show History if exists -->
         {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
-          <div class="p-2 pt-3">
+          <div class="memories">
             {#each $LedgerStore.memories as log}
-              <div
-                class="text-center text-inverse text-sm text-faded-3 n-row"
-                style="margin-bottom:-12px;">
-                <div class="filler" />
-                <div
-                  class="clickable d-flex flex-row align-items-center"
+              <div class="memories-log-header">
+                <button
+                  class="btn btn-clear"
                   on:click={() => {
                     methods.goto(dayjs(log.end));
                   }}>
                   From {dayjs(log.end).fromNow()}
-                  <button class="btn btn-clear p-0 tap-icon">
-                    <NIcon name="chevronRight" size="16" />
-                  </button>
-                </div>
-                <div class="filler" />
+                  <NIcon name="chevronRight" className="fill-white" />
+                </button>
               </div>
               <LogItem
                 className="aged"
@@ -562,7 +566,7 @@
   </main>
   <!-- end header-content content -->
 
-</AppLayout>
+</NLayout>
 
 {#if state.location.lat}
   <NModal show={true} title={state.location.name || 'Location'}>

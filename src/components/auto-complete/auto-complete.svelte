@@ -36,6 +36,7 @@
   /**
    * Auto Complete Search
    * Searches trackers, people and context
+   * THIS IS A MESS
    *
    **/
   const autoCompleteSearch = (searchTag, type = "tracker") => {
@@ -90,7 +91,7 @@
       partialTag = `@${state.partialTag}`;
     } else if (tracker.type === "context") {
       note = `+${tracker.tag} `;
-      partialTag = `+${state.partialTag}`;
+      partialTag = `${state.partialTag}`;
     } else {
       note = await getTrackerInput(tracker);
       partialTag = `#${state.partialTag.replace("#", "")}`;
@@ -140,6 +141,18 @@
 </script>
 
 <style lang="scss">
+  :global(autocomplete-results .scroller) {
+    max-height: 48px;
+    overflow: scroll;
+    .tracker-list {
+      margin-top: 0px;
+      margin-bottom: 2px;
+      max-height: 40px;
+      display: flex;
+      flex-wrap: nowrap !important;
+      width: fit-content;
+    }
+  }
   .autocomplete-results {
     margin: 0px;
     border-radius: 2px;
@@ -162,8 +175,6 @@
         transform: translateY(60px);
       }
     }
-    &.scroller {
-    }
 
     .tracker-list {
       display: flex;
@@ -171,8 +182,8 @@
       flex-wrap: wrap;
     }
     .btn {
-      flex-grow: 1;
-      flex-shrink: 1;
+      flex-grow: 0;
+      flex-shrink: 0;
       max-width: 120px;
       white-space: pre;
     }

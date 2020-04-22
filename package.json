@@ -1,6 +1,6 @@
 {
   "name": "open-nomie",
-  "version": "5.0.83",
+  "version": "5.1.14",
   "homepage": "https://nomie.app",
   "bugs": {
     "url": "https://github.com/open-nomie/nomie/issues",
@@ -39,7 +39,7 @@
     "bootstrap": "^4.3.1",
     "concurrently": "^4.1.1",
     "copy": "^0.3.2",
-    "cypress": "^3.4.0",
+    "cypress": "^4.4.0",
     "dom-to-image-chrome-fix": "^2.6.0",
     "eslint": "^6.6.0",
     "eslint-plugin-svelte3": "^2.7.3",
@@ -79,7 +79,8 @@
     "svelte": "^3.20.1",
     "svelte-preprocess-css-global": "0.0.1",
     "svelte-routing": "^1.4.2",
-    "svelte-sortable-list": "^1.1.0"
+    "svelte-sortable-list": "^1.1.0",
+    "svelte-spa-router": "^2.1.0"
   },
   "dependencies": {
     "carbon-icons-svelte": "^10.9.3",

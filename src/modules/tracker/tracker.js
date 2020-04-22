@@ -95,9 +95,8 @@ export default class TrackerConfig {
   }
 
   getIncluded(value) {
-    let includedStr = (this.include || "").replace(/\*/g, value);
-    let includedNote = extract.asNote(includedStr);
-    return includedNote;
+    let includedStr = (this.include || "").replace(/\*/g, value || "");
+    return includedStr.trim();
   }
 
   // Make the tag look good if no label is provided

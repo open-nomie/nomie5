@@ -21,7 +21,7 @@
   import ImporterModal from "../containers/importer/importer.svelte";
   import MassEditor from "../containers/mass-editor/mass-editor.svelte";
 
-  import AppLayout from "../containers/layout/app.svelte";
+  import NLayout from "../containers/layout/layout.svelte";
 
   // Vendors
   import dayjs from "dayjs";
@@ -36,6 +36,7 @@
   import { NomieAPI } from "../store/napi";
   import { Lang } from "../store/lang";
   import { PeopleStore } from "../store/people-store";
+  import { Browser } from "../store/browser-store";
 
   // Config
   import config from "../../config/global";
@@ -249,7 +250,7 @@ Note: Your data will not automatically move over. You'll first need to export it
   });
 </script>
 
-<AppLayout>
+<NLayout pageTitle="Settings">
   <div slot="header" class="n-toolbar-grid container">
     <div class="left" />
     <div class="main">
@@ -267,7 +268,6 @@ Note: Your data will not automatically move over. You'll first need to export it
       <div class="page page-settings">
         <div class="container p-0">
 
-          <NItem className="n-item-divider compact" />
           <NItem
             className="clickable solo p-2"
             title={Lang.t('settings.share-nomie', 'Share Nomie w/ Friends')}
@@ -537,6 +537,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             <NItem title={Lang.t('general.trackers', 'Tracker Count')}>
               <span slot="right">{TrackerStore.getAsArray().length}</span>
             </NItem>
+
             <NItem title={Lang.t('general.first_log', 'First Log')}>
               <div class="" slot="right">
                 {#await LedgerStore.getFirstDate()}
@@ -558,6 +559,15 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </button>
                 {$UserStore.launchCount}
               </div>
+            </NItem>
+            <NItem title={Lang.t('general.device', 'Device')}>
+              <span slot="right">{$Browser.device}</span>
+            </NItem>
+            <NItem title={Lang.t('general.platform', 'Platform')}>
+              <span slot="right">{$Browser.platform}</span>
+            </NItem>
+            <NItem title={Lang.t('general.pwa', 'PWA')}>
+              <span slot="right">{$Browser.pwa}</span>
             </NItem>
             <NItem title="Version">
               <span slot="right">APP_VERSION</span>
@@ -596,7 +606,7 @@ Note: Your data will not automatically move over. You'll first need to export it
   </div>
   <!-- end content slot-->
 
-</AppLayout>
+</NLayout>
 
 {#if showImporter}
   <ImporterModal on:dismiss={() => (showImporter = false)} />

@@ -26,3 +26,18 @@
     justify-content: flex-end;
   }
 }
+
+.align-top {
+  align-items: flex-start;
+}
+
+.filler {
+  flex-grow: 1;
+  flex-shrink: 1;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}

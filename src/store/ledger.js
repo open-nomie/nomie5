@@ -13,6 +13,9 @@
 
 // Nomie log is the base Log item that is saved in a ledger
 import NomieLog from "../modules/nomie-log/nomie-log";
+import logFilter from "../modules/log-filter/log-filter.js";
+import extractor from "../utils/extract/extract";
+import TrackableElement from "../modules/trackable-element/trackable-element";
 // Storage for generic access to local,blockstack,pouch
 import Storage from "../modules/storage/storage";
 // Hooks for firing off hooks
@@ -67,54 +70,7 @@ const ledgerInit = () => {
      * @param {Object} filter
      */
     filterLogs(logs, filter) {
-      filter = filter || {};
-
-      // First filter on search if it exists
-      if (filter.search) {
-        const tokens = tokenizer(filter.search.toLowerCase());
-        // Filter Logs by tokens
-        let filtered = logs.filter((log) => {
-          // Tokenize the note
-          let note = tokenizer(log.note.toLowerCase()).map((token) => token.term);
-          // Holder of matches
-          let match = [];
-          // Loop over tokenized search term
-          tokens.forEach((token) => {
-            // If we should exclude it
-            if (token.exlcude) {
-              // Does it have this term?
-              match.push(note.indexOf(token.term) === -1);
-            } else {
-              // It's a normal search - look at the note completely
-              match.push(note.join(" ").search(regex.escape(token.term)) > -1);
-            }
-          });
-          return match.indexOf(false) === -1;
-        });
-
-        logs = filtered;
-      } // end if we have a search term
-
-      //. Now filter logs on start and end date
-      logs = logs.filter((log) => {
-        let pass = false;
-        if (filter.start && filter.end) {
-          pass = log.end >= filter.start && log.end <= filter.end;
-        } else if (filter.start) {
-          pass = log.end >= filter.start;
-        } else if (filter.end) {
-          pass = log.end <= filter.end;
-        }
-        return pass;
-      });
-
-      if (filter.limit) {
-        logs = logs.filter((row, i) => {
-          return i <= filter.limit;
-        });
-      }
-
-      return logs;
+      return logFilter(logs, filter || {});
     },
     // Connect to hooks
     hook(type, func) {
@@ -182,15 +138,22 @@ const ledgerInit = () => {
       if (age > 2 || fresh) {
         // Get list of books
         const books = await methods.listBooks();
-        const firstBook = books[0].replace(config.book_root + "/", "");
-        // Create date from book name
-        let date = dayjs(firstBook, config.book_time_format);
-        // Store it locally so we don't have to look it up all the time.
-        Storage.local.put("firstBook", {
-          date: date.toDate().getTime(),
-          lastChecked: new Date().getTime(),
-        });
-        return date;
+        if (books.length) {
+          const firstBook = books[0].replace(config.book_root + "/", "");
+          let bookYearWeekSplit = firstBook.split("-");
+          let day = 1 + (bookYearWeekSplit[1] - 1) * 7; // 1st of January + 7 days for each week
+          let frankenDate = new Date(bookYearWeekSplit[0], 0, day);
+          // Create date from book name
+          let date = dayjs(frankenDate, config.book_time_format);
+          // Store it locally so we don't have to look it up all the time.
+          Storage.local.put("firstBook", {
+            date: date.toDate().getTime(),
+            lastChecked: new Date().getTime(),
+          });
+          return date;
+        } else {
+          return dayjs();
+        }
       } else {
         return dayjs(bookDetails.date);
       }
@@ -211,13 +174,20 @@ const ledgerInit = () => {
     },
     extractTrackerTagAndValues(logs) {
       logs = logs || [];
+
+      // Setup Tracker Map
       let trackers = {};
+      // Loop over each log
       logs.forEach((log) => {
+        // If log is not expanded, expand it
         if (!log.trackers) {
           log = new NomieLog(log);
-          log.expanded();
+          log.getMeta();
         }
-        Object.keys(log.trackers || {}).forEach((tag) => {
+        // Loop over each tracker
+        log.trackers.forEach((trackerElement) => {
+          trackerElement = trackerElement instanceof TrackableElement ? trackerElement : new TrackableElement(trackerElement);
+          let tag = trackerElement.id;
           trackers[tag] = trackers[tag] || {
             values: [],
             tag: tag,
@@ -225,7 +195,7 @@ const ledgerInit = () => {
             logs: [],
           };
           // Push the value to values array
-          trackers[tag].values.push(log.trackers[tag].value);
+          trackers[tag].values.push(trackerElement.value);
           // Add the Logs for Today - so we can calcuate the score
           if (trackers[tag].logs.indexOf(log) == -1) {
             trackers[tag].logs.push(log);
@@ -280,8 +250,10 @@ const ledgerInit = () => {
         start: start.toDate(),
         end: end.toDate(),
       });
+
       // Extract Trackers
       let trackersUsed = methods.extractTrackerTagAndValues(todaysLogs);
+
       // Setup data for update
       let data;
       update((d) => {
@@ -409,6 +381,12 @@ const ledgerInit = () => {
       methods.hooks.run("onBeforeSave", log);
       // Clean the dirty dirty
       delete log._dirty;
+      delete log.trackers;
+      delete log.endDate;
+      delete log.startDate;
+      delete log.people;
+      delete log.context;
+      delete log.duration;
       // Trim any white space from note
       log.note = log.note.trim();
       // Get location if it's needed
@@ -419,6 +397,7 @@ const ledgerInit = () => {
         log.lat = location.latitude;
         log.lng = location.longitude;
       }
+      log.source = log.source || "n5";
       return log;
     },
     /**
@@ -528,9 +507,9 @@ const ledgerInit = () => {
           // Save any new people to the People Store
           // Passing an Array of USERNAMES - people store should convert it to the right thing
           PeopleStore.saveFoundPeople(
-            meta.people.map((username) => {
+            meta.people.map((peopleElement) => {
               return {
-                username,
+                username: peopleElement.id,
                 last: log.end,
               };
             })
@@ -668,13 +647,9 @@ const ledgerInit = () => {
 
     async queryPerson(username, start, end) {
       let logs = await methods.query({ start, end, search: `@${username}` });
-      return logs
-        .filter((record) => {
-          return record.note.match(new RegExp(`@${username}`, "gi"));
-        })
-        .sort((a, b) => {
-          return a.end < b.end ? 1 : -1;
-        });
+      return logs.sort((a, b) => {
+        return a.end < b.end ? 1 : -1;
+      });
     },
 
     async queryAll(term, start, end) {
@@ -704,11 +679,28 @@ const ledgerInit = () => {
       });
     },
     async getMemories() {
-      const date = new Date();
-      let logs1 = methods.getDay(dayjs(date).subtract(1, "year"));
-      let logs2 = methods.getDay(dayjs(date).subtract(2, "year"));
-      let logs3 = methods.getDay(dayjs(date).subtract(3, "year"));
-      let years = await Promise.all([logs1, logs2, logs3]);
+      let times = [];
+      let firstDate = await methods.getFirstDate();
+      let yearsDiff = dayjs().diff(firstDate, "year");
+
+      if (yearsDiff > 1) {
+        for (var y = 0; y < yearsDiff; y++) {
+          if (y !== 0 && y < 5) {
+            times.push(dayjs().subtract(y, "year"));
+          }
+        }
+      } else if (dayjs().diff(firstDate, "month") > 5) {
+        times.push(dayjs().subtract(6, "month"));
+      }
+
+      let lookupPromises = [];
+      times
+        .filter((time) => time)
+        .forEach((time) => {
+          lookupPromises.push(methods.getDay(time));
+        });
+
+      let years = await Promise.all(lookupPromises);
       let memories = [];
       years.forEach((day) => {
         day = day
@@ -752,16 +744,19 @@ const ledgerInit = () => {
       let endTime = dayjs(options.end || new Date()).endOf("day");
       // Diff Betwen the two
       let diff = endTime.diff(startTime, config.book_time_unit);
-
       // Define array of "book paths" to get
       let books_to_get = [];
       let state = methods.getState(); // get ledger state;
 
+      // If there's no diff, no need get multiple books
       if (diff === 0) {
         books_to_get.push(endTime.format(config.book_time_format));
       } else {
+        // We need to get multiple books.
         books_to_get.push(startTime.format(config.book_time_format));
+        diff = diff + 1; // add one book for good measure
         for (let i = 0; i < diff; i++) {
+          // Push each of the formated dates YYYY-w to an array
           books_to_get.push(
             dayjs(startTime)
               .add(i + 1, config.book_time_unit)

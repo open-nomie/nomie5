@@ -1,4 +1,7 @@
 // Colors
+
+$gap: 8pt;
+
 $primary: #20699d;
 $primaryMuted: #4d84a1;
 $primaryDark: #1a212a;
@@ -18,6 +21,18 @@ $textFaded2: #dddddd;
 $green: #38a83f;
 $red: #e94151;
 
+$morning-alt: #fe8300;
+$morning: rgb(255, 204, 0);
+
+$afternoon-alt: rgb(0, 255, 21);
+$afternoon: rgb(0, 166, 255);
+
+$evening-alt: rgb(62, 9, 252);
+$evening: rgb(145, 25, 220);
+
+$night-alt: #c3727c;
+$night: #311f62;
+
 $progress-height: 10px;
 $progress-font-size: 0.8rem;
 $progress-bg: var(--color-faded);
@@ -35,5 +50,5 @@ $grid-breakpoints: (
   sm: 350px,
   md: 600px,
   lg: 980px,
-  xl: 1280px
+  xl: 1280px,
 );

@@ -12,9 +12,9 @@
   import NIcon from "../icon/icon.svelte";
   import dayjs from "dayjs";
   import domtoimage from "dom-to-image-more";
-  import regex from "../../utils/regex";
   import tick from "../../utils/tick/tick";
   import copyToClipboard from "../../utils/clipboard/clipboard";
+  import extractor from "../../utils/extract/extract";
 
   let boxDom;
   let noteDom;
@@ -75,13 +75,13 @@
       Interact.closeShareImage();
     },
     getIcons() {
-      let logTrackers = $Interact.shareImage.log.trackersArray();
+      let logTrackers = $Interact.shareImage.log.getMeta().trackers;
       return logTrackers
         .map(tagValue => {
           let pl = {};
-          pl.tag = tagValue.tag;
+          pl.tag = tagValue.id;
           pl.value = tagValue.value;
-          pl.tracker = trackers.hasOwnProperty(pl.tag)
+          pl.tracker = $TrackerStore.trackers.hasOwnProperty(pl.tag)
             ? trackers[pl.tag]
             : null;
           return pl;
@@ -106,10 +106,10 @@
       }
     },
     noteLength() {
-      let note = $Interact.shareImage.log.note
-        .replace(new RegExp(regex.tag, "gi"), "")
-        .trim();
-      return note.length;
+      let parsed = extractor
+        .parse($Interact.shareImage.log.note, { includeGeneric: true })
+        .filter(row => row.type != "tracker");
+      return parsed.length;
     },
     resize() {
       if (boxDom.style) {

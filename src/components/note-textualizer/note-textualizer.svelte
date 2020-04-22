@@ -4,10 +4,7 @@
   import NTagBadge from "../tag-badge/tag-badge.svelte";
 
   //Utils
-  import extractTrackers from "../../utils/extract/extract-trackers";
-  import extractPeople from "../../utils/extract/extract-people";
-  import extractContext from "../../utils/extract/extract-context";
-  import regexs from "../../utils/regex";
+  import extractor from "../../utils/extract/extract";
 
   // Modules
   import Tracker from "../../modules/tracker/tracker";
@@ -19,7 +16,7 @@
 
   const dispatch = createEventDispatcher();
 
-  const data = {
+  const state = {
     words: []
   };
 
@@ -35,86 +32,22 @@
     textElementClick(element) {
       dispatch("textClick", element);
     },
-    parse_tracker_str(str) {
-      let extractedTrackers = extractTrackers(str);
-      let remainder = str.replace(regexs.tag, "").trim();
-      let keys = Object.keys(extractedTrackers);
-      if (keys.length) {
-        return {
-          type: "tracker",
-          tracker: methods.tracker_get(extractedTrackers[keys[0]].tracker),
-          value: extractedTrackers[keys[0]].value,
-          remainder: remainder
-        };
-      } else {
-        return {
-          type: "tracker",
-          tracker: new Tracker(),
-          value: null,
-          remainder: remainder
-        };
-      }
+    linkClick(link) {
+      window.open(link, "_system");
     },
     note_to_array(str) {
-      let noteArray = [];
-      let words = methods.split(str);
-      let people = [];
-      let context = [];
-
-      words.forEach(word => {
-        word = word.trim();
-        const first = word.substr(0, 1);
-        if (first === "#") {
-          let trackerMatch = methods.parse_tracker_str(word);
-          noteArray.push(trackerMatch);
-          if (trackerMatch.remainder.length) {
-            noteArray.push({
-              type: "remainder",
-              value: trackerMatch.remainder
-            });
-          }
-        } else if (first === "@") {
-          let persons = extractPeople(word);
-          let person = persons[0];
-          if ((persons || []).length) {
-            people.push(person);
-            noteArray.push({ type: "person", value: "@" + person });
-            let remainder = word
-              .replace(person, "")
-              .replace("@", "")
-              .trim();
-            if (remainder.length) {
-              noteArray.push({ type: "remainder", value: remainder });
-            }
-          }
-          actual++;
-        } else if (first === "+") {
-          let contexts = extractContext(word);
-          let thisContext = contexts[0];
-          if ((thisContext || []).length) {
-            context.push(thisContext);
-            noteArray.push({ type: "context", value: "+" + thisContext });
-            let remainder = word
-              .replace(thisContext, "")
-              .replace("+", "")
-              .trim();
-            if (remainder.length) {
-              noteArray.push({ type: "remainder", value: remainder });
-            }
-          }
-          // context.push(word);
-          // noteArray.push({ type: "context", value: word });
-          actual++;
-        } else if (word.length) {
-          noteArray.push({ type: "string", value: word });
-          actual++;
-        }
+      let parsed = extractor.parse(str, { includeGeneric: true });
+      let matches = parsed.filter(trackableElement => {
+        return (
+          ("person", "context", "generic").indexOf(trackableElement.type) > -1
+        );
       });
-      return noteArray;
+      actual = matches.length;
+      return parsed;
     }
   };
 
-  data.words = methods.note_to_array(note);
+  state.words = methods.note_to_array(note);
 </script>
 
 <style lang="scss">
@@ -122,10 +55,12 @@
     &.inherit {
       font-size: inherit;
       line-height: inherit;
+      letter-spacing: inherit;
     }
 
     .value {
       max-height: 15px;
+      flex-shrink: 0;
       font-size: 10px;
       font-weight: bold;
       height: 14px;
@@ -157,15 +92,15 @@
 {#if actual}
   <div
     class="n-note-textualized {className}
-    {data.words.length > 20 ? 'long-note' : 'short-note'}">
-    {#each data.words as word}
+    {state.words.length > 20 ? 'long-note' : 'short-note'}">
+    {#each state.words as word}
       {#if word.type === 'tracker'}
         <span
           class="tracker font-weight-bold clickable text-primary-bright"
           on:click={() => {
             methods.textElementClick(word);
           }}>
-          {` #${word.tracker.tag} `}
+          {` #${word.id} `}
         </span>
       {:else if word.type == 'person'}
         <span
@@ -173,7 +108,7 @@
           on:click={() => {
             methods.textElementClick(word);
           }}>
-          {` ${word.value} `}
+          {` ${word.raw} `}
         </span>
       {:else if word.type == 'context'}
         <span
@@ -181,11 +116,22 @@
           on:click={() => {
             methods.textElementClick(word);
           }}>
-          {` ${word.value} `}
+          {` ${word.raw} `}
         </span>
-      {:else if word.type == 'remainder'}
-        <span class="remainder">{word.value.trim()}</span>
-      {:else}{word.value + ' '}{/if}
+      {:else if word.type == 'link'}
+        <span
+          class="context font-weight-bold clickable text-primary-bright"
+          on:click={() => {
+            methods.linkClick(word.raw);
+          }}>
+          {` ${word.id} `}
+        </span>
+      {:else if word.type == 'line-break'}
+        <br />
+      {:else if word.raw}{word.raw + ' '}{/if}
+      {#if word.remainder}
+        <span class="remainder">{word.remainder.trim()}</span>
+      {/if}
     {/each}
   </div>
 {/if}

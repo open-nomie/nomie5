@@ -1,3 +1,4 @@
+// TODO ORGANIZE THIS
 html,
 body {
   -webkit-user-select: none;
@@ -22,11 +23,11 @@ body.no-scroll {
 }
 
 body {
+  overflow: hidden;
   --color-darkest: #fff;
   --color-bg: #eeeeee;
-
+  --space-gap: #{$gap};
   --color-input-background: rgba(0, 0, 0, 0.1);
-
   --tracker-background: #fff;
   --color-inverse: #333;
   --color-inverse-1: #555;

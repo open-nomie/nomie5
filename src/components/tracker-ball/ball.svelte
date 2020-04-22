@@ -8,6 +8,7 @@
   export let color = "#000";
   export let className = "";
   export let style = "";
+  export let radius = 0;
 </script>
 
 <style lang="scss">
@@ -46,25 +47,29 @@
     text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
   }
 
-  .dymoji-wrap {
+  .dymoji-wrapper {
     position: absolute !important;
     top: 0;
     bottom: 0;
     right: 0;
     left: 0;
+    display: flex;
   }
   .n-ball {
     position: relative;
+    display: inline-block;
     &.frame {
       box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
       border-radius: 32%;
+      overflow: hidden;
     }
   }
 </style>
 
 <div
   class="n-ball {className}"
-  style="width:{size}px; height:{size}px; {style}">
+  style="width:{size}px; height:{size}px; {radius ? `border-radius:${size * radius}px; overflow:hidden;` : ''}
+  {style}">
   {#if avatar}
     <div
       class=" avatar"
@@ -83,7 +88,7 @@
         style="font-size: {size * 0.5}px; {color ? `color:${color}` : ''}">
         {username.substr(0, 2).toUpperCase()}
       </div>
-      <Dymoji {username} {size} />
+      <Dymoji {username} {size} radius={0.32} />
     </div>
   {/if}
 </div>

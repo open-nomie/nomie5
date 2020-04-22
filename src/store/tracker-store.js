@@ -11,6 +11,7 @@ import config from "../../config/global";
 
 import snakeCase from "../utils/snake-case/snake-case";
 import tick from "../utils/tick/tick";
+import extractor from "../utils/extract/extract";
 
 // Stores
 import { Interact } from "./interact";
@@ -209,6 +210,10 @@ const trackerStoreInit = () => {
     getByTag(tag) {
       let trackers = this.getAll();
       return trackers.hasOwnProperty(tag) ? trackers[tag] : new Tracker({ tag: tag });
+    },
+
+    byTag(tag) {
+      return methods.getByTag(tag);
     },
 
     tagExists(tag) {
