@@ -80,7 +80,7 @@ context("App", () => {
 
   const createMultiTracker = () => {
     const next = () => {
-      cy.get(".footer-slot button").eq(1).click();
+      cy.get(".layout-footer button").eq(1).click();
     };
     cy.get(".tracker-undefined").click();
     cy.wait(300);
@@ -88,12 +88,13 @@ context("App", () => {
     cy.wait(300);
     cy.get(".step .type-note").click();
     next();
+    cy.get(".container > .ml-1");
     cy.wait(300);
     cy.get(".n-input input").type("Check up");
     next();
     cy.get(".input-emoji").type("✅");
     next();
-    cy.get('[style="background-color: rgb(165, 214, 167);"]').click();
+    cy.get('[style="background-color: rgb(84, 110, 122);"]').click();
     next();
     cy.get("textarea").type("#mood #sleep_quality");
     next();
@@ -130,13 +131,14 @@ context("App", () => {
     cy.wait(500);
     cy.get(".tracker-input.slider input").as("range").invoke("val", 8).trigger("change");
     cy.wait(100);
-    cy.get(".n-modal-footer > .footer > .btn").eq(2).click();
+    cy.get(".footer > .right > .btn").click();
     cy.wait(500);
     cy.get(".tracker-input.slider input").as("range").invoke("val", 5).trigger("change");
     cy.wait(100);
-    cy.get(".n-modal-footer > .footer > .btn").eq(2).click();
+    cy.get(".footer > .right > .btn").click();
     cy.wait(500);
-    cy.get("#textarea-capture-note").should("contain.value", "#check_up #mood(8) #sleep_quality(10)");
+    cy.get("#textarea-capture-note").should("contain.value", "#mood(8)");
+    cy.wait(500);
     cy.get(".save-button").click();
     // cy.get(".n-modal-footer > .footer > .btn-primary").click();
   };
@@ -168,12 +170,17 @@ context("App", () => {
   };
 
   const testCaptureForm = () => {
-    trackMood("add");
-    cy.get("#textarea-capture-note").should("contain.value", "#mood(3)");
-    // cy.get(".n-points .number").should("contain", "1");
+    cy.get("#textarea-capture-note").type("#sample #data #mood(6)");
     cy.get(".save-button").click();
     cy.wait(200);
     cy.get("#textarea-capture-note").should("contain.value", "");
+  };
+
+  const testHistory = () => {
+    cy.visit("http://localhost:5000/history");
+    cy.wait(400);
+    cy.get(".page > .container .n-item").eq(0).should("contain.value", "Sample");
+    cy.get(".page > .container .n-item").eq(1).should("contain.value", "Data");
   };
 
   it("Should On Boarding with Local", () => {
@@ -181,11 +188,11 @@ context("App", () => {
     window.indexedDB.deleteDatabase("localforage");
     onboard();
     selectStarters();
-    testTips();
-    useTrackers();
+    // testTips();
+    // useTrackers();
     createMultiTracker();
-    createTrackers();
     testCaptureForm();
+    testHistory();
   });
 });
 
