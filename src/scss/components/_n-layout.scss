@@ -8,10 +8,15 @@
   right: 0;
 
   .layout-header-fade {
+    pointer-events: none;
     background: var(--header-fade);
     z-index: 3;
-    height: 80px;
-    margin-top: -60px;
+    height: 70px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: -20px;
   }
 
   header.layout-header {
