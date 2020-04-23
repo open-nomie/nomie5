@@ -23,10 +23,10 @@
         help="e.g. Water, Walked, Sleep, Angry, Mood." />
     </NItem>
 
-    <!-- {#if tag.length}
+    {#if $TrackerDesignerStore.tracker.tag.length}
       <NItem class="tag m-4">
-        <div class="text-lg text-primary text-center">Tag: #{tag}</div>
+        <div class="text-lg text-primary text-center">#{tag}</div>
       </NItem>
-    {/if} -->
+    {/if}
   </section>
 </div>
