@@ -144,13 +144,12 @@
   <div class="n-toolbar-grid n-row" slot="header">
     <div class="left truncate pl-3">
       <span class="animate truncate up {data.ready ? 'visible' : 'hidden'}">
-        {tracker.label}
+        {#if data.tracker}{data.tracker.displayValue(data.value)}{/if}
       </span>
     </div>
     <div class="main">
       <span class="animate up text-lg {data.ready ? 'visible' : 'hidden'}">
-        {tracker.emoji}
-        {#if data.tracker}{data.tracker.displayValue(data.value)}{/if}
+        {tracker.emoji} {tracker.label}
       </span>
     </div>
     <button class="btn btn-clear tap-icon right" on:click={editTracker}>
