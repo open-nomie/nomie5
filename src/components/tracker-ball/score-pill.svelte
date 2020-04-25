@@ -1,6 +1,17 @@
 <script>
   export let positivity = 0;
   export let score = 0;
+
+  let changed = false;
+
+  let lastScore;
+  $: if (score !== lastScore) {
+    lastScore = score;
+    changed = true;
+    setTimeout(() => {
+      changed = false;
+    }, 500);
+  }
 </script>
 
 <style lang="scss">
@@ -15,6 +26,7 @@
     box-shadow: 0px 10px 10px -5px rgba($green, 0.4) !important;
   }
   .score {
+    transition: all 0.2s ease-in-out;
     $scoreSize: 26px;
     position: absolute;
     top: 8px;
@@ -34,6 +46,9 @@
     &.negative {
       background-color: var(--color-red);
     }
+    &.changed {
+      transform: translateX(10px) scale(1.3);
+    }
     &.popin {
       &.hidden {
         opacity: 0;
@@ -44,6 +59,6 @@
 </style>
 
 <div
-  class={`score animate popin ${positivity < 0 ? 'negative' : ''} ${positivity > 0 ? 'positive' : ''} ${score ? 'visible' : 'hidden'}`}>
+  class={`${changed ? 'changed' : ''} score animate popin ${positivity < 0 ? 'negative' : ''} ${positivity > 0 ? 'positive' : ''} ${score ? 'visible' : 'hidden'}`}>
   {score}
 </div>

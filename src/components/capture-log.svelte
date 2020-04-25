@@ -595,7 +595,7 @@
           <div>{Lang.t('general.score', 'Score')}</div>
           <div slot="right">
             <NPositivitySelector
-              size="sm"
+              size="md"
               score={$ActiveLogStore.score}
               on:change={evt => {
                 $ActiveLogStore.score = evt.detail;

@@ -14,6 +14,9 @@
 
   export let value = 0;
   export let displayFormat = undefined;
+  export let defaultEphemeral = true;
+
+  let tapped = false;
 
   onMount(() => {
     if (value) {
@@ -49,7 +52,17 @@
   }
 
   function click(input) {
+    // If we should clear a default and one exists
+    if (!tapped && value && defaultEphemeral) {
+      value = 0;
+      clearBuffer();
+      tapped = true;
+    }
     insertBuffer(input);
+  }
+
+  function clearBuffer() {
+    buffer = [];
   }
 
   function isNumber(input) {
