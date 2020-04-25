@@ -5436,6 +5436,9 @@ body.theme-dark {
 .bg-solid-2 {
   background-color: var(--color-solid-2); }
 
+.bg-primary-bright {
+  background-color: var(--color-primary-bright) !important; }
+
 .bg-inverse {
   background-color: var(--color-inverse); }
 
@@ -6095,6 +6098,8 @@ body.scrolling .mini-map {
     margin: 8pt;
     border-radius: 8pt;
     box-shadow: var(--box-shadow); }
+    .n-item.solo .right .btn-clear, .n-item[solo] .right .btn-clear {
+      margin-right: 0px !important; }
   .n-item select,
   .n-item input {
     margin: 8px 0; }
@@ -6934,6 +6939,36 @@ aside.n-panel {
     padding-bottom: env(safe-area-inset-bottom); }
   .n-layout #nav-tabs {
     height: 70px; }
+
+#note-capture .advanced .container {
+  padding: 0px !important; }
+  #note-capture .advanced .container .n-item {
+    border: solid 1px var(--color-faded-1);
+    min-height: 45px; }
+    #note-capture .advanced .container .n-item div.left {
+      padding-right: 0; }
+  @media (min-width: 600px) {
+    #note-capture .advanced .container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: stretch; }
+      #note-capture .advanced .container .n-item {
+        max-width: 32%;
+        flex-grow: 1;
+        flex-shrink: 1;
+        min-height: 45px; }
+      #note-capture .advanced .container .score-item .main {
+        display: none; } }
+  #note-capture .advanced .container .btn-group .btn.active {
+    border: solid 1px var(--color-primary-bright) !important;
+    background-color: var(--color-solid) !important;
+    border-radius: 8pt !important; }
+    #note-capture .advanced .container .btn-group .btn.active div {
+      transform: scale(1.6) translateX(2px); }
+  #note-capture .advanced .container .btn-group .btn {
+    border: solid 1px transparent !important;
+    border-radius: 8pt !important; }
 
 .loading-screen {
   position: fixed;

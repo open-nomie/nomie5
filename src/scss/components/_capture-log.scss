@@ -1,0 +1,41 @@
+#note-capture .advanced {
+  .container {
+    padding: 0px !important;
+    .n-item {
+      border: solid 1px var(--color-faded-1);
+      min-height: 45px;
+
+      div.left {
+        padding-right: 0;
+      }
+    }
+    // .n-item
+    @include media-breakpoint-up(md) {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: stretch;
+      .n-item {
+        max-width: 32%;
+        flex-grow: 1;
+        flex-shrink: 1;
+        min-height: 45px;
+      }
+      .score-item .main {
+        display: none;
+      }
+    }
+    .btn-group .btn.active {
+      border: solid 1px var(--color-primary-bright) !important;
+      background-color: var(--color-solid) !important;
+      border-radius: 8pt !important;
+      div {
+        transform: scale(1.6) translateX(2px);
+      }
+    }
+    .btn-group .btn {
+      border: solid 1px transparent !important;
+      border-radius: 8pt !important;
+    }
+  }
+}

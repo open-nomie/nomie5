@@ -30,6 +30,9 @@
     margin: 8pt;
     border-radius: 8pt;
     box-shadow: var(--box-shadow);
+    .right .btn-clear {
+      margin-right: 0px !important;
+    }
   }
 
   select,

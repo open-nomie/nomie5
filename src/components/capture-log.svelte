@@ -126,16 +126,17 @@
         state.showCustomDate = true;
       }
     },
-    toggleCustomLocation() {
+    async toggleCustomLocation() {
       if ($ActiveLogStore.lat) {
         $ActiveLogStore.lat = null;
         $ActiveLogStore.lng = null;
       } else {
-        Interact.pickLocation().then(location => {
+        let location = await Interact.pickLocation();
+        if (location) {
           $ActiveLogStore.lat = location.lat;
           $ActiveLogStore.lng = location.lng;
-          $ActiveLogStore.location = location.name;
-        });
+          $ActiveLogStore.location = location.location;
+        }
       }
     },
     checkTextareaSize() {
@@ -584,12 +585,15 @@
     <div class="advanced">
       <div class="container">
         <!-- Score -->
-        <NItem compact className="bg-transparent">
+        <NItem
+          truncate
+          compact
+          className="bg-transparent solo text-sm score-item">
           <div slot="left" class="text-sm text-bold">
             <NIcon name="star" className="mr-2 fill-primary-bright" size="16" />
-            Score
           </div>
-          <div slot="right" class="text-sm">
+          <div>{Lang.t('general.score', 'Score')}</div>
+          <div slot="right">
             <NPositivitySelector
               size="sm"
               score={$ActiveLogStore.score}
@@ -600,25 +604,28 @@
         </NItem>
         <!-- Location -->
         <NItem
+          truncate
           compact
-          className="bg-transparent clickable mr-2"
+          className="bg-transparent clickable mr-2 solo text-sm"
           on:click={methods.toggleCustomLocation}>
           <div slot="left" class="text-sm text-bold">
             <NIcon name="pin" className="mr-2 fill-primary-bright" size="16" />
-            Location
           </div>
+          {#if !$ActiveLogStore.lat}
+            {Lang.t('general.location', 'Location')}
+          {:else}
+            {$ActiveLogStore.location || ''}
+            {math.round($ActiveLogStore.lat, 100)},{math.round($ActiveLogStore.lng, 100)}
+          {/if}
           <div slot="right" class="n-row">
             {#if $ActiveLogStore.lat}
-              <label class="text-sm ">
-                {math.round($ActiveLogStore.lat, 100)},{math.round($ActiveLogStore.lng, 100)}
-              </label>
               <button
                 class="btn btn-clear btn-icon"
                 on:click|stopPropagation={methods.clearLocation}>
-                <NIcon name="close" className="fill-red" size="16" />
+                <NIcon name="close" className="fill-red" size="22" />
               </button>
             {:else if $UserStore.alwaysLocate}
-              <label class="text-sm text-faded-3 ">Current Location</label>
+              <label class="text-sm text-faded-3 ">Current</label>
             {:else}
               <label class="text-sm text-faded-3 ">None</label>
             {/if}
@@ -627,19 +634,23 @@
         <!-- Date / Time -->
         <NItem
           compact
-          className="bg-transparent mt-1 mb-2 mr-2"
+          truncate
+          className="bg-transparent mt-1 mb-2 mr-2 solo text-sm"
           on:click={methods.selectDate}>
           <div slot="left" class="text-sm text-bold">
             <NIcon name="time" className="mr-2 fill-primary-bright" size="16" />
-            Date/Time
+          </div>
+          <div>
+            {#if !$ActiveLogStore.end}
+              {Lang.t('general.set-date', 'Set Date')}
+            {:else}{state.dateFormated}{/if}
           </div>
           <div slot="right" class="n-row">
             {#if $ActiveLogStore.end}
-              <label class="text-sm">{state.dateFormated}</label>
               <button
                 class="btn btn-clear btn-icon"
                 on:click|stopPropagation={methods.clearDate}>
-                <NIcon name="close" className="fill-red" size="16" />
+                <NIcon name="close" className="fill-red" size="22" />
               </button>
             {:else}
               <label class="text-sm text-faded-3">Now</label>
