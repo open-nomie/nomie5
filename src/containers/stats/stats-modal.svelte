@@ -436,19 +436,22 @@
     // If we do - then lets load them each up
     if (state.compare.length == 0 && savedCompares) {
       // Loop over compares
-      savedCompares.forEach(searchTerm => {
-        let type = extractor.toElement(searchTerm);
-        type.obj = type.type == "tracker" ? TrackerStore.byTag(type.id) : {};
-        state.compare.push(
-          new StatsRef({
-            type: type.type,
-            key: type.id,
-            label: type.id,
-            base: type.obj,
-            is24Hour: $UserStore.meta.is24Hour
-          })
-        );
-      });
+      (savedCompares || [])
+        .filter(row => row)
+        .forEach(searchTerm => {
+          let type = extractor.toElement(searchTerm);
+          type.obj = type.type == "tracker" ? TrackerStore.byTag(type.id) : {};
+          state.compare.push(
+            new StatsRef({
+              type: type.type,
+              key: type.id,
+              math: type.obj.math || "sum",
+              label: type.id,
+              base: type.obj,
+              is24Hour: $UserStore.meta.is24Hour
+            })
+          );
+        });
     }
     // Get Stats for Compares
     for (let i = 0; i < state.compare.length; i++) {
@@ -849,27 +852,29 @@
       <div class="charts">
         {#each state.compare as compare}
           <NItem className="solo chart-item">
-            <NBarChart
-              height={110}
-              title={compare.getSearchTerm()}
-              color={compare.getTracker().color}
-              labels={compare.stats.chart.values.map(point => point.x)}
-              points={compare.stats.chart.values}
-              on:swipeLeft={loadNextDate}
-              on:swipeRight={loadPreviousDate}
-              xFormat={(x, index) => {
-                return x;
-              }}
-              on:titleClick={event => {
-                Interact.openStats(compare.getSearchTerm());
-              }}
-              on:tap={event => {
-                setSelected(event.detail);
-              }}
-              yFormat={y => {
-                return compare.getTracker().displayValue(y);
-              }}
-              activeIndex={state.selected.index} />
+            {#if compare.stats}
+              <NBarChart
+                height={110}
+                title={compare.getSearchTerm()}
+                color={compare.getTracker().color}
+                labels={compare.stats.chart.values.map(point => point.x)}
+                points={compare.stats.chart.values}
+                on:swipeLeft={loadNextDate}
+                on:swipeRight={loadPreviousDate}
+                xFormat={(x, index) => {
+                  return x;
+                }}
+                on:titleClick={event => {
+                  Interact.openStats(compare.getSearchTerm());
+                }}
+                on:tap={event => {
+                  setSelected(event.detail);
+                }}
+                yFormat={y => {
+                  return compare.getTracker().displayValue(y);
+                }}
+                activeIndex={state.selected.index} />
+            {:else}{compare.id} chart unavailable{/if}
             <button
               class="btn btn-clear btn-close"
               on:click={() => {
