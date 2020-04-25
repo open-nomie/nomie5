@@ -269,6 +269,12 @@
         }
       });
     },
+    async _selectDate() {
+      let date = await Interact.selectDate(new Date());
+      if (date) {
+        methods.goto(dayjs(date));
+      }
+    },
     selectDate() {
       let ranges = [
         {
@@ -309,10 +315,14 @@
         buttons: ranges.map(range => {
           return {
             title: range.title,
-            click() {
-              if (range.days == -1) {
-                local.showDatePicker = true;
-              } else if (range.days === 0) {
+            click: async () => {
+              if (range.time == -1) {
+                // local.showDatePicker = true;
+                let date = await Interact.selectDate();
+                if (date) {
+                  methods.goto(dayjs(date));
+                }
+              } else if (range.time === 0) {
                 methods.goto(dayjs());
               } else {
                 methods.goto(state.date.subtract(range.time, range.unit));
