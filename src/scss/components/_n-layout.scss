@@ -41,6 +41,7 @@
     flex-grow: 1;
     flex-shrink: 0;
     background-color: var(--footer-background) !important;
+    padding-bottom: env(safe-area-inset-bottom);
   }
   #nav-tabs {
     height: 70px;

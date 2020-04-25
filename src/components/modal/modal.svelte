@@ -187,6 +187,9 @@
         margin: 0 !important;
       }
 
+      .n-modal-footer {
+        padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+      }
       .n-modal-body {
         &.flex-body {
           position: relative;

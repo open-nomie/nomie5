@@ -20,6 +20,7 @@
     height: 100%;
     transition: all 0.3s ease-in-out;
     background-color: var(--local-background);
+    color: var(--color-inverse);
 
     .btn-content {
       color: var(--color-inverse);
@@ -50,7 +51,7 @@
       flex-shrink: 0;
       justify-content: center;
       align-items: center;
-      height: calc(100vh - 50px);
+      height: calc(100vh - 120px);
       // background-color: var(--color-primary);
       h1 {
         text-align: center;

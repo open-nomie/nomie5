@@ -6930,7 +6930,8 @@ aside.n-panel {
     min-height: 50px;
     flex-grow: 1;
     flex-shrink: 0;
-    background-color: var(--footer-background) !important; }
+    background-color: var(--footer-background) !important;
+    padding-bottom: env(safe-area-inset-bottom); }
   .n-layout #nav-tabs {
     height: 70px; }
 
@@ -7016,7 +7017,8 @@ aside.n-panel {
   flex-direction: column;
   height: 100%;
   transition: all 0.3s ease-in-out;
-  background-color: var(--local-background); }
+  background-color: var(--local-background);
+  color: var(--color-inverse); }
   .page-setup .slide .btn-content {
     color: var(--color-inverse);
     box-shadow: var(--box-shadow-float);
@@ -7039,7 +7041,7 @@ aside.n-panel {
     flex-shrink: 0;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 50px); }
+    height: calc(100vh - 120px); }
     .page-setup .slide .top h1 {
       text-align: center;
       padding-top: env(safe-area-inset-top); }
