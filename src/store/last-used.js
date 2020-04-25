@@ -41,21 +41,27 @@ const LastUsedStore = () => {
      */
     async record(log) {
       // Get tracker tags as array
-      let trackers = log.getMeta().trackers.map((ta) => ta.tag);
+      let trackers = log.getMeta().trackers.map((trackableElement) => trackableElement.id);
+
       let data;
+      let logDate = new Date(log.end);
       // Get from the store
-      update((d) => {
+      update((state) => {
         // Loop over tracekrs
-        trackers.forEach((tracker) => {
+        trackers.forEach((tag) => {
           // Push updated info to object
-          d[tracker] = {
-            log: log._id,
-            book: dayjs(log.end).format("YYYY-MM"),
-            date: new Date(),
-          };
+          state[tag] = state[tag] || {};
+          let lastDate = state[tag].date ? new Date(state[tag].date) : null;
+          if (logDate > lastDate) {
+            state[tag] = {
+              log: log._id,
+              book: dayjs(logDate).format("YYYY-MM"),
+              date: logDate,
+            };
+          }
         });
-        data = d;
-        return d;
+        data = state;
+        return state;
       });
       // Write to storage
       return await NStorage.put(`${config.data_root}/${lastUsedKey}`, data);
