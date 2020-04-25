@@ -44,7 +44,7 @@ export default class Record {
     this.location = starter.location || "";
     // Add current timezone offset
     if (!starter.offset && this.lat) {
-      let local = timespace.getFuzzyLocalTimeFromPoint(Date.now(), [this.lng, this.lat]);
+      let local = timespace.getFuzzyLocalTimeFromPoint(this.end || Date.now(), [this.lng, this.lat]);
       let offset = -local._offset;
       this.offset = offset;
     } else {
