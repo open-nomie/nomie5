@@ -14,6 +14,7 @@ class StatsReference {
     this.base = starter.base;
     this.label = starter.label;
     this.stats = null;
+    this.math = starter.math;
     this.is24Hour = starter.is24Hour || false;
   }
 
@@ -54,6 +55,7 @@ class StatsReference {
         fromDate: fromDate,
         toDate: toDate,
         mode: timeSpan,
+        math: this.base.math || "sum", // added to fix compares not showing right math
         tracker: this.getTracker(),
         trackableElement: extractor.toElement(searchTerm),
       });
