@@ -6964,9 +6964,8 @@ aside.n-panel {
     border: solid 1px var(--color-primary-bright) !important;
     background-color: var(--color-solid) !important;
     border-radius: 8pt !important; }
-    #note-capture .advanced .container .btn-group .btn.active div {
-      transform: scale(1.6) translateX(2px); }
   #note-capture .advanced .container .btn-group .btn {
+    transform: none;
     border: solid 1px transparent !important;
     border-radius: 8pt !important; }
 
