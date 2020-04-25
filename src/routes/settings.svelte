@@ -121,6 +121,7 @@
           );
 
           if (res === true) {
+            Interact.blocker("Deleting data...");
             let files = await Storage.list();
 
             let promises = [];
@@ -130,6 +131,7 @@
             await Promise.all(promises);
             await localforage.clear();
             localStorage.clear();
+            Interact.stopBlocker();
             await Interact.alert("Done", "Your data has been destroyed.");
 
             window.location.href = "/";
