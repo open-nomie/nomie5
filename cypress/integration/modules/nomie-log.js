@@ -9,6 +9,36 @@ describe("modules/nomie-log", function () {
 		`,
   };
 
+  it("should try and find a timezone if not provided one and has lat long", () => {
+    let log = new Log({
+      lat: 39.764,
+      lng: -86.1581,
+      note: "Testing Location Indy",
+    });
+    let logSoule = new Log({
+      lat: 39.764,
+      lng: 126.978,
+      note: "Testing Location Soule",
+    });
+    expect(log.offset).to.equal(240);
+    expect(logSoule.offset).to.equal(-540);
+  });
+
+  it("should handle the speed", () => {
+    let start = new Date().getTime();
+    let items = [];
+    for (var i = 0; i < 100000; i++) {
+      let log = new Log({
+        lat: 39.764,
+        lng: 126.978,
+        note: "Testing Location Soule",
+      });
+      items.push(log);
+    }
+    let end = new Date().getTime() - start;
+    console.log(`${items.length} took ${end}ms`);
+  });
+
   it("log.getMeta", () => {
     log = new Log(stub);
     const meta = log.getMeta();

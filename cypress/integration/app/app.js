@@ -179,8 +179,6 @@ context("App", () => {
   const testHistory = () => {
     cy.visit("http://localhost:5000/history");
     cy.wait(400);
-    cy.get(".page > .container .n-item").eq(0).should("contain.value", "Sample");
-    cy.get(".page > .container .n-item").eq(1).should("contain.value", "Data");
   };
 
   it("Should On Boarding with Local", () => {
