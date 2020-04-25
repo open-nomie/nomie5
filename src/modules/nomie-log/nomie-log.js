@@ -26,8 +26,8 @@ export default class Record {
      */
     let end = starter.end ? new Date(starter.end) : new Date(); // set the end date
     let start = starter.start ? new Date(starter.start) : end;
-    this.end = end.getTime();
     this.start = start.getTime();
+    this.end = end.getTime();
 
     // Score Calculation
     // This Might be a bad idea - but i'm doing it anyways
@@ -40,6 +40,8 @@ export default class Record {
     this.lat = starter.lat || null;
     this.lng = starter.lng || null;
     this.location = starter.location || "";
+    // Add current timezone offset
+    this.offset = starter.offset || new Date().getTimezoneOffset();
 
     // Get if this has been edited
     this.modified = starter.modified || false;

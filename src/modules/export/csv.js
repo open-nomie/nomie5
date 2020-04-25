@@ -9,7 +9,7 @@ export default class CSV {
   constructor() {}
 
   logsToCSV(logs, trackersToInclude) {
-    let header = ["epoch", "start", "end", "tracker", "value", "note", "lat", "lng", "location", "score"];
+    let header = ["epoch", "start", "end", "offset", "tracker", "value", "note", "lat", "lng", "location", "score"];
     let rows = [header];
     // Get an array of tag names from the trackers
     let tagsToInclude = trackersToInclude.map((tracker) => tracker.tag);
@@ -31,6 +31,7 @@ export default class CSV {
             log.end,
             localStart,
             localEnd,
+            log.offset,
             trackerTag,
             trackerElement.value,
             log.note.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
