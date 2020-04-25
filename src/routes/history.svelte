@@ -332,6 +332,10 @@
     methods.getLogs();
   });
 
+  LedgerStore.hook("onLogSaved", log => {
+    methods.getLogs();
+  });
+
   LedgerStore.hook("onLogsDeleted", async () => {
     await tick(600);
     methods.getLogs();
