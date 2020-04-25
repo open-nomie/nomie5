@@ -17,7 +17,7 @@ export default class CSV {
     logs.forEach((log) => {
       // Extract log tracker tags
 
-      const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+      const tzoffset = (log.offset || new Date().getTimezoneOffset()) * 60000; //offset in milliseconds
       const localStart = new Date(log.start - tzoffset).toISOString().slice(0, -1);
       const localEnd = new Date(log.end - tzoffset).toISOString().slice(0, -1);
 
@@ -48,6 +48,7 @@ export default class CSV {
           log.end,
           localStart,
           localEnd,
+          log.offset,
           "note",
           1,
           log.note.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars

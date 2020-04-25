@@ -6,6 +6,8 @@ import ScoreNote from "../../modules/scoring/score-note";
 import dayjs from "dayjs";
 import math from "../../utils/math/math";
 
+import timespace from "@mapbox/timespace";
+
 /**
  * Nomie Log / Record
  * It's been called a record since Nomie 1, but a log is a better name
@@ -41,7 +43,14 @@ export default class Record {
     this.lng = starter.lng || null;
     this.location = starter.location || "";
     // Add current timezone offset
-    this.offset = starter.offset || new Date().getTimezoneOffset();
+    if (!starter.offset && this.lat) {
+      let local = timespace.getFuzzyLocalTimeFromPoint(Date.now(), [this.lng, this.lat]);
+      let offset = -local._offset;
+      this.offset = offset;
+    } else {
+      this.offset = starter.offset || new Date().getTimezoneOffset();
+    }
+    // this.offset = starter.offset || new Date().getTimezoneOffset();
 
     // Get if this has been edited
     this.modified = starter.modified || false;
