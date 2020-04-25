@@ -141,22 +141,25 @@ const commanderInit = () => {
     async runCommand(command) {
       switch ((command || {}).command) {
         case "note":
+          let maxLength = 500;
           // Create a Log
           let note = decodeURIComponent(command.payload.note);
           let log = new NomieLog({
-            note: note.substr(0, 500),
+            note: note.substr(0, maxLength),
             lat: command.payload.lat ? parseFloat(command.payload.lat) : null,
             lng: command.payload.lng ? parseFloat(command.payload.lng) : null,
           });
-          if (note && note.length) {
+          if (note && note.length < maxLength) {
             // Save the log to the ledger
-            let confirm = await Interact.confirm("Add Note?", note.substr(0, 500));
+            let confirm = await Interact.confirm("Add Note?", note.substr(0, maxLength));
             if (confirm === true) {
               let saving = await LedgerStore.saveLog(log);
               return saving;
             } else {
               return false;
             }
+          } else if (note.length >= maxLength) {
+            Interact.alert("Error", `Note exceeds ${maxWidth} characters`);
           } else {
             return false;
           }
