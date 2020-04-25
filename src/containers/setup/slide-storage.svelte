@@ -22,7 +22,7 @@
       on:click={() => {
         UserStore.setStorage('local');
       }}>
-      <div class="text-md font-weight-bold">On this Device Only</div>
+      <div class="text-md font-weight-bold">This Device Only</div>
       <div class="text-sm" className="">
         Stored unencrypted ONLY on this device.
       </div>

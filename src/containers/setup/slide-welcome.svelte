@@ -33,10 +33,10 @@
       tracker={{ label: 'Tap Me!', emoji: emoji }}
       value={testValue}
       {positivity} />
-    <h1 style="max-width:400px; mt-3">
-      track your mood, your friends, your anything.
+    <h1 style="max-width:400px;" class="my-3 text-inverse">
+      Track what (and who) you do, privately.
     </h1>
-    <p>
+    <p class="text-inverse">
       <strong>100% private</strong>
       &
       <a href="https://github.com/open-nomie/nomie">open source.</a>

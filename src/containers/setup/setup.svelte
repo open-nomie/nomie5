@@ -26,6 +26,8 @@
   import LocationSlide from "./slide-location.svelte";
   import StorageSlide from "./slide-storage.svelte";
 
+  import NLayout from "../layout/layout.svelte";
+
   import dayjs from "dayjs";
   // Local components
 
@@ -106,67 +108,23 @@
 
 <style lang="scss">
   @import "../../scss/utils/_utils";
-  .page-setup.page {
-    --local-background: var(--color-bg);
-
-    background-color: var(--local-background);
-    min-height: calc(100vh);
-    max-height: calc(100vh);
-    color: var(--color-inverse);
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: stretch;
-
-    .logo {
-      margin-bottom: 10px;
-    }
-
-    .logo-holder {
-      position: absolute;
-      padding-top: env(safe-area-inset-top);
-      top: 16px;
-      left: 16px;
-      right: 16px;
-      z-index: 20;
-      display: flex;
-      justify-content: center;
-    }
-  }
-  .setup-footer-buttons {
-    position: fixed;
-    z-index: 2000;
-    bottom: 0;
-    min-height: 50px;
-    left: 0;
-    right: 0;
-    background-color: var(--local-background);
-
-    .btn {
-      color: var(--color-primary-bright);
-      &:hover {
-        color: var(--color-primary);
-      }
-      @include media-breakpoint-up(md) {
-        font-size: 1.2rem;
-      }
-    }
-  }
 </style>
 
-<main class="page page-setup">
-  <div class="logo-holder">
-    <Logo size={16} color="#CCC" />
+<NLayout
+  pageTitle="Privately track what and who you do."
+  className="page-setup"
+  showTabs={false}>
+  <div slot="header" class="n-toolbar-grid container">
+    <div class="left" />
+    <div class="main">
+      <Logo size={16} color="#CCC" />
+    </div>
+    <div class="right" />
   </div>
-
-  <!-- Welcome screen -->
-  <svelte:component this={slides[state.activeSlide]} />
-
-  <!-- STATS ARE GOOD!-->
-</main>
-
-<div class="setup-footer-buttons">
-  <div class="n-toolbar-grid">
+  <main slot="content">
+    <svelte:component this={slides[state.activeSlide]} />
+  </main>
+  <div class="n-toolbar-grid" slot="footer">
     {#if state.activeSlide > 0}
       <button class="btn btn-clear left " on:click={methods.back}>BACK</button>
     {/if}
@@ -190,4 +148,4 @@
       {/if}
     {/if}
   </div>
-</div>
+</NLayout>

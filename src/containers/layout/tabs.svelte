@@ -1,5 +1,6 @@
 <script>
   // Vendors
+  import { onMount } from "svelte";
   import { Link } from "svelte-routing";
 
   // Components
@@ -7,6 +8,14 @@
 
   import { Lang } from "../../store/lang";
   import { TrackerStore } from "../../store/tracker-store";
+
+  const state = {
+    mounted: false
+  };
+
+  onMount(() => {
+    state.mounted = true;
+  });
 </script>
 
 <style lang="scss">
@@ -109,31 +118,33 @@
   }
 </style>
 
-<nav id="app-tabs" class="">
-  <div class="n-row mw-500px mx-auto">
+{#if state.mounted}
+  <nav id="app-tabs" class="">
+    <div class="n-row mw-500px mx-auto">
 
-    <Link to="/history">
-      <Icon name="calendar" />
-      <label>{Lang.t('tabs.history')}</label>
-    </Link>
+      <Link to="/history">
+        <Icon name="calendar" />
+        <label>{Lang.t('tabs.history')}</label>
+      </Link>
 
-    <Link to="/">
-      {#if $TrackerStore.timers.length}
-        <div class="notification" />
-      {/if}
-      <Icon name="tracker" />
-      <label>{Lang.t('general.trackers', 'Trackers')}</label>
-    </Link>
+      <Link to="/">
+        {#if $TrackerStore.timers.length}
+          <div class="notification" />
+        {/if}
+        <Icon name="tracker" />
+        <label>{Lang.t('general.trackers', 'Trackers')}</label>
+      </Link>
 
-    <Link to="/people">
-      <Icon name="people" />
-      <label>{Lang.t('tabs.people')}</label>
-    </Link>
+      <Link to="/people">
+        <Icon name="people" />
+        <label>{Lang.t('tabs.people')}</label>
+      </Link>
 
-    <Link to="/settings">
-      <Icon name="settings" />
-      <label>{Lang.t('tabs.settings')}</label>
-    </Link>
+      <Link to="/settings">
+        <Icon name="settings" />
+        <label>{Lang.t('tabs.settings')}</label>
+      </Link>
 
-  </div>
-</nav>
+    </div>
+  </nav>
+{/if}
