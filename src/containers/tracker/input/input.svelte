@@ -38,7 +38,8 @@
   let data = {
     value: null, // holds current value
     tracker: null, // holds current tracker
-    ready: false // when it's ready
+    ready: false,
+    calcUsed: false // when it's ready
   };
 
   // Set up the Methods
@@ -148,7 +149,7 @@
       </span>
     </div>
     <div class="main">
-      <span class="animate up text-lg {data.ready ? 'visible' : 'hidden'}">
+      <span class="animate up text-md {data.ready ? 'visible' : 'hidden'}">
         {tracker.emoji} {tracker.label}
       </span>
     </div>
@@ -173,13 +174,11 @@
           <NCalculator
             {value}
             displayFormat={input => {
-              console.log('Display Input', input);
               return tracker.displayValue(input || '');
             }}
-            on:change={value => {
-              data.value = value.detail;
+            on:change={changedValue => {
+              data.value = changedValue.detail;
             }} />
-
         </div>
       {:else if tracker.type === 'timer'}
         <NTimer
