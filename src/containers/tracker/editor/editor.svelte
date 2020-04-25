@@ -289,8 +289,8 @@
             name="math"
             placeholder={Lang.t('tracker.calculate-total', 'Calculate Totals using:')}
             bind:value={data.tracker.math}>
-            {#each ['sum', 'avg'] as math_key}
-              <option value={math_key}>{math_key}</option>
+            {#each [{ value: 'sum', label: Lang.t('general.sum', 'Sum') }, { value: 'mean', label: Lang.t('general.avg', 'Average') }] as math_key}
+              <option value={math_key.value}>{math_key.label}</option>
             {/each}
           </NInput>
         </NItem>
