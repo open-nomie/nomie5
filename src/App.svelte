@@ -1,7 +1,6 @@
 <script>
   // Svelte
   import { Router, Route, navigate } from "svelte-routing";
-  import { Link } from "svelte-routing";
   import { onMount } from "svelte";
 
   // Vendors
@@ -49,16 +48,18 @@
    */
   let confirming = false;
   const today = new Date().toDateString();
-  const dayCheck = setInterval(() => {
+  const MinuteChecker30 = setInterval(() => {
     // Fire off a notice if it's not today anymore - and we haven't
     // already fired off the confirm prompt // stops the double firing.
     if (today !== new Date().toDateString() && !confirming) {
       if (confirm("It's a new day! Nomie needs a refresh, do that now?")) {
         setTimeout(() => {
-          window.location.href = "/";
-        }, 200);
+          window.location.reload();
+        }, 500);
       }
     }
+    // Check if the theme has Changed
+    methods.setDocParams();
   }, 1000 * 60 * 30);
   //
 
