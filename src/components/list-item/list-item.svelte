@@ -12,6 +12,7 @@
   export let className = "";
   export let itemDivider = undefined;
   export let compact = false;
+  export let truncate = false;
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty("left");
   const has_right = (arguments[1].$$slots || {}).hasOwnProperty("right");
@@ -59,7 +60,7 @@
       <slot name="left" />
     </div>
   {/if}
-  <div class="main">
+  <div class="main {truncate ? 'truncate' : ''}">
     {#if title}
       <NText size="md" tag="div" medium>{title}</NText>
     {/if}
