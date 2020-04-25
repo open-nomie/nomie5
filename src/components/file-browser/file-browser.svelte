@@ -6,7 +6,7 @@
   import NItem from "../list-item/list-item.svelte";
   import NIcon from "../icon/icon.svelte";
   import NBackButton from "../back-button/back-button.svelte";
-  import NPage from "../../containers/layout/page.svelte";
+  import NLayout from "../../containers/layout/layout.svelte";
 
   // Utils and Modules
   import Downloader from "../../modules/download/download";
@@ -209,7 +209,7 @@
 </style>
 
 {#if !state.file}
-  <NPage className="n-file-browser">
+  <NLayout className="n-file-browser">
     <div class="n-toolbar-grid container" slot="header">
       <div class="left">
         <button class="btn" on:click={back}>
@@ -258,9 +258,9 @@
         {/each}
       </div>
     </div>
-  </NPage>
+  </NLayout>
 {:else}
-  <NPage className="n-file-browser">
+  <NLayout className="n-file-browser" showTabs={false}>
     <div class="n-toolbar-grid container" slot="header">
       <div class="left">
         <button class="btn" on:click={back}>
@@ -300,5 +300,5 @@
         {/await}
       </div>
     </div>
-  </NPage>
+  </NLayout>
 {/if}
