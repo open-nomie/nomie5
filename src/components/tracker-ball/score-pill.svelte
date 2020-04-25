@@ -47,7 +47,8 @@
       background-color: var(--color-red);
     }
     &.changed {
-      transform: translateX(10px) scale(1.3);
+      transform: scale(1.5);
+      z-index: 1000;
     }
     &.popin {
       &.hidden {
