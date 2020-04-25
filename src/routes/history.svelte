@@ -269,12 +269,6 @@
         }
       });
     },
-    async _selectDate() {
-      let date = await Interact.selectDate(new Date());
-      if (date) {
-        methods.goto(dayjs(date));
-      }
-    },
     selectDate() {
       let ranges = [
         {
@@ -317,7 +311,6 @@
             title: range.title,
             click: async () => {
               if (range.time == -1) {
-                // local.showDatePicker = true;
                 let date = await Interact.selectDate();
                 if (date) {
                   methods.goto(dayjs(date));
