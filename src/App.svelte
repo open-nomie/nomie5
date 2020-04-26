@@ -2,6 +2,7 @@
   // Svelte
   import { Router, Route, navigate } from "svelte-routing";
   import { onMount } from "svelte";
+  import dayjs from "dayjs";
 
   // Vendors
   import Spinner from "./components/spinner/spinner.svelte";
@@ -41,27 +42,35 @@
   gestures();
 
   /**
-   * New Day?
-   *
-   * This checks to see if the day has changed since it was last launched.
-   * If so, lets give the user the option to reload the app..
+   * Day / Time Change Monitoring
+   * Fire off the MinuteChecker30 every 30 minutes
+   * This will check if the day changed
    */
-  let confirming = false;
-  const today = new Date().toDateString();
-  const MinuteChecker30 = setInterval(() => {
-    // Fire off a notice if it's not today anymore - and we haven't
-    // already fired off the confirm prompt // stops the double firing.
-    if (today !== new Date().toDateString() && !confirming) {
-      if (confirm("It's a new day! Nomie needs a refresh, do that now?")) {
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
-      }
+  let todayCheckPeriod = 1000 * 60 * 10;
+  let todayCheckFormat = "YYYY-MM-DD";
+  let todayKey = dayjs().format(todayCheckFormat);
+  let newDay = false; // View reacts to this value
+
+  // Check every X minutes
+  const todayCheckInteval = setInterval(() => {
+    // Get now key
+    let checkKey = dayjs().format(todayCheckFormat);
+    // Compare now key to today key
+    if (todayKey !== checkKey) {
+      // It's new - trigger some reactions
+      newDay = true;
+      // Show toast notification
+      Interact.toast(`It's ${dayjs().format("dddd")}!`);
+      // Set today key to check key
+      todayKey = checkKey;
+      // Wait 500 ms
+      setTimeout(() => {
+        newDay = false;
+      }, 500);
     }
     // Check if the theme has Changed
     methods.setDocParams();
-  }, 1000 * 60 * 30);
-  //
+  }, todayCheckPeriod);
 
   const appVersion = "APP_VERSION";
 
@@ -201,9 +210,9 @@
   // onMount(() => {});
 </script>
 
-{#if $UserStore.signedIn === true}
+{#if $UserStore.signedIn === true && !newDay}
   <RouterView />
-{:else if $UserStore.signedIn == undefined}
+{:else if $UserStore.signedIn == undefined || newDay}
   <div class="empty-notice" style="height:calc(100vh - 75px)">
     <Spinner />
   </div>
