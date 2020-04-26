@@ -193,7 +193,9 @@
       importing.all.running = false;
       importing.all.done = true;
       Interact.toast("Import Complete. Reloading...");
+      // Get and store first book - fresh
       await LedgerStore.getFirstDate(true);
+      // Redirect to home
       window.location.href = "/";
       return true;
     },
