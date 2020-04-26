@@ -422,26 +422,37 @@ const ledgerInit = () => {
      */
 
     async getBookWithSync(date) {
-      const book = await Storage.get(`${config.data_root}/books/${date}`);
-      // If no book and on blockstack
-      if (!book && Storage.storageType() == "blockstack") {
-        let confirm = await Interact.confirm(
-          `A new week is beginning!`,
-          `Ledger for ${dayjs().format(config.book_time_format)} was not found. Should I create it?`
-        );
-        if (confirm) {
-          // User confirms to create a new blank book - godspeed
+      try {
+        // The sync part - get book first
+        const book = await Storage.get(`${config.data_root}/books/${date}`);
+        // If no book and on blockstack
+        if (!book && Storage.storageType() == "blockstack") {
+          // Its blockstack, let's how this is for a new week.
+          Interact.toast(`Creating ${dayjs().format(config.book_time_format)} in Blockstack`);
+
+          return [];
+        } else if (!book) {
+          // It's local - so we will assume they're creating a new book
+
           return [];
         } else {
-          throw new Error("User stopped creation of book");
+          // Else just return the book already
+
+          return book;
         }
-      } else if (!book) {
-        // It's local - so we will assume they're creating a new book
-        return [];
-      } else {
-        // Else just return the book already
-        return book;
+      } catch (e) {
+        Interact.alert("Error", e);
       }
+      // let confirm = await Interact.confirm(
+      //   `Create blockstack file?`,
+      //   `Ledger for ${dayjs().format(config.book_time_format)} was not found. Should I create it?`
+      // );
+      // if (confirm) {
+      //   // User confirms to create a new blank book - godspeed
+      //   return [];
+      // } else {
+      //   throw new Error("User stopped creation of book");
+      // }
     }, // end update if out of sync
 
     async getLog(id, book) {
