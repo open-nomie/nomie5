@@ -248,8 +248,10 @@ Note: Your data will not automatically move over. You'll first need to export it
   <div slot="header">
     <NToolbar>
       <div class="text-inverse text-bold">{Lang.t('settings.settings')}</div>
-      <button on:click={methods.faq} class="btn btn-clear text-primary">
-        {Lang.t('general.faq')}
+      <button
+        on:click={methods.faq}
+        class="btn btn-clear text-bold text-primary-bright">
+        UPGRADE to N5
       </button>
     </NToolbar>
   </div>
