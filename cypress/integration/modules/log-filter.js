@@ -4,15 +4,15 @@ import NomieLog from "../../../src/modules/nomie-log/nomie-log";
 import TrackableElement from "../../../src/modules/trackable-element/trackable-element";
 
 let log1 = new NomieLog({ note: "Tracker #cheese for Brandon 1" });
-let log2 = new NomieLog({ note: "Tracker #cheese for @brandon 2" });
-let log3 = new NomieLog({ note: "Tracker #cheese for @Brandon 3" });
-let log4 = new NomieLog({ note: "Tracker #burger for covid @brandOn 4" });
+let log2 = new NomieLog({ note: "Tracker #cheese for @brandon, 2" });
+let log3 = new NomieLog({ note: "Tracker #cheese? for @Brandon 3" });
+let log4 = new NomieLog({ note: "Tracker #burger! for covid @brandOn 4" });
 let log5 = new NomieLog({ note: "Tracker #fries for Brandon 5" });
 let log6 = new NomieLog({ note: "Tracker #cheese(30) cheese(30) #cheesey(33) #cheese-bread for Brandon 6" });
-let log7 = new NomieLog({ note: "Tracker #milk for @brandon +covid 7" });
+let log7 = new NomieLog({ note: "Tracker #milk, for @brandon, +covid 7" });
 let log8 = new NomieLog({ note: "Tracker not cheese for Brandon +covid 8" });
 let log9 = new NomieLog({ note: "Tracker #gas #pizza for Brandon 9" });
-let log10 = new NomieLog({ note: "Tracker #cheese for Brandon 10" });
+let log10 = new NomieLog({ note: "Tracker #cheese(33:33) for Brandon 10" });
 
 let logs = [log1, log2, log3, log4, log5, log6, log7, log8, log9, log10];
 let cheeseTrackableElement = new TrackableElement({ id: "cheese", type: "tracker" });

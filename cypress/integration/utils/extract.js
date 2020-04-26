@@ -35,7 +35,7 @@ describe("utils/extractor", function () {
     return new Date().getTime() - start;
   };
 
-  it("should be fast! parse 60,000 complicated notes in less than 2.5 seconds", () => {
+  it("should parse 60,000 complicated notes in less than 3 seconds", () => {
     let notes = [];
     let parsed = tester({
       name: "baseline",
@@ -44,7 +44,7 @@ describe("utils/extractor", function () {
         notes.push(extractor.parse(note));
       },
     });
-    expect(parsed).to.be.lessThan(2500);
+    expect(parsed).to.be.lessThan(3000);
   });
 
   it("Should handle #test_time: #hj #bj", () => {

@@ -177,19 +177,68 @@ context("App", () => {
   };
 
   const testHistory = () => {
-    cy.visit("http://localhost:5000/history");
+    cy.get('[href="/history"]').click();
     cy.wait(400);
   };
 
-  it("Should On Boarding with Local", () => {
+  const initBasic = () => {
     window.localStorage.clear();
     window.indexedDB.deleteDatabase("localforage");
     onboard();
     selectStarters();
-    // testTips();
-    // useTrackers();
-    createMultiTracker();
-    testCaptureForm();
+  };
+
+  const testPerson = () => {
+    // Type
+    cy.get("#textarea-capture-note").type("hello there @bob, I hope you are well!");
+    cy.get(".save-button").click();
+    cy.get('[href="/people"]').click();
+    cy.wait(400);
+    // cy.get(".n-item .title").should("contain.value", "bob");
+    cy.get(".n-item").click();
+    cy.wait(400);
+    cy.get(".person-checkin textarea").type(" and I are going to test +nomie!");
+    cy.get(".btn-group > :nth-child(5)").click();
+    cy.get(".person-checkin > .btn-block").click();
+    cy.wait(2000);
+    cy.get('[slot="left"] > .btn > .n-icon').click();
+    cy.wait(400);
+    // View Logs
+    cy.get(".person-modal .n-modal-header .btn-group .btn").eq(0).click();
+    cy.get(".person-modal .log-list-loader > .n-list")
+      .find(".n-item")
+      .then((listing) => {
+        // const count = Cypress.$(listing).length;
+        expect(listing).to.have.length(2);
+      });
+    // Close modal
+    cy.get(".person-modal .left > .btn > .n-icon").click();
+    cy.wait(400);
+    cy.get('.n-row > [href="/"]').click();
+  };
+
+  it("Should On Boarding with Local", () => {
+    initBasic();
+  });
+
+  it("Should properly handle adding a person via a note", () => {
+    testPerson();
+  });
+
+  // it("Should properly track using the tracker buttons", () => {
+  //   // testTips();
+  //   useTrackers();
+  // });
+
+  // it("Should create and be able to use a multi-tracker", () => {
+  //   createMultiTracker();
+  // });
+
+  // it("should be able to create a log via a note", () => {
+  //   testCaptureForm();
+  // });
+
+  it("should have all the things in history", () => {
     testHistory();
   });
 });
