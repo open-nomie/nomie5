@@ -8,7 +8,7 @@
   // Modules
   import NomieLog from "../../modules/nomie-log/nomie-log";
   import Tracker from "../../modules/tracker/tracker";
-  import Location from "../../modules/locate/location";
+  import Location from "../../modules/locate/Location";
 
   // Utils
   import PromiseStep from "../../utils/promise-step/promise-step";
