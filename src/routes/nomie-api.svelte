@@ -248,14 +248,14 @@
   </header>
 
   <div class="container">
-    <div item-divider />
+    <div item-divider class="pt-4" />
     {#if !state.ready}
       <div class="empty-notice">
         <Spinner />
       </div>
     {:else if state.ready && !state.registered}
       <NItem
-        className="clickable text-primary solo text-center"
+        className="clickable text-primary solo text-center mb-3"
         on:click={methods.register}
         title="Generate API Key..." />
 
@@ -278,7 +278,7 @@
       </NItem>
 
       <NItem
-        className="clickable text-primary mt-4 solo text-center"
+        className="clickable text-primary mt-4 solo text-center mb-3"
         on:click={installAPI}
         title="Manually set API/Private Key..." />
     {:else if state.view === 'captured'}
@@ -325,7 +325,7 @@
         -->
       <NItem
         title="Auto Accept"
-        className="solo py-2"
+        className="solo py-2 pt-3 mb-3"
         description="Auto import and accept API logs">
         <div slot="right">
           <NToggle
@@ -340,7 +340,7 @@
         </div>
       </NItem>
 
-      <div class="n-list solo mt-3">
+      <div class="n-list solo mt-3 mb-3">
         <NItem className="">
           <NInput label="Your API Key" bind:value={state.apiKey}>
             <button
