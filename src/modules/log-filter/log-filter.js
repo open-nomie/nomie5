@@ -19,7 +19,10 @@ export default function (logs, filter) {
     // Filter Logs by tokens
     let filtered = logs.filter((log) => {
       // Tokenize the note
-      let note = log.note.toLowerCase().split(" ");
+      let note = log.note
+        .toLowerCase()
+        .replace(/(\'|\,|\.|\!|’|\?|:)/gi, "")
+        .split(" ");
       // Holder of matches
       let match = [];
       // Loop over tokenized search term
