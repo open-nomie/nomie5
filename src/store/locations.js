@@ -33,12 +33,12 @@ const LocationsInit = () => {
     save(location) {
       return new Promise((resolve, reject) => {
         location = new Location(location);
-        update(d => {
-          let found = d.find(d => d.id == location.id);
+        update((d) => {
+          let found = d.find((d) => d.id == location.id);
           if (!found) {
             d.push(location);
           } else {
-            d = d.map(row => {
+            d = d.map((row) => {
               return row.id == location.id ? location : row;
             });
           }
@@ -51,21 +51,35 @@ const LocationsInit = () => {
         });
       });
     },
+    getAll() {
+      let all = [];
+      update((state) => {
+        all = state;
+        return state;
+      });
+      return all;
+    },
     async write(payload) {
       return Storage.put(`${config.data_root}/locations.json`, payload);
     },
     async loadLocations() {
-      const locations = await Storage.get(`${config.data_root}/locations.json`);
-      update(d => locations || []);
+      let locations = await Storage.get(`${config.data_root}/locations.json`);
+      locations = (locations || []).map((loc) => {
+        return new Location(loc);
+      });
+      update((state) => {
+        state = locations;
+        return state;
+      });
       return locations;
     },
     deleteByID(id) {
-      update(d => {
-        let data = d.filter(row => row.id !== id);
+      update((d) => {
+        let data = d.filter((row) => row.id !== id);
         this.write(data);
         return data;
       });
-    }
+    },
   };
 
   // Get storage
@@ -77,7 +91,7 @@ const LocationsInit = () => {
     update,
     subscribe,
     set,
-    ...methods
+    ...methods,
   };
 };
 

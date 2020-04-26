@@ -2,12 +2,13 @@
   // vendors
   // import EmojiSearch from "emoji-search";
   import md5 from "md5";
-  import Spinner from "svelte-spinner";
+
   import { createEventDispatcher } from "svelte";
 
   // Modules
   import NomieLog from "../../modules/nomie-log/nomie-log";
   import Tracker from "../../modules/tracker/tracker";
+  import Location from "../../modules/locate/location";
 
   // Utils
   import PromiseStep from "../../utils/promise-step/promise-step";
@@ -17,6 +18,7 @@
   import NModal from "../../components/modal/modal.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NIcon from "../../components/icon/icon.svelte";
+  import NSpinner from "../../components/spinner/spinner.svelte";
 
   // Stores
   import { Interact } from "../../store/interact";
@@ -24,6 +26,7 @@
   import { TrackerStore } from "../../store/tracker-store";
   import { BoardStore } from "../../store/boards";
   import { PeopleStore } from "../../store/people-store";
+  import { Locations } from "../../store/locations";
   import { Lang } from "../../store/lang";
 
   let fileInput; // holder of dom element self
@@ -38,6 +41,7 @@
   // Status of imports
   let importing = {
     boards: { running: false, done: false },
+    locations: { running: false, done: false },
     records: { running: false, done: false, progress: 0 },
     trackers: { running: false, done: false },
     people: { running: false, done: false },
@@ -56,6 +60,7 @@
         archive.trackers = methods.getTrackers();
         archive.boards = methods.getBoards();
         archive.records = methods.getRecords();
+        archive.locations = methods.getLocations();
       }
     },
     async finish() {
@@ -160,11 +165,28 @@
         });
       });
     },
+    async importLocations() {
+      importing.locations.running = true;
+      let currentLocations = Locations.getAll();
+      console.log("Current Locations", currentLocations);
+      console.log("Locations to save", archive.locations);
+      archive.locations.forEach(loc => {
+        if (!currentLocations.find(l => l.id == loc.id)) {
+          currentLocations.push(loc);
+        }
+      });
+      console.log("Current", currentLocations);
+      await Locations.write(currentLocations);
+      importing.locations.running = false;
+      importing.locations.done = true;
+      return importing.locations;
+    },
 
     // Import All Things
     async _importAll() {
       importing.all.running = true;
       await methods._importTrackers();
+      await methods.importLocations();
       await methods._importPeople();
       await methods._importBoards();
       await methods._importRecords();
@@ -447,6 +469,20 @@
       return trackers;
     },
 
+    getLocations() {
+      let locations = [];
+      try {
+        if (fileData.locations) {
+          fileData.locations.forEach(loc => {
+            locations.push(new Location(loc));
+          });
+        }
+      } catch (e) {
+        console.log("Error on locations", e.message);
+      }
+      return locations;
+    },
+
     // Get boards for archive
     getBoards() {
       let boards = [];
@@ -529,12 +565,7 @@
       <NItem title="Trackers">
         <div slot="right">
           {#if importing.trackers.running}
-            <Spinner
-              size="40"
-              speed="750"
-              color="#CCC"
-              thickness="8"
-              gap="40" />
+            <NSpinner />
           {:else if importing.trackers.done}
             Imported
             <NIcon name="checkmarkFilled" />
@@ -547,16 +578,28 @@
           {/if}
         </div>
       </NItem>
+      <!-- Locations -->
+      <NItem title="Locations">
+        <div slot="right">
+          {#if importing.locations.running}
+            <NSpinner />
+          {:else if importing.locations.done}
+            Imported
+            <NIcon name="checkmarkFilled" />
+          {:else}
+            <button
+              class="btn text-primary btn-clear"
+              on:click={methods.importLocations}>
+              Import Locations ({archive.locations.length})
+            </button>
+          {/if}
+        </div>
+      </NItem>
       <!-- Board -->
       <NItem title="Boards">
         <div slot="right">
           {#if importing.boards.running}
-            <Spinner
-              size="40"
-              speed="750"
-              color="#CCC"
-              thickness="8"
-              gap="40" />
+            <NSpinner />
           {:else if importing.boards.done}
             Imported
             <NIcon name="checkmarkFilled" />
@@ -573,12 +616,7 @@
       <NItem title="People">
         <div slot="right">
           {#if importing.people.running}
-            <Spinner
-              size="40"
-              speed="750"
-              color="#CCC"
-              thickness="8"
-              gap="40" />
+            <NSpinner />
           {:else if importing.people.done}
             Imported
             <NIcon name="checkmarkFilled" />
