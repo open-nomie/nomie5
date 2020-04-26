@@ -12,9 +12,17 @@
   import NPage from "../containers/layout/page.svelte";
 
   import { Interact } from "../store/interact";
-
+  import copy from "copy-to-clipboard";
   // config
   import faq from "../../config/faq";
+
+  function copyURL() {
+    copy("https://v5.nomie.app");
+    Interact.alert(
+      "Nomie5 URL Copied",
+      "Now Launch your browser (Safari for iOS or Chrome for Android) and paste in the url (https://v5.nomie.app)"
+    );
+  }
 
   function generateBackup() {
     const Export = new Exporter();
@@ -53,15 +61,14 @@
             <span class="text-inverse-2">(might take a minute)</span>
           </div>
           <div class="py-2 text-inverse">
-            2. Visit
-            <a
-              href="https://v5.nomie.app"
-              target="_blank"
+            2. Open
+            <span
+              on:click={copyURL}
               class="fake-link text-inverse"
               style="text-decoration:underline">
               v5.nomie.app
-            </a>
-            and follow the instructions to install Nomie 5
+            </span>
+            in Safari (for iOS), or Chrome (for Android).
           </div>
           <div class="py-2">
             Note: This version of Nomie 4 will continue to be available.
