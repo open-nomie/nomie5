@@ -7124,6 +7124,6 @@ TODO: Organize main into components or containers.
 
 .page {
   display: flex;
-  min-height: calc(100vh - 120px);
+  min-height: fit-content;
   flex-grow: 1;
   background-color: var(--color-bg); }

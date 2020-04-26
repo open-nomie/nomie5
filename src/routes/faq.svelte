@@ -30,8 +30,11 @@
   <div class="container">
     <div class="n-list">
       {#each faq as q, index}
-        <div class="n-pop my-2 py-2">
-          <NItem title={q.question} description={q.answer} />
+        <div class="my-3">
+          <NItem className="solo py-3">
+            <div class="title text-bold">{q.question}</div>
+            <div class="text-inverse-1">{q.answer}</div>
+          </NItem>
         </div>
       {/each}
     </div>
