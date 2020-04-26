@@ -145,12 +145,10 @@
   .title {
     position: absolute;
     top: -2px;
-    right: 60px;
-    text-align: center;
-    left: 60px;
-    font-size: 0.72rem;
-    color: var(--color-inverse-2);
-    opacity: 0.75;
+    left: 20px;
+
+    font-size: 0.7rem;
+    color: var(--color-inverse);
   }
   .active-item {
     position: absolute;
@@ -162,7 +160,7 @@
     // box-shadow: var(--box-shadow-tight);
     z-index: 120;
     padding: 4px 10px;
-    font-size: 0.67rem;
+    font-size: 0.7rem;
     display: flex;
 
     .value {

@@ -735,8 +735,12 @@
       padding: 0;
       height: 24px;
       width: 24px;
-      background-color: #000;
+      border: solid 1px var(--color-inverse-1);
+      background-color: var(--color-solid);
     }
+  }
+  :global(.chart-item .btn-close svg) {
+    fill: var(--color-inverse) !important;
   }
 </style>
 

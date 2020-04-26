@@ -336,7 +336,7 @@
           <NInput
             type="text"
             label={Lang.t('tracker.include', 'Additional trackers or people to include')}
-            placeholder={Lang.t('tracker.include-placeholder', 'Additional trackers or people to include')}
+            placeholder={Lang.t('tracker.include-placeholder', 'Include other trackers or people.')}
             bind:value={data.tracker.include} />
           <AutoComplete
             input={data.tracker.include}
@@ -348,7 +348,7 @@
         <NItem className="item-divider bg-transparent mb-4">
           <div class="text-sm text-inverse-2">
             Automatically include trackers, people or context when using this
-            tracker.
+            tracker. Include this trackers value by using #hashtag(*).
           </div>
         </NItem>
       {/if}

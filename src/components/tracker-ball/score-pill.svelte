@@ -10,7 +10,7 @@
     changed = true;
     setTimeout(() => {
       changed = false;
-    }, 500);
+    }, 200);
   }
 </script>
 
@@ -53,7 +53,7 @@
     &.popin {
       &.hidden {
         opacity: 0;
-        transform: scale(0);
+        // transform: scale(0);
       }
     }
   }
