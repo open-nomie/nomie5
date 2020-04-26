@@ -59,6 +59,7 @@
               Generate a Backup
             </span>
             <span class="text-inverse-2">(might take a minute)</span>
+            so you can import it into Nomie 5
           </div>
           <div class="py-2 text-inverse">
             2. Open
