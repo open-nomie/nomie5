@@ -374,7 +374,7 @@ const ledgerInit = () => {
     async prepareLog(log) {
       // Make sure start and end are setup
       log.end = log.end || new Date().getTime();
-      log.start = log.start || new Date().getTime();
+      log.start = log.start || log.end - 1000;
       // If it's not a NomieLog - make it one.
       log = log instanceof NomieLog ? log : new NomieLog(log);
       // Log is being prepared to save - on Before Save
