@@ -28,7 +28,8 @@
     logs: [],
     percentage: 0,
     daysHit: 0,
-    daysTotal: 0
+    daysTotal: 0,
+    thisMonth: true
   };
 
   function next() {
@@ -52,7 +53,10 @@
   function getPercentage(rows) {
     let start = dayjs(state.date).startOf("month");
     let end = dayjs(start).endOf("month");
-    let diff = end.diff(start, "day");
+    if (state.thisMonth) {
+      end = dayjs().endOf("day");
+    }
+    let diff = end.diff(start, "day") + 1;
     let final = [];
     for (var i = 0; i < diff; i++) {
       let date = dayjs(start).add(i, "day");
@@ -76,6 +80,7 @@
       end: state.date.endOf("month")
     };
     let type = extractor.toElement($Interact.streak.show);
+
     let logs = await LedgerStore.query({
       search: type.toSearchTerm($Interact.streak.show),
       start: payload.start,
@@ -95,6 +100,7 @@
   let lastDate;
   $: if ($Interact.streak.show && state.date.format("YYYY-MM") !== lastDate) {
     lastDate = state.date.format("YYYY-MM");
+    state.thisMonth = lastDate == dayjs().format("YYYY-MM");
     main();
   }
   $: if (!$Interact.streak.show) {
@@ -164,7 +170,7 @@
             {state.daysTotal}
           </h1>
           <small class="text-inverse-2">
-            {math.round(state.percentage, 0)}% of the Days
+            {math.round(state.percentage, 0)}% of the days
           </small>
         </div>
         <div class="n-panel w-50 center-all py-2">
