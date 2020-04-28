@@ -184,7 +184,7 @@
       on:change={event => {
         methods.setUnitValue(event, 'hours');
       }}>
-      {#each time.getNumberedArray(120) as unit (unit)}
+      {#each time.getNumberedArray(300) as unit (unit)}
         <option value={unit}>{unit}</option>
       {/each}
     </select>
