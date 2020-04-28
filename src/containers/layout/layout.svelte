@@ -19,7 +19,12 @@
   <title>{pageTitle ? `${pageTitle} - N5` : `Nomie v5`}</title>
 </svelte:head>
 
-<div class="n-layout {className}" {style}>
+<div
+  class="n-layout {className}
+  {hasFooter ? 'has-footer' : ''}
+  {hasHeader ? 'has-header' : ''}
+  {showTabs ? 'has-tabs' : 'no-tabs'}"
+  {style}>
   {#if hasHeader}
     <header class="layout-header">
       <slot name="header" />
