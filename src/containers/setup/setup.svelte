@@ -121,7 +121,7 @@
     </div>
     <div class="right" />
   </div>
-  <main slot="content">
+  <main slot="content" class="setup-main">
     <svelte:component this={slides[state.activeSlide]} />
   </main>
   <div class="n-toolbar-grid" slot="footer">

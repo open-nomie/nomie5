@@ -6933,7 +6933,8 @@ aside.n-panel {
     min-height: 50px;
     flex-grow: 1;
     flex-shrink: 0;
-    background-color: var(--footer-background) !important;
+    background-color: var(--footer-background) !important; }
+  .n-layout.no-tabs footer.layout-footer {
     padding-bottom: env(safe-area-inset-bottom); }
   .n-layout #nav-tabs {
     height: 70px; }
@@ -7030,6 +7031,14 @@ aside.n-panel {
       bottom: 1000px;
       opacity: 0; }
 
+.page-setup .setup-main {
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center; }
+
 .page-setup .center-grow {
   flex-grow: 1;
   flex-shrink: 1;
@@ -7047,10 +7056,10 @@ aside.n-panel {
   flex-shrink: 1;
   display: flex;
   flex-direction: column;
-  height: 100%;
   transition: all 0.3s ease-in-out;
   background-color: var(--local-background);
-  color: var(--color-inverse); }
+  color: var(--color-inverse);
+  margin: 0 16px; }
   .page-setup .slide .btn-content {
     color: var(--color-inverse);
     box-shadow: var(--box-shadow-float);
@@ -7067,13 +7076,10 @@ aside.n-panel {
     max-width: 400px; }
   .page-setup .slide .top {
     flex-direction: column;
-    padding: 20px 25px 0;
-    padding-top: env(safe-area-inset-top) !important;
     flex-grow: 0;
     flex-shrink: 0;
     justify-content: center;
-    align-items: center;
-    height: calc(100vh - 120px); }
+    align-items: center; }
     .page-setup .slide .top h1 {
       text-align: center;
       padding-top: env(safe-area-inset-top); }

@@ -1,4 +1,13 @@
 .page-setup {
+  .setup-main {
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
   .center-grow {
     flex-grow: 1;
     flex-shrink: 1;
@@ -17,10 +26,10 @@
     flex-shrink: 1;
     display: flex;
     flex-direction: column;
-    height: 100%;
     transition: all 0.3s ease-in-out;
     background-color: var(--local-background);
     color: var(--color-inverse);
+    margin: 0 16px;
 
     .btn-content {
       color: var(--color-inverse);
@@ -45,13 +54,12 @@
 
     .top {
       flex-direction: column;
-      padding: 20px 25px 0;
-      padding-top: env(safe-area-inset-top) !important;
+      // padding: 20px 25px 0;
+      // padding-top: env(safe-area-inset-top) !important;
       flex-grow: 0;
       flex-shrink: 0;
       justify-content: center;
       align-items: center;
-      height: calc(100vh - 120px);
       // background-color: var(--color-primary);
       h1 {
         text-align: center;

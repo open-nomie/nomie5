@@ -1,4 +1,4 @@
-import Stats from "../../../src/modules/stats/stats";
+// import Stats from "../../../src/modules/stats/stats";
 import StatsV5 from "../../../src/modules/stats/statsV5";
 import NomieLog from "../../../src/modules/nomie-log/nomie-log";
 import Tracker from "../../../src/modules/tracker/tracker";

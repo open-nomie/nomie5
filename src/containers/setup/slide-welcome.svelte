@@ -6,7 +6,7 @@
   let testValue = 0;
   let positivity = -1;
 
-  let emojis = ["😁", "😩", "😂", "😴", "🤯"];
+  let emojis = ["😁", "😁", "💩", "❤️", "😂", "😴", "🤯"];
   let emoji = math.random(emojis);
 
   function testTrackerTap() {
@@ -30,19 +30,23 @@
   <div class="top center-grow">
     <TrackerButton
       on:click={testTrackerTap}
-      tracker={{ label: 'Tap Me!', emoji: emoji }}
+      tracker={{ label: '', emoji: emoji }}
       value={testValue}
       {positivity} />
     <h1 style="max-width:400px;" class="my-3 text-inverse">
-      Track what (and who) you do, privately.
+      Track your who,
+      <br />
+      what, & where
+      <br />
+      privately
     </h1>
     <p class="text-inverse">
-      <strong>100% private</strong>
-      &
-      <a href="https://github.com/open-nomie/nomie">open source.</a>
-      Nomie was created because I needed a way to privately track my life -
-      without giving up my precious data to some company.
+      I needed a way to privately track my life - without handing over my data
+      to some company, and Nomie was born.
+      <br />
       <a href="https://twitter.com/brandoncorbin">Brandon</a>
+      •
+      <a href="https://github.com/open-nomie/nomie">Open Source</a>
     </p>
   </div>
 </section>
