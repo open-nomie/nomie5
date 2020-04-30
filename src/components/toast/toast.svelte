@@ -21,6 +21,8 @@
     pointer-events: none;
     padding-bottom: env(safe-area-inset-bottom);
     transition: all 0.2s ease-in-out;
+    padding-left: 16px;
+    padding-right: 16px;
     &.hidden {
       transform: translateY(100px) scale(0.8);
       opacity: 0;

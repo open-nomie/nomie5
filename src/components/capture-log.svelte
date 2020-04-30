@@ -505,6 +505,7 @@
       padding: 8px 0;
       color: var(--color-inverse-1);
       margin: 0 16px;
+      margin-right: 0px;
       font-size: 1rem;
       &:focus,
       &:active {
