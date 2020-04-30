@@ -98,7 +98,9 @@
       let theme = localStorage.getItem(config.theme_key) || "auto";
       if (theme === "auto" && isDarkMode) {
         document.body.classList.add("theme-dark");
+        document.body.classList.remove("theme-light");
       } else if (theme === "auto") {
+        document.body.classList.remove("theme-dark");
         document.body.classList.add("theme-light");
       } else {
         document.body.classList.add(`theme-${theme}`);
