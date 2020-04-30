@@ -35,6 +35,14 @@ describe("utils/extractor", function () {
     return new Date().getTime() - start;
   };
 
+  it("should handle 's ok", () => {
+    let note = "this is @brandon's test #momo's too? #momo(34)'s";
+    let parsed = extractor.parse(note);
+    expect(parsed[0].id).to.equal("brandon");
+    expect(parsed[1].id).to.equal("momo");
+    expect(parsed[2].id).to.equal("momo");
+  });
+
   it("should parse 60,000 complicated notes in less than 3 seconds", () => {
     let notes = [];
     let parsed = tester({

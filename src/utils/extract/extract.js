@@ -40,18 +40,6 @@ function toElement(str = {}) {
   return parsed.length ? parsed[0] : null;
 }
 
-/**
- * Cleans up a string before processing it.
- * @param {string} word
- */
-function scrub(word) {
-  let cleanedWord = word.replace(/(\'|\,|\.|\!|’|\?|:)/gi, "").trim();
-  return {
-    word: cleanedWord.trim(),
-    remainder: word.replace(cleanedWord, ""),
-  };
-}
-
 function generateRaw(str = "", type = "generic") {
   switch (type) {
     case "tracker":

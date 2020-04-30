@@ -16,7 +16,7 @@ export default function (str = "") {
    * @param {String} word
    */
   function scrub(word) {
-    const cleanedWord = word.replace(/(\'|\,|\.|\!|’|\?|:)/gi, "");
+    const cleanedWord = word.replace(/(’s|\'s|\'|\,|\.|\!|’|\?|:)/gi, "");
     return {
       word: cleanedWord,
       remainder: word.replace(cleanedWord, ""),

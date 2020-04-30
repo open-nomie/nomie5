@@ -1,7 +1,7 @@
-const Ordinal = value => {
+const Ordinal = (value) => {
   if (!value) return "";
   let i = parseInt(value);
-  var j = i % 10,
+  let j = i % 10,
     k = i % 100;
   if (j == 1 && k != 11) {
     return i + "st";
