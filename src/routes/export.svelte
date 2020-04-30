@@ -73,7 +73,7 @@
       ).then(res => {
         if (res === true) {
           Export.onChange(change => {
-            Interact.toast(`Export: ${change}`, true);
+            Interact.toast(`Export: ${change}`, { perm: true });
           });
           Export.start().then(() => {
             Interact.toast(Lang.t("settings.export-complete"));

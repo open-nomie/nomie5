@@ -481,8 +481,9 @@ const interactInit = () => {
         return s;
       });
     },
-    toast(message, perm) {
-      perm = perm === true ? true : false;
+    toast(message, options = {}) {
+      options.timeout = options.timeout || 1500;
+      let perm = options.perm === true ? true : false;
       update((s) => {
         s.toast.message = message;
         s.toast.show = true;
@@ -495,7 +496,7 @@ const interactInit = () => {
             s.toast.show = false;
             return s;
           });
-        }, 1300);
+        }, options.timeout);
       }
     },
     confirm(title, message, ok, cancel) {
