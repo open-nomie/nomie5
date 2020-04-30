@@ -6,6 +6,7 @@
  * this might change in the future, as it makes it
  * easier to accidentally lose a month worth of data.
  *
+ * TODO: Move a lot of this to modules that can be easily tested
  *
  */
 
@@ -30,10 +31,7 @@ import { writable } from "svelte/store";
 import PromiseStep from "../utils/promise-step/promise-step";
 import md5 from "md5";
 import tick from "../utils/tick/tick";
-import regex from "../utils/regex";
 import arrayUtils from "../utils/array/array_utils";
-
-import tokenizer from "search-text-tokenizer";
 
 // Config
 import config from "../../config/global";

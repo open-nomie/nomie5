@@ -8,7 +8,7 @@
 
   // svelte
   import { navigate } from "svelte-routing";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
 
   // components
   import NItem from "../components/list-item/list-item.svelte";
@@ -218,6 +218,8 @@
         fresh: fresh
       });
 
+      console.log("Logs", logs);
+
       loading = false;
     },
     clearLocation() {
@@ -327,19 +329,15 @@
     }
   };
 
+  function refresh() {
+    methods.getLogs();
+    LedgerStore.getMemories();
+  }
+
   // If a new Log is added, or changed update the list.
-  LedgerStore.hook("onLogUpdate", log => {
-    methods.getLogs();
-  });
-
-  LedgerStore.hook("onLogSaved", log => {
-    methods.getLogs();
-  });
-
-  LedgerStore.hook("onLogsDeleted", async () => {
-    await tick(600);
-    methods.getLogs();
-  });
+  let onLogUpdate;
+  let onLogSaved;
+  let onLogsDeleted;
 
   // WHen mounted.
   onMount(() => {
@@ -347,15 +345,29 @@
       methods.refreshSearch();
     }
     window.scrollTo(0, 0);
-    methods.getLogs();
-    LedgerStore.getMemories();
-  });
+    refresh();
 
-  /**
-   * // Fire off call to query the datastore
-   * This will call the ledger and load up the right book
-   * once the book is loaded, the logs var will be automaticallly filtered
-   */
+    onLogUpdate = LedgerStore.hook("onLogUpdate", async log => {
+      await tick(600);
+      refresh();
+    });
+
+    onLogSaved = LedgerStore.hook("onLogSaved", async log => {
+      await tick(600);
+      refresh();
+    });
+
+    onLogsDeleted = LedgerStore.hook("onLogsDeleted", async () => {
+      await tick(600);
+      refresh();
+    });
+  });
+  onDestroy(() => {
+    // Unsubscribe
+    onLogSaved();
+    onLogUpdate();
+    onLogsDeleted();
+  });
 </script>
 
 <style lang="scss" type="text/scss">
