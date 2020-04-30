@@ -17,6 +17,11 @@ export default class Hooky {
     if (typeof func === "function") {
       this.hooks[hookName] = this.hooks[hookName] || [];
       this.hooks[hookName].push(func);
+      return () => {
+        this.hooks[hookName] = this.hooks[hookName].filter((hookFunc) => {
+          return hookFunc !== func;
+        });
+      };
     }
   }
   run(hookName, payload) {
