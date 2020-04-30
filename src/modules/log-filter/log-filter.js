@@ -21,6 +21,7 @@ export default function (logs, filter) {
       // Tokenize the note
       let note = log.note
         .toLowerCase()
+        .replace(/\n/g, " ") // remove line breaks
         .replace(/(\'|\,|\.|\!|’|\?|:)/gi, "")
         .split(" ");
       // Holder of matches
@@ -28,7 +29,7 @@ export default function (logs, filter) {
       // Loop over tokenized search term
       tokens.forEach((token) => {
         // If we should exclude it
-        if (token.exlcude) {
+        if (token.exclude) {
           // Does it have this term?
           match.push(note.indexOf(token.term) === -1);
         } else {

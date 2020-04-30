@@ -2,9 +2,20 @@ import extractor from "../../../src/utils/extract/extract";
 
 let note = `This is a #test of +context @person #语 @语 +语 @brandon Nomies 
   
-  #extractor(4)! #home(0)? #coffee(3), #sleep(01:00:00) #taco[b32] and #cheese #cheese #cheese`;
+#extractor(4)! #home(0)? #coffee(3), #sleep(01:00:00) #taco[b32] and #cheese #cheese #cheese`;
 
 describe("utils/extractor", function () {
+  it("should parse this persons note", () => {
+    let theNote = `This is a special #checkin because I did a 24 hr fast for the first time and I was alright. I did drink some coffees though. You can see that in the logs. #mood(9)
+
+
+
+    #meal`;
+    let extracted = extractor.parse(theNote);
+    console.log(extracted);
+    expect(extracted[2].value).to.equal(1);
+  });
+
   it("Should be able extract Element from string", () => {
     expect(extractor.toElement(" #mood").type).to.equal("tracker");
     expect(extractor.toElement("#mood(43)").value).to.equal(43);
@@ -13,7 +24,12 @@ describe("utils/extractor", function () {
     expect(extractor.toElement("@mood").type).to.equal("person");
     expect(extractor.toElement("+mood").type).to.equal("context");
     expect(extractor.toElement("+mood(32)").type).to.equal("context");
-    expect(extractor.toElement("+mood(32)").id).to.equal("mood");
+    expect(
+      extractor.toElement(`
+
++mood(32)
+#water`).value
+    ).to.equal(32);
     expect(extractor.toElement("+mood(32): #dd").id).to.equal("mood");
     expect(extractor.toElement("+😁").id).to.equal("😁");
     expect(extractor.toElement("#timer(02:00:00)").value).to.equal(7200);
