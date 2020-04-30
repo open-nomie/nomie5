@@ -26,3 +26,9 @@ $sizes: map-merge(
     padding-right: 0 !important;
   }
 }
+
+.container.board-container {
+  @include media-breakpoint-up(lg) {
+    max-width: 90% !important;
+  }
+}
