@@ -60,10 +60,6 @@ export default function (str = "") {
     lines.forEach((line) => {
       // Extract
       let elements = parseStr(line);
-      // Loop over the elements in this line
-      // for (var e = 0; e < elements.length; e++) {
-      //   final.push(elements[e]);
-      // }
       elements.forEach((element) => {
         final.push(element);
       });
@@ -88,9 +84,6 @@ export default function (str = "") {
         .map((word) => {
           // Loop over each word
           let scrubbed = scrub(word); // Scrub it clean
-          if (scrubbed.word == "emily") {
-            console.log("scrubbed", scrubbed);
-          }
           let valueStr = getValueString(word);
           let firstChar = word.trim().substr(0, 1);
           // switch on first character

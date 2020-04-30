@@ -218,8 +218,6 @@
         fresh: fresh
       });
 
-      console.log("Logs", logs);
-
       loading = false;
     },
     clearLocation() {

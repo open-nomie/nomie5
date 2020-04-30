@@ -10,6 +10,10 @@ where a component doesn't exist, or isn't needed.
     padding-left: 0 !important;
     padding-right: 0 !important; } }
 
+@media (min-width: 980px) {
+  .container.board-container {
+    max-width: 90% !important; } }
+
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -6624,17 +6628,17 @@ aside.n-panel {
     color: var(--color-green); }
   @media (min-width: 980px) {
     .item-ball {
-      width: 157px;
-      min-width: 157px; }
+      width: 136.6px;
+      min-width: 136.6px; }
       .item-ball .avatar-ball {
-        width: 153px;
-        height: 153px;
-        border-radius: 52.02px; }
+        width: 132.6px;
+        height: 132.6px;
+        border-radius: 45.084px; }
       .item-ball .emoji-letter,
       .item-ball .n-ball {
-        width: 153px !important;
-        height: 153px !important;
-        font-size: 76.5px !important; } }
+        width: 132.6px !important;
+        height: 132.6px !important;
+        font-size: 66.3px !important; } }
   .item-ball .countdown {
     position: absolute;
     top: 0;
