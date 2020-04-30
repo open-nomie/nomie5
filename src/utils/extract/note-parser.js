@@ -16,7 +16,7 @@ export default function (str = "") {
    * @param {String} word
    */
   function scrub(word) {
-    const cleanedWord = word.replace(/(’s|\'s|\'|\,|\.|\!|’|\?|:)/gi, "");
+    const cleanedWord = word.replace(/(’s|'s|'|\,|\.|\!|’|\?|:)/gi, "");
     return {
       word: cleanedWord,
       remainder: word.replace(cleanedWord, ""),
@@ -88,6 +88,9 @@ export default function (str = "") {
         .map((word) => {
           // Loop over each word
           let scrubbed = scrub(word); // Scrub it clean
+          if (scrubbed.word == "emily") {
+            console.log("scrubbed", scrubbed);
+          }
           let valueStr = getValueString(word);
           let firstChar = word.trim().substr(0, 1);
           // switch on first character

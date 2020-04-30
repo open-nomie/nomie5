@@ -41,6 +41,7 @@ describe("utils/extractor", function () {
     expect(parsed[0].id).to.equal("brandon");
     expect(parsed[1].id).to.equal("momo");
     expect(parsed[2].id).to.equal("momo");
+    expect(parsed[2].remainder).to.equal("'s");
   });
 
   it("should parse 60,000 complicated notes in less than 3 seconds", () => {
