@@ -6622,6 +6622,19 @@ aside.n-panel {
       box-shadow: var(--box-shadow-tight); }
   .item-ball .last.today {
     color: var(--color-green); }
+  @media (min-width: 980px) {
+    .item-ball {
+      width: 157px;
+      min-width: 157px; }
+      .item-ball .avatar-ball {
+        width: 153px;
+        height: 153px;
+        border-radius: 52.02px; }
+      .item-ball .emoji-letter,
+      .item-ball .n-ball {
+        width: 153px !important;
+        height: 153px !important;
+        font-size: 76.5px !important; } }
   .item-ball .countdown {
     position: absolute;
     top: 0;

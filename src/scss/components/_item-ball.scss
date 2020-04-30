@@ -1,6 +1,7 @@
 @import "../../scss/utils/__utils.scss";
 
 $size: $trackerBallSize;
+$sizeLg: $trackerBallSize * 2;
 
 .item-ball {
   position: relative;
@@ -51,6 +52,7 @@ $size: $trackerBallSize;
     margin-top: 10px;
     line-height: 1rem;
   }
+
   &:active {
     transform: scale(0.9);
     .avatar {
@@ -61,46 +63,24 @@ $size: $trackerBallSize;
     color: var(--color-green);
   }
 
-  // .avatar {
-  //   background-size: cover;
-  //   background-position: center;
-  //   position: absolute;
-  //   top: 0;
-  //   bottom: 0;
-  //   left: 0;
-  //   right: 0;
-  // }
-  // .letter {
-  //   position: absolute;
-  //   top: 0;
-  //   right: 0;
-  //   bottom: 0;
-  //   left: 0;
-  //   text-align: center;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  //   font-weight: bold;
-  //   z-index: 102;
-  //   font-size: $size * 0.5;
-  //   // text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-  //   color: rgba(0, 0, 0, 0.8);
-  //   text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5);
-  //   &.emoji-letter {
-  //     color: rgba(0, 0, 0, 1);
-  //   }
-  // }
-  // .letter.just-letter {
-  //   font-size: $size * 0.4 !important;
-  // }
-
-  // .dymoji-wrap {
-  //   position: absolute !important;
-  //   top: 0;
-  //   bottom: 0;
-  //   right: 0;
-  //   left: 0;
-  // }
+  @mixin generateButton($theSize) {
+    width: $theSize + 4px;
+    min-width: $theSize + 4px;
+    .avatar-ball {
+      width: $theSize;
+      height: $theSize;
+      border-radius: $theSize * 0.34;
+    }
+    .emoji-letter,
+    .n-ball {
+      width: $theSize !important;
+      height: $theSize !important;
+      font-size: $theSize * 0.5 !important;
+    }
+  }
+  @include media-breakpoint-up(lg) {
+    @include generateButton($trackerBallSize * 1.5);
+  }
 
   .countdown {
     position: absolute;
