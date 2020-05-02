@@ -16,8 +16,8 @@
 // Names of the two caches used in this version of the service worker.
 // Change to v2, etc. when you update any of the local resources, which will
 // in turn trigger the install event again.
-const PRECACHE = "precache-5.1.34";
-const RUNTIME = "runtime-5.1.34";
+const PRECACHE = "precache-5.1.37";
+const RUNTIME = "runtime-5.1.37";
 
 // A list of local resources we always want to be cached.
 const PRECACHE_URLS = [

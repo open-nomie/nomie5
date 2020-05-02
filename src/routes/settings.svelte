@@ -80,6 +80,9 @@
     faq() {
       navigate("/faq");
     },
+    shop() {
+      navigate("/shop");
+    },
 
     // switchToCloud() {
     //   let msg = Lang.t("settings.switch-to-cloud-notice");
@@ -270,7 +273,7 @@ Note: Your data will not automatically move over. You'll first need to export it
       <div class="page page-settings">
         <div class="container p-0">
 
-          <NItem
+          <!-- <NItem
             className="clickable solo p-2"
             title={Lang.t('settings.share-nomie', 'Share Nomie w/ Friends')}
             description="It'd be super helpful"
@@ -280,6 +283,19 @@ Note: Your data will not automatically move over. You'll first need to export it
             </span>
             <span slot="right" class="icon">
               <NIcon name="more" />
+            </span>
+          </NItem> -->
+
+          <NItem
+            className="clickable solo p-2"
+            title={Lang.t('settings.shop-and-support', 'Shop and Support')}
+            description="Products that work with Nomie"
+            on:click={methods.shop}>
+            <span slot="left" class="btn-icon tap-icon">
+              <NIcon name="share" />
+            </span>
+            <span slot="right" class="icon">
+              <NIcon name="chevron-right" />
             </span>
           </NItem>
 

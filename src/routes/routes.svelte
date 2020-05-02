@@ -13,6 +13,7 @@
   import PeopleRoute from "./people.svelte";
   import TrackerDesigner from "./tracker-designer.svelte";
   import FileBrowser from "./file-browser.svelte";
+  import Shop from "./shop.svelte";
 </script>
 
 <Router>
@@ -30,4 +31,5 @@
   <Route path="/files/*path" let:params>
     <FileBrowser path={params.path} />
   </Route>
+  <Route path="/shop" component={Shop} />
 </Router>

@@ -6185,7 +6185,8 @@ body.scrolling .mini-map {
     .n-item .main .title {
       font-size: 1.1rem;
       margin: 2px 0;
-      line-height: 1.56rem; }
+      line-height: 1.56rem;
+      font-weight: 600; }
     .n-item .main p,
     .n-item .main .note,
     .n-item .main .description {
@@ -6703,7 +6704,9 @@ aside.n-panel {
   flex-direction: column;
   grid-area: 1 / 2 / 2 / 3;
   justify-content: center;
-  font-weight: 700; }
+  font-weight: 700;
+  text-align: center;
+  line-height: 110%; }
 
 .n-toolbar-grid .main h1,
 .n-toolbar-grid .main .title {
