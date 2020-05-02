@@ -702,7 +702,7 @@
   $: dateFormat = $UserStore.meta.is24Hour ? "DD/MM/YYYY" : "MMM Do YYYY";
 
   function onSwipeDown(e) {
-    console.log("swipe down", e);
+    close();
   }
 </script>
 

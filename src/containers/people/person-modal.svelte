@@ -11,7 +11,6 @@
   import Dymoji from "../../components/dymoji/dymoji.svelte";
   import LogItem from "../../components/list-item-log/list-item-log.svelte";
   import BarChart from "../../components/charts/bar-chart.svelte";
-  import FrappeChart from "../../components/charts/frappe.svelte";
 
   // Container Items
   import PersonCheckin from "./person-check-in.svelte";

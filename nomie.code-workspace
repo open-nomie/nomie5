@@ -7,5 +7,7 @@
 			"path": "../nomie-cli"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "nomie-src"
+	}
 }

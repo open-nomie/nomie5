@@ -1,11 +1,13 @@
-import Assets from "./svg/svgs.json";
+// import Assets from "./svg/svgs.json";
 
 import { base as colors } from "../../modules/colors/colors";
+
+// modified for nomie...
 
 class Hash {
   constructor(id) {
     this.hash = this.fh5(id);
-    this.assets = Assets;
+    this.assets = {};
   }
   fh5(s) {
     //Knuth multiplicative hash
@@ -51,10 +53,10 @@ export default class Face {
   svg() {
     let base = [];
     //const assetKeys = Object.keys(this.assets);
-    const assetKeys = ["c-wear"];
-    base = assetKeys.map((layer) => {
-      return this.hash.pick(this.assets[layer], layer);
-    });
+    // const assetKeys = ["c-wear"];
+    // base = assetKeys.map((layer) => {
+    //   return this.hash.pick(this.assets[layer], layer);
+    // });
     // Define Style
     const style = [
       `display:inline-block; overflow:hidden;`,

@@ -9,11 +9,10 @@
   import { gestures } from "@composi/gestures";
 
   // Containers
-  import AppTabs from "./containers/layout/tabs.svelte";
   import Interactions from "./containers/interactions/interactions.svelte";
   import LibraryModal from "./containers/library/library.svelte";
   import PersonModal from "./containers/people/person-modal.svelte";
-  import Modal from "./components/modal/modal.svelte";
+  // import Modal from "./components/modal/modal.svelte";
   import StatsModal from "./containers/stats/stats-modal.svelte";
   import StreakModal from "./containers/steak/streak-modal.svelte";
 
@@ -140,10 +139,7 @@
   // );
 
   /**
-   *
-   * WINDOW LISTENERS
-   * GLoBaL StUFFs!
-   *
+   * Offline Watching
    */
 
   window.addEventListener("load", () => {

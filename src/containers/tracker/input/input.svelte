@@ -90,7 +90,6 @@
       // Set to not ready and the new tracker
       data.ready = true; // TODO: make this lack janky
       data.tracker = tracker;
-      console.log("Data Tracker", data.tracker);
       data.value = tracker.default || 0;
       data.ready = true;
     }, 12);
@@ -192,7 +191,6 @@
           <NCalculator
             {value}
             displayFormat={input => {
-              console.log('Display Input', input);
               return tracker.displayValue(input || '');
             }}
             on:change={value => {

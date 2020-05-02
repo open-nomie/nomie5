@@ -98,7 +98,6 @@ describe("modules/log-filter generic term", function () {
       search: new TrackableElement({ id: "covid", type: "generic" }),
     };
     let results = logFilter(logs, filter);
-    console.log("Results", results);
     expect(results.length).to.equal(3);
   });
   it("should search for generic term if provided", () => {

@@ -13,15 +13,15 @@ if ("serviceWorker" in navigator && window.location.origin.search(/(localhost)/)
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register("/service-worker.js", { scope: "./" })
-      .then(registration => {})
-      .catch(e => {
+      .then((registration) => {})
+      .catch((e) => {
         console.error("Service worker registration failed", e.message);
       });
   });
 }
 
 const app = new App({
-  target: document.body
+  target: document.body,
 });
 
 export default app;

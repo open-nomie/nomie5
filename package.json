@@ -6,6 +6,10 @@
     "url": "https://github.com/open-nomie/nomie/issues",
     "email": "support@happydata.org"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/open-nomie/nomie.git"
+  },
   "author": {
     "name": "Brandon Corbin",
     "email": "support@happydata.org",
