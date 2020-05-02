@@ -1,6 +1,6 @@
 {
   "name": "open-nomie",
-  "version": "5.1.40",
+  "version": "5.1.39",
   "homepage": "https://nomie.app",
   "bugs": {
     "url": "https://github.com/open-nomie/nomie/issues",
@@ -16,7 +16,7 @@
     "url": "https://nomie.app"
   },
   "scripts": {
-    "build": "node build-tools/bust-cache.js && node build-tools/move-resources.js && rollup -c",
+    "build": "npm rebuild && node build-tools/bust-cache.js && node build-tools/move-resources.js && rollup -c",
     "autobuild": "rollup -c -w",
     "scss": "node-sass ./src/scss/main.scss --output=./public --watch=./src/scss/**/*.scss --include-path",
     "dev": "node build-tools/move-resources.js && node build-tools/bundle-vendors.js && concurrently \"run-p start:dev autobuild\" \"npm run scss\"",
