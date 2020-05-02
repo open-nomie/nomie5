@@ -48,7 +48,7 @@ export default class Face {
     this.hash = new Hash(id);
     this.color = this.hash.pick(this.config.colors) || "red";
     this.base = ``;
-    this.assets = Assets;
+    this.assets = {};
   }
   svg() {
     let base = [];
