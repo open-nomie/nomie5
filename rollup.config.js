@@ -8,9 +8,9 @@ import { scss } from "@kazzkiq/svelte-preprocess-scss";
 import builtins from "rollup-plugin-node-builtins";
 import replace from "rollup-plugin-replace";
 import packagejson from "./package.json";
-import visualizer from "rollup-plugin-visualizer";
+// import visualizer from "rollup-plugin-visualizer";
 import dayjs from "dayjs";
-import fs from "fs";
+// import fs from "fs";
 
 const { generateSW, injectManifest } = require("rollup-plugin-workbox");
 
@@ -20,7 +20,7 @@ export default [
   {
     input: "src/main.js",
     output: {
-      sourcemap: true,
+      sourcemap: false,
       format: "iife",
       name: "nomie",
       file: "public/bundle.js",
