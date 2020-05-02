@@ -54,7 +54,7 @@
   const state = {
     date: dayjs(new Date()),
     time_format: config.book_time_format,
-    logs: null,
+    logs: [],
     trackers: {},
     ledger: null,
     searchTerm: "",
@@ -88,7 +88,7 @@
     searchMode = true;
   }
 
-  let logs = undefined; // holder of the logs
+  let logs = []; // holder of the logs
   let searchLogs = undefined; // hodler of searched logs
   let loading = true;
   let book = undefined;
@@ -219,17 +219,12 @@
       });
 
       loading = false;
+      return logs;
     },
     clearLocation() {
       state.location.name = null;
       state.location.lat = null;
       state.location.lng = null;
-    },
-    refresh() {
-      refreshing = true;
-      setTimeout(() => {
-        refreshing = false;
-      }, 10);
     },
     clearSearch() {
       showSearch = false;
@@ -329,9 +324,13 @@
     }
   };
 
-  function refresh() {
-    methods.getLogs();
+  async function refresh() {
+    refreshing = true;
+    console.log("Refresh history");
+    await tick(500);
+    await methods.getLogs(true);
     LedgerStore.getMemories();
+    refreshing = false;
   }
 
   // If a new Log is added, or changed update the list.
@@ -431,13 +430,20 @@
         on:click={methods.previous}>
         <NIcon name="chevronLeft" />
       </button>
+
       <div
         slot="main"
         class={isToday ? 'text-inverse-2' : 'not-today text-red'}
         on:click={methods.selectDate}>
+
         <span class="font-weight-bold mx-1">{state.date.format('ddd')}</span>
         {state.date.format('MMM Do YYYY')}
-        <NIcon name="chevronDown" size="16" style="margin-top:-2px;" />
+        {#if refreshing}
+          <Spinner size="16" />
+        {:else}
+          <NIcon name="chevronDown" size="16" style="margin-top:-2px;" />
+        {/if}
+
         <!-- end text middle -->
       </div>
       <button
@@ -463,28 +469,76 @@
 
   <main slot="content" class="page page-history">
 
-    {#if loading}
-      <div class="empty-notice">
-        <Spinner />
-      </div>
-    {:else}
-      <div class="container p-0">
-        <!-- If no Logs found -->
-        {#if logs.length === 0 && !showSearch}
-          {#if !searchMode}
-            <div class="empty-notice" style="max-height:200px;">
-              {Lang.t('history.no-records-found')}
+    <div class="container p-0">
+      {#if loading}
+        <div class="empty-notice">
+          <Spinner />
+        </div>
+      {/if}
+      <!-- If no Logs found -->
+      {#if logs.length === 0 && !showSearch}
+        {#if !searchMode}
+          <div class="empty-notice" style="max-height:200px;">
+            {Lang.t('history.no-records-found')}
+          </div>
+        {:else}
+          <div class="empty-notice">
+            {state.date.format('YYYY')} {Lang.t('history.no-records-found')}
+          </div>
+        {/if}
+        <!-- If Logs and Not refreshing  -->
+      {:else if !showSearch}
+        <!-- Loop over logs -->
+        {#each logs as log, index}
+          <LogItem
+            {log}
+            on:trackerClick={event => {
+              methods.trackerTapped(event.detail.tracker, log);
+            }}
+            on:textClick={event => {
+              methods.textClick(event);
+            }}
+            on:moreClick={event => {
+              Interact.logOptions(log).then(() => {});
+            }} />
+          <!-- Show the Log Item -->
+        {/each}
+
+        <!--
+          Search Results
+          If Search Mode and We have Logs
+        -->
+      {:else if showSearch && state.searchTerm}
+        <NLogListLoader
+          term={state.searchTerm}
+          limit={12}
+          on:trackerClick={event => {
+            methods.trackerTapped(event.detail.tracker, event.detail.log);
+          }}
+          on:textClick={event => {
+            methods.textClick(event);
+          }}
+          on:moreClick={event => {
+            Interact.logOptions(event.detail).then(() => {});
+          }} />
+      {/if}
+
+      <!-- Show History if exists -->
+      {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
+        <div class="memories">
+          {#each $LedgerStore.memories as log}
+            <div class="memories-log-header">
+              <button
+                class="btn btn-clear"
+                on:click={() => {
+                  methods.goto(dayjs(log.end));
+                }}>
+                From {dayjs(log.end).fromNow()}
+                <NIcon name="chevronRight" className="fill-white" />
+              </button>
             </div>
-          {:else}
-            <div class="empty-notice">
-              {state.date.format('YYYY')} {Lang.t('history.no-records-found')}
-            </div>
-          {/if}
-          <!-- If Logs and Not refreshing  -->
-        {:else if !showSearch}
-          <!-- Loop over logs -->
-          {#each logs as log, index}
             <LogItem
+              className="aged"
               {log}
               on:trackerClick={event => {
                 methods.trackerTapped(event.detail.tracker, log);
@@ -495,61 +549,13 @@
               on:moreClick={event => {
                 Interact.logOptions(log).then(() => {});
               }} />
-            <!-- Show the Log Item -->
           {/each}
+        </div>
+      {/if}
+      <!-- end history -->
 
-          <!--
-          Search Results
-          If Search Mode and We have Logs
-        -->
-        {:else if showSearch && state.searchTerm}
-          <NLogListLoader
-            term={state.searchTerm}
-            limit={12}
-            on:trackerClick={event => {
-              methods.trackerTapped(event.detail.tracker, event.detail.log);
-            }}
-            on:textClick={event => {
-              methods.textClick(event);
-            }}
-            on:moreClick={event => {
-              Interact.logOptions(event.detail).then(() => {});
-            }} />
-        {/if}
+    </div>
 
-        <!-- Show History if exists -->
-        {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
-          <div class="memories">
-            {#each $LedgerStore.memories as log}
-              <div class="memories-log-header">
-                <button
-                  class="btn btn-clear"
-                  on:click={() => {
-                    methods.goto(dayjs(log.end));
-                  }}>
-                  From {dayjs(log.end).fromNow()}
-                  <NIcon name="chevronRight" className="fill-white" />
-                </button>
-              </div>
-              <LogItem
-                className="aged"
-                {log}
-                on:trackerClick={event => {
-                  methods.trackerTapped(event.detail.tracker, log);
-                }}
-                on:textClick={event => {
-                  methods.textClick(event);
-                }}
-                on:moreClick={event => {
-                  Interact.logOptions(log).then(() => {});
-                }} />
-            {/each}
-          </div>
-        {/if}
-        <!-- end history -->
-
-      </div>
-    {/if}
     {#if locations.length && !loading && !state.searchTerm}
       {#if !state.showAllLocations}
         <div
