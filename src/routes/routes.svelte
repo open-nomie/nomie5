@@ -3,17 +3,15 @@
 
   import TrackRoute from "./track.svelte";
   import HistoryRoute from "./history.svelte";
-
   import SettingsRoute from "./settings.svelte";
   import BoardEditorRoute from "./board-editor.svelte";
   import FAQRoute from "./faq.svelte";
-  // import PluginsRoute from "./plugins.svelte";
   import NomieAPIRoute from "./nomie-api.svelte";
   import ExportRoute from "./export.svelte";
   import PeopleRoute from "./people.svelte";
   import TrackerDesigner from "./tracker-designer.svelte";
-  import FileBrowser from "./file-browser.svelte";
   import Shop from "./shop.svelte";
+  import FileBrowser from "./file-browser.svelte";
 </script>
 
 <Router>
