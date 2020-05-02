@@ -746,6 +746,7 @@ const ledgerInit = () => {
      */
     async query(options) {
       options = options || {};
+      // Fresh? Should pull from storage not cache
       options.fresh = options.fresh ? options.fresh : false;
       // Start
       let startTime = dayjs(options.start || new Date()).startOf("day");
@@ -797,13 +798,15 @@ const ledgerInit = () => {
         let gets = [];
         booksChunk.forEach((bookPath) => {
           state.books[bookPath] = state.books[bookPath] || [];
-          if (state.books[bookPath].length == 0) {
+          if (state.books[bookPath].length == 0 || options.fresh === true) {
             let getBook = methods.getBook(bookPath);
+            console.log("It's not cached");
             getBook.then((rows) => {
               state.books[bookPath] = rows;
             });
             gets.push(getBook);
           } else {
+            console.log("It's cached", options.fresh);
             gets.push(Promise.resolve(state.books[bookPath]));
           }
         });
