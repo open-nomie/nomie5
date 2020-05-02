@@ -29,8 +29,8 @@
   <div slot="header" class="n-toolbar-grid">
     <div class="main">Shop/Support Nomie</div>
   </div>
-  <main slot="content" class="products mt-4">
-    <div class="n-list solo container">
+  <main slot="content" class="products mt-4 container">
+    <div class="n-list solo">
       {#each products as product}
         <NItem
           className="pt-1 pb-2"

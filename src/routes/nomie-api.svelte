@@ -148,7 +148,6 @@
     },
     clear() {
       NAPI.clear().then(() => {
-        Interact.toast("Logs cleared");
         state.logs = [];
       });
     },
@@ -235,7 +234,7 @@
         {/if}
       </div>
     </div>
-    <div class="n-row px-3">
+    <div class="n-row px-3 container">
       {#if state.ready && state.registered}
         <NButtonGroup
           buttons={[{ label: 'Settings', active: state.view == 'settings', click() {
@@ -308,7 +307,7 @@
 
       </div>
       {#if state.logs.length > state.hidden.length}
-        <NItem>
+        <NItem className="bg-transparent">
           <button
             on:click={methods.confirmClear}
             class="btn btn-outlined btn-danger mr-1 btn-block my-0">
