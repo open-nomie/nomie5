@@ -315,10 +315,12 @@
                 if (date) {
                   methods.goto(dayjs(date));
                 }
-              } else if (range.time === 0) {
-                methods.goto(dayjs());
+              } else if (range.time === undefined || range.time === 0) {
+                methods.goto(dayjs(new Date()));
               } else {
-                methods.goto(state.date.subtract(range.time, range.unit));
+                methods.goto(
+                  state.date.subtract(range.time || 0, range.unit || "day")
+                );
               }
             }
           };
