@@ -1,19 +1,29 @@
 <script>
   import NText from "../text/text.svelte";
+
   import { fly } from "svelte/transition";
-  import { createEventDispatcher } from "svelte";
+  import { onDestroy, createEventDispatcher } from "svelte";
+
+  import NToolbarGrid from "../toolbar/toolbar-grid.svelte";
+  import NIcon from "../icon/icon.svelte";
+
   const dispatch = createEventDispatcher();
   // Props
   export let padding = false;
-  export let title;
+  export let title = "Modal";
   export let allowClose = undefined;
   export let fullscreen = false;
   export let flexBody = undefined;
   export let show = true; // Defaulted to true so it can be controlled by a parent component
   export let className = undefined;
   export let type = "normal"; // cover, fullscreen, bottom, bottom-slide-up
+  export let bodyClass = "";
+  export let closeOnBackgroundTap = false;
 
   const has_header = (arguments[1].$$slots || {}).hasOwnProperty("header");
+  const has_raw_header = (arguments[1].$$slots || {}).hasOwnProperty(
+    "raw-header"
+  );
   const has_footer = (arguments[1].$$slots || {}).hasOwnProperty("footer");
 
   let domVisible = false;
@@ -21,16 +31,32 @@
 
   // Stagger showing and dom showing for CSS effects
   $: if (show) {
+    // document.body.classList.add("no-scroll");
     showModal = true;
     setTimeout(() => {
       domVisible = true;
     }, 100);
-  } else {
+  }
+
+  $: if (show == false) {
+    // document.body.classList.remove("no-scroll");
     domVisible = false;
     setTimeout(() => {
       showModal = false;
     }, 400);
   }
+
+  function backgroundTap() {
+    console.log("Background Tap");
+    if (closeOnBackgroundTap == true) {
+      console.log("Closing");
+      dispatch("close");
+    }
+  }
+
+  onDestroy(() => {
+    // document.body.classList.remove("no-scroll");
+  });
 </script>
 
 <style lang="scss">
@@ -68,13 +94,18 @@
       }
       .n-modal {
         transition: all 0.4s ease-in-out;
-        max-height: 70vh;
+        max-height: 87vh;
+        width: 95vw;
+        max-width: 600px;
+        flex-grow: 1;
+        flex-shrink: 1;
+        height: 70vh;
         margin-bottom: 0px;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         padding-bottom: env(safe-area-inset-bottom);
         box-shadow: var(--box-shadow);
-        border: solid 1px var(--color-inverse-3);
+        border: solid 1px var(--color-faded-1);
       }
     }
     &.type-fullscreen {
@@ -120,6 +151,7 @@
     min-height: 200px;
     max-height: 90vh;
     max-width: 400px;
+    position: relative;
     margin: 10px;
     border-radius: 1.2rem;
     display: flex;
@@ -129,6 +161,7 @@
     border: var(--modal-border);
     box-shadow: var(--box-shadow-float);
     transition: all 0.2s ease-in-out;
+
     .n-modal-body {
       flex-grow: 1;
       @include media-breakpoint-up(md) {
@@ -146,6 +179,17 @@
       max-width: 700px;
       max-height: 700px;
 
+      @include media-breakpoint-down(sm) {
+        height: 100vh;
+        width: 100vw;
+        max-height: 100vh;
+        max-width: 100vh;
+        margin: 0 !important;
+      }
+
+      .n-modal-footer {
+        padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+      }
       .n-modal-body {
         &.flex-body {
           position: relative;
@@ -157,8 +201,12 @@
       }
     }
   }
+
+  .n-modal-raw-header {
+    z-index: 2;
+  }
+
   .n-modal-header {
-    padding: 10px 16px;
     min-height: 40px;
     border-bottom: solid 1px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -205,36 +253,43 @@
 </style>
 
 <div
+  on:click={backgroundTap}
   class="n-modal-frame {className} type-{type}
   {domVisible ? 'visible' : 'hidden'}">
   <div
-    class="n-modal {fullscreen ? 'full-screen-modal' : ''}
+    on:click|stopPropagation={() => {}}
+    class="n-modal animate up {fullscreen ? 'full-screen-modal' : ''}
     {domVisible ? 'visible' : 'hidden'}">
-    {#if has_header || title}
+    {#if has_raw_header}
+      <div class="n-modal-raw-header">
+        <slot name="raw-header" />
+      </div>
+    {:else if has_header || title}
       <div class="n-modal-header">
         {#if has_header}
           <slot name="header" />
         {:else}
-          {#if allowClose}
-            <button
-              class="btn btn-clear btn-icon zmdi zmdi-close"
-              on:click={() => {
-                dispatch('close');
-              }} />
-          {/if}
-          <NText tag="div" bold size="lg" className="text-center w-100 py-1">
-            {title}
-          </NText>
-          {#if allowClose}
-            <button class="btn btn-clear btn-icon zmdi" on:click={() => {}} />
-          {/if}
+          <NToolbarGrid>
+            <div slot="left">
+              {#if allowClose}
+                <button
+                  class="btn btn-clear btn-icon tap-icon"
+                  on:click={() => {
+                    dispatch('close');
+                  }}>
+                  <NIcon name="close" />
+                </button>
+              {/if}
+            </div>
+            <h1 slot="main">{title}</h1>
+          </NToolbarGrid>
         {/if}
-
       </div>
     {/if}
     <div
-      class="n-modal-body {padding ? 'padding' : 'no-padding'}
-      {flexBody ? 'flex-body' : 'no-flex-body'}">
+      class="{bodyClass} n-modal-body {padding ? 'padding' : 'no-padding'}
+      {flexBody ? 'flex-body' : 'no-flex-body'}
+      ">
       <slot />
     </div>
     {#if has_footer}

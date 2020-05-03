@@ -2,17 +2,25 @@
   //Vendors
   import { navigate, Router, Route } from "svelte-routing";
   import { tap } from "@sveltejs/gestures";
+
   import { onMount, onDestroy } from "svelte";
 
   // Utils
   import Logger from "../utils/log/log";
   import arrayUtils from "../utils/array/array_utils";
+  import tick from "../utils/tick/tick";
   // Modules
   import Tracker from "../modules/tracker/tracker";
   // Components
+  import NIcon from "../components/icon/icon.svelte";
   import NText from "../components/text/text.svelte";
+  import NInput from "../components/input/input.svelte";
   import NItem from "../components/list-item/list-item.svelte";
   import NTrackerButton from "../containers/board/tracker-button.svelte";
+  import NBall from "../components/tracker-ball/ball.svelte";
+  import NBackButton from "../components/back-button/back-button.svelte";
+
+  import NSortableList from "../components/sortable-list/sortable-list.svelte";
 
   // containers
   import NPage from "../containers/layout/page.svelte";
@@ -20,14 +28,14 @@
   //store
   import { BoardStore } from "../store/boards";
   import { UserStore } from "../store/user";
-  import { TrackerStore } from "../store/trackers";
+  import { TrackerStore } from "../store/tracker-store";
   import { Interact } from "../store/interact";
   import { Lang } from "../store/lang";
 
   const console = new Logger("🎲 Board Editor");
   let trackers = [];
 
-  let data = {
+  const data = {
     board: null,
     updatedLabel: null,
     trackers: null,
@@ -43,27 +51,51 @@
   let ready = false;
   let path = window.location.href.split("/");
   let id = path[path.length - 1];
+
   let showDeletes = true;
-  let isMobile =
-    typeof window.orientation !== "undefined" ||
-    navigator.userAgent.indexOf("IEMobile") !== -1;
 
-  // $: if ((data.board || {}).hasOwnProperty("trackers")) {
-  //   data.trackers = data.board.trackers.map(tag => {
-  //     return $TrackerStore[tag] || new Tracker({ tag: tag });
-  //   });
-  // }
-
-  $: if ($BoardStore.activeBoard && ready == false) {
+  // Reactive Moments!
+  $: if (
+    // If board is active and not ready, and not ALL Board
+    $BoardStore.activeBoard &&
+    ready == false &&
+    $BoardStore.activeBoard.id != "all"
+  ) {
     ready = true;
     data.updatedLabel = $BoardStore.activeBoard.label;
+    data.board = $BoardStore.activeBoard;
+  } else if (id == "all" && ready == false) {
+    // If ALL board and not ready...
+    ready = true;
+    // Set up the all board
+    data.board = BoardStore.boardById("all") || {
+      id: "all",
+      trackers: [],
+      label: "All"
+    };
+    // Set trackers to ALL trackers, sorted by the ALL board tracker list.
+    data.board.trackers = Object.keys($TrackerStore.trackers).sort((a, b) => {
+      if (data.board.trackers.indexOf(a) > data.board.trackers.indexOf(b)) {
+        return 1;
+      } else if (
+        data.board.trackers.indexOf(a) < data.board.trackers.indexOf(b)
+      ) {
+        return -1;
+      } else {
+        return a > b ? 1 : -1;
+      }
+    });
+    trackers = data.board.trackers
+      .map(tag => $TrackerStore.trackers[tag])
+      .filter(t => t);
   }
 
-  // $: if (data.draggingTag && data.draggingTag !== data.lastDraggingTag) {
-  //   data.lastDraggingTag = data.draggingTag;
-  //   data.draggingTracker =
-  //     $TrackerStore[data.draggingTag] || new Tracker({ tag: data.draggingTag });
-  // }
+  let titleChange = false;
+  $: if (data.updatedLabel !== (data.board || {}).label) {
+    titleChange = true;
+  } else {
+    titleChange = false;
+  }
 
   const methods = {
     refresh() {
@@ -72,40 +104,53 @@
         data.refreshing = false;
       }, 100);
     },
-    initialize() {},
-    getTrackers() {},
-    save() {
-      $BoardStore.activeBoard.label = data.updatedLabel;
-      BoardStore.saveBoard($BoardStore.activeBoard).then(() => {
-        window.history.back();
-      });
-    },
-    deleteBoard() {
-      Interact.confirm(
-        "Delete " + $BoardStore.activeBoard.label + " tab?",
-        "You can recreate it later, but it's not super easy."
-      ).then(res => {
-        if (res === true) {
-          data.refreshing = true;
-          BoardStore.deleteBoard($BoardStore.activeBoard.id).then(() => {
-            navigate("/");
+    /**
+     * Save the Current Active Board
+     */
+    async save(options = {}) {
+      options.silent = options.silent == false ? false : true;
+      try {
+        // If the Active Board is set...
+        if ($BoardStore.activeBoard) {
+          BoardStore.update(state => {
+            state.activeBoard.label = data.updatedLabel;
+            state.activeBoard.trackers = trackers.map(tracker => tracker.tag);
+            return state;
           });
         }
-      });
+        // Wait 10ms then Save
+        await tick(10);
+        let saved = await BoardStore.saveBoard(data.board);
+        // If not silent show toast
+        if (!options.silent) {
+          Interact.toast(Lang.t("general.saved", "Saved"));
+        }
+      } catch (e) {
+        Interact.alert(Lang.t("general.error", "Error"), e.message);
+      }
+    },
+    async deleteBoard() {
+      let confirmed = await Interact.confirm(
+        "Delete " + data.board.label + " tab?",
+        "You can recreate it later, but it's not super easy."
+      );
+      if (confirmed === true) {
+        data.refreshing = true;
+        await BoardStore.deleteBoard(data.board.id);
+        navigate("/");
+        Interact.toast("Deleted");
+      }
     },
     removeTracker(event, tracker) {
       event.preventDefault();
       event.stopPropagation();
       Interact.confirm(
-        `Remove ${tracker.label} from ${$BoardStore.activeBoard.label}?`,
+        `Remove ${tracker.label} from ${data.board.label}?`,
         "You can always add it later."
       ).then(res => {
         if (res === true) {
           event.preventDefault();
-          BoardStore.removeTrackerFromBoard(
-            tracker,
-            $BoardStore.activeBoard.id
-          ).then(() => {
+          BoardStore.removeTrackerFromBoard(tracker, data.board.id).then(() => {
             data.refreshing = true;
             setTimeout(() => {
               data.refreshing = false;
@@ -116,39 +161,15 @@
     },
     trackerIndex(tracker) {
       return trackers.indexOf(tracker);
-    },
-    moveUp(tracker) {
-      let index = methods.trackerIndex(tracker);
-      console.log("Move Up", index);
-      if (index > 0) {
-        setTimeout(() => {
-          BoardStore.update(b => {
-            b.activeBoard.trackers = arrayUtils
-              .move(trackers, index, index - 1)
-              .map(r => r.tag);
-            return b;
-          });
-        }, 120);
-        // BoardStore.update(b => {
-        //   b.activeBoard.trackers = arr;
-        //   return b;
-        // });
-      }
-    },
-    moveDown(tracker) {
-      let index = methods.trackerIndex(tracker);
-      if (index < trackers.length - 1) {
-        setTimeout(() => {
-          BoardStore.update(b => {
-            b.activeBoard.trackers = arrayUtils
-              .move(trackers, index, index + 1)
-              .map(r => r.tag);
-            return b;
-          });
-        }, 120);
-      }
     }
   };
+
+  async function trackersSorted(evt) {
+    trackers = evt.detail;
+    data.board.trackers = trackers.map(tracker => tracker.tag);
+    await tick(100);
+    methods.save({ silent: true });
+  }
 
   let boardUnsub;
 
@@ -156,10 +177,10 @@
     boardUnsub = BoardStore.subscribe(b => {
       if (b.activeBoard) {
         trackers = b.activeBoard.trackers.map(tag => {
-          return $TrackerStore[tag] || new Tracker({ tag: tag });
+          return $TrackerStore.trackers[tag] || new Tracker({ tag: tag });
         });
       } else {
-        navigate("/");
+        // navigate("/");
       }
     });
   });
@@ -169,84 +190,20 @@
   });
 
   UserStore.onReady(() => {
-    methods.initialize();
+    // methods.initialize();
   });
+
+  let list = [
+    { id: 1, name: "First Item" },
+    { id: 2, name: "Second Item" },
+    { id: 3, name: "Third Item" }
+  ];
+  const sortList = ev => {
+    trackers = ev.detail;
+  };
 </script>
 
 <style lang="scss">
-  .input-group {
-    .input-group-text {
-      color: var(--color-inverse-2);
-      background-color: var(--color-faded-1);
-    }
-    input {
-      padding-left: 16px;
-    }
-  }
-  div.tracker-grabber {
-    position: relative;
-    padding: 8px;
-    margin: 0px;
-    .btn-delete {
-      $size: 30px;
-      width: $size;
-      max-width: $size;
-      height: $size;
-      padding: 0;
-      border-radius: $size * 0.5;
-      background-color: #fff;
-      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
-      font-size: $size * 0.6;
-      line-height: $size;
-      border: none;
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 100;
-    }
-    // transition: all 0.4s ease-in-out;
-    &.hovered {
-      // transition: all 0.8s ease-in-out;
-      padding-left: 120px;
-      position: relative;
-      &:after {
-        content: "Here";
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--color-faded-2);
-        background-color: var(--color-faded);
-        border: dotted 3px var(--color-faded-3);
-        border-radius: 12px;
-        top: 12px;
-        left: 12px;
-        right: 55%;
-        bottom: 6px;
-        position: absolute;
-      }
-    }
-  }
-
-  :global(div.tracker-grabber .n-tracker-button) {
-    pointer-events: none;
-    &:after {
-      position: absolute;
-      z-index: 1200;
-      content: "";
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-  } // end global
-
-  .grid {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-  }
   .grid-container {
     display: flex;
     flex-direction: column;
@@ -254,147 +211,94 @@
     min-height: 50vh;
   }
 
-  #ball {
-    background-color: red;
-    height: 20px;
-    width: 20px;
-    position: fixed;
-    z-index: 3000;
-    border-radius: 10px;
-    display: none;
-  }
-
   .btn-group {
     .btn {
       width: 36px;
     }
   }
-  .notice {
-    position: fixed;
-    bottom: 70px;
-    left: 10px;
-    right: 10px;
-    padding: 5px;
-    border: solid 1px blue;
-    color: blue;
-  }
 
   // Animation from https://www.kirupa.com/html5/creating_the_ios_icon_jiggle_wobble_effect_in_css.htm
 </style>
 
-{#if $BoardStore.activeBoard}
-  <NPage className="stats" withBack={true}>
+{#if data.board}
+  <NPage>
 
-    <div slot="header" class="n-row">
-      <h1 class="text-center flex-grow text-inverse">Edit Tab</h1>
-      <button class="btn btn btn-clear text-danger " on:click={methods.save}>
-        {Lang.t('general.save')}
-      </button>
-    </div>
-
-    <div slot="sub-header" class="py-1">
-      <NItem className="w-100 p-0 ">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Label</span>
-          </div>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Board Label"
-            aria-label="Board Label"
-            bind:value={data.updatedLabel}
-            aria-describedby="basic-addon1" />
-        </div>
-      </NItem>
+    <div class="n-toolbar-grid container" slot="header">
+      <div class="left">
+        <NBackButton />
+      </div>
+      <div class="main">
+        <h1 class="title">
+          {#if data.board.id == 'all'}
+            All Tab Sorting
+          {:else}Edit {data.board.label}{/if}
+        </h1>
+      </div>
     </div>
     <!-- /.container -->
 
-    <div class="container pt-3 px-0 grid-container">
+    <div class="container px-0">
 
-      <div class="n-list">
-        {#each trackers as tracker, i (tracker.tag)}
-          <NItem>
-            <div slot="right" class="n-row">
-              <button
-                class="btn btn-icon zmdi zmdi-close text-red"
-                on:click={evt => {
-                  methods.removeTracker(evt, tracker);
-                }} />
-            </div>
-            <div class="n-row filler">
-              <div class="emoji text-lg mr-2">{tracker.emoji}</div>
-              {tracker.label}
-              <div class="filler" />
-            </div>
-            <div class="btn-group flex-shrink-off" slot="left">
-              <button
-                class="btn px-2 btn-lg btn-light {i === 0 ? 'disabled' : ''}"
-                on:click={() => {
-                  methods.moveUp(tracker);
-                }}>
-                <i class="zmdi zmdi-long-arrow-up" />
-              </button>
-              <button
-                class="btn px-2 btn-lg btn-light {i === trackers.length - 1 ? 'disabled' : ''}"
-                on:click={() => {
-                  methods.moveDown(tracker);
-                }}>
-                <i class="zmdi zmdi-long-arrow-down" />
-              </button>
-            </div>
+      <div class="n-list pt-2">
+        {#if data.board.id !== 'all'}
+          <NItem className="py-2">
+            <NInput
+              type="text"
+              placeholder="Tab Label"
+              bind:value={data.updatedLabel}>
+              <div slot="right">
+                {#if data.updatedLabel != data.board.label}
+                  <button
+                    class="btn text-primary-bright"
+                    on:click={methods.save}>
+                    {Lang.t('general.save')}
+                  </button>
+                {/if}
+              </div>
+
+            </NInput>
           </NItem>
-        {/each}
+        {/if}
+        {#if trackers}
+          <NSortableList
+            bind:items={trackers}
+            handle=".menu-handle"
+            key="tag"
+            on:update={trackersSorted}
+            let:item>
+            <NItem className="py-2 bottom-line">
+              <div slot="left" class="n-row">
+                <button
+                  class="btn btn-icon fill-red mr-2"
+                  on:click={evt => {
+                    methods.removeTracker(evt, item);
+                  }}>
+                  <NIcon name="remove" className="fill-red" />
+                </button>
+                <NBall className="frame" emoji={item.emoji} size={40} />
+              </div>
+              {item.label}
+              <div slot="right" class="menu-handle">
+                <NIcon className="fill-inverse" name="sort" />
+              </div>
+            </NItem>
+          </NSortableList>
+        {/if}
       </div>
 
-      <!-- <div
-        class="grid"
-        id="edit-grid"
-        on:drop={methods.drag.drop}
-        on:touchend={methods.drag.touchend}
-        on:dragover={methods.drag.over}
-        on:dragleave={methods.drag.leave}>
-        {#each methods.getTrackers() as tracker, i (tracker.tag)}
-          <NItem>
-            <div class="emoji" slot="left" />
-            <h1 class="title">{tracker.label}</h1>
-          </NItem> -->
-
-      <!-- <div
-            class="tracker-grabber {data.hoverTag == tracker.tag ? 'hovered' : ''}"
-            data-id={tracker.tag}
-            id={tracker.tag}
-            draggable={true}
-            on:touchmove={event => methods.drag.touchmove(event, i)}
-            on:touchend={methods.drag.touchend}
-            xon:touchstart={event => methods.drag.start(event, i, 'touch')}
-            on:dragstart={event => methods.drag.start(event, i)}>
-            {#if showDeletes}
-              <button
-                class="btn-delete zmdi zmdi-close"
-                on:click={event => {
-                  methods.removeTracker(event, tracker);
-                }} />
-            {/if}
-            <NTrackerButton
-              {tracker}
-              className={i % 2 ? 'wiggle' : 'wiggle-other'} />
-          </div> -->
-      <!-- {/each}
-        <div id="ball" />
+    </div>
+    {#if data.board.id != 'all'}
+      <div class="n-row p-2">
+        <div class="filler" />
+        <button
+          class="btn btn btn-clear text-danger "
+          on:click={methods.deleteBoard}>
+          <NIcon name="delete" className="fill-red" />
+          Delete Tab
+        </button>
+        <div class="filler" />
       </div>
-      <div class="filler" /> -->
-
-    </div>
-    <div class="n-row p-2">
-      <div class="filler" />
-      <button
-        class="btn btn btn-clear text-danger "
-        on:click={methods.deleteBoard}>
-        Delete this Tab
-      </button>
-      <div class="filler" />
-    </div>
+    {/if}
   </NPage>
 {:else}
   <NPage>

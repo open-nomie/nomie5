@@ -1,6 +1,13 @@
 // Variables and mixins
 @import "./utils/_utils";
 
+/**
+Why have a SCSS file when you can do it directly in the components?
+It's not easy to style children components within a component, 
+so i've opted to have the scss file be the override, and to fill in 
+where a component doesn't exist, or isn't needed.
+**/
+
 // Vendors
 @import "./vendor/bootstrap/bootstrap";
 
@@ -11,6 +18,12 @@
 @import "./base/forms";
 @import "./base/flex";
 @import "./base/animate";
+@import "./base/opacity";
+@import "./base/clickable";
+@import "./base/container";
+@import "./base/touch";
+@import "./base/position";
+@import "./base/size";
 
 // Components
 @import "./components/board-tabs";
@@ -24,48 +37,30 @@
 @import "./components/tracker-input-modal";
 @import "./components/tracker-button";
 @import "./components/share-image";
+@import "./components/grid";
+@import "./components/app-panel";
+@import "./components/item-ball";
+@import "./components/toolbar";
+@import "./components/n-log-item";
+@import "./components/badge";
+@import "./components/memories";
+@import "./components/time-bar";
+@import "./components/photo-holder";
+@import "./components/main-content";
+@import "./components/card";
+@import "./components/tap-icon-text";
+@import "./components/offline-notice";
+@import "./components/n-layout";
+@import "./components/capture-log";
+
+@import "./components/loading-screen";
+
+@import "./pages/setup";
 
 /**
 THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 
 TODO: Organize main into components or containers. 
 **/
-
-.input-model {
-  flex-grow: 1;
-  height: 100%;
-  &.type-range {
-    .keypad-holder {
-      display: none;
-    }
-  }
-  &.type-value {
-    .tracker-input.slider {
-      display: none;
-    }
-  }
-}
-
-.text-underline {
-  text-decoration: underline !important;
-}
-
-.container-sm {
-  max-width: 800px;
-}
-
-.click-thru {
-  display: block;
-  width: 100%;
-  border: none;
-  background: none;
-  -webkit-appearance: none;
-  padding: 0;
-  margin: 0;
-}
-
-.pointer {
-  cursor: pointer;
-}
 
 .gap {
   height: 16px;
@@ -76,348 +71,15 @@ TODO: Organize main into components or containers.
   background-color: var(--color-bg) !important;
 }
 
-.delete-on-app {
-  transition: all 1s ease-in-out;
-  .version {
-    background-color: rgba(255, 255, 255, 0.5);
-    color: var(--color-primary);
-    font-weight: bold;
-    z-index: 3000;
-  }
-
-  &.deleted {
-    transition: all 0.5s ease-in-out;
-    opacity: 0;
-    transform: scale(1.7);
-
-    .version {
-      bottom: 1000px;
-      opacity: 0;
-    }
-    svg {
-      // transition: all 0.3s ease-in-out;
-      // transform: scale(2);
-    }
-  }
-}
-
-.loading-screen {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 4000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &.deleted {
-  }
-
-  &:before {
-    transition: all 0.5s ease-in-out;
-    content: "";
-    background-color: #fff;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 300;
-  }
-  &:after {
-    transition: all 0.5s ease-in-out;
-    content: "";
-    background-image: url(/images/nomie-splash.svg);
-    background-size: cover;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 400;
-    background-position: center;
-  }
-
-  // svg {
-  // 	transition: all 0.3s ease-in-out;
-  // }
-}
-.version {
-  position: absolute;
-  width: 100px;
-  bottom: 50px;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
-  margin-left: -50px;
-  left: 50%;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  height: 24px;
-  line-height: 24px;
-  padding: 0 12px;
-  text-align: center;
-}
-
-.n-item.bg-light {
-  background-color: var(--color-bg) !important;
-  &.text-faded {
-    color: var(--color-inverse-3) !important;
-  }
-}
-
-.n-title {
-  flex-direction: column;
-  font-size: 1.2rem !important;
-  font-weight: 700 !important;
-  color: var(--color-inverse);
-  line-height: 120%;
-  margin: 0;
-  small {
-    display: block;
-    font-size: 0.75rem;
-    line-height: 0.75rem;
-    opacity: 0.8;
-  }
-}
-
-$morning-alt: #fe8300;
-$morning: rgb(255, 204, 0);
-
-$afternoon-alt: rgb(0, 255, 21);
-$afternoon: rgb(0, 166, 255);
-
-$evening-alt: rgb(62, 9, 252);
-$evening: rgb(145, 25, 220);
-
-$night-alt: #c3727c;
-$night: #311f62;
-
-.glow {
-  &.glow-morning {
-    box-shadow: 0px 2px 24px -10px rgba($morning, 0.2),
-      0px 3px 10px -2px rgba($morning-alt, 0.1) !important;
-  }
-  &.glow-afternoon {
-    box-shadow: 0px 2px 24px -10px rgba($afternoon, 0.1),
-      0px 3px 10px -2px rgba($afternoon-alt, 0.1) !important;
-  }
-  &.glow-evening {
-    box-shadow: 0px 2px 24px -10px rgba($evening, 0.1),
-      0px 3px 10px -2px rgba($evening-alt, 0.1) !important;
-  }
-  &.glow-night {
-    box-shadow: 0px 2px 24px -10px rgba($night, 0.2),
-      0px 3px 10px -2px rgba($night-alt, 0.2) !important;
-  }
-}
-
-.card {
-  $padding: 16px;
-  border-radius: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  z-index: 120;
-  .card-body {
-    padding: $padding;
-    min-height: 0;
-  }
-  p,
-  .card-body {
-    font-size: 0.9rem;
-  }
-  .card-title {
-    $paddingTop: $padding * 0.7;
-    padding: $paddingTop $padding;
-    font-weight: bold;
-    font-size: 1.2rem;
-  }
-}
-
-.mw-500px {
-  max-width: 500px !important;
-}
-
-// nav {
-//   position: fixed;
-//   bottom: 0;
-//   left: 0;
-//   right: 0;
-//   height: 40px;
-//   background-color: rgba(0, 0, 0, 0.1);
-//   display: flex;
-//   align-items: center;
-//   width: 100%;
-// }
-
-.main-content {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 0;
-  flex-grow: 1;
-  flex-shrink: 1;
-  min-height: calc(100vh - 50px) !important;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-bottom: 50px;
-
-  // background-color: var(--color-bg);
-  // background-color: red !important;
-}
-
-.clickable,
-[clickable] {
-  position: relative;
-  cursor: pointer;
-  touch-action: manipulation;
-}
-.clickable:hover,
-.clickable:focus {
-  background-color: rgba($primaryBright, 0.09);
-}
-.btn,
-a,
-input,
-header,
-footer,
-button {
-  touch-action: manipulation;
-}
-.filler {
-  flex-grow: 1;
-  flex-shrink: 1;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.justify-content-between {
-  justify-content: space-between;
+.fake-link {
+  border-bottom: dotted 1px var(--color-primary-bright);
+  color: var(--color-primary-bright);
 }
 
 .page {
   display: flex;
-  min-height: calc(100vh - 120px);
+  // min-height: calc(100vh - 120px);
+  min-height: fit-content;
   flex-grow: 1;
   background-color: var(--color-bg);
-}
-
-@keyframes keyframes1 {
-  0% {
-    transform: rotate(-1.2deg);
-    animation-timing-function: ease-in-out;
-  }
-  50% {
-    transform: rotate(1.7deg);
-    animation-timing-function: ease-in-out;
-  }
-}
-
-@keyframes keyframes2 {
-  0% {
-    transform: rotate(1.2deg);
-    animation-timing-function: ease-in-out;
-  }
-  50% {
-    transform: rotate(-1.7deg);
-    animation-timing-function: ease-in-out;
-  }
-}
-
-@keyframes shadow-pulse {
-  0% {
-    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
-  }
-  100% {
-    box-shadow: 0 0 0 35px rgba(0, 0, 0, 0);
-  }
-}
-
-.wiggle {
-  animation: keyframes2 infinite 0.6s ease-out;
-  transform-origin: 50% 10%;
-}
-.wiggle-other {
-  animation: keyframes2 infinite 0.6s ease-in;
-  transform-origin: 50% 10%;
-}
-
-.pulse {
-  transform: scale(1);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    // transform: scale3d(0.95);
-    box-shadow: 0 0 0 0 rgba($green, 0.3);
-  }
-
-  70% {
-    // transform: scale3d(1);
-    box-shadow: 0 0 0 10px rgba($green, 0);
-  }
-
-  100% {
-    // transform: scale3d(0.95);
-    box-shadow: 0 0 0 0 rgba($green, 0);
-  }
-}
-
-.offline-notice {
-  background-color: $red;
-  color: #fff;
-  font-size: 0.7rem;
-  padding: 2px 10px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 5000;
-}
-
-.badge {
-  height: 22px;
-  border-radius: 11px;
-  padding: 0 12px;
-  line-height: 22px;
-  background-color: var(--color-primary);
-  color: #000;
-  font-size: 11px;
-  border: var(--color-primary);
-
-  &.badge-lg {
-    font-size: 1rem;
-    height: 2rem;
-    border-radius: 1rem;
-    line-height: 2rem;
-    padding: 0 18px;
-  }
-  &.badge-md {
-    font-size: 0.8rem;
-    height: 1.6rem;
-    border-radius: 0.8rem;
-    line-height: 1.6rem;
-    padding: 0 14px;
-  }
-}
-.badge-primary {
-  background-color: var(--color-primary);
-  color: #fff;
-}
-.badge-blue {
-  background-color: var(--color-blue);
-  color: #fff;
-}
-.badge-green {
-  background-color: var(--color-green);
-  color: #fff;
-}
-.badge-light {
-  background-color: var(--color-solid-2);
-  color: var(--color-inverse-2);
 }

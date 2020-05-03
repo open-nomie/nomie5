@@ -4,14 +4,16 @@
    */
 
   // Svelte
-  import { createEventDispatcher } from "svelte";
-
+  import { createEventDispatcher, onMount } from "svelte";
+  const dispatch = createEventDispatcher();
   // Utils
 
   import math from "../../utils/math/math";
 
   // vendor
   import { scaleLinear } from "d3-scale";
+  import { UserStore } from "../../store/user";
+  import NIcon from "../icon/icon.svelte";
 
   export let labels = [];
   export let height = 200;
@@ -26,12 +28,15 @@
   const xTicks = labels;
   let yTicks = [0, 5, 10, 20];
   const padding = { top: 30, right: 15, bottom: 25, left: 25 };
-  const dispatch = createEventDispatcher();
 
   let finalPoints = [];
   let lastPoints = null;
-  $: if (points && points !== lastPoints) {
-    lastPoints = points;
+
+  $: hourFormat = $UserStore.meta.is24Hour ? "ddd HH" : "ddd ha";
+
+  $: if (points && JSON.stringify(points) !== JSON.stringify(lastPoints)) {
+    lastPoints = JSON.stringify(points);
+
     if (points.length) {
       let values = points.map(point => point.y);
 
@@ -60,6 +65,26 @@
   $: innerWidth = width - (padding.left + padding.right);
   $: barWidth = innerWidth / xTicks.length;
 
+  let lastActiveIndex;
+
+  $: if (activeIndex != lastActiveIndex) {
+    lastActiveIndex = activeIndex;
+  }
+
+  function showValue(value, index) {
+    return true;
+  }
+
+  function showLabel(label, index) {
+    if (labels.length > 12 && labels.length < 24) {
+      return index % 2;
+    } else if (labels.length >= 24) {
+      return index % 4 != 0 ? false : true;
+    } else {
+      return true;
+    }
+  }
+
   const methods = {
     onTap(event, data) {
       dispatch("tap", data);
@@ -75,6 +100,8 @@
       return isNaN(value) ? base : value;
     }
   };
+
+  onMount(() => {});
 </script>
 
 <style lang="scss">
@@ -104,7 +131,7 @@
   }
 
   .tick text {
-    fill: #ccc;
+    fill: var(--color-inverse-3);
     text-anchor: start;
   }
 
@@ -117,27 +144,28 @@
   }
   .title {
     position: absolute;
-    top: 0px;
-    left: 0px;
-    font-size: 0.67rem;
+    top: -2px;
+    left: 20px;
+
+    font-size: 0.7rem;
     color: var(--color-inverse);
   }
   .active-item {
     position: absolute;
-    top: -4px;
-    right: -4px;
+    top: 2px;
+    right: 0px;
     // background-color: var(--color-solid);
     color: var(--color-inverse);
     // border-radius: 4px;
     // box-shadow: var(--box-shadow-tight);
     z-index: 120;
     padding: 4px 10px;
-    font-size: 0.67rem;
+    font-size: 0.7rem;
     display: flex;
-    opacity: 0.6;
+
     .value {
       color: #fff;
-      background-color: rgba(0, 0, 0, 0.5);
+      text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
       border-radius: 10px;
       padding: 0 6px;
     }
@@ -160,29 +188,50 @@
 </style>
 
 {#if points}
-  <div class="n-chart" bind:clientWidth={width} bind:clientHeight={height}>
+  <div
+    class="n-chart"
+    bind:clientWidth={width}
+    bind:clientHeight={height}
+    on:swiperight={() => {
+      dispatch('swipeRight');
+    }}
+    on:swipeleft={() => {
+      dispatch('swipeLeft');
+    }}>
     {#if title}
-      <div class="title">{title}</div>
+      <div
+        class="title clickable truncate"
+        style="z-index:120;"
+        on:click={() => {
+          dispatch('titleClick', title);
+        }}>
+        {title}
+        <NIcon name="chevronRight" size="14" />
+      </div>
     {/if}
     <svg height={`${height}px`}>
       <!-- y axis -->
       <g class="axis y-axis" transform="translate(0,{padding.top})">
-        {#each yTicks as tick}
-          <g
-            class="tick tick-{tick}"
-            transform="translate(0, {yScale(tick) - padding.bottom})">
-            <line x2="100%" />
-            <text y="-4">{yFormat(tick)} {tick === 20 ? '' : ''}</text>
-          </g>
+        {#each yTicks as tick, index}
+          {#if showValue(tick, index)}
+            <g
+              class="tick tick-{tick}"
+              transform="translate(0, {yScale(tick) - padding.bottom})">
+              <line x2="100%" />
+              <text y="-4">{yFormat(tick)} {tick === 20 ? '' : ''}</text>
+            </g>
+          {/if}
         {/each}
       </g>
 
       <!-- x axis -->
       <g class="axis x-axis">
         {#each points as point, i}
-          <g class="tick" transform="translate({xScale(i)},{height})">
-            <text x={barWidth / 2} y="-4">{xFormat(point.x)}</text>
-          </g>
+          {#if showLabel(points, i)}
+            <g class="tick" transform="translate({xScale(i)},{height})">
+              <text x={barWidth / 2} y="-4">{xFormat(point.x)}</text>
+            </g>
+          {/if}
         {/each}
       </g>
 
@@ -190,14 +239,10 @@
         {#each points as point, i}
           <rect
             on:click={event => {
-              methods.onTap(event, {
-                index: i,
-                point: points[i],
-                label: labels[i]
-              });
+              methods.onTap(event, { index: i, point: point });
             }}
             rx="4"
-            class="bar {activeIndex === i + 1 ? 'active' : ''}"
+            class="bar {activeIndex === i ? 'active' : ''}"
             ry="4"
             style="fill: {color}"
             x={xScale(i) + 2}
@@ -207,13 +252,19 @@
         {/each}
       </g>
     </svg>
-    {#if activeIndex && points[activeIndex - 1]}
+    {#if activeIndex !== undefined && points[activeIndex] !== undefined}
       <div class="active-item">
         <label>
-          {points[activeIndex - 1].date.format(points.length == 12 ? 'MMM YYYY' : 'ddd MMM D')}
+          {#if points[activeIndex].unit == 'hour'}
+            {points[activeIndex].date.format(hourFormat)}
+          {:else if points[activeIndex].unit == 'day'}
+            {points[activeIndex].date.format('ddd MMM Do')}
+          {:else if points[activeIndex].unit == 'month'}
+            {points[activeIndex].date.format('MMM YYYY')}
+          {/if}
         </label>
         <div class="value" style="background-color:{color}">
-          {yFormat(points[activeIndex - 1].y)}
+          {yFormat(points[activeIndex].y)}
         </div>
       </div>
     {/if}

@@ -10,10 +10,12 @@
   // Components
   import NText from "../components/text/text.svelte";
   import NItem from "../components/list-item/list-item.svelte";
+  import NBackButton from "../components/back-button/back-button.svelte";
+  import NIcon from "../components/icon/icon.svelte";
   // containers
-  import NPage from "../containers/layout/page.svelte";
+  import NLayout from "../containers/layout/layout.svelte";
   // config
-  import { TrackerStore } from "../store/trackers";
+  import { TrackerStore } from "../store/tracker-store";
   import { Interact } from "../store/interact";
   import { Lang } from "../store/lang";
   import dayjs from "dayjs";
@@ -71,7 +73,7 @@
       ).then(res => {
         if (res === true) {
           Export.onChange(change => {
-            Interact.toast(`Export: ${change}`, true);
+            Interact.toast(`Export: ${change}`, { perm: true });
           });
           Export.start().then(() => {
             Interact.toast(Lang.t("settings.export-complete"));
@@ -84,8 +86,14 @@
   onMount(() => {});
 </script>
 
-<NPage className="Export" title="Export" withBack={true}>
-
+<NLayout pageTitle="Export your Data" className="Export">
+  <div class="n-toolbar-grid container" slot="header">
+    <div class="left">
+      <NBackButton />
+    </div>
+    <div class="title main">Export</div>
+    <div class="right" />
+  </div>
   <div class="btn-group w-100" slot="sub-header">
     <button
       class="btn btn-sm {type == 'backup' ? 'active' : ''}"
@@ -105,52 +113,54 @@
 
   {#if type == 'csv'}
     <div class="container csv">
-      <div class="gap" />
-      <NItem>
+
+      <NItem className="mx-2 bg-transparent">
         <p class="text-sm">{Lang.t('export.csv.description')}</p>
       </NItem>
-      <div class="gap" />
-      <NItem title="Trackers" on:click={methods.selectTrackers}>
-        <div slot="right">
-          {#if state.trackers.length == Object.keys($TrackerStore).length}
-            <div class="text-primary">All Trackers</div>
-          {:else}
-            {#each state.trackers as tracker}{tracker.emoji}{/each}
-          {/if}
-        </div>
-      </NItem>
-      <NItem title={Lang.t('general.start')}>
-        <input
-          type="date"
-          class="form-control"
-          bind:value={state.start}
-          slot="right" />
-      </NItem>
-      <NItem title={Lang.t('general.end')}>
-        <input
-          type="date"
-          class="form-control"
-          bind:value={state.end}
-          slot="right" />
-      </NItem>
-      <div class="gap" />
+
+      <div class="n-list solo">
+        <NItem title="Trackers" on:click={methods.selectTrackers}>
+          <div slot="right">
+            {#if state.trackers.length == Object.keys($TrackerStore.trackers).length}
+              <div class="text-primary">All Trackers</div>
+            {:else}
+              {#each state.trackers as tracker}{tracker.emoji}{/each}
+            {/if}
+          </div>
+        </NItem>
+        <NItem title={Lang.t('general.start')}>
+          <input
+            type="date"
+            class="form-control"
+            bind:value={state.start}
+            slot="right" />
+        </NItem>
+        <NItem title={Lang.t('general.end')}>
+          <input
+            type="date"
+            class="form-control"
+            bind:value={state.end}
+            slot="right" />
+        </NItem>
+      </div>
+
       <NItem
         title={Lang.t('export.csv.download')}
-        className="text-primary clickable"
+        className="text-primary-bright clickable solo text-center"
         on:click={methods.exportCSV} />
     </div>
   {:else}
     <div class="container backup">
       <div class="gap" />
-      <NItem>
+      <NItem className="px-3 bg-transparent">
         <p class=" text-sm">{Lang.t('export.backup.description')}</p>
       </NItem>
       <div class="gap" />
       <NItem
         title={Lang.t('export.backup.download')}
-        className="text-primary clickable"
+        className="text-primary-bright clickable solo text-center"
         on:click={methods.export} />
     </div>
   {/if}
 
-</NPage>
+</NLayout>

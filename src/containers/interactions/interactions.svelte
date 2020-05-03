@@ -24,6 +24,7 @@
   // Containers
   import NMap from "../map/map.svelte";
   import TrackerSelector from "../tracker/selector/selector.svelte";
+  import NSelector from "../selector/selector.svelte";
   import NTrackerEditor from "../tracker/editor/editor.svelte";
   import TrackerInput from "../tracker/input/input.svelte";
   import LogEditor from "../log-editor/log-editor.svelte";
@@ -33,7 +34,7 @@
   import { ActiveLogStore } from "../../store/active-log";
   import { LedgerStore } from "../../store/ledger";
   import { BoardStore } from "../../store/boards";
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
 
   let promptInput;
   let logEditorTracker;
@@ -50,16 +51,15 @@
         return {
           value: log.trackers[tag].value || 0,
           tag: tag,
-          tracker: $TrackerStore[tag] || new Tracker({ tag: tag })
+          tracker: $TrackerStore.trackers[tag] || new Tracker({ tag: tag })
         };
       });
     },
     getTracker(tag) {
-      return $TrackerStore[tag] || new Tracker({ tag: tag });
+      return $TrackerStore.trackers[tag] || new Tracker({ tag: tag });
     },
     onCameraPhoto(photo) {
       const path = `camera/${md5(photo)}`;
-      // console.log(`Write payload ${payload.length} to ${path}`);
       Storage.put(path, photo).then(() => {
         if ($Interact.camera.onInteract) {
           $Interact.camera.onInteract(path);
@@ -238,6 +238,22 @@
     }
   }} />
 
+<NSelector
+  show={$Interact.selector.show}
+  multiple={$Interact.selector.multiple}
+  on:cancel={() => {
+    Interact.dismissSelector();
+  }}
+  on:select={event => {
+    let trackers = event.detail;
+    if ($Interact.selector.onInteract) {
+      $Interact.selector.onInteract(trackers);
+      Interact.dismissSelector();
+    } else {
+      Interact.dismissSelector();
+    }
+  }} />
+
 <!-- Share Image -->
 {#if $Interact.shareImage.log}
   <NShareImage />
@@ -252,14 +268,12 @@
         $Interact.trackerInput.onInteract(event.detail);
       }
       Interact.dismissTrackerInput();
-      ActiveLogStore.addTag(event.detail.tracker.tag, event.detail.value);
-      $ActiveLogStore.score = ActiveLogStore.calculateScore($ActiveLogStore.note, $TrackerStore);
+      $ActiveLogStore.score = ActiveLogStore.calculateScore($ActiveLogStore.note, $TrackerStore.trackers);
       LedgerStore.saveLog($ActiveLogStore).then(() => {
         ActiveLogStore.clear();
       });
     }}
     on:add={event => {
-      ActiveLogStore.addTag(event.detail.tracker.tag, event.detail.value);
       if ($Interact.trackerInput.onInteract) {
         $Interact.trackerInput.onInteract(event.detail);
       }
@@ -294,15 +308,16 @@
     on:close={() => {
       Interact.dismissEditLog();
     }}
-    on:save={evt => {
-      let log = evt.detail;
-      LedgerStore.updateLog(log, $Interact.logEditor.log.end)
-        .then(() => {
-          Interact.dismissEditLog();
-        })
-        .catch(e => {
-          Interact.alert(e.message);
-          Interact.dismissEditLog();
-        });
+    on:save={async evt => {
+      try {
+        let log = evt.detail;
+        let updatedLog = await LedgerStore.updateLog(log, $Interact.logEditor.log.end);
+        if ($Interact.logEditor.onInteract) {
+          $Interact.logEditor.onInteract(log);
+        }
+        Interact.dismissEditLog();
+      } catch (e) {
+        Interact.alert(e.message);
+      }
     }} />
 {/if}

@@ -44,6 +44,7 @@
 
 <style lang="scss" type="text/scss">
   :global(.alert-dialog) {
+    min-height: 200px;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -69,7 +70,7 @@
       }
     }
     .card {
-      border-radius: 1rem;
+      border-radius: 1.2rem;
       transition: all 0.2s ease-in-out;
       max-width: 400px;
       max-height: 80vh;
@@ -88,6 +89,9 @@
       .card-title {
         line-height: 115%;
         color: var(--color-inverse);
+        &.message {
+          padding-bottom: 6px;
+        }
       }
       .card-body {
         flex-grow: 1;
@@ -135,7 +139,7 @@
 
     <!-- -->
 
-    <div class="p-2 d-flex flex-row footer">
+    <div class="p-1 d-flex flex-row footer">
       {#if cancel}
         <button
           class="btn btn-lg btn-light mr-1 flex-grow"

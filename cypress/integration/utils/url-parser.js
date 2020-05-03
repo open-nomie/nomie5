@@ -1,13 +1,9 @@
 // Nomie ID
 import URLParser from "../../../src/utils/url-parser/url-parser";
-describe("modules/url-parser", function() {
+describe("modules/url-parser", function () {
   it("url should be truthy", () => {
     let url = URLParser("http://google.com");
     expect(url).to.exist;
-  });
-  it("url should be an object", () => {
-    let url = URLParser("http://google.com");
-    expect(url).to.be.an.object;
   });
 
   it("url should be valid", () => {

@@ -1,21 +1,23 @@
 <script>
   export let pinTop = undefined;
   export let className = "";
+  export let style = "";
 </script>
 
 <style lang="scss">
-  :global(.n-toolbar) {
+  .n-toolbar {
+    transition: all 0.2s ease-in-out;
     min-height: 50px;
     display: flex;
     align-items: center;
     justify-content: stretch;
 
-    padding: 0 16px;
+    padding: 0 8pt;
 
     h1,
     h2,
     h3 {
-      font-size: 1rem;
+      font-size: 1rem !important;
       margin: 0;
     }
 
@@ -44,7 +46,7 @@
       }
     }
     .container {
-      padding: 0px 10px;
+      // padding: 0px 10px;
     }
     [slot="sub-header"] {
       width: 100%;
@@ -53,21 +55,15 @@
   .n-toolbar.stretch {
     justify-content: stretch;
   }
-  :global(.n-toolbar .btn-clear) {
+  :global(.n-toolbar .btn-clear, .n-toolbar-grid .btn-clear) {
     border-radius: 0 !important;
     outline: none !important;
     padding: 0 10px;
     font-size: 1rem;
   }
-  :global(.n-toolbar .zmdi) {
-    font-size: 1.6rem !important;
-    &.text-xs {
-      font-size: 18px !important;
-    }
-  }
 </style>
 
-<div class="n-toolbar {pinTop ? 'pin-top' : ''} {className}">
+<div class="n-toolbar {pinTop ? 'pin-top' : ''} {className}" {style}>
   <div class="container n-row px-0">
     <slot />
   </div>

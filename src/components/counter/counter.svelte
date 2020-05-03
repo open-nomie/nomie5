@@ -64,14 +64,14 @@
 <style lang="scss">
   @import "../../scss/utils/_utils";
   .n-counter {
-    background-color: red;
+    background-color: var(--color-red);
     color: #fff;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     font-weight: bold;
     height: 20px;
     line-height: 20px;
     padding: 0 4px;
-    border-radius: 9px;
+    border-radius: 4px;
     display: flex;
     width: 100%;
     justify-content: center;

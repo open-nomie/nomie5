@@ -14,17 +14,18 @@
 
   // Utils
   import Logger from "../../utils/log/log";
+  import NIcon from "../../components/icon/icon.svelte";
 
   const console = new Logger("📅 Sweet");
   const dispatch = createEventDispatcher();
 
-  export let name = "Calendar";
-  export let color = "#319ed7";
+  // export let name = "Calendar";
+  // export let color = "#319ed7";
 
   // Props
   export let initialDate = new Date();
   export let firstDayOfWeek = 1; // 1: Sunday, 2: Monday, etc
-  export let eventCategories = [];
+  // export let eventCategories = [];
   export let events = [];
   export let offDays = [[1, 7]];
   export let showHeader = true;
@@ -288,11 +289,12 @@
         <div class="header">
 
           <div class="left-arrow" on:click={methods.prevMonth}>
-            <i class="zmdi zmdi-chevron-left" />
+            <NIcon name="chevronLeft" className="fill-primary-bright" />
+
           </div>
           <div class="month">{selectedMonthName} {selectedYear}</div>
           <div class="right-arrow" on:click={methods.nextMonth}>
-            <i class="zmdi zmdi-chevron-right" />
+            <NIcon name="chevronRight" className="fill-primary-bright" />
           </div>
 
         </div>

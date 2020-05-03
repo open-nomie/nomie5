@@ -13,9 +13,7 @@ export default {
 
     if (parseInt(minutes) > 59) {
       hours = this.padTime(Math.floor(parseInt(minutes) / 60).toString());
-      minutes = this.padTime(
-        (parseInt(minutes) - parseInt(hours) * 60).toString()
-      );
+      minutes = this.padTime((parseInt(minutes) - parseInt(hours) * 60).toString());
     }
 
     seconds = this.padTime(Math.floor(parseInt(seconds) % 60).toString());
@@ -62,10 +60,7 @@ export default {
     // This hack brought to you by datetime-local
     // iOS defaults to GMT - but it doesn't do it on
     // desktop browsers.
-    let updatedDate = dayjs(dateStr, "YYYY-MM-DD")
-      .set("hour", timeStr.split(":")[0])
-      .set("minute", timeStr.split(":")[1])
-      .toDate();
+    let updatedDate = dayjs(dateStr, "YYYY-MM-DD").set("hour", timeStr.split(":")[0]).set("minute", timeStr.split(":")[1]).toDate();
     return updatedDate;
   },
   // Milliseconds to Seconds
@@ -91,5 +86,5 @@ export default {
       items.push((i + "").toString().length == 1 ? `0${i}` : `${i}`);
     }
     return items;
-  }
+  },
 };

@@ -9,7 +9,7 @@ import { writable } from "svelte/store";
 // utils
 import Logger from "../utils/log/log";
 import PromiseStep from "../utils/promise-step/promise-step";
-import calculateScore from "../utils/calculate-score/calculate-score";
+import ScoreNote from "../modules/scoring/score-note";
 
 // Modules
 import Storage from "../modules/storage/storage";
@@ -20,6 +20,7 @@ import NomieAPICli from "../modules/nomie-api-cli/nomie-api-cli";
 // Stores
 import { LedgerStore } from "./ledger";
 import { Interact } from "./interact";
+import { TrackerStore } from "./tracker-store";
 
 const console = new Logger("🚦 Nomie API");
 const NAPI = new NomieAPICli({ domain: "nomieapi.com" });
@@ -33,7 +34,7 @@ const nomieApiInit = () => {
     apiKey: null,
     privateKey: null,
     autoImport: JSON.parse(localStorage.getItem("napi-auto") || "false"),
-    ready: false
+    ready: false,
   };
   const { update, subscribe, set } = writable(_stub);
 
@@ -41,7 +42,7 @@ const nomieApiInit = () => {
     // Load the Napi - and fire things when ready
     load() {
       NAPI.onReady(() => {
-        update(base => {
+        update((base) => {
           if (NAPI.isRegistered()) {
             base.registered = true;
             base.ready = true;
@@ -64,32 +65,33 @@ const nomieApiInit = () => {
     shouldAutoImport() {
       return JSON.parse(localStorage.getItem("napi-auto") || "false");
     },
-    autoImport() {
-      let logs = methods.getLogs().then(logs => {
-        if (logs.length) {
-          Interact.toast(`${logs.length} Nomie API logs to import`);
-          methods.import(logs).then(res => {
-            NAPI.clear().then(() => {});
-          });
-        }
-      });
+    async autoImport() {
+      let logs = await methods.getLogs();
+      if (logs.length) {
+        await methods.import(logs);
+        await NAPI.clear();
+      }
     },
-    import(logs) {
-      return PromiseStep(
+    async import(logs) {
+      Interact.blocker(`Importing ${logs.length} notes from the API...`);
+      await 1000;
+      let finished = await PromiseStep(
         logs,
-        log => {
+        (log) => {
           log.end = new Date(log.date);
           let nLog = new NomieLog(log);
-          nLog.score = calculateScore(nLog.note, $TrackerStore);
+          nLog.score = ScoreNote(nLog.note, TrackerStore.state.trackers);
           return LedgerStore.saveLog(nLog);
         },
-        status => {
+        (status) => {
           console.log("Status", status);
         }
       );
+      Interact.stopBlocker();
+      return finished;
     },
     enableAutoImport() {
-      update(base => {
+      update((base) => {
         base.autoImport = true;
         localStorage.setItem("napi-auto", JSON.stringify(true));
         return base;
@@ -99,7 +101,6 @@ const nomieApiInit = () => {
     startAutoImporting() {
       if (!autoImporterInterval) {
         autoImporterInterval = setInterval(() => {
-          console.log("Checking for Logs");
           methods.autoImport();
         }, 1000 * 60 * 4);
         methods.autoImport();
@@ -109,13 +110,13 @@ const nomieApiInit = () => {
       clearInterval(autoImporterInterval);
     },
     disableAutoImport() {
-      update(base => {
+      update((base) => {
         base.autoImport = false;
         localStorage.setItem("napi-auto", JSON.stringify(false));
         return base;
       });
       methods.stopAutoImporting();
-    }
+    },
   };
 
   if (_stub.autoImport) {
@@ -125,7 +126,7 @@ const nomieApiInit = () => {
     update,
     subscribe,
     set,
-    ...methods
+    ...methods,
   };
 };
 

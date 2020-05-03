@@ -1,18 +1,21 @@
-# Nomie 4.6
+# Nomie 5
 
-## Open Source Mood Tracker / Life Tracker / Data Journal
+## Open Source Life Tracker / Mood Tracker / Data Journal
 
-![](https://shareking.s3.amazonaws.com/nomie-header.png?2)
+![](https://shareking.s3.amazonaws.com/pb-l3LHnDdC5H-1586728691.png)
 
 ## Try it out
 
-- https://open.nomie.app **Production** (master)
+- [https://v5.nomie.app](https://v5.nomie.app) **Production** (v5-prod)
 
 If you like to live dangerously you can run the dev branch
 
-- https://dev.nomie.app **Development** (develop)
+- [https://v5-dev.nomie.app](https://v5-dev.nomie.app) **Development** (v5-develop)
 
-## Watch the [Nomie Podcast](https://www.youtube.com/channel/UCBDutSGTIQIO7cX3ZaJXv9Q)
+---
+
+Version 4 will main accessible at https://open.nomie.app
+And on the /v4 branch
 
 ---
 
@@ -32,7 +35,7 @@ Wanna know more about the Nomie story? [Here are a handful of podcasts talking a
 
 ## Want to contribute?
 
-1. Work in the develop branch, not master. All pull requests should be for develop.
+1. Work in the `v5-develop` branch, not master. All pull requests should be for `v5-develop`.
 2. Keep dependencies to an absolute minimum.
 3. Reuse code when possible.
 
@@ -51,6 +54,7 @@ You'll need Node >= 6 and NPM. I have not tested running this on Windows.
 ```
 git clone git@github.com:nomie-app/nomie.git
 cd nomie
+git checkout v5-develop
 npm install
 npm run dev
 ```
@@ -61,9 +65,28 @@ npm run dev
 npm run cypress
 ```
 
-Deploy straight to Netlify to test it out quickly.
+## Notes In Nomie
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://app.netlify.com/start/deploy?repository=https://github.com/open-nomie/nomie)
+Nomie stores each record as a log - with all tracker, people and context data being stored as a string in the ``log.note`` field. Nomie then parses the notes to extract structured data. 
+
+For example: 
+
+``Today I walked #miles(5) #mood(8)`` is converted to a structure like: `{ 'miles' : 5, 'mood': 8 }`
+
+A more complicated example would be:
+
+``Today @em @maddy and I #walked(4) +memory``
+
+which would be converted into something like:
+
+```
+{ 
+	people:['em','maddy'], 
+ 	trackers: { walked: 4}, 
+	context:['memory'] 
+}
+```
+
 
 ## Structure Overview
 
@@ -71,7 +94,6 @@ Deploy straight to Netlify to test it out quickly.
 - **/src/components** - simple single ui components to build the user interfact
 - **/src/containers** - complicated components
 - **/src/modules** - models and commonly used functions
-- **/src/plugins** - holder of plugins (coming soon)
 - **/src/routes** - nomie app's primary routes
 - **/src/lang** - holder of languages
 - **/src/scss** - global SCSS styling, variables, bootstrap
@@ -85,30 +107,33 @@ Deploy straight to Netlify to test it out quickly.
 - **Board** - a board is specific group of trackers.
 - **Board Tabs** - how you switch boards on the track tab
 - **Log** - a record event. A lot contains a note, a note can contain unlimited numbers of tags; e.g: #mood(4) #pizza #beer(12). Logs can contain a lat and long. Tracker Objects and their values are parsed out of the logs in real time.
+- **Person** - a Person that you track in Nomie. You can track individuals by using the @username format. 
+- **Context** - a generic categorization / group using the +context format. For example ``Went to dinner with @mom +meal`
+- **Location** - a physical location that you store and use later
 
 ## Stores
 
-- ** /src/store/lang ** - Language Controls
-- ** /src/store/trackers ** -- Tracker Data and interactions
-  -- TODO: finish this
+- **LedgerStore** - A central store for logs, all queries go through the ledger, which does the needed data lookup and filtering. The ledger caches lookups so excessive network calls are avoided (if using blockstack).
+- **Interact Store** - Interact holds the majority of actions needed for interacting with the users - things like generic modals, the alert/confirm/prompt components, etc. 
+- **People Store** - Stores the people! 
 
-## Data Storage - NEEDS UPDATING
+## Data Storage - 
 
-Open Nomie as of Jul 27, will support either local (with localforage) or cloud (with blockstack)
+Nomie 5 supports 3 types of storage:
+
+1. Local only (localforage)
+2. Local with CouchDB Syncing (pouchdb)
+3. In the Cloud - using [Blockstack](https://blockstack.org)
 
 All storage is done based a key, value - so adding additional storage options in the future should be pretty easy.
 
 Blockstack.org is a "Decentralized computing network and app ecosystem" - basically, it offers a means to auth a user, and get/put files that are encrypted. This means Nomie works with flat files that require a network lookup. I've decided to create a "log book" for each month. Even heavy users will have a monthly book less than 100k, so that seemed reasonable. Plus doing it every day would require way too many network lookups when generating stats, and each year would be too big for and risky.
 
-/v01/data/books/2019-01 - array of logs
-/v01/data/trackers.json - trackers
-/v01/data/boards.json - users board configuration
+/v5/data/books/2019-WEEKOFYEAR - array of logs
+/v5/data/trackers.json - trackers
+/v5/data/boards.json - users board configuration
 
-## Component / Container Issues
-
-I don't like having a bunch of floating variables around, so like Vue, and Svete 2 - I tend to group data and methods together. But I flipped about half way through calling it data, to then calling it state. I'm not sure which will stick.
-
-# Current Tracker Types
+## Current Tracker Types
 
 **tick** Single Tap
 
@@ -126,21 +151,33 @@ Great for any type of range selection - for example Mood.
 
 Tap to start, tap to stop. The timer is great for tracking durations.
 
-**meta** Multi-tracker
+**multi-tracker** Multi-tracker
 
-Combine multiple trackers into a single flow, for collecting a squence of tracker data
+Combine multiple trackers into a single flow, for collecting a sequence of tracker data
 
 # Coding Rules
 
 - **Keep it readable** - focus on writing code that new people can easily understand and follow. If the code can't do it, then do it with comments. There's no such thing as too much commenting.
-- **Keep it under 300 lines** - the goal is to keep files under 300 lines of code. Note: Sometimes that's not feasible.
+- **Keep it under 300 lines** - the goal is to keep files under 300 lines of code. Note: Sometimes that's not feasible, and I break it often
 - **Keep it flexible** - think in components. If you're doing something more than once, it most likely should be a component.
+- **Keep it save** - if you're deleting something of the users, consider using ``await Interact.confirm("Are you sure")`` to confirm they're action
 - **Keep cleaning, organizing and testing** - this project didn't start very clean, or ready for unit testing, this should be an on going objective.
 - **Use what's there** - Twitter bootstrap ([and all its classes](https://getbootstrap.com/)) are available, reuse what already exists before writing new - especially css.
 
 ## Nomie Jingle
 
 The Nomie Jingle was written and produced by soldilil - see more work at https://soldilil.bandcamp.com
+
+## Open Source Props 
+
+- SvelteJS https://svelte.dev/
+- Leaflet https://leafletjs.com
+- OpenStreetMap https://openstreetmap.org
+- Blockstack https://blockstack.org
+- Cypress https://cypress.io
+- PouchDB https://pouchdb.com
+- LocalForage https://localforage.github.io/localForage/
+- Carbon Design System https://www.carbondesignsystem.com
 
 ## Trademark License
 

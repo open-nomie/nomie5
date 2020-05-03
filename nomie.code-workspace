@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../nomie-cli"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "nomie-src"
+	}
+}

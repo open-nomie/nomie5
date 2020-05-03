@@ -1,8 +1,19 @@
 .truncate {
   @include truncate(1);
+  max-width: 100%;
 }
 .truncate-2 {
   @include truncate(2);
+}
+
+.text-bold {
+  font-weight: 600;
+}
+.text-bolder {
+  font-weight: 800;
+}
+.text-underline {
+  text-decoration: underline !important;
 }
 // Colors
 .text-primary-bright {
@@ -19,6 +30,30 @@
 }
 .bg-solid {
   background-color: var(--color-solid);
+}
+.fill-primary-bright {
+  fill: var(--color-primary-bright) !important;
+}
+.fill-green {
+  fill: var(--color-green) !important;
+}
+.fill-red {
+  fill: var(--color-red) !important;
+}
+.fill-inverse {
+  fill: var(--color-inverse) !important;
+}
+.fill-primary {
+  fill: var(--color-primary) !important;
+}
+.bg-solid-1 {
+  background-color: var(--color-solid-1);
+}
+.bg-solid-2 {
+  background-color: var(--color-solid-2);
+}
+.bg-primary-bright {
+  background-color: var(--color-primary-bright) !important;
 }
 .bg-inverse {
   background-color: var(--color-inverse);
@@ -53,31 +88,51 @@
 .font-140 {
   font-size: 1.4rem;
 }
+.fill-faded {
+  fill: var(--color-faded) !important;
+}
+.fill-faded-1 {
+  fill: var(--color-faded-1) !important;
+}
+.fill-white {
+  fill: #fff !important;
+}
+.fill-faded-2 {
+  fill: var(--color-faded-2) !important;
+}
+.fill-faded-3 {
+  fill: var(--color-faded-3) !important;
+}
+
 .text-faded {
-  color: var(--color-faded);
+  color: var(--color-faded) !important;
 }
 .text-faded-1 {
-  color: var(--color-faded-1);
+  color: var(--color-faded-1) !important;
 }
 .text-faded-2 {
-  color: var(--color-faded-2);
+  color: var(--color-faded-2) !important;
 }
 .text-faded-3 {
-  color: var(--color-faded-3);
+  color: var(--color-faded-3) !important;
 }
 
 .text-xs {
-  font-size: 0.5rem !important;
-  line-height: 0.7rem;
+  font-size: 0.6rem !important;
+  line-height: 0.8rem;
 }
 .text-sm {
-  font-size: 0.81rem !important;
-  line-height: 0.98rem;
+  font-size: 0.85rem !important;
+  line-height: 1.2rem;
 }
 .text-md {
   font-size: 1rem !important;
-  line-height: 1.2rem;
+  line-height: 1.3rem;
 }
 .text-lg {
   font-size: 1.3rem !important;
+}
+
+.text-xl {
+  font-size: 1.6rem !important;
 }

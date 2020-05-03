@@ -1,0 +1,103 @@
+@import "../../scss/utils/__utils.scss";
+
+$size: $trackerBallSize;
+$sizeLg: $trackerBallSize * 2;
+
+.item-ball {
+  position: relative;
+  margin: 0 4px;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  width: $size + 4px;
+  min-width: $size + 4px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 8px;
+  //
+
+  .one-tap {
+    position: absolute;
+    height: 4px;
+    border-radius: 2px;
+    background-color: var(--color-faded-2);
+    opacity: 0.3;
+    bottom: 4px;
+    left: 25%;
+    right: 25%;
+    z-index: 0;
+  }
+
+  .avatar-ball {
+    position: relative;
+    width: $size;
+    height: $size;
+    border-radius: $size * 0.34;
+    background-color: var(--color-solid);
+    box-shadow: var(--box-shadow-float);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .username {
+    font-weight: 500;
+    width: 100%;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: var(--color-inverse);
+    margin-top: 10px;
+    line-height: 1rem;
+  }
+
+  &:active {
+    transform: scale(0.9);
+    .avatar {
+      box-shadow: var(--box-shadow-tight);
+    }
+  }
+  .last.today {
+    color: var(--color-green);
+  }
+
+  @mixin generateButton($theSize) {
+    width: $theSize + 4px;
+    min-width: $theSize + 4px;
+    .avatar-ball {
+      width: $theSize;
+      height: $theSize;
+      border-radius: $theSize * 0.34;
+    }
+    .emoji-letter,
+    .n-ball {
+      width: $theSize !important;
+      height: $theSize !important;
+      font-size: $theSize * 0.5 !important;
+    }
+  }
+  @include media-breakpoint-up(lg) {
+    @include generateButton($trackerBallSize * 1.3);
+  }
+
+  .countdown {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 202;
+  }
+  .balls {
+    position: absolute;
+    bottom: 4px;
+    left: 20%;
+    right: 20%;
+    z-index: 202;
+  }
+}

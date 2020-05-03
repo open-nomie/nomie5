@@ -5,7 +5,8 @@
   display: flex;
   align-items: center;
   justify-content: stretch;
-  padding: 4px 16px;
+  padding: 4px 8pt;
+
   min-height: 50px;
   max-width: 100vw;
   position: relative;
@@ -16,9 +17,39 @@
   flex-shrink: 0;
   background-color: var(--color-solid);
 
+  &.bg-light {
+    background-color: var(--color-bg) !important;
+    &.text-faded {
+      color: var(--color-inverse-3) !important;
+    }
+  }
+
+  &.solo,
+  &[solo] {
+    width: calc(100% - 16pt);
+    margin: 8pt;
+    border-radius: 8pt;
+    box-shadow: var(--box-shadow);
+    .right .btn-clear {
+      margin-right: 0px !important;
+    }
+  }
+
   select,
   input {
     margin: 8px 0;
+  }
+
+  label {
+    margin-bottom: 0;
+  }
+
+  .trackers-list .n-item {
+    padding-left: 16pt !important;
+    padding-right: 16pt !important;
+    .main {
+      // font-size: 1rem;
+    }
   }
 
   &.item-divider {
@@ -40,7 +71,7 @@
   }
 
   &.compact {
-    min-height: 20px;
+    min-height: 35px;
     .n-text.md {
       font-size: 0.8rem;
       line-height: 1rem;
@@ -57,16 +88,35 @@
     max-width: 95vw;
   }
 
-  &.border-bottom,
-  &[border-bottom] {
-    border-bottom: solid 1px rgba(0, 0, 0, 0.1);
+  &.bottom-line,
+  &[bottom-line] {
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      border-bottom: solid 1px var(--color-faded-1);
+      left: 16px;
+      right: 0;
+    }
+    &:last-child {
+      &:after {
+        display: none;
+      }
+    }
   }
 
+  .left,
+  [slot="left"] {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+  }
   .left {
-    padding-right: 16px;
+    padding-right: 8pt;
   }
   .right {
-    padding-left: 16px;
+    padding-left: 8pt;
     text-align: right;
     display: flex;
     flex-wrap: nowrap;
@@ -75,6 +125,13 @@
   .main {
     flex-grow: 1;
     flex-shrink: 1;
+    max-width: 100%;
+    padding-left: 4pt;
+  }
+
+  .n-note-textualized {
+    max-width: 100%;
+    overflow-x: auto;
   }
 
   .left,
@@ -106,13 +163,17 @@
     flex-shrink: 1;
     // TODO: see if making main overflow hidden was a bad idea
     // overflow: hidden;
-    h4 {
-      font-size: 1.14rem;
+    h4,
+    .title {
+      font-size: 1.1rem;
       margin: 2px 0;
       line-height: 1.56rem;
+      font-weight: 600;
     }
 
-    p {
+    p,
+    .note,
+    .description {
       margin: 2px 0;
       color: var(--color-inverse-3);
       line-height: 140%;
@@ -147,8 +208,8 @@
       font-size: 0.9rem;
     }
     select {
-      min-width: 190px;
-      width: 190px;
+      // min-width: 190px;
+      // width: 190px;
       text-align: right;
     }
     .form-control {
@@ -164,6 +225,11 @@
   &.text-primary {
     .n-text {
       color: var(--color-primary);
+    }
+  }
+  &.text-primary-bright {
+    .n-text {
+      color: var(--color-primary-bright);
     }
   }
 } // end .n-item
@@ -183,21 +249,38 @@
   }
   .main,
   .n-text {
-    @extend .n-title;
+    // @extend .n-title;
   }
 }
 
-[item-divider],
-.item-divider {
-  @extend .n-item-divider.compact;
-}
+// [item-divider],
+// .item-divider {
+//   @extend .n-item-divider.compact;
+// }
 
 .n-list {
-  margin-bottom: 16px;
-}
+  &.solo,
+  [solo] {
+    width: calc(100% - 16pt);
+    margin: 8pt;
+    box-shadow: var(--box-shadow);
+    border-radius: 6pt;
+    overflow: hidden;
+  }
 
-.border-bottom {
-  border-color: var(--color-faded-2) !important;
+  margin-bottom: 16px;
+  @include media-breakpoint-up(sm) {
+    border-radius: 6px;
+  }
+  overflow: hidden;
+  .n-item:first-child {
+    // border-top-left-radius: 6px;
+    // border-top-right-radius: 6px;
+  }
+  .n-item:last-child {
+    // border-bottom-left-radius: 6px;
+    // border-bottom-right-radius: 6px;
+  }
 }
 
 .bg-selected {
@@ -206,33 +289,4 @@
 
 .bg-light {
   background-color: var(--color-solid) !important;
-}
-
-.n-item-log {
-  &.compact {
-    margin: 2px !important;
-    .time-row {
-      padding: 2px;
-      display: flex;
-      align-items: center;
-      height: 24px;
-      margin-top: 3px;
-      margin-bottom: -2px;
-
-      .time {
-        font-size: 0.8rem;
-      }
-    }
-    .n-note-textualized {
-      font-size: 0.9rem;
-      line-height: 1.1rem;
-    }
-    .n-item {
-      min-height: 30px;
-    }
-  }
-
-  .time-row {
-    padding-top: 12px;
-  }
 }

@@ -4,20 +4,19 @@
   import NTagBadge from "../tag-badge/tag-badge.svelte";
 
   //Utils
-  import extractTrackers from "../../utils/extract-trackers/extract-trackers";
+  import extractor from "../../utils/extract/extract";
 
   // Modules
   import Tracker from "../../modules/tracker/tracker";
 
   // Props
   export let note = "";
-  export let item;
   export let trackers = {};
   export let className = undefined;
 
   const dispatch = createEventDispatcher();
 
-  const data = {
+  const state = {
     words: []
   };
 
@@ -33,73 +32,35 @@
     textElementClick(element) {
       dispatch("textClick", element);
     },
-    parse_tracker_str(str) {
-      let extractedTrackers = extractTrackers(str);
-      let keys = Object.keys(extractedTrackers);
-      if (keys.length) {
-        return {
-          type: "tracker",
-          tracker: methods.tracker_get(extractedTrackers[keys[0]].tracker),
-          value: extractedTrackers[keys[0]].value
-        };
-      } else {
-        return {
-          type: "tracker",
-          tracker: new Tracker(),
-          value: null
-        };
-      }
+    linkClick(link) {
+      window.open(link, "_system");
     },
     note_to_array(str) {
-      let noteArray = [];
-      let words = methods.split(str);
-      let people = [];
-      let context = [];
-
-      words.forEach(word => {
-        word = word.trim();
-        const first = word.substr(0, 1);
-        if (first === "#") {
-          noteArray.push(methods.parse_tracker_str(word));
-        } else if (first === "@") {
-          people.push(word);
-          noteArray.push({ type: "person", value: word });
-          actual++;
-        } else if (first === "+") {
-          context.push(word);
-          noteArray.push({ type: "context", value: word });
-          actual++;
-        } else if (word.length) {
-          noteArray.push({ type: "string", value: word });
-          actual++;
-        }
+      let parsed = extractor.parse(str, { includeGeneric: true });
+      let matches = parsed.filter(trackableElement => {
+        return (
+          ("person", "context", "generic").indexOf(trackableElement.type) > -1
+        );
       });
-      return noteArray;
+      actual = matches.length;
+      return parsed;
     }
   };
 
-  data.words = methods.note_to_array(note);
+  state.words = methods.note_to_array(note);
 </script>
 
 <style lang="scss">
   .n-note-textualized {
-    font-size: 1.1rem;
-    line-height: 1.5rem;
-    opacity: 0.8;
-    margin-top: 6px;
-
     &.inherit {
       font-size: inherit;
       line-height: inherit;
+      letter-spacing: inherit;
     }
 
-    .tracker {
-      position: relative;
-      padding-right: 2px;
-      display: inline-block;
-    }
     .value {
       max-height: 15px;
+      flex-shrink: 0;
       font-size: 10px;
       font-weight: bold;
       height: 14px;
@@ -110,6 +71,18 @@
       text-align: center;
       display: inline-block;
     }
+    .string,
+    .tracker,
+    .person,
+    .context {
+      padding-right: 3px;
+      flex-shrink: 0;
+    }
+    .remainder {
+      padding-right: 5px;
+      margin-left: -6px;
+    }
+
     span {
       display: inline;
     }
@@ -117,28 +90,48 @@
 </style>
 
 {#if actual}
-  <div class="n-note-textualized {className}">
-    {#each data.words as word}
+  <div
+    class="n-note-textualized {className}
+    {state.words.length > 20 ? 'long-note' : 'short-note'}">
+    {#each state.words as word}
       {#if word.type === 'tracker'}
-        <span class="tracker font-weight-bold">#{word.tracker.tag}</span>
-      {:else if word.type == 'person'}
         <span
-          class="person font-weight-bold clickable text-primary"
+          class="tracker font-weight-bold clickable text-primary-bright"
           on:click={() => {
             methods.textElementClick(word);
           }}>
-          {word.value}
+          {` #${word.id} `}
+        </span>
+      {:else if word.type == 'person'}
+        <span
+          class="person font-weight-bold clickable text-primary-bright"
+          on:click={() => {
+            methods.textElementClick(word);
+          }}>
+          {` ${word.raw} `}
         </span>
       {:else if word.type == 'context'}
         <span
-          class="context font-weight-bold clickable text-primary"
+          class="context font-weight-bold clickable text-primary-bright"
           on:click={() => {
             methods.textElementClick(word);
           }}>
-          {word.value}
+          {` ${word.raw} `}
         </span>
-      {:else}{word.value}{/if}
-      {' '}
+      {:else if word.type == 'link'}
+        <span
+          class="context font-weight-bold clickable text-primary-bright"
+          on:click={() => {
+            methods.linkClick(word.raw);
+          }}>
+          {` ${word.id} `}
+        </span>
+      {:else if word.type == 'line-break'}
+        <br />
+      {:else if word.raw}{word.raw + ' '}{/if}
+      {#if word.remainder}
+        <span class="remainder">{word.remainder.trim()}</span>
+      {/if}
     {/each}
   </div>
 {/if}

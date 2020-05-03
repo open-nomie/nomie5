@@ -3,8 +3,11 @@
   const dispatch = createEventDispatcher();
 
   import NModal from "../../components/modal/modal.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
+  import NInput from "../../components/input/input.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NProgress from "../../components/progress-bar/progress-bar.svelte";
+  import regex from "../../utils/regex";
 
   // Utils
   import PromiseStep from "../../utils/promise-step/promise-step";
@@ -12,8 +15,10 @@
   import math from "../../utils/math/math";
   import Logger from "../../utils/log/log";
 
+  import arrayUtils from "../../utils/array/array_utils";
+
   //vendors
-  import Spinner from "svelte-spinner";
+  import Spinner from "../../components/spinner/spinner.svelte";
 
   // Stores
   import { LedgerStore } from "../../store/ledger";
@@ -38,47 +43,70 @@
   };
 
   const methods = {
-    async find() {
-      // Clear errors
+    back() {
+      state.found = null;
       state.error = null;
-      // If replace is set
-      if (state.replace) {
-        // Clear previously found results
-        state.found = [];
-        // Set finding and progress
-        state.finding = true;
-        state.findingProgress = 0;
-        // Get all user books
-        let books = await LedgerStore.listBooks();
-        // Step over (one at a time) each book, and search it.
-        PromiseStep(books, async bookPath => {
-          // Get this paths book by index
-          let index = books.indexOf(bookPath) + 1;
-          let book = await Storage.get(bookPath);
-          // Set progress to index / length of books
-          state.findingProgress = Math.round((index / books.length) * 100);
-          // Loop over each log in the book
-          book.forEach(log => {
-            // If log.note has the search term
-            if (log.note.search(state.replace) > -1) {
-              state.foundCount++;
-              state.found = state.found || [];
-              // Push found results
-              state.found.push({
-                book: bookPath,
-                log: log
-              });
-            }
-          });
-          return Promise.resolve(true);
-        }).then(finishedFinding => {
-          state.example = 0;
-          state.finishedFinding = true;
-        });
-      } else {
-        state.error = "Both 'replace' and 'with' are required";
-      }
+      state.finding = false;
+      state.replacing = false;
+      state.foundCount = 0;
+      state.finishedFinding = false;
+      state.example = null;
+      state.replacedCount = 0;
     },
+
+    findInBook(bookPath, logs) {
+      logs.forEach(log => {
+        let searchReg = new RegExp(regex.escape(state.replace), "g");
+        if (log.note.search(searchReg) > -1) {
+          state.foundCount++;
+          state.found = state.found || [];
+          // Push found results
+          state.found.push({
+            book: bookPath,
+            log: log
+          });
+        }
+      });
+      return state.found;
+    },
+
+    async getAndFindChunks(bookPaths) {
+      let promises = [];
+      for (var i = 0; i < bookPaths.length; i++) {
+        let path = bookPaths[i];
+        let getBook = Storage.get(path);
+        promises.push(getBook);
+        getBook.then(logs => {
+          methods.findInBook(path, logs);
+        });
+      }
+      return Promise.all(promises);
+    },
+
+    async find() {
+      if (state.replace) {
+        state.found = [];
+        state.finding = true;
+        state.findingProress = 0;
+        // Let all books
+        let bookPaths = await LedgerStore.listBooks();
+        // Break them into chunks of 10
+        let chunkedBookPaths = arrayUtils.chunk(bookPaths, 10);
+        // Loop over (using for loop for await)
+        for (var i = 0; i < chunkedBookPaths.length; i++) {
+          let thisBatch = chunkedBookPaths[i];
+          // Check this chunk
+          let processed = await methods.getAndFindChunks(thisBatch);
+          // Update the pgoress bar
+          state.findingProgress = Math.round(
+            (i / chunkedBookPaths.length) * 100
+          );
+        }
+        state.example = 0;
+        state.finishedFinding = true;
+      } // end if we have something to replace
+    },
+
     clear() {
       state.replace = null;
       state.with = null;
@@ -116,7 +144,7 @@
       let map = methods.foundToMap();
       let bookPaths = Object.keys(map);
       // Set Searching Regex
-      let searchReg = new RegExp(`${state.replace}`, "g");
+      let searchReg = new RegExp(regex.escape(state.replace), "g");
       //Step over each replacing within the books
       PromiseStep(bookPaths, path => {
         return new Promise(resolve => {
@@ -196,18 +224,20 @@
         <NItem
           description="Find and replace specific content from all of your notes.
           For example renaming a tag." />
-        <NItem title="Replace this:">
-          <input
+        <NItem>
+          <NInput
             class="form-control"
             bind:value={state.replace}
-            placeholder="#sleep_time" />
+            placeholder="Replace this:"
+            help="e.g. #sleep_time" />
         </NItem>
 
-        <NItem title="... with this:">
-          <input
+        <NItem>
+          <NInput
             class="form-control"
             bind:value={state.with}
-            placeholder="#sleep" />
+            placeholder="with this:"
+            help="e.g. #sleep" />
         </NItem>
       {/if}
 
@@ -216,14 +246,9 @@
           <NProgress percentage={state.replacingProgress} />
           <span slot="left">
             {#if state.finishedReplacing}
-              <i class="zmdi zmdi-check-circle text-lg text-green" />
+              <NIcon name="checkmarkOutline" className="fill-green" />
             {:else}
-              <Spinner
-                size="30"
-                speed="750"
-                color="#ccc"
-                thickness="6"
-                gap="40" />
+              <Spinner size="30" />
             {/if}
           </span>
         </NItem>
@@ -233,39 +258,37 @@
           title={`${state.finishedFinding ? 'Find Complete' : 'Finding...'}`}>
           <span slot="left">
             {#if state.finishedFinding}
-              <i class="zmdi zmdi-check-circle text-lg text-green" />
+              <NIcon name="checkmarkOutline" className="fill-green" />
             {:else}
-              <Spinner
-                size="30"
-                speed="750"
-                color="#ccc"
-                thickness="6"
-                gap="40" />
+              <Spinner size="30" />
             {/if}
           </span>
           <span slot="right">{state.foundCount} Found</span>
-          <NProgress percentage={state.findingProgress} />
+          <div class="pt-1">
+            <NProgress percentage={state.findingProgress} />
+          </div>
         </NItem>
         {#if state.found.length > 0 && state.example !== null}
           <div class="p-1 mt-2">
             <NItem>
-              <div>
-                <small class="text-faded-2">
-                  Sample {state.example + 1} of {state.found.length}
-                </small>
-                <br />
-                <small>
-                  <strong>{state.found[state.example || 0].log.note}</strong>
-                </small>
+              <div class="text-md">
+                Sample {state.example + 1} of {state.found.length}
+                <div class="note">
+                  {state.found[state.example || 0].log.note}
+                </div>
               </div>
               <button
-                class="btn btn-clear btn-icon zmdi zmdi-arrow-left"
+                class="btn btn-clear btn-icon tap-icon"
                 slot="left"
-                on:click={methods.previousSample} />
+                on:click={methods.previousSample}>
+                <NIcon name="chevronLeft" />
+              </button>
               <button
-                class="btn btn-clear btn-icon zmdi zmdi-arrow-right"
+                class="btn btn-clear btn-icon tap-icon"
                 slot="right"
-                on:click={methods.nextSample} />
+                on:click={methods.nextSample}>
+                <NIcon name="chevronRight" />
+              </button>
             </NItem>
           </div>
         {/if}
@@ -274,15 +297,19 @@
     </div>
 
     <div slot="footer" class="n-row">
-      <button class="btn btn-clear" on:click={methods.close}>Cancel</button>
+
       {#if state.finding && state.finishedFinding}
+        <button class="btn btn-clear" on:click={methods.back}>Back</button>
         <button class="btn btn-primary" on:click={methods.replace}>
           Replace All...
         </button>
       {:else if !state.finding && !state.found}
+        <button class="btn btn-clear" on:click={methods.close}>Cancel</button>
         <button class="btn btn-primary" on:click={methods.find}>
           Find All...
         </button>
+      {:else}
+        <button class="btn btn-clear" on:click={methods.back}>Back</button>
       {/if}
     </div>
 

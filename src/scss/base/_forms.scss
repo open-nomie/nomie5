@@ -1,7 +1,8 @@
 input[type="text"],
+input[type="email"],
 input[type="number"],
 input[type="password"] {
-  background-color: var(--color-faded-1);
+  background-color: var(--color-input-background);
   border-color: var(--color-solid-1);
   color: var(--color-inverse-2);
 
@@ -11,44 +12,27 @@ input[type="password"] {
   padding: 6px;
   color: var(--color-inverse);
   &:focus {
-    background-color: var(--color-faded-1);
+    background-color: var(--color-input-background);
     color: var(--color-inverse);
   }
 }
 
 .search-bar {
   position: relative;
-  .btn.zmdi-close {
-    position: absolute;
-    right: 12px;
-    top: 8px;
-    font-size: 10px !important;
-    display: flex !important;
-    width: 20px;
-    height: 20px;
-    border-radius: 10px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-inverse-3);
-    color: var(--color-solid);
-  }
-  .btn.zmdi-search {
-    position: absolute;
-    right: 32px;
-    top: 5px;
-    font-size: 24px !important;
-  }
 }
 
 .form-control {
   &:focus {
     box-shadow: none !important;
+    background-color: var(--color-solid);
   }
 }
-input.form-control {
-  background-color: var(--color-faded-1);
-  border-color: var(--color-solid-1);
+.form-control,
+input.form-control,
+select.form-control {
+  border-radius: 0.4rem !important;
+  background-color: var(--color-solid-half) !important;
+  border: solid 1px var(--color-solid-1) !important;
   color: var(--color-inverse-2);
   &:focus {
     background-color: var(--color-faded);
@@ -56,7 +40,7 @@ input.form-control {
   }
 }
 textarea.form-control {
-  background-color: var(--color-faded-1);
+  background-color: var(--color-solid-half);
   border-color: var(--color-solid-1);
   color: var(--color-inverse-2);
   border: none;
@@ -65,7 +49,7 @@ textarea.form-control {
   font-size: 0.7rem;
   color: var(--color-inverse);
   &:focus {
-    background-color: var(--color-faded);
+    background-color: var(--color-input-background);
     border-color: var(--color-solid);
     color: var(--color-inverse);
   }
@@ -77,7 +61,6 @@ select {
   color: var(--color-inverse) !important;
   border: transparent !important;
   border-radius: 0 !important;
-  border-bottom: solid 1px var(--color-inverse-3) !important;
   position: relative;
 }
 
@@ -93,7 +76,7 @@ select {
   }
   .input-group-text {
     border: none;
-    background-color: var(--color-faded);
+    background-color: var(--color-input-background);
   }
 }
 
@@ -106,17 +89,17 @@ select {
 }
 
 .search-input {
-  border-radius: 40px !important;
+  border-radius: 8px !important;
   padding: 0px 16px !important;
   height: 36px;
   border: solid 1px transparent;
-  background-color: var(--color-faded);
+  background-color: var(--color-input-background);
   color: var(--color-inverse-2);
   flex-grow: 1;
   outline: none;
   transition: all 0.2s ease-in-out;
   &:focus {
     border: solid 1px var(--color-faded-1);
-    background-color: var(--color-faded);
+    background-color: var(--color-input-background);
   }
 }

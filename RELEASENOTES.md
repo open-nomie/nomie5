@@ -1,3 +1,29 @@
+# v.5.0.77 - Apr 12 2020
+
+## New
+
+- Stats for People, Trackers, Context
+- New Standalone Streak View
+- Completely redesigned Stats
+- Compared unlimited items
+- Stacked Stats
+- People Tracking
+- File Browser
+- Related Items
+- Lots of UI Improvements
+- Better Searching
+- Clickable Map Pins
+- CouchDB define your own database name
+- Drag and Drop Item Sorting (boards, trackers)
+- New Initial Tracker Designer
+- Improved On Boarding
+- Smaller Storage Data Chunks (now stored by the week instead of the month)
+
+## Fixes
+
+- Lots of UI improvements
+- Lots of bug fixes
+
 # v.4.6 - November 24 2019
 
 ## Enhancements

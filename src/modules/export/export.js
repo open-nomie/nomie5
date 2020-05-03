@@ -1,104 +1,123 @@
 // Modules
-import Storage from '../storage/storage';
+import Storage from "../storage/storage";
 // stores
-import config from '../../../config/global';
-import { LedgerStore } from '../../store/ledger';
+import config from "../../../config/global";
+import { LedgerStore } from "../../store/ledger";
+import { Interact } from "../../store/interact";
+import { PeopleStore } from "../../store/people-store";
+import { Locations } from "../../store/locations";
 
 //vendors
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 export default class Export {
-	constructor(options) {
-		options = options || {};
-		this.listeners = [];
-		this.format = options.format || 'json';
-		this.backup = {
-			nomie: {
-				number: 'APP_VERSION',
-				created: new Date().toJSON(),
-				startDate: new Date().toJSON(),
-				endDate: new Date().toJSON(),
-			},
-			boards: [],
-			events: [],
-			trackers: {},
-		};
-	}
+  constructor(options) {
+    options = options || {};
+    this.listeners = [];
+    this.format = options.format || "json";
+    this.backup = {
+      nomie: {
+        number: "APP_VERSION",
+        created: new Date().toJSON(),
+        startDate: new Date().toJSON(),
+        endDate: new Date().toJSON(),
+      },
+      boards: [],
+      events: [],
+      trackers: {},
+      people: {},
+      locations: [],
+    };
+  }
 
-	start() {
-		return new Promise((resolve, reject) => {
-			this.fireChange('Starting...');
-			this.getTrackers().then(trackers => {
-				this.fireChange('Trackers Loaded');
-				if (trackers) {
-					this.backup.trackers = trackers;
-				}
-				this.fireChange('Getting Boards');
-				this.getBoards().then(boards => {
-					this.backup.boards = boards;
-					this.fireChange('Getting Events...');
-					this.getEvents().then(events => {
-						this.backup.events = events;
-						this.fireChange(`${events.length} events loaded`);
+  async start() {
+    try {
+      this.fireChange("People...");
+      // Get People
+      let people = await PeopleStore.getPeople();
+      this.backup.people = people || {};
 
-						let downloadButton = document.createElement('a');
-						downloadButton.setAttribute(
-							'href',
-							URL.createObjectURL(new Blob([JSON.stringify(this.backup)], { type: 'text/json' }))
-						);
-						downloadButton.setAttribute(
-							'download',
-							`nomie-APP_VERSION-${dayjs().format('YYYY-MM-DD-H:mm')}.json`
-						);
-						downloadButton.click();
-						resolve();
-					});
-				});
-			});
-		});
-	}
+      this.fireChange("Locations...");
+      let locations = await Locations.loadLocations();
+      this.backup.locations = locations || [];
 
-	getTrackers() {
-		return Storage.get(`${config.data_root}/${config.tracker_file}`).then(res => {
-			return res;
-		});
-	}
+      // Get Trackers
+      this.fireChange("Trackers...");
+      let trackers = await this.getTrackers();
 
-	getBoards() {
-		return Storage.get(`${config.data_root}/${config.board_file}`).then(res => {
-			return res;
-		});
-	}
+      if (trackers) {
+        this.backup.trackers = trackers;
+      }
+      // Get Boards
+      this.fireChange("Boards...");
+      let boards = await this.getBoards();
+      this.backup.boards = boards;
+      // Get Events
+      this.fireChange("Events...");
+      let events = await this.getEvents();
+      this.backup.events = events || [];
+      this.fireChange(`${(events || []).length} events loaded`);
+      // Setup a Document to Download
+      let downloadButton = document.createElement("a");
+      downloadButton.setAttribute("href", URL.createObjectURL(new Blob([JSON.stringify(this.backup)], { type: "text/json" })));
+      downloadButton.setAttribute("download", `nomie-APP_VERSION-${dayjs().format("YYYY-MM-DD-H:mm")}.json`);
+      downloadButton.click();
+    } catch (e) {
+      Interact.alert("Export Error", e.message);
+    }
+  }
 
-	getEvents() {
-		let flatten = arr =>
-			[].concat.apply([], arr.map(element => (Array.isArray(element) ? flatten(element) : element)));
-		// get all books
-		return new Promise(async (resolve, reject) => {
-			let books = await LedgerStore.listBooks();
-			let finished = [];
-			let loadNext = () => {
-				if (finished.length < books.length) {
-					Storage.get(books[finished.length]).then(book => {
-						finished.push(book);
-						loadNext();
-					});
-				} else {
-					let events = flatten(finished);
-					resolve(events);
-				}
-			};
-			loadNext();
-		}); // end promise
-	}
+  getTrackers() {
+    return Storage.get(`${config.data_root}/${config.tracker_file}`).then((res) => {
+      return res;
+    });
+  }
 
-	onChange(func) {
-		this.listeners.push(func);
-	}
+  getPeople() {
+    return Storage.get(`${config.data_root}/${config.tracker_file}`).then((res) => {
+      return res;
+    });
+  }
 
-	fireChange(change) {
-		this.listeners.forEach(func => {
-			func(change);
-		});
-	}
+  getBoards() {
+    return Storage.get(`${config.data_root}/${config.board_file}`).then((res) => {
+      return res;
+    });
+  }
+
+  getEvents() {
+    let flatten = (arr) =>
+      [].concat.apply(
+        [],
+        arr.map((element) => (Array.isArray(element) ? flatten(element) : element))
+      );
+    // get all books
+    return new Promise(async (resolve, reject) => {
+      let books = await LedgerStore.listBooks();
+      let finished = [];
+      let loadNext = () => {
+        if (finished.length < books.length) {
+          this.fireChange(`${config.book_time_unit} ${finished.length} of ${books.length}`);
+          Storage.get(books[finished.length]).then((book) => {
+            finished.push(book);
+            loadNext();
+          });
+        } else {
+          let events = flatten(finished);
+          resolve(events);
+        }
+      };
+      loadNext();
+    }); // end promise
+  }
+
+  onChange(func) {
+    this.listeners.push(func);
+  }
+
+  fireChange(change) {
+    this.listeners.forEach((func) => {
+      func(change);
+    });
+  }
 }

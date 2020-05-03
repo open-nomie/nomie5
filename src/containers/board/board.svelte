@@ -15,21 +15,23 @@
   import { navigate } from "svelte-routing";
   import { onMount, onDestroy } from "svelte";
   import dayjs from "dayjs";
+  import { fade, fly } from "svelte/transition";
 
   // Components
   import NTrackerButton from "./tracker-button.svelte";
   import NToolbar from "../../components/toolbar/toolbar.svelte";
-  import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
+  import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
+  import NSearchBar from "../../components/search-bar/search-bar.svelte";
   import NModal from "../../components/modal/modal.svelte";
-  import NHScroll from "../../components/h-scroller/h-scroller.svelte";
   import LogoType from "../../components/logo/logo.svelte";
-  import LogoMark from "../../components/elephant.svelte";
-
+  import NTip from "../../components/tip/tip.svelte";
   import CaptureLog from "../../components/capture-log.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
+  import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
 
   // Containers
-  import AppLayout from "../../containers/layout/app.svelte";
+  import NLayout from "../../containers/layout/layout.svelte";
   import BoardSortModal from "../../containers/board/board-sort.svelte";
 
   // Modules/Libs/Utils
@@ -39,17 +41,17 @@
   import math from "../../utils/math/math";
   import Logger from "../../utils/log/log";
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
-  import extractor from "../../utils/extract-trackers/extract-trackers";
-  import promiseStep from "../../utils/promise-step/promise-step";
-
+  import tick from "../../utils/tick/tick";
   import TrackerInputer from "../../modules/tracker/tracker-inputer";
+
+  import ScoreTracker from "../../modules/scoring/score-tracker";
 
   //Stores
   import { ActiveLogStore } from "../../store/active-log";
   import { LedgerStore } from "../../store/ledger";
   import { UserStore } from "../../store/user";
   import { BoardStore } from "../../store/boards";
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
   import { Interact } from "../../store/interact";
   import { Lang } from "../../store/lang";
   import { TrackerLibrary } from "../../store/tracker-library";
@@ -66,9 +68,10 @@
 
   // Browser Title
   let appTitle = "(Loading)";
+  let _elSearchBar;
 
   // Data Storage
-  let data = {
+  let state = {
     selectedTracker: null, // populated when user tabs tracker
     showStartPacks: false, // shows the start library
     savingTrackers: [], // to highlight trackers that are being saved
@@ -97,10 +100,10 @@
   // Check if it's ready
   const checkIfReady = requester => {
     if (isReady.done == false) {
-      if (isReady.boards && $TrackerStore && isReady.ledger) {
+      if (isReady.boards && $TrackerStore.trackers && isReady.ledger) {
         isReady.done = true;
         setTimeout(() => {
-          methods.setBoardTrackers();
+          setBoardTrackers();
         }, 20);
       }
     }
@@ -112,12 +115,17 @@
    **/
 
   let tips = [
-    "Press and hold a tracker button for more options",
+    "Tap a button to track, press and hold for additional options",
     "The History tab shows you everything you've done",
-    "Check out the settings to change the theme",
-    "Enable auto location in the Settings for deeper data",
-    "Click the nomie logo above to enable Tabs",
-    "Want to auto import data?  Settings -> Nomie API"
+    "Enable location tracking in the Settings for more data",
+    "Tap the Tab icon in the upper right to enable Tracker Tabs",
+    "You can manually track by writing a note. For example: Today is awesome! #mood(8) with @brandon",
+    "Use @username in notes to tag people",
+    "Include @username in a note to automatically tag that user.",
+    "Include +context to add additional context to your log",
+    "Tap the clock icon in the notes field to back date a log",
+    "Tap the Location pin in the notes field to set a specific location",
+    "Import data from places like IFTTT. Tap Settings, then Nomie API"
   ];
 
   // Wait for the User to be ready
@@ -126,81 +134,97 @@
     user = $UserStore; // Kick off
     // Setup Hooks These will fire on before safe, and onLogSave
     LedgerStore.hook("onBeforeSave", log => {
-      data.savingTrackers = log.trackersArray().map(t => t.tag);
-    }).hook("onLogSaved", log => {
+      state.savingTrackers = log.getMeta().trackers.map(t => t.id);
+    });
+
+    LedgerStore.hook("onLogSaved", log => {
       // Clear saving states
-      data.savingTrackers = [];
-      data.searching = false;
-      data.addedTrackers = [];
+      state.savingTrackers = [];
+      state.searching = false;
+      state.addedTrackers = [];
     });
   });
 
+  function editBoard() {
+    if (!$BoardStore.activeBoard) {
+      navigate(`/board/all`);
+    } else {
+      navigate(`/board/${$BoardStore.activeBoard.id}`);
+    }
+  }
+
+  function setBoardTrackers() {
+    /** If its the ALL Board we need to handle it different **/
+    if ($BoardStore.active == "all") {
+      appTitle = "All";
+      // Get the All Board
+      let allBoard = $BoardStore.boards.find(b => b.id == "all");
+      let boardSort = allBoard ? allBoard.trackers : [];
+      // // Loop over Tracker store - sorting by boardSort
+      boardTrackers = Object.keys($TrackerStore.trackers)
+        .sort((a, b) => {
+          if (boardSort.indexOf(a) > boardSort.indexOf(b)) {
+            return 1;
+          } else if (boardSort.indexOf(a) < boardSort.indexOf(b)) {
+            return -1;
+          } else {
+            return a > b ? 1 : -1;
+          }
+        })
+        .map(tag => {
+          return $TrackerStore.trackers[tag];
+        })
+        // Remove any nulls
+        .filter(tracker => tracker);
+    } else {
+      /**
+       * Else we have a real board and need to render it.
+       */
+
+      // Get Board Trackers from active Board
+      appTitle = ($BoardStore.activeBoard || {}).label || "";
+      // Get trackers from activeBoard
+      boardTrackers = (($BoardStore.activeBoard || {}).trackers || [])
+        .map(
+          tag => {
+            return $TrackerStore.trackers[tag];
+          }
+          // Remove any nulls
+        )
+        .filter(tracker => tracker);
+    }
+  }
+
   // Component Methods
   const methods = {
-    editBoard() {
-      navigate(`/board/${$BoardStore.activeBoard.id}`);
-    },
-    setBoardTrackers() {
-      if ($BoardStore.active == "all") {
-        appTitle = "All";
-        // Convert trackers to array
-        boardTrackers = Object.keys($TrackerStore)
-          .map(tag => {
-            return $TrackerStore[tag] || new Tracker({ tag: tag });
-          })
-          // Sort ALL by label
-          .sort((a, b) => {
-            return a.label > b.label ? 1 : -1;
-          });
-      } else {
-        // Get Board Trackers from active Board
-        appTitle = ($BoardStore.activeBoard || {}).label || "";
-        // Get trackers from activeBoard
-        boardTrackers = (($BoardStore.activeBoard || {}).trackers || []).map(
-          tag => {
-            return $TrackerStore[tag] || new Tracker({ tag: tag });
-          }
-        );
-      }
-    },
-    nextTip() {
-      if (data.activeTip == tips.length - 1) {
-        data.activeTip = 0;
-      } else {
-        data.activeTip++;
-      }
-    },
-    previousTip() {
-      if (data.activeTip == 0) {
-        data.activeTip = tips.length - 1;
-      } else {
-        data.activeTip--;
-      }
-    },
     // When user starts searching
     searchKeypress() {
       // Find trackers matching query
-      foundTrackers = Object.keys($TrackerStore)
+      foundTrackers = Object.keys($TrackerStore.trackers)
         .map(tag => {
-          return $TrackerStore[tag];
+          return $TrackerStore.trackers[tag];
         })
         .filter(tracker => {
           // Search the tag and the label
-          let regex = new RegExp(data.searchTerm.trim(), "gi");
+          let regex = new RegExp((state.searchTerm || "").trim(), "gi");
           return `${tracker.tag}-${tracker.label}`.search(regex) > -1;
         });
     },
     // Toggle if the user is searching or not.
-    toggleSearch() {
-      if (data.searching) {
+    async toggleSearch() {
+      if (state.searching) {
         methods.stopSearch();
       } else {
-        data.searching = true;
+        state.searching = true;
+        await tick(200);
+        if (_elSearchBar) {
+          _elSearchBar.focus();
+        }
       }
     },
     stopSearch() {
-      data.searchTerm = null;
-      data.searching = false;
+      state.searchTerm = null;
+      state.searching = false;
       foundTrackers = null;
     },
     // When the user wants to add a new tracker
@@ -218,13 +242,13 @@
         // Add "Existing Tracker" button
         buttons.push({
           title: Lang.t("board.add-existing-tracker"),
-          click() {
-            Interact.selectTrackers().then(tkrs => {
-              BoardStore.addTrackersToActiveBoard(tkrs);
-              setTimeout(() => {
-                data = data;
-              }, 100);
-            });
+          click: async () => {
+            let trackers = await Interact.selectTrackers();
+
+            BoardStore.addTrackersToActiveBoard(trackers);
+            setTimeout(() => {
+              state = state;
+            }, 100);
           }
         });
       }
@@ -232,7 +256,8 @@
       buttons.push({
         title: Lang.t("board.create-custom-tracker"),
         click() {
-          methods.trackerEditor();
+          // methods.trackerEditor();
+          navigate("/tracker/design");
         }
       });
 
@@ -250,13 +275,15 @@
       // Get boards passed
       boards = boards || [];
       // Clone the board;
-      let b = boards.slice(0);
-      // Add All to beginning
-      b.unshift({
+
+      let allBoard = $BoardStore.boards.find(b => b.id == "all") || {
         id: "all",
         label: "All",
-        trackers: Object.keys($TrackerStore || {})
-      });
+        trackers: Object.keys($TrackerStore.trackers || {})
+      };
+      let b = boards.filter(b => b.id !== "all");
+
+      b.unshift(allBoard);
       return b;
     },
 
@@ -267,6 +294,16 @@
       Interact.editTracker().then(tracker => {
         BoardStore.addTracker(tracker);
       });
+    },
+
+    getLastUsed(tracker) {
+      if ($LastUsed.hasOwnProperty(tracker.tag)) {
+        let last = $LastUsed[tracker.tag];
+        if (last) {
+          return dayjs(last.log.end);
+        }
+      }
+      return null;
     },
 
     /**
@@ -284,33 +321,58 @@
       );
       if (res) {
         let label = res.trim();
-        BoardStore.addBoard(label).then(board => {
-          BoardStore.setActive(board.id);
-        });
+        if (label.toLowerCase() !== "all") {
+          BoardStore.addBoard(label).then(board => {
+            BoardStore.setActive(board.id);
+          });
+        } else {
+          Interact.alert("Error", "Sorry, All is a reserved named");
+        }
       }
     },
     // Settings Shortcut - enable boards - tap on logo
     async enableBoards() {
-      let res = await Interact.confirm(
-        "Enable tabs?",
-        "This will allow you to organize a bunch of trackers."
-      );
-      $UserStore.meta.boardsEnabled = res;
-      UserStore.saveMeta();
+      $UserStore.meta.boardsEnabled = true;
+      await UserStore.saveMeta();
+      methods.newBoard();
     },
     // User Tapped a Tracker
     async trackerTapped(tracker) {
       // Set selected tracker to this one.
-      data.selectedTracker = tracker;
-
+      state.selectedTracker = tracker;
       // Inserting new TrackerInputer
-      let inputer = new TrackerInputer(tracker);
+      let inputer = new TrackerInputer(tracker, $TrackerStore);
+      let payload = await inputer.get();
 
-      inputer.get().then(value => {
-        if (tracker.one_tap) {
-          LedgerStore.saveLog($ActiveLogStore);
-        }
-      });
+      /**
+       * Payload could be an array of, or single { tracker, value }
+       */
+      if (payload instanceof Array) {
+        let items = payload.filter(item => item);
+        items.forEach(item => {
+          // ActiveLogStore.addTag(item.tracker.tag, item.value);
+          let tracker = TrackerStore.getByTag(item.tracker.tag);
+          // Get any additional content to pull along with this tracker
+          let includeStr = tracker.getIncluded(item.value) || "";
+          includeStr = includeStr.length ? ` ${includeStr}` : "";
+          ActiveLogStore.addElement(
+            `#${tracker.tag}(${item.value})${includeStr}`
+          );
+        });
+      } else if (payload) {
+        let tracker = payload.tracker;
+        // Get any additional content to pull along with this tracker
+        let includeStr = tracker.getIncluded(payload.value) || "";
+        includeStr = includeStr.length ? ` ${includeStr}` : "";
+        ActiveLogStore.addElement(
+          `#${tracker.tag}(${payload.value})${includeStr}`
+        );
+      }
+      // One Tap Trackers
+      // TODO move the adding to the activeLogStore here.
+      if (tracker.one_tap) {
+        LedgerStore.saveLog($ActiveLogStore);
+      }
     },
     /**
      * Get Tracker Value
@@ -334,6 +396,11 @@
       }
       return value ? NomieUOM.format(value, tracker.uom) : null;
     },
+    getPositivity(tracker) {
+      let value = methods.getTrackerValue(tracker);
+      value = value || 0;
+      return ScoreTracker(value, tracker);
+    },
     /**
      * Get Hours Used
      * Used for generating the time-balls on the trackers
@@ -353,13 +420,19 @@
       // Define buttons
       let buttons = [
         {
-          title: "Stats",
+          title: Lang.t("tracker.stats", "Stats"),
           click() {
-            Interact.openStats(tracker.tag);
+            Interact.openStats(`#${tracker.tag}`);
           }
         },
         {
-          title: "Edit Tracker",
+          title: Lang.t("tracker.streak", "Streak"),
+          click() {
+            Interact.openStreak(`#${tracker.tag}`);
+          }
+        },
+        {
+          title: Lang.t("tracker.edit-tracker", "Edit Tracker"),
           click() {
             Interact.editTracker(tracker);
           }
@@ -396,28 +469,13 @@
       };
 
       // If a Last Used is present
+      let subtitle;
       if ($LastUsed.hasOwnProperty(tracker.tag)) {
         let last = $LastUsed[tracker.tag];
         if (last.log) {
-          buttons.push({
-            title: `${Lang.t("board.last-used", "Last used")} ${dayjs(
-              last.date
-            ).fromNow()}`,
-            click: async () => {
-              let log = await LedgerStore.getLog(last.log, last.book);
-              if (log) {
-                Interact.openShareImage(log);
-              } else {
-                Interact.alert(
-                  Lang.t("general.error", "Error"),
-                  Lang.t(
-                    "general.log-not-found",
-                    "Sorry, that log was not found, was it deleted?"
-                  )
-                );
-              }
-            }
-          });
+          subtitle = `${Lang.t("board.last-used", "Last used")} ${dayjs(
+            last.date
+          ).fromNow()}`;
         }
       }
       // Add Remove button to array
@@ -426,6 +484,7 @@
       // Fire Pop menu
       Interact.popmenu({
         title: `${tracker.emoji || "⚪️"} ${tracker.label || tracker.tag}`,
+        description: subtitle,
         buttons: buttons
       });
     } // end showTrackerOptions
@@ -441,7 +500,7 @@
     trackerUnsub = TrackerStore.subscribe(trackerStore => {
       setTimeout(() => {
         boardTrackers = boardTrackers;
-        methods.setBoardTrackers();
+        setBoardTrackers();
       }, 120);
     });
 
@@ -452,7 +511,7 @@
       // If the board is ready, and it changes
       // Refire the setBoard Trackers for the new changes
       if (isReady.done) {
-        methods.setBoardTrackers();
+        setBoardTrackers();
       }
       /**
        * Board Check
@@ -490,7 +549,7 @@
        * When the log changes, extract the trackers so we can
        * make them pulse
        */
-      data.addedTrackers = new NomieLog(log).trackersArray().map(t => t.tag);
+      state.addedTrackers = new NomieLog(log).getMeta().trackers.map(t => t.id);
     });
     LedgerStore.getToday();
   }); // end onMount
@@ -507,13 +566,18 @@
   @import "../../scss/utils/_utils";
   @import "../../scss/vendor/bootstrap/base";
 
+  :global(.n-board .tracker-button-wrapper) {
+    @include media-breakpoint-up(md) {
+      margin: 8pt;
+    }
+  }
+
   .n-board {
     padding: 0px 0px;
     background-color: var(--color-bg);
     min-height: 50vh;
     display: flex;
     flex-direction: column;
-
     @include media-breakpoint-up(md) {
       padding-top: 20px;
     }
@@ -550,29 +614,22 @@
     justify-content: center;
     align-items: center;
   }
-
-  .zmdi-search.active {
-    transform: scale(1.5);
-    background-color: var(--color-solid) !important;
-    color: var(--color-green) !important;
-    box-shadow: var(--box-shadow-float) !important;
-    border-radius: 50% !important;
-    z-index: 1000;
-  }
-  .zmdi-search {
-    color: var(--color-inverse);
-  }
-  .n-board .trackers {
-    max-width: 100%;
-    min-height: 30vh;
-    padding: 10px 0;
+  .board-edit-button {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: space-evenly;
+    align-items: center;
+    padding: 0px;
+    justify-content: center;
+    min-width: 40px;
+    min-height: 40px;
+    width: 40px;
+    height: 40px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    border-radius: 20px;
+    font-size: 22px;
+    background-color: var(--color-faded-1);
+    color: var(--color-inverse) !important;
   }
-
   .board-actions {
     display: flex;
     align-items: center;
@@ -580,78 +637,100 @@
     margin: 16px;
     margin-bottom: 32px;
     padding: 0 10px;
-    .btn {
-      min-width: 220px;
-      margin-left: 10px;
-      margin-right: 10px;
-      max-width: 200px;
-    }
-
-    @include media-breakpoint-down(sm) {
-      min-width: 300px;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-
-      flex-direction: column;
-      .btn {
-        flex-grow: 1;
-        width: 100%;
-        display: block;
-        margin-bottom: 6px;
-      }
-    }
-
-    padding-top: 16px;
-    > * {
-      margin: 0 4px;
-    }
   }
 </style>
 
 <!-- Start App Layout -->
-<AppLayout title={appTitle}>
-  <div slot="header">
+<NLayout pageTitle={appTitle}>
+  <header slot="header">
     {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
       <div class="container p-0 n-row h-100">
-        {#if TrackerStore.getAsArray().length > 13}
+        {#if $TrackerStore.timers.length}
           <button
-            style="margin:2px; border-radius:8px; padding:0 12px;"
-            class="btn btn-icon zmdi zmdi-search py-2 {data.searching ? 'active' : 'btn-clear'}"
-            on:click={methods.toggleSearch} />
+            xtransition:fade
+            class="btn tap-icon pl-3 pr-1"
+            on:click={TrackerStore.toggleTimers}>
+            <NIcon name="time" size={22} className="fill-red-pulse" />
+          </button>
         {/if}
+        <!-- IF MORE THAN 13 TRACKERS - SHOW SEARCH ICON-->
+        {#if Object.keys($TrackerStore.trackers).length > 13}
+          <button
+            class="btn tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}"
+            on:click={methods.toggleSearch}>
+            <NIcon
+              name="search"
+              size={22}
+              className={state.searching ? 'fill-primary-bright' : 'fill-faded-2'} />
+          </button>
+        {/if}
+
         <NBoardTabs
           boards={methods.injectAllBoard($BoardStore.boards || [])}
           active={$BoardStore.active}
           on:create={methods.newBoard}
           on:tabTap={event => {
             methods.stopSearch();
-            BoardStore.setActive(event.detail.id);
+            BoardStore.setActive(event.detail.id, event.detail);
           }}>
           {#if $BoardStore.boards.length > 1}
             <button
-              class="btn btn-clear btn-icon zmdi zmdi-sort-amount-desc"
+              class="btn btn-clear tap-icon px-2 pl-1"
               on:click={() => {
                 Interact.toggleBoardSorter();
-              }} />
+              }}>
+              <NIcon name="sort" size="22" className="fill-primary-bright" />
+            </button>
           {/if}
         </NBoardTabs>
       </div>
     {:else}
-      <NToolbar>
-        <i
-          on:click={methods.enableBoards}
-          class="zmdi zmdi-tab clickable ml-2 text-xs"
-          style="opacity:0" />
-        <div class="filler" />
-        <LogoType size={20} on:click={methods.enableBoards} />
-        <div class="filler" />
-        <i
-          on:click={methods.enableBoards}
-          class="zmdi zmdi-tab clickable ml-2 text-xs text-faded-2" />
-      </NToolbar>
+      <NToolbarGrid>
+        <div slot="left">
+          {#if $TrackerStore.timers.length}
+            <button
+              xtransition:fade
+              class="btn tap-icon pl-2"
+              on:click={TrackerStore.toggleTimers}>
+              <NIcon name="time" size={20} className="fill-red-pulse" />
+            </button>
+          {/if}
+        </div>
+        <div slot="main" class="align-items-center">
+          <LogoType size={20} on:click={methods.enableBoards} />
+        </div>
+        <button
+          slot="right"
+          class="btn btn-clear btn-icon tap-icon"
+          on:click={methods.enableBoards}>
+          <NIcon name="newTab" size="20" />
+        </button>
+      </NToolbarGrid>
     {/if}
-  </div>
+    {#if state.searching}
+      <div>
+        <NSearchBar
+          bind:this={_elSearchBar}
+          className="mt-2"
+          autocomplete
+          on:clear={() => {
+            state.searchTerm = null;
+          }}
+          on:change={value => {
+            state.searchTerm = value.detail;
+            methods.searchKeypress();
+          }}
+          placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}...">
+          <button
+            slot="right-inside"
+            class="btn btn-clear"
+            on:click={methods.toggleSearch}>
+            <NIcon name="close" className="fill-faded-2" />
+          </button>
+        </NSearchBar>
+      </div>
+    {/if}
+  </header>
   <!-- end header-->
   <div slot="content" class="container board-container">
     {#if user}
@@ -661,28 +740,34 @@
         </div>
       {:else}
         <main class="n-board h-100">
-
-          {#if data.searching}
-            <NToolbar className="mt-3 bg-transparent">
-              <div
-                class="d-flex d-row justify-content-between align-items-center
-                w-100 search-bar">
-
-                <input
-                  type="search"
-                  autofocus
-                  bind:this={searchInput}
-                  bind:value={data.searchTerm}
-                  on:input={methods.searchKeypress}
-                  placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}..."
-                  class="search-input" />
-
-              </div>
-            </NToolbar>
+          {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
+            <div
+              class="trackers n-grid framed mt-2"
+              style="min-height:auto"
+              transition:fly={{ y: -20, duration: 200 }}>
+              {#each TrackerStore.state.runningTimers() as tracker}
+                <NTrackerButton
+                  {tracker}
+                  value={methods.getTrackerValue(tracker)}
+                  hoursUsed={methods.getHoursUsed(tracker)}
+                  positivity={methods.getPositivity(tracker)}
+                  on:click={() => {
+                    methods.trackerTapped(tracker);
+                  }}
+                  disabled={state.savingTrackers.indexOf(tracker.tag) > -1}
+                  className={`${state.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${state.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
+                  on:longpress={() => {
+                    methods.showTrackerOptions(tracker);
+                  }} />
+              {/each}
+              <button class="btn-close" on:click={TrackerStore.hideTimers}>
+                <NIcon name="chevronUp" className="fill-inverse" />
+              </button>
+            </div>
           {/if}
-
           <!-- Loop over trackers -->
-          <div class="trackers">
+          <div class="trackers n-grid">
+
             {#if (foundTrackers || boardTrackers || []).length === 0}
               {#if foundTrackers != null}
                 <div class="no-trackers">
@@ -690,85 +775,58 @@
                 </div>
               {/if}
             {/if}
-
-            {#each foundTrackers || boardTrackers as tracker (tracker.tag)}
+            <!-- lastUsed={methods.getLastUsed(tracker)} -->
+            {#each foundTrackers || boardTrackers as tracker}
               <NTrackerButton
                 {tracker}
                 value={methods.getTrackerValue(tracker)}
                 hoursUsed={methods.getHoursUsed(tracker)}
+                positivity={methods.getPositivity(tracker)}
                 on:click={() => {
                   methods.trackerTapped(tracker);
                 }}
-                disabled={data.savingTrackers.indexOf(tracker.tag) > -1}
-                className={`${data.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${data.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
+                disabled={state.savingTrackers.indexOf(tracker.tag) > -1}
+                className={`${state.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${state.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
                 on:longpress={() => {
-                  Interact.vibrate();
                   methods.showTrackerOptions(tracker);
                 }} />
             {/each}
-            {#if !data.searching}
-              <button
-                class="n-tracker-button n-add-button"
-                on:click={methods.addButtonTap}>
-                <i class="emoji">+</i>
-              </button>
+            {#if !state.searching && $BoardStore.active !== '_timers'}
+              <NTrackerButton
+                on:click={methods.addButtonTap}
+                tracker={{ label: 'Add', emoji: '➕' }} />
             {/if}
           </div>
 
           <!-- Include User Tips - shit should be a component -->
-          {#if $UserStore.launchCount < 5 && data.hideTips !== true && $BoardStore.active == 'all'}
-            <div class="new-user tip n-row mb-3">
-              <button
-                class="text-md btn btn-clear btn-sm p-0 btn-icon flex-grow-off"
-                on:click={() => {
-                  data.hideTips = true;
-                }}>
-                <i class="text-md zmdi zmdi-close-circle" />
-              </button>
-              <div class="main filler m-1 ml-2">{tips[data.activeTip]}</div>
-              <div class="d-flex flex-row arrows">
-                <button
-                  class="btn btn-clear btn-icon zmdi px-1 zmdi-chevron-left"
-                  on:click={methods.previousTip} />
-                <button
-                  class="btn btn-clear btn-icon zmdi px-1 pl-2
-                  zmdi-chevron-right"
-                  on:click={methods.nextTip} />
-              </div>
-            </div>
-          {/if}
+          <NTip {tips} />
 
           <div class="board-actions">
-
-            {#if $BoardStore.activeBoard}
-              <button
-                on:click={methods.editBoard}
-                class="btn btn btn-clear btn-sm icon-left">
-                <i class="zmdi zmdi-edit mr-2" />
-                {Lang.t('board.edit-board', {
-                  board: ($BoardStore.activeBoard || {}).label || null
-                })}
-              </button>
-            {/if}
+            <button
+              on:click={editBoard}
+              class="btn btn btn-round board-edit-button clickable">
+              <NIcon name="more" size="32" className="fill-white" />
+            </button>
           </div>
 
         </main>
       {/if}
     {/if}
   </div>
+  <!-- End -->
   <div slot="footer">
     <div id="note-capture">
       <CaptureLog />
     </div>
   </div>
   <!-- end content-->
-</AppLayout>
+</NLayout>
 
 {#if $Interact.boardSorter.show}
   <BoardSortModal />
 {/if}
 
-{#if data.showStartPacks}
+{#if state.showStartPacks}
   <NModal title="Starter Packs">
     <div slot="header">
       <NBoardTabs boards={StarterPacks.methods.asArray()} />

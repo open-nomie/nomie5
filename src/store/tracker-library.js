@@ -12,7 +12,7 @@ import Logger from "../utils/log/log";
 // Vendors
 
 import StartPack from "../modules/packs/default-trackers";
-import { TrackerStore } from "../store/trackers";
+import { TrackerStore } from "../store/tracker-store";
 import { Interact } from "../store/interact";
 import { Lang } from "../store/lang";
 
@@ -24,16 +24,14 @@ const console = new Logger("🚦 Lang");
 
 const TrackerLibInit = () => {
   const { update, subscribe, set } = writable({
-    trackers: Object.keys(StartPack.trackers).map(
-      key => StartPack.trackers[key]
-    ),
+    trackers: Object.keys(StartPack.trackers).map((key) => StartPack.trackers[key]),
     show: false,
-    first: false
+    first: false,
   });
 
   const methods = {
     toggle() {
-      update(p => {
+      update((p) => {
         p.show = !p.show;
         p.first = false;
         return p;
@@ -41,19 +39,19 @@ const TrackerLibInit = () => {
     },
 
     showFirst() {
-      update(p => {
+      update((p) => {
         p.show = true;
         p.first = true;
         return p;
       });
-    }
+    },
   };
 
   return {
     update,
     subscribe,
     set,
-    ...methods
+    ...methods,
   };
 };
 

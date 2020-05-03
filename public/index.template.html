@@ -2,12 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="utf8" />
-    <title>Nomie 4</title>
+    <title>Nomie 5</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
     <meta http-equiv="Cache-Control" content="max-age=600" />
     <meta name="description" content="Open Source Mood Tracking" />
-    <meta name="apple-mobile-web-app-title" content="Nomie 4" />
+    <meta name="apple-mobile-web-app-title" content="Nomie 5" />
     <meta name="theme-color" content="#319ed7" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -15,12 +15,12 @@
 
     <link rel="apple-touch-icon" href="/images/icons/nomie-512.png" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/images/icons/nomie-android-192.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/icons/nomie-192.png" />
     <link rel="manifest" href="/manifest.json" />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="APP_URL" />
-    <meta property="og:title" content="Nomie 4" />
+    <meta property="og:title" content="Nomie 5" />
     <meta property="og:description" content="Private Mood and Life Tracking" />
     <meta property="og:image" content="" />
 
@@ -39,29 +39,23 @@
 
   <body>
     <noscript>
-      Sorry. Nomie 4 requires Javascript to run.
+      Sorry. Nomie requires Javascript to run.
     </noscript>
 
     <div class="loading-screen delete-on-app">
       <div class="version">vAPP_VERSION</div>
     </div>
 
-    <!-- Javascript Includes -->
-    <script src="/vendors/pouchdb/pouchdb.min.js"></script>
-    <script src="/vendors/blockstack/blockstack.js"></script>
-    <script src="/vendors/leaflet/leaflet.js"></script>
-    <script src="/vendors/leaflet/esri/esri-leaflet.js"></script>
-    <script src="/vendors/leaflet/geocoder/esri-leaflet-geocoder.js"></script>
-
-    <!-- App Bundle -->
+    <script src="/js/vendors.js"></script>
     <script src="/bundle.js?v=APP_VERSION"></script>
-
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="vendors/leaflet/leaflet.css" />
-    <link rel="stylesheet" href="vendors/leaflet/geocoder/esri-leaflet-geocoder.css" />
-    <!-- ZMDI for icons -->
-    <link rel="stylesheet" href="/vendors/material-design-iconic-font/css/material-design-iconic-font.min.css" />
-    <!-- bundle is all the styles from the app and components-->
+    <link rel="stylesheet" href="/css/vendors.css?v=APP_VERSION" defer />
     <link rel="stylesheet" href="/bundle.css?v=APP_VERSION" />
+    <!-- 
+      SimpleAnalytics 
+      Privacy aware analytics. They don't track IP or use Cookies.
+      Learn more at https://docs.simpleanalytics.com/what-we-collect
+    -->
+    <script async defer src="https://cdn.simpleanalytics.io/hello.js"></script>
+    <noscript><img src="https://api.simpleanalytics.io/hello.gif" alt="" /></noscript>
   </body>
 </html>

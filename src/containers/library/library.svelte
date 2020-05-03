@@ -3,12 +3,15 @@
 
   import TrackerButton from "../../containers/board/tracker-button.svelte";
   import NText from "../../components/text/text.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
+
   // Stores
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
   import { Lang } from "../../store/lang";
   import { TrackerLibrary } from "../../store/tracker-library";
   import { Interact } from "../../store/interact";
   import { UserStore } from "../../store/user";
+  import tick from "../../utils/tick/tick";
 
   let installed = {}; // hol der for anything installed during the opening
 
@@ -27,6 +30,32 @@
       }
       return tracker;
     });
+  }
+
+  function isInstalled(tracker) {
+    return (
+      $TrackerStore.trackers.hasOwnProperty(tracker.tag) ||
+      installed.hasOwnProperty(tracker.tag)
+    );
+  }
+
+  async function toggleTrackerInstalled(tracker) {
+    if (!isInstalled(tracker)) {
+      TrackerStore.saveTracker(tracker);
+      installed[tracker.tag] = true;
+      Interact.toast(`${tracker.label} added`);
+    } else {
+      let confirmed = await Interact.confirm(
+        `Remove ${tracker.label}?`,
+        `Data will be untouched`
+      );
+      if (confirmed) {
+        await TrackerStore.deleteTracker(tracker);
+        delete installed[tracker.tag];
+        installed = installed;
+        Interact.toast(`${tracker.label} removed`);
+      }
+    }
   }
 </script>
 
@@ -49,7 +78,7 @@
   }
   .tracker-option {
     position: relative;
-    margin: 4px;
+    // margin: 4px;
     .badge {
       position: absolute;
       right: 8px;
@@ -74,25 +103,19 @@
     </div>
   {/if}
 
-  <div class="grid">
+  <div class="n-grid">
     {#each trackers as tracker, index (tracker.tag)}
       <div class="tracker-option">
-        {#if TrackerStore.tagExists(tracker.tag) || installed.hasOwnProperty(tracker.tag)}
+        {#if $TrackerStore.trackers.hasOwnProperty(tracker.tag) || installed.hasOwnProperty(tracker.tag)}
           <div class="badge badge-green">
-            <i class="zmdi zmdi-check" />
+            <NIcon name="checkmark" className="fill-white" size="16" />
           </div>
         {/if}
         <TrackerButton
           hideMore={true}
           {tracker}
           on:click={() => {
-            if (!(TrackerStore.tagExists(tracker.tag) || installed.hasOwnProperty(tracker.tag))) {
-              TrackerStore.saveTracker(tracker);
-              installed[tracker.tag] = true;
-              Interact.toast(`${tracker.label} added`);
-            } else {
-              Interact.toast(`${tracker.label} already installed`);
-            }
+            toggleTrackerInstalled(tracker);
           }} />
       </div>
     {/each}

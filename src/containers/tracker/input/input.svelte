@@ -11,17 +11,18 @@
 
   // Components
   import NModal from "../../../components/modal/modal.svelte";
+  import NIcon from "../../../components/icon/icon.svelte";
 
   //Container for Slider (range), Keypad and Timer
   import SliderInput from "./slider.svelte";
-  import NKeypad from "./keypad.svelte";
   import NTimer from "./timer.svelte";
+  import NCalculator from "../../../components/calculator/calculator.svelte";
 
   // Utils
   import NomieUOM from "../../../utils/nomie-uom/nomie-uom";
 
   // Stores
-  import { TrackerStore } from "../../../store/trackers";
+  import { TrackerStore } from "../../../store/tracker-store";
   import { Interact } from "../../../store/interact";
   import { Lang } from "../../../store/lang";
 
@@ -31,14 +32,14 @@
   export let value = undefined; // If a valid is provided
   export let hideAdd = undefined; // If the Add button should be hidden
   export let saveLabel = Lang.t("general.save", "Save"); // The label of the save Button
-
   // Consts
   const dispatch = createEventDispatcher(); // Setup the dispatcher
 
   let data = {
     value: null, // holds current value
     tracker: null, // holds current tracker
-    ready: false // when it's ready
+    ready: false,
+    calcUsed: false // when it's ready
   };
 
   // Set up the Methods
@@ -68,6 +69,7 @@
       data.tracker.started = new Date().getTime();
       // Start the Timer for this tracker
       TrackerStore.startTimer(data.tracker);
+      methods.onCancel();
     },
     // Stop the Timer
     stopTimer() {
@@ -88,12 +90,14 @@
       // Set to not ready and the new tracker
       data.ready = true; // TODO: make this lack janky
       data.tracker = tracker;
-      setTimeout(() => {
-        // Wait to set the value
-        data.value = tracker.default || 0;
-        data.ready = true;
-      }, 200);
+      data.value = tracker.default || 0;
+      data.ready = true;
     }, 12);
+  }
+
+  function editTracker() {
+    Interact.editTracker(tracker);
+    Interact.dismissTrackerInput();
   }
 
   // When Component Mounts
@@ -137,12 +141,20 @@
   show={show || $Interact.trackerInput.show}
   type="fullscreen"
   className="tracker-input">
-  <div class="input-toolbar n-row" slot="header">
-    <div class="filler" />
-    <span class="animate notice-text {data.ready ? 'visible' : 'hidden'}">
-      {tracker.emoji} {tracker.label}
-    </span>
-    <div class="filler" />
+  <div class="n-toolbar-grid n-row" slot="header">
+    <div class="left truncate pl-3">
+      <span class="animate truncate up {data.ready ? 'visible' : 'hidden'}">
+        {#if data.tracker}{data.tracker.displayValue(data.value)}{/if}
+      </span>
+    </div>
+    <div class="main">
+      <span class="animate up text-md {data.ready ? 'visible' : 'hidden'}">
+        {tracker.emoji} {tracker.label}
+      </span>
+    </div>
+    <button class="btn btn-clear tap-icon right" on:click={editTracker}>
+      <NIcon name="edit" size="26" />
+    </button>
   </div>
   <!-- Is the data ready -->
   {#if data.ready === true}
@@ -158,11 +170,13 @@
           }} />
       {:else if tracker.type === 'value' || tracker.type === 'tick'}
         <div id="keypad-holder">
-          <NKeypad
-            {tracker}
+          <NCalculator
             {value}
-            on:change={value => {
-              data.value = value.detail;
+            displayFormat={input => {
+              return tracker.displayValue(input || '');
+            }}
+            on:change={changedValue => {
+              data.value = changedValue.detail;
             }} />
         </div>
       {:else if tracker.type === 'timer'}
@@ -174,9 +188,11 @@
           }} />
       {:else}
         <div id="keypad-holder">
-          <NKeypad
-            {tracker}
-            value={data.value}
+          <NCalculator
+            {value}
+            displayFormat={input => {
+              return tracker.displayValue(input || '');
+            }}
             on:change={value => {
               data.value = value.detail;
             }} />
@@ -185,77 +201,65 @@
     </div>
   {/if}
 
-  <div
-    class="footer d-flex flex-row align-center justify-content-between w-100"
-    slot="footer">
+  <div class="footer n-toolbar-grid" slot="footer">
+
     {#if data.tracker}
-      {#if data.tracker.type !== 'timer'}
+      <div class="left">
         <button
           aria-label="Cancel"
           on:click={methods.onCancel}
-          class="btn btn-clear btn-lg w-25 {data.tracker.type == 'timer' && !data.tracker.started ? 'd-none' : ''}">
-          <span class=" zmdi zmdi-close" />
+          class="btn btn-clear btn-lg">
+          {Lang.t('general.cancel', 'Cancel')}
         </button>
-      {/if}
+      </div>
+      <!-- end left toolbar -->
 
-      {#if data.tracker.type == 'timer'}
-        <button
-          on:click={methods.onCancel}
-          aria-label="Cancel"
-          class="btn btn-clear btn-lg mr-2 {data.value ? 'w-25' : 'w-100'}">
-          {#if data.value}
-            <span class=" zmdi zmdi-close" />
-          {:else}Close{/if}
-        </button>
-      {/if}
+      <div class="main px-2">
 
-      {#if data.tracker.type == 'timer' && data.value}
-        <button
-          on:click={methods.onSave}
-          class="btn btn-primary btn-lg "
-          aria-label="Save this log"
-          style="width:105px;">
-          {saveLabel}
-        </button>
-      {/if}
+        {#if (data.tracker.type == 'timer' && data.value) || (data.tracker.type != 'timer' && $Interact.trackerInput.allowSave !== false)}
+          <button
+            on:click={methods.onSave}
+            class="btn btn-primary btn-lg text-white btn-block "
+            aria-label="Save this log">
+            {saveLabel}
+          </button>
+        {/if}
 
-      {#if data.tracker.type != 'timer'}
-        <button
-          on:click={methods.onSave}
-          aria-label="Save this log"
-          class="btn btn-primary btn-lg "
-          style="width:105px;">
-          {saveLabel}
-        </button>
-      {/if}
+        {#if data.tracker.type == 'timer' && !data.tracker.started && !data.value}
+          <button
+            on:click={methods.startTimer}
+            aria-label="Start Timer"
+            class="btn btn-success btn-lg btn-block text-white">
+            {Lang.t('general.start', 'Start')}
+          </button>
+        {/if}
 
-      {#if data.tracker.type == 'timer' && !data.tracker.started && !data.value}
-        <button
-          on:click={methods.startTimer}
-          aria-label="Start Timer"
-          class="btn btn-success btn-lg w-100">
-          Start
-        </button>
-      {/if}
+        {#if data.tracker.type == 'timer' && data.tracker.started !== null}
+          <button
+            on:click={methods.stopTimer}
+            aria-label="Stop Timer"
+            class="btn btn-danger text-white btn-lg btn-block {data.tracker.started > 0 ? '' : 'd-none'}">
+            {Lang.t('general.stop', 'Stop')}
+          </button>
+        {/if}
 
-      {#if data.tracker.type == 'timer' && data.tracker.started !== null}
-        <button
-          on:click={methods.stopTimer}
-          aria-label="Stop Timer"
-          class="btn btn-danger btn-lg btn-block {data.tracker.started > 0 ? '' : 'd-none'}">
-          Stop
-        </button>
-      {/if}
+      </div>
+      <!-- end main toolbar-grid-->
 
-      {#if (data.tracker.type !== 'timer' || data.value) && hideAdd !== true}
-        <button
-          on:click={methods.onAdd}
-          title="Add this to the note, but don't save yet"
-          class="btn btn-clear btn-lg w-25 {tracker.started ? 'd-none' : ''}">
-          <!-- local hack to make plus match with close-->
-          <span class="zmdi zmdi-plus" />
-        </button>
-      {/if}
+      <div class="right">
+
+        {#if (data.tracker.type !== 'timer' || data.value) && hideAdd !== true}
+          <button
+            on:click={methods.onAdd}
+            title="Add this to the note, but don't save yet"
+            class="btn btn-clear btn-lg {tracker.started ? 'd-none' : ''}">
+            <!-- local hack to make plus match with close-->
+            <NIcon name="add" size="32" />
+            Add
+          </button>
+        {/if}
+      </div>
+      <!-- end toolbar-grid right -->
     {/if}
 
   </div>

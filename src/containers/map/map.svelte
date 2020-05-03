@@ -5,6 +5,7 @@
 
   // components
   import Item from "../../components/list-item/list-item.svelte";
+  import NIcon from "../../components/icon/icon.svelte";
   // modules
   import locate from "../../modules/locate/locate";
   import distance from "../../modules/locate/distance";
@@ -14,12 +15,16 @@
   import { Interact } from "../../store/interact";
   import { Lang } from "../../store/lang";
 
+  import tick from "../../utils/tick/tick";
+
   // props
   export let locations = [];
 
   export let small = undefined;
   export let picker = undefined;
   export let height = undefined;
+  export let className = "";
+  export let style = "";
 
   // consts
   const dispatch = createEventDispatcher();
@@ -32,6 +37,7 @@
 
   // Leaflet Map Holder
   let MAP = undefined;
+  let _el;
 
   // Local State
   let data = {
@@ -40,7 +46,8 @@
     locating: false,
     lat: null,
     lng: null,
-    showLocations: false
+    showLocations: false,
+    height: `100px`
   };
 
   $: if (locations) {
@@ -63,6 +70,10 @@
   // methods
   let methods = {
     init() {
+      if (_el) {
+        data.height = _el.parentElement.clientHeight;
+      }
+
       /** Initialize map **/
       return new Promise((resolve, reject) => {
         if (!MAP) {
@@ -72,12 +83,6 @@
           MAP.removeLayer(layer);
         });
 
-        if (locations.length) {
-          methods.getLocation(locations[0].lat, locations[0].lng).then(loc => {
-            data.locationName = loc.Match_addr;
-            data.locating = false;
-          });
-        }
         if (picker) {
           MAP.on("moveend", () => {
             let center = MAP.getCenter();
@@ -222,6 +227,9 @@
             locations[0].name,
             () => {
               data.activeLocation = locations[0];
+              if (data.activeLocation.log) {
+                Interact.shareLog(data.activeLocation.log);
+              }
             }
           );
         }
@@ -247,29 +255,29 @@
   };
 
   // Reactive Location Lookup
-  $: getLocation = () => {
-    return new Promise(resolve => {
-      // If activeLocation is not null
-      if (data.activeLocation) {
-        // Look up lat long
-        methods
-          .getLocation(data.activeLocation.lat, data.activeLocation.lng)
-          .then(address => {
-            resolve(address);
-          });
-      } else {
-        resolve(null);
-      }
-    });
-  };
+  // $: getLocation = () => {
+  //   return new Promise(resolve => {
+  //     // If activeLocation is not null
+  //     if (data.activeLocation) {
+  //       // Look up lat long
+  //       methods
+  //         .getLocation(data.activeLocation.lat, data.activeLocation.lng)
+  //         .then(address => {
+  //           resolve(address);
+  //         });
+  //     } else {
+  //       resolve(null);
+  //     }
+  //   });
+  // };
 
   let check = 1;
 
   // On Mount
-  onMount(() => {
-    methods.init().then(map => {
-      methods.renderMap();
-    });
+  onMount(async () => {
+    await tick(120);
+    await methods.init();
+    methods.renderMap();
   });
 </script>
 
@@ -393,8 +401,10 @@
 </style>
 
 <div
-  class="n-map-container {small ? 'small ' : ''}"
-  style="height:{height ? height + 'px' : ''}">
+  bind:this={_el}
+  class="{className} n-map-container {small ? 'small ' : ''}"
+  style="{height ? `height: ${height}px;` : `min-height: ${data.height}px;`}
+  {style}">
   {#if picker}
     <div class="picker-cover">
       <div class="picker-target">
@@ -443,8 +453,12 @@
               data.showLocations = !data.showLocations;
             }}>
 
-            <i
-              class="zmdi {data.showLocations ? 'zmdi-chevron-down' : 'zmdi-chevron-up'}" />
+            {#if data.showLocations}
+              <NIcon name="chevronDown" />
+            {:else}
+              <NIcon name="menu" />
+            {/if}
+
           </button>
         </div>
 
@@ -482,7 +496,8 @@
                 on:click={() => {
                   methods.setLocation(location);
                 }}>
-                <i class="zmdi zmdi-pin" />
+
+                <NIcon name="radio" />
               </button>
               <div
                 class="text-md text-inverse font-weight-bold"
@@ -493,18 +508,18 @@
               </div>
               <div slot="right" class="n-row" style="min-width:50px;">
                 <button
-                  class="btn btn-clear btn-icon mr-2"
+                  class="btn btn-clear mr-2"
                   on:click={evt => {
                     methods.editName(location);
                   }}>
-                  <i class="zmdi zmdi-edit" />
+                  <NIcon name="edit" size="24" />
                 </button>
                 <button
-                  class="btn btn-clear btn-icon px-0"
+                  class="btn btn-clear"
                   on:click={evt => {
                     methods.deleteLocation(location);
                   }}>
-                  <i class="zmdi zmdi-delete" />
+                  <NIcon name="delete" className="fill-red" />
                 </button>
               </div>
 

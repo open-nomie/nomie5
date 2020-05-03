@@ -8,35 +8,34 @@
 
   // svelte
   import { navigate } from "svelte-routing";
-  import { onMount } from "svelte";
-  import { fly } from "svelte/transition";
+  import { onMount, onDestroy } from "svelte";
 
   // components
   import NItem from "../components/list-item/list-item.svelte";
-  import NCell from "../components/cell/cell.svelte";
-  import NText from "../components/text/text.svelte";
   import NPoints from "../components/points/points.svelte";
-  import NNoteTextualizer from "../components/note-textualizer/note-textualizer.svelte";
+  import NIcon from "../components/icon/icon.svelte";
+  import NLogListLoader from "../components/log-list/log-list-loader.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
+  import NToolbarGrid from "../components/toolbar/toolbar-grid.svelte";
   import NModal from "../components/modal/modal.svelte";
   import Spinner from "../components/spinner/spinner.svelte";
   import NDatePicker from "../components/date-picker/date-picker.svelte";
   import LogItem from "../components/list-item-log/list-item-log.svelte";
-  import NDatePill from "../components/date-pill/date-pill.svelte";
   import NSearchBar from "../components/search-bar/search-bar.svelte";
+
+  import config from "../../config/global";
 
   // Containers
   import NMap from "../containers/map/map.svelte";
-  import AppLayout from "../containers/layout/app.svelte";
-
+  import NLayout from "../containers/layout/layout.svelte";
   // Utils
-  import NomieUOM from "../utils/nomie-uom/nomie-uom";
   import dayjs from "dayjs";
+  import tick from "../utils/tick/tick";
 
   // Stores
   import { UserStore } from "../store/user";
   import { Interact } from "../store/interact";
-  import { TrackerStore } from "../store/trackers";
+  import { TrackerStore } from "../store/tracker-store";
   import { LedgerStore } from "../store/ledger";
   import { Lang } from "../store/lang";
 
@@ -50,11 +49,12 @@
   let datePicker;
   let searchInput;
   let appTitle = null;
+  let showSearch = false;
 
   const state = {
     date: dayjs(new Date()),
-    time_format: "YYYY-MM",
-    logs: null,
+    time_format: config.book_time_format,
+    logs: [],
     trackers: {},
     ledger: null,
     searchTerm: "",
@@ -71,8 +71,7 @@
     },
     locations: [],
     loading: true,
-    showAllLocations: false,
-    searchYear: dayjs().format("YYYY")
+    showAllLocations: false
   }; // Assign State to compiled history page
 
   let refreshing = false;
@@ -89,7 +88,7 @@
     searchMode = true;
   }
 
-  let logs = undefined; // holder of the logs
+  let logs = []; // holder of the logs
   let searchLogs = undefined; // hodler of searched logs
   let loading = true;
   let book = undefined;
@@ -129,28 +128,6 @@
     );
   };
 
-  // Dynamically assign book
-  $: if ($LedgerStore.books[state.date.format("YYYY-MM")] && !searchMode) {
-    loading = true;
-    book = $LedgerStore.books[state.date.format("YYYY-MM")] || [];
-    logs = (book || [])
-      .filter(log => filterActiveDate(log))
-      .sort((a, b) => {
-        return a.end < b.end ? 1 : -1;
-      });
-
-    dayScore = 0;
-    logs
-      .filter(log => {
-        return log.score;
-      })
-      .forEach(log => {
-        dayScore = dayScore + parseInt(log.score);
-      });
-
-    loading = false;
-  }
-
   $: appTitle = `History ${state.date.format("YYYY-MM-DD")}`;
 
   $: if (searchLogs || logs) {
@@ -179,36 +156,79 @@
         searchMode = true;
       }
     },
-    getLogs(fresh) {
+
+    async doSearch(event) {
+      state.searchTerm = null;
+      let trackableElement = event.detail;
+      tick(100);
+      if (trackableElement.type == "tracker") {
+        state.searchTerm = `#${trackableElement.id}`;
+      } else {
+        state.searchTerm = `${trackableElement.raw}`;
+      }
+      showSearch = true;
+      methods.onSearchEnter();
+    },
+
+    async textClick(event) {
+      let trackableElement = event.detail;
+      let tracker =
+        trackableElement.type == "tracker"
+          ? TrackerStore.getByTag(trackableElement.id)
+          : null;
+
+      const buttons = [
+        {
+          title: `View stats`,
+          click: () => {
+            if (tracker) {
+              Interact.openStats(`#${trackableElement.id}`);
+            } else {
+              Interact.openStats(trackableElement.raw);
+            }
+          }
+        },
+        {
+          title: `Search for ${tracker ? tracker.label : trackableElement.raw}`,
+          click: () => {
+            methods.doSearch(event);
+          }
+        }
+      ];
+      if (trackableElement.type == "person") {
+        buttons.push({
+          title: `Check-In`,
+          click: () => {
+            Interact.person(trackableElement.id);
+          }
+        });
+      }
+      Interact.popmenu({
+        title: `${tracker ? tracker.label : trackableElement.raw} options`,
+        buttons: buttons
+      });
+    },
+    async getLogs(fresh) {
       fresh = fresh ? fresh : false;
-
       loading = true;
-      // state.refreshing = true;
-      // checks.list_date = {};
-
       // Query the Ledger for Posts on this day.
-      return LedgerStore.query({
+      logs = await LedgerStore.query({
         start: state.date.startOf("day").toDate(),
         end: state.date.endOf("day").toDate(),
         fresh: fresh
       });
+
+      loading = false;
+      return logs;
     },
     clearLocation() {
       state.location.name = null;
       state.location.lat = null;
       state.location.lng = null;
     },
-    refresh() {
-      refreshing = true;
-      setTimeout(() => {
-        refreshing = false;
-      });
-    },
     clearSearch() {
-      state.searchResults = null;
-      searchMode = false;
+      showSearch = false;
       state.searchTerm = "";
-      searchLogs = null;
     },
     previous() {
       methods.getDate(state.date.subtract(1, "day"));
@@ -220,71 +240,22 @@
     next() {
       methods.getDate(state.date.add(1, "day"));
     },
-    previousSearch() {
-      state.date = state.date.subtract(1, "year").startOf("year");
-      methods.search(state.searchTerm, state.date.format("YYYY"));
-    },
-    nextSearch() {
-      state.date = state.date.add(1, "year").startOf("year");
-      methods.search(state.searchTerm, state.date.format("YYYY"));
-    },
-    headerExists(date) {
-      // let dformat = dayjs(date).format("YYYY-MM-DD");
-      // if (checks.list_date.hasOwnProperty(dformat)) {
-      //   return true;
-      // } else {
-      //   checks.list_date[dformat] = true;
-      //   return false;
-      // }
-    },
     goto(date) {
       state.date = date;
       methods.getLogs();
     },
-    formSubmit(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      methods.search(state.searchTerm, state.date.format("YYYY"));
-      searchMode = true;
-    },
     searchChange(evt) {
-      console.log("history evt", evt);
       state.searchTerm = evt.detail;
-      // if (state.searchTerm.length > 1) {
-      //   console.log("Searching");
-      //   methods.search(state.searchTerm, state.date.format("YYYY"));
-      // }
+      showSearch = false;
+      window.scrollTo(0, 0);
     },
-    doSearch(evt) {
-      state.searchTerm = evt.detail;
-      if (state.searchTerm.length > 1) {
-        methods.search(state.searchTerm, state.date.format("YYYY"));
-      }
-    },
-    searchKeypress(event) {
-      if (event.key === "Enter" || event.key === "Return") {
-        methods.search(state.searchTerm, state.date.format("YYYY"));
-        return false;
-      }
-    },
-    refreshSearch() {
-      methods.search(state.searchTerm, state.date.format("YYYY"));
-    },
-    search(key, year) {
-      searchMode = true;
-      if ((key || "").length > 1) {
-        state.searchResults = [];
-        loading = true;
-        LedgerStore.search(state.searchTerm, year).then(searchResults => {
-          loading = false;
-          searchLogs = searchResults;
-        });
-      }
+    async onSearchEnter(evt) {
+      await tick(100);
+      window.scrollTo(0, 0);
+      showSearch = true;
     },
     trackerTapped(tracker, log) {
-      // let trackerId = ($TrackerStore[tracker.tag] || {}).id;
-      // navigate(`/stats/${tracker.tag}`);
-      Interact.openStats(tracker.tag);
+      Interact.openStats(`#${tracker.tag}`);
     },
     showLogOptions(log) {
       Interact.logOptions(log).then(action => {
@@ -296,24 +267,29 @@
     selectDate() {
       let ranges = [
         {
-          days: 90,
-          title: "90 Days Back"
+          time: 90,
+          title: "90 Days Back",
+          unit: "day"
         },
         {
-          days: 180,
-          title: "6 Months Back"
+          time: 180,
+          title: "6 Months Back",
+          unit: "day"
         },
         {
-          days: 365,
-          title: "1 Year Back"
+          time: 1,
+          title: "1 Year Back",
+          unit: "year"
         },
         {
-          days: 730,
-          title: "2 Years Back"
+          time: 2,
+          title: "2 Years Back",
+          unit: "year"
         },
         {
-          days: -1,
-          title: "Select Date..."
+          time: -1,
+          title: "Select Date...",
+          unit: "day"
         }
       ];
 
@@ -328,13 +304,18 @@
         buttons: ranges.map(range => {
           return {
             title: range.title,
-            click() {
-              if (range.days == -1) {
-                local.showDatePicker = true;
-              } else if (range.days === 0) {
-                methods.goto(dayjs());
+            click: async () => {
+              if (range.time == -1) {
+                let date = await Interact.selectDate();
+                if (date) {
+                  methods.goto(dayjs(date));
+                }
+              } else if (range.time === undefined || range.time === 0) {
+                methods.goto(dayjs(new Date()));
               } else {
-                methods.goto(state.date.subtract(range.days, "days"));
+                methods.goto(
+                  state.date.subtract(range.time || 0, range.unit || "day")
+                );
               }
             }
           };
@@ -343,19 +324,49 @@
     }
   };
 
+  async function refresh() {
+    refreshing = true;
+    console.log("Refresh history");
+    await tick(500);
+    await methods.getLogs(true);
+    LedgerStore.getMemories();
+    refreshing = false;
+  }
+
+  // If a new Log is added, or changed update the list.
+  let onLogUpdate;
+  let onLogSaved;
+  let onLogsDeleted;
+
+  // WHen mounted.
   onMount(() => {
     if ((state.searchTerm || "").length > 1 && !searchLogs) {
       methods.refreshSearch();
     }
     window.scrollTo(0, 0);
-  });
+    refresh();
 
-  /**
-   * // Fire off call to query the datastore
-   * This will call the ledger and load up the right book
-   * once the book is loaded, the logs var will be automaticallly filtered
-   */
-  methods.getLogs();
+    onLogUpdate = LedgerStore.hook("onLogUpdate", async log => {
+      await tick(600);
+      refresh();
+    });
+
+    onLogSaved = LedgerStore.hook("onLogSaved", async log => {
+      await tick(600);
+      refresh();
+    });
+
+    onLogsDeleted = LedgerStore.hook("onLogsDeleted", async () => {
+      await tick(600);
+      refresh();
+    });
+  });
+  onDestroy(() => {
+    // Unsubscribe
+    onLogSaved();
+    onLogUpdate();
+    onLogsDeleted();
+  });
 </script>
 
 <style lang="scss" type="text/scss">
@@ -365,21 +376,30 @@
     padding: 0;
     border-top: solid 1px rgba(0, 0, 0, 0.2);
   }
-  :global(.trackers-list .border-bottom:last-child) {
-    border-bottom: none !important;
-  }
+  // :global(.trackers-list .border-bottom:last-child) {
+  //   border-bottom: none !important;
+  // }
 
   .map-btn {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  .today-btn {
     position: fixed;
-    left: 18px;
-    bottom: 68px;
+    left: 10px;
+    bottom: 10px;
     border-radius: 20px;
     padding: 6px 12px;
     font-size: 12px;
   }
   .close-btn {
     left: auto;
-    right: 18px;
+    right: 0px;
+    bottom: 0px !important;
   }
 
   .page-history {
@@ -389,54 +409,10 @@
       max-height: 400px;
     }
   }
-
-  .history-toolbar-container {
-    .btn {
-      outline: none !important;
-    }
-    .btn.active {
-      color: var(--color-primary-bright) !important;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      border-radius: 20% !important;
-      outline: none !important;
-    }
-  }
-
-  .n-date-pill-container {
-    position: fixed;
-    bottom: 70px;
-    left: 0;
-    right: 0;
-  }
-
   .header-date-control {
     line-height: 100%;
     flex-grow: 1;
-    flex-shrin: 1;
-  }
-
-  :global(.trackers-list) {
-    border-bottom: solid 1px rgba(0, 0, 0, 0.06);
-    border-top: solid 1px rgba(0, 0, 0, 0.06);
-    margin-top: 10px;
-  }
-  :global(.trackers-list .n-item) {
-    margin-left: -16px;
-    margin-right: -16px;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-    border-bottom-color: rgba(0, 0, 0, 0.05) !important;
-  }
-  :global(.trackers-list .main div) {
-    font-size: 1.1rem !important;
-  }
-  :global(.trackers-list .emoji) {
-    font-size: 1.2rem !important;
-  }
-  .btn.flex {
-    display: flex;
-    align-items: center;
+    flex-shrink: 1;
   }
 
   :global(.page-history .n-item .n-item:last-child) {
@@ -444,179 +420,141 @@
   }
 </style>
 
-<AppLayout title={appTitle}>
+<NLayout pageTitle={appTitle}>
 
   <header slot="header">
+    <NToolbarGrid className="animate in {showSearch ? 'hidden' : 'visible'}">
+      <button
+        slot="left"
+        class="btn btn-clear btn-icon flex text-xl tap-icon"
+        on:click={methods.previous}>
+        <NIcon name="chevronLeft" />
+      </button>
+
+      <div
+        slot="main"
+        class={isToday ? 'text-inverse-2' : 'not-today text-red'}
+        on:click={methods.selectDate}>
+
+        <span class="font-weight-bold mx-1">{state.date.format('ddd')}</span>
+        {state.date.format('MMM Do YYYY')}
+        {#if refreshing}
+          <Spinner size="16" />
+        {:else}
+          <NIcon name="chevronDown" size="16" style="margin-top:-2px;" />
+        {/if}
+
+        <!-- end text middle -->
+      </div>
+      <button
+        slot="right"
+        class="btn btn-clear btn-icon flex text-xl tap-icon"
+        on:click={methods.next}>
+        <NIcon name="chevronRight" />
+      </button>
+    </NToolbarGrid>
+
+    <!-- hasResults={(searchLogs || []).length > 0} -->
+
     <NSearchBar
       searchTerm={state.searchTerm}
-      hasResults={(searchLogs || []).length > 0}
+      placeholder="Search History..."
+      style={showSearch ? 'margin-top:-20px;' : ''}
       on:change={methods.searchChange}
       on:clear={methods.clearSearch}
-      on:search={methods.doSearch} />
-
-    <NToolbar>
-      <div class="container history-toolbar-container">
-        <div class="d-flex justify-content-stretch align-items-center w-100">
-          {#if searchMode}
-            <button
-              class="btn btn-clear text-inverse flex"
-              on:click={methods.previousSearch}>
-              <i class="zmdi zmdi-chevron-left mr-2" />
-              {state.date.subtract(1, 'year').format('YYYY')}
-            </button>
-          {:else}
-            <button
-              class="btn btn-clear btn-icon flex"
-              on:click={methods.previous}>
-              <i class="zmdi zmdi-chevron-left" />
-            </button>
-          {/if}
-
-          {#if searchMode}
-            <div class="filler" />
-            <div class="text-center n-text md text-inverse">
-              {Lang.t('general.search')} {state.date.format('YYYY')}
-            </div>
-            <div class="filler" />
-          {:else}
-            <div class="filler" />
-
-            <div
-              class="header-date-control justify-content-center flex-grow
-              text-center"
-              on:click={methods.selectDate}>
-              <div class="text-center text-md n-row">
-                {#if dayScore}
-                  <NPoints points={dayScore} className="mr-2" />
-                {:else}
-                  <i class="zmdi mr-4 text-faded-3 text-xs" />
-                {/if}
-                <div class="col">
-                  <div
-                    class="{isToday ? 'text-inverse' : 'not-today text-primary-bright'}
-                    text-md text-inverse font-weight-bold md">
-                    {state.date.format('dddd')}
-                  </div>
-                  <div class="text-sm text-inverse-2">
-                    {state.date.format('MMM D YYYY')}
-                  </div>
-                </div>
-                <i class="zmdi zmdi-calendar mx-2 text-faded-3 text-xs" />
-              </div>
-              <!-- end text middle -->
-            </div>
-            <!-- end header-date-control -->
-
-            <div class="filler" />
-          {/if}
-          <!-- <button class="btn btn-clear btn-icon" on:click={methods.selectDate}>
-        <i class="zmdi zmdi-calendar" />
-      </button> -->
-          {#if searchMode}
-            <button
-              class="btn btn-clear text-inverse flex"
-              on:click={methods.nextSearch}>
-              {state.date.add(1, 'year').format('YYYY')}
-              <i class="zmdi zmdi-chevron-right ml-2" />
-            </button>
-          {:else}
-            <button class="btn btn-clear btn-icon flex" on:click={methods.next}>
-              <i class="zmdi zmdi-chevron-right" />
-            </button>
-          {/if}
-        </div>
-      </div>
-      <!-- end toolbar div wrapper-->
-    </NToolbar>
+      on:search={methods.onSearchEnter} />
 
   </header>
   <!-- end header-content header -->
 
   <main slot="content" class="page page-history">
 
-    {#if loading}
-      <div class="empty-notice">
-        <Spinner />
-      </div>
-    {:else}
-      <div class="container p-0">
-        <!-- If no Logs found -->
-        {#if logs.length === 0}
-          {#if !searchMode}
-            <div class="empty-notice">{Lang.t('history.no-records-found')}</div>
-          {:else}
-            <div class="empty-notice">
-              {state.date.format('YYYY')} {Lang.t('history.no-records-found')}
-            </div>
-          {/if}
-          <!-- If Logs and Not refreshing  -->
-        {:else if !searchMode}
-          <!-- Loop over logs -->
-          {#each logs as log, i (log._id)}
-            <LogItem
-              {log}
-              trackers={$TrackerStore}
-              on:trackerClick={event => {
-                methods.trackerTapped(event.detail.tracker, log);
-              }}
-              on:locationClick={event => {
-                Interact.showLocations([log]);
-              }}
-              on:textClick={event => {
-                state.searchTerm = event.detail.value;
-                methods.search(state.searchTerm);
-              }}
-              show24Hour={$UserStore.meta.is24Hour}
-              on:moreClick={event => {
-                Interact.logOptions(log).then(() => {});
-              }} />
-            <!-- Show the Log Item -->
-          {/each}
-          <!--
+    <div class="container p-0">
+      {#if loading}
+        <div class="empty-notice">
+          <Spinner />
+        </div>
+      {:else if logs.length === 0 && !showSearch}
+        {#if !searchMode}
+          <div class="empty-notice" style="max-height:200px;">
+            {Lang.t('history.no-records-found')}
+          </div>
+        {:else}
+          <div class="empty-notice">
+            {state.date.format('YYYY')} {Lang.t('history.no-records-found')}
+          </div>
+        {/if}
+        <!-- If Logs and Not refreshing  -->
+      {:else if !showSearch}
+        <!-- Loop over logs -->
+        {#each logs as log, index}
+          <LogItem
+            {log}
+            on:trackerClick={event => {
+              methods.trackerTapped(event.detail.tracker, log);
+            }}
+            on:textClick={event => {
+              methods.textClick(event);
+            }}
+            on:moreClick={event => {
+              Interact.logOptions(log).then(() => {});
+            }} />
+          <!-- Show the Log Item -->
+        {/each}
+
+        <!--
           Search Results
           If Search Mode and We have Logs
         -->
-        {:else if searchMode && searchLogs}
-          {#each searchLogs as log, i (log._id)}
+      {:else if showSearch && state.searchTerm}
+        <NLogListLoader
+          term={state.searchTerm}
+          limit={12}
+          on:trackerClick={event => {
+            methods.trackerTapped(event.detail.tracker, event.detail.log);
+          }}
+          on:textClick={event => {
+            methods.textClick(event);
+          }}
+          on:moreClick={event => {
+            Interact.logOptions(event.detail).then(() => {});
+          }} />
+      {/if}
+
+      <!-- Show History if exists -->
+      {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
+        <div class="memories">
+          {#each $LedgerStore.memories as log}
+            <div class="memories-log-header">
+              <button
+                class="btn btn-clear"
+                on:click={() => {
+                  methods.goto(dayjs(log.end));
+                }}>
+                From {dayjs(log.end).fromNow()}
+                <NIcon name="chevronRight" className="fill-white" />
+              </button>
+            </div>
             <LogItem
+              className="aged"
               {log}
-              fullDate={true}
-              trackers={$TrackerStore}
               on:trackerClick={event => {
                 methods.trackerTapped(event.detail.tracker, log);
               }}
               on:textClick={event => {
-                state.searchTerm = event.detail.value;
-                methods.search(state.searchTerm);
-              }}
-              on:locationClick={event => {
-                Interact.showLocations([log]);
+                methods.textClick(event);
               }}
               on:moreClick={event => {
                 Interact.logOptions(log).then(() => {});
               }} />
-            <!-- Show the Log Item -->
           {/each}
-          <!-- We have No search results -->
-          {#if !searchLogs.length}
-            <div class="gap" />
-            <NItem className="text-center bg-transparent">
-              <span class="text-faded-3">
-                No Results for {state.date.format('YYYY')}
-              </span>
-            </NItem>
-          {/if}
-          <div class="gap" />
-          <NItem
-            className="text-primary text-center"
-            on:click={methods.previousSearch}
-            title="Search {state.date.subtract(1, 'year').format('YYYY')}..." />
-          <div class="gap" />
-        {/if}
+        </div>
+      {/if}
+      <!-- end history -->
 
-      </div>
-    {/if}
-    {#if locations.length && !loading}
+    </div>
+
+    {#if locations.length && !loading && !state.searchTerm}
       {#if !state.showAllLocations}
         <div
           class="mini-map closed"
@@ -627,21 +565,21 @@
         </div>
       {:else}
         <div class="mini-map opened">
-
           <NMap {locations} />
           <button
-            class="btn btn-sm btn-dark btn-icon zmdi zmdi-close btn-round
-            map-btn close-btn"
+            class="btn btn-icon btn-round map-btn close-btn"
             on:click={() => {
               state.showAllLocations = !state.showAllLocations;
-            }} />
+            }}>
+            <NIcon name="closeFilled" size="48" />
+          </button>
 
         </div>
       {/if}
     {/if}
     {#if !isToday && !searchMode}
       <button
-        class="btn btn-sm btn-light btn-round map-btn"
+        class="btn btn-sm btn-light btn-round today-btn"
         on:click={() => {
           methods.goto(dayjs());
         }}>
@@ -651,7 +589,7 @@
   </main>
   <!-- end header-content content -->
 
-</AppLayout>
+</NLayout>
 
 {#if state.location.lat}
   <NModal show={true} title={state.location.name || 'Location'}>

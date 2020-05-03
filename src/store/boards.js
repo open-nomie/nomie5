@@ -11,7 +11,7 @@ import Storage from "../modules/storage/storage";
 
 // Stores
 import config from "../../config/global";
-import { TrackerStore } from "../store/trackers";
+import { TrackerStore } from "../store/tracker-store";
 
 // Utils
 import md5 from "md5";
@@ -28,7 +28,7 @@ const boardsInit = () => {
     active: localStorage.getItem("active-board") || "all",
     boards: [],
     loaded: false,
-    activeBoard: null
+    activeBoard: null,
   };
 
   const { subscribe, set, update } = writable(base);
@@ -36,22 +36,20 @@ const boardsInit = () => {
   const methods = {
     initialize(UserStore, tkrs) {
       trackers = tkrs;
-      let boardData = Storage.get(`${config.data_root}/boards.json`).then(
-        boards => {
-          if (boards) {
-            methods.load(boards);
-          }
-          return boards;
+      let boardData = Storage.get(`${config.data_root}/boards.json`).then((boards) => {
+        if (boards) {
+          methods.load(boards);
         }
-      );
+        return boards;
+      });
       return boardData;
     },
     load(boards) {
-      return update(bs => {
+      return update((bs) => {
         let map = {};
         // Filter out duplicate ID boards
         // TODO: figure out why duplicates happen on board saving
-        bs.boards = boards.filter(board => {
+        bs.boards = boards.filter((board) => {
           map[board.id] = map[board.id] || null;
           if (!map[board.id]) {
             map[board.id] = true;
@@ -62,13 +60,11 @@ const boardsInit = () => {
         });
         bs.loaded = true;
         // Get the active board based on active id
-        bs.activeBoard = bs.boards.find(b => b.id == bs.active);
+        bs.activeBoard = bs.boards.find((b) => b.id == bs.active);
 
         if (bs.activeBoard) {
           // remove any nulls from the tracker array if they exist
-          bs.activeBoard.trackers = (bs.activeBoard.trackers || []).filter(b =>
-            b ? true : false
-          );
+          bs.activeBoard.trackers = (bs.activeBoard.trackers || []).filter((b) => (b ? true : false));
         }
         // return state
         return bs;
@@ -76,7 +72,7 @@ const boardsInit = () => {
     },
     _save() {
       let boards;
-      update(d => {
+      update((d) => {
         let boards = d.boards;
         return d;
       });
@@ -88,7 +84,7 @@ const boardsInit = () => {
       return Storage.put(`${config.data_root}/boards.json`, boards);
     },
     labelById(id) {
-      let label = (base.boards.find(b => b.id === id) || {}).label;
+      let label = (base.boards.find((b) => b.id === id) || {}).label;
       return label ? label : "";
     },
     addTracker(tracker) {
@@ -96,7 +92,7 @@ const boardsInit = () => {
     },
     data() {
       let d = null;
-      update(bs => {
+      update((bs) => {
         d = bs;
         return d;
       });
@@ -104,8 +100,8 @@ const boardsInit = () => {
     },
     deleteBoard(boardId) {
       let boards;
-      update(bs => {
-        bs.boards = bs.boards.filter(board => {
+      update((bs) => {
+        bs.boards = bs.boards.filter((board) => {
           return board.id !== boardId;
         });
         boards = bs.boards;
@@ -118,10 +114,10 @@ const boardsInit = () => {
     },
     removeTrackerFromBoard(tracker, boardId) {
       let res;
-      update(bs => {
+      update((bs) => {
         let board = methods.boardById(boardId);
         if (board) {
-          board.trackers = board.trackers.filter(tag => {
+          board.trackers = board.trackers.filter((tag) => {
             return tag !== tracker.tag;
           });
           res = methods.save(bs.boards);
@@ -137,18 +133,18 @@ const boardsInit = () => {
     activeBoardContains(tracker) {
       let contains = false;
       tracker = tracker.tag || tracker; // if it's an object use the tag, otherwise assume it's a string
-      update(d => {
+      update((d) => {
         contains = d.activeBoard.indexOf(tracker) > -1;
         return d;
       });
       return contains;
     },
     saveBoard(boardToSave) {
-      return new Promise(resolve => {
-        update(bs => {
-          let existing = bs.boards.find(brd => brd.id == boardToSave.id);
+      return new Promise((resolve) => {
+        update((bs) => {
+          let existing = bs.boards.find((brd) => brd.id == boardToSave.id);
           if (existing) {
-            bs.boards = bs.boards.map(board => {
+            bs.boards = bs.boards.map((board) => {
               return board.id == boardToSave.id ? boardToSave : board;
             });
           } else {
@@ -160,7 +156,12 @@ const boardsInit = () => {
       });
     },
     boardById(id) {
-      return base.boards.find(b => {
+      let base;
+      update((state) => {
+        base = state;
+        return state;
+      });
+      return base.boards.find((b) => {
         return b.id == id;
       });
     },
@@ -171,7 +172,7 @@ const boardsInit = () => {
       return (methods.boardById(base.active) || {}).label;
     },
     sortActiveTrackers(tagsArray) {
-      update(bs => {
+      update((bs) => {
         let board = methods.boardById(bs.activeBoard.id);
         board.trackers = tagsArray;
         methods.save(bs.boards);
@@ -182,7 +183,7 @@ const boardsInit = () => {
       return methods.addTrackersToBoard(trackerArray, base.active);
     },
     addTrackersToBoard(trackerArray, boardId) {
-      update(bs => {
+      update((bs) => {
         // Find the board by id.
         let board = methods.boardById(boardId);
         // if it's found
@@ -190,10 +191,10 @@ const boardsInit = () => {
           // loop over trackers to push
           // TODO: tried to make this a spread - but I keep breaking it.
           trackerArray
-            .filter(t => {
+            .filter((t) => {
               return t ? true : false;
             })
-            .forEach(tkr => {
+            .forEach((tkr) => {
               if (board.trackers.indexOf(tkr.tag) === -1) {
                 board.trackers.push(tkr.tag);
               }
@@ -212,9 +213,9 @@ const boardsInit = () => {
         let boardStub = {
           id: id,
           label: label,
-          trackers: trackers
+          trackers: trackers,
         };
-        update(bs => {
+        update((bs) => {
           bs.boards.push(boardStub);
           Storage.put(`${config.data_root}/boards.json`, bs.boards)
             .then(() => {
@@ -225,74 +226,28 @@ const boardsInit = () => {
         });
       });
     },
-    setActive(id) {
+
+    setActive(id, board) {
       if (id) {
         localStorage.setItem("active-board", id);
-        return update(bs => {
+        return update((bs) => {
           bs.active = id;
-          bs.activeBoard = bs.boards.find(b => b.id == bs.active);
+          bs.activeBoard = bs.boards.find((b) => b.id == bs.active);
           return bs;
         });
       }
     },
-    nextBoard() {
-      let data = methods.data();
-      let index = 0;
-      data.boards.forEach((b, bIndex) => {
-        if (b.id == data.active) {
-          index = bIndex;
-        }
-      });
-      if (index < data.boards.length - 1) {
-        let board = data.boards[index + 1];
-        if (board.id) {
-          methods.setActive(board.id);
-        }
-      }
-    },
-    previousBoard() {
-      let data = methods.data();
-      let index = 0;
-      data.boards.forEach((b, bIndex) => {
-        if (b.id == data.active) {
-          index = bIndex;
-        }
-      });
-      if (index > 0) {
-        let board = data.boards[index - 1];
-        if (board.id) {
-          methods.setActive(board.id);
-        }
-      }
-    },
-    getActiveTrackerTags() {
-      let trackers = [];
-      let data = methods.data();
 
-      if (data.active == "all") {
-        trackers = TrackerStore.getAsArray().map(tracker => tracker.tag);
-      } else if (data.active == "timers") {
-        trackers = TrackerStore.getRunning().map(tracker => tracker.tag);
-      } else {
-        let b = data.boards.find(board => board.id === data.active);
-        if (b) {
-          trackers = b.trackers;
-        } else {
-          return [];
-        }
-      }
-      return trackers;
-    },
     reset() {
       return set(base);
-    }
+    },
   };
 
   return {
     subscribe,
     update,
     set,
-    ...methods
+    ...methods,
   };
 };
 

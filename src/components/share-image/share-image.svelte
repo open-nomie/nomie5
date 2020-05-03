@@ -4,14 +4,17 @@
   import { Lang } from "../../store/lang";
   import math from "../../utils/math/math";
   import { UserStore } from "../../store/user";
-  import { TrackerStore } from "../../store/trackers";
+  import { TrackerStore } from "../../store/tracker-store";
   import NNoteTextualizer from "../note-textualizer/note-textualizer.svelte";
   import Tracker from "../../modules/tracker/tracker";
   import TrackerButton from "../../containers/board/tracker-button.svelte";
   import Logo from "../logo/logo.svelte";
+  import NIcon from "../icon/icon.svelte";
   import dayjs from "dayjs";
   import domtoimage from "dom-to-image-more";
-  import regex from "../../utils/regex";
+  import tick from "../../utils/tick/tick";
+  import copyToClipboard from "../../utils/clipboard/clipboard";
+  import extractor from "../../utils/extract/extract";
 
   let boxDom;
   let noteDom;
@@ -40,33 +43,45 @@
         generating = false;
       }, 10);
     },
+    async copy() {
+      try {
+        // Get Image as Base64
+        const base64Image = await methods.toImage();
+        // Fetch the base64 - as a blob
+        const res = await fetch(base64Image);
+        const blob = await res.blob();
+        const item = new ClipboardItem({ "image/png": blob });
+        // Copy to clipboard
+        navigator.clipboard.write([item]);
+        // Fire toast
+        Interact.toast("Copied");
+      } catch (e) {
+        Interact.alert(Lang.t("general.error", "Error"), e.message);
+      }
+    },
+    async toImage() {
+      downloading = true;
+      await tick(120);
+      return await domtoimage.toPng(boxDom);
+    },
     async capture() {
       downloading = true;
-
-      setTimeout(() => {
-        domtoimage
-          .toPng(boxDom)
-          .then(function(dataUrl) {
-            var link = document.createElement("a");
-            link.download = `nomie-${dayjs().format("YYYY-DD-MM-H-mm")}.png`;
-            link.href = dataUrl;
-            link.click();
-            downloading = false;
-            Interact.closeShareImage();
-          })
-          .catch(function(error) {
-            console.error("oops, something went wrong!", error);
-          });
-      }, 120);
+      let image = await methods.toImage();
+      var link = document.createElement("a");
+      link.download = `nomie-${dayjs().format("YYYY-DD-MM-H-mm")}.png`;
+      link.href = image;
+      link.click();
+      downloading = false;
+      Interact.closeShareImage();
     },
     getIcons() {
-      let logTrackers = $Interact.shareImage.log.trackersArray();
+      let logTrackers = $Interact.shareImage.log.getMeta().trackers;
       return logTrackers
         .map(tagValue => {
           let pl = {};
-          pl.tag = tagValue.tag;
+          pl.tag = tagValue.id;
           pl.value = tagValue.value;
-          pl.tracker = trackers.hasOwnProperty(pl.tag)
+          pl.tracker = $TrackerStore.trackers.hasOwnProperty(pl.tag)
             ? trackers[pl.tag]
             : null;
           return pl;
@@ -91,10 +106,10 @@
       }
     },
     noteLength() {
-      let note = $Interact.shareImage.log.note
-        .replace(new RegExp(regex.tag, "gi"), "")
-        .trim();
-      return note.length;
+      let parsed = extractor
+        .parse($Interact.shareImage.log.note, { includeGeneric: true })
+        .filter(row => row.type != "tracker");
+      return parsed.length;
     },
     resize() {
       if (boxDom.style) {
@@ -108,7 +123,7 @@
   };
   let trackUnsub;
   onMount(() => {
-    trackers = $TrackerStore;
+    trackers = $TrackerStore.trackers;
     ready = true;
     setTimeout(() => {
       methods.resize();
@@ -174,13 +189,16 @@
       <button
         class="btn btn-clear clickable"
         on:click={Interact.closeShareImage}>
-        <i class="zmdi zmdi-close" />
+        <NIcon name="close" className="fill-white" />
       </button>
       <button class="btn btn-primary clickable" on:click={methods.capture}>
-        <i class="zmdi zmdi-download" />
+        <NIcon name="share" className="fill-white" />
+      </button>
+      <button class="btn btn-primary clickable" on:click={methods.copy}>
+        <NIcon name="copy" className="fill-white" />
       </button>
       <button class="btn btn-clear clickable" on:click={methods.randomTheme}>
-        <i class="zmdi zmdi-refresh" />
+        <NIcon name="refresh" className="fill-white" />
       </button>
     </div>
   </div>

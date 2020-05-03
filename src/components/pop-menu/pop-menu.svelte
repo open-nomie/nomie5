@@ -8,11 +8,13 @@
   export let title = undefined;
   export let description = undefined;
   export let buttons = [];
-  export let cancel = undefined;
+  // export let cancel = undefined;
   export let show = true;
 
   const methods = {
-    backgroundClicked(event) {}
+    backgroundClicked(event) {
+      dispatch("close");
+    }
   };
   let escListener;
   $: if (show) {
@@ -99,6 +101,16 @@
           border-radius: $radius;
           margin-top: 10px;
         }
+        &:active {
+          transform: scale(0.98);
+        }
+        &:hover {
+          transform: none;
+          background-color: var(--color-faded) !important;
+        }
+        &.btn-danger:hover {
+          background-color: var(--color-red) !important;
+        }
       }
 
       .card-body {
@@ -116,12 +128,13 @@
 </style>
 
 <div
-  class="full-screen dark-glass pop-menu {show === true ? 'visible' : 'hidden'}">
+  class="full-screen dark-glass pop-menu {show === true ? 'visible' : 'hidden'}"
+  on:click={methods.backgroundClicked}>
   <div class="card">
     {#if title || description}
-      <div class="pb-4 pt-2 text-center">
+      <div class="pb-3 pt-2 text-center">
         {#if title}
-          <h5 class="text-center m-0 p-0">{title}</h5>
+          <h5 class="text-center m-0 p-0 text-md text-inverse-2">{title}</h5>
         {/if}
         {#if description}
           <p class="text-center m-0 p-0">{description}</p>
@@ -132,7 +145,7 @@
       {#each buttons as button}
         <button
           class="btn btn-block btn-light btn-lg {button.description ? 'btn-desc' : ''}"
-          on:click={() => {
+          on:click|stopPropagation={() => {
             button.click();
             dispatch('close');
           }}>
@@ -144,7 +157,7 @@
       {/each}
       <button
         class="btn btn-block btn-danger btn-lg"
-        on:click={() => {
+        on:click|stopPropagation={() => {
           dispatch('close');
         }}>
         {Lang.t('general.cancel')}

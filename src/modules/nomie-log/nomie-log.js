@@ -1,11 +1,12 @@
 import nid from "../../modules/nid/nid";
 
 // Modules
-import extractTrackers from "../../utils/extract-trackers/extract-trackers"; // extract tracker function
-import _calculateScore from "../../utils/calculate-score/calculate-score"; // Score calculator
-import regexs from "../../utils/regex"; // Regex to find data points in the note
-import extractPeople from "../../utils/extract-trackers/extract-people";
-import extractContext from "../../utils/extract-trackers/extract-context";
+import extractor from "../../utils/extract/extract";
+import ScoreNote from "../../modules/scoring/score-note";
+import dayjs from "dayjs";
+import math from "../../utils/math/math";
+
+import timespace from "@mapbox/timespace";
 
 /**
  * Nomie Log / Record
@@ -27,39 +28,35 @@ export default class Record {
      */
     let end = starter.end ? new Date(starter.end) : new Date(); // set the end date
     let start = starter.start ? new Date(starter.start) : end;
-    this.end = end.getTime();
     this.start = start.getTime();
+    this.end = end.getTime();
 
     // Score Calculation
     // This Might be a bad idea - but i'm doing it anyways
     // If a score is set, use it - if not, calculate it.
     // If a score is 0 or not set
     //starter.score ||
-    this.score = _calculateScore(this.note, this.end);
+    this.score = starter.score || ScoreNote(this.note, this.end);
 
     // Get location
     this.lat = starter.lat || null;
     this.lng = starter.lng || null;
     this.location = starter.location || "";
+    // Add current timezone offset
+    if (!starter.offset && this.lat) {
+      let local = timespace.getFuzzyLocalTimeFromPoint(this.end || Date.now(), [this.lng, this.lat]);
+      let offset = -local._offset;
+      this.offset = offset;
+    } else {
+      this.offset = starter.offset || new Date().getTimezoneOffset();
+    }
+    // this.offset = starter.offset || new Date().getTimezoneOffset();
 
     // Get if this has been edited
     this.modified = starter.modified || false;
 
     // Get the source if provided
     this.source = starter.source || null;
-  }
-
-  // Get a hash of this note
-  hash() {
-    return nid([this.note, this.start, this.end, this.lat, this.lng].join(""));
-  }
-
-  isValid() {
-    return this.note.length > 0 || this.lat || this.lng;
-  }
-
-  calculateScore(note = null) {
-    return _calculateScore(note || this.note, this.end);
   }
 
   // Get it as an object
@@ -72,8 +69,27 @@ export default class Record {
       score: this.score,
       lat: this.lat,
       lng: this.lng,
-      location: this.location
+      location: this.location,
+      source: this.source,
+      modified: this.modified,
     };
+  }
+
+  // Get a hash of this note
+  hash() {
+    return nid([this.note, this.start, this.end, this.lat, this.lng].join(""));
+  }
+
+  isValid() {
+    return this.note.length > 0 || this.lat || this.lng;
+  }
+
+  calculateScore(note = null) {
+    return ScoreNote(note || this.note, this.end);
+  }
+
+  setScore(score) {
+    this.score = score;
   }
 
   // add a tag to the note
@@ -83,36 +99,44 @@ export default class Record {
     } else {
       this.note = `${this.note} #${tag}`;
     }
-    if (this.trackers) {
-      this.expand();
-    }
+    this.getMeta();
     return this;
   }
 
   // Does it have a specific  tracker?
   hasTracker(trackerTag) {
-    return this.trackers.hasOwnProperty(trackerTag);
+    if (!this.trackers) {
+      this.getMeta();
+    }
+    return this.trackers.find((trackerElement) => trackerElement.id == trackerTag) ? true : false;
+  }
+
+  getTrackerValues(trackerTag) {
+    return this.trackers
+      .filter((trackerElement) => trackerElement.id == trackerTag)
+      .map((trackerElement) => {
+        return trackerElement.value;
+      });
   }
 
   // Get note length without tags
   noteTextLength() {
-    let scrubbed = this.note.replace(new RegExp(regexs.tag, "gi"), "").trim();
-    return scrubbed.length;
+    return this.getScrubbedNote().length;
   }
 
-  // Get the score
-  positivityScore() {
-    if (this.score === 1) {
-      return -2;
-    } else if (this.score === 2) {
-      return -1;
-    } else if (this.score === 4) {
-      return 1;
-    } else if (this.score === 5) {
-      return 2;
-    } else {
-      return 0;
-    }
+  getScrubbedNote() {
+    let results = this.note
+      .split(" ")
+      .filter((word) => {
+        if (word.length > 1 && word.substr(0, 1) == "#") {
+          return false;
+        } else {
+          return true;
+        }
+      })
+      .join(" ");
+
+    return results;
   }
 
   // Expand for more data
@@ -122,56 +146,33 @@ export default class Record {
 
   expanded() {
     return Object.assign(this, {
-      trackers: extractTrackers(this.note),
+      trackableElements: extractor.parse(this.note),
       duration: this.end - this.start,
       startDate: new Date(this.start),
-      endDate: new Date(this.end)
+      endDate: new Date(this.end),
     });
   }
 
-  getMeta() {
-    return {
-      people: this.getPeople(),
-      context: this.getContext(),
-      trackers: this.trackersArray()
-    };
-  }
-
-  getPeople() {
-    return extractPeople(this.note || "");
-  }
-
-  getContext() {
-    return extractContext(this.note || "");
-  }
-
-  // Get trackers as array
-  trackersArray() {
-    let tks = extractTrackers(this.note);
-
-    let res = Object.keys(tks).map(key => {
-      return {
-        tag: tks[key].tracker,
-        value: tks[key].value
-      };
-    });
-    if (Array.isArray(res)) {
-      return res;
+  getTrackerValue(tag, calculateBy = "sum") {
+    let values = this.getMeta()
+      .trackers.filter((t) => t.id == tag)
+      .map((trackableElements) => trackableElements.value);
+    if (calculateBy == "sum") {
+      return math.sum(values);
     } else {
-      return [res];
+      return math.average(values);
     }
   }
 
-  // Get public verion - WTF IS THIS EVEN? I don't remember
-  public(tag) {
-    return {
+  getMeta() {
+    let trackableElements = extractor.parse(this.note);
+    return Object.assign(this, {
       duration: this.end - this.start,
-      geo: this.lat ? [this.lat, this.lng] : null,
-      startDate: new Date(this.start),
-      endDate: new Date(this.end),
-      start: new Date(this.start),
-      end: new Date(this.end),
-      value: (this.trackers[tag] || {}).value || 0
-    };
+      startDate: dayjs(this.start),
+      endDate: dayjs(this.end),
+      people: trackableElements.filter((te) => te.type == "person"),
+      context: trackableElements.filter((te) => te.type == "context"),
+      trackers: trackableElements.filter((te) => te.type == "tracker"),
+    });
   }
 }

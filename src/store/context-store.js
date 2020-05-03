@@ -26,20 +26,19 @@ const ContextInit = () => {
 
   const methods = {
     async init() {
-      Storage.get(`${config.data_root}/context.json`).then(contexts => {
-        update(d => contexts || []);
+      Storage.get(`${config.data_root}/context.json`).then((contexts) => {
+        update((d) => contexts || []);
       });
     },
     async save(contextArray) {
-      update(context => {
+      update((context) => {
         let changed = false;
-        contextArray.forEach(term => {
-          if (context.indexOf(term) == -1) {
+        contextArray.forEach((contextElement) => {
+          if (context.indexOf(`${contextElement.id}`) == -1) {
             changed = true;
-            context.push(term);
+            context.push(`${contextElement.id}`);
           }
         });
-
         if (changed) {
           this.write(context);
         }
@@ -48,14 +47,14 @@ const ContextInit = () => {
     },
     async write(payload) {
       return Storage.put(`${config.data_root}/context.json`, payload);
-    }
+    },
   };
 
   return {
     update,
     subscribe,
     set,
-    ...methods
+    ...methods,
   };
 };
 

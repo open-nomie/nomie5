@@ -1,39 +1,33 @@
 <script>
   // Svelte
   import { Router, Route, navigate } from "svelte-routing";
-  import { Link } from "svelte-routing";
   import { onMount } from "svelte";
+  import dayjs from "dayjs";
 
   // Vendors
   import Spinner from "./components/spinner/spinner.svelte";
   import { gestures } from "@composi/gestures";
 
   // Containers
-  import AppTabs from "./containers/layout/tabs.svelte";
   import Interactions from "./containers/interactions/interactions.svelte";
   import LibraryModal from "./containers/library/library.svelte";
-  import Modal from "./components/modal/modal.svelte";
+  import PersonModal from "./containers/people/person-modal.svelte";
+  // import Modal from "./components/modal/modal.svelte";
+  import StatsModal from "./containers/stats/stats-modal.svelte";
+  import StreakModal from "./containers/steak/streak-modal.svelte";
+
+  import SetupRoute from "./routes/setup.svelte";
 
   // Utils
   import Logger from "./utils/log/log";
 
-  // Routes
-  import TrackRoute from "./routes/track.svelte";
-  import HistoryRoute from "./routes/history.svelte";
-  import SetupRoute from "./routes/setup.svelte";
-  import SettingsRoute from "./routes/settings.svelte";
-  import StatsRoute from "./routes/stats.svelte";
-  import BoardEditorRoute from "./routes/board-editor.svelte";
-  import FAQRoute from "./routes/faq.svelte";
-  import PluginsRoute from "./routes/plugins.svelte";
-  import NomieAPIRoute from "./routes/nomie-api.svelte";
-  import ExportRoute from "./routes/export.svelte";
+  import RouterView from "./routes/routes.svelte";
 
   // Stores
   import { UserStore } from "./store/user"; //  user auth and state
   import { Interact } from "./store/interact"; //  global alerts, popmenus, confirms, etc
   import { BoardStore } from "./store/boards"; // board state  and methods
-  import { TrackerStore } from "./store/trackers"; // tracker state and methods
+  import { TrackerStore } from "./store/tracker-store"; // tracker state and methods
   import { TrackerLibrary } from "./store/tracker-library";
   import { CommanderStore } from "./store/commander"; // commander - /?note=hi&lat=35&lng=-81.32
   import { NomieAPI } from "./store/napi"; // Store for interacting with the Nomie API
@@ -47,40 +41,40 @@
   gestures();
 
   /**
-   * New Day?
-   *
-   * This checks to see if the day has changed since it was last launched.
-   * If so, lets give the user the option to reload the app..
+   * Day / Time Change Monitoring
+   * Fire off the MinuteChecker30 every 30 minutes
+   * This will check if the day changed
    */
-  let confirming = false;
-  const today = new Date().toDateString();
-  const dayCheck = setInterval(() => {
-    // Fire off a notice if it's not today anymore - and we haven't
-    // already fired off the confirm prompt // stops the double firing.
-    if (today !== new Date().toDateString() && !confirming) {
-      if (confirm("It's a new day! Nomie needs a refresh, do that now?")) {
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 200);
-      }
+  let todayCheckPeriod = 1000 * 60 * 10;
+  let todayCheckFormat = "YYYY-MM-DD";
+  let todayKey = dayjs().format(todayCheckFormat);
+  let newDay = false; // View reacts to this value
+
+  // Check every X minutes
+  const todayCheckInteval = setInterval(() => {
+    // Get now key
+    let checkKey = dayjs().format(todayCheckFormat);
+    // Compare now key to today key
+    if (todayKey !== checkKey) {
+      // It's new - trigger some reactions
+      newDay = true;
+      // Show toast notification
+      Interact.toast(`It's ${dayjs().format("dddd")}!`);
+      // Set today key to check key
+      todayKey = checkKey;
+      // Wait 500 ms
+      setTimeout(() => {
+        newDay = false;
+      }, 500);
     }
-  }, 1000 * 60 * 30);
-  //
-  /**
-   * Check for App Updates
-   * Will hit the version.json and compare it to the known
-   * version
-   *
-   * TODO: this is not working - why?
-   **/
+    // Check if the theme has Changed
+    methods.setDocParams();
+  }, todayCheckPeriod);
 
   const appVersion = "APP_VERSION";
 
-  // Not sure if theese are needed
-  // export let name = "nomie";
-  export let url = "";
-
-  $: if (window && $TrackerStore) {
+  // This should be reworked
+  $: if (window && $TrackerStore && !window.$TrackerStore) {
     window.$TrackerStore = $TrackerStore;
   }
 
@@ -88,7 +82,6 @@
   let offline = false;
 
   const methods = {
-    routerChange(event) {},
     hideSplashScreen() {
       document.querySelectorAll(".delete-on-app").forEach(d => {
         d.classList.add("deleted");
@@ -104,7 +97,9 @@
       let theme = localStorage.getItem(config.theme_key) || "auto";
       if (theme === "auto" && isDarkMode) {
         document.body.classList.add("theme-dark");
+        document.body.classList.remove("theme-light");
       } else if (theme === "auto") {
+        document.body.classList.remove("theme-dark");
         document.body.classList.add("theme-light");
       } else {
         document.body.classList.add(`theme-${theme}`);
@@ -135,19 +130,16 @@
     hidden = "webkitHidden";
     visibilityChange = "webkitvisibilitychange";
   }
-  document.addEventListener(
-    visibilityChange,
-    () => {
-      methods.setDocParams({ hidden });
-    },
-    false
-  );
+  // document.addEventListener(
+  //   visibilityChange,
+  //   () => {
+  //     methods.setDocParams({ hidden });
+  //   },
+  //   false
+  // );
 
   /**
-   *
-   * WINDOW LISTENERS
-   * GLoBaL StUFFs!
-   *
+   * Offline Watching
    */
 
   window.addEventListener("load", () => {
@@ -216,23 +208,9 @@
   // onMount(() => {});
 </script>
 
-{#if $UserStore.signedIn === true}
-  <Router {url} on:change={methods.routerChange} bind:this={router}>
-    <Route path="/history" component={HistoryRoute} />
-    <Route path="/history/:date" component={HistoryRoute} />
-    <Route path="/" component={TrackRoute} />
-    <Route path="/settings" component={SettingsRoute} />
-    <Route path="/board/:id" component={BoardEditorRoute} />
-    <Route path="/faq" component={FAQRoute} />
-    <!-- Plugin Coming Soon -->
-    <Route path="/plugins" component={PluginsRoute} />
-    <Route path="/plugins/settings/:pluginId" component={PluginsRoute} />
-    <Route path="/plugins/:pluginId" component={PluginsRoute} />
-    <Route path="/api" component={NomieAPIRoute} />
-    <Route path="/settings/export/:type" component={ExportRoute} />
-    <Route path="/settings/export" component={ExportRoute} />
-  </Router>
-{:else if $UserStore.signedIn == undefined}
+{#if $UserStore.signedIn === true && !newDay}
+  <RouterView />
+{:else if $UserStore.signedIn == undefined || newDay}
   <div class="empty-notice" style="height:calc(100vh - 75px)">
     <Spinner />
   </div>
@@ -241,15 +219,28 @@
 {/if}
 
 <!-- Global Modals, alerts, menus, etc-->
-{#if $Interact.stats.activeTag}
-  <StatsRoute id={$Interact.stats.activeTag} />
+{#if $Interact.stats.terms.length}
+  <StatsModal />
 {/if}
 {#if $TrackerLibrary.show}
   <LibraryModal />
 {/if}
+{#if $Interact.people.active}
+  <PersonModal />
+{/if}
+{#if $Interact.blocker.show}
+  <div id="ui-blocker" class="full-screen bg-translucent n-panel center-all">
+    <Spinner size="16" />
+    <span class="text-white ml-2">{$Interact.blocker.message}</span>
+  </div>
+{/if}
 <Interactions />
+<StreakModal />
 {#if $UserStore.storageType == 'blockstack' && offline}
   <div class="offline-notice">
     No connection to Blockstack. Avoid tracking while offline.
   </div>
 {/if}
+<div id="photo-holder">
+  <img id="photo-holder-image" alt="avatar-holder" />
+</div>

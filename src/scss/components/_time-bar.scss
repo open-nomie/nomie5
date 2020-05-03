@@ -1,0 +1,11 @@
+.timer-bar {
+  position: fixed;
+  animation: redPulse 3s infinite;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  font-size: 12px;
+  background-color: var(--color-red);
+  z-index: 2000;
+}

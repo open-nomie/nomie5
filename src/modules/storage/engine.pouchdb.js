@@ -32,7 +32,8 @@ export default {
   syncer: null, // the sync object
   db: new PouchDB(dbKey, {
     auto_compaction: true,
-    revs_limit: 2
+    rev_limit: 3,
+    ajax: { cache: false }
   }),
   onReady(func) {
     func(this);
@@ -52,9 +53,9 @@ export default {
     let remote = this.getRemote();
     if (remote.isValid()) {
       let parsed = remote.url;
-      parsed.username = remote.username ? remote.username || "".length : null;
-      parsed.password = remote.password ? remote.password || "".length : null;
-      parsed.pathname = `/${remote.dbPrefix || ""}${this.dbKey}`;
+      // parsed.username = remote.username ? remote.username || "".length : null;
+      // parsed.password = remote.password ? remote.password || "".length : null;
+      parsed.pathname = `/${remote.database}`;
       return parsed.toString();
     } else {
       return null;
@@ -92,13 +93,20 @@ export default {
     }
   },
   startSync() {
+    let remote = this.getRemote();
     let errorCount = 0;
     let syncURL = this.remoteToUrl();
     let self = this;
     if (syncURL) {
       this.syncer = PouchDB.sync(dbKey, syncURL, {
         live: true,
-        retry: true
+        retry: true,
+        ajax: { cache: false },
+        batch_size: 10,
+        auth: {
+          username: remote.username,
+          password: remote.password
+        }
       });
 
       this.syncer
@@ -110,6 +118,7 @@ export default {
           self.syncing = true;
           self.syncValid = true;
         });
+
       this.syncer
         .on("complete", this.onChange)
         .on("change", this.onChange)

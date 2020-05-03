@@ -7,27 +7,93 @@ button:focus {
   box-shadow: inherit;
 }
 
+.btn-close {
+  position: absolute;
+  padding: 0px;
+  top: -10px;
+  left: -8px;
+  background-color: var(--color-solid);
+  box-shadow: var(--box-shadow-tight);
+  color: var(--color-inverse);
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
+  border-radius: 12px;
+  border: none;
+  display: flex;
+  appearance: none;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 0;
+  flex-shrink: 0;
+  svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
+.btn-badge {
+  font-size: 0.8rem;
+  padding: 3pt 6pt 3pt 6pt;
+  background-color: var(--color-solid);
+  color: var(--color-inverse);
+  box-shadow: var(--box-shadow-tight);
+  margin: 4pt 2pt;
+  .count {
+    background-color: var(--color-solid-1);
+    font-size: 12px;
+    line-height: 20px;
+    padding: 0 4px;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    margin-left: 4px;
+  }
+  &.btn-xs {
+    font-size: 0.6rem !important;
+    padding: 0pt 8pt 0pt 8pt;
+    text-transform: uppercase;
+    font-weight: bold;
+    svg {
+      width: 20px !important;
+      margin-right: -4px;
+    }
+  }
+}
+
 .btn-group {
   .btn {
     &:active {
       color: var(--color-primary) !important;
     }
+    font-size: 0.75rem !important;
   }
+}
+
+.btn-sm {
+  border-radius: 6pt !important;
+}
+
+.btn:disabled {
+  opacity: 0.3;
 }
 
 .btn {
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  border-radius: 0.4rem;
+  border-radius: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
   &.btn-lg {
-    border-radius: 1rem;
+    border-radius: 0.6rem;
   }
-  &:active {
+  &:active,
+  &:hover {
     transition: all 0.2s ease-in-out;
     transform: scale(0.97) !important;
+    // color: var(--color-primary);
   }
 
   &.btn-desc {
@@ -49,7 +115,7 @@ button:focus {
 .btn-primary {
   background-color: var(--color-primary-bright);
   &:hover {
-    background-color: --color-primary;
+    // background-color: --color-primary;
   }
 }
 
@@ -100,8 +166,8 @@ button:focus {
   color: var(--color-primary);
   transition: all 0.2s ease-in-out;
   &:hover {
-    color: var(--color-primary);
-    transform: scale(1.06);
+    // color: var(--color-primary);
+    // transform: scale(1.06);
   }
   .text-md {
     font-weight: bold;
@@ -197,7 +263,7 @@ button:focus {
   &.btn-lg {
     min-height: 140px;
     min-width: 140px;
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
 }
 
@@ -228,6 +294,16 @@ button:focus {
       font-size: 1.4rem;
     }
   }
+  &.inverse {
+    background-color: transparent;
+    .btn {
+      opacity: 0.4;
+      &.active {
+        opacity: 1;
+        background-color: var(--color-solid-2) !important;
+      }
+    }
+  }
 }
 
 .btn-clear {
@@ -244,6 +320,10 @@ button:focus {
 
 .bg-faded {
   background-color: var(--color-faded) !important;
+}
+
+.bg-bg {
+  background-color: var(--color-bg);
 }
 
 .btn-round {

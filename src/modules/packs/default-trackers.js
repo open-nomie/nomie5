@@ -10,27 +10,21 @@ export default {
       uom: "num",
       emoji: "😉",
       default: "3",
-      max: "5",
+      max: "10",
       min: "1",
       score: "custom",
       score_calc: [
         {
           if: "value",
-          is: "gte",
-          v: "4",
-          sc: "2"
+          is: "gt",
+          v: "5",
+          sc: "1"
         },
         {
           if: "value",
-          is: "eq",
-          v: "2",
+          is: "lt",
+          v: "5",
           sc: "-1"
-        },
-        {
-          if: "value",
-          is: "eq",
-          v: "1",
-          sc: "-2"
         }
       ],
       goal: null,
@@ -59,7 +53,21 @@ export default {
       max: "100",
       min: "10",
       one_tap: false,
-      label: "Sleep Quality"
+      label: "Sleep Quality",
+      score_calc: [
+        {
+          if: "value",
+          is: "gt",
+          v: "50",
+          sc: "1"
+        },
+        {
+          if: "value",
+          is: "lt",
+          v: "50",
+          sc: "-1"
+        }
+      ]
     },
     water: {
       tag: "water",

@@ -13,7 +13,7 @@ import { navigate } from "svelte-routing";
 
 // vendors
 import dayjs from "dayjs";
-import math from "../utils/math/math";
+import md5 from "md5";
 
 // utils
 import Logger from "../utils/log/log";
@@ -21,21 +21,20 @@ import time from "../utils/time/time";
 
 // modules
 import NomieLog from "../modules/nomie-log/nomie-log";
+import Hooky from "../modules/hooks/hooks";
+const hooks = new Hooky();
 
 // Stores
 import { LedgerStore } from "../store/ledger";
 
 const console = new Logger("✋ Interact");
 
-let fakeNote =
-  "#water(43) #mood(5) This is a very long note that I would like to show off, and it should be able to be cut off at some point or another but never too early or late if you know what I mean. Shit it needs to be even longer than that! I must go on! Carry this axe and grind the stones of the forever more!";
-let randomLength = math.random_range(19, 300);
-
 const interactInit = () => {
   let getBaseState = () => {
     return {
       stats: {
-        activeTag: null
+        activeTag: null,
+        terms: [],
       },
       alert: {
         show: false,
@@ -43,72 +42,89 @@ const interactInit = () => {
         message: null,
         ok: "Ok",
         cancel: null,
-        onInteract: null
+        onInteract: null,
+      },
+      blocker: {
+        show: false,
+        message: null,
+      },
+      streak: {
+        show: null,
       },
       shareImage: {
         log: null,
-        color: null
+        color: null,
       },
       boardSorter: {
-        show: false
+        show: false,
+      },
+      people: {
+        active: null,
       },
       trackerSelector: {
         show: false,
         multiple: false,
-        onInteract: null
+        onInteract: null,
+      },
+      selector: {
+        show: false,
+        multiple: false,
+        onInteract: null,
+        type: "tracker",
       },
       trackerEditor: {
         show: false,
         tracker: null,
-        onInteract: null
+        onInteract: null,
       },
       trackerInput: {
         show: false,
         tracker: null,
         onInteract: null,
-        value: null
+        value: null,
+        allowSave: true,
       },
       logEditor: {
         show: false,
         log: null,
         onInteract: null,
         tag: null,
-        value: null
+        value: null,
       },
       toast: {
         show: false,
-        message: null
+        message: null,
       },
       popmenu: {
         show: false,
         title: null,
         description: null,
-        buttons: []
+        buttons: [],
       },
       locationFinder: {
         show: false,
         onInteract: null,
-        location: null
+        location: null,
       },
       locationViewer: {
         show: false,
-        locations: null
+        locations: null,
       },
       prompt: {
         show: false,
         placeholder: null,
         message: null,
-        title: null
+        title: null,
       },
       trackerInput: {
         show: false,
         tracker: null,
-        onInteract: null
+        onInteract: null,
       },
       camera: {
         show: false,
-        onInteract: null
-      }
+        onInteract: null,
+      },
     };
   };
 
@@ -118,8 +134,8 @@ const interactInit = () => {
 
   const methods = {
     alert(title, message, ok) {
-      return new Promise(resolve => {
-        update(s => {
+      return new Promise((resolve) => {
+        update((s) => {
           s.alert.show = true;
           s.alert.title = title;
           s.alert.message = message;
@@ -130,6 +146,47 @@ const interactInit = () => {
         });
       });
     },
+    blocker(message) {
+      update((state) => {
+        state.blocker.show = true;
+        state.blocker.message = message;
+        return state;
+      });
+    },
+    stopBlocker() {
+      update((state) => {
+        state.blocker.show = false;
+        state.blocker.message = null;
+        return state;
+      });
+    },
+    openStreak(term) {
+      update((state) => {
+        state.streak.show = term;
+        return state;
+      });
+    },
+    closeStreak(term) {
+      update((state) => {
+        state.streak.show = false;
+        return state;
+      });
+    },
+    loading(message) {
+      let cancel = () => {
+        update((state) => {
+          state.toast.show = false;
+          state.toast.message = null;
+          return state;
+        });
+      };
+      update((state) => {
+        state.toast.show = true;
+        state.toast.message = message;
+        return state;
+      });
+      return cancel;
+    },
     vibrate(ms) {
       // ms = ms || 90;
       // if (navigator.vibrate) {
@@ -138,10 +195,10 @@ const interactInit = () => {
     },
     editTracker(tracker) {
       return new Promise((resolve, reject) => {
-        update(s => {
+        update((s) => {
           s.trackerEditor.show = true;
           s.trackerEditor.tracker = tracker;
-          s.trackerEditor.onInteract = event => {
+          s.trackerEditor.onInteract = (event) => {
             resolve(event.detail);
           };
           return s;
@@ -149,20 +206,23 @@ const interactInit = () => {
       });
     },
     dismissEditTracker() {
-      update(s => {
+      update((s) => {
         s.trackerEditor.show = false;
         s.trackerEditor.tracker = null;
         s.trackerEditor.onInteract = null;
         return s;
       });
     },
-    trackerInput(tracker, value) {
+    async trackerInput(tracker, options = {}) {
+      let value = options.value || null;
+      let allowSave = options.allowSave === false ? false : true;
       return new Promise((resolve, reject) => {
-        update(s => {
+        return update((s) => {
           s.trackerInput.show = true;
           s.trackerInput.tracker = tracker;
+          s.trackerInput.allowSave = allowSave;
           s.trackerInput.value = value;
-          s.trackerInput.onInteract = tracker => {
+          s.trackerInput.onInteract = (tracker) => {
             resolve(tracker);
           };
           return s;
@@ -170,7 +230,7 @@ const interactInit = () => {
       });
     },
     dismissTrackerInput() {
-      update(d => {
+      update((d) => {
         d.trackerInput.show = false;
         d.trackerInput.tracker = null;
         d.trackerInput.onInteract = null;
@@ -178,45 +238,56 @@ const interactInit = () => {
       });
     },
     openShareImage(log) {
-      update(d => {
+      update((d) => {
         d.shareImage.log = log;
         return d;
       });
     },
     closeShareImage() {
-      update(d => {
+      update((d) => {
         d.shareImage.color = null;
         d.shareImage.log = null;
         return d;
       });
     },
-    openStats(tag) {
-      update(d => {
-        d.stats.activeTag = tag;
+    openStats(term) {
+      update((d) => {
+        d.stats.terms = d.stats.terms || [];
+        // if the term isn't the last one - then allow it.
+        // otherwise don't - this will allow them to add it later in the stack
+        if (d.stats.terms[d.stats.terms.length] !== term) {
+          d.stats.terms.push(term);
+        }
+        return d;
+      });
+    },
+    person(username) {
+      update((d) => {
+        d.people.active = username;
         return d;
       });
     },
     closeStats() {
-      update(d => {
-        d.stats.activeTag = null;
+      update((d) => {
+        d.stats.terms = [];
         return d;
       });
     },
     toggleBoardSorter() {
-      update(s => {
+      update((s) => {
         s.boardSorter.show = !s.boardSorter.show;
         return s;
       });
     },
     openCamera(onSave) {
-      update(s => {
+      update((s) => {
         s.camera.show = true;
         s.camera.onInteract = onSave;
         return s;
       });
     },
     closeCamera() {
-      update(s => {
+      update((s) => {
         s.camera.show = false;
         s.camera.onInteract = null;
         return s;
@@ -225,49 +296,61 @@ const interactInit = () => {
     shareLog(log) {
       Interact.openShareImage(log);
     },
+
+    select(type = "tracker", multiple = false) {
+      return new Promise((resolve, reject) => {
+        update((state) => {
+          state.selector.multiple = multiple;
+          state.selector.show = true;
+          state.selector.type = type;
+          state.selector.onInteract = (itemArray) => {
+            resolve(itemArray);
+          };
+          return state;
+        });
+      });
+    },
     /**
      * Select a Single Tracker
      */
-    selectTracker() {
-      return new Promise((resolve, reject) => {
-        update(s => {
-          s.trackerSelector.show = true;
-          s.trackerSelector.multiple = false;
-          s.trackerSelector.onInteract = trackerArray => {
-            resolve(trackerArray.length ? trackerArray[0] : null);
-          };
-          return s;
-        });
-      });
+    async selectTracker() {
+      return methods.select("tracker");
     },
     /**
      * Select a Multiple Tracker
      */
     selectTrackers() {
-      return new Promise((resolve, reject) => {
-        update(s => {
-          s.trackerSelector.show = true;
-          s.trackerSelector.multiple = true;
-          s.trackerSelector.onInteract = trackerArray => {
-            resolve(trackerArray);
-          };
-          return s;
-        });
-      });
+      return methods.select("tracker", true);
     },
     dismissTrackerSelector() {
-      update(s => {
+      update((s) => {
         s.trackerSelector.show = false;
         s.trackerSelector.multiple = false;
         s.trackerSelector.onInteract = null;
         return s;
       });
     },
+    dismissSelector() {
+      update((s) => {
+        s.selector.show = false;
+        s.selector.multiple = false;
+        s.selector.onInteract = null;
+        return s;
+      });
+    },
+    async selectDate(date = new Date()) {
+      let selectedDate = await Interact.prompt("Date / Time", null, {
+        valueType: "datetime",
+        value: dayjs(new Date(date)).format("YYYY-MM-DDTHH:mm"),
+      });
+      let localizedDate = time.datetimeLocal(selectedDate);
+      return localizedDate.getTime();
+    },
     editLog(log) {
       log = new NomieLog(log);
       log.expanded();
       return new Promise((resolve, reject) => {
-        update(s => {
+        update((s) => {
           s.logEditor.show = true;
           s.logEditor.log = log;
           s.logEditor.onInteract = resolve;
@@ -276,7 +359,7 @@ const interactInit = () => {
       });
     },
     dismissEditLog() {
-      update(s => {
+      update((s) => {
         s.logEditor.show = false;
         s.logEditor.log = null;
         s.logEditor.onInteract = null;
@@ -294,28 +377,28 @@ const interactInit = () => {
             methods
               .prompt("Update Content", null, {
                 value: log.note,
-                valueType: "textarea"
+                valueType: "textarea",
               })
-              .then(content => {
+              .then((content) => {
                 log.note = content;
-                LedgerStore.updateLog(log).then(res => {
+                LedgerStore.updateLog(log).then((res) => {
                   resolve({ action: "updated" });
                 });
               });
           },
-          updateData() {
-            Interact.editLog(log).then(log => {
-              setTimeout(() => {
-                resolve({ action: "data-updated" });
-              }, 10);
-            });
+          async updateData() {
+            const log = await Interact.editLog(log);
+            setTimeout(() => {
+              LedgerStore.hooks.run("onLogUpdate", log);
+            }, 10);
+            return { action: "data-updated" };
           },
-          editLog() {
-            Interact.editLog(log).then(log => {
-              setTimeout(() => {
-                resolve({ action: "data-updated" });
-              }, 10);
-            });
+          async editLog() {
+            const updatedLog = await Interact.editLog(log);
+            setTimeout(() => {
+              LedgerStore.hooks.run("onLogUpdate", updatedLog);
+            }, 10);
+            return { action: "data-updated" };
           },
           shareLog() {
             Interact.openShareImage(log);
@@ -323,127 +406,103 @@ const interactInit = () => {
           updateDate() {
             Interact.prompt("New Date / Time", null, {
               valueType: "datetime",
-              value: dayjs(new Date(log.end)).format("YYYY-MM-DDTHH:mm")
-            }).then(date => {
+              value: dayjs(new Date(log.end)).format("YYYY-MM-DDTHH:mm"),
+            }).then((date) => {
               let localizedDate = time.datetimeLocal(date);
               log.start = localizedDate.getTime();
               log.end = localizedDate.getTime();
               setTimeout(() => {
-                LedgerStore.updateLog(log).then(res => {
+                LedgerStore.updateLog(log).then((res) => {
                   resolve({ action: "date-updated" });
                 });
               }, 10);
             });
           },
           updateLocation() {
-            methods.pickLocation().then(location => {
+            methods.pickLocation().then((location) => {
               if (location) {
                 log.lat = location.lat;
                 log.lng = location.lng;
                 setTimeout(() => {
-                  LedgerStore.updateLog(log).then(res => {
+                  LedgerStore.updateLog(log).then((res) => {
                     resolve({ action: "updated" });
                   });
                 }, 10);
               }
             });
           },
-          delete() {
-            setTimeout(() => {
-              methods.confirm("Are you sure?", "Deleting an log cannot be undone, only recreated").then(res => {
-                if (res === true) {
-                  LedgerStore.deleteLogs([log]).then(() => {
-                    setTimeout(() => {
-                      resolve({ action: "deleted" });
-                    }, 1000);
-                  });
-                }
-              });
-            }, 10);
-          }
+          async delete() {
+            let confirmed = await methods.confirm("Are you sure?", "Deleting a log cannot be undone.");
+            if (confirmed) {
+              await LedgerStore.deleteLogs([log]);
+              return { action: "deleted" };
+            } else {
+              return null;
+            }
+          },
         };
-        // let initial = [
-        // 	{
-        // 		title: 'Note',
-        // 		click: actions.updateContent,
-        // 	},
-        // 	{
-        // 		title: 'Location',
-        // 		click: actions.updateLocation,
-        // 	},
-        // 	{
-        // 		title: 'Date & Time',
-        // 		click: actions.updateDate,
-        // 	},
-        // ];
-
-        // if (Object.keys(log.trackers).length) {
-        // 	initial.push({
-        // 		title: 'Tracker Data',
-        // 		click: actions.updateData,
-        // 	});
-        // }
 
         let initial = [
           {
             title: "Share...",
-            click: actions.shareLog
+            click: actions.shareLog,
           },
           {
             title: "Edit...",
-            click: actions.editLog
+            click: actions.editLog,
           },
           {
             title: "Delete...",
-            click: actions.delete
-          }
+            click: actions.delete,
+          },
         ];
 
         methods.popmenu({ title: "Log Options", buttons: initial });
       }); // end return promise
     },
     showLocations(locations) {
-      update(s => {
+      update((s) => {
         s.locationViewer.locations = locations;
         s.locationViewer.show = true;
         return s;
       });
     },
     dismissLocations() {
-      update(s => {
+      update((s) => {
         s.locationViewer.locations = null;
         s.locationViewer.show = false;
         return s;
       });
     },
     dismissToast() {
-      update(s => {
+      update((s) => {
         s.toast.message = null;
         s.toast.show = false;
         return s;
       });
     },
-    toast(message, perm) {
-      perm = perm === true ? true : false;
-      update(s => {
+    toast(message, options = {}) {
+      options.timeout = options.timeout || 1500;
+      let perm = options.perm === true ? true : false;
+      update((s) => {
         s.toast.message = message;
         s.toast.show = true;
         return s;
       });
       if (!perm) {
         setTimeout(() => {
-          update(s => {
+          update((s) => {
             s.toast.message = null;
             s.toast.show = false;
             return s;
           });
-        }, 1300);
+        }, options.timeout);
       }
     },
     confirm(title, message, ok, cancel) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          update(s => {
+          update((s) => {
             s.alert.show = true;
             s.alert.title = title;
             s.alert.message = message;
@@ -457,27 +516,25 @@ const interactInit = () => {
       });
     },
     reload() {
-      // console.log("Going to reload the app");
       document.location.reload(true);
     },
     popmenu(options) {
-      // console.log("Popmenu", options);
       setTimeout(() => {
-        update(s => {
+        update((s) => {
           s.popmenu.show = true;
           s.popmenu.buttons = options.buttons;
           s.popmenu.title = options.title;
           s.popmenu.description = options.description;
-          // console.log("Description", s.popmenu.description);
+
           return s;
         });
       }, 1);
     },
     pickLocation() {
       return new Promise((resolve, reject) => {
-        update(s => {
+        update((s) => {
           s.locationFinder.show = true;
-          s.locationFinder.onInteract = event => {
+          s.locationFinder.onInteract = (event) => {
             resolve(event);
           };
           return s;
@@ -485,23 +542,23 @@ const interactInit = () => {
       });
     },
     dismissPickLocation() {
-      update(s => {
+      update((s) => {
         s.locationFinder.show = false;
         s.locationFinder.onInteract = null;
         return s;
       });
     },
     clearPrompt() {
-      update(s => {
+      update((s) => {
         s.prompt.show = false;
         s.prompt.onInteract = null;
         return s;
       });
     },
-    prompt(title, message, options) {
+    prompt(title, message, options = {}) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          update(s => {
+          update((s) => {
             s.prompt.show = true;
             s.prompt.message = message;
             s.prompt.title = title;
@@ -509,7 +566,7 @@ const interactInit = () => {
             s.prompt.valueType = options.valueType || "text";
             s.prompt.cancel = "Cancel";
             s.prompt.placeholder = options.placeholder || "";
-            s.prompt.onInteract = res => {
+            s.prompt.onInteract = (res) => {
               resolve(s.prompt.value);
             };
             return s;
@@ -518,20 +575,20 @@ const interactInit = () => {
       });
     },
     dismiss() {
-      update(s => {
+      update((s) => {
         s.alert.show = false;
         s.popmenu.show = false;
         s.prompt.show = false;
         return s;
       });
-    }
+    },
   };
 
   return {
     update,
     subscribe,
     set,
-    ...methods
+    ...methods,
   };
 };
 

@@ -1,0 +1,33 @@
+#photo-holder {
+  position: fixed;
+  bottom: -220px;
+  left: 20px;
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // z-index: 3000;
+  img {
+    position: relative;
+  }
+  &[data-orientation="horizontal"] {
+    img {
+      width: auto;
+      height: 100%;
+    }
+  }
+  &[data-orientation="vertical"] {
+    img {
+      height: auto;
+      width: 100%;
+    }
+  }
+  &[data-orientation="square"] {
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+.tap-icon {
+  transition: all 0.2s ease-in-out;
+  z-index: 10;
+  position: relative;
+  font-size: 1.6rem !important;
+  color: var(--color-primary-bright);
+  fill: var(--color-primary-bright) !important;
+  &.sm {
+    font-size: 1.5rem !important;
+  }
+  svg {
+    height: 32px;
+    width: 32px;
+  }
+  &:focus,
+  &:active {
+    transform: scale(0.9) !important;
+  }
+}
+
+.tap-text {
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  color: var(--color-primary-bright) !important;
+  &.sm {
+    font-size: 1.5rem !important;
+  }
+}

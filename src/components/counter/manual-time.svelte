@@ -7,11 +7,13 @@
   import time from "../../utils/time/time";
   import Logger from "../../utils/log/log";
 
+  import NIcon from "../../components/icon/icon.svelte";
+
   // Vendors
   import dayjs from "dayjs";
 
   // Props
-  export let started = undefined;
+  // export let started = undefined;
   export let className = "";
   export let value = 0;
 
@@ -120,6 +122,13 @@
 <style lang="scss">
   @import "../../scss/utils/_utils";
 
+  :global(.n-counter-manual .unit svg) {
+    position: absolute;
+    top: 20px;
+    right: 2px;
+    height: 16px;
+    pointer-events: none;
+  }
   .n-counter-manual {
     // padding: 40px 20px;
     display: flex;
@@ -132,8 +141,14 @@
       font-size: 40px;
     }
     .unit {
+      position: relative;
       text-align: center;
+      background-color: var(--color-solid-2);
+      border-radius: 4pt;
+      margin: 4pt;
+      width: 95px;
       select {
+        -webkit-appearance: none;
         border: solid 1px rgba(0, 0, 0, 0.1);
         height: 50px;
         line-height: 50px;
@@ -143,7 +158,13 @@
         min-width: 86px;
         flex-grow: 1;
         text-align: center;
-        -webkit-appearance: none;
+        margin: 2px;
+        border-radius: 4pt;
+        background-color: var(--color-solid);
+
+        option {
+          text-align: center;
+        }
       }
       display: flex;
       flex-direction: column;
@@ -152,50 +173,27 @@
         color: var(--color-inverse-3);
         margin-top: 10px;
       }
-      &.hours {
-        margin-left: 6px;
-        margin-right: 6px;
-      }
     }
   }
 </style>
 
 <div class="n-counter-manual {className}">
   <div class="unit hours">
-    <!-- <button
-      class="btn btn-sm p-1 h-auto btn-square"
-      on:click={() => {
-        methods.add('hours');
-      }}>
-      <i class="zmdi zmdi-chevron-up" />
-    </button> -->
     <select
       value={methods.getUnitValue('hours')}
       on:change={event => {
         methods.setUnitValue(event, 'hours');
       }}>
-      {#each time.getNumberedArray(120) as unit (unit)}
+      {#each time.getNumberedArray(300) as unit (unit)}
         <option value={unit}>{unit}</option>
       {/each}
     </select>
-    <!-- <button
-      class="btn btn-sm p-1 h-auto btn-square"
-      on:click={() => {
-        methods.subtract('hours');
-      }}>
-      <i class="zmdi zmdi-chevron-down" />
-    </button> -->
+    <NIcon name="chevronDown" className="fill-solid" />
     <label>Hour</label>
   </div>
   <!-- Minutes -->
   <div class="unit hours">
-    <!-- <button
-      class="btn btn-sm p-1 h-auto btn-square"
-      on:click={() => {
-        methods.add('minutes');
-      }}>
-      <i class="zmdi zmdi-chevron-up" />
-    </button> -->
+
     <select
       value={methods.getUnitValue('minutes')}
       on:change={event => {
@@ -205,24 +203,12 @@
         <option value={unit}>{unit}</option>
       {/each}
     </select>
-    <!-- <button
-      class="btn btn-sm p-1 h-auto btn-square"
-      on:click={() => {
-        methods.subtract('minutes');
-      }}>
-      <i class="zmdi zmdi-chevron-down" />
-    </button> -->
+    <NIcon name="chevronDown" className="fill-solid" />
     <label>Min</label>
   </div>
   <!-- SEconds -->
   <div class="unit seconds">
-    <!-- <button
-      class="btn btn-sm p-1 h-auto btn-square"
-      on:click={() => {
-        methods.add('seconds');
-      }}>
-      <i class="zmdi zmdi-chevron-up" />
-    </button> -->
+
     <select
       value={methods.getUnitValue('seconds')}
       on:change={event => {
@@ -232,13 +218,7 @@
         <option value={unit}>{unit}</option>
       {/each}
     </select>
-    <!-- <button
-      class="btn btn-sm p-1 h-auto btn-square"
-      on:click={() => {
-        methods.subtract('seconds');
-      }}>
-      <i class="zmdi zmdi-chevron-down" />
-    </button> -->
+    <NIcon name="chevronDown" className="fill-solid" />
     <label>Sec</label>
   </div>
 </div>

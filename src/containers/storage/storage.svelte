@@ -1,12 +1,14 @@
 <script>
   // Svelte
   import { onMount } from "svelte";
+  import { navigate } from "svelte-routing";
 
   // Vendors
   import localforage from "localforage";
 
   // Modules
   import Storage from "../../modules/storage/storage";
+  import NIcon from "../../components/icon/icon.svelte";
 
   // Components
   import NItem from "../../components/list-item/list-item.svelte";
@@ -53,42 +55,23 @@
     }
   };
 
-  onMount(() => {
-    methods.initialize();
-  });
+  // onMount(() => {
+  //   // methods.initialize();
+  // });
 </script>
 
 <div class="n-storage">
   <div class="list">
     <NItem
-      title="Files ({state.files.length})"
+      title="Browse Storage..."
       on:click={() => {
-        state.showFiles = !state.showFiles;
+        navigate('/files');
       }}
       className="clickable">
-      <span slot="left" class="zmdi zmdi-folder text-primary btn-icon" />
-      <span slot="right" class="text-primary">
-        {#if state.showFiles}Hide{:else}Show Files{/if}
+      <span slot="right">
+        <NIcon name="chevronRight" className="fill-faded-2" />
       </span>
     </NItem>
-
-    {#if state.showFiles}
-      {#each state.files as file (file)}
-        <NItem>
-          <div class="truncate text-sm">
-            {file.substr(0, 40)}{file.length > 40 ? '...' : ''}
-          </div>
-          <button
-            class="btn btn-sm btn-clear text-danger"
-            slot="right"
-            on:click={() => {
-              methods.deleteFile(file);
-            }}>
-            Delete
-          </button>
-        </NItem>
-      {/each}
-    {/if}
 
   </div>
 </div>
