@@ -474,9 +474,7 @@
         <div class="empty-notice">
           <Spinner />
         </div>
-      {/if}
-      <!-- If no Logs found -->
-      {#if logs.length === 0 && !showSearch}
+      {:else if logs.length === 0 && !showSearch}
         {#if !searchMode}
           <div class="empty-notice" style="max-height:200px;">
             {Lang.t('history.no-records-found')}
