@@ -10,6 +10,9 @@
   import StatsV5 from "../../modules/stats/statsV5";
   import StatsRef from "../../modules/stats/stats-ref";
 
+  import TimeOfDay from "../../components/time-of-day/time-of-day.svelte";
+  import DayOfWeek from "../../components/day-of-week/day-of-week.svelte";
+
   import { strToColor } from "../../components/dymoji/dymoji";
 
   // Utils
@@ -490,6 +493,7 @@
       math: state.tracker.math,
       trackableElement: state.trackableElement
     });
+    console.log("Stats!", state.stats);
     // See if we have any saved compares
     loadSavedCompares(queryPayload);
 
@@ -964,12 +968,15 @@
         </div>
         <!-- end over view -->
       {:else if state.dataView == 'time'}
-        <NTimeGrid
-          term={state.currentTerm}
-          color={state.currentColor}
-          rows={state.stats.rows}
-          className="flex-grow flex-shrink"
-          style="min-height:100%" />
+        <div class="p-1 mt-2">
+          <NTimeGrid
+            term={state.currentTerm}
+            color={state.currentColor}
+            rows={state.stats.rows}
+            style="min-height:100px;max-height:100px" />
+        </div>
+        <TimeOfDay statsTod={state.stats.tod} color={state.currentColor} />
+        <DayOfWeek statsDow={state.stats.dow} color={state.currentColor} />
       {:else if state.dataView == 'logs'}
         {#if state.timeSpan == 'y'}
           <div class="p-4 text-sm text-center text-inverse-2">

@@ -9,6 +9,9 @@ import Logger from "../../utils/log/log";
 import _math from "../../utils/math/math";
 import TrackableElement from "../trackable-element/trackable-element";
 
+import getDayOfWeek from "./day-of-week";
+import getTimeOfDay from "./time-of-day";
+
 const console = new Logger("📊 V5 Stats");
 
 export default class StatsProcessor {
@@ -306,6 +309,8 @@ export default class StatsProcessor {
       sum: valueMapTotals.sum,
       min: minMax.min,
       max: minMax.max,
+      dow: getDayOfWeek(this.rows), // day of week
+      tod: getTimeOfDay(this.rows), // time of day
     };
     return this.results;
   }

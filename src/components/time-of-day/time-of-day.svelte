@@ -1,0 +1,37 @@
+<script>
+  import BarChart from "../charts/bar-chart.svelte";
+  export let statsTod = null;
+  export let color = null;
+
+  let points = [];
+
+  const labels = {
+    early_morning: "Early AM",
+    morning: "Morning",
+    afternoon: "Afternoon",
+    evening: "Evening",
+    night: "Night"
+  };
+
+  $: if (statsTod) {
+    points = Object.keys(statsTod).map(key => {
+      return {
+        x: labels[key],
+        y: statsTod[key].count
+      };
+    });
+  }
+</script>
+
+<style lang="scss">
+
+</style>
+
+{#if statsTod}
+  <BarChart
+    height={100}
+    {points}
+    hideYTicks={true}
+    labels={points.map(p => p.x)}
+    {color} />
+{/if}
