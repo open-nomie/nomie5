@@ -7153,3 +7153,53 @@ TODO: Organize main into components or containers.
   min-height: fit-content;
   flex-grow: 1;
   background-color: var(--color-bg); }
+
+.tod {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: space-evenly;
+  flex-grow: 1;
+  flex-shrink: 1; }
+  .tod .bar {
+    background-color: #fff;
+    width: 16px;
+    border-radius: 8px; }
+  .tod .day {
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: calc(100% / 7);
+    height: calc(100% - 16px);
+    padding: 8px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+  .tod .early_morning {
+    background-color: #000e5b;
+    color: #ffbf00; }
+  .tod .morning {
+    background-color: #1e0aff;
+    color: #ffcc00; }
+  .tod .afternoon {
+    background-color: #509fff;
+    color: #00e5ff; }
+  .tod .evening {
+    background-color: #9912d3;
+    color: yellow; }
+  .tod .night {
+    background-color: #0c0f21;
+    color: yellow; }
+
+.dow {
+  flex-grow: 1;
+  flex-shrink: 1; }
+  .dow .day .bar {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    font-weight: bold; }

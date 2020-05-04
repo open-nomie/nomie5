@@ -47,9 +47,7 @@
   }
 
   function backgroundTap() {
-    console.log("Background Tap");
     if (closeOnBackgroundTap == true) {
-      console.log("Closing");
       dispatch("close");
     }
   }

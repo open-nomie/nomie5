@@ -800,13 +800,11 @@ const ledgerInit = () => {
           state.books[bookPath] = state.books[bookPath] || [];
           if (state.books[bookPath].length == 0 || options.fresh === true) {
             let getBook = methods.getBook(bookPath);
-            console.log("It's not cached");
             getBook.then((rows) => {
               state.books[bookPath] = rows;
             });
             gets.push(getBook);
           } else {
-            console.log("It's cached", options.fresh);
             gets.push(Promise.resolve(state.books[bookPath]));
           }
         });
