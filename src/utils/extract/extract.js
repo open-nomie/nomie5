@@ -1,7 +1,7 @@
 import TrackableElement from "../../modules/trackable-element/trackable-element";
 import snakeCase from "../snake-case/snake-case";
-import stringToValue from "../string-to-value/string-to-value";
-import noteParser from "./note-parser";
+
+import { tokenize } from "nomie-utils";
 
 /**
  * Parse a string into an array of Trackable Items
@@ -10,12 +10,12 @@ import noteParser from "./note-parser";
  * @param {Object} options
  */
 function parse(str = "", options = {}) {
-  return noteParser(str)
+  return tokenize(str)
     .map((elementObj) => {
       // Create a Trackable Element
       let element = new TrackableElement(elementObj);
       // Convert String to Number
-      element.value = stringToValue(element.value);
+      // element.value = stringToValue(element.value);
       return element;
     })
     .filter((element) => {
