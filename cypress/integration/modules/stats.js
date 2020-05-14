@@ -10,7 +10,7 @@ import TrackableElement from "../../../src/modules/trackable-element/trackable-e
 describe("modules/stats/stats", function () {
   let rows = [
     new NomieLog({
-      note: `I'm  just a note`,
+      note: `I'm  just a note #region`,
       end: dayjs().toDate().getTime(),
     }),
     new NomieLog({
@@ -22,7 +22,7 @@ describe("modules/stats/stats", function () {
       end: dayjs().day(1).hour(12).toDate().getTime(),
     }),
     new NomieLog({
-      note: `I'm a thing good!`,
+      note: `I'm a thing good! #soggy`,
     }),
     new NomieLog({
       note: `I'm the #middle #note and I'm #good(10) too`,
@@ -41,7 +41,7 @@ describe("modules/stats/stats", function () {
   const monthago = dayjs().subtract(30, "day");
   const weekago = dayjs().subtract(7, "day");
   const dayago = dayjs().subtract(1, "day");
-  const today = dayjs();
+  const today = dayjs().endOf("day");
   const moodElement = new TrackableElement({
     type: "tracker",
     id: "mood",
@@ -74,10 +74,6 @@ describe("modules/stats/stats", function () {
     expect(moodGenerated.tod.afternoon.count).to.equal(2);
   });
 
-  it("should get the right day of week", () => {
-    expect(moodGenerated.dow.mon.count).to.equal(3);
-  });
-
   it("should respect config order", () => {
     let stats = new StatsV5({ math: "mean", mode: "d" });
     stats.init({ mode: "w" });
@@ -107,10 +103,7 @@ describe("modules/stats/stats", function () {
     let todayKey = dayjs(new Date()).format("YYYY-MM-DD");
     let yesterdayKey = dayjs(new Date()).subtract(1, "day").format("YYYY-MM-DD");
     let valueMap = goodStats.getValueMap(rows);
-    console.log("Value Map", valueMap);
     expect(valueMap[todayKey]).to.be.instanceOf(Array);
-    console.log("Valuemap", valueMap[todayKey]);
-    expect(valueMap[todayKey]).to.include.members([11]);
     expect(valueMap[yesterdayKey]).to.include.members([10]);
   });
 

@@ -20,6 +20,7 @@
   import tick from "../../utils/tick/tick";
   import math from "../../utils/math/math";
   import Storage from "../../modules/storage/storage";
+  import DataDistance from "../../modules/data-distance/data-distance";
 
   import extractor from "../../utils/extract/extract";
 
@@ -249,19 +250,88 @@
     return type;
   }
 
+  /**
+   * A crazy ass function!!!
+   * This will load up the the stats for EVERY tracker
+   * for the current time period, and run a
+   * euclidean distance function on each to identify
+   * any that have simular patterns.
+   */
+  async function findRelatedTrackers() {
+    Interact.blocker("Looking for related...");
+    await tick(40);
+    let compareItems = {};
+    let trackerTags = Object.keys($TrackerStore.trackers);
+    let activeTrackerValues = state.stats.chart.values.map(point => point.y);
+    // Loop over trackers
+    for (var i = 0; i < trackerTags.length; i++) {
+      let tag = trackerTags[i]; // get tag
+      let tracker = $TrackerStore.trackers[tag]; // get tracker
+      let results = await getTrackerStats(tracker); // get stats
+      let compareValues = results.stats.chart.values.map(point => point.y); // get y values
+      let distance = DataDistance.euclidean(activeTrackerValues, compareValues); // calculate distance
+      compareItems[tag] = {
+        stats: results,
+        distance: distance
+      };
+    }
+    // Generate Results
+    let results = Object.keys(compareItems)
+      .map(tag => {
+        return {
+          tag,
+          stats: compareItems[tag].stats,
+          value: compareItems[tag].distance
+        };
+      })
+      .filter(r => r.value)
+      .sort((a, b) => {
+        return a.value < b.value ? -1 : 1;
+      })
+      .filter((r, index) => {
+        if (r.value < 5000 && index < 5) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    // Clear Compare
+    state.compare = [];
+    // Loop over results
+    for (var i = 0; i < results.length; i++) {
+      let tag = results[i].tag;
+      let tracker = $TrackerStore.trackers[tag];
+      if (tracker) {
+        let stats = compareItems[tag].stats;
+        state.compare.push(stats);
+      }
+    }
+    // Hit it again for svelte array
+    state.compare = state.compare;
+    // Save trackers for later
+    rememberCompare();
+    // Close blocker
+    Interact.stopBlocker();
+  }
+
+  async function getTrackerStats(tracker) {
+    let compareObj = new StatsRef({
+      type: "tracker",
+      key: tracker.tag,
+      label: tracker.label,
+      base: tracker,
+      is24Hour: $UserStore.meta.is24Hour
+    });
+    await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
+    return compareObj;
+  }
+
   async function compareTracker() {
     let trackers = await Interact.select("tracker", true);
     if (trackers.length) {
       for (var i = 0; i < trackers.length; i++) {
         const tracker = trackers[i];
-        let compareObj = new StatsRef({
-          type: "tracker",
-          key: tracker.tag,
-          label: tracker.label,
-          base: tracker,
-          is24Hour: $UserStore.meta.is24Hour
-        });
-        await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
+        const compareObj = await getTrackerStats(tracker);
         state.compare.push(compareObj);
       }
       state.compare = state.compare;
@@ -332,7 +402,7 @@
   }
 
   async function compareType() {
-    let types = ["Tracker", "Person", "Context", "Search Term"];
+    let types = ["Tracker", "Person", "Context", "Search Term", "Pick for me"];
     Interact.popmenu({
       buttons: types.map(type => {
         return {
@@ -353,6 +423,10 @@
                 break;
               case "Search Term":
                 await compareSearchTerm();
+                setView(dataViews.compare);
+                break;
+              case "Pick for me":
+                await findRelatedTrackers();
                 setView(dataViews.compare);
                 break;
             }
@@ -379,7 +453,7 @@
     const startOfMonth = {
       title: "Start of month",
       click: () => {
-        changeDate(state.date.startOf("month"));
+        changeDate(state.date.startOf("month").subtract(1, "day"));
       }
     };
     const startOfYear = {
@@ -391,7 +465,11 @@
     const startOfWeek = {
       title: "Start of week",
       click: () => {
-        changeDate(state.date.startOf("week"));
+        let date = state.date.startOf("week");
+        if (!$UserStore.meta.is24Hour) {
+          date = date.subtract(1, "day");
+        }
+        changeDate(date);
       }
     };
     const viewStreak = {
@@ -493,7 +571,7 @@
       math: state.tracker.math,
       trackableElement: state.trackableElement
     });
-    console.log("Stats!", state.stats);
+
     // See if we have any saved compares
     loadSavedCompares(queryPayload);
 
@@ -575,15 +653,15 @@
   function getMonthRange() {
     const from = getFromDate();
     const to = getToDate();
-    return `${from.format("MMM D")} - ${to.format("MMM D YYYY")}`;
+    return `${from.add(1, "day").format("MMM D")} - ${to.format("MMM D YYYY")}`;
   }
-
-  function getTimeGridRows() {}
 
   function getYearRange() {
     const from = getFromDate();
     const to = getToDate();
-    return `${from.format("MMM D YYYY")} - ${to.format("MMM D YYYY")}`;
+    return `${from.add(1, "month").format("MMM D YYYY")} - ${to.format(
+      "MMM D YYYY"
+    )}`;
   }
 
   function getDateRangeText() {
