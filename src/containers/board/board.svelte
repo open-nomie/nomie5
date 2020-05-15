@@ -741,10 +741,7 @@
       {:else}
         <main class="n-board h-100">
           {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
-            <div
-              class="trackers n-grid framed mt-2"
-              style="min-height:auto"
-              transition:fly={{ y: -20, duration: 200 }}>
+            <div class="trackers n-grid framed mt-2" style="min-height:auto">
               {#each TrackerStore.state.runningTimers() as tracker}
                 <NTrackerButton
                   {tracker}
