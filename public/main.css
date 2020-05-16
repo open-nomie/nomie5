@@ -6613,12 +6613,12 @@ aside.n-panel {
     align-items: center;
     justify-content: center; }
   .item-ball .username {
-    font-weight: 500;
+    font-weight: 400;
     width: 100%;
     text-align: center;
     text-overflow: ellipsis;
     overflow: hidden;
-    color: var(--color-inverse);
+    color: var(--color-inverse-1);
     margin-top: 10px;
     line-height: 1rem; }
   .item-ball:active {
@@ -6656,6 +6656,22 @@ aside.n-panel {
     left: 20%;
     right: 20%;
     z-index: 202; }
+  .item-ball.item-ball-small {
+    min-width: auto;
+    width: auto; }
+    .item-ball.item-ball-small .avatar-ball {
+      height: 76px;
+      border-radius: 26px;
+      width: auto; }
+      @media (min-width: 350px) {
+        .item-ball.item-ball-small .avatar-ball {
+          min-width: 100px; } }
+    .item-ball.item-ball-small .username {
+      margin-top: 6px;
+      font-size: 80% !important; }
+    .item-ball.item-ball-small .score {
+      top: -2px;
+      left: -2px; }
 
 .n-toolbar h1,
 .n-toolbar h2,

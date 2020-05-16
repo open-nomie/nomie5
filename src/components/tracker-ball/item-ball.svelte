@@ -12,7 +12,7 @@
   export let avatar = null;
   export let emoji = null;
   export let username = null;
-
+  export let small = false;
   export let label = null;
   export let color = "#333";
   export let note = null;
@@ -35,14 +35,14 @@
 
 <div
   {id}
-  class={`item-ball ${className}`}
+  class={`item-ball ${className} ${small ? 'item-ball-small' : ''}`}
   on:click={() => {
     dispatch('click', this);
   }}>
   <!-- -->
   <div class="avatar-ball">
     <slot />
-    <NBall {username} {emoji} {avatar} {color} size={102} />
+    <NBall {username} {emoji} {avatar} {color} size={small ? 80 : 102} />
   </div>
 
   <div class="username text-inverse-2 text-sm truncate-1">{label}</div>

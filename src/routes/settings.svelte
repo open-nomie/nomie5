@@ -319,6 +319,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 
               </div>
             </NItem>
+
             <!-- Use Location -->
             <NItem title={Lang.t('settings.use-location')}>
 
@@ -328,6 +329,14 @@ Note: Your data will not automatically move over. You'll first need to export it
                   on:change={event => {
                     UserStore.setAlwaysLocate(event.detail);
                   }} />
+              </div>
+            </NItem>
+            <NItem
+              title={Lang.t('settings.small-tracker-buttons', 'Small Tracker Buttons')}>
+              <div slot="right">
+                <NToggle
+                  bind:value={$UserStore.meta.compactTrackerButtons}
+                  on:change={methods.settingChange} />
               </div>
             </NItem>
             <!-- Tracker Board Tabs -->

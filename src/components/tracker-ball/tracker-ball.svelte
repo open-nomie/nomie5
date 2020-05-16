@@ -3,6 +3,7 @@
   import { createEventDispatcher } from "svelte";
   import ItemBall from "./item-ball.svelte";
   import ScorePill from "./score-pill.svelte";
+  import { UserStore } from "../../store/user";
   import dayjs from "dayjs";
   const dispatch = createEventDispatcher();
 
@@ -12,6 +13,7 @@
   export let note = undefined;
   export let className = "";
   export let tracker = null;
+  export let small = true;
 </script>
 
 <style lang="scss">
@@ -24,6 +26,7 @@
     {className}
     label={tracker.label}
     emoji={tracker.emoji}
+    small={$UserStore.meta.compactTrackerButtons == true}
     {note}
     color={tracker.color}
     on:click={() => {
