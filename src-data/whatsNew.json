@@ -1,1 +1,8 @@
-{"features":[],"fixes":["spelling errors","remove animtaion on running timer view - it's breaking the view"],"chores":[]}
+{
+  "features": [],
+  "fixes": [
+    "spelling errors",
+    "remove animtaion on running timer view - it's breaking the view"
+  ],
+  "chores": []
+}

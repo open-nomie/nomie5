@@ -1,51 +1,63 @@
 <script>
+  import { onMount } from "svelte";
   import NModal from "../../components/modal/modal.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NIcon from "../../components/icon/icon.svelte";
   import NText from "../../components/text/text.svelte";
-  import { DeviceStore } from "../../store/device-store";
+  import { AppStore } from "../../store/app-store";
 
   function closeThisUpdate() {
-    DeviceStore.closeUpdate();
+    AppStore.closeUpdate();
   }
   let showFixes = false;
+
+  onMount(() => {
+    setTimeout(() => {
+      AppStore.checkForUpdate();
+    }, 1000);
+  });
 </script>
 
-<NModal
-  title="New in APP_VERSION"
-  allowClose={true}
-  on:close={() => {
-    closeThisUpdate();
-  }}
-  show={$DeviceStore.whatsNew !== null}>
-  {#if $DeviceStore.whatsNew}
-    <NItem description={$DeviceStore.whatsNew.description} className="pt-2" />
-    {#if $DeviceStore.whatsNew.features.length}
+<NModal show={$AppStore.whatsNew !== null}>
+  <header slot="header" class="n-toolbar-grid">
+    <div class="left">
+      <button class="btn btn-clear tap-icon" on:click={closeThisUpdate}>
+        <NIcon name="close" />
+      </button>
+    </div>
+    <div class="main">
+      <NText size="md">Nomie APP_VERSION</NText>
+      <NText size="sm" className="text-faded-2">What's New</NText>
+    </div>
+  </header>
+  {#if $AppStore.whatsNew}
+    {#if $AppStore.whatsNew.features.length}
       <NItem
         className="divider text-xs py-1 text-primary compact font-weight-bold">
         FEATURES
       </NItem>
       <div class="n-list compact border-bottom">
-        {#each $DeviceStore.whatsNew.features as feature}
-          <NItem className="text-xs py-2" compact>{feature}</NItem>
+        {#each $AppStore.whatsNew.features as feature}
+          <NItem className="text-sm py-1" compact>{feature}</NItem>
         {/each}
       </div>
     {/if}
-    {#if $DeviceStore.whatsNew.fixes.length}
+    {#if $AppStore.whatsNew.fixes.length}
       <NItem
         className="divider text-xs py-1 text-primary compact font-weight-bold">
         FIXES
-        <button
-          class="btn btn-link"
+        <!-- <button
+          slot="right"
+          class="btn btn-clear btn-xs text-xs"
           on:click={() => {
             showFixes = !showFixes;
           }}>
           {showFixes ? 'Hide' : 'View'}
-        </button>
+        </button> -->
       </NItem>
       <div class="n-list compact">
-        {#each $DeviceStore.whatsNew.fixes as fix}
-          <NItem className="text-xs py-2" compact>{fix}</NItem>
+        {#each $AppStore.whatsNew.fixes as fix}
+          <NItem className="text-sm py-1" compact>{fix}</NItem>
         {/each}
       </div>
     {/if}

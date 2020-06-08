@@ -15,6 +15,7 @@
   // import Modal from "./components/modal/modal.svelte";
   import StatsModal from "./containers/stats/stats-modal.svelte";
   import StreakModal from "./containers/steak/streak-modal.svelte";
+  import WhatsNewModal from "./containers/whats-new/whats-new-modal.svelte";
 
   import SetupRoute from "./routes/setup.svelte";
 
@@ -33,7 +34,7 @@
   import { NomieAPI } from "./store/napi"; // Store for interacting with the Nomie API
   import { PeopleStore } from "./store/people-store"; // Store for holding People
   import { ContextStore } from "./store/context-store"; // Store for holding Post Context (categories)
-
+  import { AppStore } from "./store/app-store";
   import config from "../config/global";
 
   // Set a better console
@@ -195,7 +196,7 @@
     // Set the user if they're logged in
     ready = true;
     PeopleStore.init();
-    ContextStore.init();
+    ContextStore.init(); // check if this is a new version
     // Run any commands if needed
     setTimeout(() => {
       // If there are any URL caommands, it will run here.
@@ -210,6 +211,7 @@
 
 {#if $UserStore.signedIn === true && !newDay}
   <RouterView />
+  <WhatsNewModal />
 {:else if $UserStore.signedIn == undefined || newDay}
   <div class="empty-notice" style="height:calc(100vh - 75px)">
     <Spinner />
@@ -236,6 +238,7 @@
 {/if}
 <Interactions />
 <StreakModal />
+
 {#if $UserStore.storageType == 'blockstack' && offline}
   <div class="offline-notice">
     No connection to Blockstack. Avoid tracking while offline.
