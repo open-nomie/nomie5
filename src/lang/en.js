@@ -159,7 +159,7 @@ export default {
       "note-description": `Combine multiple trackers together using their
             #hashtags. For example, #mood #sleep_quality. Nomie will then ask
             for values one by one.`,
-      "delete-description": `You can always recreate it later. No historic data will be deleted deleted.`,
+      "delete-description": `You can always recreate it later. No historic data will be deleted.`,
     },
   },
 };
