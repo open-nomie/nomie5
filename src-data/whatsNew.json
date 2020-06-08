@@ -1,1 +1,1 @@
-{"features":["what's new modal on release changes"],"fixes":["spelling errors","remove animtaion on running timer view - it's breaking the view"],"chores":["installing new packages for better commit control"]}
+{"features":["what's new modal on release changes"],"fixes":["fixing what's new update always showing up","spelling errors","remove animtaion on running timer view - it's breaking the view"],"chores":["release v5.1.45","installing new packages for better commit control"]}
