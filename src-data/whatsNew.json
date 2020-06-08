@@ -1,8 +1,1 @@
-{
-  "features": [],
-  "fixes": [
-    "spelling errors",
-    "remove animtaion on running timer view - it's breaking the view"
-  ],
-  "chores": []
-}
+{"features":["what's new modal on release changes"],"fixes":["spelling errors","remove animtaion on running timer view - it's breaking the view"],"chores":["installing new packages for better commit control"]}
