@@ -16,6 +16,7 @@
     "url": "https://nomie.app"
   },
   "scripts": {
+    "generate-whatsnew": "node build-tools/generate-whats-new.js && git add . && git commit -m 'build: whats new'",
     "build": "npm rebuild && node build-tools/bust-cache.js && node build-tools/move-resources.js && rollup -c",
     "autobuild": "rollup -c -w",
     "scss": "node-sass ./src/scss/main.scss --output=./public --watch=./src/scss/**/*.scss --include-path",
@@ -58,6 +59,7 @@
     "euclidean-distance": "^1.0.0",
     "find-in-files": "^0.5.0",
     "git-release-notes": "^4.0.1",
+    "gitlog": "^4.0.0",
     "html2canvas": "^1.0.0-rc.5",
     "i18next": "^17.0.16",
     "jest": "^24.8.0",
