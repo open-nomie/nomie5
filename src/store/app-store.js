@@ -12,7 +12,7 @@ const console = new Logger("🗺 $AppStore");
 
 class AppStoreState {
   constructor() {
-    this.whatsNew = whatsNew;
+    this.whatsNew = null;
   }
 }
 
@@ -21,7 +21,7 @@ const AppStoreInit = () => {
 
   const checkForUpdate = () => {
     let lastVersion = localStorage.getItem("nomie/last-version");
-    if (lastVersion !== whatsNew.version + "444") {
+    if (lastVersion !== whatsNew.version) {
       localStorage.setItem("nomie/last-version", whatsNew.version);
       update((state) => {
         state.whatsNew = whatsNew;
