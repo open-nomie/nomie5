@@ -9,6 +9,7 @@
         padding-right: 0;
       }
     }
+
     // .n-item
     @include media-breakpoint-up(md) {
       display: flex;
@@ -35,6 +36,28 @@
 
       border: solid 1px transparent !important;
       border-radius: 8pt !important;
+    }
+  }
+}
+
+.capture-log {
+  .more-button {
+    flex-shrink: 0;
+    flex-grow: 0;
+    background-color: var(--color-solid);
+    width: 30px;
+    border-radius: 15px;
+    max-width: 30px;
+    height: 30px;
+    max-height: 30px;
+    overflow: hidden;
+    padding: 0;
+    display: flex;
+    margin-bottom: 6px;
+    margin-left: 6px;
+    &.active {
+      background-color: var(--color-primary) !important;
+      color: #fff;
     }
   }
 }

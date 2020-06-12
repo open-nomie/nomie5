@@ -545,7 +545,13 @@
       <!-- Note Input -->
       <div
         class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 || $ActiveLogStore.photo ? 'populated' : 'empty'}">
-
+        <button
+          class="btn more-button btn-icon {state.advanced ? 'active' : ''}"
+          on:click={toggleAdvanced}>
+          <NIcon
+            name="more"
+            className={state.advanced ? 'fill-white' : 'fill-inverse-2'} />
+        </button>
         <textarea
           id="textarea-capture-note"
           style="overflow:hidden"
@@ -556,13 +562,6 @@
           on:input={methods.keyPress}
           on:paste={methods.keyPress} />
 
-        <button
-          class="btn btn-clear btn-icon mr-1 {state.advanced ? 'text-green' : 'text-inverse'}"
-          on:click={toggleAdvanced}>
-          <NIcon
-            name="more"
-            className={state.advanced ? 'fill-green' : 'fill-inverse'} />
-        </button>
         {#if !saving}
           <button class="save-button" on:click={methods.logSave}>
             <NIcon name="sendFilled" style="fill: #FFF;" size="16" />
