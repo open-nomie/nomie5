@@ -19,6 +19,14 @@ input[type="password"] {
 
 .search-bar {
   position: relative;
+  &.top {
+    // position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    z-index: 1000;
+  }
 }
 
 .form-control {

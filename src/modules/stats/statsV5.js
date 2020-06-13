@@ -184,12 +184,13 @@ export default class StatsProcessor {
 
   // Generate Chart Data
   getChartDataByType(unit, timeFormat, labelFormat, valueMapTotals) {
+    console.log(`getChartDataByType - ${unit}, ${timeFormat}, ${labelFormat}, ${valueMapTotals}`);
     let labels = [];
     let values = [];
     let unitValues = valueMapTotals.days;
 
     let from = unit == "hour" ? this.fromDate.startOf("day") : this.fromDate;
-    let to = unit == "hour" ? this.fromDate.endOf("day") : this.toDate;
+    let to = unit == "hour" ? this.toDate.endOf("day") : this.toDate;
     let diff = to.diff(from, unit);
     for (var i = 1; i <= diff; i++) {
       const unitDate = dayjs(from).add(i, unit);
@@ -214,7 +215,7 @@ export default class StatsProcessor {
 
   getChartData(valueMapTotals) {
     if (this.mode == "d") {
-      let { labels, values } = this.getChartDataByType("hour", "H", this.is24Hour ? "H" : "ha", valueMapTotals);
+      let { labels, values } = this.getChartDataByType("hour", "YYYY-MM-DD-H", this.is24Hour ? "H" : "ha", valueMapTotals);
       return {
         mode: this.mode,
         labels,
