@@ -182,45 +182,68 @@ export default class StatsProcessor {
     return relatedArr;
   }
 
-  // Generate Chart Data
+  /**
+   * getChartDataByType
+   * Generate chart data for a set of options
+   *
+   * @param {*} unit // hour, day, month, year
+   * @param {*} timeFormat // format of the day
+   * @param {*} labelFormat // label format dayjs
+   * @param {*} valueMapTotals // totals from the valuemap
+   */
   getChartDataByType(unit, timeFormat, labelFormat, valueMapTotals) {
-    console.log(`getChartDataByType - ${unit}, ${timeFormat}, ${labelFormat}, ${valueMapTotals}`);
-    let labels = [];
-    let values = [];
-    let unitValues = valueMapTotals.days;
-
-    let from = unit == "hour" ? this.fromDate.startOf("day") : this.fromDate;
+    let labels = []; // Holds the labels for the chart
+    let values = []; // holds the values for the cahrt
+    let unitValues = valueMapTotals.days; // Each of the individual x units for the chart
+    // Get start
+    let from = unit == "hour" ? this.toDate.startOf("day") : this.fromDate;
+    // Get End
     let to = unit == "hour" ? this.toDate.endOf("day") : this.toDate;
+    // Get Length between to and fromt
     let diff = to.diff(from, unit);
+    // Loop over each diff
     for (var i = 1; i <= diff; i++) {
+      // Get the unit format
       const unitDate = dayjs(from).add(i, unit);
+      // Generate the key
       let key = unitDate.format(timeFormat);
+      // Generate a label
       let label = unitDate.format(labelFormat);
-
+      // If our unitValues map has our key we will
+      let value;
+      // Get the value if it exists
       if (unitValues.hasOwnProperty(key)) {
-        const value = this.math == "sum" ? unitValues[key].sum : unitValues[key].avg;
-        labels.push({ x: label });
-        values.push({ x: label, y: value, date: unitDate, unit });
-      } else {
-        labels.push({ x: label });
-        values.push({ x: label, y: 0, date: unitDate, unit });
+        // Is this a sum or a average?
+        value = this.math == "sum" ? unitValues[key].sum : unitValues[key].avg;
       }
+      // Push the label
+      labels.push({ x: label });
+      // Push the value
+      values.push({ x: label, y: value || 0, date: unitDate, unit });
     }
-
+    // Return labels and values
     return {
       labels,
       values,
     };
   }
 
+  /**
+   * getChartData
+   * returns the chart data fro a given type
+   * @param {*} valueMapTotals
+   */
   getChartData(valueMapTotals) {
+    // If it's a date mode
     if (this.mode == "d") {
-      let { labels, values } = this.getChartDataByType("hour", "YYYY-MM-DD-H", this.is24Hour ? "H" : "ha", valueMapTotals);
+      let { labels, values } = this.getChartDataByType("hour", "H", this.is24Hour ? "H" : "ha", valueMapTotals);
+      console.log("Day Mode", { labels, values });
       return {
         mode: this.mode,
         labels,
         values,
       };
+      // If it's a week mode
     } else if (this.mode == "w") {
       let { labels, values } = this.getChartDataByType("day", "YYYY-MM-DD", "dd Do", valueMapTotals);
       return {
@@ -228,6 +251,7 @@ export default class StatsProcessor {
         labels,
         values,
       };
+      // if it's a month mode
     } else if (this.mode == "m") {
       let { labels, values } = this.getChartDataByType("day", "YYYY-MM-DD", "M/D", valueMapTotals);
       return {
@@ -235,6 +259,7 @@ export default class StatsProcessor {
         labels,
         values,
       };
+      // If it's a year mode
     } else if (this.mode == "y") {
       let { labels, values } = this.getChartDataByType("month", "YYYY-MM", "MMM", valueMapTotals);
       return {
