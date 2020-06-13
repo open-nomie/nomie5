@@ -217,11 +217,9 @@
               <div class="label">
                 {(trackerElement.obj || {}).label || trackerElement.id}
               </div>
-              {#if NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom) !== '1' && trackerElement.obj.type !== 'tick'}
-                <div class="value">
-                  {NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom)}
-                </div>
-              {/if}
+              <div class="value">
+                {NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom)}
+              </div>
             </main>
           </button>
         {/each}
