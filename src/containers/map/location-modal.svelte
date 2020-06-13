@@ -116,7 +116,8 @@
         value: loc.name
       });
       loc.name = name;
-      Locations.save(loc);
+      let saved = await Locations.save(loc);
+      console.log("Saved", loc, Locations);
     }
   }
 
@@ -131,13 +132,19 @@
   });
 </script>
 
-<NModal fullscreen flexBody>
+<NModal
+  fullscreen
+  flexBody
+  closeOnBackgroundTap={true}
+  on:close={() => {
+    Interact.dismissPickLocation();
+  }}>
   <header slot="header" class="n-toolbar-grid">
     <div class="left">
       {#if state.mode == 'edit'}
         <button
           class="btn btn-clear text-red"
-          on:click={() => {
+          on:click|preventDefault={() => {
             state.mode = 'view';
           }}>
           Done
@@ -162,11 +169,9 @@
       </div>
     </main>
     <div class="right n-row">
-      {#if showFavoriteButton}
-        <button class="btn btn-clear text-primary-bright" on:click={favorite}>
-          Favorite
-        </button>
-      {/if}
+      <button class="btn btn-clear text-primary-bright" on:click={favorite}>
+        Favorite
+      </button>
     </div>
   </header>
   <section class="n-panel vertical">
@@ -181,72 +186,66 @@
         bind:this={map} />
     </div>
     <!-- List Panel -->
-    <div class="n-panel vertical bg-solid scroll-y">
+    <div class="n-panel vertical bg-solid scroll-y h-100">
       {#if state.locations.length == 0}
         <NItem class="text-faded-2">No Favorites Found</NItem>
       {/if}
 
-      <NSortableList
-        items={state.locations}
-        handle=".menu"
-        on:update={sorted}
-        let:item>
+      <div class="list-wrapper">
+        <NSortableList
+          items={state.locations}
+          handle=".menu"
+          on:update={sorted}
+          let:item>
 
-        <NItem
-          className="clickable"
-          on:click={() => {
-            goto(item);
-          }}>
-          <div slot="left" class="n-row">
-            {#if state.mode == 'view'}
-              <div style="font-size:30px">📍</div>
-            {:else}
-              <button
-                class="btn btn-clear text-primary-bright btn-sm"
-                on:click={() => {
-                  rename(item);
-                }}>
-                <NIcon name="edit" />
-              </button>
-              <button
-                class="btn btn-clear text-primary-bright btn-sm"
-                on:click={evt => {
-                  unfavorite(item);
-                  evt.preventDefault();
-                  evt.stopPropagation();
-                }}>
-                <NIcon name="delete" className="fill-red" />
-              </button>
-            {/if}
-          </div>
+          <NItem
+            className="clickable"
+            on:click={() => {
+              if (state.mode == 'view') {
+                select(item);
+              }
+            }}>
+            <div slot="left" class="n-row">
+              {#if state.mode == 'view'}
+                <div style="font-size:30px">📍</div>
+              {:else}
+                <button
+                  class="btn btn-clear text-primary-bright btn-sm"
+                  on:click|stopPropagation={() => {
+                    rename(item);
+                  }}>
+                  <NIcon name="edit" />
+                </button>
+                <button
+                  class="btn btn-clear text-primary-bright btn-sm"
+                  on:click|stopPropagation={evt => {
+                    unfavorite(item);
+                  }}>
+                  <NIcon name="delete" className="fill-red" />
+                </button>
+              {/if}
+            </div>
 
-          <h1
-            class="title truncate-2 {state.active && item.hash == state.active.hash ? 'text-primary' : ''}
-            my-2">
-            {item.name}
-            {#if state.active && item.hash == state.active.hash}
-              <NIcon name="checkmark" className="fill-primary" />
-            {/if}
-          </h1>
+            <h1
+              class="title truncate-2 {state.active && item.hash == state.active.hash ? 'text-primary' : ''}
+              my-2">
+              {item.name}
+              {#if state.active && item.hash == state.active.hash}
+                <NIcon name="checkmark" className="fill-primary" />
+              {/if}
+            </h1>
 
-          <div slot="right" class="pr-2 n-row">
-            {#if state.mode == 'view'}
-              <button
-                class="btn btn-clear text-primary-bright btn-sm"
-                on:click={() => {
-                  select(item);
-                }}>
-                Select
-              </button>
-            {:else}
-              <div class="menu">
-                <NIcon name="menu" />
-              </div>
-            {/if}
-          </div>
-        </NItem>
+            <div slot="right" class="pr-2 n-row">
+              {#if state.mode == 'edit'}
+                <div class="menu">
+                  <NIcon name="menu" />
+                </div>
+              {/if}
+            </div>
+          </NItem>
 
-      </NSortableList>
+        </NSortableList>
+      </div>
 
       <!-- {#each state.locations as location}
         <NItem

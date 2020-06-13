@@ -220,9 +220,12 @@
       methods.autoCompleteDone();
     },
     async autoCompleteDone() {
-      state.partialTag = null;
-      state.cursorIndex = null;
-      state.autocompleteResults = null;
+      console.log("Auto Complete Done?");
+      setTimeout(() => {
+        state.partialTag = null;
+        state.cursorIndex = null;
+        state.autocompleteResults = null;
+      }, 10);
     },
 
     keyPress(event) {
@@ -232,7 +235,7 @@
         let value = event.target.value;
         let last = value.charAt(value.length - 1);
         if (last == " ") {
-          state.autocompleteResults = null;
+          methods.autoCompleteDone();
         } else if (value.length) {
           let arr = value.split(" ");
           let tag = arr[arr.length - 1];
@@ -271,6 +274,7 @@
     },
     clear() {
       ActiveLogStore.clear();
+      methods.autoCompleteDone();
       setTimeout(() => {
         state.date = null;
         state.autocompleteResults = null;
@@ -285,9 +289,7 @@
 
     ifPopulated() {
       return (
-        $ActiveLogStore.lat ||
-        ($ActiveLogStore.note.trim() || "").length > 0 ||
-        $ActiveLogStore.photo
+        $ActiveLogStore.lat || ($ActiveLogStore.note.trim() || "").length > 0
       );
     }
   };
@@ -295,6 +297,10 @@
   // Clear the settings when saved
   LedgerStore.hook("onLogSaved", res => {
     methods.clear();
+    setTimeout(() => {
+      console.log("Clearing?");
+      methods.autoCompleteDone();
+    });
   });
 
   // When a tag is added by a button or other service
@@ -610,8 +616,7 @@
           {#if !$ActiveLogStore.lat}
             {Lang.t('general.location', 'Location')}
           {:else}
-            {$ActiveLogStore.location || ''}
-            {math.round($ActiveLogStore.lat, 100)},{math.round($ActiveLogStore.lng, 100)}
+            {$ActiveLogStore.location || `${math.round($ActiveLogStore.lat, 100)},${math.round($ActiveLogStore.lng, 100)}`}
           {/if}
           <div slot="right" class="n-row">
             {#if $ActiveLogStore.lat}

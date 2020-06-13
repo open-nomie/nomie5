@@ -31,26 +31,16 @@ const LocationsInit = () => {
      * it will update or insert if ifs new
      * @param {Location} location
      */
-    save(location) {
-      return new Promise((resolve, reject) => {
-        location = new Location(location);
-        update((d) => {
-          let found = d.find((d) => d.id == location.id);
-          if (!found) {
-            d.push(location);
-          } else {
-            d = d.map((row) => {
-              return row.id == location.id ? location : row;
-            });
-          }
-          this.write(d)
-            .then(() => {
-              resolve(location);
-            })
-            .catch(reject);
-          return d;
-        });
+    async save(location) {
+      location = location instanceof Location ? location : new Location(location);
+      let theLocations;
+      update((locations) => {
+        locations.push(location);
+        theLocations = locations;
+        return locations;
       });
+      console.log("Location to save", location, theLocations);
+      return this.write(theLocations);
     },
     findClosestTo(location) {
       let match = null;

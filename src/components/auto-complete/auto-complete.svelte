@@ -18,12 +18,6 @@
     results: []
   };
 
-  let lastInput;
-  $: if (input && lastInput != input) {
-    lastInput = input;
-    onInput(input);
-  }
-
   async function getTrackerInput(tracker) {
     let inputer = new TrackerInputer(tracker, $TrackerStore);
     return await inputer.getNoteString();
@@ -138,6 +132,16 @@
       state.results = null;
     }
   };
+
+  /**
+   * Main Mount
+   */
+
+  let lastInput;
+  $: if (lastInput != input) {
+    lastInput = input;
+    onInput(input);
+  }
 </script>
 
 <style lang="scss">

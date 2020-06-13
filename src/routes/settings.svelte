@@ -68,6 +68,9 @@
         "https://nomie.app"
       );
     },
+    locations() {
+      Interact.pickLocation();
+    },
     sign_in() {
       UserStore.redirectToSignIn();
     },
