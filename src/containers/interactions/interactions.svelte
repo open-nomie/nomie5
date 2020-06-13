@@ -181,33 +181,7 @@
 
 <Toast message={$Interact.toast.message} show={$Interact.toast.show} />
 
-{#if $Interact.locationFinder.show}
-  <NLocationModal />
-  <!-- <NModal title="Pick your location" fullscreen flexBody>
-    <NMap
-      picker={true}
-      on:change={event => {
-        $Interact.locationFinder.location = event.detail;
-      }} />
-    <button
-      slot="footer"
-      class="btn btn-lg btn-block btn-clear"
-      on:click={Interact.dismissPickLocation}>
-      Cancel
-    </button>
-    <button
-      slot="footer"
-      class="btn btn-lg btn-block btn-primary"
-      on:click={() => {
-        if ($Interact.locationFinder.onInteract) {
-          $Interact.locationFinder.onInteract($Interact.locationFinder.location);
-        }
-        Interact.dismissPickLocation();
-      }}>
-      Select
-    </button>
-  </NModal> -->
-{/if}
+<NLocationModal />
 
 {#if ($UserStore.meta || {}).lock}
   <PinLock />

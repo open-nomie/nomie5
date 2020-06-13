@@ -26,6 +26,7 @@
   let changeTimeout;
   let lastLocation = null;
   let mapLocation = null;
+  let showModal = false;
 
   function goto(location) {
     state.active = location;
@@ -33,6 +34,12 @@
   }
 
   let showFavoriteButton = false;
+
+  $: if ($Interact.locationFinder.show) {
+    showModal = true;
+  } else {
+    showModal = false;
+  }
 
   /**
    * If Location changes
@@ -135,10 +142,12 @@
 <NModal
   fullscreen
   flexBody
+  show={showModal}
   closeOnBackgroundTap={true}
   on:close={() => {
     Interact.dismissPickLocation();
   }}>
+
   <header slot="header" class="n-toolbar-grid">
     <div class="left">
       {#if state.mode == 'edit'}
@@ -174,80 +183,81 @@
       </button>
     </div>
   </header>
-  <section class="n-panel vertical">
-    <div
-      className="n-panel"
-      style="height:225px; border-bottom:var(--color-solid-2);">
-      <!-- MAP -->
-      <NMap
-        on:change={mapChange}
-        locations={state.active ? [state.active] : []}
-        picker={true}
-        bind:this={map} />
-    </div>
-    <!-- List Panel -->
-    <div class="n-panel vertical bg-solid scroll-y h-100">
-      {#if state.locations.length == 0}
-        <NItem class="text-faded-2">No Favorites Found</NItem>
-      {/if}
-
-      <div class="list-wrapper">
-        <NSortableList
-          items={state.locations}
-          handle=".menu"
-          on:update={sorted}
-          let:item>
-
-          <NItem
-            className="clickable"
-            on:click={() => {
-              if (state.mode == 'view') {
-                select(item);
-              }
-            }}>
-            <div slot="left" class="n-row">
-              {#if state.mode == 'view'}
-                <div style="font-size:30px">📍</div>
-              {:else}
-                <button
-                  class="btn btn-clear text-primary-bright btn-sm"
-                  on:click|stopPropagation={() => {
-                    rename(item);
-                  }}>
-                  <NIcon name="edit" />
-                </button>
-                <button
-                  class="btn btn-clear text-primary-bright btn-sm"
-                  on:click|stopPropagation={evt => {
-                    unfavorite(item);
-                  }}>
-                  <NIcon name="delete" className="fill-red" />
-                </button>
-              {/if}
-            </div>
-
-            <h1
-              class="title truncate-2 {state.active && item.hash == state.active.hash ? 'text-primary' : ''}
-              my-2">
-              {item.name}
-              {#if state.active && item.hash == state.active.hash}
-                <NIcon name="checkmark" className="fill-primary" />
-              {/if}
-            </h1>
-
-            <div slot="right" class="pr-2 n-row">
-              {#if state.mode == 'edit'}
-                <div class="menu">
-                  <NIcon name="menu" />
-                </div>
-              {/if}
-            </div>
-          </NItem>
-
-        </NSortableList>
+  {#if showModal}
+    <section class="n-panel vertical">
+      <div
+        className="n-panel"
+        style="height:225px; border-bottom:var(--color-solid-2);">
+        <!-- MAP -->
+        <NMap
+          on:change={mapChange}
+          locations={state.active ? [state.active] : []}
+          picker={true}
+          bind:this={map} />
       </div>
+      <!-- List Panel -->
+      <div class="n-panel vertical bg-solid scroll-y h-100">
+        {#if state.locations.length == 0}
+          <NItem class="text-faded-2">No Favorites Found</NItem>
+        {/if}
 
-      <!-- {#each state.locations as location}
+        <div class="list-wrapper">
+          <NSortableList
+            items={state.locations}
+            handle=".menu"
+            on:update={sorted}
+            let:item>
+
+            <NItem
+              className="clickable"
+              on:click={() => {
+                if (state.mode == 'view') {
+                  select(item);
+                }
+              }}>
+              <div slot="left" class="n-row">
+                {#if state.mode == 'view'}
+                  <div style="font-size:30px">📍</div>
+                {:else}
+                  <button
+                    class="btn btn-clear text-primary-bright btn-sm"
+                    on:click|stopPropagation={() => {
+                      rename(item);
+                    }}>
+                    <NIcon name="edit" />
+                  </button>
+                  <button
+                    class="btn btn-clear text-primary-bright btn-sm"
+                    on:click|stopPropagation={evt => {
+                      unfavorite(item);
+                    }}>
+                    <NIcon name="delete" className="fill-red" />
+                  </button>
+                {/if}
+              </div>
+
+              <h1
+                class="title truncate-2 {state.active && item.hash == state.active.hash ? 'text-primary' : ''}
+                my-2">
+                {item.name}
+                {#if state.active && item.hash == state.active.hash}
+                  <NIcon name="checkmark" className="fill-primary" />
+                {/if}
+              </h1>
+
+              <div slot="right" class="pr-2 n-row">
+                {#if state.mode == 'edit'}
+                  <div class="menu">
+                    <NIcon name="menu" />
+                  </div>
+                {/if}
+              </div>
+            </NItem>
+
+          </NSortableList>
+        </div>
+
+        <!-- {#each state.locations as location}
         <NItem
           className="clickable"
           on:click={() => {
@@ -293,23 +303,17 @@
           </div>
         </NItem>
       {/each} -->
-      <NItem
-        className="clickable text-primary"
-        on:click={() => {
-          currentLocation();
-        }}>
-        Go to Current Location
-      </NItem>
-    </div>
-  </section>
+        <NItem
+          className="clickable text-primary"
+          on:click={() => {
+            currentLocation();
+          }}>
+          Go to Current Location
+        </NItem>
+      </div>
+    </section>
 
-  <button
-    slot="footer"
-    class="btn btn-block btn-primary"
-    on:click={Interact.dismissPickLocation}>
-    Close
-  </button>
-  <!-- <button
+    <!-- <button
     slot="footer"
     class="btn btn-block btn-primary"
     disabled={!state.active}
@@ -321,4 +325,11 @@
     }}>
     Select
   </button> -->
+  {/if}
+  <button
+    slot="footer"
+    class="btn btn-block btn-primary"
+    on:click={Interact.dismissPickLocation}>
+    Close
+  </button>
 </NModal>

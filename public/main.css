@@ -5173,6 +5173,7 @@ button:focus {
       .show-test:before {
         content: "xl"; } }
 
+/* montserrat-regular - latin */
 html,
 body {
   -webkit-user-select: none;
@@ -6139,6 +6140,7 @@ body.scrolling .mini-map {
   align-items: center;
   justify-content: stretch;
   padding: 4px 8pt;
+  cursor: pointer;
   min-height: 50px;
   max-width: 100vw;
   position: relative;
@@ -6147,7 +6149,10 @@ body.scrolling .mini-map {
   color: var(--color-inverse);
   font-size: 1rem;
   flex-shrink: 0;
-  background-color: var(--color-solid); }
+  background-color: var(--color-solid);
+  display: flex !important;
+  width: 100%;
+  border: none; }
   .n-item.bg-light {
     background-color: var(--color-bg) !important; }
     .n-item.bg-light.text-faded {
@@ -6191,8 +6196,6 @@ body.scrolling .mini-map {
     border-radius: 0.9rem;
     overflow: hidden;
     max-width: 95vw; }
-  .n-item.no-border {
-    border-bottom: none !important; }
   .n-item.bottom-line:after, .n-item[bottom-line]:after {
     content: "";
     position: absolute;

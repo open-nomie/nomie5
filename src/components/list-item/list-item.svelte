@@ -13,6 +13,9 @@
   export let itemDivider = undefined;
   export let compact = false;
   export let truncate = false;
+  export let style = "";
+  export let clickable = false;
+  export let ariaLabel = "";
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty("left");
   const has_right = (arguments[1].$$slots || {}).hasOwnProperty("right");
@@ -21,7 +24,7 @@
   const dispatch = createEventDispatcher();
 
   const methods = {
-    clicked(event) {
+    tap(event) {
       if (href) {
         // event.preventDefault();
         window.location.href = href;
@@ -31,6 +34,13 @@
         // this.$emit("click", this.$props);
       }
       dispatch("click", {});
+      dispatch("tap", {});
+    },
+    doubletap(evt) {
+      dispatch("dbltap", evt);
+    },
+    longtap(evt) {
+      dispatch("longtap", evt);
     },
     getHref() {
       return this.href || this.to || null;
@@ -47,13 +57,22 @@
   };
 </script>
 
-<div
+<button
   {id}
-  on:click={methods.clicked}
+  aria-label={ariaLabel}
+  on:tap={methods.tap}
+  on:dbltap={methods.doubletap}
+  on:longtap={methods.longtap}
+  on:contextmenu={evt => {
+    dispatch('contextmenu', evt);
+    return false;
+  }}
   item-divider={itemDivider}
+  {style}
   class="n-item {borderBottom ? 'border-bottom' : 'no-border'}
   {compact ? 'compact' : ''}
-  {className}"
+  {className}
+  {clickable ? 'clickable' : ''}"
   :alt="title">
   {#if has_left}
     <div class="left">
@@ -75,4 +94,4 @@
       <slot name="right" />
     </div>
   {/if}
-</div>
+</button>
