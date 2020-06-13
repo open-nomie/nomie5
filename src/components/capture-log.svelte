@@ -135,7 +135,7 @@
         if (location) {
           $ActiveLogStore.lat = location.lat;
           $ActiveLogStore.lng = location.lng;
-          $ActiveLogStore.location = location.location;
+          $ActiveLogStore.location = location.name;
         }
       }
     },
@@ -588,19 +588,13 @@
         <NItem
           truncate
           compact
-          className="bg-transparent solo text-sm score-item">
-          <div slot="left" class="text-sm text-bold">
-            <NIcon name="star" className="mr-2 fill-primary-bright" size="16" />
-          </div>
-          <div>{Lang.t('general.score', 'Score')}</div>
-          <div slot="right">
-            <NPositivitySelector
-              size="md"
-              score={$ActiveLogStore.score}
-              on:change={evt => {
-                $ActiveLogStore.score = evt.detail;
-              }} />
-          </div>
+          className="no-border bg-transparent text-sm score-item pt-2">
+          <NPositivitySelector
+            size="xl"
+            score={$ActiveLogStore.score}
+            on:change={evt => {
+              $ActiveLogStore.score = evt.detail;
+            }} />
         </NItem>
         <!-- Location -->
         <NItem
