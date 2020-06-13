@@ -250,6 +250,14 @@
     return type;
   }
 
+  function scoreDistance(distance) {
+    if (distance >= 100) {
+      return 1;
+    } else {
+      return Math.abs(Math.round(distance - 100));
+    }
+  }
+
   /**
    * A crazy ass function!!!
    * This will load up the the stats for EVERY tracker
@@ -270,6 +278,7 @@
       let results = await getTrackerStats(tracker); // get stats
       let compareValues = results.stats.chart.values.map(point => point.y); // get y values
       let distance = DataDistance.euclidean(activeTrackerValues, compareValues); // calculate distance
+      results.distance = scoreDistance(distance);
       compareItems[tag] = {
         stats: results,
         distance: distance
@@ -284,10 +293,13 @@
           value: compareItems[tag].distance
         };
       })
+      // Remove any 0 values (exact match)
       .filter(r => r.value)
       .sort((a, b) => {
+        // Sort by Lowest value
         return a.value < b.value ? -1 : 1;
       })
+      // Remove anything over 5000 and only 5
       .filter((r, index) => {
         if (r.value < 5000 && index < 5) {
           return true;
@@ -817,9 +829,19 @@
       padding: 0;
       height: 24px;
       width: 24px;
-      border: solid 1px var(--color-inverse-1);
+      border: solid 1px var(--color-solid-2);
       background-color: var(--color-solid);
     }
+  }
+
+  .distance {
+    font-size: 12px;
+    color: var(--color-solid-3);
+    position: absolute;
+    top: 10px;
+    right: 30%;
+    left: 30%;
+    text-align: center;
   }
   :global(.chart-item .btn-close svg) {
     fill: var(--color-inverse) !important;
@@ -936,12 +958,19 @@
   {#if !state.loading}
     {#if state.dataView == 'compare'}
       <div class="charts">
+
         {#each state.compare as compare}
-          <NItem className="solo chart-item">
-            {#if compare.stats}
+          {#if compare.stats}
+            <NItem className="solo chart-item">
+              {#if compare.distance}
+                <div class="distance">
+                  Score
+                  <strong>{compare.distance}</strong>
+                </div>
+              {/if}
               <NBarChart
                 height={110}
-                title={compare.getSearchTerm()}
+                title={`${compare.getSearchTerm()}`}
                 color={compare.getTracker().color}
                 labels={compare.stats.chart.values.map(point => point.x)}
                 points={compare.stats.chart.values}
@@ -960,15 +989,16 @@
                   return compare.getTracker().displayValue(y);
                 }}
                 activeIndex={state.selected.index} />
-            {:else}{compare.id} chart unavailable{/if}
-            <button
-              class="btn btn-clear btn-close"
-              on:click={() => {
-                removeCompare(compare);
-              }}>
-              <NIcon name="close" className="fill-white" size="16" />
-            </button>
-          </NItem>
+
+              <button
+                class="btn btn-clear btn-close"
+                on:click={() => {
+                  removeCompare(compare);
+                }}>
+                <NIcon name="close" className="fill-white" size="16" />
+              </button>
+            </NItem>
+          {/if}
         {/each}
       </div>
 

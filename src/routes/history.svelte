@@ -257,6 +257,12 @@
     trackerTapped(tracker, log) {
       Interact.openStats(`#${tracker.tag}`);
     },
+    personTapped(person, log) {
+      Interact.openStats(`@${person.id}`);
+    },
+    contextTapped(context, log) {
+      Interact.openStats(`+${context.id}`);
+    },
     showLogOptions(log) {
       Interact.logOptions(log).then(action => {
         if (searchMode) {
@@ -494,10 +500,10 @@
               methods.trackerTapped(event.detail.tracker, log);
             }}
             on:personClick={event => {
-              console.log('TODO make person click', event);
+              methods.personTapped(event.detail.person, log);
             }}
             on:contextClick={event => {
-              console.log('TODO make context click', event);
+              methods.contextTapped(event.detail.context, log);
             }}
             on:textClick={event => {
               methods.textClick(event);

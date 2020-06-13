@@ -112,7 +112,7 @@
     }
 
     if (loc) {
-      let name = await Interact.prompt("📍 Location Name", null, {
+      let name = await Interact.prompt("📍 Name this location", null, {
         value: loc.name
       });
       loc.name = name;
@@ -170,7 +170,7 @@
     </main>
     <div class="right n-row">
       <button class="btn btn-clear text-primary-bright" on:click={favorite}>
-        Favorite
+        Save
       </button>
     </div>
   </header>
