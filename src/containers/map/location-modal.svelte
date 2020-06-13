@@ -220,8 +220,15 @@
             {/if}
           </div>
 
-          <h1 class="title truncate-2">{item.name}</h1>
-          <div class="note">{item.hash}</div>
+          <h1
+            class="title truncate-2 {state.active && item.hash == state.active.hash ? 'text-primary' : ''}
+            my-2">
+            {item.name}
+            {#if state.active && item.hash == state.active.hash}
+              <NIcon name="checkmark" className="fill-primary" />
+            {/if}
+          </h1>
+
           <div slot="right" class="pr-2 n-row">
             {#if state.mode == 'view'}
               <button
@@ -299,19 +306,20 @@
 
   <button
     slot="footer"
-    class="btn btn-block btn-clear text-red"
+    class="btn btn-block btn-clear"
     on:click={Interact.dismissPickLocation}>
     Close
   </button>
-  <!-- <button
+  <button
     slot="footer"
-    class="btn btn-lg btn-block btn-primary"
+    class="btn btn-block btn-primary"
+    disabled={!state.active}
     on:click={() => {
       if ($Interact.locationFinder.onInteract) {
-        $Interact.locationFinder.onInteract($Interact.locationFinder.location);
+        $Interact.locationFinder.onInteract(state.active);
       }
       Interact.dismissPickLocation();
     }}>
     Select
-  </button> -->
+  </button>
 </NModal>

@@ -62,6 +62,16 @@ THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED
 TODO: Organize main into components or containers. 
 **/
 
+.location-badge {
+  padding: 2px 5px !important;
+  max-width: 80px;
+  text-transform: capitalize !important;
+  border: none;
+  @include media-breakpoint-up(md) {
+    max-width: 120px;
+  }
+}
+
 .gap {
   height: 16px;
 }

@@ -548,9 +548,11 @@
         <button
           class="btn more-button btn-icon {state.advanced ? 'active' : ''}"
           on:click={toggleAdvanced}>
-          <NIcon
-            name="more"
-            className={state.advanced ? 'fill-white' : 'fill-inverse-2'} />
+          {#if state.advanced}
+            <NIcon name="chevronDown" className="fill-white" />
+          {:else}
+            <NIcon name="more" className="fill-inverse-2" />
+          {/if}
         </button>
         <textarea
           id="textarea-capture-note"

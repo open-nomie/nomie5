@@ -4925,6 +4925,9 @@ button:focus {
     height: 20px;
     border-radius: 10px;
     margin-left: 4px; }
+  .btn-badge.faded {
+    background-color: var(--color-solid-1);
+    box-shadow: none; }
   .btn-badge.btn-xs {
     font-size: 0.6rem !important;
     padding: 0pt 8pt 0pt 8pt;
@@ -7273,6 +7276,15 @@ aside.n-panel {
 THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 
 TODO: Organize main into components or containers. 
 **/
+.location-badge {
+  padding: 2px 5px !important;
+  max-width: 80px;
+  text-transform: capitalize !important;
+  border: none; }
+  @media (min-width: 600px) {
+    .location-badge {
+      max-width: 120px; } }
+
 .gap {
   height: 16px; }
 

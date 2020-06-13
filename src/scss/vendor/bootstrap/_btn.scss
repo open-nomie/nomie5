@@ -59,6 +59,12 @@ button:focus {
     border-radius: 10px;
     margin-left: 4px;
   }
+
+  &.faded {
+    background-color: var(--color-solid-1);
+    box-shadow: none;
+  }
+
   &.btn-xs {
     font-size: 0.6rem !important;
     padding: 0pt 8pt 0pt 8pt;

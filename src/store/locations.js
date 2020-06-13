@@ -53,21 +53,28 @@ const LocationsInit = () => {
       });
     },
     findClosestTo(location) {
-      console.log("Find the closes location to ", location);
-      let match = { location: null, distance: 10000 };
+      let match = null;
       update((locations) => {
-        let locs = locations.map((loc) => {
-          return {
-            distance: distance.between([location.lat, location.lng], [loc.lat, loc.lng], "m"),
-            location: loc,
-          };
-        });
-
-        console.log("locs", locs);
+        match = [...locations]
+          .map((loc) => {
+            return {
+              distance: distance.between([location.lat, location.lng], [loc.lat, loc.lng], "m"),
+              location: loc,
+            };
+          })
+          .sort((a, b) => {
+            return a.distance > b.distance ? 1 : -1;
+          })
+          .find((loc) => loc.distance < 1);
 
         return locations;
       });
-      return match;
+      if (match) {
+        console.log("Found match", match);
+        return match.location;
+      } else {
+        return location;
+      }
     },
     getAll() {
       let all = [];

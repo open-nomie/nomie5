@@ -239,12 +239,17 @@ const ledgerInit = () => {
       }
     },
     /**
+     * todayReady
      * Update Today
      */
     async todayReady() {
+      // Get the start of the day
       let start = dayjs().startOf("day");
+      // Get end of day
       let end = dayjs().endOf("day");
+      // Get the book key for today
       let todayKey = dayjs().format(config.book_time_format);
+      // Get all logs for the key
       let allLogs = base.books[todayKey];
       // Extract just today's logs from the book
       let todaysLogs = methods.filterLogs(allLogs, {
@@ -257,11 +262,11 @@ const ledgerInit = () => {
 
       // Setup data for update
       let data;
-      update((d) => {
-        data = d;
-        d.today = trackersUsed;
-        d.hash = methods.hashTodayPayload(trackersUsed);
-        return d;
+      update((state) => {
+        data = state;
+        state.today = trackersUsed;
+        state.hash = methods.hashTodayPayload(trackersUsed);
+        return state;
       });
       return data;
     },
@@ -269,34 +274,24 @@ const ledgerInit = () => {
      * Get the Users location if it's needed
      */
     async locateIfNeeded() {
+      // Should we locate?
       let shouldLocate = JSON.parse(localStorage.getItem(config.always_locate_key) || "false");
       if (shouldLocate) {
         try {
+          // Get the Location
           let theLoc = await locate();
+          // make it a location
           let location = new Location({ lat: theLoc.latitude, lng: theLoc.longitude });
-          console.log("Ths Location", location);
+          // Find any favorited that are super close
           let match = Locations.findClosestTo(location);
-          console.log("Match", match);
-          return theLoc;
+          // Return the match - or the location if we didnt any favorites
+          return match || location;
         } catch (e) {
           Interact.alert("Error", e.message);
         }
       } else {
         return null;
       }
-      // return new Promise((resolve, reject) => {
-      //   if (shouldLocate) {
-      //     locate()
-      //       .then(resolve)
-      //       .catch((e) => {
-      //         console.error("Location e", e);
-      //         Interact.alert(e.message);
-      //         resolve(null);
-      //       });
-      //   } else {
-      //     resolve(null);
-      //   }
-      // });
     },
     /**
      * Update a Log
@@ -405,11 +400,13 @@ const ledgerInit = () => {
       log.note = log.note.trim();
       // Get location if it's needed
       let location = await methods.locateIfNeeded();
+
       // If we have a location add to log
       if (location && !log.lat) {
         // Add location Data
-        log.lat = location.latitude;
-        log.lng = location.longitude;
+        log.lat = location.lat;
+        log.lng = location.lng;
+        log.location = location.name;
       }
       log.source = log.source || "n5";
       return log;

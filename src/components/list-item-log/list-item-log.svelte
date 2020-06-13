@@ -74,11 +74,6 @@
     background-color: var(--color-faded-1);
     margin-bottom: 20px;
   }
-  .location-badge {
-    max-width: 80px;
-    font-size: 9px;
-    border: none;
-  }
   .more-button {
     margin-right: -8pt;
   }
@@ -101,8 +96,12 @@
 
       <div class="filler" />
       <!-- If they have location-->
-      {#if displayLog.location}
+      {#if displayLog.location && displayLog.lat}
         <button
+          on:click={event => {
+            Interact.showLocations([displayLog]);
+            event.stopPropagation();
+          }}
           class="btn btn-xs btn-badge btn-primary text-white location-badge
           truncate">
           {displayLog.location}
@@ -114,7 +113,7 @@
             event.stopPropagation();
           }}
           class="btn btn-sm btn-clear pl-2 pr-2 clickable">
-          <NIcon name="pin" className="fill-primary-bright" size="16" />
+          <NIcon name="pin" className="fill-primary-bright" size="20" />
         </button>
       {/if}
 
@@ -211,7 +210,7 @@
         <div class="context px-2 pb-2">
           {#each logMeta.context as context}
             <button
-              class="btn btn-badge"
+              class="btn btn-badge faded"
               on:click={() => {
                 dispatch('contextClick', { context: context, log });
               }}>
