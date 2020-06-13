@@ -5542,6 +5542,12 @@ input[type="password"] {
 
 .search-bar {
   position: relative; }
+  .search-bar.top {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    z-index: 1000; }
 
 .form-control:focus {
   box-shadow: none !important;
@@ -5931,6 +5937,40 @@ button {
 body.scrolling .mini-map {
   opacity: 0.3; }
 
+.geocoder-control {
+  color: var(--color-inverse-1) !important;
+  background-color: var(--color-solid) !important; }
+  .geocoder-control input {
+    border: none; }
+  .geocoder-control:after {
+    content: "Search";
+    background-color: var(--color-solid);
+    padding: 8px;
+    display: block;
+    width: 60px;
+    border-radius: 2px;
+    z-index: 100; }
+  .geocoder-control .geocoder-control-suggestions,
+  .geocoder-control .geocoder-control-header,
+  .geocoder-control .geocoder-control-list,
+  .geocoder-control .geocoder-control-suggestion {
+    color: var(--color-inverse-1) !important;
+    background-color: var(--color-solid) !important; }
+  .geocoder-control .geocoder-control-header {
+    border-bottom: solid 1px var(--color-solid-3) !important; }
+  .geocoder-control .geocoder-control-suggestion {
+    border-top: solid 1px var(--color-solid-3) !important; }
+  .geocoder-control .geocoder-control-input {
+    background: transparent;
+    border: none !important; }
+  .geocoder-control.geocoder-control-expanded .geocoder-control-input {
+    background-color: var(--color-solid) !important;
+    color: var(--color-inverse-1) !important;
+    border: solid 1px var(--color-solid-2) !important; }
+  .geocoder-control .geocoder-control-suggestions {
+    background-color: var(--color-solid) !important;
+    color: var(--color-inverse-1) !important; }
+
 .leaflet-control-zoom {
   float: none !important;
   position: absolute;
@@ -6136,6 +6176,8 @@ body.scrolling .mini-map {
     border-radius: 0.9rem;
     overflow: hidden;
     max-width: 95vw; }
+  .n-item.no-border {
+    border-bottom: none !important; }
   .n-item.bottom-line:after, .n-item[bottom-line]:after {
     content: "";
     position: absolute;
