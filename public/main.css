@@ -6798,23 +6798,27 @@ aside.n-panel {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding: 0 10px 10px; }
+  padding: 0 6px 10px; }
   .tracker-grid button {
-    min-width: calc(50% - 8px);
+    width: calc(50% - 1px);
     min-height: 70px; }
 
 .n-tracker-value-grid-button {
   justify-content: flex-start;
-  box-shadow: var(--box-shadow-float);
-  padding: 10px 4px 10px 0px; }
+  padding: 0;
+  min-height: 50px; }
+  .n-tracker-value-grid-button:active {
+    background-color: var(--color-solid-1); }
   .n-tracker-value-grid-button .emoji {
     font-size: 40px;
     width: 60px;
-    line-height: 20px; }
+    line-height: 20px;
+    flex-shrink: 0; }
   .n-tracker-value-grid-button .label {
     text-align: left;
     font-weight: 500;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+    max-width: calc(100% - 1px);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -6825,6 +6829,7 @@ aside.n-panel {
     font-size: 1.1rem;
     line-height: 1.2rem;
     text-align: left;
+    font-weight: 600;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -6843,6 +6848,8 @@ aside.n-panel {
     .n-item-log .time-row .date-ago {
       font-size: 10pt;
       opacity: 0.5; }
+  .n-item-log .main {
+    padding-left: 0; }
   .n-item-log .n-note-textualized {
     padding: 16pt !important;
     font-size: 1.1rem;
@@ -7087,7 +7094,6 @@ aside.n-panel {
       #note-capture .advanced .container .score-item .main {
         display: none; } }
   #note-capture .advanced .container .btn-group .btn.active {
-    border: solid 1px var(--color-primary-bright) !important;
     background-color: var(--color-solid) !important;
     border-radius: 8pt !important; }
   #note-capture .advanced .container .btn-group .btn {
