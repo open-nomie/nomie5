@@ -134,28 +134,87 @@
         {trackers}
         className={logMeta.trackers.length ? '' : 'pb-2'} />
     {/if}
-    {#if displayLog.people.length}
-      <div class="people pb-2 px-2">
+
+    {#if logMeta.trackers.length || logMeta.people.length || logMeta.context.length}
+      <div class="tracker-grid n-row">
         {#each displayLog.people as person}
-          {#if $PeopleStore.people[person.id]}
-            <NBall
-              size="20"
-              radius="0.3"
-              avatar={$PeopleStore.people[person.id].avatar}
-              username={person.id}
-              className="ml-2" />
-          {:else}
-            <NBall
-              size="20"
-              username={person.id}
-              className="ml-2"
-              radius="0.3" />
-          {/if}
+          <button
+            class="btn btn-badge n-tracker-value-grid-button"
+            on:click={() => {
+              dispatch('personClick', { person: person, log });
+            }}>
+
+            <span class="emoji">
+              {#if $PeopleStore.people[person.id]}
+                <NBall
+                  size="40"
+                  radius="0.3"
+                  avatar={$PeopleStore.people[person.id].avatar}
+                  username={person.id}
+                  className="ml-2" />
+              {:else}
+                <NBall
+                  size="40"
+                  username={person.id}
+                  className="ml-2"
+                  radius="0.3" />
+              {/if}
+            </span>
+            <main>
+              <div class="label">{person.id}</div>
+            </main>
+          </button>
+        {/each}
+        {#each logMeta.trackers.filter(trk => {
+          if (focus) {
+            return trk.id == focus;
+          } else {
+            return true;
+          }
+        }) as trackerElement}
+          <button
+            class="btn btn-badge n-tracker-value-grid-button"
+            on:click={event => {
+              event.preventDefault();
+              event.stopPropagation();
+              dispatch('trackerClick', { tracker: trackerElement.obj, log });
+              return false;
+            }}>
+            <span
+              class="emoji"
+              style={`color:${(trackerElement.obj || {}).color || '#CCC'}`}>
+              {(trackerElement.obj || {}).emoji || '⚪️'}
+            </span>
+            <main>
+              <div class="label">
+                {(trackerElement.obj || {}).label || trackerElement.id}
+              </div>
+              {#if NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom) !== '1'}
+                <div class="value">
+                  {NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom)}
+                </div>
+              {/if}
+            </main>
+          </button>
         {/each}
       </div>
+      {#if logMeta.context.length}
+        <div class="context px-2 pb-2">
+          {#each logMeta.context as context}
+            <button
+              class="btn btn-badge"
+              on:click={() => {
+                dispatch('contextClick', { context: context, log });
+              }}>
+              +{context.id}
+            </button>
+          {/each}
+        </div>
+      {/if}
     {/if}
-    <div class="trackers-list">
-      <!-- Loop over the trackers within this log -->
+    <!-- <div class="trackers-list">
+
+     
       {#each logMeta.trackers.filter(trk => {
         if (focus) {
           return trk.id == focus;
@@ -163,7 +222,6 @@
           return true;
         }
       }) as trackerElement}
-        <!-- Tracker List Item  -->
         <NItem
           className="clickable bottom-line"
           on:click={event => {
@@ -181,7 +239,7 @@
           </div>
         </NItem>
       {/each}
-    </div>
+    </div> -->
 
   </NItem>
 {/if}

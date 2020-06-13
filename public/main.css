@@ -4878,6 +4878,10 @@ button:focus {
 .btn:focus, .btn.focus {
   box-shadow: inherit; }
 
+.btn-row {
+  display: flex;
+  flex-direction: row; }
+
 .btn-close {
   position: absolute;
   padding: 0px;
@@ -4901,6 +4905,9 @@ button:focus {
   .btn-close svg {
     width: 20px !important;
     height: 20px !important; }
+
+.btn:hover {
+  color: inherit; }
 
 .btn-badge {
   font-size: 0.8rem;
@@ -4926,6 +4933,8 @@ button:focus {
     .btn-badge.btn-xs svg {
       width: 20px !important;
       margin-right: -4px; }
+  .btn-badge .emoji {
+    margin-right: 4px; }
 
 .btn-group .btn {
   font-size: 0.75rem !important; }
@@ -5520,6 +5529,9 @@ body.theme-dark {
 
 .text-xl {
   font-size: 1.6rem !important; }
+
+.text-xxl {
+  font-size: 2.3rem !important; }
 
 input[type="text"],
 input[type="email"],
@@ -6782,6 +6794,43 @@ aside.n-panel {
   grid-area: 1 / 3 / 2 / 4;
   justify-content: center; }
 
+.tracker-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0 10px 10px; }
+  .tracker-grid button {
+    min-width: calc(50% - 8px);
+    min-height: 70px; }
+
+.n-tracker-value-grid-button {
+  justify-content: flex-start;
+  box-shadow: var(--box-shadow-float);
+  padding: 10px 4px 10px 0px; }
+  .n-tracker-value-grid-button .emoji {
+    font-size: 40px;
+    width: 60px;
+    line-height: 20px; }
+  .n-tracker-value-grid-button .label {
+    text-align: left;
+    font-weight: 500;
+    font-size: 0.8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden !important;
+    display: block;
+    opacity: 0.8; }
+  .n-tracker-value-grid-button .value {
+    font-size: 1.1rem;
+    line-height: 1.2rem;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden !important;
+    display: block; }
+
 .n-item-log {
   width: calc(100% - 16pt);
   margin: 16pt 8pt;
@@ -6797,7 +6846,7 @@ aside.n-panel {
   .n-item-log .n-note-textualized {
     padding: 16pt !important;
     font-size: 1.1rem;
-    line-height: 126%;
+    line-height: 136%;
     border-top: solid 1px var(--color-solid-2); }
     .n-item-log .n-note-textualized.long-note {
       font-size: 0.97rem; }

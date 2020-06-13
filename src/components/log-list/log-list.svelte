@@ -43,6 +43,7 @@
         className={compact ? 'compact' : ''}
         {log}
         on:trackerClick={event => {
+          console.log('AM I here?');
           dispatch('trackerClick', event.detail);
         }}
         on:locationClick={event => {

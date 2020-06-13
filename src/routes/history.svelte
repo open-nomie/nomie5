@@ -493,6 +493,12 @@
             on:trackerClick={event => {
               methods.trackerTapped(event.detail.tracker, log);
             }}
+            on:personClick={event => {
+              console.log('TODO make person click', event);
+            }}
+            on:contextClick={event => {
+              console.log('TODO make context click', event);
+            }}
             on:textClick={event => {
               methods.textClick(event);
             }}
