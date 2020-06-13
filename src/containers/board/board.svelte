@@ -679,7 +679,10 @@
               on:click={() => {
                 Interact.toggleBoardSorter();
               }}>
-              <NIcon name="sort" size="22" className="fill-primary-bright" />
+              <NIcon
+                name="settings"
+                size="22"
+                className="fill-primary-bright" />
             </button>
           {/if}
         </NBoardTabs>
