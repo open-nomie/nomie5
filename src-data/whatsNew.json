@@ -1,1 +1,36 @@
-{"features":["better location management","bigger positivity selector in capture log"],"fixes":["fixing what's new update always showing up"],"chores":["cleanup","working on testing","updating title","release v5.1.46"]}
+{
+  "features": [
+    {
+      "version": "5.1.47",
+      "title": "better location management"
+    },
+    {
+      "version": "5.1.47",
+      "title": "bigger positivity selector in capture log"
+    }
+  ],
+  "fixes": [],
+  "chores": [
+    {
+      "version": "5.1.47",
+      "title": "release v5.1.47"
+    },
+    {
+      "version": "5.1.47",
+      "title": "cleanup"
+    },
+    {
+      "version": "5.1.47",
+      "title": "working on testing"
+    },
+    {
+      "version": "5.1.47",
+      "title": "updating title"
+    },
+    {
+      "version": "5.1.47",
+      "title": "release v5.1.46"
+    }
+  ],
+  "build_date": "2020-06-13T12:37:28.477Z"
+}
