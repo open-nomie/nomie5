@@ -38,7 +38,10 @@
       </NItem>
       <div class="n-list compact border-bottom">
         {#each $AppStore.whatsNew.features as feature}
-          <NItem className="text-sm py-1" compact>{feature}</NItem>
+          <NItem className="text-sm py-1" compact>
+            <div slot="right">{feature.version}</div>
+            {feature.title}
+          </NItem>
         {/each}
       </div>
     {/if}
@@ -57,7 +60,10 @@
       </NItem>
       <div class="n-list compact">
         {#each $AppStore.whatsNew.fixes as fix}
-          <NItem className="text-sm py-1" compact>{fix}</NItem>
+          <NItem className="text-sm py-1" compact>
+            <div slot="right">{fix.version}</div>
+            {fix.title}
+          </NItem>
         {/each}
       </div>
     {/if}
