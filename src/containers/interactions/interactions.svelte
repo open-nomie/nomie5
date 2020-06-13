@@ -1,4 +1,8 @@
 <script>
+  /**
+   * Jun 12 2020 - Good god this file has turned into a nightmare.
+   */
+
   import { onMount } from "svelte";
   // vendors
   import md5 from "md5";
@@ -19,6 +23,8 @@
   import NTextualize from "../../components/note-textualizer/note-textualizer.svelte";
 
   import NShareImage from "../../components/share-image/share-image.svelte";
+
+  import NLocationModal from "../../containers/map/location-modal.svelte";
 
   // import NCamera from "../../components/camera/camera.svelte";
   // Containers
@@ -175,7 +181,8 @@
 <Toast message={$Interact.toast.message} show={$Interact.toast.show} />
 
 {#if $Interact.locationFinder.show}
-  <NModal title="Pick your location" fullscreen flexBody>
+  <NLocationModal />
+  <!-- <NModal title="Pick your location" fullscreen flexBody>
     <NMap
       picker={true}
       on:change={event => {
@@ -198,7 +205,7 @@
       }}>
       Select
     </button>
-  </NModal>
+  </NModal> -->
 {/if}
 
 {#if ($UserStore.meta || {}).lock}

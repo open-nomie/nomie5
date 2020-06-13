@@ -4,6 +4,54 @@ body.scrolling {
   }
 }
 
+.geocoder-control {
+  color: var(--color-inverse-1) !important;
+  background-color: var(--color-solid) !important;
+  input {
+    border: none;
+  }
+  &:after {
+    content: "Search";
+    background-color: var(--color-solid);
+    padding: 8px;
+    display: block;
+    width: 60px;
+    border-radius: 2px;
+    z-index: 100;
+  }
+
+  .geocoder-control-suggestions,
+  .geocoder-control-header,
+  .geocoder-control-list,
+  .geocoder-control-suggestion {
+    color: var(--color-inverse-1) !important;
+    background-color: var(--color-solid) !important;
+  }
+  .geocoder-control-header {
+    border-bottom: solid 1px var(--color-solid-3) !important;
+  }
+  .geocoder-control-suggestion {
+    border-top: solid 1px var(--color-solid-3) !important;
+  }
+
+  .geocoder-control-input {
+    background: transparent;
+    border: none !important;
+  }
+  &.geocoder-control-expanded {
+    .geocoder-control-input {
+      background-color: var(--color-solid) !important;
+      color: var(--color-inverse-1) !important;
+      border: solid 1px var(--color-solid-2) !important;
+    }
+  }
+
+  .geocoder-control-suggestions {
+    background-color: var(--color-solid) !important;
+    color: var(--color-inverse-1) !important;
+  }
+} // end geo-coder-control
+
 .leaflet-control-zoom {
   // display: none !important;
   $size: 44px;

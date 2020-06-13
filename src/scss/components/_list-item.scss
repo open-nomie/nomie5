@@ -88,6 +88,10 @@
     max-width: 95vw;
   }
 
+  &.no-border {
+    border-bottom: none !important;
+  }
+
   &.bottom-line,
   &[bottom-line] {
     &:after {

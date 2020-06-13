@@ -17,8 +17,12 @@
   // export let hasResults = false;
 
   // FIre off changes when input changes
+  let timeout;
   function fireChange() {
-    dispatch("change", searchTerm);
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      dispatch("change", searchTerm);
+    }, 400);
   }
 
   export function focus() {

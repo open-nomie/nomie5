@@ -68,7 +68,7 @@
   }
 
   // methods
-  let methods = {
+  export let methods = {
     init() {
       if (_el) {
         data.height = _el.parentElement.clientHeight;
@@ -78,7 +78,36 @@
       return new Promise((resolve, reject) => {
         if (!MAP) {
           MAP = new L.Map(id).fitWorld();
+          var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
+
+          let searchController = L.esri.Geocoding.geosearch({
+            zoomToResult: true,
+            placeholder: "Search",
+            useMapBounds: 25,
+            providers: [
+              arcgisOnline,
+              L.esri.Geocoding.mapServiceProvider({
+                label: "States and Counties",
+                url:
+                  "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer",
+                layers: [2, 3],
+                searchFields: ["NAME", "STATE_NAME"]
+              })
+            ]
+          }).addTo(MAP);
+
+          searchController.on("results", data => {
+            if (data.latlng) {
+              let location = new Location({
+                lat: data.latlng.lat,
+                lng: data.latlng.lng,
+                name: data.text
+              });
+              methods.setLocation(location);
+            }
+          });
         }
+
         MAP.eachLayer(function(layer) {
           MAP.removeLayer(layer);
         });
@@ -132,6 +161,7 @@
       locations = [location];
       data.showLocations = false;
       MAP.setView(L.latLng(location.lat, location.lng), 12);
+      dispatch("location", location);
     },
     /**
      * Save the current Location
@@ -438,11 +468,11 @@
       </div>
     </div>
   {/if}
-  <div class="n-map-wrapper" style="bottom:{picker ? '50px' : '0'}">
+  <div class="n-map-wrapper" style="bottom:{picker ? '1px' : '0'}">
     <div {id} class="n-map" />
   </div>
 
-  {#if picker}
+  {#if picker && 1 == 2}
     <div class="location-name {data.showLocations ? 'expanded' : 'collapsed'}">
       <div class="row">
         <div class="left">
