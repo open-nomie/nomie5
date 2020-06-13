@@ -4,6 +4,7 @@
   export let labelClass = "";
   export let inverse = false;
   export let color = undefined;
+  export let className = "";
 
   import NIcon from "../icon/icon.svelte";
 
@@ -31,7 +32,7 @@
 </style>
 
 {#if buttons.length}
-  <div class="btn-group w-100 {inverse ? 'inverse' : ''}">
+  <div class="btn-group w-100 {inverse ? 'inverse' : ''} {className}">
     {#each buttons as button, index (button.label + button.icon)}
       <button
         class="btn {button.active ? 'active' : ''} btn-{size}
