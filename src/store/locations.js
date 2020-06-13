@@ -14,6 +14,7 @@ import Storage from "../modules/storage/storage";
 
 import config from "../../config/global";
 import Location from "../modules/locate/Location";
+import distance from "../modules/locate/distance";
 
 // Stores
 
@@ -51,6 +52,23 @@ const LocationsInit = () => {
         });
       });
     },
+    findClosestTo(location) {
+      console.log("Find the closes location to ", location);
+      let match = { location: null, distance: 10000 };
+      update((locations) => {
+        let locs = locations.map((loc) => {
+          return {
+            distance: distance.between([location.lat, location.lng], [loc.lat, loc.lng], "m"),
+            location: loc,
+          };
+        });
+
+        console.log("locs", locs);
+
+        return locations;
+      });
+      return match;
+    },
     getAll() {
       let all = [];
       update((state) => {
@@ -62,7 +80,7 @@ const LocationsInit = () => {
     async write(payload) {
       return Storage.put(`${config.data_root}/locations.json`, payload);
     },
-    async loadLocations() {
+    async init() {
       let locations = await Storage.get(`${config.data_root}/locations.json`);
       locations = (locations || []).map((loc) => {
         return new Location(loc);
@@ -83,9 +101,9 @@ const LocationsInit = () => {
   };
 
   // Get storage
-  Storage.onReady(() => {
-    methods.loadLocations();
-  });
+  // Storage.onReady(() => {
+  //   methods.loadLocations();
+  // });
 
   return {
     update,

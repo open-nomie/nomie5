@@ -19,6 +19,7 @@ import extractor from "../utils/extract/extract";
 import TrackableElement from "../modules/trackable-element/trackable-element";
 // Storage for generic access to local,blockstack,pouch
 import Storage from "../modules/storage/storage";
+import Location from "../modules/locate/Location";
 // Hooks for firing off hooks
 import Hooky from "../modules/hooks/hooks";
 // Get the Geo Location module
@@ -41,6 +42,8 @@ import { Interact } from "./interact";
 import { LastUsed } from "./last-used";
 import { PeopleStore } from "./people-store";
 import { ContextStore } from "./context-store";
+
+import { Locations } from "./locations";
 
 const console = new Logger("🧺 store/ledger.js");
 // Hooky is for firing off generic events
@@ -265,22 +268,35 @@ const ledgerInit = () => {
     /**
      * Get the Users location if it's needed
      */
-    locateIfNeeded() {
+    async locateIfNeeded() {
       let shouldLocate = JSON.parse(localStorage.getItem(config.always_locate_key) || "false");
-
-      return new Promise((resolve, reject) => {
-        if (shouldLocate) {
-          locate()
-            .then(resolve)
-            .catch((e) => {
-              console.error("Location e", e);
-              Interact.alert(e.message);
-              resolve(null);
-            });
-        } else {
-          resolve(null);
+      if (shouldLocate) {
+        try {
+          let theLoc = await locate();
+          let location = new Location({ lat: theLoc.latitude, lng: theLoc.longitude });
+          console.log("Ths Location", location);
+          let match = Locations.findClosestTo(location);
+          console.log("Match", match);
+          return theLoc;
+        } catch (e) {
+          Interact.alert("Error", e.message);
         }
-      });
+      } else {
+        return null;
+      }
+      // return new Promise((resolve, reject) => {
+      //   if (shouldLocate) {
+      //     locate()
+      //       .then(resolve)
+      //       .catch((e) => {
+      //         console.error("Location e", e);
+      //         Interact.alert(e.message);
+      //         resolve(null);
+      //       });
+      //   } else {
+      //     resolve(null);
+      //   }
+      // });
     },
     /**
      * Update a Log

@@ -575,9 +575,9 @@
     </div>
 
     {#if $ActiveLogStore.score}
-      <div class="post-score">
+      <!-- <div class="post-score">
         <NPoints points={$ActiveLogStore.score} />
-      </div>
+      </div> -->
     {/if}
 
   </div>
@@ -588,7 +588,7 @@
         <NItem
           truncate
           compact
-          className="no-border bg-transparent text-sm score-item pt-2">
+          className="bg-transparent clickable mr-2 solo text-sm">
           <NPositivitySelector
             size="xl"
             score={$ActiveLogStore.score}

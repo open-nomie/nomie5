@@ -70,6 +70,7 @@
   // methods
   export let methods = {
     init() {
+      console.log("INIT MAP");
       if (_el) {
         data.height = _el.parentElement.clientHeight;
       }
@@ -94,7 +95,7 @@
                 searchFields: ["NAME", "STATE_NAME"]
               })
             ]
-          }).addTo(MAP);
+          });
 
           searchController.on("results", data => {
             if (data.latlng) {
@@ -106,14 +107,9 @@
               methods.setLocation(location);
             }
           });
-        }
 
-        MAP.eachLayer(function(layer) {
-          MAP.removeLayer(layer);
-        });
-
-        if (picker) {
-          MAP.on("moveend", () => {
+          const onMove = () => {
+            console.log("on Move End");
             let center = MAP.getCenter();
             let lat = center.lat;
             let lng = center.lng;
@@ -127,12 +123,27 @@
                 data.locating = false;
               });
             }
-            dispatch("change", {
-              ...MAP.getCenter(),
-              ...{ location: data.locationName }
-            });
-          });
-        }
+            dispatch(
+              "change",
+              new Location({
+                ...MAP.getCenter(),
+                ...{ location: data.locationName },
+                ...{ name: data.locationName }
+              })
+            );
+          };
+
+          MAP.off("moveend", onMove);
+          if (picker) {
+            // Add the Search Controller
+            searchController.addTo(MAP);
+            MAP.on("moveend", onMove);
+          }
+        } // end no map
+
+        MAP.eachLayer(function(layer) {
+          MAP.removeLayer(layer);
+        });
 
         resolve(MAP);
       });
@@ -305,6 +316,7 @@
 
   // On Mount
   onMount(async () => {
+    console.log("Map On Mount");
     await tick(120);
     await methods.init();
     methods.renderMap();
@@ -407,9 +419,9 @@
   .picker-cover {
     pointer-events: none;
     position: absolute;
-    top: 0;
-    bottom: $locationHeight;
-    left: 0;
+    top: -27px;
+    bottom: 0;
+    left: 12px;
     right: 0;
     display: flex;
     align-items: center;
@@ -450,13 +462,13 @@
           style="enable-background:new 0 0 60 60;"
           xml:space="preserve">
           <g>
-            <path
+            <!-- <path
               d="M59,29h-2.025C56.458,14.907,45.093,3.542,31,3.025V1c0-0.553-0.447-1-1-1s-1,0.447-1,1v2.025
               C14.907,3.542,3.542,14.907,3.025,29H1c-0.553,0-1,0.447-1,1s0.447,1,1,1h2.025C3.542,45.093,14.907,56.458,29,56.975V59
               c0,0.553,0.447,1,1,1s1-0.447,1-1v-2.025C45.093,56.458,56.458,45.093,56.975,31H59c0.553,0,1-0.447,1-1S59.553,29,59,29z
               M31,54.975V53c0-0.553-0.447-1-1-1s-1,0.447-1,1v1.975C16.01,54.46,5.54,43.99,5.025,31H7c0.553,0,1-0.447,1-1s-0.447-1-1-1H5.025
               C5.54,16.01,16.01,5.54,29,5.025V7c0,0.553,0.447,1,1,1s1-0.447,1-1V5.025C43.99,5.54,54.46,16.01,54.975,29H53
-              c-0.553,0-1,0.447-1,1s0.447,1,1,1h1.975C54.46,43.99,43.99,54.46,31,54.975z" />
+              c-0.553,0-1,0.447-1,1s0.447,1,1,1h1.975C54.46,43.99,43.99,54.46,31,54.975z" /> -->
             <path
               d="M42,29h-5.08c-0.441-3.059-2.861-5.479-5.92-5.92V18c0-0.553-0.447-1-1-1s-1,0.447-1,1v5.08
               c-3.059,0.441-5.479,2.862-5.92,5.92H18c-0.553,0-1,0.447-1,1s0.447,1,1,1h5.08c0.441,3.059,2.861,5.479,5.92,5.92V42

@@ -9,20 +9,52 @@
 
   import { Interact } from "../../store/interact";
   import { Locations } from "../../store/locations";
+  import Location from "../../modules/locate/Location";
 
   import math from "../../utils/math/math";
 
   const state = {
     locations: [],
     active: null,
-    mode: "view"
+    mode: "view",
+    mapLocation: null
   };
   let unsub; // holder of the unsbuscribe object
   let map; // holder of the map object
 
   function goto(location) {
     state.active = location;
+    state.mapLocation = null;
     console.log("map", map);
+  }
+
+  let changeTimeout;
+  let lastLocation = null;
+  let mapLocation = null;
+
+  let showFavoriteButton = false;
+
+  $: if (mapLocation || state.active) {
+    let loc = !mapLocation
+      ? new Location(state.active)
+      : new Location(mapLocation);
+    let exists = state.locations.find(l => l.lid == loc.lid) ? true : false;
+    console.log("location saved?", exists);
+    showFavoriteButton = !exists;
+  }
+
+  function mapChange(evt) {
+    let location = evt.detail;
+    if (lastLocation !== location.lid) {
+      lastLocation = location.lid;
+      console.log("Map Really Changed", location);
+      mapLocation = location;
+    }
+    // if (ll) {
+    //   lastLocation = [location.lat, location.lng];
+    //   console.log("Map Changed", location);
+    //   state.mapLocation = location;
+    // }
   }
 
   async function unfavorite(location) {
@@ -54,16 +86,21 @@
     Interact.dismissPickLocation();
   }
 
-  function search(searchTerm) {
-    console.log("Search", searchTerm.detail);
-  }
+  async function favorite() {
+    let loc;
+    if (mapLocation) {
+      loc = mapLocation;
+    } else if (state.active) {
+      loc = state.active;
+    }
 
-  async function save() {
-    let name = await Interact.prompt("📍 Location Name", null, {
-      value: state.active.name
-    });
-    state.active.name = name;
-    Locations.save(state.active);
+    if (loc) {
+      let name = await Interact.prompt("📍 Location Name", null, {
+        value: loc.name
+      });
+      loc.name = name;
+      Locations.save(loc);
+    }
   }
 
   onMount(() => {
@@ -101,15 +138,16 @@
     </div>
     <main class="main truncate">
       <div class="truncate w-100">
-        {state.active ? state.active.name : 'Pick a location'}
+        {#if state.active}
+          {state.active.name}
+        {:else if state.mapLocation}
+          {state.mapLocation.lat},{state.mapLocation.lng}
+        {:else}Pick a Location{/if}
       </div>
     </main>
     <div class="right n-row">
-      {#if state.active && !state.locations.find(loc => {
-          console.log(`${loc.lat} ${state.active.lat}`);
-          return loc.lat == state.active.lat && loc.lng == state.active.lng;
-        })}
-        <button class="btn btn-clear text-primary-bright" on:click={save}>
+      {#if showFavoriteButton}
+        <button class="btn btn-clear text-primary-bright" on:click={favorite}>
           Favorite
         </button>
       {/if}
@@ -123,10 +161,7 @@
           search(e);
         }} /> -->
       <NMap
-        on:change={event => {}}
-        on:location={event => {
-          state.active = event.detail;
-        }}
+        on:change={mapChange}
         locations={state.active ? [state.active] : []}
         picker={true}
         bind:this={map} />
@@ -142,20 +177,9 @@
           on:click={() => {
             goto(location);
           }}>
-          <div slot="left" style="font-size:30px">📍</div>
-          <h1 class="title truncate-2">{location.name}</h1>
-          <div class="note">
-            {math.round(location.lat)},{math.round(location.lng)}
-          </div>
-          <div slot="right" class="pr-2 n-row">
+          <div slot="left" class="n-row">
             {#if state.mode == 'view'}
-              <button
-                class="btn btn-clear text-primary-bright btn-sm"
-                on:click={() => {
-                  select(location);
-                }}>
-                Select
-              </button>
+              <div style="font-size:30px">📍</div>
             {:else}
               <button
                 class="btn btn-clear text-primary-bright btn-sm"
@@ -172,6 +196,22 @@
                   evt.stopPropagation();
                 }}>
                 <NIcon name="delete" className="fill-red" />
+              </button>
+            {/if}
+          </div>
+
+          <h1 class="title truncate-2">{location.name}</h1>
+          <div class="note">
+            {math.round(location.lat)},{math.round(location.lng)}
+          </div>
+          <div slot="right" class="pr-2 n-row">
+            {#if state.mode == 'view'}
+              <button
+                class="btn btn-clear text-primary-bright btn-sm"
+                on:click={() => {
+                  select(location);
+                }}>
+                Select
               </button>
             {/if}
           </div>

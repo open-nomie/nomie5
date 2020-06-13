@@ -567,7 +567,7 @@
           on:click={() => {
             state.showAllLocations = !state.showAllLocations;
           }}>
-          <NMap {locations} />
+          <!-- <NMap {locations} /> -->
         </div>
       {:else}
         <div class="mini-map opened">

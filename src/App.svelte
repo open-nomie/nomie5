@@ -35,6 +35,7 @@
   import { PeopleStore } from "./store/people-store"; // Store for holding People
   import { ContextStore } from "./store/context-store"; // Store for holding Post Context (categories)
   import { AppStore } from "./store/app-store";
+  import { Locations } from "./store/locations";
   import config from "../config/global";
 
   // Set a better console
@@ -196,6 +197,7 @@
     // Set the user if they're logged in
     ready = true;
     PeopleStore.init();
+    Locations.init();
     ContextStore.init(); // check if this is a new version
     // Run any commands if needed
     setTimeout(() => {

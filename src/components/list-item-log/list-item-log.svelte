@@ -74,6 +74,11 @@
     background-color: var(--color-faded-1);
     margin-bottom: 20px;
   }
+  .location-badge {
+    max-width: 80px;
+    font-size: 9px;
+    border: none;
+  }
   .more-button {
     margin-right: -8pt;
   }
@@ -96,7 +101,13 @@
 
       <div class="filler" />
       <!-- If they have location-->
-      {#if displayLog.lat}
+      {#if displayLog.location}
+        <button
+          class="btn btn-xs btn-badge btn-primary text-white location-badge
+          truncate">
+          {displayLog.location}
+        </button>
+      {:else if displayLog.lat}
         <button
           on:click={event => {
             Interact.showLocations([displayLog]);
@@ -108,9 +119,9 @@
       {/if}
 
       <!-- SCORE display -->
-      {#if displayLog.score}
+      <!-- {#if displayLog.score}
         <NPoints points={displayLog.score} />
-      {/if}
+      {/if} -->
 
       {#if hideMore !== true}
         <button
@@ -139,7 +150,7 @@
       <div class="tracker-grid n-row">
         {#each displayLog.people as person}
           <button
-            class="btn btn-badge n-tracker-value-grid-button"
+            class="btn n-tracker-value-grid-button"
             on:click={() => {
               dispatch('personClick', { person: person, log });
             }}>
@@ -160,9 +171,7 @@
                   radius="0.3" />
               {/if}
             </span>
-            <main>
-              <div class="label">{person.id}</div>
-            </main>
+            <div class="label truncate">{person.id}</div>
           </button>
         {/each}
         {#each logMeta.trackers.filter(trk => {
@@ -173,7 +182,7 @@
           }
         }) as trackerElement}
           <button
-            class="btn btn-badge n-tracker-value-grid-button"
+            class="btn n-tracker-value-grid-button"
             on:click={event => {
               event.preventDefault();
               event.stopPropagation();
@@ -185,7 +194,7 @@
               style={`color:${(trackerElement.obj || {}).color || '#CCC'}`}>
               {(trackerElement.obj || {}).emoji || '⚪️'}
             </span>
-            <main>
+            <main class="truncate w-100">
               <div class="label">
                 {(trackerElement.obj || {}).label || trackerElement.id}
               </div>

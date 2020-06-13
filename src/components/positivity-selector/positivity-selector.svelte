@@ -14,11 +14,31 @@
   }
 </script>
 
+<style>
+  :global(.positivity-selector) {
+    padding: 0px !important;
+  }
+  :global(.positivity-selector .text-xl) {
+    line-height: 21px;
+    font-size: 30px;
+  }
+  :global(.positivity-selector .btn) {
+    opacity: 0.5 !important;
+  }
+  :global(.positivity-selector .btn.active) {
+    opacity: 1 !important;
+  }
+  :global(.positivity-selector .btn.active) {
+    border: none !important;
+    transform: scale(1.1) !important;
+  }
+</style>
+
 <NButtonGroup
   inverse
   {style}
-  {className}
-  labelClass="text-{size}"
+  className={`${className} positivity-selector`}
+  labelClass="emoji text-{size}"
   buttons={[{ label: '😩', active: score === -2, click: () => {
         score = -2;
         onChange();
