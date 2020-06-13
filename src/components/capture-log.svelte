@@ -616,7 +616,9 @@
           {#if !$ActiveLogStore.lat}
             {Lang.t('general.location', 'Location')}
           {:else}
-            {$ActiveLogStore.location || `${math.round($ActiveLogStore.lat, 100)},${math.round($ActiveLogStore.lng, 100)}`}
+            <strong>
+              {$ActiveLogStore.location || `${math.round($ActiveLogStore.lat, 100)},${math.round($ActiveLogStore.lng, 100)}`}
+            </strong>
           {/if}
           <div slot="right" class="n-row">
             {#if $ActiveLogStore.lat}
@@ -644,7 +646,9 @@
           <div>
             {#if !$ActiveLogStore.end}
               {Lang.t('general.set-date', 'Set Date')}
-            {:else}{state.dateFormated}{/if}
+            {:else}
+              <strong>{state.dateFormated}</strong>
+            {/if}
           </div>
           <div slot="right" class="n-row">
             {#if $ActiveLogStore.end}

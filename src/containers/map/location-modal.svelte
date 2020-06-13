@@ -82,7 +82,7 @@
         name: rawLoc.location
       });
 
-      goto(location);
+      select(location);
     }
   }
 
@@ -305,11 +305,11 @@
 
   <button
     slot="footer"
-    class="btn btn-block btn-clear"
+    class="btn btn-block btn-primary"
     on:click={Interact.dismissPickLocation}>
     Close
   </button>
-  <button
+  <!-- <button
     slot="footer"
     class="btn btn-block btn-primary"
     disabled={!state.active}
@@ -320,5 +320,5 @@
       Interact.dismissPickLocation();
     }}>
     Select
-  </button>
+  </button> -->
 </NModal>

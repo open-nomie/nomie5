@@ -74,6 +74,20 @@
     background-color: var(--color-faded-1);
     margin-bottom: 20px;
   }
+  .score-mark {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 4px;
+    border-radius: 2px;
+    height: 4px;
+    &.positive {
+      background-color: var(--color-green);
+    }
+    &.negative {
+      background-color: var(--color-red);
+    }
+  }
   .more-button {
     margin-right: -8pt;
   }
@@ -118,9 +132,10 @@
       {/if}
 
       <!-- SCORE display -->
-      <!-- {#if displayLog.score}
-        <NPoints points={displayLog.score} />
-      {/if} -->
+      {#if displayLog.score}
+        <div
+          class="score-mark {displayLog.score > 0 ? 'positive' : 'negative'}" />
+      {/if}
 
       {#if hideMore !== true}
         <button
