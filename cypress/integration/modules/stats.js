@@ -71,7 +71,15 @@ describe("modules/stats/stats", function () {
   });
 
   it("should get the right time of day", () => {
+    expect(moodGenerated.tod.afternoon.count).to.equal(3);
+  });
+
+  it("should get the right time of day", () => {
     expect(moodGenerated.tod.afternoon.count).to.equal(2);
+  });
+
+  it("should get the right day of week", () => {
+    expect(moodGenerated.dow.mon.count).to.equal(3);
   });
 
   it("should respect config order", () => {
