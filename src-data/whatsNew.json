@@ -1,1 +1,53 @@
-{"features":[{"version":"5.1.50","title":"location tagging when tracking at a favorite location"},{"version":"5.1.50","title":"adding scores to \"pick it for me\" comparisons"},{"version":"5.1.49","title":"adding scores to \"pick it for me\" comparisons"},{"version":"5.1.48","title":"location tagging when tracking at a favorite location"},{"version":"5.1.48","title":"improved list item design"},{"version":"5.1.49","title":"location tagging when tracking at a favorite location"}],"fixes":[{"version":"5.1.50","title":"whats new generation bug"},{"version":"5.1.50","title":"stats day view chart showing previous day data"},{"version":"5.1.49","title":"whats new generation bug"},{"version":"5.1.49","title":"stats day view chart showing previous day data"}],"chores":[{"version":"5.1.50","title":"release v5.1.49"},{"version":"5.1.50","title":"release v5.1.50"},{"version":"5.1.48","title":"adding className support to button-group"},{"version":"5.1.48","title":"release v5.1.48"},{"version":"5.1.48","title":"adding stickiness to the what's new generator"},{"version":"5.1.49","title":"release v5.1.49"},{"version":"5.1.49","title":"adding className support to button-group"},{"version":"5.1.49","title":"release v5.1.48"}],"build_date":"2020-06-13T18:40:24.621Z"}
+{
+  "features": [
+    {
+      "version": "5.1.50",
+      "title": "adding scores to \"pick it for me\" comparisons"
+    },
+    {
+      "version": "5.1.48",
+      "title": "location tagging when tracking at a favorite location"
+    },
+    {
+      "version": "5.1.48",
+      "title": "improved list item design"
+    }
+  ],
+  "fixes": [
+    {
+      "version": "5.1.50",
+      "title": "whats new generation bug"
+    },
+    {
+      "version": "5.1.50",
+      "title": "stats day view chart showing previous day data"
+    }
+  ],
+  "chores": [
+    {
+      "version": "5.1.48",
+      "title": "adding className support to button-group"
+    },
+    {
+      "version": "5.1.48",
+      "title": "release v5.1.48"
+    },
+    {
+      "version": "5.1.48",
+      "title": "adding stickiness to the what's new generator"
+    },
+    {
+      "version": "5.1.49",
+      "title": "release v5.1.49"
+    },
+    {
+      "version": "5.1.49",
+      "title": "adding className support to button-group"
+    },
+    {
+      "version": "5.1.49",
+      "title": "release v5.1.48"
+    }
+  ],
+  "build_date": "2020-06-13T18:40:24.621Z"
+}

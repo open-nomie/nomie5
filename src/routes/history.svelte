@@ -553,6 +553,12 @@
               on:trackerClick={event => {
                 methods.trackerTapped(event.detail.tracker, log);
               }}
+              on:personClick={event => {
+                methods.personTapped(event.detail.person, log);
+              }}
+              on:contextClick={event => {
+                methods.contextTapped(event.detail.context, log);
+              }}
               on:textClick={event => {
                 methods.textClick(event);
               }}

@@ -21,19 +21,19 @@ let build_date = new Date();
 commits.forEach((commit) => {
   if (commit.subject && commit.subject.search("fix:") > -1) {
     let title = commit.subject.replace("fix: ", "");
-    if (!fixes.find((f) => f.version == version && f.title == title)) {
+    if (!fixes.find((f) => f.title == title)) {
       fixes.unshift({ version, title });
     }
   }
   if (commit.subject && commit.subject.search("feat:") > -1) {
     let title = commit.subject.replace("feat: ", "");
-    if (!features.find((f) => f.version == version && f.title == title)) {
+    if (!features.find((f) => f.title == title)) {
       features.unshift({ version, title });
     }
   }
   if (commit.subject && commit.subject.search("chore:") > -1) {
     let title = commit.subject.replace("chore: ", "");
-    if (!chores.find((f) => f.version == version && f.title == title)) {
+    if (!chores.find((f) => f.title == title)) {
       chores.unshift({ version, title });
     }
   }

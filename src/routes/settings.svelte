@@ -553,7 +553,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             <span slot="right">
               <a
                 class="btn btn-clear text-primary-bright"
-                href={`mailto:${config.support_email}?subject=Nomie vAPP_VERSION`}>
+                href={`mailto:${config.support_email}?subject=Nomie APP_VERSION`}>
                 {config.support_contact}
               </a>
             </span>

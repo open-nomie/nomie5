@@ -74,10 +74,15 @@
     background-color: var(--color-faded-1);
     margin-bottom: 20px;
   }
+
+  .n-row.context {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
   .score-mark {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    bottom: 16px;
+    right: 16px;
     width: 4px;
     border-radius: 2px;
     height: 4px;
@@ -212,7 +217,7 @@
               <div class="label">
                 {(trackerElement.obj || {}).label || trackerElement.id}
               </div>
-              {#if NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom) !== '1'}
+              {#if NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom) !== '1' && trackerElement.obj.type !== 'tick'}
                 <div class="value">
                   {NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom)}
                 </div>
@@ -222,7 +227,7 @@
         {/each}
       </div>
       {#if logMeta.context.length}
-        <div class="context px-2 pb-2">
+        <div class="context n-row px-2 pb-2">
           {#each logMeta.context as context}
             <button
               class="btn btn-badge faded"
