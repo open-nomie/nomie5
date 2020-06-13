@@ -86,6 +86,7 @@
     "i18next": "^17.0.16",
     "jest": "^24.8.0",
     "json-loader": "^0.5.7",
+    "latlon-geohash": "^2.0.0",
     "leaflet": "^1.5.1",
     "localforage": "^1.7.3",
     "md5": "^2.2.1",

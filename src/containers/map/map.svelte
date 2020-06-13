@@ -70,7 +70,6 @@
   // methods
   export let methods = {
     init() {
-      console.log("INIT MAP");
       if (_el) {
         data.height = _el.parentElement.clientHeight;
       }
@@ -108,32 +107,43 @@
             }
           });
 
+          let moveTimeout;
           const onMove = () => {
-            console.log("on Move End");
             let center = MAP.getCenter();
             let lat = center.lat;
             let lng = center.lng;
             data.lat = lat;
             data.lng = lng;
             // Stop this from being called multiple times.
-            if (!data.locating) {
-              data.locating = true;
-              methods.getLocation(lat, lng).then(loc => {
-                data.locationName = loc.Match_addr;
-                data.locating = false;
-              });
-            }
-            dispatch(
-              "change",
-              new Location({
-                ...MAP.getCenter(),
-                ...{ location: data.locationName },
-                ...{ name: data.locationName }
-              })
-            );
+
+            /**
+             * Fire the Move action -
+             * encased so we can only do it so often
+             **** */
+            const fireMove = async () => {
+              // let loc = await methods.getLocation(lat, lng);
+              // data.locationName = loc.Match_addr;
+              dispatch(
+                "change",
+                new Location({
+                  ...MAP.getCenter(),
+                  ...{ location: data.locationName },
+                  ...{ name: null }
+                })
+              );
+            };
+            // Clear Timeout
+            clearTimeout(moveTimeout);
+            // Set 1s timeout
+            moveTimeout = setTimeout(() => {
+              // Fire Move
+              fireMove();
+            }, 1000);
           };
 
+          // Clear any moveend listeners
           MAP.off("moveend", onMove);
+          // If we're picking an address do the following
           if (picker) {
             // Add the Search Controller
             searchController.addTo(MAP);
@@ -141,10 +151,12 @@
           }
         } // end no map
 
+        // Clean up the layers
         MAP.eachLayer(function(layer) {
           MAP.removeLayer(layer);
         });
 
+        // return map
         resolve(MAP);
       });
     },
@@ -316,7 +328,6 @@
 
   // On Mount
   onMount(async () => {
-    console.log("Map On Mount");
     await tick(120);
     await methods.init();
     methods.renderMap();

@@ -44,12 +44,10 @@
 
   let promptInput;
   let logEditorTracker;
+  let lastId;
 
   $: if ($Interact.prompt.show && promptInput) {
     promptInput.focus();
-    setTimeout(() => {
-      promptInput.select();
-    }, 120);
   }
 
   let ready = false;
