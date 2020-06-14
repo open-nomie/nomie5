@@ -349,18 +349,24 @@
        * Payload could be an array of, or single { tracker, value }
        */
       if (payload instanceof Array) {
+        /**
+         * It's a Multi Tracker Payload
+         * */
         let items = payload.filter(item => item);
         items.forEach(item => {
-          // ActiveLogStore.addTag(item.tracker.tag, item.value);
           let tracker = TrackerStore.getByTag(item.tracker.tag);
           // Get any additional content to pull along with this tracker
           let includeStr = tracker.getIncluded(item.value) || "";
           includeStr = includeStr.length ? ` ${includeStr}` : "";
+          // Add the Element
           ActiveLogStore.addElement(
             `#${tracker.tag}(${item.value})${includeStr}`
           );
         });
       } else if (payload) {
+        /**
+         * It's a Single Tracker Payload
+         * */
         let tracker = payload.tracker;
         // Setup Note array
         let note = [];
