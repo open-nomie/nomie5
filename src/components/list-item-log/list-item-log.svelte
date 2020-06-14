@@ -190,7 +190,7 @@
                   radius="0.3" />
               {/if}
             </span>
-            <div class="label truncate">{person.id}</div>
+            <div class="label truncate text-inverse">{person.id}</div>
           </button>
         {/each}
         {#each logMeta.trackers.filter(trk => {
@@ -214,12 +214,14 @@
               {(trackerElement.obj || {}).emoji || '⚪️'}
             </span>
             <main class="truncate w-100">
-              <div class="label">
+              <div class="label text-inverse">
                 {(trackerElement.obj || {}).label || trackerElement.id}
               </div>
-              <div class="value">
-                {NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom)}
-              </div>
+              {#if ['tick', 'picker'].indexOf(trackerElement.obj.type) == -1}
+                <div class="value text-inverse">
+                  {NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom)}
+                </div>
+              {/if}
             </main>
           </button>
         {/each}

@@ -141,6 +141,7 @@
 
       {#each state.people as person}
         <NItem
+          truncate
           className="pt-1 pb-1 clickable solo box-shadow mb-3 mr-0 filler"
           on:click={() => {
             personClicked(person);
@@ -164,7 +165,9 @@
                 style={`border-radius:32%; overflow:hidden`} />
             {/if}
           </div>
-          <div class="title">{$PeopleStore.people[person].displayName}</div>
+          <div class="title truncate w-100">
+            {$PeopleStore.people[person].displayName}
+          </div>
           {#if $PeopleStore.people[person].last}
             <div class="note">
               {dayjs($PeopleStore.people[person].last).fromNow()}
