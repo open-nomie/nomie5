@@ -343,6 +343,7 @@
       // Inserting new TrackerInputer
       let inputer = new TrackerInputer(tracker, $TrackerStore);
       let payload = await inputer.get();
+      console.log("Payload from inputer", payload);
 
       /**
        * Payload could be an array of, or single { tracker, value }
@@ -361,12 +362,25 @@
         });
       } else if (payload) {
         let tracker = payload.tracker;
+        // Setup Note array
+        let note = [];
+        // If a value is provided
+        if (payload.value) {
+          note.push(`#${tracker.tag}(${payload.value})`);
+        } else {
+          note.push(`#${tracker.tag}`);
+        }
         // Get any additional content to pull along with this tracker
         let includeStr = tracker.getIncluded(payload.value) || "";
-        includeStr = includeStr.length ? ` ${includeStr}` : "";
-        ActiveLogStore.addElement(
-          `#${tracker.tag}(${payload.value})${includeStr}`
-        );
+        if (includeStr.length) {
+          note.push(includeStr);
+        }
+        // If a suffix is provided
+        if (payload.suffix && payload.suffix.length) {
+          note.push(payload.suffix);
+        }
+        // Return the note joined by spaces
+        ActiveLogStore.addElement(note.join(" "));
       }
       // One Tap Trackers
       // TODO move the adding to the activeLogStore here.

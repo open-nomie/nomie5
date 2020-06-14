@@ -15,6 +15,7 @@
 
   //Container for Slider (range), Keypad and Timer
   import SliderInput from "./slider.svelte";
+  import PickerInput from "./picker.svelte";
   import NTimer from "./timer.svelte";
   import NCalculator from "../../../components/calculator/calculator.svelte";
 
@@ -39,6 +40,7 @@
     value: null, // holds current value
     tracker: null, // holds current tracker
     ready: false,
+    suffix: "",
     calcUsed: false // when it's ready
   };
 
@@ -49,7 +51,8 @@
       // Dispatch value and tracker
       dispatch("save", {
         value: data.value,
-        tracker: tracker
+        tracker: tracker,
+        suffix: data.suffix
       });
     },
     // When Add is hit
@@ -57,7 +60,8 @@
       // Dispatch add
       dispatch("add", {
         value: data.value,
-        tracker: tracker
+        tracker: tracker,
+        suffix: data.suffix
       });
     },
     onCancel() {
@@ -92,7 +96,8 @@
       data.tracker = tracker;
       data.value = tracker.default || 0;
       data.ready = true;
-    }, 12);
+      data.suffix = "";
+    }, 1);
   }
 
   function editTracker() {
@@ -113,7 +118,7 @@
     data.tracker = tracker;
     setTimeout(() => {
       data.ready = true;
-    }, 120);
+    }, 12);
   });
 </script>
 
@@ -160,6 +165,7 @@
   {#if data.ready === true}
     <!-- Slide in the input -->
     <div class="input-model type-{tracker.type}">
+
       {#if tracker.type === 'range'}
         <SliderInput
           value={(data.value || tracker.min) + ''}
@@ -167,6 +173,12 @@
           max={(tracker.max || 0) + ''}
           on:change={value => {
             data.value = value.detail;
+          }} />
+      {:else if tracker.type === 'picker'}
+        <PickerInput
+          {tracker}
+          on:change={evt => {
+            data.suffix = evt.detail;
           }} />
       {:else if tracker.type === 'value' || tracker.type === 'tick'}
         <div id="keypad-holder">

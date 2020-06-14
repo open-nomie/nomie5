@@ -8,6 +8,7 @@
   import NInput from "../../../components/input/input.svelte";
   import ColorPicker from "../../../components/color-picker/color-picker.svelte";
   import AutoComplete from "../../../components/auto-complete/auto-complete.svelte";
+  import PickerList from "../../../components/picker-list/picker-list.svelte";
 
   // Utils
   import { createEventDispatcher } from "svelte";
@@ -204,6 +205,21 @@
         </NInput>
       </NItem>
 
+      {#if data.tracker.type == 'picker'}
+        <PickerList
+          bind:list={data.tracker.picks}
+          on:change={evt => {
+            console.log('List now?', data.tracker.picks);
+          }} />
+      {/if}
+
+      <!--  <PickerList
+        bind:value={$TrackerDesignerStore.tracker.picks}
+        on:change={evt => {
+          $TrackerDesignerStore.tracker.picks = evt.detail;
+          console.log('$TrackerDesigner', $TrackerDesignerStore.tracker);
+        }} /> -->
+
       {#if data.tracker.type == 'tick'}
         <NItem
           title={Lang.t('tracker.save-on-tap')}
@@ -260,7 +276,7 @@
       {/if}
       <NItem className="item-divider compact" />
 
-      {#if data.tracker.type !== 'timer' && data.tracker.type !== 'note'}
+      {#if data.tracker.type !== 'timer' && data.tracker.type !== 'note' && data.tracker.type !== 'picker'}
         <NItem>
           <NInput
             placeholder={Lang.t('tracker.measure-by')}
@@ -281,7 +297,7 @@
 
         </NItem>
       {/if}
-      {#if data.tracker.type !== 'note'}
+      {#if data.tracker.type !== 'note' && data.tracker.type !== 'picker'}
         <NItem>
           <NInput
             type="select"
@@ -294,7 +310,7 @@
             {/each}
           </NInput>
         </NItem>
-      {:else}
+      {:else if data.tracker.type == 'note'}
         <NItem>
           <NInput
             type="textarea"
@@ -313,7 +329,7 @@
       <NItem className="item-divider compact" />
       <PointsEditor tracker={data.tracker} />
       <NItem className="item-divider bg-solid compact" />
-      {#if data.tracker.type !== 'note'}
+      {#if data.tracker.type !== 'note' && data.tracker.type !== 'picker'}
         <NItem>
           <NInput
             pattern="[0-9]*"

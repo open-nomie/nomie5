@@ -6196,14 +6196,14 @@ body.scrolling .mini-map {
     border-radius: 0.9rem;
     overflow: hidden;
     max-width: 95vw; }
-  .n-item.bottom-line:after, .n-item[bottom-line]:after {
+  .n-item.bottom-line:before, .n-item[bottom-line]:before {
     content: "";
     position: absolute;
-    bottom: 0;
+    bottom: 1px;
     border-bottom: solid 1px var(--color-faded-1);
     left: 16px;
     right: 0; }
-  .n-item.bottom-line:last-child:after, .n-item[bottom-line]:last-child:after {
+  .n-item.bottom-line:last-child:before, .n-item[bottom-line]:last-child:before {
     display: none; }
   .n-item .left,
   .n-item [slot="left"] {

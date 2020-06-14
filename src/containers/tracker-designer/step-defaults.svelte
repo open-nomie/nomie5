@@ -7,6 +7,7 @@
   import trackerTypes from "../../modules/tracker-types/tracker-types";
   import { Lang } from "../../store/lang";
   import { Interact } from "../../store/interact";
+  import PickerList from "../../components/picker-list/picker-list.svelte";
 
   const getTrackerInput = async target => {
     const response = await Interact.trackerInput(
@@ -23,7 +24,7 @@
   class="step label n-panel vertical scroll-y {$TrackerDesignerStore.tracker.type == 'range' ? '' : 'center-all'}">
   <section class="container-xs">
 
-    {#if ['tick', 'note'].indexOf($TrackerDesignerStore.tracker.type) == -1}
+    {#if ['tick', 'note', 'picker'].indexOf($TrackerDesignerStore.tracker.type) == -1}
       <NItem>
         <div class="title text-md flex-grow w-100">
           Default
@@ -50,6 +51,15 @@
           </NInput>
         </div>
       </NItem>
+    {/if}
+
+    {#if $TrackerDesignerStore.tracker.type == 'picker'}
+      <PickerList
+        bind:value={$TrackerDesignerStore.tracker.picks}
+        on:change={evt => {
+          $TrackerDesignerStore.tracker.picks = evt.detail;
+          console.log('$TrackerDesigner', $TrackerDesignerStore.tracker);
+        }} />
     {/if}
 
     {#if $TrackerDesignerStore.tracker.type == 'note'}

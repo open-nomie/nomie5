@@ -132,6 +132,9 @@
       case "timer":
         _steps = [type, label, emoji, color, defaultValue, calc, positivity];
         break;
+      case "picker":
+        _steps = [type, defaultValue, label, emoji, color];
+        break;
       default:
         _steps = [
           type,

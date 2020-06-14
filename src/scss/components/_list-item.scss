@@ -93,16 +93,16 @@
 
   &.bottom-line,
   &[bottom-line] {
-    &:after {
+    &:before {
       content: "";
       position: absolute;
-      bottom: 0;
+      bottom: 1px;
       border-bottom: solid 1px var(--color-faded-1);
       left: 16px;
       right: 0;
     }
     &:last-child {
-      &:after {
+      &:before {
         display: none;
       }
     }

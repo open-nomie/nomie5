@@ -69,8 +69,7 @@
   }}
   item-divider={itemDivider}
   {style}
-  class="n-item {borderBottom ? 'border-bottom' : 'no-border'}
-  {compact ? 'compact' : ''}
+  class="n-item {compact ? 'compact' : ''}
   {className}
   {clickable ? 'clickable' : ''}"
   :alt="title">

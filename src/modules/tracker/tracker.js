@@ -73,6 +73,7 @@ export default class TrackerConfig {
     // Not used in Open Nomie since we don't
     // have a good means for notifications
     this.reminders = [];
+    this.picks = starter.picks || undefined;
 
     if (starter.reminders) {
       if (starter.reminders.length) {

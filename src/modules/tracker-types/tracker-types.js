@@ -19,6 +19,10 @@ export default {
     label: "Multi Tracker",
     description: "Track multiple trackers in a series",
   },
+  picker: {
+    label: "Pick from a List",
+    description: "Select items from a list you create",
+  },
   // note: {
   // 	title: 'Prefilled Note',
   // 	description: 'Prefill a full note - for example describing a common workout',
