@@ -149,7 +149,9 @@
   <div class="n-toolbar-grid n-row" slot="header">
     <div class="left truncate pl-3">
       <span class="animate truncate up {data.ready ? 'visible' : 'hidden'}">
-        {#if data.tracker}{data.tracker.displayValue(data.value)}{/if}
+        {#if data.tracker && tracker.type !== 'picker'}
+          {data.tracker.displayValue(data.value)}
+        {/if}
       </span>
     </div>
     <div class="main">

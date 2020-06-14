@@ -133,7 +133,7 @@
         _steps = [type, label, emoji, color, defaultValue, calc, positivity];
         break;
       case "picker":
-        _steps = [type, defaultValue, label, emoji, color];
+        _steps = [type, label, emoji, color, defaultValue];
         break;
       default:
         _steps = [

@@ -53,7 +53,7 @@
         </div>
         <LabelMeta
           str={pick}
-          titleClass={active.indexOf(pick) > -1 ? 'text-primary' : ''} />
+          titleClass={active.indexOf(pick) > -1 ? 'text-primary-bright' : ''} />
         <button class="btn btn-clear" slot="right">
           {#if active.indexOf(pick) > -1}
             <NIcon name="radioFilled" className="fill-primary-bright" />

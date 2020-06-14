@@ -50,10 +50,16 @@
 </script>
 
 <div class="n-picker-list {className}" {style}>
+  <NItem title="Enter items to pick from your list.">
+    <div class="note">
+      Enter any value, including #tracker, #trackerValues(3), @people and
+      +context
+    </div>
+  </NItem>
   <NItem>
     <NInput
       on:enter={add}
-      placeholder="Value to include in Note. #mood(4)"
+      placeholder="Item to select"
       bind:value={activeValue}>
       <button slot="right" class="btn btn-clear" on:click={add}>
         <NIcon name="addOutline" />
