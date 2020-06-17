@@ -6287,6 +6287,9 @@ body.scrolling .mini-map {
   .n-item.text-primary-bright .n-text {
     color: var(--color-primary-bright); }
 
+.border-bottom {
+  border-bottom-color: var(--color-solid-1) !important; }
+
 .n-item-divider {
   min-height: 60px !important;
   height: 30px;

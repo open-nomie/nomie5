@@ -217,7 +217,7 @@
               <div class="label text-inverse">
                 {(trackerElement.obj || {}).label || trackerElement.id}
               </div>
-              {#if ['tick', 'picker'].indexOf(trackerElement.obj.type) == -1}
+              {#if ['picker'].indexOf(trackerElement.obj.type) == -1 || (trackerElement.obj.type == 'tick' && trackerElement.value > 1)}
                 <div class="value text-inverse">
                   {NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom)}
                 </div>

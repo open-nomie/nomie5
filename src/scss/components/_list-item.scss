@@ -237,6 +237,10 @@
   }
 } // end .n-item
 
+.border-bottom {
+  border-bottom-color: var(--color-solid-1) !important;
+}
+
 .n-item-divider {
   min-height: 60px !important;
   height: 30px;
