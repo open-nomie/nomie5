@@ -1,12 +1,17 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import NItem from "../../../components/list-item/list-item.svelte";
+  import NInput from "../../../components/input/input.svelte";
   import NIcon from "../../../components/icon/icon.svelte";
   import LabelMeta from "../../../components/label-meta/label-meta.svelte";
+
+  import { TrackerStore } from "../../../store/tracker-store";
+
   const dispatch = createEventDispatcher();
 
   export let tracker;
   let active = [];
+  let activeValue;
 
   function toggle(pick) {
     if (active.indexOf(pick) > -1) {
@@ -23,6 +28,13 @@
       } catch (e) {}
     }, 120);
     fireChange();
+  }
+
+  function add() {
+    tracker.picks.push(`${activeValue}`);
+    activeValue = null;
+    TrackerStore.saveTracker(tracker);
+    tracker.picks = tracker.picks;
   }
 
   function fireChange() {
@@ -63,6 +75,13 @@
         </button>
       </NItem>
     {/each}
+    <NItem>
+      <NInput on:enter={add} placeholder="Add an Item" bind:value={activeValue}>
+        <button slot="right" class="btn btn-clear" on:click={add}>
+          <NIcon name="addOutline" />
+        </button>
+      </NInput>
+    </NItem>
   </div>
   <!-- <div class="value">{tempValue}</div>
   <input

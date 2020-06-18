@@ -45,7 +45,6 @@
 
   onMount(() => {
     ready = true;
-    console.log("Picker list ready", list);
   });
 </script>
 
@@ -57,10 +56,7 @@
     </div>
   </NItem>
   <NItem>
-    <NInput
-      on:enter={add}
-      placeholder="Item to select"
-      bind:value={activeValue}>
+    <NInput on:enter={add} placeholder="Add an Item" bind:value={activeValue}>
       <button slot="right" class="btn btn-clear" on:click={add}>
         <NIcon name="addOutline" />
       </button>

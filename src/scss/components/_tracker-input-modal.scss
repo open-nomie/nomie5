@@ -22,6 +22,10 @@
     flex-shrink: 1;
     align-items: center;
   }
+  .tracker-input.picker {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
   .tracker-input.keypad {
     flex-direction: column;
     justify-content: stretch;
