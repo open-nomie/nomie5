@@ -31,7 +31,6 @@ const AppStoreInit = () => {
   };
 
   const closeUpdate = () => {
-    console.log("Close State");
     update((state) => {
       state.whatsNew = null;
       return state;

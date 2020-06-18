@@ -206,19 +206,8 @@
       </NItem>
 
       {#if data.tracker.type == 'picker'}
-        <PickerList
-          bind:list={data.tracker.picks}
-          on:change={evt => {
-            console.log('List now?', data.tracker.picks);
-          }} />
+        <PickerList bind:list={data.tracker.picks} on:change={evt => {}} />
       {/if}
-
-      <!--  <PickerList
-        bind:value={$TrackerDesignerStore.tracker.picks}
-        on:change={evt => {
-          $TrackerDesignerStore.tracker.picks = evt.detail;
-          console.log('$TrackerDesigner', $TrackerDesignerStore.tracker);
-        }} /> -->
 
       {#if data.tracker.type == 'tick'}
         <NItem

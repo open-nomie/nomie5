@@ -237,7 +237,7 @@ export default class StatsProcessor {
     // If it's a date mode
     if (this.mode == "d") {
       let { labels, values } = this.getChartDataByType("hour", "H", this.is24Hour ? "H" : "ha", valueMapTotals);
-      console.log("Day Mode", { labels, values });
+
       return {
         mode: this.mode,
         labels,

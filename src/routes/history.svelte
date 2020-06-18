@@ -332,7 +332,7 @@
 
   async function refresh() {
     refreshing = true;
-    console.log("Refresh history");
+
     await tick(500);
     await methods.getLogs(true);
     LedgerStore.getMemories();

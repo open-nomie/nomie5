@@ -124,7 +124,6 @@
       });
       loc.name = name;
       let saved = await Locations.save(loc);
-      console.log("Saved", loc, Locations);
     }
   }
 

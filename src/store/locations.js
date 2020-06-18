@@ -39,7 +39,6 @@ const LocationsInit = () => {
         theLocations = locations;
         return locations;
       });
-      console.log("Location to save", location, theLocations);
       return this.write(theLocations);
     },
     findClosestTo(location) {
@@ -60,7 +59,6 @@ const LocationsInit = () => {
         return locations;
       });
       if (match) {
-        console.log("Found match", match);
         return match.location;
       } else {
         return location;

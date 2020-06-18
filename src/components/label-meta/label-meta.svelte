@@ -31,7 +31,6 @@
       })
       .join(" ")
       .trim();
-    console.log({ str, meta, label });
   }
 </script>
 

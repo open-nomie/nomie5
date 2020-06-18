@@ -343,7 +343,6 @@
       // Inserting new TrackerInputer
       let inputer = new TrackerInputer(tracker, $TrackerStore);
       let payload = await inputer.get();
-      console.log("Payload from inputer", payload);
 
       /**
        * Payload could be an array of, or single { tracker, value }

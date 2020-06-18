@@ -220,7 +220,6 @@
       methods.autoCompleteDone();
     },
     async autoCompleteDone() {
-      console.log("Auto Complete Done?");
       setTimeout(() => {
         state.partialTag = null;
         state.cursorIndex = null;
@@ -298,7 +297,6 @@
   LedgerStore.hook("onLogSaved", res => {
     methods.clear();
     setTimeout(() => {
-      console.log("Clearing?");
       methods.autoCompleteDone();
     });
   });

@@ -168,14 +168,11 @@
     async importLocations() {
       importing.locations.running = true;
       let currentLocations = Locations.getAll();
-      console.log("Current Locations", currentLocations);
-      console.log("Locations to save", archive.locations);
       archive.locations.forEach(loc => {
         if (!currentLocations.find(l => l.id == loc.id)) {
           currentLocations.push(loc);
         }
       });
-      console.log("Current", currentLocations);
       await Locations.write(currentLocations);
       importing.locations.running = false;
       importing.locations.done = true;

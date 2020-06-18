@@ -6343,6 +6343,10 @@ body.scrolling .mini-map {
   flex-shrink: 1;
   align-items: center; }
 
+.n-modal-frame.tracker-input .tracker-input.picker {
+  flex-direction: column;
+  justify-content: flex-start; }
+
 .n-modal-frame.tracker-input .tracker-input.keypad {
   flex-direction: column;
   justify-content: stretch;
