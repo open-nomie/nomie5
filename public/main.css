@@ -6343,7 +6343,7 @@ body.scrolling .mini-map {
   flex-shrink: 1;
   align-items: center; }
 
-.n-modal-frame.tracker-input .tracker-input.picker {
+.n-modal-frame.tracker-input .input-model.type-picker {
   flex-direction: column;
   justify-content: flex-start; }
 
