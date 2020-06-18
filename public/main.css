@@ -6329,6 +6329,8 @@ body.scrolling .mini-map {
   align-items: center; }
   .n-modal-frame.tracker-input .n-modal-body > div {
     width: 100%; }
+  .n-modal-frame.tracker-input .n-modal-body.no-scroll {
+    overflow: auto !important; }
   .n-modal-frame.tracker-input .n-modal-body .input-model {
     display: flex;
     flex-direction: column;
@@ -6345,7 +6347,8 @@ body.scrolling .mini-map {
 
 .n-modal-frame.tracker-input .input-model.type-picker {
   flex-direction: column;
-  justify-content: flex-start; }
+  justify-content: flex-start;
+  height: 100%; }
 
 .n-modal-frame.tracker-input .tracker-input.keypad {
   flex-direction: column;

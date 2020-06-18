@@ -145,6 +145,7 @@
 <NModal
   show={show || $Interact.trackerInput.show}
   type="fullscreen"
+  bodyClass={`${tracker.type == 'picker' ? 'no-scroll' : ''}`}
   className="tracker-input">
   <div class="n-toolbar-grid n-row" slot="header">
     <div class="left truncate pl-3">

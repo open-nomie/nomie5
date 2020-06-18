@@ -189,6 +189,9 @@
         padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
       }
       .n-modal-body {
+        &.no-scroll {
+          overflow: auto !important;
+        }
         &.flex-body {
           position: relative;
           display: flex;
