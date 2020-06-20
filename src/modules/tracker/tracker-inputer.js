@@ -6,7 +6,16 @@ import Tracker from "./tracker";
 import PromiseStep from "../../utils/promise-step/promise-step";
 import NomieLog from "../../modules/nomie-log/nomie-log";
 
+/**
+ * Tracker Input
+ * This is a main method for collecting details on a specific tracker, or group of trackers
+ */
+
 export default class TrackerInputer {
+  /**
+   * Constructor
+   * Pass in tracker and the tracker store $ object
+   */
   constructor(tracker, $TrackerStore) {
     this.tracker = tracker;
     this.value = 0;
@@ -16,12 +25,13 @@ export default class TrackerInputer {
     };
     this.$TrackerStore = $TrackerStore;
   }
-
+  // Listeners
   on(type, func) {
     if (this.listeners[type].indexOf(func) == -1) {
       this.listeners[type].push(func);
     }
   }
+  // Firing listeners
   fire(type) {
     this.listeners[type].forEach((func) => {
       func(this);
@@ -61,11 +71,19 @@ export default class TrackerInputer {
     return note.join(" ");
   }
 
-  //
+  /**
+   * Get Note as String
+   * Used mainly in the auto complete to select a tracker and insert it's value into a note
+   */
   async getNoteString() {
     let note = [];
+    // Ticks - check for default
     if (this.tracker.type === "tick") {
-      note.push(`#${this.tracker.tag}`);
+      let content = `#${this.tracker.tag}`;
+      if (this.tracker.default) {
+        content = `${content}(${this.tracker.default})`;
+      }
+      note.push(content);
     } else if (this.tracker.type === "note") {
       let input = await this.getNoteTrackerInputAsString(this.tracker);
       note.push(input);
@@ -95,7 +113,7 @@ export default class TrackerInputer {
       }
       if (this.tracker.type === "tick") {
         // Just add the tag to the note
-        ActiveLogStore.addTag(this.tracker.tag);
+        ActiveLogStore.addTag(this.tracker.tag, this.tracker.default);
         let includeStr = this.tracker.getIncluded(1);
         ActiveLogStore.addElement(includeStr);
         // If it's one_tap - then save it
