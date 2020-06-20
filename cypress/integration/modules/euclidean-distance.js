@@ -21,6 +21,6 @@ describe("euclidean-distance", function () {
   it("get a distance between increment+1 arrays", () => {
     let array1 = [5, 7, 9, 11];
     let array2 = [2, 4, 6, 8];
-    expect(distance.euclidean(array1, array2)).to.equal(25.5235);
+    expect(distance.euclidean(array1, array2)).to.equal(25.52);
   });
 });

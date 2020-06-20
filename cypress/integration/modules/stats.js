@@ -11,7 +11,7 @@ describe("modules/stats/stats", function () {
   let rows = [
     new NomieLog({
       note: `I'm  just a note #region`,
-      end: dayjs().toDate().getTime(),
+      end: dayjs().hour(1).toDate().getTime(),
     }),
     new NomieLog({
       note: `I'm the #first #note #mood(10) and I'm #good`,
@@ -23,18 +23,19 @@ describe("modules/stats/stats", function () {
     }),
     new NomieLog({
       note: `I'm a thing good! #soggy`,
+      end: dayjs().hour(1).toDate().getTime(),
     }),
     new NomieLog({
       note: `I'm the #middle #note and I'm #good(10) too`,
-      end: dayjs().subtract(1, "day").toDate().getTime(),
+      end: dayjs().subtract(1, "day").hour(1).toDate().getTime(),
     }),
     new NomieLog({
       note: `I'm the #middle #note #mood(5) and I'm #good(22) too`,
-      end: dayjs().subtract(1, "week").toDate().getTime(),
+      end: dayjs().subtract(1, "week").hour(1).toDate().getTime(),
     }),
     new NomieLog({
       note: `I'm the #middle #note and I'm  too`,
-      end: dayjs().subtract(1, "month").toDate().getTime(),
+      end: dayjs().subtract(1, "month").hour(1).toDate().getTime(),
     }),
   ];
 
@@ -71,11 +72,11 @@ describe("modules/stats/stats", function () {
   });
 
   it("should get the right time of day", () => {
-    expect(moodGenerated.tod.afternoon.count).to.equal(3);
+    expect(moodGenerated.tod.afternoon.count).to.equal(3); //
   });
 
   it("should get the right time of day", () => {
-    expect(moodGenerated.tod.afternoon.count).to.equal(2);
+    expect(moodGenerated.tod.afternoon.count).to.equal(2); //
   });
 
   it("should get the right day of week", () => {

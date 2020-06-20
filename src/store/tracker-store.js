@@ -341,6 +341,12 @@ const trackerStoreInit = () => {
       });
       return response;
     },
+    import() {
+      // TODO : finish this
+      // let inputFile = document.createElement("input");
+      // inputFile.type = "file";
+      // inputFile.click();
+    },
     download(tracker) {
       let pkg = {
         type: "tracker",

@@ -6137,7 +6137,7 @@ body.scrolling .mini-map {
   border-bottom: solid 3px var(--color-primary-bright) !important; }
 
 .n-picker-list ul {
-  max-height: 50vh;
+  max-height: 45vh;
   overflow-y: scroll !important;
   border: solid 1px var(--color-faded);
   border-radius: 6px;
@@ -6145,6 +6145,9 @@ body.scrolling .mini-map {
   background-color: var(--color-faded); }
   .n-picker-list ul .n-item {
     background-color: transparent; }
+    .n-picker-list ul .n-item.active {
+      font-weight: bold !important;
+      border-bottom: solid 1px var(--color-primary-bright); }
 
 .n-item {
   text-align: left;

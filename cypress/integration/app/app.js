@@ -33,7 +33,10 @@ context("App", () => {
     cy.wait(200);
     cy.get(".n-modal-frame .tracker-option").eq(3).click();
     cy.wait(200);
-    cy.get('.n-modal-footer button[slot="footer"]').click();
+    cy.get(".library-modal > .n-modal > .n-modal-footer > .btn").click();
+    cy.wait(300);
+
+    cy.get(".left > .btn > .n-icon").click();
   };
 
   const trackWater = () => {

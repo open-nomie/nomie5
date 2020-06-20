@@ -214,7 +214,7 @@
                   select(item);
                 }
               }}>
-              <div slot="left" class="n-row">
+              <div slot="right" class="n-row">
                 {#if state.mode == 'view'}
                   <div style="font-size:30px">📍</div>
                 {:else}
@@ -244,7 +244,7 @@
                 {/if}
               </h1>
 
-              <div slot="right" class="pr-2 n-row">
+              <div slot="left" class="pr-2 n-row">
                 {#if state.mode == 'edit'}
                   <div class="menu">
                     <NIcon name="menu" />

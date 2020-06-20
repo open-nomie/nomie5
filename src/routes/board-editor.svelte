@@ -267,7 +267,12 @@
             on:update={trackersSorted}
             let:item>
             <NItem className="py-2 bottom-line">
-              <div slot="left" class="n-row">
+              <div slot="left" class="menu-handle">
+                <NIcon className="fill-inverse mr-2" name="menu" />
+                <NBall className="frame" emoji={item.emoji} size={40} />
+              </div>
+              {item.label}
+              <div slot="right" class="n-row">
                 <button
                   class="btn btn-icon fill-red mr-2"
                   on:click={evt => {
@@ -275,12 +280,9 @@
                   }}>
                   <NIcon name="remove" className="fill-red" />
                 </button>
-                <NBall className="frame" emoji={item.emoji} size={40} />
+
               </div>
-              {item.label}
-              <div slot="right" class="menu-handle">
-                <NIcon className="fill-inverse" name="menu" />
-              </div>
+
             </NItem>
           </NSortableList>
         {/if}
@@ -293,7 +295,7 @@
         <button
           class="btn btn btn-clear text-danger "
           on:click={methods.deleteBoard}>
-          <NIcon name="remove" className="fill-red" />
+          <NIcon name="delete" className="fill-red mr-2" />
           Delete Tab
         </button>
         <div class="filler" />

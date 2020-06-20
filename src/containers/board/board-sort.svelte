@@ -21,6 +21,16 @@
       BoardStore.save($BoardStore.boards);
     }
   }
+  async function deleteBoard(board) {
+    let confirmed = await Interact.confirm(
+      "Delete " + board.label + " tab?",
+      "You can recreate it later, but it's not super easy."
+    );
+    if (confirmed === true) {
+      await BoardStore.deleteBoard(board.id);
+      Interact.toast("Deleted");
+    }
+  }
 </script>
 
 <style>
@@ -33,7 +43,7 @@
 </style>
 
 <Modal
-  title="Sort Tabs"
+  title={Lang.t('general.tabs', 'Tabs')}
   type="fullscreen"
   allowClose={true}
   on:close={Interact.toggleBoardSorter}>
@@ -49,6 +59,7 @@
       <button class="btn btn-clear" slot="right">
         {Lang.t('general.save')}
       </button>
+
     </NToolbarGrid>
   </div>
   <div class="n-list">
@@ -58,18 +69,28 @@
       key="label"
       on:update={boardsSorted}
       let:item>
-      <NItem bottom-line className="bottom-line">
-        <div slot="right" class="menu-handle">
-          <NIcon name="menu" />
-        </div>
-        <NText size="lg">{item.label}</NText>
-        <!-- <div class="name-only text-center">{item.label}</div> -->
-        <!-- {#if is.emoji(item.label)}
+      {#if item.label !== 'all'}
+        <NItem bottom-line className="bottom-line" title={item.label}>
+          <div slot="left" class="menu-handle">
+            <NIcon name="menu" />
+          </div>
+          <div slot="right" class="flex-shrink-off">
+            <button
+              class="btn btn-icon tap-icon mr-2"
+              on:click={() => {
+                deleteBoard(item);
+              }}>
+              <NIcon name="remove" className="fill-red" />
+            </button>
+          </div>
+          <!-- <div class="name-only text-center">{item.label}</div> -->
+          <!-- {#if is.emoji(item.label)}
           <div class="emoji-only text-center">{item.label}</div>
         {:else}
           <div class="name-only text-center">{item.label}</div>
         {/if} -->
-      </NItem>
+        </NItem>
+      {/if}
     </NSortableList>
   </div>
 </Modal>

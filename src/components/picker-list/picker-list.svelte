@@ -18,11 +18,24 @@
 
   let ready = false;
   let activeValue = null;
+  let activeItem = null;
 
   function add() {
-    list.push(`${activeValue}`);
+    let newList = [];
+    let itemToAdd = `${activeValue}`;
+    let pushed = false;
+    list.forEach(item => {
+      newList.push(item);
+      if (item == activeItem) {
+        newList.push(itemToAdd);
+        pushed = true;
+      }
+    });
+    if (!pushed) {
+      newList.push(itemToAdd);
+    }
+    list = newList;
     activeValue = null;
-    list = list;
     fireChange();
   }
 
@@ -83,20 +96,28 @@
         handle=".menu-handle"
         on:update={sorted}
         let:item>
-        <NItem className="bottom-line">
+        <NItem
+          className="bottom-line {activeItem == item ? 'active' : ''}"
+          on:click={() => {
+            if (activeItem == item) {
+              activeItem = null;
+            } else {
+              activeItem = item;
+            }
+          }}>
+          <div slot="left">
+            <NIcon name="menu" className="fill-faded-3 menu-handle" size="18" />
+          </div>
           <NText size="sm">{item}</NText>
           <button
-            slot="left"
-            class="btn btn-clear px-0"
+            slot="right"
+            class="btn btn-clear pl-0"
             on:click={() => {
               remove(item);
             }}>
             <NIcon name="remove" className="fill-red" size="18" />
           </button>
 
-          <div slot="right">
-            <NIcon name="menu" className="fill-faded-3 menu-handle" size="18" />
-          </div>
         </NItem>
       </NSortableList>
     </div>
