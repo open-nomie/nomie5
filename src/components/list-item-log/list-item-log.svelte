@@ -62,6 +62,16 @@
       : false;
 
   $: timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
+
+  function shouldShowValue(trackerElement) {
+    if (trackerElement.obj.type == "picker") {
+      return false;
+    } else if (trackerElement.obj.type == "tick") {
+      return trackerElement.value !== 1;
+    } else {
+      return true;
+    }
+  }
 </script>
 
 <style lang="scss">
@@ -217,7 +227,8 @@
               <div class="label text-inverse">
                 {(trackerElement.obj || {}).label || trackerElement.id}
               </div>
-              {#if ['picker'].indexOf(trackerElement.obj.type) == -1 || (trackerElement.obj.type == 'tick' && trackerElement.value > 1)}
+
+              {#if shouldShowValue(trackerElement)}
                 <div class="value text-inverse">
                   {NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom)}
                 </div>

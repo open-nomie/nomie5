@@ -40,6 +40,11 @@
   function fireChange() {
     dispatch("change", active.join(" "));
   }
+
+  function isHeader(pick) {
+    let split = pick.split(" ");
+    return split.length >= 2 && split[split.length - 1] == ":";
+  }
 </script>
 
 <style lang="scss">
@@ -52,31 +57,35 @@
 <div class="tracker-input picker">
   <div class="n-list solo">
     {#each tracker.picks as pick}
-      <NItem
-        clickable
-        className="py-2 bottom-line"
-        on:click={() => {
-          toggle(pick);
-        }}>
-        <div slot="left">
-          {#if active.indexOf(pick) > -1}
-            <NIcon name="checkmark" />
-          {/if}
-        </div>
-        <LabelMeta
-          str={pick}
-          titleClass={active.indexOf(pick) > -1 ? 'text-primary-bright' : ''} />
-        <button class="btn btn-clear" slot="right">
-          {#if active.indexOf(pick) > -1}
-            <NIcon name="radioFilled" className="fill-primary-bright" />
-          {:else}
-            <NIcon name="radio" className="fill-primary-bright" />
-          {/if}
-        </button>
-      </NItem>
+      {#if isHeader(pick)}
+        <NItem className="item-divider compact">{pick.replace(' :', '')}</NItem>
+      {:else}
+        <NItem
+          compact
+          clickable
+          className="bottom-line compact {active.indexOf(pick) > -1 ? 'bg-primary-bright' : ''}"
+          on:click={() => {
+            toggle(pick);
+          }}>
+          <LabelMeta
+            str={pick}
+            titleClass={active.indexOf(pick) > -1 ? 'text-white' : ''} />
+          <button class="btn btn-clear" slot="right">
+            {#if active.indexOf(pick) > -1}
+              <NIcon name="radioFilled" className="fill-white" />
+            {:else}
+              <NIcon name="radio" className="fill-primary-bright" />
+            {/if}
+          </button>
+        </NItem>
+      {/if}
     {/each}
     <NItem>
-      <NInput on:enter={add} placeholder="Add an Item" bind:value={activeValue}>
+      <NInput
+        on:enter={add}
+        compact
+        placeholder="Add an Item"
+        bind:value={activeValue}>
         <button slot="right" class="btn btn-clear" on:click={add}>
           <NIcon name="addOutline" />
         </button>

@@ -6349,6 +6349,16 @@ body.scrolling .mini-map {
   flex-direction: column;
   justify-content: flex-start;
   height: 100%; }
+  .n-modal-frame.tracker-input .input-model.type-picker .n-list {
+    box-shadow: var(--box-shadow-float);
+    max-height: 90%;
+    overflow-y: scroll; }
+    .n-modal-frame.tracker-input .input-model.type-picker .n-list .n-item {
+      min-height: 30px;
+      font-size: 1rem;
+      padding: 4pt 8pt; }
+      .n-modal-frame.tracker-input .input-model.type-picker .n-list .n-item .main .title {
+        font-size: 1rem; }
 
 .n-modal-frame.tracker-input .tracker-input.keypad {
   flex-direction: column;

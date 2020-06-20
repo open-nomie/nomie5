@@ -32,7 +32,23 @@
     flex-direction: column;
     justify-content: flex-start;
     height: 100%;
+
+    .n-list {
+      box-shadow: var(--box-shadow-float);
+      max-height: 90%;
+      overflow-y: scroll;
+      .n-item {
+        min-height: 30px;
+
+        font-size: 1rem;
+        padding: 4pt 8pt;
+        .main .title {
+          font-size: 1rem;
+        }
+      }
+    }
   }
+
   .tracker-input.keypad {
     flex-direction: column;
     justify-content: stretch;
