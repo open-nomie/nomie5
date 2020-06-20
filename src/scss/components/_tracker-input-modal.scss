@@ -29,14 +29,19 @@
     align-items: center;
   }
   .input-model.type-picker {
-    flex-direction: column;
-    justify-content: flex-start;
+    display: block;
     height: 100%;
     background-color: var(--color-bg);
+    position: relative;
 
     .n-list {
       box-shadow: var(--box-shadow-float);
-      max-height: 90%;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      bottom: 20px;
+      right: 20px;
+      width: calc(100% - 60px);
       overflow-y: scroll;
       .n-item {
         min-height: 30px;
