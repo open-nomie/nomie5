@@ -25,7 +25,11 @@
     fireChange();
   }
 
-  function sorted(evt) {}
+  function sorted(evt) {
+    // console.log("sorted", evt);
+    list = evt.detail;
+    fireChange();
+  }
 
   function remove(item) {
     list = list.filter(i => {
@@ -40,7 +44,7 @@
     dispatch("change", list);
     setTimeout(() => {
       ready = true;
-    }, 10);
+    }, 1);
   }
 
   onMount(() => {
