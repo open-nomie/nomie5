@@ -30,7 +30,7 @@ export default class TrackerConfig {
     // Set if encrypt
     // this.always_encrypt = starter.always_encrypt === true ? true : false
     // SEt Emoji
-    this.emoji = starter.emoji || "⚪️";
+    this.emoji = starter.emoji || "#️";
     // set Default value
     this.default = starter.default || null;
     // max
