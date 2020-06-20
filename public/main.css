@@ -6347,7 +6347,8 @@ body.scrolling .mini-map {
 .n-modal-frame.tracker-input .input-model.type-picker {
   flex-direction: column;
   justify-content: flex-start;
-  height: 100%; }
+  height: 100%;
+  background-color: var(--color-bg); }
   .n-modal-frame.tracker-input .input-model.type-picker .n-list {
     box-shadow: var(--box-shadow-float);
     max-height: 90%;
