@@ -11,6 +11,7 @@ import config from "../../config/global";
 
 import snakeCase from "../utils/snake-case/snake-case";
 import tick from "../utils/tick/tick";
+import downloader from "../modules/download/download";
 import extractor from "../utils/extract/extract";
 
 // Stores
@@ -339,6 +340,15 @@ const trackerStoreInit = () => {
         return state;
       });
       return response;
+    },
+    download(tracker) {
+      let pkg = {
+        type: "tracker",
+        tracker,
+        created: new Date(),
+        version: `APP_VERSION`,
+      };
+      downloader.json(`${tracker.label}.nomie`, JSON.stringify(pkg));
     },
     async saveTracker(tracker) {
       let response;
