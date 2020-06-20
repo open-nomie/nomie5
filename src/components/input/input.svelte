@@ -65,6 +65,13 @@
   @import "../../scss/utils/_utils";
   $height: 54px;
 
+  .n-input-container.with-label.compact
+    .n-input-wrapper.has-input
+    .n-input
+    label {
+    transform: translateY(-4px) !important;
+  }
+
   .n-input-container {
     position: relative;
     width: auto;
@@ -92,6 +99,7 @@
         select {
           min-height: $height - 1;
         }
+
         &.has-input {
           .n-input {
             label {
@@ -130,21 +138,46 @@
       }
     }
 
-    &.solo.compact {
+    &.compact {
+      &.has-input {
+        label {
+          transform: translateY(-4px) !important;
+        }
+      }
       // background-color: blue !important;
       .n-input-wrapper {
-        height: 36px;
+        min-height: 46px;
+        height: 46px;
         .n-input {
-          height: 36px;
+          height: 46px;
+
           input,
           select,
           textarea {
-            height: 35px;
+            min-height: 45px;
+            height: 45px;
             font-size: 1rem;
           }
         }
       }
     }
+
+    // &.solo.compact {
+    //   // background-color: blue !important;
+    //   .n-input-wrapper {
+    //     min-height: 32px;
+    //     height: 32px;
+    //     .n-input {
+    //       height: 32px;
+    //       input,
+    //       select,
+    //       textarea {
+    //         height: 31px;
+    //         font-size: 1rem;
+    //       }
+    //     }
+    //   }
+    // }
 
     .n-input-wrapper {
       // position: relative;

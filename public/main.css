@@ -5812,21 +5812,21 @@ select {
 
 .clickable,
 [clickable] {
-  transition: all 0.2s ease-in-out;
+  transition: all 0.1s ease-in-out;
   position: relative;
   cursor: pointer;
   touch-action: manipulation; }
   .clickable:after,
   [clickable]:after {
-    transition: all 0.2s ease-in-out;
+    transition: all 0.1s ease-in-out;
     content: "";
     pointer-events: none;
     background-color: rgba(49, 158, 215, 0);
-    transform: scale(0.1);
     border-radius: 8pt; }
 
 .clickable:focus,
 .clickable:active {
+  touch-action: manipulation;
   outline: none;
   overflow: hidden; }
   .clickable:focus:after,
@@ -5837,8 +5837,7 @@ select {
     bottom: 0;
     right: 0;
     left: 0;
-    transform: scale(1);
-    background-color: rgba(49, 158, 215, 0.2); }
+    background-color: rgba(49, 158, 215, 0.1); }
 
 .container-sm {
   max-width: 800px;
