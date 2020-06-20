@@ -202,7 +202,7 @@
 
         <div class="list-wrapper">
           <NSortableList
-            items={state.locations}
+            bind:items={state.locations}
             handle=".menu"
             on:update={sorted}
             let:item>
@@ -230,7 +230,7 @@
                     on:click|stopPropagation={evt => {
                       unfavorite(item);
                     }}>
-                    <NIcon name="delete" className="fill-red" />
+                    <NIcon name="remove" className="fill-red" />
                   </button>
                 {/if}
               </div>

@@ -364,6 +364,12 @@
         </div>
       </NItem>
 
+      <NItem on:click={TrackerStore.download(data.tracker)}>
+        <div class="text-sm text-center text-primary-bright">
+          Download Tracker
+        </div>
+      </NItem>
+
       <button
         slot="footer"
         on:click={methods.cancel}

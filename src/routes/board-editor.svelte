@@ -279,7 +279,7 @@
               </div>
               {item.label}
               <div slot="right" class="menu-handle">
-                <NIcon className="fill-inverse" name="sort" />
+                <NIcon className="fill-inverse" name="menu" />
               </div>
             </NItem>
           </NSortableList>
@@ -293,7 +293,7 @@
         <button
           class="btn btn btn-clear text-danger "
           on:click={methods.deleteBoard}>
-          <NIcon name="delete" className="fill-red" />
+          <NIcon name="remove" className="fill-red" />
           Delete Tab
         </button>
         <div class="filler" />

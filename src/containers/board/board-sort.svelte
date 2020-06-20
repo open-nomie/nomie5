@@ -1,6 +1,7 @@
 <script>
   import Modal from "../../components/modal/modal.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
+  import NText from "../../components/text/text.svelte";
   import NSortableList from "../../components/sortable-list/sortable-list.svelte";
   import NIcon from "../../components/icon/icon.svelte";
   import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
@@ -57,15 +58,17 @@
       key="label"
       on:update={boardsSorted}
       let:item>
-      <NItem className="bottom-line">
+      <NItem bottom-line className="bottom-line">
         <div slot="right" class="menu-handle">
-          <NIcon name="sort" />
+          <NIcon name="menu" />
         </div>
-        {#if is.emoji(item.label)}
+        <NText size="lg">{item.label}</NText>
+        <!-- <div class="name-only text-center">{item.label}</div> -->
+        <!-- {#if is.emoji(item.label)}
           <div class="emoji-only text-center">{item.label}</div>
         {:else}
           <div class="name-only text-center">{item.label}</div>
-        {/if}
+        {/if} -->
       </NItem>
     </NSortableList>
   </div>

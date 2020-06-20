@@ -58,7 +58,6 @@
         bind:value={$TrackerDesignerStore.tracker.picks}
         on:change={evt => {
           $TrackerDesignerStore.tracker.picks = evt.detail;
-          console.log('$TrackerDesigner', $TrackerDesignerStore.tracker);
         }} />
     {/if}
 

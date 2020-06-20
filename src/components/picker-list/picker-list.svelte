@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
 
   import NItem from "../list-item/list-item.svelte";
+  import NText from "../text/text.svelte";
   import NInput from "../input/input.svelte";
   import NIcon from "../icon/icon.svelte";
   import NSpinner from "../spinner/spinner.svelte";
@@ -42,9 +43,10 @@
   function fireChange() {
     ready = false;
     dispatch("change", list);
-    setTimeout(() => {
-      ready = true;
-    }, 1);
+    ready = true;
+    // setTimeout(() => {
+    //   ready = true;
+    // }, 1);
   }
 
   onMount(() => {
@@ -60,33 +62,43 @@
     </div>
   </NItem>
   <NItem>
-    <NInput on:enter={add} placeholder="Add an Item" bind:value={activeValue}>
-      <button slot="right" class="btn btn-clear" on:click={add}>
+    <NInput
+      compact
+      on:enter={add}
+      placeholder="Add an Item"
+      bind:value={activeValue}>
+      <button
+        slot="right"
+        class="btn btn-clear"
+        disabled={!activeValue}
+        on:click={add}>
         <NIcon name="addOutline" />
       </button>
     </NInput>
   </NItem>
   {#if ready}
-    <NSortableList
-      bind:items={list}
-      handle=".menu-handle"
-      on:update={sorted}
-      let:item>
-      <NItem title={item}>
+    <div class="sortable-list p-2 px-3">
+      <NSortableList
+        items={list}
+        handle=".menu-handle"
+        on:update={sorted}
+        let:item>
+        <NItem className="bottom-line">
+          <NText size="sm">{item}</NText>
+          <button
+            slot="left"
+            class="btn btn-clear px-0"
+            on:click={() => {
+              remove(item);
+            }}>
+            <NIcon name="remove" className="fill-red" size="18" />
+          </button>
 
-        <button
-          slot="left"
-          class="btn btn-clear px-0"
-          on:click={() => {
-            remove(item);
-          }}>
-          <NIcon name="delete" className="fill-red" />
-        </button>
-
-        <div slot="right">
-          <NIcon name="menu" className="fill-faded-3 menu-handle" />
-        </div>
-      </NItem>
-    </NSortableList>
+          <div slot="right">
+            <NIcon name="menu" className="fill-faded-3 menu-handle" size="18" />
+          </div>
+        </NItem>
+      </NSortableList>
+    </div>
   {/if}
 </div>
