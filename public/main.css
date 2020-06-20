@@ -6133,6 +6133,19 @@ body.scrolling .mini-map {
   .n-list .n-pop {
     border-radius: 0 !important; } }
 
+.sortable-ghost .n-item {
+  border-bottom: solid 3px var(--color-primary-bright) !important; }
+
+.n-picker-list ul {
+  max-height: 50vh;
+  overflow-y: scroll !important;
+  border: solid 1px var(--color-faded);
+  border-radius: 6px;
+  margin: 6px 8px;
+  background-color: var(--color-faded); }
+  .n-picker-list ul .n-item {
+    background-color: transparent; }
+
 .n-item {
   text-align: left;
   display: flex;
@@ -6184,7 +6197,7 @@ body.scrolling .mini-map {
   .n-item.large {
     min-height: 56px; }
   .n-item.compact {
-    min-height: 35px; }
+    min-height: 40px; }
     .n-item.compact .n-text.md {
       font-size: 0.8rem;
       line-height: 1rem; }
@@ -6198,11 +6211,11 @@ body.scrolling .mini-map {
   .n-item.bottom-line:before, .n-item[bottom-line]:before {
     content: "";
     position: absolute;
-    bottom: 1px;
-    border-bottom: solid 1px var(--color-faded-1);
+    bottom: 0px;
+    border-bottom: solid 1px var(--color-faded-1) !important;
     left: 16px;
     right: 0; }
-  .n-item.bottom-line:last-child:before, .n-item[bottom-line]:last-child:before {
+  > .n-item.bottom-line:last-child:before, > .n-item[bottom-line]:last-child:before {
     display: none; }
   .n-item .left,
   .n-item [slot="left"] {
@@ -6285,9 +6298,6 @@ body.scrolling .mini-map {
     color: var(--color-primary); }
   .n-item.text-primary-bright .n-text {
     color: var(--color-primary-bright); }
-
-.border-bottom {
-  border-bottom-color: var(--color-solid-1) !important; }
 
 .n-item-divider {
   min-height: 60px !important;
