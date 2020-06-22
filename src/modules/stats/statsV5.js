@@ -62,6 +62,8 @@ export default class StatsProcessor {
       unitFormat = "H";
     } else if (this.mode == "w" || this.mode == "m") {
       unitFormat = "YYYY-MM-DD";
+    } else if (this.mode == "q") {
+      unitFormat = "YYYY-w";
     } else if (this.mode == "y") {
       unitFormat = "YYYY-MM";
     }
@@ -254,6 +256,14 @@ export default class StatsProcessor {
       // if it's a month mode
     } else if (this.mode == "m") {
       let { labels, values } = this.getChartDataByType("day", "YYYY-MM-DD", "M/D", valueMapTotals);
+      return {
+        mode: this.mode,
+        labels,
+        values,
+      };
+      // If it's a year mode
+    } else if (this.mode == "q") {
+      let { labels, values } = this.getChartDataByType("week", "YYYY-w", "Ww", valueMapTotals);
       return {
         mode: this.mode,
         labels,

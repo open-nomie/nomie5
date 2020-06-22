@@ -54,6 +54,7 @@
     d: { id: "d", label: "D", title: "Day", unit: "day" },
     w: { id: "w", label: "W", title: "Week", unit: "week" },
     m: { id: "m", label: "M", title: "Month", unit: "month" },
+    q: { id: "q", label: "3M", title: "Quarter", unit: "month", count: 3 },
     y: { id: "y", label: "Y", title: "Year", unit: "year" }
   };
 
@@ -228,7 +229,7 @@
 
   function getFromDate() {
     let timespan = getTimeSpan();
-    return getToDate().subtract(1, timespan.unit);
+    return getToDate().subtract(timespan.count || 1, timespan.unit);
   }
 
   function getToDate() {
@@ -277,8 +278,12 @@
       let tracker = $TrackerStore.trackers[tag]; // get tracker
       let results = await getTrackerStats(tracker); // get stats
       let compareValues = results.stats.chart.values.map(point => point.y); // get y values
-      let distance = DataDistance.euclidean(activeTrackerValues, compareValues); // calculate distance
-      results.distance = scoreDistance(distance);
+      let distance = await DataDistance.score(
+        activeTrackerValues,
+        compareValues
+      ); // calculate distance
+      results.distance = distance;
+
       compareItems[tag] = {
         stats: results,
         distance: distance
@@ -294,14 +299,14 @@
         };
       })
       // Remove any 0 values (exact match)
-      .filter(r => r.value)
+      .filter(r => r.value && !isNaN(r.value))
       .sort((a, b) => {
         // Sort by Lowest value
-        return a.value < b.value ? -1 : 1;
+        return a.value > b.value ? -1 : 1;
       })
       // Remove anything over 5000 and only 5
       .filter((r, index) => {
-        if (r.value < 5000 && index < 5) {
+        if (index < 11) {
           return true;
         } else {
           return false;
@@ -688,6 +693,9 @@
       case "m":
         range = getMonthRange();
         break;
+      case "q":
+        range = getMonthRange();
+        break;
       case "y":
         range = getYearRange();
         break;
@@ -718,10 +726,17 @@
     } else if (state.timeSpan == "w" || state.timeSpan == "m") {
       payload.start = dayjs(state.selected.point.date).startOf("day");
       payload.end = dayjs(state.selected.point.date).endOf("day");
+    } else if (state.timeSpan == "q") {
+      payload.end = dayjs(state.selected.point.date).endOf("month");
+      payload.start = dayjs(payload.end)
+        .subtract(3, "month")
+        .startOf("month");
     } else if (state.timeSpan == "y") {
       payload.start = dayjs(state.selected.point.date).startOf("month");
       payload.end = dayjs(state.selected.point.date).endOf("month");
     }
+
+    console.log("Payload for time", payload);
     let rows = await LedgerStore.query(payload);
 
     if (dataViews.logs.focused) {
@@ -964,8 +979,7 @@
             <NItem className="solo chart-item">
               {#if compare.distance}
                 <div class="distance">
-                  Score
-                  <strong>{compare.distance}</strong>
+                  <strong>{compare.distance.toFixed(1)}</strong>
                 </div>
               {/if}
               <NBarChart
