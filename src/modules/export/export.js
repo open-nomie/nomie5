@@ -38,7 +38,7 @@ export default class Export {
       this.backup.people = people || {};
 
       this.fireChange("Locations...");
-      let locations = await Locations.loadLocations();
+      let locations = await Locations.getAll();
       this.backup.locations = locations || [];
 
       // Get Trackers
