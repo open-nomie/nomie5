@@ -22,14 +22,11 @@ export default {
     }
   },
   // Get the min from array
-  min: (arr, includeZero) => {
-    includeZero = includeZero === true ? true : false;
+  min: (arr, includeZero = false) => {
     if (arr.length) {
-      if (includeZero) {
-        return Math.min(...arr);
-      } else {
-        return Math.min.apply(null, arr.filter(Boolean));
-      }
+      arr = includeZero == true ? arr : arr.filter(a=>a);
+      let min = Math.min(...arr);
+      return min;
     } else {
       return 0;
     }

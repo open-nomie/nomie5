@@ -58,27 +58,28 @@ context("App", () => {
   };
 
   const createSimpleTracker = () => {
-    const next = () => {
-      cy.get(".footer-slot button").eq(1).click();
-    };
-    cy.get(".tracker-undefined").click();
-    cy.wait(300);
-    cy.get(".pop-menu button").eq(1).click();
-    next();
-    cy.get(".n-input input").type("Simple Tracker");
-    next();
-    cy.get(".input-emoji").type("😂");
-    next();
-    cy.get('[style="background-color: rgb(165, 214, 167);"]').click();
-    next();
-    cy.get(".onoffswitch-label").click();
-    next();
-    cy.get("select").as("select").invoke("val", "1").trigger("change");
-    next();
-    cy.get(".tracker-simple_tracker").should("exist");
-    cy.get(".tracker-simple_tracker").click();
-    cy.wait(400);
-    cy.get(".tracker-simple_tracker .score").should("be", "1");
+    // const next = () => {
+    //   cy.get(".footer-slot button").eq(1).click();
+    // };
+    // cy.get(".tracker-undefined").click();
+    // cy.wait(300);
+    // cy.get(".pop-menu button").eq(1).click();
+    // next();
+    // cy.get(".n-input input").type("Simple Tracker");
+    // next();
+    // cy.get(".input-emoji").type("😂");
+    // next();
+    // cy.wait(400);
+    // cy.get('[style="background-color: rgb(255, 160, 0);"]').click();
+    // next();
+    // cy.get(".onoffswitch-label").click();
+    // next();
+    // cy.get("select").as("select").invoke("val", "1").trigger("change");
+    // next();
+    // cy.get(".tracker-simple_tracker").should("exist");
+    // cy.get(".tracker-simple_tracker").click();
+    // cy.wait(400);
+    // cy.get(".tracker-simple_tracker .score").should("be", "1");
   };
 
   const createMultiTracker = () => {
@@ -89,7 +90,8 @@ context("App", () => {
     cy.wait(300);
     cy.get(".pop-menu button").eq(1).click();
     cy.wait(300);
-    cy.get(".step .type-note").click();
+    cy.get(".n-item.type-note").click();
+    cy.wait(300);
     next();
     cy.get(".container > .ml-1");
     cy.wait(300);
@@ -97,7 +99,8 @@ context("App", () => {
     next();
     cy.get(".input-emoji").type("✅");
     next();
-    cy.get('[style="background-color: rgb(84, 110, 122);"]').click();
+    cy.wait(400);
+    cy.get('[style="background-color: rgb(255, 160, 0);"]').click();
     next();
     cy.get("textarea").type("#mood #sleep_quality");
     next();
@@ -191,6 +194,11 @@ context("App", () => {
     selectStarters();
   };
 
+  const exportData = ()=>{
+    cy.get('[href="/settings"]').click();
+    cy.wait(400);
+  }
+
   const testPerson = () => {
     // Type
     cy.get("#textarea-capture-note").type("hello there @bob, I hope you are well!");
@@ -222,11 +230,12 @@ context("App", () => {
 
   it("Should On Boarding with Local", () => {
     initBasic();
+    exportData();
   });
 
-  it("Should properly handle adding a person via a note", () => {
-    testPerson();
-  });
+  // it("Should properly handle adding a person via a note", () => {
+  //   testPerson();
+  // });
 
   // it("Should properly track using the tracker buttons", () => {
   //   // testTips();
@@ -241,9 +250,9 @@ context("App", () => {
   //   testCaptureForm();
   // });
 
-  it("should have all the things in history", () => {
-    testHistory();
-  });
+  // it("should have all the things in history", () => {
+  //   testHistory();
+  // });
 });
 
 // cy.wait(200);
