@@ -341,11 +341,46 @@ const trackerStoreInit = () => {
       });
       return response;
     },
-    import() {
-      // TODO : finish this
-      // let inputFile = document.createElement("input");
-      // inputFile.type = "file";
-      // inputFile.click();
+    /**
+     * Import a Tracker from a .nomie.json file
+     */
+    importFromFile() {
+      // Create an input and listen for a change
+      let inputFile = document.createElement("input");
+      inputFile.type = "file";
+      inputFile.click();
+      // Input change
+      inputFile.onchange = (event)=>{
+        let reader = new FileReader();
+        let file = event.target.files[0];
+        // file on loaded
+        reader.onload = async (theFile) => {
+          try {
+            // get data 
+            let fileData = JSON.parse(theFile.target.result);
+            console.log("File Data", fileData);
+            // if it
+            if(fileData.type === 'tracker') {
+              // Create the tracker
+              let tracker = new Tracker(fileData.tracker);
+              // Confirm the user wants to install it.
+              let confirmed = await Interact.confirm(`Install ${tracker.emoji} ${tracker.label}?`, `Type: ${tracker.type}`);
+              if(confirmed) {
+                await methods.saveTracker(tracker);
+                Interact.toast(`${tracker.emoji} ${tracker.label} added`)
+              }
+              console.log("Is it a tracker", fileData);
+            } else {
+              Interact.alert("Error", "This isn't a valid tracker");
+            }
+
+          } catch (e) {
+            Interact.alert("Error", e.message);
+          }
+        };
+        // Read the file
+        reader.readAsText(file);
+      }
     },
     download(tracker) {
       let pkg = {
@@ -354,7 +389,7 @@ const trackerStoreInit = () => {
         created: new Date(),
         version: `APP_VERSION`,
       };
-      downloader.json(`${tracker.label}.nomie`, JSON.stringify(pkg));
+      downloader.text(`${snakeCase(tracker.label).toLowerCase()}.nomie.tkr`, JSON.stringify(pkg));
     },
     async saveTracker(tracker) {
       let response;

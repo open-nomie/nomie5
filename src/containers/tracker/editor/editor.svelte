@@ -28,6 +28,8 @@
   import { Interact } from "../../../store/interact";
   import { TrackerStore } from "../../../store/tracker-store";
   import { Lang } from "../../../store/lang";
+  import { BoardStore } from "../../../store/boards";
+
 
   const dispatch = createEventDispatcher();
 
@@ -74,6 +76,17 @@
 
   async function duplicate() {
     let duplicated = await TrackerStore.duplicateTracker(data.tracker);
+  }
+
+  async function remove() {
+    let confirmed = await Interact.confirm(
+        Lang.t("general.delete-from-nomie", { thing: tracker.label }),
+        Lang.t("tracker.delete-description")
+      );
+      if(confirmed) {
+        await TrackerStore.deleteTracker(tracker);
+        methods.cancel();
+      }
   }
 
   const methods = {
@@ -358,17 +371,29 @@
         </NItem>
       {/if}
 
-      <NItem on:click={duplicate}>
-        <div class="text-sm text-center text-primary-bright">
+
+      <div class="p-2">
+      
+      </div>
+      <NItem on:click={TrackerStore.download(data.tracker)} className="bottom-line">
+        <div class="text-primary-bright">
+          Download .tkr
+        </div>
+        <div slot="right" class="text-faded-2">Share this tracker config</div>
+      </NItem>
+      <NItem on:click={duplicate} className="bottom-line">
+        <div class="text-primary-bright">
           Duplicate Tracker
         </div>
       </NItem>
 
-      <NItem on:click={TrackerStore.download(data.tracker)}>
-        <div class="text-sm text-center text-primary-bright">
-          Download Tracker
+      <NItem on:click={remove} className="bottom-line">
+        <div class="text-red">
+          Remove Tracker
         </div>
       </NItem>
+
+
 
       <button
         slot="footer"

@@ -261,6 +261,13 @@
         }
       });
 
+      buttons.push({
+        title: 'Import from file',
+        click() {
+          TrackerStore.importFromFile()
+        }
+      })
+
       // Show Menu
       Interact.popmenu({
         buttons: buttons
@@ -754,7 +761,7 @@
     {/if}
   </header>
   <!-- end header-->
-  <div slot="content" class="container board-container">
+  <div slot="content" class="container board-container" >
     {#if user}
       {#if !isReady.done}
         <div class="empty-notice">

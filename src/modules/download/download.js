@@ -26,4 +26,8 @@ export default {
     filename = filename.search(".json") == -1 ? `${filename}.json` : filename;
     download(filename, content, type);
   },
+  text(filename = "download.json", content) {
+    const type = "text/plain";
+    download(filename, (content), type);
+  },
 };
