@@ -230,29 +230,29 @@ context("App", () => {
 
   it("Should On Boarding with Local", () => {
     initBasic();
-    exportData();
+    // exportData();
   });
 
-  // it("Should properly handle adding a person via a note", () => {
-  //   testPerson();
-  // });
+  it("Should properly handle adding a person via a note", () => {
+    testPerson();
+  });
 
-  // it("Should properly track using the tracker buttons", () => {
-  //   // testTips();
-  //   useTrackers();
-  // });
+  it("Should properly track using the tracker buttons", () => {
+    // testTips();
+    useTrackers();
+  });
 
-  // it("Should create and be able to use a multi-tracker", () => {
-  //   createMultiTracker();
-  // });
+  it("Should create and be able to use a multi-tracker", () => {
+    createMultiTracker();
+  });
 
-  // it("should be able to create a log via a note", () => {
-  //   testCaptureForm();
-  // });
+  it("should be able to create a log via a note", () => {
+    testCaptureForm();
+  });
 
-  // it("should have all the things in history", () => {
-  //   testHistory();
-  // });
+  it("should have all the things in history", () => {
+    testHistory();
+  });
 });
 
 // cy.wait(200);
