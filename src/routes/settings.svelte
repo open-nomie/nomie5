@@ -471,7 +471,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                     {#if $UserStore.storageType === 'local'}
                       {Lang.t('storage.local', 'Local')}
                     {:else if $UserStore.storageType === 'pouchdb'}
-                      f {Lang.t('storage.pouchdb', 'Local + CouchDB')}
+                      {Lang.t('storage.pouchdb', 'Local + CouchDB')}
                     {:else if $UserStore.storageType === 'blockstack'}
                       {Lang.t('storage.blockstack', 'Blockstack')}
                     {/if}
