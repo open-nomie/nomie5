@@ -17,7 +17,7 @@
   import faq from "../../config/faq";
 </script>
 
-<NLayout className="faq" pageTitle="Common Questions about Nomie">
+<NLayout className="faq" pageTitle="Common Questions about Nomie" showTabs={false}>
 
   <div slot="header" class="n-toolbar-grid container">
     <div class="left">

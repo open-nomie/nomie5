@@ -11,7 +11,7 @@
   import NIcon from "../components/icon/icon.svelte";
   import NToggle from "../components/toggle-switch/toggle-switch.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
-
+  import NButtonGroup from "../components/button-group/button-group.svelte";
   import BlockstackOptions from "../components/storage/blockstack.svelte";
   import LocalstorageOptions from "../components/storage/localstorage.svelte";
   import PouchDBOptions from "../components/storage/pouchdb.svelte";
@@ -251,7 +251,11 @@ Note: Your data will not automatically move over. You'll first need to export it
       }
     }
   };
-
+  let view = Storage.local.get("settings/last-view") || "tweaks";
+  function changeView(v) {
+    view = v;
+    Storage.local.put("settings/last-view", v);
+  }
   // const setTimeout = setTimeout;
   onMount(() => {
     window.scrollTo(0, 0);
@@ -259,15 +263,30 @@ Note: Your data will not automatically move over. You'll first need to export it
 </script>
 
 <NLayout pageTitle="Settings">
-  <div slot="header" class="n-toolbar-grid container">
-    <div class="left" />
-    <div class="main">
-      <h1>{Lang.t('settings.settings')}</h1>
+  <div slot="header">
+    <div class="n-toolbar-grid container">
+      <div class="left" />
+      <div class="main">
+        <h1>{Lang.t('settings.settings')}</h1>
+      </div>
+      <div class="right">
+        <button on:click={methods.faq} class="btn tap-text">
+          {Lang.t('general.faq')}
+        </button>
+      </div>
     </div>
-    <div class="right">
-      <button on:click={methods.faq} class="btn tap-text">
-        {Lang.t('general.faq')}
-      </button>
+    <div class="n-toolbar-grid container">
+
+      <div class="main">
+        <NButtonGroup
+          buttons={[{ label: 'Tweaks', active: view == 'tweaks', click() {
+                changeView('tweaks');
+              } }, { label: 'Data', active: view == 'data', click() {
+                changeView('data');
+              } }, { label: 'About', active: view == 'about', click() {
+                changeView('about');
+              } }]} />
+      </div>
     </div>
   </div>
 
@@ -275,6 +294,329 @@ Note: Your data will not automatically move over. You'll first need to export it
     {#if $UserStore.meta}
       <div class="page page-settings">
         <div class="container p-0">
+
+          {#if view == 'tweaks'}
+            <!--
+              *******************************************
+              TWEAKS VIEW 
+              *******************************************
+            -->
+            <div class="n-list solo">
+              <NItem title={Lang.t('settings.theme')}>
+                <div slot="right">
+                  <select
+                    class="form-control"
+                    style="min-width:100px;width:100px"
+                    bind:value={$UserStore.theme}
+                    on:change={event => {
+                      UserStore.setTheme($UserStore.theme);
+                    }}>
+                    <option value="auto">Auto</option>
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                  </select>
+
+                </div>
+              </NItem>
+
+              <!-- Use Location -->
+              <NItem title={Lang.t('settings.use-location')}>
+
+                <div slot="right">
+                  <NToggle
+                    bind:value={$UserStore.alwaysLocate}
+                    on:change={event => {
+                      UserStore.setAlwaysLocate(event.detail);
+                    }} />
+                </div>
+              </NItem>
+              <NItem
+                title={Lang.t('settings.small-tracker-buttons', 'Small Tracker Buttons')}>
+                <div slot="right">
+                  <NToggle
+                    bind:value={$UserStore.meta.compactTrackerButtons}
+                    on:change={methods.settingChange} />
+                </div>
+              </NItem>
+              <!-- Tracker Board Tabs -->
+              {#if $BoardStore.boards.length == 0}
+                <NItem title={Lang.t('settings.enable-boards')}>
+                  <div slot="right">
+                    <NToggle
+                      bind:value={$UserStore.meta.boardsEnabled}
+                      on:change={methods.settingChange} />
+                  </div>
+                </NItem>
+              {/if}
+              <!-- Pin Code -->
+              <NItem title={Lang.t('settings.require-pin')}>
+
+                <div slot="right">
+                  <NToggle
+                    bind:value={$UserStore.meta.lock}
+                    on:change={methods.lockToggle} />
+                </div>
+              </NItem>
+              <!-- 24 Hour -->
+              <NItem title={Lang.t('settings.24-hour-clock')}>
+
+                <div slot="right">
+                  <NToggle
+                    bind:value={$UserStore.meta.is24Hour}
+                    on:change={methods.settingChange} />
+                </div>
+              </NItem>
+              <!-- Language -->
+              <NItem title={Lang.t('settings.language')}>
+
+                <div slot="right">
+                  <select
+                    class="form-control"
+                    style="min-width:100px;width:100px"
+                    bind:value={$Lang.lang}
+                    on:change={event => {
+                      Lang.setLang($Lang.lang);
+                    }}>
+                    {#each Lang.getLangs() as lang}
+                      <option value={lang.key}>{lang.label}</option>
+                    {/each}
+                  </select>
+
+                </div>
+              </NItem>
+
+            </div>
+          {:else if view == 'data'}
+            <!--
+              *******************************************
+              DATA VIEW
+              *******************************************
+            -->
+            <div class="n-list solo">
+
+              <NItem
+                className="clickable"
+                title={Lang.t('settings.nomie-api')}
+                on:click={() => navigate('/api')}>
+
+                <span slot="right">
+                  <NIcon name="chevronRight" className="fill-faded-2" />
+                </span>
+
+              </NItem>
+              <NItem
+                className="clickable"
+                title={Lang.t('settings.import-from-backup')}
+                on:click={() => {
+                  showImporter = true;
+                }}>
+
+                <span slot="right">
+                  <NIcon name="chevronRight" className="fill-faded-2" />
+                </span>
+                <input
+                  slot="right"
+                  class="d-none"
+                  type="file"
+                  bind:this={fileInput}
+                  on:change={methods.onImportFile} />
+              </NItem>
+
+              <NItem
+                className="clickable"
+                title={Lang.t('settings.generate-backup')}
+                to="/settings/export/backup">
+
+                <span slot="right">
+                  <NIcon name="chevronRight" className="fill-faded-2" />
+                </span>
+              </NItem>
+              <NItem
+                className="clickable"
+                title={Lang.t('settings.generate-csv')}
+                to="/settings/export/csv">
+                <span slot="right">
+                  <NIcon name="chevronRight" className="fill-faded-2" />
+                </span>
+              </NItem>
+              <NItem
+                className="clickable"
+                title="{Lang.t('settings.find-and-replace')}..."
+                on:click={() => {
+                  data.showMassEditor = true;
+                }}>
+                <span slot="right">
+                  <NIcon name="chevronRight" className="fill-faded-2" />
+                </span>
+              </NItem>
+
+              <!-- Find and Replace -->
+              <MassEditor
+                on:close={methods.closeMassEditor}
+                show={data.showMassEditor} />
+
+            </div>
+
+            <div class="n-list solo">
+              <NItem>
+                <div class="title truncate">
+                  <strong>{Lang.t('general.type', 'Type')}</strong>
+                </div>
+
+                <div slot="right">
+
+                  <button
+                    class="btn btn-clear icon-right"
+                    on:click={methods.storageMenu}>
+                    {#if $UserStore.storageType === 'local'}
+                      {Lang.t('storage.local', 'Local')}
+                    {:else if $UserStore.storageType === 'pouchdb'}
+                      f {Lang.t('storage.pouchdb', 'Local + CouchDB')}
+                    {:else if $UserStore.storageType === 'blockstack'}
+                      {Lang.t('storage.blockstack', 'Blockstack')}
+                    {/if}
+                    <NIcon name="chevronDown" size="16" className="ml-2" />
+                  </button>
+                  <!-- {#if $UserStore.storageType === 'local'}
+                <button
+                  class="btn btn-clear text-primary-bright"
+                  on:click={methods.switchToCloud}>
+                  {Lang.t('settings.use-cloud')}
+                </button>
+              {:else}
+                <button
+                  class="btn btn-clear text-primary-bright"
+                  on:click={methods.switchToLocal}>
+                  {Lang.t('settings.use-local')}
+                </button>
+              {/if} -->
+                </div>
+              </NItem>
+
+              {#if $UserStore.storageType === 'blockstack'}
+                <BlockstackOptions />
+              {/if}
+              {#if $UserStore.storageType === 'local'}
+                <LocalstorageOptions />
+              {/if}
+              {#if $UserStore.storageType === 'pouchdb'}
+                <PouchDBOptions />
+              {/if}
+
+              <NItem
+                title="Browse Storage..."
+                on:click={() => {
+                  navigate('/files');
+                }}
+                className="clickable">
+                <span slot="right">
+                  <NIcon name="chevronRight" className="fill-faded-2" />
+                </span>
+              </NItem>
+
+            </div>
+            <NItem
+              className="solo text-red text-center mt-4"
+              on:click={methods.deleteEverything}>
+              Reset & Delete all Nomie Data...
+            </NItem>
+          {:else if view == 'about'}
+            <!--
+              *******************************************
+              ABOUT VIEW 
+              *******************************************
+            -->
+            <NItem
+              className="clickable solo p-2"
+              title={Lang.t('settings.shop-and-support', 'Shop and Support')}
+              description="Products that work with Nomie"
+              on:click={methods.shop}>
+              <span slot="left" class="btn-icon tap-icon">
+                <NIcon name="share" />
+              </span>
+              <span slot="right" class="icon">
+                <NIcon name="chevron-right" />
+              </span>
+            </NItem>
+            <div class="n-list solo">
+
+              <NItem title="Learn More">
+                <span slot="right">
+                  <a
+                    href="https://nomie.app?s=dap"
+                    class="btn btn-clear text-primary-bright"
+                    target="_system">
+                    Website
+                  </a>
+                </span>
+              </NItem>
+              <NItem title="Reddit r/nomie">
+                <span slot="right">
+                  <a
+                    href="https://reddit.com/r/nomie"
+                    class="btn btn-clear text-primary-bright"
+                    target="_system">
+                    r/nomie
+                  </a>
+                </span>
+              </NItem>
+
+              <NItem title="Open Source">
+                <span slot="right">
+                  <a
+                    href="https://github.com/open-nomie/nomie"
+                    class="btn btn-clear text-primary-bright"
+                    target="_system">
+                    Github
+                  </a>
+                </span>
+              </NItem>
+            </div>
+            <div class="n-list solo">
+              <NItem title={Lang.t('general.trackers', 'Tracker Count')}>
+                <span slot="right">{TrackerStore.getAsArray().length}</span>
+              </NItem>
+
+              <NItem title={Lang.t('general.first_log', 'First Log')}>
+                <div class="" slot="right">
+                  {#await LedgerStore.getFirstDate()}
+                    Loading...
+                  {:then date}
+                    <div class="text-sm">
+                      {date.format('MMMM YYYY')} ({date.fromNow()})
+                    </div>
+                  {/await}
+                  <!--  -->
+                </div>
+              </NItem>
+              <NItem title={Lang.t('general.launch-count', 'Launch Count')}>
+                <div class="n-row" slot="right">
+                  <button
+                    class="btn btn-clear"
+                    on:click={UserStore.resetLaunchCount}>
+                    <NIcon name="delete" className="fill-red" size="18" />
+                  </button>
+                  {$UserStore.launchCount}
+                </div>
+              </NItem>
+              <NItem title={Lang.t('general.device', 'Device')}>
+                <span slot="right">{$Browser.device}</span>
+              </NItem>
+              <NItem title={Lang.t('general.platform', 'Platform')}>
+                <span slot="right">{$Browser.platform}</span>
+              </NItem>
+              <NItem title={Lang.t('general.pwa', 'PWA')}>
+                <span slot="right">{$Browser.pwa}</span>
+              </NItem>
+              <NItem title="Version">
+                <span slot="right">APP_VERSION</span>
+              </NItem>
+              <NItem title="Built">
+                <span slot="right">APP_BUILD_DATE</span>
+              </NItem>
+            </div>
+          {/if}
+          <!-- END Views -->
 
           <!-- <NItem
             className="clickable solo p-2"
@@ -289,267 +631,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             </span>
           </NItem> -->
 
-          <NItem
-            className="clickable solo p-2"
-            title={Lang.t('settings.shop-and-support', 'Shop and Support')}
-            description="Products that work with Nomie"
-            on:click={methods.shop}>
-            <span slot="left" class="btn-icon tap-icon">
-              <NIcon name="share" />
-            </span>
-            <span slot="right" class="icon">
-              <NIcon name="chevron-right" />
-            </span>
-          </NItem>
-
-          <NItem
-            title={Lang.t('general.customize')}
-            className="n-item-divider" />
-          <div class="n-list solo">
-            <NItem title={Lang.t('settings.theme')}>
-              <div slot="right">
-                <select
-                  class="form-control"
-                  style="min-width:100px;width:100px"
-                  bind:value={$UserStore.theme}
-                  on:change={event => {
-                    UserStore.setTheme($UserStore.theme);
-                  }}>
-                  <option value="auto">Auto</option>
-                  <option value="dark">Dark</option>
-                  <option value="light">Light</option>
-                </select>
-
-              </div>
-            </NItem>
-
-            <!-- Use Location -->
-            <NItem title={Lang.t('settings.use-location')}>
-
-              <div slot="right">
-                <NToggle
-                  bind:value={$UserStore.alwaysLocate}
-                  on:change={event => {
-                    UserStore.setAlwaysLocate(event.detail);
-                  }} />
-              </div>
-            </NItem>
-            <NItem
-              title={Lang.t('settings.small-tracker-buttons', 'Small Tracker Buttons')}>
-              <div slot="right">
-                <NToggle
-                  bind:value={$UserStore.meta.compactTrackerButtons}
-                  on:change={methods.settingChange} />
-              </div>
-            </NItem>
-            <!-- Tracker Board Tabs -->
-            {#if $BoardStore.boards.length == 0}
-              <NItem title={Lang.t('settings.enable-boards')}>
-                <div slot="right">
-                  <NToggle
-                    bind:value={$UserStore.meta.boardsEnabled}
-                    on:change={methods.settingChange} />
-                </div>
-              </NItem>
-            {/if}
-            <!-- Pin Code -->
-            <NItem title={Lang.t('settings.require-pin')}>
-
-              <div slot="right">
-                <NToggle
-                  bind:value={$UserStore.meta.lock}
-                  on:change={methods.lockToggle} />
-              </div>
-            </NItem>
-            <!-- 24 Hour -->
-            <NItem title={Lang.t('settings.24-hour-clock')}>
-
-              <div slot="right">
-                <NToggle
-                  bind:value={$UserStore.meta.is24Hour}
-                  on:change={methods.settingChange} />
-              </div>
-            </NItem>
-            <!-- Language -->
-            <NItem title={Lang.t('settings.language')}>
-
-              <div slot="right">
-                <select
-                  class="form-control"
-                  style="min-width:100px;width:100px"
-                  bind:value={$Lang.lang}
-                  on:change={event => {
-                    Lang.setLang($Lang.lang);
-                  }}>
-                  {#each Lang.getLangs() as lang}
-                    <option value={lang.key}>{lang.label}</option>
-                  {/each}
-                </select>
-
-              </div>
-            </NItem>
-
-          </div>
-
-          <NItem title={Lang.t('settings.data')} className="n-item-divider" />
-          <div class="n-list solo">
-
-            <NItem
-              className="clickable"
-              title={Lang.t('settings.nomie-api')}
-              on:click={() => navigate('/api')}>
-
-              <span slot="right">
-                <NIcon name="chevronRight" className="fill-faded-2" />
-              </span>
-
-            </NItem>
-            <NItem
-              className="clickable"
-              title={Lang.t('settings.import-from-backup')}
-              on:click={() => {
-                showImporter = true;
-              }}>
-
-              <span slot="right">
-                <NIcon name="chevronRight" className="fill-faded-2" />
-              </span>
-              <input
-                slot="right"
-                class="d-none"
-                type="file"
-                bind:this={fileInput}
-                on:change={methods.onImportFile} />
-            </NItem>
-
-            <NItem
-              className="clickable"
-              title={Lang.t('settings.generate-backup')}
-              to="/settings/export/backup">
-
-              <span slot="right">
-                <NIcon name="chevronRight" className="fill-faded-2" />
-              </span>
-            </NItem>
-            <NItem
-              className="clickable"
-              title={Lang.t('settings.generate-csv')}
-              to="/settings/export/csv">
-              <span slot="right">
-                <NIcon name="chevronRight" className="fill-faded-2" />
-              </span>
-            </NItem>
-            <NItem
-              className="clickable"
-              title="{Lang.t('settings.find-and-replace')}..."
-              on:click={() => {
-                data.showMassEditor = true;
-              }}>
-              <span slot="right">
-                <NIcon name="chevronRight" className="fill-faded-2" />
-              </span>
-            </NItem>
-
-            <!-- Find and Replace -->
-            <MassEditor
-              on:close={methods.closeMassEditor}
-              show={data.showMassEditor} />
-
-          </div>
-
-          <NItem
-            title={Lang.t('settings.storage')}
-            className="n-item-divider" />
-
-          <div class="n-list solo">
-            <NItem>
-              <div class="title truncate">
-                <strong>{Lang.t('general.type', 'Type')}</strong>
-              </div>
-
-              <div slot="right">
-
-                <button
-                  class="btn btn-clear icon-right"
-                  on:click={methods.storageMenu}>
-                  {#if $UserStore.storageType === 'local'}
-                    {Lang.t('storage.local', 'Local')}
-                  {:else if $UserStore.storageType === 'pouchdb'}
-                    f {Lang.t('storage.pouchdb', 'Local + CouchDB')}
-                  {:else if $UserStore.storageType === 'blockstack'}
-                    {Lang.t('storage.blockstack', 'Blockstack')}
-                  {/if}
-                  <NIcon name="chevronDown" size="16" className="ml-2" />
-                </button>
-                <!-- {#if $UserStore.storageType === 'local'}
-                <button
-                  class="btn btn-clear text-primary-bright"
-                  on:click={methods.switchToCloud}>
-                  {Lang.t('settings.use-cloud')}
-                </button>
-              {:else}
-                <button
-                  class="btn btn-clear text-primary-bright"
-                  on:click={methods.switchToLocal}>
-                  {Lang.t('settings.use-local')}
-                </button>
-              {/if} -->
-              </div>
-            </NItem>
-
-            {#if $UserStore.storageType === 'blockstack'}
-              <BlockstackOptions />
-            {/if}
-            {#if $UserStore.storageType === 'local'}
-              <LocalstorageOptions />
-            {/if}
-            {#if $UserStore.storageType === 'pouchdb'}
-              <PouchDBOptions />
-            {/if}
-            <StorageManager />
-
-          </div>
-
-          <NItem
-            title={Lang.t('settings.about-nomie')}
-            className="n-item-divider" />
-
-          <div class="n-list solo">
-
-            <NItem title="Learn More">
-              <span slot="right">
-                <a
-                  href="https://nomie.app?s=dap"
-                  class="btn btn-clear text-primary-bright"
-                  target="_system">
-                  Website
-                </a>
-              </span>
-            </NItem>
-            <NItem title="Reddit r/nomie">
-              <span slot="right">
-                <a
-                  href="https://reddit.com/r/nomie"
-                  class="btn btn-clear text-primary-bright"
-                  target="_system">
-                  r/nomie
-                </a>
-              </span>
-            </NItem>
-
-            <NItem title="Open Source">
-              <span slot="right">
-                <a
-                  href="https://github.com/open-nomie/nomie"
-                  class="btn btn-clear text-primary-bright"
-                  target="_system">
-                  Github
-                </a>
-              </span>
-            </NItem>
-          </div>
-
-          <NItem title={Lang.t('general.questions')} className="solo">
+          <NItem title={Lang.t('general.questions')} className="solo mt-3">
             <span slot="right">
               <a
                 class="btn btn-clear text-primary-bright"
@@ -557,60 +639,6 @@ Note: Your data will not automatically move over. You'll first need to export it
                 {config.support_contact}
               </a>
             </span>
-          </NItem>
-
-          <NItem
-            title={Lang.t('settings.general-stats', 'General Stats')}
-            className="n-item-divider" />
-
-          <div class="n-list solo">
-            <NItem title={Lang.t('general.trackers', 'Tracker Count')}>
-              <span slot="right">{TrackerStore.getAsArray().length}</span>
-            </NItem>
-
-            <NItem title={Lang.t('general.first_log', 'First Log')}>
-              <div class="" slot="right">
-                {#await LedgerStore.getFirstDate()}
-                  Loading...
-                {:then date}
-                  <div class="text-sm">
-                    {date.format('MMMM YYYY')} ({date.fromNow()})
-                  </div>
-                {/await}
-                <!--  -->
-              </div>
-            </NItem>
-            <NItem title={Lang.t('general.launch-count', 'Launch Count')}>
-              <div class="n-row" slot="right">
-                <button
-                  class="btn btn-clear"
-                  on:click={UserStore.resetLaunchCount}>
-                  <NIcon name="delete" className="fill-red" size="18" />
-                </button>
-                {$UserStore.launchCount}
-              </div>
-            </NItem>
-            <NItem title={Lang.t('general.device', 'Device')}>
-              <span slot="right">{$Browser.device}</span>
-            </NItem>
-            <NItem title={Lang.t('general.platform', 'Platform')}>
-              <span slot="right">{$Browser.platform}</span>
-            </NItem>
-            <NItem title={Lang.t('general.pwa', 'PWA')}>
-              <span slot="right">{$Browser.pwa}</span>
-            </NItem>
-            <NItem title="Version">
-              <span slot="right">APP_VERSION</span>
-            </NItem>
-            <NItem title="Built">
-              <span slot="right">APP_BUILD_DATE</span>
-            </NItem>
-          </div>
-
-          <NItem
-            className="solo text-red text-center mt-4"
-            on:click={methods.deleteEverything}>
-            Reset & Delete all Nomie Data...
           </NItem>
 
           <NItem className="compact item-divider" />
