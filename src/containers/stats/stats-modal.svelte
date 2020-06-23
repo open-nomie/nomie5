@@ -268,6 +268,8 @@
    */
   async function findRelatedTrackers() {
     Interact.blocker("Looking for related...");
+    // Clear Compare
+    state.compare = [];
     await tick(40);
     let compareItems = {};
     let trackerTags = Object.keys($TrackerStore.trackers);
@@ -290,6 +292,7 @@
       };
     }
     // Generate Results
+    let maxScore = 0;
     let results = Object.keys(compareItems)
       .map(tag => {
         return {
@@ -301,6 +304,9 @@
       // Remove any 0 values (exact match)
       .filter(r => r.value && !isNaN(r.value))
       .sort((a, b) => {
+        if (a.value > maxScore) {
+          maxScore = a.value;
+        }
         // Sort by Lowest value
         return a.value > b.value ? -1 : 1;
       })
@@ -311,9 +317,12 @@
         } else {
           return false;
         }
+      })
+      .map(r => {
+        r.stats.distance = math.percentage(maxScore, r.value);
+        return r;
       });
-    // Clear Compare
-    state.compare = [];
+
     // Loop over results
     for (var i = 0; i < results.length; i++) {
       let tag = results[i].tag;
@@ -736,7 +745,6 @@
       payload.end = dayjs(state.selected.point.date).endOf("month");
     }
 
-    console.log("Payload for time", payload);
     let rows = await LedgerStore.query(payload);
 
     if (dataViews.logs.focused) {
@@ -835,17 +843,27 @@
     max-width: 500px !important;
   }
 
+  :global(.chart-item.solo.n-item) {
+    margin: 8pt 0;
+    width: calc(100% - 0px);
+    border-radius: 0px;
+  }
+
   :global(.chart-item) {
     position: relative;
     .btn-close {
       position: absolute;
-      top: -4px;
-      right: -6px;
+      top: 5px;
+      left: 6px;
       padding: 0;
-      height: 24px;
-      width: 24px;
+      height: 20px;
+      width: 20px;
       border: solid 1px var(--color-solid-2);
       background-color: var(--color-solid);
+      svg {
+        height: 18px;
+        width: 18px;
+      }
     }
   }
 
@@ -979,7 +997,7 @@
             <NItem className="solo chart-item">
               {#if compare.distance}
                 <div class="distance">
-                  <strong>{compare.distance.toFixed(1)}</strong>
+                  <strong>{compare.distance.toFixed(0)}</strong>
                 </div>
               {/if}
               <NBarChart

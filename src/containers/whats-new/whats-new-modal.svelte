@@ -36,10 +36,10 @@
         className="divider text-xs py-1 text-primary compact font-weight-bold">
         FEATURES
       </NItem>
-      <div class="n-list compact border-bottom">
+      <div class="n-list compact">
         {#each $AppStore.whatsNew.features as feature}
           <NItem className="text-sm py-1" compact>
-            <div slot="right">{feature.version}</div>
+            <div slot="left" class="text-faded-2">{feature.version}</div>
             {feature.title}
           </NItem>
         {/each}
@@ -49,23 +49,22 @@
       <NItem
         className="divider text-xs py-1 text-primary compact font-weight-bold">
         FIXES
-        <!-- <button
+        <button
           slot="right"
-          class="btn btn-clear btn-xs text-xs"
+          class="btn btn-clear btn-xs text-xs text-bold"
           on:click={() => {
             showFixes = !showFixes;
           }}>
-          {showFixes ? 'Hide' : 'View'}
-        </button> -->
+          {showFixes ? 'HIDE' : 'VIEW'}
+        </button>
       </NItem>
-      <div class="n-list compact">
-        {#each $AppStore.whatsNew.fixes as fix}
-          <NItem className="text-sm py-1" compact>
-            <div slot="right">{fix.version}</div>
-            {fix.title}
-          </NItem>
-        {/each}
-      </div>
+      {#if showFixes}
+        <div class="n-list compact">
+          {#each $AppStore.whatsNew.fixes as fix}
+            <NItem className="text-sm py-1" compact>{fix.title}</NItem>
+          {/each}
+        </div>
+      {/if}
     {/if}
   {/if}
   <footer slot="footer" />
