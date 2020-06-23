@@ -58,6 +58,8 @@
         version = parseInt(fileData.nomie.number.split(".")[0]);
         // load data
         archive.trackers = methods.getTrackers();
+        archive.people = methods.getPeople();
+
         archive.boards = methods.getBoards();
         archive.records = methods.getRecords();
         archive.locations = methods.getLocations();
@@ -468,6 +470,14 @@
       return trackers;
     },
 
+    getPeople() {
+      let people = {};
+      if (version >= 4) {
+        people = fileData.people;
+      }
+      return people;
+    },
+
     getLocations() {
       let locations = [];
       try {
@@ -623,7 +633,7 @@
             <button
               class="btn text-primary btn-clear"
               on:click={methods.importPeople}>
-              Import People ({(archive.people || []).length})
+              Import People ({(Object.keys(archive.people) || []).length})
             </button>
           {/if}
         </div>
