@@ -284,8 +284,11 @@ const ledgerInit = () => {
           let location = new Location({ lat: theLoc.latitude, lng: theLoc.longitude });
           // Find any favorited that are super close
           let match = Locations.findClosestTo(location);
+          if (match && !location.name) {
+            location.name = match;
+          }
           // Return the match - or the location if we didnt any favorites
-          return match || location;
+          return location;
         } catch (e) {
           Interact.alert("Error", e.message);
         }
