@@ -10,6 +10,7 @@
   import NItem from "../list-item/list-item.svelte";
   import NBall from "../tracker-ball/ball.svelte";
   import Dymoji from "../dymoji/dymoji.svelte";
+  import LocationBadge from "../location-badge/location-badge.svelte";
   import NIcon from "../icon/icon.svelte";
   import NPoints from "../points/points.svelte";
   import NText from "../text/text.svelte";
@@ -125,7 +126,7 @@
 
       <div class="filler" />
       <!-- If they have location-->
-      {#if displayLog.location && displayLog.lat}
+      {#if displayLog.lat}
         <button
           on:click={event => {
             Interact.showLocations([displayLog]);
@@ -133,16 +134,7 @@
           }}
           class="btn btn-xs btn-badge btn-primary text-white location-badge
           truncate">
-          {displayLog.location}
-        </button>
-      {:else if displayLog.lat}
-        <button
-          on:click={event => {
-            Interact.showLocations([displayLog]);
-            event.stopPropagation();
-          }}
-          class="btn btn-sm btn-clear pl-2 pr-2 clickable">
-          <NIcon name="pin" className="fill-primary-bright" size="20" />
+          <LocationBadge location={displayLog} />
         </button>
       {/if}
 

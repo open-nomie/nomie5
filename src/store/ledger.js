@@ -283,9 +283,10 @@ const ledgerInit = () => {
           // make it a location
           let location = new Location({ lat: theLoc.latitude, lng: theLoc.longitude });
           // Find any favorited that are super close
-          let match = Locations.findClosestTo(location);
-          if (match && !location.name) {
-            location.name = match;
+          let nearest = Locations.findClosestTo(location);
+          // If we have a nearest and a name
+          if (nearest && nearest.name) {
+            location.name = nearest.name;
           }
           // Return the match - or the location if we didnt any favorites
           return location;
