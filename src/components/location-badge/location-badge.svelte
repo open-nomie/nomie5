@@ -25,6 +25,6 @@
   {#if name}
     {name}
   {:else}
-    <NIcon name="pin" className="fill-white" size="16" />
+    <NIcon name="pin" className="fill-white" style="margin:0 auto;" size="16" />
   {/if}
 {/if}

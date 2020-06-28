@@ -130,7 +130,6 @@ export default class StatsProcessor {
       values.push(value);
     });
     min.value = _math.min(values, false);
-    console.log("Min from value", values,  min.value);
     max.value = _math.max(values);
     return { min, max };
   }

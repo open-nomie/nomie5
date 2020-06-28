@@ -487,7 +487,7 @@
           });
         }
       } catch (e) {
-        console.log("Error on locations", e.message);
+        console.error("Error on locations", e.message);
       }
       return locations;
     },

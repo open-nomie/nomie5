@@ -350,37 +350,34 @@ const trackerStoreInit = () => {
       inputFile.type = "file";
       inputFile.click();
       // Input change
-      inputFile.onchange = (event)=>{
+      inputFile.onchange = (event) => {
         let reader = new FileReader();
         let file = event.target.files[0];
         // file on loaded
         reader.onload = async (theFile) => {
           try {
-            // get data 
+            // get data
             let fileData = JSON.parse(theFile.target.result);
-            console.log("File Data", fileData);
             // if it
-            if(fileData.type === 'tracker') {
+            if (fileData.type === "tracker") {
               // Create the tracker
               let tracker = new Tracker(fileData.tracker);
               // Confirm the user wants to install it.
               let confirmed = await Interact.confirm(`Install ${tracker.emoji} ${tracker.label}?`, `Type: ${tracker.type}`);
-              if(confirmed) {
+              if (confirmed) {
                 await methods.saveTracker(tracker);
-                Interact.toast(`${tracker.emoji} ${tracker.label} added`)
+                Interact.toast(`${tracker.emoji} ${tracker.label} added`);
               }
-              console.log("Is it a tracker", fileData);
             } else {
               Interact.alert("Error", "This isn't a valid tracker");
             }
-
           } catch (e) {
             Interact.alert("Error", e.message);
           }
         };
         // Read the file
         reader.readAsText(file);
-      }
+      };
     },
     download(tracker) {
       let pkg = {

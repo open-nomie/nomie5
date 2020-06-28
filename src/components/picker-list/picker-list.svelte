@@ -40,7 +40,6 @@
   }
 
   function sorted(evt) {
-    // console.log("sorted", evt);
     list = evt.detail;
     fireChange();
   }
