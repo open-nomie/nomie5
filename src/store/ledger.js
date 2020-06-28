@@ -291,7 +291,7 @@ const ledgerInit = () => {
           // Return the match - or the location if we didnt any favorites
           return location;
         } catch (e) {
-          Interact.alert("Error", e.message);
+          // Interact.alert("Error", e.message);
         }
       } else {
         return null;
