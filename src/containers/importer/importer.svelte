@@ -36,7 +36,8 @@
     trackers: null,
     records: null,
     boards: null,
-    people: null
+    people: null,
+    locations: null
   };
   // Status of imports
   let importing = {
@@ -221,7 +222,11 @@
 
     async _importPeople() {
       let people = await PeopleStore.getPeople();
-      await PeopleStore.write({ ...archive.people, ...people });
+      people = people || {};
+      await PeopleStore.write({
+        ...(archive || { people: {} }).people,
+        ...people
+      });
       importing.people.running = false;
       importing.people.done = true;
       return importing.people;
@@ -473,7 +478,7 @@
     getPeople() {
       let people = {};
       if (version >= 4) {
-        people = fileData.people;
+        people = fileData.people || {};
       }
       return people;
     },
