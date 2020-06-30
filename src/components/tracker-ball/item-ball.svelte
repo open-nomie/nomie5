@@ -23,14 +23,14 @@
 
 <style lang="scss">
   // Moved to scss/components/item-ball
-  :global(.item-ball .n-ball) {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    overflow: hidden;
-  }
+  // :global(.item-ball .n-ball) {
+  //   position: absolute;
+  //   top: 0;
+  //   right: 0;
+  //   left: 0;
+  //   bottom: 0;
+  //   overflow: hidden;
+  // }
 </style>
 
 <div

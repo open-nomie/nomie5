@@ -6737,7 +6737,9 @@ aside.n-panel {
       .item-ball .n-ball {
         width: 132.6px !important;
         height: 132.6px !important;
-        font-size: 66.3px !important; } }
+        font-size: 66.3px !important; }
+      .item-ball.item-ball-small .emoji-letter {
+        font-size: 50px !important; } }
   .item-ball .countdown {
     position: absolute;
     top: 0;
