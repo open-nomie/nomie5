@@ -604,7 +604,7 @@
             <button
               class="btn text-primary btn-clear"
               on:click={methods.importLocations}>
-              Import Locations ({archive.locations.length})
+              Import Locations ({(archive.locations || []).length})
             </button>
           {/if}
         </div>
