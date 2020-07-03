@@ -43,13 +43,18 @@ export default class Record {
     this.lng = starter.lng || null;
     this.location = starter.location || "";
     // Add current timezone offset
-    if (!starter.offset && this.lat) {
-      let local = timespace.getFuzzyLocalTimeFromPoint(this.end || Date.now(), [this.lng, this.lat]);
-      let offset = -local._offset;
-      this.offset = offset;
-    } else {
-      this.offset = starter.offset || new Date().getTimezoneOffset();
-    }
+
+    this.offset = starter.offset || new Date().getTimezoneOffset();
+
+    // if (!starter.offset && this.lat) {
+    //   let local = timespace.getFuzzyLocalTimeFromPoint(this.end || Date.now(), [this.lng, this.lat]);
+    //   if (local) {
+    //     let offset = -local._offset;
+    //     this.offset = offset;
+    //   }
+    // } else {
+    //   this.offset = starter.offset || new Date().getTimezoneOffset();
+    // }
     // this.offset = starter.offset || new Date().getTimezoneOffset();
 
     // Get if this has been edited
