@@ -170,13 +170,17 @@
     },
     async importLocations() {
       importing.locations.running = true;
-      let currentLocations = Locations.getAll();
-      archive.locations.forEach(loc => {
-        if (!currentLocations.find(l => l.id == loc.id)) {
-          currentLocations.push(loc);
-        }
-      });
-      await Locations.write(currentLocations);
+      let currentLocations = Locations.getAll() || [];
+      try {
+        (archive.locations || []).forEach(loc => {
+          if (!currentLocations.find(l => l.id == loc.id)) {
+            currentLocations.push(loc);
+          }
+        });
+        await Locations.write(currentLocations);
+      } catch (e) {
+        console.error(e);
+      }
       importing.locations.running = false;
       importing.locations.done = true;
       return importing.locations;
