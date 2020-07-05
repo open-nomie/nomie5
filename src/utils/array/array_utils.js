@@ -9,6 +9,10 @@ export default {
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
     return arr; // for testing
   },
+  split(arr = []) {
+    let half = Math.ceil(arr.length * 0.5);
+    return [arr.splice(0, half), arr.splice(-half)];
+  },
   chunk(array, chunkSize) {
     var arrayOfArrays = [];
 

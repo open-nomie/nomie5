@@ -54,6 +54,18 @@ const userInit = () => {
     getStorageEngine() {
       return Storage._storageType();
     },
+    getTimeFormat() {
+      let format;
+      update((state) => {
+        if (state.meta.is24Hour) {
+          format = "HH:mm";
+        } else {
+          format = "h:mm A";
+        }
+        return state;
+      });
+      return format;
+    },
     initialize() {
       // Set Dark or Light Mode
       // Lets get dark Mode
