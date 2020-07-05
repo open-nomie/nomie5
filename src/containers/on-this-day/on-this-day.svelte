@@ -49,7 +49,6 @@
     loading = true;
     let day = await LedgerStore.getDay($Interact.onThisDay);
     let trackersUsed = LedgerStore.extractTrackerTagAndValues(day);
-    console.log({ day, trackersUsed });
     let trackerKeys = Object.keys(trackersUsed);
 
     processTrackers(trackersUsed);
@@ -67,7 +66,6 @@
   }
 
   function processTrackers(trackersUsed) {
-    console.log({ $TrackerStore });
     let trackers = Object.keys(trackersUsed)
       .map(tag => {
         let base = trackersUsed[tag];
@@ -89,7 +87,6 @@
         return a.count < b.count ? 1 : -1;
       });
 
-    console.log("Trackers", trackers);
     state.trackers = trackers;
   }
 
