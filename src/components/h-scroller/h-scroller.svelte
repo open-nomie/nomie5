@@ -86,6 +86,7 @@
     overflow-y: hidden;
     scroll-behavior: smooth;
     min-height: 40px;
+    max-width: 100%;
   }
   .n-hscroller .wrapper {
     display: flex;

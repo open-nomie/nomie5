@@ -3,20 +3,21 @@
   // export let color = undefined;
   export let bold = undefined;
   export let medium = undefined;
-  export let tag = "span";
+  export let tag = "div";
   export let className = "";
 </script>
 
 <style type="text/scss">
   .n-text {
     color: var(--color-inverse);
-    line-height: 100%;
+    line-height: 116%;
+    white-space: normal;
+
     &.xs {
       font-size: 0.65rem;
     }
     &.sm {
       font-size: 0.85rem;
-      line-height: 0.98rem;
     }
     &.md {
       font-size: 1rem;

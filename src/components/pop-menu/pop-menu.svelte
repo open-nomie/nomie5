@@ -106,10 +106,11 @@
         }
         &:hover {
           transform: none;
-          background-color: var(--color-faded) !important;
+          // background-color: var(--color-faded) !important;
         }
         &.btn-danger:hover {
           background-color: var(--color-red) !important;
+          color: #fff;
         }
       }
 

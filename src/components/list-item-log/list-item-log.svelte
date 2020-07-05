@@ -17,6 +17,8 @@
   import NNoteTextualizer from "../note-textualizer/note-textualizer.svelte";
   import NCameraImage from "../camera/image.svelte";
 
+  import NTrackerSmallBlock from "../tracker-ball/tracker-small-block.svelte";
+
   // utils
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import time from "../../utils/time/time";
@@ -170,7 +172,29 @@
     {#if logMeta.trackers.length || logMeta.people.length || logMeta.context.length}
       <div class="tracker-grid n-row">
         {#each displayLog.people as person}
-          <button
+          <NTrackerSmallBlock
+            element={person}
+            on:click={() => {
+              dispatch('personClick', { person: person, log });
+            }}>
+            <span slot="emoji" class="emoji">
+              {#if $PeopleStore.people[person.id]}
+                <NBall
+                  size="40"
+                  radius="0.3"
+                  avatar={$PeopleStore.people[person.id].avatar}
+                  username={person.id}
+                  className="ml-2" />
+              {:else}
+                <NBall
+                  size="40"
+                  username={person.id}
+                  className="ml-2"
+                  radius="0.3" />
+              {/if}
+            </span>
+          </NTrackerSmallBlock>
+          <!-- <button
             class="btn n-tracker-value-grid-button"
             on:click={() => {
               dispatch('personClick', { person: person, log });
@@ -193,7 +217,7 @@
               {/if}
             </span>
             <div class="label truncate text-inverse">{person.id}</div>
-          </button>
+          </button> -->
         {/each}
         {#each logMeta.trackers.filter(trk => {
           if (focus) {
@@ -202,31 +226,11 @@
             return true;
           }
         }) as trackerElement}
-          <button
-            class="btn n-tracker-value-grid-button"
-            on:click={event => {
-              event.preventDefault();
-              event.stopPropagation();
+          <NTrackerSmallBlock
+            element={trackerElement}
+            on:click={() => {
               dispatch('trackerClick', { tracker: trackerElement.obj, log });
-              return false;
-            }}>
-            <span
-              class="emoji"
-              style={`color:${(trackerElement.obj || {}).color || '#CCC'}`}>
-              {(trackerElement.obj || {}).emoji || '⚪️'}
-            </span>
-            <main class="truncate w-100">
-              <div class="label text-inverse">
-                {(trackerElement.obj || {}).label || trackerElement.id}
-              </div>
-
-              {#if shouldShowValue(trackerElement)}
-                <div class="value text-inverse">
-                  {NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom)}
-                </div>
-              {/if}
-            </main>
-          </button>
+            }} />
         {/each}
       </div>
       {#if logMeta.context.length}

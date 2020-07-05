@@ -16,6 +16,7 @@
   import StatsModal from "./containers/stats/stats-modal.svelte";
   import StreakModal from "./containers/steak/streak-modal.svelte";
   import WhatsNewModal from "./containers/whats-new/whats-new-modal.svelte";
+  import OnThisDayModal from "./containers/on-this-day/on-this-day.svelte";
 
   import SetupRoute from "./routes/setup.svelte";
 
@@ -240,6 +241,7 @@
 {/if}
 <Interactions />
 <StreakModal />
+<OnThisDayModal />
 
 {#if $UserStore.storageType == 'blockstack' && offline}
   <div class="offline-notice">

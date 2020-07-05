@@ -18,7 +18,7 @@ import { Lang } from "../store/lang";
 
 // Stores
 
-const console = new Logger("🚦 Lang");
+const console = new Logger("📚 Nomie Library");
 
 // Nomie API Store
 
@@ -27,7 +27,10 @@ const TrackerLibInit = () => {
     trackers: Object.keys(StartPack.trackers).map((key) => StartPack.trackers[key]),
     show: false,
     first: false,
+    activeBundle: null
   });
+
+  console.log("INITIALIZING");
 
   const methods = {
     toggle() {
@@ -37,7 +40,14 @@ const TrackerLibInit = () => {
         return p;
       });
     },
-
+    presentBundle(bundle) {
+      update(state=>{
+        state.
+      })
+    },
+    installBundle(bundle) {
+      console.log("install this bundle", bundle);
+    },
     showFirst() {
       update((p) => {
         p.show = true;
