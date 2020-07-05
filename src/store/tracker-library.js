@@ -27,7 +27,7 @@ const TrackerLibInit = () => {
     trackers: Object.keys(StartPack.trackers).map((key) => StartPack.trackers[key]),
     show: false,
     first: false,
-    activeBundle: null
+    activeBundle: null,
   });
 
   console.log("INITIALIZING");
@@ -41,9 +41,10 @@ const TrackerLibInit = () => {
       });
     },
     presentBundle(bundle) {
-      update(state=>{
-        state.
-      })
+      update((state) => {
+        state.activeBundle = bundle;
+        return state;
+      });
     },
     installBundle(bundle) {
       console.log("install this bundle", bundle);
