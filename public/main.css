@@ -6859,21 +6859,29 @@ aside.n-panel {
   min-height: 50px; }
   .n-tracker-value-grid-button:active {
     background-color: var(--color-solid-1); }
+  .n-tracker-value-grid-button.solo {
+    background-color: var(--color-solid-1);
+    border-radius: 6px;
+    padding: 4px 12px 6px 0px;
+    margin: 4px; }
   .n-tracker-value-grid-button .emoji {
     font-size: 40px;
     width: 60px;
     line-height: 20px;
-    flex-shrink: 0; }
-  .n-tracker-value-grid-button .label {
-    text-align: left;
-    font-weight: 500;
-    font-size: 0.9rem;
+    flex-shrink: 0;
+    letter-spacing: -24px;
+    padding-right: 24px; }
+  .n-tracker-value-grid-button.truncate .label {
     max-width: calc(100% - 1px);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden !important;
-    display: block;
+    display: block; }
+  .n-tracker-value-grid-button .label {
+    text-align: left;
+    font-weight: 500;
+    font-size: 0.9rem;
     opacity: 0.8; }
   .n-tracker-value-grid-button .value {
     font-size: 1.1rem;

@@ -23,18 +23,31 @@
     background-color: var(--color-solid-1);
   }
 
+  &.solo {
+    background-color: var(--color-solid-1);
+    border-radius: 6px;
+    padding: 4px 12px 6px 0px;
+    margin: 4px;
+  }
+
   .emoji {
     font-size: 40px;
     width: 60px;
     line-height: 20px;
     flex-shrink: 0;
+    letter-spacing: -24px;
+    padding-right: 24px;
+  }
+  &.truncate {
+    .label {
+      max-width: calc(100% - 1px);
+      @include truncate();
+    }
   }
   .label {
     text-align: left;
     font-weight: 500;
     font-size: 0.9rem;
-    max-width: calc(100% - 1px);
-    @include truncate();
     opacity: 0.8;
   }
   .value {

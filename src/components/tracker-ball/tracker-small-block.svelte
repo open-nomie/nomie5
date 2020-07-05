@@ -4,6 +4,9 @@
   const dispatch = createEventDispatcher();
 
   export let element;
+  export let style = "";
+  export let truncate = false;
+  export let solo = false;
 
   let hasEmojiSlot = arguments[1].$$slots || {}.emoji;
 
@@ -18,11 +21,14 @@
       return false;
     }
   }
+  // console.log("element", element);
 </script>
 
 {#if element}
   <button
-    class="btn n-tracker-value-grid-button"
+    {style}
+    class="btn n-tracker-value-grid-button {solo ? 'solo' : ''}
+    "
     on:click={event => {
       event.preventDefault();
       event.stopPropagation();
@@ -38,7 +44,7 @@
         {(element.obj || {}).emoji || '⚪️'}
       </span>
     {/if}
-    <main class="truncate w-100">
+    <main class="{truncate ? 'truncate' : ''} w-100">
       <div class="label text-inverse">
         {(element.obj || {}).label || element.id}
       </div>

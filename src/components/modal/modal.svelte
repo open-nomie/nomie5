@@ -142,6 +142,14 @@
       }
     }
   }
+
+  :global(.n-modal-footer) {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+    width: 100%;
+  }
+  :global(.n-modal-footer [slot="footer"]) {
+    width: 100%;
+  }
   .n-modal {
     border: var(--modal-border);
     min-width: 320px;
@@ -185,9 +193,6 @@
         margin: 0 !important;
       }
 
-      .n-modal-footer {
-        padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
-      }
       .n-modal-body {
         &.no-scroll {
           overflow: auto !important;

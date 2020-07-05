@@ -242,6 +242,9 @@
 <Interactions />
 <StreakModal />
 <OnThisDayModal />
+<!-- 
+  TODO: .. 
+  <OnThisDayModal /> -->
 
 {#if $UserStore.storageType == 'blockstack' && offline}
   <div class="offline-notice">

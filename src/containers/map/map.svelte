@@ -20,6 +20,8 @@
   // props
   export let locations = [];
 
+  export let records = [];
+
   export let small = undefined;
   export let picker = undefined;
   export let height = undefined;
@@ -55,6 +57,20 @@
       await methods.init();
       methods.renderMap();
     }, 12);
+  }
+
+  $: if (!locations.length && records.length) {
+    let locs = records
+      .filter(r => r.lat)
+      .map(record => {
+        return {
+          lat: record.lat,
+          lng: record.lng,
+          name: record.location,
+          log: record
+        };
+      });
+    locations = locs;
   }
 
   $: if (picker && MAP && locations.length == 0) {

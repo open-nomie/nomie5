@@ -72,6 +72,7 @@ const interactInit = () => {
         onInteract: null,
         type: "tracker",
       },
+      onThisDay: null,
       trackerEditor: {
         show: false,
         tracker: null,
@@ -144,6 +145,19 @@ const interactInit = () => {
           s.alert.onInteract = resolve;
           return s;
         });
+      });
+    },
+
+    onThisDay(date) {
+      update((state) => {
+        state.onThisDay = date;
+        return state;
+      });
+    },
+    closeOnThisDay() {
+      update((state) => {
+        state.onThisDay = null;
+        return state;
       });
     },
     blocker(message) {
@@ -454,6 +468,12 @@ const interactInit = () => {
           {
             title: "Delete...",
             click: actions.delete,
+          },
+          {
+            title: `On this Day...`,
+            click: () => {
+              Interact.onThisDay(new Date(log.end));
+            },
           },
         ];
 

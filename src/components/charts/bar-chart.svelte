@@ -1,4 +1,5 @@
 <script>
+  import { Interact } from "./../../store/interact.js";
   /**
    * God Speed! We're going to make a chart
    */
@@ -254,7 +255,11 @@
       </g>
     </svg>
     {#if activeIndex !== undefined && points[activeIndex] !== undefined}
-      <div class="active-item">
+      <div
+        class="active-item"
+        on:click={() => {
+          Interact.onThisDay(points[activeIndex].date.toDate());
+        }}>
         <label>
           {#if points[activeIndex].unit == 'hour'}
             {points[activeIndex].date.format(hourFormat)}
