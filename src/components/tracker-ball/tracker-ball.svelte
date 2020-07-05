@@ -13,7 +13,7 @@
   export let note = undefined;
   export let className = "";
   export let tracker = null;
-  export let small = true;
+  // export let small = true;
 </script>
 
 <style lang="scss">

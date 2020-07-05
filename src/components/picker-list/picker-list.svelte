@@ -14,7 +14,7 @@
   export let style = "";
   export let className = "";
   export let list = [];
-  export let mode = "edit";
+  // export let mode = "edit";
 
   let ready = false;
   let activeValue = null;

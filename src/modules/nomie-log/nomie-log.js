@@ -6,7 +6,7 @@ import ScoreNote from "../../modules/scoring/score-note";
 import dayjs from "dayjs";
 import math from "../../utils/math/math";
 
-import timespace from "@mapbox/timespace";
+// import timespace from "@mapbox/timespace";
 
 /**
  * Nomie Log / Record

@@ -4,7 +4,7 @@
   import { createEventDispatcher } from "svelte";
   export let title = undefined;
   export let description = undefined;
-  export let borderBottom = false;
+  // export let borderBottom = false;
 
   export let href = undefined;
   export let to = undefined;
