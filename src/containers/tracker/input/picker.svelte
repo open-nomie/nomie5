@@ -31,6 +31,7 @@
   }
 
   function add() {
+    tracker.picks = tracker.picks || [];
     tracker.picks.push(`${activeValue}`);
     activeValue = null;
     TrackerStore.saveTracker(tracker);
@@ -56,7 +57,7 @@
 
 <div class="tracker-input picker">
   <div class="n-list solo">
-    {#each tracker.picks as pick}
+    {#each tracker.picks || [] as pick}
       {#if isHeader(pick)}
         <NItem className="item-divider compact">{pick.replace(' :', '')}</NItem>
       {:else}

@@ -20,6 +20,19 @@
   let activeValue = null;
   let activeItem = null;
 
+  function updateItem(oldItem, newItem) {
+    let matched = false;
+    list = list.map(item => {
+      if (item == oldItem && !matched) {
+        matched = true;
+        return newItem;
+      } else {
+        return item;
+      }
+    });
+    list = list;
+  }
+
   function add() {
     let newList = [];
     let itemToAdd = `${activeValue}`;
@@ -91,7 +104,7 @@
   {#if ready}
     <div class="sortable-list p-2 px-3">
       <NSortableList
-        items={list}
+        items={list || []}
         handle=".menu-handle"
         on:update={sorted}
         let:item>
@@ -107,7 +120,17 @@
           <div slot="left">
             <NIcon name="menu" className="fill-faded-3 menu-handle" size="18" />
           </div>
-          <NText size="sm">{item}</NText>
+          <NText size="sm">
+            <span
+              on:dbltap={() => {
+                let newItem = prompt('Update', item);
+                if (newItem) {
+                  updateItem(item, newItem);
+                }
+              }}>
+              {item}
+            </span>
+          </NText>
           <button
             slot="right"
             class="btn btn-clear pl-0"
