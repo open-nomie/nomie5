@@ -65,7 +65,11 @@
       });
     },
     onCancel() {
-      dispatch("cancel");
+      if (!$Interact.trackerInput.allowSave) {
+        dispatch("cancelAll");
+      } else {
+        dispatch("cancel");
+      }
     },
     // When the user starts the time
     startTimer() {
@@ -222,7 +226,9 @@
       <div class="left">
         <button
           aria-label="Cancel"
-          on:click={methods.onCancel}
+          on:click={() => {
+            methods.onCancel();
+          }}
           class="btn btn-clear btn-lg">
           {Lang.t('general.cancel', 'Cancel')}
         </button>
@@ -233,6 +239,7 @@
 
         {#if (data.tracker.type == 'timer' && data.value) || (data.tracker.type != 'timer' && $Interact.trackerInput.allowSave !== false)}
           <button
+            style="max-width:130px"
             on:click={methods.onSave}
             class="btn btn-primary btn-lg text-white btn-block "
             aria-label="Save this log">
@@ -243,6 +250,7 @@
         {#if data.tracker.type == 'timer' && !data.tracker.started && !data.value}
           <button
             on:click={methods.startTimer}
+            style="max-width:130px"
             aria-label="Start Timer"
             class="btn btn-success btn-lg btn-block text-white">
             {Lang.t('general.start', 'Start')}
@@ -252,6 +260,7 @@
         {#if data.tracker.type == 'timer' && data.tracker.started !== null}
           <button
             on:click={methods.stopTimer}
+            style="max-width:130px"
             aria-label="Stop Timer"
             class="btn btn-danger text-white btn-lg btn-block {data.tracker.started > 0 ? '' : 'd-none'}">
             {Lang.t('general.stop', 'Stop')}
@@ -269,8 +278,13 @@
             title="Add this to the note, but don't save yet"
             class="btn btn-clear btn-lg {tracker.started ? 'd-none' : ''}">
             <!-- local hack to make plus match with close-->
-            <NIcon name="add" size="32" />
-            Add
+            {#if !$Interact.trackerInput.allowSave}
+              Next
+              <NIcon name="chevronRight" size="32" />
+            {:else}
+              <NIcon name="add" size="32" />
+              Add
+            {/if}
           </button>
         {/if}
       </div>

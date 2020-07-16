@@ -267,6 +267,9 @@
       }
       Interact.dismissTrackerInput();
     }}
+    on:cancelAll={() => {
+      Interact.dismissTrackerInput();
+    }}
     show={$Interact.trackerInput.show}
     tracker={new Tracker($Interact.trackerInput.tracker)}
     value={$Interact.trackerInput.value} />

@@ -47,11 +47,19 @@ export default class TrackerInputer {
     }
   }
 
+  /**
+   * Note Tracker Type convert to real note
+   * This takes a note value, which can be anything including @ # +
+   * and extracts the trackers, people and context.
+   * @param {Tracker} tracker
+   */
   async getNoteTrackerInputAsString(tracker) {
     // Set up the Note
     let note = [];
+
     // Get Tracker tags from this trackers note
     const trackerElements = extractor.trackers(tracker.note);
+
     // Add this trackers tag for logging
     note.push(`#${tracker.tag}`);
 
@@ -64,10 +72,16 @@ export default class TrackerInputer {
       };
     });
 
+    /**
+     * For Loop for await
+     * We then loop over any trackers that and get the input
+     * this will prompt the inputer to launch and collect user data
+     */
     for (let i = 0; i < items.length; i++) {
       let response = await this.getTrackerInputAsString(items[i].tracker, items[i].value);
       note.push(response);
     }
+    // Merge all of the note array into a single string.
     return note.join(" ");
   }
 
@@ -100,10 +114,15 @@ export default class TrackerInputer {
     // If it's a plain old tick tracker
     return new Promise((resolve, reject) => {
       let finished = (payload) => {
-        resolve(payload);
+        if (payload) {
+          ActiveLogStore.addTag(this.tracker.tag);
+          resolve(payload);
+        }
       };
       let finishedWithError = (err) => {
         console.error("error", err);
+        // This way we can look up some stats on it too
+        ActiveLogStore.addTag(this.tracker.tag);
         reject(err);
       };
       if (options.replace) {
@@ -126,9 +145,6 @@ export default class TrackerInputer {
          * ask the user to provide inputs for
          * each type of note
          **/
-
-        // This way we can look up some stats on it too
-        ActiveLogStore.addTag(this.tracker.tag);
 
         // Setup a temp log with the tracker note
         const tempLog = new NomieLog({ note: this.tracker.note });
@@ -167,23 +183,26 @@ export default class TrackerInputer {
          * Loop over each of the items { tracker: [object], value: value }
          * If this is a multiple tracker request we will show each of the
          * tracker inputs one at a time using the promise step function
+         *
+         * TODO : Make this massive ass function into something more maintainable.
          */
-        PromiseStep(items, (item) => {
-          return new Promise((resolve, reject) => {
-            // testing if going direct works
-            //   $Interact.trackerInput.show = false;
-            //   $Interact.trackerInput.tracker = null;
-            //   $Interact.trackerInput.onInteract = null;
-            // Wait for timeout
-            setTimeout(() => {
-              // Show Tracker Input for this given tracker
-              // then return the promise and move on to the next
-              Interact.trackerInput(item.tracker, { value: item.value, allowSave: true }).then(resolve).catch(reject);
-            }, 12);
-          });
-        })
-          .then(finished)
-          .catch(finishedWithError);
+        let itemIndex = 0;
+        let finishedRes;
+
+        const getMany = async () => {
+          try {
+            finishedRes = await PromiseStep(items, async (item) => {
+              itemIndex++;
+              const allowSave = itemIndex == items.length;
+              return Interact.trackerInput(item.tracker, { value: item.value, allowSave });
+            });
+            finished(finishedRes);
+          } catch (e) {
+            console.log("Error Caught Error", e);
+            finishedWithError(e);
+          }
+        };
+        getMany();
       } else {
         // It's an input of some sort
         Interact.trackerInput(this.tracker, { allowSave: true }).then(finished).catch(finishedWithError);

@@ -87,7 +87,7 @@ export default {
       "edit-board": `Edit Tab`,
       "board-label": "Board Label",
       "create-custom-tracker": "Create Custom Tracker",
-      "add-existing-tracker": "Add Existing Tracker",
+      "add-existing-tracker": "Pick from My Trackers",
       "browse-starter-trackers": "Browse Library",
       "add-a-board": "Add a Tab",
       "add-a-board-description": `Tabs help you organize your trackers. For example: social, food, and fitness can contain trackers specifically for those activies. You can have the same tracker on multiple tabs.`,

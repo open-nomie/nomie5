@@ -262,11 +262,11 @@
       });
 
       buttons.push({
-        title: 'Import from file',
+        title: "Import from file",
         click() {
-          TrackerStore.importFromFile()
+          TrackerStore.importFromFile();
         }
-      })
+      });
 
       // Show Menu
       Interact.popmenu({
@@ -362,12 +362,16 @@
         items.forEach(item => {
           let tracker = TrackerStore.getByTag(item.tracker.tag);
           // Get any additional content to pull along with this tracker
+          let str = [`#${tracker.tag}(${item.value})`];
           let includeStr = tracker.getIncluded(item.value) || "";
-          includeStr = includeStr.length ? ` ${includeStr}` : "";
+          if (includeStr.length) {
+            str.push(`${includeStr}`);
+          }
+          if (item.suffix) {
+            str.push(item.suffix);
+          }
           // Add the Element
-          ActiveLogStore.addElement(
-            `#${tracker.tag}(${item.value})${includeStr}`
-          );
+          ActiveLogStore.addElement(str.join(" "));
         });
       } else if (payload) {
         /**
@@ -761,7 +765,7 @@
     {/if}
   </header>
   <!-- end header-->
-  <div slot="content" class="container board-container" >
+  <div slot="content" class="container board-container">
     {#if user}
       {#if !isReady.done}
         <div class="empty-notice">
