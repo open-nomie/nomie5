@@ -5,6 +5,7 @@ import extractor from "../../utils/extract/extract";
 import Tracker from "./tracker";
 import PromiseStep from "../../utils/promise-step/promise-step";
 import NomieLog from "../../modules/nomie-log/nomie-log";
+import { TrackerStore } from "../../store/tracker-store";
 
 /**
  * Tracker Input
@@ -167,7 +168,7 @@ export default class TrackerInputer {
         // Create array of items to pass to promise step
 
         let items = trackerElements.map((trackerElement) => {
-          let realTracker = this.$TrackerStore.trackers[trackerElement.id];
+          let realTracker = TrackerStore.getByTag(trackerElement.id);
           let value = trackerElement.value;
           if (realTracker.type == "timer") {
             value = 0;
