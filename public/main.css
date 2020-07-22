@@ -6893,6 +6893,19 @@ aside.n-panel {
     white-space: nowrap;
     overflow: hidden !important;
     display: block; }
+  .n-tracker-value-grid-button.novalue .value {
+    display: none; }
+  .n-tracker-value-grid-button.size-xs {
+    padding: 0px;
+    background-color: transparent !important;
+    min-height: 24px;
+    line-height: 18px; }
+    .n-tracker-value-grid-button.size-xs .label {
+      font-size: 14px; }
+    .n-tracker-value-grid-button.size-xs .emoji {
+      font-size: 18px;
+      width: auto;
+      margin-right: 6px; }
 
 .n-item-log {
   width: calc(100% - 16pt);

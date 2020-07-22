@@ -22,6 +22,7 @@
   import OverflowMenuHorizontal24 from "carbon-icons-svelte/lib/OverflowMenuHorizontal24";
   import ChevronSort24 from "carbon-icons-svelte/lib/ChevronSort24";
   import TrashCan24 from "carbon-icons-svelte/lib/TrashCan24";
+  import Dashboard24 from "carbon-icons-svelte/lib/Dashboard24";
   import Share24 from "carbon-icons-svelte/lib/Share24";
   import SubtractAlt24 from "carbon-icons-svelte/lib/SubtractAlt24";
   import ArrowLeft24 from "carbon-icons-svelte/lib/ArrowLeft24";
@@ -82,7 +83,8 @@
     radioFilled: RadioButtonChecked24,
     edit: Edit24,
     menu: Menu24,
-    grid: Grid24
+    grid: Grid24,
+    dashboard: Dashboard24
   };
 
   function getStyle() {

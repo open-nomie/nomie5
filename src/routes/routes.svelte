@@ -1,4 +1,5 @@
 <script>
+  import Dashboard from "./dashboard.svelte";
   import { Router, Route, navigate } from "svelte-routing";
 
   import TrackRoute from "./track.svelte";
@@ -22,6 +23,7 @@
   <Route path="/settings" component={SettingsRoute} />
   <Route path="/board/:id" component={BoardEditorRoute} />
   <Route path="/faq" component={FAQRoute} />
+  <Route path="/dashboard" component={Dashboard} />
   <Route path="/api" component={NomieAPIRoute} />
   <Route path="/settings/export/:type" component={ExportRoute} />
   <Route path="/settings/export" component={ExportRoute} />

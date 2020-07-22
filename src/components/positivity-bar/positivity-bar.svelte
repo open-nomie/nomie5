@@ -7,6 +7,7 @@
   export let neutral = 30;
   export let className = "";
   export let style = "";
+  export let height = "8pt";
 
   let positivity = [0, 0, 0];
   let negativeStyle = "";
@@ -33,32 +34,39 @@
       border-radius: 4pt;
       overflow: hidden;
       flex-direction: row;
-      height: 8pt;
     }
     .negative {
       background-color: var(--color-red);
-      margin-right: 1px;
+      margin-right: 2px;
     }
     .positive {
       background-color: var(--color-green);
-      margin-left: 1px;
+      margin-left: 2px;
     }
     .neutral {
       background-color: var(--color-primary-bright);
     }
     .unit {
-      height: 8pt;
-      border-radius: 4pt;
+      // border-radius: 4pt;
     }
   }
 </style>
 
 {#if negative || neutral || positive}
   <div class="positivity-bar {className}" {style}>
-    <div class="bar">
-      <div class="unit negative" data-score={negative} style={negativeStyle} />
-      <div class="unit neutral" data-score={neutral} style={neutralStyle} />
-      <div class="unit positive" data-score={positive} style={positiveStyle} />
+    <div class="bar" style="height:{height}">
+      <div
+        class="unit negative"
+        data-score={negative}
+        style={`height:${height}; ${negativeStyle}`} />
+      <div
+        class="unit neutral"
+        data-score={neutral}
+        style={`height:${height}; ${neutralStyle}`} />
+      <div
+        class="unit positive"
+        data-score={positive}
+        style={`height:${height}; ${positiveStyle}`} />
     </div>
   </div>
 {/if}

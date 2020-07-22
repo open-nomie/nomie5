@@ -7,6 +7,8 @@
   export let style = "";
   export let truncate = false;
   export let solo = false;
+  export let xs = false;
+  export let novalue = false;
 
   let hasEmojiSlot = arguments[1].$$slots || {}.emoji;
 
@@ -28,6 +30,8 @@
   <button
     {style}
     class="btn n-tracker-value-grid-button {solo ? 'solo' : ''}
+    {xs ? 'size-xs' : ''}
+    {novalue ? 'novalue' : ''}
     "
     on:click={event => {
       event.preventDefault();

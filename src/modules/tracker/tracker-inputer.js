@@ -116,7 +116,7 @@ export default class TrackerInputer {
     return new Promise((resolve, reject) => {
       let finished = (payload) => {
         if (payload) {
-          ActiveLogStore.addTag(this.tracker.tag);
+          // ActiveLogStore.addTag(this.tracker.tag);
           resolve(payload);
         }
       };

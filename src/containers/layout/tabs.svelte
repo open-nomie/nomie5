@@ -127,12 +127,17 @@
         <label>{Lang.t('tabs.history')}</label>
       </Link>
 
+      <Link to="/dashboard">
+        <Icon name="dashboard" />
+        <label>{Lang.t('tabs.dashboard', 'Dash')}</label>
+      </Link>
+
       <Link to="/">
         {#if $TrackerStore.timers.length}
           <div class="notification" />
         {/if}
         <Icon name="tracker" />
-        <label>{Lang.t('general.trackers', 'Trackers')}</label>
+        <label>{Lang.t('general.trackers', 'Track')}</label>
       </Link>
 
       <Link to="/people">

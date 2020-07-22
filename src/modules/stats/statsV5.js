@@ -198,6 +198,7 @@ export default class StatsProcessor {
     let values = []; // holds the values for the cahrt
     let unitValues = valueMapTotals.days; // Each of the individual x units for the chart
     // Get start
+    // console.log("THIS?", this);
     let from = unit == "hour" ? this.toDate.startOf("day") : this.fromDate;
     // Get End
     let to = unit == "hour" ? this.toDate.endOf("day") : this.toDate;

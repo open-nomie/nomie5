@@ -119,6 +119,7 @@ const PeopleInit = () => {
       return methods.writeState();
     },
     get(name) {
+      let person;
       update((state) => {
         if (state.people.hasOwnProperty(name)) {
           person = state.people[name];

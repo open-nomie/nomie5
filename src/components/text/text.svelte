@@ -1,10 +1,11 @@
 <script>
-  export let size = "sm";
+  export let size = "md";
   // export let color = undefined;
   export let bold = undefined;
   export let medium = undefined;
   export let tag = "div";
   export let className = "";
+  export let faded = false;
 </script>
 
 <style type="text/scss">
@@ -27,6 +28,9 @@
     }
     &.xl {
       font-size: 2rem;
+    }
+    &.xxl {
+      font-size: 2.4rem;
     }
     &.font-weight-bold {
       font-weight: bold;

@@ -57,6 +57,25 @@
     font-weight: 600;
     @include truncate();
   }
+  &.novalue {
+    .value {
+      display: none;
+    }
+  }
+  &.size-xs {
+    padding: 0px;
+    background-color: transparent !important;
+    min-height: 24px;
+    line-height: 18px;
+    .label {
+      font-size: 14px;
+    }
+    .emoji {
+      font-size: 18px;
+      width: auto;
+      margin-right: 6px;
+    }
+  }
 }
 
 .n-item-log {
