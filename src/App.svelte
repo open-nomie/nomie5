@@ -6,7 +6,7 @@
 
   // Vendors
   import Spinner from "./components/spinner/spinner.svelte";
-  import { gestures } from "@composi/gestures";
+  import * as ComposiGestures from "@composi/gestures";
 
   // Containers
   import Interactions from "./containers/interactions/interactions.svelte";
@@ -35,13 +35,14 @@
   import { NomieAPI } from "./store/napi"; // Store for interacting with the Nomie API
   import { PeopleStore } from "./store/people-store"; // Store for holding People
   import { ContextStore } from "./store/context-store"; // Store for holding Post Context (categories)
+  import { DashboardStore } from "./store/dashboard-store"; // Store for holding Post Context (categories)
   import { AppStore } from "./store/app-store";
   import { Locations } from "./store/locations";
   import config from "../config/global";
 
   // Set a better console
   const console = new Logger("App.svelte");
-  gestures();
+  ComposiGestures.default.gestures();
 
   /**
    * Day / Time Change Monitoring
@@ -194,12 +195,14 @@
   let ready = false;
 
   // Used to make sure that boards and trackers are loaded
-  UserStore.onReady(() => {
+  UserStore.onReady(async () => {
     // Set the user if they're logged in
     ready = true;
+
     PeopleStore.init();
     Locations.init();
     ContextStore.init(); // check if this is a new version
+    DashboardStore.init();
     // Run any commands if needed
     setTimeout(() => {
       // If there are any URL caommands, it will run here.

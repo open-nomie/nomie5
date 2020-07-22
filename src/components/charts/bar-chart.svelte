@@ -12,9 +12,11 @@
   import math from "../../utils/math/math";
 
   // vendor
-  import { scaleLinear } from "d3-scale";
+  import * as ScaleLinear from "d3-scale";
   import { UserStore } from "../../store/user";
   import NIcon from "../icon/icon.svelte";
+
+  const scaleLinear = ScaleLinear.default.scaleLinear;
 
   export let labels = [];
   export let height = 200;

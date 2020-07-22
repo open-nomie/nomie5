@@ -8,6 +8,10 @@ import { scss } from "@kazzkiq/svelte-preprocess-scss";
 import builtins from "rollup-plugin-node-builtins";
 import replace from "rollup-plugin-replace";
 import packagejson from "./package.json";
+
+import autoPreprocess from "svelte-preprocess";
+import typescript from "@rollup/plugin-typescript";
+
 // import visualizer from "rollup-plugin-visualizer";
 import dayjs from "dayjs";
 // import fs from "fs";
@@ -46,16 +50,17 @@ export default [
       svelte({
         // enable run-time checks when not in production
         dev: !production,
-        preprocess: {
-          style: scss({ all: true }),
-        },
+        preprocess: autoPreprocess(),
+        // preprocess: {
+        //   style: scss({ all: true }),
+        // },
         // we'll extract any component CSS out into
         // a separate file — better for performance
         css: (css) => {
           css.write("public/bundle.css");
         },
       }),
-
+      typescript({ sourceMap: !production }),
       json(),
       resolve(),
       commonjs({ sourceMap: false }),
