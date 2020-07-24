@@ -8,6 +8,7 @@
   export let shape = "rounded";
   export let color = "primary";
   export let className = "";
+  export let block = false;
 </script>
 
 <style lang="scss">
@@ -15,7 +16,7 @@
 </style>
 
 <button
-  class={`btn btn-${shape} btn-${color} btn-${size} ${className}`}
+  class={`btn ${block ? 'btn-block' : ''} btn-${shape} btn-${color} btn-${size} ${className}`}
   on:click={() => {
     dispatch('click');
   }}>
