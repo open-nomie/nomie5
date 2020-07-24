@@ -1,17 +1,19 @@
-<script>
+<script lang="ts">
   import PositivityBar from "./../../components/positivity-bar/positivity-bar.svelte";
   import BarChart from "./../../components/charts/bar-chart.svelte";
   import TrackerSmallBlock from "./../../components/tracker-ball/tracker-small-block.svelte";
   import Text from "./../../components/text/text.svelte";
-  import { Block } from "./block";
+  import { Block } from "../../modules/dashboard/block";
+  import { createEventDispatcher } from "svelte";
+  import Pie from "../../components/chart/pie.svelte";
+  import Icon from "../../components/icon/icon.svelte";
+  import Button from "../../components/button/button.svelte";
 
-  export let block;
+  const dispatch = createEventDispatcher();
 
-  $: if (block) {
-    console.log("♎️ ♎️♎️♎️♎️  Block Changed", block.stats);
-  }
+  export let block: Block;
 
-  function formatValue(value) {
+  function formatValue(value): string {
     if (block.element.obj.displayValue) {
       return block.element.obj.displayValue(value);
     } else {
@@ -21,9 +23,9 @@
 </script>
 
 <style lang="scss">
+  @import "../../scss/utils/_utils";
   .dashboard-block {
     margin: 4px;
-    height: 130px;
     display: inline-flex;
     flex-direction: column;
     background-color: var(--color-solid);
@@ -31,13 +33,19 @@
     box-shadow: var(--box-shadow-float);
     min-width: calc(50% - 12px);
     max-width: 175px;
+
+    @include media-breakpoint-up(md) {
+      max-width: 130px;
+      min-width: 130px;
+    }
+
     flex-grow: 1;
     .block-header,
     .block-footer {
-      padding: 6px 12px;
+      padding: 6px 8px;
       flex-grow: 0;
       flex-shrink: 0;
-      height: 20px;
+      min-height: 32px;
     }
     .block-main {
       height: 90px;
@@ -62,36 +70,46 @@
 
 {#if block && block.stats}
   <div class="dashboard-block type-{block.type}">
-    <div class="block-header">
+    <div class="block-header n-row">
       <TrackerSmallBlock xs novalue element={block.element} />
+
+      <Button
+        size="xs"
+        color="clear"
+        className="p-0"
+        on:click={() => {
+          dispatch('click');
+        }}>
+        <Icon name="settings" size="16" />
+      </Button>
     </div>
     <div class="block-main">
       {#if block.type == 'chart' && block.stats && block.stats.chart}
         <BarChart
           height={100}
           color={'blue'}
-          labels={block.stats.chart.values.map(point => point.x)}
+          labels={block.stats.chart.values.map((point) => point.x)}
           points={block.stats.chart.values}
           xFormat={(x, index) => {
             return x;
           }}
-          yFormat={y => {
+          yFormat={(y) => {
             return y;
           }} />
       {:else if block.type == 'value' && block.stats}
         <div class="value">
-          <div class="current">
-            {block.math == 'mean' ? formatValue(block.stats.avg) : formatValue(block.stats.sum)}
-          </div>
+          <div class="current">{block.math == 'mean' ? formatValue(block.stats.avg) : formatValue(block.stats.sum)}</div>
         </div>
       {:else if block.type == 'positivity' && block.stats}
         <div class="value">
-          <PositivityBar
-            positive={20}
-            neutral={10}
-            negative={30}
+          <Pie
+            data={[{ label: 'Positive', value: block.positivity.positive, color: '#38a83f' }, { label: 'Neutral', value: block.positivity.neutral, color: '#319ed7' }, { label: 'Negative', value: block.positivity.negative, color: '#e94151' }]} />
+          <!-- <PositivityBar
+            positive={block.positivity.positive}
+            neutral={block.positivity.neutral}
+            negative={block.positivity.negative}
             style="width:100%"
-            height="50px" />
+            height="50px" /> -->
         </div>
       {:else}{block.type} {Object.keys(block)}{/if}
     </div>

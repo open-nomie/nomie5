@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import Text from "./../../components/text/text.svelte";
   import Icon from "./../../components/icon/icon.svelte";
   import ListItem from "./../../components/list-item/list-item.svelte";
@@ -15,7 +15,7 @@
   //Vendors
   import { navigate, Router, Route } from "svelte-routing";
 
-  import { Block } from "./block";
+  import { Block } from "../../modules/dashboard/block";
 
   // Modules
   import Tracker from "../../modules/tracker/tracker";
@@ -23,24 +23,66 @@
   import NText from "../../components/text/text.svelte";
   // containers
   import NLayout from "../layout/layout.svelte";
+  import { DashboardStore } from "../../store/dashboard-store";
+  import Modal from "../../components/modal/modal.svelte";
+  import DashblockEditor from "./dashblock-editor.svelte";
+  import { Interact } from "../../store/interact";
+  import Button from "../../components/button/button.svelte";
+
+  import { positivityFromLogs } from "../../utils/positivity/positivity";
+  import Stepper from "../../components/stepper/stepper.svelte";
+  import Dashboard from "../../routes/dashboard.svelte";
 
   let trackers;
   let people;
+  let dashboards;
   let unsubTrackers;
+  let unsubDashboard;
   let unsubPeople;
   let ready = false;
+  let editingBlock = null;
+
+  let editMode = false;
+
+  function toggleEdit() {
+    editMode = !editMode;
+  }
+
+  async function saveBlock(): void {
+    if (editingBlock && editingBlock.element) {
+      Interact.blocker("Saving...");
+      try {
+        await DashboardStore.saveBlock(editingBlock);
+      } catch (e) {
+        Interact.alert("Error", e.message);
+      }
+      Interact.stopBlocker();
+      clearEditing();
+    }
+  }
+
+  async function newBlock() {
+    editingBlock = new Block();
+  }
 
   onMount(() => {
-    unsubTrackers = TrackerStore.subscribe(tkrs => {
+    unsubTrackers = TrackerStore.subscribe((tkrs) => {
       if (tkrs.trackers) {
         trackers = tkrs.trackers;
         // console.log("trackers", trackers);
       }
     });
-    unsubPeople = PeopleStore.subscribe(pple => {
+    unsubPeople = PeopleStore.subscribe((pple) => {
       if (pple.people) {
         people = pple.people;
         // console.log({ people });
+      }
+    });
+    unsubDashboard = DashboardStore.subscribe((dbStore) => {
+      if (dbStore.dashboards.length) {
+        console.log("Dashboard.svelte store Changed", dbStore.dashboards);
+        dashboards = dbStore.dashboards;
+        initDashboard();
       }
     });
   });
@@ -48,16 +90,23 @@
   onDestroy(() => {
     unsubTrackers();
     unsubPeople();
+    unsubDashboard();
   });
 
   async function getBlockData(block) {}
 
+  function editBlock(block) {
+    block._editing = true;
+    editingBlock = block;
+  }
+
   function getStartEndDates(dboard) {
     let start = null;
     let end = null;
-    dboard.forEach(block => {
-      let tStart = block.dateRange.start.date.toDate();
-      let tEnd = block.dateRange.end.date.toDate();
+    dboard.forEach((block: Block) => {
+      let dateRange = block.getDateRange();
+      let tStart = dateRange[0];
+      let tEnd = dateRange[1];
       if (tEnd > end || !end) {
         end = tEnd;
       }
@@ -68,10 +117,12 @@
     return { start, end };
   }
 
-  async function getLogsForBlock(block) {
+  async function getLogsForBlock(block: Block): Promise<Array<any>> {
     let logs = [];
-    const start = block.dateRange.start.date.toDate();
-    const end = block.dateRange.end.date.toDate();
+    const dateRange = block.getDateRange();
+    const start = dateRange[0];
+    const end = dateRange[1];
+    // console.log("getLogsforBlock", { start, end, block });
     if (block.element.type == "tracker") {
       logs = await LedgerStore.queryTag(block.element.id, start, end);
     } else if (block.element.type == "person") {
@@ -79,10 +130,11 @@
     } else if (block.element.type == "context") {
       logs = await LedgerStore.queryContext(block.element.id, start, end);
     }
+    // console.log("getLogs for block", { logs });
     return logs;
   }
 
-  async function getActiveBoardData(dboard) {
+  async function loadActiveDashboard(dboard) {
     let { start, end } = getStartEndDates(dboard);
     for (let i = 0; i < dboard.length; i++) {
       const block = dboard[i];
@@ -98,8 +150,11 @@
         toDate: dayjs(end),
         mode: "w",
         math: block.math, //state.tracker.math
-        trackableElement: block.element
+        trackableElement: block.element,
       });
+
+      block.positivity = positivityFromLogs(block.logs, block.element);
+      console.log("block positivity", block.positivity);
 
       dboard[i] = block;
       // console.log("logs for block", block);
@@ -107,76 +162,13 @@
     activeDashboard = dboard;
   }
 
-  const dashboard = [
-    [
-      {
-        element: { type: "tracker", id: "mood" },
-        type: "chart",
-        dateRange: {
-          start: {
-            subtract: [30, "days"]
-          },
-          end: null
-        }
-      },
-      {
-        element: { type: "tracker", id: "mood" },
-        type: "value",
-        dateRange: {
-          label: "Last Week",
-          start: {
-            startOf: "week",
-            subtract: [7, "days"]
-          },
-          end: {
-            endOf: "week",
-            subtract: [7, "days"]
-          }
-        }
-      },
-      {
-        element: { type: "tracker", id: "mood" },
-        type: "value",
-        dateRange: {
-          label: "Today",
-          start: {
-            startOf: "day"
-          },
-          end: {
-            endOf: "day"
-          }
-        }
-      },
-      {
-        element: { type: "tracker", id: "soda" },
-        type: "value",
-        dateRange: {
-          label: "Yesterday",
-          start: {
-            startOf: "day",
-            subtract: [1, "day"]
-          },
-          end: {
-            endOf: "day",
-            subtract: [1, "day"]
-          }
-        }
-      },
-      {
-        element: { type: "person", id: "emily" },
-        type: "positivity"
-      }
-    ]
-  ];
-
-  let pageCount = dashboard.length;
   let activePage = 0;
   let lastActivePage;
-  let activeDashboard = dashboard[0];
+  let activeDashboard = [];
 
-  $: if (trackers && people && activePage !== lastActivePage) {
-    lastActivePage = activePage;
-    activeDashboard = dashboard[activePage].map(block => {
+  function initDashboard() {
+    console.log("init", { dashboards, type: typeof dashboards });
+    activeDashboard = dashboards[$DashboardStore.activeIndex].blocks.map((block) => {
       let nBlock = new Block(block);
       if (nBlock.element.type == "tracker" && trackers[nBlock.element.id]) {
         nBlock.element.obj = trackers[nBlock.element.id];
@@ -185,7 +177,16 @@
       }
       return nBlock;
     });
-    getActiveBoardData(activeDashboard);
+    loadActiveDashboard(activeDashboard);
+  }
+
+  $: if (trackers && people && dashboards && activePage !== lastActivePage) {
+    lastActivePage = activePage;
+    // initDashboard();
+  }
+
+  function clearEditing() {
+    editingBlock = false;
   }
 </script>
 
@@ -195,42 +196,81 @@
     flex-direction: row;
     flex-wrap: wrap;
     padding: 16px;
-    justify-items: stretch;
+    justify-content: space-between;
+    align-content: flex-start;
   }
 </style>
 
 <NLayout className="dasboard" pageTitle="Dashboard" showTabs={true}>
 
   <div slot="header" class="n-toolbar-grid container">
-    <div class="left" />
-    <div class="main title">••••</div>
-    <div class="right" />
+    <div class="left">
+      <Button color="clear" on:click={DashboardStore.newDashboard}>Add</Button>
+    </div>
+    <div class="main title">
+      <Stepper single dark steps={(dashboards || []).length} current={$DashboardStore.activeIndex} />
+    </div>
+    <div class="right">
+      <Button color="clear" on:click={toggleEdit}>{editMode ? 'Done' : 'Edit'}</Button>
+    </div>
   </div>
 
-  <div class="container">
-    <div class="dashboard-wrapper">
-      {#if people && trackers}
-        {#each activeDashboard as block}
-          <Dashblock {block} />
-        {/each}
-      {/if}
-    </div>
-    <SortableList
-      items={activeDashboard || []}
-      handle=".menu-handle"
-      on:update={sorted => {
-        console.log('Sorted', sorted.detail);
-        activeDashboard = sorted.detail;
-      }}
-      let:item>
-      <ListItem>
-        <Text bold>{item.element.id}</Text>
-        <Text size="sm">{item.type} {item.dateRange}</Text>
-        <div slot="right" class="menu-handle">
-          <Icon name="menu" />
-        </div>
-      </ListItem>
-    </SortableList>
+  <div class="container h-100">
+    {#if !editMode}
+      <div class="dashboard-wrapper h-100" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
+        {#if people && trackers}
+          {#each activeDashboard as block}
+            <Dashblock
+              {block}
+              on:click={() => {
+                editBlock(block);
+              }} />
+          {/each}
+        {/if}
+        <button class="btn btn-round btn-light btn-block mx-auto my-2" style="max-width:300px;" on:click={newBlock}>
+          <Icon name="add" size="24" />
+          Add Block
+        </button>
+      </div>
+    {:else}
+      <SortableList
+        items={activeDashboard || []}
+        handle=".menu-handle"
+        on:update={(sorted) => {
+          console.log('Sorted', sorted.detail);
+          activeDashboard = sorted.detail;
+          DashboardStore.update((state) => {
+            state.dashboards[$DashboardStore.activeIndex].blocks = activeDashboard;
+            return state;
+          });
+          DashboardStore.save();
+        }}
+        let:item>
+        <ListItem>
+          <Text bold>{item.element.id}</Text>
+          <Text size="sm">{item.type} {item.timeRange}</Text>
+          <div slot="right" class="menu-handle">
+            <Icon name="menu" />
+          </div>
+        </ListItem>
+      </SortableList>
+    {/if}
   </div>
+
+  <Modal show={editingBlock}>
+    <div class="n-toolbar-grid" slot="header">
+      <button class="btn btn-clear left" on:click={clearEditing}>
+        <Icon name="close" />
+      </button>
+      <div class="main">Block Editor</div>
+      <button class="btn btn-clear right" on:click={saveBlock}>
+        {#if editingBlock && editingBlock._editing}Update{:else}Save{/if}
+      </button>
+
+    </div>
+    {#if editingBlock}
+      <DashblockEditor bind:value={editingBlock} on:close={clearEditing} />
+    {/if}
+  </Modal>
 
 </NLayout>
