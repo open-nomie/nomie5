@@ -143,16 +143,13 @@
 
 <div class="dashblock-editor p-2">
   <ListItem>
-    Trackable
-    <div slot="right">
-      <Button color="clear" on:click={selectType}>
-        {#if value.element}
-          <TrackerSmallBlock element={value.element} on:click={selectType} />
-        {:else}
-          <Text className="text-primary">Select</Text>
-        {/if}
-      </Button>
-    </div>
+    <Button color="clear" block on:click={selectType}>
+      {#if value.element}
+        <TrackerSmallBlock element={value.element} on:click={selectType} />
+      {:else}
+        <Text className="text-primary-bright w-100">Select Item</Text>
+      {/if}
+    </Button>
   </ListItem>
   <Input type="select" placeholder="Display Type" bind:value={value.type}>
     <option value="chart">Chart</option>

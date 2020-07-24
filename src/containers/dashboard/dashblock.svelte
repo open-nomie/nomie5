@@ -1,23 +1,34 @@
 <script lang="ts">
   import PositivityBar from "./../../components/positivity-bar/positivity-bar.svelte";
-  import BarChart from "./../../components/charts/bar-chart.svelte";
+  import BarChart from "./../../components/charts/bar-chart-2.svelte";
   import TrackerSmallBlock from "./../../components/tracker-ball/tracker-small-block.svelte";
   import Text from "./../../components/text/text.svelte";
   import { Block } from "../../modules/dashboard/block";
   import { createEventDispatcher } from "svelte";
-  import Pie from "../../components/chart/pie.svelte";
+  import Pie from "../../components/charts/pie.svelte";
   import Icon from "../../components/icon/icon.svelte";
   import Button from "../../components/button/button.svelte";
+  import { strToColor } from "../../components/dymoji/dymoji";
 
   const dispatch = createEventDispatcher();
 
   export let block: Block;
 
   function formatValue(value): string {
-    if (block.element.obj.displayValue) {
+    if (block.element.obj && block.element.obj.displayValue) {
       return block.element.obj.displayValue(value);
     } else {
       return value;
+    }
+  }
+
+  function getBlockColor(block: Block) {
+    console.log("Get Block Color", block.id, block.element.obj, block.type);
+    if (block.element && block.element.obj && block.element.obj.color) {
+      console.log("🖍🖍🖍🖍 Block Has Tracker - use color", block.element.obj.color);
+      return block.element.obj.color;
+    } else {
+      return strToColor(block.element.id);
     }
   }
 </script>
@@ -25,20 +36,14 @@
 <style lang="scss">
   @import "../../scss/utils/_utils";
   .dashboard-block {
-    margin: 4px;
+    margin: 8px;
     display: inline-flex;
     flex-direction: column;
     background-color: var(--color-solid);
-    border-radius: 8px;
+    border-radius: 16px;
     box-shadow: var(--box-shadow-float);
-    min-width: calc(50% - 12px);
-    max-width: 175px;
-
-    @include media-breakpoint-up(md) {
-      max-width: 130px;
-      min-width: 130px;
-    }
-
+    width: calc(50% - 16px);
+    flex-shrink: 1;
     flex-grow: 1;
     .block-header,
     .block-footer {
@@ -52,7 +57,7 @@
     }
   }
   .type-chart {
-    min-width: calc(100% - 20px);
+    min-width: calc(100% - 16px);
     max-width: 320px;
   }
   .value {
@@ -61,6 +66,7 @@
     align-items: column;
     justify-content: center;
     align-items: center;
+    color: var(--color-inverse);
     height: 100%;
     .current {
       font-size: 2rem;
@@ -87,7 +93,7 @@
       {#if block.type == 'chart' && block.stats && block.stats.chart}
         <BarChart
           height={100}
-          color={'blue'}
+          color={getBlockColor(block)}
           labels={block.stats.chart.values.map((point) => point.x)}
           points={block.stats.chart.values}
           xFormat={(x, index) => {
@@ -113,8 +119,8 @@
         </div>
       {:else}{block.type} {Object.keys(block)}{/if}
     </div>
-    <div class="block-footer">
-      <Text size="xs">{block.getLabel()}</Text>
+    <div class="block-footer n-row">
+      <Text size="xs" className="text-center flex-grow">{block.getLabel()}</Text>
     </div>
   </div>
 {/if}

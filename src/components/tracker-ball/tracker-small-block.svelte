@@ -27,6 +27,7 @@
 </script>
 
 {#if element}
+
   <button
     {style}
     class="btn n-tracker-value-grid-button {solo ? 'solo' : ''}
@@ -45,7 +46,7 @@
       <span class="emoji" style={`color:${(element.obj || {}).color || '#CCC'}`}>{(element.obj || {}).emoji || '⚪️'}</span>
     {/if}
     <main class="{truncate ? 'truncate' : ''} w-100">
-      <div class="label text-inverse">{(element.obj || {}).label || element.id}</div>
+      <div class="{truncate ? 'truncate' : ''} label text-inverse">{(element.obj || {}).label || element.id}</div>
       {#if shouldShowValue(element)}
         <div class="value text-inverse">{NomieUOM.format(element.value, (element.obj || {}).uom) || ''}</div>
       {/if}

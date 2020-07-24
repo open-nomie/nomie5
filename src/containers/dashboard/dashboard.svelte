@@ -144,17 +144,31 @@
       // Generate Stats
       block.math = block.math || (block.element.obj || {}).math || "sum";
 
+      const fromDate = dayjs(start);
+      const toDate = dayjs(end);
+      const dayDiff = Math.abs(fromDate.diff(toDate, "day"));
+      let mode = "w";
+
+      if (dayDiff < 8) {
+        mode = "w";
+      } else if (dayDiff < 90) {
+        mode = "d";
+      } else if (dayDiff < 365) {
+        mode = "q";
+      } else {
+        mode = "m";
+      }
+
       block.stats = statsV5.generate({
         rows: block.logs,
-        fromDate: dayjs(start),
-        toDate: dayjs(end),
-        mode: "w",
+        fromDate,
+        toDate,
+        mode,
         math: block.math, //state.tracker.math
         trackableElement: block.element,
       });
 
       block.positivity = positivityFromLogs(block.logs, block.element);
-      console.log("block positivity", block.positivity);
 
       dboard[i] = block;
       // console.log("logs for block", block);
@@ -208,7 +222,17 @@
       <Button color="clear" on:click={DashboardStore.newDashboard}>Add</Button>
     </div>
     <div class="main title">
-      <Stepper single dark steps={(dashboards || []).length} current={$DashboardStore.activeIndex} />
+      <div class="n-row">
+        <div class="n-filler" />
+        <Button color="clear" on:click={DashboardStore.previous}>
+          <Icon name="chevronLeft" size="14" />
+        </Button>
+        <Stepper single dark steps={(dashboards || []).length} current={$DashboardStore.activeIndex} />
+        <Button color="clear" on:click={DashboardStore.next}>
+          <Icon name="chevronRight" size="14" />
+        </Button>
+        <div class="n-filler" />
+      </div>
     </div>
     <div class="right">
       <Button color="clear" on:click={toggleEdit}>{editMode ? 'Done' : 'Edit'}</Button>

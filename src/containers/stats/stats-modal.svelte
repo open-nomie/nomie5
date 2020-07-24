@@ -34,7 +34,7 @@
   import NItem from "../../components/list-item/list-item.svelte";
   import NSpinner from "../../components/spinner/spinner.svelte";
   import NKVBlock from "../../components/kv-block/kv-block.svelte";
-  import NBarChart from "../../components/charts/bar-chart.svelte";
+  import NBarChart from "../../components/charts/bar-chart-2.svelte";
   import NLogList from "../../components/log-list/log-list.svelte";
   import NTimeGrid from "../../components/day-time-grid/day-time-grid.svelte";
   import NIcon from "../../components/icon/icon.svelte";
@@ -969,7 +969,8 @@
                 </div>
               {/if}
               <NBarChart
-                height={110}
+                height={120}
+                hideYTicks
                 title={`${compare.getSearchTerm()}`}
                 color={compare.getTracker().color}
                 labels={compare.stats.chart.values.map((point) => point.x)}
