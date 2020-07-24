@@ -26,6 +26,10 @@
     &.lg {
       font-size: 1.25rem;
     }
+
+    &.faded {
+      opacity: 0.5;
+    }
     &.xl {
       font-size: 2rem;
     }
@@ -45,16 +49,18 @@
   <span
     class="n-text {size || 'sm'}
     {className}
-    {bold ? 'font-weight-bold' : ''}
-    {medium ? 'font-weight-medium' : ''}">
+    {faded ? 'faded ' : ''}
+    {bold ? 'font-weight-bold ' : ''}
+    {medium ? 'font-weight-medium ' : ''}">
     <slot />
   </span>
 {:else}
   <div
     class="n-text {size || 'sm'}
     {className}
-    {bold ? 'font-weight-bold' : ''}
-    {medium ? 'font-weight-medium' : ''}">
+    {faded ? 'faded ' : ''}
+    {bold ? 'font-weight-bold ' : ''}
+    {medium ? 'font-weight-medium ' : ''}">
     <slot />
   </div>
 {/if}

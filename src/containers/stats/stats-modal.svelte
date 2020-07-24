@@ -55,7 +55,7 @@
     w: { id: "w", label: "W", title: "Week", unit: "week" },
     m: { id: "m", label: "M", title: "Month", unit: "month" },
     q: { id: "q", label: "3M", title: "Quarter", unit: "month", count: 3 },
-    y: { id: "y", label: "Y", title: "Year", unit: "year" }
+    y: { id: "y", label: "Y", title: "Year", unit: "year" },
   };
 
   const dataViews = {
@@ -63,14 +63,14 @@
     compare: { id: "compare", label: "Compare" },
     map: { id: "map", label: "Map" },
     time: { id: "time", label: "Time" },
-    logs: { id: "logs", label: "Logs", focused: true }
+    logs: { id: "logs", label: "Logs", focused: true },
   };
 
   const types = {
     tracker: { prefix: "#" },
     person: { prefix: "@" },
     context: { prefix: "+" },
-    location: { prefix: "" }
+    location: { prefix: "" },
   };
 
   const viewMemory = new Storage.SideStore("stats-memory");
@@ -98,7 +98,7 @@
     compare: [],
     selected: { index: undefined, rows: null },
     lookupStack: [],
-    related: []
+    related: [],
   };
 
   function setTimeView(option) {
@@ -119,14 +119,14 @@
     return;
   }
 
-  $: timeViewButtons = Object.keys(timeSpans).map(optionId => {
+  $: timeViewButtons = Object.keys(timeSpans).map((optionId) => {
     let option = timeSpans[optionId];
     return {
       label: option.label,
       active: state.timeSpan === optionId,
       click: () => {
         setTimeView(option);
-      }
+      },
     };
   });
 
@@ -140,7 +140,7 @@
         if (state.selected) {
           setSelected(state.selected);
         }
-      }
+      },
     },
     {
       label: `All Logs`,
@@ -151,13 +151,13 @@
         if (state.selected) {
           setSelected(state.selected);
         }
-      }
-    }
+      },
+    },
   ];
 
   function getScore() {
     let scores = [];
-    state.stats.rows.forEach(row => {
+    state.stats.rows.forEach((row) => {
       let score = row.score || row.calculateScore();
       scores.push(score);
     });
@@ -175,7 +175,7 @@
 
   function getDataViewButtons() {
     return Object.keys(dataViews)
-      .map(optionId => {
+      .map((optionId) => {
         let option = dataViews[optionId];
         if ((option.excludeFrom || []).indexOf(state.timeSpan) == -1) {
           return {
@@ -183,13 +183,13 @@
             active: state.dataView === optionId,
             click: () => {
               setView(option);
-            }
+            },
           };
         } else {
           return null;
         }
       })
-      .filter(row => row);
+      .filter((row) => row);
   }
 
   function close() {
@@ -197,7 +197,7 @@
   }
 
   function back() {
-    Interact.update(state => {
+    Interact.update((state) => {
       state.stats.terms.pop();
       return state;
     });
@@ -237,7 +237,7 @@
   }
 
   function removeCompare(compare) {
-    state.compare = state.compare.filter(row => {
+    state.compare = state.compare.filter((row) => {
       return row != compare;
     });
     rememberCompare();
@@ -273,36 +273,33 @@
     await tick(40);
     let compareItems = {};
     let trackerTags = Object.keys($TrackerStore.trackers);
-    let activeTrackerValues = state.stats.chart.values.map(point => point.y);
+    let activeTrackerValues = state.stats.chart.values.map((point) => point.y);
     // Loop over trackers
     for (var i = 0; i < trackerTags.length; i++) {
       let tag = trackerTags[i]; // get tag
       let tracker = $TrackerStore.trackers[tag]; // get tracker
       let results = await getTrackerStats(tracker); // get stats
-      let compareValues = results.stats.chart.values.map(point => point.y); // get y values
-      let distance = await DataDistance.score(
-        activeTrackerValues,
-        compareValues
-      ); // calculate distance
+      let compareValues = results.stats.chart.values.map((point) => point.y); // get y values
+      let distance = await DataDistance.score(activeTrackerValues, compareValues); // calculate distance
       results.distance = distance;
 
       compareItems[tag] = {
         stats: results,
-        distance: distance
+        distance: distance,
       };
     }
     // Generate Results
     let maxScore = 0;
     let results = Object.keys(compareItems)
-      .map(tag => {
+      .map((tag) => {
         return {
           tag,
           stats: compareItems[tag].stats,
-          value: compareItems[tag].distance
+          value: compareItems[tag].distance,
         };
       })
       // Remove any 0 values (exact match)
-      .filter(r => r.value && !isNaN(r.value))
+      .filter((r) => r.value && !isNaN(r.value))
       .sort((a, b) => {
         if (a.value > maxScore) {
           maxScore = a.value;
@@ -318,7 +315,7 @@
           return false;
         }
       })
-      .map(r => {
+      .map((r) => {
         r.stats.distance = math.percentage(maxScore, r.value);
         return r;
       });
@@ -346,7 +343,7 @@
       key: tracker.tag,
       label: tracker.label,
       base: tracker,
-      is24Hour: $UserStore.meta.is24Hour
+      is24Hour: $UserStore.meta.is24Hour,
     });
     await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
     return compareObj;
@@ -366,7 +363,7 @@
   }
 
   function rememberCompare() {
-    let comparing = state.compare.map(statRef => statRef.getSearchTerm());
+    let comparing = state.compare.map((statRef) => statRef.getSearchTerm());
     remember("compare", comparing);
   }
 
@@ -380,7 +377,7 @@
           key: person.username,
           label: person.displayName,
           base: person,
-          is24Hour: $UserStore.meta.is24Hour
+          is24Hour: $UserStore.meta.is24Hour,
         });
         await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
         state.compare.push(compareObj);
@@ -400,7 +397,7 @@
           key: context,
           label: context,
           base: context,
-          is24Hour: $UserStore.meta.is24Hour
+          is24Hour: $UserStore.meta.is24Hour,
         });
         await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
         state.compare.push(compareObj);
@@ -418,7 +415,7 @@
         key: item,
         label: item,
         base: item,
-        is24Hour: $UserStore.meta.is24Hour
+        is24Hour: $UserStore.meta.is24Hour,
       });
       await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
       state.compare.push(compareObj);
@@ -430,7 +427,7 @@
   async function compareType() {
     let types = ["Tracker", "Person", "Context", "Search Term", "Pick for me"];
     Interact.popmenu({
-      buttons: types.map(type => {
+      buttons: types.map((type) => {
         return {
           title: `${type}...`,
           async click() {
@@ -456,9 +453,9 @@
                 setView(dataViews.compare);
                 break;
             }
-          }
+          },
         };
-      })
+      }),
     });
   }
 
@@ -468,25 +465,25 @@
       title: "Compare to...",
       click() {
         compareType();
-      }
+      },
     };
     const gotoToday = {
       title: "Today",
       click: () => {
         changeDate(dayjs());
-      }
+      },
     };
     const startOfMonth = {
       title: "Start of month",
       click: () => {
         changeDate(state.date.startOf("month").subtract(1, "day"));
-      }
+      },
     };
     const startOfYear = {
       title: "Start of year",
       click: () => {
         changeDate(state.date.startOf("year"));
-      }
+      },
     };
     const startOfWeek = {
       title: "Start of week",
@@ -496,13 +493,13 @@
           date = date.subtract(1, "day");
         }
         changeDate(date);
-      }
+      },
     };
     const viewStreak = {
       title: "View Streak",
       click: () => {
         Interact.openStreak(state.currentTerm);
-      }
+      },
     };
 
     const editElement = {
@@ -513,7 +510,7 @@
         } else if (state.trackableElement.type == "person") {
           Interact.person(state.trackableElement.id);
         }
-      }
+      },
     };
 
     buttons.push(compare);
@@ -544,8 +541,8 @@
     if (state.compare.length == 0 && savedCompares) {
       // Loop over compares
       (savedCompares || [])
-        .filter(row => row)
-        .forEach(searchTerm => {
+        .filter((row) => row)
+        .forEach((searchTerm) => {
           let type = extractor.toElement(searchTerm);
           type.obj = type.type == "tracker" ? TrackerStore.byTag(type.id) : {};
           state.compare.push(
@@ -555,18 +552,14 @@
               math: type.obj.math || "sum",
               label: type.id,
               base: type.obj,
-              is24Hour: $UserStore.meta.is24Hour
+              is24Hour: $UserStore.meta.is24Hour,
             })
           );
         });
     }
     // Get Stats for Compares
     for (let i = 0; i < state.compare.length; i++) {
-      let stats = await state.compare[i].getStats(
-        state.timeSpan,
-        queryPayload.start,
-        queryPayload.end
-      );
+      let stats = await state.compare[i].getStats(state.timeSpan, queryPayload.start, queryPayload.end);
     }
   } // end load saved compares
 
@@ -575,7 +568,7 @@
     let queryPayload = {
       search: state.trackableElement,
       start: getFromDate(),
-      end: getToDate()
+      end: getToDate(),
     };
     // if day - normalize start and end
     if (state.timeSpan == "d") {
@@ -595,7 +588,7 @@
       toDate: getToDate(),
       mode: state.timeSpan,
       math: state.tracker.math,
-      trackableElement: state.trackableElement
+      trackableElement: state.trackableElement,
     });
 
     // See if we have any saved compares
@@ -639,10 +632,10 @@
 
   function getCalendarData() {
     let rows = state.stats.rows
-      .filter(row => {
+      .filter((row) => {
         return new Date(row.end).getMonth() == state.date.toDate().getMonth();
       })
-      .map(row => {
+      .map((row) => {
         row.start = new Date(row.start);
         row.end = new Date(row.end);
         row.repeat = "never";
@@ -653,19 +646,19 @@
 
   function getLocations() {
     return state.stats.rows
-      .map(row => {
+      .map((row) => {
         if (row.lat) {
           return {
             lat: row.lat,
             lng: row.lng,
             name: row.location,
-            log: row
+            log: row,
           };
         } else {
           return null;
         }
       })
-      .filter(row => row);
+      .filter((row) => row);
   }
 
   function formatValue(value, includeUnit) {
@@ -685,12 +678,10 @@
   function getYearRange() {
     const from = getFromDate();
     const to = getToDate();
-    return `${from.add(1, "month").format("MMM D YYYY")} - ${to.format(
-      "MMM D YYYY"
-    )}`;
+    return `${from.add(1, "month").format("MMM D YYYY")} - ${to.format("MMM D YYYY")}`;
   }
 
-  function getDateRangeText() {
+  function gettimeRangeText() {
     let range;
     switch (state.timeSpan) {
       case "d":
@@ -726,7 +717,7 @@
     let payload = {
       start: dayjs(state.selected.point.date).startOf("day"),
       end: dayjs(state.selected.point.date).endOf("day"),
-      limit: 100
+      limit: 100,
     };
     // if day - normalize start and end
     if (state.timeSpan == "d") {
@@ -737,9 +728,7 @@
       payload.end = dayjs(state.selected.point.date).endOf("day");
     } else if (state.timeSpan == "q") {
       payload.end = dayjs(state.selected.point.date).endOf("month");
-      payload.start = dayjs(payload.end)
-        .subtract(3, "month")
-        .startOf("month");
+      payload.start = dayjs(payload.end).subtract(3, "month").startOf("month");
     } else if (state.timeSpan == "y") {
       payload.start = dayjs(state.selected.point.date).startOf("month");
       payload.end = dayjs(state.selected.point.date).endOf("month");
@@ -748,7 +737,7 @@
     let rows = await LedgerStore.query(payload);
 
     if (dataViews.logs.focused) {
-      state.selected.rows = rows.filter(row => {
+      state.selected.rows = rows.filter((row) => {
         return row.note.match(state.trackableElement.toSearchTerm());
       });
     } else {
@@ -770,7 +759,7 @@
     // Get term from Interact Store
     state.currentTerm = $Interact.stats.terms[$Interact.stats.terms.length - 1];
     // Get range and view options
-    state.range = getDateRangeText();
+    state.range = gettimeRangeText();
     state.viewOption = getDataViewButtons();
     // Get trackable element from the latest term
     state.trackableElement = extractor.toElement(state.currentTerm);
@@ -881,13 +870,7 @@
   }
 </style>
 
-<NModal
-  className="stats-modal"
-  bodyClass="bg-solid-1 "
-  fullscreen
-  closeOnBackgroundTap
-  on:close={close}
-  on:swipeDown={onSwipeDown}>
+<NModal className="stats-modal" bodyClass="bg-solid-1 " fullscreen closeOnBackgroundTap on:close={close} on:swipeDown={onSwipeDown}>
   <header slot="raw-header" class="box-shadow-float">
     {#if $Interact.stats.terms.length > 1}
       {#each $Interact.stats.terms as term}
@@ -896,8 +879,7 @@
         </div>
       {/each}
     {/if}
-    <div
-      class="mock-card-animation animate up {state.showAnimation ? 'visible' : 'hidden'}" />
+    <div class="mock-card-animation animate up {state.showAnimation ? 'visible' : 'hidden'}" />
     <NToolbarGrid>
       <div slot="left" className="truncate" style="min-width:100px;">
         {#if $Interact.stats.terms.length == 1}
@@ -907,9 +889,7 @@
         {:else}
           <button class="btn btn-clear tap-icon clickable pl-1" on:click={back}>
             <NIcon name="arrowBack" size="28" />
-            <small
-              class="text-sm text-inverse-2 ml-1 truncate"
-              style="max-width:60px;">
+            <small class="text-sm text-inverse-2 ml-1 truncate" style="max-width:60px;">
               {$Interact.stats.terms[$Interact.stats.terms.length - 2]}
             </small>
           </button>
@@ -918,10 +898,7 @@
 
       <h1 class="title truncate" slot="main">{state.currentTerm}</h1>
 
-      <div
-        slot="right"
-        style="min-width:100px"
-        class="toolbar-buttons align-right">
+      <div slot="right" style="min-width:100px" class="toolbar-buttons align-right">
         <button class="btn btn-clear tap-icon clickable" on:click={onMoreTap}>
           <NIcon name="more" />
         </button>
@@ -932,18 +909,12 @@
     </div>
 
     <NToolbarGrid>
-      <button
-        class="btn btn-clear text-primary-bright clickable pr-1 pl-1"
-        slot="left"
-        on:click={loadPreviousDate}>
+      <button class="btn btn-clear text-primary-bright clickable pr-1 pl-1" slot="left" on:click={loadPreviousDate}>
         <NIcon name="chevronLeft" className="fill-primary-bright" />
         Prev
       </button>
       <div class="time-range truncate" slot="main">{state.range}</div>
-      <button
-        class="btn btn-clear text-primary-bright clickable pl-1 pr-1"
-        slot="right"
-        on:click={loadNextDate}>
+      <button class="btn btn-clear text-primary-bright clickable pl-1 pr-1" slot="right" on:click={loadNextDate}>
         Next
         <NIcon name="chevronRight" className="fill-primary-bright" />
       </button>
@@ -962,17 +933,17 @@
         <NBarChart
           height={140}
           color={state.currentColor}
-          labels={state.stats.chart.values.map(point => point.x)}
+          labels={state.stats.chart.values.map((point) => point.x)}
           points={state.stats.chart.values}
           on:swipeLeft={loadNextDate}
           on:swipeRight={loadPreviousDate}
           xFormat={(x, index) => {
             return x;
           }}
-          yFormat={y => {
+          yFormat={(y) => {
             return state.tracker.displayValue(y);
           }}
-          on:tap={event => {
+          on:tap={(event) => {
             setSelected(event.detail);
           }}
           activeIndex={state.selected.index} />
@@ -982,10 +953,7 @@
   </header>
 
   <div slot="footer" class="w-100">
-    <NButtonGroup
-      inverse
-      color={state.currentColor}
-      buttons={state.viewOption} />
+    <NButtonGroup inverse color={state.currentColor} buttons={state.viewOption} />
   </div>
 
   {#if !state.loading}
@@ -1004,20 +972,20 @@
                 height={110}
                 title={`${compare.getSearchTerm()}`}
                 color={compare.getTracker().color}
-                labels={compare.stats.chart.values.map(point => point.x)}
+                labels={compare.stats.chart.values.map((point) => point.x)}
                 points={compare.stats.chart.values}
                 on:swipeLeft={loadNextDate}
                 on:swipeRight={loadPreviousDate}
                 xFormat={(x, index) => {
                   return x;
                 }}
-                on:titleClick={event => {
+                on:titleClick={(event) => {
                   Interact.openStats(compare.getSearchTerm());
                 }}
-                on:tap={event => {
+                on:tap={(event) => {
                   setSelected(event.detail);
                 }}
-                yFormat={y => {
+                yFormat={(y) => {
                   return compare.getTracker().displayValue(y);
                 }}
                 activeIndex={state.selected.index} />
@@ -1039,31 +1007,22 @@
       {/if}
 
       <div class="p-2 pt-2">
-        <button class="btn btn-light btn-block" on:click={compareType}>
-          {Lang.t('stats.select-comparison', 'Select Comparison')}...
-        </button>
+        <button class="btn btn-light btn-block" on:click={compareType}>{Lang.t('stats.select-comparison', 'Select Comparison')}...</button>
       </div>
     {/if}
     {#if state.dataView == 'map'}
-      <NMap
-        small
-        locations={getLocations()}
-        className="flex-grow flex-shrink" />
+      <NMap small locations={getLocations()} className="flex-grow flex-shrink" />
     {/if}
     {#if state.stats}
       {#if state.dataView == 'overview'}
         <div class="overview py-2 flex-grow flex-shrink">
           {#if state.stats.math == 'sum'}
             <NItem className="solo" title="Total">
-              <div slot="right" class="text-lg text-inverse">
-                {formatValue(state.stats.sum)}
-              </div>
+              <div slot="right" class="text-lg text-inverse">{formatValue(state.stats.sum)}</div>
             </NItem>
           {/if}
           <NItem className="solo" title="Average">
-            <div slot="right" class="text-lg text-inverse">
-              {formatValue(state.stats.avg)}
-            </div>
+            <div slot="right" class="text-lg text-inverse">{formatValue(state.stats.avg)}</div>
           </NItem>
           {#if state.stats.max.value > state.stats.min.value}
             <NItem className="solo" title="Range">
@@ -1088,15 +1047,9 @@
                       Interact.openStats(item.search);
                     }}>
                     {#if item.type == 'person'}
-                      <Dymoji
-                        person={$PeopleStore.people[item.value]}
-                        className="mr-2"
-                        size={20}
-                        radius={0.3} />
+                      <Dymoji person={$PeopleStore.people[item.value]} className="mr-2" size={20} radius={0.3} />
                     {/if}
-                    {#if item.type == 'tracker'}
-                      {TrackerStore.byTag(item.value).emoji}
-                    {/if}
+                    {#if item.type == 'tracker'}{TrackerStore.byTag(item.value).emoji}{/if}
                     {item.search}
                     <span class="count">{item.count}</span>
                   </button>
@@ -1119,17 +1072,13 @@
         <DayOfWeek statsDow={state.stats.dow} color={state.currentColor} />
       {:else if state.dataView == 'logs'}
         {#if state.timeSpan == 'y'}
-          <div class="p-4 text-sm text-center text-inverse-2">
-            Logs not yet available for a full year
-          </div>
+          <div class="p-4 text-sm text-center text-inverse-2">Logs not yet available for a full year</div>
         {:else}
           {#if state.selected.rows}
             <NToolbar className="text-center mt-2">
               <div class="filler" />
               <NButtonGroup buttons={logViewButtons} />
-              <button
-                class="btn btn-badge btn-xs clickable ml-2"
-                on:click={clearSelected}>
+              <button class="btn btn-badge btn-xs clickable ml-2" on:click={clearSelected}>
                 {state.selected.point.x}
                 <NIcon name="close" size="22" />
               </button>
@@ -1139,14 +1088,14 @@
 
           <NLogList
             compact
-            on:textClick={evt => {
+            on:textClick={(evt) => {
               if (evt.detail.type == 'tracker') {
                 Interact.openStats(`#${evt.detail.id}`);
               } else {
                 Interact.openStats(`${evt.detail.raw}`);
               }
             }}
-            on:trackerClick={evt => {
+            on:trackerClick={(evt) => {
               Interact.openStats(`#${evt.detail.tag}`);
             }}
             logs={state.selected.rows || state.stats.rows}

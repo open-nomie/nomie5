@@ -100,7 +100,7 @@ button:focus {
 .btn {
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  border-radius: 14px;
+  border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -132,6 +132,7 @@ button:focus {
 
 .btn-primary {
   background-color: var(--color-primary-bright);
+  box-shadow: 0px 6px 12px -6px var(--color-primary-bright);
   &:hover {
     // background-color: --color-primary;
   }
