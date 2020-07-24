@@ -33,7 +33,7 @@
   // }
 </style>
 
-<div
+<button
   {id}
   class={`item-ball ${className} ${small ? 'item-ball-small' : ''}`}
   on:click={() => {
@@ -49,4 +49,4 @@
   {#if note}
     <div class="last text-xs text-faded-3">{note}</div>
   {/if}
-</div>
+</button>

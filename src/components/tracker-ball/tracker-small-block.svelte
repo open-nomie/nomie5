@@ -3,7 +3,7 @@
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   const dispatch = createEventDispatcher();
 
-  export let element;
+  export let element = undefined;
   export let style = "";
   export let truncate = false;
   export let solo = false;
@@ -17,7 +17,7 @@
       return false;
     } else if (trackerElement.obj && trackerElement.obj.type == "tick") {
       return trackerElement.value !== 1;
-    } else if (trackerElement.obj) {
+    } else if (trackerElement.value != undefined) {
       return true;
     } else {
       return false;
@@ -33,7 +33,7 @@
     {xs ? 'size-xs' : ''}
     {novalue ? 'novalue' : ''}
     "
-    on:click={event => {
+    on:click={(event) => {
       event.preventDefault();
       event.stopPropagation();
       dispatch('click', element);
@@ -42,21 +42,12 @@
     {#if hasEmojiSlot}
       <slot name="emoji" />
     {:else}
-      <span
-        class="emoji"
-        style={`color:${(element.obj || {}).color || '#CCC'}`}>
-        {(element.obj || {}).emoji || '⚪️'}
-      </span>
+      <span class="emoji" style={`color:${(element.obj || {}).color || '#CCC'}`}>{(element.obj || {}).emoji || '⚪️'}</span>
     {/if}
     <main class="{truncate ? 'truncate' : ''} w-100">
-      <div class="label text-inverse">
-        {(element.obj || {}).label || element.id}
-      </div>
-
+      <div class="label text-inverse">{(element.obj || {}).label || element.id}</div>
       {#if shouldShowValue(element)}
-        <div class="value text-inverse">
-          {NomieUOM.format(element.value, (element.obj || {}).uom)}
-        </div>
+        <div class="value text-inverse">{NomieUOM.format(element.value, (element.obj || {}).uom) || ''}</div>
       {/if}
     </main>
   </button>

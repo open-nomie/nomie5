@@ -16,6 +16,8 @@ $sizeLg: $trackerBallSize * 2;
   align-items: center;
   justify-content: center;
   padding: 8px 8px;
+  border: none;
+  background: transparent;
   //
 
   .one-tap {
@@ -35,6 +37,8 @@ $sizeLg: $trackerBallSize * 2;
     width: $size;
     height: $size;
     border-radius: $size * 0.34;
+    border: none;
+    padding: 0;
     background-color: var(--color-solid);
     box-shadow: var(--box-shadow-float);
     display: flex;
