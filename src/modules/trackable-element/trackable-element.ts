@@ -1,14 +1,34 @@
 import snakeCase from "../../utils/snake-case/snake-case";
 import stringToValue from "../../utils/string-to-value/string-to-value";
+
+export interface ITrackableElement {
+  id: string;
+  type: string;
+  raw?: string;
+  value?: any;
+  prefix?: any;
+  remainder?: any;
+  obj?: any;
+}
+
 export default class TrackableElement {
-  constructor(starter = {}) {
-    this.id = starter.id || null; // brandon of @brandon, meet of #meet, home of +home
-    this.type = starter.type || null; // tracker, person, context
-    this.raw = starter.raw || null; // the raw string
-    this.value = starter.value; // any value passed or 1
-    this.prefix = starter.prefix || null; // @ # or +
-    this.remainder = starter.remainder || null; // holder of any characters after this
-    this.obj = starter.obj || null; // holder of related things
+  id: string;
+  type: string;
+  raw?: string;
+  value?: any;
+  prefix?: any;
+  remainder?: any;
+  obj?: any;
+  constructor(starter: ITrackableElement) {
+    if (starter) {
+      this.id = starter.id || null; // brandon of @brandon, meet of #meet, home of +home
+      this.type = starter.type || null; // tracker, person, context
+      this.raw = starter.raw || null; // the raw string
+      this.value = starter.value; // any value passed or 1
+      this.prefix = starter.prefix || null; // @ # or +
+      this.remainder = starter.remainder || null; // holder of any characters after this
+      this.obj = starter.obj || null; // holder of related things
+    }
 
     // Lowercase the ID no matter what
     if (this.id) {
@@ -30,7 +50,7 @@ export default class TrackableElement {
           this.prefix = "#";
           this.type = "tracker";
           // See if there's a value provided as in #tracker(value)
-          let valueSplit = this.raw.split("(");
+          let valueSplit: Array<any> = this.raw.split("(");
           if (valueSplit.length == 2) {
             // Convert it to a number.
             this.value = stringToValue(valueSplit[1].replace(")", ""));
@@ -48,7 +68,7 @@ export default class TrackableElement {
     }
   }
 
-  getPrefix(type) {
+  public getPrefix(type?: string): string {
     type = type || this.type;
     switch (type) {
       case "tracker":
@@ -66,7 +86,7 @@ export default class TrackableElement {
     }
   }
 
-  toSearchTerm() {
+  public toSearchTerm() {
     return `${this.prefix}${this.id}`;
   }
 }

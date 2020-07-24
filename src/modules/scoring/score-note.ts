@@ -1,8 +1,9 @@
 import extractor from "../../utils/extract/extract";
 import ScoreTracker from "./score-tracker";
 import math from "../../utils/math/math";
+declare let window: any;
 
-export default (note, endTime) => {
+export default function ScoreNote(note: string, endTime: number): number {
   endTime = endTime || new Date().getTime();
   let trackers = (window.$TrackerStore || {}).trackers || {}; // hack - fucking hell
   // Extract Trackers
@@ -17,4 +18,4 @@ export default (note, endTime) => {
   });
 
   return math.sum(scores);
-};
+}
