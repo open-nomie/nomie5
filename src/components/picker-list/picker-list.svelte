@@ -22,7 +22,7 @@
 
   function updateItem(oldItem, newItem) {
     let matched = false;
-    list = list.map(item => {
+    list = list.map((item) => {
       if (item == oldItem && !matched) {
         matched = true;
         return newItem;
@@ -37,7 +37,7 @@
     let newList = [];
     let itemToAdd = `${activeValue}`;
     let pushed = false;
-    list.forEach(item => {
+    list.forEach((item) => {
       newList.push(item);
       if (item == activeItem) {
         newList.push(itemToAdd);
@@ -58,7 +58,7 @@
   }
 
   function remove(item) {
-    list = list.filter(i => {
+    list = list.filter((i) => {
       return i !== item;
     });
     list = list;
@@ -76,38 +76,24 @@
 
   onMount(() => {
     ready = true;
+    console.log("LIST for Picker", list);
   });
 </script>
 
 <div class="n-picker-list {className}" {style}>
-  <NItem title="Enter items to pick from your list.">
-    <div class="note">
-      Enter any value, including #tracker, #trackerValues(3), @people and
-      +context
-    </div>
+  <NItem title="Add items to pick from">
+    <div class="note">Example: #tracker, #trackerValues(3), @people and +context</div>
   </NItem>
   <NItem>
-    <NInput
-      compact
-      on:enter={add}
-      placeholder="Add an Item"
-      bind:value={activeValue}>
-      <button
-        slot="right"
-        class="btn btn-clear"
-        disabled={!activeValue}
-        on:click={add}>
+    <NInput compact on:enter={add} placeholder="Add an Item" bind:value={activeValue}>
+      <button slot="right" class="btn btn-clear" disabled={!activeValue} on:click={add}>
         <NIcon name="addOutline" />
       </button>
     </NInput>
   </NItem>
   {#if ready}
     <div class="sortable-list p-2 px-3">
-      <NSortableList
-        items={list || []}
-        handle=".menu-handle"
-        on:update={sorted}
-        let:item>
+      <NSortableList items={list || []} handle=".menu-handle" on:update={sorted} let:item>
         <NItem
           className="bottom-line {activeItem == item ? 'active' : ''}"
           on:click={() => {

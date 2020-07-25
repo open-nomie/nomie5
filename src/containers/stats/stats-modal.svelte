@@ -50,7 +50,7 @@
   import { TrackerStore } from "../../store/tracker-store";
   import { PeopleStore } from "../../store/people-store";
 
-  const timeSpans = {
+  export const timeSpans = {
     d: { id: "d", label: "D", title: "Day", unit: "day" },
     w: { id: "w", label: "W", title: "Week", unit: "week" },
     m: { id: "m", label: "M", title: "Month", unit: "month" },

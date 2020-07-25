@@ -295,8 +295,10 @@
     width: calc(100% - 16pt);
     margin: 8pt;
     box-shadow: var(--box-shadow);
-    border-radius: 6pt;
+    border-radius: 12pt;
     overflow: hidden;
+    background-color: var(--color-solid);
+    padding: 8px 0;
   }
 
   margin-bottom: 16px;
