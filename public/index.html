@@ -55,6 +55,15 @@
       Privacy aware analytics. They don't track IP or use Cookies.
       Learn more at https://docs.simpleanalytics.com/what-we-collect
     -->
+    <script async defer src="https://purch.dev/v1/purch.js"></script>
+    <script async defer>
+      setTimeout(() => {
+        $purch.init({
+          appId: "nomie",
+          key: "live_PG5CF13F1F994161B7A2AC38455A",
+        });
+      }, 500);
+    </script>
     <script async defer src="https://cdn.simpleanalytics.io/hello.js"></script>
     <noscript><img src="https://api.simpleanalytics.io/hello.gif" alt="" /></noscript>
   </body>

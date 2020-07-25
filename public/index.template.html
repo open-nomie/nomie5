@@ -51,6 +51,17 @@
     <link rel="stylesheet" href="/css/vendors.css?v=APP_VERSION" defer />
     <link rel="stylesheet" href="/bundle.css?v=APP_VERSION" />
     <!-- 
+      Purch
+      For in-app purchases
+    -->
+    <script async defer src="https://purch.dev/v1/purch.js"></script>
+    <script async defer>
+      $purch.init({
+        appId: "nomie",
+        key: "live_PG5CF13F1F994161B7A2AC38455A",
+      });
+    </script>
+    <!-- 
       SimpleAnalytics 
       Privacy aware analytics. They don't track IP or use Cookies.
       Learn more at https://docs.simpleanalytics.com/what-we-collect
