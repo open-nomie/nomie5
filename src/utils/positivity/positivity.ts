@@ -1,5 +1,5 @@
 import ScoreNote from "../../modules/scoring/score-note";
-import Record from "../../modules/nomie-log/nomie-log";
+import type Record from "../../modules/nomie-log/nomie-log";
 
 export interface IPositivityResults {
   positive: number;
