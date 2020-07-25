@@ -26,7 +26,7 @@ interface IDashboardStore {
 const DasboardStoreInit = (): any => {
   const state: IDashboardStore = {
     dashboards: [],
-    activeIndex: 0,
+    activeIndex: Storage.local.get("dashboard/lastIndex") || 0,
   };
   console.log({ state });
   const { update, subscribe, set } = writable(state);
@@ -40,6 +40,12 @@ const DasboardStoreInit = (): any => {
       });
       return _state;
     },
+    saveIndex(index) {
+      Storage.local.put("dashboard/lastIndex", index);
+    },
+    getIndex() {
+      return Storage.local.get("dashboard/lastIndex") || 0;
+    },
     next() {
       console.log("next");
       update((state: IDashboardStore) => {
@@ -48,6 +54,7 @@ const DasboardStoreInit = (): any => {
         } else {
           state.activeIndex++;
         }
+        methods.saveIndex(state.activeIndex);
         return state;
       });
     },
@@ -59,6 +66,7 @@ const DasboardStoreInit = (): any => {
         } else {
           state.activeIndex--;
         }
+        methods.saveIndex(state.activeIndex);
         return state;
       });
     },

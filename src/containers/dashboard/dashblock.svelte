@@ -52,6 +52,7 @@
       flex-shrink: 0;
       min-height: 32px;
     }
+
     .block-main {
       height: 90px;
     }
@@ -120,7 +121,7 @@
       {:else}{block.type} {Object.keys(block)}{/if}
     </div>
     <div class="block-footer n-row">
-      <Text size="xs" className="text-center flex-grow">{block.getLabel()}</Text>
+      <Text size="xs" className="text-center flex-grow text-uppercase font-weight-bold">{block.getLabel()}</Text>
     </div>
   </div>
 {/if}

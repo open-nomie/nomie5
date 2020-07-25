@@ -157,6 +157,7 @@
     <option value="positivity">Positivity</option>
   </Input>
   <Input placeholder="Timeframe" type="select" bind:value={dateType}>
+    <option>Select a Timeframe</option>
     {#each timeFrames as timeFrame}
       <option value={timeFrame.id}>{timeFrame.label}</option>
     {/each}

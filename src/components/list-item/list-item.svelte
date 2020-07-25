@@ -48,49 +48,89 @@
     getStyle() {
       if (this.getHref) {
         return {
-          cursor: "pointer"
+          cursor: "pointer",
         };
       } else {
         return {};
       }
-    }
+    },
   };
 </script>
 
-<button
-  {id}
-  aria-label={ariaLabel}
-  on:tap={methods.tap}
-  on:dbltap={methods.doubletap}
-  on:longtap={methods.longtap}
-  on:contextmenu={evt => {
-    dispatch('contextmenu', evt);
-    return false;
-  }}
-  item-divider={itemDivider}
-  {style}
-  class="n-item {compact ? 'compact' : ''}
-  {className}
-  {clickable ? 'clickable' : ''}"
-  :alt="title">
-  {#if has_left}
-    <div class="left">
-      <slot name="left" />
+{#if clickable}
+  <button
+    {id}
+    aria-label={ariaLabel}
+    on:tap={methods.tap}
+    on:dbltap={methods.doubletap}
+    on:longtap={methods.longtap}
+    on:contextmenu={(evt) => {
+      dispatch('contextmenu', evt);
+      return false;
+    }}
+    item-divider={itemDivider}
+    {style}
+    class="n-item {compact ? 'compact' : ''}
+    {className}
+    {clickable ? 'clickable' : ''}"
+    :alt="title">
+    {#if has_left}
+      <div class="left">
+        <slot name="left" />
+      </div>
+    {/if}
+    <div class="main {truncate ? 'truncate' : ''}">
+      {#if title}
+        <NText size="md" tag="div" medium>{title}</NText>
+      {/if}
+      {#if description}
+        <p class="description">{description}</p>
+      {/if}
+      <slot />
     </div>
-  {/if}
-  <div class="main {truncate ? 'truncate' : ''}">
-    {#if title}
-      <NText size="md" tag="div" medium>{title}</NText>
-    {/if}
-    {#if description}
-      <p class="description">{description}</p>
-    {/if}
-    <slot />
-  </div>
 
-  {#if has_right}
-    <div class="right">
-      <slot name="right" />
+    {#if has_right}
+      <div class="right">
+        <slot name="right" />
+      </div>
+    {/if}
+  </button>
+{:else}
+  <div
+    {id}
+    aria-label={ariaLabel}
+    on:tap={methods.tap}
+    on:dbltap={methods.doubletap}
+    on:longtap={methods.longtap}
+    on:contextmenu={(evt) => {
+      dispatch('contextmenu', evt);
+      return false;
+    }}
+    item-divider={itemDivider}
+    {style}
+    class="n-item {compact ? 'compact' : ''}
+    {className}
+    "
+    :alt="title">
+    {#if has_left}
+      <div class="left">
+        <slot name="left" />
+      </div>
+    {/if}
+    <div class="main {truncate ? 'truncate' : ''}">
+      {#if title}
+        <NText size="md" tag="div" className="title" medium>{title}</NText>
+      {/if}
+      {#if description}
+        <p class="description">{description}</p>
+      {/if}
+      <slot />
     </div>
-  {/if}
-</button>
+
+    {#if has_right}
+      <div class="right">
+        <slot name="right" />
+      </div>
+    {/if}
+  </div>
+{/if}

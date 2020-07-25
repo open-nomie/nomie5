@@ -58,6 +58,8 @@
       }
       Interact.stopBlocker();
       clearEditing();
+    } else {
+      Interact.toast("Incomplete");
     }
   }
 
@@ -224,13 +226,17 @@
     <div class="main title">
       <div class="n-row">
         <div class="n-filler" />
-        <Button color="clear" on:click={DashboardStore.previous}>
-          <Icon name="chevronLeft" size="14" />
-        </Button>
+        {#if (dashboards || []).length}
+          <Button color="clear" on:click={DashboardStore.previous}>
+            <Icon name="chevronLeft" size="14" />
+          </Button>
+        {/if}
         <Stepper single dark steps={(dashboards || []).length} current={$DashboardStore.activeIndex} />
-        <Button color="clear" on:click={DashboardStore.next}>
-          <Icon name="chevronRight" size="14" />
-        </Button>
+        {#if (dashboards || []).length}
+          <Button color="clear" on:click={DashboardStore.next}>
+            <Icon name="chevronRight" size="14" />
+          </Button>
+        {/if}
         <div class="n-filler" />
       </div>
     </div>
@@ -270,9 +276,11 @@
           DashboardStore.save();
         }}
         let:item>
-        <ListItem>
-          <Text bold>{item.element.id}</Text>
-          <Text size="sm">{item.type} {item.timeRange}</Text>
+        <ListItem title={item.element.id}>
+          <Text size="sm">
+            {item.timeRange.getLabel()}
+            <span class="opacity-5">{item.type}</span>
+          </Text>
           <div slot="right" class="menu-handle">
             <Icon name="menu" />
           </div>
