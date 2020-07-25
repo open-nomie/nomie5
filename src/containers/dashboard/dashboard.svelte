@@ -11,6 +11,8 @@
   import StatsProcessor from "../../modules/stats/statsV5";
   import TrackerSmallBlock from "./../../components/tracker-ball/tracker-small-block.svelte";
   import Dashblock from "./dashblock.svelte";
+  import Logger from "../../utils/log/log";
+  const console = new Logger("📊 container/dashboard.svelte");
 
   //Vendors
   import { navigate, Router, Route } from "svelte-routing";
@@ -32,6 +34,7 @@
   import { positivityFromLogs } from "../../utils/positivity/positivity";
   import Stepper from "../../components/stepper/stepper.svelte";
   import Dashboard from "../../routes/dashboard.svelte";
+  import Log from "../../utils/log/log";
 
   let trackers;
   let people;
@@ -49,7 +52,7 @@
   }
 
   async function saveBlock(): void {
-    if (editingBlock && editingBlock.element) {
+    if (editingBlock) {
       Interact.blocker("Saving...");
       try {
         await DashboardStore.saveBlock(editingBlock);
@@ -122,11 +125,11 @@
     const start = dateRange[0];
     const end = dateRange[1];
 
-    if (block.element.type == "tracker") {
+    if (block.element && block.element.type == "tracker") {
       logs = await LedgerStore.queryTag(block.element.id, start, end);
-    } else if (block.element.type == "person") {
+    } else if (block.element && block.element.type == "person") {
       logs = await LedgerStore.queryPerson(block.element.id, start, end);
-    } else if (block.element.type == "context") {
+    } else if (block.element && block.element.type == "context") {
       logs = await LedgerStore.queryContext(block.element.id, start, end);
     }
 
@@ -138,37 +141,42 @@
     let { start, end } = getStartEndDates(dboard);
     for (let i = 0; i < dboard.blocks.length; i++) {
       const block = dboard.blocks[i];
-      block.logs = await getLogsForBlock(block);
 
-      const statsV5 = new StatsProcessor();
-      // Generate Stats
-      block.math = block.math || (block.element.obj || {}).math || "sum";
+      if (block.element) {
+        block.logs = await getLogsForBlock(block);
 
-      const fromDate = dayjs(start);
-      const toDate = dayjs(end);
-      const dayDiff = Math.abs(fromDate.diff(toDate, "day"));
-      let mode = "w";
+        const statsV5 = new StatsProcessor();
+        // Generate Stats
+        block.math = block.math || (block.element.obj || {}).math || "sum";
 
-      if (dayDiff < 8) {
-        mode = "w";
-      } else if (dayDiff < 90) {
-        mode = "d";
-      } else if (dayDiff < 365) {
-        mode = "q";
-      } else {
-        mode = "m";
+        const fromDate = dayjs(start);
+        const toDate = dayjs(end);
+        const dayDiff = Math.abs(fromDate.diff(toDate, "day"));
+        let mode = "w";
+
+        if (dayDiff < 8) {
+          mode = "w";
+        } else if (dayDiff < 91) {
+          mode = "m";
+        } else if (dayDiff < 365) {
+          mode = "q";
+        } else if (dayDiff > 365) {
+          mode = "y";
+        } else {
+          mode = "m";
+        }
+
+        block.stats = statsV5.generate({
+          rows: block.logs,
+          fromDate,
+          toDate,
+          mode,
+          math: block.math, //state.tracker.math
+          trackableElement: block.element,
+        });
+
+        block.positivity = positivityFromLogs(block.logs, block.element);
       }
-
-      block.stats = statsV5.generate({
-        rows: block.logs,
-        fromDate,
-        toDate,
-        mode,
-        math: block.math, //state.tracker.math
-        trackableElement: block.element,
-      });
-
-      block.positivity = positivityFromLogs(block.logs, block.element);
 
       dboard.blocks[i] = block;
     }
@@ -182,9 +190,9 @@
   function initDashboard() {
     dashboards[$DashboardStore.activeIndex].blocks = dashboards[$DashboardStore.activeIndex].blocks.map((block) => {
       let nBlock = new Block(block);
-      if (nBlock.element.type == "tracker" && trackers[nBlock.element.id]) {
+      if (nBlock.element && nBlock.element.type == "tracker" && trackers[nBlock.element.id]) {
         nBlock.element.obj = trackers[nBlock.element.id];
-      } else if (nBlock.element.type == "person" && people[nBlock.element.id]) {
+      } else if (nBlock.element && nBlock.element.type == "person" && people[nBlock.element.id]) {
         nBlock.element.obj = people[nBlock.element.id];
       }
       return nBlock;
@@ -276,6 +284,7 @@
       <SortableList
         items={activeDashboard.blocks || []}
         handle=".menu-handle"
+        key="id"
         on:update={(sorted) => {
           activeDashboard.blocks = sorted.detail;
           DashboardStore.update((state) => {
@@ -285,9 +294,9 @@
           DashboardStore.save();
         }}
         let:item>
-        <ListItem solo className="pb-2" title={item.element.id}>
+        <ListItem solo className="pb-2" title={item.getTitle()}>
           <Text size="sm">
-            {item.timeRange.getLabel()}
+            {#if item.timeRange}{item.timeRange.getLabel()}{/if}
             <span class="opacity-5">{item.type}</span>
           </Text>
           <div slot="right" class="menu-handle">

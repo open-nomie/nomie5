@@ -12,6 +12,7 @@ export function positivityFromLogs(logs: Array<any>, target: any): IPositivityRe
   let negative = 0;
   let neutral = 0;
   logs.forEach((row: Record) => {
+    // TODO make this work with just a tracker target
     let score = ScoreNote(row.note, row.end);
     if (score == 0) {
       neutral++;

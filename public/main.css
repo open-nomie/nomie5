@@ -6324,8 +6324,10 @@ body.scrolling .mini-map {
     width: calc(100% - 16pt);
     margin: 8pt;
     box-shadow: var(--box-shadow);
-    border-radius: 6pt;
-    overflow: hidden; }
+    border-radius: 12pt;
+    overflow: hidden;
+    background-color: var(--color-solid);
+    padding: 8px 0; }
   @media (min-width: 350px) {
     .n-list {
       border-radius: 6px; } }

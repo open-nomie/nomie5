@@ -290,6 +290,7 @@ export default class StatsProcessor {
   }
 
   getValueMapTotals(valueMap) {
+    // console.log("Value Map", valueMap);
     let newMap = {
       sum: 0,
       avg: 0,
@@ -328,7 +329,8 @@ export default class StatsProcessor {
     }); // end loop over each day
 
     newMap.sum = _math.sum(allValues);
-    newMap.avg = _math.average(allValues);
+    newMap.avg = _math.average(allValues, true);
+    // console.log("New Map", newMap.avg, newMap, allValues);
     return newMap;
   }
 

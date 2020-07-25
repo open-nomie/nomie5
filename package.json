@@ -68,7 +68,7 @@
     "commitlint": "^8.3.5",
     "concurrently": "^4.1.1",
     "copy": "^0.3.2",
-    "cypress": "^4.4.0",
+    "cypress": "^4.11.0",
     "d3-scale": "^3.2.1",
     "dayjs": "^1.8.30",
     "dom-to-image-chrome-fix": "^2.6.0",

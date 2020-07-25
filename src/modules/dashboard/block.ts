@@ -80,7 +80,8 @@ export class BlockTimeFrame {
     this.id = this.id || nid();
   }
   public getLabel(): string {
-    return this.label || `${this.start.date.format("MMM DD")} to ${this.end.date.format("MMM DD YYYY")}`;
+    let defaultDate = this.start.date ? `${this.start.date.format("MMM DD")} to ${this.end.date.format("MMM DD YYYY")}` : "Unknown";
+    return this.label || defaultDate;
   }
 }
 
@@ -96,6 +97,8 @@ export interface IBlock {
   id?: string;
   type: string;
   timeRange: IBlockTimeFrame;
+  includeAvg?: boolean;
+  description?: string;
 }
 
 export class Block {
@@ -103,11 +106,15 @@ export class Block {
   id: string;
   type: string = "value";
   timeRange: BlockTimeFrame;
+  includeAvg?: boolean = false;
+  description?: string;
   _editing?: any;
   constructor(payload?: IBlock) {
     if (payload) {
       this.id = payload.id || nid();
       this.type = payload.type;
+      this.description = payload.description;
+      this.includeAvg = payload.includeAvg ? true : false;
       if (payload.timeRange) {
         this.timeRange = new BlockTimeFrame(payload.timeRange);
       }
@@ -116,6 +123,13 @@ export class Block {
       }
     } else {
       this.id = nid();
+    }
+  }
+  getTitle() {
+    if (this.element) {
+      return this.element.id;
+    } else {
+      return "unknown";
     }
   }
 

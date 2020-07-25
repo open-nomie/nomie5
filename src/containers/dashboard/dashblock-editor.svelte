@@ -8,9 +8,20 @@
   import { Interact } from "../../store/interact";
   import { DashboardStore } from "../../store/dashboard-store";
   import { createEventDispatcher, onMount } from "svelte";
+  import ToggleSwitch from "../../components/toggle-switch/toggle-switch.svelte";
   export let value: Block = null;
 
   let dateType;
+  let widget;
+  let goalValue;
+  let blockTypeId;
+  let blockType: IBlockType;
+
+  $: if (blockTypeId) {
+    blockType = blockTypes.find((blockType) => blockType.id == blockTypeId);
+    console.log("Block Type selected", blockType);
+    value.type = blockTypeId;
+  }
 
   $: if (dateType) {
     let timeFrame = timeFrames.find((t) => t.id == dateType);
@@ -85,6 +96,69 @@
         endOf: "month",
       },
     },
+    {
+      id: "last-7",
+      label: "Last 7 days",
+      start: {
+        subtract: [7, "day"],
+        startOf: "day",
+      },
+      end: {
+        endOf: "day",
+      },
+    },
+    {
+      id: "last-30",
+      label: "Last 30 days",
+      start: {
+        subtract: [30, "day"],
+        startOf: "day",
+      },
+      end: {
+        endOf: "day",
+      },
+    },
+  ];
+
+  type IBlockTypeUnit = "timeframe" | "goal" | "element";
+  interface IBlockType {
+    id: string;
+    label: string;
+    requires: Array<IBlockTypeUnit>;
+    optional: Array<IBlockTypeUnit>;
+  }
+
+  const blockTypes: Array<IBlockType> = [
+    {
+      label: "Bar Chart",
+      id: "barchart",
+      requires: ["timeframe", "element"],
+      optional: [],
+    },
+    {
+      label: "Value",
+      id: "value",
+      requires: ["timeframe", "element"],
+      optional: ["goal"],
+    },
+    {
+      label: "Positivity Piecart",
+      id: "positivity",
+      requires: ["timeframe", "element"],
+      optional: [],
+    },
+    {
+      label: "Last Used",
+      id: "last-used",
+      requires: ["element"],
+      optional: [],
+    },
+    {
+      label: "Just Text",
+      id: "text",
+      requires: [],
+      optional: [],
+    },
   ];
 
   async function deleteBlock() {
@@ -133,34 +207,58 @@
   }
 
   onMount(() => {
-    if (value && value.timeRange) {
-      dateType = value.timeRange.id;
+    if (value) {
+      if (value.timeRange) {
+        dateType = value.timeRange.id;
+      }
+      blockTypeId = value.type;
     }
   });
 </script>
 
 <div class="dashblock-editor p-2">
-  <ListItem>
-    <Button color="clear" block on:click={selectType}>
-      {#if value.element}
-        <TrackerSmallBlock element={value.element} on:click={selectType} />
-      {:else}
-        <Text className="text-primary-bright w-100">Select Item</Text>
-      {/if}
-    </Button>
-  </ListItem>
-  <Input type="select" placeholder="Display Type" bind:value={value.type}>
-    <option value="chart">Chart</option>
-    <option value="value">Value</option>
-    <option value="positivity">Positivity</option>
-  </Input>
-  <Input placeholder="Timeframe" type="select" bind:value={dateType}>
-    <option>Select a Timeframe</option>
-    {#each timeFrames as timeFrame}
-      <option value={timeFrame.id}>{timeFrame.label}</option>
-    {/each}
 
+  <Input type="select" placeholder="Widget" bind:value={blockTypeId}>
+    <option>Select a Widget</option>
+    {#each blockTypes as blockType}
+      <option value={blockType.id}>{blockType.label}</option>
+    {/each}
   </Input>
+
+  {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('element') > -1}
+    <ListItem className="px-0">
+      <Button color="light" block on:click={selectType}>
+        {#if value.element}
+          <TrackerSmallBlock element={value.element} on:click={selectType} />
+        {:else}Select Trackable Item{/if}
+      </Button>
+    </ListItem>
+  {/if}
+
+  {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('timeframe') > -1}
+    <Input placeholder="Timeframe" type="select" bind:value={dateType}>
+      <option>Select a Timeframe</option>
+      {#each timeFrames as timeFrame}
+        <option value={timeFrame.id}>{timeFrame.label}</option>
+      {/each}
+    </Input>
+  {/if}
+
+  {#if blockTypeId == 'value' && value.timeRange && ['today', 'yesterday'].indexOf(value.timeRange.id) == -1}
+    <ListItem title="Include Average">
+      <div slot="right">
+        <ToggleSwitch bind:value={value.includeAvg} />
+      </div>
+    </ListItem>
+  {/if}
+
+  {#if blockTypeId == 'text'}
+    <Input placeholder="Description" type="text" bind:value={value.description} />
+  {/if}
+
+  <!-- {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('goal') > -1}
+      <Input placeholder="Goal" type="number" bind:value={value.goal} />
+    {/if} -->
 
   {#if value._editing}
     <ListItem className="text-red" on:click={deleteBlock}>Delete Block</ListItem>

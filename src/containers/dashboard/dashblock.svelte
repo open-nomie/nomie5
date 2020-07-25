@@ -9,6 +9,9 @@
   import Icon from "../../components/icon/icon.svelte";
   import Button from "../../components/button/button.svelte";
   import { strToColor } from "../../components/dymoji/dymoji";
+  import { LastUsed } from "../../store/last-used";
+  import dayjs from "dayjs";
+  import { element } from "svelte/internal";
 
   const dispatch = createEventDispatcher();
 
@@ -29,10 +32,30 @@
       return strToColor(block.element.id);
     }
   }
+
+  function getLastUsed(trackerTag) {
+    console.log({ $LastUsed, trackerTag });
+    if ($LastUsed.hasOwnProperty(trackerTag)) {
+      let last = $LastUsed[trackerTag];
+      if (last) {
+        return dayjs(last.date).fromNow();
+      }
+    }
+    return "Unknown";
+  }
 </script>
 
 <style lang="scss">
   @import "../../scss/utils/_utils";
+
+  .dashboard-text {
+    padding: 8px 16px;
+    min-width: 100%;
+    flex-grow: 1;
+    width: 100%;
+    font-size: 0.9rem;
+    color: var(--color-inverse-2);
+  }
   .dashboard-block {
     margin: 8px;
     display: inline-flex;
@@ -55,31 +78,44 @@
       height: 90px;
     }
   }
-  .type-chart {
+  .type-barchart {
     min-width: calc(100% - 16px);
     max-width: 320px;
   }
   .value {
     display: flex;
     flex-grow: 1;
-    align-items: column;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     color: var(--color-inverse);
     height: 100%;
+    padding: 2px 8px;
     .current {
       font-size: 2rem;
-      line-height: 110%;
+      line-height: 100%;
       text-align: center;
+    }
+    &.value-sm {
+      .current {
+        font-size: 1.4rem;
+      }
+      .avg {
+        opacity: 0.6;
+      }
+    }
+    &.last-used {
+      .current {
+        font-size: 1.5rem;
+      }
     }
   }
 </style>
 
-{#if block && block.stats}
+{#if block && block.type !== 'text'}
   <div class="dashboard-block type-{block.type}">
     <div class="block-header n-row">
       <TrackerSmallBlock xs novalue element={block.element} />
-
       <Button
         size="xs"
         color="clear"
@@ -91,7 +127,7 @@
       </Button>
     </div>
     <div class="block-main">
-      {#if block.type == 'chart' && block.stats && block.stats.chart}
+      {#if block.type == 'barchart' && block.stats && block.stats.chart}
         <BarChart
           height={100}
           color={getBlockColor(block)}
@@ -104,8 +140,17 @@
             return y;
           }} />
       {:else if block.type == 'value' && block.stats}
-        <div class="value">
+        <div class="value {block.includeAvg ? 'value-sm' : ''}">
           <div class="current">{block.math == 'mean' ? formatValue(block.stats.avg) : formatValue(block.stats.sum)}</div>
+          {#if block.includeAvg}
+            <div class="avg">{formatValue(block.stats.avg)}</div>
+          {/if}
+        </div>
+      {:else if block.type == 'last-used' && block.stats}
+        <div class="value last-used">
+          <div class="current">
+            {#if block.element.id}{getLastUsed(block.element.id)}{:else}Unknown{/if}
+          </div>
         </div>
       {:else if block.type == 'positivity' && block.stats}
         <div class="value">
@@ -118,10 +163,20 @@
             style="width:100%"
             height="50px" /> -->
         </div>
-      {:else}{block.type} {Object.keys(block)}{/if}
+      {:else}{block.type}{Object.keys(block)}{/if}
     </div>
     <div class="block-footer n-row">
-      <Text size="xs" className="text-center flex-grow text-uppercase font-weight-bold">{block.getLabel()}</Text>
+      {#if block.timeRange}
+        <Text size="xs" className="text-center flex-grow text-uppercase font-weight-bold">{block.getLabel()}</Text>
+      {/if}
     </div>
+  </div>
+{:else}
+  <div
+    class="dashboard-text type-text text-center"
+    on:click={() => {
+      dispatch('click');
+    }}>
+    {block.description}
   </div>
 {/if}
