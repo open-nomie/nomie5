@@ -1,4 +1,6 @@
 <script>
+  import { createEventDispatcher } from "svelte";
+
   export let size = "md";
   // export let color = undefined;
   export let bold = undefined;
@@ -6,6 +8,7 @@
   export let tag = "div";
   export let className = "";
   export let faded = false;
+  const dispatch = createEventDispatcher();
 </script>
 
 <style type="text/scss">
@@ -47,6 +50,9 @@
 
 {#if tag === 'span'}
   <span
+    on:click={() => {
+      dispatch('click');
+    }}
     class="n-text {size || 'sm'}
     {className}
     {faded ? 'faded ' : ''}
@@ -56,6 +62,9 @@
   </span>
 {:else}
   <div
+    on:click={() => {
+      dispatch('click');
+    }}
     class="n-text {size || 'sm'}
     {className}
     {faded ? 'faded ' : ''}

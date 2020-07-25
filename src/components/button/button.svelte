@@ -11,7 +11,7 @@
   export let block = false;
 </script>
 
-<style lang="scss">
+<style>
 
 </style>
 

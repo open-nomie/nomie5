@@ -129,7 +129,7 @@
 
       {#if $FeatureStore.dashboard}
         <Link to="/dashboard">
-          <Icon name="dashboard" />
+          <Icon name="report" />
           <label>{Lang.t('tabs.dashboard', 'Dash')}</label>
         </Link>
       {/if}

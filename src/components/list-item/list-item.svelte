@@ -16,6 +16,7 @@
   export let style = "";
   export let clickable = false;
   export let ariaLabel = "";
+  export let solo = false;
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty("left");
   const has_right = (arguments[1].$$slots || {}).hasOwnProperty("right");
@@ -110,6 +111,7 @@
     {style}
     class="n-item {compact ? 'compact' : ''}
     {className}
+    {solo ? 'solo' : ''}
     "
     :alt="title">
     {#if has_left}

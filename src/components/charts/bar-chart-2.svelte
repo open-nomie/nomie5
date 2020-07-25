@@ -10,6 +10,7 @@
 
   export let labels = [];
   export let height = 200;
+
   export let title = "";
   export let color = "#4d84a1";
   export let points;
