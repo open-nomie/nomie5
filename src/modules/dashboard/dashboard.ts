@@ -1,10 +1,11 @@
 import dayjs from "dayjs";
 import { Block, IBlock } from "./block";
 import TrackableElement from "../../modules/trackable-element/trackable-element";
-
 export class Dashboard {
+  label: string;
   blocks: Array<IBlock>;
   constructor(starter: any = {}) {
+    this.label = starter.label || "Untitled";
     this.blocks = (starter.blocks || []).map((block) => {
       return new Block(block);
     });

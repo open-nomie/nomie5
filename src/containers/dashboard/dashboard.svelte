@@ -102,7 +102,7 @@
   function getStartEndDates(dboard) {
     let start = null;
     let end = null;
-    dboard.forEach((block: Block) => {
+    dboard.blocks.forEach((block: Block) => {
       let dateRange = block.getDateRange();
       let tStart = dateRange[0];
       let tEnd = dateRange[1];
@@ -133,10 +133,11 @@
     return logs;
   }
 
-  async function loadActiveDashboard(dboard) {
+  async function loadActiveDashboard() {
+    const dboard = dashboards[$DashboardStore.activeIndex];
     let { start, end } = getStartEndDates(dboard);
-    for (let i = 0; i < dboard.length; i++) {
-      const block = dboard[i];
+    for (let i = 0; i < dboard.blocks.length; i++) {
+      const block = dboard.blocks[i];
       block.logs = await getLogsForBlock(block);
 
       const statsV5 = new StatsProcessor();
@@ -169,17 +170,17 @@
 
       block.positivity = positivityFromLogs(block.logs, block.element);
 
-      dboard[i] = block;
+      dboard.blocks[i] = block;
     }
     activeDashboard = dboard;
   }
 
   let activePage = 0;
   let lastActivePage;
-  let activeDashboard = [];
+  let activeDashboard = { label: "Loading...", blocks: [] };
 
   function initDashboard() {
-    activeDashboard = dashboards[$DashboardStore.activeIndex].blocks.map((block) => {
+    dashboards[$DashboardStore.activeIndex].blocks = dashboards[$DashboardStore.activeIndex].blocks.map((block) => {
       let nBlock = new Block(block);
       if (nBlock.element.type == "tracker" && trackers[nBlock.element.id]) {
         nBlock.element.obj = trackers[nBlock.element.id];
@@ -188,7 +189,7 @@
       }
       return nBlock;
     });
-    loadActiveDashboard(activeDashboard);
+    loadActiveDashboard();
   }
 
   $: if (trackers && people && dashboards && activePage !== lastActivePage) {
@@ -199,6 +200,16 @@
   function clearEditing() {
     editingBlock = false;
   }
+
+  async function rename() {
+    let newName = await Interact.prompt("Rename Dashboard", null, {
+      value: activeDashboard.label,
+    });
+    if (newName) {
+      $DashboardStore.dashboards[$DashboardStore.activeIndex].label = newName;
+      DashboardStore.save();
+    }
+  }
 </script>
 
 <style lang="scss">
@@ -206,7 +217,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    padding: 16px;
+    padding: 10px 16px 16px;
     justify-content: space-between;
     align-content: flex-start;
   }
@@ -221,17 +232,7 @@
     <div class="main title">
       <div class="n-row">
         <div class="n-filler" />
-        {#if (dashboards || []).length}
-          <Button color="clear" on:click={DashboardStore.previous}>
-            <Icon name="chevronLeft" size="14" />
-          </Button>
-        {/if}
         <Stepper single dark steps={(dashboards || []).length} current={$DashboardStore.activeIndex} />
-        {#if (dashboards || []).length}
-          <Button color="clear" on:click={DashboardStore.next}>
-            <Icon name="chevronRight" size="14" />
-          </Button>
-        {/if}
         <div class="n-filler" />
       </div>
     </div>
@@ -241,10 +242,23 @@
   </div>
 
   <div class="container h-100">
+    <div class="n-toolbar n-row px-2">
+      <Text size="xl" className="px-2 filler" bold on:click={rename}>
+        <span style="border-bottom:dotted 1px rgba(100,100,100,0.4)">{activeDashboard.label}</span>
+      </Text>
+      {#if (dashboards || []).length}
+        <Button color="clear" on:click={DashboardStore.previous}>
+          <Icon name="chevronLeft" />
+        </Button>
+        <Button color="clear" on:click={DashboardStore.next}>
+          <Icon name="chevronRight" />
+        </Button>
+      {/if}
+    </div>
     {#if !editMode}
       <div class="dashboard-wrapper h-100" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
         {#if people && trackers}
-          {#each activeDashboard as block}
+          {#each activeDashboard.blocks as block}
             <Dashblock
               {block}
               on:click={() => {
@@ -258,19 +272,20 @@
         </button>
       </div>
     {:else}
+      <div class="mt-2" />
       <SortableList
-        items={activeDashboard || []}
+        items={activeDashboard.blocks || []}
         handle=".menu-handle"
         on:update={(sorted) => {
-          activeDashboard = sorted.detail;
+          activeDashboard.blocks = sorted.detail;
           DashboardStore.update((state) => {
-            state.dashboards[$DashboardStore.activeIndex].blocks = activeDashboard;
+            state.dashboards[$DashboardStore.activeIndex] = activeDashboard;
             return state;
           });
           DashboardStore.save();
         }}
         let:item>
-        <ListItem title={item.element.id}>
+        <ListItem solo className="pb-2" title={item.element.id}>
           <Text size="sm">
             {item.timeRange.getLabel()}
             <span class="opacity-5">{item.type}</span>

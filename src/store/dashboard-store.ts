@@ -23,7 +23,7 @@ interface IDashboardStore {
   activeIndex: number;
 }
 
-const DasboardStoreInit = (): any => {
+const DashboardStoreInit = (): any => {
   const state: IDashboardStore = {
     dashboards: [],
     activeIndex: Storage.local.get("dashboard/lastIndex") || 0,
@@ -159,4 +159,4 @@ const DasboardStoreInit = (): any => {
   };
 };
 
-export const DashboardStore = DasboardStoreInit();
+export const DashboardStore = DashboardStoreInit();

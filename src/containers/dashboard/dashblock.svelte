@@ -69,6 +69,8 @@
     height: 100%;
     .current {
       font-size: 2rem;
+      line-height: 110%;
+      text-align: center;
     }
   }
 </style>
