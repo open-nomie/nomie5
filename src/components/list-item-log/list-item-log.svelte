@@ -47,22 +47,19 @@
   let trackers = $TrackerStore.trackers;
 
   let state = {
-    showPhoto: false
+    showPhoto: false,
   };
 
   $: if (log) {
     displayLog = new NomieLog(log);
     logMeta = displayLog.getMeta();
-    logMeta.trackers = logMeta.trackers.map(trackerElement => {
+    logMeta.trackers = logMeta.trackers.map((trackerElement) => {
       trackerElement.obj = TrackerStore.getByTag(trackerElement.id);
       return trackerElement;
     });
   }
 
-  $: fullDate =
-    log && new Date(log.end).toDateString() !== new Date().toDateString()
-      ? true
-      : false;
+  $: fullDate = log && new Date(log.end).toDateString() !== new Date().toDateString() ? true : false;
 
   $: timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
 
@@ -117,9 +114,7 @@
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row time-row">
       <div class="time truncate" style="max-width:60%;">
-        <div class="day-time truncate">
-          {logMeta.endDate.format(`ddd ${timeFormat}`)}
-        </div>
+        <div class="day-time truncate">{logMeta.endDate.format(`ddd ${timeFormat}`)}</div>
         <div class="date-ago truncate">
           {logMeta.endDate.format('MMM Do YYYY')}
           <span class="ago">{time.fromNow(logMeta.endDate)} ago</span>
@@ -130,25 +125,23 @@
       <!-- If they have location-->
       {#if displayLog.lat}
         <button
-          on:click={event => {
+          on:click={(event) => {
             Interact.showLocations([displayLog]);
             event.stopPropagation();
           }}
-          class="btn btn-xs btn-badge btn-primary text-white location-badge
-          truncate">
+          class="btn btn-xs btn-badge btn-primary text-white location-badge truncate">
           <LocationBadge location={displayLog} />
         </button>
       {/if}
 
       <!-- SCORE display -->
       {#if displayLog.score}
-        <div
-          class="score-mark {displayLog.score > 0 ? 'positive' : 'negative'}" />
+        <div class="score-mark {displayLog.score > 0 ? 'positive' : 'negative'}" />
       {/if}
 
       {#if hideMore !== true}
         <button
-          on:click={event => {
+          on:click={(event) => {
             Interact.logOptions(displayLog);
           }}
           class="btn btn-clear btn-sm more-button clickable ml-1">
@@ -161,7 +154,7 @@
     This really isn't special right now -->
     {#if displayLog.note.length}
       <NNoteTextualizer
-        on:textClick={evt => {
+        on:textClick={(evt) => {
           dispatch('textClick', evt.detail);
         }}
         note={displayLog.note}
@@ -173,53 +166,21 @@
       <div class="tracker-grid n-row">
         {#each displayLog.people as person}
           <NTrackerSmallBlock
+            truncate={true}
             element={person}
             on:click={() => {
               dispatch('personClick', { person: person, log });
             }}>
             <span slot="emoji" class="emoji">
               {#if $PeopleStore.people[person.id]}
-                <NBall
-                  size="40"
-                  radius="0.3"
-                  avatar={$PeopleStore.people[person.id].avatar}
-                  username={person.id}
-                  className="ml-2" />
+                <NBall size="40" radius="0.3" avatar={$PeopleStore.people[person.id].avatar} username={person.id} className="ml-2" />
               {:else}
-                <NBall
-                  size="40"
-                  username={person.id}
-                  className="ml-2"
-                  radius="0.3" />
+                <NBall size="40" username={person.id} className="ml-2" radius="0.3" />
               {/if}
             </span>
           </NTrackerSmallBlock>
-          <!-- <button
-            class="btn n-tracker-value-grid-button"
-            on:click={() => {
-              dispatch('personClick', { person: person, log });
-            }}>
-
-            <span class="emoji">
-              {#if $PeopleStore.people[person.id]}
-                <NBall
-                  size="40"
-                  radius="0.3"
-                  avatar={$PeopleStore.people[person.id].avatar}
-                  username={person.id}
-                  className="ml-2" />
-              {:else}
-                <NBall
-                  size="40"
-                  username={person.id}
-                  className="ml-2"
-                  radius="0.3" />
-              {/if}
-            </span>
-            <div class="label truncate text-inverse">{person.id}</div>
-          </button> -->
         {/each}
-        {#each logMeta.trackers.filter(trk => {
+        {#each logMeta.trackers.filter((trk) => {
           if (focus) {
             return trk.id == focus;
           } else {
@@ -227,6 +188,7 @@
           }
         }) as trackerElement}
           <NTrackerSmallBlock
+            truncate
             element={trackerElement}
             on:click={() => {
               dispatch('trackerClick', { tracker: trackerElement.obj, log });

@@ -120,7 +120,11 @@ export class Block {
   }
 
   getLabel() {
-    return this.timeRange.getLabel();
+    if (this.timeRange) {
+      return this.timeRange.getLabel();
+    } else {
+      return "Unknown";
+    }
   }
 
   isValid() {
@@ -132,10 +136,18 @@ export class Block {
   }
 
   getStartDate() {
-    return this.timeRange.start.toDate();
+    if (this.timeRange && this.timeRange.start) {
+      return this.timeRange.start.toDate();
+    } else {
+      return new Date();
+    }
   }
   getEndDate() {
-    return this.timeRange.end.toDate();
+    if (this.timeRange && this.timeRange.end) {
+      return this.timeRange.end.toDate();
+    } else {
+      return new Date();
+    }
   }
   getDateRange() {
     return [this.getStartDate(), this.getEndDate()];
