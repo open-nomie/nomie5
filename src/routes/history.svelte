@@ -67,11 +67,11 @@
     location: {
       name: null,
       lat: null,
-      lng: null
+      lng: null,
     },
     locations: [],
     loading: true,
-    showAllLocations: false
+    showAllLocations: false,
   }; // Assign State to compiled history page
 
   let refreshing = false;
@@ -79,7 +79,7 @@
   let local = {
     showDatePicker: false,
     datePickerValue: null,
-    searchMode: false
+    searchMode: false,
   };
 
   // $: searchMode = (state.searchTerm || "").length ? true : false;
@@ -97,7 +97,7 @@
 
   // Used for checking things
   const checks = {
-    list_date: {}
+    list_date: {},
   };
 
   /// Watchers for when we're in edit mode
@@ -113,34 +113,23 @@
   }
 
   // Filter logs for today
-  const filterActiveDate = log => {
-    return (
-      log.end >=
-        state.date
-          .startOf("day")
-          .toDate()
-          .getTime() &&
-      log.end <=
-        state.date
-          .endOf("day")
-          .toDate()
-          .getTime()
-    );
+  const filterActiveDate = (log) => {
+    return log.end >= state.date.startOf("day").toDate().getTime() && log.end <= state.date.endOf("day").toDate().getTime();
   };
 
   $: appTitle = `History ${state.date.format("YYYY-MM-DD")}`;
 
   $: if (searchLogs || logs) {
     locations = (searchLogs || logs)
-      .filter(log => {
+      .filter((log) => {
         return log.lat;
       })
-      .map(log => {
+      .map((log) => {
         return {
           lat: log.lat,
           lng: log.lng,
           name: log.location,
-          log: log
+          log: log,
         };
       });
   }
@@ -172,10 +161,7 @@
 
     async textClick(event) {
       let trackableElement = event.detail;
-      let tracker =
-        trackableElement.type == "tracker"
-          ? TrackerStore.getByTag(trackableElement.id)
-          : null;
+      let tracker = trackableElement.type == "tracker" ? TrackerStore.getByTag(trackableElement.id) : null;
 
       const buttons = [
         {
@@ -186,26 +172,26 @@
             } else {
               Interact.openStats(trackableElement.raw);
             }
-          }
+          },
         },
         {
           title: `Search for ${tracker ? tracker.label : trackableElement.raw}`,
           click: () => {
             methods.doSearch(event);
-          }
-        }
+          },
+        },
       ];
       if (trackableElement.type == "person") {
         buttons.push({
           title: `Check-In`,
           click: () => {
             Interact.person(trackableElement.id);
-          }
+          },
         });
       }
       Interact.popmenu({
         title: `${tracker ? tracker.label : trackableElement.raw} options`,
-        buttons: buttons
+        buttons: buttons,
       });
     },
     async getLogs(fresh) {
@@ -215,7 +201,7 @@
       logs = await LedgerStore.query({
         start: state.date.startOf("day").toDate(),
         end: state.date.endOf("day").toDate(),
-        fresh: fresh
+        fresh: fresh,
       });
 
       loading = false;
@@ -264,7 +250,7 @@
       Interact.openStats(`+${context.id}`);
     },
     showLogOptions(log) {
-      Interact.logOptions(log).then(action => {
+      Interact.logOptions(log).then((action) => {
         if (searchMode) {
           methods.refreshSearch();
         }
@@ -275,39 +261,39 @@
         {
           time: 90,
           title: "90 Days Back",
-          unit: "day"
+          unit: "day",
         },
         {
           time: 180,
           title: "6 Months Back",
-          unit: "day"
+          unit: "day",
         },
         {
           time: 1,
           title: "1 Year Back",
-          unit: "year"
+          unit: "year",
         },
         {
           time: 2,
           title: "2 Years Back",
-          unit: "year"
+          unit: "year",
         },
         {
           time: -1,
           title: "Select Date...",
-          unit: "day"
-        }
+          unit: "day",
+        },
       ];
 
       if (!isToday) {
         ranges.unshift({
           days: 0,
-          title: "Go to Today"
+          title: "Go to Today",
         });
       }
 
       Interact.popmenu({
-        buttons: ranges.map(range => {
+        buttons: ranges.map((range) => {
           return {
             title: range.title,
             click: async () => {
@@ -319,15 +305,13 @@
               } else if (range.time === undefined || range.time === 0) {
                 methods.goto(dayjs(new Date()));
               } else {
-                methods.goto(
-                  state.date.subtract(range.time || 0, range.unit || "day")
-                );
+                methods.goto(state.date.subtract(range.time || 0, range.unit || "day"));
               }
-            }
+            },
           };
-        })
+        }),
       });
-    }
+    },
   };
 
   async function refresh() {
@@ -352,12 +336,12 @@
     window.scrollTo(0, 0);
     refresh();
 
-    onLogUpdate = LedgerStore.hook("onLogUpdate", async log => {
+    onLogUpdate = LedgerStore.hook("onLogUpdate", async (log) => {
       await tick(600);
       refresh();
     });
 
-    onLogSaved = LedgerStore.hook("onLogSaved", async log => {
+    onLogSaved = LedgerStore.hook("onLogSaved", async (log) => {
       await tick(600);
       refresh();
     });
@@ -429,18 +413,9 @@
 <NLayout pageTitle={appTitle}>
 
   <header slot="header">
-    <NToolbarGrid className="animate in {showSearch ? 'hidden' : 'visible'}">
-      <button
-        slot="left"
-        class="btn btn-clear btn-icon flex text-xl tap-icon"
-        on:click={methods.previous}>
-        <NIcon name="chevronLeft" />
-      </button>
+    <NToolbar className="container animate in {showSearch ? 'hidden' : 'visible'}">
 
-      <div
-        slot="main"
-        class={isToday ? 'text-inverse-2' : 'not-today text-red'}
-        on:click={methods.selectDate}>
+      <div class="{isToday ? 'text-inverse-2' : 'not-today text-red'} filler pl-2" on:click={methods.selectDate}>
 
         <span class="font-weight-bold mx-1">{state.date.format('ddd')}</span>
         {state.date.format('MMM Do YYYY')}
@@ -452,13 +427,13 @@
 
         <!-- end text middle -->
       </div>
-      <button
-        slot="right"
-        class="btn btn-clear btn-icon flex text-xl tap-icon"
-        on:click={methods.next}>
+      <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.previous}>
+        <NIcon name="chevronLeft" />
+      </button>
+      <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.next}>
         <NIcon name="chevronRight" />
       </button>
-    </NToolbarGrid>
+    </NToolbar>
 
     <!-- hasResults={(searchLogs || []).length > 0} -->
 
@@ -482,13 +457,9 @@
         </div>
       {:else if logs.length === 0 && !showSearch}
         {#if !searchMode}
-          <div class="empty-notice" style="max-height:200px;">
-            {Lang.t('history.no-records-found')}
-          </div>
+          <div class="empty-notice" style="max-height:200px;">{Lang.t('history.no-records-found')}</div>
         {:else}
-          <div class="empty-notice">
-            {state.date.format('YYYY')} {Lang.t('history.no-records-found')}
-          </div>
+          <div class="empty-notice">{state.date.format('YYYY')} {Lang.t('history.no-records-found')}</div>
         {/if}
         <!-- If Logs and Not refreshing  -->
       {:else if !showSearch}
@@ -496,19 +467,19 @@
         {#each logs as log, index}
           <LogItem
             {log}
-            on:trackerClick={event => {
+            on:trackerClick={(event) => {
               methods.trackerTapped(event.detail.tracker, log);
             }}
-            on:personClick={event => {
+            on:personClick={(event) => {
               methods.personTapped(event.detail.person, log);
             }}
-            on:contextClick={event => {
+            on:contextClick={(event) => {
               methods.contextTapped(event.detail.context, log);
             }}
-            on:textClick={event => {
+            on:textClick={(event) => {
               methods.textClick(event);
             }}
-            on:moreClick={event => {
+            on:moreClick={(event) => {
               Interact.logOptions(log).then(() => {});
             }} />
           <!-- Show the Log Item -->
@@ -522,13 +493,13 @@
         <NLogListLoader
           term={state.searchTerm}
           limit={12}
-          on:trackerClick={event => {
+          on:trackerClick={(event) => {
             methods.trackerTapped(event.detail.tracker, event.detail.log);
           }}
-          on:textClick={event => {
+          on:textClick={(event) => {
             methods.textClick(event);
           }}
-          on:moreClick={event => {
+          on:moreClick={(event) => {
             Interact.logOptions(event.detail).then(() => {});
           }} />
       {/if}
@@ -550,19 +521,19 @@
             <LogItem
               className="aged"
               {log}
-              on:trackerClick={event => {
+              on:trackerClick={(event) => {
                 methods.trackerTapped(event.detail.tracker, log);
               }}
-              on:personClick={event => {
+              on:personClick={(event) => {
                 methods.personTapped(event.detail.person, log);
               }}
-              on:contextClick={event => {
+              on:contextClick={(event) => {
                 methods.contextTapped(event.detail.context, log);
               }}
-              on:textClick={event => {
+              on:textClick={(event) => {
                 methods.textClick(event);
               }}
-              on:moreClick={event => {
+              on:moreClick={(event) => {
                 Interact.logOptions(log).then(() => {});
               }} />
           {/each}
@@ -612,19 +583,14 @@
 {#if state.location.lat}
   <NModal show={true} title={state.location.name || 'Location'}>
     <NMap locations={[state.location]} />
-    <button
-      class="btn btn-lg btn-primary btn-block mb-0"
-      on:click={methods.clearLocation}
-      slot="footer">
-      Close
-    </button>
+    <button class="btn btn-lg btn-primary btn-block mb-0" on:click={methods.clearLocation} slot="footer">Close</button>
   </NModal>
 {/if}
 
 {#if local.showDatePicker}
   <NModal show={true} title={'Select a Date'}>
     <NDatePicker
-      on:change={event => {
+      on:change={(event) => {
         local.datePickerValue = event.detail;
       }} />
     <button

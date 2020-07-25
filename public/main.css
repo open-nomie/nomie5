@@ -5906,7 +5906,8 @@ button {
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: center; }
+    align-items: center;
+    flex-grow: 1; }
     .n-board-tabs .tab.active:before {
       content: "";
       position: absolute;
