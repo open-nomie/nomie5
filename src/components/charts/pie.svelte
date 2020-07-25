@@ -4,7 +4,6 @@
   import nid from "../../modules/nid/nid";
 
   export let data: Array<IPieData> = [];
-  export let size: any = "100";
 
   const chartId = `chart-${nid()}`;
 

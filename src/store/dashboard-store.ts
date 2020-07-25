@@ -28,7 +28,7 @@ const DasboardStoreInit = (): any => {
     dashboards: [],
     activeIndex: Storage.local.get("dashboard/lastIndex") || 0,
   };
-  console.log({ state });
+
   const { update, subscribe, set } = writable(state);
 
   const methods = {
@@ -47,7 +47,6 @@ const DasboardStoreInit = (): any => {
       return Storage.local.get("dashboard/lastIndex") || 0;
     },
     next() {
-      console.log("next");
       update((state: IDashboardStore) => {
         if (state.activeIndex == state.dashboards.length - 1) {
           state.activeIndex = 0;
@@ -59,7 +58,6 @@ const DasboardStoreInit = (): any => {
       });
     },
     previous() {
-      console.log("previous");
       update((state: IDashboardStore) => {
         if (state.activeIndex == 0) {
           state.activeIndex = state.dashboards.length - 1;
@@ -119,7 +117,6 @@ const DasboardStoreInit = (): any => {
       }
     },
     newDashboard() {
-      console.log("New Dashboard!");
       update((state: IDashboardStore) => {
         state.dashboards.push(new Dashboard());
         state.activeIndex = state.dashboards.length - 1;
@@ -127,6 +124,7 @@ const DasboardStoreInit = (): any => {
       });
     },
     async deleteBlock(block: Block) {
+      block = block instanceof Block ? block : new Block(block);
       let _state: IDashboardStore = methods.get();
       _state.dashboards = _state.dashboards.map((dashboard: Dashboard) => {
         dashboard.blocks = dashboard.blocks.filter((blk: Block) => {
@@ -141,7 +139,6 @@ const DasboardStoreInit = (): any => {
       return methods.save();
     },
     async init(): Promise<void> {
-      console.log("Dashboard Initializating Starts Now");
       let dashboards = await Storage.get(`${config.data_root}/dashboards.json`);
       update((state: any) => {
         state.dashboards = (dashboards || [[{ blocks: [] }]]).map((dashboard) => {
@@ -150,7 +147,6 @@ const DasboardStoreInit = (): any => {
         dashboards = state.dashboards;
         return state;
       });
-      console.log("from storage", dashboards);
     },
   };
 

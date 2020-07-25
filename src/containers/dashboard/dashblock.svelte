@@ -23,9 +23,7 @@
   }
 
   function getBlockColor(block: Block) {
-    console.log("Get Block Color", block.id, block.element.obj, block.type);
     if (block.element && block.element.obj && block.element.obj.color) {
-      console.log("🖍🖍🖍🖍 Block Has Tracker - use color", block.element.obj.color);
       return block.element.obj.color;
     } else {
       return strToColor(block.element.id);

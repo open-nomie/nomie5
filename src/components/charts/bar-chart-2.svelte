@@ -4,24 +4,16 @@
   import Chart from "chart.js";
   import nid from "../../modules/nid/nid";
   const dispatch = createEventDispatcher();
-  // Utils
-
   import math from "../../utils/math/math";
-
-  // vendor
-  import * as ScaleLinear from "d3-scale";
   import { UserStore } from "../../store/user";
   import NIcon from "../icon/icon.svelte";
 
-  const scaleLinear = ScaleLinear.default.scaleLinear;
-
   export let labels = [];
   export let height = 200;
-  export let width = 500;
   export let title = "";
   export let color = "#4d84a1";
   export let points;
-  export let activeIndex;
+  // export let activeIndex;
   export let xFormat = (x) => x;
   export let yFormat = (y) => y;
   export let hideYTicks = false;
@@ -104,7 +96,7 @@
         },
       },
     };
-    console.log("chart config", chartConfig);
+
     let myChart = new Chart(ctx, chartConfig);
   }
   onMount(initChart);

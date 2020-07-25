@@ -23,7 +23,6 @@
       return false;
     }
   }
-  // console.log("element", element);
 </script>
 
 {#if element}

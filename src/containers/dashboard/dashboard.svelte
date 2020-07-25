@@ -71,18 +71,15 @@
     unsubTrackers = TrackerStore.subscribe((tkrs) => {
       if (tkrs.trackers) {
         trackers = tkrs.trackers;
-        // console.log("trackers", trackers);
       }
     });
     unsubPeople = PeopleStore.subscribe((pple) => {
       if (pple.people) {
         people = pple.people;
-        // console.log({ people });
       }
     });
     unsubDashboard = DashboardStore.subscribe((dbStore) => {
       if (dbStore.dashboards.length) {
-        console.log("Dashboard.svelte store Changed", dbStore.dashboards);
         dashboards = dbStore.dashboards;
         initDashboard();
       }
@@ -124,7 +121,7 @@
     const dateRange = block.getDateRange();
     const start = dateRange[0];
     const end = dateRange[1];
-    // console.log("getLogsforBlock", { start, end, block });
+
     if (block.element.type == "tracker") {
       logs = await LedgerStore.queryTag(block.element.id, start, end);
     } else if (block.element.type == "person") {
@@ -132,7 +129,7 @@
     } else if (block.element.type == "context") {
       logs = await LedgerStore.queryContext(block.element.id, start, end);
     }
-    // console.log("getLogs for block", { logs });
+
     return logs;
   }
 
@@ -173,7 +170,6 @@
       block.positivity = positivityFromLogs(block.logs, block.element);
 
       dboard[i] = block;
-      // console.log("logs for block", block);
     }
     activeDashboard = dboard;
   }
@@ -183,7 +179,6 @@
   let activeDashboard = [];
 
   function initDashboard() {
-    console.log("init", { dashboards, type: typeof dashboards });
     activeDashboard = dashboards[$DashboardStore.activeIndex].blocks.map((block) => {
       let nBlock = new Block(block);
       if (nBlock.element.type == "tracker" && trackers[nBlock.element.id]) {
@@ -267,7 +262,6 @@
         items={activeDashboard || []}
         handle=".menu-handle"
         on:update={(sorted) => {
-          console.log('Sorted', sorted.detail);
           activeDashboard = sorted.detail;
           DashboardStore.update((state) => {
             state.dashboards[$DashboardStore.activeIndex].blocks = activeDashboard;

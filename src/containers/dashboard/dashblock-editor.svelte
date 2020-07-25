@@ -14,9 +14,7 @@
 
   $: if (dateType) {
     let timeFrame = timeFrames.find((t) => t.id == dateType);
-    console.log("Matched Timeframe", timeFrame);
     value.timeRange = new BlockTimeFrame(timeFrame);
-    // console.log("Date Type Change", value.timeRange);
   }
 
   const dispatch = createEventDispatcher();
