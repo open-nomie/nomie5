@@ -8,9 +8,9 @@
 
   import { Lang } from "../../store/lang";
   import { TrackerStore } from "../../store/tracker-store";
-
+  import { FeatureStore } from "../../store/feature-store";
   const state = {
-    mounted: false
+    mounted: false,
   };
 
   onMount(() => {
@@ -127,10 +127,12 @@
         <label>{Lang.t('tabs.history')}</label>
       </Link>
 
-      <Link to="/dashboard">
-        <Icon name="dashboard" />
-        <label>{Lang.t('tabs.dashboard', 'Dash')}</label>
-      </Link>
+      {#if $FeatureStore.dashboard}
+        <Link to="/dashboard">
+          <Icon name="dashboard" />
+          <label>{Lang.t('tabs.dashboard', 'Dash')}</label>
+        </Link>
+      {/if}
 
       <Link to="/">
         {#if $TrackerStore.timers.length}
@@ -140,10 +142,12 @@
         <label>{Lang.t('general.trackers', 'Track')}</label>
       </Link>
 
-      <Link to="/people">
-        <Icon name="people" />
-        <label>{Lang.t('tabs.people')}</label>
-      </Link>
+      {#if $FeatureStore.people}
+        <Link to="/people">
+          <Icon name="people" />
+          <label>{Lang.t('tabs.people')}</label>
+        </Link>
+      {/if}
 
       <Link to="/settings">
         <Icon name="settings" />

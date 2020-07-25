@@ -40,6 +40,8 @@
 
   // Config
   import config from "../../config/global";
+  import Features from "../containers/settings/features.svelte";
+  import Tweaks from "../containers/settings/tweaks.svelte";
 
   // consts
   // const Export = new Exporter();
@@ -47,7 +49,7 @@
   let data = {
     signedIn: false,
     files: [],
-    showMassEditor: false
+    showMassEditor: false,
   };
 
   $: alwaysLocate = $UserStore.alwaysLocate;
@@ -63,10 +65,7 @@
       UserStore.signout();
     },
     share() {
-      SocialShare(
-        `I track my life with Nomie! It's free, private, and you get to design what you track. @nomieapp`,
-        "https://nomie.app"
-      );
+      SocialShare(`I track my life with Nomie! It's free, private, and you get to design what you track. @nomieapp`, "https://nomie.app");
     },
     locations() {
       Interact.pickLocation();
@@ -114,11 +113,7 @@
     },
     async deleteEverything() {
       try {
-        let res = await Interact.confirm(
-          "DANGER ZONE!",
-          `This will destroy all of your data in Nomie. Are you sure?`,
-          "Destroy"
-        );
+        let res = await Interact.confirm("DANGER ZONE!", `This will destroy all of your data in Nomie. Are you sure?`, "Destroy");
         if (res) {
           res = await Interact.confirm(
             "Sorry! One last time.. Really?",
@@ -131,7 +126,7 @@
             let files = await Storage.list();
 
             let promises = [];
-            files.forEach(file => {
+            files.forEach((file) => {
               promises.push(Storage.delete(file));
             });
             await Promise.all(promises);
@@ -170,86 +165,37 @@ Note: Your data will not automatically move over. You'll first need to export it
     storageMenu() {
       let buttons = [
         {
-          title: `${$UserStore.storageType === "local" ? "✓" : ""} ${Lang.t(
-            "storage.local_title",
-            "This Device Only"
-          )}`,
-          description: Lang.t(
-            "storage.local_description",
-            "Good for getting started, but make sure you backup your data."
-          ),
+          title: `${$UserStore.storageType === "local" ? "✓" : ""} ${Lang.t("storage.local_title", "This Device Only")}`,
+          description: Lang.t("storage.local_description", "Good for getting started, but make sure you backup your data."),
           click() {
             methods.switchStorage("local");
-          }
+          },
         },
         {
-          title: `${
-            $UserStore.storageType === "blockstack" ? "✓" : ""
-          } Blockstack`,
-          description: Lang.t(
-            "storage.blockstack_description",
-            "Stored encryted with Blockstack's file storage. FREE"
-          ),
+          title: `${$UserStore.storageType === "blockstack" ? "✓" : ""} Blockstack`,
+          description: Lang.t("storage.blockstack_description", "Stored encryted with Blockstack's file storage. FREE"),
           click() {
             methods.switchStorage("blockstack");
-          }
+          },
         },
         {
-          title: `${$UserStore.storageType === "pouchdb" ? "✓" : ""} ${Lang.t(
-            "storage.pouchdb_title",
-            "Device + My own CouchDB"
-          )}`,
-          description: Lang.t(
-            "storage.pouchdb_description",
-            "Have a CouchDB server? Sync in near-real time."
-          ),
+          title: `${$UserStore.storageType === "pouchdb" ? "✓" : ""} ${Lang.t("storage.pouchdb_title", "Device + My own CouchDB")}`,
+          description: Lang.t("storage.pouchdb_description", "Have a CouchDB server? Sync in near-real time."),
           click() {
             methods.switchStorage("pouchdb");
-          }
-        }
+          },
+        },
       ];
       Interact.popmenu({
         title: Lang.t("storage.type_selector_title", `Storage Options`),
-        description: Lang.t(
-          "storage.type_selector_title",
-          `How would you like your data stored?`
-        ),
-        buttons: buttons
+        description: Lang.t("storage.type_selector_title", `How would you like your data stored?`),
+        buttons: buttons,
       });
     },
     // boardsToggle() {
     //   $UserStore.meta.boardsEnabled = !$UserStore.meta.boardsEnabled;
     //   UserStore.saveMeta();
     // },
-    async lockToggle() {
-      if ($UserStore.meta.lock === true) {
-        if (($UserStore.meta.pin || "").length == 0) {
-          // TODO: figure out how to handle a cancel in the interact prompt
-          let pin = await Interact.prompt(
-            Lang.t("settings.pin-details"),
-            null,
-            {
-              value: "",
-              valueType: "number"
-            }
-          );
-
-          if (!pin) {
-            $UserStore.meta.lock = false;
-            $UserStore.meta.pin = null;
-            UserStore.saveMeta();
-          } else {
-            $UserStore.meta.lock = true;
-            $UserStore.meta.pin = pin;
-            UserStore.saveMeta();
-          }
-        }
-      } else {
-        $UserStore.meta.lock = false;
-        $UserStore.meta.pin = null;
-        UserStore.saveMeta();
-      }
-    }
   };
   let view = Storage.local.get("settings/last-view") || "tweaks";
   function changeView(v) {
@@ -270,23 +216,20 @@ Note: Your data will not automatically move over. You'll first need to export it
         <h1>{Lang.t('settings.settings')}</h1>
       </div>
       <div class="right">
-        <button on:click={methods.faq} class="btn tap-text">
-          {Lang.t('general.faq')}
-        </button>
+        <button on:click={methods.faq} class="btn tap-text">{Lang.t('general.faq')}</button>
       </div>
     </div>
-    <div class="n-toolbar-grid container">
-
-      <div class="main">
-        <NButtonGroup
-          buttons={[{ label: 'Tweaks', active: view == 'tweaks', click() {
-                changeView('tweaks');
-              } }, { label: 'Data', active: view == 'data', click() {
-                changeView('data');
-              } }, { label: 'About', active: view == 'about', click() {
-                changeView('about');
-              } }]} />
-      </div>
+    <div class="n-toolbar px-2 container">
+      <NButtonGroup
+        buttons={[{ label: 'Features', active: view == 'features', click() {
+              changeView('features');
+            } }, { label: 'Tweaks', active: view == 'tweaks', click() {
+              changeView('tweaks');
+            } }, { label: 'Data', active: view == 'data', click() {
+              changeView('data');
+            } }, { label: 'About', active: view == 'about', click() {
+              changeView('about');
+            } }]} />
     </div>
   </div>
 
@@ -294,98 +237,10 @@ Note: Your data will not automatically move over. You'll first need to export it
     {#if $UserStore.meta}
       <div class="page page-settings">
         <div class="container p-0">
-
-          {#if view == 'tweaks'}
-            <!--
-              *******************************************
-              TWEAKS VIEW 
-              *******************************************
-            -->
-            <div class="n-list solo">
-              <NItem title={Lang.t('settings.theme')}>
-                <div slot="right">
-                  <select
-                    class="form-control"
-                    style="min-width:100px;width:100px"
-                    bind:value={$UserStore.theme}
-                    on:change={event => {
-                      UserStore.setTheme($UserStore.theme);
-                    }}>
-                    <option value="auto">Auto</option>
-                    <option value="dark">Dark</option>
-                    <option value="light">Light</option>
-                  </select>
-
-                </div>
-              </NItem>
-
-              <!-- Use Location -->
-              <NItem title={Lang.t('settings.use-location')}>
-
-                <div slot="right">
-                  <NToggle
-                    bind:value={$UserStore.alwaysLocate}
-                    on:change={event => {
-                      UserStore.setAlwaysLocate(event.detail);
-                    }} />
-                </div>
-              </NItem>
-              <NItem
-                title={Lang.t('settings.small-tracker-buttons', 'Small Tracker Buttons')}>
-                <div slot="right">
-                  <NToggle
-                    bind:value={$UserStore.meta.compactTrackerButtons}
-                    on:change={methods.settingChange} />
-                </div>
-              </NItem>
-              <!-- Tracker Board Tabs -->
-              {#if $BoardStore.boards.length == 0}
-                <NItem title={Lang.t('settings.enable-boards')}>
-                  <div slot="right">
-                    <NToggle
-                      bind:value={$UserStore.meta.boardsEnabled}
-                      on:change={methods.settingChange} />
-                  </div>
-                </NItem>
-              {/if}
-              <!-- Pin Code -->
-              <NItem title={Lang.t('settings.require-pin')}>
-
-                <div slot="right">
-                  <NToggle
-                    bind:value={$UserStore.meta.lock}
-                    on:change={methods.lockToggle} />
-                </div>
-              </NItem>
-              <!-- 24 Hour -->
-              <NItem title={Lang.t('settings.24-hour-clock')}>
-
-                <div slot="right">
-                  <NToggle
-                    bind:value={$UserStore.meta.is24Hour}
-                    on:change={methods.settingChange} />
-                </div>
-              </NItem>
-              <!-- Language -->
-              <NItem title={Lang.t('settings.language')}>
-
-                <div slot="right">
-                  <select
-                    class="form-control"
-                    style="min-width:100px;width:100px"
-                    bind:value={$Lang.lang}
-                    on:change={event => {
-                      Lang.setLang($Lang.lang);
-                    }}>
-                    {#each Lang.getLangs() as lang}
-                      <option value={lang.key}>{lang.label}</option>
-                    {/each}
-                  </select>
-
-                </div>
-              </NItem>
-
-            </div>
+          {#if view == 'features'}
+            <Features />
+          {:else if view == 'tweaks'}
+            <Tweaks />
           {:else if view == 'data'}
             <!--
               *******************************************
@@ -394,10 +249,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             -->
             <div class="n-list solo">
 
-              <NItem
-                className="clickable"
-                title={Lang.t('settings.nomie-api')}
-                on:click={() => navigate('/api')}>
+              <NItem className="clickable" title={Lang.t('settings.nomie-api')} on:click={() => navigate('/api')}>
 
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
@@ -414,27 +266,16 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
-                <input
-                  slot="right"
-                  class="d-none"
-                  type="file"
-                  bind:this={fileInput}
-                  on:change={methods.onImportFile} />
+                <input slot="right" class="d-none" type="file" bind:this={fileInput} on:change={methods.onImportFile} />
               </NItem>
 
-              <NItem
-                className="clickable"
-                title={Lang.t('settings.generate-backup')}
-                to="/settings/export/backup">
+              <NItem className="clickable" title={Lang.t('settings.generate-backup')} to="/settings/export/backup">
 
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
               </NItem>
-              <NItem
-                className="clickable"
-                title={Lang.t('settings.generate-csv')}
-                to="/settings/export/csv">
+              <NItem className="clickable" title={Lang.t('settings.generate-csv')} to="/settings/export/csv">
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
@@ -451,9 +292,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               </NItem>
 
               <!-- Find and Replace -->
-              <MassEditor
-                on:close={methods.closeMassEditor}
-                show={data.showMassEditor} />
+              <MassEditor on:close={methods.closeMassEditor} show={data.showMassEditor} />
 
             </div>
 
@@ -465,16 +304,12 @@ Note: Your data will not automatically move over. You'll first need to export it
 
                 <div slot="right">
 
-                  <button
-                    class="btn btn-clear icon-right"
-                    on:click={methods.storageMenu}>
+                  <button class="btn btn-clear icon-right" on:click={methods.storageMenu}>
                     {#if $UserStore.storageType === 'local'}
                       {Lang.t('storage.local', 'Local')}
                     {:else if $UserStore.storageType === 'pouchdb'}
                       {Lang.t('storage.pouchdb', 'Local + CouchDB')}
-                    {:else if $UserStore.storageType === 'blockstack'}
-                      {Lang.t('storage.blockstack', 'Blockstack')}
-                    {/if}
+                    {:else if $UserStore.storageType === 'blockstack'}{Lang.t('storage.blockstack', 'Blockstack')}{/if}
                     <NIcon name="chevronDown" size="16" className="ml-2" />
                   </button>
                   <!-- {#if $UserStore.storageType === 'local'}
@@ -515,11 +350,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               </NItem>
 
             </div>
-            <NItem
-              className="solo text-red text-center mt-4"
-              on:click={methods.deleteEverything}>
-              Reset & Delete all Nomie Data...
-            </NItem>
+            <NItem className="solo text-red text-center mt-4" on:click={methods.deleteEverything}>Reset & Delete all Nomie Data...</NItem>
           {:else if view == 'about'}
             <!--
               *******************************************
@@ -542,33 +373,18 @@ Note: Your data will not automatically move over. You'll first need to export it
 
               <NItem title="Learn More">
                 <span slot="right">
-                  <a
-                    href="https://nomie.app?s=dap"
-                    class="btn btn-clear text-primary-bright"
-                    target="_system">
-                    Website
-                  </a>
+                  <a href="https://nomie.app?s=dap" class="btn btn-clear text-primary-bright" target="_system">Website</a>
                 </span>
               </NItem>
               <NItem title="Reddit r/nomie">
                 <span slot="right">
-                  <a
-                    href="https://reddit.com/r/nomie"
-                    class="btn btn-clear text-primary-bright"
-                    target="_system">
-                    r/nomie
-                  </a>
+                  <a href="https://reddit.com/r/nomie" class="btn btn-clear text-primary-bright" target="_system">r/nomie</a>
                 </span>
               </NItem>
 
               <NItem title="Open Source">
                 <span slot="right">
-                  <a
-                    href="https://github.com/open-nomie/nomie"
-                    class="btn btn-clear text-primary-bright"
-                    target="_system">
-                    Github
-                  </a>
+                  <a href="https://github.com/open-nomie/nomie" class="btn btn-clear text-primary-bright" target="_system">Github</a>
                 </span>
               </NItem>
             </div>
@@ -582,18 +398,14 @@ Note: Your data will not automatically move over. You'll first need to export it
                   {#await LedgerStore.getFirstDate()}
                     Loading...
                   {:then date}
-                    <div class="text-sm">
-                      {date.format('MMMM YYYY')} ({date.fromNow()})
-                    </div>
+                    <div class="text-sm">{date.format('MMMM YYYY')} ({date.fromNow()})</div>
                   {/await}
                   <!--  -->
                 </div>
               </NItem>
               <NItem title={Lang.t('general.launch-count', 'Launch Count')}>
                 <div class="n-row" slot="right">
-                  <button
-                    class="btn btn-clear"
-                    on:click={UserStore.resetLaunchCount}>
+                  <button class="btn btn-clear" on:click={UserStore.resetLaunchCount}>
                     <NIcon name="delete" className="fill-red" size="18" />
                   </button>
                   {$UserStore.launchCount}
@@ -631,27 +443,19 @@ Note: Your data will not automatically move over. You'll first need to export it
             </span>
           </NItem> -->
 
-          <NItem title={Lang.t('general.questions')} className="solo mt-3">
+          <NItem className="compact item-divider" />
+          <NItem title={Lang.t('general.questions')} className="bg-transparent mt-3">
             <span slot="right">
-              <a
-                class="btn btn-clear text-primary-bright"
-                href={`mailto:${config.support_email}?subject=Nomie APP_VERSION`}>
+              <a class="btn btn-clear text-primary-bright" href={`mailto:${config.support_email}?subject=Nomie APP_VERSION`}>
                 {config.support_contact}
               </a>
             </span>
           </NItem>
-
-          <NItem className="compact item-divider" />
-
-          <NItem>
-            <div class="text-sm pb-2 pt-2">
-              &copy; Copyright 2019. All Rights Reserved
-            </div>
+          <NItem className="bg-transparent">
+            <div class="text-sm pb-2 pt-2">&copy; Copyright 2019. All Rights Reserved</div>
             <div class="text-sm pb-2">
               Nomie&reg; by
-              <a href="https://www.happydata.org" traget="_system">
-                Happy Data, LLC
-              </a>
+              <a href="https://www.happydata.org" traget="_system">Happy Data, LLC</a>
             </div>
 
           </NItem>

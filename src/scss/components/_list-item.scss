@@ -194,7 +194,7 @@
     .title {
       font-size: 1.1rem;
       margin: 2px 0;
-      line-height: 1.56rem;
+      line-height: 1.36rem !important;
       font-weight: 600;
     }
 
@@ -203,8 +203,8 @@
     .description {
       margin: 2px 0;
       color: var(--color-inverse-3);
-      line-height: 140%;
-      font-size: 0.9rem;
+      line-height: 132%;
+      font-size: 0.82rem;
 
       &.sm,
       &.small {
