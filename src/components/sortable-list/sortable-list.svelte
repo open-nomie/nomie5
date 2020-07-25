@@ -20,27 +20,32 @@
     newList.splice(to, 0, tempItem);
     // FILTER OUT MOVED ITEM
     newList = newList
-      .filter(item => {
+      .filter((item) => {
         return item !== movedItem;
       })
-      .map(item => {
+      .map((item) => {
         return item !== tempItem ? item : movedItem;
       });
 
     dispatch("update", newList);
   };
 
-  // UTILS
-  const getKey = item => (key ? item[key] : item);
+  function getKey(item, index) {
+    if (typeof item == "string") {
+      return index;
+    } else if (key) {
+      return item[key] || index;
+    }
+  }
 
   onMount(() => {
     setTimeout(() => {
       if (sortableList) {
         let sortable = Sortable.create(sortableList, {
           handle: handle,
-          onEnd: function(evt) {
+          onEnd: function (evt) {
             reorder(evt.newDraggableIndex, evt.oldDraggableIndex);
-          }
+          },
         });
       }
     });
@@ -69,7 +74,7 @@
 
 {#if items && items.length}
   <ul bind:this={sortableList}>
-    {#each items as item, index (getKey(item))}
+    {#each items as item, index (getKey(item, index))}
       <li>
         <slot {item} {index} />
       </li>
