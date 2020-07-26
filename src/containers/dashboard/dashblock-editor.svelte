@@ -225,16 +225,6 @@
     {/each}
   </Input>
 
-  {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('element') > -1}
-    <ListItem className="px-0">
-      <Button color="light" block on:click={selectType}>
-        {#if value.element}
-          <TrackerSmallBlock element={value.element} on:click={selectType} />
-        {:else}Select Trackable Item{/if}
-      </Button>
-    </ListItem>
-  {/if}
-
   {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('timeframe') > -1}
     <Input placeholder="Timeframe" type="select" bind:value={dateType}>
       <option>Select a Timeframe</option>
@@ -252,8 +242,18 @@
     </ListItem>
   {/if}
 
+  {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('element') > -1}
+    <ListItem className="px-0">
+      <Button color="light" block on:click={selectType}>
+        {#if value.element}
+          <TrackerSmallBlock element={value.element} on:click={selectType} />
+        {:else}Select Trackable Item{/if}
+      </Button>
+    </ListItem>
+  {/if}
+
   {#if blockTypeId == 'text'}
-    <Input placeholder="Description" type="text" bind:value={value.description} />
+    <Input placeholder="Message" type="text" bind:value={value.description} />
   {/if}
 
   <!-- {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('goal') > -1}

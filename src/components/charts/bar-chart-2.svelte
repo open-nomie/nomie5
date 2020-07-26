@@ -7,6 +7,7 @@
   import math from "../../utils/math/math";
   import { UserStore } from "../../store/user";
   import NIcon from "../icon/icon.svelte";
+  import tick from "../../utils/tick/tick";
 
   export let labels = [];
   export let height = 200;
@@ -24,13 +25,24 @@
 
   // console.log("chart", points);
 
+  let showChart = false;
+  let theChart;
+
+  $: if (points) {
+    console.log(`${points.length} Points for this Chart`);
+    initChart();
+  }
+
   interface IPieData {
     label: string;
     value: number;
     color: string;
   }
 
-  function initChart() {
+  async function initChart() {
+    showChart = false;
+    await tick(100);
+    showChart = true;
     var ctx = document.getElementById(chartId);
 
     const lineStyle = {
@@ -98,9 +110,13 @@
       },
     };
 
-    let myChart = new Chart(ctx, chartConfig);
+    theChart = new Chart(ctx, chartConfig);
   }
-  onMount(initChart);
+  onMount(() => {
+    if (points) {
+      showChart = true;
+    }
+  });
 </script>
 
 <style>

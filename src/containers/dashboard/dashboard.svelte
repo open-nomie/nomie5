@@ -166,14 +166,18 @@
           mode = "m";
         }
 
-        block.stats = statsV5.generate({
+        const statsConfig = {
           rows: block.logs,
           fromDate,
           toDate,
           mode,
           math: block.math, //state.tracker.math
           trackableElement: block.element,
-        });
+        };
+
+        console.log(statsConfig);
+
+        block.stats = statsV5.generate(statsConfig);
 
         block.positivity = positivityFromLogs(block.logs, block.element);
       }
@@ -274,7 +278,7 @@
               }} />
           {/each}
         {/if}
-        <button class="btn btn-round btn-light btn-block mx-auto my-2" style="max-width:300px;" on:click={newBlock}>
+        <button class="btn btn-round btn-light btn-block mx-auto my-2 mb-4" style="max-width:300px; max-height:50px;" on:click={newBlock}>
           <Icon name="add" size="24" />
           Add Block
         </button>

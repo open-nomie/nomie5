@@ -2,6 +2,7 @@
   import ListItem from "../../components/list-item/list-item.svelte";
   import ToggleSwitch from "../../components/toggle-switch/toggle-switch.svelte";
   import { FeatureStore } from "../../store/feature-store";
+  import Booster from "../booster/booster.svelte";
 </script>
 
 <div class="n-list solo my-2">
@@ -27,3 +28,5 @@
     </div>
   </ListItem>
 </div>
+
+<Booster />

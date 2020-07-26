@@ -12,9 +12,10 @@
   import { LastUsed } from "../../store/last-used";
   import dayjs from "dayjs";
   import { element } from "svelte/internal";
+  import nid from "../../modules/nid/nid";
 
   const dispatch = createEventDispatcher();
-
+  const id = nid();
   export let block: Block;
 
   function formatValue(value): string {
@@ -113,7 +114,7 @@
 </style>
 
 {#if block && block.type !== 'text'}
-  <div class="dashboard-block type-{block.type}">
+  <div class="dashboard-block type-{block.type}" {id}>
     <div class="block-header n-row">
       <TrackerSmallBlock xs novalue element={block.element} />
       <Button
@@ -173,6 +174,7 @@
   </div>
 {:else}
   <div
+    {id}
     class="dashboard-text type-text text-center"
     on:click={() => {
       dispatch('click');
