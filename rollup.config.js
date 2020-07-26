@@ -9,6 +9,8 @@ import builtins from "rollup-plugin-node-builtins";
 import replace from "rollup-plugin-replace";
 import packagejson from "./package.json";
 
+import fs from "fs";
+
 import autoPreprocess from "svelte-preprocess";
 import typescript from "@rollup/plugin-typescript";
 
@@ -19,6 +21,30 @@ import dayjs from "dayjs";
 const { generateSW, injectManifest } = require("rollup-plugin-workbox");
 
 const production = !process.env.ROLLUP_WATCH;
+const replaceContent = {
+  APP_VERSION: packagejson.version,
+  APP_BRANCH: process.env.BRANCH,
+  APP_URL: process.env.URL,
+  APP_CONTEXT: process.env.CONTEXT,
+  APP_BUILD_DATE: dayjs().format("ddd MMM D YYYY h:mma"),
+  APP_PURCH_KEY: production ? "live_PG5CF13F1F994161B7A2AC38455A" : "test_PG262565617C4BC8AA788D972329",
+};
+
+/**
+ * Setup the index file
+ * Replaces values and sets up base cache-busting
+ */
+const writeIndexFile = function () {
+  let index = fs.readFileSync("./public/index.template.html", "UTF-8");
+
+  Object.keys(replaceContent).forEach((replaceThis) => {
+    const withThis = replaceContent[replaceThis];
+    const regex = new RegExp(replaceThis, "g");
+    index = index.replace(regex, withThis);
+  });
+
+  fs.writeFileSync("./public/index.html", index, "UTF-8");
+};
 
 export default [
   {
@@ -34,13 +60,8 @@ export default [
     plugins: [
       builtins(),
       //
-      replace({
-        APP_VERSION: packagejson.version,
-        APP_BRANCH: process.env.BRANCH,
-        APP_URL: process.env.URL,
-        APP_CONTEXT: process.env.CONTEXT,
-        APP_BUILD_DATE: dayjs().format("ddd MMM D YYYY h:mma"),
-      }),
+      writeIndexFile(),
+      replace(replaceContent),
       scss({
         input: "./scss/main.scss",
         output: function (styles, styleNodes) {

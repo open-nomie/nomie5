@@ -16,10 +16,11 @@
     "url": "https://nomie.app"
   },
   "scripts": {
+    "oldbustcache": "node build-tools/bust-cache.js",
     "generate-whatsnew": "node build-tools/generate-whats-new.js && git add . && git commit -m 'build: whats new'",
     "release": "npm run generate-whatsnew &&  release-it --no-npm.publish",
     "commit": "git cz",
-    "pre:run": "node build-tools/bust-cache.js && node build-tools/move-resources.js && node build-tools/bundle-vendors.js",
+    "pre:run": "node build-tools/move-resources.js && node build-tools/bundle-vendors.js",
     "build": "npm run pre:run && rollup -c",
     "autobuild": "rollup -c -w",
     "scss": "node-sass ./src/scss/main.scss --output=./public --watch=./src/scss/**/*.scss --include-path",

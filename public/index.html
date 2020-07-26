@@ -19,7 +19,7 @@
     <link rel="manifest" href="/manifest.json" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="APP_URL" />
+    <meta property="og:url" content="undefined" />
     <meta property="og:title" content="Nomie 5" />
     <meta property="og:description" content="Private Mood and Life Tracking" />
     <meta property="og:image" content="" />
@@ -34,7 +34,7 @@
     <base href="/" />
 
     <!-- main is from scss/main.scss -->
-    <link rel="stylesheet" href="/main.css?v=5.2.6" />
+    <link rel="stylesheet" href="/main.css?v=5.2.7" />
   </head>
 
   <body>
@@ -43,27 +43,29 @@
     </noscript>
 
     <div class="loading-screen delete-on-app">
-      <div class="version">v5.2.6</div>
+      <div class="version">v5.2.7</div>
     </div>
 
     <script src="/js/vendors.js"></script>
-    <script src="/bundle.js?v=5.2.6"></script>
-    <link rel="stylesheet" href="/css/vendors.css?v=5.2.6" defer />
-    <link rel="stylesheet" href="/bundle.css?v=5.2.6" />
+    <script src="/bundle.js?v=5.2.7"></script>
+    <link rel="stylesheet" href="/css/vendors.css?v=5.2.7" defer />
+    <link rel="stylesheet" href="/bundle.css?v=5.2.7" />
+    <!-- 
+      Purch
+      For in-app purchases
+    -->
+    <script src="https://purch.dev/v1/purch.js"></script>
+    <script>
+      $purch.init({
+        appId: "nomie",
+        key: "test_PG262565617C4BC8AA788D972329",
+      });
+    </script>
     <!-- 
       SimpleAnalytics 
       Privacy aware analytics. They don't track IP or use Cookies.
       Learn more at https://docs.simpleanalytics.com/what-we-collect
     -->
-    <script async defer src="https://purch.dev/v1/purch.js"></script>
-    <script async defer>
-      setTimeout(() => {
-        $purch.init({
-          appId: "nomie",
-          key: "live_PG5CF13F1F994161B7A2AC38455A",
-        });
-      }, 500);
-    </script>
     <script async defer src="https://cdn.simpleanalytics.io/hello.js"></script>
     <noscript><img src="https://api.simpleanalytics.io/hello.gif" alt="" /></noscript>
   </body>
