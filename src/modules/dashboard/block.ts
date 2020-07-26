@@ -1,7 +1,7 @@
 import TrackableElement, { ITrackableElement } from "../../modules/trackable-element/trackable-element";
 import dayjs, { Dayjs, OpUnitType } from "dayjs";
 import nid from "../nid/nid";
-import NLog from "../nomie-log/nomie-log";
+import type NLog from "../nomie-log/nomie-log";
 
 /**
  * Block Date
