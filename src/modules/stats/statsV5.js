@@ -39,6 +39,7 @@ export default class StatsProcessor {
     try {
       this.rows = logFilter(this.rows, { search: this.trackableElement.toSearchTerm() });
     } catch (e) {
+      console.error(e.message);
       console.error(`Filtering logs failed, is a trackableElement provided?`, this.trackableElement);
     }
   }

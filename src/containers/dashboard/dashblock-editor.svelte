@@ -7,8 +7,12 @@
   import Text from "../../components/text/text.svelte";
   import { Interact } from "../../store/interact";
   import { DashboardStore } from "../../store/dashboard-store";
+  import { Lang } from "../../store/lang";
+
   import { createEventDispatcher, onMount } from "svelte";
   import ToggleSwitch from "../../components/toggle-switch/toggle-switch.svelte";
+  import Icon from "../../components/icon/icon.svelte";
+  import TinyColorPicker from "../../components/color-picker/tiny-color-picker.svelte";
   export let value: Block = null;
 
   let dateType;
@@ -16,6 +20,7 @@
   let goalValue;
   let blockTypeId;
   let blockType: IBlockType;
+  let conditionalStyling: boolean = false;
 
   $: if (blockTypeId) {
     blockType = blockTypes.find((blockType) => blockType.id == blockTypeId);
@@ -136,13 +141,13 @@
       optional: [],
     },
     {
-      label: "Value",
+      label: "Value/Count",
       id: "value",
       requires: ["timeframe", "element"],
       optional: ["goal"],
     },
     {
-      label: "Positivity Piecart",
+      label: "Positivity Pie Chart",
       id: "positivity",
       requires: ["timeframe", "element"],
       optional: [],
@@ -211,6 +216,9 @@
       if (value.timeRange) {
         dateType = value.timeRange.id;
       }
+      if (value.compareValue) {
+        conditionalStyling = true;
+      }
       blockTypeId = value.type;
     }
   });
@@ -234,6 +242,16 @@
     </Input>
   {/if}
 
+  {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('element') > -1}
+    <ListItem on:click={selectType} title="Trackable Item">
+      <div slot="right" class="mr-2">
+        {#if value.element}
+          <TrackerSmallBlock element={value.element} on:click={selectType} />
+        {:else}Select{/if}
+      </div>
+    </ListItem>
+  {/if}
+
   {#if blockTypeId == 'value' && value.timeRange && ['today', 'yesterday'].indexOf(value.timeRange.id) == -1}
     <ListItem title="Include Average">
       <div slot="right">
@@ -242,14 +260,49 @@
     </ListItem>
   {/if}
 
-  {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('element') > -1}
-    <ListItem className="px-0">
-      <Button color="light" block on:click={selectType}>
-        {#if value.element}
-          <TrackerSmallBlock element={value.element} on:click={selectType} />
-        {:else}Select Trackable Item{/if}
-      </Button>
-    </ListItem>
+  {#if blockTypeId == 'value'}
+    <div class="conditional-styling n-list {conditionalStyling ? 'solo framed' : ''}">
+      <ListItem title="Conditional Colors">
+        <div slot="right">
+          <ToggleSwitch bind:value={conditionalStyling} />
+        </div>
+      </ListItem>
+      {#if conditionalStyling}
+        <ListItem title="Compare Value">
+          <div slot="right">
+            <Input pattern="[0-9]*" inputmode="numeric" placeholder="Value" style="max-width:140px;" bind:value={value.compareValue}>
+              <button
+                class="btn btn-icon clickable mr-2"
+                slot="right"
+                on:click={async () => {
+                  const response = await Interact.trackerInput(value.element.obj, { value: value.compareValue, allowSave: false });
+                  if (response && response.value) {
+                    value.compareValue = response.value;
+                  }
+                }}>
+                {#if value.element.type == 'tracker'}
+                  <Icon name="addOutline" />
+                {/if}
+              </button>
+            </Input>
+          </div>
+        </ListItem>
+        <ListItem>
+          <div class="under" slot="left">
+            <div class="text-center">
+              <Text className="mb-2" size="sm">Under value color</Text>
+              <TinyColorPicker bind:value={value.compareUnderColor} />
+            </div>
+          </div>
+          <div class="over" slot="right">
+            <div class="text-center">
+              <Text className="mb-2" size="sm">Over value color</Text>
+              <TinyColorPicker bind:value={value.compareOverColor} />
+            </div>
+          </div>
+        </ListItem>
+      {/if}
+    </div>
   {/if}
 
   {#if blockTypeId == 'text'}

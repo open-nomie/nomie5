@@ -5442,6 +5442,18 @@ body.theme-dark {
 .fill-red {
   fill: var(--color-red) !important; }
 
+.bg-red {
+  background-color: var(--color-red) !important; }
+
+.bg-green {
+  background-color: var(--color-green) !important; }
+
+.bg-blue {
+  background-color: var(--color-blue) !important; }
+
+.bg-orange {
+  background-color: var(--color-orange) !important; }
+
 .fill-inverse {
   fill: var(--color-inverse) !important; }
 
@@ -5454,7 +5466,8 @@ body.theme-dark {
 .bg-solid-2 {
   background-color: var(--color-solid-2); }
 
-.bg-primary-bright {
+.bg-primary-bright,
+.bg-blue {
   background-color: var(--color-primary-bright) !important; }
 
 .bg-inverse {
@@ -6328,6 +6341,8 @@ body.scrolling .mini-map {
     overflow: hidden;
     background-color: var(--color-solid);
     padding: 8px 0; }
+  .n-list.framed {
+    border: solid 1px var(--color-solid-2) !important; }
   @media (min-width: 350px) {
     .n-list {
       border-radius: 6px; } }

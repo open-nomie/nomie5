@@ -1,6 +1,7 @@
 import TrackableElement, { ITrackableElement } from "../../modules/trackable-element/trackable-element";
 import dayjs, { Dayjs, OpUnitType } from "dayjs";
 import nid from "../nid/nid";
+import NLog from "../nomie-log/nomie-log";
 
 /**
  * Block Date
@@ -14,6 +15,7 @@ export interface IBlockDate {
   subtract?: Array<any>;
   startOf?: any;
   endOf?: any;
+  toDate(): Date;
 }
 
 export class BlockDate implements IBlockDate {
@@ -62,11 +64,12 @@ export interface IBlockTimeFrame {
   label?: string;
   start: IBlockDate;
   end: IBlockDate;
+  getLabel(): string;
 }
 
 export class BlockTimeFrame {
   id?: string;
-  label: string;
+  label?: string;
   start: BlockDate;
   end: BlockDate;
 
@@ -99,21 +102,45 @@ export interface IBlock {
   timeRange: IBlockTimeFrame;
   includeAvg?: boolean;
   description?: string;
+  compareValue?: number;
+  compareOverColor?: string;
+  compareUnderColor?: string;
+  math?: string;
+  logs?: Array<NLog>;
+  positivity?: any;
+  stats?: any;
+  getTitle(): string;
+  getLabel(): string;
+  isValid(): boolean;
+  toObject(): any;
+  getStartDate(): Date;
+  getEndDate(): any;
+  getDateRange(): Array<Date>;
 }
 
 export class Block {
   element: ITrackableElement;
-  id: string;
+  id?: string;
   type: string = "value";
-  timeRange: BlockTimeFrame;
+  timeRange: IBlockTimeFrame;
   includeAvg?: boolean = false;
   description?: string;
+  compareValue?: number;
+  compareOverColor?: string;
+  compareUnderColor?: string;
   _editing?: any;
+  math?: string;
+  logs?: Array<NLog>;
+  positivity?: any;
+  stats?: any;
   constructor(payload?: IBlock) {
     if (payload) {
       this.id = payload.id || nid();
       this.type = payload.type;
       this.description = payload.description;
+      this.compareValue = payload.compareValue;
+      this.compareOverColor = payload.compareOverColor;
+      this.compareUnderColor = payload.compareUnderColor;
       this.includeAvg = payload.includeAvg ? true : false;
       if (payload.timeRange) {
         this.timeRange = new BlockTimeFrame(payload.timeRange);
@@ -125,7 +152,7 @@ export class Block {
       this.id = nid();
     }
   }
-  getTitle() {
+  getTitle(): string {
     if (this.element) {
       return this.element.id;
     } else {
@@ -133,7 +160,7 @@ export class Block {
     }
   }
 
-  getLabel() {
+  getLabel(): string {
     if (this.timeRange) {
       return this.timeRange.getLabel();
     } else {
@@ -141,15 +168,15 @@ export class Block {
     }
   }
 
-  isValid() {
-    return this.type && this.id;
+  isValid(): boolean {
+    return this.type && this.id ? true : false;
   }
 
-  toObject() {
+  toObject(): any {
     return JSON.parse(JSON.stringify(this));
   }
 
-  getStartDate() {
+  getStartDate(): Date {
     if (this.timeRange && this.timeRange.start) {
       return this.timeRange.start.toDate();
     } else {

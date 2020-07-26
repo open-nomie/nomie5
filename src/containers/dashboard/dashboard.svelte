@@ -1,75 +1,271 @@
 <script lang="ts">
-  import Text from "./../../components/text/text.svelte";
+  import { navigate, Router, Route } from "svelte-routing";
+  import { onMount, onDestroy } from "svelte";
+
+  import dayjs from "dayjs";
+
+  import Dashblock from "./dashblock.svelte";
+  import DashblockEditor from "./dashblock-editor.svelte";
+
+  // Components
+  import Button from "../../components/button/button.svelte";
   import Icon from "./../../components/icon/icon.svelte";
   import ListItem from "./../../components/list-item/list-item.svelte";
+  import Modal from "../../components/modal/modal.svelte";
+  import NText from "../../components/text/text.svelte";
   import SortableList from "./../../components/sortable-list/sortable-list.svelte";
-  import dayjs from "dayjs";
-  import { LedgerStore } from "./../../store/ledger.js";
-  import { onMount, onDestroy } from "svelte";
-  import { PeopleStore } from "./../../store/people-store.js";
-  import { TrackerStore } from "./../../store/tracker-store.js";
-  import StatsProcessor from "../../modules/stats/statsV5";
+  import Stepper from "../../components/stepper/stepper.svelte";
+  import Text from "./../../components/text/text.svelte";
   import TrackerSmallBlock from "./../../components/tracker-ball/tracker-small-block.svelte";
-  import Dashblock from "./dashblock.svelte";
+
+  // modules
+  import StatsProcessor from "../../modules/stats/statsV5";
+  import { Block } from "../../modules/dashboard/block";
+  import Tracker from "../../modules/tracker/tracker";
+
+  // Utils
+  import { positivityFromLogs } from "../../utils/positivity/positivity";
   import Logger from "../../utils/log/log";
   const console = new Logger("📊 container/dashboard.svelte");
 
-  //Vendors
-  import { navigate, Router, Route } from "svelte-routing";
-
-  import { Block } from "../../modules/dashboard/block";
-
-  // Modules
-  import Tracker from "../../modules/tracker/tracker";
-  // Components
-  import NText from "../../components/text/text.svelte";
-  // containers
+  //Containers / Layouts
   import NLayout from "../layout/layout.svelte";
-  import { DashboardStore } from "../../store/dashboard-store";
-  import Modal from "../../components/modal/modal.svelte";
-  import DashblockEditor from "./dashblock-editor.svelte";
+  import { Dashboard } from "../../modules/dashboard/dashboard";
+
+  // Stores
   import { Interact } from "../../store/interact";
-  import Button from "../../components/button/button.svelte";
+  import { DashboardStore } from "../../store/dashboard-store";
+  import { LedgerStore } from "./../../store/ledger.js";
+  import { PeopleStore } from "./../../store/people-store.js";
+  import { TrackerStore } from "./../../store/tracker-store.js";
 
-  import { positivityFromLogs } from "../../utils/positivity/positivity";
-  import Stepper from "../../components/stepper/stepper.svelte";
-  import Dashboard from "../../routes/dashboard.svelte";
-  import Log from "../../utils/log/log";
+  let trackers: any; // holder of user Trackers - loaded from subscribe
+  let people: any; // holder of User People - loaded from subscribe
+  let dashboards: Array<Dashboard>; // holder of Dashboards
+  let unsubTrackers: Function; // Unsubscribe from trackers
+  let unsubDashboard: Function; // Unsubscribe from dashboard
+  let unsubPeople: Function; // Unsubscribe from people
+  let ready = false; // Is the component Ready
+  let editingBlock: Block; // Editing block - if defined
+  let editMode = false; // Toggle Edit mode
+  let activePage = 0; // activePage - which page we're on in the array of dasboards
+  // let lastActivePage; // last Active for managing reactiveness
+  let activeDashboard = { label: "Loading...", blocks: [] }; // Set a default dasboard
 
-  let trackers;
-  let people;
-  let dashboards;
-  let unsubTrackers;
-  let unsubDashboard;
-  let unsubPeople;
-  let ready = false;
-  let editingBlock = null;
-
-  let editMode = false;
-
+  /**
+   * Toggle Edit more
+   */
   function toggleEdit() {
     editMode = !editMode;
   }
 
-  async function saveBlock(): void {
+  /**
+   * Save the Editing Block
+   */
+  async function saveEditingBlock(): Promise<void> {
+    // If we're editing something
     if (editingBlock) {
-      Interact.blocker("Saving...");
+      Interact.blocker("Saving..."); // Throw shade
       try {
+        // Save block to current dashboardsIndex
         await DashboardStore.saveBlock(editingBlock);
       } catch (e) {
+        // Show Error
         Interact.alert("Error", e.message);
       }
+      // Disable Blocker
       Interact.stopBlocker();
+      // Clear Editing - close
       clearEditing();
     } else {
+      // no Editing block? Show message
       Interact.toast("Incomplete");
     }
   }
 
+  /**
+   * Create a New Block
+   */
   async function newBlock() {
     editingBlock = new Block();
   }
 
+  /**
+   * Edit a Block
+   * Will show the block editor
+   */
+  function editBlock(block) {
+    block._editing = true;
+    editingBlock = block;
+  }
+
+  /**
+   * Get Start / End Dates from a Board
+   * This will go through all blocks and find the full date range of the dasboard
+   */
+  function getStartEndDates(dboard) {
+    let start = null;
+    let end = null;
+    // Loop over the blocks
+    dboard.blocks.forEach((block: Block) => {
+      // Get the date range for this block
+      let dateRange = block.getDateRange();
+      // Start is first element
+      let blockStart = dateRange[0];
+      // End is last element
+      let blockEnd = dateRange[1];
+      // If block end is greater (in the future) than end
+      // save it as the winner
+      if (blockEnd > end || !end) {
+        end = blockEnd;
+      }
+      // If block start is less than (more in the past) then
+      // set it as the winner
+      if (blockStart < start || !start) {
+        start = blockStart;
+      }
+    });
+    // Return Earliest and latest dates
+    return { start, end };
+  }
+
+  /**
+   * Get the Logs for a Block
+   */
+  async function getLogsForBlock(block: Block): Promise<Array<any>> {
+    let logs = []; // Holder of the logs
+
+    const dateRange = block.getDateRange(); // Get Date Range for this block.
+    const start = dateRange[0]; // get  start
+    const end = dateRange[1]; // get end
+
+    // Get the Logs based on the Type provided
+    if (block.element && block.element.type == "tracker") {
+      // Tracker Search
+      logs = await LedgerStore.queryTag(block.element.id, start, end);
+    } else if (block.element && block.element.type == "person") {
+      // Person Search
+      logs = await LedgerStore.queryPerson(block.element.id, start, end);
+    } else if (block.element && block.element.type == "context") {
+      // Context Search
+      logs = await LedgerStore.queryContext(block.element.id, start, end);
+    } else if (block.element) {
+      // Generic Search
+      logs = await LedgerStore.queryAll(block.element.id, start, end);
+    }
+
+    return logs;
+  }
+
+  /**
+   * Load The Active Dashboard
+   * This will take the current active dashboard from the store, loop over it, and build out
+   * the data structure we need to generate each of the blocks.
+   */
+  async function loadActiveDashboard() {
+    // Get the Board
+    const dboard: Dashboard = dashboards[$DashboardStore.activeIndex];
+    // Get Start and End
+
+    // Loop over each block
+    for (let i = 0; i < dboard.blocks.length; i++) {
+      // Set the Block
+      const block: Block = dboard.blocks[i] instanceof Block ? dboard.blocks[i] : new Block(dboard.blocks[i]);
+      let start = block.getStartDate();
+      let end = block.getEndDate();
+      if (block.element) {
+        block.logs = await getLogsForBlock(block);
+
+        const statsV5 = new StatsProcessor();
+        // Generate Stats
+        block.math = block.math || (block.element.obj || {}).math || "sum";
+        // Get dayjs Start Date
+        const fromDate = dayjs(start);
+        const toDate = dayjs(end);
+        const dayDiff = Math.abs(fromDate.diff(toDate, "day"));
+        // Set Default Mode to "Week"
+        let mode = "w";
+        // Determine Stat Mode based on number of days provided
+        if (dayDiff < 8) {
+          mode = "w";
+        } else if (dayDiff < 91) {
+          mode = "m";
+        } else if (dayDiff < 365) {
+          mode = "q";
+        } else if (dayDiff > 365) {
+          mode = "y";
+        } else {
+          mode = "m";
+        }
+        // Setup the Config to Pass to Stats
+        const statsConfig = {
+          rows: block.logs,
+          fromDate,
+          toDate,
+          mode,
+          math: block.math, //state.tracker.math
+          trackableElement: block.element,
+        };
+        // Generate the Stats
+        block.stats = statsV5.generate(statsConfig);
+        // Generate the Positivity
+        block.positivity = positivityFromLogs(block.logs, block.element);
+      }
+      // Replace the block with the new populated version.
+      dboard.blocks[i] = block;
+    }
+    // Set the Active Dashboard
+    activeDashboard = dboard;
+  }
+
+  /**
+   * Initialize the Dashboard
+   */
+  function initDashboard() {
+    // Loop over the blocks - convert them to real blocks.
+    dashboards[$DashboardStore.activeIndex].blocks = dashboards[$DashboardStore.activeIndex].blocks.map((block) => {
+      // Set block
+      let nBlock = block instanceof Block ? block : new Block(block);
+      // If it's a Tracker - and the tracker exists
+      if (nBlock.element && nBlock.element.type == "tracker") {
+        nBlock.element.obj = TrackerStore.getByTag(nBlock.element.id);
+        // If it's a person and the person exists
+      } else if (nBlock.element && nBlock.element.type == "person" && people[nBlock.element.id]) {
+        nBlock.element.obj = people[nBlock.element.id];
+      }
+      return nBlock;
+    });
+    loadActiveDashboard();
+  }
+
+  // If Something changes - update the last Active Page
+  // $: if (trackers && people && dashboards && activePage !== lastActivePage) {
+  //   lastActivePage = activePage;
+  // }
+
+  /**
+   * Stop Editing
+   */
+  function clearEditing() {
+    editingBlock = undefined;
+  }
+
+  /**
+   * Rename a Dashboard
+   */
+  async function rename() {
+    let newName = await Interact.prompt("Rename Dashboard", null, {
+      value: activeDashboard.label,
+    });
+    if (newName) {
+      $DashboardStore.dashboards[$DashboardStore.activeIndex].label = newName;
+      DashboardStore.save();
+    }
+  }
+
+  /**
+   * On Mount / On Destroy
+   **/
   onMount(() => {
     unsubTrackers = TrackerStore.subscribe((tkrs) => {
       if (tkrs.trackers) {
@@ -94,134 +290,6 @@
     unsubPeople();
     unsubDashboard();
   });
-
-  async function getBlockData(block) {}
-
-  function editBlock(block) {
-    block._editing = true;
-    editingBlock = block;
-  }
-
-  function getStartEndDates(dboard) {
-    let start = null;
-    let end = null;
-    dboard.blocks.forEach((block: Block) => {
-      let dateRange = block.getDateRange();
-      let tStart = dateRange[0];
-      let tEnd = dateRange[1];
-      if (tEnd > end || !end) {
-        end = tEnd;
-      }
-      if (tStart < start || !start) {
-        start = tStart;
-      }
-    });
-    return { start, end };
-  }
-
-  async function getLogsForBlock(block: Block): Promise<Array<any>> {
-    let logs = [];
-    const dateRange = block.getDateRange();
-    const start = dateRange[0];
-    const end = dateRange[1];
-
-    if (block.element && block.element.type == "tracker") {
-      logs = await LedgerStore.queryTag(block.element.id, start, end);
-    } else if (block.element && block.element.type == "person") {
-      logs = await LedgerStore.queryPerson(block.element.id, start, end);
-    } else if (block.element && block.element.type == "context") {
-      logs = await LedgerStore.queryContext(block.element.id, start, end);
-    }
-
-    return logs;
-  }
-
-  async function loadActiveDashboard() {
-    const dboard = dashboards[$DashboardStore.activeIndex];
-    let { start, end } = getStartEndDates(dboard);
-    for (let i = 0; i < dboard.blocks.length; i++) {
-      const block = dboard.blocks[i];
-
-      if (block.element) {
-        block.logs = await getLogsForBlock(block);
-
-        const statsV5 = new StatsProcessor();
-        // Generate Stats
-        block.math = block.math || (block.element.obj || {}).math || "sum";
-
-        const fromDate = dayjs(start);
-        const toDate = dayjs(end);
-        const dayDiff = Math.abs(fromDate.diff(toDate, "day"));
-        let mode = "w";
-
-        if (dayDiff < 8) {
-          mode = "w";
-        } else if (dayDiff < 91) {
-          mode = "m";
-        } else if (dayDiff < 365) {
-          mode = "q";
-        } else if (dayDiff > 365) {
-          mode = "y";
-        } else {
-          mode = "m";
-        }
-
-        const statsConfig = {
-          rows: block.logs,
-          fromDate,
-          toDate,
-          mode,
-          math: block.math, //state.tracker.math
-          trackableElement: block.element,
-        };
-
-        console.log(statsConfig);
-
-        block.stats = statsV5.generate(statsConfig);
-
-        block.positivity = positivityFromLogs(block.logs, block.element);
-      }
-
-      dboard.blocks[i] = block;
-    }
-    activeDashboard = dboard;
-  }
-
-  let activePage = 0;
-  let lastActivePage;
-  let activeDashboard = { label: "Loading...", blocks: [] };
-
-  function initDashboard() {
-    dashboards[$DashboardStore.activeIndex].blocks = dashboards[$DashboardStore.activeIndex].blocks.map((block) => {
-      let nBlock = new Block(block);
-      if (nBlock.element && nBlock.element.type == "tracker" && trackers[nBlock.element.id]) {
-        nBlock.element.obj = trackers[nBlock.element.id];
-      } else if (nBlock.element && nBlock.element.type == "person" && people[nBlock.element.id]) {
-        nBlock.element.obj = people[nBlock.element.id];
-      }
-      return nBlock;
-    });
-    loadActiveDashboard();
-  }
-
-  $: if (trackers && people && dashboards && activePage !== lastActivePage) {
-    lastActivePage = activePage;
-    // initDashboard();
-  }
-
-  function clearEditing() {
-    editingBlock = false;
-  }
-
-  async function rename() {
-    let newName = await Interact.prompt("Rename Dashboard", null, {
-      value: activeDashboard.label,
-    });
-    if (newName) {
-      $DashboardStore.dashboards[$DashboardStore.activeIndex].label = newName;
-      DashboardStore.save();
-    }
-  }
 </script>
 
 <style lang="scss">
@@ -258,7 +326,7 @@
       <Text size="xl" className="px-2 filler" bold on:click={rename}>
         <span style="border-bottom:dotted 1px rgba(100,100,100,0.4)">{activeDashboard.label}</span>
       </Text>
-      {#if (dashboards || []).length}
+      {#if (dashboards || []).length > 1}
         <Button color="clear" on:click={DashboardStore.previous}>
           <Icon name="chevronLeft" />
         </Button>
@@ -278,10 +346,12 @@
               }} />
           {/each}
         {/if}
-        <button class="btn btn-round btn-light btn-block mx-auto my-2 mb-4" style="max-width:300px; max-height:50px;" on:click={newBlock}>
-          <Icon name="add" size="24" />
-          Add Block
-        </button>
+        <div class="w-100 flex-grow">
+          <button class="btn btn-round btn-light btn-block mx-auto my-2 mb-4" style="max-width:300px; max-height:50px;" on:click={newBlock}>
+            <Icon name="add" size="24" />
+            Add Block
+          </button>
+        </div>
       </div>
     {:else}
       <div class="mt-2" />
@@ -311,20 +381,19 @@
     {/if}
   </div>
 
-  <Modal show={editingBlock}>
-    <div class="n-toolbar-grid" slot="header">
-      <button class="btn btn-clear left" on:click={clearEditing}>
-        <Icon name="close" />
-      </button>
-      <div class="main">Block Editor</div>
-      <button class="btn btn-clear right" on:click={saveBlock}>
-        {#if editingBlock && editingBlock._editing}Update{:else}Save{/if}
-      </button>
-
-    </div>
-    {#if editingBlock}
-      <DashblockEditor bind:value={editingBlock} on:close={clearEditing} />
-    {/if}
-  </Modal>
-
 </NLayout>
+<Modal show={editingBlock !== undefined}>
+  <div class="n-toolbar-grid" slot="header">
+    <button class="btn btn-clear left" on:click={clearEditing}>
+      <Icon name="close" />
+    </button>
+    <div class="main">Block Editor</div>
+    <button class="btn btn-clear right" on:click={saveEditingBlock}>
+      {#if editingBlock && editingBlock._editing}Update{:else}Save{/if}
+    </button>
+
+  </div>
+  {#if editingBlock}
+    <DashblockEditor bind:value={editingBlock} on:close={clearEditing} />
+  {/if}
+</Modal>

@@ -10,6 +10,10 @@ import dayjs from "dayjs";
 const console = new Logger("♹ store/${lastUsedKey}.js");
 const lastUsedKey = "last-usage";
 
+import NLog from "../modules/nomie-log/nomie-log";
+
+import { LedgerStore } from "./ledger";
+
 /**
  * Last Used Store
  * Used for reading and writing the last time a tracker was used
@@ -27,6 +31,25 @@ const LastUsedStore = () => {
         return d;
       });
     },
+    async get(tag: string) {
+      let found;
+      update((state) => {
+        if (state.hasOwnProperty(tag)) {
+          found = state[tag];
+        }
+        return state;
+      });
+      if (found) {
+        return found.date;
+      } else {
+        let logs = await LedgerStore.queryTag(tag, dayjs().subtract(6, "month").toDate(), new Date());
+        if (logs) {
+          await methods.record(logs[0]);
+          return logs[0].end;
+        }
+        return null;
+      }
+    },
     data() {
       let data;
       update((d) => {
@@ -39,7 +62,7 @@ const LastUsedStore = () => {
      * Save the Last Updated on array of trackers
      * LastUsed.record(['tag1','tag2','tag4']);
      */
-    async record(log) {
+    async record(log: NLog) {
       // Get tracker tags as array
       let trackers = log.getMeta().trackers.map((trackableElement) => trackableElement.id);
 

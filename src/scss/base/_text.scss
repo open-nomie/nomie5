@@ -40,6 +40,18 @@
 .fill-red {
   fill: var(--color-red) !important;
 }
+.bg-red {
+  background-color: var(--color-red) !important;
+}
+.bg-green {
+  background-color: var(--color-green) !important;
+}
+.bg-blue {
+  background-color: var(--color-blue) !important;
+}
+.bg-orange {
+  background-color: var(--color-orange) !important;
+}
 .fill-inverse {
   fill: var(--color-inverse) !important;
 }
@@ -52,7 +64,8 @@
 .bg-solid-2 {
   background-color: var(--color-solid-2);
 }
-.bg-primary-bright {
+.bg-primary-bright,
+.bg-blue {
   background-color: var(--color-primary-bright) !important;
 }
 .bg-inverse {

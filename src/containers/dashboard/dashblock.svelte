@@ -34,15 +34,29 @@
     }
   }
 
-  function getLastUsed(trackerTag) {
-    console.log({ $LastUsed, trackerTag });
-    if ($LastUsed.hasOwnProperty(trackerTag)) {
-      let last = $LastUsed[trackerTag];
-      if (last) {
-        return dayjs(last.date).fromNow();
+  function getClass(block: Block): string {
+    let classes = [`type-${block.type}`];
+    let value;
+    if (block.stats) {
+      value = block.math !== "sum" ? block.stats.sum : block.stats.avg;
+    }
+    if (block.compareValue) {
+      if (value || 0 > block.compareValue) {
+        classes.push(`over block-over-${block.compareOverColor}`);
+      } else if (value || 0 < block.compareValue) {
+        classes.push(`over block-over-${block.compareUnderColor}`);
       }
     }
-    return "Unknown";
+    return classes.join(" ");
+  }
+
+  async function getLastUsed(trackerTag) {
+    let lastUsed = await LastUsed.get(trackerTag);
+    if (lastUsed) {
+      return dayjs(lastUsed).fromNow();
+    } else {
+      return "Last time unknown";
+    }
   }
 </script>
 
@@ -57,6 +71,22 @@
     font-size: 0.9rem;
     color: var(--color-inverse-2);
   }
+
+  :global(.dashboard-block.over .block-footer .n-text, .dashboard-block.under .block-footer .n-text) {
+    color: #fff !important;
+  }
+  :global(.dashboard-block.block-over-red .block-footer) {
+    background-color: var(--color-red);
+  }
+  :global(.dashboard-block.block-over-blue .block-footer) {
+    background-color: var(--color-blue);
+  }
+  :global(.dashboard-block.block-over-green .block-footer) {
+    background-color: var(--color-green);
+  }
+  :global(.dashboard-block.block-over-orange .block-footer) {
+    background-color: var(--color-orange);
+  }
   .dashboard-block {
     margin: 8px;
     display: inline-flex;
@@ -64,7 +94,20 @@
     background-color: var(--color-solid);
     border-radius: 16px;
     box-shadow: var(--box-shadow-float);
+    overflow: hidden;
+
+    min-width: 148px;
+    @include media-breakpoint-down(xs) {
+      min-width: calc(50% - 16px);
+    }
     width: calc(50% - 16px);
+    max-width: calc(50% - 16px);
+
+    @include media-breakpoint-up(md) {
+      width: calc(25% - 16px);
+      max-width: calc(50% - 16px);
+    }
+
     flex-shrink: 1;
     flex-grow: 1;
     .block-header,
@@ -80,8 +123,11 @@
     }
   }
   .type-barchart {
-    min-width: calc(100% - 16px);
-    max-width: 320px;
+    min-width: calc(100% - 16px) !important;
+    max-width: calc(100% - 16px);
+    @include media-breakpoint-up(md) {
+      min-width: calc(50% - 16px) !important;
+    }
   }
   .value {
     display: flex;
@@ -114,7 +160,7 @@
 </style>
 
 {#if block && block.type !== 'text'}
-  <div class="dashboard-block type-{block.type}" {id}>
+  <div class="dashboard-block {getClass(block)}" {id}>
     <div class="block-header n-row">
       <TrackerSmallBlock xs novalue element={block.element} />
       <Button
@@ -150,7 +196,9 @@
       {:else if block.type == 'last-used' && block.stats}
         <div class="value last-used">
           <div class="current">
-            {#if block.element.id}{getLastUsed(block.element.id)}{:else}Unknown{/if}
+            {#if block.element.id}
+              {#await getLastUsed(block.element.id)}Finding...{:then date}{date}{:catch error}{error.message}{/await}
+            {:else}Unknown{/if}
           </div>
         </div>
       {:else if block.type == 'positivity' && block.stats}
