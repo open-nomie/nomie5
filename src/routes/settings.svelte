@@ -42,6 +42,7 @@
   import config from "../../config/global";
   import Features from "../containers/settings/features.svelte";
   import Tweaks from "../containers/settings/tweaks.svelte";
+  import Text from "../components/text/text.svelte";
 
   // consts
   // const Export = new Exporter();
@@ -197,7 +198,7 @@ Note: Your data will not automatically move over. You'll first need to export it
     //   UserStore.saveMeta();
     // },
   };
-  let view = Storage.local.get("settings/last-view") || "tweaks";
+  let view = Storage.local.get("settings/last-view") || "features";
   function changeView(v) {
     view = v;
     Storage.local.put("settings/last-view", v);
@@ -247,8 +248,8 @@ Note: Your data will not automatically move over. You'll first need to export it
               DATA VIEW
               *******************************************
             -->
-            <div class="n-list solo">
-
+            <div class="n-list solo mb-3">
+              <Text bold className="my-2 mx-3">Importing Data</Text>
               <NItem className="clickable" title={Lang.t('settings.nomie-api')} on:click={() => navigate('/api')}>
 
                 <span slot="right">
@@ -268,7 +269,9 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </span>
                 <input slot="right" class="d-none" type="file" bind:this={fileInput} on:change={methods.onImportFile} />
               </NItem>
-
+            </div>
+            <div class="n-list solo mb-3">
+              <Text bold className="my-2 mx-3">Exporting Data</Text>
               <NItem className="clickable" title={Lang.t('settings.generate-backup')} to="/settings/export/backup">
 
                 <span slot="right">
@@ -296,14 +299,11 @@ Note: Your data will not automatically move over. You'll first need to export it
 
             </div>
 
-            <div class="n-list solo">
+            <div class="n-list solo mb-3">
+
               <NItem>
-                <div class="title truncate">
-                  <strong>{Lang.t('general.type', 'Type')}</strong>
-                </div>
-
+                <div class="title truncate">{Lang.t('general.type', 'Data Location')}</div>
                 <div slot="right">
-
                   <button class="btn btn-clear icon-right" on:click={methods.storageMenu}>
                     {#if $UserStore.storageType === 'local'}
                       {Lang.t('storage.local', 'Local')}
@@ -339,7 +339,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               {/if}
 
               <NItem
-                title="Browse Storage..."
+                title="Browse Files..."
                 on:click={() => {
                   navigate('/files');
                 }}
@@ -369,7 +369,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <NIcon name="chevron-right" />
               </span>
             </NItem>
-            <div class="n-list solo">
+            <div class="n-list solo mb-3">
 
               <NItem title="Learn More">
                 <span slot="right">
@@ -388,7 +388,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </span>
               </NItem>
             </div>
-            <div class="n-list solo">
+            <div class="n-list solo mb-3">
               <NItem title={Lang.t('general.trackers', 'Tracker Count')}>
                 <span slot="right">{TrackerStore.getAsArray().length}</span>
               </NItem>
