@@ -1,16 +1,11 @@
 import { writable } from "svelte/store";
 import config from "../../config/global";
 // utils
-import Logger from "../utils/log/log";
-
 import NStorage from "../modules/storage/storage";
+import type NLog from "../modules/nomie-log/nomie-log";
 
 import dayjs from "dayjs";
-
-const console = new Logger("♹ store/${lastUsedKey}.js");
 const lastUsedKey = "last-usage";
-
-import NLog from "../modules/nomie-log/nomie-log";
 
 import { LedgerStore } from "./ledger";
 
@@ -33,15 +28,18 @@ const LastUsedStore = () => {
     },
     async get(tag: string) {
       let found;
+      // Find if it exists in the last used
       update((state) => {
         if (state.hasOwnProperty(tag)) {
           found = state[tag];
         }
         return state;
       });
+      // If found - return the date
       if (found) {
         return found.date;
       } else {
+        // Not found? Lets query the ledger for the last 6 months
         let logs = await LedgerStore.queryTag(tag, dayjs().subtract(6, "month").toDate(), new Date());
         if (logs) {
           await methods.record(logs[0]);
