@@ -105,10 +105,12 @@ export interface IBlock {
   compareValue?: number;
   compareOverColor?: string;
   compareUnderColor?: string;
+  value?: any;
   math?: string;
   logs?: Array<NLog>;
   positivity?: any;
   stats?: any;
+  lastUsed?: any;
   getTitle(): string;
   getLabel(): string;
   isValid(): boolean;
@@ -133,11 +135,15 @@ export class Block {
   logs?: Array<NLog>;
   positivity?: any;
   stats?: any;
+  lastUsed?: any;
   constructor(payload?: IBlock) {
     if (payload) {
       this.id = payload.id || nid();
       this.type = payload.type;
       this.description = payload.description;
+      if (typeof payload.compareValue == "string") {
+        payload.compareValue = parseFloat(payload.compareValue);
+      }
       this.compareValue = payload.compareValue;
       this.compareOverColor = payload.compareOverColor;
       this.compareUnderColor = payload.compareUnderColor;

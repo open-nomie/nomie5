@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 const lastUsedKey = "last-usage";
 
 import { LedgerStore } from "./ledger";
+import { ITrackableElement } from "../modules/trackable-element/trackable-element";
 
 /**
  * Last Used Store
@@ -26,7 +27,7 @@ const LastUsedStore = () => {
         return d;
       });
     },
-    async get(tag: string) {
+    async get(tag: string, type?: ITrackableElement) {
       let found;
       // Find if it exists in the last used
       update((state) => {
@@ -37,13 +38,13 @@ const LastUsedStore = () => {
       });
       // If found - return the date
       if (found) {
-        return found.date;
+        return new Date(found.date);
       } else {
         // Not found? Lets query the ledger for the last 6 months
         let logs = await LedgerStore.queryTag(tag, dayjs().subtract(6, "month").toDate(), new Date());
         if (logs) {
           await methods.record(logs[0]);
-          return logs[0].end;
+          return new Date(logs[0].end);
         }
         return null;
       }

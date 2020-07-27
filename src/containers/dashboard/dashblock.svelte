@@ -38,25 +38,22 @@
     let classes = [`type-${block.type}`];
     let value;
     if (block.stats) {
-      value = block.math !== "sum" ? block.stats.sum : block.stats.avg;
+      if (block.type == "last-used") {
+        value = block.stats.daysPast;
+      } else {
+        value = block.math !== "sum" ? block.stats.avg : block.stats.sum;
+      }
     }
+    value = value || 0;
+    console.log("get class", { value, compareValue: block.compareValue });
     if (block.compareValue) {
-      if (value || 0 > block.compareValue) {
-        classes.push(`over block-over-${block.compareOverColor}`);
-      } else if (value || 0 < block.compareValue) {
-        classes.push(`over block-over-${block.compareUnderColor}`);
+      if (value > block.compareValue) {
+        classes.push(`over block-${block.compareOverColor}`);
+      } else if (value < block.compareValue) {
+        classes.push(`over block-${block.compareUnderColor}`);
       }
     }
     return classes.join(" ");
-  }
-
-  async function getLastUsed(trackerTag) {
-    let lastUsed = await LastUsed.get(trackerTag);
-    if (lastUsed) {
-      return dayjs(lastUsed).fromNow();
-    } else {
-      return "Last time unknown";
-    }
   }
 </script>
 
@@ -75,16 +72,16 @@
   :global(.dashboard-block.over .block-footer .n-text, .dashboard-block.under .block-footer .n-text) {
     color: #fff !important;
   }
-  :global(.dashboard-block.block-over-red .block-footer) {
+  :global(.dashboard-block.block-red .block-footer) {
     background-color: var(--color-red);
   }
-  :global(.dashboard-block.block-over-blue .block-footer) {
+  :global(.dashboard-block.block-blue .block-footer) {
     background-color: var(--color-blue);
   }
-  :global(.dashboard-block.block-over-green .block-footer) {
+  :global(.dashboard-block.block-green .block-footer) {
     background-color: var(--color-green);
   }
-  :global(.dashboard-block.block-over-orange .block-footer) {
+  :global(.dashboard-block.block-orange .block-footer) {
     background-color: var(--color-orange);
   }
   .dashboard-block {
@@ -116,6 +113,9 @@
       flex-grow: 0;
       flex-shrink: 0;
       min-height: 32px;
+    }
+    .block-footer {
+      margin-top: 8px;
     }
 
     .block-main {
@@ -193,12 +193,10 @@
             <div class="avg">{formatValue(block.stats.avg)}</div>
           {/if}
         </div>
-      {:else if block.type == 'last-used' && block.stats}
+      {:else if block.type == 'last-used'}
         <div class="value last-used">
           <div class="current">
-            {#if block.element.id}
-              {#await getLastUsed(block.element.id)}Finding...{:then date}{date}{:catch error}{error.message}{/await}
-            {:else}Unknown{/if}
+            {#if block.lastUsed}{dayjs(block.lastUsed).fromNow()}{:else}Unknown{/if}
           </div>
         </div>
       {:else if block.type == 'positivity' && block.stats}

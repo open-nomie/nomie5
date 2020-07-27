@@ -1,9 +1,10 @@
 import snakeCase from "../../utils/snake-case/snake-case";
 import stringToValue from "../../utils/string-to-value/string-to-value";
 
+export type ITrackableElementType = "tracker" | "person" | "context" | "generic";
 export interface ITrackableElement {
   id: string;
-  type: string;
+  type: ITrackableElementType;
   raw?: string;
   value?: any;
   prefix?: any;
@@ -13,7 +14,7 @@ export interface ITrackableElement {
 
 export default class TrackableElement {
   id: string;
-  type: string;
+  type: ITrackableElementType;
   raw?: string;
   value?: any;
   prefix?: any;
@@ -21,13 +22,13 @@ export default class TrackableElement {
   obj?: any;
   constructor(starter: ITrackableElement) {
     if (starter) {
-      this.id = starter.id || null; // brandon of @brandon, meet of #meet, home of +home
-      this.type = starter.type || null; // tracker, person, context
-      this.raw = starter.raw || null; // the raw string
+      this.id = starter.id; // brandon of @brandon, meet of #meet, home of +home
+      this.type = starter.type; // tracker, person, context
+      this.raw = starter.raw; // the raw string
       this.value = starter.value; // any value passed or 1
-      this.prefix = starter.prefix || null; // @ # or +
-      this.remainder = starter.remainder || null; // holder of any characters after this
-      this.obj = starter.obj || null; // holder of related things
+      this.prefix = starter.prefix; // @ # or +
+      this.remainder = starter.remainder; // holder of any characters after this
+      this.obj = starter.obj; // holder of related things
     }
 
     // Lowercase the ID no matter what
