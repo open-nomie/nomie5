@@ -13,6 +13,8 @@
   import ToggleSwitch from "../../components/toggle-switch/toggle-switch.svelte";
   import Icon from "../../components/icon/icon.svelte";
   import TinyColorPicker from "../../components/color-picker/tiny-color-picker.svelte";
+  import { TrackerStore } from "../../store/tracker-store";
+  import TrackerConfig from "../../modules/tracker/tracker";
   export let value: Block = null;
 
   let dateType;
@@ -31,6 +33,10 @@
   $: if (dateType) {
     let timeFrame = timeFrames.find((t) => t.id == dateType);
     value.timeRange = new BlockTimeFrame(timeFrame);
+  }
+
+  $: if (conditionalStyling === false) {
+    // value.compareValue = undefined;
   }
 
   const dispatch = createEventDispatcher();
@@ -90,6 +96,16 @@
       },
     },
     {
+      id: "this-year",
+      label: "This Year",
+      start: {
+        startOf: "year",
+      },
+      end: {
+        endOf: "year",
+      },
+    },
+    {
       id: "last-month",
       label: "Last Month",
       start: {
@@ -123,9 +139,31 @@
         endOf: "day",
       },
     },
+    {
+      id: "last-90",
+      label: "Last 90 days",
+      start: {
+        subtract: [90, "day"],
+        startOf: "day",
+      },
+      end: {
+        endOf: "day",
+      },
+    },
+    {
+      id: "last-365",
+      label: "Last 365 days",
+      start: {
+        subtract: [365, "day"],
+        startOf: "day",
+      },
+      end: {
+        endOf: "day",
+      },
+    },
   ];
 
-  type IBlockTypeUnit = "timeframe" | "goal" | "element";
+  type IBlockTypeUnit = "timeframe" | "cond-style" | "element";
   interface IBlockType {
     id: string;
     label: string;
@@ -144,7 +182,7 @@
       label: "Value/Count",
       id: "value",
       requires: ["timeframe", "element"],
-      optional: ["goal"],
+      optional: ["cond-style"],
     },
     {
       label: "Positivity Pie Chart",
@@ -156,7 +194,7 @@
       label: "Last Used",
       id: "last-used",
       requires: ["element"],
-      optional: [],
+      optional: ["cond-style"],
     },
     {
       label: "Just Text",
@@ -211,6 +249,20 @@
     });
   }
 
+  async function getConditionalValue() {
+    let inputTracker;
+    if (value.element.type == "tracker") {
+      inputTracker = value.element.obj;
+    } else {
+      inputTracker = new TrackerConfig({ tag: value.element.obj.id, type: "numeric" });
+    }
+    const tracker = TrackerStore.getByTag();
+    const response = await Interact.trackerInput(value.element.obj, { value: value.compareValue, allowSave: false });
+    if (response && response.value) {
+      value.compareValue = response.value;
+    }
+  }
+
   onMount(() => {
     if (value) {
       if (value.timeRange) {
@@ -260,7 +312,7 @@
     </ListItem>
   {/if}
 
-  {#if blockTypeId == 'value'}
+  {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('cond-style') > -1}
     <div class="conditional-styling n-list {conditionalStyling ? 'solo framed' : ''}">
       <ListItem title="Conditional Colors">
         <div slot="right">
@@ -270,15 +322,17 @@
       {#if conditionalStyling}
         <ListItem title="Compare Value">
           <div slot="right">
-            <Input pattern="[0-9]*" inputmode="numeric" placeholder="Value" style="max-width:140px;" bind:value={value.compareValue}>
+            <Input
+              pattern="[0-9]*"
+              inputmode="numeric"
+              placeholder={blockTypeId == 'value' ? 'Value' : blockTypeId == 'last-used' ? 'Days' : 'Value'}
+              style="max-width:140px;"
+              bind:value={value.compareValue}>
               <button
                 class="btn btn-icon clickable mr-2"
                 slot="right"
                 on:click={async () => {
-                  const response = await Interact.trackerInput(value.element.obj, { value: value.compareValue, allowSave: false });
-                  if (response && response.value) {
-                    value.compareValue = response.value;
-                  }
+                  getConditionalValue();
                 }}>
                 {#if value.element.type == 'tracker'}
                   <Icon name="addOutline" />

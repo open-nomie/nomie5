@@ -41,7 +41,7 @@
 
   async function initChart() {
     showChart = false;
-    await tick(100);
+    await tick(200);
     showChart = true;
     var ctx = document.getElementById(chartId);
 
@@ -65,6 +65,9 @@
         ],
       },
       options: {
+        animation: {
+          duration: 0, // general animation time
+        },
         defaultColor: color,
         responsive: true,
         defaultFontSize: 10,

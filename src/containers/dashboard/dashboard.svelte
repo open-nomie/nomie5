@@ -52,7 +52,7 @@
   let activePage = 0; // activePage - which page we're on in the array of dasboards
   // let lastActivePage; // last Active for managing reactiveness
   let activeDashboard = { label: "Loading...", blocks: [] }; // Set a default dasboard
-
+  let stopRefresh;
   /**
    * Toggle Edit more
    */
@@ -200,11 +200,11 @@
         // Determine Stat Mode based on number of days provided
         if (dayDiff < 8) {
           mode = "w";
-        } else if (dayDiff < 91) {
+        } else if (dayDiff < 89) {
           mode = "m";
         } else if (dayDiff < 365) {
           mode = "q";
-        } else if (dayDiff > 365) {
+        } else if (dayDiff > 364) {
           mode = "y";
         } else {
           mode = "m";
@@ -293,11 +293,15 @@
       if (dbStore.dashboards.length) {
         dashboards = dbStore.dashboards;
         initDashboard();
+        // stopRefresh = setInterval(() => {
+        //   initDashboard();
+        // }, 10000);
       }
     });
   });
 
   onDestroy(() => {
+    // clearInterval(stopRefresh);
     unsubTrackers();
     unsubPeople();
     unsubDashboard();

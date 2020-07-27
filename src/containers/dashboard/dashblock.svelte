@@ -190,7 +190,7 @@
         <div class="value {block.includeAvg ? 'value-sm' : ''}">
           <div class="current">{block.math == 'mean' ? formatValue(block.stats.avg) : formatValue(block.stats.sum)}</div>
           {#if block.includeAvg}
-            <div class="avg">{formatValue(block.stats.avg)}</div>
+            <div class="avg">avg {formatValue(block.stats.avg)}</div>
           {/if}
         </div>
       {:else if block.type == 'last-used'}
