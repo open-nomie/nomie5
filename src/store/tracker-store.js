@@ -336,7 +336,11 @@ const trackerStoreInit = () => {
       update((state) => {
         state.trackers = state.trackers || {};
         delete state.trackers[tracker.tag];
-        response = methods.save(state.trackers);
+        try {
+          response = methods.save(state.trackers);
+        } catch (e) {
+          alert(e.message);
+        }
         return state;
       });
       return response;
