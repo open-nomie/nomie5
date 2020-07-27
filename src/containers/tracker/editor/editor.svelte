@@ -365,16 +365,22 @@
       {/if}
 
       <div class="p-2" />
+      <NItem title={Lang.t('tracker.hide-on-all-board', 'Hide on All Board')}>
+        <div slot="right">
+          <NToggle bind:value={data.tracker.hidden} />
+        </div>
+      </NItem>
+      <div class="p-2" />
       <NItem on:click={TrackerStore.download(data.tracker)} className="bottom-line">
-        <div class="text-primary-bright">Download .tkr</div>
+        <div class="text-primary-bright">{Lang.t('general.download', 'Download')} .tkr</div>
         <div slot="right" class="text-faded-2">Share this tracker config</div>
       </NItem>
       <NItem on:click={duplicate} className="bottom-line">
-        <div class="text-primary-bright">Duplicate Tracker</div>
+        <div class="text-primary-bright">{Lang.t('tracker.duplicate-tracker', 'Duplicate Tracker')}</div>
       </NItem>
 
       <NItem on:click={remove} className="bottom-line">
-        <div class="text-red">Remove Tracker</div>
+        <div class="text-red">{Lang.t('tracker.remove-tracker', 'Delete Tracker')}</div>
       </NItem>
 
       <button slot="footer" on:click={methods.cancel} class="btn btn-light btn-lg flex-grow mr-1">{Lang.t('general.cancel')}</button>

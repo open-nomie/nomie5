@@ -6,7 +6,33 @@ import extract from "../../utils/extract/extract";
 
 import md5 from "md5";
 
+type ITrackerType = "tick" | "value" | "range" | "picker" | "note" | "timer";
+type ITrackerMath = "sum" | "mean";
+
 export default class TrackerConfig {
+  id?: string; // Id of Tracker
+  tag: string; // Tag of Tracker
+  label?: string; // Label of the Tracker
+  type?: ITrackerType; // Type of Tracker
+  color?: string; // Color of Tracker
+  math?: ITrackerMath; // Sum Mean?
+  ignore_zeros?: Boolean; // Ignore Zeros when doing maths
+  uom?: string; // Unit of Measure KEY
+  emoji?: string; // Emoji for the Tracker
+  default?: string | number; // Default value for a tracker
+  max?: number; // Max of a Range
+  min?: number; // Min of a Range
+  score?: number; // Current Score?
+  score_calc?: any; // Positivity Score calc
+  goal?: any; // NOT USED
+  one_tap?: boolean; // One tapper?
+  include?: string; // Content to always include when tracking this tracker
+  note?: string; // Content to include when a note tracker
+  hidden?: boolean; // Hidden from All Board
+  started?: Date; // If its started (and a timer based tracker)
+  picks?: Array<string>; // Picks for a Picker type of tracker
+  private _dirty?: boolean;
+
   constructor(starter) {
     // Starter is generic object with params
     starter = starter || {};
@@ -48,46 +74,25 @@ export default class TrackerConfig {
     this.goal = starter.goal || null;
     // one tap
     this.one_tap = starter.one_tap === true ? true : false;
-
     // include
     this.include = starter.include || "";
     // Primary NOte
     this.note = starter.note || null;
 
+    // Hide from All Board
     this.hidden = starter.hidden === true ? true : false;
-
-    this.hook = starter.hook || null;
 
     // If it's a timer, set if started else null
     if (this.type === "timer") {
       this.started = starter.started || null;
     }
 
-    // Honestly, I don't remembrer what this is about
-    if (starter.decimal === true) {
-      this.decimal = true;
-    } else {
-      this.decimal = false;
-    }
-    // Holder for any scheduled reminders
-    // Not used in Open Nomie since we don't
-    // have a good means for notifications
-    this.reminders = [];
     this.picks = starter.picks || undefined;
-
-    if (starter.reminders) {
-      if (starter.reminders.length) {
-        starter.reminders.forEach((reminder) => {
-          this.reminders.push(new Reminder(reminder));
-        });
-      }
-    }
 
     if (starter.label) {
       this.label = starter.label;
     } else {
       this.label = this.displayTag();
-      // this.label = 'dick'
     }
   }
 
