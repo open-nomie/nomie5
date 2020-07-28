@@ -165,66 +165,72 @@
    */
   async function loadActiveDashboard() {
     // Get the Board
-    const dboard: Dashboard = dashboards[$DashboardStore.activeIndex];
+    const activeIndex = $DashboardStore.activeIndex;
+    let dboard;
+    if (dashboards.length > activeIndex) {
+      dboard = dashboards[$DashboardStore.activeIndex];
+    }
     // Get Start and End
 
     // Loop over each block
-    for (let i = 0; i < dboard.blocks.length; i++) {
-      // Set the Block
-      const block: Block = dboard.blocks[i] instanceof Block ? dboard.blocks[i] : new Block(dboard.blocks[i]);
-      let start = block.getStartDate();
-      let end = block.getEndDate();
+    if (dboard) {
+      for (let i = 0; i < dboard.blocks.length; i++) {
+        // Set the Block
+        const block: Block = dboard.blocks[i] instanceof Block ? dboard.blocks[i] : new Block(dboard.blocks[i]);
+        let start = block.getStartDate();
+        let end = block.getEndDate();
 
-      // TODO make this work for all trackable elements
-      if (block.type == "last-used" && block.element.type == "tracker") {
-        block.lastUsed = await LastUsed.get(block.element.id);
-        if (block.lastUsed) {
-          let lastUsedDay = dayjs(block.lastUsed);
-          let daysPast = Math.abs(dayjs().diff(lastUsedDay, "day"));
-          block.stats = block.stats || {};
-          block.stats.daysPast = daysPast;
+        // TODO make this work for all trackable elements
+        if (block.type == "last-used" && block.element.type == "tracker") {
+          block.lastUsed = await LastUsed.get(block.element.id);
+          if (block.lastUsed) {
+            let lastUsedDay = dayjs(block.lastUsed);
+            let daysPast = Math.abs(dayjs().diff(lastUsedDay, "day"));
+            block.stats = block.stats || {};
+            block.stats.daysPast = daysPast;
+          }
         }
-      }
-      if (block.element && block.type != "last-used") {
-        block.logs = await getLogsForBlock(block);
+        if (block.element && block.type != "last-used") {
+          block.logs = await getLogsForBlock(block);
 
-        const statsV5 = new StatsProcessor();
-        // Generate Stats
-        block.math = block.math || (block.element.obj || {}).math || "sum";
-        // Get dayjs Start Date
-        const fromDate = dayjs(start);
-        const toDate = dayjs(end);
-        const dayDiff = Math.abs(fromDate.diff(toDate, "day"));
-        // Set Default Mode to "Week"
-        let mode = "w";
-        // Determine Stat Mode based on number of days provided
-        if (dayDiff < 8) {
-          mode = "w";
-        } else if (dayDiff < 89) {
-          mode = "m";
-        } else if (dayDiff < 365) {
-          mode = "q";
-        } else if (dayDiff > 364) {
-          mode = "y";
-        } else {
-          mode = "m";
+          const statsV5 = new StatsProcessor();
+          // Generate Stats
+          block.math = block.math || (block.element.obj || {}).math || "sum";
+          // Get dayjs Start Date
+          const fromDate = dayjs(start);
+          const toDate = dayjs(end);
+          const dayDiff = Math.abs(fromDate.diff(toDate, "day"));
+          // Set Default Mode to "Week"
+          let mode = "w";
+          // Determine Stat Mode based on number of days provided
+          if (dayDiff < 8) {
+            mode = "w";
+          } else if (dayDiff < 89) {
+            mode = "m";
+          } else if (dayDiff < 365) {
+            mode = "q";
+          } else if (dayDiff > 364) {
+            mode = "y";
+          } else {
+            mode = "m";
+          }
+          // Setup the Config to Pass to Stats
+          const statsConfig = {
+            rows: block.logs,
+            fromDate,
+            toDate,
+            mode,
+            math: block.math, //state.tracker.math
+            trackableElement: block.element,
+          };
+          // Generate the Stats
+          block.stats = statsV5.generate(statsConfig);
+          // Generate the Positivity
+          block.positivity = positivityFromLogs(block.logs, block.element);
         }
-        // Setup the Config to Pass to Stats
-        const statsConfig = {
-          rows: block.logs,
-          fromDate,
-          toDate,
-          mode,
-          math: block.math, //state.tracker.math
-          trackableElement: block.element,
-        };
-        // Generate the Stats
-        block.stats = statsV5.generate(statsConfig);
-        // Generate the Positivity
-        block.positivity = positivityFromLogs(block.logs, block.element);
+        // Replace the block with the new populated version.
+        dboard.blocks[i] = block;
       }
-      // Replace the block with the new populated version.
-      dboard.blocks[i] = block;
     }
     // Set the Active Dashboard
     activeDashboard = dboard;
@@ -235,19 +241,23 @@
    */
   function initDashboard() {
     // Loop over the blocks - convert them to real blocks.
-    dashboards[$DashboardStore.activeIndex].blocks = dashboards[$DashboardStore.activeIndex].blocks.map((block) => {
-      // Set block
-      let nBlock = block instanceof Block ? block : new Block(block);
-      // If it's a Tracker - and the tracker exists
-      if (nBlock.element && nBlock.element.type == "tracker") {
-        nBlock.element.obj = TrackerStore.getByTag(nBlock.element.id);
-        // If it's a person and the person exists
-      } else if (nBlock.element && nBlock.element.type == "person" && people[nBlock.element.id]) {
-        nBlock.element.obj = people[nBlock.element.id];
-      }
-      return nBlock;
-    });
-    loadActiveDashboard();
+    try {
+      dashboards[$DashboardStore.activeIndex].blocks = dashboards[$DashboardStore.activeIndex].blocks.map((block) => {
+        // Set block
+        let nBlock = block instanceof Block ? block : new Block(block);
+        // If it's a Tracker - and the tracker exists
+        if (nBlock.element && nBlock.element.type == "tracker") {
+          nBlock.element.obj = TrackerStore.getByTag(nBlock.element.id);
+          // If it's a person and the person exists
+        } else if (nBlock.element && nBlock.element.type == "person" && people[nBlock.element.id]) {
+          nBlock.element.obj = people[nBlock.element.id];
+        }
+        return nBlock;
+      });
+      loadActiveDashboard();
+    } catch (e) {
+      console.error(e.message);
+    }
   }
 
   // If Something changes - update the last Active Page
@@ -293,15 +303,11 @@
       if (dbStore.dashboards.length) {
         dashboards = dbStore.dashboards;
         initDashboard();
-        // stopRefresh = setInterval(() => {
-        //   initDashboard();
-        // }, 10000);
       }
     });
   });
 
   onDestroy(() => {
-    // clearInterval(stopRefresh);
     unsubTrackers();
     unsubPeople();
     unsubDashboard();
