@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 const lastUsedKey = "last-usage";
 
 import { LedgerStore } from "./ledger";
-import { ITrackableElement } from "../modules/trackable-element/trackable-element";
+import type { ITrackableElement } from "../modules/trackable-element/trackable-element";
 
 /**
  * Last Used Store
