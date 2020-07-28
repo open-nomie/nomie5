@@ -117,9 +117,11 @@ export default class StatsProcessor {
    * from a valueMap
    * @param {Object} valueMap
    */
+
   getMinMaxFromValueMap(valueMap) {
     let min = { value: null, dateKey: null, date: null };
     let max = { value: 0, dateKey: null, date: null };
+    let dates = [];
     let values = [];
     Object.keys(valueMap).map((dateKey) => {
       let value;
@@ -129,9 +131,17 @@ export default class StatsProcessor {
         value = _math.average(valueMap[dateKey]);
       }
       values.push(value);
+      dates.push({ dateKey, value });
     });
     min.value = _math.min(values, false);
     max.value = _math.max(values);
+    let maxDateFound = dates.find((d) => d.value == max.value);
+    let minDateFound = dates.find((d) => d.value == min.value);
+    min.date = dayjs(minDateFound.dateKey).toDate();
+    min.dateKey = minDateFound.dateKey;
+    max.date = dayjs(maxDateFound.dateKey).toDate();
+    max.dateKey = maxDateFound.dateKey;
+
     return { min, max };
   }
 

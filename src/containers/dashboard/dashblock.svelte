@@ -45,7 +45,7 @@
       }
     }
     value = value || 0;
-    console.log("get class", { value, compareValue: block.compareValue });
+
     if (block.compareValue) {
       if (value > block.compareValue) {
         classes.push(`over block-${block.compareOverColor}`);
