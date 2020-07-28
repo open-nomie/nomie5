@@ -1,7 +1,7 @@
 import ScoreNote from "../../modules/scoring/score-note";
 import type Record from "../../modules/nomie-log/nomie-log";
 import TrackableElement from "../../modules/trackable-element/trackable-element";
-import TrackerConfig from "../../modules/tracker/tracker";
+import type TrackerConfig from "../../modules/tracker/tracker";
 import ScoreTracker from "../../modules/scoring/score-tracker";
 export interface IPositivityResults {
   positive: number;
