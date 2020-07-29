@@ -233,7 +233,7 @@
       }
     }
     // Set the Active Dashboard
-    activeDashboard = dboard;
+    activeDashboard = dboard || new Dashboard();
   }
 
   /**

@@ -26,7 +26,7 @@
 
   $: if (blockTypeId) {
     blockType = blockTypes.find((blockType) => blockType.id == blockTypeId);
-    console.log("Block Type selected", blockType);
+
     value.type = blockTypeId;
   }
 

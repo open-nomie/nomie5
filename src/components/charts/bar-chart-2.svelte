@@ -29,7 +29,6 @@
   let theChart;
 
   $: if (points) {
-    console.log(`${points.length} Points for this Chart`);
     initChart();
   }
 

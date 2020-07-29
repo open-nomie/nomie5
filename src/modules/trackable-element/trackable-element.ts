@@ -10,6 +10,7 @@ export interface ITrackableElement {
   prefix?: any;
   remainder?: any;
   obj?: any;
+  getPrefix?: any;
 }
 
 export default class TrackableElement {
