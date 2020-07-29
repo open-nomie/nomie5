@@ -6,7 +6,7 @@ import Tracker from "./tracker";
 import PromiseStep from "../../utils/promise-step/promise-step";
 import NomieLog from "../nomie-log/nomie-log";
 import { TrackerStore } from "../../store/tracker-store";
-import TrackerConfig from "./tracker";
+import type TrackerConfig from "./tracker";
 
 /**
  * Tracker Input
