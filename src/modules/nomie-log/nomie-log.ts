@@ -1,8 +1,8 @@
-import nid from "../../modules/nid/nid";
+import nid from "../nid/nid";
 
 // Modules
 import extractor from "../../utils/extract/extract";
-import ScoreNote from "../../modules/scoring/score-note";
+import ScoreNote from "../scoring/score-note";
 import dayjs from "dayjs";
 import math from "../../utils/math/math";
 
@@ -13,7 +13,22 @@ import math from "../../utils/math/math";
  * It's been called a record since Nomie 1, but a log is a better name
  * you'll see i've used the term both thoughout - 🤦‍♂️
  */
-export default class Record {
+export default class NLog {
+  public _dirty?: boolean;
+  public _id?: string;
+  public note?: string;
+  public start: number;
+  public end: number;
+  public score?: number;
+  public lat?: number;
+  public lng?: number;
+  public location?: string;
+  public offset?: number;
+  public modified?: number;
+  public source?: string;
+
+  public trackers: Array<any>;
+
   constructor(starter) {
     starter = starter || {};
 
@@ -46,17 +61,6 @@ export default class Record {
 
     this.offset = starter.offset || new Date().getTimezoneOffset();
 
-    // if (!starter.offset && this.lat) {
-    //   let local = timespace.getFuzzyLocalTimeFromPoint(this.end || Date.now(), [this.lng, this.lat]);
-    //   if (local) {
-    //     let offset = -local._offset;
-    //     this.offset = offset;
-    //   }
-    // } else {
-    //   this.offset = starter.offset || new Date().getTimezoneOffset();
-    // }
-    // this.offset = starter.offset || new Date().getTimezoneOffset();
-
     // Get if this has been edited
     this.modified = starter.modified || false;
 
@@ -81,24 +85,24 @@ export default class Record {
   }
 
   // Get a hash of this note
-  hash() {
+  hash(): string {
     return nid([this.note, this.start, this.end, this.lat, this.lng].join(""));
   }
 
-  isValid() {
-    return this.note.length > 0 || this.lat || this.lng;
+  isValid(): boolean {
+    return this.note.length > 0 || this.lat || this.lng ? true : false;
   }
 
-  calculateScore(note = null) {
+  calculateScore(note = null): number {
     return ScoreNote(note || this.note, this.end);
   }
 
-  setScore(score) {
+  setScore(score): void {
     this.score = score;
   }
 
   // add a tag to the note
-  addTag(tag, value) {
+  addTag(tag, value): this {
     if (value) {
       this.note = `${this.note} #${tag}(${value})`;
     } else {
@@ -109,14 +113,14 @@ export default class Record {
   }
 
   // Does it have a specific  tracker?
-  hasTracker(trackerTag) {
+  hasTracker(trackerTag): boolean {
     if (!this.trackers) {
       this.getMeta();
     }
     return this.trackers.find((trackerElement) => trackerElement.id == trackerTag) ? true : false;
   }
 
-  getTrackerValues(trackerTag) {
+  getTrackerValues(trackerTag): Array<any> {
     return this.trackers
       .filter((trackerElement) => trackerElement.id == trackerTag)
       .map((trackerElement) => {

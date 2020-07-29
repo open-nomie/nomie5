@@ -4,8 +4,9 @@ import { Interact } from "../../store/interact";
 import extractor from "../../utils/extract/extract";
 import Tracker from "./tracker";
 import PromiseStep from "../../utils/promise-step/promise-step";
-import NomieLog from "../../modules/nomie-log/nomie-log";
+import NomieLog from "../nomie-log/nomie-log";
 import { TrackerStore } from "../../store/tracker-store";
+import TrackerConfig from "./tracker";
 
 /**
  * Tracker Input
@@ -13,6 +14,13 @@ import { TrackerStore } from "../../store/tracker-store";
  */
 
 export default class TrackerInputer {
+  tracker: TrackerConfig;
+  value: number;
+  listeners: {
+    cancel: Array<Function>;
+    value: Array<Function>;
+  };
+  $TrackerStore: any;
   /**
    * Constructor
    * Pass in tracker and the tracker store $ object
@@ -27,19 +35,19 @@ export default class TrackerInputer {
     this.$TrackerStore = $TrackerStore;
   }
   // Listeners
-  on(type, func) {
+  on(type: string, func: Function): void {
     if (this.listeners[type].indexOf(func) == -1) {
       this.listeners[type].push(func);
     }
   }
   // Firing listeners
-  fire(type) {
+  fire(type: string): void {
     this.listeners[type].forEach((func) => {
       func(this);
     });
   }
 
-  async getTrackerInputAsString(tracker, value) {
+  async getTrackerInputAsString(tracker: TrackerConfig, value?: number): Promise<string> {
     const response = await Interact.trackerInput(tracker, { value, allowSave: false });
     if (response && response.tracker) {
       return `#${response.tracker.tag}(${response.value}) `;
@@ -68,7 +76,7 @@ export default class TrackerInputer {
     let items = trackerElements.map((trackerElement) => {
       let tag = trackerElement.id;
       return {
-        tracker: $TrackerStore.trackers[tag] || new Tracker({ tag: tag }),
+        tracker: this.$TrackerStore.trackers[tag] || new Tracker({ tag: tag }),
         value: trackerElement.value, // not being used?
       };
     });
@@ -109,6 +117,12 @@ export default class TrackerInputer {
     return note.join(" ");
   }
 
+  /**
+   * Get a tracker input
+   * THIS IS A GOD DAMN MESS! This should just return an array of elements to be included
+   * but not it's adding them to the log store - this is sloppy.
+   * @param options
+   */
   async get(options) {
     options = options || {};
 
@@ -131,13 +145,22 @@ export default class TrackerInputer {
           ActiveLogStore.removeStr(options.replace);
         }, 120);
       }
+
       if (this.tracker.type === "tick") {
         // Just add the tag to the note
-        ActiveLogStore.addTag(this.tracker.tag, this.tracker.default);
+        // ActiveLogStore.addTag(this.tracker.tag, this.tracker.default);
         let includeStr = this.tracker.getIncluded(1);
-        ActiveLogStore.addElement(includeStr);
+        if (includeStr || "".length) {
+          ActiveLogStore.addElement(includeStr);
+        }
+        // This is getting added in the board.svelte file - refer to sloppy comment at top of function
+        // ActiveLogStore.addElement(includeStr);
         // If it's one_tap - then save it
-        finished();
+        finished({ tracker: this.tracker, value: null });
+        // return {
+        //   tracker: null,
+        //   value: this.value,
+        // };
         // If it's a note (combined trackers)
       } else if (this.tracker.type === "note") {
         /**
@@ -155,6 +178,8 @@ export default class TrackerInputer {
         let trackerElements = meta.trackers;
         let contexts = meta.context;
         let people = meta.people;
+        // Add the Tracker Tag
+        ActiveLogStore.addTag(this.tracker.tag);
         // Loop over people add to log
         people.forEach((person) => {
           ActiveLogStore.addElement(`@${person}`);
