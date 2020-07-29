@@ -288,7 +288,6 @@
     // add space to the end.
     setTimeout(() => {
       if (textarea) {
-        console.log("Textarea change?");
         textarea.value = textarea.value;
       }
       // adjust textarea size

@@ -8,6 +8,12 @@ import NomieLog from "../nomie-log/nomie-log";
 import { TrackerStore } from "../../store/tracker-store";
 import type TrackerConfig from "./tracker";
 
+interface ITrackerInputerGetOptions {}
+interface ITrackerInputResult {
+  suffix?: string;
+  tracker: TrackerConfig;
+  value: number;
+}
 /**
  * Tracker Input
  * This is a main method for collecting details on a specific tracker, or group of trackers
@@ -47,8 +53,8 @@ export default class TrackerInputer {
     });
   }
 
-  async getTrackerInputAsString(tracker: TrackerConfig, value?: number): Promise<string> {
-    const response = await Interact.trackerInput(tracker, { value, allowSave: false });
+  async getTrackerInputAsString(tracker: TrackerConfig, value?: number, allowSave: boolean = false): Promise<string> {
+    const response = await Interact.trackerInput(tracker, { value, allowSave });
     if (response && response.tracker) {
       return `#${response.tracker.tag}(${response.value}) `;
     } else {
@@ -87,11 +93,11 @@ export default class TrackerInputer {
      * this will prompt the inputer to launch and collect user data
      */
     for (let i = 0; i < items.length; i++) {
-      let response = await this.getTrackerInputAsString(items[i].tracker, items[i].value);
+      let response = await this.getTrackerInputAsString(items[i].tracker, items[i].value, i == items.length - 1);
       note.push(response);
     }
     // Merge all of the note array into a single string.
-    return note.join(" ");
+    return note.join(" ").replace(/  /g, " ");
   }
 
   /**
@@ -117,122 +123,190 @@ export default class TrackerInputer {
     return note.join(" ");
   }
 
+  async getTrackerInput(tracker: TrackerConfig, options: ITrackerInputerGetOptions = true): Promise<ITrackerInputResult> {
+    let input = await Interact.trackerInput(tracker, options);
+    return input;
+  }
+
+  // async getNoteElements():any {
+  //   const tempLog = new NomieLog({ note: this.tracker.note });
+  //       // Extract the meta data from the note
+  //       const meta = tempLog.getMeta();
+  //       // Get tag, context, people
+  //       let trackerElements = meta.trackers;
+  //       let context = meta.context;
+  //       let people = meta.people;
+  //       return { people, context, trackerElements};
+  // }
+
+  async getElements(options: ITrackerInputerGetOptions): Promise<Array<string>> {
+    const note = [];
+    /**
+     * Tick Tracker Types
+     * Ticks are a simple tracker - just tapp it.
+     */
+    if (this.tracker.type == "tick") {
+      // Push tag(default) or just tag if no default
+      note.push(`#${this.tracker.tag}${this.tracker.default ? `(${this.tracker.default})` : ``}`);
+      // Check for include
+      if (this.tracker.include) {
+        note.push(this.tracker.getIncluded(this.tracker.default || 1));
+      }
+      /**
+       * Note Tracker Types
+       * These might require multiple input popups
+       * loop through the note, get tracker values, add people and context
+       */
+    } else if (this.tracker.type == "note") {
+      // Get values as a string
+      let results = await this.getNoteTrackerInputAsString(this.tracker);
+      // If results - push it.
+      if (results) {
+        note.push(results);
+      }
+      // If include, push it too
+      if (this.tracker.include) {
+        note.push(this.tracker.getIncluded(1));
+      }
+    } else {
+      /**
+       * All Other Trackers
+       * Catch all for other tracker inputs
+       */
+      let results: ITrackerInputResult = await this.getTrackerInput(this.tracker, { allowSave: true });
+      if (results) {
+        // Push results
+        note.push(`#${results.tracker.tag}${results.value ? `(${results.value})` : ``}`);
+        // If there's an include
+        if (this.tracker.include) {
+          note.push(this.tracker.getIncluded(results.value || 1));
+        }
+        // If there's a suffix
+        if (results.suffix) {
+          note.push(results.suffix);
+        }
+      }
+    }
+
+    return note;
+  }
+
   /**
    * Get a tracker input
    * THIS IS A GOD DAMN MESS! This should just return an array of elements to be included
    * but not it's adding them to the log store - this is sloppy.
    * @param options
    */
-  async get(options) {
-    options = options || {};
+  // async get(options) {
+  //   options = options || {};
 
-    // If it's a plain old tick tracker
-    return new Promise((resolve, reject) => {
-      let finished = (payload) => {
-        if (payload) {
-          // ActiveLogStore.addTag(this.tracker.tag);
-          resolve(payload);
-        }
-      };
-      let finishedWithError = (err) => {
-        console.error("error", err);
-        // This way we can look up some stats on it too
-        ActiveLogStore.addTag(this.tracker.tag);
-        reject(err);
-      };
-      if (options.replace) {
-        setTimeout(() => {
-          ActiveLogStore.removeStr(options.replace);
-        }, 120);
-      }
+  //   // If it's a plain old tick tracker
+  //   return new Promise((resolve, reject) => {
+  //     let finished = (payload) => {
+  //       if (payload) {
+  //         // ActiveLogStore.addTag(this.tracker.tag);
+  //         resolve(payload);
+  //       }
+  //     };
+  //     let finishedWithError = (err) => {
+  //       console.error("error", err);
+  //       // This way we can look up some stats on it too
+  //       ActiveLogStore.addTag(this.tracker.tag);
+  //       reject(err);
+  //     };
+  //     if (options.replace) {
+  //       setTimeout(() => {
+  //         ActiveLogStore.removeStr(options.replace);
+  //       }, 120);
+  //     }
 
-      if (this.tracker.type === "tick") {
-        // Just add the tag to the note
-        // ActiveLogStore.addTag(this.tracker.tag, this.tracker.default);
-        let includeStr = this.tracker.getIncluded(1);
-        if (includeStr || "".length) {
-          ActiveLogStore.addElement(includeStr);
-        }
-        // This is getting added in the board.svelte file - refer to sloppy comment at top of function
-        // ActiveLogStore.addElement(includeStr);
-        // If it's one_tap - then save it
-        finished({ tracker: this.tracker, value: null });
-        // return {
-        //   tracker: null,
-        //   value: this.value,
-        // };
-        // If it's a note (combined trackers)
-      } else if (this.tracker.type === "note") {
-        /**
-         * Note Tracker Type
-         * This is a note tracker type and will
-         * ask the user to provide inputs for
-         * each type of note
-         **/
+  //     if (this.tracker.type === "tick") {
+  //       // Just add the tag to the note
+  //       // ActiveLogStore.addTag(this.tracker.tag, this.tracker.default);
+  //       let includeStr = this.tracker.getIncluded(1);
+  //       if (includeStr || "".length) {
+  //         ActiveLogStore.addElement(includeStr);
+  //       }
+  //       // This is getting added in the board.svelte file - refer to sloppy comment at top of function
+  //       // ActiveLogStore.addElement(includeStr);
+  //       // If it's one_tap - then save it
+  //       finished({ tracker: this.tracker, value: null });
+  //       // return {
+  //       //   tracker: null,
+  //       //   value: this.value,
+  //       // };
+  //       // If it's a note (combined trackers)
+  //     } else if (this.tracker.type === "note") {
+  //       /**
+  //        * Note Tracker Type
+  //        * This is a note tracker type and will
+  //        * ask the user to provide inputs for
+  //        * each type of note
+  //        **/
 
-        // Setup a temp log with the tracker note
-        const tempLog = new NomieLog({ note: this.tracker.note });
-        // Extract the meta data from the note
-        const meta = tempLog.getMeta();
-        // Get tag, context, people
-        let trackerElements = meta.trackers;
-        let contexts = meta.context;
-        let people = meta.people;
-        // Add the Tracker Tag
-        ActiveLogStore.addTag(this.tracker.tag);
-        // Loop over people add to log
-        people.forEach((person) => {
-          ActiveLogStore.addElement(`@${person}`);
-        });
-        // Loop over context add to log
-        contexts.forEach((context) => {
-          ActiveLogStore.addElement(`+${context}`);
-        });
-        // Add Note Tracker Tag to the note first...
+  //       // Setup a temp log with the tracker note
+  //       const tempLog = new NomieLog({ note: this.tracker.note });
+  //       // Extract the meta data from the note
+  //       const meta = tempLog.getMeta();
+  //       // Get tag, context, people
+  //       let trackerElements = meta.trackers;
+  //       let contexts = meta.context;
+  //       let people = meta.people;
+  //       // Add the Tracker Tag
+  //       ActiveLogStore.addTag(this.tracker.tag);
+  //       // Loop over people add to log
+  //       people.forEach((person) => {
+  //         ActiveLogStore.addElement(`@${person}`);
+  //       });
+  //       // Loop over context add to log
+  //       contexts.forEach((context) => {
+  //         ActiveLogStore.addElement(`+${context}`);
+  //       });
+  //       // Add Note Tracker Tag to the note first...
 
-        // Create array of items to pass to promise step
+  //       // Create array of items to pass to promise step
 
-        let items = trackerElements.map((trackerElement) => {
-          let realTracker = TrackerStore.getByTag(trackerElement.id);
-          let value = trackerElement.value;
-          if (realTracker.type == "timer") {
-            value = 0;
-          }
-          return {
-            tracker: realTracker || new Tracker({ tag: trackerElement.id }),
-            value: value, // not being used ??
-          };
-        });
+  //       let items = trackerElements.map((trackerElement) => {
+  //         let realTracker = TrackerStore.getByTag(trackerElement.id);
+  //         let value = trackerElement.value;
+  //         if (realTracker.type == "timer") {
+  //           value = 0;
+  //         }
+  //         return {
+  //           tracker: realTracker || new Tracker({ tag: trackerElement.id }),
+  //           value: value, // not being used ??
+  //         };
+  //       });
 
-        /**
-         * Promise Step
-         * Loop over each of the items { tracker: [object], value: value }
-         * If this is a multiple tracker request we will show each of the
-         * tracker inputs one at a time using the promise step function
-         *
-         * TODO : Make this massive ass function into something more maintainable.
-         */
-        let itemIndex = 0;
-        let finishedRes;
+  //       /**
+  //        * Promise Step
+  //        * Loop over each of the items { tracker: [object], value: value }
+  //        * If this is a multiple tracker request we will show each of the
+  //        * tracker inputs one at a time using the promise step function
+  //        *
+  //        * TODO : Make this massive ass function into something more maintainable.
+  //        */
+  //       let itemIndex = 0;
+  //       let finishedRes;
 
-        const getMany = async () => {
-          try {
-            finishedRes = await PromiseStep(items, async (item) => {
-              itemIndex++;
-              const allowSave = itemIndex == items.length;
-              return Interact.trackerInput(item.tracker, { value: item.value, allowSave });
-            });
-            finished(finishedRes);
-          } catch (e) {
-            console.log("Error Caught Error", e);
-            finishedWithError(e);
-          }
-        };
-        getMany();
-      } else {
-        // It's an input of some sort
-        Interact.trackerInput(this.tracker, { allowSave: true }).then(finished).catch(finishedWithError);
-      } // end if tick or others
-    }); // end return promise
-  }
+  //       const getMany = async () => {
+  //         try {
+  //           finishedRes = await PromiseStep(items, async (item) => {
+  //             itemIndex++;
+  //             const allowSave = itemIndex == items.length;
+  //             return Interact.trackerInput(item.tracker, { value: item.value, allowSave });
+  //           });
+  //           finished(finishedRes);
+  //         } catch (e) {
+  //           console.log("Error Caught Error", e);
+  //           finishedWithError(e);
+  //         }
+  //       };
+  //       getMany();
+  //     } else {
+  //       // It's an input of some sort
+  //       Interact.trackerInput(this.tracker, { allowSave: true }).then(finished).catch(finishedWithError);
+  //     } // end if tick or others
+  //   }); // end return promise
+  // }
 }
