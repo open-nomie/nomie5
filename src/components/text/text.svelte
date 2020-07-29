@@ -8,6 +8,7 @@
   export let tag = "div";
   export let className = "";
   export let faded = false;
+  export let style = "";
   const dispatch = createEventDispatcher();
 </script>
 
@@ -50,6 +51,7 @@
 
 {#if tag === 'span'}
   <span
+    {style}
     on:click={() => {
       dispatch('click');
     }}
@@ -62,6 +64,7 @@
   </span>
 {:else}
   <div
+    {style}
     on:click={() => {
       dispatch('click');
     }}
