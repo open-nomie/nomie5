@@ -47,8 +47,7 @@
 
   // Consts
   const console = new Logger("capture-log");
-  const isIOS =
-    !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+  const isIOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
   let textarea;
   let iOSFileInput;
@@ -70,7 +69,7 @@
     cursorIndex: null,
     partialTag: null,
     advanced: false,
-    dateFormated: null
+    dateFormated: null,
   };
 
   function toggleAdvanced() {
@@ -80,9 +79,7 @@
   $: if ($ActiveLogStore.end) {
     let timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
     let dateFormat = $UserStore.meta.is24Hour ? "MM/DD/YYYY" : "MMM D YYYY";
-    state.dateFormated = dayjs($ActiveLogStore.end).format(
-      `${dateFormat} ${timeFormat}`
-    );
+    state.dateFormated = dayjs($ActiveLogStore.end).format(`${dateFormat} ${timeFormat}`);
   }
 
   // TODO: Add a media/photo type of thing that can be added to a log..
@@ -95,13 +92,11 @@
       state.showCustomDate = false;
     },
     async selectDate() {
-      let date = await Interact.selectDate(
-        $ActiveLogStore.end ? new Date($ActiveLogStore.end) : new Date()
-      );
+      let date = await Interact.selectDate($ActiveLogStore.end ? new Date($ActiveLogStore.end) : new Date());
 
       if (date) {
         await tick(10);
-        ActiveLogStore.update(log => {
+        ActiveLogStore.update((log) => {
           log.end = date;
           return log;
         });
@@ -160,10 +155,10 @@
       try {
         if (type == "tracker") {
           let tkrs = Object.keys($TrackerStore.trackers || {})
-            .map(tag => {
+            .map((tag) => {
               return $TrackerStore.trackers[tag];
             })
-            .filter(trk => {
+            .filter((trk) => {
               return trk.tag.search(searchTag.replace("#", "")) > -1;
             });
           return tkrs.length ? tkrs : null;
@@ -172,11 +167,10 @@
         } else if (type === "person") {
           try {
             let people = Object.keys($PeopleStore.people || []).filter(
-              person =>
-                person.toLowerCase().search(searchTag.replace("@", "")) > -1
+              (person) => person.toLowerCase().search(searchTag.replace("@", "")) > -1
             );
             return people.length
-              ? people.map(username => {
+              ? people.map((username) => {
                   return { tag: username, emoji: "👤", type: "person" };
                 })
               : null;
@@ -188,13 +182,13 @@
 
           // Search for Context
         } else if (type === "context") {
-          let context = $ContextStore.filter(term => {
+          let context = $ContextStore.filter((term) => {
             let text = searchTag.replace("+", "").toLowerCase();
             term = term.toLowerCase();
             return term.search(text.toLowerCase()) > -1;
           });
           return context.length
-            ? context.map(c => {
+            ? context.map((c) => {
                 return { tag: c, emoji: "💡", type: "context" };
               })
             : null;
@@ -202,8 +196,7 @@
       } catch (e) {}
     },
     calculateScore() {
-      $ActiveLogStore.score =
-        $ActiveLogStore.score || ScoreNote($ActiveLogStore.note);
+      $ActiveLogStore.score = $ActiveLogStore.score || ScoreNote($ActiveLogStore.note);
     },
     async logSave() {
       methods.calculateScore();
@@ -211,7 +204,7 @@
       methods.clear();
     },
     async autocompleteText(text) {
-      ActiveLogStore.update(s => {
+      ActiveLogStore.update((s) => {
         s.note = s.note.replace(state.partialTag, text + " ");
         return s;
       });
@@ -242,24 +235,15 @@
           // If its a tag
           if (tag.charAt(0) === "#" && tag.length > 1) {
             state.partialTag = tag;
-            state.autocompleteResults = methods.autoCompleteSearch(
-              tag,
-              "tracker"
-            );
+            state.autocompleteResults = methods.autoCompleteSearch(tag, "tracker");
             // If its a person
           } else if (tag.charAt(0) === "@" && tag.length > 1) {
             state.partialTag = tag;
-            state.autocompleteResults = methods.autoCompleteSearch(
-              tag,
-              "person"
-            );
+            state.autocompleteResults = methods.autoCompleteSearch(tag, "person");
             // If it's context
           } else if (tag.charAt(0) === "+" && tag.length > 1) {
             state.partialTag = tag;
-            state.autocompleteResults = methods.autoCompleteSearch(
-              tag,
-              "context"
-            );
+            state.autocompleteResults = methods.autoCompleteSearch(tag, "context");
           } else {
             state.partialTag = null;
             state.autocompleteResults = null;
@@ -287,14 +271,12 @@
     },
 
     ifPopulated() {
-      return (
-        $ActiveLogStore.lat || ($ActiveLogStore.note.trim() || "").length > 0
-      );
-    }
+      return $ActiveLogStore.lat || ($ActiveLogStore.note.trim() || "").length > 0;
+    },
   };
 
   // Clear the settings when saved
-  LedgerStore.hook("onLogSaved", res => {
+  LedgerStore.hook("onLogSaved", (res) => {
     methods.clear();
     setTimeout(() => {
       methods.autoCompleteDone();
@@ -302,10 +284,11 @@
   });
 
   // When a tag is added by a button or other service
-  ActiveLogStore.hook("onAddTag", res => {
+  ActiveLogStore.hook("onAddTag", (res) => {
     // add space to the end.
     setTimeout(() => {
       if (textarea) {
+        console.log("Textarea change?");
         textarea.value = textarea.value;
       }
       // adjust textarea size
@@ -519,26 +502,21 @@
   }
 </style>
 
-<div
-  class="capture-wrapper"
-  on:swipeup={methods.swipeUp}
-  on:swipedown={methods.swipeDown}>
+<div class="capture-wrapper" on:swipeup={methods.swipeUp} on:swipedown={methods.swipeDown}>
 
   <!-- 
     AUTO COMPLETE RESULTS
   -->
 
   <div class="capture-log">
-    <div
-      class="save-progress {saved ? 'saved' : ''}
-      {saving ? 'saving' : ''}" />
+    <div class="save-progress {saved ? 'saved' : ''} {saving ? 'saving' : ''}" />
     <div class="container p-0">
 
       <!-- Auto Complet e-->
       <AutoComplete
         input={$ActiveLogStore.note}
         scroller
-        on:select={evt => {
+        on:select={(evt) => {
           ActiveLogStore.updateNote(evt.detail.note);
           textarea.focus();
           textarea.setSelectionRange(textarea.value.length, textarea.value.length);
@@ -549,9 +527,7 @@
       <!-- Note Input -->
       <div
         class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 || $ActiveLogStore.photo ? 'populated' : 'empty'}">
-        <button
-          class="btn more-button btn-icon {state.advanced ? 'active' : ''}"
-          on:click={toggleAdvanced}>
+        <button class="btn more-button btn-icon {state.advanced ? 'active' : ''}" on:click={toggleAdvanced}>
           {#if state.advanced}
             <NIcon name="chevronDown" className="fill-white" />
           {:else}
@@ -591,38 +567,27 @@
     <div class="advanced">
       <div class="container">
         <!-- Score -->
-        <NItem
-          truncate
-          compact
-          className="bg-transparent clickable mr-2 solo text-sm">
+        <NItem truncate compact className="bg-transparent clickable mr-2 solo text-sm">
           <NPositivitySelector
             size="xl"
             score={$ActiveLogStore.score}
-            on:change={evt => {
+            on:change={(evt) => {
               $ActiveLogStore.score = evt.detail;
             }} />
         </NItem>
         <!-- Location -->
-        <NItem
-          truncate
-          compact
-          className="bg-transparent clickable mr-2 solo text-sm"
-          on:click={methods.toggleCustomLocation}>
+        <NItem truncate compact className="bg-transparent clickable mr-2 solo text-sm" on:click={methods.toggleCustomLocation}>
           <div slot="left" class="text-sm text-bold">
             <NIcon name="pin" className="mr-2 fill-primary-bright" size="16" />
           </div>
           {#if !$ActiveLogStore.lat}
             {Lang.t('general.location', 'Location')}
           {:else}
-            <strong>
-              {$ActiveLogStore.location || `${math.round($ActiveLogStore.lat, 100)},${math.round($ActiveLogStore.lng, 100)}`}
-            </strong>
+            <strong>{$ActiveLogStore.location || `${math.round($ActiveLogStore.lat, 100)},${math.round($ActiveLogStore.lng, 100)}`}</strong>
           {/if}
           <div slot="right" class="n-row">
             {#if $ActiveLogStore.lat}
-              <button
-                class="btn btn-clear btn-icon"
-                on:click|stopPropagation={methods.clearLocation}>
+              <button class="btn btn-clear btn-icon" on:click|stopPropagation={methods.clearLocation}>
                 <NIcon name="close" className="fill-red" size="22" />
               </button>
             {:else if $UserStore.alwaysLocate}
@@ -633,11 +598,7 @@
           </div>
         </NItem>
         <!-- Date / Time -->
-        <NItem
-          compact
-          truncate
-          className="bg-transparent mt-1 mb-2 mr-2 solo text-sm"
-          on:click={methods.selectDate}>
+        <NItem compact truncate className="bg-transparent mt-1 mb-2 mr-2 solo text-sm" on:click={methods.selectDate}>
           <div slot="left" class="text-sm text-bold">
             <NIcon name="time" className="mr-2 fill-primary-bright" size="16" />
           </div>
@@ -650,9 +611,7 @@
           </div>
           <div slot="right" class="n-row">
             {#if $ActiveLogStore.end}
-              <button
-                class="btn btn-clear btn-icon"
-                on:click|stopPropagation={methods.clearDate}>
+              <button class="btn btn-clear btn-icon" on:click|stopPropagation={methods.clearDate}>
                 <NIcon name="close" className="fill-red" size="22" />
               </button>
             {:else}

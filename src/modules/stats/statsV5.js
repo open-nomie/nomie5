@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 // Modules
 import Tracker from "../tracker/tracker";
-import NomieLog from "../../modules/nomie-log/nomie-log";
+import NomieLog from "../nomie-log/nomie-log";
 import Log from "../nomie-log/nomie-log";
 import logFilter from "../log-filter/log-filter";
 // Utils
