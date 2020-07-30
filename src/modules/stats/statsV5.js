@@ -137,9 +137,9 @@ export default class StatsProcessor {
     max.value = _math.max(values);
     let maxDateFound = dates.find((d) => d.value == max.value);
     let minDateFound = dates.find((d) => d.value == min.value);
-    min.date = dayjs(minDateFound.dateKey).toDate();
+    min.date = minDateFound ? dayjs(minDateFound.dateKey).toDate() : new Date();
     min.dateKey = minDateFound.dateKey;
-    max.date = dayjs(maxDateFound.dateKey).toDate();
+    max.date = maxDateFound ? dayjs(maxDateFound.dateKey).toDate() : new Date();
     max.dateKey = maxDateFound.dateKey;
 
     return { min, max };

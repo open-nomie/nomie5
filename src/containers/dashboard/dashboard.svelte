@@ -242,6 +242,7 @@
   function initDashboard() {
     // Loop over the blocks - convert them to real blocks.
     try {
+      dashboards[$DashboardStore.activeIndex] = dashboards[$DashboardStore.activeIndex] || new Dashboard();
       dashboards[$DashboardStore.activeIndex].blocks = dashboards[$DashboardStore.activeIndex].blocks.map((block) => {
         // Set block
         let nBlock = block instanceof Block ? block : new Block(block);
