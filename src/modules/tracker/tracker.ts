@@ -6,8 +6,8 @@ import extract from "../../utils/extract/extract";
 
 import md5 from "md5";
 
-type ITrackerType = "tick" | "value" | "range" | "picker" | "note" | "timer";
-type ITrackerMath = "sum" | "mean";
+export type ITrackerType = "tick" | "value" | "range" | "picker" | "note" | "timer";
+export type ITrackerMath = "sum" | "mean";
 
 export default class TrackerConfig {
   id?: string; // Id of Tracker

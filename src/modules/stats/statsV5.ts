@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 // Modules
 import Tracker from "../tracker/tracker";
 import NomieLog from "../nomie-log/nomie-log";
@@ -7,15 +7,100 @@ import logFilter from "../log-filter/log-filter";
 // Utils
 import Logger from "../../utils/log/log";
 import _math from "../../utils/math/math";
-import TrackableElement from "../trackable-element/trackable-element";
+import TrackableElement, { ITrackableElementType } from "../trackable-element/trackable-element";
 
 import getDayOfWeek from "./day-of-week";
 import getTimeOfDay from "./time-of-day";
+import type { ITrackerMath } from "../tracker/tracker";
+
+export type IStatsChartUnit = "day" | "week" | "month" | "quarter" | "year";
+export type IStatsChartMode = "d" | "w" | "m" | "q" | "y";
+export interface IStatDow {
+  count: number;
+  percent: number;
+  values: Array<number>;
+}
+export interface IStatsChartLabel {
+  x: string;
+}
+export interface IStatsChartValue {
+  x: string;
+  y: number;
+  date: Dayjs;
+  unit: IStatsChartUnit;
+}
+interface IDow {
+  mon: IStatDow;
+  tue: IStatDow;
+  wed: IStatDow;
+  thu: IStatDow;
+  fri: IStatDow;
+  sat: IStatDow;
+  sun: IStatDow;
+}
+
+export interface IStatsTodUnit {
+  count: number;
+  values: Array<number>;
+  start: number;
+  end: number;
+  percent: number;
+}
+export interface IStatsTod {
+  afternoon: IStatsTodUnit;
+  early_morning: IStatsTodUnit;
+  evening: IStatsTodUnit;
+  morning: IStatsTodUnit;
+  night: IStatsTodUnit;
+}
+
+export interface IStatsMaxMin {
+  date: Date;
+  dateKey: string;
+  value: number;
+}
+
+export interface IStats {
+  trackableElement: TrackableElement;
+  rows: Array<NomieLog>;
+  type: ITrackableElementType;
+  math: ITrackerMath;
+  avg: number;
+  sum: number;
+  chart: {
+    labels: Array<IStatsChartLabel>;
+    values: Array<IStatsChartValue>;
+    mode: IStatsChartMode;
+  };
+  dow: IDow;
+  tod: IStatsTod;
+  min: IStatsMaxMin;
+  max: IStatsMaxMin;
+}
 
 const console = new Logger("📊 V5 Stats");
 
-export default class StatsProcessor {
-  constructor(starter = {}) {
+export default class StatsProcessor implements IStats {
+  trackableElement: TrackableElement;
+  rows: Array<NomieLog>;
+  type: ITrackableElementType;
+  math: ITrackerMath;
+  avg: number;
+  sum: number;
+  chart: {
+    labels: Array<IStatsChartLabel>;
+    values: Array<IStatsChartValue>;
+    mode: IStatsChartMode;
+  };
+  dow: IDow;
+  tod: IStatsTod;
+  min: IStatsMaxMin;
+  max: IStatsMaxMin;
+  fromDate: Dayjs;
+  toDate: Dayjs;
+  mode: IStatsChartMode;
+  is24Hour: boolean;
+  constructor(starter: any = {}) {
     // Set Defaults
     this.rows = starter.rows || [];
     this.fromDate = starter.fromDate || dayjs().subtract(1, "week");
@@ -79,7 +164,7 @@ export default class StatsProcessor {
    * }
    * @param {Array} rows
    */
-  getValueMap(overrideRows) {
+  getValueMap(overrideRows): any {
     let rows = overrideRows || this.rows;
     let valueMap = {};
 
@@ -138,9 +223,9 @@ export default class StatsProcessor {
     let maxDateFound = dates.find((d) => d.value == max.value);
     let minDateFound = dates.find((d) => d.value == min.value);
     min.date = minDateFound ? dayjs(minDateFound.dateKey).toDate() : new Date();
-    min.dateKey = minDateFound.dateKey;
+    min.dateKey = minDateFound ? minDateFound.dateKey : null;
     max.date = maxDateFound ? dayjs(maxDateFound.dateKey).toDate() : new Date();
-    max.dateKey = maxDateFound.dateKey;
+    max.dateKey = maxDateFound ? maxDateFound.dateKey : null;
 
     return { min, max };
   }
@@ -155,7 +240,7 @@ export default class StatsProcessor {
     let context = {};
     let tags = {};
 
-    this.rows.forEach((row) => {
+    this.rows.forEach((row: NomieLog) => {
       if (!row.trackers) {
         row.getMeta();
       }
@@ -301,7 +386,7 @@ export default class StatsProcessor {
   }
 
   getValueMapTotals(valueMap) {
-    // console.log("Value Map", valueMap);
+    console.log("Value Map", valueMap);
     let newMap = {
       sum: 0,
       avg: 0,
@@ -345,13 +430,14 @@ export default class StatsProcessor {
     return newMap;
   }
 
-  generateResults() {
+  generateResults(): IStats {
     let valueMap = this.getValueMap(this.rows);
     let valueMapTotals = this.getValueMapTotals(valueMap);
     let minMax = this.getMinMaxFromValueMap(valueMap);
     let chart = this.getChartData(valueMapTotals);
-    this.results = {
+    return {
       type: this.trackableElement.type,
+      trackableElement: this.trackableElement,
       math: this.math,
       rows: this.rows,
       chart: chart,
@@ -362,6 +448,5 @@ export default class StatsProcessor {
       dow: getDayOfWeek(this.rows), // day of week
       tod: getTimeOfDay(this.rows), // time of day
     };
-    return this.results;
   }
 }

@@ -28,6 +28,8 @@ export default class NLog {
   public source?: string;
 
   public trackers: Array<any>;
+  public people: Array<any>;
+  public context: Array<any>;
 
   constructor(starter) {
     starter = starter || {};
