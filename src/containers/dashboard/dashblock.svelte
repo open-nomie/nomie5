@@ -13,6 +13,7 @@
   import dayjs from "dayjs";
   import { element } from "svelte/internal";
   import nid from "../../modules/nid/nid";
+  import Calendar from "../../components/calendar/calendar.svelte";
 
   const dispatch = createEventDispatcher();
   const id = nid();
@@ -210,7 +211,9 @@
             style="width:100%"
             height="50px" /> -->
         </div>
-      {:else}{block.type}{Object.keys(block)}{/if}
+      {:else}
+        <div class="value">Unknown {block.type}</div>
+      {/if}
     </div>
     <div class="block-footer n-row">
       {#if block.timeRange}

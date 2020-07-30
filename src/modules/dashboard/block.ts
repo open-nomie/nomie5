@@ -2,7 +2,7 @@ import TrackableElement, { ITrackableElement } from "../../modules/trackable-ele
 import dayjs, { Dayjs, OpUnitType } from "dayjs";
 import nid from "../nid/nid";
 import type NLog from "../nomie-log/nomie-log";
-
+import { strToColor } from "../../components/dymoji/dymoji";
 /**
  * Block Date
  * The blockdate is either the start or end of a TimeFrame
@@ -156,6 +156,13 @@ export class Block {
       }
     } else {
       this.id = nid();
+    }
+  }
+  getColor(): string {
+    if (this.element && this.element.type == "tracker") {
+      return this.element.obj.color;
+    } else {
+      return strToColor(this.element.id);
     }
   }
   getTitle(): string {

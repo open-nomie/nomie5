@@ -190,6 +190,12 @@
       requires: ["timeframe", "element"],
       optional: [],
     },
+    // {
+    //   label: "Streak",
+    //   id: "streak",
+    //   requires: ["timeframe", "element"],
+    //   optional: [],
+    // },
     {
       label: "Last Used",
       id: "last-used",

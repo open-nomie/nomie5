@@ -190,6 +190,7 @@
             block.stats.daysPast = daysPast;
           }
         }
+
         if (block.element && block.type != "last-used") {
           block.logs = await getLogsForBlock(block);
 
@@ -227,6 +228,7 @@
           block.stats = statsV5.generate(statsConfig);
           // Generate the Positivity
           block.positivity = positivityFromLogs(block.logs, block.element);
+          console.log("block stats", block.stats);
         }
         // Replace the block with the new populated version.
         dboard.blocks[i] = block;
