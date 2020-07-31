@@ -7,7 +7,8 @@ import logFilter from "../log-filter/log-filter";
 // Utils
 import Logger from "../../utils/log/log";
 import _math from "../../utils/math/math";
-import TrackableElement, { ITrackableElementType } from "../trackable-element/trackable-element";
+import TrackableElement from "../trackable-element/trackable-element";
+import type { ITrackableElementType } from "../trackable-element/trackable-element";
 
 import getDayOfWeek from "./day-of-week";
 import getTimeOfDay from "./time-of-day";
