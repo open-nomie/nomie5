@@ -14,6 +14,7 @@
   import { element } from "svelte/internal";
   import nid from "../../modules/nid/nid";
   import Calendar from "../../components/calendar/calendar.svelte";
+  import { Interact } from "../../store/interact";
 
   const dispatch = createEventDispatcher();
   const id = nid();
@@ -163,7 +164,14 @@
 {#if block && block.type !== 'text'}
   <div class="dashboard-block {getClass(block)}" {id}>
     <div class="block-header n-row">
-      <TrackerSmallBlock xs novalue element={block.element} />
+      <TrackerSmallBlock
+        xs
+        novalue
+        element={block.element}
+        on:click={() => {
+          console.log('Open stats for ', block.element.toSearchTerm());
+          Interact.openStats(block.element.toSearchTerm());
+        }} />
       <Button
         size="xs"
         color="clear"

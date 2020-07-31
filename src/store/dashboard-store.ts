@@ -94,7 +94,7 @@ const DashboardStoreInit = (): any => {
     async saveBlock(block: Block) {
       if (block) {
         let _state: IDashboardStore = methods.get();
-        console.log("Saving block", block);
+
         let found = false;
         delete block._editing;
         _state.dashboards = _state.dashboards.map((dashboard: Dashboard) => {
@@ -109,13 +109,10 @@ const DashboardStoreInit = (): any => {
           return dashboard;
         });
         if (!found) {
-          console.log("BLock wasn't found, adding to active dashboard");
           _state.dashboards[_state.activeIndex].blocks.push(block);
         }
-        // console.log("Hello?", _state);
         update((state: any) => {
           state.dashboards = _state.dashboards;
-          console.log("State", state);
           return state;
         });
         return methods.save();
@@ -145,9 +142,13 @@ const DashboardStoreInit = (): any => {
     },
     async init(): Promise<void> {
       let dashboards = await Storage.get(`${config.data_root}/dashboards.json`);
+      dashboards = dashboards || [];
+      if (!dashboards.length) {
+        dashboards.push(new Dashboard({ label: "My First Dashboard", blocks: [] }));
+      }
       update((state: any) => {
-        state.dashboards = (dashboards || [[{ blocks: [] }]]).map((dashboard) => {
-          return new Dashboard(dashboard);
+        state.dashboards = dashboards.map((dashboard) => {
+          return dashboard instanceof Dashboard ? dashboard : new Dashboard(dashboard);
         });
         dashboards = state.dashboards;
         return state;

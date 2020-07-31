@@ -11,6 +11,7 @@ export interface ITrackableElement {
   remainder?: any;
   obj?: any;
   getPrefix?: any;
+  toSearchTerm?: any;
 }
 
 export default class TrackableElement {
@@ -88,7 +89,7 @@ export default class TrackableElement {
     }
   }
 
-  public toSearchTerm() {
+  public toSearchTerm(): string {
     return `${this.prefix}${this.id}`;
   }
 }

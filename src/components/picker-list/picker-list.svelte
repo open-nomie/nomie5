@@ -76,7 +76,6 @@
 
   onMount(() => {
     ready = true;
-    console.log("LIST for Picker", list);
   });
 </script>
 

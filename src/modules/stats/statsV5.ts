@@ -386,7 +386,6 @@ export default class StatsProcessor implements IStats {
   }
 
   getValueMapTotals(valueMap) {
-    console.log("Value Map", valueMap);
     let newMap = {
       sum: 0,
       avg: 0,
