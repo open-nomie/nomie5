@@ -16,6 +16,9 @@ import NomieLog from "../modules/nomie-log/nomie-log";
 // Stores
 import { LedgerStore } from "./ledger";
 import { Interact } from "./interact";
+import { TrackerStore } from "./tracker-store";
+import { ActiveLogStore } from "./active-log";
+import TrackerInputer from "../modules/tracker/tracker-inputer";
 
 const console = new Logger("🚦 Commander");
 
@@ -159,7 +162,7 @@ const commanderInit = () => {
               return false;
             }
           } else if (note.length >= maxLength) {
-            Interact.alert("Error", `Note exceeds ${maxWidth} characters`);
+            Interact.alert("Error", `Note exceeds ${maxLength} characters`);
           } else {
             return false;
           }
@@ -173,20 +176,26 @@ const commanderInit = () => {
     /**
      * Process the URL for any params that we can use.
      */
-    processURL() {
-      let urlParams = {};
+    async processURL() {
+      let urlParams: any = {};
       // Get URL params - split em up - loop over them - fill urlParams object
-      window.location.search
-        .replace("?", "")
-        .split("&")
-        .forEach((chunks) => {
-          let kv = chunks.split("=");
-          urlParams[kv[0]] = kv[1];
-        });
+      let base = window.location.search.replace("?", "").substr(0, 1000);
+
+      base.split("&").forEach((chunks) => {
+        let kv = chunks.split("=");
+        urlParams[kv[0]] = kv[1];
+      });
       // If a command URL is present.
       if (urlParams.hasOwnProperty("note")) {
         methods.add("note", urlParams);
         // Clear the state.
+        window.history.pushState({}, document.title, "/");
+      } else if (urlParams.hasOwnProperty("tracker")) {
+        let tracker = TrackerStore.getByTag(urlParams.tracker);
+        let value = urlParams.value ? parseFloat(urlParams.value) : undefined;
+        let inputer = new TrackerInputer(tracker, TrackerStore.data());
+        let note = await inputer.getElements({ value });
+        ActiveLogStore.addElement(note.join(" "));
         window.history.pushState({}, document.title, "/");
       }
     },

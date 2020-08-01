@@ -34,7 +34,7 @@
     <base href="/" />
 
     <!-- main is from scss/main.scss -->
-    <link rel="stylesheet" href="/main.css?v=5.2.11" />
+    <link rel="stylesheet" href="/main.css?v=5.2.12" />
   </head>
 
   <body>
@@ -43,23 +43,31 @@
     </noscript>
 
     <div class="loading-screen delete-on-app">
-      <div class="version">v5.2.11</div>
+      <div class="version">v5.2.12</div>
     </div>
 
     <script src="/js/vendors.js"></script>
-    <script src="/bundle.js?v=5.2.11"></script>
-    <link rel="stylesheet" href="/css/vendors.css?v=5.2.11" defer />
-    <link rel="stylesheet" href="/bundle.css?v=5.2.11" />
+    <script src="/bundle.js?v=5.2.12"></script>
+    <link rel="stylesheet" href="/css/vendors.css?v=5.2.12" defer />
+    <link rel="stylesheet" href="/bundle.css?v=5.2.12" />
     <!-- 
       Purch
       For in-app purchases
     -->
-    <script src="https://purch.dev/v1/purch.js"></script>
     <script>
-      $purch.init({
-        appId: "nomie",
-        key: "test_PG262565617C4BC8AA788D972329",
-      });
+      ((w, d) => {
+        window["$purch"] = undefined;
+        var s = document.createElement("script");
+        s.src = "https://purch.dev/v1/purch.js";
+        s.async = 1;
+        d.head.appendChild(s);
+        s.onload = () => {
+          $purch.init({
+            appId: "nomie",
+            key: "test_PG262565617C4BC8AA788D972329",
+          });
+        };
+      })(window, document);
     </script>
     <!-- 
       SimpleAnalytics 

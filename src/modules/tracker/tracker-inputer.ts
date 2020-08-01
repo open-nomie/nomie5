@@ -8,7 +8,10 @@ import NomieLog from "../nomie-log/nomie-log";
 import { TrackerStore } from "../../store/tracker-store";
 import type TrackerConfig from "./tracker";
 
-interface ITrackerInputerGetOptions {}
+interface ITrackerInputerGetOptions {
+  value?: number;
+  allowSave?: boolean;
+}
 interface ITrackerInputResult {
   suffix?: string;
   tracker: TrackerConfig;
@@ -123,7 +126,7 @@ export default class TrackerInputer {
     return note.join(" ");
   }
 
-  async getTrackerInput(tracker: TrackerConfig, options: ITrackerInputerGetOptions = true): Promise<ITrackerInputResult> {
+  async getTrackerInput(tracker: TrackerConfig, options: ITrackerInputerGetOptions): Promise<ITrackerInputResult> {
     let input = await Interact.trackerInput(tracker, options);
     return input;
   }
@@ -145,12 +148,13 @@ export default class TrackerInputer {
      * Tick Tracker Types
      * Ticks are a simple tracker - just tapp it.
      */
+    let defaultValue: number = options.value || this.tracker.default;
     if (this.tracker.type == "tick") {
       // Push tag(default) or just tag if no default
-      note.push(`#${this.tracker.tag}${this.tracker.default ? `(${this.tracker.default})` : ``}`);
+      note.push(`#${this.tracker.tag}${defaultValue ? `(${defaultValue})` : ``}`);
       // Check for include
       if (this.tracker.include) {
-        note.push(this.tracker.getIncluded(this.tracker.default || 1));
+        note.push(this.tracker.getIncluded(defaultValue || 1));
       }
       /**
        * Note Tracker Types
@@ -173,7 +177,7 @@ export default class TrackerInputer {
        * All Other Trackers
        * Catch all for other tracker inputs
        */
-      let results: ITrackerInputResult = await this.getTrackerInput(this.tracker, { allowSave: true });
+      let results: ITrackerInputResult = await this.getTrackerInput(this.tracker, { value: defaultValue, allowSave: true });
       if (results) {
         // Push results
         note.push(`#${results.tracker.tag}${results.value ? `(${results.value})` : ``}`);

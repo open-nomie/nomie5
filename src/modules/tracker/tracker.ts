@@ -19,7 +19,7 @@ export default class TrackerConfig {
   ignore_zeros?: Boolean; // Ignore Zeros when doing maths
   uom?: string; // Unit of Measure KEY
   emoji?: string; // Emoji for the Tracker
-  default?: string | number; // Default value for a tracker
+  default?: number; // Default value for a tracker
   max?: number; // Max of a Range
   min?: number; // Min of a Range
   score?: number; // Current Score?
