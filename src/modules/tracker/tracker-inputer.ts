@@ -148,6 +148,7 @@ export default class TrackerInputer {
      * Tick Tracker Types
      * Ticks are a simple tracker - just tapp it.
      */
+    options = options || { value: null };
     let defaultValue: number = options.value || this.tracker.default;
     if (this.tracker.type == "tick") {
       // Push tag(default) or just tag if no default
