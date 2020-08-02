@@ -21,6 +21,7 @@
   import calcTrackerScore from "../../modules/scoring/score-tracker";
 
   import { TrackerStore } from "../../store/tracker-store";
+  import { UserStore } from "../../store/user-store";
 
   const console = new Logger("📅 calendar/calendar");
   const dispatch = createEventDispatcher();
@@ -30,7 +31,8 @@
 
   // Props
   export let initialDate = new Date();
-  export let firstDayOfWeek = 1; // 1: Sunday, 2: Monday, etc
+  export let firstDayOfWeek = $UserStore.meta.firstDayOfWeek; // 1: Sunday, 2: Monday, etc.
+
   // export let eventCategories = [];
   export let events = [];
   export let offDays = [[1, 7]];

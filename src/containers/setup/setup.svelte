@@ -23,6 +23,7 @@
   import PWASlide from "./slide-pwa-install.svelte";
   import ThemeSlide from "./slide-theme.svelte";
   import TimeFormatSlide from "./slide-time-format.svelte";
+  import FirstDayOfWeekSlide from "./slide-first-day-of-week.svelte";
   import LocationSlide from "./slide-location.svelte";
   import StorageSlide from "./slide-storage.svelte";
 
@@ -60,6 +61,7 @@
   }
   slides.push(ThemeSlide);
   slides.push(TimeFormatSlide);
+  slides.push(FirstDayOfWeekSlide);
   slides.push(LocationSlide);
   slides.push(StorageSlide);
 

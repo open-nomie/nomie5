@@ -16,6 +16,8 @@
   import Logger from "../../utils/log/log";
   import NIcon from "../../components/icon/icon.svelte";
 
+  import { UserStore } from "../../store/user-store";
+
   const console = new Logger("📅 Sweet");
   const dispatch = createEventDispatcher();
 
@@ -24,7 +26,8 @@
 
   // Props
   export let initialDate = new Date();
-  export let firstDayOfWeek = 1; // 1: Sunday, 2: Monday, etc
+  export let firstDayOfWeek = Number($UserStore.meta.firstDayOfWeek); // 1: Sunday, 2: Monday, etc.
+
   // export let eventCategories = [];
   export let events = [];
   export let offDays = [[1, 7]];
