@@ -4,6 +4,8 @@
   import NToggle from "../../components/toggle-switch/toggle-switch.svelte";
   import { BoardStore } from "../../store/boards";
   import { Lang } from "../../store/lang";
+  // import Storage from "../storage/storage.svelte";
+  import Storage from "../../modules/storage/storage";
 
   let methods = {
     settingChange() {
@@ -38,10 +40,10 @@
 </script>
 
 <!--
-              *******************************************
-              TWEAKS VIEW 
-              *******************************************
-            -->
+  *******************************************
+  TWEAKS VIEW 
+  *******************************************
+-->
 <div class="n-list solo">
   <NItem title={Lang.t('settings.theme')}>
     <div slot="right">
@@ -73,7 +75,15 @@
   </NItem>
   <NItem title={Lang.t('settings.small-tracker-buttons', 'Small Tracker Buttons')}>
     <div slot="right">
-      <NToggle bind:value={$UserStore.meta.compactTrackerButtons} on:change={methods.settingChange} />
+      <NToggle
+        bind:value={$UserStore.localSettings.compactButtons}
+        on:change={(change) => {
+          UserStore.update((state) => {
+            state.localSettings.compactButtons = change.detail === false ? false : true;
+            Storage.local.put('settings/compactButtons', state.localSettings.compactButtons);
+            return state;
+          });
+        }} />
     </div>
   </NItem>
   <!-- Tracker Board Tabs -->

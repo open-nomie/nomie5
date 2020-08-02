@@ -273,7 +273,6 @@ Note: Your data will not automatically move over. You'll first need to export it
             <div class="n-list solo mb-3">
               <Text bold className="my-2 mx-3">Exporting Data</Text>
               <NItem className="clickable" title={Lang.t('settings.generate-backup')} to="/settings/export/backup">
-
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
@@ -312,19 +311,6 @@ Note: Your data will not automatically move over. You'll first need to export it
                     {:else if $UserStore.storageType === 'blockstack'}{Lang.t('storage.blockstack', 'Blockstack')}{/if}
                     <NIcon name="chevronDown" size="16" className="ml-2" />
                   </button>
-                  <!-- {#if $UserStore.storageType === 'local'}
-                <button
-                  class="btn btn-clear text-primary-bright"
-                  on:click={methods.switchToCloud}>
-                  {Lang.t('settings.use-cloud')}
-                </button>
-              {:else}
-                <button
-                  class="btn btn-clear text-primary-bright"
-                  on:click={methods.switchToLocal}>
-                  {Lang.t('settings.use-local')}
-                </button>
-              {/if} -->
                 </div>
               </NItem>
 

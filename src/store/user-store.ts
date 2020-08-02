@@ -31,7 +31,9 @@ export interface IUserMeta {
   is24Hour?: boolean;
   lastBackup?: Date;
   boardsEnabled?: boolean;
-  compactTrackerButtons?: boolean;
+}
+export interface IUserLocalSettings {
+  compactButtons: boolean;
 }
 type StorageType = "blockstack" | "local" | "pouchdb";
 
@@ -49,6 +51,7 @@ export interface IUserState {
   autoImportApi: boolean;
   meta: IUserMeta;
   locked: boolean;
+  localSettings: IUserLocalSettings;
 }
 
 // Store Initlization
@@ -72,6 +75,9 @@ const userInit = () => {
       pin: undefined,
       is24Hour: false,
       lastBackup: undefined,
+    },
+    localSettings: {
+      compactButtons: Storage.local.get("settings/compactButtons") || false,
     },
     locked: true,
   };
@@ -131,6 +137,7 @@ const userInit = () => {
                 d.ready = true;
                 d.signedIn = true;
                 d.profile = Storage.getProfile();
+                // d.localSettings.compactButtons = Storage.local.get("settings/compactButtons");
 
                 return d;
               });

@@ -26,7 +26,7 @@
     {className}
     label={tracker.label}
     emoji={tracker.emoji}
-    small={$UserStore.meta.compactTrackerButtons == true}
+    small={$UserStore.localSettings.compactButtons == true}
     {note}
     color={tracker.color}
     on:click={() => {
