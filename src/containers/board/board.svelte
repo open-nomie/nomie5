@@ -49,13 +49,16 @@
   //Stores
   import { ActiveLogStore } from "../../store/active-log";
   import { LedgerStore } from "../../store/ledger";
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import { BoardStore } from "../../store/boards";
   import { TrackerStore } from "../../store/tracker-store";
   import { Interact } from "../../store/interact";
   import { Lang } from "../../store/lang";
   import { TrackerLibrary } from "../../store/tracker-library";
   import { LastUsed } from "../../store/last-used";
+  import Button from "../../components/button/button.svelte";
+  import Text from "../../components/text/text.svelte";
+  import exportData from "../../modules/export/export-helper";
   // Consts
   const console = new Logger("board.svelte");
 
@@ -65,7 +68,7 @@
   let searchInput; // binding to dom element
   let foundTrackers = null; // for search results
   let boardTrackers = []; // Actual array to display to user
-
+  let daysSinceLastBackup = 0;
   // Browser Title
   let appTitle = "(Loading)";
   let _elSearchBar;
@@ -109,6 +112,10 @@
     }
   };
 
+  $: if ($UserStore.meta) {
+    daysSinceLastBackup = dayjs().diff(dayjs(new Date(user.meta.lastBackup || null)), "day");
+  }
+
   /**
    * Add some tips to help new users
    * This will stop showing after 12 nomie launches
@@ -132,6 +139,7 @@
   UserStore.onReady(() => {
     // Set user to kick off top view conditional.
     user = $UserStore; // Kick off
+
     // Setup Hooks These will fire on before safe, and onLogSave
     LedgerStore.hook("onBeforeSave", (log) => {
       state.savingTrackers = log.getMeta().trackers.map((t) => t.id);
@@ -746,9 +754,23 @@
 
           <div class="board-actions">
             <button on:click={editBoard} class="btn btn btn-round board-edit-button clickable">
-              <NIcon name="more" size="32" className="fill-white" />
+              <NIcon name="sort" size="32" className="fill-white" />
             </button>
+
           </div>
+
+          {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 2 && $UserStore.storageType == 'local'}
+            <div class="container-sm">
+              <div class="backup n-row pb-2">
+                {#if daysSinceLastBackup > 1000}
+                  <Text size="sm" faded>No known backups</Text>
+                {:else}
+                  <Text size="sm" faded>It's been {daysSinceLastBackup} since your last backup.</Text>
+                {/if}
+                <Button shape="round" color="light" className="ml-2" size="sm" on:click={exportData}>Backup Now</Button>
+              </div>
+            </div>
+          {/if}
 
         </main>
       {/if}
