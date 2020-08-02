@@ -1,6 +1,6 @@
 <script>
   import NItem from "../../components/list-item/list-item.svelte";
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import NToggle from "../../components/toggle-switch/toggle-switch.svelte";
   import { BoardStore } from "../../store/boards";
   import { Lang } from "../../store/lang";

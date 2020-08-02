@@ -1,9 +1,9 @@
 <script>
   import { Lang } from "../../store/lang";
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
 
   const state = {
-    theme: "auto"
+    theme: "auto",
   };
 </script>
 

@@ -2,7 +2,7 @@
   // Components
   import Keypad from "./keypad.svelte";
   // Stores
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
 
   let pin;
   $: view = pin ? pin.replace(/\d(?!$)/g, " • ") : "Enter Pin";
@@ -19,7 +19,7 @@
     },
     shake() {
       alert("Incorrect Pin");
-    }
+    },
   };
 </script>
 
@@ -34,8 +34,7 @@
   }
 </style>
 
-<div
-  class="full-screen flex-column bg-primary {$UserStore.locked && accessPin ? 'visible' : 'hidden'}">
+<div class="full-screen flex-column bg-primary {$UserStore.locked && accessPin ? 'visible' : 'hidden'}">
   <h1>{view}</h1>
   <Keypad bind:value={pin} on:submit={methods.submit} />
 </div>

@@ -11,21 +11,21 @@
   import Board from "../containers/board/board.svelte";
 
   // Stores
-  import { UserStore } from "../store/user";
+  import { UserStore } from "../store/user-store";
   import { TrackerStore } from "../store/tracker-store";
 
   const data = {
     editMode: false,
-    hasTrackers: false
+    hasTrackers: false,
   };
 
   const methods = {
     toggleEditMode() {
       data.editMode = !data.editMode;
-    }
+    },
   };
 
-  TrackerStore.subscribe(t => {
+  TrackerStore.subscribe((t) => {
     if (Object.keys(t.trackers || {}).length) {
       data.hasTrackers = true;
     } else {

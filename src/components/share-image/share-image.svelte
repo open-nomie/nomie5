@@ -3,7 +3,7 @@
   import { Interact } from "../../store/interact";
   import { Lang } from "../../store/lang";
   import math from "../../utils/math/math";
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import { TrackerStore } from "../../store/tracker-store";
   import NNoteTextualizer from "../note-textualizer/note-textualizer.svelte";
   import Tracker from "../../modules/tracker/tracker";

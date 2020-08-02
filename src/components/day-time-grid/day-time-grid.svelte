@@ -7,7 +7,7 @@
   import math from "../../utils/math/math";
   import extractor from "../../utils/extract/extract";
 
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import { TrackerStore } from "../../store/tracker-store";
 
   //   // Props

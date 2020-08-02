@@ -21,13 +21,41 @@ import { LedgerStore } from "./ledger";
 
 // Consts
 const console = new Logger("🤠 userStore");
+
+declare let blockstack: any;
 const UserSession = new blockstack.UserSession();
+
+export interface IUserMeta {
+  lock: boolean;
+  pin?: number;
+  is24Hour?: boolean;
+  lastBackup?: Date;
+  boardsEnabled?: boolean;
+  compactTrackerButtons?: boolean;
+}
+type StorageType = "blockstack" | "local" | "pouchdb";
+
+export interface IUserState {
+  storageType: StorageType;
+  ready: boolean;
+  signedIn?: boolean;
+  launchCount: number;
+  profile: {
+    username?: string;
+  };
+  alwaysLocate: boolean;
+  theme: string;
+  location: any;
+  autoImportApi: boolean;
+  meta: IUserMeta;
+  locked: boolean;
+}
 
 // Store Initlization
 const userInit = () => {
   let listeners = [];
   // User State
-  let state = {
+  let state: IUserState = {
     storageType: Storage.local.get("root/storage_type"),
     ready: false,
     signedIn: undefined,
@@ -41,9 +69,9 @@ const userInit = () => {
     autoImportApi: false,
     meta: {
       lock: false,
-      pin: null,
-      aggressiveSync: false,
+      pin: undefined,
       is24Hour: false,
+      lastBackup: undefined,
     },
     locked: true,
   };
@@ -53,6 +81,13 @@ const userInit = () => {
   const methods = {
     getStorageEngine() {
       return Storage._storageType();
+    },
+    async saveLastBackupDate() {
+      update((state: IUserState) => {
+        state.meta.lastBackup = new Date();
+        return state;
+      });
+      return methods.saveMeta();
     },
     getTimeFormat() {
       let format;

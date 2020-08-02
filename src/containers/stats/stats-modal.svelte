@@ -45,7 +45,7 @@
   // Stores
   import { LedgerStore } from "../../store/ledger";
   import { Interact } from "../../store/interact";
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import { Lang } from "../../store/lang";
   import { TrackerStore } from "../../store/tracker-store";
   import { PeopleStore } from "../../store/people-store";

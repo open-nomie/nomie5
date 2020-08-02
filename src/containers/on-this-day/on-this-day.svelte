@@ -3,7 +3,7 @@
   import Map from "./../map/map.svelte";
   import NoteTextualizer from "./../../components/note-textualizer/note-textualizer.svelte";
   import TrackerSmallBlock from "./../../components/tracker-ball/tracker-small-block.svelte";
-  import { UserStore } from "./../../store/user.js";
+  import { UserStore } from "./../../store/user-store.js";
   import { TrackerStore } from "./../../store/tracker-store.js";
   import { LedgerStore } from "./../../store/ledger.js";
   import Card from "./../../components/card/card.svelte";
@@ -25,7 +25,7 @@
     trackers: [],
     trackers1: [],
     trackers2: [],
-    records: []
+    records: [],
   };
 
   let showDom = false;
@@ -54,7 +54,7 @@
     processTrackers(trackersUsed);
 
     let notes = day
-      .filter(record => {
+      .filter((record) => {
         return hasNote(record.note);
       })
       .sort((a, b) => {
@@ -67,20 +67,17 @@
 
   function processTrackers(trackersUsed) {
     let trackers = Object.keys(trackersUsed)
-      .map(tag => {
+      .map((tag) => {
         let base = trackersUsed[tag];
         let tracker = TrackerStore.getByTag(tag);
 
-        let value =
-          tracker.math == "sum"
-            ? math.sum(base.values)
-            : math.average(base.values);
+        let value = tracker.math == "sum" ? math.sum(base.values) : math.average(base.values);
         return {
           tag,
           tracker,
           values: base.values,
           count: base.values.length,
-          value: tracker.displayValue(value)
+          value: tracker.displayValue(value),
         };
       })
       .sort((a, b) => {
@@ -91,22 +88,18 @@
   }
 
   function nextDay() {
-    let date = dayjs($Interact.onThisDay)
-      .add(1, "day")
-      .toDate();
+    let date = dayjs($Interact.onThisDay).add(1, "day").toDate();
     Interact.onThisDay(date);
   }
 
   function previousDay() {
-    let date = dayjs($Interact.onThisDay)
-      .subtract(1, "day")
-      .toDate();
+    let date = dayjs($Interact.onThisDay).subtract(1, "day").toDate();
     Interact.onThisDay(date);
   }
 
   function hasNote(str) {
     let parsed = extractor.parse(str, { includeGeneric: true });
-    let generic = parsed.filter(tElement => {
+    let generic = parsed.filter((tElement) => {
       return tElement.type == "generic";
     });
     return math.percentage(parsed.length, generic.length) > 70;
@@ -123,27 +116,19 @@
   <NModal show={showWindow} type="bottom-slideup" bodyClass="bg-solid-1">
     <header slot="header" class="w-100">
       <div class="n-toolbar-grid">
-        <button
-          class="btn btn-clear btn-icon tap-icon left"
-          on:click={Interact.closeOnThisDay}>
+        <button class="btn btn-clear btn-icon tap-icon left" on:click={Interact.closeOnThisDay}>
           <NIcon name="close" />
         </button>
         <div class="main">
           <Text>{dayjs($Interact.onThisDay).format('ddd MMM D, YYYY')}</Text>
-          <Text className="text-faded-3" size="sm">
-            {dayjs($Interact.onThisDay).fromNow()}
-          </Text>
+          <Text className="text-faded-3" size="sm">{dayjs($Interact.onThisDay).fromNow()}</Text>
         </div>
         <div class="right">
           <div class="n-row">
-            <button
-              class="btn btn-clear btn-icon tap-icon px-1"
-              on:click={previousDay}>
+            <button class="btn btn-clear btn-icon tap-icon px-1" on:click={previousDay}>
               <NIcon name="chevronLeft" />
             </button>
-            <button
-              class="btn btn-clear btn-icon tap-icon px-1"
-              on:click={nextDay}>
+            <button class="btn btn-clear btn-icon tap-icon px-1" on:click={nextDay}>
               <NIcon name="chevronRight" />
             </button>
           </div>
@@ -164,9 +149,7 @@
       <section class="bg-solid-2">
         {#each state.notes as note}
           <Card className="p-3">
-            <Text size="xs" className="mb-2 text-faded-2">
-              {dayjs(note.end).format(UserStore.getTimeFormat())}
-            </Text>
+            <Text size="xs" className="mb-2 text-faded-2">{dayjs(note.end).format(UserStore.getTimeFormat())}</Text>
             <NoteTextualizer note={note.note} />
           </Card>
         {/each}

@@ -5,7 +5,7 @@
 
   // Modules
   import Tracker from "../modules/tracker/tracker";
-  import Exporter from "../modules/export/export";
+  import Exporter from "../modules/export/export-helper";
   import CSV from "../modules/export/csv";
   // Components
   import NText from "../components/text/text.svelte";
@@ -21,7 +21,7 @@
   import dayjs from "dayjs";
 
   // Setup the Exporter
-  const Export = new Exporter();
+  // const Export = new Exporter();
 
   // Default to Backup - passed in by :type in route
   export let type = "backup";
@@ -29,10 +29,8 @@
   // Set state
   let state = {
     trackers: TrackerStore.getAsArray(), // assume all
-    start: dayjs()
-      .subtract(1, "month")
-      .format("YYYY-MM-DD"),
-    end: dayjs().format("YYYY-MM-DD")
+    start: dayjs().subtract(1, "month").format("YYYY-MM-DD"),
+    end: dayjs().format("YYYY-MM-DD"),
   };
 
   // Prepare Dynamic values
@@ -58,29 +56,17 @@
       csv.generate({
         trackers,
         start,
-        end
+        end,
       });
     },
     selectTrackers() {
-      Interact.selectTrackers().then(trackers => {
+      Interact.selectTrackers().then((trackers) => {
         state.trackers = trackers;
       });
     },
     export() {
-      Interact.confirm(
-        Lang.t("general.continue-question"),
-        Lang.t("settings.export-confirm")
-      ).then(res => {
-        if (res === true) {
-          Export.onChange(change => {
-            Interact.toast(`Export: ${change}`, { perm: true });
-          });
-          Export.start().then(() => {
-            Interact.toast(Lang.t("settings.export-complete"));
-          });
-        }
-      });
-    }
+      Exporter();
+    },
   };
 
   onMount(() => {});
@@ -129,18 +115,10 @@
           </div>
         </NItem>
         <NItem title={Lang.t('general.start')}>
-          <input
-            type="date"
-            class="form-control"
-            bind:value={state.start}
-            slot="right" />
+          <input type="date" class="form-control" bind:value={state.start} slot="right" />
         </NItem>
         <NItem title={Lang.t('general.end')}>
-          <input
-            type="date"
-            class="form-control"
-            bind:value={state.end}
-            slot="right" />
+          <input type="date" class="form-control" bind:value={state.end} slot="right" />
         </NItem>
       </div>
 

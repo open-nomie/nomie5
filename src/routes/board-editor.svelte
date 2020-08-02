@@ -27,7 +27,7 @@
 
   //store
   import { BoardStore } from "../store/boards";
-  import { UserStore } from "../store/user";
+  import { UserStore } from "../store/user-store";
   import { TrackerStore } from "../store/tracker-store";
   import { Interact } from "../store/interact";
   import { Lang } from "../store/lang";
@@ -45,7 +45,7 @@
     refreshing: false,
     notice: "Notice",
     lastDraggingTag: null,
-    draggingTracker: null
+    draggingTracker: null,
   };
 
   let ready = false;
@@ -71,23 +71,19 @@
     data.board = BoardStore.boardById("all") || {
       id: "all",
       trackers: [],
-      label: "All"
+      label: "All",
     };
     // Set trackers to ALL trackers, sorted by the ALL board tracker list.
     data.board.trackers = Object.keys($TrackerStore.trackers).sort((a, b) => {
       if (data.board.trackers.indexOf(a) > data.board.trackers.indexOf(b)) {
         return 1;
-      } else if (
-        data.board.trackers.indexOf(a) < data.board.trackers.indexOf(b)
-      ) {
+      } else if (data.board.trackers.indexOf(a) < data.board.trackers.indexOf(b)) {
         return -1;
       } else {
         return a > b ? 1 : -1;
       }
     });
-    trackers = data.board.trackers
-      .map(tag => $TrackerStore.trackers[tag])
-      .filter(t => t);
+    trackers = data.board.trackers.map((tag) => $TrackerStore.trackers[tag]).filter((t) => t);
   }
 
   let titleChange = false;
@@ -112,9 +108,9 @@
       try {
         // If the Active Board is set...
         if ($BoardStore.activeBoard) {
-          BoardStore.update(state => {
+          BoardStore.update((state) => {
             state.activeBoard.label = data.updatedLabel;
-            state.activeBoard.trackers = trackers.map(tracker => tracker.tag);
+            state.activeBoard.trackers = trackers.map((tracker) => tracker.tag);
             return state;
           });
         }
@@ -130,10 +126,7 @@
       }
     },
     async deleteBoard() {
-      let confirmed = await Interact.confirm(
-        "Delete " + data.board.label + " tab?",
-        "You can recreate it later, but it's not super easy."
-      );
+      let confirmed = await Interact.confirm("Delete " + data.board.label + " tab?", "You can recreate it later, but it's not super easy.");
       if (confirmed === true) {
         data.refreshing = true;
         await BoardStore.deleteBoard(data.board.id);
@@ -144,10 +137,7 @@
     removeTracker(event, tracker) {
       event.preventDefault();
       event.stopPropagation();
-      Interact.confirm(
-        `Remove ${tracker.label} from ${data.board.label}?`,
-        "You can always add it later."
-      ).then(res => {
+      Interact.confirm(`Remove ${tracker.label} from ${data.board.label}?`, "You can always add it later.").then((res) => {
         if (res === true) {
           event.preventDefault();
           BoardStore.removeTrackerFromBoard(tracker, data.board.id).then(() => {
@@ -161,12 +151,12 @@
     },
     trackerIndex(tracker) {
       return trackers.indexOf(tracker);
-    }
+    },
   };
 
   async function trackersSorted(evt) {
     trackers = evt.detail;
-    data.board.trackers = trackers.map(tracker => tracker.tag);
+    data.board.trackers = trackers.map((tracker) => tracker.tag);
     await tick(100);
     methods.save({ silent: true });
   }
@@ -174,9 +164,9 @@
   let boardUnsub;
 
   onMount(() => {
-    boardUnsub = BoardStore.subscribe(b => {
+    boardUnsub = BoardStore.subscribe((b) => {
       if (b.activeBoard) {
-        trackers = b.activeBoard.trackers.map(tag => {
+        trackers = b.activeBoard.trackers.map((tag) => {
           return $TrackerStore.trackers[tag] || new Tracker({ tag: tag });
         });
       } else {
@@ -196,9 +186,9 @@
   let list = [
     { id: 1, name: "First Item" },
     { id: 2, name: "Second Item" },
-    { id: 3, name: "Third Item" }
+    { id: 3, name: "Third Item" },
   ];
-  const sortList = ev => {
+  const sortList = (ev) => {
     trackers = ev.detail;
   };
 </script>
@@ -229,9 +219,7 @@
       </div>
       <div class="main">
         <h1 class="title">
-          {#if data.board.id == 'all'}
-            All Tab Sorting
-          {:else}Edit {data.board.label}{/if}
+          {#if data.board.id == 'all'}All Tab Sorting{:else}Edit {data.board.label}{/if}
         </h1>
       </div>
     </div>
@@ -242,17 +230,10 @@
       <div class="n-list pt-2">
         {#if data.board.id !== 'all'}
           <NItem className="py-2">
-            <NInput
-              type="text"
-              placeholder="Tab Label"
-              bind:value={data.updatedLabel}>
+            <NInput type="text" placeholder="Tab Label" bind:value={data.updatedLabel}>
               <div slot="right">
                 {#if data.updatedLabel != data.board.label}
-                  <button
-                    class="btn text-primary-bright"
-                    on:click={methods.save}>
-                    {Lang.t('general.save')}
-                  </button>
+                  <button class="btn text-primary-bright" on:click={methods.save}>{Lang.t('general.save')}</button>
                 {/if}
               </div>
 
@@ -260,12 +241,7 @@
           </NItem>
         {/if}
         {#if trackers}
-          <NSortableList
-            bind:items={trackers}
-            handle=".menu-handle"
-            key="tag"
-            on:update={trackersSorted}
-            let:item>
+          <NSortableList bind:items={trackers} handle=".menu-handle" key="tag" on:update={trackersSorted} let:item>
             <NItem className="py-2 bottom-line">
               <div slot="left" class="menu-handle">
                 <NIcon className="fill-inverse mr-2" name="menu" />
@@ -275,7 +251,7 @@
               <div slot="right" class="n-row">
                 <button
                   class="btn btn-icon fill-red mr-2"
-                  on:click={evt => {
+                  on:click={(evt) => {
                     methods.removeTracker(evt, item);
                   }}>
                   <NIcon name="remove" className="fill-red" />
@@ -292,9 +268,7 @@
     {#if data.board.id != 'all'}
       <div class="n-row p-2">
         <div class="filler" />
-        <button
-          class="btn btn btn-clear text-danger "
-          on:click={methods.deleteBoard}>
+        <button class="btn btn btn-clear text-danger " on:click={methods.deleteBoard}>
           <NIcon name="delete" className="fill-red mr-2" />
           Delete Tab
         </button>

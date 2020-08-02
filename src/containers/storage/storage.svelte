@@ -15,17 +15,17 @@
 
   // Stores
   import { Interact } from "../../store/interact";
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
 
   const state = {
     showFiles: false,
-    files: []
+    files: [],
   };
 
   const methods = {
     initialize() {
       state.files = [];
-      return Storage.list().then(files => {
+      return Storage.list().then((files) => {
         state.files = files.sort((a, b) => {
           return a > b ? 1 : -1;
         });
@@ -43,7 +43,7 @@
         `Holup! Delete ${file}?`,
         `This can cause serious problems if you don't know what you're doing.`,
         "Yes, Delete"
-      ).then(res => {
+      ).then((res) => {
         if (res === true) {
           Storage.delete(file).then(() => {
             setTimeout(() => {
@@ -52,7 +52,7 @@
           });
         }
       });
-    }
+    },
   };
 
   // onMount(() => {

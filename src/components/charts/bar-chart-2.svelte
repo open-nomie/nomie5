@@ -5,7 +5,7 @@
   import nid from "../../modules/nid/nid";
   const dispatch = createEventDispatcher();
   import math from "../../utils/math/math";
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import NIcon from "../icon/icon.svelte";
   import tick from "../../utils/tick/tick";
 

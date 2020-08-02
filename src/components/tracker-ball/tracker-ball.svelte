@@ -3,7 +3,7 @@
   import { createEventDispatcher } from "svelte";
   import ItemBall from "./item-ball.svelte";
   import ScorePill from "./score-pill.svelte";
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import dayjs from "dayjs";
   const dispatch = createEventDispatcher();
 

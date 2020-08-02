@@ -4,7 +4,7 @@
   import NInput from "../input/input.svelte";
   import NSpinner from "../spinner/spinner.svelte";
   import NToggle from "../../components/toggle-switch/toggle-switch.svelte";
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import { Lang } from "../../store/lang";
   import { Interact } from "../../store/interact";
   import Storage from "../../modules/storage/storage";

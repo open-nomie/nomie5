@@ -40,7 +40,7 @@
   import { TrackerStore } from "../store/tracker-store";
   import { LedgerStore } from "../store/ledger";
   import { ActiveLogStore } from "../store/active-log";
-  import { UserStore } from "../store/user";
+  import { UserStore } from "../store/user-store";
   import { Lang } from "../store/lang";
   import { PeopleStore } from "../store/people-store";
   import { ContextStore } from "../store/context-store";

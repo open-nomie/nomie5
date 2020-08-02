@@ -13,7 +13,7 @@
 
   // vendor
   import * as ScaleLinear from "d3-scale";
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import NIcon from "../icon/icon.svelte";
 
   const scaleLinear = ScaleLinear.default.scaleLinear;
@@ -25,8 +25,8 @@
   export let color = "#4d84a1";
   export let points;
   export let activeIndex;
-  export let xFormat = x => x;
-  export let yFormat = y => y;
+  export let xFormat = (x) => x;
+  export let yFormat = (y) => y;
   export let hideYTicks = false;
 
   const xTicks = labels;
@@ -40,7 +40,7 @@
   let lastPoints = null;
   $: if (points) {
     if (points.length) {
-      let values = points.map(point => point.y);
+      let values = points.map((point) => point.y);
 
       let sum = math.sum(values);
       let max = math.max(values);
@@ -100,7 +100,7 @@
     },
     toTrustedValue(value, base) {
       return isNaN(value) ? base : value;
-    }
+    },
   };
 
   onMount(() => {});
@@ -217,9 +217,7 @@
         <g class="axis y-axis" transform="translate(0,{padding.top})">
           {#each yTicks as tick, index}
             {#if showValue(tick, index)}
-              <g
-                class="tick tick-{tick}"
-                transform="translate(0, {yScale(tick) - padding.bottom})">
+              <g class="tick tick-{tick}" transform="translate(0, {yScale(tick) - padding.bottom})">
                 <line x2="100%" />
                 <text y="-4">{yFormat(tick)} {tick === 20 ? '' : ''}</text>
               </g>
@@ -242,7 +240,7 @@
       <g class="bars">
         {#each points as point, i}
           <rect
-            on:click={event => {
+            on:click={(event) => {
               methods.onTap(event, { index: i, point: point });
             }}
             rx="4"
@@ -267,13 +265,9 @@
             {points[activeIndex].date.format(hourFormat)}
           {:else if points[activeIndex].unit == 'day'}
             {points[activeIndex].date.format('ddd MMM Do')}
-          {:else if points[activeIndex].unit == 'month'}
-            {points[activeIndex].date.format('MMM YYYY')}
-          {:else}{points[activeIndex].x}{/if}
+          {:else if points[activeIndex].unit == 'month'}{points[activeIndex].date.format('MMM YYYY')}{:else}{points[activeIndex].x}{/if}
         </label>
-        <div class="value" style="background-color:{color}">
-          {yFormat(points[activeIndex].y)}
-        </div>
+        <div class="value" style="background-color:{color}">{yFormat(points[activeIndex].y)}</div>
       </div>
     {/if}
   </div>

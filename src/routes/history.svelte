@@ -33,7 +33,7 @@
   import tick from "../utils/tick/tick";
 
   // Stores
-  import { UserStore } from "../store/user";
+  import { UserStore } from "../store/user-store";
   import { Interact } from "../store/interact";
   import { TrackerStore } from "../store/tracker-store";
   import { LedgerStore } from "../store/ledger";

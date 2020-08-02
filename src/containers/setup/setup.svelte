@@ -32,7 +32,7 @@
   // Local components
 
   // Stores
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import { Lang } from "../../store/lang";
   import { Browser } from "../../store/browser-store";
   import { Interact } from "../../store/interact";
@@ -40,9 +40,7 @@
   // TODO: UserSession shouldn't be in here - login should be fired by Storage.
   const UserSession = new blockstack.UserSession();
 
-  let isMobile =
-    typeof window.orientation !== "undefined" ||
-    navigator.userAgent.indexOf("IEMobile") !== -1;
+  let isMobile = typeof window.orientation !== "undefined" || navigator.userAgent.indexOf("IEMobile") !== -1;
 
   const state = {
     ready: false,
@@ -53,7 +51,7 @@
     isTiny: false,
     redirecting: false,
     timeFormat: "is12",
-    theme: UserStore.getTheme()
+    theme: UserStore.getTheme(),
   };
 
   let slides = [WelcomeSlide];
@@ -95,7 +93,7 @@
     },
     back() {
       state.activeSlide = state.activeSlide - 1;
-    }
+    },
   };
   onMount(() => {
     setTimeout(() => {
@@ -110,10 +108,7 @@
   @import "../../scss/utils/_utils";
 </style>
 
-<NLayout
-  pageTitle="Privately track what and who you do."
-  className="page-setup"
-  showTabs={false}>
+<NLayout pageTitle="Privately track what and who you do." className="page-setup" showTabs={false}>
   <div slot="header" class="n-toolbar-grid container">
     <div class="left" />
     <div class="main">
@@ -130,10 +125,7 @@
     {/if}
 
     <div class="main">
-      <NStepper
-        steps={slides.length}
-        stepClass="primary-bright"
-        current={state.activeSlide} />
+      <NStepper steps={slides.length} stepClass="primary-bright" current={state.activeSlide} />
     </div>
 
     {#if (slides[state.activeSlide] == StorageSlide && $UserStore.storageType) || slides[state.activeSlide] != StorageSlide}

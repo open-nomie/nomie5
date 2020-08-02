@@ -24,7 +24,7 @@
 
   // Stores
   import config from "../../../../config/global";
-  import { UserStore } from "../../../store/user";
+  import { UserStore } from "../../../store/user-store";
   import { Interact } from "../../../store/interact";
   import { TrackerStore } from "../../../store/tracker-store";
   import { Lang } from "../../../store/lang";

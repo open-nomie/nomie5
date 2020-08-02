@@ -26,7 +26,7 @@
   import RouterView from "./routes/routes.svelte";
 
   // Stores
-  import { UserStore } from "./store/user"; //  user auth and state
+  import { UserStore } from "./store/user-store"; //  user auth and state
   import { Interact } from "./store/interact"; //  global alerts, popmenus, confirms, etc
   import { BoardStore } from "./store/boards"; // board state  and methods
   import { TrackerStore } from "./store/tracker-store"; // tracker state and methods
@@ -87,7 +87,7 @@
 
   const methods = {
     hideSplashScreen() {
-      document.querySelectorAll(".delete-on-app").forEach(d => {
+      document.querySelectorAll(".delete-on-app").forEach((d) => {
         d.classList.add("deleted");
         setTimeout(() => {
           d.remove();
@@ -95,8 +95,7 @@
       });
     },
     setDocParams(options) {
-      let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches;
+      let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
       // let isDarkMode = false;
       let theme = localStorage.getItem(config.theme_key) || "auto";
       if (theme === "auto" && isDarkMode) {
@@ -109,7 +108,7 @@
         document.body.classList.add(`theme-${theme}`);
       }
       methods.hideSplashScreen();
-    }
+    },
   };
 
   /**
@@ -147,7 +146,7 @@
    */
 
   window.addEventListener("load", () => {
-    let onNetworkChange = event => {
+    let onNetworkChange = (event) => {
       if (navigator.onLine) {
         document.body.classList.remove("is-offline");
         offline = false;
@@ -171,11 +170,11 @@
   let scollingTimeout;
   window.addEventListener(
     "scroll",
-    event => {
+    (event) => {
       // Clear our timeout throughout the scroll
       window.clearTimeout(scollingTimeout);
       // Set a timeout to run after scrolling ends
-      scollingTimeout = setTimeout(function() {
+      scollingTimeout = setTimeout(function () {
         document.body.classList.remove("scrolling");
       }, 200);
       document.body.classList.add("scrolling");
@@ -250,9 +249,7 @@
   <OnThisDayModal /> -->
 
 {#if $UserStore.storageType == 'blockstack' && offline}
-  <div class="offline-notice">
-    No connection to Blockstack. Avoid tracking while offline.
-  </div>
+  <div class="offline-notice">No connection to Blockstack. Avoid tracking while offline.</div>
 {/if}
 <div id="photo-holder">
   <img id="photo-holder-image" alt="avatar-holder" />

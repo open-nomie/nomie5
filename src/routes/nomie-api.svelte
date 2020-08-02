@@ -35,7 +35,7 @@
   // Stores
   import { LedgerStore } from "../store/ledger";
   import { Interact } from "../store/interact";
-  import { UserStore } from "../store/user";
+  import { UserStore } from "../store/user-store";
   import { NomieAPI } from "../store/napi";
   import { Lang } from "../store/lang";
 
@@ -51,17 +51,13 @@
     view: "settings",
     capturingId: null,
     apiExample: null,
-    showPrivateKey: false
+    showPrivateKey: false,
   };
 
   $: autoImportAPI = $NomieAPI.autoImport;
 
   $: if (state.apiKey) {
-    state.apiExample = JSON.stringify(
-      { note: "#mood(4)", api_key: state.apiKey },
-      null,
-      2
-    );
+    state.apiExample = JSON.stringify({ note: "#mood(4)", api_key: state.apiKey }, null, 2);
   }
 
   function copy(key) {
@@ -75,7 +71,7 @@
 
     apiKey = await Interact.prompt("API Key");
     privateKey = await Interact.prompt("Private Key", "Paste your privatekey", {
-      valueType: "textarea"
+      valueType: "textarea",
     });
     let isValue = await NAPI.testAndSave(apiKey, privateKey);
 
@@ -84,15 +80,9 @@
       state.ready = true;
       state.apiKey = NAPI.apiKey;
       state.privateKey = NAPI.privateKey;
-      Interact.alert(
-        Lang.t("general.success", "Success"),
-        "API and Private Key are valid"
-      );
+      Interact.alert(Lang.t("general.success", "Success"), "API and Private Key are valid");
     } else {
-      Interact.alert(
-        Lang.t("general.failure", "Failure"),
-        "Please check that the API and Private Key are valid"
-      );
+      Interact.alert(Lang.t("general.failure", "Failure"), "Please check that the API and Private Key are valid");
     }
   }
 
@@ -132,13 +122,13 @@
     register() {
       state.ready = false;
       state.message = "Registering...";
-      NAPI.register().then(payload => {
+      NAPI.register().then((payload) => {
         methods.init();
       });
     },
     getLogs() {
       state.ready = false;
-      return NAPI.logs().then(logs => {
+      return NAPI.logs().then((logs) => {
         state.ready = true;
         state.logs = logs.sort((a, b) => {
           return a.date > b.date ? -1 : 1;
@@ -152,25 +142,20 @@
       });
     },
     unregister() {
-      Interact.confirm("Destroy this API Key?", "This cannot be undone").then(
-        res => {
-          if (res === true) {
-            NAPI.unregister()
-              .then(() => {
-                state.registered = false;
-              })
-              .catch(e => {
-                Interact.alert("Error", e.message);
-              });
-          }
+      Interact.confirm("Destroy this API Key?", "This cannot be undone").then((res) => {
+        if (res === true) {
+          NAPI.unregister()
+            .then(() => {
+              state.registered = false;
+            })
+            .catch((e) => {
+              Interact.alert("Error", e.message);
+            });
         }
-      );
+      });
     },
     confirmClear() {
-      Interact.confirm(
-        "Clear Logs?",
-        "This will delete the remaining items and cannot be undone."
-      ).then(res => {
+      Interact.confirm("Clear Logs?", "This will delete the remaining items and cannot be undone.").then((res) => {
         if (res) {
           methods.clear();
         }
@@ -193,7 +178,7 @@
       if (view === "captured") {
         methods.getLogs();
       }
-    }
+    },
   };
 
   function toLog(apiLog) {
@@ -226,11 +211,7 @@
       </div>
       <div class="right">
         {#if state.registered}
-          <button
-            class="btn btn-clear tap-text mr-2"
-            on:click={methods.getLogs}>
-            Check
-          </button>
+          <button class="btn btn-clear tap-text mr-2" on:click={methods.getLogs}>Check</button>
         {/if}
       </div>
     </div>
@@ -253,33 +234,24 @@
         <Spinner />
       </div>
     {:else if state.ready && !state.registered}
-      <NItem
-        className="clickable text-primary solo text-center mb-3"
-        on:click={methods.register}
-        title="Generate API Key..." />
+      <NItem className="clickable text-primary solo text-center mb-3" on:click={methods.register} title="Generate API Key..." />
 
       <NItem className="just-content">
         <p>
-          Generating an API will create a unique public/private key combination.
-          The public key is stored in the Nomie API data store, your private key
-          will be stored in Nomie.
+          Generating an API will create a unique public/private key combination. The public key is stored in the Nomie API data store, your
+          private key will be stored in Nomie.
         </p>
         <p class="mt-2">
-          When you POST data with the provided API, your content is encrypted
-          with the public key. Meaning, only your private key can decrypt the
-          content.
+          When you POST data with the provided API, your content is encrypted with the public key. Meaning, only your private key can
+          decrypt the content.
         </p>
         <p class="mt-2">
-          FREE Plans have 10 slots to hold data. Each time you import into Nomie
-          it will clear all the slots. This will help limit run away web service
-          calls.
+          FREE Plans have 10 slots to hold data. Each time you import into Nomie it will clear all the slots. This will help limit run away
+          web service calls.
         </p>
       </NItem>
 
-      <NItem
-        className="clickable text-primary mt-4 solo text-center mb-3"
-        on:click={installAPI}
-        title="Manually set API/Private Key..." />
+      <NItem className="clickable text-primary mt-4 solo text-center mb-3" on:click={installAPI} title="Manually set API/Private Key..." />
     {:else if state.view === 'captured'}
       <div class="n-list">
         {#each state.logs as apiLog, index}
@@ -308,9 +280,7 @@
       </div>
       {#if state.logs.length > state.hidden.length}
         <NItem className="bg-transparent">
-          <button
-            on:click={methods.confirmClear}
-            class="btn btn-outlined btn-danger mr-1 btn-block my-0">
+          <button on:click={methods.confirmClear} class="btn btn-outlined btn-danger mr-1 btn-block my-0">
             <NIcon name="closeOutline" className="fill-white mr-2" />
             Clear Remaining
           </button>
@@ -322,14 +292,11 @@
     {:else}
       <!-- We're In the Settings Tab
         -->
-      <NItem
-        title="Auto Accept"
-        className="solo py-2 pt-3 mb-3"
-        description="Auto import and accept API logs">
+      <NItem title="Auto Accept" className="solo py-2 pt-3 mb-3" description="Auto import and accept API logs">
         <div slot="right">
           <NToggle
             bind:value={autoImportAPI}
-            on:change={event => {
+            on:change={(event) => {
               if (autoImportAPI === true) {
                 NomieAPI.disableAutoImport();
               } else {
@@ -355,9 +322,7 @@
           <input type="text" class="form-control mt-1" value={state.apiKey} />
         </div> -->
         </NItem>
-        <NItem
-          title="Private Key"
-          on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
+        <NItem title="Private Key" on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
           <button class="btn btn-clear text-primary-bright" slot="right">
             <NIcon name="chevron{state.showPrivateKey ? 'Up' : 'Down'}" />
           </button>
@@ -365,20 +330,13 @@
         {#if state.showPrivateKey}
           <NItem className="px-3 pb-3">
             <div>
-              <textarea
-                type="text"
-                class="form-control text-sm mt-1"
-                style="min-height:100px;"
-                value={state.privateKey} />
+              <textarea type="text" class="form-control text-sm mt-1" style="min-height:100px;" value={state.privateKey} />
               <div
                 class="p-2 text-center text-primary-bright text-sm"
                 on:click={() => {
                   copy(state.privateKey);
                 }}>
-                <NIcon
-                  name="copy"
-                  size={20}
-                  className="fill-primary-bright mr-2" />
+                <NIcon name="copy" size={20} className="fill-primary-bright mr-2" />
                 Copy Private Key
               </div>
             </div>
@@ -386,10 +344,7 @@
         {/if}
       </div>
 
-      <NItem
-        title="Example POST"
-        className="solo mt-3"
-        on:click={() => (state.showExample = !state.showExample)}>
+      <NItem title="Example POST" className="solo mt-3" on:click={() => (state.showExample = !state.showExample)}>
         <button slot="right" class="btn btn-clear">
           <NIcon name="chevron{state.showExample ? 'Up' : 'Down'}" />
         </button>
@@ -397,28 +352,15 @@
       {#if state.showExample}
         <NItem className="px-3 pb-2 bg-transparent">
           <p class="text-sm">POST JSON to: https://nomieapi.com/log</p>
-          <textarea
-            class="form-control"
-            style="height:120px"
-            bind:value={state.apiExample} />
-          <p class="text-sm mt-1">
-            fields: note, api_key, lat, lng, date, source
-          </p>
+          <textarea class="form-control" style="height:120px" bind:value={state.apiExample} />
+          <p class="text-sm mt-1">fields: note, api_key, lat, lng, date, source</p>
         </NItem>
       {/if}
       <div item-divider />
 
-      <NItem
-        className="text-red text-center solo mt-4"
-        on:click={methods.forget}>
-        Forget API Key...
-      </NItem>
+      <NItem className="text-red text-center solo mt-4" on:click={methods.forget}>Forget API Key...</NItem>
       <div item-divider />
-      <NItem
-        className="text-red text-center solo"
-        on:click={methods.unregister}>
-        Destroy API Key...
-      </NItem>
+      <NItem className="text-red text-center solo" on:click={methods.unregister}>Destroy API Key...</NItem>
       <div item-divider />
     {/if}
   </div>

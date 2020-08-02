@@ -14,7 +14,7 @@
   import extractor from "../../utils/extract/extract";
 
   // Stores
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import { Interact } from "../../store/interact";
   import { LedgerStore } from "../../store/ledger";
   import { TrackerStore } from "../../store/tracker-store";
@@ -29,7 +29,7 @@
     percentage: 0,
     daysHit: 0,
     daysTotal: 0,
-    thisMonth: true
+    thisMonth: true,
   };
 
   function next() {
@@ -60,12 +60,10 @@
     let final = [];
     for (var i = 0; i < diff; i++) {
       let date = dayjs(start).add(i, "day");
-      let hasEvent = rows.find(
-        row => new Date(row.end).toDateString() === date.toDate().toDateString()
-      );
+      let hasEvent = rows.find((row) => new Date(row.end).toDateString() === date.toDate().toDateString());
       final.push(hasEvent);
     }
-    let found = final.filter(r => r).length;
+    let found = final.filter((r) => r).length;
     let total = final.length;
 
     state.daysTotal = total;
@@ -77,17 +75,17 @@
   async function main() {
     let payload = {
       start: state.date.startOf("month"),
-      end: state.date.endOf("month")
+      end: state.date.endOf("month"),
     };
     let type = extractor.toElement($Interact.streak.show);
 
     let logs = await LedgerStore.query({
       search: type.toSearchTerm($Interact.streak.show),
       start: payload.start,
-      end: payload.end
+      end: payload.end,
     });
 
-    logs = logs.map(row => {
+    logs = logs.map((row) => {
       row.start = new Date(row.start);
       row.end = new Date(row.end);
       row.repeat = "never";
@@ -127,10 +125,7 @@
   <NModal show={$Interact.streak.show} type="bottom-slideup">
     <div slot="header" class="w-100">
       <NToolbarGrid>
-        <button
-          class="btn btn-clear tap-icon"
-          slot="left"
-          on:click={Interact.closeStreak}>
+        <button class="btn btn-clear tap-icon" slot="left" on:click={Interact.closeStreak}>
           <NIcon name="close" />
         </button>
         <main slot="main">{$Interact.streak.show}</main>
@@ -139,9 +134,7 @@
         <button class="btn btn-clear tap-icon" slot="left" on:click={prev}>
           <NIcon name="chevronLeft" />
         </button>
-        <main slot="main" class="w-100 text-center">
-          {state.date.format('MMM YYYY')}
-        </main>
+        <main slot="main" class="w-100 text-center">{state.date.format('MMM YYYY')}</main>
         <button class="btn btn-clear tap-icon" slot="right" on:click={next}>
           <NIcon name="chevronRight" />
         </button>
@@ -154,7 +147,7 @@
         color={tracker.color}
         {tracker}
         showHeader={false}
-        on:dayClick={event => {
+        on:dayClick={(event) => {
           state.date = dayjs(event.detail);
           main();
         }}
@@ -169,9 +162,7 @@
             <span class="text-inverse-3">of</span>
             {state.daysTotal}
           </h1>
-          <small class="text-inverse-2">
-            {math.round(state.percentage, 0)}% of the days
-          </small>
+          <small class="text-inverse-2">{math.round(state.percentage, 0)}% of the days</small>
         </div>
         <div class="n-panel w-50 center-all py-2">
           <div class="spinner-container">

@@ -24,7 +24,7 @@
   import time from "../../utils/time/time";
 
   import { TrackerStore } from "../../store/tracker-store";
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import { Interact } from "../../store/interact";
   import { PeopleStore } from "../../store/people-store";
 

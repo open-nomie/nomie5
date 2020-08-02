@@ -10,7 +10,7 @@
   import { Lang } from "../../store/lang";
   import { TrackerLibrary } from "../../store/tracker-library";
   import { Interact } from "../../store/interact";
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import tick from "../../utils/tick/tick";
 
   let installed = {}; // hol der for anything installed during the opening
@@ -23,7 +23,7 @@
   });
 
   $: if ($TrackerLibrary && !trackers.length && ready) {
-    trackers = $TrackerLibrary.trackers.map(tracker => {
+    trackers = $TrackerLibrary.trackers.map((tracker) => {
       if (tracker.uom == "oz" && $UserStore.meta.is24Hour === true) {
         tracker.uom = "milliliter";
         tracker.default = "350";
@@ -33,10 +33,7 @@
   }
 
   function isInstalled(tracker) {
-    return (
-      $TrackerStore.trackers.hasOwnProperty(tracker.tag) ||
-      installed.hasOwnProperty(tracker.tag)
-    );
+    return $TrackerStore.trackers.hasOwnProperty(tracker.tag) || installed.hasOwnProperty(tracker.tag);
   }
 
   async function toggleTrackerInstalled(tracker) {
@@ -45,10 +42,7 @@
       installed[tracker.tag] = true;
       Interact.toast(`${tracker.label} added`);
     } else {
-      let confirmed = await Interact.confirm(
-        `Remove ${tracker.label}?`,
-        `Data will be untouched`
-      );
+      let confirmed = await Interact.confirm(`Remove ${tracker.label}?`, `Data will be untouched`);
       if (confirmed) {
         await TrackerStore.deleteTracker(tracker);
         delete installed[tracker.tag];

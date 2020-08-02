@@ -36,7 +36,7 @@
   import LogEditor from "../log-editor/log-editor.svelte";
   // Store
   import { Interact } from "../../store/interact";
-  import { UserStore } from "../../store/user";
+  import { UserStore } from "../../store/user-store";
   import { ActiveLogStore } from "../../store/active-log";
   import { LedgerStore } from "../../store/ledger";
   import { BoardStore } from "../../store/boards";
@@ -54,11 +54,11 @@
 
   const methods = {
     getLogTrackers(log) {
-      return Object.keys(log.trackers).map(tag => {
+      return Object.keys(log.trackers).map((tag) => {
         return {
           value: log.trackers[tag].value || 0,
           tag: tag,
-          tracker: $TrackerStore.trackers[tag] || new Tracker({ tag: tag })
+          tracker: $TrackerStore.trackers[tag] || new Tracker({ tag: tag }),
         };
       });
     },
@@ -77,7 +77,7 @@
       let tracker = event.detail.tracker;
       let value = event.detail.value;
       let valueSet = false;
-      let newNote = $Interact.logDataEditor.log.note.split(" ").map(word => {
+      let newNote = $Interact.logDataEditor.log.note.split(" ").map((word) => {
         if (word.search(`#${$Interact.logDataEditor.tag}`) === -1) {
           return word;
         } else if (!valueSet) {
@@ -92,7 +92,7 @@
       $Interact.logDataEditor.log = new NomieLog($Interact.logDataEditor.log);
       $Interact.logDataEditor.log.expanded();
       $Interact.logDataEditor.tag = null;
-    }
+    },
   };
   ready = true;
 </script>
@@ -112,7 +112,7 @@
   message={$Interact.alert.message}
   ok={$Interact.alert.ok}
   cancel={$Interact.alert.cancel}
-  onInteract={answer => {
+  onInteract={(answer) => {
     $Interact.alert.onInteract(answer);
     Interact.dismiss();
   }} />
@@ -129,7 +129,7 @@
   title={$Interact.prompt.title}
   message={$Interact.prompt.message}
   cancel={$Interact.prompt.cancel}
-  onInteract={answer => {
+  onInteract={(answer) => {
     if (answer) {
       if ($Interact.prompt.onInteract) {
         $Interact.prompt.onInteract($Interact.prompt.value);
@@ -191,7 +191,7 @@
 
 <NTrackerEditor
   tracker={new Tracker($Interact.trackerEditor.tracker)}
-  on:save={tracker => {
+  on:save={(tracker) => {
     $Interact.trackerEditor.show = false;
     $Interact.trackerEditor.tracker = null;
     if ($Interact.trackerEditor.onInteract) {
@@ -210,7 +210,7 @@
   on:cancel={() => {
     Interact.dismissTrackerSelector();
   }}
-  on:select={event => {
+  on:select={(event) => {
     let trackers = event.detail;
     if ($Interact.trackerSelector.onInteract) {
       $Interact.trackerSelector.onInteract(trackers);
@@ -226,7 +226,7 @@
   on:cancel={() => {
     Interact.dismissSelector();
   }}
-  on:select={event => {
+  on:select={(event) => {
     let trackers = event.detail;
     if ($Interact.selector.onInteract) {
       $Interact.selector.onInteract(trackers);
@@ -245,7 +245,7 @@
 
 {#if $Interact.trackerInput.show}
   <TrackerInput
-    on:save={event => {
+    on:save={(event) => {
       if ($Interact.trackerInput.onInteract) {
         $Interact.trackerInput.onInteract(event.detail);
       }
@@ -255,7 +255,7 @@
         ActiveLogStore.clear();
       });
     }}
-    on:add={event => {
+    on:add={(event) => {
       if ($Interact.trackerInput.onInteract) {
         $Interact.trackerInput.onInteract(event.detail);
       }
@@ -293,7 +293,7 @@
     on:close={() => {
       Interact.dismissEditLog();
     }}
-    on:save={async evt => {
+    on:save={async (evt) => {
       try {
         let log = evt.detail;
         let updatedLog = await LedgerStore.updateLog(log, $Interact.logEditor.log.end);

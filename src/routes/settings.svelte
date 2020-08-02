@@ -28,7 +28,7 @@
   import localforage from "localforage";
 
   // Stores
-  import { UserStore } from "../store/user";
+  import { UserStore } from "../store/user-store";
   import { LedgerStore } from "../store/ledger";
   import { Interact } from "../store/interact";
   import { TrackerStore } from "../store/tracker-store";
