@@ -31,6 +31,13 @@
         grid[index].push(0);
       }
     });
+
+    // // In case firstDayOfWeek is Monday, move the first row to the end.
+    // if ($UserStore.meta.firstDayOfWeek === '2') {
+    //   const sunday = grid.shift();
+    //   grid.push(sunday);
+    // }
+
     return grid;
   };
 
@@ -94,6 +101,12 @@
         return math.percentage(maxValue, hvalue);
       });
     });
+
+    // // In case firstDayOfWeek is Monday, move the first row to the end.
+    // if ($UserStore.meta.firstDayOfWeek === '2') {
+    //   const sunday = days.shift();
+    //   days.push(sunday);
+    // }
   }
 
   function main() {
@@ -173,21 +186,66 @@
   style="height:{height}px; {style}"
   bind:this={_el}>
 
-  {#each days as day, index}
+  <!--<pre>{JSON.stringify(days, null, 2)}</pre>-->
+
+  {#if $UserStore.meta.firstDayOfWeek === '2'}
+    <!-- firstDayOfWeek is Monday -->
+
+    <!-- Monday-Saturday -->
+    {#each days as day, index}
+      {#if index !== 0}
+        <div class="day">
+          <label>
+            {dayjs(new Date())
+            .day(index)
+            .format('ddd')
+            .substr(0, 2)}
+          </label>
+          {#each day as hour, hi}
+            <div
+                    class="hour hour-{hi}"
+                    style="opacity: {days[index][hi] / 100 || 0.1}; background-color: {color}" />
+          {/each}
+        </div>
+      {/if}
+    {/each}
+    <!-- /Monday-Saturday -->
+
+    <!-- Sunday -->
     <div class="day">
       <label>
         {dayjs(new Date())
+            .day(0)
+            .format('ddd')
+            .substr(0, 2)}
+      </label>
+      {#each days[0] as hour, hi}
+        <div
+                class="hour hour-{hi}"
+                style="opacity: {days[0][hi] / 100 || 0.1}; background-color: {color}" />
+      {/each}
+    </div>
+    <!-- /Sunday -->
+
+  {:else}
+  <!-- firstDayOfWeek is Sunday -->
+    {#each days as day, index}
+      <div class="day">
+        <label>
+          {dayjs(new Date())
           .day(index)
           .format('ddd')
           .substr(0, 2)}
-      </label>
-      {#each day as hour, hi}
-        <div
-          class="hour hour-{hi}"
-          style="opacity: {days[index][hi] / 100 || 0.1}; background-color: {color}" />
-      {/each}
-    </div>
-  {/each}
+        </label>
+        {#each day as hour, hi}
+          <div
+                  class="hour hour-{hi}"
+                  style="opacity: {days[index][hi] / 100 || 0.1}; background-color: {color}" />
+        {/each}
+      </div>
+    {/each}
+  {/if}
+
   <div class="hour-header">
     {#each hours as hour, index}
       <div class="hour hour-{index} header">{hour}</div>
