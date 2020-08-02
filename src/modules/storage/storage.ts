@@ -12,6 +12,8 @@ import PouchDBEngine from "./engine.pouchdb";
 import Config from "../../../config/global";
 
 class SideStore {
+  dbPath: string;
+  data: any;
   constructor(path) {
     this.dbPath = `${Config.data_root}/localDB/${path}`;
     this.data = JSON.parse(localStorage.getItem(this.dbPath) || "{}");
