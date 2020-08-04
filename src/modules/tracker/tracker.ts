@@ -58,7 +58,7 @@ export default class TrackerConfig {
     // SEt Emoji
     this.emoji = starter.emoji || "⚪";
     // set Default value
-    this.default = starter.default || null;
+    this.default = starter.default;
     // max
     if (this.type === "range") {
       this.max = starter.max ? starter.max.toString() : "10";
@@ -67,24 +67,24 @@ export default class TrackerConfig {
       // cards
     }
     // score
-    this.score = starter.score || null;
+    this.score = starter.score;
     // Dynamic Score
-    this.score_calc = starter.score_calc || null;
+    this.score_calc = starter.score_calc;
     // Goal Config
-    this.goal = starter.goal || null;
+    this.goal = starter.goal;
     // one tap
     this.one_tap = starter.one_tap === true ? true : false;
     // include
     this.include = starter.include || "";
     // Primary NOte
-    this.note = starter.note || null;
+    this.note = starter.note;
 
     // Hide from All Board
     this.hidden = starter.hidden === true ? true : false;
 
     // If it's a timer, set if started else null
     if (this.type === "timer") {
-      this.started = starter.started || null;
+      this.started = starter.started;
     }
 
     this.picks = starter.picks || undefined;

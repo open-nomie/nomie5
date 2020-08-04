@@ -32,14 +32,6 @@ const DashboardStoreInit = (): any => {
   const { update, subscribe, set } = writable(state);
 
   const methods = {
-    get(): IDashboardStore {
-      let _state;
-      update((state: any) => {
-        _state = state;
-        return state;
-      });
-      return _state;
-    },
     saveIndex(index) {
       Storage.local.put("dashboard/lastIndex", index);
     },
@@ -93,7 +85,7 @@ const DashboardStoreInit = (): any => {
     },
     async saveBlock(block: Block) {
       if (block) {
-        let _state: IDashboardStore = methods.get();
+        let _state: IDashboardStore = methods.data();
 
         let found = false;
         delete block._editing;
@@ -125,9 +117,18 @@ const DashboardStoreInit = (): any => {
         return state;
       });
     },
+
+    data(): IDashboardStore {
+      let _state;
+      update((state: any) => {
+        _state = state;
+        return state;
+      });
+      return _state;
+    },
     async deleteBlock(block: Block) {
       block = block instanceof Block ? block : new Block(block);
-      let _state: IDashboardStore = methods.get();
+      let _state: IDashboardStore = methods.data();
       _state.dashboards = _state.dashboards.map((dashboard: Dashboard) => {
         dashboard.blocks = dashboard.blocks.filter((blk: Block) => {
           return blk.id == block.id ? false : true;
@@ -140,12 +141,18 @@ const DashboardStoreInit = (): any => {
       });
       return methods.save();
     },
-    async init(): Promise<void> {
+    async get(): Promise<Array<Dashboard>> {
       let dashboards = await Storage.get(`${config.data_root}/dashboards.json`);
-      dashboards = dashboards || [];
+      if (dashboards instanceof Array === false) {
+        dashboards = [];
+      }
       if (!dashboards.length) {
         dashboards.push(new Dashboard({ label: "My First Dashboard", blocks: [] }));
       }
+      return dashboards;
+    },
+    async init(): Promise<void> {
+      let dashboards = await methods.get();
       update((state: any) => {
         state.dashboards = dashboards.map((dashboard) => {
           return dashboard instanceof Dashboard ? dashboard : new Dashboard(dashboard);

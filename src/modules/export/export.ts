@@ -6,12 +6,33 @@ import { LedgerStore } from "../../store/ledger";
 import { Interact } from "../../store/interact";
 import { PeopleStore } from "../../store/people-store";
 import { Locations } from "../../store/locations";
-
+import { DashboardStore } from "../../store/dashboard-store";
+import { ContextStore } from "../../store/context-store";
 //vendors
 import dayjs from "dayjs";
 
+export interface IBackupItems {
+  nomie: {
+    number: string;
+    created: string;
+    startDate: string;
+    endDate: string;
+  };
+  boards: Array<any>;
+  events: Array<any>;
+  trackers: any;
+  people: any;
+  locations: Array<any>;
+  dashboards: Array<any>;
+  context: Array<string>;
+}
+
 export default class Export {
-  constructor(options) {
+  listeners: Array<Function>;
+  format: string;
+  backup: IBackupItems;
+
+  constructor(options: any = {}) {
     options = options || {};
     this.listeners = [];
     this.format = options.format || "json";
@@ -27,6 +48,8 @@ export default class Export {
       trackers: {},
       people: {},
       locations: [],
+      dashboards: [],
+      context: [],
     };
   }
 
@@ -36,6 +59,14 @@ export default class Export {
       // Get People
       let people = await PeopleStore.getPeople();
       this.backup.people = people || {};
+
+      this.fireChange("Dashboards...");
+      let dashboards = await DashboardStore.get();
+      this.backup.dashboards = dashboards;
+
+      this.fireChange("Context...");
+      let context = await ContextStore.get();
+      this.backup.context = context;
 
       this.fireChange("Locations...");
       let locations = await Locations.getAll();
@@ -85,7 +116,7 @@ export default class Export {
     });
   }
 
-  getEvents() {
+  getEvents(): Promise<Array<any>> {
     let flatten = (arr) =>
       [].concat.apply(
         [],

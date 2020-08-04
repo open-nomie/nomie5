@@ -15,6 +15,7 @@ import Storage from "../modules/storage/storage";
 
 // Get Config
 import config from "../../config/global";
+import { get } from "sortablejs";
 
 const console = new Logger("🗺 $ContextStore");
 
@@ -26,9 +27,13 @@ const ContextInit = () => {
 
   const methods = {
     async init() {
-      Storage.get(`${config.data_root}/context.json`).then((contexts) => {
-        update((d) => contexts || []);
-      });
+      let context = await methods.get();
+      update((d) => context || []);
+      return context;
+    },
+    async get() {
+      let context = Storage.get(`${config.data_root}/context.json`);
+      return context || [];
     },
     async save(contextArray) {
       update((context) => {
