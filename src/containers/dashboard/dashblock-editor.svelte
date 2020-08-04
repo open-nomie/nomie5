@@ -184,6 +184,13 @@
       requires: ["timeframe", "element"],
       optional: ["cond-style"],
     },
+    // This is not complete
+    // {
+    //   label: "What Time",
+    //   id: "what-time",
+    //   requires: ["timeframe", "element"],
+    //   optional: [],
+    // },
     {
       label: "Positivity Pie Chart",
       id: "positivity",

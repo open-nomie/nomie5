@@ -15,6 +15,7 @@
   import nid from "../../modules/nid/nid";
   import Calendar from "../../components/calendar/calendar.svelte";
   import { Interact } from "../../store/interact";
+  import DashblockWhatTime from "./dashblock-what-time.svelte";
 
   const dispatch = createEventDispatcher();
   const id = nid();
@@ -202,6 +203,8 @@
             <div class="avg">avg {formatValue(block.stats.avg)}</div>
           {/if}
         </div>
+      {:else if block.type == 'what-time'}
+        <DashblockWhatTime {block} />
       {:else if block.type == 'last-used'}
         <div class="value last-used">
           <div class="current">
