@@ -5,7 +5,7 @@ const options = {
   repo: ROOT,
 };
 
-let currentRaw = fs.readFileSync(`${ROOT}/src-data/whatsNew.json`, "utf-8");
+let currentRaw = fs.readFileSync(`${ROOT}/config/whatsNew.json`, "utf-8");
 let current = JSON.parse(currentRaw);
 let pkgRaw = fs.readFileSync(`${ROOT}/package.json`, "utf-8") || "{}";
 let pkg = JSON.parse(pkgRaw);
@@ -39,4 +39,4 @@ commits.forEach((commit) => {
   }
 });
 
-fs.writeFileSync(`${ROOT}/src-data/whatsNew.json`, JSON.stringify({ features, fixes, chores, build_date }));
+fs.writeFileSync(`${ROOT}/config/whatsNew.json`, JSON.stringify({ features, fixes, chores, build_date }));
