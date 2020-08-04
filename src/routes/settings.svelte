@@ -250,7 +250,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             -->
             <div class="n-list solo mb-3">
               <Text bold className="my-2 mx-3">Importing Data</Text>
-              <NItem className="clickable" title={Lang.t('settings.nomie-api')} on:click={() => navigate('/api')}>
+              <NItem className="clickable" bottomLine title={Lang.t('settings.nomie-api')} on:click={() => navigate('/api')}>
 
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
@@ -272,18 +272,18 @@ Note: Your data will not automatically move over. You'll first need to export it
             </div>
             <div class="n-list solo mb-3">
               <Text bold className="my-2 mx-3">Exporting Data</Text>
-              <NItem className="clickable" title={Lang.t('settings.generate-backup')} to="/settings/export/backup">
+              <NItem bottomLine clickable title={Lang.t('settings.generate-backup')} to="/settings/export/backup">
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
               </NItem>
-              <NItem className="clickable" title={Lang.t('settings.generate-csv')} to="/settings/export/csv">
+              <NItem clickable bottomLine title={Lang.t('settings.generate-csv')} to="/settings/export/csv">
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
               </NItem>
               <NItem
-                className="clickable"
+                clickable
                 title="{Lang.t('settings.find-and-replace')}..."
                 on:click={() => {
                   data.showMassEditor = true;
@@ -344,7 +344,8 @@ Note: Your data will not automatically move over. You'll first need to export it
               *******************************************
             -->
             <NItem
-              className="clickable solo p-2"
+              clickable
+              className="solo p-2"
               title={Lang.t('settings.shop-and-support', 'Shop and Support')}
               description="Products that work with Nomie"
               on:click={methods.shop}>
@@ -357,12 +358,12 @@ Note: Your data will not automatically move over. You'll first need to export it
             </NItem>
             <div class="n-list solo mb-3">
 
-              <NItem title="Learn More">
+              <NItem title="Learn More" bottomLine>
                 <span slot="right">
                   <a href="https://nomie.app?s=dap" class="btn btn-clear text-primary-bright" target="_system">Website</a>
                 </span>
               </NItem>
-              <NItem title="Reddit r/nomie">
+              <NItem title="Reddit r/nomie" bottomLine>
                 <span slot="right">
                   <a href="https://reddit.com/r/nomie" class="btn btn-clear text-primary-bright" target="_system">r/nomie</a>
                 </span>

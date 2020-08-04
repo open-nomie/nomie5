@@ -45,7 +45,7 @@
   *******************************************
 -->
 <div class="n-list solo">
-  <NItem title={Lang.t('settings.theme')}>
+  <NItem bottomLine title={Lang.t('settings.theme')}>
     <div slot="right">
       <select
         class="form-control"
@@ -63,7 +63,7 @@
   </NItem>
 
   <!-- Use Location -->
-  <NItem title={Lang.t('settings.use-location')}>
+  <NItem bottomLine title={Lang.t('settings.use-location')}>
 
     <div slot="right">
       <NToggle
@@ -73,7 +73,7 @@
         }} />
     </div>
   </NItem>
-  <NItem title={Lang.t('settings.small-tracker-buttons', 'Small Tracker Buttons')}>
+  <NItem bottomLine title={Lang.t('settings.small-tracker-buttons', 'Small Tracker Buttons')}>
     <div slot="right">
       <NToggle
         bind:value={$UserStore.localSettings.compactButtons}
@@ -88,21 +88,21 @@
   </NItem>
   <!-- Tracker Board Tabs -->
   {#if $BoardStore.boards.length == 0}
-    <NItem title={Lang.t('settings.enable-boards')}>
+    <NItem bottomLine title={Lang.t('settings.enable-boards')}>
       <div slot="right">
         <NToggle bind:value={$UserStore.meta.boardsEnabled} on:change={methods.settingChange} />
       </div>
     </NItem>
   {/if}
   <!-- Pin Code -->
-  <NItem title={Lang.t('settings.require-pin')}>
+  <NItem bottomLine title={Lang.t('settings.require-pin')}>
 
     <div slot="right">
       <NToggle bind:value={$UserStore.meta.lock} on:change={methods.lockToggle} />
     </div>
   </NItem>
   <!-- 24 Hour -->
-  <NItem title={Lang.t('settings.24-hour-clock')}>
+  <NItem bottomLine title={Lang.t('settings.24-hour-clock')}>
 
     <div slot="right">
       <NToggle bind:value={$UserStore.meta.is24Hour} on:change={methods.settingChange} />

@@ -6,7 +6,7 @@
 </script>
 
 <div class="n-list solo my-2">
-  <ListItem className="py-2" title="People Tracking" description="Keep track of those you interact with.">
+  <ListItem bottomLine className="py-2" title="People Tracking" description="Keep track of those you interact with.">
     <div slot="right">
       <ToggleSwitch
         value={$FeatureStore.people}
