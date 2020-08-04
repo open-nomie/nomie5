@@ -3,7 +3,7 @@ import { writable } from "svelte/store";
 
 // Vendors
 // import Storage from "../modules/storage/storage";
-import whatsNew from "../../src-data/whatsNew";
+import whatsNew from "../../config/whatsNew";
 
 // Stores
 
