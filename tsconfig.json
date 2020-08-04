@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["jest"]
   },
   "extends": "@tsconfig/svelte/tsconfig.json",
   "include": ["src/**/*", "src/node_modules"],

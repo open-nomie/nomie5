@@ -44,7 +44,7 @@
     [7, 8, 9, "*"],
     [4, 5, 6, "-"],
     [1, 2, 3, "+"],
-    [null, 0, ".", null]
+    [null, 0, ".", null],
   ];
 
   function calculateBuffer() {
@@ -73,7 +73,6 @@
   function insertBuffer(insert) {
     // Set last buffer
     let lastBuffer = buffer.length ? buffer[buffer.length - 1] : null;
-
     // if its a number and so is the last buffer - merge the nubmers
     if (isNumber(insert) && isNumber(lastBuffer)) {
       buffer[buffer.length - 1] = parseFloat(`${lastBuffer}${insert}`);
@@ -83,7 +82,7 @@
       let preDecimal = buffer[buffer.length - 2];
       let postDecimal = insert;
       if (!math.isFloat(preDecimal)) {
-        buffer[buffer.length - 2] = parseFloat(`${preDecimal}.${postDecimal}`);
+        buffer[buffer.length - 2] = `${preDecimal}.${postDecimal}`;
         buffer.pop();
       }
       change();

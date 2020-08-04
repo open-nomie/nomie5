@@ -38,7 +38,7 @@
 
     {#if !level}
       <Text bold className="mb-1">Nomie Booster</Text>
-      <Text size="sm" faded>By supporting becoming a Booster, you support me in the continual development of Nomie.</Text>
+      <Text size="sm" faded>By becoming a Booster, you support me in the continual development of Nomie.</Text>
       <Button className="mt-3" block on:click={purch.ui.toggle('available')}>Become a Booster</Button>
       <div class="text-center p-3">
         <Text size="sm" style="text-decoration:underline;" on:click={purch.ui.open}>Restore Purchases</Text>
