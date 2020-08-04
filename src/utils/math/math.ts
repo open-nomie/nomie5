@@ -24,7 +24,7 @@ export default {
   // Get the min from array
   min: (arr, includeZero = false) => {
     if (arr.length) {
-      arr = includeZero == true ? arr : arr.filter(a=>a);
+      arr = includeZero == true ? arr : arr.filter((a) => a);
       let min = Math.min(...arr);
       return min;
     } else {
@@ -32,7 +32,7 @@ export default {
     }
   },
   // Average an Array
-  average: (arr, ignoreZeros) => {
+  average: (arr, ignoreZeros?) => {
     if (ignoreZeros) {
       arr = arr.filter((row) => {
         if (row === 0) {
