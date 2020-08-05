@@ -5,15 +5,20 @@
  * multiple pages, containers or components.
  *
  * For example: Alerts, Confirms, Prompts, Location Lookup, Location Showing, Editing Trackers
+ *
+ * Also - this thing has gotten completely out of control.
+ * Going back, I don't think I'd do it this way again. Or at least
+ * only for the general app interactions.. Not things like editing trackers
+ * but maybe someday.
+ *
+ *
  */
 
 // Svelte
 import { writable } from "svelte/store";
-import { navigate } from "svelte-routing";
 
 // vendors
 import dayjs from "dayjs";
-import md5 from "md5";
 
 // utils
 import Logger from "../utils/log/log";
@@ -21,8 +26,8 @@ import time from "../utils/time/time";
 
 // modules
 import NomieLog from "../modules/nomie-log/nomie-log";
-import Hooky from "../modules/hooks/hooks";
-const hooks = new Hooky();
+// import Hooky from "../modules/hooks/hooks";
+// const hooks = new Hooky();
 
 // Stores
 import { LedgerStore } from "../store/ledger";
@@ -96,6 +101,8 @@ const interactInit = () => {
       toast: {
         show: false,
         message: null,
+        buttonLabel: undefined,
+        click: undefined,
       },
       popmenu: {
         show: false,
@@ -505,9 +512,14 @@ const interactInit = () => {
     toast(message, options = {}) {
       options.timeout = options.timeout || 1500;
       let perm = options.perm === true ? true : false;
+      console.log("Toast", message);
       update((s) => {
         s.toast.message = message;
         s.toast.show = true;
+        if (options.buttonLabel && options.click) {
+          s.toast.buttonLabel = options.buttonLabel;
+          s.toast.click = options.click;
+        }
         return s;
       });
       if (!perm) {
@@ -515,6 +527,8 @@ const interactInit = () => {
           update((s) => {
             s.toast.message = null;
             s.toast.show = false;
+            s.toast.buttonLabel = undefined;
+            s.toast.click = undefined;
             return s;
           });
         }, options.timeout);

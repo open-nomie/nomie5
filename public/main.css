@@ -5443,19 +5443,19 @@ body.theme-dark {
   background-color: transparent; }
 
 .text-inverse {
-  color: var(--color-inverse); }
+  color: var(--color-inverse) !important; }
 
 .text-inverse-1 {
-  color: var(--color-inverse-1); }
+  color: var(--color-inverse-1) !important; }
 
 .text-inverse-2 {
-  color: var(--color-inverse-2); }
+  color: var(--color-inverse-2) !important; }
 
 .text-dark {
-  color: var(--color-dark); }
+  color: var(--color-dark) !important; }
 
 .text-inverse-3 {
-  color: var(--color-inverse-3); }
+  color: var(--color-inverse-3) !important; }
 
 .text-white {
   color: #fff; }
@@ -5652,6 +5652,14 @@ select {
 
 .justify-content-between {
   justify-content: space-between; }
+
+@keyframes fadeUp {
+  from {
+    transform: translateY(8px);
+    opacity: 0; }
+  to {
+    transform: translateY(0);
+    opacity: 1; } }
 
 .animate {
   transition: all 0.2s ease-in-out; }

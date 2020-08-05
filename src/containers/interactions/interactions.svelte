@@ -179,7 +179,7 @@
   {/if}
 </NAlertBox>
 
-<Toast message={$Interact.toast.message} show={$Interact.toast.show} />
+<Toast />
 
 <NLocationModal />
 
