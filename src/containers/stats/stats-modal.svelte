@@ -711,27 +711,34 @@
    * Set Selected ({point})
    * User Selected a Specific Date from the Cart
    */
+
   async function setSelected(selected) {
+    if (state.selected !== selected) {
+      _setSelected(selected);
+    }
+  }
+  async function _setSelected(selected) {
+    console.log("selecting", selected);
     state.selected = selected;
 
     let payload = {
-      start: dayjs(state.selected.point.date).startOf("day"),
-      end: dayjs(state.selected.point.date).endOf("day"),
+      start: dayjs(state.selected.date).startOf("day"),
+      end: dayjs(state.selected.date).endOf("day"),
       limit: 100,
     };
     // if day - normalize start and end
     if (state.timeSpan == "d") {
-      payload.start = dayjs(state.selected.point.date).startOf("hour");
-      payload.end = dayjs(state.selected.point.date).endOf("hour");
+      payload.start = dayjs(state.selected.date).startOf("hour");
+      payload.end = dayjs(state.selected.date).endOf("hour");
     } else if (state.timeSpan == "w" || state.timeSpan == "m") {
-      payload.start = dayjs(state.selected.point.date).startOf("day");
-      payload.end = dayjs(state.selected.point.date).endOf("day");
+      payload.start = dayjs(state.selected.date).startOf("day");
+      payload.end = dayjs(state.selected.date).endOf("day");
     } else if (state.timeSpan == "q") {
-      payload.end = dayjs(state.selected.point.date).endOf("month");
+      payload.end = dayjs(state.selected.date).endOf("month");
       payload.start = dayjs(payload.end).subtract(3, "month").startOf("month");
     } else if (state.timeSpan == "y") {
-      payload.start = dayjs(state.selected.point.date).startOf("month");
-      payload.end = dayjs(state.selected.point.date).endOf("month");
+      payload.start = dayjs(state.selected.date).startOf("month");
+      payload.end = dayjs(state.selected.date).endOf("month");
     }
 
     let rows = await LedgerStore.query(payload);
@@ -861,8 +868,7 @@
     color: var(--color-solid-3);
     position: absolute;
     top: 10px;
-    right: 30%;
-    left: 30%;
+    right: 16px;
     text-align: center;
   }
   :global(.chart-item .btn-close svg) {
@@ -937,6 +943,9 @@
           points={state.stats.chart.values}
           on:swipeLeft={loadNextDate}
           on:swipeRight={loadPreviousDate}
+          on:more={(evt) => {
+            Interact.onThisDay(evt.detail.date.toDate());
+          }}
           xFormat={(x, index) => {
             return x;
           }}
@@ -979,6 +988,9 @@
                 on:swipeRight={loadPreviousDate}
                 xFormat={(x, index) => {
                   return x;
+                }}
+                on:more={(evt) => {
+                  Interact.onThisDay(evt.detail.date.toDate());
                 }}
                 on:titleClick={(event) => {
                   Interact.openStats(compare.getSearchTerm());
