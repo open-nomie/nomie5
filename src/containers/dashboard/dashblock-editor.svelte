@@ -311,7 +311,7 @@
     <ListItem on:click={selectType} title="Trackable Item">
       <div slot="right" class="mr-2">
         {#if value.element}
-          <TrackerSmallBlock element={value.element} on:click={selectType} />
+          <TrackerSmallBlock truncate element={value.element} on:click={selectType} style="max-width:150px" />
         {:else}Select{/if}
       </div>
     </ListItem>

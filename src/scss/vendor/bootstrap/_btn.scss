@@ -95,7 +95,7 @@ button:focus {
 
 .btn-xs {
   font-size: 0.65rem !important;
-  padding: 2px 8px;
+  padding: 2px 10px;
   text-transform: uppercase;
   font-weight: bold;
 }
@@ -258,7 +258,7 @@ button:focus {
   background-color: var(--color-solid);
   box-shadow: var(--box-shadow-tight);
   border: none;
-  color: var(--color-primary-bright);
+  color: var(--color-inverse);
   &:hover {
     background-color: var(--color-solid-1);
     color: var(--color-primary);

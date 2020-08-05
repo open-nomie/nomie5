@@ -167,6 +167,7 @@
     <div class="block-header n-row">
       <TrackerSmallBlock
         xs
+        truncate
         novalue
         element={block.element}
         on:click={() => {
