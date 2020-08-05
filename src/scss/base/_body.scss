@@ -136,10 +136,10 @@ body.test {
   --color-translucent: rgba(0, 0, 0, 0.79);
 
   .btn-light {
-    @include button-variant(#333, darken(#333, 5%), darken(#333, 5%), darken(#333, 5%), rgba($primaryBright, 5%));
-    &:hover {
-      @include button-variant(#333, darken(#333, 10%), darken(#333, 10%), darken(#333, 10%), rgba($primaryBright, 10%));
-    }
+    // @include button-variant(#333, darken(#333, 5%), darken(#333, 5%), darken(#333, 5%), rgba($primaryBright, 5%));
+    // &:hover {
+    //   @include button-variant(#333, darken(#333, 10%), darken(#333, 10%), darken(#333, 10%), rgba($primaryBright, 10%));
+    // }
   }
 }
 

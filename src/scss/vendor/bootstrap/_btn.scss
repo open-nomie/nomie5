@@ -93,6 +93,13 @@ button:focus {
   border-radius: 6pt !important;
 }
 
+.btn-xs {
+  font-size: 0.65rem !important;
+  padding: 2px 8px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
 .btn:disabled {
   opacity: 0.3;
 }
@@ -248,9 +255,13 @@ button:focus {
 }
 
 .btn-light {
-  background-color: var(--color-faded);
+  background-color: var(--color-solid);
+  box-shadow: var(--box-shadow-tight);
+  border: none;
+  color: var(--color-primary-bright);
   &:hover {
-    background-color: var(--color-faded-2);
+    background-color: var(--color-solid-1);
+    color: var(--color-primary);
   }
 }
 
