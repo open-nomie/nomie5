@@ -148,10 +148,10 @@
   }
   @include media-breakpoint-down(xs) {
     .buttons {
-      grid-template-columns: 50px 50px 50px 50px;
-      grid-template-rows: 50px 50px;
+      grid-template-columns: 25% 25% 25% 25%;
+      grid-template-rows: 60px 60px;
       .btn {
-        width: 45px;
+        width: 100%;
         height: 45px;
       }
     }
@@ -166,6 +166,18 @@
       }
     }
   }
+
+  @keyframes numberUp {
+    from {
+      transform: translateY(8px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
   .calc-screen {
     position: relative;
     display: flex;
@@ -197,13 +209,20 @@
       min-height: 22px;
       font-size: 0.8rem;
       color: #999;
+
+      span {
+      }
     }
+  }
+  :global(.numberUp) {
+    display: inline-block;
+    animation: numberUp 0.4s ease-in-out;
+    -webkit-animation: numberUp 0.4s ease-in-out;
   }
   .btn {
     touch-action: manipulation;
-    background-color: dimgray;
     border: none;
-    color: white;
+    color: var(--color-inverse);
     margin: 4px;
     border-radius: 50%;
     line-height: 100%;
@@ -212,16 +231,16 @@
     font-size: 26px;
   }
   .btn.r-0 {
-    background-color: silver;
-    color: black;
+    color: silver;
+    background-color: transparent;
   }
   .btn.b-3 {
-    background-color: var(--color-orange);
-    color: #fff;
+    color: var(--color-orange);
+    background-color: transparent;
   }
   .btn.b-0.r-0 {
-    background-color: var(--color-red);
-    color: #fff;
+    color: var(--color-red);
+    background-color: transparent;
   }
 </style>
 
@@ -237,7 +256,11 @@
         {/each}
       {/if}
     </div>
-    <div class="value" style="font-size:{fontSize}px">{globalAnswer}</div>
+    <div class="value" style="font-size:{fontSize}px">
+      {#each globalAnswer.toString().split('') as bit}
+        <span class="numberUp">{bit}</span>
+      {/each}
+    </div>
   </div>
   <div class="buttons">
     {#each buttons as buttonRow, rIndex}

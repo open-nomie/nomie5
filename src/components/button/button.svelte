@@ -9,6 +9,7 @@
   export let color = "primary";
   export let className = "";
   export let block = false;
+  export let style = "";
 </script>
 
 <style>
@@ -16,6 +17,7 @@
 </style>
 
 <button
+  {style}
   class={`btn ${block ? 'btn-block' : ''} btn-${type} btn-${shape} btn-${color} btn-${size} ${className}`}
   on:click={() => {
     dispatch('click');
