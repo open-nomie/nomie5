@@ -37,12 +37,15 @@
   import { Lang } from "../store/lang";
   import { PeopleStore } from "../store/people-store";
   import { Browser } from "../store/browser-store";
+  import { ContextStore } from "../store/context-store";
 
   // Config
   import config from "../../config/global";
   import Features from "../containers/settings/features.svelte";
   import Tweaks from "../containers/settings/tweaks.svelte";
   import Text from "../components/text/text.svelte";
+  import Button from "../components/button/button.svelte";
+  import Icon from "../components/icon/icon.svelte";
 
   // consts
   // const Export = new Exporter();
@@ -336,8 +339,11 @@ Note: Your data will not automatically move over. You'll first need to export it
               </NItem>
 
               <NItem title={Lang.t('settings.allow-file-editing', 'Allow file editing')}>
-                <Text size="sm" faded>Enable manual editing of nomie files</Text>
-                <Text size="xs" className="text-red mt-2">Use with caution.</Text>
+                <Text size="sm" faded>
+                  Enable manual editing of nomie files
+                  <span class="text-red">Use with caution.</span>
+                </Text>
+
                 <div slot="right">
                   <NToggle bind:value={$UserStore.meta.canEditFiles} on:change={methods.settingChange} />
                 </div>
@@ -346,8 +352,8 @@ Note: Your data will not automatically move over. You'll first need to export it
 
             <div class="n-list solo my-2">
               <Text bold className="my-2 mx-3">{Lang.t('general.type', 'Finding old data')}</Text>
-              <NItem bottomLine title="Find Context" />
-              <NItem bottomLine title="Find People" />
+              <NItem bottomLine title="Find Context" on:click={ContextStore.searchForContext} />
+              <NItem title="Find People" on:click={PeopleStore.searchForPeople} />
             </div>
 
             <NItem className="solo text-red text-center mt-4" on:click={methods.deleteEverything}>Reset & Delete all Nomie Data...</NItem>
@@ -399,7 +405,11 @@ Note: Your data will not automatically move over. You'll first need to export it
                   {#await LedgerStore.getFirstDate()}
                     Loading...
                   {:then date}
-                    <div class="text-sm">{date.format('MMMM YYYY')} ({date.fromNow()})</div>
+                    <div class="text-sm">
+                      {date.format('MMMM YYYY')}
+                      <br />
+                      ({date.fromNow()})
+                    </div>
                   {/await}
                   <!--  -->
                 </div>
@@ -443,6 +453,24 @@ Note: Your data will not automatically move over. You'll first need to export it
               <NIcon name="more" />
             </span>
           </NItem> -->
+
+          <div class="n-list solo mt-3">
+            <NItem title="Nomie needs you! 🥺">
+              <Text size="sm" faded>Help keep Nomie development moving forward, free, no ads, and opensource.</Text>
+            </NItem>
+            <NItem
+              clickable
+              title="Become a Patron"
+              className="text-primary-bright"
+              on:click={() => {
+                window.open(config.patreon, '_system');
+              }}>
+              <Text size="xs" color="inverse-2" className="mt-1">Pick from 1 of 3 Patreon levels</Text>
+              <div slot="right" class="pr-2">
+                <Icon name="link" className="fill-primary" />
+              </div>
+            </NItem>
+          </div>
 
           <NItem className="compact item-divider" />
           <NItem title={Lang.t('general.questions')} className="bg-transparent mt-3">

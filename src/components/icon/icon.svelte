@@ -38,6 +38,7 @@
   import RadioButtonChecked24 from "carbon-icons-svelte/lib/RadioButtonChecked24";
   import Menu24 from "carbon-icons-svelte/lib/Menu24";
   import Grid24 from "carbon-icons-svelte/lib/Grid24";
+  import Link24 from "carbon-icons-svelte/lib/Link24";
   import Report24 from "carbon-icons-svelte/lib/Report24";
 
   export let name = "add";
@@ -87,6 +88,7 @@
     grid: Grid24,
     dashboard: Dashboard24,
     report: Report24,
+    link: Link24,
   };
 
   function getStyle() {

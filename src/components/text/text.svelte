@@ -13,6 +13,7 @@
   export let truncate = false;
   export let truncate2 = false;
   export let truncate3 = false;
+  export let color = "";
 
   const dispatch = createEventDispatcher();
 </script>
@@ -28,6 +29,7 @@
     }
     &.sm {
       font-size: 0.85rem;
+      line-height: 125%;
     }
     &.md {
       font-size: 1rem;
@@ -61,7 +63,7 @@
       dispatch('click');
     }}
     class="n-text {size || 'sm'}
-    {className}
+    {className} text-{color}
     {truncate ? 'truncate' : ''}
     {truncate2 ? 'truncate-2' : ''}
     {truncate3 ? 'truncate-3' : ''}
@@ -77,7 +79,7 @@
       dispatch('click');
     }}
     class="n-text {size || 'sm'}
-    {className}
+    {className} text-{color}
     {truncate ? 'truncate' : ''}
     {truncate2 ? 'truncate-2' : ''}
     {truncate3 ? 'truncate-3' : ''}

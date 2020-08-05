@@ -12,5 +12,6 @@ export default {
   theme_key: "theme",
   user_meta_path: "v5-data/meta.json",
   support_email: "support@happydata.org",
-  support_contact: "Email Brandon"
+  support_contact: "Email Brandon",
+  patreon: "https://www.patreon.com/nomieapp",
 };
