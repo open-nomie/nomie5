@@ -149,13 +149,13 @@ export default class TrackerInputer {
      * Ticks are a simple tracker - just tapp it.
      */
     options = options || { value: null };
-    let defaultValue: number = options.value || this.tracker.default;
+    let defaultValue: number = options.value !== undefined ? options.value : this.tracker.default;
     if (this.tracker.type == "tick") {
       // Push tag(default) or just tag if no default
       note.push(`#${this.tracker.tag}${defaultValue ? `(${defaultValue})` : ``}`);
       // Check for include
       if (this.tracker.include) {
-        note.push(this.tracker.getIncluded(defaultValue || 1));
+        note.push(this.tracker.getIncluded(defaultValue));
       }
       /**
        * Note Tracker Types
