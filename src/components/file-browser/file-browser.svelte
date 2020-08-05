@@ -81,7 +81,14 @@
         let payload = JSON.parse(value);
         editor.value = JSON.stringify(payload, null, 2);
         await Storage.put(state.path.join("/"), payload);
-        Interact.toast("Updated");
+        Interact.toast("File Saved", {
+          buttonLabel: "Reload",
+          timeout: 2500,
+          click() {
+            console.log("Reload");
+            window.location.href = window.location.href;
+          },
+        });
       } catch (e) {
         Interact.error(e.message);
       }
@@ -301,40 +308,42 @@
       <div class="right" />
     </div>
     <div class="content n-panel vertical scroll-y">
-      <div class="n-list mt-2 container">
+      <div class="container">
+        <div class="n-list mt-2 solo">
 
-        {#if state.loading}
-          <div class="p-4 n-panel center-all">
-            <NSpinner />
-          </div>
-        {/if}
-        {#each state.files as file}
-          {#if !isFile(file)}
-            <NItem
-              className="clickable bottom-line"
-              on:click={() => {
-                navigate(getPath(file));
-              }}>
-              {file}
-              <div slot="right">
-                <span class="text-sm text-faded-1">Folder</span>
-                <NIcon name="chevronRight" className="fill-faded-2" />
-              </div>
-            </NItem>
-          {:else}
-            <NItem
-              className="clickable bottom-line"
-              on:click={() => {
-                navigate(getPath(file));
-              }}>
-              {file}
-              <div slot="right">
-                <span class="text-sm text-faded-1">File</span>
-                <NIcon name="chevronRight" className="fill-faded-2" />
-              </div>
-            </NItem>
+          {#if state.loading}
+            <div class="p-4 n-panel center-all">
+              <NSpinner />
+            </div>
           {/if}
-        {/each}
+          {#each state.files as file}
+            {#if !isFile(file)}
+              <NItem
+                className="clickable bottom-line"
+                on:click={() => {
+                  navigate(getPath(file));
+                }}>
+                {file}
+                <div slot="right">
+                  <span class="text-sm text-faded-1">Folder</span>
+                  <NIcon name="chevronRight" className="fill-faded-2" />
+                </div>
+              </NItem>
+            {:else}
+              <NItem
+                className="clickable bottom-line"
+                on:click={() => {
+                  navigate(getPath(file));
+                }}>
+                {file}
+                <div slot="right">
+                  <span class="text-sm text-faded-1">File</span>
+                  <NIcon name="chevronRight" className="fill-faded-2" />
+                </div>
+              </NItem>
+            {/if}
+          {/each}
+        </div>
       </div>
     </div>
   </NLayout>
