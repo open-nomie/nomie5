@@ -9,6 +9,11 @@
   export let className = "";
   export let faded = false;
   export let style = "";
+
+  export let truncate = false;
+  export let truncate2 = false;
+  export let truncate3 = false;
+
   const dispatch = createEventDispatcher();
 </script>
 
@@ -57,6 +62,9 @@
     }}
     class="n-text {size || 'sm'}
     {className}
+    {truncate ? 'truncate' : ''}
+    {truncate2 ? 'truncate-2' : ''}
+    {truncate3 ? 'truncate-3' : ''}
     {faded ? 'faded ' : ''}
     {bold ? 'font-weight-bold ' : ''}
     {medium ? 'font-weight-medium ' : ''}">
@@ -70,6 +78,9 @@
     }}
     class="n-text {size || 'sm'}
     {className}
+    {truncate ? 'truncate' : ''}
+    {truncate2 ? 'truncate-2' : ''}
+    {truncate3 ? 'truncate-3' : ''}
     {faded ? 'faded ' : ''}
     {bold ? 'font-weight-bold ' : ''}
     {medium ? 'font-weight-medium ' : ''}">
