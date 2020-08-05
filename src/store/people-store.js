@@ -227,7 +227,7 @@ const PeopleInit = () => {
         const confirm = await Interact.confirm(`${people.length} @username's found`, "Add them to your People list?");
         if (confirm) {
           await methods.saveFoundPeople(people);
-          Interact.toast("People list updated");
+          Interact.alert("👍 People list updated!");
         }
       } else {
         Interact.alert(`Sorry, no @username's found in the last 6 months`);
