@@ -117,7 +117,18 @@ const DashboardStoreInit = (): any => {
         return state;
       });
     },
-
+    async delete(dashboard: Dashboard) {
+      console.log("Deleting", dashboard);
+      update((state: IDashboardStore) => {
+        state.dashboards = state.dashboards.filter((dash: Dashboard) => {
+          console.log({ dash, dashboard, match: dash == dashboard });
+          return dash !== dashboard;
+        });
+        state.activeIndex = 0;
+        return state;
+      });
+      return methods.save();
+    },
     data(): IDashboardStore {
       let _state;
       update((state: any) => {

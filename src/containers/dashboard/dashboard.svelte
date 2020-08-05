@@ -302,12 +302,18 @@
       }
     });
     unsubDashboard = DashboardStore.subscribe((dbStore) => {
-      if (dbStore.dashboards.length) {
-        dashboards = dbStore.dashboards;
-        initDashboard();
-      }
+      console.log("store", { dbStore });
+      dashboards = dbStore.dashboards;
+      initDashboard();
     });
   });
+
+  async function deleteDashboard() {
+    let confirmed = await Interact.confirm("Delete dashboard?", "You cannot undo this action.");
+    if (confirmed) {
+      await DashboardStore.delete(activeDashboard);
+    }
+  }
 
   onDestroy(() => {
     unsubTrackers();
@@ -371,10 +377,20 @@
           {/each}
         {/if}
         <div class="w-100 flex-grow">
-          <button class="btn btn-round btn-light btn-block mx-auto my-2 mb-4" style="max-width:300px; max-height:50px;" on:click={newBlock}>
+          <button class="btn btn-round btn-light btn-block mx-auto mt-4 mb-2" style="max-width:300px; max-height:50px;" on:click={newBlock}>
             <Icon name="add" size="24" />
             Add Block
           </button>
+          <Button
+            size="xs"
+            color="clear"
+            block
+            className="mx-auto mt-4 mb-4"
+            style="max-width:300px; max-height:22px; opacity:0.6"
+            on:click={deleteDashboard}>
+            <Icon name="delete" size="14" className="mr-2" />
+            Delete Dashboard
+          </Button>
         </div>
       </div>
     {:else}
