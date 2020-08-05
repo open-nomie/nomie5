@@ -15,6 +15,8 @@
   import Storage from "../../modules/storage/storage";
 
   import { Interact } from "../../store/interact";
+  import { UserStore } from "../../store/user-store";
+  import Button from "../button/button.svelte";
 
   const state = {
     title: "File Browser",
@@ -24,8 +26,12 @@
     animateForward: false,
     animateBack: false,
     file: null,
-    loading: true
+    loading: true,
+    edit: false,
   };
+
+  let fileContent;
+  let editor;
 
   // Not working
   export let path = undefined;
@@ -39,6 +45,7 @@
 
   async function init() {
     state.file = null;
+    state.edit = false;
     lastPath = path;
     if (path.substr(0, 1) == "/") {
       path = path.replace("/", "");
@@ -50,6 +57,7 @@
       if (isFile(fileName)) {
         state.file = fileName;
         state.path = ogPath;
+        readFile();
       } else {
         state.path = ogPath;
 
@@ -58,6 +66,26 @@
     }
     state.title = ogPath.join("/");
     state.path = ogPath;
+  }
+  function cancelEdits() {
+    state.edit = false;
+  }
+  async function saveChanges() {
+    if (!editor) {
+      editor = document.getElementById("file-editor");
+    }
+    let value;
+    if (editor) {
+      value = editor.value;
+      try {
+        let payload = JSON.parse(value);
+        editor.value = JSON.stringify(payload, null, 2);
+        await Storage.put(state.path.join("/"), payload);
+        Interact.toast("Updated");
+      } catch (e) {
+        Interact.error(e.message);
+      }
+    }
   }
 
   async function back() {
@@ -76,7 +104,7 @@
   function extractFiles() {
     if (state.path.length) {
       let obj = { ...state.tree };
-      state.path.forEach(name => {
+      state.path.forEach((name) => {
         if (obj.hasOwnProperty(name)) {
           obj = obj[name];
         }
@@ -147,7 +175,10 @@
 
   async function readFile() {
     let content = await Storage.get(state.path.join("/"));
-    return JSON.stringify(content, null, 2);
+    if (content) {
+      fileContent = JSON.stringify(content, null, 2);
+    }
+    return fileContent;
   }
 
   async function download(file) {
@@ -168,6 +199,37 @@
       return false;
     }
   }
+
+  function onKeyPress(e) {
+    var keyCode = e.code;
+    console.log(e);
+
+    if (e.keyCode === 9) {
+      // tab was pressed
+
+      // get caret position/selection
+      var val = this.value,
+        start = this.selectionStart,
+        end = this.selectionEnd;
+
+      // set textarea value to: text before caret + tab + text after caret
+      this.value = val.substring(0, start) + "\t" + val.substring(end);
+
+      // put caret at right position again
+      this.selectionStart = this.selectionEnd = start + 1;
+
+      // prevent the focus lose
+      return false;
+    }
+  }
+
+  async function editFile() {
+    state.edit = true;
+    await tick(200);
+    editor = document.getElementById("file-editor");
+    editor.addEventListener("onkeydown", onKeyPress);
+  }
+
   function getPath(file) {
     let path;
     if (state.path.length == 1) {
@@ -196,6 +258,23 @@
       transform: translateX(100px);
       opacity: 0;
     }
+  }
+
+  textarea#file-editor {
+    font-family: "Courier New", Courier, monospace;
+    min-height: calc(100% - 0px);
+    width: 100%;
+    border: none;
+    background-color: var(--color-solid);
+    color: var(--color-inverse);
+    padding: 16px;
+    background: url(/images/editor-background.png);
+    background-attachment: local;
+    background-repeat: no-repeat;
+    padding-left: 35px;
+    padding-top: 10px;
+    font-size: 11px;
+    line-height: 150%;
   }
 
   .code-view {
@@ -287,18 +366,45 @@
         </button>
       </div>
     </div>
-    <div class="content code-view">
-      <div class="container">
-        {#await readFile()}
+    <div class="content code-view h-100">
+      <div class="container h-100">
+        {#if fileContent}
+          {#if !state.edit}
+            <pre>{fileContent}</pre>
+          {:else}
+            <textarea id="file-editor" autocapitalize="off" autocorrect="off">{fileContent}</textarea>
+          {/if}
+        {:else}
+          <div class="n-panel center-all">
+            <NSpinner />
+          </div>
+        {/if}
+        <!-- {#await readFile()}
           <div class="n-panel center-all">
             <NSpinner />
           </div>
         {:then content}
-          <pre>{content}</pre>
+          {#if !state.edit}
+            <pre>{content}</pre>
+          {:else}
+            <textarea id="editor">{content}</textarea>
+          {/if}
         {:catch error}
           <div class="text-red">{error.message}</div>
-        {/await}
+        {/await} -->
       </div>
+    </div>
+    <div slot="footer">
+      {#if $UserStore.meta.canEditFiles}
+        <div class="container n-row px-2 pt-1 pb-2">
+          {#if state.edit}
+            <Button size="md" color="clear" block on:click={cancelEdits}>Cancel</Button>
+            <Button size="md" color="primary" block on:click={saveChanges}>Save Changes</Button>
+          {:else}
+            <Button size="md" color="clear" block on:click={editFile}>Edit</Button>
+          {/if}
+        </div>
+      {/if}
     </div>
   </NLayout>
 {/if}

@@ -4,8 +4,10 @@
   import NToggle from "../../components/toggle-switch/toggle-switch.svelte";
   import { BoardStore } from "../../store/boards";
   import { Lang } from "../../store/lang";
+  import { Interact } from "../../store/interact";
   // import Storage from "../storage/storage.svelte";
   import Storage from "../../modules/storage/storage";
+  import Text from "../../components/text/text.svelte";
 
   let methods = {
     settingChange() {
@@ -19,6 +21,8 @@
             value: "",
             valueType: "number",
           });
+
+          console.log("PIN", pin);
 
           if (!pin) {
             $UserStore.meta.lock = false;

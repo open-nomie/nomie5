@@ -26,6 +26,7 @@ const hooks = new Hooky();
 
 // Stores
 import { LedgerStore } from "../store/ledger";
+import { Lang } from "../store/lang";
 
 const console = new Logger("✋ Interact");
 
@@ -518,6 +519,9 @@ const interactInit = () => {
           });
         }, options.timeout);
       }
+    },
+    error(message) {
+      return methods.alert(Lang.t("general.error", "Error"), message);
     },
     confirm(title, message, ok, cancel) {
       return new Promise((resolve, reject) => {

@@ -299,9 +299,8 @@ Note: Your data will not automatically move over. You'll first need to export it
             </div>
 
             <div class="n-list solo mb-3">
-
               <NItem>
-                <div class="title truncate">{Lang.t('general.type', 'Data Location')}</div>
+                <Text bold className="my-2">{Lang.t('general.type', 'Data Location')}</Text>
                 <div slot="right">
                   <button class="btn btn-clear icon-right" on:click={methods.storageMenu}>
                     {#if $UserStore.storageType === 'local'}
@@ -326,6 +325,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 
               <NItem
                 title="Browse Files..."
+                bottomLine
                 on:click={() => {
                   navigate('/files');
                 }}
@@ -335,7 +335,21 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </span>
               </NItem>
 
+              <NItem title={Lang.t('settings.allow-file-editing', 'Allow file editing')}>
+                <Text size="sm" faded>Enable manual editing of nomie files</Text>
+                <Text size="xs" className="text-red mt-2">Use with caution.</Text>
+                <div slot="right">
+                  <NToggle bind:value={$UserStore.meta.canEditFiles} on:change={methods.settingChange} />
+                </div>
+              </NItem>
             </div>
+
+            <div class="n-list solo my-2">
+              <Text bold className="my-2 mx-3">{Lang.t('general.type', 'Finding old data')}</Text>
+              <NItem bottomLine title="Find Context" />
+              <NItem bottomLine title="Find People" />
+            </div>
+
             <NItem className="solo text-red text-center mt-4" on:click={methods.deleteEverything}>Reset & Delete all Nomie Data...</NItem>
           {:else if view == 'about'}
             <!--

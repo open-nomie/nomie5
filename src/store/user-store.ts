@@ -31,6 +31,7 @@ export interface IUserMeta {
   is24Hour?: boolean;
   lastBackup?: Date;
   boardsEnabled?: boolean;
+  canEditFiles?: boolean;
 }
 export interface IUserLocalSettings {
   compactButtons: boolean;
