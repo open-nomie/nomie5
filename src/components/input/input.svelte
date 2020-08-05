@@ -34,14 +34,19 @@
     _elInput.focus();
   }
 
+  export function getValue() {
+    console.log(_elInput);
+    return _elInput.value;
+  }
+
   let blur = () => {
     focused = false;
   };
-  let focus = event => {
+  let focus = (event) => {
     focused = true;
     dispatch("focus", event);
   };
-  let change = evt => {
+  let change = (evt) => {
     if (evt.key == "Enter") {
       dispatch("enter", value);
     }
@@ -65,10 +70,7 @@
   @import "../../scss/utils/_utils";
   $height: 54px;
 
-  .n-input-container.with-label.compact
-    .n-input-wrapper.has-input
-    .n-input
-    label {
+  .n-input-container.with-label.compact .n-input-wrapper.has-input .n-input label {
     transform: translateY(-4px) !important;
   }
 
@@ -260,9 +262,7 @@
   {solo ? 'solo' : 'with-label'}"
   style="{width ? `max-width:${width}; width:${width}; ` : ``}
   {style}">
-  <div
-    class="n-input-wrapper {hasInput ? 'has-input' : 'no-input'}
-    {focused ? 'has-focus' : 'no-focus'}">
+  <div class="n-input-wrapper {hasInput ? 'has-input' : 'no-input'} {focused ? 'has-focus' : 'no-focus'}">
     <slot name="left" />
     <div class="n-input">
       <label>{label || placeholder}</label>
