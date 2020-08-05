@@ -13,6 +13,9 @@ export default {
     let half = Math.ceil(arr.length * 0.5);
     return [arr.splice(0, half), arr.splice(-half)];
   },
+  unique(array) {
+    return [...new Set(array)];
+  },
   chunk(array, chunkSize) {
     var arrayOfArrays = [];
 
