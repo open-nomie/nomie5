@@ -16,7 +16,7 @@
   const state = {
     active: null,
     activeIndex: 0,
-    hasTimers: false
+    hasTimers: false,
   };
 
   // When board size changes
@@ -34,7 +34,7 @@
     asArray() {
       return;
     },
-    setActive(id) {}
+    setActive(id) {},
   };
 </script>
 
@@ -50,7 +50,7 @@
   {#each boards as board}
     <button
       class="tab board-{board.id}
-      {board.id == active ? 'active' : 'inactive'}"
+      {board.id == active ? 'selected' : 'inactive'}"
       on:click={() => {
         dispatch('tabTap', board);
       }}>
@@ -61,7 +61,8 @@
     </button>
   {/each}
   <button
-    class="tap-icon btn btn-clear px-2"
+    id="create-tab"
+    class="tap-icon tab btn btn-clear"
     on:click={() => {
       dispatch('create');
     }}>
