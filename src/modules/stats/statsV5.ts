@@ -426,7 +426,7 @@ export default class StatsProcessor implements IStats {
 
     newMap.sum = _math.sum(allValues);
     newMap.avg = _math.average(allValues, true);
-    // console.log("New Map", newMap.avg, newMap, allValues);
+
     return newMap;
   }
 

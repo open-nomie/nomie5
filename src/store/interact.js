@@ -512,7 +512,6 @@ const interactInit = () => {
     toast(message, options = {}) {
       options.timeout = options.timeout || 1500;
       let perm = options.perm === true ? true : false;
-      console.log("Toast", message);
       update((s) => {
         s.toast.message = message;
         s.toast.show = true;

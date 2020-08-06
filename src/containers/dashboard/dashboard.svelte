@@ -302,7 +302,6 @@
       }
     });
     unsubDashboard = DashboardStore.subscribe((dbStore) => {
-      console.log("store", { dbStore });
       dashboards = dbStore.dashboards;
       initDashboard();
     });

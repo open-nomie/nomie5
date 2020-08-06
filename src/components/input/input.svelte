@@ -35,7 +35,6 @@
   }
 
   export function getValue() {
-    console.log(_elInput);
     return _elInput.value;
   }
 

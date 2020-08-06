@@ -10,7 +10,6 @@
 
   async function init() {
     times = TrackerLogsToTime(block.element.id, block.logs);
-    console.log({ times, block });
   }
 </script>
 

@@ -118,10 +118,8 @@ const DashboardStoreInit = (): any => {
       });
     },
     async delete(dashboard: Dashboard) {
-      console.log("Deleting", dashboard);
       update((state: IDashboardStore) => {
         state.dashboards = state.dashboards.filter((dash: Dashboard) => {
-          console.log({ dash, dashboard, match: dash == dashboard });
           return dash !== dashboard;
         });
         state.activeIndex = 0;

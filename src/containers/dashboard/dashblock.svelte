@@ -171,7 +171,6 @@
         novalue
         element={block.element}
         on:click={() => {
-          console.log('Open stats for ', block.element.toSearchTerm());
           Interact.openStats(block.element.toSearchTerm());
         }} />
       <Button

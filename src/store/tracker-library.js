@@ -30,8 +30,6 @@ const TrackerLibInit = () => {
     activeBundle: null,
   });
 
-  console.log("INITIALIZING");
-
   const methods = {
     toggle() {
       update((p) => {

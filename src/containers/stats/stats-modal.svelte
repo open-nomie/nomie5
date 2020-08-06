@@ -718,7 +718,7 @@
     }
   }
   async function _setSelected(selected) {
-    console.log("selecting", selected);
+    
     state.selected = selected;
 
     let payload = {

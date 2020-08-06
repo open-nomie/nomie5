@@ -64,7 +64,6 @@
     if (lastLocation !== location.hash) {
       lastLocation = location.hash;
       mapLocation = location;
-      console.log("Map change", mapLocation);
     }
   }
 

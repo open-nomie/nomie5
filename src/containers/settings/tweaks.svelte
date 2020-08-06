@@ -22,8 +22,7 @@
             valueType: "number",
           });
 
-          console.log("PIN", pin);
-
+          
           if (!pin) {
             $UserStore.meta.lock = false;
             $UserStore.meta.pin = null;

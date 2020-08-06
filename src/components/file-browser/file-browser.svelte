@@ -85,7 +85,6 @@
           buttonLabel: "Reload",
           timeout: 2500,
           click() {
-            console.log("Reload");
             window.location.href = window.location.href;
           },
         });
@@ -209,7 +208,6 @@
 
   function onKeyPress(e) {
     var keyCode = e.code;
-    console.log(e);
 
     if (e.keyCode === 9) {
       // tab was pressed
