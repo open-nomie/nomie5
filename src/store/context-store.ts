@@ -21,8 +21,7 @@ import dayjs from "dayjs";
 import { Interact } from "./interact";
 import { LedgerStore } from "./ledger";
 import array_utils from "../utils/array/array_utils";
-import TrackableElement from "../modules/trackable-element/trackable-element";
-import tick from "../utils/tick/tick";
+import type TrackableElement from "../modules/trackable-element/trackable-element";
 
 const console = new Logger("🗺 $ContextStore");
 
