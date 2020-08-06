@@ -9,6 +9,30 @@ import md5 from "md5";
 export type ITrackerType = "tick" | "value" | "range" | "picker" | "note" | "timer";
 export type ITrackerMath = "sum" | "mean";
 
+export interface ITracker {
+  id?: string; // Id of Tracker
+  tag: string; // Tag of Tracker
+  label?: string; // Label of the Tracker
+  type?: ITrackerType; // Type of Tracker
+  color?: string; // Color of Tracker
+  math?: ITrackerMath; // Sum Mean?
+  ignore_zeros?: Boolean; // Ignore Zeros when doing maths
+  uom?: string; // Unit of Measure KEY
+  emoji?: string; // Emoji for the Tracker
+  default?: number; // Default value for a tracker
+  max?: number; // Max of a Range
+  min?: number; // Min of a Range
+  score?: number; // Current Score?
+  score_calc?: any; // Positivity Score calc
+  goal?: any; // NOT USED
+  one_tap?: boolean; // One tapper?
+  include?: string; // Content to always include when tracking this tracker
+  note?: string; // Content to include when a note tracker
+  hidden?: boolean; // Hidden from All Board
+  started?: Date; // If its started (and a timer based tracker)
+  picks?: Array<string>; // Picks for a Picker type of tracker
+}
+
 export default class TrackerConfig {
   id?: string; // Id of Tracker
   tag: string; // Tag of Tracker
