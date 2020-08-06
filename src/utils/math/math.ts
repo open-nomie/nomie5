@@ -9,12 +9,12 @@ export default {
     }
   },
   // Round a number
-  round: (num, amount) => {
+  round: (num: number, amount?: number): number => {
     amount = amount || 100;
     return Math.round(amount * num) / amount;
   },
   // Get max from array
-  max: (arr) => {
+  max: (arr): number => {
     if (arr.length) {
       return Math.max(...arr);
     } else {
@@ -50,7 +50,7 @@ export default {
     }
   },
   // Get the percentage of 2 numbers
-  percentage: (n1, n2, flip) => {
+  percentage: (n1, n2, flip?: boolean) => {
     if (flip) {
       return ((n1 - n2) / n1) * 100;
     } else {

@@ -141,6 +141,8 @@ button:focus {
   background-color: var(--color-primary-bright);
   box-shadow: 0px 6px 12px -6px var(--color-primary-bright);
   &:hover {
+    color: #fff;
+    box-shadow: 0px 3px 6px -3px var(--color-primary-bright);
     // background-color: --color-primary;
   }
 }

@@ -4983,6 +4983,9 @@ button:focus {
 .btn-primary {
   background-color: var(--color-primary-bright);
   box-shadow: 0px 6px 12px -6px var(--color-primary-bright); }
+  .btn-primary:hover {
+    color: #fff;
+    box-shadow: 0px 3px 6px -3px var(--color-primary-bright); }
 
 .btn-outline-dark {
   border-color: var(--color-solid-2) !important; }
@@ -5868,6 +5871,7 @@ button {
   max-width: 500px !important; }
 
 .n-board-tabs {
+  padding-left: 16px;
   width: 100%;
   min-height: 50px;
   -webkit-overflow-scrolling: touch;
@@ -5880,12 +5884,15 @@ button {
   .n-board-tabs .zmdi {
     color: var(--color-inverse-2);
     z-index: 10; }
+  .n-board-tabs .tap-icon {
+    margin-top: 6px !important;
+    flex-grow: 1; }
   .n-board-tabs .tab {
     color: var(--color-inverse-2);
     border: none;
     background: transparent;
     padding: 6px 10px;
-    min-width: 42px;
+    min-width: 45px;
     max-width: 200px;
     width: auto;
     flex-shrink: 0;
@@ -5895,8 +5902,9 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-grow: 1; }
-    .n-board-tabs .tab.active {
+    flex-grow: 1;
+    text-align: center; }
+    .n-board-tabs .tab.selected {
       background-color: var(--color-solid);
       box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1), 0px 6px 7px -2px rgba(49, 158, 215, 0.1);
       border-radius: 12px; }
