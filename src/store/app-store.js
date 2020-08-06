@@ -20,7 +20,10 @@ const AppStoreInit = () => {
   const { update, subscribe, set } = writable(new AppStoreState());
 
   const checkForUpdate = () => {
-    let lastVersion = Storage.local.get("last-version");
+    // TODO remove this eventually
+    let _oldLastVersion = localStorage.getItem("nomie/last-version");
+    let lastVersion = Storage.local.get("last-version") || _oldLastVersion;
+
     if (lastVersion !== whatsNew.version) {
       Storage.local.put("last-version", whatsNew.version);
     }

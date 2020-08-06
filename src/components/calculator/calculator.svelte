@@ -152,6 +152,7 @@
       grid-template-rows: 60px 60px;
       .btn {
         width: 100%;
+        font-weight: 900;
         height: 45px;
       }
     }
@@ -231,11 +232,11 @@
     font-size: 26px;
   }
   .btn.r-0 {
-    color: silver;
+    color: var(--color-inverse-1);
     background-color: transparent;
   }
   .btn.b-3 {
-    color: var(--color-orange);
+    color: var(--color-inverse-1);
     background-color: transparent;
   }
   .btn.b-0.r-0 {

@@ -26,6 +26,7 @@
   import { TrackerStore } from "../../../store/tracker-store";
   import { Interact } from "../../../store/interact";
   import { Lang } from "../../../store/lang";
+  import Icon from "../../../components/icon/icon.svelte";
 
   // Props
   export let tracker = undefined; // You can provide a tracker
@@ -41,7 +42,7 @@
     tracker: null, // holds current tracker
     ready: false,
     suffix: "",
-    calcUsed: false // when it's ready
+    calcUsed: false, // when it's ready
   };
 
   // Set up the Methods
@@ -52,7 +53,7 @@
       dispatch("save", {
         value: data.value,
         tracker: tracker,
-        suffix: data.suffix
+        suffix: data.suffix,
       });
     },
     // When Add is hit
@@ -61,7 +62,7 @@
       dispatch("add", {
         value: data.value,
         tracker: tracker,
-        suffix: data.suffix
+        suffix: data.suffix,
       });
     },
     onCancel() {
@@ -87,7 +88,7 @@
       data.tracker.started = null;
       // tell store to stop timer
       TrackerStore.stopTimer(data.tracker);
-    }
+    },
   };
 
   // If Tracker Changes
@@ -154,15 +155,11 @@
   <div class="n-toolbar-grid n-row" slot="header">
     <div class="left truncate pl-3">
       <span class="animate truncate up {data.ready ? 'visible' : 'hidden'}">
-        {#if data.tracker && tracker.type !== 'picker'}
-          {data.tracker.displayValue(data.value)}
-        {/if}
+        {#if data.tracker && tracker.type !== 'picker'}{data.tracker.displayValue(data.value)}{/if}
       </span>
     </div>
     <div class="main">
-      <span class="animate up text-md {data.ready ? 'visible' : 'hidden'}">
-        {tracker.emoji} {tracker.label}
-      </span>
+      <span class="animate up text-md {data.ready ? 'visible' : 'hidden'}">{tracker.emoji} {tracker.label}</span>
     </div>
     <button class="btn btn-clear tap-icon right" on:click={editTracker}>
       <NIcon name="edit" size="26" />
@@ -178,23 +175,23 @@
           value={(data.value || tracker.min) + ''}
           min={(tracker.min || 0) + ''}
           max={(tracker.max || 0) + ''}
-          on:change={value => {
+          on:change={(value) => {
             data.value = value.detail;
           }} />
       {:else if tracker.type === 'picker'}
         <PickerInput
           {tracker}
-          on:change={evt => {
+          on:change={(evt) => {
             data.suffix = evt.detail;
           }} />
       {:else if tracker.type === 'value' || tracker.type === 'tick'}
         <div id="keypad-holder">
           <NCalculator
             {value}
-            displayFormat={input => {
+            displayFormat={(input) => {
               return tracker.displayValue(input || '');
             }}
-            on:change={changedValue => {
+            on:change={(changedValue) => {
               data.value = changedValue.detail;
             }} />
         </div>
@@ -202,17 +199,17 @@
         <NTimer
           tracker={data.tracker}
           bind:value={data.value}
-          on:change={event => {
+          on:change={(event) => {
             data.value = event.detail;
           }} />
       {:else}
         <div id="keypad-holder">
           <NCalculator
             {value}
-            displayFormat={input => {
+            displayFormat={(input) => {
               return tracker.displayValue(input || '');
             }}
-            on:change={value => {
+            on:change={(value) => {
               data.value = value.detail;
             }} />
         </div>
@@ -230,7 +227,7 @@
             methods.onCancel();
           }}
           class="btn btn-clear btn-lg">
-          {Lang.t('general.cancel', 'Cancel')}
+          <Icon name="close" size="42" />
         </button>
       </div>
       <!-- end left toolbar -->
@@ -279,11 +276,9 @@
             class="btn btn-clear btn-lg {tracker.started ? 'd-none' : ''}">
             <!-- local hack to make plus match with close-->
             {#if !$Interact.trackerInput.allowSave}
-              Next
-              <NIcon name="chevronRight" size="32" />
+              <NIcon name="chevronRight" size="42" />
             {:else}
-              <NIcon name="add" size="32" />
-              Add
+              <NIcon name="add" size="46" />
             {/if}
           </button>
         {/if}

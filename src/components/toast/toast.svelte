@@ -4,31 +4,18 @@
   import { Interact } from "../../store/interact";
   import Button from "../button/button.svelte";
   import ListItem from "../list-item/list-item.svelte";
-  import Interactions from "../../containers/interactions/interactions.svelte";
   import Text from "../text/text.svelte";
 
   // Props
   export let message = "Done";
   export let show = false;
-
   let showDom = false;
-  let showObj = false;
 
-  Interact.subscribe((interact) => {
-    if (interact.toast.show == true) {
-      console.log(`show ${interact.toast.message}`);
-      showDom = true;
-      setTimeout(() => {
-        showObj = true;
-      }, 10);
-    } else if (interact.toast.show === false) {
-      console.log(`Hide ${interact.toast.message}`);
-      showObj = false;
-      setTimeout(() => {
-        showDom = false;
-      }, 250);
-    }
-  });
+  $: if ($Interact.toast.show) {
+    showDom = true;
+  } else {
+    showDom = false;
+  }
 </script>
 
 <style lang="scss" type="text/scss">
@@ -58,7 +45,7 @@
     }
     .n-toast-panel {
       min-height: 36px;
-      max-height: 45px;
+
       max-width: 600px;
       min-width: 300px;
       border-radius: 6px;
@@ -75,7 +62,7 @@
   }
 </style>
 
-<div class="n-toast {showObj ? 'visible' : 'hidden'}" aria-hidden={showObj ? 'false' : 'true'}>
+<div class="n-toast {showDom ? 'visible' : 'hidden'}" aria-hidden={showDom ? 'false' : 'true'}>
   <div class="n-toast-panel">
     <ListItem style="background-color:transparent">
       <Text className="text-white">{$Interact.toast.message}</Text>
