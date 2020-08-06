@@ -5,11 +5,13 @@
   import NIcon from "../../components/icon/icon.svelte";
   import NText from "../../components/text/text.svelte";
   import { AppStore } from "../../store/app-store";
+  import Button from "../../components/button/button.svelte";
 
   function closeThisUpdate() {
     AppStore.closeUpdate();
   }
   let showFixes = false;
+  let showUpdates = false;
 
   onMount(() => {
     setTimeout(() => {
@@ -18,24 +20,34 @@
   });
 </script>
 
-<NModal show={$AppStore.whatsNew !== null}>
+<NModal type="bottom" show={$AppStore.whatsNew !== null}>
   <header slot="header" class="n-toolbar-grid">
     <div class="left">
       <button class="btn btn-clear tap-icon" on:click={closeThisUpdate}>
         <NIcon name="close" />
       </button>
     </div>
-    <div class="main">
-      <NText size="md">Nomie APP_VERSION</NText>
-      <NText size="sm" className="text-faded-2">What's New</NText>
+    <div class="main p-2">
+      <NText size="lg" center bold>Welcome to Nomie APP_VERSION 🥳</NText>
     </div>
   </header>
-  {#if $AppStore.whatsNew}
+  {#if $AppStore.whatsNew && !showUpdates}
+    <NItem className="p-3">
+      Nomie APP_VERSION adds {$AppStore.whatsNew.features.length} features, and {$AppStore.whatsNew.fixes.length} bug fixes.
+      <NText
+        tag="span"
+        color="red"
+        underline
+        on:click={() => {
+          showUpdates = true;
+        }}>
+        View Updates
+      </NText>
+    </NItem>
+  {/if}
+  {#if $AppStore.whatsNew && showUpdates}
     {#if $AppStore.whatsNew.features.length}
-      <NItem
-        className="divider text-xs py-1 text-primary compact font-weight-bold">
-        FEATURES
-      </NItem>
+      <NItem className="divider text-xs py-1 text-primary compact font-weight-bold">FEATURES</NItem>
       <div class="n-list compact">
         {#each $AppStore.whatsNew.features as feature}
           <NItem className="text-sm py-1" compact>
@@ -46,8 +58,7 @@
       </div>
     {/if}
     {#if $AppStore.whatsNew.fixes.length}
-      <NItem
-        className="divider text-xs py-1 text-primary compact font-weight-bold">
+      <NItem className="divider text-xs py-1 text-primary compact font-weight-bold">
         FIXES
         <button
           slot="right"
@@ -67,5 +78,9 @@
       {/if}
     {/if}
   {/if}
-  <footer slot="footer" />
+  <footer slot="footer">
+    <div class="n-row">
+      <Button block color="light" on:click={closeThisUpdate}>Close</Button>
+    </div>
+  </footer>
 </NModal>

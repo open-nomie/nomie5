@@ -6784,7 +6784,8 @@ aside.n-panel {
   width: calc(100% - 16pt);
   min-height: 50px;
   margin-left: 8pt;
-  margin-right: 8pt; }
+  margin-right: 8pt;
+  height: auto; }
   @media (min-width: 600px) {
     .n-toolbar-grid {
       margin-left: auto;

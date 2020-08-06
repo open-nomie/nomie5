@@ -24,6 +24,7 @@
   min-height: 50px;
   margin-left: 8pt;
   margin-right: 8pt;
+  height: auto;
 
   @include media-breakpoint-up(md) {
     margin-left: auto;

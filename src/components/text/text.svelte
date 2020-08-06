@@ -9,11 +9,12 @@
   export let className = "";
   export let faded = false;
   export let style = "";
-
+  export let center = false;
   export let truncate = false;
   export let truncate2 = false;
   export let truncate3 = false;
   export let color = "";
+  export let underline = false;
 
   const dispatch = createEventDispatcher();
 </script>
@@ -67,6 +68,8 @@
     {truncate ? 'truncate' : ''}
     {truncate2 ? 'truncate-2' : ''}
     {truncate3 ? 'truncate-3' : ''}
+    {center ? 'text-center' : ''}
+    {underline ? 'text-underline' : ''}
     {faded ? 'faded ' : ''}
     {bold ? 'font-weight-bold ' : ''}
     {medium ? 'font-weight-medium ' : ''}">
@@ -83,6 +86,7 @@
     {truncate ? 'truncate' : ''}
     {truncate2 ? 'truncate-2' : ''}
     {truncate3 ? 'truncate-3' : ''}
+    {center ? 'text-center' : ''}
     {faded ? 'faded ' : ''}
     {bold ? 'font-weight-bold ' : ''}
     {medium ? 'font-weight-medium ' : ''}">
