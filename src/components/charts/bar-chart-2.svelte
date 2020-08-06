@@ -1,14 +1,19 @@
 <script type="ts">
-  import { Interact } from "./../../store/interact.js";
   import { createEventDispatcher, onMount } from "svelte";
-  import Chart from "chart.js";
-  import nid from "../../modules/nid/nid";
   const dispatch = createEventDispatcher();
-  import math from "../../utils/math/math";
-  import { UserStore } from "../../store/user-store";
+
+  import Chart from "chart.js";
+
   import NIcon from "../icon/icon.svelte";
-  import tick from "../../utils/tick/tick";
   import Button from "../button/button.svelte";
+
+  import math from "../../utils/math/math";
+  import tick from "../../utils/tick/tick";
+
+  import nid from "../../modules/nid/nid";
+
+  import { UserStore } from "../../store/user-store";
+  import { Interact } from "./../../store/interact.js";
 
   export let labels = [];
   export let height = 200;
@@ -22,9 +27,8 @@
   export let hideYTicks = false;
   export let type = "bar";
 
+  // Generate a random ID for this Component
   const chartId = `chart-${nid()}`;
-
-  // console.log("chart", points);
 
   let showChart = false;
   let _canvas;
@@ -36,12 +40,6 @@
   $: if (points && theChart && points.map((p) => p.y).join() !== lastPoints) {
     lastPoints = points.map((p) => p.y).join();
     loadData();
-  }
-
-  interface IPieData {
-    label: string;
-    value: number;
-    color: string;
   }
 
   function loadData() {
@@ -66,10 +64,6 @@
   }
 
   async function initChart() {
-    console.log("📊📊📊 initilizaing Chart");
-    // showChart = false;
-    // // await tick(200);
-    // showChart = true;
     var ctx = document.getElementById(chartId);
 
     const chartConfig = {
@@ -145,8 +139,6 @@
       }
       // dispatch("tap", selected);
     });
-
-    console.log("The Chart", theChart);
   }
 
   onMount(() => {
@@ -185,7 +177,7 @@
         size="xs"
         color="light"
         on:click={() => {
-          dispatch('more', selected);
+          Interact.onThisDay(selected.date.toDate());
         }}>
         {selected.x}
         <NIcon name="more" size="14" />

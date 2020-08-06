@@ -46,6 +46,7 @@
   import Text from "../components/text/text.svelte";
   import Button from "../components/button/button.svelte";
   import Icon from "../components/icon/icon.svelte";
+  import { AppStore } from "../store/app-store";
 
   // consts
   // const Export = new Exporter();
@@ -432,7 +433,10 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <span slot="right">{$Browser.pwa}</span>
               </NItem>
               <NItem title="Version">
-                <span slot="right">APP_VERSION</span>
+                <span slot="right" class="n-row">
+                  <span>APP_VERSION</span>
+                  <Button size="xs" on:click={AppStore.reveal} className="ml-2">What's new</Button>
+                </span>
               </NItem>
               <NItem title="Built">
                 <span slot="right">APP_BUILD_DATE</span>

@@ -36,6 +36,13 @@ const AppStoreInit = () => {
     }
   };
 
+  const reveal = () => {
+    update((state) => {
+      state.whatsNew = whatsNew;
+      return state;
+    });
+  };
+
   const closeUpdate = () => {
     update((state) => {
       state.whatsNew = null;
@@ -49,6 +56,7 @@ const AppStoreInit = () => {
     update,
     subscribe,
     set,
+    reveal,
   };
 };
 

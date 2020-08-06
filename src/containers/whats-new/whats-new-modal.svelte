@@ -51,7 +51,7 @@
       <div class="n-list compact">
         {#each $AppStore.whatsNew.features as feature}
           <NItem className="text-sm py-1" compact>
-            <div slot="left" class="text-faded-2">{feature.version}</div>
+            <!-- <div slot="left" class="text-faded-2">{feature.version}</div> -->
             {feature.title}
           </NItem>
         {/each}
