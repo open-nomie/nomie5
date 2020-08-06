@@ -155,9 +155,9 @@ const DashboardStoreInit = (): any => {
       if (dashboards instanceof Array === false) {
         dashboards = [];
       }
-      if (!dashboards.length) {
-        dashboards.push(new Dashboard({ label: "My First Dashboard", blocks: [] }));
-      }
+      // if (!dashboards.length) {
+      //   dashboards.push(new Dashboard({ label: "My First Dashboard", blocks: [] }));
+      // }
       return dashboards;
     },
     async init(): Promise<void> {

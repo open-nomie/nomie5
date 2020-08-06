@@ -71,21 +71,14 @@
   style="width:{size}px; height:{size}px; {radius ? `border-radius:${size * radius}px; overflow:hidden;` : ''}
   {style}">
   {#if avatar}
-    <div
-      class=" avatar"
-      style="background-image:url({avatar}); width:{size}px; height:{size}px" />
+    <div class=" avatar" style="background-image:url({avatar}); width:{size}px; height:{size}px" />
   {:else if emoji}
-    <div
-      class=" letter emoji-letter"
-      style="font-size: {size * 0.5}px; width:{size}px; height:{size}px; {color ? `color:${color}` : ''}
-      ">
+    <div class=" letter emoji-letter" style="font-size: {size * 0.5}px; width:{size}px; height:{size}px; {color ? `color:${color}` : ''} ">
       {emoji}
     </div>
   {:else if username}
     <div class="dymoji-wrapper">
-      <div
-        class="letter just-letter"
-        style="font-size: {size * 0.5}px; {color ? `color:${color}` : ''}">
+      <div class="letter just-letter" style="letter-spacing: 0 !important; font-size: {size * 0.5}px; {color ? `color:${color}` : ''}">
         {username.substr(0, 2).toUpperCase()}
       </div>
       <Dymoji {username} {size} radius={0.32} />
