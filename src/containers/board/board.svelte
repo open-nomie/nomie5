@@ -621,13 +621,13 @@
     {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
       <div class="container p-0 n-row h-100">
         {#if $TrackerStore.timers.length}
-          <button xtransition:fade class="btn tap-icon pl-3 pr-1" on:click={TrackerStore.toggleTimers}>
+          <button class="btn tab tap-icon pl-3 pr-1" on:click={TrackerStore.toggleTimers}>
             <NIcon name="time" size={22} className="fill-red-pulse" />
           </button>
         {/if}
         <!-- IF MORE THAN 13 TRACKERS - SHOW SEARCH ICON-->
         {#if Object.keys($TrackerStore.trackers).length > 13}
-          <button class="btn tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
+          <button class="btn tab tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
             <NIcon name="search" size={22} className={state.searching ? 'fill-primary-bright' : 'fill-faded-2'} />
           </button>
         {/if}
@@ -642,7 +642,7 @@
           }}>
           {#if $BoardStore.boards.length > 1}
             <button
-              class="btn btn-clear tap-icon px-2 pl-1"
+              class="btn btn-clear tab tap-icon px-2 pl-1"
               on:click={() => {
                 Interact.toggleBoardSorter();
               }}>
@@ -655,7 +655,7 @@
       <NToolbarGrid>
         <div slot="left">
           {#if $TrackerStore.timers.length}
-            <button xtransition:fade class="btn tap-icon pl-2" on:click={TrackerStore.toggleTimers}>
+            <button xtransition:fade class="btn tool tap-icon pl-2" on:click={TrackerStore.toggleTimers}>
               <NIcon name="time" size={20} className="fill-red-pulse" />
             </button>
           {/if}

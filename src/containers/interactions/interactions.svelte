@@ -276,6 +276,7 @@
 {/if}
 
 {#if $Interact.locationViewer.show}
+  <!-- TODO make this use the Location Modal in the future -->
   <NModal
     show={true}
     fullscreen

@@ -7,8 +7,6 @@
   import Text from "../text/text.svelte";
 
   // Props
-  export let message = "Done";
-  export let show = false;
   let showDom = false;
 
   $: if ($Interact.toast.show) {
@@ -65,7 +63,7 @@
 <div class="n-toast {showDom ? 'visible' : 'hidden'}" aria-hidden={showDom ? 'false' : 'true'}>
   <div class="n-toast-panel">
     <ListItem style="background-color:transparent">
-      <Text className="text-white">{$Interact.toast.message}</Text>
+      <Text className="text-white truncate-3">{$Interact.toast.message}</Text>
       <div slot="right">
         {#if $Interact.toast.buttonLabel && $Interact.toast.click}
           <Button
