@@ -1,7 +1,22 @@
 import md5 from "md5";
 import math from "../../utils/math/math";
 import Geohash from "latlon-geohash";
-export default class Location {
+
+export interface ILocation {
+  lat: number;
+  lng: number;
+  name: string;
+  hash?: string;
+  id?: string;
+}
+
+export default class Location implements ILocation {
+  lat: number;
+  lng: number;
+  name: string;
+  hash?: string;
+  id?: string;
+
   constructor(starter) {
     starter = starter || {};
     this.lat = starter.lat;
