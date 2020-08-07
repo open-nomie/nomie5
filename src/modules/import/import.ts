@@ -45,18 +45,17 @@ export default class Importer {
     this.version = parseInt(importPayload?.nomie?.number?.split(".")[0]);
     if (!this.version) {
       throw new Error("Invalid Nomie Backup file");
-    } else if (this.version == 2) {
-      this.normalized = N2ImportNormalizer(importPayload);
     } else if (this.version >= 4) {
       this.normalized = N5ImportNormalizer(importPayload);
-      console.log("This is nomie 4 and above");
+      console.log("Nomie 4 and above");
     } else if (this.version == 3) {
-      console.log("This is nomie 3");
+      console.log("Nomie 3");
       this.normalized = N3ImportNormalizer(importPayload);
+    } else if (this.version == 2) {
+      this.normalized = N2ImportNormalizer(importPayload);
     } else if (this.version == 1) {
-      console.log("This is nomie 1");
+      console.log("Nomie 1");
       this.normalized = N1ImportNormalizer(importPayload);
     }
-    console.log("Normalized", this.normalized);
   }
 }

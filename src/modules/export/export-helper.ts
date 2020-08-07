@@ -5,7 +5,7 @@ import Exporter from "./export";
 
 export default async function exportData() {
   const Export = new Exporter();
-  let confirmed = await Interact.confirm(Lang.t("general.continue-question"), Lang.t("settings.export-confirm"));
+  let confirmed = await Interact.confirm("Download a backup?", Lang.t("settings.export-confirm"));
 
   if (confirmed === true) {
     Export.onChange((change) => {
