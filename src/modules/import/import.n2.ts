@@ -1,6 +1,8 @@
 import { INormalizedImport, dashCase, ITrackers } from "./import";
-import TrackerConfig, { ITracker } from "../tracker/tracker";
-import { IBoard } from "../board/board";
+
+import TrackerConfig from "../tracker/tracker";
+import type { ITracker } from "../tracker/tracker";
+import type { IBoard } from "../board/board";
 import NLog from "../nomie-log/nomie-log";
 import nid from "../nid/nid";
 
