@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import { get } from "svelte/store";
 
   export let size = "md";
   // export let color = undefined;
@@ -15,8 +16,22 @@
   export let truncate3 = false;
   export let color = "";
   export let underline = false;
+  export let inline = false;
 
   const dispatch = createEventDispatcher();
+
+  function getClassNames() {
+    return ` ${size || "sm"}
+    ${className} text-{color}
+    ${truncate ? "truncate" : ""}
+    ${truncate2 ? "truncate-2" : ""}
+    ${truncate3 ? "truncate-3" : ""}
+    ${center ? "text-center" : ""}
+    ${underline ? "text-underline" : ""}
+    ${faded ? "faded " : ""}
+    ${bold ? "font-weight-bold " : ""}
+    ${medium ? "font-weight-medium " : ""}`.trim();
+  }
 </script>
 
 <style type="text/scss">
@@ -57,22 +72,13 @@
   }
 </style>
 
-{#if tag === 'span'}
+{#if tag === 'span' || inline}
   <span
     {style}
     on:click={() => {
       dispatch('click');
     }}
-    class="n-text {size || 'sm'}
-    {className} text-{color}
-    {truncate ? 'truncate' : ''}
-    {truncate2 ? 'truncate-2' : ''}
-    {truncate3 ? 'truncate-3' : ''}
-    {center ? 'text-center' : ''}
-    {underline ? 'text-underline' : ''}
-    {faded ? 'faded ' : ''}
-    {bold ? 'font-weight-bold ' : ''}
-    {medium ? 'font-weight-medium ' : ''}">
+    class="n-text {getClassNames()}">
     <slot />
   </span>
 {:else}
@@ -81,15 +87,7 @@
     on:click={() => {
       dispatch('click');
     }}
-    class="n-text {size || 'sm'}
-    {className} text-{color}
-    {truncate ? 'truncate' : ''}
-    {truncate2 ? 'truncate-2' : ''}
-    {truncate3 ? 'truncate-3' : ''}
-    {center ? 'text-center' : ''}
-    {faded ? 'faded ' : ''}
-    {bold ? 'font-weight-bold ' : ''}
-    {medium ? 'font-weight-medium ' : ''}">
+    class="n-text {getClassNames()}">
     <slot />
   </div>
 {/if}

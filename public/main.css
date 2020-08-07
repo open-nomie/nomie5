@@ -5871,7 +5871,6 @@ button {
   max-width: 500px !important; }
 
 .n-board-tabs {
-  padding-left: 16px;
   width: 100%;
   min-height: 50px;
   -webkit-overflow-scrolling: touch;

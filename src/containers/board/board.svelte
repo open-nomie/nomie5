@@ -698,6 +698,18 @@
         </div>
       {:else}
         <main class="n-board h-100">
+          {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 2 && $UserStore.storageType == 'local'}
+            <div class="container-sm">
+              <div class="backup pt-2 pb-1">
+                {#if daysSinceLastBackup > 1000}
+                  <Text inline size="sm" faded>No known backups</Text>
+                {:else}
+                  <Text inline size="sm" faded>{daysSinceLastBackup} days since last backup</Text>
+                {/if}
+                <Text inline underline color="primary-bright" className="ml-2" size="sm" on:click={exportData}>Backup Now</Text>
+              </div>
+            </div>
+          {/if}
           {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
             <div class="trackers n-grid framed mt-2" style="min-height:auto">
               {#each TrackerStore.state.runningTimers() as tracker}
@@ -758,19 +770,6 @@
             </button>
 
           </div>
-
-          {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 2 && $UserStore.storageType == 'local'}
-            <div class="container-sm">
-              <div class="backup n-row pb-2">
-                {#if daysSinceLastBackup > 1000}
-                  <Text size="sm" faded>No known backups</Text>
-                {:else}
-                  <Text size="sm" faded>It's been {daysSinceLastBackup} since your last backup.</Text>
-                {/if}
-                <Button shape="round" color="light" className="ml-2" size="sm" on:click={exportData}>Backup Now</Button>
-              </div>
-            </div>
-          {/if}
 
         </main>
       {/if}
