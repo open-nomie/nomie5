@@ -1,5 +1,5 @@
-import { INormalizedImport, dashCase, ITrackers } from "./import";
-
+import { dashCase } from "./import";
+import type { INormalizedImport, ITrackers } from "./import";
 import TrackerConfig from "../tracker/tracker";
 import type { ITracker } from "../tracker/tracker";
 import type { IBoard } from "../board/board";

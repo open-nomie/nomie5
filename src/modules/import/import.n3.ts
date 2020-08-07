@@ -1,11 +1,8 @@
-import { INormalizedImport, dashCase, ITrackers, IPeople } from "./import";
-import TrackerConfig, { ITracker } from "../tracker/tracker";
-import Board, { IBoard } from "../board/board";
+import type { INormalizedImport, ITrackers } from "./import";
+import TrackerConfig from "../tracker/tracker";
+import Board from "../board/board";
+import type { IBoard } from "../board/board";
 import NLog from "../nomie-log/nomie-log";
-import nid from "../nid/nid";
-import { Dashboard } from "../dashboard/dashboard";
-import Person from "../person/person";
-import Location from "../locate/Location";
 
 function getTrackers(fileData: any): ITrackers {
   let trackers: ITrackers = {};
