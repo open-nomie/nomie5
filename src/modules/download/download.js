@@ -22,12 +22,15 @@ export default {
     download(filename, content, type);
   },
   json(filename = "download.json", content) {
-    const type = "text/json";
+    // Converting to string if not already
+    if (typeof content == "object") {
+      content = JSON.stringify(content);
+    }
     filename = filename.search(".json") == -1 ? `${filename}.json` : filename;
-    download(filename, content, type);
+    download(filename, content, "text/json");
   },
   text(filename = "download.json", content) {
     const type = "text/plain";
-    download(filename, (content), type);
+    download(filename, content, type);
   },
 };
