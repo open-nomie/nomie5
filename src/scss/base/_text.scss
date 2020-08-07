@@ -5,6 +5,9 @@
 .truncate-2 {
   @include truncate(2);
 }
+.truncate-3 {
+  @include truncate(3);
+}
 
 .text-bold {
   font-weight: 600;

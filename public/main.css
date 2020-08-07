@@ -5378,6 +5378,13 @@ body.theme-dark {
   overflow: hidden !important;
   display: -webkit-box; }
 
+.truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden !important;
+  display: -webkit-box; }
+
 .text-bold {
   font-weight: 600; }
 

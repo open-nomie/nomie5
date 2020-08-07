@@ -33,6 +33,7 @@ import PromiseStep from "../utils/promise-step/promise-step";
 import md5 from "md5";
 import tick from "../utils/tick/tick";
 import arrayUtils from "../utils/array/array_utils";
+import textUtils from "../utils/text/text";
 
 // Config
 import config from "../../config/global";
@@ -551,7 +552,7 @@ const ledgerInit = () => {
           return s;
         });
         /** Fire off Notifications and hooks Save */
-        Interact.toast(`Saved ${log.note}`); // show Alert
+        Interact.toast(`Saved ${textUtils.truncate(log.note, 100)}`); // show Alert
         // Fire off the onLogSaved
         methods.hooks.run("onLogSaved", log);
         tick(100, methods.getToday);
