@@ -4,6 +4,8 @@
 
 ![](https://shareking.s3.amazonaws.com/pb-l3LHnDdC5H-1586728691.png)
 
+## Want to help? [Become a Nomie Patron](https://www.patreon.com/nomieapp)
+
 ## Try it out
 
 - [https://v5.nomie.app](https://v5.nomie.app) **Production** (v5-prod)
@@ -67,26 +69,25 @@ npm run cypress
 
 ## Notes In Nomie
 
-Nomie stores each record as a log - with all tracker, people and context data being stored as a string in the ``log.note`` field. Nomie then parses the notes to extract structured data. 
+Nomie stores each record as a log - with all tracker, people and context data being stored as a string in the `log.note` field. Nomie then parses the notes to extract structured data.
 
-For example: 
+For example:
 
-``Today I walked #miles(5) #mood(8)`` is converted to a structure like: `{ 'miles' : 5, 'mood': 8 }`
+`Today I walked #miles(5) #mood(8)` is converted to a structure like: `{ 'miles' : 5, 'mood': 8 }`
 
 A more complicated example would be:
 
-``Today @em @maddy and I #walked(4) +memory``
+`Today @em @maddy and I #walked(4) +memory`
 
 which would be converted into something like:
 
 ```
-{ 
-	people:['em','maddy'], 
- 	trackers: { walked: 4}, 
-	context:['memory'] 
+{
+	people:['em','maddy'],
+ 	trackers: { walked: 4},
+	context:['memory']
 }
 ```
-
 
 ## Structure Overview
 
@@ -107,17 +108,17 @@ which would be converted into something like:
 - **Board** - a board is specific group of trackers.
 - **Board Tabs** - how you switch boards on the track tab
 - **Log** - a record event. A lot contains a note, a note can contain unlimited numbers of tags; e.g: #mood(4) #pizza #beer(12). Logs can contain a lat and long. Tracker Objects and their values are parsed out of the logs in real time.
-- **Person** - a Person that you track in Nomie. You can track individuals by using the @username format. 
+- **Person** - a Person that you track in Nomie. You can track individuals by using the @username format.
 - **Context** - a generic categorization / group using the +context format. For example ``Went to dinner with @mom +meal`
 - **Location** - a physical location that you store and use later
 
 ## Stores
 
 - **LedgerStore** - A central store for logs, all queries go through the ledger, which does the needed data lookup and filtering. The ledger caches lookups so excessive network calls are avoided (if using blockstack).
-- **Interact Store** - Interact holds the majority of actions needed for interacting with the users - things like generic modals, the alert/confirm/prompt components, etc. 
-- **People Store** - Stores the people! 
+- **Interact Store** - Interact holds the majority of actions needed for interacting with the users - things like generic modals, the alert/confirm/prompt components, etc.
+- **People Store** - Stores the people!
 
-## Data Storage - 
+## Data Storage -
 
 Nomie 5 supports 3 types of storage:
 
@@ -160,7 +161,7 @@ Combine multiple trackers into a single flow, for collecting a sequence of track
 - **Keep it readable** - focus on writing code that new people can easily understand and follow. If the code can't do it, then do it with comments. There's no such thing as too much commenting.
 - **Keep it under 300 lines** - the goal is to keep files under 300 lines of code. Note: Sometimes that's not feasible, and I break it often
 - **Keep it flexible** - think in components. If you're doing something more than once, it most likely should be a component.
-- **Keep it save** - if you're deleting something of the users, consider using ``await Interact.confirm("Are you sure")`` to confirm they're action
+- **Keep it save** - if you're deleting something of the users, consider using `await Interact.confirm("Are you sure")` to confirm they're action
 - **Keep cleaning, organizing and testing** - this project didn't start very clean, or ready for unit testing, this should be an on going objective.
 - **Use what's there** - Twitter bootstrap ([and all its classes](https://getbootstrap.com/)) are available, reuse what already exists before writing new - especially css.
 
@@ -168,7 +169,9 @@ Combine multiple trackers into a single flow, for collecting a sequence of track
 
 The Nomie Jingle was written and produced by soldilil - see more work at https://soldilil.bandcamp.com
 
-## Open Source Props 
+## [Become a Nomie Patron](https://www.patreon.com/nomieapp)
+
+## Open Source Props
 
 - SvelteJS https://svelte.dev/
 - Leaflet https://leafletjs.com

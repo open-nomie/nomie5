@@ -364,24 +364,17 @@ Note: Your data will not automatically move over. You'll first need to export it
               ABOUT VIEW 
               *******************************************
             -->
-            <NItem
-              clickable
-              className="solo p-2"
-              title={Lang.t('settings.shop-and-support', 'Shop and Support')}
-              description="Products that work with Nomie"
-              on:click={methods.shop}>
-              <span slot="left" class="btn-icon tap-icon">
-                <NIcon name="share" />
-              </span>
-              <span slot="right" class="icon">
-                <NIcon name="chevron-right" />
-              </span>
-            </NItem>
+
             <div class="n-list solo mb-3">
 
               <NItem title="Learn More" bottomLine>
                 <span slot="right">
                   <a href="https://nomie.app?s=dap" class="btn btn-clear text-primary-bright" target="_system">Website</a>
+                </span>
+              </NItem>
+              <NItem title="Become a Patron" bottomLine>
+                <span slot="right">
+                  <a href="https://www.patreon.com/nomieapp" class="btn btn-clear text-primary-bright" target="_system">Patreon</a>
                 </span>
               </NItem>
               <NItem title="Reddit r/nomie" bottomLine>
