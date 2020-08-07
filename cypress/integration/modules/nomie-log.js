@@ -9,21 +9,6 @@ describe("modules/nomie-log", function () {
 		`,
   };
 
-  it("should try and find a timezone if not provided one and has lat long", () => {
-    let log = new Log({
-      lat: 39.764,
-      lng: -86.1581,
-      note: "Testing Location Indy",
-    });
-    let logSoule = new Log({
-      lat: 39.764,
-      lng: 126.978,
-      note: "Testing Location Soule",
-    });
-    expect(log.offset).to.equal(240);
-    expect(logSoule.offset).to.equal(-540);
-  });
-
   it("should handle the speed", () => {
     let start = new Date().getTime();
     let items = [];

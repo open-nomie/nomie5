@@ -1,4 +1,1 @@
-{
-  "integrationFolder": ".",
-  "testFiles": "**.spec.js"
-}
+{}
