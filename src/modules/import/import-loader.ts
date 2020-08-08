@@ -15,11 +15,16 @@ import { DashboardStore } from "../../store/dashboard-store";
 import math from "../../utils/math/math";
 import type { INormalizedImport } from "./import";
 
+type IImportTypes = "dashboards" | "locations" | "people" | "trackers" | "logs" | "context";
+export interface IImportStatus {
+  importing: IImportTypes;
+  progress?: number;
+}
+
 export default class ImportLoader {
   normalized: INormalizedImport;
   raw: any;
   changeListeners: Array<Function>;
-  completeListeners: Array<Function>;
   importing: any = {};
   importer: Importer;
 
@@ -33,25 +38,34 @@ export default class ImportLoader {
     }
   }
 
-  public onComplete(func: Function): void {
-    if (this.completeListeners.indexOf(func) == -1) {
-      this.completeListeners.push(func);
-    }
-  }
-
   public async openPayload(payload: IBackupItems) {
     this.raw = payload;
     this.importer = new Importer(payload);
     this.normalized = this.importer.normalized;
   }
 
-  public async importAll() {
-    await this.importBoards();
-    await this.importTrackers();
-    await this.importDashboards();
-    await this.importPeople();
-    await this.importContext();
-    await this.importLocations();
+  public async importAll(func?: Function) {
+    func = func || function (status: IImportStatus) {};
+    try {
+      func({ importing: "boards" });
+      await this.importBoards();
+      func({ importing: "trackers" });
+      await this.importTrackers();
+      func({ importing: "dashboards" });
+      await this.importDashboards();
+      func({ importing: "people" });
+      await this.importPeople();
+      func({ importing: "context" });
+      await this.importContext();
+      func({ importing: "locations" });
+      await this.importLocations();
+      func({ importing: "logs" });
+      await this.importLogs(func);
+      return true;
+    } catch (e) {
+      console.error(e);
+      throw new Error(e.message);
+    }
   }
 
   public async importTrackers(): Promise<any> {
@@ -88,7 +102,7 @@ export default class ImportLoader {
           progress = 0;
         }
         if (onProgress) {
-          onProgress(progress);
+          onProgress({ message: `Step ${status.step} of ${status.total}`, progress });
         }
       }
     });

@@ -1,15 +1,15 @@
 <script lang="ts">
   // vendors
   // import EmojiSearch from "emoji-search";
-  import md5 from "md5";
+  // import md5 from "md5";
 
   import { createEventDispatcher } from "svelte";
 
   // Modules
-  import NomieLog from "../../modules/nomie-log/nomie-log";
-  import Tracker from "../../modules/tracker/tracker";
-  import Location from "../../modules/locate/Location";
-  import Importer from "../../modules/import/import";
+  // import NomieLog from "../../modules/nomie-log/nomie-log";
+  // import Tracker from "../../modules/tracker/tracker";
+  // import Location from "../../modules/locate/Location";
+  // import Importer from "../../modules/import/import";
   import ImportLoader from "../../modules/import/import-loader";
 
   // Utils
@@ -19,24 +19,28 @@
   // components
   import NModal from "../../components/modal/modal.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
-  import NIcon from "../../components/icon/icon.svelte";
-  import NSpinner from "../../components/spinner/spinner.svelte";
+  // import NIcon from "../../components/icon/icon.svelte";
+  // import NSpinner from "../../components/spinner/spinner.svelte";
 
   // Stores
   import { Interact } from "../../store/interact";
   import { LedgerStore } from "../../store/ledger";
-  import { TrackerStore } from "../../store/tracker-store";
-  import { BoardStore } from "../../store/boards";
-  import { PeopleStore } from "../../store/people-store";
-  import { Locations } from "../../store/locations";
+  // import { TrackerStore } from "../../store/tracker-store";
+  // import { BoardStore } from "../../store/boards";
+  // import { PeopleStore } from "../../store/people-store";
+  // import { Locations } from "../../store/locations";
   import { Lang } from "../../store/lang";
   import Button from "../../components/button/button.svelte";
-  import { DashboardStore } from "../../store/dashboard-store";
-  import { ContextStore } from "../../store/context-store";
+  // import { DashboardStore } from "../../store/dashboard-store";
+  // import { ContextStore } from "../../store/context-store";
+  import TagBadge from "../../components/tag-badge/tag-badge.svelte";
+  import ImporterItem from "./importer-item.svelte";
 
   let fileInput; // holder of dom element self
   let fileData = null; // holder of file content
   let version = undefined; // version we're dealing with
+
+  let importingAll = false;
 
   // Status of imports
   let importing = {
@@ -100,6 +104,10 @@
         let proceed = true;
         if (prompt) {
           proceed = await Interact.confirm(`Import ${type}?`, "This action cannot be undone");
+          if (proceed !== true) {
+            importing[type].running = false;
+            importing[type].done = false;
+          }
         }
         if (proceed) {
           await func();
@@ -157,7 +165,7 @@
     // Confirm Import logs
     async importLogs(confirmation: boolean = false) {
       return await methods.run(
-        "people",
+        "logs",
         async () => {
           return await importLoader.importLogs((progress) => {
             importing.logs.progress = progress;
@@ -190,12 +198,40 @@
     async importAll() {
       let confirmed = await Interact.confirm("Confirm", "Are you sure? Importing cannot be undone.");
       if (confirmed === true) {
+        importingAll = true;
         importing.all.running = true;
+        let statusMonitor = [];
         try {
-          await importLoader.importAll();
+          // Let the importer Importer all
+          await importLoader.importAll((status) => {
+            // While importing each item (other than logs)
+            if (status.importing) {
+              importing[status.importing] = importing[status.importing] || {};
+              importing[status.importing].running = true;
+              statusMonitor.push(status.importing);
+              // Make sure other things are not in the running state.
+              Object.keys(importing).forEach((item) => {
+                if (status.importing !== item) {
+                  importing[item].running = false;
+                  if (statusMonitor.indexOf(item) > -1) {
+                    importing[item].done = true;
+                  }
+                }
+              });
+            } else {
+              // We're importing Logs
+              if (status.progress) {
+                importing.logs.progress = status.progress;
+              }
+            }
+          });
+          Object.keys(importing).forEach((item) => {
+            importing[item].done = true;
+          });
           importing.all.running = false;
           importing.all.done = true;
-          Interact.toast("Import Complete. Reloading...");
+          importingAll = false;
+          Interact.toast("Import Finishing...");
           await LedgerStore.getFirstDate(true);
           window.location.href = "/";
         } catch (e) {
@@ -208,9 +244,6 @@
     },
 
     // Get Percentage between two numbers
-    progress(ths, tht) {
-      return math.percentage(ths, tht);
-    },
   };
 </script>
 
@@ -234,6 +267,7 @@
         <Button
           block
           color="primary"
+          shape="round"
           on:click={() => {
             fileInput.click();
           }}>
@@ -256,102 +290,91 @@
         <button slot="right" class="btn btn-clear text-danger" on:click={() => (fileData = null)}>{Lang.t('general.cancel')}</button>
       </NItem>
       <NItem className="item-divider compact bg-faded" />
+
       <!-- Importable Items -->
-      <NItem title="🥺 Trackers">
-        <div slot="right">
-          {#if importing.trackers.running}
-            <NSpinner size={24} />
-          {:else if importing.trackers.done}
-            Imported
-            <NIcon name="checkmarkFilled" />
-          {:else}
-            <button class="btn text-primary btn-clear" on:click={methods.importTrackers}>
-              Import Trackers ({Object.keys(importLoader.normalized.trackers).length})
-            </button>
-          {/if}
-        </div>
-      </NItem>
+      {#if Object.keys(importLoader.normalized.trackers).length > 0}
+        <ImporterItem
+          emoji="🤪"
+          title="Trackers"
+          count={Object.keys(importLoader.normalized.trackers).length}
+          bind:status={importing.trackers}
+          on:import={() => {
+            methods.importTrackers(true);
+          }} />
+      {/if}
+
       <!-- Locations -->
-      <NItem title="🗺 Locations">
-        <div slot="right">
-          {#if importing.locations.running}
-            <NSpinner size={24} />
-          {:else if importing.locations.done}
-            Imported
-            <NIcon name="checkmarkFilled" />
-          {:else}
-            <button class="btn text-primary btn-clear" on:click={methods.importLocations}>
-              Import Locations ({(importLoader.normalized.locations || []).length})
-            </button>
-          {/if}
-        </div>
-      </NItem>
+      {#if (importLoader.normalized.locations || []).length > 0}
+        <ImporterItem
+          emoji="🗺"
+          title="Locations"
+          count={(importLoader.normalized.locations || []).length}
+          bind:status={importing.locations}
+          on:import={() => {
+            methods.importLocations(true);
+          }} />
+      {/if}
+
       <!-- Board -->
-      <NItem title="🅱️ Boards">
-        <div slot="right">
-          {#if importing.boards.running}
-            <NSpinner size={24} />
-          {:else if importing.boards.done}
-            Imported
-            <NIcon name="checkmarkFilled" />
-          {:else}
-            <button class="btn text-primary btn-clear" on:click={methods.importBoards}>
-              Import Boards ({(importLoader.normalized.boards || []).length})
-            </button>
-          {/if}
-        </div>
-      </NItem>
-      <!-- People -->
-      <NItem title="👩🏽‍💼 People">
-        <div slot="right">
-          {#if importing.people.running}
-            <NSpinner size={24} />
-          {:else if importing.people.done}
-            Imported
-            <NIcon name="checkmarkFilled" />
-          {:else}
-            <button class="btn text-primary btn-clear" on:click={methods.importPeople}>
-              Import People ({(Object.keys(importLoader.normalized.people) || []).length})
-            </button>
-          {/if}
-        </div>
-      </NItem>
+      {#if (importLoader.normalized.boards || []).length > 0}
+        <ImporterItem
+          emoji="🗂"
+          title="Boards"
+          count={(importLoader.normalized.boards || []).length}
+          bind:status={importing.boards}
+          on:import={() => {
+            methods.importBoards(true);
+          }} />
+      {/if}
 
       <!-- People -->
-      <NItem title="💭 Context">
-        <div slot="right">
-          {#if importing.context.running}
-            <NSpinner size={24} />
-          {:else if importing.context.done}
-            Imported
-            <NIcon name="checkmarkFilled" />
-          {:else}
-            <button class="btn text-primary btn-clear" on:click={methods.importContext}>
-              Import Context ({(Object.keys(importLoader.normalized.context) || []).length})
-            </button>
-          {/if}
-        </div>
-      </NItem>
+      {#if (Object.keys(importLoader.normalized.people) || []).length > 0}
+        <ImporterItem
+          emoji="👩🏽‍💼"
+          title="People"
+          count={(Object.keys(importLoader.normalized.people) || []).length}
+          bind:status={importing.people}
+          on:import={() => {
+            methods.importPeople(true);
+          }} />
+      {/if}
+
+      <!-- People -->
+      {#if (importLoader.normalized.context || []).length > 0}
+        <ImporterItem
+          emoji="💭"
+          title="Context"
+          count={(importLoader.normalized.context || []).length}
+          bind:status={importing.context}
+          on:import={() => {
+            methods.importContext(true);
+          }} />
+      {/if}
 
       <!-- Dashboards -->
-      <NItem title="📊 Dashboards">
-        <div slot="right">
-          {#if importing.dashboards.running}
-            <NSpinner size={24} />
-          {:else if importing.dashboards.done}
-            Imported
-            <NIcon name="checkmarkFilled" />
-          {:else}
-            <button class="btn text-primary btn-clear" on:click={methods.importDashboards}>
-              Import Dashboards ({(importLoader.normalized.dashboards || []).length})
-            </button>
-          {/if}
-        </div>
-      </NItem>
+      {#if (importLoader.normalized.dashboards || []).length > 0}
+        <ImporterItem
+          emoji="📊"
+          title="Dashboards"
+          count={(importLoader.normalized.dashboards || []).length}
+          bind:status={importing.dashboards}
+          on:import={() => {
+            methods.importDashboards(true);
+          }} />
+      {/if}
 
       <!-- logs -->
-      <NItem title="⏰ Logs">
-        <div slot="right">
+      {#if (importLoader.normalized.logs || []).length > 0}
+        <ImporterItem
+          key="logs"
+          emoji="⏰"
+          title="Logs"
+          count={(importLoader.normalized.logs || []).length}
+          bind:status={importing.logs}
+          on:import={() => {
+            console.log('Import Logs?!');
+            methods.importLogs(true);
+          }}>
           {#if importing.logs.running}
             <div class="progress" style="min-width:200px;">
               <div
@@ -362,25 +385,18 @@
                 aria-valuemax="100"
                 style="width: {importing.logs.progress}%" />
             </div>
-          {:else if importing.logs.done}
-            Imported
-            <NIcon name="checkmarkFilled" />
-          {:else}
-            <button class="btn text-primary btn-clear" on:click={methods.importLogs}>
-              Import Logs ({(importLoader.normalized.logs || []).length})
-            </button>
           {/if}
-        </div>
-      </NItem>
+        </ImporterItem>
+      {/if}
     {/if}
   </div>
 
   <!-- Footer -->
   <div slot="footer" class="flex-grow">
-    {#if fileData && version && !importing.all.running && !importing.all.done}
-      <button class="btn btn-primary btn-block btn-lg btn-block" on:click={methods.importAll}>Import All</button>
-    {:else if importing.all.running}
+    {#if importingAll === true}
       <button class="btn btn-primary btn-block flex-grow btn-lg" disabled>Importing...</button>
+    {:else if version && !importing.all.running && !importing.all.done}
+      <button class="btn btn-primary btn-block btn-lg btn-block" on:click={methods.importAll}>Import All</button>
     {:else if importing.all.done}
       <button class="btn btn-primary btn-block btn-lg" on:click={methods.finish}>Finsished</button>
     {/if}
