@@ -32,17 +32,17 @@ const euclideanDistance = (arr1, arr2) => {
   return parseFloat(euclidean(array1, array2).toFixed(2));
 };
 
-const dtwDistance = (arr1, arr2) => {
-  const distFunc = function (a, b) {
-    return Math.abs(a - b);
-  };
-  let dtw = new DTW(arr1, arr2, distFunc);
-  let cost = dtw.getDistance();
-  return cost;
-};
+// const dtwDistance = (arr1, arr2) => {
+//   const distFunc = function (a, b) {
+//     return Math.abs(a - b);
+//   };
+//   let dtw = new DTW(arr1, arr2, distFunc);
+//   let cost = dtw.getDistance();
+//   return cost;
+// };
 
 export default {
-  dtw: dtwDistance,
+  // dtw: dtwDistance,
   euclidean: euclideanDistance,
   score: rS,
 };
