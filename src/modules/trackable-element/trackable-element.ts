@@ -10,11 +10,9 @@ export interface ITrackableElement {
   prefix?: any;
   remainder?: any;
   obj?: any;
-  getPrefix?: any;
-  toSearchTerm?: any;
 }
 
-export default class TrackableElement {
+export default class TrackableElement implements ITrackableElement {
   id: string;
   type: ITrackableElementType;
   raw?: string;

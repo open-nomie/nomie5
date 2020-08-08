@@ -39,6 +39,7 @@
   import { PeopleStore } from "./../../store/people-store.js";
   import { TrackerStore } from "./../../store/tracker-store.js";
   import { LastUsed } from "../../store/last-used";
+  import type Person from "../../modules/person/person";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
   let people: any; // holder of User People - loaded from subscribe
@@ -181,17 +182,23 @@
         let end = block.getEndDate();
 
         // TODO make this work for all trackable elements
-        if (block.type == "last-used" && block.element.type == "tracker") {
-          block.lastUsed = await LastUsed.get(block.element.id);
+        if (block.type == "last-used") {
+          if (block.element.type == "tracker") {
+            block.lastUsed = await LastUsed.get(block.element.id);
+          } else if (block.element.type == "person") {
+            let person: Person = await $PeopleStore.people[block.element.id];
+            if (person) {
+              block.lastUsed = person.last;
+            }
+          }
+
           if (block.lastUsed) {
             let lastUsedDay = dayjs(block.lastUsed);
             let daysPast = Math.abs(dayjs().diff(lastUsedDay, "day"));
             block.stats = block.stats || {};
             block.stats.daysPast = daysPast;
           }
-        }
-
-        if (block.element && block.type != "last-used") {
+        } else if (block.element && block.type != "last-used") {
           block.logs = await getLogsForBlock(block);
 
           const statsV5 = new StatsProcessor();
@@ -302,8 +309,10 @@
       }
     });
     unsubDashboard = DashboardStore.subscribe((dbStore) => {
-      dashboards = dbStore.dashboards;
-      initDashboard();
+      if (dbStore.dashboards && trackers && people) {
+        dashboards = dbStore.dashboards;
+        initDashboard();
+      }
     });
   });
 

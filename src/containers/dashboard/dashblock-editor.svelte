@@ -15,6 +15,7 @@
   import TinyColorPicker from "../../components/color-picker/tiny-color-picker.svelte";
   import { TrackerStore } from "../../store/tracker-store";
   import TrackerConfig from "../../modules/tracker/tracker";
+  import TrackableElement from "../../modules/trackable-element/trackable-element";
   export let value: Block = null;
 
   let dateType;
@@ -30,9 +31,15 @@
     value.type = blockTypeId;
   }
 
+  /**
+   * On Date Type Change
+   **/
   $: if (dateType) {
     let timeFrame = timeFrames.find((t) => t.id == dateType);
     value.timeRange = new BlockTimeFrame(timeFrame);
+    if (value.timeRange.id == "today" || value.timeRange.id == "yesterday") {
+      value.includeAvg = false;
+    }
   }
 
   $: if (conditionalStyling === false) {
@@ -248,6 +255,7 @@
             } else {
               console.error("Fit for other types", selected[0]);
             }
+            value.element = value.element instanceof TrackableElement ? value.element : new TrackableElement(value.element);
           }
         },
       };
