@@ -43,7 +43,7 @@
 
 <!--
   *******************************************
-  TWEAKS VIEW 
+  TWEAKS VIEW
   *******************************************
 -->
 <div class="n-list solo">
@@ -111,6 +111,20 @@
     <span slot="left">⌚️</span>
     <div slot="right">
       <NToggle bind:value={$UserStore.meta.is24Hour} on:change={methods.settingChange} />
+    </div>
+  </NItem>
+  <!-- firstDayOfWeek -->
+  <NItem title={Lang.t('settings.first-day-of-week')}>
+    <span slot="left">🗓</span>
+    <div slot="right">
+      <select
+        class="form-control"
+        style="min-width:100px;width:100px"
+        bind:value={$UserStore.meta.firstDayOfWeek}
+        on:change={methods.settingChange}>
+        <option value="1">{Lang.t('settings.sunday')}</option>
+        <option value="2">{Lang.t('settings.monday')}</option>
+      </select>
     </div>
   </NItem>
   <!-- Language -->
