@@ -10,6 +10,7 @@
   import Tracker from "../../modules/tracker/tracker";
   import Location from "../../modules/locate/Location";
   import Importer from "../../modules/import/import";
+  import ImportLoader from "../../modules/import/import-loader";
 
   // Utils
   // import PromiseStep from "../../utils/promise-step/promise-step";
@@ -37,15 +38,6 @@
   let fileData = null; // holder of file content
   let version = undefined; // version we're dealing with
 
-  let archive: any = {
-    trackers: {},
-    logs: [],
-    boards: [],
-    people: {},
-    locations: [],
-    dashboards: [],
-    context: [],
-  };
   // Status of imports
   let importing = {
     boards: { running: false, done: false },
@@ -59,29 +51,19 @@
   };
 
   const dispatch = createEventDispatcher();
+  const importLoader = new ImportLoader();
 
   const methods = {
     // Initialze once we have data.
     init() {
       if (fileData.hasOwnProperty("nomie")) {
-        const importer = new Importer(fileData);
-        console.log({ importer });
-
-        if (!importer.normalized) {
-          Interact.error("Unable to process this backup.");
-        } else {
-          // set version
-          version = importer.version;
-          // // load data
-          archive.trackers = importer.normalized.trackers;
-          archive.people = importer.normalized.people;
-          archive.boards = importer.normalized.boards;
-          archive.logs = importer.normalized.logs;
-          archive.locations = importer.normalized.locations;
-          archive.dashboards = importer.normalized.dashboards;
-          archive.context = importer.normalized.context;
-
-          console.log({ archive });
+        // const importer = new Importer(fileData);
+        try {
+          importLoader.openPayload(fileData);
+          version = importLoader.importer.version;
+        } catch (e) {
+          console.error(e.message);
+          Interact.alert("Error", e.message);
         }
       }
     },
@@ -110,232 +92,119 @@
       reader.readAsText(file);
     },
 
-    /**
-     *
-     * TRACKERS
-     * Methods for interacting with variout trackers
-     *
-     */
-
-    // Get Version 1 Trackers
-    v1Trackers() {
-      return methods.v2Trackers();
-    },
-    // Get Version 2 Trackers
-    v2Trackers() {
-      // Types Map
-      let types = {
-        tick: "tick",
-        numeric: "value",
-        range: "range",
-        timer: "timer",
-      };
-      // Set a Trackers Holder
-      let trackers = {};
-      // Loop over the Trackers - will be an array
-      fileData.trackers.forEach((ot) => {
-        ot.config = ot.config || {};
-        // Search for an emoti by name
-        // let emojis = EmojiSearch(ot.label.toLowerCase());
-        // Set new tracker object
-        let tracker = {
-          tag: methods.lowDashCase(ot.label),
-          label: ot.label,
-          color: ot.color,
-          emoji: null,
-          min: ot.config.min || "",
-          max: ot.config.max || "",
-          uom: ot.config.uom || "num",
-          type: types[ot.config.type || "tick"] || "tick",
-          math: ot.config.math || "sum",
-          //   score: score[(ot.charge || 0).toString()] || null
-        };
-        // Assign tracker to trackers object
-        trackers[tracker.tag] = tracker;
-      });
-
-      return trackers;
-    },
-    v3Trackers() {
-      let trackers = fileData.trackers;
-
-      return trackers;
-    },
-    // Do the Actual Importing
-    _importTrackers() {
-      importing.trackers.running = true;
-      // Get existing trackers
-      let existing = TrackerStore.data();
-      // Tracker Store Save - merge old and new
-      return TrackerStore.save({ ...archive.trackers, ...existing }).then(() => {
-        importing.trackers.running = false;
-        importing.trackers.done = true;
-        return importing.trackers;
-      });
-    },
     // Confirm Import Trackers
-    importTrackers() {
-      return new Promise((resolve, reject) => {
-        return Interact.confirm("Confirm", "Are you sure? Importing Trackers cannot be undone.").then((res) => {
-          if (res === true) {
-            return methods._importTrackers();
-          }
-        });
-      });
-    },
 
-    // Do the Actual Importing
-    async _importDashboards() {
-      importing.dashboards.running = true;
-      // Get existing trackers
-      let existing = await DashboardStore.get();
-      // Tracker Store Save - merge old and new
-      DashboardStore.update((state) => {
-        archive.dashboards = (archive.dashboards || []).filter((dashboard) => {
-          return (existing || []).map((d) => d.id).indexOf(dashboard.id) == -1;
-        });
-        state.dashboards = [...archive.dashboards, ...existing];
-        return state;
-      });
-      await DashboardStore.save();
-      importing.dashboards.running = false;
-      importing.dashboards.done = true;
-      return importing.dashboards;
-    },
-    // Confirm Import Trackers
-    async importDashboards() {
-      let confirmed = await Interact.confirm("Confirm", "Are you sure? Importing Dashboards cannot be undone.");
-      if (confirmed === true) {
-        return methods._importDashboards();
-      }
-    },
-
-    async importContext() {
-      importing.context.running = true;
-      let contexts = await ContextStore.get();
-      contexts = contexts || [];
+    async run(type: string, func: Function, prompt: boolean = false) {
+      importing[type].running = true;
       try {
-        (archive.context || []).forEach((context) => {
-          if (contexts.indexOf(context) == -1) {
-            contexts.push(context);
-          }
-        });
-        await ContextStore.write(contexts);
+        let proceed = true;
+        if (prompt) {
+          proceed = await Interact.confirm(`Import ${type}?`, "This action cannot be undone");
+        }
+        if (proceed) {
+          await func();
+          importing[type].running = false;
+          importing[type].done = true;
+        }
       } catch (e) {
+        console.error(type, e.message);
         Interact.alert("Error", e.message);
+        importing[type].running = false;
+        importing[type].done = false;
       }
-      importing.context.running = false;
-      importing.context.done = true;
-      return importing.context;
+    },
+    async importTrackers(confirmation: boolean = false) {
+      return await methods.run(
+        "trackers",
+        async () => {
+          return await importLoader.importTrackers();
+        },
+        confirmation
+      );
+    },
+    // Confirm Import Trackers
+    async importDashboards(confirmation: boolean = false) {
+      return await methods.run(
+        "dashboards",
+        async () => {
+          return await importLoader.importDashboards();
+        },
+        confirmation
+      );
     },
 
-    async importLocations() {
-      importing.locations.running = true;
-      let currentLocations = Locations.getAll() || [];
-      try {
-        (archive.locations || []).forEach((loc) => {
-          if (!currentLocations.find((l) => l.id == loc.id)) {
-            currentLocations.push(loc);
-          }
-        });
-        await Locations.write(currentLocations);
-      } catch (e) {
-        console.error(e);
-      }
-      importing.locations.running = false;
-      importing.locations.done = true;
-      return importing.locations;
+    async importPeople(confirmation: boolean = false) {
+      return await methods.run(
+        "people",
+        async () => {
+          return await importLoader.importPeople();
+        },
+        confirmation
+      );
     },
 
-    // Import All Things
-    async _importAll() {
-      importing.all.running = true;
-      await methods._importTrackers();
-      await methods.importLocations();
-      await methods._importPeople();
-      await methods._importBoards();
-      await methods._importLogs();
-      await methods._importDashboards();
-      await methods.importContext();
-      importing.all.running = false;
-      importing.all.done = true;
-      Interact.toast("Import Complete. Reloading...");
-      // Get and store first book - fresh
-      await LedgerStore.getFirstDate(true);
-      // Redirect to home
-      window.location.href = "/";
-      return true;
+    // Confirm Import Boards
+    async importBoards(confirmation: boolean = false) {
+      return await methods.run(
+        "boards",
+        async () => {
+          return await importLoader.importBoards();
+        },
+        confirmation
+      );
+    },
+
+    // Confirm Import logs
+    async importLogs(confirmation: boolean = false) {
+      return await methods.run(
+        "people",
+        async () => {
+          return await importLoader.importLogs((progress) => {
+            importing.logs.progress = progress;
+          });
+        },
+        confirmation
+      );
+    },
+
+    async importContext(confirmation: boolean = false) {
+      return await methods.run(
+        "context",
+        async () => {
+          return await importLoader.importContext();
+        },
+        confirmation
+      );
+    },
+
+    async importLocations(confirmation: boolean = false) {
+      return await methods.run(
+        "locations",
+        async () => {
+          return await importLoader.importLocations();
+        },
+        confirmation
+      );
     },
     // Confirm Import All
     async importAll() {
       let confirmed = await Interact.confirm("Confirm", "Are you sure? Importing cannot be undone.");
       if (confirmed === true) {
-        return await methods._importAll();
-      }
-    },
-
-    async importPeople() {
-      let confirmed = await Interact.confirm("Import People?", "Importing boards be undone.");
-      if (confirmed) {
-        return await methods._importPeople();
-      }
-    },
-
-    async _importPeople() {
-      let people = await PeopleStore.getPeople();
-      people = people || {};
-      await PeopleStore.write({
-        ...(archive || { people: {} }).people,
-        ...people,
-      });
-      importing.people.running = false;
-      importing.people.done = true;
-      return importing.people;
-    },
-
-    // Import Boards
-    async _importBoards() {
-      importing.boards.running = true;
-      let existingBoards = BoardStore.data().boards || [];
-      let save = await BoardStore.save([...archive.boards, ...existingBoards]);
-      importing.boards.running = false;
-      importing.boards.done = true;
-      return importing.boards;
-    },
-    // Confirm Import Boards
-    async importBoards() {
-      let res = await Interact.confirm("Confirm", "Are you sure? Importing boards be undone.");
-      if (res === true) {
-        return methods._importBoards();
-      }
-    },
-
-    // Import logs
-    _importLogs() {
-      importing.logs.running = true;
-      return LedgerStore.import(archive.logs, (status) => {
-        if (status.step) {
-          if (status.step < status.total) {
-            importing.logs.progress = math.round(100 - ((status.total - status.step) / status.total) * 100);
-          } else {
-            importing.logs.progress = 0;
-          }
+        importing.all.running = true;
+        try {
+          await importLoader.importAll();
+          importing.all.running = false;
+          importing.all.done = true;
+          Interact.toast("Import Complete. Reloading...");
+          await LedgerStore.getFirstDate(true);
+          window.location.href = "/";
+        } catch (e) {
+          console.error(e.message);
+          Interact.alert("Error", e.message);
         }
-      }).then(() => {
-        importing.logs.done = true;
-        importing.logs.running = false;
-        return importing.logs;
-      });
-    },
-    // Confirm Import logs
-    importLogs() {
-      return new Promise((resolve, reject) => {
-        return Interact.confirm("Confirm", "Are you sure? Importing logs cannot be undone.").then((res) => {
-          if (res === true) {
-            return methods._importLogs();
-          }
-        });
-      });
+
+        return true;
+      }
     },
 
     // Get Percentage between two numbers
@@ -397,7 +266,7 @@
             <NIcon name="checkmarkFilled" />
           {:else}
             <button class="btn text-primary btn-clear" on:click={methods.importTrackers}>
-              Import Trackers ({Object.keys(archive.trackers).length})
+              Import Trackers ({Object.keys(importLoader.normalized.trackers).length})
             </button>
           {/if}
         </div>
@@ -412,7 +281,7 @@
             <NIcon name="checkmarkFilled" />
           {:else}
             <button class="btn text-primary btn-clear" on:click={methods.importLocations}>
-              Import Locations ({(archive.locations || []).length})
+              Import Locations ({(importLoader.normalized.locations || []).length})
             </button>
           {/if}
         </div>
@@ -427,7 +296,7 @@
             <NIcon name="checkmarkFilled" />
           {:else}
             <button class="btn text-primary btn-clear" on:click={methods.importBoards}>
-              Import Boards ({(archive.boards || []).length})
+              Import Boards ({(importLoader.normalized.boards || []).length})
             </button>
           {/if}
         </div>
@@ -442,7 +311,7 @@
             <NIcon name="checkmarkFilled" />
           {:else}
             <button class="btn text-primary btn-clear" on:click={methods.importPeople}>
-              Import People ({(Object.keys(archive.people) || []).length})
+              Import People ({(Object.keys(importLoader.normalized.people) || []).length})
             </button>
           {/if}
         </div>
@@ -458,7 +327,7 @@
             <NIcon name="checkmarkFilled" />
           {:else}
             <button class="btn text-primary btn-clear" on:click={methods.importContext}>
-              Import Context ({(Object.keys(archive.context) || []).length})
+              Import Context ({(Object.keys(importLoader.normalized.context) || []).length})
             </button>
           {/if}
         </div>
@@ -474,7 +343,7 @@
             <NIcon name="checkmarkFilled" />
           {:else}
             <button class="btn text-primary btn-clear" on:click={methods.importDashboards}>
-              Import Dashboards ({(archive.dashboards || []).length})
+              Import Dashboards ({(importLoader.normalized.dashboards || []).length})
             </button>
           {/if}
         </div>
@@ -497,7 +366,9 @@
             Imported
             <NIcon name="checkmarkFilled" />
           {:else}
-            <button class="btn text-primary btn-clear" on:click={methods.importLogs}>Import Logs ({(archive.logs || []).length})</button>
+            <button class="btn text-primary btn-clear" on:click={methods.importLogs}>
+              Import Logs ({(importLoader.normalized.logs || []).length})
+            </button>
           {/if}
         </div>
       </NItem>
