@@ -3,20 +3,20 @@ import snakeCase from "../snake-case/snake-case";
 
 import { tokenize } from "nomie-utils";
 
+declare var window: any;
+window.tokenize = tokenize;
+
 /**
  * Parse a string into an array of Trackable Items
  * pass in an optional option.includeGeneric to include all terms
  * @param {String} str
  * @param {Object} options
  */
-function parse(str = "", options = {}) {
+function parse(str = "", options?: any): Array<TrackableElement> {
+  options = options || {};
   return tokenize(str)
     .map((elementObj) => {
-      // Create a Trackable Element
-      let element = new TrackableElement(elementObj);
-      // Convert String to Number
-      // element.value = stringToValue(element.value);
-      return element;
+      return new TrackableElement(elementObj);
     })
     .filter((element) => {
       if (options.includeGeneric) {
@@ -30,8 +30,8 @@ function parse(str = "", options = {}) {
  * Converts a single trackable element like #tag or @people to a TrackableElement
  * @param {String} str
  */
-function toElement(str = {}) {
-  const parsed = parse(str);
+function toElement(str: string) {
+  const parsed: Array<TrackableElement> = parse(str);
   if (parsed.length) {
     return parsed[0];
   } else if (str.length) {
