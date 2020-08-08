@@ -120,7 +120,7 @@ export interface IBlock {
   getDateRange(): Array<Date>;
 }
 
-export class Block {
+export class Block implements IBlock {
   element: ITrackableElement;
   id?: string;
   type: string = "value";
@@ -136,23 +136,30 @@ export class Block {
   positivity?: any;
   stats?: any;
   lastUsed?: any;
+
   constructor(payload?: IBlock) {
     if (payload) {
       this.id = payload.id || nid();
       this.type = payload.type;
       this.description = payload.description;
+
       if (typeof payload.compareValue == "string") {
         payload.compareValue = parseFloat(payload.compareValue);
       }
       this.compareValue = payload.compareValue;
       this.compareOverColor = payload.compareOverColor;
       this.compareUnderColor = payload.compareUnderColor;
+
       this.includeAvg = payload.includeAvg ? true : false;
+
       if (payload.timeRange) {
         this.timeRange = new BlockTimeFrame(payload.timeRange);
       }
+
       if (payload.element) {
         this.element = new TrackableElement({ id: payload.element.id, type: payload.element.type });
+      } else {
+        this.element = new TrackableElement(payload.element);
       }
     } else {
       this.id = nid();
@@ -196,6 +203,7 @@ export class Block {
       return new Date();
     }
   }
+
   getEndDate() {
     if (this.timeRange && this.timeRange.end) {
       return this.timeRange.end.toDate();
@@ -203,6 +211,7 @@ export class Block {
       return new Date();
     }
   }
+
   getDateRange() {
     return [this.getStartDate(), this.getEndDate()];
   }
