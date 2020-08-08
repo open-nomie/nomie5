@@ -50,7 +50,7 @@ export default [
   {
     input: "src/main.js",
     output: {
-      sourcemap: false,
+      sourcemap: !production,
       format: "iife",
       name: "nomie",
       file: "public/bundle.js",

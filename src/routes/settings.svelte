@@ -255,7 +255,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             <div class="n-list solo mb-3">
               <Text bold className="my-2 mx-3">Importing Data</Text>
               <NItem className="clickable" bottomLine title={Lang.t('settings.nomie-api')} on:click={() => navigate('/api')}>
-
+                <span slot="left">🕸</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
@@ -263,11 +263,11 @@ Note: Your data will not automatically move over. You'll first need to export it
               </NItem>
               <NItem
                 className="clickable"
-                title={Lang.t('settings.import-from-backup')}
+                title={`${Lang.t('settings.import-from-backup')}`}
                 on:click={() => {
                   showImporter = true;
                 }}>
-
+                <span slot="left">📦</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
@@ -277,11 +277,13 @@ Note: Your data will not automatically move over. You'll first need to export it
             <div class="n-list solo mb-3">
               <Text bold className="my-2 mx-3">Exporting Data</Text>
               <NItem bottomLine clickable title={Lang.t('settings.generate-backup')} to="/settings/export/backup">
+                <span slot="left">📦</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
               </NItem>
               <NItem clickable bottomLine title={Lang.t('settings.generate-csv')} to="/settings/export/csv">
+                <span slot="left">📃</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
@@ -292,6 +294,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                 on:click={() => {
                   data.showMassEditor = true;
                 }}>
+                <span slot="left">🕵️‍♂️</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
@@ -334,6 +337,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                   navigate('/files');
                 }}
                 className="clickable">
+                <span slot="left">📂</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
@@ -353,8 +357,12 @@ Note: Your data will not automatically move over. You'll first need to export it
 
             <div class="n-list solo my-2">
               <Text bold className="my-2 mx-3">{Lang.t('general.type', 'Finding old data')}</Text>
-              <NItem bottomLine title="Find Context" on:click={ContextStore.searchForContext} />
-              <NItem title="Find People" on:click={PeopleStore.searchForPeople} />
+              <NItem bottomLine title="Find Context" on:click={ContextStore.searchForContext}>
+                <span slot="left">💬</span>
+              </NItem>
+              <NItem title="Find People" on:click={PeopleStore.searchForPeople}>
+                <span slot="left">👨‍👨‍👧‍👧</span>
+              </NItem>
             </div>
 
             <NItem className="solo text-red text-center mt-4" on:click={methods.deleteEverything}>Reset & Delete all Nomie Data...</NItem>
@@ -373,6 +381,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </span>
               </NItem>
               <NItem title="Become a Patron" bottomLine>
+
                 <span slot="right">
                   <a href="https://www.patreon.com/nomieapp" class="btn btn-clear text-primary-bright" target="_system">Patreon</a>
                 </span>
@@ -462,6 +471,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               on:click={() => {
                 window.open(config.patreon, '_system');
               }}>
+              <span slot="left">🙏</span>
               <Text size="xs" color="inverse-2" className="mt-1">Pick from 1 of 3 Patreon levels</Text>
               <div slot="right" class="pr-2">
                 <Icon name="link" className="fill-primary" />

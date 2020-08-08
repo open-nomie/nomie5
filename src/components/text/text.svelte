@@ -22,7 +22,7 @@
 
   function getClassNames() {
     return ` ${size || "sm"}
-    ${className} text-{color}
+    ${className} text-${color}
     ${truncate ? "truncate" : ""}
     ${truncate2 ? "truncate-2" : ""}
     ${truncate3 ? "truncate-3" : ""}
