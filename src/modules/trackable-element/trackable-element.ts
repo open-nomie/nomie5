@@ -1,7 +1,7 @@
 import snakeCase from "../../utils/snake-case/snake-case";
 import stringToValue from "../../utils/string-to-value/string-to-value";
 
-export type ITrackableElementType = "tracker" | "person" | "context" | "generic";
+export type ITrackableElementType = "tracker" | "person" | "context" | "generic" | "line-break" | "link";
 export interface ITrackableElement {
   id: string;
   type: ITrackableElementType;
