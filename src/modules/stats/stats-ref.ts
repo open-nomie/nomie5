@@ -1,21 +1,35 @@
 //Modules utils
 import { strToColor } from "../../components/dymoji/dymoji";
-import Tracker from "../../modules/tracker/tracker";
+import Tracker from "../tracker/tracker";
+import type { ITrackerMath } from "../tracker/tracker";
 import StatsV5 from "./statsV5";
+import type { IStats } from "./statsV5";
 import extractor from "../../utils/extract/extract";
 
 // Stores
 import { LedgerStore } from "../../store/ledger";
+import nid from "../nid/nid";
 
 class StatsReference {
-  constructor(starter = {}) {
+  type: string;
+  key: string;
+  base: any;
+  label: string;
+  stats: IStats;
+  math: ITrackerMath;
+  is24Hour: boolean;
+  id: string;
+
+  constructor(starter?: any) {
+    starter = starter || {};
     this.type = starter.type;
     this.key = starter.key;
     this.base = starter.base;
     this.label = starter.label;
     this.stats = null;
     this.math = starter.math;
-    this.is24Hour = starter.is24Hour || false;
+    this.is24Hour = starter.is24Hour == true ? true : false;
+    this.id = starter.id || nid();
   }
 
   getSearchTerm() {
