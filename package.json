@@ -1,5 +1,5 @@
 {
-  "name": "open-nomie",
+  "name": "nomie",
   "version": "5.2.18",
   "homepage": "https://nomie.app",
   "bugs": {
@@ -16,7 +16,6 @@
     "url": "https://nomie.app"
   },
   "scripts": {
-    "oldbustcache": "node build-tools/bust-cache.js",
     "generate-whatsnew": "node build-tools/generate-whats-new.js && git add . && git commit -m 'build: whats new'",
     "release": "npm run generate-whatsnew &&  release-it --no-npm.publish",
     "commit": "git cz",
@@ -54,18 +53,13 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.2",
-    "@commitlint/config-conventional": "^8.3.4",
-    "@composi/gestures": "^1.0.9",
+    "@commitlint/config-conventional": "^9.1.1",
     "@kazzkiq/svelte-preprocess-scss": "^0.1.3",
     "@release-it/conventional-changelog": "^1.1.4",
     "@rollup/plugin-typescript": "^5.0.1",
     "@sveltejs/gestures": "0.0.1",
     "@tsconfig/svelte": "^1.0.2",
     "@types/jest": "^26.0.8",
-    "blockstack": "^19.3.0",
-    "bootstrap": "^4.3.1",
-    "carbon-icons-svelte": "^10.9.3",
-    "chart.js": "^2.9.3",
     "commitizen": "^4.1.2",
     "commitlint": "^9.1.2",
     "concurrently": "^5.2.0",
@@ -99,9 +93,7 @@
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.14.1",
     "nomie-uom": "^1.0.2",
-    "nomie-utils": "^0.1.8",
     "npm-run-all": "^4.1.5",
-    "pouchdb": "^7.1.1",
     "r-squared": "0.0.0",
     "release-it": "^13.6.6",
     "rollup": "^2.7.6",
@@ -120,7 +112,6 @@
     "search-text-tokenizer": "^2.1.1",
     "semver": "^6.2.0",
     "sirv-cli": "^0.4.4",
-    "sortablejs": "^1.10.2",
     "style-loader": "^0.23.1",
     "svelte": "^3.20.1",
     "svelte-awesome": "^1.4.1",
@@ -136,8 +127,18 @@
     "ts-jest": "^26.1.4",
     "typescript": "^3.9.7",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "yargs-parser": "^18.1.3"
   },
-  "dependencies": {},
+  "dependencies": {
+    "blockstack": "^19.3.0",
+    "bootstrap": "^4.3.1",
+    "carbon-icons-svelte": "^10.9.3",
+    "chart.js": "^2.9.3",
+    "sortablejs": "^1.10.2",
+    "nomie-utils": "^0.1.10",
+    "pouchdb": "^7.1.1",
+    "@composi/gestures": "^1.0.9"
+  },
   "license": "MIT"
 }
