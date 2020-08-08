@@ -159,17 +159,6 @@
   }
 </style>
 
-<!-- {#if title}
-  <div
-    class="title clickable truncate"
-    style="z-index:120; "
-    on:click={() => {
-      dispatch('titleClick', title);
-    }}>
-    {title}
-    <NIcon name="chevronRight" size="14" />
-  </div>
-{/if} -->
 <div class="wrapper">
   {#if selected && selected.unit == 'day'}
     <div class="selected">

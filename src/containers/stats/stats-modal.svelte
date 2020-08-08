@@ -718,7 +718,6 @@
     }
   }
   async function _setSelected(selected) {
-    
     state.selected = selected;
 
     let payload = {
@@ -969,7 +968,7 @@
     {#if state.dataView == 'compare'}
       <div class="charts">
 
-        {#each state.compare as compare}
+        {#each state.compare as compare (compare.id)}
           {#if compare.stats}
             <NItem className="solo chart-item">
               {#if compare.distance}
@@ -977,6 +976,7 @@
                   <strong>{compare.distance.toFixed(0)}</strong>
                 </div>
               {/if}
+
               <NBarChart
                 height={120}
                 hideYTicks
