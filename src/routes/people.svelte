@@ -138,14 +138,14 @@
             <button class="btn btn-clear tap-icon p-1 mr-1">
               <NIcon name="addOutline" className="fill-primary-bright" size={18} />
             </button>
-            {#if $PeopleStore.people[person].avatar}
+            {#if $PeopleStore.people[person] && $PeopleStore.people[person].avatar}
               <AvatarBall size={48} avatar={$PeopleStore.people[person].avatar} style={`border-radius:32%; overflow:hidden`} />
-            {:else if $PeopleStore.people[person].displayName}
+            {:else if $PeopleStore.people[person] && $PeopleStore.people[person].displayName}
               <AvatarBall size={48} username={$PeopleStore.people[person].displayName} style={`border-radius:32%; overflow:hidden`} />
             {/if}
           </div>
-          <div class="title truncate w-100">{$PeopleStore.people[person].displayName}</div>
-          {#if $PeopleStore.people[person].last}
+          <div class="title truncate w-100">{($PeopleStore.people[person] || {}).displayName}</div>
+          {#if $PeopleStore.people[person] && $PeopleStore.people[person].last}
             <div class="note">{dayjs($PeopleStore.people[person].last).fromNow()}</div>
           {/if}
           <div slot="right" class="n-row">
