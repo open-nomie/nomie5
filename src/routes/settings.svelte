@@ -461,7 +461,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 
           <div class="n-list solo mt-3">
             <NItem title="Nomie needs you! 🥺">
-              <Text size="sm" faded>Help keep Nomie development moving forward, free, no ads, and opensource.</Text>
+              <Text size="sm" faded>Help keep Nomie development moving forward, free, no ads, and open.</Text>
             </NItem>
             <NItem
               clickable
