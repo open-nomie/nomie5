@@ -40,6 +40,7 @@
   import { TrackerStore } from "./../../store/tracker-store.js";
   import { LastUsed } from "../../store/last-used";
   import type Person from "../../modules/person/person";
+  import HScroller from "../../components/h-scroller/h-scroller.svelte";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
   let people: any; // holder of User People - loaded from subscribe
@@ -348,6 +349,19 @@
       <Button color="clear" on:click={DashboardStore.newDashboard}>Add</Button>
     </div>
     <div class="main title">
+      <!-- <HScroller activeIndex={$DashboardStore.activeIndex} className="n-board-tabs">
+        {#each dashboards || [] as board, i (board.id)}
+          <button
+            class="tab board-{board.id}
+            {i == $DashboardStore.activeIndex ? 'selected' : 'inactive'}"
+            on:click={() => {
+              DashboardStore.toIndex(i);
+            }}>
+            {board.label}
+          </button>
+        {/each}
+      </HScroller> -->
+
       <div class="n-row">
         <div class="n-filler" />
         <Stepper single dark steps={(dashboards || []).length} current={$DashboardStore.activeIndex} />
@@ -376,7 +390,7 @@
     {#if !editMode}
       <div class="dashboard-wrapper h-100" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
         {#if people && trackers}
-          {#each activeDashboard.blocks as block}
+          {#each activeDashboard.blocks as block (block.id)}
             <Dashblock
               {block}
               on:click={() => {

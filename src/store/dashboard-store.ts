@@ -38,6 +38,15 @@ const DashboardStoreInit = (): any => {
     getIndex() {
       return Storage.local.get("dashboard/lastIndex") || 0;
     },
+    toIndex(i: number) {
+      update((state: IDashboardStore) => {
+        if (i <= state.dashboards.length) {
+          state.activeIndex = i;
+        }
+        methods.saveIndex(state.activeIndex);
+        return state;
+      });
+    },
     next() {
       update((state: IDashboardStore) => {
         if (state.activeIndex == state.dashboards.length - 1) {
