@@ -32,8 +32,9 @@
         <strong>by Blockstack.</strong>
       </div>
     </button>
-    <p class="text-faded-3">
+    <p class="text-faded-3 mt-2">
       You can always change this later.
+      <br />
       <a href="https://blockstack.com" target="_blank">Learn more about Blockstack</a>
     </p>
   </div>

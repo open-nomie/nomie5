@@ -11,7 +11,7 @@
 <section class="slide slide-time-format">
   <div class="top center-grow pt-3">
 
-    <h1 class="mt-4">{Lang.t('setup.choose-time-format', `Choose Time Format`)}</h1>
+    <h1 class="mt-4">{Lang.t('setup.choose-time-format', `Which time looks right?`)}</h1>
     <button
       class="btn-block my-3 btn btn-content {$UserStore.meta.is24Hour ? 'active' : ''}"
       on:click={() => {

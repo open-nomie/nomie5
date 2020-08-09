@@ -17,7 +17,7 @@
         UserStore.setTheme('light');
         state.theme = 'light';
       }}>
-      <div class="text-lg">Light</div>
+      <div class="text-lg">🌕 Light</div>
     </button>
     <button
       class="btn-block my-3 btn btn-content {state.theme == 'dark' ? 'active' : ''}"
@@ -25,7 +25,7 @@
         UserStore.setTheme('dark');
         state.theme = 'dark';
       }}>
-      <div class="text-lg">Dark</div>
+      <div class="text-lg">🌑 Dark</div>
     </button>
     <button
       class="btn-block my-3 btn btn-content {state.theme == 'auto' ? 'active' : ''}"
@@ -33,7 +33,7 @@
         UserStore.setTheme('auto');
         state.theme = 'auto';
       }}>
-      <div class="text-lg">Automatic</div>
+      <div class="text-lg">🌓 Automatic</div>
     </button>
   </div>
 
