@@ -91,28 +91,6 @@
       navigate("/shop");
     },
 
-    // switchToCloud() {
-    //   let msg = Lang.t("settings.switch-to-cloud-notice");
-    //   Interact.confirm(Lang.t("settings.switch-to-cloud-confirm"), msg).then(
-    //     res => {
-    //       if (res === true) {
-    //         UserStore.setStorage("blockstack");
-    //         window.location.href = "/";
-    //       }
-    //     }
-    //   );
-    // },
-    // switchToLocal() {
-    //   let msg = Lang.t("settings.switch-to-local-notice");
-    //   Interact.confirm(Lang.t("settings.switch-to-local-confirm"), msg).then(
-    //     res => {
-    //       if (res === true) {
-    //         UserStore.setStorage("local");
-    //         window.location.href = "/";
-    //       }
-    //     }
-    //   );
-    // },
     settingChange() {
       UserStore.saveMeta();
     },
@@ -202,10 +180,10 @@ Note: Your data will not automatically move over. You'll first need to export it
     //   UserStore.saveMeta();
     // },
   };
-  let view = Storage.local.get("settings/last-view") || "features";
+  let view = Storage.local.get("settings/view") || "features";
   function changeView(v) {
     view = v;
-    Storage.local.put("settings/last-view", v);
+    Storage.local.put("settings/view", v);
   }
   // const setTimeout = setTimeout;
   onMount(() => {
@@ -445,19 +423,6 @@ Note: Your data will not automatically move over. You'll first need to export it
             </div>
           {/if}
           <!-- END Views -->
-
-          <!-- <NItem
-            className="clickable solo p-2"
-            title={Lang.t('settings.share-nomie', 'Share Nomie w/ Friends')}
-            description="It'd be super helpful"
-            on:click={methods.share}>
-            <span slot="left" class="btn-icon tap-icon">
-              <NIcon name="share" />
-            </span>
-            <span slot="right" class="icon">
-              <NIcon name="more" />
-            </span>
-          </NItem> -->
 
           <div class="n-list solo mt-3">
             <NItem title="Nomie needs you! 🥺">
