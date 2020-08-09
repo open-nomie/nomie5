@@ -122,7 +122,7 @@
    **/
 
   let tips = [
-    "Tap a button to track, press and hold for additional options",
+    "Press and hold a tracker for additional options",
     "The History tab shows you everything you've done",
     "Enable location tracking in the Settings for more data",
     "Tap the Tab icon in the upper right to enable Tracker Tabs",
@@ -592,18 +592,17 @@
   .board-edit-button {
     display: flex;
     align-items: center;
-    padding: 0px;
+    padding: 0px 16px;
     justify-content: center;
     min-width: 40px;
     min-height: 40px;
-    width: 40px;
     height: 40px;
     flex-grow: 0;
     flex-shrink: 0;
     border-radius: 20px;
-    font-size: 22px;
+    font-size: 16px;
     background-color: var(--color-faded-1);
-    color: var(--color-inverse) !important;
+    color: var(--color-solid) !important;
   }
   .board-actions {
     display: flex;
@@ -698,7 +697,7 @@
         </div>
       {:else}
         <main class="n-board h-100">
-          {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 2 && $UserStore.storageType == 'local'}
+          {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 10 && $UserStore.storageType == 'local'}
             <div class="container-sm">
               <div class="backup pt-2 pb-1">
                 {#if daysSinceLastBackup > 1000}
@@ -761,15 +760,12 @@
             {/if}
           </div>
 
+          <div class="board-actions">
+            <button on:click={editBoard} class="btn btn btn-round board-edit-button clickable">Edit</button>
+          </div>
+
           <!-- Include User Tips - shit should be a component -->
           <NTip {tips} />
-
-          <div class="board-actions">
-            <button on:click={editBoard} class="btn btn btn-round board-edit-button clickable">
-              <NIcon name="sort" size="32" className="fill-white" />
-            </button>
-
-          </div>
 
         </main>
       {/if}

@@ -152,7 +152,7 @@
       grid-template-rows: 60px 60px;
       .btn {
         width: 100%;
-        font-weight: 900;
+        font-weight: 600;
         height: 45px;
       }
     }
