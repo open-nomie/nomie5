@@ -444,7 +444,11 @@
           </div>
         </ListItem>
       </SortableList>
-    {:else}Loading Dashboard{/if}
+    {:else}
+      <div class="p-4 text-center mt-4">
+        <Text size="sm" faded>Loading Dashboard</Text>
+      </div>
+    {/if}
   </div>
 
 </NLayout>
