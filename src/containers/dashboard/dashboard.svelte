@@ -240,9 +240,12 @@
         // Replace the block with the new populated version.
         dboard.blocks[i] = block;
       }
+    } else {
+      console.error("No DBoard Found...");
     }
     // Set the Active Dashboard
     activeDashboard = dboard || new Dashboard();
+    ready = true;
   }
 
   /**
@@ -266,6 +269,7 @@
       });
       loadActiveDashboard();
     } catch (e) {
+      Interact.alert("Error", e.message);
       console.error(e.message);
     }
   }
@@ -387,7 +391,7 @@
         </Button>
       {/if}
     </div>
-    {#if !editMode}
+    {#if !editMode && ready}
       <div class="dashboard-wrapper h-100" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
         {#if people && trackers}
           {#each activeDashboard.blocks as block (block.id)}
@@ -415,7 +419,7 @@
           </Button>
         </div>
       </div>
-    {:else}
+    {:else if ready}
       <div class="mt-2" />
       <SortableList
         items={activeDashboard.blocks || []}
@@ -440,7 +444,7 @@
           </div>
         </ListItem>
       </SortableList>
-    {/if}
+    {:else}Loading Dashboard{/if}
   </div>
 
 </NLayout>
