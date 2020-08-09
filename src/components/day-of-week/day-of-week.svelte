@@ -3,7 +3,7 @@
   export let color = null;
   export let height = 100;
 
-  import BarChart from "../charts/bar-chart.svelte";
+  import BarChart from "../charts/bar-chart-2.svelte";
 
   let points = [];
 
@@ -15,16 +15,11 @@
       { y: statsDow.thu.count, x: "T" },
       { y: statsDow.fri.count, x: "F" },
       { y: statsDow.sat.count, x: "S" },
-      { y: statsDow.sun.count, x: "S" }
+      { y: statsDow.sun.count, x: "S" },
     ];
   }
 </script>
 
 {#if statsDow}
-  <BarChart
-    {points}
-    hideYTicks={true}
-    {height}
-    labels={points.map(p => p.x)}
-    {color} />
+  <BarChart {points} {height} hideYTicks={true} type="line" labels={points.map((p) => p.x)} {color} />
 {/if}

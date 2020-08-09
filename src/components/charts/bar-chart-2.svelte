@@ -25,7 +25,9 @@
   export let xFormat = (x) => x;
   export let yFormat = (y) => y;
   export let hideYTicks = false;
+  export let hideXTicks = false;
   export let type = "bar";
+  export let beginAtZero = true;
 
   // Generate a random ID for this Component
   const chartId = `chart-${nid()}`;
@@ -44,7 +46,7 @@
 
   function loadData() {
     const lineStyle = {
-      backgroundColor: "rgba(0, 0, 0, 0.4)",
+      backgroundColor: "transparent",
       borderColor: color,
     };
     const barStyle = {
@@ -105,7 +107,8 @@
                   }
                 },
                 fontSize: 9,
-                beginAtZero: true,
+                beginAtZero: beginAtZero,
+                display: hideYTicks == false,
               },
             },
           ],
@@ -122,7 +125,7 @@
                     return value;
                   }
                 },
-                display: hideYTicks !== true,
+                display: hideXTicks == false,
                 fontSize: 9,
               },
             },

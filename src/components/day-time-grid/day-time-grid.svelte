@@ -45,9 +45,7 @@
   const dateStart = dayjs().startOf("day");
   for (var i = 0; i < 24; i++) {
     let date = dateStart.add(i, "hour");
-    hours.push(
-      trimHour($UserStore.meta.is24Hour ? date.format("H") : date.format("ha"))
-    );
+    hours.push(trimHour($UserStore.meta.is24Hour ? date.format("H") : date.format("ha")));
   }
 
   const getGridMax = () => {
@@ -78,7 +76,7 @@
     let trackableElement = extractor.toElement(term);
 
     days = emptyGrid();
-    rows.forEach(row => {
+    rows.forEach((row) => {
       let date = new Date(row.end);
       let day = date.getDay();
       let hour = date.getHours();
@@ -116,9 +114,9 @@
   const methods = {
     hourStyle(value) {
       return {
-        opacity: value / 100
+        opacity: value / 100,
       };
-    }
+    },
   };
 
   onMount(() => {
@@ -151,7 +149,7 @@
 
     label {
       margin: 0;
-      font-size: 0.6rem;
+      font-size: 9px;
       text-align: right;
       color: var(--color-inverse);
       padding-right: 4px;
@@ -172,21 +170,16 @@
         text-align: center;
         margin: 0px;
         background-color: $primary;
-        margin-right: 4px;
-        margin-bottom: 2px;
-        border-radius: 4px;
-        height: 95%;
+        /* margin-right: 4px; */
+        /* margin-bottom: 2px; */
+        /* border-radius: 4px; */
+        height: 100%;
       }
     }
   }
 </style>
 
-<div
-  class="time-grid {className}"
-  style="height:{height}px; {style}"
-  bind:this={_el}>
-
-  <!--<pre>{JSON.stringify(days, null, 2)}</pre>-->
+<div class="time-grid {className}" style="height:{height}px; {style}" bind:this={_el}>
 
   {#if $UserStore.meta.firstDayOfWeek === '2'}
     <!-- firstDayOfWeek is Monday -->
@@ -195,16 +188,9 @@
     {#each days as day, index}
       {#if index !== 0}
         <div class="day">
-          <label>
-            {dayjs(new Date())
-            .day(index)
-            .format('ddd')
-            .substr(0, 2)}
-          </label>
+          <label>{dayjs(new Date()).day(index).format('ddd').substr(0, 2)}</label>
           {#each day as hour, hi}
-            <div
-                    class="hour hour-{hi}"
-                    style="opacity: {days[index][hi] / 100 || 0.1}; background-color: {color}" />
+            <div class="hour hour-{hi}" style="opacity: {days[index][hi] / 100 || 0}; background-color: {color}" />
           {/each}
         </div>
       {/if}
@@ -213,34 +199,19 @@
 
     <!-- Sunday -->
     <div class="day">
-      <label>
-        {dayjs(new Date())
-            .day(0)
-            .format('ddd')
-            .substr(0, 2)}
-      </label>
+      <label>{dayjs(new Date()).day(0).format('ddd').substr(0, 2)}</label>
       {#each days[0] as hour, hi}
-        <div
-                class="hour hour-{hi}"
-                style="opacity: {days[0][hi] / 100 || 0.1}; background-color: {color}" />
+        <div class="hour hour-{hi}" style="opacity: {days[0][hi] / 100 || 0}; background-color: {color}" />
       {/each}
     </div>
     <!-- /Sunday -->
-
   {:else}
-  <!-- firstDayOfWeek is Sunday -->
+    <!-- firstDayOfWeek is Sunday -->
     {#each days as day, index}
       <div class="day">
-        <label>
-          {dayjs(new Date())
-          .day(index)
-          .format('ddd')
-          .substr(0, 2)}
-        </label>
+        <label>{dayjs(new Date()).day(index).format('ddd').substr(0, 2)}</label>
         {#each day as hour, hi}
-          <div
-                  class="hour hour-{hi}"
-                  style="opacity: {days[index][hi] / 100 || 0.1}; background-color: {color}" />
+          <div class="hour hour-{hi}" style="opacity: {days[index][hi] / 100 || 0}; background-color: {color}" />
         {/each}
       </div>
     {/each}

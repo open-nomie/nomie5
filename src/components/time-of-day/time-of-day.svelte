@@ -1,5 +1,5 @@
 <script>
-  import BarChart from "../charts/bar-chart.svelte";
+  import BarChart from "../charts/bar-chart-2.svelte";
   export let statsTod = null;
   export let color = null;
 
@@ -10,14 +10,14 @@
     morning: "Morning",
     afternoon: "Afternoon",
     evening: "Evening",
-    night: "Night"
+    night: "Night",
   };
 
   $: if (statsTod) {
-    points = Object.keys(statsTod).map(key => {
+    points = Object.keys(statsTod).map((key) => {
       return {
         x: labels[key],
-        y: statsTod[key].count
+        y: statsTod[key].count,
       };
     });
   }
@@ -28,10 +28,5 @@
 </style>
 
 {#if statsTod}
-  <BarChart
-    height={100}
-    {points}
-    hideYTicks={true}
-    labels={points.map(p => p.x)}
-    {color} />
+  <BarChart height={90} {points} hideYTicks={true} beginAtZero={false} type="line" labels={points.map((p) => p.x)} {color} />
 {/if}
