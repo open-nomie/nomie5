@@ -1074,15 +1074,20 @@
         </div>
         <!-- end over view -->
       {:else if state.dataView == 'time'}
-        <div class="p-1 mt-2">
+        <div class="bg-solid py-2 pr-2 pl-0">
           <NTimeGrid
             term={state.currentTerm}
             color={state.currentColor}
             rows={state.stats.rows}
             style="min-height:100px;max-height:100px" />
+
         </div>
-        <TimeOfDay statsTod={state.stats.tod} color={state.currentColor} />
-        <DayOfWeek statsDow={state.stats.dow} color={state.currentColor} />
+        <div class="bg-solid p-2">
+          <TimeOfDay statsTod={state.stats.tod} color={state.currentColor} />
+        </div>
+        <div class="bg-solid p-2">
+          <DayOfWeek height={90} statsDow={state.stats.dow} color={state.currentColor} />
+        </div>
       {:else if state.dataView == 'logs'}
         {#if state.timeSpan == 'y'}
           <div class="p-4 text-sm text-center text-inverse-2">Logs not yet available for a full year</div>
