@@ -1,7 +1,7 @@
 <script>
   import { Locations } from "../../store/locations";
   import NIcon from "../icon/icon.svelte";
-
+  import textUtils from "../../utils/text/text";
   export let location;
 
   let name = null;
@@ -23,7 +23,7 @@
 
 {#if location}
   {#if name}
-    {name}
+    <div class="truncate">{name}</div>
   {:else}
     <NIcon name="pin" className="fill-white" style="margin:0 auto;" size="16" />
   {/if}
