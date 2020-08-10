@@ -601,8 +601,8 @@
     flex-shrink: 0;
     border-radius: 20px;
     font-size: 16px;
-    background-color: var(--color-faded-1);
-    color: var(--color-solid) !important;
+    background-color: var(--color-solid-2);
+    color: var(--color-inverse-1) !important;
   }
   .board-actions {
     display: flex;
@@ -761,7 +761,7 @@
           </div>
 
           <div class="board-actions">
-            <button on:click={editBoard} class="btn btn btn-round board-edit-button clickable">Edit</button>
+            <button on:click={editBoard} style="color:#FFF" class="btn btn btn-round board-edit-button clickable">Edit</button>
           </div>
 
           <!-- Include User Tips - shit should be a component -->
