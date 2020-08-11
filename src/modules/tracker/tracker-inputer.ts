@@ -58,7 +58,6 @@ export default class TrackerInputer {
 
   async getTrackerInputAsString(tracker: TrackerConfig, value?: number, allowSave: boolean = false): Promise<string> {
     const response = await Interact.trackerInput(tracker, { value, allowSave });
-    console.log({ response });
     if (response && response.tracker) {
       return `#${response.tracker.tag}(${response.value}) ${response.suffix || ""}`;
     } else {
