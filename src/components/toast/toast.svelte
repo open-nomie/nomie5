@@ -16,6 +16,14 @@
   } else {
     showDom = false;
   }
+
+  function click() {
+    if ($Interact.toast.click) {
+      $Interact.toast.click();
+    } else {
+      Interact.dismissToast();
+    }
+  }
 </script>
 
 <style lang="scss" type="text/scss">
@@ -62,7 +70,7 @@
   }
 </style>
 
-<div class="n-toast {showDom ? 'visible' : 'hidden'}" aria-hidden={showDom ? 'false' : 'true'}>
+<div class="n-toast {showDom ? 'visible' : 'hidden'}" aria-hidden={showDom ? 'false' : 'true'} on:click={click}>
   <div class="n-toast-panel">
     <ListItem style="background-color:transparent">
       <Text size="md" style="color:#FFF" truncate>{$Interact.toast.message}</Text>
