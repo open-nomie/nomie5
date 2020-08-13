@@ -36,7 +36,7 @@
   import { NomieAPI } from "../store/napi";
   import { Lang } from "../store/lang";
   import { PeopleStore } from "../store/people-store";
-  import { Browser } from "../store/browser-store";
+  import { Device } from "../store/device-store";
   import { ContextStore } from "../store/context-store";
 
   // Config
@@ -392,13 +392,13 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </div>
               </NItem>
               <NItem title={Lang.t('general.device', 'Device')}>
-                <span slot="right">{$Browser.device}</span>
+                <span slot="right">{$Device.device}</span>
               </NItem>
               <NItem title={Lang.t('general.platform', 'Platform')}>
-                <span slot="right">{$Browser.platform}</span>
+                <span slot="right">{$Device.platform}</span>
               </NItem>
               <NItem title={Lang.t('general.pwa', 'PWA')}>
-                <span slot="right">{$Browser.pwa}</span>
+                <span slot="right">{$Device.pwa}</span>
               </NItem>
               <NItem title="Version">
                 <span slot="right" class="n-row">

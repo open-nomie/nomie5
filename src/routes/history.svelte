@@ -41,6 +41,8 @@
   import { Lang } from "../store/lang";
 
   import { HistoryPage } from "../store/history-page";
+  import { Device } from "../store/device-store";
+  import Storage from "../modules/storage/storage";
 
   /**
    * I've messed this all up again. but it's faster and more responsivle
@@ -199,14 +201,27 @@
       fresh = fresh ? fresh : false;
       loading = true;
       // Query the Ledger for Posts on this day.
-      logs = await LedgerStore.query({
-        start: state.date.startOf("day").toDate(),
-        end: state.date.endOf("day").toDate(),
-        fresh: fresh,
-      });
+      let canLookup = true;
+      if (Storage.getEngine().name == "Blockstack" && $Device.offline == true) {
+        canLookup = false;
+      } else {
+        console.log({
+          name: Storage.getEngine().name,
+          offline: $Device.offline,
+        });
+      }
+      if (canLookup) {
+        logs = await LedgerStore.query({
+          start: state.date.startOf("day").toDate(),
+          end: state.date.endOf("day").toDate(),
+          fresh: fresh,
+        });
+        loading = false;
+      } else {
+        loading = false;
+      }
 
-      loading = false;
-      return logs;
+      return logs || [];
     },
     clearLocation() {
       state.location.name = null;

@@ -35,7 +35,7 @@
   // Stores
   import { UserStore } from "../../store/user-store";
   import { Lang } from "../../store/lang";
-  import { Browser } from "../../store/browser-store";
+  import { Device } from "../../store/device-store";
   import { Interact } from "../../store/interact";
 
   // TODO: UserSession shouldn't be in here - login should be fired by Storage.
@@ -56,7 +56,7 @@
   };
 
   let slides = [WelcomeSlide];
-  if (Browser.iOS() && !$Browser.pwa) {
+  if (Device.iOS() && !$Device.pwa) {
     slides.push(PWASlide);
   }
   slides.push(ThemeSlide);
