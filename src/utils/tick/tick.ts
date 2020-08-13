@@ -1,5 +1,5 @@
-export default (time, callback) => {
-  return new Promise(resolve => {
+export default (time: number, callback?: Function) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       if (callback) {
         callback();
