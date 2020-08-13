@@ -31,7 +31,8 @@
 
   // Props
   export let initialDate = new Date();
-  export let firstDayOfWeek = $UserStore.meta.firstDayOfWeek; // 1: Sunday, 2: Monday, etc.
+  // Updating to be react...
+  $: firstDayOfWeek = $UserStore.meta.firstDayOfWeek || 1; // 1: Sunday, 2: Monday, etc.
 
   // export let eventCategories = [];
   export let events = [];
@@ -48,8 +49,8 @@
     totals: {
       positive: 0,
       negative: 0,
-      neutral: 0
-    }
+      neutral: 0,
+    },
   };
 
   let mounted = false;
@@ -65,11 +66,7 @@
   let days = null;
   let day = null;
 
-  let startWeekDayOfMonth =
-    state.date
-      .startOf("month")
-      .toDate()
-      .getDay() + 1;
+  let startWeekDayOfMonth = state.date.startOf("month").toDate().getDay() + 1;
   let numberOfDays = state.date.daysInMonth();
   let selectedMonth = state.date.month();
   let selectedMonthName = state.date.format("MMMM");
@@ -99,11 +96,7 @@
     state.totals.positive = 0;
     state.totals.negative = 0;
 
-    startWeekDayOfMonth =
-      state.date
-        .startOf("month")
-        .toDate()
-        .getDay() + 1;
+    startWeekDayOfMonth = state.date.startOf("month").toDate().getDay() + 1;
 
     numberOfDays = state.date.daysInMonth();
     selectedMonth = state.date.month();
@@ -112,9 +105,7 @@
     monthStartDate = dayjs(state.date).startOf("month");
 
     // Create array of empty days previous month calendar bleed over
-    let emptyDays = Array((startWeekDayOfMonth - firstDayOfWeek + 7) % 7).fill(
-      null
-    );
+    let emptyDays = Array((startWeekDayOfMonth - firstDayOfWeek + 7) % 7).fill(null);
     // Create array of days for this month
     let nonEmptyDays = Array(numberOfDays)
       .fill()
@@ -134,15 +125,7 @@
       state.date = state.date.subtract(1, "month");
     },
     generateWeekdayNames(firstDayOfWeek = 1) {
-      let weekdays = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday"
-      ];
+      let weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
       for (let i = 2; i <= firstDayOfWeek; i++) {
         let first = weekdays.shift();
         weekdays.push(first);
@@ -168,12 +151,10 @@
       // });
 
       let values = events
-        .filter(row => {
-          return (
-            day.toDate().toDateString() === new Date(row.end).toDateString()
-          );
+        .filter((row) => {
+          return day.toDate().toDateString() === new Date(row.end).toDateString();
         })
-        .map(row => {
+        .map((row) => {
           if (!row.trackers) {
             row.getMeta();
           }
@@ -221,10 +202,8 @@
       }
     },
     getDayClass(day) {
-      let activeToday = events.find(row => {
-        return (
-          day.toDate().toDateString() === state.date.toDate().toDateString()
-        );
+      let activeToday = events.find((row) => {
+        return day.toDate().toDateString() === state.date.toDate().toDateString();
       });
       let classes = [
         "day",
@@ -232,12 +211,10 @@
         `weekday-${day.toDate().getDay()}`,
         activeToday ? "selected" : "not-selected",
         offDays.includes(day.toDate().getDay()) ? "off-day" : null,
-        day.toDate().toDateString() === state.today.toDateString()
-          ? "today"
-          : null
+        day.toDate().toDateString() === state.today.toDateString() ? "today" : null,
       ];
       return classes.join(" ");
-    }
+    },
   };
 </script>
 
@@ -378,7 +355,7 @@
             {#if day}
               <div
                 data-date={day.format('YYYY-MM-DD')}
-                on:click={event => {
+                on:click={(event) => {
                   dispatch('dayClick', day);
                 }}
                 class={methods.getDayClass(day)}
@@ -391,8 +368,5 @@
       </div>
     </div>
   </div>
-  <NPositivityBar
-    positive={state.totals.positive}
-    neutral={state.totals.neutral}
-    negative={state.totals.negative} />
+  <NPositivityBar positive={state.totals.positive} neutral={state.totals.neutral} negative={state.totals.negative} />
 {:else}Loading{/if}
