@@ -17,6 +17,9 @@
   import { Interact } from "../../store/interact";
   import { UserStore } from "../../store/user-store";
   import Button from "../button/button.svelte";
+  import { Lang } from "../../store/lang";
+  import ToggleSwitch from "../toggle-switch/toggle-switch.svelte";
+  import Text from "../text/text.svelte";
 
   const state = {
     title: "File Browser",
@@ -342,6 +345,15 @@
             {/if}
           {/each}
         </div>
+        <NItem className="bg-transparent mt-2" title={Lang.t('settings.allow-file-editing', 'Allow file editing')}>
+          <Text size="sm" faded>
+            Edit data files.
+            <span class="text-red">Use with caution.</span>
+          </Text>
+          <div slot="right">
+            <ToggleSwitch bind:value={$UserStore.meta.canEditFiles} on:change={UserStore.saveMeta} />
+          </div>
+        </NItem>
       </div>
     </div>
   </NLayout>

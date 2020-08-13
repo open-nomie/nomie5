@@ -307,17 +307,6 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </span>
               </NItem>
 
-              <NItem bottomLine title={Lang.t('settings.allow-file-editing', 'Allow file editing')}>
-                <Text size="sm" faded>
-                  Enable manual editing of nomie files
-                  <span class="text-red">Use with caution.</span>
-                </Text>
-
-                <div slot="right">
-                  <NToggle bind:value={$UserStore.meta.canEditFiles} on:change={methods.settingChange} />
-                </div>
-              </NItem>
-
               <NItem
                 clickable
                 title="{Lang.t('settings.find-and-replace')}..."
