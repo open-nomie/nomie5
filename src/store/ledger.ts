@@ -82,6 +82,15 @@ const ledgerInit = () => {
     memories: [],
   };
 
+  function state(s: any) {
+    let _state;
+    update((state) => {
+      _state = { ...state, ...s };
+      return _state;
+    });
+    return _state;
+  }
+
   const methods = {
     hooks: new Hooky(),
     /**
@@ -497,8 +506,9 @@ const ledgerInit = () => {
      * @param {NomieLog} log
      */
     async saveLog(log): Promise<void> {
+      log = await methods.prepareLog(log);
       try {
-        if (!window.offline) {
+        if (!window.offline || Storage.getEngine().name !== "Blockstack") {
           return await this._saveLog(log);
         } else {
           throw Error("offline");
@@ -509,12 +519,12 @@ const ledgerInit = () => {
           console.log("🤬 Offline! SAVE to Offline Queue", log);
           let saved = await OfflineQueue.record(log);
           if (saved) {
-            Interact.toast("⚠️ Cloud failure", {
-              description: `Saving to cloud failed, this log has been saved to the Offline Queue`,
+            Interact.toast("😐 Cloud Save Failed", {
+              description: `Log has been saved to the Offline Queue`,
               timeout: 3000,
             });
           } else {
-            throw new Error("save failed");
+            throw new Error("save failed to queue");
           }
         } else {
           throw new Error("save failed");
@@ -522,22 +532,14 @@ const ledgerInit = () => {
       }
     },
 
-    async _saveLog(log) {
+    async _saveLog(log: NLog) {
       // Set up a holder for current state
-      let currentState;
-
-      // log = log instanceof NomieLog ? log : new NomieLog(log);
-
-      // extract current state
-      update((s) => {
-        s.saving = true;
-        currentState = s;
-        return s;
+      let currentState = state({
+        saving: true,
       });
 
       try {
         // Set the time
-        log = await methods.prepareLog(log);
 
         // Set the date for the book
         let date = dayjs(new Date(log.end)).format(config.book_time_format);

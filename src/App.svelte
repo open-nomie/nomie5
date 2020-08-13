@@ -29,6 +29,7 @@
   import { UserStore } from "./store/user-store"; //  user auth and state
   import { Interact } from "./store/interact"; //  global alerts, popmenus, confirms, etc
   import { BoardStore } from "./store/boards"; // board state  and methods
+  import { Device } from "./store/device-store"; // board state  and methods
   import { TrackerStore } from "./store/tracker-store"; // tracker state and methods
   import { TrackerLibrary } from "./store/tracker-library";
   import { CommanderStore } from "./store/commander"; // commander - /?note=hi&lat=35&lng=-81.32
@@ -40,6 +41,8 @@
   import { Locations } from "./store/locations";
   import config from "../config/global";
   import { OfflineQueue } from "./store/offline-queue-store";
+  // import Storage from "./containers/storage/storage.svelte";
+  import Storage from "./modules/storage/storage";
 
   // Set a better console
   const console = new Logger("App.svelte");
@@ -84,8 +87,6 @@
   }
 
   // Offline monitor
-  let offline = false;
-  window.offline = false;
 
   const methods = {
     hideSplashScreen() {
@@ -148,19 +149,6 @@
    */
 
   window.addEventListener("load", () => {
-    let onNetworkChange = (event) => {
-      if (navigator.onLine) {
-        document.body.classList.remove("is-offline");
-        offline = false;
-        window.offline = false;
-      } else {
-        document.body.classList.add("is-offline");
-        offline = true;
-        window.offline = true;
-      }
-    };
-    window.addEventListener("online", onNetworkChange);
-    window.addEventListener("offline", onNetworkChange);
     methods.setDocParams();
   });
 
@@ -202,10 +190,11 @@
     // Set the user if they're logged in
     ready = true;
 
-    PeopleStore.init();
-    Locations.init();
+    PeopleStore.init(); // Initialize the People Store
+    Locations.init(); // Initialize Location Store
     ContextStore.init(); // check if this is a new version
-    DashboardStore.init();
+    DashboardStore.init(); // Initilize Dashboards
+    Device.init(); // Initialize Device
 
     // Run any commands if needed
     setTimeout(() => {
@@ -254,8 +243,8 @@
   TODO: .. 
   <OnThisDayModal /> -->
 
-{#if $UserStore.storageType == 'blockstack' && offline}
-  <div class="offline-notice">No connection to Blockstack. Avoid tracking while offline.</div>
+{#if $UserStore.storageType == 'blockstack' && $Device.offline}
+  <div class="offline-notice text-center">No connection to Blockstack.</div>
 {/if}
 <div id="photo-holder">
   <img id="photo-holder-image" alt="avatar-holder" />
