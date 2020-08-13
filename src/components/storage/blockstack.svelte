@@ -2,10 +2,17 @@
   import NItem from "../list-item/list-item.svelte";
   import { UserStore } from "../../store/user-store";
   import { Lang } from "../../store/lang";
+  import { Interact } from "../../store/interact";
 
   const methods = {
-    signOut() {
-      UserStore.signout();
+    async signOut() {
+      let confirmed = await Interact.confirm(
+        "Remove Blockstack Account from Nomie?",
+        "Your data in blockstack will be fine, but you will need to reconnect."
+      );
+      if (confirmed) {
+        UserStore.signout();
+      }
     },
   };
 </script>
