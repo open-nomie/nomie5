@@ -5,7 +5,7 @@
   import TrackerSmallBlock from "./../../components/tracker-ball/tracker-small-block.svelte";
   import { UserStore } from "./../../store/user-store.js";
   import { TrackerStore } from "./../../store/tracker-store.js";
-  import { LedgerStore } from "./../../store/ledger.js";
+  import { LedgerStore } from "../../store/ledger.js";
   import Card from "./../../components/card/card.svelte";
   import Text from "./../../components/text/text.svelte";
   import HScroller from "./../../components/h-scroller/h-scroller.svelte";

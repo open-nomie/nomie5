@@ -45,9 +45,27 @@ import { PeopleStore } from "./people-store";
 import { ContextStore } from "./context-store";
 
 import { Locations } from "./locations";
+import NLog from "../modules/nomie-log/nomie-log";
+import { OfflineQueue } from "./offline-queue-store";
 
 const console = new Logger("🧺 store/ledger.js");
 // Hooky is for firing off generic events
+
+declare let window: any;
+
+export interface IBooks {}
+
+export interface IToday {}
+
+export interface ILedgerState {
+  books: IBooks;
+  booksLastUpdate: any;
+  today: IToday;
+  count: number;
+  saving: boolean;
+  hash?: string;
+  memories: Array<NLog>;
+}
 
 // initialize the Store
 const ledgerInit = () => {
@@ -437,7 +455,7 @@ const ledgerInit = () => {
      * @param {String} date
      */
 
-    async getBookWithSync(date) {
+    async getBookWithSync(date: string) {
       try {
         // The sync part - get book first
         const book = await Storage.get(`${config.data_root}/books/${date}`);
@@ -449,26 +467,15 @@ const ledgerInit = () => {
           return [];
         } else if (!book) {
           // It's local - so we will assume they're creating a new book
-
           return [];
         } else {
           // Else just return the book already
-
           return book;
         }
       } catch (e) {
-        Interact.alert("Error", e);
+        // Interact.alert("Error", e);
+        throw e;
       }
-      // let confirm = await Interact.confirm(
-      //   `Create blockstack file?`,
-      //   `Ledger for ${dayjs().format(config.book_time_format)} was not found. Should I create it?`
-      // );
-      // if (confirm) {
-      //   // User confirms to create a new blank book - godspeed
-      //   return [];
-      // } else {
-      //   throw new Error("User stopped creation of book");
-      // }
     }, // end update if out of sync
 
     async getLog(id, book) {
@@ -489,7 +496,33 @@ const ledgerInit = () => {
      * It should not be used for updating
      * @param {NomieLog} log
      */
-    async saveLog(log) {
+    async saveLog(log): Promise<void> {
+      try {
+        if (!window.offline) {
+          return await this._saveLog(log);
+        } else {
+          throw Error("offline");
+        }
+      } catch (e) {
+        console.log("Error", e, Storage.getEngine());
+        if (e.message.match(/(fetch|offline|connect)/) && Storage.getEngine().name == "Blockstack") {
+          console.log("🤬 Offline! SAVE to Offline Queue", log);
+          let saved = await OfflineQueue.record(log);
+          if (saved) {
+            Interact.toast("⚠️ Cloud failure", {
+              description: `Saving to cloud failed, this log has been saved to the Offline Queue`,
+              timeout: 3000,
+            });
+          } else {
+            throw new Error("save failed");
+          }
+        } else {
+          throw new Error("save failed");
+        }
+      }
+    },
+
+    async _saveLog(log) {
       // Set up a holder for current state
       let currentState;
 
@@ -502,17 +535,17 @@ const ledgerInit = () => {
         return s;
       });
 
-      // Set the time
-      log = await methods.prepareLog(log);
-
-      // Set the date for the book
-      let date = dayjs(new Date(log.end)).format(config.book_time_format);
-
-      // Set Path
-      let bookPath = `${config.data_root}/books/${date}`; // path to book
-      // Update if out of sync with Server
-
       try {
+        // Set the time
+        log = await methods.prepareLog(log);
+
+        // Set the date for the book
+        let date = dayjs(new Date(log.end)).format(config.book_time_format);
+
+        // Set Path
+        let bookPath = `${config.data_root}/books/${date}`; // path to book
+        // Update if out of sync with Server
+
         // Get the Book - if its blockstack then make sure it exists
         let book = await methods.getBookWithSync(date);
         book.push(log); // push log
@@ -556,15 +589,12 @@ const ledgerInit = () => {
         // Fire off the onLogSaved
         methods.hooks.run("onLogSaved", log);
         tick(100, methods.getToday);
-        methods.getToday(); // Get Today
+        // methods.getToday(); // Get Today
         return { log, date };
       } catch (e) {
-        Interact.alert("Error", e.message);
-        update((s) => {
-          s.saving = false;
-          return s;
-        });
-      } // end try catch
+        console.log("_saveLog error", e.message);
+        throw e;
+      }
     },
 
     /**

@@ -22,6 +22,7 @@
   import NDatePicker from "../components/date-picker/date-picker.svelte";
   import LogItem from "../components/list-item-log/list-item-log.svelte";
   import NSearchBar from "../components/search-bar/search-bar.svelte";
+  import OfflineQueue from "../components/offline-queue/offline-queue.svelte";
 
   import config from "../../config/global";
 
@@ -451,6 +452,7 @@
   <main slot="content" class="page page-history">
 
     <div class="container p-0">
+      <OfflineQueue />
       {#if loading}
         <div class="empty-notice">
           <Spinner />

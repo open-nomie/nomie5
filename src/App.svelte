@@ -39,6 +39,7 @@
   import { AppStore } from "./store/app-store";
   import { Locations } from "./store/locations";
   import config from "../config/global";
+  import { OfflineQueue } from "./store/offline-queue-store";
 
   // Set a better console
   const console = new Logger("App.svelte");
@@ -84,6 +85,7 @@
 
   // Offline monitor
   let offline = false;
+  window.offline = false;
 
   const methods = {
     hideSplashScreen() {
@@ -150,9 +152,11 @@
       if (navigator.onLine) {
         document.body.classList.remove("is-offline");
         offline = false;
+        window.offline = false;
       } else {
         document.body.classList.add("is-offline");
         offline = true;
+        window.offline = true;
       }
     };
     window.addEventListener("online", onNetworkChange);
@@ -202,9 +206,11 @@
     Locations.init();
     ContextStore.init(); // check if this is a new version
     DashboardStore.init();
+
     // Run any commands if needed
     setTimeout(() => {
       // If there are any URL caommands, it will run here.
+      OfflineQueue.init();
       CommanderStore.run();
       // If they have the API - it will load here
       NomieAPI.load();

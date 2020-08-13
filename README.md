@@ -41,6 +41,10 @@ Wanna know more about the Nomie story? [Here are a handful of podcasts talking a
 2. Keep dependencies to an absolute minimum.
 3. Reuse code when possible.
 
+## Typescript Migration
+
+Currently Nomie 5.\* is going through a Typescript migration, thus expect both .js and .ts files intermixed.
+
 ## [Svelte](https://svelte.dev)
 
 This rewrite/port uses SvelteJS https://svelte.dev - a great tool for building fast / reactive single page apps (like Vue, React) without the framework.

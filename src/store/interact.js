@@ -30,7 +30,7 @@ import NomieLog from "../modules/nomie-log/nomie-log";
 // const hooks = new Hooky();
 
 // Stores
-import { LedgerStore } from "../store/ledger";
+import { LedgerStore } from "./ledger";
 import { Lang } from "../store/lang";
 
 const console = new Logger("✋ Interact");
@@ -101,6 +101,7 @@ const interactInit = () => {
       toast: {
         show: false,
         message: null,
+        detail: null,
         buttonLabel: undefined,
         click: undefined,
       },
@@ -199,6 +200,7 @@ const interactInit = () => {
         update((state) => {
           state.toast.show = false;
           state.toast.message = null;
+          state.toast.detail = null;
           return state;
         });
       };
@@ -506,15 +508,18 @@ const interactInit = () => {
       update((s) => {
         s.toast.message = null;
         s.toast.show = false;
+        s.toast.description = null;
         return s;
       });
     },
     toast(message, options = {}) {
       options.timeout = options.timeout || 1500;
       let perm = options.perm === true ? true : false;
+
       update((s) => {
         s.toast.message = message;
         s.toast.show = true;
+        s.toast.description = options.description;
         if (options.buttonLabel && options.click) {
           s.toast.buttonLabel = options.buttonLabel;
           s.toast.click = options.click;
@@ -527,6 +532,7 @@ const interactInit = () => {
             s.toast.message = null;
             s.toast.show = false;
             s.toast.buttonLabel = undefined;
+            s.toast.description = undefined;
             s.toast.click = undefined;
             return s;
           });

@@ -5,6 +5,8 @@
   import Button from "../button/button.svelte";
   import ListItem from "../list-item/list-item.svelte";
   import Text from "../text/text.svelte";
+  import Interactions from "../../containers/interactions/interactions.svelte";
+  import { tap } from "@sveltejs/gestures";
 
   // Props
   let showDom = false;
@@ -43,9 +45,9 @@
     }
     .n-toast-panel {
       min-height: 36px;
-
       max-width: 600px;
       min-width: 300px;
+      padding: 4px 0;
       border-radius: 6px;
       background-color: $primaryBright;
       color: #fff;
@@ -63,7 +65,10 @@
 <div class="n-toast {showDom ? 'visible' : 'hidden'}" aria-hidden={showDom ? 'false' : 'true'}>
   <div class="n-toast-panel">
     <ListItem style="background-color:transparent">
-      <Text className="text-white truncate-3">{$Interact.toast.message}</Text>
+      <Text size="md" style="color:#FFF" truncate>{$Interact.toast.message}</Text>
+      {#if $Interact.toast.description}
+        <Text size="sm" style="color:#FFF; opacity:0.75; margin-top:2px; line-height:1.1rem;">{$Interact.toast.description}</Text>
+      {/if}
       <div slot="right">
         {#if $Interact.toast.buttonLabel && $Interact.toast.click}
           <Button
