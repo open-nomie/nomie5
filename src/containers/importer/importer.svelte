@@ -372,7 +372,6 @@
           count={(importLoader.normalized.logs || []).length}
           bind:status={importing.logs}
           on:import={() => {
-            console.log('Import Logs?!');
             methods.importLogs(true);
           }}>
           {#if importing.logs.running}

@@ -56,6 +56,6 @@ export default function TrackerLogsToTime(trackerTag: string, logs: Array<NLog>)
     t.percent = percentages[i];
     return t;
   });
-  console.log(times);
+
   return times;
 }

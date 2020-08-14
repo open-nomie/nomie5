@@ -599,8 +599,7 @@ const ledgerInit = () => {
         // methods.getToday(); // Get Today
         return { log, date };
       } catch (e) {
-        methods.hooks.run("onSaveFailed", log);
-        console.log("_saveLog error", e.message);
+        console.error("_saveLog error", e.message);
         throw e;
       }
     },

@@ -146,7 +146,6 @@
     LedgerStore.hook("onBeforeSave", (log) => {
       state.savingTrackers = log.getMeta().trackers.map((t) => t.id);
     });
-
     LedgerStore.hook("onLogSaved", (log) => {
       // Clear saving states
       state.savingTrackers = [];

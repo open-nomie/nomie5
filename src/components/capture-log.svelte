@@ -203,7 +203,7 @@
       try {
         await LedgerStore.saveLog($ActiveLogStore); // TODO: Make ledger task instead
       } catch (e) {
-        console.log("Error in capture-log logSave", e.message);
+        console.error("Error in capture-log logSave", e.message);
       }
       methods.clear();
     },
