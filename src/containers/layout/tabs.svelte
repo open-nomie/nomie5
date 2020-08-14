@@ -29,7 +29,6 @@
     align-items: stretch;
     z-index: 1200;
     flex-shrink: 0;
-
     .n-row {
       z-index: 10;
       max-height: 60px;
@@ -87,13 +86,13 @@
 
     &:after {
       content: "";
-      position: absolute;
-      bottom: -6px;
-      left: 40%;
-      right: 40%;
-      height: 0px;
-      border-radius: 2px;
-      background-color: rgba($primaryBright, 0);
+      // position: absolute;
+      // bottom: -6px;
+      // left: 40%;
+      // right: 40%;
+      // height: 0px;
+      // border-radius: 2px;
+      // background-color: rgba($primaryBright, 0);
     }
 
     // When Active
@@ -104,15 +103,16 @@
         transform: scale(1.1);
         transition: all 0.2s ease-in-out;
       }
+      transform: scale(1.1);
       &:after {
         content: "";
-        position: absolute;
-        bottom: -6px;
-        left: 20%;
-        right: 20%;
-        height: 4px;
-        border-radius: 2px;
-        background-color: var(--color-primary-bright);
+        // position: absolute;
+        // bottom: -6px;
+        // left: 20%;
+        // right: 20%;
+        // height: 4px;
+        // border-radius: 2px;
+        // background-color: var(--color-primary-bright);
       }
     }
   }
