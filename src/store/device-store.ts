@@ -43,9 +43,7 @@ const DeviceStoreInit = () => {
       return (navigator.platform || "").toLowerCase().match(/iphone|ipad|ipod/gi) ? true : false;
     },
     init() {
-      console.log("WHAT THE HELL!?");
       const fireChange = () => {
-        console.log("Fire Change");
         if (navigator.onLine) {
           document.body.classList.remove("is-offline");
           window.offline = false;
@@ -61,14 +59,6 @@ const DeviceStoreInit = () => {
       fireChange();
     },
   };
-
-  //   window.onresize = (evt) => {
-  //     update((state) => {
-  //       state.width = window.innerWidth;
-  //       state.height = window.innerHeight;
-  //       return state;
-  //     });
-  //   };
 
   return {
     subscribe,
