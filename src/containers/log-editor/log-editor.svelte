@@ -21,6 +21,7 @@
   import NCell from "../../components/cell/cell.svelte";
   import NInput from "../../components/input/input.svelte";
   import NIcon from "../../components/icon/icon.svelte";
+  import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
 
   // Props
   export let log = undefined;
@@ -34,7 +35,7 @@
   let state = {
     view: "note",
     dateTimeValue: null,
-    saving: false
+    saving: false,
   };
 
   // Watch for Log
@@ -47,9 +48,7 @@
     init() {
       if (log) {
         state.log = new NomieLog(log);
-        state.dateTimeValue = dayjs(new Date(log.end)).format(
-          "YYYY-MM-DDTHH:mm"
-        );
+        state.dateTimeValue = dayjs(new Date(log.end)).format("YYYY-MM-DDTHH:mm");
       }
     },
     setView(view) {
@@ -61,19 +60,19 @@
         locations.push({
           lat: state.log.lat,
           lng: state.log.lng,
-          name: state.log.location
+          name: state.log.location,
         });
       }
       return locations;
     },
     save() {
       state.saving = true;
-      let updatedDate = time.datetimeLocal(state.dateTimeValue);
-      state.log.start = updatedDate.getTime();
-      state.log.end = updatedDate.getTime();
+      // let updatedDate = time.datetimeLocal(state.dateTimeValue);
+      // state.log.start = updatedDate.getTime();
+      // state.log.end = updatedDate.getTime();
       dispatch("save", state.log);
       // dispatch("close");
-    }
+    },
   };
 
   onMount(() => {
@@ -112,14 +111,8 @@
       height: 200px;
     }
     .date-time {
-      input {
-        border: none;
-        border-bottom: solid 2px var(--color-primary);
-        background-color: transparent;
-        border-radius: 0;
-        padding: 7px 0;
-        color: var(--color-inverse);
-      }
+      min-height: 300px;
+      padding: 0px;
     }
   }
 </style>
@@ -160,24 +153,22 @@
     <div class="view-port">
       {#if state.view == 'note'}
         <div class="p-2">
-          <textarea
-            class="form-control"
-            bind:this={textarea}
-            bind:value={state.log.note} />
+          <textarea class="form-control" bind:this={textarea} bind:value={state.log.note} />
           <AutoComplete
             scroller
             input={state.log.note}
-            on:select={evt => {
+            on:select={(evt) => {
               state.log.note = evt.detail.note;
               textarea.focus();
               textarea.setSelectionRange(textarea.value.length, textarea.value.length);
             }} />
+
         </div>
       {:else if state.view == 'where'}
         <NMap
           locations={methods.getLocations()}
           picker={true}
-          on:change={event => {
+          on:change={(event) => {
             state.log.lat = event.detail.lat;
             state.log.lng = event.detail.lng;
             state.log.location = event.detail.location;
@@ -187,18 +178,19 @@
           <NPositivitySelector
             size="xl"
             score={state.log.score}
-            on:change={evt => {
+            on:change={(evt) => {
               state.log.score = evt.detail;
             }} />
         </div>
       {:else if state.view == 'when'}
         <div class="date-time center-content">
-          <input
-            name="value"
-            title="input value"
-            bind:value={state.dateTimeValue}
-            type="datetime-local"
-            class="form-control mt-2" />
+          <DateTimeBar
+            opened
+            date={dayjs(state.log.end)}
+            on:change={(evt) => {
+              console.log('Change', evt.detail.toDate().getTime());
+              state.log.end = evt.detail.toDate().getTime();
+            }} />
         </div>
       {/if}
     </div>
@@ -212,9 +204,7 @@
           }}>
           Cancel
         </button>
-        <button class="btn btn-primary w-50" on:click={methods.save}>
-          Save
-        </button>
+        <button class="btn btn-primary w-50" on:click={methods.save}>Save</button>
       {:else}
         <button class="btn btn-primary w-100" disabled>Saving...</button>
       {/if}

@@ -16,21 +16,21 @@
   // Utils
   import Logger from "../../utils/log/log";
   import NIcon from "../../components/icon/icon.svelte";
+  import Text from "../../components/text/text.svelte";
   import NPositivityBar from "../../components/positivity-bar/positivity-bar.svelte";
 
   import calcTrackerScore from "../../modules/scoring/score-tracker";
 
   import { TrackerStore } from "../../store/tracker-store";
   import { UserStore } from "../../store/user-store";
+  import { Lang } from "../../store/lang";
 
   const console = new Logger("📅 calendar/calendar");
   const dispatch = createEventDispatcher();
 
-  // export let name = "Calendar";
-  // export let color = "#319ed7";
-
   // Props
   export let initialDate = new Date();
+  export let size = "md";
   // Updating to be react...
   $: firstDayOfWeek = $UserStore.meta.firstDayOfWeek || 1; // 1: Sunday, 2: Monday, etc.
 
@@ -110,7 +110,6 @@
     let nonEmptyDays = Array(numberOfDays)
       .fill()
       .map((item, index) => dayjs(monthStartDate).add(index, "days"));
-
     // Merge the arrays
     days = emptyDays.concat(nonEmptyDays);
     state.percentage = nonEmptyDays / (emptyDays + nonEmptyDays);
@@ -119,10 +118,10 @@
   // Methods
   const methods = {
     prevMonth() {
-      state.date = state.date.add(1, "month");
+      state.date = state.date.subtract(1, "month");
     },
     nextMonth() {
-      state.date = state.date.subtract(1, "month");
+      state.date = state.date.add(1, "month");
     },
     generateWeekdayNames(firstDayOfWeek = 1) {
       let weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -142,6 +141,7 @@
     // Go to Today
     goToday() {
       state.date = dayjs();
+      dispatch("dayClick", state.date);
     },
     getDayStyle(day) {
       let score = undefined;
@@ -203,7 +203,7 @@
     },
     getDayClass(day) {
       let activeToday = events.find((row) => {
-        return day.toDate().toDateString() === state.date.toDate().toDateString();
+        return day.format("YYYY-MM-DD") === state.date.format("YYYY-MM-DD");
       });
       let classes = [
         "day",
@@ -211,7 +211,8 @@
         `weekday-${day.toDate().getDay()}`,
         activeToday ? "selected" : "not-selected",
         offDays.includes(day.toDate().getDay()) ? "off-day" : null,
-        day.toDate().toDateString() === state.today.toDateString() ? "today" : null,
+        day.toDate().toDateString() === state.date.toDate().toDateString() ? "active" : "inactive",
+        day.format("YYYY-MM-DD") === dayjs(state.today).format("YYYY-MM-DD") ? "today" : null,
       ];
       return classes.join(" ");
     },
@@ -219,7 +220,22 @@
 </script>
 
 <style lang="scss">
+  // Partially based on https://www.npmjs.com/package/vue-sweet-calendar
   @import "../../scss/utils/_utils";
+
+  .sweet-calendar.sm {
+    --cal-font-size: 0.5rem;
+    --cal-day-size: 16px;
+  }
+  .sweet-calendar.md {
+    --cal-font-size: 0.8rem;
+    --cal-day-size: 20px;
+  }
+  .sweet-calendar.lg {
+    --cal-font-size: 0.8rem;
+    --cal-day-size: 24px;
+  }
+
   .sweet-calendar {
     $off-day-background-color: #e5e5e5;
     $selected-color: #994242;
@@ -228,6 +244,31 @@
     $day-color: #232323;
     $week-day-name-color: rgba($day-color, 0.7);
 
+    .active {
+      position: relative;
+      &:before {
+        content: "";
+        height: 4px;
+        border-radius: 2px;
+        background-color: var(--color-primary-bright);
+        bottom: -3px;
+        left: 0;
+        right: 0;
+        position: absolute;
+      }
+    }
+    .today {
+      position: relative;
+      &:after {
+        content: "";
+        height: 4px;
+        width: 4px;
+        border-radius: 2px;
+        background-color: var(--color-primary-bright);
+        top: -3px;
+        position: absolute;
+      }
+    }
     .sweet-container {
       //   display: grid;
       //   grid-template-rows: 40px 1fr;
@@ -235,18 +276,20 @@
         align-items: center;
         display: grid;
         grid-column-gap: 5px;
-        grid-template-columns: 50px 1fr 50px;
+        grid-template-columns: 1fr 30px 50px 30px;
+        margin: 6px 0;
+        margin-left: 16px;
         .month {
-          justify-self: center;
+          flex-grow: 1;
         }
         .left-arrow {
-          justify-self: end;
+          justify-self: center;
           span {
             cursor: pointer;
           }
         }
         .right-arrow {
-          justify-self: start;
+          justify-self: center;
           span {
             cursor: pointer;
           }
@@ -262,6 +305,7 @@
         .day-name {
           color: var(--color-inverse);
           font-weight: bold;
+          font-size: 0.6rem;
         }
         .day-container {
           display: flex;
@@ -276,9 +320,9 @@
             box-sizing: content-box;
             color: var(--color-inverse-2);
             display: flex;
-            height: 26px;
+            height: var(--cal-day-size);
             justify-content: center;
-            min-width: 26px;
+            min-width: var(--cal-day-size);
             &.selected {
               border: 3px solid var(--color-solid-2);
             }
@@ -287,7 +331,7 @@
               font-weight: bold;
             }
             span {
-              font-size: 14px;
+              font-size: var(--cal-font-size);
               margin: 0;
               padding: 0;
               align-self: center;
@@ -329,20 +373,22 @@
 </style>
 
 {#if state.date && mounted}
-  <div class="sweet-calendar">
+  <div class="sweet-calendar {size}">
     <div class="sweet-container calendar">
       {#if showHeader}
         <div class="header">
-
-          <div class="left-arrow" on:click={methods.prevMonth}>
+          <div class="month filler">
+            <Text size="sm" bold>{selectedMonthName} {selectedYear}</Text>
+          </div>
+          <button class="btn btn-sm btn-clear left-arrow" on:click={methods.prevMonth}>
             <NIcon name="chevronLeft" className="fill-primary-bright" />
-
-          </div>
-          <div class="month">{selectedMonthName} {selectedYear}</div>
-          <div class="right-arrow" on:click={methods.nextMonth}>
+          </button>
+          <button class="btn btn-sm btn-clear goto-today" on:click={methods.goToday}>
+            <Text size="xs">{Lang.t('general.today', 'Today')}</Text>
+          </button>
+          <button class="btn btn-sm btn-clear right-arrow" on:click={methods.nextMonth}>
             <NIcon name="chevronRight" className="fill-primary-bright" />
-          </div>
-
+          </button>
         </div>
       {/if}
 
@@ -350,12 +396,13 @@
         {#each state.weekdays || [] as day, index}
           <div class="day-name" title={day}>{day[0]}</div>
         {/each}
-        {#each days || [] as day, index}
+        {#each days || [] as day}
           <div class="day-container clickable">
             {#if day}
               <div
                 data-date={day.format('YYYY-MM-DD')}
                 on:click={(event) => {
+                  console.log('Day clicked', day.format('MMM Do YYYY'));
                   dispatch('dayClick', day);
                 }}
                 class={methods.getDayClass(day)}

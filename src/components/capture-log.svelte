@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   /**
    * Capture Log
    *
@@ -9,6 +9,7 @@
   // Svelte
   import { onDestroy, onMount } from "svelte";
   // import { slide } from "svelte/transition";
+  import DateTimeBar from "./date-time-bar/date-time-bar.svelte";
 
   // Modules
   import NomieLog from "../modules/nomie-log/nomie-log";
@@ -44,6 +45,7 @@
   import { Lang } from "../store/lang";
   import { PeopleStore } from "../store/people-store";
   import { ContextStore } from "../store/context-store";
+  import Text from "./text/text.svelte";
 
   // Consts
   const console = new Logger("capture-log");
@@ -196,7 +198,7 @@
       } catch (e) {}
     },
     calculateScore() {
-      $ActiveLogStore.score = $ActiveLogStore.score || ScoreNote($ActiveLogStore.note);
+      $ActiveLogStore.score = $ActiveLogStore.score || ScoreNote($ActiveLogStore.note, new Date().getTime());
     },
     async logSave() {
       methods.calculateScore();
@@ -544,6 +546,7 @@
             <NIcon name="more" className="fill-inverse-2" />
           {/if}
         </button>
+
         <textarea
           id="textarea-capture-note"
           style="overflow:hidden"
@@ -566,12 +569,6 @@
       </div>
     </div>
 
-    {#if $ActiveLogStore.score}
-      <!-- <div class="post-score">
-        <NPoints points={$ActiveLogStore.score} />
-      </div> -->
-    {/if}
-
   </div>
   {#if state.advanced}
     <div class="advanced">
@@ -586,29 +583,50 @@
             }} />
         </NItem>
         <!-- Location -->
-        <NItem truncate compact className="bg-transparent clickable mr-2 solo text-sm" on:click={methods.toggleCustomLocation}>
+        <NItem truncate className="bg-transparent clickable mr-2 solo text-sm" on:click={methods.toggleCustomLocation}>
           <div slot="left" class="text-sm text-bold">
-            <NIcon name="pin" className="mr-2 fill-primary-bright" size="16" />
+            <NIcon name="pin" className="mr-2 fill-inverse-2" size="16" />
           </div>
           {#if !$ActiveLogStore.lat}
-            {Lang.t('general.location', 'Location')}
+            <Text size="md">{Lang.t('general.location', 'Location')}</Text>
           {:else}
-            <strong>{$ActiveLogStore.location || `${math.round($ActiveLogStore.lat, 100)},${math.round($ActiveLogStore.lng, 100)}`}</strong>
+            <Text size="md">
+              {$ActiveLogStore.location || `${math.round($ActiveLogStore.lat, 100)},${math.round($ActiveLogStore.lng, 100)}`}
+            </Text>
           {/if}
           <div slot="right" class="n-row">
             {#if $ActiveLogStore.lat}
               <button class="btn btn-clear btn-icon" on:click|stopPropagation={methods.clearLocation}>
-                <NIcon name="close" className="fill-red" size="22" />
+                <NIcon name="close" className="fill-inverse" size="22" />
               </button>
             {:else if $UserStore.alwaysLocate}
-              <label class="text-sm text-faded-3 ">Current</label>
+              <Text faded className="pr-1">Current</Text>
             {:else}
-              <label class="text-sm text-faded-3 ">None</label>
+              <Text faded className="pr-1">None</Text>
             {/if}
           </div>
         </NItem>
         <!-- Date / Time -->
-        <NItem compact truncate className="bg-transparent mt-1 mb-2 mr-2 solo text-sm" on:click={methods.selectDate}>
+
+        <DateTimeBar
+          date={$ActiveLogStore.end}
+          on:change={(evt) => {
+            $ActiveLogStore.end = dayjs(evt.detail).toDate().getTime();
+          }}>
+          <div slot="left">
+            <NIcon name="calendar" className="ml-2 fill-inverse-2" size="16" />
+          </div>
+          <div slot="right">
+            {#if $ActiveLogStore.end}
+              <button class="btn btn-icon mr-2 ml-2" on:click|stopPropagation={methods.clearDate}>
+                <NIcon name="close" className="fill-inverse" size="22" />
+              </button>
+            {/if}
+          </div>
+        </DateTimeBar>
+
+        <!-- <NItem compact truncate className="bg-transparent mt-1 mb-2 mr-2 solo text-sm" on:click={methods.selectDate}>
+          
           <div slot="left" class="text-sm text-bold">
             <NIcon name="time" className="mr-2 fill-primary-bright" size="16" />
           </div>
@@ -628,7 +646,7 @@
               <label class="text-sm text-faded-3">Now</label>
             {/if}
           </div>
-        </NItem>
+        </NItem> -->
       </div>
     </div>
   {/if}
