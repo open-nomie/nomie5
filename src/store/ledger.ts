@@ -45,7 +45,7 @@ import { PeopleStore } from "./people-store";
 import { ContextStore } from "./context-store";
 
 import { Locations } from "./locations";
-import NLog from "../modules/nomie-log/nomie-log";
+import type NLog from "../modules/nomie-log/nomie-log";
 import { OfflineQueue } from "./offline-queue-store";
 import { ActiveLogStore } from "./active-log";
 

@@ -26,7 +26,7 @@ import type TrackableElement from "../modules/trackable-element/trackable-elemen
 const console = new Logger("🗺 $ContextStore");
 
 const searchForContext = async () => {
-  let contexts = [];
+  let contexts: Array<string> = [];
   Interact.blocker("Finding context...");
   try {
     const logs = await LedgerStore.query({ start: dayjs().subtract(6, "month") });
