@@ -131,10 +131,10 @@
         <main slot="main">{$Interact.streak.show}</main>
       </NToolbarGrid>
       <NToolbarGrid>
+        <main slot="main" class="w-100 text-center">{state.date.format('MMM YYYY')}</main>
         <button class="btn btn-clear tap-icon" slot="left" on:click={prev}>
           <NIcon name="chevronLeft" />
         </button>
-        <main slot="main" class="w-100 text-center">{state.date.format('MMM YYYY')}</main>
         <button class="btn btn-clear tap-icon" slot="right" on:click={next}>
           <NIcon name="chevronRight" />
         </button>
