@@ -200,7 +200,11 @@
     },
     async logSave() {
       methods.calculateScore();
-      await LedgerStore.saveLog($ActiveLogStore); // TODO: Make ledger task instead
+      try {
+        await LedgerStore.saveLog($ActiveLogStore); // TODO: Make ledger task instead
+      } catch (e) {
+        console.log("Error in capture-log logSave", e.message);
+      }
       methods.clear();
     },
     async autocompleteText(text) {
@@ -277,11 +281,18 @@
 
   // Clear the settings when saved
   LedgerStore.hook("onLogSaved", (res) => {
-    methods.clear();
-    setTimeout(() => {
-      methods.autoCompleteDone();
-    });
+    // methods.clear();
+    // setTimeout(() => {
+    //   methods.autoCompleteDone();
+    // });
   });
+  // LedgerStore.hook("onSaveFailed", (res) => {
+  //   console.log("🍺🍺 On Save Failed", res);
+  //   methods.clear();
+  //   setTimeout(() => {
+  //     methods.autoCompleteDone();
+  //   });
+  // });
 
   // When a tag is added by a button or other service
   ActiveLogStore.hook("onAddTag", (res) => {

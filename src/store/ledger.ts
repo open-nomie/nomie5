@@ -47,6 +47,7 @@ import { ContextStore } from "./context-store";
 import { Locations } from "./locations";
 import NLog from "../modules/nomie-log/nomie-log";
 import { OfflineQueue } from "./offline-queue-store";
+import { ActiveLogStore } from "./active-log";
 
 const console = new Logger("🧺 store/ledger.js");
 // Hooky is for firing off generic events
@@ -514,15 +515,19 @@ const ledgerInit = () => {
           throw Error("offline");
         }
       } catch (e) {
-        console.log("Error", e, Storage.getEngine());
+        /**
+         * Check if Offline or GaiaHub Error
+         */
         if (e.message.match(/(fetch|offline|connect)/) && Storage.getEngine().name == "Blockstack") {
-          console.log("🤬 Offline! SAVE to Offline Queue", log);
+          // Save this to the Offline Queue
           let saved = await OfflineQueue.record(log);
           if (saved) {
             Interact.toast("😐 Cloud Save Failed", {
               description: `Log has been saved to the Offline Queue`,
               timeout: 3000,
             });
+            ActiveLogStore.clear();
+            methods.hooks.run("onLogSaved", log);
           } else {
             throw new Error("save failed to queue");
           }
@@ -594,6 +599,7 @@ const ledgerInit = () => {
         // methods.getToday(); // Get Today
         return { log, date };
       } catch (e) {
+        methods.hooks.run("onSaveFailed", log);
         console.log("_saveLog error", e.message);
         throw e;
       }
