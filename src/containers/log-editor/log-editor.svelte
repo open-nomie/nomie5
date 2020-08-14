@@ -88,6 +88,10 @@
     height: 300px;
   }
 
+  :global(.log-editor .view-port .date-time) {
+    height: 350px;
+  }
+
   :global(.log-editor .n-modal) {
     max-width: 300px;
     width: 300px;
@@ -111,7 +115,7 @@
       height: 200px;
     }
     .date-time {
-      min-height: 300px;
+      min-height: 350px;
       padding: 0px;
     }
   }
@@ -185,7 +189,6 @@
       {:else if state.view == 'when'}
         <div class="date-time center-content">
           <DateTimeBar
-            opened
             date={dayjs(state.log.end)}
             on:change={(evt) => {
               console.log('Change', evt.detail.toDate().getTime());
