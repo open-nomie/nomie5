@@ -137,6 +137,10 @@ button:focus {
   }
 }
 
+.btn-block + .btn-block {
+  margin-top: auto;
+}
+
 .btn-primary {
   background-color: var(--color-primary-bright);
   box-shadow: 0px 6px 12px -6px var(--color-primary-bright);

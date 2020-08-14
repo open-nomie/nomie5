@@ -141,9 +141,9 @@
   }
   .left {
     padding-right: 8pt;
+    margin-right: 4pt;
   }
   .right {
-    padding-left: 8pt;
     text-align: right;
     display: flex;
     flex-wrap: nowrap;
@@ -153,7 +153,7 @@
     flex-grow: 1;
     flex-shrink: 1;
     max-width: 100%;
-    padding-left: 4pt;
+    // padding-left: 4pt;
   }
 
   .n-note-textualized {
