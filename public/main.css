@@ -4980,6 +4980,9 @@ button:focus {
       font-size: 1rem;
       font-weight: 500; }
 
+.btn-block + .btn-block {
+  margin-top: auto; }
+
 .btn-primary {
   background-color: var(--color-primary-bright);
   box-shadow: 0px 6px 12px -6px var(--color-primary-bright); }
@@ -5199,6 +5202,9 @@ body {
   padding: 0;
   font-size: 18px;
   background-color: var(--color-bg); }
+
+.w-50 {
+  width: 50%; }
 
 body.no-scroll {
   overflow: hidden;
@@ -5432,6 +5438,12 @@ body.theme-dark {
 
 .fill-inverse {
   fill: var(--color-inverse) !important; }
+
+.fill-inverse-1 {
+  fill: var(--color-inverse-1) !important; }
+
+.fill-inverse-2 {
+  fill: var(--color-inverse-2) !important; }
 
 .fill-primary {
   fill: var(--color-primary) !important; }
@@ -5810,24 +5822,23 @@ select {
 
 .clickable,
 [clickable] {
-  transition: all 0.1s ease-in-out;
+  transition: all 0.2s ease-in-out;
   position: relative;
   cursor: pointer;
   touch-action: manipulation; }
   .clickable:after,
   [clickable]:after {
-    transition: all 0.1s ease-in-out;
+    transition: all 0.2s ease-in-out;
     content: "";
     pointer-events: none;
-    background-color: rgba(49, 158, 215, 0);
+    background-color: var(--color-inverse-3);
+    opacity: 0;
     border-radius: 8pt; }
 
-.clickable:focus,
 .clickable:active {
   touch-action: manipulation;
   outline: none;
   overflow: hidden; }
-  .clickable:focus:after,
   .clickable:active:after {
     content: "";
     position: absolute;
@@ -5835,7 +5846,8 @@ select {
     bottom: 0;
     right: 0;
     left: 0;
-    background-color: rgba(49, 158, 215, 0.1); }
+    opacity: 0.6;
+    background-color: var(--color-inverse-3); }
 
 .container-sm {
   max-width: 800px;
@@ -6224,17 +6236,16 @@ body.scrolling .mini-map {
     flex-direction: row;
     align-items: center; }
   .n-item .left {
-    padding-right: 8pt; }
+    padding-right: 8pt;
+    margin-right: 4pt; }
   .n-item .right {
-    padding-left: 8pt;
     text-align: right;
     display: flex;
     flex-wrap: nowrap; }
   .n-item .main {
     flex-grow: 1;
     flex-shrink: 1;
-    max-width: 100%;
-    padding-left: 4pt; }
+    max-width: 100%; }
   .n-item .n-note-textualized {
     max-width: 100%;
     overflow-x: auto; }
