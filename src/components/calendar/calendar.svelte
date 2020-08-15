@@ -13,17 +13,17 @@
   // vendors
   import dayjs from "dayjs";
 
-  // Utils
+  // Utils & modules
   import Logger from "../../utils/log/log";
+  import calcTrackerScore from "../../modules/scoring/score-tracker";
+  // import { TrackerStore } from "../../store/tracker-store";
+  import { UserStore } from "../../store/user-store";
+  import { Lang } from "../../store/lang";
+
+  // Components
   import NIcon from "../../components/icon/icon.svelte";
   import Text from "../../components/text/text.svelte";
   import NPositivityBar from "../../components/positivity-bar/positivity-bar.svelte";
-
-  import calcTrackerScore from "../../modules/scoring/score-tracker";
-
-  import { TrackerStore } from "../../store/tracker-store";
-  import { UserStore } from "../../store/user-store";
-  import { Lang } from "../../store/lang";
 
   const console = new Logger("📅 calendar/calendar");
   const dispatch = createEventDispatcher();
@@ -31,6 +31,7 @@
   // Props
   export let initialDate = new Date();
   export let size = "md";
+
   // Updating to be react...
   $: firstDayOfWeek = $UserStore.meta.firstDayOfWeek || 1; // 1: Sunday, 2: Monday, etc.
 
@@ -87,9 +88,7 @@
     let neutralCount = 0;
   }
 
-  // If date change - do the magic.
-  let lastDate = null;
-  $: if (state.date && state.date != lastDate) {
+  function init() {
     lastDate = state.date;
 
     state.totals.neutral = 0;
@@ -113,6 +112,12 @@
     // Merge the arrays
     days = emptyDays.concat(nonEmptyDays);
     state.percentage = nonEmptyDays / (emptyDays + nonEmptyDays);
+  }
+
+  // If date change - do the magic.
+  let lastDate = null;
+  $: if (state.date && state.date != lastDate) {
+    init();
   }
 
   // Methods
@@ -143,17 +148,18 @@
       state.date = dayjs();
       dispatch("dayClick", state.date);
     },
+    /**
+     * Generate the Style for the Provided Day
+     */
     getDayStyle(day) {
+      let total = 0;
       let score = undefined;
-
-      // let activeToday = events.find(row => {
-      //   return day.toDate().toDateString() === new Date(row.end).toDateString();
-      // });
-
+      // Filter values, get only this days
       let values = events
         .filter((row) => {
           return day.toDate().toDateString() === new Date(row.end).toDateString();
         })
+        // Map the tracker - and return the sum or avg values
         .map((row) => {
           if (!row.trackers) {
             row.getMeta();
@@ -164,14 +170,16 @@
             return math.average(row.getTrackerValues(tracker.tag));
           }
         });
-      let total = 0;
+      // If we have values
       if (values.length) {
+        // If it's a sum
         if (tracker.math == "sum") {
           total = math.sum(values);
         } else {
           total = math.average(values);
         }
       }
+      // If we have a total - figure the score
       if (total) {
         score = calcTrackerScore(total, tracker);
       }
@@ -193,28 +201,36 @@
     getDayBorder(score) {
       if (score) {
         if (score > 0) {
-          return `font-weight:bold; border:solid 2px var(--color-green)`;
+          return `font-weight:bold; border:solid 2px var(--color-green); color:#FFF; background-color:var(--color-green)`;
         } else {
-          return `font-weight:bold; border:solid 2px var(--color-red)`;
+          return `font-weight:bold; border:solid 2px var(--color-red); color:#FFF; background-color:var(--color-red)`;
         }
       } else {
-        return `font-weight:bold; border:solid 2px var(--color-primary-bright)`;
+        return `font-weight:bold; border:solid 2px var(--color-primary-bright); color:#FFF; background-color:var(--color-primary-bright);`;
       }
     },
     getDayClass(day) {
-      let activeToday = events.find((row) => {
-        return day.format("YYYY-MM-DD") === state.date.format("YYYY-MM-DD");
-      });
-      let classes = [
-        "day",
-        `day-${day.format("D")}`,
-        `weekday-${day.toDate().getDay()}`,
-        activeToday ? "selected" : "not-selected",
-        offDays.includes(day.toDate().getDay()) ? "off-day" : null,
-        day.toDate().toDateString() === state.date.toDate().toDateString() ? "active" : "inactive",
-        day.format("YYYY-MM-DD") === dayjs(state.today).format("YYYY-MM-DD") ? "today" : null,
-      ];
-      return classes.join(" ");
+      try {
+        const dayFormat = day.format("YYYY-MM-DD");
+        const stateDateFormat = state.date.format("YYYY-MM-DD");
+        const todayFormat = dayjs(state.today).format("YYYY-MM-DD");
+        const activeToday = events.find((row) => {
+          return dayFormat === stateDateFormat;
+        });
+        let classes = [
+          "day",
+          `day-${day.format("D")}`,
+          `weekday-${day.toDate().getDay()}`,
+          activeToday ? "selected" : "not-selected",
+          offDays.includes(day.toDate().getDay()) ? "off-day" : null,
+          dayFormat === stateDateFormat ? "active" : "inactive",
+          dayFormat === todayFormat ? "today" : null,
+        ];
+        return classes.join(" ");
+      } catch (e) {
+        console.error(e);
+        return "error-generating-classes";
+      }
     },
   };
 </script>
@@ -306,6 +322,7 @@
           color: var(--color-inverse);
           font-weight: bold;
           font-size: 0.6rem;
+          height: 18px;
         }
         .day-container {
           display: flex;
@@ -402,7 +419,6 @@
               <div
                 data-date={day.format('YYYY-MM-DD')}
                 on:click={(event) => {
-                  console.log('Day clicked', day.format('MMM Do YYYY'));
                   dispatch('dayClick', day);
                 }}
                 class={methods.getDayClass(day)}

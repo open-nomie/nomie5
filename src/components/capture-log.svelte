@@ -618,7 +618,7 @@
           </div>
           <div slot="right">
             {#if $ActiveLogStore.end}
-              <button class="btn btn-icon mr-2 ml-2" on:click|stopPropagation={methods.clearDate}>
+              <button class="btn btn-icon mr-2" on:click|stopPropagation={methods.clearDate}>
                 <NIcon name="close" className="fill-inverse" size="22" />
               </button>
             {/if}

@@ -55,6 +55,9 @@
 </script>
 
 <style lang="scss">
+  * {
+    // border: solid 1px red !important;
+  }
   .date-time-bar {
     background-color: var(--color-solid);
   }
@@ -81,6 +84,7 @@
     }
   }
   .view.visible {
+    border-top: solid 1px var(--color-solid-2);
     margin-bottom: 8px;
   }
   :global(.date-time-bar-item.opened .left, .date-time-bar-item.opened .right) {
@@ -101,15 +105,15 @@
           on:click={() => {
             toggleOpen();
           }}>
-          <Text size="md">{_date.format('ddd MMM D YYYY')}</Text>
+          <Text size="md" truncate>{_date.format('ddd MMM D YYYY')}</Text>
         </button>
-        <TimeSelect
-          bind:value={_date}
-          on:change={(evt) => {
-            setDate(evt.detail);
-          }}
-          className="filler n-row"
-          style="width:58%; margin-right:6px;" />
+        <div style="width:58%; margin-right:8px;">
+          <TimeSelect
+            bind:value={_date}
+            on:change={(evt) => {
+              setDate(evt.detail);
+            }} />
+        </div>
       </div>
 
       <div class="animate up view date" class:visible={_opened} class:hidden={!_opened}>
