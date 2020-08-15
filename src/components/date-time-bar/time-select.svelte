@@ -92,7 +92,7 @@
       </select>
       <!-- If is not 24 hour - show ampm -->
       {#if !$UserStore.meta.is24Hour}
-        <select bind:value={ampm} class="filler ampm" on:change={onChange}>
+        <select bind:value={ampm} class="filler ampm" on:change={onChange} style="margin-left:4px;">
           <option value="am" selected={ampm === 'am'}>AM</option>
           <option value="pm" selected={ampm === 'pm'}>PM</option>
         </select>
