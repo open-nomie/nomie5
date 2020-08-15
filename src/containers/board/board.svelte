@@ -43,8 +43,10 @@
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import tick from "../../utils/tick/tick";
   import TrackerInputer from "../../modules/tracker/tracker-inputer";
-
   import ScoreTracker from "../../modules/scoring/score-tracker";
+
+  // data
+  import tips from "../../../config/tips";
 
   //Stores
   import { ActiveLogStore } from "../../store/active-log";
@@ -61,6 +63,7 @@
   import exportData from "../../modules/export/export-helper";
 
   import OfflineQueue from "../../components/offline-queue/offline-queue.svelte";
+
   // Consts
   const console = new Logger("board.svelte");
 
@@ -122,20 +125,6 @@
    * Add some tips to help new users
    * This will stop showing after 12 nomie launches
    **/
-
-  let tips = [
-    "Press and hold a tracker for additional options",
-    "The History tab shows you everything you've done",
-    "Enable location tracking in the Settings for more data",
-    "Tap the Tab icon in the upper right to enable Tracker Tabs",
-    "You can manually track by writing a note. For example: Today is awesome! #mood(8) with @brandon",
-    "Use @username in notes to tag people",
-    "Include @username in a note to automatically tag that user.",
-    "Include +context to add additional context to your log",
-    "Tap the clock icon in the notes field to back date a log",
-    "Tap the Location pin in the notes field to set a specific location",
-    "Import data from places like IFTTT. Tap Settings, then Nomie API",
-  ];
 
   // Wait for the User to be ready
   UserStore.onReady(() => {

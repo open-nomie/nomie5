@@ -90,24 +90,26 @@
 
 {#if show}
   <section class="n-tip-wrapper {className}">
-    <div class="n-tips">
-      <div class="n-row mb-2">
-
+    <div class="n-tips mx-auto" style="max-width:280px;">
+      <div class="mx-auto n-row">
+        <div class="filler" />
         <button class="btn btn-clear btn-icon tap-icon" on:click={previousTip}>
-          <NIcon name="chevronLeft" />
+          <NIcon name="chevronLeft" size="20" />
         </button>
-        <div class="tip filler">TIP #{state.activeTip + 1}: {tips[state.activeTip]}</div>
-        <div class="d-flex flex-row arrows">
-          <button class="btn btn-clear btn-icon tap-icon" on:click={nextTip}>
-            <NIcon name="chevronRight" />
-          </button>
-        </div>
-      </div>
-      <div style="max-width:150px" class="mx-auto n-row">
         <NStepper steps={tips.length} current={state.activeTip} dark />
         <button class="btn-close text-lg flex-grow-off" on:click={hideTips}>
           <NIcon name="close" size="9" />
         </button>
+        <button class="btn btn-clear btn-icon tap-icon" on:click={nextTip}>
+          <NIcon name="chevronRight" size="20" />
+        </button>
+        <div class="filler" />
+      </div>
+      <div class="n-row mb-2 px-4">
+        <div class="tip filler">
+          <strong>Tip #{state.activeTip + 1}</strong>
+          {tips[state.activeTip]}
+        </div>
       </div>
     </div>
   </section>
