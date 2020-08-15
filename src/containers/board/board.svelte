@@ -344,8 +344,10 @@
       ActiveLogStore.addElement(note.join(" "));
       // If one tap, auto save it.
       if (tracker.one_tap) {
-        LedgerStore.saveLog($ActiveLogStore);
+        await LedgerStore.saveLog($ActiveLogStore);
+        await ActiveLogStore.clear();
       }
+      return note;
     },
 
     /**
