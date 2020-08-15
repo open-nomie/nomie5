@@ -105,7 +105,7 @@ export default {
       "dark-mode": "Dark Mode",
       "require-pin": "Require Pin",
       "24-hour-clock": "24 hour clock",
-      "first-day-of-week": "First day of the week",
+      "first-day-of-week": "First day of week",
       sunday: "Sunday",
       monday: "Monday",
       data: "Data",

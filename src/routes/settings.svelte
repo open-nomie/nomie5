@@ -432,21 +432,29 @@ Note: Your data will not automatically move over. You'll first need to export it
             </NItem>
           </div>
 
-          <NItem className="compact item-divider" />
-          <NItem title={Lang.t('general.questions')} className="bg-transparent mt-3">
-            <span slot="right">
-              <a class="btn btn-clear text-primary-bright" href={`mailto:${config.support_email}?subject=Nomie APP_VERSION`}>
-                {config.support_contact}
-              </a>
-            </span>
-          </NItem>
-          <NItem className="bg-transparent">
-            <div class="text-sm pb-2 pt-2">&copy; Copyright 2019. All Rights Reserved</div>
-            <div class="text-sm pb-2">
-              Nomie&reg; by
-              <a href="https://www.happydata.org" traget="_system">Happy Data, LLC</a>
+          <NItem solo className="mt-3">
+            <div slot="left">
+              <Text>🆘</Text>
             </div>
+            {`${Lang.t('general.questions')}`}
+            <div slot="right">
+              <Text size="sm" className="mr-1">
+                <a class="text-primary-bright" href={`mailto:${config.support_email}?subject=Nomie APP_VERSION`}>
+                  {config.support_contact}
+                </a>
+              </Text>
+            </div>
+          </NItem>
 
+          <NItem className="bg-transparent">
+            <div class="px-2 py-4">
+              <Text size="sm">&copy; Copyright 2014 - {dayjs().format('YYYY')}</Text>
+              <Text size="sm" inline faded>All Rights Reserved</Text>
+              <Text size="sm" inline>
+                Nomie&reg; by
+                <a class="text-primary-bright" href="https://www.happydata.org" traget="_system">Happy Data, LLC</a>
+              </Text>
+            </div>
           </NItem>
 
         </div>

@@ -5584,6 +5584,13 @@ select.form-control {
     background-color: var(--color-faded);
     color: var(--color-inverse-2); }
 
+select.form-control {
+  height: auto;
+  padding: 2px 12px; }
+
+.n-item select.form-control {
+  margin: 0 !important; }
+
 textarea.form-control {
   background-color: var(--color-solid-half);
   border-color: var(--color-solid-1);
@@ -6163,9 +6170,9 @@ body.scrolling .mini-map {
   display: flex;
   align-items: center;
   justify-content: stretch;
-  padding: 4px 8pt;
+  padding: 10px 12px;
   cursor: pointer;
-  min-height: 50px;
+  min-height: 46px;
   max-width: 100vw;
   position: relative;
   transition: all 0.2s ease-in-out;
@@ -6333,7 +6340,7 @@ body.scrolling .mini-map {
     border-radius: 12pt;
     overflow: hidden;
     background-color: var(--color-solid);
-    padding: 8px 0; }
+    padding: 0px 0; }
   .n-list.framed {
     border: solid 1px var(--color-solid-2) !important; }
   @media (min-width: 350px) {

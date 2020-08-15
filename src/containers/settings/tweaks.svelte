@@ -114,7 +114,7 @@
     </div>
   </NItem>
   <!-- firstDayOfWeek -->
-  <NItem title={Lang.t('settings.first-day-of-week')}>
+  <NItem bottomLine title={Lang.t('settings.first-day-of-week')}>
     <span slot="left">🗓</span>
     <div slot="right">
       <select

@@ -47,6 +47,15 @@ select.form-control {
     color: var(--color-inverse-2);
   }
 }
+select.form-control {
+  height: auto;
+  padding: 2px 12px;
+}
+.n-item {
+  select.form-control {
+    margin: 0 !important;
+  }
+}
 textarea.form-control {
   background-color: var(--color-solid-half);
   border-color: var(--color-solid-1);
