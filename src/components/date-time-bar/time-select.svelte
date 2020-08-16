@@ -76,7 +76,7 @@
 
 {#if minute}
   <div class="time-select {className}" {style}>
-    <div class="n-row">
+    <div class="n-row mx-auto">
       <!-- Loop over hours -->
       <select bind:value={hour} class="filler hour text-right" style="text-align:center;" on:change={onChange}>
         {#each hours as h}

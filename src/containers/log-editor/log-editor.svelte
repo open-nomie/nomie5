@@ -90,6 +90,8 @@
 
   :global(.log-editor .view-port .date-time) {
     height: 350px;
+    width: 100vw;
+    max-width: 320px;
   }
 
   :global(.log-editor .n-modal) {
@@ -187,11 +189,12 @@
             }} />
         </div>
       {:else if state.view == 'when'}
-        <div class="date-time center-content">
+        <div class="date-time center-content p-0">
           <DateTimeBar
+            opened
+            style="padding:0px;"
             date={dayjs(state.log.end)}
             on:change={(evt) => {
-              console.log('Change', evt.detail.toDate().getTime());
               state.log.end = evt.detail.toDate().getTime();
             }} />
         </div>

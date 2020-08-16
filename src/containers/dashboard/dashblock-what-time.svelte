@@ -17,9 +17,6 @@
   .time-graph {
     border: solid 1px var(--color-solid-1);
     height: 120px;
-    * {
-      border: solid 1px red !important;
-    }
   }
   .time-graph .days {
     display: flex;

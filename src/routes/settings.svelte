@@ -216,7 +216,7 @@ Note: Your data will not automatically move over. You'll first need to export it
     </div>
   </div>
 
-  <div slot="content">
+  <div slot="content" class="pt-2">
     {#if $UserStore.meta}
       <div class="page page-settings">
         <div class="container p-0">
@@ -271,7 +271,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 
             <div class="n-list solo mb-3">
               <NItem>
-                <Text bold className="my-1">{Lang.t('general.type', 'Data Location')}</Text>
+                <Text bold className="my-2">{Lang.t('general.type', 'Data Location')}</Text>
                 <div slot="right">
                   <button class="btn btn-clear icon-right" on:click={methods.storageMenu}>
                     {#if $UserStore.storageType === 'local'}

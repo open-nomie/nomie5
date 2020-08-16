@@ -13,6 +13,7 @@
 
   export let date: any = new Date().getTime(); // prop
   export let opened: boolean = false;
+  export let style: string = "";
 
   let lastDate;
   let _date: Dayjs; // local
@@ -55,22 +56,22 @@
 </script>
 
 <style lang="scss">
-  * {
-    // border: solid 1px red !important;
-  }
   .date-time-bar {
     background-color: var(--color-solid);
   }
   .date-time-bar .buttons {
+    display: grid;
+    flex-shrink: 1;
+    flex-grow: 1;
+    grid-template-columns: 1fr 0.7fr;
     padding: 0px;
     height: 40px;
-    display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: stretch;
     button {
       height: 40px;
-      width: 100%;
+      flex-grow: 1;
+      flex-shrink: 1;
       border: none;
       background-color: var(--color-solid);
       color: var(--color-primary-bright);
@@ -93,7 +94,7 @@
 </style>
 
 {#if _date}
-  <ListItem solo style="padding:0px; overflow:hidden" className="date-time-bar-item {_opened ? 'opened' : ''}">
+  <ListItem solo style="padding:0px; overflow:hidden; {style}" className="date-time-bar-item {_opened ? 'opened' : ''}">
     <div slot="left">
       <slot name="left" />
     </div>
@@ -107,13 +108,11 @@
           }}>
           <Text size="md" truncate>{_date.format('ddd MMM D YYYY')}</Text>
         </button>
-        <div style="width:58%; margin-right:8px;">
-          <TimeSelect
-            bind:value={_date}
-            on:change={(evt) => {
-              setDate(evt.detail);
-            }} />
-        </div>
+        <TimeSelect
+          bind:value={_date}
+          on:change={(evt) => {
+            setDate(evt.detail);
+          }} />
       </div>
 
       <div class="animate up view date" class:visible={_opened} class:hidden={!_opened}>
