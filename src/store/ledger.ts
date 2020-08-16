@@ -349,7 +349,7 @@ const ledgerInit = () => {
      * @param {NomieLog} log
      * @param {Date} previousEndDate
      */
-    async updateLog(log, previousEndDate) {
+    async updateLog(log: NomieLog, previousEndDate?) {
       // Fire hooks
       methods.hooks.run("onBeforeUpdate", log);
       // Set saving

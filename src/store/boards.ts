@@ -5,17 +5,19 @@
  */
 
 import { writable } from "svelte/store";
+import { navigate } from "svelte-routing";
 
 // Modules
 import Storage from "../modules/storage/storage";
 
 // Stores
 import config from "../../config/global";
-import { TrackerStore } from "../store/tracker-store";
 
 // Utils
 import md5 from "md5";
 import Logger from "../utils/log/log";
+import type { ITrackers } from "../modules/import/import";
+import { Interact } from "./interact";
 
 //
 
@@ -34,7 +36,7 @@ const boardsInit = () => {
   const { subscribe, set, update } = writable(base);
 
   const methods = {
-    initialize(UserStore, tkrs) {
+    initialize(UserStore, tkrs: ITrackers) {
       trackers = tkrs;
       let boardData = Storage.get(`${config.data_root}/boards.json`).then((boards) => {
         if (boards) {
@@ -86,10 +88,10 @@ const boardsInit = () => {
     save(boards) {
       return Storage.put(`${config.data_root}/boards.json`, boards);
     },
-    labelById(id) {
-      let label = (base.boards.find((b) => b.id === id) || {}).label;
-      return label ? label : "";
-    },
+    // labelById(id) {
+    //   let label = (base.boards.find((b) => b.id === id) || {}).label;
+    //   return label ? label : "";
+    // },
     addTracker(tracker) {
       return methods.addTrackersToActiveBoard([tracker]);
     },
@@ -100,6 +102,15 @@ const boardsInit = () => {
         return d;
       });
       return d;
+    },
+    async deleteConfirm(board) {
+      console.log("Delete the board fucker", board);
+      let confirmed = await Interact.confirm("Delete " + board.label + " tab?", "You can recreate it later, but it's not super easy.");
+      if (confirmed === true) {
+        await methods.deleteBoard(board.id);
+        navigate("/");
+        Interact.toast("Board Deleted");
+      }
     },
     deleteBoard(boardId) {
       let boards;
@@ -230,7 +241,7 @@ const boardsInit = () => {
       });
     },
 
-    setActive(id, board) {
+    setActive(id) {
       if (id) {
         localStorage.setItem("active-board", id);
         return update((bs) => {

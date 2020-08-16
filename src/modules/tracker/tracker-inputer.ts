@@ -7,12 +7,13 @@ import PromiseStep from "../../utils/promise-step/promise-step";
 import NomieLog from "../nomie-log/nomie-log";
 import { TrackerStore } from "../../store/tracker-store";
 import type TrackerConfig from "./tracker";
+import { ITrackers } from "../import/import";
 
-interface ITrackerInputerGetOptions {
+export interface ITrackerInputerGetOptions {
   value?: number;
   allowSave?: boolean;
 }
-interface ITrackerInputResult {
+export interface ITrackerInputResult {
   suffix?: string;
   tracker: TrackerConfig;
   value: number;
@@ -57,7 +58,7 @@ export default class TrackerInputer {
   }
 
   async getTrackerInputAsString(tracker: TrackerConfig, value?: number, allowSave: boolean = false): Promise<string> {
-    const response = await Interact.trackerInput(tracker, { value, allowSave });
+    const response: any = await Interact.trackerInput(tracker, { value, allowSave });
     if (response && response.tracker) {
       return `#${response.tracker.tag}(${response.value}) ${response.suffix || ""}`;
     } else {
@@ -127,7 +128,7 @@ export default class TrackerInputer {
   }
 
   async getTrackerInput(tracker: TrackerConfig, options: ITrackerInputerGetOptions): Promise<ITrackerInputResult> {
-    let input = await Interact.trackerInput(tracker, options);
+    let input: ITrackerInputResult = await Interact.trackerInput(tracker, options);
     return input;
   }
 

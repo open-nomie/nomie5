@@ -14,6 +14,8 @@
  *
  */
 
+// Todo make this more type complete
+
 // Svelte
 import { writable } from "svelte/store";
 
@@ -32,8 +34,19 @@ import NomieLog from "../modules/nomie-log/nomie-log";
 // Stores
 import { LedgerStore } from "./ledger";
 import { Lang } from "./lang";
+import type { ILocation } from "../modules/locate/Location";
+import type { ITrackerInputResult } from "../modules/tracker/tracker-inputer";
 
 const console = new Logger("✋ Interact");
+
+export interface IToastOptions {
+  timeout?: number;
+  show?: boolean;
+  description?: string;
+  buttonLabel?: string;
+  click?: Function;
+  perm?: boolean;
+}
 
 const interactInit = () => {
   let getBaseState = () => {
@@ -104,6 +117,7 @@ const interactInit = () => {
         detail: null,
         buttonLabel: undefined,
         click: undefined,
+        description: undefined,
       },
       popmenu: {
         show: false,
@@ -122,18 +136,13 @@ const interactInit = () => {
       },
       prompt: {
         show: false,
-        placeholder: null,
-        message: null,
-        title: null,
-      },
-      trackerInput: {
-        show: false,
-        tracker: null,
-        onInteract: null,
-      },
-      camera: {
-        show: false,
-        onInteract: null,
+        placeholder: undefined,
+        message: undefined,
+        title: undefined,
+        value: undefined,
+        valueType: undefined,
+        cancel: undefined,
+        onInteract: undefined,
       },
     };
   };
@@ -143,7 +152,7 @@ const interactInit = () => {
   const { update, subscribe, set } = writable(state);
 
   const methods = {
-    alert(title, message, ok) {
+    alert(title: string, message?: string, ok?: string) {
       return new Promise((resolve) => {
         update((s) => {
           s.alert.show = true;
@@ -237,7 +246,7 @@ const interactInit = () => {
         return s;
       });
     },
-    async trackerInput(tracker, options = {}) {
+    async trackerInput(tracker, options: any = {}): Promise<ITrackerInputResult> {
       let value = options.value || null;
       let allowSave = options.allowSave === false ? false : true;
       return new Promise((resolve, reject) => {
@@ -300,20 +309,6 @@ const interactInit = () => {
     toggleBoardSorter() {
       update((s) => {
         s.boardSorter.show = !s.boardSorter.show;
-        return s;
-      });
-    },
-    openCamera(onSave) {
-      update((s) => {
-        s.camera.show = true;
-        s.camera.onInteract = onSave;
-        return s;
-      });
-    },
-    closeCamera() {
-      update((s) => {
-        s.camera.show = false;
-        s.camera.onInteract = null;
         return s;
       });
     },
@@ -411,9 +406,9 @@ const interactInit = () => {
               });
           },
           async updateData() {
-            const log = await Interact.editLog(log);
+            const updatedLog = await Interact.editLog(log);
             setTimeout(() => {
-              LedgerStore.hooks.run("onLogUpdate", log);
+              LedgerStore.hooks.run("onLogUpdate", updatedLog);
             }, 10);
             return { action: "data-updated" };
           },
@@ -443,7 +438,7 @@ const interactInit = () => {
             });
           },
           updateLocation() {
-            methods.pickLocation().then((location) => {
+            methods.pickLocation().then((location: ILocation) => {
               if (location) {
                 log.lat = location.lat;
                 log.lng = location.lng;
@@ -512,7 +507,9 @@ const interactInit = () => {
         return s;
       });
     },
-    toast(message, options = {}) {
+    toast(message, options?: IToastOptions) {
+      options = options || {};
+
       options.timeout = options.timeout || 1500;
       let perm = options.perm === true ? true : false;
 
@@ -542,7 +539,7 @@ const interactInit = () => {
     error(message) {
       return methods.alert(Lang.t("general.error", "Error"), message);
     },
-    confirm(title, message, ok, cancel) {
+    confirm(title: string, message: string, ok?: string, cancel?: string) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           update((s) => {
@@ -598,7 +595,7 @@ const interactInit = () => {
         return s;
       });
     },
-    prompt(title, message, options = {}) {
+    prompt(title, message, options: any = {}) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           update((s) => {
