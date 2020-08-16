@@ -23,7 +23,8 @@ const console = new Logger("🗺 $Locations");
 // Nomie API Store
 
 const LocationsInit = () => {
-  const { update, subscribe, set } = writable([]);
+  const BaseState: Array<Location> = [];
+  const { update, subscribe, set } = writable(BaseState);
 
   const methods = {
     /**
@@ -41,7 +42,8 @@ const LocationsInit = () => {
       });
       return this.write(theLocations);
     },
-    findClosestTo(location) {
+
+    findClosestTo(location): Location {
       let match = null;
       update((locations) => {
         match = [...locations]
@@ -64,7 +66,7 @@ const LocationsInit = () => {
         return location;
       }
     },
-    getAll() {
+    getAll(): Array<Location> {
       let all = [];
       update((state) => {
         all = state;
@@ -72,7 +74,7 @@ const LocationsInit = () => {
       });
       return all;
     },
-    async write(payload) {
+    async write(payload): Promise<any> {
       return Storage.put(`${config.data_root}/locations.json`, payload);
     },
     async init() {
