@@ -46,6 +46,38 @@ const boardsInit = () => {
       });
       return boardData;
     },
+    setActive(id) {
+      if (id) {
+        localStorage.setItem("active-board", id);
+        return update((bs) => {
+          bs.active = id;
+          bs.activeBoard = bs.boards.find((b) => b.id == bs.active);
+          return bs;
+        });
+      }
+    },
+    move(dir: "next" | "previous") {
+      update((state) => {
+        let index = state.boards.findIndex((b) => b.id == state.active);
+        let nextIndex;
+        if (dir == "next") {
+          nextIndex = index < state.boards.length - 1 ? index + 1 : 0;
+        } else {
+          nextIndex = index > 0 ? index - 1 : state.boards.length - 1;
+        }
+        let board = state.boards[nextIndex];
+        if (board) {
+          methods.setActive(board.id);
+        }
+        return state;
+      });
+    },
+    next() {
+      methods.move("next");
+    },
+    previous() {
+      methods.move("previous");
+    },
     load(boards) {
       return update((bs) => {
         let map = {};
@@ -239,17 +271,6 @@ const boardsInit = () => {
           return bs;
         });
       });
-    },
-
-    setActive(id) {
-      if (id) {
-        localStorage.setItem("active-board", id);
-        return update((bs) => {
-          bs.active = id;
-          bs.activeBoard = bs.boards.find((b) => b.id == bs.active);
-          return bs;
-        });
-      }
     },
 
     reset() {

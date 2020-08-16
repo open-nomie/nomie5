@@ -723,7 +723,7 @@
           </div>
         {/if}
         <OfflineQueue />
-        <main class="n-board h-100">
+        <main class="n-board h-100" on:swipeleft={BoardStore.next} on:swiperight={BoardStore.previous}>
           {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
             <div class="trackers n-grid framed mt-2" style="min-height:auto">
               {#each TrackerStore.state.runningTimers() as tracker}
