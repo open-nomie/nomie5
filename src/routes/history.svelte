@@ -484,12 +484,14 @@
           <div class="empty-notice">{state.date.format('YYYY')} {Lang.t('history.no-records-found')}</div>
         {/if}
         <!-- If Logs and Not refreshing  -->
-      {:else if !showSearch}
+      {:else}
         <!-- Loop over logs -->
         {#each logs as log, index}
-          <LogItem
-            {log}
-            on:trackerClick={(event) => {
+          <LogItem {log} />
+        {/each}
+
+        <!--
+          on:trackerClick={(event) => {
               methods.trackerTapped(event.detail.tracker, log);
             }}
             on:personClick={(event) => {
@@ -503,27 +505,13 @@
             }}
             on:moreClick={(event) => {
               Interact.logOptions(log).then(() => {});
-            }} />
-          <!-- Show the Log Item -->
-        {/each}
+            }} 
+        -->
 
         <!--
           Search Results
           If Search Mode and We have Logs
         -->
-      {:else if showSearch && state.searchTerm}
-        <NLogListLoader
-          term={state.searchTerm}
-          limit={12}
-          on:trackerClick={(event) => {
-            methods.trackerTapped(event.detail.tracker, event.detail.log);
-          }}
-          on:textClick={(event) => {
-            methods.textClick(event);
-          }}
-          on:moreClick={(event) => {
-            Interact.logOptions(event.detail).then(() => {});
-          }} />
       {/if}
 
       <!-- Show History if exists -->

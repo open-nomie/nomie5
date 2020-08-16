@@ -260,10 +260,11 @@
   }
 
   /**
+   * RSquared
    * A crazy ass function!!!
    * This will load up the the stats for EVERY tracker
    * for the current time period, and run a
-   * euclidean distance function on each to identify
+   * RSquared distance function on each to identify
    * any that have simular patterns.
    */
   async function findRelatedTrackers() {
@@ -282,7 +283,6 @@
       let compareValues = results.stats.chart.values.map((point) => point.y); // get y values
       let distance = await DataDistance.score(activeTrackerValues, compareValues); // calculate distance
       results.distance = distance;
-
       compareItems[tag] = {
         stats: results,
         distance: distance,

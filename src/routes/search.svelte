@@ -221,6 +221,7 @@
       max-height: 400px;
     }
   }
+
   :global(.page-search .n-item .n-item:last-child) {
     border-bottom: none !important;
   }
@@ -267,9 +268,9 @@
           on:moreClick={(event) => {
             Interact.logOptions(event.detail).then(() => {});
           }} />
+      {:else}
+        <div class="empty-notice">Search your records</div>
       {/if}
-
-      <div class="empty-notice">{state.date.format('YYYY')} {Lang.t('history.no-records-found')}</div>
 
       <!-- end history -->
 

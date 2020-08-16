@@ -30,6 +30,7 @@
   // vendors
   import dayjs from "dayjs";
   import Text from "../text/text.svelte";
+  import TrackableElement from "../../modules/trackable-element/trackable-element";
 
   // props
   export let log = undefined;
@@ -169,6 +170,7 @@
             truncate={true}
             element={person}
             on:click={() => {
+              Interact.openStats(`@${person.id}`);
               dispatch('personClick', { person: person, log });
             }}>
             <span slot="emoji" class="emoji">
@@ -191,6 +193,7 @@
             truncate
             element={trackerElement}
             on:click={() => {
+              Interact.openStats(`#${trackerElement.id}`);
               dispatch('trackerClick', { tracker: trackerElement.obj, log });
             }} />
         {/each}
@@ -201,6 +204,7 @@
             <button
               class="btn btn-badge faded"
               on:click={() => {
+                Interact.openStats(`${trackerElement.raw}`);
                 dispatch('contextClick', { context: context, log });
               }}>
               +{context.id}
@@ -209,34 +213,6 @@
         </div>
       {/if}
     {/if}
-    <!-- <div class="trackers-list">
-
-     
-      {#each logMeta.trackers.filter(trk => {
-        if (focus) {
-          return trk.id == focus;
-        } else {
-          return true;
-        }
-      }) as trackerElement}
-        <NItem
-          className="clickable bottom-line"
-          on:click={event => {
-            event.preventDefault();
-            event.stopPropagation();
-            dispatch('trackerClick', { tracker: trackerElement.obj, log });
-            return false;
-          }}>
-          <div class="emoji" slot="left">
-            {(trackerElement.obj || {}).emoji || '⚪️'}
-          </div>
-          <div>{(trackerElement.obj || {}).label || trackerElement.id}</div>
-          <div class="value" slot="right">
-            {NomieUOM.format(trackerElement.value, (trackerElement.obj || {}).uom)}
-          </div>
-        </NItem>
-      {/each}
-    </div> -->
 
   </NItem>
 {/if}
