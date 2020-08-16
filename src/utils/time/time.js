@@ -39,7 +39,7 @@ export default {
     }
   },
   fromNow(date) {
-    let fromNow = dayjs(date).fromNow();
+    let fromNow = dayjs(date).fromNow(true);
     let v = fromNow;
     if (fromNow == "a few seconds ago") {
       v = "now";
@@ -50,7 +50,7 @@ export default {
       let s = fromNow.split(" ");
       v = `${s[0]}${s[1].substr(0, 1)}`;
     }
-    return v;
+    return fromNow;
   },
   datetimeLocal(dateString) {
     let dateSplit = dateString.split("T");
