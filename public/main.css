@@ -4944,6 +4944,9 @@ button:focus {
   .btn-group .btn:active {
     color: var(--color-primary) !important; }
 
+.btn-group.lg .btn {
+  min-height: 40px; }
+
 .btn-sm, .btn-group-sm > .btn {
   border-radius: 6pt !important; }
 
@@ -5341,10 +5344,10 @@ body.theme-dark {
   --color-darkest: #000;
   --color-bg: rgb(5, 5, 5);
   --color-solid: rgb(25, 25, 25);
-  --color-solid-half: rgb(30, 30, 30);
+  --color-solid-half: rgb(14, 9, 9);
   --color-solid-1: rgb(35, 35, 35);
-  --color-solid-2: rgb(45, 45, 45);
-  --color-solid-3: rgb(55, 55, 55);
+  --color-solid-2: rgb(39, 39, 39);
+  --color-solid-3: rgb(73, 73, 73);
   --color-inverse: #fff;
   --color-inverse-1: #eee;
   --color-inverse-2: #ccc;
@@ -5839,8 +5842,7 @@ select {
     content: "";
     pointer-events: none;
     background-color: var(--color-inverse-3);
-    opacity: 0;
-    border-radius: 8pt; }
+    opacity: 0; }
 
 .clickable:active {
   touch-action: manipulation;
@@ -5900,9 +5902,9 @@ button {
   width: 100%;
   min-height: 50px;
   -webkit-overflow-scrolling: touch;
-  height: 50px;
   box-shadow: inset 3px 0px 4px rgba(0, 0, 0, 0);
-  transition: all 0.2s ease-in-out; }
+  transition: all 0.2s ease-in-out;
+  background-color: var(--color-solid); }
   .n-board-tabs:not([data-scroll="0"]) {
     box-shadow: inset 2px 0px 1px var(--color-faded) !important;
     z-index: 10; }
@@ -5913,26 +5915,37 @@ button {
     margin-top: 6px !important;
     flex-grow: 1; }
   .n-board-tabs .tab {
-    color: var(--color-inverse-2);
+    color: var(--color-inverse-3);
     border: none;
     background: transparent;
     padding: 6px 10px;
     min-width: 45px;
-    max-width: 260px;
+    max-width: 120px;
     width: auto;
     flex-shrink: 0;
     height: 40px;
-    margin-top: 6px;
+    margin-top: 10px;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-grow: 1;
-    text-align: center; }
+    flex-grow: 0;
+    text-align: center;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease-in-out; }
     .n-board-tabs .tab.selected {
-      background-color: var(--color-solid);
-      box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1), 0px 6px 7px -2px rgba(49, 158, 215, 0.1);
-      border-radius: 12px; }
+      background-color: var(--color-bg);
+      color: var(--color-inverse); }
+      .n-board-tabs .tab.selected:before {
+        content: "";
+        position: absolute;
+        bottom: 45px;
+        z-index: 100;
+        height: 4px;
+        background-color: var(--color-solid);
+        background-color: red !important; }
     .n-board-tabs .tab:last-child.active {
       border-bottom: none; }
     .n-board-tabs .tab:after {
@@ -7375,6 +7388,18 @@ TODO: Organize main into components or containers.
 
 .gap {
   height: 16px; }
+
+.board-actions {
+  max-width: 300px !important; }
+  .board-actions .btn-group {
+    background-color: var(--color-solid);
+    box-shadow: var(--box-shadow-tight); }
+    .board-actions .btn-group .btn .n-text {
+      color: var(--color-inverse-2) !important; }
+    .board-actions .btn-group .btn {
+      border-right: solid 1px var(--color-solid-1); }
+      .board-actions .btn-group .btn:last-child {
+        border-right: none; }
 
 .library-modal .n-modal-body {
   background-color: var(--color-bg) !important; }
