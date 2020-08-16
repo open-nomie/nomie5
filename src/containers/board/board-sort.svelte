@@ -22,10 +22,7 @@
     }
   }
   async function deleteBoard(board) {
-    let confirmed = await Interact.confirm(
-      "Delete " + board.label + " tab?",
-      "You can recreate it later, but it's not super easy."
-    );
+    let confirmed = await Interact.confirm("Delete " + board.label + " tab?", "You can recreate it later, but it's not super easy.");
     if (confirmed === true) {
       await BoardStore.deleteBoard(board.id);
       Interact.toast("Deleted");
@@ -42,33 +39,18 @@
   }
 </style>
 
-<Modal
-  title={Lang.t('general.tabs', 'Tabs')}
-  type="fullscreen"
-  allowClose={true}
-  on:close={Interact.toggleBoardSorter}>
+<Modal title="Edit / Sort your Tabs" type="fullscreen" allowClose={true} on:close={Interact.toggleBoardSorter}>
   <div slot="modal-header">
     <NToolbarGrid>
-      <button
-        slot="left"
-        class="btn btn-icon btn-clear tap-icon"
-        on:click={Interact.toggleBoardSorter}>
+      <button slot="left" class="btn btn-icon btn-clear tap-icon" on:click={Interact.toggleBoardSorter}>
         <NIcon name="close" />
       </button>
       <div slot="main">{Lang.t('board.sort-tabs', 'Sort Tabs')}</div>
-      <button class="btn btn-clear" slot="right">
-        {Lang.t('general.save')}
-      </button>
-
+      <button class="btn btn-clear" slot="right">{Lang.t('general.save')}</button>
     </NToolbarGrid>
   </div>
   <div class="n-list">
-    <NSortableList
-      bind:items={$BoardStore.boards}
-      handle=".menu-handle"
-      key="label"
-      on:update={boardsSorted}
-      let:item>
+    <NSortableList bind:items={$BoardStore.boards} handle=".menu-handle" key="label" on:update={boardsSorted} let:item>
       {#if item.label !== 'all'}
         <NItem bottom-line className="bottom-line" title={item.label}>
           <div slot="left" class="menu-handle">

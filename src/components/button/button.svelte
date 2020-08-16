@@ -18,7 +18,7 @@
 
 <button
   {style}
-  class={`btn ${block ? 'btn-block' : ''} btn-${type} btn-${shape} btn-${color} btn-${size} ${className}`}
+  class={`btn ${block ? 'btn-block' : ''} btn-${type} btn-${shape} btn-${color} btn-${size} ${className} clickable`}
   on:click={() => {
     dispatch('click');
   }}>

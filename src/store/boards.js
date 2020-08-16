@@ -77,6 +77,9 @@ const boardsInit = () => {
         return d;
       });
       if (boards) {
+        boards = boards.filter((b) => {
+          return b.id !== "all";
+        });
         methods.save(boards);
       }
     },

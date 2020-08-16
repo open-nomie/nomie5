@@ -6,13 +6,10 @@ import Logger from "../utils/log/log";
 
 // Vendors
 import Storage from "../modules/storage/storage";
-
 import config from "../../config/global";
-import Location from "../modules/locate/Location";
-import distance from "../modules/locate/distance";
-// import { IDashboardDate, DashboardDate } from "../containers/dashboard/block";
 import { Dashboard } from "../modules/dashboard/dashboard";
 import { Block } from "../modules/dashboard/block";
+import { Interact } from "../store/interact";
 
 // Stores
 
@@ -26,12 +23,25 @@ interface IDashboardStore {
 const DashboardStoreInit = (): any => {
   const state: IDashboardStore = {
     dashboards: [],
-    activeIndex: Storage.local.get("dashboard/lastIndex") || 0,
+    activeIndex: 0, //Storage.local.get("dashboard/lastIndex")
   };
 
   const { update, subscribe, set } = writable(state);
 
   const methods = {
+    async init(): Promise<void> {
+      let dashboards = await methods.get();
+      update((state: any) => {
+        dashboards = dashboards || [];
+        state.dashboards = dashboards
+          .map((dashboard) => {
+            return dashboard instanceof Dashboard ? dashboard : new Dashboard(dashboard);
+          })
+          .filter((d) => d);
+        console.log("from store", { dashboards });
+        return state;
+      });
+    },
     saveIndex(index) {
       Storage.local.put("dashboard/lastIndex", index);
     },
@@ -47,6 +57,20 @@ const DashboardStoreInit = (): any => {
         return state;
       });
     },
+    async newDashboard() {
+      let name = await Interact.prompt("Create new Dashboard", null, {
+        placeholder: "Dashboard Label",
+      });
+      if (name) {
+        let dashboard = new Dashboard({ label: name });
+        update((state) => {
+          state.dashboards.push(dashboard);
+          state.activeIndex = state.dashboards.length - 1;
+          return state;
+        });
+        return await methods.save();
+      }
+    },
     next() {
       update((state: IDashboardStore) => {
         if (state.activeIndex == state.dashboards.length - 1) {
@@ -57,6 +81,14 @@ const DashboardStoreInit = (): any => {
         methods.saveIndex(state.activeIndex);
         return state;
       });
+    },
+    state(payload: any) {
+      let _state;
+      update((state) => {
+        payload = { ...state, ...payload };
+        return payload;
+      });
+      return payload;
     },
     previous() {
       update((state: IDashboardStore) => {
@@ -75,17 +107,20 @@ const DashboardStoreInit = (): any => {
         dashboards = JSON.parse(JSON.stringify(state.dashboards));
         return state;
       });
-      dashboards = dashboards.map((dashboard) => {
-        dashboard.blocks = dashboard.blocks.map((block: any) => {
-          delete block.stats;
-          delete block.logs;
-          if (block.element && block.element.obj) {
-            delete block.element.obj;
-          }
-          return block;
+
+      dashboards = dashboards
+        .filter((d) => d)
+        .map((dashboard) => {
+          dashboard.blocks = dashboard.blocks.map((block: any) => {
+            delete block.stats;
+            delete block.logs;
+            if (block.element && block.element.obj) {
+              delete block.element.obj;
+            }
+            return block;
+          });
+          return dashboard;
         });
-        return dashboard;
-      });
       if (dashboards) {
         return Storage.put(`${config.data_root}/dashboards.json`, dashboards);
       } else {
@@ -95,7 +130,6 @@ const DashboardStoreInit = (): any => {
     async saveBlock(block: Block) {
       if (block) {
         let _state: IDashboardStore = methods.data();
-
         let found = false;
         delete block._editing;
         _state.dashboards = _state.dashboards.map((dashboard: Dashboard) => {
@@ -118,13 +152,6 @@ const DashboardStoreInit = (): any => {
         });
         return methods.save();
       }
-    },
-    newDashboard() {
-      update((state: IDashboardStore) => {
-        state.dashboards.push(new Dashboard());
-        state.activeIndex = state.dashboards.length - 1;
-        return state;
-      });
     },
     async delete(dashboard: Dashboard) {
       update((state: IDashboardStore) => {
@@ -168,16 +195,6 @@ const DashboardStoreInit = (): any => {
       //   dashboards.push(new Dashboard({ label: "My First Dashboard", blocks: [] }));
       // }
       return dashboards;
-    },
-    async init(): Promise<void> {
-      let dashboards = await methods.get();
-      update((state: any) => {
-        state.dashboards = dashboards.map((dashboard) => {
-          return dashboard instanceof Dashboard ? dashboard : new Dashboard(dashboard);
-        });
-        dashboards = state.dashboards;
-        return state;
-      });
     },
   };
 

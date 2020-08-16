@@ -22,16 +22,13 @@
       if (wrapper && wrapper.children) {
         for (let i = 0; i < wrapper.children.length; i++) {
           let child = wrapper.children[i];
-          child.addEventListener("click", event => {
-            let selectedIndex = Array.prototype.indexOf.call(
-              wrapper.children,
-              event.target
-            );
+          child.addEventListener("click", (event) => {
+            let selectedIndex = Array.prototype.indexOf.call(wrapper.children, event.target);
             methods.selectIndex(selectedIndex);
           });
         }
 
-        scroller.addEventListener("scroll", evt => {
+        scroller.addEventListener("scroll", (evt) => {
           scroller.setAttribute("data-scroll", evt.target.scrollLeft);
         });
 
@@ -40,7 +37,7 @@
     },
     // Clear currently selected index
     clearSelected() {
-      if (activeIndex > -1) {
+      if (activeIndex > -1 && wrapper.children[activeIndex]) {
         wrapper.children[activeIndex].classList.remove(activeClass);
       }
     },
@@ -64,7 +61,7 @@
         child.classList.add(activeClass);
       } catch (e) {}
       ready = true;
-    }
+    },
   };
   // when component mounts
   onMount(() => {

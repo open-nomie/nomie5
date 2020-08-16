@@ -76,6 +76,23 @@ TODO: Organize main into components or containers.
   height: 16px;
 }
 
+.board-actions {
+  max-width: 300px !important;
+  .btn-group {
+    background-color: var(--color-solid);
+    box-shadow: var(--box-shadow-tight);
+    .btn .n-text {
+      color: var(--color-inverse-2) !important;
+    }
+    .btn {
+      border-right: solid 1px var(--color-solid-1);
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+}
+
 // HACK! This isn't working in the component
 .library-modal .n-modal-body {
   background-color: var(--color-bg) !important;

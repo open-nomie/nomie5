@@ -5,6 +5,7 @@
   export let className = "";
   export let pageTitle = undefined;
   export let showTabs = true;
+  export let headerClassNames = "";
 
   function generateContent() {
     return new Array(300).fill("hello").join(" ");
@@ -26,7 +27,7 @@
   {showTabs ? 'has-tabs' : 'no-tabs'}"
   {style}>
   {#if hasHeader}
-    <header class="layout-header">
+    <header class="layout-header {headerClassNames}">
       <slot name="header" />
     </header>
     <div class="layout-header-fade" />

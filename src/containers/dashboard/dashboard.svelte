@@ -41,6 +41,8 @@
   import { LastUsed } from "../../store/last-used";
   import type Person from "../../modules/person/person";
   import HScroller from "../../components/h-scroller/h-scroller.svelte";
+  import Input from "../../components/input/input.svelte";
+  import { Lang } from "../../store/lang";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
   let people: any; // holder of User People - loaded from subscribe
@@ -253,6 +255,7 @@
    */
   function initDashboard() {
     // Loop over the blocks - convert them to real blocks.
+
     try {
       dashboards[$DashboardStore.activeIndex] = dashboards[$DashboardStore.activeIndex] || new Dashboard();
       dashboards[$DashboardStore.activeIndex].blocks = dashboards[$DashboardStore.activeIndex].blocks.map((block) => {
@@ -267,6 +270,7 @@
         }
         return nBlock;
       });
+
       loadActiveDashboard();
     } catch (e) {
       Interact.alert("Error", e.message);
@@ -321,6 +325,11 @@
     });
   });
 
+  async function done() {
+    DashboardStore.save();
+    toggleEdit();
+  }
+
   async function deleteDashboard() {
     let confirmed = await Interact.confirm("Delete dashboard?", "You cannot undo this action.");
     if (confirmed) {
@@ -343,123 +352,112 @@
     padding: 10px 16px 16px;
     justify-content: space-between;
     align-content: flex-start;
+    min-height: 70vh;
+  }
+  .new-block {
+    background-color: var(--color-solid);
+    box-shadow: var(--box-shadow-tight);
   }
 </style>
 
-<NLayout className="dasboard" pageTitle="Dashboard" showTabs={true}>
-
-  <div slot="header" class="n-toolbar-grid container">
-    <div class="left">
-      <Button color="clear" on:click={DashboardStore.newDashboard}>Add</Button>
-    </div>
-    <div class="main title">
-      <!-- <HScroller activeIndex={$DashboardStore.activeIndex} className="n-board-tabs">
-        {#each dashboards || [] as board, i (board.id)}
-          <button
-            class="tab board-{board.id}
-            {i == $DashboardStore.activeIndex ? 'selected' : 'inactive'}"
-            on:click={() => {
-              DashboardStore.toIndex(i);
-            }}>
-            {board.label}
-          </button>
-        {/each}
-      </HScroller> -->
-
-      <div class="n-row">
-        <div class="n-filler" />
-        <Stepper single dark steps={(dashboards || []).length} current={$DashboardStore.activeIndex} />
-        <div class="n-filler" />
-      </div>
-    </div>
-    <div class="right">
-      <Button color="clear" on:click={toggleEdit}>{editMode ? 'Done' : 'Edit'}</Button>
-    </div>
+<NLayout className="dasboard" headerClassNames="bg-solid" pageTitle="Dashboard" showTabs={true}>
+  <div slot="header" class="n-row pl-2 container">
+    <HScroller activeIndex={$DashboardStore.activeIndex} className="n-board-tabs">
+      {#each dashboards || [] as board, i (board.id)}
+        <button
+          class="tab board-{board.id}
+          {i == $DashboardStore.activeIndex ? 'selected' : 'inactive'}"
+          on:click={() => {
+            DashboardStore.toIndex(i);
+          }}>
+          {board.label}
+        </button>
+      {/each}
+    </HScroller>
+    <Button color="clear" className="mt-2" on:click={DashboardStore.newDashboard}>
+      <Icon name="addOutline" size="18" />
+    </Button>
   </div>
+  {#if activeDashboard}
+    <div class="container h-100">
+      {#if editMode}
+        <div class="n-toolbar n-row px-2 mt-2">
+          <Input type="text" placeholder="Dashboard Label" bind:value={activeDashboard.label} />
+          <Button color="clear" className="text-primary-bright" on:click={done}>{editMode ? 'Done' : 'Edit'}</Button>
+        </div>
+      {/if}
+      {#if !editMode && ready}
+        <div class="dashboard-wrapper" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
+          {#if people && trackers}
+            {#if activeDashboard.blocks.length == 0}
+              <div class="center-all p-5 n-panel vertical">
+                <Text faded size="lg">😔 Empty Dashboard</Text>
+                <Button size="xs" className="mt-2" on:click={newBlock}>Add a Widget...</Button>
+              </div>
+            {/if}
 
-  <div class="container h-100">
-    <div class="n-toolbar n-row px-2">
-      <Text size="xl" className="px-2 filler" bold on:click={rename}>
-        <span style="border-bottom:dotted 1px rgba(100,100,100,0.4)">{activeDashboard.label}</span>
-      </Text>
-      {#if (dashboards || []).length > 1}
-        <Button color="clear" on:click={DashboardStore.previous}>
-          <Icon name="chevronLeft" />
-        </Button>
-        <Button color="clear" on:click={DashboardStore.next}>
-          <Icon name="chevronRight" />
-        </Button>
+            {#each activeDashboard.blocks as block (block.id)}
+              <Dashblock
+                {block}
+                on:click={() => {
+                  editBlock(block);
+                }} />
+            {/each}
+          {/if}
+        </div>
+        <div class="board-actions filler">
+          <div class="btn-group filler">
+            <Button on:click={newBlock} color="clear">
+              <Text size="sm">{Lang.t('general.add', 'Add')} Widget</Text>
+            </Button>
+            <Button on:click={toggleEdit} color="clear">
+              <Text size="sm">{Lang.t('general.edit', 'Edit')}</Text>
+            </Button>
+            <Button on:click={deleteDashboard} color="clear">
+              <Text size="sm">{Lang.t('general.delete', 'Delete')}</Text>
+            </Button>
+          </div>
+        </div>
+      {:else if ready}
+        <SortableList
+          items={activeDashboard.blocks || []}
+          handle=".menu-handle"
+          key="id"
+          on:update={(sorted) => {
+            activeDashboard.blocks = sorted.detail;
+            DashboardStore.update((state) => {
+              state.dashboards[$DashboardStore.activeIndex] = activeDashboard;
+              return state;
+            });
+            DashboardStore.save();
+          }}
+          let:item>
+          <ListItem solo className="pb-2" title={item.getTitle()}>
+            <Text size="sm">
+              {#if item.timeRange}{item.timeRange.getLabel()}{/if}
+              <span class="opacity-5">{item.type}</span>
+            </Text>
+            <div slot="right" class="menu-handle">
+              <Icon name="menu" />
+            </div>
+          </ListItem>
+        </SortableList>
+      {:else}
+        <div class="p-4 text-center mt-4">
+          <Text size="sm" faded>{Lang.t('general.loading', 'Loading')}...</Text>
+        </div>
       {/if}
     </div>
-    {#if !editMode && ready}
-      <div class="dashboard-wrapper h-100" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
-        {#if people && trackers}
-          {#each activeDashboard.blocks as block (block.id)}
-            <Dashblock
-              {block}
-              on:click={() => {
-                editBlock(block);
-              }} />
-          {/each}
-        {/if}
-        <div class="w-100 flex-grow">
-          <button class="btn btn-round btn-light btn-block mx-auto mt-4 mb-2" style="max-width:300px; max-height:50px;" on:click={newBlock}>
-            <Icon name="add" size="24" />
-            Add Block
-          </button>
-          <Button
-            size="xs"
-            color="clear"
-            block
-            className="mx-auto mt-4 mb-4"
-            style="max-width:300px; max-height:22px; opacity:0.6"
-            on:click={deleteDashboard}>
-            <Icon name="delete" size="14" className="mr-2" />
-            Delete Dashboard
-          </Button>
-        </div>
-      </div>
-    {:else if ready}
-      <div class="mt-2" />
-      <SortableList
-        items={activeDashboard.blocks || []}
-        handle=".menu-handle"
-        key="id"
-        on:update={(sorted) => {
-          activeDashboard.blocks = sorted.detail;
-          DashboardStore.update((state) => {
-            state.dashboards[$DashboardStore.activeIndex] = activeDashboard;
-            return state;
-          });
-          DashboardStore.save();
-        }}
-        let:item>
-        <ListItem solo className="pb-2" title={item.getTitle()}>
-          <Text size="sm">
-            {#if item.timeRange}{item.timeRange.getLabel()}{/if}
-            <span class="opacity-5">{item.type}</span>
-          </Text>
-          <div slot="right" class="menu-handle">
-            <Icon name="menu" />
-          </div>
-        </ListItem>
-      </SortableList>
-    {:else}
-      <div class="p-4 text-center mt-4">
-        <Text size="sm" faded>Loading Dashboard</Text>
-      </div>
-    {/if}
-  </div>
-
+  {/if}
 </NLayout>
 <Modal show={editingBlock !== undefined}>
   <div class="n-toolbar-grid" slot="header">
     <button class="btn btn-clear left" on:click={clearEditing}>
       <Icon name="close" />
     </button>
-    <div class="main">Block Editor</div>
+    <div class="main">Widget Editor</div>
     <button class="btn btn-clear right" on:click={saveEditingBlock}>
-      {#if editingBlock && editingBlock._editing}Update{:else}Save{/if}
+      {#if editingBlock && editingBlock._editing}{Lang.t('general.update', 'Update')}{:else}{Lang.t('general.save', 'Save')}{/if}
     </button>
 
   </div>

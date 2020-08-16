@@ -21,7 +21,7 @@
   import NTrackerButton from "./tracker-button.svelte";
   import NToolbar from "../../components/toolbar/toolbar.svelte";
   import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
-  import NIcon from "../../components/icon/icon.svelte";
+  import Icon from "../../components/icon/icon.svelte";
   import NSearchBar from "../../components/search-bar/search-bar.svelte";
   import NModal from "../../components/modal/modal.svelte";
   import LogoType from "../../components/logo/logo.svelte";
@@ -581,7 +581,8 @@
     justify-content: center;
     align-items: center;
   }
-  .board-edit-button {
+
+  :global(.board-edit-button) {
     display: flex;
     align-items: center;
     padding: 0px 16px;
@@ -596,31 +597,34 @@
     background-color: var(--color-solid-2);
     color: var(--color-inverse-1) !important;
   }
-  .board-actions {
+  :global(.board-actions) {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 16px;
+    margin: 16px auto;
     margin-bottom: 32px;
     padding: 0 10px;
+    max-width: 250px;
   }
 </style>
 
 <!-- Start App Layout -->
-<NLayout pageTitle={appTitle}>
+<NLayout pageTitle={appTitle} headerClassNames={'bg-solid'}>
   <header slot="header">
     {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
       <div class="container p-0 n-row h-100">
         {#if $TrackerStore.timers.length}
-          <button class="btn tab tap-icon pl-3 pr-1" on:click={TrackerStore.toggleTimers}>
-            <NIcon name="time" size={22} className="fill-red-pulse" />
+          <button class="btn tab tap-icon pl-3 pr-1 mt-2" on:click={TrackerStore.toggleTimers}>
+            <Icon name="time" size={18} className="fill-red-pulse" />
           </button>
         {/if}
         <!-- IF MORE THAN 13 TRACKERS - SHOW SEARCH ICON-->
         {#if Object.keys($TrackerStore.trackers).length > 13}
-          <button class="btn tab tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
-            <NIcon name="search" size={22} className={state.searching ? 'fill-primary-bright' : 'fill-faded-2'} />
+          <button class="btn tab tap-icon mt-2 pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
+            <Icon name="search" size={18} className={state.searching ? 'fill-primary-bright' : 'fill-inverse-2'} />
           </button>
+        {:else}
+          <div class="pr-2" />
         {/if}
 
         <NBoardTabs
@@ -631,23 +635,34 @@
             methods.stopSearch();
             BoardStore.setActive(event.detail.id, event.detail);
           }}>
-          {#if $BoardStore.boards.length > 1}
+          <div slot="right" class="n-row">
             <button
-              class="btn btn-clear tab tap-icon px-2 pl-1"
+              id="create-tab"
+              class="btn btn-clear mt-2 px-2"
               on:click={() => {
-                Interact.toggleBoardSorter();
+                methods.newBoard();
               }}>
-              <NIcon name="settings" size="22" className="fill-primary-bright" />
+              <Icon name="addOutline" size="18" />
             </button>
-          {/if}
+            {#if $BoardStore.boards.length > 2}
+              <button
+                class="btn btn-clear mt-2 px-2"
+                on:click={() => {
+                  Interact.toggleBoardSorter();
+                }}>
+                <Icon name="settings" size="18" />
+              </button>
+            {/if}
+          </div>
         </NBoardTabs>
+
       </div>
     {:else}
       <NToolbarGrid>
         <div slot="left">
           {#if $TrackerStore.timers.length}
-            <button xtransition:fade class="btn tool tap-icon pl-2" on:click={TrackerStore.toggleTimers}>
-              <NIcon name="time" size={20} className="fill-red-pulse" />
+            <button class="btn tool tap-icon pl-2" on:click={TrackerStore.toggleTimers}>
+              <Icon name="time" size={20} className="fill-red-pulse" />
             </button>
           {/if}
         </div>
@@ -655,10 +670,13 @@
           <LogoType size={20} on:click={methods.enableBoards} />
         </div>
         <button slot="right" class="btn btn-clear btn-icon tap-icon" on:click={methods.enableBoards}>
-          <NIcon name="newTab" size="20" />
+          <Icon name="newTab" size="20" />
         </button>
       </NToolbarGrid>
     {/if}
+  </header>
+  <!-- end header-->
+  <div slot="content" class="container board-container">
     {#if state.searching}
       <div>
         <NSearchBar
@@ -674,14 +692,11 @@
           }}
           placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}...">
           <button slot="right-inside" class="btn btn-clear" on:click={methods.toggleSearch}>
-            <NIcon name="close" className="fill-faded-2" />
+            <Icon name="close" className="fill-faded-2" />
           </button>
         </NSearchBar>
       </div>
     {/if}
-  </header>
-  <!-- end header-->
-  <div slot="content" class="container board-container">
     {#if user}
       {#if !isReady.done}
         <div class="empty-notice">
@@ -720,7 +735,7 @@
                   }} />
               {/each}
               <button class="btn-close" on:click={TrackerStore.hideTimers}>
-                <NIcon name="chevronUp" className="fill-inverse" />
+                <Icon name="chevronUp" className="fill-inverse" />
               </button>
             </div>
           {/if}
@@ -749,12 +764,16 @@
                 }} />
             {/each}
             {#if !state.searching && $BoardStore.active !== '_timers'}
-              <NTrackerButton on:click={methods.addButtonTap} tracker={{ label: 'Add', emoji: '➕' }} />
+              <NTrackerButton
+                on:click={methods.addButtonTap}
+                tracker={{ label: Lang.t('tracker.add-tracker', 'Add Tracker'), emoji: '➕' }} />
             {/if}
           </div>
 
           <div class="board-actions">
-            <button on:click={editBoard} style="color:#FFF" class="btn btn btn-round board-edit-button clickable">Edit</button>
+            <button on:click={editBoard} style="color:#FFF" class="btn btn btn-round board-edit-button clickable">
+              <Text>Edit Tab</Text>
+            </button>
           </div>
 
           <!-- Include User Tips - shit should be a component -->

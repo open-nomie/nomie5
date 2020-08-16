@@ -87,6 +87,11 @@ button:focus {
     }
     font-size: 0.75rem !important;
   }
+  &.lg {
+    .btn {
+      min-height: 40px;
+    }
+  }
 }
 
 .btn-sm {

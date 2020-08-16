@@ -60,14 +60,6 @@
       {:else}{board.label}{/if}
     </button>
   {/each}
-  <button
-    id="create-tab"
-    class="tap-icon tab btn btn-clear"
-    on:click={() => {
-      dispatch('create');
-    }}>
-    <NIcon name="newTab" className="fill-primary-bright" size={20} />
-  </button>
   <slot />
   <slot name="right" />
 </NHScroller>
