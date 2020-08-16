@@ -31,7 +31,7 @@ import NomieLog from "../modules/nomie-log/nomie-log";
 
 // Stores
 import { LedgerStore } from "./ledger";
-import { Lang } from "../store/lang";
+import { Lang } from "./lang";
 
 const console = new Logger("✋ Interact");
 

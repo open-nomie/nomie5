@@ -14,6 +14,7 @@ import { Lang } from "../../store/lang";
 import { DashboardStore } from "../../store/dashboard-store";
 import math from "../../utils/math/math";
 import type { INormalizedImport } from "./import";
+import Location from "../locate/Location";
 
 type IImportTypes = "dashboards" | "locations" | "people" | "trackers" | "logs" | "context";
 export interface IImportStatus {
@@ -136,7 +137,7 @@ export default class ImportLoader {
   public async importLocations() {
     let currentLocations = Locations.getAll();
     this.normalized.locations = this.normalized.locations || [];
-    this.normalized.locations.forEach((loc) => {
+    this.normalized.locations.forEach((loc: any) => {
       if (!currentLocations.find((l) => l.id == loc.id)) {
         currentLocations.push(loc);
       }

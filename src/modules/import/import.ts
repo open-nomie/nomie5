@@ -6,7 +6,7 @@ import { N2ImportNormalizer } from "./import.n2";
 import { N3ImportNormalizer } from "./import.n3";
 import { N5ImportNormalizer } from "./import.n5";
 import type { IPerson } from "../person/person";
-import type { ILocation } from "../locate/Location";
+// import type { ILocation } from "../locate/Location";
 
 export interface ITrackers {
   [key: string]: ITracker;
@@ -21,7 +21,7 @@ export interface INormalizedImport {
   boards: Array<any>;
   context: Array<string>;
   people: IPeople;
-  locations: Array<ILocation>;
+  locations: Array<Location>;
   dashboards: Array<Dashboard>;
   logs: Array<NLog>;
 }

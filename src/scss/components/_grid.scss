@@ -11,6 +11,11 @@
   justify-content: space-evenly;
 }
 
+.n-grid-split {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
 .n-grid.framed {
   background-color: var(--color-solid-2);
   width: calc(100% - 16pt);

@@ -10,22 +10,21 @@ export interface ILocation {
   id?: string;
 }
 
-export default class Location implements ILocation {
+export default class Location {
   lat: number;
   lng: number;
   name: string;
   hash?: string;
-  id?: string;
+  id: string;
 
-  constructor(starter) {
-    starter = starter || {};
+  constructor(starter: any) {
     this.lat = starter.lat;
     this.lng = starter.lng;
     this.name = starter.name;
-    this.hash = starter.geohash || this.getGeoHash();
+    this.hash = starter.hash || this.getGeoHash();
     this.id = starter.id || this.hash; // deprecated
   }
-  getGeoHash() {
+  getGeoHash(): string {
     return Geohash.encode(this.lat, this.lng, 10);
   }
 }
