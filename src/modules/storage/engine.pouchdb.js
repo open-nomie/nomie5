@@ -32,8 +32,7 @@ export default {
   syncer: null, // the sync object
   db: new PouchDB(dbKey, {
     auto_compaction: true,
-    rev_limit: 3,
-    ajax: { cache: false }
+    ajax: { cache: false },
   }),
   onReady(func) {
     func(this);
@@ -43,7 +42,7 @@ export default {
     // }
   },
   fireReady() {
-    listeners.forEach(func => {
+    listeners.forEach((func) => {
       func();
     });
     listeners = [];
@@ -66,9 +65,9 @@ export default {
     this.syncing = true;
     if (change.direction == "pull") {
       // It's an update
-      let docs = change.change.docs.forEach(doc => {
+      let docs = change.change.docs.forEach((doc) => {
         if (changeListeners.hasOwnProperty(doc._id)) {
-          changeListeners[doc._id].forEach(func => {
+          changeListeners[doc._id].forEach((func) => {
             func(doc.data);
           });
         }
@@ -105,16 +104,16 @@ export default {
         batch_size: 10,
         auth: {
           username: remote.username,
-          password: remote.password
-        }
+          password: remote.password,
+        },
       });
 
       this.syncer
-        .catch(e => {
+        .catch((e) => {
           console.error("Catch error in syncer", e.message);
           this.syncing = false;
         })
-        .then(res => {
+        .then((res) => {
           self.syncing = true;
           self.syncValid = true;
         });
@@ -123,7 +122,7 @@ export default {
         .on("complete", this.onChange)
         .on("change", this.onChange)
         .on("paused", this.onPaused)
-        .on("error", e => {
+        .on("error", (e) => {
           this.onError(e);
           errorCount++;
           if (errorCount > 10) {
@@ -154,18 +153,18 @@ export default {
   },
   info() {
     return {
-      sync: syncer
+      sync: syncer,
     };
   },
   getProfile() {
     return {
-      username: "Local User"
+      username: "Local User",
     };
   },
   async put(path, content) {
     let payload = {
       _id: path,
-      data: content
+      data: content,
     };
     // check if it exists
     let exists = await this.getFullDoc(path);
@@ -197,7 +196,7 @@ export default {
   async list() {
     let docs = await this.db.allDocs();
     let rows = docs ? docs.rows : [];
-    return rows.map(doc => doc.id);
+    return rows.map((doc) => doc.id);
   },
   async delete(path) {
     let doc = await this.getFullDoc(path);
@@ -205,5 +204,5 @@ export default {
       return await this.db.remove(doc);
     }
     return null;
-  }
+  },
 };
