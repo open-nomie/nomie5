@@ -57,6 +57,10 @@
 
 <style lang="scss">
   @import "../../scss/vendor/bootstrap/base";
+
+  :global(.type-normal .full-screen-modal .n-modal-footer, .type-fullscreen .n-modal-footer) {
+    padding-bottom: calc(env(safe-area-inset-bottom));
+  }
   .n-modal-frame {
     position: fixed;
     top: 0;
@@ -120,12 +124,7 @@
         }
       }
     }
-    &.type-normal,
-    &.type-fullscreen {
-      .n-modal-footer {
-        padding-bottom: calc(env(safe-area-inset-bottom));
-      }
-    }
+
     &.type-cover {
       .n-modal {
         padding-top: env(safe-area-inset-top) !important;

@@ -69,7 +69,7 @@ button:focus {
     font-size: 0.6rem !important;
     padding: 0pt 8pt 0pt 8pt;
     text-transform: uppercase;
-    font-weight: bold;
+    font-weight: 500;
     svg {
       width: 20px !important;
       margin-right: -4px;
@@ -82,6 +82,15 @@ button:focus {
 
 .btn-group {
   .btn {
+    &:first-child {
+      border-top-left-radius: 16px;
+      border-bottom-left-radius: 16px;
+    }
+    &:last-child {
+      border-top-right-radius: 16px;
+      border-bottom-right-radius: 16px;
+    }
+
     &:active {
       color: var(--color-primary) !important;
     }

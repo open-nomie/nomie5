@@ -30,6 +30,7 @@
 
   // vendors
   import dayjs from "dayjs";
+  import Text from "../text/text.svelte";
 
   // props
   export let log = undefined;
@@ -114,11 +115,11 @@
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row time-row">
       <div class="time truncate" style="max-width:60%;">
-        <div class="day-time truncate">{logMeta.endDate.format(`ddd ${timeFormat}`)}</div>
-        <div class="date-ago truncate">
+        <Text size="md" style="line-height:1.4rem">{logMeta.endDate.format(`ddd ${timeFormat}`)}</Text>
+        <Text size="xs" className="text-inverse-2">
           {logMeta.endDate.format('MMM Do YYYY')}
-          <span class="ago">{time.fromNow(logMeta.endDate)} ago</span>
-        </div>
+          <span class="ago text-inverse-3 ml-1">{time.fromNow(logMeta.endDate)} ago</span>
+        </Text>
       </div>
 
       <div class="filler" />
@@ -129,7 +130,7 @@
             Interact.showLocations([displayLog]);
             event.stopPropagation();
           }}
-          class="btn btn-xs btn-badge btn-primary text-white location-badge truncate">
+          class="btn btn-xs btn-badge text-normal btn-primary text-white location-badge truncate">
           <LocationBadge location={displayLog} />
         </button>
       {/if}

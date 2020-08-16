@@ -151,6 +151,11 @@
       navigate(`/board/${$BoardStore.activeBoard.id}`);
     }
   }
+  async function deleteBoard() {
+    if ($BoardStore.activeBoard) {
+      await BoardStore.deleteConfirm($BoardStore.activeBoard);
+    }
+  }
 
   function setBoardTrackers() {
     /** If its the ALL Board we need to handle it different **/
@@ -772,16 +777,27 @@
             {/if}
           </div>
 
-          <div class="board-actions">
+          <!-- <div class="board-actions">
             <button on:click={editBoard} style="color:#FFF" class="btn btn btn-round board-edit-button clickable">
               <Text>Edit Tab</Text>
             </button>
-          </div>
+          </div> -->
 
           <!-- Include User Tips - shit should be a component -->
-          <NTip {tips} />
 
         </main>
+        <div class="board-actions mt-5 mb-2" style="min-width:200px;">
+          <div class="btn-group filler">
+            <Button on:click={editBoard} color="clear">
+              <Text size="sm">{Lang.t('general.edit-tab', 'Edit Tab')}</Text>
+            </Button>
+            <Button on:click={deleteBoard} color="clear" disabled={!$BoardStore.activeBoard}>
+              <Text size="sm">{Lang.t('general.delete', 'Delete')}</Text>
+            </Button>
+          </div>
+
+        </div>
+        <NTip {tips} />
       {/if}
     {/if}
   </div>
