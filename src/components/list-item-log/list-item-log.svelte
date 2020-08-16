@@ -15,7 +15,6 @@
   import NPoints from "../points/points.svelte";
   import NText from "../text/text.svelte";
   import NNoteTextualizer from "../note-textualizer/note-textualizer.svelte";
-  import NCameraImage from "../camera/image.svelte";
 
   import NTrackerSmallBlock from "../tracker-ball/tracker-small-block.svelte";
 

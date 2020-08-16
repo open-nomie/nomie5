@@ -13,7 +13,7 @@
   import nid from "../../modules/nid/nid";
 
   import { UserStore } from "../../store/user-store";
-  import { Interact } from "./../../store/interact.js";
+  import { Interact } from "../../store/interact";
 
   export let labels = [];
   export let height = 200;

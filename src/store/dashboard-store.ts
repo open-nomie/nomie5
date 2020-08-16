@@ -9,7 +9,7 @@ import Storage from "../modules/storage/storage";
 import config from "../../config/global";
 import { Dashboard } from "../modules/dashboard/dashboard";
 import { Block } from "../modules/dashboard/block";
-import { Interact } from "../store/interact";
+import { Interact } from "./interact";
 
 // Stores
 

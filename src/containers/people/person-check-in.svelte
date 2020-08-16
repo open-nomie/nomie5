@@ -18,15 +18,15 @@
   import tick from "../../utils/tick/tick";
 
   // Stores
-  import { Interact } from "../../store/interact.js";
-  import { Lang } from "../../store/lang.js";
-  import { LedgerStore } from "../../store/ledger.js";
+  import { Interact } from "../../store/interact";
+  import { Lang } from "../../store/lang";
+  import { LedgerStore } from "../../store/ledger";
 
   const state = {
     note: ` @${$Interact.people.active} `,
     checkingIn: false,
     checkedIn: false,
-    score: 0
+    score: 0,
   };
   const getPlaceholder = () => {
     return `What are you and @${$Interact.people.active} up to?`;
@@ -35,7 +35,7 @@
     state.checkingIn = true;
     try {
       let log = new NomieLog({
-        note: state.note
+        note: state.note,
       });
       log.score = state.score;
       let saved = await LedgerStore.saveLog(log);
@@ -53,15 +53,11 @@
 <div class="person-checkin p-3">
   <div class="text-area-holder">
 
-    <NInput
-      type="textarea"
-      rows={6}
-      placeholder={getPlaceholder()}
-      bind:value={state.note} />
+    <NInput type="textarea" rows={6} placeholder={getPlaceholder()} bind:value={state.note} />
     <AutoComplete
       scroller
       input={state.note}
-      on:select={evt => {
+      on:select={(evt) => {
         let payload = evt.detail;
         state.note = payload.note;
       }} />
@@ -70,23 +66,20 @@
     <NPositivitySelector
       score={state.score}
       size="xl"
-      on:change={evt => {
+      on:change={(evt) => {
         state.score = evt.detail;
       }} />
 
   </div>
   {#if !state.checkingIn && !state.checkedIn}
-    <button class="btn btn-block btn-primary mt-4" on:click={checkIn}>
-      Check-In
-    </button>
+    <button class="btn btn-block btn-primary mt-4" on:click={checkIn}>Check-In</button>
   {:else if state.checkingIn}
     <button class="btn btn-block btn-light mt-4" disabled>
       <Spinner size={24} className="mr-3" />
       <div class="ml-2">Checking In...</div>
     </button>
   {/if}
-  <div
-    class="text-center mt-4 animate up {state.checkedIn ? 'visible' : 'hidden'}">
+  <div class="text-center mt-4 animate up {state.checkedIn ? 'visible' : 'hidden'}">
     <NIcon name="checkmarkOutline" size="60" className="fill-green" />
   </div>
 </div>

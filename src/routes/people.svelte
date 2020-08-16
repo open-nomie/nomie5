@@ -17,10 +17,10 @@
 
   import Person from "../modules/person/person";
 
-  import { Lang } from "../store/lang.js";
-  import { PeopleStore } from "../store/people-store.js";
-  import { Interact } from "../store/interact.js";
-  import { LedgerStore } from "../store/ledger.js";
+  import { Lang } from "../store/lang";
+  import { PeopleStore } from "../store/people-store";
+  import { Interact } from "../store/interact";
+  import { LedgerStore } from "../store/ledger";
 
   let state = {
     people: [],

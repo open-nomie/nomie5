@@ -25,8 +25,8 @@
   import dayjs from "dayjs";
 
   import { LedgerStore } from "../../store/ledger";
-  import { Interact } from "../../store/interact.js";
-  import { PeopleStore } from "../../store/people-store.js";
+  import { Interact } from "../../store/interact";
+  import { PeopleStore } from "../../store/people-store";
 
   let domVisible = false;
   let avatarBase64 = null;
@@ -36,17 +36,14 @@
   let lastActivePersonKey;
   let activeLogs;
 
-  $: if (
-    $Interact.people.active &&
-    lastActivePersonKey !== $Interact.people.active
-  ) {
+  $: if ($Interact.people.active && lastActivePersonKey !== $Interact.people.active) {
     lastActivePersonKey = $Interact.people.active;
     domVisible = true;
     activePerson = new Person($PeopleStore.people[$Interact.people.active]);
   }
 
   const state = {
-    view: "check-in"
+    view: "check-in",
   };
 
   async function deleteUser() {
@@ -103,20 +100,16 @@
   async function loadActiveLogs() {
     let active = $Interact.people.active;
     activePerson = new Person($PeopleStore.people[active]);
-    activeLogs = await LedgerStore.queryPerson(
-      active,
-      dayjs().subtract(1, "year"),
-      dayjs()
-    );
+    activeLogs = await LedgerStore.queryPerson(active, dayjs().subtract(1, "year"), dayjs());
   }
 
   async function selectPhoto(evt) {
-    const toBase64 = file =>
+    const toBase64 = (file) =>
       new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
+        reader.onerror = (error) => reject(error);
       });
 
     let input = evt.target;
@@ -145,17 +138,10 @@
   }
 </style>
 
-<Modal
-  className="person-modal"
-  bodyClass="bg-solid-1"
-  show={domVisible}
-  type="bottom-slideup">
+<Modal className="person-modal" bodyClass="bg-solid-1" show={domVisible} type="bottom-slideup">
   <header class="w-100" slot="header" on:swipedown={close}>
     <NToolbarGrid>
-      <button
-        slot="left"
-        class="btn btn-clear btn-icon tap-icon"
-        on:click={close}>
+      <button slot="left" class="btn btn-clear btn-icon tap-icon" on:click={close}>
         <NIcon name="close" />
       </button>
       <div class="main">
@@ -195,17 +181,11 @@
       <div class="edit p-3">
 
         <NItem className="bg-transparent">
-          <NInput
-            type="text"
-            placeholder="Display Name"
-            bind:value={activePerson.displayName} />
+          <NInput type="text" placeholder="Display Name" bind:value={activePerson.displayName} />
         </NItem>
 
         <NItem className="bg-transparent">
-          <NInput
-            type="textarea"
-            placeholder="Notes"
-            bind:value={activePerson.notes} />
+          <NInput type="textarea" placeholder="Notes" bind:value={activePerson.notes} />
         </NItem>
 
         <NItem className="bg-transparent">
@@ -217,10 +197,7 @@
             {#if activePerson.avatar}
               <Dymoji avatar={activePerson.avatar} size={50} radius={0.3} />
             {:else}
-              <Dymoji
-                username={activePerson.displayName}
-                size={50}
-                radius={0.3} />
+              <Dymoji username={activePerson.displayName} size={50} radius={0.3} />
             {/if}
           </div>
 
@@ -244,18 +221,10 @@
         </NItem>
 
         <NItem className="bg-transparent">
-          <button
-            class="btn btn-block btn-secondary my-4"
-            on:click={saveActivePerson}>
-            Save @{activePerson.username}
-          </button>
+          <button class="btn btn-block btn-secondary my-4" on:click={saveActivePerson}>Save @{activePerson.username}</button>
         </NItem>
 
-        <NItem
-          className="bg-transparent text-red text-sm text-center"
-          on:click={deleteUser}>
-          Delete @{activePerson.username}...
-        </NItem>
+        <NItem className="bg-transparent text-red text-sm text-center" on:click={deleteUser}>Delete @{activePerson.username}...</NItem>
       </div>
     {:else if state.view == 'logs'}
       <NLogListLoader compact term={`@${activePerson.username}`} />

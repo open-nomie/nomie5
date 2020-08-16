@@ -13,7 +13,7 @@ import Logger from "../utils/log/log";
 
 import StartPack from "../modules/packs/default-trackers";
 import { TrackerStore } from "../store/tracker-store";
-import { Interact } from "../store/interact";
+import { Interact } from "./interact";
 import { Lang } from "./lang";
 
 // Stores

@@ -1,5 +1,5 @@
 <script>
-  import { Interact } from "./../../store/interact.js";
+  import { Interact } from "../../store/interact";
   import Map from "./../map/map.svelte";
   import NoteTextualizer from "./../../components/note-textualizer/note-textualizer.svelte";
   import TrackerSmallBlock from "./../../components/tracker-ball/tracker-small-block.svelte";

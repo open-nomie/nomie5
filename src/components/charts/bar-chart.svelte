@@ -1,5 +1,5 @@
 <script>
-  import { Interact } from "./../../store/interact.js";
+  import { Interact } from "../../store/interact";
   /**
    * God Speed! We're going to make a chart
    */
