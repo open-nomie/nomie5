@@ -58,16 +58,12 @@
 <style lang="scss">
   .date-time-bar {
     background-color: var(--color-solid);
-  }
-  .date-time-bar .buttons {
     display: grid;
     flex-shrink: 1;
     flex-grow: 1;
     grid-template-columns: 1fr 0.7fr;
-    padding: 0px;
-    height: 40px;
     align-items: center;
-    justify-content: stretch;
+
     button {
       height: 40px;
       flex-grow: 1;
@@ -99,34 +95,33 @@
       <slot name="left" />
     </div>
     <div class="date-time-bar">
-      <div class="buttons">
-        <button
-          class="date clickable"
-          class:text-center={_opened}
-          on:click={() => {
-            toggleOpen();
-          }}>
-          <Text size="md" truncate>{_date.format('ddd MMM D YYYY')}</Text>
-        </button>
-        <TimeSelect
-          bind:value={_date}
-          on:change={(evt) => {
-            setDate(evt.detail);
-          }} />
-      </div>
+      <button
+        class="date clickable"
+        class:text-center={_opened}
+        on:click={() => {
+          toggleOpen();
+        }}>
+        <Text size="md" truncate>{_date.format('ddd MMM D YYYY')}</Text>
+      </button>
 
-      <div class="animate up view date" class:visible={_opened} class:hidden={!_opened}>
-        {#if _opened}
-          <Calendar
-            on:dayClick={(evt) => {
-              setDate(evt.detail);
-            }}
-            initialDate={_date} />
-        {/if}
-      </div>
+      <TimeSelect
+        is24Hour={$UserStore.meta.is24Hour ? true : false}
+        bind:value={_date}
+        on:change={(evt) => {
+          setDate(evt.detail);
+        }} />
     </div>
     <div slot="right">
       <slot name="right" />
     </div>
   </ListItem>
+  <div class="animate up view date" class:visible={_opened} class:hidden={!_opened}>
+    {#if _opened}
+      <Calendar
+        on:dayClick={(evt) => {
+          setDate(evt.detail);
+        }}
+        initialDate={_date} />
+    {/if}
+  </div>
 {/if}

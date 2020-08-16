@@ -21,9 +21,7 @@
   export let closeOnBackgroundTap = false;
 
   const has_header = (arguments[1].$$slots || {}).hasOwnProperty("header");
-  const has_raw_header = (arguments[1].$$slots || {}).hasOwnProperty(
-    "raw-header"
-  );
+  const has_raw_header = (arguments[1].$$slots || {}).hasOwnProperty("raw-header");
   const has_footer = (arguments[1].$$slots || {}).hasOwnProperty("footer");
 
   let domVisible = false;
@@ -121,8 +119,11 @@
           border-radius: 0.7rem;
         }
       }
+    }
+    &.type-normal,
+    &.type-fullscreen {
       .n-modal-footer {
-        padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+        padding-bottom: calc(env(safe-area-inset-bottom));
       }
     }
     &.type-cover {
@@ -258,10 +259,7 @@
   }
 </style>
 
-<div
-  on:click={backgroundTap}
-  class="n-modal-frame {className} type-{type}
-  {domVisible ? 'visible' : 'hidden'}">
+<div on:click={backgroundTap} class="n-modal-frame {className} type-{type} {domVisible ? 'visible' : 'hidden'}">
   <div
     on:click|stopPropagation={() => {}}
     class="n-modal animate up {fullscreen ? 'full-screen-modal' : ''}
@@ -292,10 +290,7 @@
         {/if}
       </div>
     {/if}
-    <div
-      class="{bodyClass} n-modal-body {padding ? 'padding' : 'no-padding'}
-      {flexBody ? 'flex-body' : 'no-flex-body'}
-      ">
+    <div class="{bodyClass} n-modal-body {padding ? 'padding' : 'no-padding'} {flexBody ? 'flex-body' : 'no-flex-body'} ">
       <slot />
     </div>
     {#if has_footer}

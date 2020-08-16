@@ -63,6 +63,7 @@
   import exportData from "../../modules/export/export-helper";
 
   import OfflineQueue from "../../components/offline-queue/offline-queue.svelte";
+  import TimeSelect from "../../components/date-time-bar/time-select.svelte";
 
   // Consts
   const console = new Logger("board.svelte");
@@ -677,6 +678,7 @@
   </header>
   <!-- end header-->
   <div slot="content" class="container board-container">
+
     {#if state.searching}
       <div>
         <NSearchBar
