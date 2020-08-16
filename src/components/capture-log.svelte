@@ -284,9 +284,10 @@
   // Clear the settings when saved
   LedgerStore.hook("onLogSaved", (res) => {
     // methods.clear();
-    // setTimeout(() => {
-    //   methods.autoCompleteDone();
-    // });
+    setTimeout(() => {
+      state.advanced = false;
+      methods.autoCompleteDone();
+    });
   });
   // LedgerStore.hook("onSaveFailed", (res) => {
   //   console.log("🍺🍺 On Save Failed", res);

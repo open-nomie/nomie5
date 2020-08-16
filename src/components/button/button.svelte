@@ -10,6 +10,7 @@
   export let className = "";
   export let block = false;
   export let style = "";
+  export let disabled = false;
 </script>
 
 <style>
@@ -18,6 +19,7 @@
 
 <button
   {style}
+  {disabled}
   class={`btn ${block ? 'btn-block' : ''} btn-${type} btn-${shape} btn-${color} btn-${size} ${className} clickable`}
   on:click={() => {
     dispatch('click');
