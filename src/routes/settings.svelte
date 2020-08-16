@@ -231,7 +231,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               *******************************************
             -->
             <div class="n-list solo mb-3">
-              <Text bold className="my-2 mx-3">Importing Data</Text>
+              <Text bold className="my-3 mx-3">Importing Data</Text>
               <NItem className="clickable" bottomLine title={Lang.t('settings.nomie-api')} on:click={() => navigate('/api')}>
                 <span slot="left">🕸</span>
                 <span slot="right">
@@ -253,7 +253,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               </NItem>
             </div>
             <div class="n-list solo mb-3">
-              <Text bold className="my-2 mx-3">Exporting Data</Text>
+              <Text bold className="my-3 mx-3">Exporting Data</Text>
               <NItem bottomLine clickable title={Lang.t('settings.generate-backup')} to="/settings/export/backup">
                 <span slot="left">📦</span>
                 <span slot="right">
@@ -271,7 +271,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 
             <div class="n-list solo mb-3">
               <NItem>
-                <Text bold className="my-2">{Lang.t('general.type', 'Data Location')}</Text>
+                <Text bold className="my-1">{Lang.t('general.type', 'Data Location')}</Text>
                 <div slot="right">
                   <button class="btn btn-clear icon-right" on:click={methods.storageMenu}>
                     {#if $UserStore.storageType === 'local'}
@@ -322,7 +322,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             </div>
 
             <div class="n-list solo my-2">
-              <Text bold className="my-2 mx-3">{Lang.t('general.type', 'Finding old data')}</Text>
+              <Text bold className="my-3 mx-3">{Lang.t('general.type', 'Finding old data')}</Text>
               <NItem bottomLine title="Find Context" on:click={ContextStore.searchForContext}>
                 <span slot="left">💬</span>
               </NItem>

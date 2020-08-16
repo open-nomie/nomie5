@@ -14,11 +14,11 @@
   const methods = {
     backgroundClicked(event) {
       dispatch("close");
-    }
+    },
   };
   let escListener;
   $: if (show) {
-    escListener = document.addEventListener("keyup", evt => {
+    escListener = document.addEventListener("keyup", (evt) => {
       if (evt.key == "Escape") {
         dispatch("close");
       }
@@ -89,6 +89,11 @@
         border-radius: 0;
         margin-bottom: 0;
         margin-top: 0;
+        border: solid 1px var(--color-solid-1);
+        &:hover {
+          transform: scale(1) !important;
+          color: var(--color-inverse) !important;
+        }
         &:first-child {
           border-top-right-radius: $radius;
           border-top-left-radius: $radius;
@@ -128,9 +133,7 @@
   }
 </style>
 
-<div
-  class="full-screen dark-glass pop-menu {show === true ? 'visible' : 'hidden'}"
-  on:click={methods.backgroundClicked}>
+<div class="full-screen dark-glass pop-menu {show === true ? 'visible' : 'hidden'}" on:click={methods.backgroundClicked}>
   <div class="card">
     {#if title || description}
       <div class="pb-3 pt-2 text-center">
