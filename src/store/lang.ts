@@ -23,7 +23,7 @@ const console = new Logger("🚦 Lang");
 
 const LangInit = () => {
   let base = {
-    lang: localStorage.getItem("n4-lang") || "en"
+    lang: localStorage.getItem("n4-lang") || "en",
   };
   const { update, subscribe, set } = writable(base);
 
@@ -33,23 +33,23 @@ const LangInit = () => {
     resources: {
       en: langs["en"].lang,
       zhcn: langs["zhcn"].lang,
-      it: langs["it"].lang
-    }
+      it: langs["it"].lang,
+    },
   });
 
   const methods = {
-    t(str, payload) {
+    t(str: string, payload?: any) {
       return i18next.t(str, payload);
     },
     getLangs() {
-      return Object.keys(langs).map(key => {
+      return Object.keys(langs).map((key) => {
         let lang = langs[key];
         lang.key = key;
         return lang;
       });
     },
     setLang(langKey) {
-      update(d => {
+      update((d) => {
         d.lang = langKey;
         return d;
       });
@@ -58,14 +58,14 @@ const LangInit = () => {
         // window.location.reload();
         window.location.href = "/";
       }, 10);
-    }
+    },
   };
 
   return {
     update,
     subscribe,
     set,
-    ...methods
+    ...methods,
   };
 };
 
