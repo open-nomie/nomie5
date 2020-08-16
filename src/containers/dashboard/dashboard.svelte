@@ -405,7 +405,7 @@
             {/each}
           {/if}
         </div>
-        <div class="board-actions filler">
+        <div class="board-actions filler mb-4">
           <div class="btn-group filler">
             <Button on:click={newBlock} color="clear">
               <Text size="sm">{Lang.t('general.add', 'Add')} Widget</Text>
