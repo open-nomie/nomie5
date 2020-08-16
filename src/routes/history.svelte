@@ -246,16 +246,19 @@
       state.date = date;
       methods.getLogs();
     },
-    searchChange(evt) {
-      state.searchTerm = evt.detail;
-      showSearch = false;
-      window.scrollTo(0, 0);
+    search() {
+      navigate("/search");
     },
-    async onSearchEnter(evt) {
-      await tick(100);
-      window.scrollTo(0, 0);
-      showSearch = true;
-    },
+    // searchChange(evt) {
+    //   state.searchTerm = evt.detail;
+    //   showSearch = false;
+    //   window.scrollTo(0, 0);
+    // },
+    // async onSearchEnter(evt) {
+    //   await tick(100);
+    //   window.scrollTo(0, 0);
+    //   showSearch = true;
+    // },
     trackerTapped(tracker, log) {
       Interact.openStats(`#${tracker.tag}`);
     },
@@ -430,7 +433,9 @@
 
   <header slot="header">
     <NToolbar className="container animate in {showSearch ? 'hidden' : 'visible'}">
-
+      <button class="btn btn-clear btn-icon tap-icon" on:click={methods.search}>
+        <NIcon name="search" size="22" />
+      </button>
       <div class="{isToday ? 'text-inverse-2' : 'not-today text-red'} filler pl-2" on:click={methods.selectDate}>
 
         <span class="font-weight-bold mx-1">{state.date.format('ddd')}</span>
@@ -444,22 +449,22 @@
         <!-- end text middle -->
       </div>
       <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.previous}>
-        <NIcon name="chevronLeft" />
+        <NIcon name="chevronLeft" size="22" />
       </button>
       <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.next}>
-        <NIcon name="chevronRight" />
+        <NIcon name="chevronRight" size="22" />
       </button>
     </NToolbar>
 
     <!-- hasResults={(searchLogs || []).length > 0} -->
 
-    <NSearchBar
+    <!-- <NSearchBar
       searchTerm={state.searchTerm}
       placeholder="Search History..."
       style={showSearch ? 'margin-top:-20px;' : ''}
       on:change={methods.searchChange}
       on:clear={methods.clearSearch}
-      on:search={methods.onSearchEnter} />
+      on:search={methods.onSearchEnter} /> -->
 
   </header>
   <!-- end header-content header -->

@@ -12,6 +12,8 @@
   export let placeholder = `${Lang.t("general.search")}...`;
   export let style = "";
   export let className = "";
+  export let compact = false;
+  export let showClose = true;
 
   let _elInput;
   // export let hasResults = false;
@@ -82,27 +84,15 @@
 </style>
 
 <NToolbar className="search-bar container {className}" {style}>
-  {#if searchTerm}
-    <button
-      class="btn btn-sm btn-clear btn-action-clear"
-      on:click={fireClear}
-      style="margin-left:-10px;">
+  {#if searchTerm && showClose}
+    <button class="btn btn-sm btn-clear btn-action-clear" on:click={fireClear} style="margin-left:-10px;">
       <NIcon name="close" size="32" />
     </button>
   {/if}
   <div class="n-row">
-    <NInput
-      solo
-      compact
-      bind:this={_elInput}
-      bind:value={searchTerm}
-      on:change={fireChange}
-      on:enter={fireSearch}
-      {placeholder}>
+    <NInput solo compact bind:this={_elInput} bind:value={searchTerm} on:change={fireChange} on:enter={fireSearch} {placeholder}>
       <div slot="left" class="pl-2">
-        <NIcon
-          name="search"
-          style="height:20px; width: 20px; opacity:0.3; margin-top:-4px;" />
+        <NIcon name="search" style="height:20px; width: 20px; opacity:0.3; margin-top:-4px;" />
       </div>
       <div slot="right">
         <slot name="right-inside" />
@@ -110,9 +100,7 @@
     </NInput>
     <slot name="right" />
     {#if searchTerm && !autocomplete}
-      <button class="btn btn-sm text-inverse-2" on:click={fireSearch}>
-        Search
-      </button>
+      <button class="btn btn-sm text-inverse-2" on:click={fireSearch}>Search</button>
     {/if}
   </div>
 </NToolbar>
