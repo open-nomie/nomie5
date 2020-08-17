@@ -73,7 +73,7 @@
       width: 200px;
       min-width: 300px !important;
       flex-grow: 1;
-      background-color: var(--color-darkest);
+      background-color: var(--color-darkest-translucent);
       color: var(--color-inverse-1);
       border-radius: 1.2rem;
       border: var(--modal-border);
