@@ -139,63 +139,9 @@
 
   // Methods
   const methods = {
-    toggleSearch() {
-      if (searchMode) {
-        state.searchResults = null;
-        state.searchTerm = null;
-        searchMode = false;
-      } else {
-        searchMode = true;
-      }
-    },
-
-    async doSearch(event) {
-      state.searchTerm = null;
-      let trackableElement = event.detail;
-      tick(100);
-      if (trackableElement.type == "tracker") {
-        state.searchTerm = `#${trackableElement.id}`;
-      } else {
-        state.searchTerm = `${trackableElement.raw}`;
-      }
-      showSearch = true;
-      methods.onSearchEnter();
-    },
-
     async textClick(event) {
       let trackableElement = event.detail;
-      let tracker = trackableElement.type == "tracker" ? TrackerStore.getByTag(trackableElement.id) : null;
-
-      const buttons = [
-        {
-          title: `View stats`,
-          click: () => {
-            if (tracker) {
-              Interact.openStats(`#${trackableElement.id}`);
-            } else {
-              Interact.openStats(trackableElement.raw);
-            }
-          },
-        },
-        {
-          title: `Search for ${tracker ? tracker.label : trackableElement.raw}`,
-          click: () => {
-            methods.doSearch(event);
-          },
-        },
-      ];
-      if (trackableElement.type == "person") {
-        buttons.push({
-          title: `Check-In`,
-          click: () => {
-            Interact.person(trackableElement.id);
-          },
-        });
-      }
-      Interact.popmenu({
-        title: `${tracker ? tracker.label : trackableElement.raw} options`,
-        buttons: buttons,
-      });
+      Interact.elementOptions(trackableElement);
     },
     async getLogs(fresh) {
       fresh = fresh ? fresh : false;

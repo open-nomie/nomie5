@@ -5,7 +5,6 @@
 
   import { onMount } from "svelte";
   // vendors
-  import md5 from "md5";
 
   //modules
   import Tracker from "../../modules/tracker/tracker";
@@ -64,14 +63,6 @@
     },
     getTracker(tag) {
       return $TrackerStore.trackers[tag] || new Tracker({ tag: tag });
-    },
-    onCameraPhoto(photo) {
-      const path = `camera/${md5(photo)}`;
-      Storage.put(path, photo).then(() => {
-        if ($Interact.camera.onInteract) {
-          $Interact.camera.onInteract(path);
-        }
-      });
     },
     editLogDataOnSave(event) {
       let tracker = event.detail.tracker;

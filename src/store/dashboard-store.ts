@@ -38,7 +38,7 @@ const DashboardStoreInit = (): any => {
             return dashboard instanceof Dashboard ? dashboard : new Dashboard(dashboard);
           })
           .filter((d) => d);
-        console.log("from store", { dashboards });
+
         return state;
       });
     },

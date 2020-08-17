@@ -7,9 +7,8 @@
    */
 
   // svelte
-  import { navigate } from "svelte-routing";
+  import { navigate, Router, Route } from "svelte-routing";
   import { onMount, onDestroy } from "svelte";
-
   // components
   import NItem from "../components/list-item/list-item.svelte";
   import NPoints from "../components/points/points.svelte";
@@ -41,6 +40,7 @@
   import { HistoryPage } from "../store/history-page";
   import { Device } from "../store/device-store";
   import Storage from "../modules/storage/storage";
+  import { getURLParams } from "../utils/url-parser/url-parser";
 
   /**
    * I've messed this all up again. but it's faster and more responsivle
@@ -121,44 +121,13 @@
         state.searchTerm = `${trackableElement.raw}`;
       }
       showSearch = true;
-      console.log("Do Search", state);
+
       methods.onSearchEnter();
     },
 
     async textClick(event) {
       let trackableElement = event.detail;
-      let tracker = trackableElement.type == "tracker" ? TrackerStore.getByTag(trackableElement.id) : null;
-
-      const buttons = [
-        {
-          title: `View stats`,
-          click: () => {
-            if (tracker) {
-              Interact.openStats(`#${trackableElement.id}`);
-            } else {
-              Interact.openStats(trackableElement.raw);
-            }
-          },
-        },
-        {
-          title: `Search for ${tracker ? tracker.label : trackableElement.raw}`,
-          click: () => {
-            methods.doSearch(event);
-          },
-        },
-      ];
-      if (trackableElement.type == "person") {
-        buttons.push({
-          title: `Check-In`,
-          click: () => {
-            Interact.person(trackableElement.id);
-          },
-        });
-      }
-      Interact.popmenu({
-        title: `${tracker ? tracker.label : trackableElement.raw} options`,
-        buttons: buttons,
-      });
+      Interact.elementOptions(trackableElement);
     },
 
     clearSearch() {
@@ -195,8 +164,9 @@
 
   // WHen mounted.
   onMount(() => {
-    if ((state.searchTerm || "").length > 1 && !searchLogs) {
-      methods.refreshSearch();
+    const urlParams = getURLParams(window.location.href);
+    if (urlParams.q) {
+      state.searchTerm = decodeURIComponent(urlParams.q);
     }
     window.scrollTo(0, 0);
     refresh();
@@ -259,9 +229,6 @@
         <NLogListLoader
           term={state.searchTerm}
           limit={20}
-          on:trackerClick={(event) => {
-            methods.trackerTapped(event.detail.tracker, event.detail.log);
-          }}
           on:textClick={(event) => {
             methods.textClick(event);
           }}

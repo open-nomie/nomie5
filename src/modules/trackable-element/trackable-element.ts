@@ -1,10 +1,11 @@
 import snakeCase from "../../utils/snake-case/snake-case";
 import stringToValue from "../../utils/string-to-value/string-to-value";
+import extractor from "../../utils/extract/extract";
 
 export type ITrackableElementType = "tracker" | "person" | "context" | "generic" | "line-break" | "link";
 export interface ITrackableElement {
-  id: string;
-  type: ITrackableElementType;
+  id?: string;
+  type?: ITrackableElementType;
   raw?: string;
   value?: any;
   prefix?: any;
@@ -12,7 +13,11 @@ export interface ITrackableElement {
   obj?: any;
 }
 
-export default class TrackableElement implements ITrackableElement {
+export function toElement(str: string) {
+  return extractor.toElement(str);
+}
+
+export default class TrackableElement {
   id: string;
   type: ITrackableElementType;
   raw?: string;

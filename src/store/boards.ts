@@ -14,10 +14,11 @@ import Storage from "../modules/storage/storage";
 import config from "../../config/global";
 
 // Utils
-import md5 from "md5";
+
 import Logger from "../utils/log/log";
 import type { ITrackers } from "../modules/import/import";
 import { Interact } from "./interact";
+import nid from "../modules/nid/nid";
 
 //
 
@@ -136,7 +137,6 @@ const boardsInit = () => {
       return d;
     },
     async deleteConfirm(board) {
-      console.log("Delete the board fucker", board);
       let confirmed = await Interact.confirm("Delete " + board.label + " tab?", "You can recreate it later, but it's not super easy.");
       if (confirmed === true) {
         await methods.deleteBoard(board.id);
@@ -255,7 +255,7 @@ const boardsInit = () => {
     addBoard(label, trackers) {
       trackers = trackers || [];
       return new Promise((resolve, reject) => {
-        let id = md5(new Date().getTime() + label).substr(0, 10);
+        let id = nid(new Date().getTime() + label).substr(0, 10);
         let boardStub = {
           id: id,
           label: label,

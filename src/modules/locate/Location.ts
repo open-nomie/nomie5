@@ -1,5 +1,3 @@
-import md5 from "md5";
-import math from "../../utils/math/math";
 import Geohash from "latlon-geohash";
 
 export interface ILocation {

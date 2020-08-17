@@ -63,7 +63,7 @@ function checkCondition(condition: ICondition, value: number, endTime: any): ICo
   return response;
 }
 
-export default function ScoreTracker(value, tracker, time: number) {
+export default function ScoreTracker(value, tracker, time?: number) {
   let score = 0;
   if (tracker.score && !tracker.score_calc) {
     score = parseInt(tracker.score);
