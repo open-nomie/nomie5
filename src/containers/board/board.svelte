@@ -656,7 +656,7 @@
                 on:click={() => {
                   Interact.toggleBoardSorter();
                 }}>
-                <Icon name="settings" size="18" />
+                <Icon name="arrowsLeftRight" size="18" />
               </button>
             {/if}
           </div>
