@@ -225,10 +225,17 @@
         state.autocompleteResults = null;
       }, 10);
     },
-
+    /**
+     * On Key Press
+     * Process each of the events
+     * - look for modifier+enter to save
+     * - look for +,#,@ to give auto complete
+     */
     keyPress(event) {
       if (event.key === "Enter" && event.getModifierState("Shift")) {
         event.preventDefault();
+      } else if (event.key === "Enter" && (event.getModifierState("Control") || event.getModifierState("Meta"))) {
+        methods.logSave();
       } else {
         let value = event.target.value;
         let last = value.charAt(value.length - 1);
@@ -555,7 +562,7 @@
           bind:value={$ActiveLogStore.note}
           bind:this={textarea}
           placeholder={Lang.t('general.whats-up')}
-          on:input={methods.keyPress}
+          on:keydown={methods.keyPress}
           on:paste={methods.keyPress} />
 
         {#if !saving}
