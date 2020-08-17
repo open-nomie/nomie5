@@ -30,7 +30,6 @@ import Logger from "../utils/log/log";
 import dayjs from "dayjs";
 import { writable } from "svelte/store";
 import PromiseStep from "../utils/promise-step/promise-step";
-import md5 from "md5";
 import tick from "../utils/tick/tick";
 import arrayUtils from "../utils/array/array_utils";
 import textUtils from "../utils/text/text";
@@ -48,6 +47,7 @@ import { Locations } from "./locations";
 import type NLog from "../modules/nomie-log/nomie-log";
 import { OfflineQueue } from "./offline-queue-store";
 import { ActiveLogStore } from "./active-log";
+import nid from "../modules/nid/nid";
 
 const console = new Logger("🧺 store/ledger.js");
 // Hooky is for firing off generic events
@@ -249,7 +249,7 @@ const ledgerInit = () => {
       let nodes = Object.keys(today).map((tag) => {
         return `${tag}-${today[tag].values.join(",")}`;
       });
-      return md5(nodes.join(","));
+      return nid(nodes.join(","));
     },
     /**
      * Get Today
@@ -308,7 +308,7 @@ const ledgerInit = () => {
       if (shouldLocate) {
         try {
           // Get the Location
-          let theLoc = await locate();
+          let theLoc: any = await locate();
           // make it a location
           let location = new Location({ lat: theLoc.latitude, lng: theLoc.longitude });
           // Find any favorited that are super close

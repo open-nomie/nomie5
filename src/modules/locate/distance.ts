@@ -1,5 +1,5 @@
 export default {
-  between(latLng: Array<number>, latLng2: Array<number>, unit: string) {
+  between(latLng: Array<number>, latLng2: Array<number>, unit?: "nm" | "km"): number {
     unit = unit || "km";
     const lat1 = latLng[0];
     const lng1 = latLng[1];
@@ -28,8 +28,8 @@ export default {
       return dist;
     }
   },
-  furthest(latLngArray, unit) {
-    unit = unit || "mile";
+  furthest(latLngArray, unit?: "nm" | "km"): number {
+    unit = unit || "nm";
     let max = 0;
     if ((latLngArray || []).length > 1) {
       let root = latLngArray[0];

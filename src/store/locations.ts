@@ -49,7 +49,7 @@ const LocationsInit = () => {
         match = [...locations]
           .map((loc) => {
             return {
-              distance: distance.between([location.lat, location.lng], [loc.lat, loc.lng], "m"),
+              distance: distance.between([location.lat, location.lng], [loc.lat, loc.lng], "nm"),
               location: loc,
             };
           })

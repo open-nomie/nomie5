@@ -17,7 +17,6 @@ export default () => {
               longitude: pos.coords.longitude,
               lng: pos.coords.longitude,
             };
-
             localStorage.setItem(LOC_CACHE_KEY, JSON.stringify(payload));
             resolve(payload);
           },

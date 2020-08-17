@@ -1,7 +1,6 @@
 import extractor from "../../utils/extract/extract";
 import tokenizer from "search-text-tokenizer";
-import TrackableElement from "../../modules/trackable-element/trackable-element";
-import regex from "../../utils/regex";
+import TrackableElement from "../trackable-element/trackable-element";
 
 export default function (logs, filter) {
   filter = filter || {};
