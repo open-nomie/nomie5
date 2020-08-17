@@ -318,7 +318,7 @@ const interactInit = () => {
       Interact.openShareImage(log);
     },
     elementOptions(element: TrackableElement) {
-      let trackableElement = element;
+      let trackableElement = element instanceof TrackableElement ? element : new TrackableElement(element);
       let tracker = trackableElement.type == "tracker" ? TrackerStore.getByTag(trackableElement.id) : null;
 
       const buttons = [
