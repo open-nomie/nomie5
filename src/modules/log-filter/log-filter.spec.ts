@@ -1,7 +1,7 @@
 // Nomie ID
-import logFilter from "../../../src/modules/log-filter/log-filter";
-import NomieLog from "../../../src/modules/nomie-log/nomie-log";
-import TrackableElement from "../../../src/modules/trackable-element/trackable-element";
+import logFilter from "./log-filter";
+import NomieLog from "../nomie-log/nomie-log";
+import TrackableElement from "../trackable-element/trackable-element";
 
 let log1 = new NomieLog({ note: "Tracker #cheese for Brandon 1" });
 let log2 = new NomieLog({ _id: "brandontest", note: "Tracker #cheese for @brandon, 2" });
@@ -31,7 +31,7 @@ describe("modules/log-filter trackers", function () {
       search: brandonTrackableElement,
     };
     let results = logFilter(logs, filter);
-    expect((results[0] || {})._id).to.equal("brandontest");
+    expect((results[0] || {})._id).toEqual("brandontest");
   });
 
   it("Should find the goat on a new line", () => {
@@ -39,7 +39,7 @@ describe("modules/log-filter trackers", function () {
       search: goatTrackerElement,
     };
     let results = logFilter(logs, filter);
-    expect((results[0] || {})._id).to.equal("goattest");
+    expect((results[0] || {})._id).toEqual("goattest");
   });
 
   it("should search for a trackableElement if provided", () => {
@@ -47,14 +47,14 @@ describe("modules/log-filter trackers", function () {
       search: cheeseTrackableElement,
     };
     let results = logFilter(logs, filter);
-    expect(results.length).to.equal(5);
+    expect(results.length).toEqual(5);
   });
   it("should search for a #hashtag if provided", () => {
     let filter = {
       search: "#cheese",
     };
     let results = logFilter(logs, filter);
-    expect(results.length).to.equal(5);
+    expect(results.length).toEqual(5);
   });
 });
 
@@ -64,14 +64,14 @@ describe("modules/log-filter people", function () {
       search: brandonTrackableElement,
     };
     let results = logFilter(logs, filter);
-    expect(results.length).to.equal(4);
+    expect(results.length).toEqual(4);
   });
   it("should search for a @username if provided", () => {
     let cheeseFilter = {
       search: "@brandon",
     };
     let results = logFilter(logs, cheeseFilter);
-    expect(results.length).to.equal(4);
+    expect(results.length).toEqual(4);
   });
 });
 
@@ -81,14 +81,14 @@ describe("modules/log-filter context", function () {
       search: covidTrackableElement,
     };
     let results = logFilter(logs, filter);
-    expect(results.length).to.equal(2);
+    expect(results.length).toEqual(2);
   });
   it("should search for a +context if provided", () => {
     let cheeseFilter = {
       search: "+covid",
     };
     let results = logFilter(logs, cheeseFilter);
-    expect(results.length).to.equal(2);
+    expect(results.length).toEqual(2);
   });
 });
 
@@ -98,13 +98,13 @@ describe("modules/log-filter generic term", function () {
       search: new TrackableElement({ id: "covid", type: "generic" }),
     };
     let results = logFilter(logs, filter);
-    expect(results.length).to.equal(3);
+    expect(results.length).toEqual(3);
   });
   it("should search for generic term if provided", () => {
     let filter = {
       search: "covid",
     };
     let results = logFilter(logs, filter);
-    expect(results.length).to.equal(3);
+    expect(results.length).toEqual(3);
   });
 });

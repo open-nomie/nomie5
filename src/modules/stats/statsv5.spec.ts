@@ -1,9 +1,9 @@
 // import Stats from "../../../src/modules/stats/stats";
-import StatsV5 from "../../../src/modules/stats/statsV5";
-import NomieLog from "../../../src/modules/nomie-log/nomie-log";
-import Tracker from "../../../src/modules/tracker/tracker";
+import StatsV5 from "./statsV5";
+import NomieLog from "../nomie-log/nomie-log";
+import Tracker from "../tracker/tracker";
 import dayjs from "dayjs";
-import TrackableElement from "../../../src/modules/trackable-element/trackable-element";
+import TrackableElement from "../trackable-element/trackable-element";
 
 // TODO: write tests for mean math trackers
 
@@ -69,47 +69,47 @@ describe("modules/stats/stats", function () {
   let goodGenerated = goodStats.generate({ rows, fromDate: monthago, toDate: today, math: "sum", trackableElement: goodElement });
 
   it("stats initializes", () => {
-    expect(goodStats).to.be.instanceOf(StatsV5);
+    expect(goodStats).toBeInstanceOf(StatsV5);
   });
 
   it("should sum good properlty", () => {
-    expect(goodGenerated.sum).to.equal(38);
+    expect(goodGenerated.sum).toEqual(38);
   });
 
-  it("should mean mood properlty", () => {
-    expect(moodGenerated.avg).to.equal(6.67);
+  it("should mean mood properly", () => {
+    expect(moodGenerated.avg).toEqual(4);
   });
 
   // it("should respect config order", () => {
   //   let stats = new StatsV5({ math: "mean", mode: "d" });
   //   stats.init({ mode: "w" });
-  //   expect(stats.math).to.equal("mean");
+  //   expect(stats.math).toEqual("mean");
   //   expect(stats.mode).to.be.equal("w");
   // });
 
   // it("should generate results", () => {
-  //   expect(moodGenerated.rows).to.be.instanceOf(Array);
+  //   expect(moodGenerated.rows).toBeInstanceOf(Array);
   //   expect(moodGenerated.avg).to.be.greaterThan(-1);
   //   expect(moodGenerated.sum).to.be.greaterThan(-1);
-  //   expect(moodGenerated.rows.length).to.equal(3);
+  //   expect(moodGenerated.rows.length).toEqual(3);
   // });
 
   // it("stats rows should expand", () => {
-  //   expect(moodGenerated.rows[0].getMeta().trackers[0].value).to.equal(1);
-  //   expect(moodGenerated.rows[0].getMeta().trackers[0].id).to.equal("first");
+  //   expect(moodGenerated.rows[0].getMeta().trackers[0].value).toEqual(1);
+  //   expect(moodGenerated.rows[0].getMeta().trackers[0].id).toEqual("first");
   // });
 
   // it("should generate the right number of labels for chart", () => {
   //   let daysAgo = dayjs().diff(monthago, "day");
-  //   expect(goodStats.results.chart.labels.length).to.equal(daysAgo);
-  //   expect(goodStats.results.chart.values.length).to.equal(daysAgo);
+  //   expect(goodStats.results.chart.labels.length).toEqual(daysAgo);
+  //   expect(goodStats.results.chart.values.length).toEqual(daysAgo);
   // });
 
   // it("getValueMap", () => {
   //   let todayKey = dayjs(new Date()).format("YYYY-MM-DD");
   //   let yesterdayKey = dayjs(new Date()).subtract(1, "day").format("YYYY-MM-DD");
   //   let valueMap = goodStats.getValueMap(rows);
-  //   expect(valueMap[todayKey]).to.be.instanceOf(Array);
+  //   expect(valueMap[todayKey]).toBeInstanceOf(Array);
   //   expect(valueMap[yesterdayKey]).to.include.members([1, 11, 4]);
   // });
 
@@ -117,7 +117,7 @@ describe("modules/stats/stats", function () {
   //   let valueMap = goodStats.getValueMap(rows);
   //   let minmax = goodStats.getMinMaxFromValueMap(valueMap);
   //   console.log({ valueMap, minmax });
-  //   expect(minmax.min.value).to.equal(16);
-  //   expect(minmax.max.value).to.equal(22);
+  //   expect(minmax.min.value).toEqual(16);
+  //   expect(minmax.max.value).toEqual(22);
   // });
 });

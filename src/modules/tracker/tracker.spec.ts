@@ -1,5 +1,5 @@
-import Tracker from "../../../src/modules/tracker/tracker";
-import calcTrackerScore from "../../../src/modules/scoring/score-tracker";
+import Tracker from "./tracker";
+import calcTrackerScore from "../scoring/score-tracker";
 
 const mood = new Tracker({
   tag: "mood",
@@ -35,6 +35,6 @@ const mood = new Tracker({
 describe("Calculate Tracker Score", () => {
   it("should calculate a dynamic score", () => {
     let score = calcTrackerScore(6, mood);
-    expect(score).to.equal(1);
+    expect(score).toEqual(1);
   });
 });
