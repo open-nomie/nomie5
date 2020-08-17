@@ -1,6 +1,7 @@
 <script lang="ts">
   import dayjs from "dayjs";
   import { onMount, createEventDispatcher } from "svelte";
+  import { isTruthy } from "../../utils/truthy/truthy";
 
   const dispatch = createEventDispatcher();
 
@@ -82,7 +83,7 @@
   }
 </style>
 
-{#if minute}
+{#if isTruthy(minute)}
   <div class="time-select-wrapper {className}" {style}>
     <div class="time-select">
       <!-- Loop over hours -->
