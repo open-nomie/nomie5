@@ -21,7 +21,7 @@
   import NCell from "../components/cell/cell.svelte";
   import NPoints from "../components/points/points.svelte";
   import dayjs from "dayjs";
-  import md5 from "md5";
+
   import domtoimage from "dom-to-image-chrome-fix";
   import Dymoji from "../components/dymoji/dymoji.svelte";
   import AutoComplete from "../components/auto-complete/auto-complete.svelte";

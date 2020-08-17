@@ -3,8 +3,7 @@
 // import CardModel from './card.class'
 import NomieUOM from "../../utils/nomie-uom/nomie-uom";
 import extract from "../../utils/extract/extract";
-
-import md5 from "md5";
+import nid from "../nid/nid";
 
 export type ITrackerType = "tick" | "value" | "range" | "picker" | "note" | "timer";
 export type ITrackerMath = "sum" | "mean";
@@ -66,7 +65,7 @@ export default class TrackerConfig {
     if (!this.tag.length) {
       this._dirty = true;
     }
-    this.id = starter.id || md5(Math.random());
+    this.id = starter.id || nid();
     // Set the Type of the Input
     this.type = starter.type || "tick";
     // Set the color if it's passed
@@ -121,7 +120,7 @@ export default class TrackerConfig {
   }
 
   getUID() {
-    return md5(this.tag);
+    return nid(this.tag);
   }
 
   getIncluded(value) {

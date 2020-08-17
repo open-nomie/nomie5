@@ -4,7 +4,8 @@
   import NStepper from "../../components/stepper/stepper.svelte";
   import NIcon from "../../components/icon/icon.svelte";
   import { Interact } from "../../store/interact";
-  import md5 from "md5";
+  import nid from "../../modules/nid/nid";
+
   export let tips = [];
   export let className = "";
 
@@ -18,7 +19,7 @@
   };
 
   $: if (tips) {
-    id = md5(JSON.stringify(tips));
+    id = nid(JSON.stringify(tips));
     show = hiddenTips.indexOf(id) == -1;
   } else {
     show = false;

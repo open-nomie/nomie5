@@ -1,6 +1,6 @@
 <script>
   // Svelte
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
   // Modules
   import NomieLog from "../../modules/nomie-log/nomie-log";
@@ -204,7 +204,7 @@
             <button
               class="btn btn-badge faded"
               on:click={() => {
-                Interact.openStats(`${trackerElement.raw}`);
+                Interact.openStats(`+${context}`);
                 dispatch('contextClick', { context: context, log });
               }}>
               +{context.id}
