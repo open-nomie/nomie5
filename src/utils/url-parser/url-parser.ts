@@ -1,6 +1,16 @@
-export default function ParseURL(urlString) {
-  let url;
-  const hasURLParts = (str) => {
+export interface IParsedURL {
+  url?: URL;
+  original?: string;
+  valid?: boolean;
+}
+
+export default function ParseURL(urlString: string): IParsedURL {
+  let payload: IParsedURL = {
+    url: undefined,
+    original: urlString,
+    valid: false,
+  };
+  const hasURLParts = (str: string): boolean => {
     // http:,,host
     let valid = true;
     let chunks = (str || "").split("/");
@@ -13,11 +23,14 @@ export default function ParseURL(urlString) {
     return valid;
   };
 
-  if (hasURLParts(urlString)) {
-    url = new URL(urlString);
-    url.valid = true;
+  try {
+    payload.url = new URL(urlString);
+    payload.valid = hasURLParts(urlString);
+  } catch (e) {
+    payload.valid = false;
   }
-  return url;
+
+  return payload;
 }
 
 interface IURLParams {
