@@ -18,7 +18,7 @@
 
 // Svelte
 import { writable } from "svelte/store";
-
+import { navigate } from "svelte-routing";
 // vendors
 import dayjs from "dayjs";
 
@@ -33,9 +33,11 @@ import NomieLog from "../modules/nomie-log/nomie-log";
 
 // Stores
 import { LedgerStore } from "./ledger";
+import { TrackerStore } from "./tracker-store";
 import { Lang } from "./lang";
 import type { ILocation } from "../modules/locate/Location";
 import type { ITrackerInputResult } from "../modules/tracker/tracker-inputer";
+import TrackableElement from "../modules/trackable-element/trackable-element";
 
 const console = new Logger("✋ Interact");
 
@@ -315,7 +317,41 @@ const interactInit = () => {
     shareLog(log) {
       Interact.openShareImage(log);
     },
+    elementOptions(element: TrackableElement) {
+      let trackableElement = element;
+      let tracker = trackableElement.type == "tracker" ? TrackerStore.getByTag(trackableElement.id) : null;
 
+      const buttons = [
+        {
+          title: `View stats`,
+          click: () => {
+            if (tracker) {
+              Interact.openStats(`#${trackableElement.id}`);
+            } else {
+              Interact.openStats(trackableElement.raw);
+            }
+          },
+        },
+        {
+          title: `Search for ${tracker ? tracker.label : trackableElement.raw}`,
+          click: () => {
+            navigate(`/search?q=${encodeURIComponent(trackableElement.prefix + trackableElement.id)}`);
+          },
+        },
+      ];
+      if (trackableElement.type == "person") {
+        buttons.push({
+          title: `Check-In`,
+          click: () => {
+            Interact.person(trackableElement.id);
+          },
+        });
+      }
+      methods.popmenu({
+        title: `${tracker ? tracker.label : trackableElement.raw} options`,
+        buttons: buttons,
+      });
+    },
     select(type = "tracker", multiple = false) {
       return new Promise((resolve, reject) => {
         update((state) => {
