@@ -28,6 +28,7 @@ import time from "../utils/time/time";
 
 // modules
 import NomieLog from "../modules/nomie-log/nomie-log";
+import clipboard from "../utils/clipboard/clipboard";
 // import Hooky from "../modules/hooks/hooks";
 // const hooks = new Hooky();
 
@@ -499,21 +500,28 @@ const interactInit = () => {
 
         let initial = [
           {
-            title: "Share...",
+            title: `${Lang.t("general.share", "Share")}...`,
             click: actions.shareLog,
           },
           {
-            title: "Edit...",
+            title: `${Lang.t("general.edit", "Edit")}...`,
             click: actions.editLog,
           },
           {
-            title: "Delete...",
+            title: `${Lang.t("general.delete", "Delete")}...`,
             click: actions.delete,
           },
           {
-            title: `On this Day...`,
+            title: `${Lang.t("general.on-this-day", "On this Day")}...`,
             click: () => {
               Interact.onThisDay(new Date(log.end));
+            },
+          },
+          {
+            title: `${Lang.t("general.copy-to-clipboard", "Copy to Clipboard")}...`,
+            click: () => {
+              clipboard(log.note);
+              Interact.toast("📋  Note text copied");
             },
           },
         ];

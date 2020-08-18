@@ -56,6 +56,11 @@
 </script>
 
 <style lang="scss">
+  .date-time-bar-wrapper {
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: 100%;
+  }
   .date-time-bar {
     background-color: var(--color-solid);
     display: grid;
@@ -63,6 +68,7 @@
     flex-grow: 1;
     grid-template-columns: 1fr 0.7fr;
     align-items: center;
+    width: 100%;
 
     button {
       height: 40px;
@@ -85,43 +91,46 @@
     margin-bottom: 8px;
   }
   :global(.date-time-bar-item.opened .left, .date-time-bar-item.opened .right) {
-    display: none !important;
+    // display: none !important;
   }
 </style>
 
 {#if _date}
-  <ListItem solo style="padding:0px; overflow:hidden; {style}" className="date-time-bar-item {_opened ? 'opened' : ''}">
-    <div slot="left">
-      <slot name="left" />
-    </div>
-    <div class="date-time-bar">
-      <button
-        class="date clickable"
-        class:text-center={_opened}
-        on:click={() => {
-          toggleOpen();
-        }}>
-        <Text size="md" truncate>{_date.format('ddd MMM D YYYY')}</Text>
-      </button>
+  <div class="date-time-bar-wrapper">
+    <ListItem solo style="padding:0px; overflow:hidden; {style}" className="date-time-bar-item {_opened ? 'opened' : ''}">
+      <div slot="left">
+        <slot name="left" />
+      </div>
+      <div class="date-time-bar">
+        <button
+          class="date clickable"
+          on:click={() => {
+            toggleOpen();
+          }}>
+          <Text size="md" color={_opened ? 'primary-bright' : ''} truncate>
+            {$UserStore.meta.is24Hour ? _date.format('ddd D MMM YYYY') : _date.format('ddd MMM D YYYY')}
+          </Text>
+        </button>
 
-      <TimeSelect
-        is24Hour={$UserStore.meta.is24Hour ? true : false}
-        bind:value={_date}
-        on:change={(evt) => {
-          setDate(evt.detail);
-        }} />
+        <TimeSelect
+          is24Hour={$UserStore.meta.is24Hour ? true : false}
+          bind:value={_date}
+          on:change={(evt) => {
+            setDate(evt.detail);
+          }} />
+      </div>
+      <div slot="right">
+        <slot name="right" />
+      </div>
+    </ListItem>
+    <div class="animate up view date" class:visible={_opened} class:hidden={!_opened}>
+      {#if _opened}
+        <Calendar
+          on:dayClick={(evt) => {
+            setDate(evt.detail);
+          }}
+          initialDate={_date} />
+      {/if}
     </div>
-    <div slot="right">
-      <slot name="right" />
-    </div>
-  </ListItem>
-  <div class="animate up view date" class:visible={_opened} class:hidden={!_opened}>
-    {#if _opened}
-      <Calendar
-        on:dayClick={(evt) => {
-          setDate(evt.detail);
-        }}
-        initialDate={_date} />
-    {/if}
   </div>
 {/if}

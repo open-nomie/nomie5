@@ -33,7 +33,6 @@
   import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NSpinner from "../../components/spinner/spinner.svelte";
-  import NKVBlock from "../../components/kv-block/kv-block.svelte";
   import NBarChart from "../../components/charts/bar-chart-2.svelte";
   import NLogList from "../../components/log-list/log-list.svelte";
   import NTimeGrid from "../../components/day-time-grid/day-time-grid.svelte";

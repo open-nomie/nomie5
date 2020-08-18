@@ -78,7 +78,16 @@
     on:click={() => {
       dispatch('click');
     }}
-    class="n-text {getClassNames()}">
+    class="n-text {` ${size || 'sm'}
+    ${className} text-${color}
+    ${truncate ? 'truncate' : ''}
+    ${truncate2 ? 'truncate-2' : ''}
+    ${truncate3 ? 'truncate-3' : ''}
+    ${center ? 'text-center' : ''}
+    ${underline ? 'text-underline' : ''}
+    ${faded ? 'faded ' : ''}
+    ${bold ? 'font-weight-bold ' : ''}
+    ${medium ? 'font-weight-medium ' : ''}`.trim()}">
     <slot />
   </span>
 {:else}
@@ -87,7 +96,16 @@
     on:click={() => {
       dispatch('click');
     }}
-    class="n-text {getClassNames()}">
+    class="n-text {` ${size || 'sm'}
+    ${className} text-${color}
+    ${truncate ? 'truncate' : ''}
+    ${truncate2 ? 'truncate-2' : ''}
+    ${truncate3 ? 'truncate-3' : ''}
+    ${center ? 'text-center' : ''}
+    ${underline ? 'text-underline' : ''}
+    ${faded ? 'faded ' : ''}
+    ${bold ? 'font-weight-bold ' : ''}
+    ${medium ? 'font-weight-medium ' : ''}`.trim()}">
     <slot />
   </div>
 {/if}

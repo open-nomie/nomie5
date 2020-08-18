@@ -7210,7 +7210,6 @@ aside.n-panel {
       align-items: center;
       justify-content: stretch; }
       #note-capture .advanced .container .n-item {
-        max-width: 32%;
         flex-grow: 1;
         flex-shrink: 1;
         min-height: 45px; }

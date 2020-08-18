@@ -232,13 +232,17 @@
      * - look for +,#,@ to give auto complete
      */
     keyPress(event) {
+      // If enter + shift
       if (event.key === "Enter" && event.getModifierState("Shift")) {
         event.preventDefault();
+        // If enter + modify er
       } else if (event.key === "Enter" && (event.getModifierState("Control") || event.getModifierState("Meta"))) {
         methods.logSave();
+        // All other keyboard events
       } else {
         let value = event.target.value;
         let last = value.charAt(value.length - 1);
+        // If space clear auto complete
         if (last == " ") {
           methods.autoCompleteDone();
         } else if (value.length) {
