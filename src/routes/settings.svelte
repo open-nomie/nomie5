@@ -321,7 +321,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 
             </div>
 
-            <div class="n-list solo my-2">
+            <!-- <div class="n-list solo my-2">
               <Text bold className="my-3 mx-3">{Lang.t('general.type', 'Finding old data')}</Text>
               <NItem bottomLine title="Find Context" on:click={ContextStore.searchForContext}>
                 <span slot="left">💬</span>
@@ -329,9 +329,9 @@ Note: Your data will not automatically move over. You'll first need to export it
               <NItem title="Find People" on:click={PeopleStore.searchForPeople}>
                 <span slot="left">👨‍👨‍👧‍👧</span>
               </NItem>
-            </div>
+            </div> -->
 
-            <NItem className="solo text-red text-center mt-4" on:click={methods.deleteEverything}>Reset & Delete all Nomie Data...</NItem>
+            <NItem className="solo text-red text-center my-4" on:click={methods.deleteEverything}>Reset & Delete all Nomie Data...</NItem>
           {:else if view == 'about'}
             <!--
               *******************************************

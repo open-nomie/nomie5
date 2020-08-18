@@ -20,7 +20,7 @@ export function positivityFromLogs(logs: Array<any>, target?: TrackableElement):
     if (target && target.type == "tracker" && target.obj) {
       const tkr: TrackerConfig = target.obj;
       const foundElement: TrackableElement = (row.trackers || []).find((data) => data.id == target.id);
-      const value = foundElement.value;
+      const value = (foundElement || {}).value || 0;
       score = ScoreTracker(value, tkr, row.end);
     } else {
       score = ScoreNote(row.note, row.end);

@@ -14,18 +14,18 @@ describe("modules/url-parser", function () {
 
   it("url should be invalid", () => {
     let url = URLParser("http");
-    console.log(url);
+
     expect(url.valid).toEqual(false);
   });
 
   it("url should be invalid", () => {
     let url = URLParser("google");
-    console.log(url);
+
     expect(url.valid).toEqual(false);
   });
   it("url should be invalid", () => {
     let url = URLParser("google.com");
-    console.log(url);
+
     expect(url.valid).toEqual(false);
   });
 });

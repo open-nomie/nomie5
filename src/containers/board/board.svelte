@@ -648,7 +648,7 @@
               on:click={() => {
                 methods.newBoard();
               }}>
-              <Icon name="addOutline" size="18" />
+              <Icon name="newTab" size="18" />
             </button>
             {#if $BoardStore.boards.length > 2}
               <button

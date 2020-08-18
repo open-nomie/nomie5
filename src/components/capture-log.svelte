@@ -300,13 +300,6 @@
       methods.autoCompleteDone();
     });
   });
-  // LedgerStore.hook("onSaveFailed", (res) => {
-  //   console.log("🍺🍺 On Save Failed", res);
-  //   methods.clear();
-  //   setTimeout(() => {
-  //     methods.autoCompleteDone();
-  //   });
-  // });
 
   // When a tag is added by a button or other service
   ActiveLogStore.hook("onAddTag", (res) => {
