@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let value = "blue";
+  export let value;
 </script>
 
 <style lang="scss">
