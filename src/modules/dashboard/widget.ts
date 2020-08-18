@@ -1,15 +1,15 @@
-import TrackableElement, { ITrackableElement } from "../../modules/trackable-element/trackable-element";
+import TrackableElement, { ITrackableElement } from "../trackable-element/trackable-element";
 import dayjs, { Dayjs, OpUnitType } from "dayjs";
 import nid from "../nid/nid";
 import type NLog from "../nomie-log/nomie-log";
 import { strToColor } from "../../components/dymoji/dymoji";
 /**
- * Block Date
+ * Widget Date
  * The blockdate is either the start or end of a TimeFrame
  * They can have a hard coded date, or be dynamically set
  * using add, subtract, startOf and endOf
  */
-export interface IBlockDate {
+export interface IWidgetDate {
   date?: Dayjs;
   add?: Array<any>;
   subtract?: Array<any>;
@@ -18,14 +18,14 @@ export interface IBlockDate {
   toDate(): Date;
 }
 
-export class BlockDate implements IBlockDate {
+export class WidgetDate implements IWidgetDate {
   date?: Dayjs;
   subtract?: Array<any>;
   add?: Array<any>;
   endOf?: OpUnitType;
   startOf?: OpUnitType;
 
-  constructor(part: IBlockDate) {
+  constructor(part: IWidgetDate) {
     this.date = part.date;
     this.subtract = part.subtract;
     this.add = part.add;
@@ -53,31 +53,31 @@ export class BlockDate implements IBlockDate {
 
 /**
  * Time Frame
- * A Timeframe is a start and end BlockDate
+ * A Timeframe is a start and end WidgetDate
  * as well as a label, and ID to allow for easily
  * setting up pre-defined settings
  * TODO: Make a custom option
  */
 
-export interface IBlockTimeFrame {
+export interface IWidgetTimeFrame {
   id?: string;
   label?: string;
-  start: IBlockDate;
-  end: IBlockDate;
+  start: IWidgetDate;
+  end: IWidgetDate;
   getLabel(): string;
 }
 
-export class BlockTimeFrame {
+export class WidgetTimeFrame {
   id?: string;
   label?: string;
-  start: BlockDate;
-  end: BlockDate;
+  start: WidgetDate;
+  end: WidgetDate;
 
-  constructor(payload: IBlockTimeFrame) {
+  constructor(payload: IWidgetTimeFrame) {
     if (payload) {
       this.label = payload.label;
-      this.start = new BlockDate(payload.start);
-      this.end = new BlockDate(payload.end);
+      this.start = new WidgetDate(payload.start);
+      this.end = new WidgetDate(payload.end);
       this.id = payload.id;
     }
     this.id = this.id || nid();
@@ -89,17 +89,18 @@ export class BlockTimeFrame {
 }
 
 /**
- * Block
- * The Block is a central object that defines
+ * Widget
+ * The Widget is a central object that defines
  * what we're showing, what type of block we should show,
  * and what the timeframe is.
  */
 
-export interface IBlock {
+export interface IWidget {
   element: ITrackableElement;
   id?: string;
+  size?: "sm" | "md" | "lg";
   type: string;
-  timeRange: IBlockTimeFrame;
+  timeRange: IWidgetTimeFrame;
   includeAvg?: boolean;
   description?: string;
   compareValue?: number;
@@ -120,11 +121,12 @@ export interface IBlock {
   getDateRange(): Array<Date>;
 }
 
-export class Block implements IBlock {
+export class Widget implements IWidget {
   element: ITrackableElement;
   id?: string;
   type: string = "value";
-  timeRange: IBlockTimeFrame;
+  size?: "sm" | "md" | "lg";
+  timeRange: IWidgetTimeFrame;
   includeAvg?: boolean = false;
   description?: string;
   compareValue?: number;
@@ -137,11 +139,13 @@ export class Block implements IBlock {
   stats?: any;
   lastUsed?: any;
 
-  constructor(payload?: IBlock) {
+  constructor(payload?: IWidget) {
     if (payload) {
       this.id = payload.id || nid();
       this.type = payload.type;
       this.description = payload.description;
+
+      this.size = payload.size || "md";
 
       if (typeof payload.compareValue == "string") {
         payload.compareValue = parseFloat(payload.compareValue);
@@ -153,7 +157,7 @@ export class Block implements IBlock {
       this.includeAvg = payload.includeAvg ? true : false;
 
       if (payload.timeRange) {
-        this.timeRange = new BlockTimeFrame(payload.timeRange);
+        this.timeRange = new WidgetTimeFrame(payload.timeRange);
       }
 
       if (payload.element) {

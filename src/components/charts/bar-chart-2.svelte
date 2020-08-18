@@ -155,6 +155,7 @@
 <style>
   .wrapper {
     position: relative;
+    width: 100%;
   }
   .wrapper .selected {
     position: absolute;

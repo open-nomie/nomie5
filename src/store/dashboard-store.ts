@@ -8,7 +8,7 @@ import Logger from "../utils/log/log";
 import Storage from "../modules/storage/storage";
 import config from "../../config/global";
 import { Dashboard } from "../modules/dashboard/dashboard";
-import { Block } from "../modules/dashboard/block";
+import { Widget } from "../modules/dashboard/widget";
 import { Interact } from "./interact";
 
 // Stores
@@ -107,17 +107,17 @@ const DashboardStoreInit = (): any => {
         dashboards = JSON.parse(JSON.stringify(state.dashboards));
         return state;
       });
-
       dashboards = dashboards
         .filter((d) => d)
         .map((dashboard) => {
-          dashboard.blocks = dashboard.blocks.map((block: any) => {
-            delete block.stats;
-            delete block.logs;
-            if (block.element && block.element.obj) {
-              delete block.element.obj;
+          dashboard.widgets = dashboard.widgets.map((widget: any) => {
+            delete widget.stats;
+            delete widget.logs;
+            delete widget.positivity;
+            if (widget.element && widget.element.obj) {
+              delete widget.element.obj;
             }
-            return block;
+            return widget;
           });
           return dashboard;
         });
@@ -127,16 +127,16 @@ const DashboardStoreInit = (): any => {
         return false;
       }
     },
-    async saveBlock(block: Block) {
-      if (block) {
+    async saveWidget(widget: Widget) {
+      if (widget) {
         let _state: IDashboardStore = methods.data();
         let found = false;
-        delete block._editing;
+        delete widget._editing;
         _state.dashboards = _state.dashboards.map((dashboard: Dashboard) => {
-          dashboard.blocks = dashboard.blocks.map((blk: Block) => {
-            if (blk.id == block.id) {
+          dashboard.widgets = dashboard.widgets.map((blk: Widget) => {
+            if (blk.id == widget.id) {
               found = true;
-              return block;
+              return widget;
             } else {
               return blk;
             }
@@ -144,7 +144,7 @@ const DashboardStoreInit = (): any => {
           return dashboard;
         });
         if (!found) {
-          _state.dashboards[_state.activeIndex].blocks.push(block);
+          _state.dashboards[_state.activeIndex].widgets.push(widget);
         }
         update((state: any) => {
           state.dashboards = _state.dashboards;
@@ -171,12 +171,12 @@ const DashboardStoreInit = (): any => {
       });
       return _state;
     },
-    async deleteBlock(block: Block) {
-      block = block instanceof Block ? block : new Block(block);
+    async deleteWidget(widget: Widget) {
+      widget = widget instanceof Widget ? widget : new Widget(widget);
       let _state: IDashboardStore = methods.data();
       _state.dashboards = _state.dashboards.map((dashboard: Dashboard) => {
-        dashboard.blocks = dashboard.blocks.filter((blk: Block) => {
-          return blk.id == block.id ? false : true;
+        dashboard.widgets = dashboard.widgets.filter((blk: Widget) => {
+          return blk.id == widget.id ? false : true;
         });
         return dashboard;
       });
@@ -192,7 +192,7 @@ const DashboardStoreInit = (): any => {
         dashboards = [];
       }
       // if (!dashboards.length) {
-      //   dashboards.push(new Dashboard({ label: "My First Dashboard", blocks: [] }));
+      //   dashboards.push(new Dashboard({ label: "My First Dashboard", widgets: [] }));
       // }
       return dashboards;
     },

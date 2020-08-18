@@ -1,15 +1,15 @@
 <script lang="ts">
-  import NLog from "../../modules/nomie-log/nomie-log";
-  import type { IStats } from "../../modules/stats/statsV5";
-  import type Block from "../../modules/dashboard/block";
-  import TrackerLogsToTime from "../../utils/tracker-logs-to-time/tracker-logs-to-time";
+  import NLog from "../../../modules/nomie-log/nomie-log";
+  import type { IStats } from "../../../modules/stats/statsV5";
+  import type { Widget } from "../../../modules/dashboard/widget";
+  import TrackerLogsToTime from "../../../utils/tracker-logs-to-time/tracker-logs-to-time";
   import { onMount } from "svelte";
-  export let block: Block;
+  export let widget: Widget;
 
   let times = [];
 
   async function init() {
-    times = TrackerLogsToTime(block.element.id, block.logs);
+    times = TrackerLogsToTime(widget.element.id, widget.logs);
   }
 </script>
 

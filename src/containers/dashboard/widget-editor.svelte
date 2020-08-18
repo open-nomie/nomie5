@@ -1,7 +1,7 @@
 <script lang="ts">
-  import Input from "./../../components/input/input.svelte";
-  import ListItem from "./../../components/list-item/list-item.svelte";
-  import { Block, BlockTimeFrame } from "../../modules/dashboard/block";
+  import Input from "../../components/input/input.svelte";
+  import ListItem from "../../components/list-item/list-item.svelte";
+  import { Widget, WidgetTimeFrame } from "../../modules/dashboard/widget";
   import TrackerSmallBlock from "../../components/tracker-ball/tracker-small-block.svelte";
   import Button from "../../components/button/button.svelte";
   import Text from "../../components/text/text.svelte";
@@ -16,19 +16,22 @@
   import { TrackerStore } from "../../store/tracker-store";
   import TrackerConfig from "../../modules/tracker/tracker";
   import TrackableElement from "../../modules/trackable-element/trackable-element";
-  export let value: Block = null;
+  import ButtonGroup from "../../components/button-group/button-group.svelte";
+  import nid from "../../modules/nid/nid";
+
+  export let value: Widget = null;
 
   let dateType;
   let widget;
   let goalValue;
-  let blockTypeId;
-  let blockType: IBlockType;
+  let widgetTypeId;
+  let widgetType: IWidgetType;
   let conditionalStyling: boolean = false;
 
-  $: if (blockTypeId) {
-    blockType = blockTypes.find((blockType) => blockType.id == blockTypeId);
+  $: if (widgetTypeId) {
+    widgetType = widgetTypes.find((widgetType) => widgetType.id == widgetTypeId);
 
-    value.type = blockTypeId;
+    value.type = widgetTypeId;
   }
 
   /**
@@ -36,7 +39,7 @@
    **/
   $: if (dateType) {
     let timeFrame = timeFrames.find((t) => t.id == dateType);
-    value.timeRange = new BlockTimeFrame(timeFrame);
+    value.timeRange = new WidgetTimeFrame(timeFrame);
     if (value.timeRange.id == "today" || value.timeRange.id == "yesterday") {
       value.includeAvg = false;
     }
@@ -47,6 +50,7 @@
   }
 
   const dispatch = createEventDispatcher();
+
   const timeFrames: Array<any> = [
     {
       id: "today",
@@ -170,15 +174,15 @@
     },
   ];
 
-  type IBlockTypeUnit = "timeframe" | "cond-style" | "element";
-  interface IBlockType {
+  type IWidgetTypeUnit = "timeframe" | "cond-style" | "element";
+  interface IWidgetType {
     id: string;
     label: string;
-    requires: Array<IBlockTypeUnit>;
-    optional: Array<IBlockTypeUnit>;
+    requires: Array<IWidgetTypeUnit>;
+    optional: Array<IWidgetTypeUnit>;
   }
 
-  const blockTypes: Array<IBlockType> = [
+  const widgetTypes: Array<IWidgetType> = [
     {
       label: "Bar Chart",
       id: "barchart",
@@ -188,6 +192,18 @@
     {
       label: "Line Chart",
       id: "linechart",
+      requires: ["timeframe", "element"],
+      optional: [],
+    },
+    {
+      label: "Min / Max",
+      id: "min-max",
+      requires: ["timeframe", "element"],
+      optional: [],
+    },
+    {
+      label: "Map",
+      id: "map",
       requires: ["timeframe", "element"],
       optional: [],
     },
@@ -230,11 +246,24 @@
     },
   ];
 
-  async function deleteBlock() {
-    let confirmed = await Interact.confirm(`Delete this block?`, "You can always recreate it");
+  let editorView = "options";
+
+  function changeView(view) {
+    editorView = view;
+  }
+
+  async function duplicateWidget() {
+    let baseWidget = { ...value };
+    value.id = nid();
+    await DashboardStore.saveWidget(new Widget(value));
+    dispatch("close");
+  }
+
+  async function deleteWidget() {
+    let confirmed = await Interact.confirm(`Delete this widget?`, "You can always recreate it");
     if (confirmed) {
       try {
-        await DashboardStore.deleteBlock(value);
+        await DashboardStore.deleteWidget(value);
         dispatch("close");
       } catch (e) {
         Interact.alert("Error", e.message);
@@ -247,7 +276,7 @@
       return {
         title,
         async click() {
-          let selected = await Interact.select(type);
+          let selected: any = await Interact.select(type);
           if (selected.length) {
             value.element = value.element || { id: null, type: null, obj: null };
             value.element.obj = selected[0];
@@ -298,103 +327,135 @@
       if (value.compareValue) {
         conditionalStyling = true;
       }
-      blockTypeId = value.type;
+      widgetTypeId = value.type;
     }
   });
 </script>
 
-<div class="dashblock-editor p-2">
+<style lang="scss">
+  .widget-top {
+    box-shadow: var(--box-shadow-float);
+  }
+</style>
 
-  <Input type="select" placeholder="Widget" bind:value={blockTypeId}>
-    <option>Select a Widget</option>
-    {#each blockTypes as blockType}
-      <option value={blockType.id}>{blockType.label}</option>
-    {/each}
-  </Input>
+<div class="dashwidget-editor">
 
-  {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('timeframe') > -1}
-    <Input placeholder="Timeframe" type="select" bind:value={dateType}>
-      <option>Select a Timeframe</option>
-      {#each timeFrames as timeFrame}
-        <option value={timeFrame.id}>{timeFrame.label}</option>
+  <div class="widget-top p-2">
+    <Input type="select" placeholder="Widget" bind:value={widgetTypeId}>
+      <option>Select a Widget</option>
+      {#each widgetTypes as widgetType}
+        <option value={widgetType.id}>{widgetType.label}</option>
       {/each}
     </Input>
-  {/if}
 
-  {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('element') > -1}
-    <ListItem on:click={selectType} title="Trackable Item">
-      <div slot="right" class="mr-2">
-        {#if value.element}
-          <TrackerSmallBlock truncate element={value.element} on:click={selectType} style="max-width:150px" />
-        {:else}Select{/if}
-      </div>
-    </ListItem>
-  {/if}
+    <ButtonGroup
+      className="my-2"
+      size="sm"
+      buttons={[{ label: 'Configure', active: editorView === 'options', click() {
+            changeView('options');
+          } }, { label: 'Style', active: editorView === 'style', click() {
+            changeView('style');
+          } }, { label: 'More', active: editorView === 'more', click() {
+            changeView('more');
+          } }]} />
+  </div>
 
-  {#if blockTypeId == 'value' && value.timeRange && ['today', 'yesterday'].indexOf(value.timeRange.id) == -1}
-    <ListItem title="Include Average">
-      <div slot="right">
-        <ToggleSwitch bind:value={value.includeAvg} />
-      </div>
-    </ListItem>
-  {/if}
+  <div class="widget-views p-2">
 
-  {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('cond-style') > -1}
-    <div class="conditional-styling n-list {conditionalStyling ? 'solo framed' : ''}">
-      <ListItem title="Conditional Colors">
-        <div slot="right">
-          <ToggleSwitch bind:value={conditionalStyling} />
-        </div>
-      </ListItem>
-      {#if conditionalStyling}
-        <ListItem title="Compare Value">
-          <div slot="right">
-            <Input
-              pattern="[0-9]*"
-              inputmode="numeric"
-              placeholder={blockTypeId == 'value' ? 'Value' : blockTypeId == 'last-used' ? 'Days' : 'Value'}
-              style="max-width:140px;"
-              bind:value={value.compareValue}>
-              <button
-                class="btn btn-icon clickable mr-2"
-                slot="right"
-                on:click={async () => {
-                  getConditionalValue();
-                }}>
-                {#if value.element.type == 'tracker'}
-                  <Icon name="addOutline" />
-                {/if}
-              </button>
-            </Input>
-          </div>
+    {#if editorView == 'options'}
+      {#if widgetTypeId == 'text'}
+        <Input placeholder="Message" type="text" bind:value={value.description} />
+      {/if}
+      {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('timeframe') > -1}
+        <ListItem bottomLine title="Timeframe">
+          <select bind:value={dateType} slot="right" class="form-control flex-shrink" style="margin-left:10px !important">
+            <option>Select</option>
+            {#each timeFrames as timeFrame}
+              <option value={timeFrame.id}>{timeFrame.label}</option>
+            {/each}
+          </select>
         </ListItem>
-        <ListItem>
-          <div class="under" slot="left">
-            <div class="text-center">
-              <Text className="mb-2" size="sm">Under value color</Text>
-              <TinyColorPicker bind:value={value.compareUnderColor} />
-            </div>
-          </div>
-          <div class="over" slot="right">
-            <div class="text-center">
-              <Text className="mb-2" size="sm">Over value color</Text>
-              <TinyColorPicker bind:value={value.compareOverColor} />
-            </div>
+      {/if}
+      {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('element') > -1}
+        <ListItem on:click={selectType} title={`${!value.element ? '⚠️ ' : ''}Trackable Item`}>
+          <div slot="right" class="mr-2">
+            {#if value.element}
+              <TrackerSmallBlock truncate element={value.element} on:click={selectType} style="min-height:40px; max-width:150px" />
+            {:else}Select{/if}
           </div>
         </ListItem>
       {/if}
-    </div>
-  {/if}
+      {#if widgetTypeId == 'value' && value.timeRange && ['today', 'yesterday'].indexOf(value.timeRange.id) == -1}
+        <ListItem title="Include Average">
+          <div slot="right">
+            <ToggleSwitch bind:value={value.includeAvg} />
+          </div>
+        </ListItem>
+      {/if}
+    {:else if editorView == 'style'}
+      <ListItem title="Widget Size">
+        <select slot="right" bind:value={value.size} class="form-control flex-shrink">
+          <option value="sm">Small</option>
+          <option value="md">Medium</option>
+          <option value="lg">Large</option>
+        </select>
+      </ListItem>
+      {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('cond-style') > -1}
+        <!-- <div class="conditional-styling n-list {conditionalStyling ? 'solo framed' : ''}"> -->
+        <ListItem title="Conditional Colors">
+          <div slot="right">
+            <ToggleSwitch bind:value={conditionalStyling} />
+          </div>
+        </ListItem>
+        {#if conditionalStyling}
+          <ListItem title="Compare Value">
+            <div slot="right">
+              <Input
+                pattern="[0-9]*"
+                inputmode="numeric"
+                placeholder={widgetTypeId == 'value' ? 'Value' : widgetTypeId == 'last-used' ? 'Days' : 'Value'}
+                style="max-width:140px;"
+                bind:value={value.compareValue}>
+                <button
+                  class="btn btn-icon clickable mr-2"
+                  slot="right"
+                  on:click={async () => {
+                    getConditionalValue();
+                  }}>
+                  {#if value.element.type == 'tracker'}
+                    <Icon name="addOutline" />
+                  {/if}
+                </button>
+              </Input>
+            </div>
+          </ListItem>
+          <ListItem>
+            <div class="under" slot="left">
+              <div class="text-center">
+                <Text className="mb-2" size="sm">Under value color</Text>
+                <TinyColorPicker bind:value={value.compareUnderColor} />
+              </div>
+            </div>
+            <div class="over" slot="right">
+              <div class="text-center">
+                <Text className="mb-2" size="sm">Over value color</Text>
+                <TinyColorPicker bind:value={value.compareOverColor} />
+              </div>
+            </div>
+          </ListItem>
+        {/if}
+        <!-- </div> -->
+      {/if}
+    {:else if editorView == 'more'}
+      {#if value._editing}
+        <ListItem on:click={duplicateWidget}>Duplicate Widget</ListItem>
+        <ListItem className="text-red" on:click={deleteWidget}>Delete Widget</ListItem>
+      {/if}
+    {/if}
 
-  {#if blockTypeId == 'text'}
-    <Input placeholder="Message" type="text" bind:value={value.description} />
-  {/if}
-
-  <!-- {#if blockType && [...blockType.requires, ...blockType.optional].indexOf('goal') > -1}
+    <!-- {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('goal') > -1}
       <Input placeholder="Goal" type="number" bind:value={value.goal} />
     {/if} -->
 
-  {#if value._editing}
-    <ListItem className="text-red" on:click={deleteBlock}>Delete Block</ListItem>
-  {/if}
+  </div>
 </div>

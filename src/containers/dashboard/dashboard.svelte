@@ -4,8 +4,8 @@
 
   import dayjs from "dayjs";
 
-  import Dashblock from "./dashblock.svelte";
-  import DashblockEditor from "./dashblock-editor.svelte";
+  import WidgetEle from "./widget.svelte";
+  import WidgetEditor from "./widget-editor.svelte";
 
   // Components
   import Button from "../../components/button/button.svelte";
@@ -20,7 +20,7 @@
 
   // modules
   import StatsProcessor from "../../modules/stats/statsV5";
-  import { Block } from "../../modules/dashboard/block";
+  import { Widget } from "../../modules/dashboard/widget";
   import Tracker from "../../modules/tracker/tracker";
 
   // Utils
@@ -43,6 +43,7 @@
   import HScroller from "../../components/h-scroller/h-scroller.svelte";
   import Input from "../../components/input/input.svelte";
   import { Lang } from "../../store/lang";
+  import Spinner from "../../components/spinner/spinner.svelte";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
   let people: any; // holder of User People - loaded from subscribe
@@ -51,12 +52,13 @@
   let unsubDashboard: Function; // Unsubscribe from dashboard
   let unsubPeople: Function; // Unsubscribe from people
   let ready = false; // Is the component Ready
-  let editingBlock: Block; // Editing block - if defined
+  let editingWidget: Widget; // Editing block - if defined
   let editMode = false; // Toggle Edit mode
   let activePage = 0; // activePage - which page we're on in the array of dasboards
   // let lastActivePage; // last Active for managing reactiveness
-  let activeDashboard = { label: "Loading...", blocks: [] }; // Set a default dasboard
+  let activeDashboard: Dashboard = { id: "fake", label: "Loading...", widgets: [] }; // Set a default dasboard
   let stopRefresh;
+  let loading = false;
   /**
    * Toggle Edit more
    */
@@ -67,13 +69,13 @@
   /**
    * Save the Editing Block
    */
-  async function saveEditingBlock(): Promise<void> {
+  async function saveEditingWidget(): Promise<void> {
     // If we're editing something
-    if (editingBlock) {
+    if (editingWidget) {
       Interact.blocker("Saving..."); // Throw shade
       try {
         // Save block to current dashboardsIndex
-        await DashboardStore.saveBlock(editingBlock);
+        await DashboardStore.saveWidget(editingWidget);
       } catch (e) {
         // Show Error
         Interact.alert("Error", e.message);
@@ -91,17 +93,17 @@
   /**
    * Create a New Block
    */
-  async function newBlock() {
-    editingBlock = new Block();
+  async function newWidget() {
+    editingWidget = new Widget();
   }
 
   /**
    * Edit a Block
    * Will show the block editor
    */
-  function editBlock(block) {
-    block._editing = true;
-    editingBlock = block;
+  function editWidget(widget) {
+    widget._editing = true;
+    editingWidget = widget;
   }
 
   /**
@@ -112,22 +114,22 @@
     let start = null;
     let end = null;
     // Loop over the blocks
-    dboard.blocks.forEach((block: Block) => {
+    dboard.widgets.forEach((widget: Widget) => {
       // Get the date range for this block
-      let dateRange = block.getDateRange();
+      let dateRange = widget.getDateRange();
       // Start is first element
-      let blockStart = dateRange[0];
+      let widgetStart = dateRange[0];
       // End is last element
-      let blockEnd = dateRange[1];
+      let widgetEnd = dateRange[1];
       // If block end is greater (in the future) than end
       // save it as the winner
-      if (blockEnd > end || !end) {
-        end = blockEnd;
+      if (widgetEnd > end || !end) {
+        end = widgetEnd;
       }
       // If block start is less than (more in the past) then
       // set it as the winner
-      if (blockStart < start || !start) {
-        start = blockStart;
+      if (widgetStart < start || !start) {
+        start = widgetStart;
       }
     });
     // Return Earliest and latest dates
@@ -135,28 +137,28 @@
   }
 
   /**
-   * Get the Logs for a Block
+   * Get the Logs for a widget
    */
-  async function getLogsForBlock(block: Block): Promise<Array<any>> {
+  async function getLogsForWidget(widget: Widget): Promise<Array<any>> {
     let logs = []; // Holder of the logs
 
-    const dateRange = block.getDateRange(); // Get Date Range for this block.
+    const dateRange = widget.getDateRange(); // Get Date Range for this widget.
     const start = dateRange[0]; // get  start
     const end = dateRange[1]; // get end
 
     // Get the Logs based on the Type provided
-    if (block.element && block.element.type == "tracker") {
+    if (widget.element && widget.element.type == "tracker") {
       // Tracker Search
-      logs = await LedgerStore.queryTag(block.element.id, start, end);
-    } else if (block.element && block.element.type == "person") {
+      logs = await LedgerStore.queryTag(widget.element.id, start, end);
+    } else if (widget.element && widget.element.type == "person") {
       // Person Search
-      logs = await LedgerStore.queryPerson(block.element.id, start, end);
-    } else if (block.element && block.element.type == "context") {
+      logs = await LedgerStore.queryPerson(widget.element.id, start, end);
+    } else if (widget.element && widget.element.type == "context") {
       // Context Search
-      logs = await LedgerStore.queryContext(block.element.id, start, end);
-    } else if (block.element) {
+      logs = await LedgerStore.queryContext(widget.element.id, start, end);
+    } else if (widget.element) {
       // Generic Search
-      logs = await LedgerStore.queryAll(block.element.id, start, end);
+      logs = await LedgerStore.queryAll(widget.element.id, start, end);
     }
 
     return logs;
@@ -165,7 +167,7 @@
   /**
    * Load The Active Dashboard
    * This will take the current active dashboard from the store, loop over it, and build out
-   * the data structure we need to generate each of the blocks.
+   * the data structure we need to generate each of the wigets.
    */
   async function loadActiveDashboard() {
     // Get the Board
@@ -176,37 +178,37 @@
     }
     // Get Start and End
 
-    // Loop over each block
+    // Loop over each widget
     if (dboard) {
-      for (let i = 0; i < dboard.blocks.length; i++) {
-        // Set the Block
-        const block: Block = dboard.blocks[i] instanceof Block ? dboard.blocks[i] : new Block(dboard.blocks[i]);
-        let start = block.getStartDate();
-        let end = block.getEndDate();
+      for (let i = 0; i < dboard.widgets.length; i++) {
+        // Set the widget
+        const widget: Widget = dboard.widgets[i] instanceof Widget ? dboard.widgets[i] : new Widget(dboard.widgets[i]);
+        let start = widget.getStartDate();
+        let end = widget.getEndDate();
 
         // TODO make this work for all trackable elements
-        if (block.type == "last-used") {
-          if (block.element.type == "tracker") {
-            block.lastUsed = await LastUsed.get(block.element.id);
-          } else if (block.element.type == "person") {
-            let person: Person = await $PeopleStore.people[block.element.id];
+        if (widget.type == "last-used") {
+          if (widget.element.type == "tracker") {
+            widget.lastUsed = await LastUsed.get(widget.element.id);
+          } else if (widget.element.type == "person") {
+            let person: Person = await $PeopleStore.people[widget.element.id];
             if (person) {
-              block.lastUsed = person.last;
+              widget.lastUsed = person.last;
             }
           }
 
-          if (block.lastUsed) {
-            let lastUsedDay = dayjs(block.lastUsed);
+          if (widget.lastUsed) {
+            let lastUsedDay = dayjs(widget.lastUsed);
             let daysPast = Math.abs(dayjs().diff(lastUsedDay, "day"));
-            block.stats = block.stats || {};
-            block.stats.daysPast = daysPast;
+            widget.stats = widget.stats || {};
+            widget.stats.daysPast = daysPast;
           }
-        } else if (block.element && block.type != "last-used") {
-          block.logs = await getLogsForBlock(block);
+        } else if (widget.element && widget.type != "last-used") {
+          widget.logs = await getLogsForWidget(widget);
 
           const statsV5 = new StatsProcessor();
           // Generate Stats
-          block.math = block.math || (block.element.obj || {}).math || "sum";
+          widget.math = widget.math || (widget.element.obj || {}).math || "sum";
           // Get dayjs Start Date
           const fromDate = dayjs(start);
           const toDate = dayjs(end);
@@ -227,48 +229,50 @@
           }
           // Setup the Config to Pass to Stats
           const statsConfig = {
-            rows: block.logs,
+            rows: widget.logs,
             fromDate,
             toDate,
             mode,
-            math: block.math, //state.tracker.math
-            trackableElement: block.element,
+            math: widget.math, //state.tracker.math
+            trackableElement: widget.element,
           };
           // Generate the Stats
-          block.stats = statsV5.generate(statsConfig);
+          widget.stats = statsV5.generate(statsConfig);
           // Generate the Positivity
-          block.positivity = positivityFromLogs(block.logs, block.element);
+          widget.positivity = positivityFromLogs(widget.logs, widget.element);
         }
-        // Replace the block with the new populated version.
-        dboard.blocks[i] = block;
+        // Replace the widget with the new populated version.
+        dboard.widgets[i] = widget;
       }
     } else {
       console.error("No DBoard Found...");
     }
+
     // Set the Active Dashboard
     activeDashboard = dboard || new Dashboard();
     ready = true;
+    loading = false;
   }
 
   /**
    * Initialize the Dashboard
    */
   function initDashboard() {
-    // Loop over the blocks - convert them to real blocks.
-
+    // Loop over the widgets - convert them to real widgets.
+    loading = true;
     try {
       dashboards[$DashboardStore.activeIndex] = dashboards[$DashboardStore.activeIndex] || new Dashboard();
-      dashboards[$DashboardStore.activeIndex].blocks = dashboards[$DashboardStore.activeIndex].blocks.map((block) => {
-        // Set block
-        let nBlock = block instanceof Block ? block : new Block(block);
+      dashboards[$DashboardStore.activeIndex].widgets = dashboards[$DashboardStore.activeIndex].widgets.map((widget) => {
+        // Set widget
+        let thisWidget = widget instanceof Widget ? widget : new Widget(widget);
         // If it's a Tracker - and the tracker exists
-        if (nBlock.element && nBlock.element.type == "tracker") {
-          nBlock.element.obj = TrackerStore.getByTag(nBlock.element.id);
+        if (thisWidget.element && thisWidget.element.type == "tracker") {
+          thisWidget.element.obj = TrackerStore.getByTag(thisWidget.element.id);
           // If it's a person and the person exists
-        } else if (nBlock.element && nBlock.element.type == "person" && people[nBlock.element.id]) {
-          nBlock.element.obj = people[nBlock.element.id];
+        } else if (thisWidget.element && thisWidget.element.type == "person" && people[thisWidget.element.id]) {
+          thisWidget.element.obj = people[thisWidget.element.id];
         }
-        return nBlock;
+        return thisWidget;
       });
 
       loadActiveDashboard();
@@ -287,7 +291,7 @@
    * Stop Editing
    */
   function clearEditing() {
-    editingBlock = undefined;
+    editingWidget = undefined;
   }
 
   /**
@@ -320,7 +324,9 @@
     unsubDashboard = DashboardStore.subscribe((dbStore) => {
       if (dbStore.dashboards && trackers && people) {
         dashboards = dbStore.dashboards;
-        initDashboard();
+        if (!editMode) {
+          initDashboard();
+        }
       }
     });
   });
@@ -349,14 +355,17 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    padding: 10px 16px 16px;
-    justify-content: space-between;
+    padding: 10px 8px 16px;
+    justify-content: center;
     align-content: flex-start;
     min-height: 70vh;
   }
-  .new-block {
+  .new-widget {
     background-color: var(--color-solid);
     box-shadow: var(--box-shadow-tight);
+  }
+  :global(.dashboard-widget.type-map) {
+    height: 260px;
   }
 </style>
 
@@ -375,10 +384,10 @@
       {/each}
     </HScroller>
     <Button color="clear" className="mt-2" on:click={DashboardStore.newDashboard}>
-      <Icon name="addOutline" size="18" />
+      <Icon name="newTab" size="18" />
     </Button>
   </div>
-  {#if activeDashboard}
+  {#if activeDashboard && !loading}
     <div class="container h-100">
       {#if editMode}
         <div class="n-toolbar n-row px-2 mt-2">
@@ -389,25 +398,25 @@
       {#if !editMode && ready}
         <div class="dashboard-wrapper" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
           {#if people && trackers}
-            {#if activeDashboard.blocks.length == 0}
+            {#if activeDashboard.widgets.length == 0}
               <div class="center-all p-5 n-panel vertical">
                 <Text faded size="lg">😔 Empty Dashboard</Text>
-                <Button size="xs" className="mt-2" on:click={newBlock}>Add a Widget...</Button>
+                <Button size="xs" className="mt-2" on:click={newWidget}>Add a Widget...</Button>
               </div>
             {/if}
 
-            {#each activeDashboard.blocks as block (block.id)}
-              <Dashblock
-                {block}
+            {#each activeDashboard.widgets as widget (widget.id)}
+              <WidgetEle
+                {widget}
                 on:click={() => {
-                  editBlock(block);
+                  editWidget(widget);
                 }} />
             {/each}
           {/if}
         </div>
         <div class="board-actions filler mb-4">
           <div class="btn-group filler">
-            <Button on:click={newBlock} color="clear">
+            <Button on:click={newWidget} color="clear">
               <Text size="sm">{Lang.t('general.add', 'Add')} Widget</Text>
             </Button>
             <Button on:click={toggleEdit} color="clear">
@@ -420,11 +429,11 @@
         </div>
       {:else if ready}
         <SortableList
-          items={activeDashboard.blocks || []}
+          items={activeDashboard.widgets || []}
           handle=".menu-handle"
           key="id"
           on:update={(sorted) => {
-            activeDashboard.blocks = sorted.detail;
+            activeDashboard.widgets = sorted.detail;
             DashboardStore.update((state) => {
               state.dashboards[$DashboardStore.activeIndex] = activeDashboard;
               return state;
@@ -448,20 +457,25 @@
         </div>
       {/if}
     </div>
+  {:else}
+    <div class="n-panel center-all">
+      <Spinner size={18} style="margin-right:6px;" />
+      Loading...
+    </div>
   {/if}
 </NLayout>
-<Modal show={editingBlock !== undefined}>
+<Modal show={editingWidget !== undefined}>
   <div class="n-toolbar-grid" slot="header">
     <button class="btn btn-clear left" on:click={clearEditing}>
       <Icon name="close" />
     </button>
     <div class="main">Widget Editor</div>
-    <button class="btn btn-clear right" on:click={saveEditingBlock}>
-      {#if editingBlock && editingBlock._editing}{Lang.t('general.update', 'Update')}{:else}{Lang.t('general.save', 'Save')}{/if}
+    <button class="btn btn-clear right" on:click={saveEditingWidget}>
+      {#if editingWidget && editingWidget._editing}{Lang.t('general.update', 'Update')}{:else}{Lang.t('general.save', 'Save')}{/if}
     </button>
 
   </div>
-  {#if editingBlock}
-    <DashblockEditor bind:value={editingBlock} on:close={clearEditing} />
+  {#if editingWidget}
+    <WidgetEditor bind:value={editingWidget} on:close={clearEditing} />
   {/if}
 </Modal>
