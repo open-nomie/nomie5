@@ -433,7 +433,11 @@
       {:else}
         <!-- Loop over logs -->
         {#each logs as log, index}
-          <LogItem {log} />
+          <LogItem
+            {log}
+            on:textClick={(event) => {
+              methods.textClick(event);
+            }} />
         {/each}
 
         <!--
