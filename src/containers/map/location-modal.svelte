@@ -178,7 +178,7 @@
     <section class="n-panel vertical">
       <div className="n-panel" style="height:225px; border-bottom:var(--color-solid-2);">
         <!-- MAP -->
-        <div style="border-radius: 16px; overflow:hidden; margin: 10px 20px; height: 200px;">
+        <div style="height: 200px;">
           <NMap on:change={mapChange} locations={state.active ? [state.active] : []} picker={true} bind:this={map} />
         </div>
       </div>

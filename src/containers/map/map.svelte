@@ -30,9 +30,7 @@
 
   // consts
   const dispatch = createEventDispatcher();
-  const id = `map-${Math.random()
-    .toString()
-    .replace(".", "")}`;
+  const id = `map-${Math.random().toString().replace(".", "")}`;
 
   // Setup GeoCode SErvice
   const geocodeService = L.esri.Geocoding.geocodeService();
@@ -49,7 +47,7 @@
     lat: null,
     lng: null,
     showLocations: false,
-    height: `100px`
+    height: `100px`,
   };
 
   $: if (locations) {
@@ -61,23 +59,23 @@
 
   $: if (!locations.length && records.length) {
     let locs = records
-      .filter(r => r.lat)
-      .map(record => {
+      .filter((r) => r.lat)
+      .map((record) => {
         return {
           lat: record.lat,
           lng: record.lng,
           name: record.location,
-          log: record
+          log: record,
         };
       });
     locations = locs;
   }
 
   $: if (picker && MAP && locations.length == 0) {
-    locate().then(location => {
+    locate().then((location) => {
       locations.push({
         lat: location.latitude,
-        lng: location.longitude
+        lng: location.longitude,
       });
       MAP.setView(L.latLng(location.latitude, location.longitude), 12);
     });
@@ -104,20 +102,19 @@
               arcgisOnline,
               L.esri.Geocoding.mapServiceProvider({
                 label: "States and Counties",
-                url:
-                  "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer",
+                url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer",
                 layers: [2, 3],
-                searchFields: ["NAME", "STATE_NAME"]
-              })
-            ]
+                searchFields: ["NAME", "STATE_NAME"],
+              }),
+            ],
           });
 
-          searchController.on("results", data => {
+          searchController.on("results", (data) => {
             if (data.latlng) {
               let location = new Location({
                 lat: data.latlng.lat,
                 lng: data.latlng.lng,
-                name: data.text
+                name: data.text,
               });
               methods.setLocation(location);
             }
@@ -144,7 +141,7 @@
                 new Location({
                   ...MAP.getCenter(),
                   ...{ location: data.locationName },
-                  ...{ name: null }
+                  ...{ name: null },
                 })
               );
             };
@@ -168,7 +165,7 @@
         } // end no map
 
         // Clean up the layers
-        MAP.eachLayer(function(layer) {
+        MAP.eachLayer(function (layer) {
           MAP.removeLayer(layer);
         });
 
@@ -177,21 +174,17 @@
       });
     },
     deleteLocation(location) {
-      Interact.confirm(`${Lang.t("general.delete")} ${location.name}?`).then(
-        res => {
-          if (res) {
-            Locations.deleteByID(location.id);
-          }
+      Interact.confirm(`${Lang.t("general.delete")} ${location.name}?`).then((res) => {
+        if (res) {
+          Locations.deleteByID(location.id);
         }
-      );
+      });
     },
     editName(location) {
-      Interact.prompt("Location Name", null, { value: location.name }).then(
-        res => {
-          location.name = res;
-          Locations.save(location);
-        }
-      );
+      Interact.prompt("Location Name", null, { value: location.name }).then((res) => {
+        location.name = res;
+        Locations.save(location);
+      });
     },
     setLocation(location) {
       data.locationName = location.name;
@@ -210,9 +203,9 @@
         new Location({
           name: data.locationName,
           lat: data.lat,
-          lng: data.lng
+          lng: data.lng,
         })
-      ).then(loc => {
+      ).then((loc) => {
         Interact.toast(Lang.t("general.saved"));
       });
       // Locations.save({
@@ -230,7 +223,7 @@
       L.tileLayer(mapTheme, {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/">OSM</a> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-        maxZoom: 18
+        maxZoom: 18,
       }).addTo(MAP);
 
       var myIcon = window.L.icon({
@@ -238,17 +231,17 @@
         iconRetinaUrl: "/images/map/map-marker.svg",
         iconSize: [32, 32],
         iconAnchor: [9, 21],
-        popupAnchor: [0, -14]
+        popupAnchor: [0, -14],
       });
 
-      let latLngArray = locations.map(loc => {
+      let latLngArray = locations.map((loc) => {
         return [loc.lat, loc.lng];
       });
 
       // Quick Add Marker Function
       let addMarker = (latLng, name, click) => {
         let mkr = new L.marker(latLng, {
-          icon: myIcon
+          icon: myIcon,
         });
         // If location name is present (TODO) show it in a popup
         if (name) {
@@ -265,7 +258,7 @@
       let maxDistance = distance.furthest(latLngArray);
       if (maxDistance > 0.4) {
         // Loop over locaitons provided in props
-        locations.forEach(loc => {
+        locations.forEach((loc) => {
           addMarker([loc.lat, loc.lng], loc.name, () => {
             // On Marker Click
             data.activeLocation = loc;
@@ -276,31 +269,27 @@
           });
         });
 
-        let connectTheDots = data => {
+        let connectTheDots = (data) => {
           // TODO: Look at making this curved dotted lines - and not just straight ones
           var c = [];
-          data.forEach(location => {
+          data.forEach((location) => {
             c.push([location.lat, location.lng]);
           });
           return c;
         };
         //let pathLine =
         window.L.polyline(connectTheDots(locations), {
-          color: "rgba(2.7%, 52.5%, 100%, 0.378)"
+          color: "rgba(2.7%, 52.5%, 100%, 0.378)",
         }).addTo(MAP);
       } else {
         // Max Distance is not enough to justify rendering a bunch of pins
         if (locations.length) {
-          addMarker(
-            [locations[0].lat, locations[0].lng],
-            locations[0].name,
-            () => {
-              data.activeLocation = locations[0];
-              if (data.activeLocation.log) {
-                Interact.shareLog(data.activeLocation.log);
-              }
+          addMarker([locations[0].lat, locations[0].lng], locations[0].name, () => {
+            data.activeLocation = locations[0];
+            if (data.activeLocation.log) {
+              Interact.shareLog(data.activeLocation.log);
             }
-          );
+          });
         }
       }
 
@@ -320,7 +309,7 @@
             resolve((result || {}).address || "Unknown");
           });
       });
-    }
+    },
   };
 
   // Reactive Location Lookup
@@ -499,8 +488,7 @@
             <path
               d="M42,29h-5.08c-0.441-3.059-2.861-5.479-5.92-5.92V18c0-0.553-0.447-1-1-1s-1,0.447-1,1v5.08
               c-3.059,0.441-5.479,2.862-5.92,5.92H18c-0.553,0-1,0.447-1,1s0.447,1,1,1h5.08c0.441,3.059,2.861,5.479,5.92,5.92V42
-              c0,0.553,0.447,1,1,1s1-0.447,1-1v-5.08c3.059-0.441,5.479-2.862,5.92-5.92H42c0.553,0,1-0.447,1-1S42.553,29,42,29z
-              M30,35
+              c0,0.553,0.447,1,1,1s1-0.447,1-1v-5.08c3.059-0.441,5.479-2.862,5.92-5.92H42c0.553,0,1-0.447,1-1S42.553,29,42,29z M30,35
               c-2.757,0-5-2.243-5-5s2.243-5,5-5s5,2.243,5,5S32.757,35,30,35z" />
           </g>
         </svg>
@@ -541,11 +529,7 @@
 
         {#if data.showLocations && data.locationName}
           <div class="right">
-            <div
-              class="btn btn-clear text-primary"
-              on:click={methods.saveLocation}>
-              Save
-            </div>
+            <div class="btn btn-clear text-primary" on:click={methods.saveLocation}>Save</div>
           </div>
         {/if}
 
@@ -553,12 +537,10 @@
       {#if data.showLocations}
         <div class="locations list">
           {#if $Locations.length == 0}
-            <div class="empty-notice" style="max-height:120px;">
-              No Saved Locations
-            </div>
+            <div class="empty-notice" style="max-height:120px;">No Saved Locations</div>
           {/if}
           {#each $Locations as location}
-            <Item className="compact text-primary">
+            <Item borderBottom compact className="compact text-primary">
               <button
                 slot="left"
                 class="btn btn-clear btn-icon text-red"
@@ -578,14 +560,14 @@
               <div slot="right" class="n-row" style="min-width:50px;">
                 <button
                   class="btn btn-clear mr-2"
-                  on:click={evt => {
+                  on:click={(evt) => {
                     methods.editName(location);
                   }}>
                   <NIcon name="edit" size="24" />
                 </button>
                 <button
                   class="btn btn-clear"
-                  on:click={evt => {
+                  on:click={(evt) => {
                     methods.deleteLocation(location);
                   }}>
                   <NIcon name="delete" className="fill-red" />
