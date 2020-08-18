@@ -125,7 +125,8 @@
       height: 90px;
     }
   }
-  .type-barchart {
+  .type-barchart,
+  .type-linechart {
     min-width: calc(100% - 16px) !important;
     max-width: calc(100% - 16px);
     @include media-breakpoint-up(md) {
@@ -184,9 +185,10 @@
       </Button>
     </div>
     <div class="block-main">
-      {#if block.type == 'barchart' && block.stats && block.stats.chart}
+      {#if ['barchart', 'linechart'].indexOf(block.type) > -1 && block.stats && block.stats.chart}
         <BarChart
           height={100}
+          type={block.type == 'linechart' ? 'line' : 'bar'}
           color={getBlockColor(block)}
           labels={block.stats.chart.values.map((point) => point.x)}
           points={block.stats.chart.values}
@@ -215,12 +217,6 @@
         <div class="value">
           <Pie
             data={[{ label: 'Positive', value: block.positivity.positive, color: '#38a83f' }, { label: 'Neutral', value: block.positivity.neutral, color: '#319ed7' }, { label: 'Negative', value: block.positivity.negative, color: '#e94151' }]} />
-          <!-- <PositivityBar
-            positive={block.positivity.positive}
-            neutral={block.positivity.neutral}
-            negative={block.positivity.negative}
-            style="width:100%"
-            height="50px" /> -->
         </div>
       {:else}
         <div class="value">Unknown {block.type}</div>

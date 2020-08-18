@@ -186,6 +186,12 @@
       optional: [],
     },
     {
+      label: "Line Chart",
+      id: "linechart",
+      requires: ["timeframe", "element"],
+      optional: [],
+    },
+    {
       label: "Value/Count",
       id: "value",
       requires: ["timeframe", "element"],
