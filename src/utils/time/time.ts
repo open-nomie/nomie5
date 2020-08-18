@@ -1,33 +1,35 @@
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 export default {
   padTime(t) {
     return (t + "").length === 1 ? (t + "").padStart(2, "0") : t;
   },
   // Seconds to Time Chunk
-  secondsToTime(secondsVar) {
+  secondsToTime(secondsVar: number): string {
     secondsVar = secondsVar || 0;
     let seconds = secondsVar;
-    let minutes = Math.floor(parseInt(seconds) / 60).toString();
-    let hours = "";
+    let minutes = Math.floor(parseInt(`${seconds}`) / 60).toString();
+    let hours;
 
     if (parseInt(minutes) > 59) {
       hours = this.padTime(Math.floor(parseInt(minutes) / 60).toString());
       minutes = this.padTime((parseInt(minutes) - parseInt(hours) * 60).toString());
     }
 
-    seconds = this.padTime(Math.floor(parseInt(seconds) % 60).toString());
+    seconds = this.padTime(Math.floor(parseInt(`${seconds}`) % 60).toString());
     minutes = this.padTime(minutes);
 
-    if (hours !== "") {
-      hours = parseInt(hours);
+    if (hours) {
+      hours = parseInt(`${hours}`);
       return `${hours}:${minutes}:${seconds}`;
     }
     return `00:${minutes}:${seconds}`;
   },
   dateToDesc(date) {
     let d = dayjs(date);
-    let h = d.format("H");
+    let h: number = parseInt(d.format("H"));
     if (h >= 6 && h < 12) {
       return "morning";
     } else if (h >= 12 && h < 18) {
@@ -38,7 +40,7 @@ export default {
       return "night";
     }
   },
-  fromNow(date) {
+  fromNow(date: Date | number): string {
     let fromNow = dayjs(date).fromNow(true);
     let v = fromNow;
     if (fromNow == "a few seconds ago") {
@@ -52,7 +54,7 @@ export default {
     }
     return fromNow;
   },
-  datetimeLocal(dateString) {
+  datetimeLocal(dateString): Date {
     let dateSplit = dateString.split("T");
     let dateStr = dateSplit[0];
     let timeStr = dateSplit[1];
@@ -64,14 +66,14 @@ export default {
     return updatedDate;
   },
   // Milliseconds to Seconds
-  msToSecond(ms) {
+  msToSecond(ms): number {
     return ms / 1000;
   },
-  timestringToSeconds(timestring) {
+  timestringToSeconds(timestring): number {
     let tsa = timestring.split(":");
     return this.unitsToSeconds(tsa[0], tsa[1], tsa[2]);
   },
-  unitsToSeconds(hour, minutes, seconds) {
+  unitsToSeconds(hour, minutes, seconds): number {
     let s = 0;
     s = (parseInt(hour) || 0) * 60 * 60;
     s = s + (parseInt(minutes) || 0) * 60;
@@ -79,7 +81,7 @@ export default {
     return s;
   },
   // Get an array from 00 to 59
-  getNumberedArray(stopAt) {
+  getNumberedArray(stopAt): Array<string> {
     stopAt++;
     let items = [];
     for (var i = 0; i < stopAt; i++) {
