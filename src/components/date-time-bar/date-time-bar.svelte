@@ -1,13 +1,16 @@
 <script lang="ts">
   import dayjs from "dayjs";
   import type { Dayjs } from "dayjs";
-  import { Lang } from "../../store/lang";
+
   import { onMount, createEventDispatcher } from "svelte";
-  import { UserStore } from "../../store/user-store";
+
   import Calendar from "../calendar/calendar.svelte";
   import Text from "../text/text.svelte";
   import ListItem from "../list-item/list-item.svelte";
   import TimeSelect from "./time-select.svelte";
+
+  import { Lang } from "../../store/lang";
+  import { UserStore } from "../../store/user-store";
 
   const dispatch = createEventDispatcher();
 
@@ -89,9 +92,6 @@
   .view.visible {
     border-top: solid 1px var(--color-solid-2);
     margin-bottom: 8px;
-  }
-  :global(.date-time-bar-item.opened .left, .date-time-bar-item.opened .right) {
-    // display: none !important;
   }
 </style>
 
