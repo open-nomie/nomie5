@@ -53,9 +53,16 @@
 
   // Fire Change
   function onChange() {
-    let _hour = !is24Hour && ampm == "pm" ? parseInt(hour) + 12 : parseInt(hour);
-    value = value.set("hour", _hour);
-    value = value.set("minute", parseInt(minute));
+    if (!is24Hour) {
+      // Create a date string - to toggle AM/PM without affecting the actual date
+      let dateString = `${dayjs(value).format("YYYY-MM-DD")} ${hour}:${minute} ${ampm}`;
+      // Parse the string
+      value = dayjs(dateString, "YYYY-MM-DD h:mm a");
+    } else {
+      // 24 Hour clock
+      value = value.set("hour", parseInt(hour));
+      value = value.set("minute", parseInt(minute));
+    }
     dispatch("change", value);
   }
 
