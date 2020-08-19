@@ -355,7 +355,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    padding: 10px 8px 16px;
+    padding: 10px 4px 16px;
     justify-content: center;
     align-content: flex-start;
     min-height: 70vh;

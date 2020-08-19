@@ -116,7 +116,7 @@ describe("modules/stats/stats", function () {
   // it("getMinMaxFromValueMap()", () => {
   //   let valueMap = goodStats.getValueMap(rows);
   //   let minmax = goodStats.getMinMaxFromValueMap(valueMap);
-  //   console.log({ valueMap, minmax });
+
   //   expect(minmax.min.value).toEqual(16);
   //   expect(minmax.max.value).toEqual(22);
   // });
