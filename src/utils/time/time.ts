@@ -41,18 +41,34 @@ export default {
     }
   },
   fromNow(date: Date | number): string {
-    let fromNow = dayjs(date).fromNow(true);
+    let fromNow = dayjs(date).fromNow();
     let v = fromNow;
     if (fromNow == "a few seconds ago") {
       v = "now";
-    } else if (fromNow.substr(0, 1) == "a") {
-      let s = fromNow.split(" ");
-      v = `1${s[1].substr(0, 1)}`;
     } else {
-      let s = fromNow.split(" ");
-      v = `${s[0]}${s[1].substr(0, 1)}`;
+      v = fromNow
+        .trim()
+        .split(" ")
+        .filter((w) => {
+          return w !== "ago";
+        })
+        .map((w) => {
+          switch (w) {
+            case "minutes":
+              return "mins";
+              break;
+            case "hours":
+              return "hrs";
+              break;
+            default:
+              return w;
+              break;
+          }
+        })
+        .join(" ");
     }
-    return fromNow;
+    console.log({ v });
+    return v;
   },
   datetimeLocal(dateString): Date {
     let dateSplit = dateString.split("T");

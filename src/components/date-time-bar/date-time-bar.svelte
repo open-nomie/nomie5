@@ -46,15 +46,14 @@
    * Sets month, day, year - leaving time alone
    */
   function setDate(d: Dayjs) {
-    _date = _date.set("month", d.get("month"));
-    _date = _date.set("date", d.get("date"));
-    _date = _date.set("year", d.get("year"));
+    // _date = _date.set("month", d.get("month")).set("date", d.get("date")).set("year", d.get("year"));
+    _date = d;
+    _date = _date;
     dispatch("change", _date);
     if (!opened && _opened) {
       _opened = false;
     }
   }
-
   onMount(init);
 </script>
 

@@ -2,6 +2,7 @@
   import dayjs from "dayjs";
   import { onMount, createEventDispatcher } from "svelte";
   import { isTruthy } from "../../utils/truthy/truthy";
+  import tick from "../../utils/tick/tick";
 
   const dispatch = createEventDispatcher();
 
@@ -14,6 +15,10 @@
   let hour; // local hour
   let minute; // local minute
   let ampm; // local ampm
+  let lastAMPM;
+  let mounted = false;
+  let hour12;
+
   // 24 Hour Array
   let hours24 = Array(24)
     .fill(0)
@@ -35,38 +40,32 @@
 
   // Reactively Set Hours
   $: hours = is24Hour ? hours24 : hours12;
-  // Reactively Initialize - if the date changes - fire off the init.
-  $: if (dayjs(value).format("YYYY-MM-DD hh:mm a") !== dayjs(lastValue).format("YYYY-MM-DD hh:mm a")) {
-    init();
-  }
 
-  /**
-   * Init the time Selector
-   */
-  function init() {
-    // Set values
+  $: if (value && value.format("hh:mm a") !== dayjs(lastValue || "2010-01-01T01:01:01").format("hh:mm a")) {
     lastValue = value;
-    hour = is24Hour ? value.format("HH") : value.format("hh");
-    minute = value.format("mm");
+    hour = parseInt(value.format("HH"));
+    hour12 = ((hour + 11) % 12) + 1;
+    minute = parseInt(value.format("mm"));
     ampm = value.format("a");
+    lastAMPM = ampm;
   }
 
-  // Fire Change
-  function onChange() {
+  function onChange(evt) {
+    let ogDate = dayjs(value);
+    let ogDay = ogDate.get("day");
+    let newHour = hour;
+
     if (!is24Hour) {
-      // Create a date string - to toggle AM/PM without affecting the actual date
-      let dateString = `${dayjs(value).format("YYYY-MM-DD")} ${hour}:${minute} ${ampm}`;
-      // Parse the string
-      value = dayjs(dateString, "YYYY-MM-DD h:mm a");
-    } else {
-      // 24 Hour clock
-      value = value.set("hour", parseInt(hour));
-      value = value.set("minute", parseInt(minute));
+      if (newHour == 12 && ampm == "am") {
+        newHour = 0;
+      } else if (ampm == "am" && newHour > 12) {
+        newHour = newHour - 12;
+      } else if (ampm == "pm" && newHour < 12) {
+        newHour = newHour + 12;
+      }
     }
-    dispatch("change", value);
+    dispatch("change", ogDate.set("hour", newHour).set("minute", minute).set("day", ogDay));
   }
-
-  onMount(init);
 </script>
 
 <style>
@@ -90,15 +89,23 @@
   }
 </style>
 
-{#if isTruthy(minute)}
+{#if value}
   <div class="time-select-wrapper {className}" {style}>
     <div class="time-select">
       <!-- Loop over hours -->
-      <select bind:value={hour} class=" hour" on:change={onChange}>
-        {#each hours as h}
-          <option value={h} selected={h == hour} style="text-align:center;">{`${h}`.length == 1 ? `0${h}` : h}</option>
-        {/each}
-      </select>
+      {#if is24Hour}
+        <select bind:value={hour} class=" hour" on:change={onChange}>
+          {#each hours as h}
+            <option value={h} selected={h == hour} style="text-align:center;">{`${h}`.length == 1 ? `0${h}` : h}</option>
+          {/each}
+        </select>
+      {:else}
+        <select bind:value={hour} class="hour" on:change={onChange}>
+          {#each hours as h}
+            <option value={h} selected={h == hour12} style="text-align:center;">{`${h}`.length == 1 ? `0${h}` : h}</option>
+          {/each}
+        </select>
+      {/if}
       <span class="blinker">:</span>
       <!-- Loop over minutes -->
       <select bind:value={minute} class="minutes" on:change={onChange}>
