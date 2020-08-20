@@ -22,6 +22,7 @@
   import WidgetMinMax from "./widgets/widget-min-max.svelte";
   import WidgetPositivityPie from "./widgets/widget-positivity-pie.svelte";
   import WidgetMap from "./widgets/widget-map.svelte";
+  import WidgetStreak from "./widgets/widget-streak.svelte";
 
   import { LastUsed } from "../../store/last-used";
   import { Interact } from "../../store/interact";
@@ -125,8 +126,8 @@
   }
 
   .widget-size-lg {
-    min-width: calc(75% - 16px) !important;
-    max-width: calc(75% - 16px);
+    min-width: calc(100% - 16px) !important;
+    max-width: calc(100% - 16px);
   }
 
   .widget-size-md {
@@ -144,7 +145,8 @@
       min-width: calc(50% - 16px) !important;
       max-width: calc(50% - 16px);
     }
-    .widget-size-md {
+    .widget-size-md,
+    .widget-size-lg {
       min-width: calc(100% - 16px) !important;
       max-width: calc(100% - 16px);
     }
@@ -216,6 +218,8 @@
         <WidgetMinMax {widget} />
       {:else if widget.type == 'map' && widget.stats}
         <WidgetMap {widget} />
+      {:else if widget.type == 'streak' && widget.stats}
+        <WidgetStreak {widget} />
       {:else}
         <div class="value">Unknown {widget.type}</div>
       {/if}

@@ -143,8 +143,13 @@
     let logs = []; // Holder of the logs
 
     const dateRange = widget.getDateRange(); // Get Date Range for this widget.
-    const start = dateRange[0]; // get  start
-    const end = dateRange[1]; // get end
+    let start = dateRange[0]; // get  start
+    let end = dateRange[1]; // get end
+
+    if (widget.type == "streak") {
+      start = dayjs().startOf("month").toDate();
+      end = dayjs().endOf("month").toDate();
+    }
 
     // Get the Logs based on the Type provided
     if (widget.element && widget.element.type == "tracker") {
@@ -414,7 +419,7 @@
             {/each}
           {/if}
         </div>
-        <div class="board-actions filler mb-4">
+        <div class="board-actions filler">
           <div class="btn-group filler">
             <Button on:click={newWidget} color="clear">
               <Text size="sm">{Lang.t('general.add', 'Add')} Widget</Text>
@@ -427,6 +432,7 @@
             </Button>
           </div>
         </div>
+        <div class="mt-3" />
       {:else if ready}
         <SortableList
           items={activeDashboard.widgets || []}

@@ -14,6 +14,12 @@ export const widgetTypes: Array<IWidgetType> = [
     requires: ["timeframe", "element"],
     optional: [],
   },
+  // {
+  //   label: "Streak",
+  //   id: "streak",
+  //   requires: ["element"],
+  //   optional: [],
+  // },
   {
     label: "Line Chart",
     id: "linechart",
