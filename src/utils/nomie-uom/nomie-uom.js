@@ -89,6 +89,12 @@ NomieUOM.uoms = {
     type: "general",
     symbolAffix: "post",
   },
+  pages: {
+    singular: "Page",
+    plural: "Pages",
+    symbol: "pgs",
+    type: "general",
+  },
   dollars: {
     singular: "Dollar",
     plural: "Dollars",
@@ -377,6 +383,14 @@ NomieUOM.uoms = {
     plural: "Cups",
     symbol: "cups",
     type: "volume",
+    symbolAffix: "post",
+    symbolSpace: true,
+  },
+  mdgl: {
+    singular: "Blood Sugar",
+    plural: "Blood Sugar",
+    symbol: "mg/dl",
+    type: "general",
     symbolAffix: "post",
     symbolSpace: true,
   },
