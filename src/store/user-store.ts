@@ -29,7 +29,7 @@ export interface IUserMeta {
   lock: boolean;
   pin?: number;
   is24Hour?: boolean;
-  firstDayOfWeek: '1' | '2'; // 1: Sunday, 2: Monday, etc.
+  firstDayOfWeek: "1" | "2"; // 1: Sunday, 2: Monday, etc.
   lastBackup?: Date;
   boardsEnabled?: boolean;
   canEditFiles?: boolean;
@@ -76,7 +76,7 @@ const userInit = () => {
       lock: false,
       pin: undefined,
       is24Hour: false,
-      firstDayOfWeek: '1', // 1: Sunday, 2: Monday, etc.
+      firstDayOfWeek: "1", // 1: Sunday, 2: Monday, etc.
       lastBackup: undefined,
     },
     localSettings: {
@@ -237,6 +237,9 @@ const userInit = () => {
         usr.locked = false;
         return usr;
       });
+    },
+    meta(): IUserMeta {
+      return methods.data().meta;
     },
     /**
      * Meta Data
