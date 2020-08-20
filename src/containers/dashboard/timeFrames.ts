@@ -22,60 +22,6 @@ export const timeFrames: Array<any> = [
     },
   },
   {
-    id: "this-week",
-    label: "This Week",
-    start: {
-      startOf: "week",
-    },
-    end: {
-      endOf: "week",
-    },
-  },
-  {
-    id: "last-week",
-    label: "Last Week",
-    start: {
-      subtract: [1, "week"],
-      startOf: "week",
-    },
-    end: {
-      subtract: [1, "week"],
-      endOf: "week",
-    },
-  },
-  {
-    id: "this-month",
-    label: "This Month",
-    start: {
-      startOf: "month",
-    },
-    end: {
-      endOf: "month",
-    },
-  },
-  {
-    id: "this-year",
-    label: "This Year",
-    start: {
-      startOf: "year",
-    },
-    end: {
-      endOf: "year",
-    },
-  },
-  {
-    id: "last-month",
-    label: "Last Month",
-    start: {
-      subtract: [1, "month"],
-      startOf: "month",
-    },
-    end: {
-      subtract: [1, "month"],
-      endOf: "month",
-    },
-  },
-  {
     id: "last-7",
     label: "Last 7 days",
     start: {
@@ -117,6 +63,62 @@ export const timeFrames: Array<any> = [
     },
     end: {
       endOf: "day",
+    },
+  },
+  {
+    id: "this-week",
+    label: "This Week",
+    // This are not used, but required - search jank in widget.ts as to why
+    start: {
+      startOf: "week",
+    },
+    end: {
+      endOf: "week",
+    },
+  },
+  {
+    id: "last-week",
+    label: "Last Week",
+    // This are not used, but required - search jank in widget.ts as to why
+    start: {
+      subtract: [1, "week"],
+      startOf: "week",
+    },
+    end: {
+      subtract: [1, "week"],
+      endOf: "week",
+    },
+  },
+  {
+    id: "this-month",
+    label: "This Month",
+    start: {
+      startOf: "month",
+    },
+    end: {
+      endOf: "month",
+    },
+  },
+  {
+    id: "this-year",
+    label: "This Year",
+    start: {
+      startOf: "year",
+    },
+    end: {
+      endOf: "year",
+    },
+  },
+  {
+    id: "last-month",
+    label: "Last Month",
+    start: {
+      subtract: [1, "month"],
+      startOf: "month",
+    },
+    end: {
+      subtract: [1, "month"],
+      endOf: "month",
     },
   },
 ];
