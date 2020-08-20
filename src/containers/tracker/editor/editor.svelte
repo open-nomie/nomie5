@@ -157,11 +157,13 @@
 {#if $Interact.trackerEditor.show}
 
   <div class="n-tracker-editor">
-    <NModal
-      type="fullscreen"
-      title="Edit {data.tracker.label.length ? data.tracker.label : 'Tracker'}"
-      allowClose
-      on:close={methods.cancel}>
+    <NModal type="fullscreen" allowClose on:close={methods.cancel}>
+
+      <header slot="header" class="n-toolbar-grid">
+        <button class="left btn btn-clear text-primary-bright" on:click|preventDefault={methods.cancel}>Cancel</button>
+        <div class="main">Edit {data.tracker.label.length ? data.tracker.label : 'Tracker'}</div>
+        <button class="right btn btn-clear text-primary-bright" on:click={methods.tracker_save}>{Lang.t('general.save')}</button>
+      </header>
 
       <NItem className="item-divider compact" />
       <ColorPicker bind:value={data.tracker.color} />
@@ -383,8 +385,10 @@
         <div class="text-red">{Lang.t('tracker.remove-tracker', 'Delete Tracker')}</div>
       </NItem>
 
-      <button slot="footer" on:click={methods.cancel} class="btn btn-light btn-lg flex-grow mr-1">{Lang.t('general.cancel')}</button>
-      <button slot="footer" class="btn btn-primary btn-lg flex-grow ml-1" on:click={methods.tracker_save}>{Lang.t('general.save')}</button>
+      <!-- <button slot="footer" on:click={methods.cancel} class="btn btn-light btn-lg flex-grow mr-1">{Lang.t('general.cancel')}</button>
+      <button slot="footer" class="btn btn-primary btn-lg flex-grow ml-1" on:click={methods.tracker_save}>{Lang.t('general.save')}</button> -->
+      <div slot="footer" />
     </NModal>
+
   </div>
 {/if}
