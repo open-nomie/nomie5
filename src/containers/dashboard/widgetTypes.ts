@@ -9,6 +9,12 @@ export interface IWidgetType {
 
 export const widgetTypes: Array<IWidgetType> = [
   {
+    label: "Display Value",
+    id: "value",
+    requires: ["timeframe", "element"],
+    optional: ["cond-style"],
+  },
+  {
     label: "Bar Chart",
     id: "barchart",
     requires: ["timeframe", "element"],
@@ -38,12 +44,7 @@ export const widgetTypes: Array<IWidgetType> = [
     requires: ["timeframe", "element"],
     optional: [],
   },
-  {
-    label: "Value/Count",
-    id: "value",
-    requires: ["timeframe", "element"],
-    optional: ["cond-style"],
-  },
+
   // This is not complete
   // {
   //   label: "What Time",

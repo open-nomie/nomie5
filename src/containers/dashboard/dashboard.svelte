@@ -44,6 +44,7 @@
   import Input from "../../components/input/input.svelte";
   import { Lang } from "../../store/lang";
   import Spinner from "../../components/spinner/spinner.svelte";
+  import { widgetTypes } from "./widgetTypes";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
   let people: any; // holder of User People - loaded from subscribe
@@ -66,24 +67,38 @@
     editMode = !editMode;
   }
 
+  function canSave(testWidget: Widget) {
+    let type = widgetTypes.find((wdgt) => wdgt.id == testWidget.type);
+    if (type) {
+      let required = type.requires;
+      if (required.indexOf("element") > -1 && !testWidget.element) {
+        throw new Error("Select a trackable element to display");
+      }
+      if (required.indexOf("timeframe") > -1 && !testWidget.timeRange.label) {
+        throw new Error("This widget requires a timeframe");
+      }
+    } else {
+      throw new Error("Select a Widget Type");
+    }
+  }
+
   /**
    * Save the Editing Block
    */
   async function saveEditingWidget(): Promise<void> {
     // If we're editing something
     if (editingWidget) {
-      Interact.blocker("Saving..."); // Throw shade
       try {
         // Save block to current dashboardsIndex
+        canSave(editingWidget);
+        Interact.blocker("Saving..."); // Throw shade
         await DashboardStore.saveWidget(editingWidget);
+        clearEditing();
       } catch (e) {
         // Show Error
         Interact.alert("Error", e.message);
       }
-      // Disable Blocker
       Interact.stopBlocker();
-      // Clear Editing - close
-      clearEditing();
     } else {
       // no Editing block? Show message
       Interact.toast("Incomplete");
@@ -472,11 +487,9 @@
 </NLayout>
 <Modal show={editingWidget !== undefined}>
   <div class="n-toolbar-grid" slot="header">
-    <button class="btn btn-clear left" on:click={clearEditing}>
-      <Icon name="close" />
-    </button>
+    <button class="btn btn-clear left text-primary-bright" on:click={clearEditing}>Close</button>
     <div class="main">Widget Editor</div>
-    <button class="btn btn-clear right" on:click={saveEditingWidget}>
+    <button class="btn btn-clear right text-primary-bright" on:click={saveEditingWidget}>
       {#if editingWidget && editingWidget._editing}{Lang.t('general.update', 'Update')}{:else}{Lang.t('general.save', 'Save')}{/if}
     </button>
 

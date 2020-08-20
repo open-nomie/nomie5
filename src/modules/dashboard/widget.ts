@@ -3,6 +3,7 @@ import dayjs, { Dayjs, OpUnitType } from "dayjs";
 import nid from "../nid/nid";
 import type NLog from "../nomie-log/nomie-log";
 import { strToColor } from "../../components/dymoji/dymoji";
+import { UserStore } from "../../store/user-store";
 /**
  * Widget Date
  * The blockdate is either the start or end of a TimeFrame
@@ -26,11 +27,13 @@ export class WidgetDate implements IWidgetDate {
   startOf?: OpUnitType;
 
   constructor(part: IWidgetDate) {
-    this.date = part.date;
-    this.subtract = part.subtract;
-    this.add = part.add;
-    this.endOf = part.endOf;
-    this.startOf = part.startOf;
+    if (part) {
+      this.date = part.date;
+      this.subtract = part.subtract;
+      this.add = part.add;
+      this.endOf = part.endOf;
+      this.startOf = part.startOf;
+    }
   }
 
   public toDate() {
@@ -73,13 +76,11 @@ export class WidgetTimeFrame {
   start: WidgetDate;
   end: WidgetDate;
 
-  constructor(payload: IWidgetTimeFrame) {
-    if (payload) {
-      this.label = payload.label;
-      this.start = new WidgetDate(payload.start);
-      this.end = new WidgetDate(payload.end);
-      this.id = payload.id;
-    }
+  constructor(payload: any = {}) {
+    this.label = payload.label;
+    this.start = new WidgetDate(payload.start);
+    this.end = new WidgetDate(payload.end);
+    this.id = payload.id;
     this.id = this.id || nid();
   }
   public getLabel(): string {
@@ -200,8 +201,34 @@ export class Widget implements IWidget {
     return JSON.parse(JSON.stringify(this));
   }
 
+  private getStartOfWeek() {
+    let startOfWeek = dayjs().startOf("week");
+    if (UserStore.meta().firstDayOfWeek == "1") {
+      startOfWeek = startOfWeek.subtract(1, "day");
+    }
+    return startOfWeek;
+  }
+
+  /**
+   * jank alert
+   * Since there isn't a good way to paramaterize the start of the week
+   * since we have monday and sunday, I'm just going to
+   * hard code the this-week and last-week conditions.
+   */
+
   getStartDate(): Date {
-    if (this.timeRange && this.timeRange.start) {
+    if (this.timeRange && ["this-week", "last-week"].indexOf(this.timeRange.id) > -1) {
+      // This is hacky
+      let startOfWeek = this.getStartOfWeek();
+      switch (this.timeRange.id) {
+        case "this-week":
+          return startOfWeek.startOf("day").toDate();
+          break;
+        case "last-week":
+          return startOfWeek.startOf("day").subtract(7, "day").toDate();
+          break;
+      }
+    } else if (this.timeRange && this.timeRange.start) {
       return this.timeRange.start.toDate();
     } else {
       return new Date();
@@ -209,7 +236,18 @@ export class Widget implements IWidget {
   }
 
   getEndDate() {
-    if (this.timeRange && this.timeRange.end) {
+    if (this.timeRange && ["this-week", "last-week"].indexOf(this.timeRange.id) > -1) {
+      // This is hacky
+      let startOfWeek = this.getStartOfWeek();
+      switch (this.timeRange.id) {
+        case "this-week":
+          return startOfWeek.add(7, "day").endOf("day").toDate();
+          break;
+        case "last-week":
+          return startOfWeek.add(7, "day").subtract(1, "week").endOf("day").toDate();
+          break;
+      }
+    } else if (this.timeRange && this.timeRange.end) {
       return this.timeRange.end.toDate();
     } else {
       return new Date();

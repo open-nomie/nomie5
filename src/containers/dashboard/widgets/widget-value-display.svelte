@@ -5,6 +5,12 @@
   export let widget: Widget;
 </script>
 
+<style>
+  .current {
+    font-size: 1.5rem;
+  }
+</style>
+
 <div class="value {widget.includeAvg ? 'value-sm' : ''}">
   <div class="current">{widget.math == 'mean' ? formatValue(widget.stats.avg, widget) : formatValue(widget.stats.sum, widget)}</div>
   {#if widget.includeAvg}
