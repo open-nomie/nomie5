@@ -150,11 +150,6 @@
       let canLookup = true;
       if (Storage.getEngine().name == "Blockstack" && $Device.offline == true) {
         canLookup = false;
-      } else {
-        console.log({
-          name: Storage.getEngine().name,
-          offline: $Device.offline,
-        });
       }
       if (canLookup) {
         logs = await LedgerStore.query({

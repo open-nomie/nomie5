@@ -115,13 +115,12 @@
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row time-row">
       <div class="time truncate" style="max-width:60%;">
-        <Text size="md" style="line-height:1.4rem">{logMeta.endDate.format(`ddd ${timeFormat}`)}</Text>
-        <Text size="xs" className="text-inverse-2">
+        <Text size="sm" bold style="line-height:1.2rem">{logMeta.endDate.format(`ddd ${timeFormat}`)}</Text>
+        <Text size="sm" className="text-inverse-2">
           {logMeta.endDate.format('MMM Do YYYY')}
-          <span class="ago text-inverse-3 ml-1">{time.fromNow(logMeta.endDate)} ago</span>
+          <Text inline size="xs" className="ml-1" faded>{time.fromNow(logMeta.endDate)}</Text>
         </Text>
       </div>
-
       <div class="filler" />
       <!-- If they have location-->
       {#if displayLog.lat}

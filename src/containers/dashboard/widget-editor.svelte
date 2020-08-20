@@ -34,7 +34,6 @@
 
   $: if (widgetTypeId) {
     widgetType = widgetTypes.find((widgetType) => widgetType.id == widgetTypeId);
-
     value.type = widgetTypeId;
   }
 
@@ -170,7 +169,6 @@
   </div>
 
   <div class="widget-views p-2">
-
     {#if editorView == 'options'}
       {#if widgetTypeId == 'text'}
         <Input placeholder="Message" type="text" bind:value={value.description} />
