@@ -64,7 +64,8 @@
         newHour = newHour + 12;
       }
     }
-    dispatch("change", ogDate.set("hour", newHour).set("minute", minute).set("day", ogDay));
+    const updatedDate = ogDate.set("hour", newHour).set("minute", minute).set("day", ogDay);
+    dispatch("change", updatedDate);
   }
 </script>
 

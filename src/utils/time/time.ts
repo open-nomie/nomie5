@@ -67,7 +67,6 @@ export default {
         })
         .join(" ");
     }
-    console.log({ v });
     return v;
   },
   datetimeLocal(dateString): Date {
