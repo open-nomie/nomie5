@@ -5,9 +5,6 @@
   import TrackerSmallBlock from "../../components/tracker-ball/tracker-small-block.svelte";
   import Button from "../../components/button/button.svelte";
   import Text from "../../components/text/text.svelte";
-  import { Interact } from "../../store/interact";
-  import { DashboardStore } from "../../store/dashboard-store";
-  import { Lang } from "../../store/lang";
 
   import { createEventDispatcher, onMount } from "svelte";
   import ToggleSwitch from "../../components/toggle-switch/toggle-switch.svelte";
@@ -22,6 +19,11 @@
   import { timeFrames } from "./timeFrames";
   import { widgetTypes } from "./widgetTypes";
   import type { IWidgetType } from "./widgetTypes";
+
+  import { Interact } from "../../store/interact";
+  import { DashboardStore } from "../../store/dashboard-store";
+  import { Lang } from "../../store/lang";
+  import { Dashboard } from "../../modules/dashboard/dashboard";
 
   export let value: Widget = null;
 
@@ -60,10 +62,30 @@
     editorView = view;
   }
 
+  async function moveWidget() {
+    const buttons = $DashboardStore.dashboards.map((dashboard: Dashboard) => {
+      return {
+        title: dashboard.label,
+        click() {
+          console.log("Move to dashboard", dashboard);
+          try {
+            DashboardStore.moveWidget(value, dashboard);
+          } catch (e) {
+            Interact.alert("Error", e.message);
+          }
+        },
+      };
+    });
+    Interact.popmenu({
+      buttons,
+      title: "Which Dashboard?",
+    });
+  }
+
   async function duplicateWidget() {
-    let baseWidget = { ...value };
-    value.id = nid();
-    await DashboardStore.saveWidget(new Widget(value));
+    let baseWidget: Widget = new Widget(value);
+    baseWidget.id = nid();
+    await DashboardStore.saveWidget(baseWidget);
     dispatch("close");
   }
 
@@ -255,8 +277,24 @@
       {/if}
     {:else if editorView == 'more'}
       {#if value._editing}
-        <ListItem on:click={duplicateWidget}>Duplicate Widget</ListItem>
-        <ListItem className="text-red" on:click={deleteWidget}>Delete Widget</ListItem>
+        <ListItem clickable on:click={moveWidget}>
+          <div slot="left">
+            <Icon name="shuffle" className="fill-primary-bright" />
+          </div>
+          Move Widget
+        </ListItem>
+        <ListItem clickable on:click={duplicateWidget}>
+          <div slot="left">
+            <Icon name="copy" className="fill-primary-bright" />
+          </div>
+          Duplicate Widget
+        </ListItem>
+        <ListItem clickable on:click={deleteWidget}>
+          <div slot="left">
+            <Icon name="delete" className="fill-red" />
+          </div>
+          Delete Widget...
+        </ListItem>
       {/if}
     {/if}
 

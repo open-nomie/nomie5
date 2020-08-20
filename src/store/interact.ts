@@ -51,6 +51,13 @@ export interface IToastOptions {
   perm?: boolean;
 }
 
+export interface IPopMenuOptions {
+  show?: boolean;
+  buttons: Array<any>;
+  title?: string;
+  description?: string;
+}
+
 const interactInit = () => {
   let getBaseState = () => {
     return {
@@ -602,14 +609,13 @@ const interactInit = () => {
     reload() {
       document.location.reload(true);
     },
-    popmenu(options) {
+    popmenu(options: IPopMenuOptions) {
       setTimeout(() => {
         update((s) => {
           s.popmenu.show = true;
           s.popmenu.buttons = options.buttons;
           s.popmenu.title = options.title;
           s.popmenu.description = options.description;
-
           return s;
         });
       }, 1);

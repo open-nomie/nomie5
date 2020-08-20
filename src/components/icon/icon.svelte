@@ -40,6 +40,7 @@
   import Grid24 from "carbon-icons-svelte/lib/Grid24";
   import Link24 from "carbon-icons-svelte/lib/Link24";
   import Report24 from "carbon-icons-svelte/lib/Report24";
+  import Shuffle24 from "carbon-icons-svelte/lib/Shuffle24";
   import ArrowsHorizontal24 from "carbon-icons-svelte/lib/ArrowsHorizontal24";
 
   export let name = "add";
@@ -91,6 +92,7 @@
     report: Report24,
     link: Link24,
     arrowsLeftRight: ArrowsHorizontal24,
+    shuffle: Shuffle24,
   };
 
   function getStyle() {

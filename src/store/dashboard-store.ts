@@ -42,6 +42,24 @@ const DashboardStoreInit = (): any => {
         return state;
       });
     },
+    async moveWidget(widget: Widget, dashboard: Dashboard) {
+      update((state: IDashboardStore) => {
+        // Remove it from the current dashboard
+        let dashboards = state.dashboards.map((loopDashboard: Dashboard) => {
+          loopDashboard.widgets = loopDashboard.widgets.filter((loopWidget: Widget) => {
+            return loopWidget.id !== widget.id;
+          });
+          if (loopDashboard.id == dashboard.id) {
+            loopDashboard.widgets.push(widget);
+          }
+          return loopDashboard;
+        });
+        // Add to state - will it work?
+        state.dashboards = dashboards;
+        return state;
+      });
+      return await methods.save();
+    },
     saveIndex(index) {
       Storage.local.put("dashboard/lastIndex", index);
     },

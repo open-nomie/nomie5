@@ -4932,7 +4932,7 @@ button:focus {
     font-size: 0.6rem !important;
     padding: 0pt 8pt 0pt 8pt;
     text-transform: uppercase;
-    font-weight: 500; }
+    font-weight: 400; }
     .btn-badge.btn-xs svg {
       width: 20px !important;
       margin-right: -4px; }
