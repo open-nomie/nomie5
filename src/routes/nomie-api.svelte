@@ -256,7 +256,7 @@
       <div class="n-list">
         {#each state.logs as apiLog, index}
           {#if state.hidden.indexOf(apiLog.id) === -1}
-            <NLogItem log={toLog(apiLog)} hideMore={true} />
+            <NLogItem log={toLog(apiLog)} />
             <div class="n-row px-2">
 
               <button
@@ -275,11 +275,12 @@
               </button>
             </div>
           {/if}
+          <hr />
         {/each}
 
       </div>
       {#if state.logs.length > state.hidden.length}
-        <NItem className="bg-transparent">
+        <NItem className="bg-transparent mb-3">
           <button on:click={methods.confirmClear} class="btn btn-outlined btn-danger mr-1 btn-block my-0">
             <NIcon name="closeOutline" className="fill-white mr-2" />
             Clear Remaining
