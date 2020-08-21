@@ -89,7 +89,7 @@
     "lirm": "0.0.1",
     "localforage": "^1.7.3",
     "lodash": "^4.17.19",
-    "md5": "^2.2.1",
+    "md5": "^2.3.0",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.14.1",
     "nomie-uom": "^1.0.2",

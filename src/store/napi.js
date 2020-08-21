@@ -8,11 +8,11 @@ import { writable } from "svelte/store";
 
 // utils
 import Logger from "../utils/log/log";
-import PromiseStep from "../utils/promise-step/promise-step";
-import ScoreNote from "../modules/scoring/score-note";
+// import PromiseStep from "../utils/promise-step/promise-step";
+// import ScoreNote from "../modules/scoring/score-note";
 
 // Modules
-import Storage from "../modules/storage/storage";
+// import Storage from "../modules/storage/storage";
 import NomieLog from "../modules/nomie-log/nomie-log";
 // Modules
 import NomieAPICli from "../modules/nomie-api-cli/nomie-api-cli";
@@ -20,23 +20,25 @@ import NomieAPICli from "../modules/nomie-api-cli/nomie-api-cli";
 // Stores
 import { LedgerStore } from "./ledger";
 import { Interact } from "./interact";
-import { TrackerStore } from "./tracker-store";
+// import { TrackerStore } from "./tracker-store";
+import tick from "../utils/tick/tick";
 
 const console = new Logger("🚦 Nomie API");
+// Todo consider making this configurable
 const NAPI = new NomieAPICli({ domain: "nomieapi.com" });
 
 // Nomie API Store
 let autoImporterInterval;
 const nomieApiInit = () => {
-  const listeners = [];
-  let _stub = {
+  // const listeners = [];
+  let _state = {
     registered: false,
     apiKey: null,
     privateKey: null,
     autoImport: JSON.parse(localStorage.getItem("napi-auto") || "false"),
     ready: false,
   };
-  const { update, subscribe, set } = writable(_stub);
+  const { update, subscribe, set } = writable(_state);
 
   const methods = {
     // Load the Napi - and fire things when ready
@@ -66,29 +68,60 @@ const nomieApiInit = () => {
       return JSON.parse(localStorage.getItem("napi-auto") || "false");
     },
     async autoImport() {
+      // Get all the logs
       let logs = await methods.getLogs();
+      // If we have logs lets import them
       if (logs.length) {
-        await methods.import(logs);
-        await NAPI.clear();
+        // Do the import
+        let results = await methods.import(logs);
+        // If no errors - show a toast notification
+        if (results.errors.length == 0) {
+          Interact.toast(`${logs.length} ${logs.length > 1 ? "notes" : "note"} imported`);
+          await NAPI.clear();
+        } else {
+          Interact.alert(
+            "Import incomplete",
+            `Imported ${results.success.length} of ${logs.length}. Please go to settings / data / nomie api / captured to see all notes current available.`
+          );
+        }
       }
     },
     async import(logs) {
       Interact.blocker(`Importing ${logs.length} notes from the API...`);
-      await 1000;
-      let finished = await PromiseStep(
-        logs,
-        (log) => {
+      // Wait a second
+      await tick(500);
+      // loop over each log
+      let results = {
+        errors: [],
+        success: [],
+      };
+      // For loop (for async) over logs
+      for (let i = 0; i < logs.length; i++) {
+        // Get log
+        let log = logs[i];
+        try {
+          // Add the Date
           log.end = new Date(log.date);
+          // Convert it into an official Nomie Log
           let nLog = new NomieLog(log);
-          nLog.score = ScoreNote(nLog.note, TrackerStore.state.trackers);
-          return LedgerStore.saveLog(nLog);
-        },
-        (status) => {
-          console.log("Status", status);
+          // Save the Log
+          await LedgerStore.saveLog(nLog);
+          // Push success
+          results.success.push(nLog);
+        } catch (e) {
+          // An error has happened
+          results.errors.push({
+            error: e.message,
+            log,
+          });
+          // Show error to console
+          console.error(e.message);
         }
-      );
+      }
+      // Stop the blocker
       Interact.stopBlocker();
-      return finished;
+      // return the error, success arrays
+      return results;
     },
     enableAutoImport() {
       update((base) => {
@@ -118,9 +151,6 @@ const nomieApiInit = () => {
       methods.stopAutoImporting();
     },
   };
-
-  if (_stub.autoImport) {
-  }
 
   return {
     update,
