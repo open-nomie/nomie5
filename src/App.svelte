@@ -101,15 +101,16 @@
       let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
       // let isDarkMode = false;
       let theme = localStorage.getItem(config.theme_key) || "auto";
+      let theme_accent = localStorage.getItem(`${config.theme_key}-accent`) || "default";
+      document.body.className = "";
       if (theme === "auto" && isDarkMode) {
         document.body.classList.add("theme-dark");
-        document.body.classList.remove("theme-light");
       } else if (theme === "auto") {
-        document.body.classList.remove("theme-dark");
         document.body.classList.add("theme-light");
       } else {
         document.body.classList.add(`theme-${theme}`);
       }
+      document.body.classList.add(theme_accent);
       methods.hideSplashScreen();
     },
   };

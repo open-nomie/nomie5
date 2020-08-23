@@ -17,7 +17,7 @@
       } else {
         event.target.checked = locked;
       }
-    }
+    },
   };
 </script>
 
@@ -65,12 +65,12 @@
     }
 
     .onoffswitch-checkbox:checked + .onoffswitch-label {
-      background-color: $primaryBright;
+      background-color: var(--color-primary-bright);
     }
 
     .onoffswitch-checkbox:checked + .onoffswitch-label,
     .onoffswitch-checkbox:checked + .onoffswitch-label:before {
-      border-color: $primaryBright;
+      border-color: var(--color-primary-bright);
     }
     .onoffswitch-checkbox:checked + .onoffswitch-label:before {
       right: 0px;

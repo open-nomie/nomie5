@@ -13,31 +13,6 @@
     settingChange() {
       UserStore.saveMeta();
     },
-    async lockToggle() {
-      if ($UserStore.meta.lock === true) {
-        if (($UserStore.meta.pin || "").length == 0) {
-          // TODO: figure out how to handle a cancel in the interact prompt
-          let pin = await Interact.prompt(Lang.t("settings.pin-details"), null, {
-            value: "",
-            valueType: "number",
-          });
-
-          if (!pin) {
-            $UserStore.meta.lock = false;
-            $UserStore.meta.pin = null;
-            UserStore.saveMeta();
-          } else {
-            $UserStore.meta.lock = true;
-            $UserStore.meta.pin = pin;
-            UserStore.saveMeta();
-          }
-        }
-      } else {
-        $UserStore.meta.lock = false;
-        $UserStore.meta.pin = null;
-        UserStore.saveMeta();
-      }
-    },
   };
 </script>
 
@@ -47,7 +22,10 @@
   *******************************************
 -->
 <div class="n-list solo">
-  <NItem bottomLine title={Lang.t('settings.theme')}>
+  <!-- Use Location -->
+
+  <NItem itemDivider>Style</NItem>
+  <NItem title={Lang.t('settings.theme')}>
     <span slot="left">💡</span>
     <div slot="right">
       <select
@@ -55,7 +33,7 @@
         style="min-width:100px;width:100px"
         bind:value={$UserStore.theme}
         on:change={(event) => {
-          UserStore.setTheme($UserStore.theme);
+          UserStore.setTheme($UserStore.theme, $UserStore.theme_accent);
         }}>
         <option value="auto">Auto</option>
         <option value="dark">Dark</option>
@@ -65,18 +43,26 @@
     </div>
   </NItem>
 
-  <!-- Use Location -->
-  <NItem bottomLine title={Lang.t('settings.use-location')}>
-    <span slot="left">📍</span>
+  <NItem title={Lang.t('settings.theme_accent', 'Color Accent')}>
+    <span slot="left">🎨</span>
     <div slot="right">
-      <NToggle
-        bind:value={$UserStore.alwaysLocate}
+      <select
+        class="form-control"
+        style="min-width:100px;width:100px"
+        bind:value={$UserStore.theme_accent}
         on:change={(event) => {
-          UserStore.setAlwaysLocate(event.detail);
-        }} />
+          UserStore.setTheme($UserStore.theme, $UserStore.theme_accent);
+        }}>
+        <option value="default">Blue</option>
+        <option value="mint">Mint</option>
+        <option value="pink">Pink</option>
+        <option value="orange">Orange</option>
+      </select>
+
     </div>
   </NItem>
-  <NItem bottomLine title={Lang.t('settings.small-tracker-buttons', 'Small Tracker Buttons')}>
+
+  <NItem bottomLine title={Lang.t('settings.small-tracker-buttons', 'Small Trackers')}>
     <span slot="left">▪️</span>
     <div slot="right">
       <NToggle
@@ -90,31 +76,22 @@
         }} />
     </div>
   </NItem>
+
   <!-- Tracker Board Tabs -->
   {#if $BoardStore.boards.length == 0}
-    <NItem bottomLine title={Lang.t('settings.enable-boards')}>
+    <NItem title={Lang.t('settings.enable-boards')}>
       <span slot="left">🗂</span>
       <div slot="right">
         <NToggle bind:value={$UserStore.meta.boardsEnabled} on:change={methods.settingChange} />
       </div>
     </NItem>
   {/if}
-  <!-- Pin Code -->
-  <NItem bottomLine title={Lang.t('settings.require-pin')}>
-    <span slot="left">🔒</span>
-    <div slot="right">
-      <NToggle bind:value={$UserStore.meta.lock} on:change={methods.lockToggle} />
-    </div>
-  </NItem>
+
+  <NItem className="mt-1" itemDivider>Locale</NItem>
   <!-- 24 Hour -->
-  <NItem bottomLine title={Lang.t('settings.24-hour-clock')}>
-    <span slot="left">⌚️</span>
-    <div slot="right">
-      <NToggle bind:value={$UserStore.meta.is24Hour} on:change={methods.settingChange} />
-    </div>
-  </NItem>
+
   <!-- firstDayOfWeek -->
-  <NItem bottomLine title={Lang.t('settings.first-day-of-week')}>
+  <NItem title={Lang.t('settings.first-day-of-week')}>
     <span slot="left">🗓</span>
     <div slot="right">
       <select
@@ -143,6 +120,13 @@
         {/each}
       </select>
 
+    </div>
+  </NItem>
+
+  <NItem title={Lang.t('settings.24-hour-clock')}>
+    <span slot="left">⌚️</span>
+    <div slot="right">
+      <NToggle bind:value={$UserStore.meta.is24Hour} on:change={methods.settingChange} />
     </div>
   </NItem>
 

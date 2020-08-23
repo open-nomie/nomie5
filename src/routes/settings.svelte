@@ -162,8 +162,8 @@ Note: Your data will not automatically move over. You'll first need to export it
           },
         },
         {
-          title: `${$UserStore.storageType === "pouchdb" ? "✓" : ""} ${Lang.t("storage.pouchdb_title", "Device + My own CouchDB")}`,
-          description: Lang.t("storage.pouchdb_description", "Have a CouchDB server? Sync in near-real time."),
+          title: `${$UserStore.storageType === "pouchdb" ? "✓" : ""} ${Lang.t("storage.pouchdb_title", "Device & CouchDB (beta)")}`,
+          description: Lang.t("storage.pouchdb_description", "Have a CouchDB server? Sync in near-real time. BETA"),
           click() {
             methods.switchStorage("pouchdb");
           },
@@ -231,8 +231,8 @@ Note: Your data will not automatically move over. You'll first need to export it
               *******************************************
             -->
             <div class="n-list solo mb-3">
-              <Text bold className="my-3 mx-3">Importing Data</Text>
-              <NItem className="clickable" bottomLine title={Lang.t('settings.nomie-api')} on:click={() => navigate('/api')}>
+              <NItem itemDivider>Import Data</NItem>
+              <NItem className="clickable" title={Lang.t('settings.nomie-api')} on:click={() => navigate('/api')}>
                 <span slot="left">🕸</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
@@ -240,6 +240,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 
               </NItem>
               <NItem
+                bottomLine
                 className="clickable"
                 title={`${Lang.t('settings.import-from-backup')}`}
                 on:click={() => {
@@ -251,36 +252,31 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </span>
                 <input slot="right" class="d-none" type="file" bind:this={fileInput} on:change={methods.onImportFile} />
               </NItem>
-            </div>
-            <div class="n-list solo mb-3">
-              <Text bold className="my-3 mx-3">Exporting Data</Text>
-              <NItem bottomLine clickable title={Lang.t('settings.generate-backup')} to="/settings/export/backup">
+
+              <NItem itemDivider>Export Data</NItem>
+              <NItem clickable title={Lang.t('settings.generate-backup')} to="/settings/export/backup">
                 <span slot="left">📦</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
               </NItem>
-              <NItem clickable title={Lang.t('settings.generate-csv')} to="/settings/export/csv">
+              <NItem bottomLine clickable title={Lang.t('settings.generate-csv')} to="/settings/export/csv">
                 <span slot="left">📃</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
               </NItem>
 
-            </div>
-
-            <div class="n-list solo mb-3">
-              <NItem>
-                <Text bold className="my-2">{Lang.t('general.type', 'Data Location')}</Text>
+              <NItem itemDivider>Storage Location</NItem>
+              <NItem on:click={methods.storageMenu}>
+                <span slot="left">☁️</span>
+                {#if $UserStore.storageType === 'local'}
+                  This device only
+                {:else if $UserStore.storageType === 'pouchdb'}
+                  {Lang.t('storage.pouchdb', 'Local + CouchDB')}
+                {:else if $UserStore.storageType === 'blockstack'}{Lang.t('storage.blockstack', 'Blockstack')}{/if}
                 <div slot="right">
-                  <button class="btn btn-clear icon-right" on:click={methods.storageMenu}>
-                    {#if $UserStore.storageType === 'local'}
-                      {Lang.t('storage.local', 'Local')}
-                    {:else if $UserStore.storageType === 'pouchdb'}
-                      {Lang.t('storage.pouchdb', 'Local + CouchDB')}
-                    {:else if $UserStore.storageType === 'blockstack'}{Lang.t('storage.blockstack', 'Blockstack')}{/if}
-                    <NIcon name="chevronDown" size="16" className="ml-2" />
-                  </button>
+                  <Text size="sm" className="text-primary-bright">Change</Text>
                 </div>
               </NItem>
 
@@ -294,9 +290,9 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <PouchDBOptions />
               {/if}
 
+              <NItem itemDivider>Data Management</NItem>
               <NItem
                 title="Browse Files..."
-                bottomLine
                 on:click={() => {
                   navigate('/files');
                 }}
@@ -413,7 +409,7 @@ Note: Your data will not automatically move over. You'll first need to export it
           {/if}
           <!-- END Views -->
 
-          <div class="n-list solo mt-3">
+          <div class="n-list solo mt-3 py-2">
             <NItem title="Nomie needs you! 🥺">
               <Text size="sm" faded>Help keep Nomie development moving forward, free, no ads, and open.</Text>
             </NItem>

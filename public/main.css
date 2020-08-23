@@ -4994,7 +4994,8 @@ button:focus {
 
 .btn-primary {
   background-color: var(--color-primary-bright);
-  box-shadow: 0px 6px 12px -6px var(--color-primary-bright); }
+  box-shadow: 0px 6px 12px -6px var(--color-primary-bright);
+  border: none; }
   .btn-primary:hover {
     color: #fff;
     box-shadow: 0px 3px 6px -3px var(--color-primary-bright); }
@@ -5223,11 +5224,23 @@ body.no-scroll {
   left: 0;
   right: 0; }
 
+body.mint {
+  --color-primary-bright: #1fb182;
+  --color-primary: #1fb182; }
+
+body.orange {
+  --color-primary-bright: #ef8354;
+  --color-primary: #ef8354; }
+
+body.pink {
+  --color-primary-bright: #ff499e;
+  --color-primary: #ff499e; }
+
 body {
   overflow: hidden;
   --color-darkest: #fff;
   --color-darkest-translucent: rgba(255, 255, 255, 0.89);
-  --color-bg: #eeeeee;
+  --color-bg: #f8f8f8;
   --space-gap: 8pt;
   --color-input-background: rgba(0, 0, 0, 0.1);
   --tracker-background: #fff;
@@ -5412,7 +5425,7 @@ body.theme-dark {
   text-decoration: underline !important; }
 
 .text-primary-bright {
-  color: #319ed7 !important; }
+  color: var(--color-primary-bright) !important; }
 
 .text-red {
   color: #e94151 !important; }
@@ -5468,6 +5481,9 @@ body.theme-dark {
 .bg-primary-bright,
 .bg-blue {
   background-color: var(--color-primary-bright) !important; }
+
+.bg-primary {
+  background-color: var(--color-primary) !important; }
 
 .bg-inverse {
   background-color: var(--color-inverse); }
@@ -6229,6 +6245,15 @@ body.scrolling .mini-map {
     padding-right: 16px !important; }
   .n-item.item-divider {
     background-color: var(--color-bg); }
+  .n-item[item-divider], .n-item.item-divider {
+    font-weight: 600;
+    margin-top: 2px;
+    color: var(--color-inverse-3) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04rem;
+    font-size: 14px !important; }
+    .n-item[item-divider].n-text, .n-item.item-divider.n-text {
+      font-size: 14px !important; }
   .n-item.disabled {
     opacity: 0.5; }
   .n-item.just-content {
@@ -7392,10 +7417,11 @@ THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED
 TODO: Organize main into components or containers. 
 **/
 .location-badge {
-  padding: 2px 8px !important;
+  padding: 2px 4px !important;
   max-width: 100px;
   text-transform: capitalize !important;
-  border: none; }
+  border: none;
+  color: var(--color-primary-bright); }
   @media (min-width: 600px) {
     .location-badge {
       max-width: 120px; } }

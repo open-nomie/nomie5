@@ -20,7 +20,7 @@
 }
 // Colors
 .text-primary-bright {
-  color: $primaryBright !important;
+  color: var(--color-primary-bright) !important;
 }
 .text-red {
   color: $red !important;
@@ -76,6 +76,9 @@
 .bg-primary-bright,
 .bg-blue {
   background-color: var(--color-primary-bright) !important;
+}
+.bg-primary {
+  background-color: var(--color-primary) !important;
 }
 .bg-inverse {
   background-color: var(--color-inverse);

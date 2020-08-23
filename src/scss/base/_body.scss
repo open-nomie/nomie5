@@ -28,11 +28,25 @@ body.no-scroll {
   right: 0;
 }
 
+body.mint {
+  --color-primary-bright: #1fb182;
+  --color-primary: #1fb182;
+}
+body.orange {
+  --color-primary-bright: #ef8354;
+  --color-primary: #ef8354;
+}
+
+body.pink {
+  --color-primary-bright: #ff499e;
+  --color-primary: #ff499e;
+}
+
 body {
   overflow: hidden;
   --color-darkest: #fff;
   --color-darkest-translucent: rgba(255, 255, 255, 0.89);
-  --color-bg: #eeeeee;
+  --color-bg: #f8f8f8;
   --space-gap: #{$gap};
   --color-input-background: rgba(0, 0, 0, 0.1);
   --tracker-background: #fff;

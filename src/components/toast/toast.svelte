@@ -57,7 +57,7 @@
       min-width: 300px;
       padding: 4px 0;
       border-radius: 6px;
-      background-color: $primaryBright;
+      background-color: var(--color-primary-bright);
       color: #fff;
       flex-grow: 0;
       border: solid 1px rgba(0, 0, 0, 0.1);
