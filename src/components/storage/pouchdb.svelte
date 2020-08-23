@@ -21,10 +21,10 @@
       username: null,
       password: null,
       host: null,
-      database: null
+      database: null,
     },
     success: false,
-    syncing: false
+    syncing: false,
   };
 
   const methods = {
@@ -51,7 +51,7 @@
         database: state.form.database,
         username: state.form.username || "".length ? state.form.username : null,
         password: state.form.password || "".length ? state.form.password : null,
-        syncEnabled: true
+        syncEnabled: true,
       });
       pouchEngine.saveRemote(remote);
     },
@@ -70,12 +70,12 @@
       let testPouch = new PouchDB(connection, {
         auth: {
           username: state.form.username,
-          password: state.form.password
-        }
+          password: state.form.password,
+        },
       });
       testPouch
         .info()
-        .then(async info => {
+        .then(async (info) => {
           // If we get some data back - we're good
           // See if user wants to save this.
           let shouldSave = await Interact.confirm(
@@ -92,12 +92,9 @@
           }
           connecting = false;
         })
-        .catch(e => {
+        .catch((e) => {
           console.error("error connecting", e.message);
-          Interact.alert(
-            Lang.t("general.error-connecting", "Error Connecting"),
-            Lang.t("storage.pouchdb.credentials-failed", e.message)
-          );
+          Interact.alert(Lang.t("general.error-connecting", "Error Connecting"), Lang.t("storage.pouchdb.credentials-failed", e.message));
           connecting = false;
         });
     },
@@ -107,7 +104,7 @@
      */
     getConnectionURL(mask = false) {
       // Remove Password with Stars
-      let dotted = str => {
+      let dotted = (str) => {
         return "🔑";
         // return str;
       };
@@ -118,9 +115,9 @@
         state.isValidSyncURL = urlDetails.valid;
         let connection = null;
         if (mask) {
-          connection = `${urlDetails.protocol}//${state.form.username}:${dotted(
-            state.form.password
-          )}@${urlDetails.host}${urlDetails.pathname}${state.form.database}`;
+          connection = `${urlDetails.protocol}//${state.form.username}:${dotted(state.form.password)}@${urlDetails.host}${
+            urlDetails.pathname
+          }${state.form.database}`;
         } else {
           connection = `${urlDetails.protocol}//${urlDetails.host}/${state.form.database}`;
         }
@@ -132,7 +129,7 @@
         state.isValidSyncURL = false;
         return "";
       }
-    }
+    },
   };
 
   // Watch Form and Connection String
@@ -183,11 +180,11 @@
 {#if pouchEngine}
   <div class="pouchdb storage-option">
     <NItem>
-      <div class="title truncate">Sync to CouchDB</div>
+      <div class="truncate">Sync to CouchDB</div>
       <div slot="right">
         <NToggle
           bind:value={state.remote.syncEnabled}
-          on:change={event => {
+          on:change={(event) => {
             if (event.detail == false) {
               methods.stopSync();
             } else if (event.detail === true) {
@@ -199,10 +196,7 @@
 
     {#if state.syncing}
       <div class="data-syncing">
-        <NItem
-          title="Syncing"
-          className="text-red clickable"
-          on:click={methods.stopSync}>
+        <NItem title="Syncing" className="text-red clickable" on:click={methods.stopSync}>
           <div slot="right">
             <span class="fake-link text-red">Stop Sync</span>
           </div>
@@ -212,12 +206,11 @@
 
     {#if !state.syncing}
       <div class="data-sync-enabled">
-        <NItem
-          description="Host your own CouchDB server and to sync your data in
-          near-real time across multiple devices." />
+        <NItem description="Host your own CouchDB server and to sync your data in near-real time across multiple devices." />
 
-        <NItem className="input">
+        <NItem className="input py-0">
           <NInput
+            compact
             type="text"
             bind:value={state.form.host}
             placeholder="https://my-couch-server:12345"
@@ -250,8 +243,9 @@
           {/if} -->
         </NItem>
 
-        <NItem>
+        <NItem className="py-0">
           <NInput
+            compact
             type="text"
             bind:value={state.form.database}
             placeholder="Database Name"
@@ -260,9 +254,10 @@
             autocapitalize="off" />
         </NItem>
 
-        <NItem>
+        <NItem className="py-0">
           <div class="n-row">
             <NInput
+              compact
               className="mr-1 w-50"
               autocomplete="off"
               autocorrect="false"
@@ -270,26 +265,16 @@
               type="email"
               placeholder="Username"
               bind:value={state.form.username} />
-            <NInput
-              className="ml-1 w-50"
-              type="password"
-              placeholder="Password"
-              bind:value={state.form.password} />
+            <NInput compact className="ml-1 w-50" type="password" placeholder="Password" bind:value={state.form.password} />
           </div>
         </NItem>
 
         <NItem className="text-xs text-faded-3">{connectionString}</NItem>
         {#if state.isValidSyncURL}
           {#if !connecting}
-            <NItem
-              className="clickable text-primary text-center"
-              on:click={methods.connect}>
-              Connect...
-            </NItem>
+            <NItem className="clickable text-primary text-center" on:click={methods.connect}>Connect...</NItem>
           {:else}
-            <NItem
-              className="clickable text-primary text-center"
-              on:click={methods.connect}>
+            <NItem className="clickable text-primary text-center" on:click={methods.connect}>
               <NSpinner size={20} />
               Connecting...
             </NItem>

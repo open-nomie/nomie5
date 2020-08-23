@@ -83,6 +83,19 @@
     background-color: var(--color-bg);
   }
 
+  &[item-divider],
+  &.item-divider {
+    font-weight: 600;
+    margin-top: 2px;
+    color: var(--color-inverse-3) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04rem;
+    font-size: 14px !important;
+    &.n-text {
+      font-size: 14px !important;
+    }
+  }
+
   &.disabled {
     opacity: 0.5;
   }

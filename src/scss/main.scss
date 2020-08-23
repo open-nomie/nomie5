@@ -63,10 +63,11 @@ TODO: Organize main into components or containers.
 **/
 
 .location-badge {
-  padding: 2px 8px !important;
+  padding: 2px 4px !important;
   max-width: 100px;
   text-transform: capitalize !important;
   border: none;
+  color: var(--color-primary-bright);
   @include media-breakpoint-up(md) {
     max-width: 120px;
   }

@@ -3,6 +3,7 @@
   import { UserStore } from "../../store/user-store";
   import { Lang } from "../../store/lang";
   import { Interact } from "../../store/interact";
+  import Text from "../text/text.svelte";
 
   const methods = {
     async signOut() {
@@ -18,10 +19,13 @@
 </script>
 
 <div class="blockstack stoage-option">
-  <NItem>
-    <div class="title truncate">{$UserStore.profile.username || 'Blockstack'}</div>
+  <NItem truncate bottomLine>
+    <div slot="left">🔌</div>
+    {$UserStore.profile.username || 'Connected'}
     <div slot="right">
-      <button class="btn btn-small btn-clear text-primary" on:click={methods.signOut}>{Lang.t('settings.sign-out')}</button>
+      <button class="btn btn-small btn-clear" on:click={methods.signOut}>
+        <Text size="sm" className="text-primary-bright">{Lang.t('settings.sign-out')}</Text>
+      </button>
     </div>
   </NItem>
 </div>

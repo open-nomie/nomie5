@@ -125,6 +125,8 @@
       if ($Interact.prompt.onInteract) {
         $Interact.prompt.onInteract($Interact.prompt.value);
       }
+    } else {
+      $Interact.prompt.onInteract(undefined);
     }
     Interact.dismiss();
   }}>
