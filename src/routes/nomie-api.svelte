@@ -293,7 +293,7 @@
     {:else}
       <!-- We're In the Settings Tab
         -->
-      <NItem title="Auto Accept" className="solo py-2 pt-3 mb-3" description="Auto import and accept API logs">
+      <NItem title="Auto Accept" className="solo py-2 mb-3" description="Auto import and accept API logs">
         <div slot="right">
           <NToggle
             bind:value={autoImportAPI}
