@@ -7393,7 +7393,7 @@ TODO: Organize main into components or containers.
 **/
 .location-badge {
   padding: 2px 8px !important;
-  max-width: 80px;
+  max-width: 100px;
   text-transform: capitalize !important;
   border: none; }
   @media (min-width: 600px) {

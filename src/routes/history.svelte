@@ -377,20 +377,21 @@
       <button class="btn btn-clear btn-icon tap-icon" on:click={methods.search}>
         <NIcon name="search" size="22" />
       </button>
-      <div class="{isToday ? 'text-inverse-2' : 'not-today text-red'} filler pl-2" on:click={methods.selectDate}>
+      <div class="{isToday ? 'text-inverse-2' : 'not-today text-red'} filler pl-2 truncate">
 
         <span class="font-weight-bold mx-1">{state.date.format('ddd')}</span>
-        {state.date.format('MMM Do YYYY')}
+        {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
         {#if refreshing}
           <Spinner size="16" />
-        {:else}
-          <NIcon name="chevronDown" size="16" style="margin-top:-2px;" />
         {/if}
 
         <!-- end text middle -->
       </div>
       <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.previous}>
         <NIcon name="chevronLeft" size="22" />
+      </button>
+      <button class="btn btn-clear btn-icon tap-icon" on:click={methods.selectDate}>
+        <NIcon name="calendar" size="18" />
       </button>
       <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.next}>
         <NIcon name="chevronRight" size="22" />

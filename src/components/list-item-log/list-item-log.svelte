@@ -63,7 +63,19 @@
 
   $: fullDate = log && new Date(log.end).toDateString() !== new Date().toDateString() ? true : false;
 
-  $: timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
+  let dtFormat;
+
+  $: if ($UserStore.meta.is24Hour) {
+    dtFormat = {
+      date: "Do MMM YYYY",
+      time: "H:mm",
+    };
+  } else {
+    dtFormat = {
+      date: "MMM Do YYYY",
+      time: "h:mma",
+    };
+  }
 
   function shouldShowValue(trackerElement) {
     if (trackerElement.obj.type == "picker") {
@@ -119,26 +131,29 @@
 {#if displayLog}
   <NItem className="{className} n-item-log">
     <!-- Show the Trackers within this Log Item -->
-    <div class="n-row time-row">
-      <div class="time truncate" style="max-width:60%;">
-        <Text size="sm" bold style="line-height:1.2rem">{logMeta.endDate.format(`ddd ${timeFormat}`)}</Text>
+    <div class="n-row time-row mt-1">
+      <div class="time truncate">
+        <Text size="sm" medium style="line-height:1.2rem">
+          {logMeta.endDate.format(`ddd ${dtFormat.time}`)}
+          <span class="text-inverse-3">{logMeta.endDate.format(`${dtFormat.date}`)}</span>
+        </Text>
         <Text size="sm" className="text-inverse-2">
-          {logMeta.endDate.format('MMM Do YYYY')}
-          <Text inline size="xs" className="ml-1" faded>{time.fromNow(logMeta.endDate)}</Text>
+          <Text inline size="xs" className="" faded>{time.fromNow(logMeta.endDate)}</Text>
+          {#if displayLog.lat}
+            <button
+              style="display:inline-flex"
+              on:click={(event) => {
+                Interact.showLocations([displayLog]);
+                event.stopPropagation();
+              }}
+              class="btn btn-xs btn-badge btn-light text-normal location-badge truncate">
+              <LocationBadge location={displayLog} />
+            </button>
+          {/if}
         </Text>
       </div>
       <div class="filler" />
       <!-- If they have location-->
-      {#if displayLog.lat}
-        <button
-          on:click={(event) => {
-            Interact.showLocations([displayLog]);
-            event.stopPropagation();
-          }}
-          class="btn btn-xs btn-badge text-normal btn-primary text-white location-badge truncate">
-          <LocationBadge location={displayLog} />
-        </button>
-      {/if}
 
       <!-- SCORE display -->
       {#if displayLog.score}
