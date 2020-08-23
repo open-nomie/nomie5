@@ -7,13 +7,20 @@
   import { LedgerStore } from "../../store/ledger";
   import tick from "../../utils/tick/tick";
   import { createEventDispatcher } from "svelte";
+
   const dispatch = createEventDispatcher();
 
   // vendor
   import dayjs from "dayjs";
+  import Text from "../text/text.svelte";
+  import { UserStore } from "../../store/user-store";
+  import Storage from "../../modules/storage/storage";
+  import global from "../../../config/global";
+  import Spinner from "../spinner/spinner.svelte";
 
   export let term = null;
   export let limit = 20;
+
   export let compact = false;
 
   let loading = false;
@@ -23,6 +30,8 @@
   let lastTo;
 
   let searchCount = 0;
+
+  const dtFormat = UserStore.getDateTimeFormat();
 
   // React to Term Change
   let lastTerm;
@@ -42,20 +51,17 @@
 
   async function search() {
     searchCount++;
+
     // Set from and to date
     loading = true;
-    let from = !lastFrom
-      ? dayjs().subtract(limit, config.book_time_unit)
-      : dayjs(lastFrom).subtract(limit, config.book_time_unit);
-    let to = !lastTo
-      ? dayjs()
-      : dayjs(lastTo).subtract(limit, config.book_time_unit);
+    let from = !lastFrom ? dayjs().subtract(limit, config.book_time_unit) : dayjs(lastFrom).subtract(limit, config.book_time_unit);
+    let to = !lastTo ? dayjs() : dayjs(lastTo).subtract(limit, config.book_time_unit);
 
     // Query the ledger
     let book = await LedgerStore.query({
       start: from.toDate(),
       end: to.toDate(),
-      search: term
+      search: term,
     });
     //
     logs = [...logs, ...book].sort((a, b) => {
@@ -86,30 +92,30 @@
   <LogList
     {compact}
     {logs}
-    on:trackerClick={event => {
+    on:trackerClick={(event) => {
       dispatch('trackerClick', event.detail);
     }}
-    on:locationClick={event => {
+    on:locationClick={(event) => {
       dispatch('locationClick', event.detail);
     }}
-    on:textClick={event => {
+    on:textClick={(event) => {
       dispatch('textClick', event.detail);
     }}
-    on:moreClick={event => {
+    on:moreClick={(event) => {
       dispatch('moreClick', event.detail);
     }} />
   {#if !loading && logs.length == 0}
-    <div class="p-2 text-center text-faded-2">0 results</div>
+    <div class="p-2 text-center text-faded-2">Sorry, no results found</div>
   {/if}
   {#if !loading && lastTo}
     <NItem className="py-2 bg-transparent mb-2">
-      <button class="btn btn-outline btn-light btn-block" on:click={search}>
-        Search past {lastFrom.format('MMM Do YYYY')}...
-      </button>
+      <button class="btn btn-outline btn-light btn-block mx-auto" style="max-width:300px;" on:click={search}>Search More ...</button>
+      <Text size="sm" faded center className="mt-2">Place in time: {lastFrom.format(dtFormat.date)}</Text>
     </NItem>
   {:else if loading}
     <NItem className="py-2 bg-transparent mb-2">
-      <button class="btn btn-outline btn-light btn-block" disabled>
+      <button class="btn btn-outline btn-light btn-block mx-auto" style="max-width:300px;" disabled>
+        <Spinner size={18} className="mr-2" />
         Searching...
       </button>
     </NItem>
