@@ -128,16 +128,8 @@
       {/if}
 
       {#each state.people as person}
-        <NItem
-          truncate
-          className="py-2 clickable solo box-shadow mb-3 mr-0 filler"
-          on:click={() => {
-            personClicked(person);
-          }}>
+        <NItem truncate clickable={false} className="py-2 clickable solo box-shadow mb-3 mr-0 filler">
           <div slot="left">
-            <button class="btn btn-clear tap-icon p-1 mr-1">
-              <NIcon name="addOutline" className="fill-primary-bright" size={18} />
-            </button>
             {#if $PeopleStore.people[person] && $PeopleStore.people[person].avatar}
               <AvatarBall size={48} avatar={$PeopleStore.people[person].avatar} style={`border-radius:32%; overflow:hidden`} />
             {:else if $PeopleStore.people[person] && $PeopleStore.people[person].displayName}
@@ -149,10 +141,20 @@
             <div class="note">{dayjs($PeopleStore.people[person].last).fromNow()}</div>
           {/if}
           <div slot="right" class="n-row">
-
+            <button
+              class="btn btn-clear tap-icon p-1 mr-1"
+              on:click={(evt) => {
+                personClicked(person);
+              }}>
+              <NIcon name="addOutline" className="fill-primary-bright" size={18} />
+            </button>
             <button
               class="btn btn-clear tap-icon "
-              on:click|stopPropagation={() => {
+              on:click={(evt) => {
+                console.log('button click', evt.target);
+                evt.preventDefault();
+                evt.stopImmediatePropagation();
+                evt.stopPropagation();
                 Interact.openStats(`@${person}`);
               }}>
               <NIcon name="chart" className="fill-primary-bright" size={18} />
