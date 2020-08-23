@@ -5,7 +5,7 @@ const regex = {
   // person: /(\@[\x00-\xFF][^\s|'|,|.|!|’|?]+)/,
   // context: /(\+[\x00-\xFF][^\s|'|,|.|!|’|?]+)/,
   escape(str) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+    return str.replace(/[@.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
   },
   //template: {
   // generic(name) {
