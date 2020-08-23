@@ -49,6 +49,7 @@ export interface IUserState {
   };
   alwaysLocate: boolean;
   theme: string;
+  theme_accent: string;
   location: any;
   autoImportApi: boolean;
   meta: IUserMeta;
@@ -70,6 +71,7 @@ const userInit = () => {
     },
     alwaysLocate: JSON.parse(localStorage.getItem(config.always_locate_key) || "false"),
     theme: localStorage.getItem(config.theme_key) || "auto",
+    theme_accent: localStorage.getItem(`${config.theme_key}-accent`) || "default",
     location: null,
     autoImportApi: false,
     meta: {
@@ -297,13 +299,13 @@ const userInit = () => {
       return localStorage.getItem(config.theme_key) || "auto";
     },
     // Set Dark Mode for User
-    setTheme(theme) {
+    setTheme(theme, accent: string = "default") {
       theme = ["auto", "light", "dark"].indexOf(theme) > -1 ? theme : "auto";
+      document.body.className = "";
       localStorage.setItem(config.theme_key, theme);
-      document.body.classList.remove(`theme-light`);
-      document.body.classList.remove(`theme-dark`);
-      document.body.classList.remove(`theme-auto`);
+      localStorage.setItem(`${config.theme_key}-accent`, accent);
       document.body.classList.add(`theme-${theme}`);
+      document.body.classList.add(`${accent}`);
 
       update((u) => {
         u.theme = theme;
