@@ -591,6 +591,7 @@ const ledgerInit = () => {
           s.books = currentState.books;
           return s;
         });
+
         /** Fire off Notifications and hooks Save */
         Interact.toast(`Saved ${textUtils.truncate(log.note, 100)}`); // show Alert
         // Fire off the onLogSaved

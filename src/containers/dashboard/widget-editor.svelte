@@ -67,7 +67,6 @@
       return {
         title: dashboard.label,
         click() {
-          console.log("Move to dashboard", dashboard);
           try {
             DashboardStore.moveWidget(value, dashboard);
           } catch (e) {

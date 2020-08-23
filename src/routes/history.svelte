@@ -43,6 +43,7 @@
   import { HistoryPage } from "../store/history-page";
   import { Device } from "../store/device-store";
   import Storage from "../modules/storage/storage";
+  import Text from "../components/text/text.svelte";
 
   /**
    * I've messed this all up again. but it's faster and more responsivle
@@ -330,6 +331,20 @@
   //   border-bottom: none !important;
   // }
 
+  .history-title {
+    transition: all 0.2s ease-in-out;
+  }
+
+  :global(body.scrolled .history-title.hide-scrolled) {
+    opacity: 0;
+  }
+  :global(body .history-title.show-scrolled) {
+    opacity: 0;
+  }
+  :global(body.scrolled .history-title.show-scrolled) {
+    opacity: 1;
+  }
+
   .map-btn {
     position: absolute;
     left: 10px;
@@ -375,26 +390,25 @@
   <header slot="header">
     <NToolbar className="container animate in {showSearch ? 'hidden' : 'visible'}">
       <button class="btn btn-clear btn-icon tap-icon" on:click={methods.search}>
-        <NIcon name="search" size="22" />
+        <NIcon name="search" size="24" />
       </button>
-      <div class="{isToday ? 'text-inverse-2' : 'not-today text-red'} filler pl-2 truncate">
+      <div class="{isToday ? 'text-inverse-2' : 'not-today text-red'} filler pl-2 truncate history-title show-scrolled">
 
         <span class="font-weight-bold mx-1">{state.date.format('ddd')}</span>
         {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
         {#if refreshing}
           <Spinner size="16" />
         {/if}
-
         <!-- end text middle -->
       </div>
       <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.previous}>
-        <NIcon name="chevronLeft" size="22" />
+        <NIcon name="chevronLeft" size="24" />
       </button>
       <button class="btn btn-clear btn-icon tap-icon" on:click={methods.selectDate}>
         <NIcon name="calendar" size="18" />
       </button>
       <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.next}>
-        <NIcon name="chevronRight" size="22" />
+        <NIcon name="chevronRight" size="24" />
       </button>
     </NToolbar>
 
@@ -411,9 +425,13 @@
   </header>
   <!-- end header-content header -->
 
-  <main slot="content" class="page page-history">
+  <main slot="content" class="page page-history flex-column">
 
     <div class="container p-0">
+      <Text size="xl" bold className="history-title px-3">
+        {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
+      </Text>
+
       <OfflineQueue />
       {#if loading}
         <div class="empty-notice">
@@ -460,43 +478,47 @@
         -->
       {/if}
 
-      <!-- Show History if exists -->
-      {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
-        <div class="memories">
-          {#each $LedgerStore.memories as log}
-            <div class="memories-log-header">
-              <button
-                class="btn btn-clear"
-                on:click={() => {
-                  methods.goto(dayjs(log.end));
-                }}>
-                From {dayjs(log.end).fromNow()}
-                <NIcon name="chevronRight" className="fill-white" />
-              </button>
-            </div>
-            <LogItem
-              className="aged"
-              {log}
-              on:trackerClick={(event) => {
-                methods.trackerTapped(event.detail.tracker, log);
-              }}
-              on:personClick={(event) => {
-                methods.personTapped(event.detail.person, log);
-              }}
-              on:contextClick={(event) => {
-                methods.contextTapped(event.detail.context, log);
-              }}
-              on:textClick={(event) => {
-                methods.textClick(event);
-              }}
-              on:moreClick={(event) => {
-                Interact.logOptions(log).then(() => {});
-              }} />
-          {/each}
-        </div>
-      {/if}
-      <!-- end history -->
+    </div>
 
+    <div class="bg-primary-bright">
+      <div class="container p-0">
+        <!-- Show History if exists -->
+        {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
+          <div class="memories">
+            {#each $LedgerStore.memories as log}
+              <div class="memories-log-header">
+                <button
+                  class="btn btn-clear"
+                  on:click={() => {
+                    methods.goto(dayjs(log.end));
+                  }}>
+                  From {dayjs(log.end).fromNow()}
+                  <NIcon name="chevronRight" className="fill-white" />
+                </button>
+              </div>
+              <LogItem
+                className="aged"
+                {log}
+                on:trackerClick={(event) => {
+                  methods.trackerTapped(event.detail.tracker, log);
+                }}
+                on:personClick={(event) => {
+                  methods.personTapped(event.detail.person, log);
+                }}
+                on:contextClick={(event) => {
+                  methods.contextTapped(event.detail.context, log);
+                }}
+                on:textClick={(event) => {
+                  methods.textClick(event);
+                }}
+                on:moreClick={(event) => {
+                  Interact.logOptions(log).then(() => {});
+                }} />
+            {/each}
+          </div>
+        {/if}
+        <!-- end history -->
+      </div>
     </div>
 
     {#if locations.length && !loading && !state.searchTerm}

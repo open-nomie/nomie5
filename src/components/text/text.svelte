@@ -58,10 +58,10 @@
       opacity: 0.5;
     }
     &.xl {
-      font-size: 2rem;
+      font-size: 1.5rem;
     }
     &.xxl {
-      font-size: 2.4rem;
+      font-size: 2rem;
     }
     &.font-weight-bold {
       font-weight: bold;
@@ -78,17 +78,7 @@
     on:click={() => {
       dispatch('click');
     }}
-    class="n-text {` ${size || 'sm'}
-    ${className} text-${color}
-    ${truncate ? 'truncate' : ''}
-    ${truncate2 ? 'truncate-2' : ''}
-    ${truncate3 ? 'truncate-3' : ''}
-    ${lineHeightMd ? 'line-height-md' : ''}
-    ${center ? 'text-center' : ''}
-    ${underline ? 'text-underline' : ''}
-    ${faded ? 'faded ' : ''}
-    ${bold ? 'font-weight-bold ' : ''}
-    ${medium ? 'font-weight-medium ' : ''}`.trim()}">
+    class="n-text {` ${size || 'sm'} ${className} text-${color} ${truncate ? 'truncate' : ''} ${truncate2 ? 'truncate-2' : ''} ${truncate3 ? 'truncate-3' : ''} ${lineHeightMd ? 'line-height-md' : ''} ${center ? 'text-center' : ''} ${underline ? 'text-underline' : ''} ${faded ? 'faded ' : ''} ${bold ? 'font-weight-bold ' : ''} ${medium ? 'font-weight-medium ' : ''}`.trim()}">
     <slot />
   </span>
 {:else}
@@ -97,17 +87,7 @@
     on:click={() => {
       dispatch('click');
     }}
-    class="n-text {` ${size || 'sm'}
-    ${className} text-${color}
-    ${truncate ? 'truncate' : ''}
-    ${truncate2 ? 'truncate-2' : ''}
-    ${truncate3 ? 'truncate-3' : ''}
-    ${lineHeightMd ? 'line-height-md' : ''}
-    ${center ? 'text-center' : ''}
-    ${underline ? 'text-underline' : ''}
-    ${faded ? 'faded ' : ''}
-    ${bold ? 'font-weight-bold ' : ''}
-    ${medium ? 'font-weight-medium ' : ''}`.trim()}">
+    class="n-text {` ${size || 'sm'} ${className} text-${color} ${truncate ? 'truncate' : ''} ${truncate2 ? 'truncate-2' : ''} ${truncate3 ? 'truncate-3' : ''} ${lineHeightMd ? 'line-height-md' : ''} ${center ? 'text-center' : ''} ${underline ? 'text-underline' : ''} ${faded ? 'faded ' : ''} ${bold ? 'font-weight-bold ' : ''} ${medium ? 'font-weight-medium ' : ''}`.trim()}">
     <slot />
   </div>
 {/if}

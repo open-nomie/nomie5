@@ -78,10 +78,6 @@ const InitOfflineQueueStore = () => {
       });
       return _state;
     },
-    /**
-     * Save the Last Updated on array of trackers
-     * LastUsed.record(['tag1','tag2','tag4']);
-     */
     async record(log: NLog): Promise<boolean> {
       let state: IOfflineQueueState = methods.state();
       state.logs.push(log);

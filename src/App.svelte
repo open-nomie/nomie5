@@ -159,21 +159,23 @@
    * this will used to stop events from happening on tracker buttons
    * when the user is scrolling
    */
-  window.scrolling = false;
-  let scollingTimeout;
-  window.addEventListener(
-    "scroll",
-    (event) => {
-      // Clear our timeout throughout the scroll
-      window.clearTimeout(scollingTimeout);
-      // Set a timeout to run after scrolling ends
-      scollingTimeout = setTimeout(function () {
-        document.body.classList.remove("scrolling");
-      }, 200);
-      document.body.classList.add("scrolling");
-    },
-    false
-  );
+  // window.scrolling = false;
+  // let scollingTimeout;
+
+  // window.addEventListener(
+  //   "scroll",
+  //   (event) => {
+  //     console.log("Scrolling");
+  //     // Clear our timeout throughout the scroll
+  //     window.clearTimeout(scollingTimeout);
+  //     // Set a timeout to run after scrolling ends
+  //     scollingTimeout = setTimeout(function () {
+  //       document.body.classList.remove("scrolling");
+  //     }, 200);
+  //     document.body.classList.add("scrolling");
+  //   },
+  //   false
+  // );
 
   /**
    * Lastly...
