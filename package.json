@@ -64,6 +64,7 @@
     "@tsconfig/svelte": "^1.0.2",
     "@types/jest": "^26.0.8",
     "babel-jest": "^26.3.0",
+    "boolean-parser": "0.0.2",
     "commitizen": "^4.1.2",
     "commitlint": "^9.1.2",
     "concurrently": "^5.2.0",
@@ -141,7 +142,6 @@
     "bootstrap": "^4.3.1",
     "carbon-icons-svelte": "^10.9.3",
     "chart.js": "^2.9.3",
-    "es-simplify": "^1.0.6",
     "nomie-utils": "^0.1.10",
     "pouchdb": "^7.1.1",
     "sortablejs": "^1.10.2"

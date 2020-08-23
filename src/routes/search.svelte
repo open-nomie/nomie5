@@ -41,15 +41,21 @@
   import { Device } from "../store/device-store";
   import Storage from "../modules/storage/storage";
   import { getURLParams } from "../utils/url-parser/url-parser";
+  import global from "../../config/global";
+  import Icon from "../components/icon/icon.svelte";
+  import Text from "../components/text/text.svelte";
 
   /**
    * I've messed this all up again. but it's faster and more responsivle
    * TODO: refactor so it's clean and using the proper amount of Store vs local
    */
+  const SEARCHES_PATH = `${global.data_root}/searches`;
 
   let searchInput;
   let appTitle = null;
   let showSearch = false;
+
+  let lastSearches = [];
 
   const state = {
     date: dayjs(new Date()),
@@ -139,6 +145,10 @@
       state.searchTerm = evt.detail;
       showSearch = false;
       window.scrollTo(0, 0);
+      if (lastSearches.indexOf(state.searchTerm) == -1) {
+        lastSearches.push(state.searchTerm);
+        Storage.local.put(SEARCHES_PATH, lastSearches);
+      }
     },
     async onSearchEnter(evt) {
       methods.searchChange(evt);
@@ -149,7 +159,11 @@
   };
 
   function back() {
-    navigate("/history");
+    if (state.searchTerm && state.searchTerm.length) {
+      methods.clearSearch();
+    } else {
+      navigate("/history");
+    }
   }
 
   async function refresh() {
@@ -162,8 +176,18 @@
   let onLogSaved;
   let onLogsDeleted;
 
+  function deleteSearch(term) {
+    lastSearches = lastSearches.filter((t) => {
+      return t !== term;
+    });
+    Storage.local.put(SEARCHES_PATH, lastSearches);
+  }
+
   // WHen mounted.
   onMount(() => {
+    console.log(Storage.local);
+    lastSearches = Storage.local.get(SEARCHES_PATH) || [];
+
     const urlParams = getURLParams(window.location.href);
     if (urlParams.q) {
       state.searchTerm = decodeURIComponent(urlParams.q);
@@ -201,8 +225,12 @@
 
   <header slot="header">
     <div class="n-row container">
-      <button class="btn btn-clear btn-icon tap-icon" on:click={back}>
-        <NIcon name="arrowBack" />
+      <button class="btn btn-clear btn-icon tap-icon pr-1" on:click={back}>
+        {#if state.searchTerm && state.searchTerm.length > 0}
+          <NIcon name="close" />
+        {:else}
+          <NIcon name="arrowBack" />
+        {/if}
       </button>
       <div class="filler">
         <!-- on:change={methods.searchChange} -->
@@ -225,7 +253,7 @@
   <main slot="content" class="page page-search">
 
     <div class="container p-0">
-      {#if state.searchTerm}
+      {#if state.searchTerm && state.searchTerm.length}
         <NLogListLoader
           term={state.searchTerm}
           limit={20}
@@ -236,7 +264,28 @@
             Interact.logOptions(event.detail).then(() => {});
           }} />
       {:else}
-        <div class="empty-notice">Search your records</div>
+        {#if lastSearches.length}
+          <NItem itemDivider compact className="bg-transparent">Previous Searches</NItem>
+          {#each lastSearches as term}
+            <NItem
+              bottomLine
+              on:click={() => {
+                state.searchTerm = term;
+                methods.onSearchEnter({ detail: term });
+              }}>
+              <Text>{term}</Text>
+              <button
+                class="btn btn-clear"
+                slot="right"
+                on:click|preventDefault={() => {
+                  deleteSearch(term);
+                }}>
+                <Icon name="closeOutline" className="fill-inverse-2" />
+              </button>
+            </NItem>
+          {/each}
+        {/if}
+        <div class="empty-notice">Search to begin</div>
       {/if}
 
       <!-- end history -->

@@ -147,16 +147,16 @@
       }
       // background-color: blue !important;
       .n-input-wrapper {
-        min-height: 46px;
-        height: 46px;
+        min-height: 31px;
+        height: 31px;
         .n-input {
-          height: 46px;
+          height: 31px;
 
           input,
           select,
           textarea {
-            min-height: 45px;
-            height: 45px;
+            min-height: 30px;
+            height: 30px;
             font-size: 1rem;
           }
         }

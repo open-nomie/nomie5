@@ -39,6 +39,7 @@
   export let focus = false;
   export let fullDate = false;
   export let hideMore = undefined;
+
   // consts
   const dispatch = createEventDispatcher();
 
@@ -84,6 +85,11 @@
     align-items: center;
     background-color: var(--color-faded-1);
     margin-bottom: 20px;
+  }
+
+  .divider {
+    font-size: 0.9rem;
+    font-weight: 500;
   }
 
   .n-row.context {

@@ -6194,7 +6194,7 @@ body.scrolling .mini-map {
   display: flex;
   align-items: center;
   justify-content: stretch;
-  padding: 10px 12px;
+  padding: 10px 16px;
   cursor: pointer;
   min-height: 46px;
   max-width: 100vw;
@@ -6213,9 +6213,9 @@ body.scrolling .mini-map {
     .n-item.bg-light.text-faded {
       color: var(--color-inverse-3) !important; }
   .n-item.solo, .n-item[solo] {
-    width: calc(100% - 16pt);
-    margin: 8pt;
-    border-radius: 8pt;
+    width: calc(100% - 16px);
+    margin: 8px;
+    border-radius: 8px;
     box-shadow: var(--box-shadow); }
     .n-item.solo .right .btn-clear, .n-item[solo] .right .btn-clear {
       margin-right: 0px !important; }
@@ -6225,8 +6225,8 @@ body.scrolling .mini-map {
   .n-item label {
     margin-bottom: 0; }
   .n-item .trackers-list .n-item {
-    padding-left: 16pt !important;
-    padding-right: 16pt !important; }
+    padding-left: 16px !important;
+    padding-right: 16px !important; }
   .n-item.item-divider {
     background-color: var(--color-bg); }
   .n-item.disabled {
@@ -6267,8 +6267,8 @@ body.scrolling .mini-map {
     flex-direction: row;
     align-items: center; }
   .n-item .left {
-    padding-right: 8pt;
-    margin-right: 4pt; }
+    padding-right: 16px;
+    margin-right: 8px; }
   .n-item .right {
     text-align: right;
     display: flex;
@@ -6358,10 +6358,10 @@ body.scrolling .mini-map {
   overflow: hidden; }
   .n-list.solo,
   .n-list [solo] {
-    width: calc(100% - 16pt);
-    margin: 8pt;
+    width: calc(100% - 16px);
+    margin: 8px;
     box-shadow: var(--box-shadow);
-    border-radius: 12pt;
+    border-radius: 12px;
     overflow: hidden;
     background-color: var(--color-solid);
     padding: 0px 0; }

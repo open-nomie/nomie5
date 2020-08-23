@@ -110,6 +110,18 @@ const userInit = () => {
       });
       return format;
     },
+    getDateTimeFormat() {
+      let format;
+      update((state) => {
+        if (state.meta.is24Hour) {
+          format = { time: "HH:mm", date: "Do MMM YYYY" };
+        } else {
+          format = { time: "h:mm A", date: "MMM Do YYYY" };
+        }
+        return state;
+      });
+      return format;
+    },
     initialize() {
       // Set Dark or Light Mode
       // Lets get dark Mode
