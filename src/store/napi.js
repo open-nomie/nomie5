@@ -132,12 +132,14 @@ const nomieApiInit = () => {
       methods.startAutoImporting();
     },
     startAutoImporting() {
-      if (!autoImporterInterval) {
-        autoImporterInterval = setInterval(() => {
+      setTimeout(() => {
+        if (!autoImporterInterval) {
+          autoImporterInterval = setInterval(() => {
+            methods.autoImport();
+          }, 1000 * 60 * 4);
           methods.autoImport();
-        }, 1000 * 60 * 4);
-        methods.autoImport();
-      }
+        }
+      }, 1000);
     },
     stopAutoImporting() {
       clearInterval(autoImporterInterval);
