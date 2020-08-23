@@ -17,21 +17,9 @@
   export let color = "";
   export let underline = false;
   export let inline = false;
+  export let lineHeightMd = false;
 
   const dispatch = createEventDispatcher();
-
-  function getClassNames() {
-    return ` ${size || "sm"}
-    ${className} text-${color}
-    ${truncate ? "truncate" : ""}
-    ${truncate2 ? "truncate-2" : ""}
-    ${truncate3 ? "truncate-3" : ""}
-    ${center ? "text-center" : ""}
-    ${underline ? "text-underline" : ""}
-    ${faded ? "faded " : ""}
-    ${bold ? "font-weight-bold " : ""}
-    ${medium ? "font-weight-medium " : ""}`.trim();
-  }
 </script>
 
 <style type="text/scss">
@@ -42,16 +30,28 @@
 
     &.xs {
       font-size: 0.65rem;
+      &.line-height-md {
+        line-height: 0.8rem;
+      }
     }
     &.sm {
       font-size: 0.85rem;
-      line-height: 125%;
+      line-height: 0.95rem;
+      &.line-height-md {
+        line-height: 1rem;
+      }
     }
     &.md {
       font-size: 1rem;
+      &.line-height-md {
+        line-height: 1.2rem;
+      }
     }
     &.lg {
       font-size: 1.25rem;
+      &.line-height-md {
+        line-height: 1.4rem;
+      }
     }
 
     &.faded {
@@ -83,6 +83,7 @@
     ${truncate ? 'truncate' : ''}
     ${truncate2 ? 'truncate-2' : ''}
     ${truncate3 ? 'truncate-3' : ''}
+    ${lineHeightMd ? 'line-height-md' : ''}
     ${center ? 'text-center' : ''}
     ${underline ? 'text-underline' : ''}
     ${faded ? 'faded ' : ''}
@@ -101,6 +102,7 @@
     ${truncate ? 'truncate' : ''}
     ${truncate2 ? 'truncate-2' : ''}
     ${truncate3 ? 'truncate-3' : ''}
+    ${lineHeightMd ? 'line-height-md' : ''}
     ${center ? 'text-center' : ''}
     ${underline ? 'text-underline' : ''}
     ${faded ? 'faded ' : ''}

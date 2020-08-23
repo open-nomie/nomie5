@@ -2,6 +2,7 @@
   import { Lang } from "../../store/lang";
   import { UserStore } from "../../store/user-store";
   import dayjs from "dayjs";
+  import Text from "../../components/text/text.svelte";
 
   const state = {
     theme: "auto",
@@ -10,8 +11,7 @@
 
 <section class="slide slide-time-format">
   <div class="top center-grow pt-3">
-
-    <h1 class="mt-4">{Lang.t('setup.choose-first-day-of-week', `What's the first day of the week?`)}</h1>
+    <Text size="md" bold className="mb-2">{Lang.t('setup.choose-first-day-of-week', `Pick first day of the week`)}</Text>
     <button
       class="btn-block my-3 btn btn-content {$UserStore.meta.firstDayOfWeek === '1' ? 'active' : ''}"
       on:click={() => {

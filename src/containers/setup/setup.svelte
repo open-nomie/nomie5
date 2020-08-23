@@ -123,7 +123,7 @@
   </main>
   <div class="n-toolbar-grid" slot="footer">
     {#if state.activeSlide > 0}
-      <button class="btn btn-clear left " on:click={methods.back}>BACK</button>
+      <button class="btn btn-clear filler left " on:click={methods.back}>Back</button>
     {/if}
 
     <div class="main">
@@ -132,8 +132,8 @@
 
     {#if (slides[state.activeSlide] == StorageSlide && $UserStore.storageType) || slides[state.activeSlide] != StorageSlide}
       {#if !state.redirecting}
-        <button class="btn btn-clear right" on:click={methods.next}>
-          <strong>NEXT</strong>
+        <button class="btn btn-clear filler right text-primary-bright" on:click={methods.next}>
+          {#if state.activeSlide == 0}I&nbsp;agree{:else}Next{/if}
         </button>
       {:else}
         <button class="btn btn-clear disabled right" disabled="true">

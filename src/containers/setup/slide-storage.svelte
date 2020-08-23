@@ -3,6 +3,7 @@
   import { UserStore } from "../../store/user-store";
   import NItem from "../../components/list-item/list-item.svelte";
   import NIcon from "../../components/icon/icon.svelte";
+  import Text from "../../components/text/text.svelte";
 
   const state = {
     theme: "auto",
@@ -11,8 +12,8 @@
 
 <section class="slide slide-4 slide-welcome {state.activeSlide === 5 ? 'active' : 'hidden'} {state.transitioning ? 'move' : ''}">
   <div class="top center-grow">
+    <Text size="md" bold className="mb-2">{Lang.t('setup.pick-data-storage', `Choose your data's location...`)}</Text>
 
-    <h1 class="mt-4">{Lang.t('setup.pick-data-storage', `Choose your data's location...`)}</h1>
     <button
       class=" btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
       on:click={() => {

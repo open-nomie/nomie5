@@ -4,6 +4,8 @@
   import math from "../../utils/math/math";
   import config from "../../../config/global";
   import { onMount, onDestroy } from "svelte";
+  import Text from "../../components/text/text.svelte";
+  import Icon from "../../components/icon/icon.svelte";
 
   let testValue = 0;
   let positivity = -1;
@@ -59,18 +61,20 @@
 </script>
 
 <section class="slide slide-1 slide-welcome">
-  <div class="top center-grow">
-    <TrackerButton on:click={testTrackerTap} tracker={{ label: '', emoji: emoji }} value={testValue} {positivity} />
-    <h1 style="max-width:400px;" class="px-3 my-3 text-inverse">Privately track your life</h1>
-    <p class="text-inverse px-3" style="line-height:150%">
-      I needed a way to track my life - without giving my data to some company. I started building it in 2014, and nomie is the result.
-      <br />
-      <br />
-      <a href="https://twitter.com/brandoncorbin" class="mb-1 d-block">By Brandon</a>
-      <br />
+  <div class="top center-grow mx-auto" style="max-width:320px; padding:16px;">
+    <TrackerButton on:click={testTrackerTap} size={100} tracker={{ label: '', emoji: emoji }} value={testValue} {positivity} />
+    <Text bold center lineHeightMd className="mt-4">Hi! I'm Nomie, an open source life tracker that's completely private and free.</Text>
+    <Text size="xs" lineHeightMd center faded className="mt-2 mb-2">
+      <Icon name="warning" size="14" />
+      <strong>Terms</strong>
+      Nomie is offered "as is", without warranty. Happy Data, LLC disclaims any liability for damanges resulting from using Nomie. Nomie is
+      not a medical device, nor should it be used as such.
+    </Text>
+    <!-- <Text size="sm">
+      By
+      <a href="https://twitter.com/brandoncorbin">Brandon</a>
       See the
       <a href="https://github.com/open-nomie/nomie">Code</a>
-
-    </p>
+    </Text> -->
   </div>
 </section>
