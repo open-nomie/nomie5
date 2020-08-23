@@ -49,9 +49,6 @@ export default {
       v = fromNow
         .trim()
         .split(" ")
-        .filter((w) => {
-          return w !== "ago";
-        })
         .map((w) => {
           switch (w) {
             case "minutes":
