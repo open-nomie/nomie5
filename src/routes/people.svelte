@@ -151,7 +151,6 @@
             <button
               class="btn btn-clear tap-icon "
               on:click={(evt) => {
-                console.log('button click', evt.target);
                 evt.preventDefault();
                 evt.stopImmediatePropagation();
                 evt.stopPropagation();

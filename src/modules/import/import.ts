@@ -26,6 +26,7 @@ export interface INormalizedImport {
   logs: Array<NLog>;
 }
 
+// TODO: replace this with the util version
 export function dashCase(str: string): string {
   return (
     str &&
@@ -47,14 +48,11 @@ export default class Importer {
       throw new Error("Invalid Nomie Backup file");
     } else if (this.version >= 4) {
       this.normalized = N5ImportNormalizer(importPayload);
-      console.log("Nomie 4 and above");
     } else if (this.version == 3) {
-      console.log("Nomie 3");
       this.normalized = N3ImportNormalizer(importPayload);
     } else if (this.version == 2) {
       this.normalized = N2ImportNormalizer(importPayload);
     } else if (this.version == 1) {
-      console.log("Nomie 1");
       this.normalized = N1ImportNormalizer(importPayload);
     }
   }

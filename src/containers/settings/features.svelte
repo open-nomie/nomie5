@@ -12,7 +12,6 @@
       UserStore.saveMeta();
     },
     async lockToggle(change) {
-      console.log("Toggle Lock", change, $UserStore.meta.lock);
       let shouldLock = change.detail;
 
       if (shouldLock === true) {
@@ -22,8 +21,6 @@
             value: "",
             valueType: "number",
           });
-
-          console.log({ pin });
 
           if (!pin) {
             $UserStore.meta.lock = false;

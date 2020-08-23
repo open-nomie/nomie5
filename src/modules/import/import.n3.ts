@@ -26,7 +26,6 @@ function getLogs(fileData: any): Array<NLog> {
 }
 
 export function N3ImportNormalizer(importer: any): INormalizedImport {
-  console.log("N3 Importer", importer);
   let final: INormalizedImport = {
     trackers: getTrackers(importer),
     boards: getBoards(importer),

@@ -291,6 +291,30 @@
       </NItem>
       <NItem className="item-divider compact bg-faded" />
 
+      {#if (importLoader.normalized.logs || []).length > 0}
+        <ImporterItem
+          key="logs"
+          emoji="⏰"
+          title="Logs"
+          count={(importLoader.normalized.logs || []).length}
+          bind:status={importing.logs}
+          on:import={() => {
+            methods.importLogs(true);
+          }}>
+          {#if importing.logs.running}
+            <div class="progress" style="min-width:200px;">
+              <div
+                class="progress-bar progress-bar-striped progress-bar-animated"
+                role="progressbar"
+                aria-valuenow={importing.logs.progress}
+                aria-valuemin="0"
+                aria-valuemax="100"
+                style="width: {importing.logs.progress}%" />
+            </div>
+          {/if}
+        </ImporterItem>
+      {/if}
+
       <!-- Importable Items -->
       {#if Object.keys(importLoader.normalized.trackers).length > 0}
         <ImporterItem
@@ -364,29 +388,6 @@
       {/if}
 
       <!-- logs -->
-      {#if (importLoader.normalized.logs || []).length > 0}
-        <ImporterItem
-          key="logs"
-          emoji="⏰"
-          title="Logs"
-          count={(importLoader.normalized.logs || []).length}
-          bind:status={importing.logs}
-          on:import={() => {
-            methods.importLogs(true);
-          }}>
-          {#if importing.logs.running}
-            <div class="progress" style="min-width:200px;">
-              <div
-                class="progress-bar progress-bar-striped progress-bar-animated"
-                role="progressbar"
-                aria-valuenow={importing.logs.progress}
-                aria-valuemin="0"
-                aria-valuemax="100"
-                style="width: {importing.logs.progress}%" />
-            </div>
-          {/if}
-        </ImporterItem>
-      {/if}
     {/if}
   </div>
 

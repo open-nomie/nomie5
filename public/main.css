@@ -6265,7 +6265,7 @@ body.scrolling .mini-map {
   .n-item.large {
     min-height: 56px; }
   .n-item.compact {
-    min-height: 40px; }
+    min-height: 30px; }
     .n-item.compact .n-text.md {
       font-size: 0.8rem;
       line-height: 1rem; }

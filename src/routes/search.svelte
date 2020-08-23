@@ -185,7 +185,6 @@
 
   // WHen mounted.
   onMount(() => {
-    console.log(Storage.local);
     lastSearches = Storage.local.get(SEARCHES_PATH) || [];
 
     const urlParams = getURLParams(window.location.href);
