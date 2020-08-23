@@ -73,7 +73,7 @@ const ContextInit = () => {
             // Get Existing
             let existing = await methods.get();
             // Create final array - make it unique
-            let final = array_utils.unique([...existing, ...contexts]);
+            let final: Array<any> = array_utils.unique([...existing, ...contexts]);
             // Write this to storage
             update((state) => {
               state = final;

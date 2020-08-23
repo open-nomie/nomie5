@@ -1,11 +1,12 @@
-export default function (calcBuffer) {
-  function isNumber(n) {
-    return !isNaN(n) && n !== null && n !== undefined;
-  }
-  function isFloat(n) {
-    return Number(n) === n && n % 1 !== 0;
-  }
+function isNumber(n) {
+  return !isNaN(n) && n !== null && n !== undefined;
+}
 
+function isFloat(n) {
+  return Number(n) === n && n % 1 !== 0;
+}
+
+export default function (calcBuffer) {
   let answer = 0;
   let lastOperator = null;
 
