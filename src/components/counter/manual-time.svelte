@@ -72,16 +72,12 @@
       let dateChunks = {
         hours: data.hours,
         minutes: data.minutes,
-        seconds: data.seconds
+        seconds: data.seconds,
       };
       // Set new unit
       dateChunks[unit] = time.padTime(selected);
       // New Set of the value to Seconds
-      value = time.unitsToSeconds(
-        dateChunks.hours,
-        dateChunks.minutes,
-        dateChunks.seconds
-      );
+      value = time.unitsToSeconds(dateChunks.hours, dateChunks.minutes, dateChunks.seconds);
       // Fire off change
       dispatch("change", value);
     },
@@ -91,19 +87,19 @@
       let payload = {
         hours: initialTime[0],
         minutes: initialTime[1],
-        seconds: initialTime[2]
+        seconds: initialTime[2],
       };
       return payload;
-    }
+    },
   };
 
   // Data
   let data = {
     ...methods.timeStringToNode(value),
     computed: {
-      totalSeconds: 0
+      totalSeconds: 0,
     },
-    localValue: value
+    localValue: value,
   };
 
   // Watch for Value Change
@@ -143,8 +139,8 @@
     .unit {
       position: relative;
       text-align: center;
-      background-color: var(--color-solid-2);
-      border-radius: 4pt;
+      background-color: var(--color-solid-1);
+      border-radius: 16px;
       margin: 4pt;
       width: 95px;
       select {
@@ -181,7 +177,7 @@
   <div class="unit hours">
     <select
       value={methods.getUnitValue('hours')}
-      on:change={event => {
+      on:change={(event) => {
         methods.setUnitValue(event, 'hours');
       }}>
       {#each time.getNumberedArray(300) as unit (unit)}
@@ -196,7 +192,7 @@
 
     <select
       value={methods.getUnitValue('minutes')}
-      on:change={event => {
+      on:change={(event) => {
         methods.setUnitValue(event, 'minutes');
       }}>
       {#each time.getNumberedArray(59) as unit (unit)}
@@ -211,7 +207,7 @@
 
     <select
       value={methods.getUnitValue('seconds')}
-      on:change={event => {
+      on:change={(event) => {
         methods.setUnitValue(event, 'seconds');
       }}>
       {#each time.getNumberedArray(59) as unit (unit)}

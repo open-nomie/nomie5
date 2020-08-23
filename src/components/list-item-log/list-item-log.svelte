@@ -131,25 +131,25 @@
 {#if displayLog}
   <NItem className="{className} n-item-log">
     <!-- Show the Trackers within this Log Item -->
-    <div class="n-row time-row mt-1">
+    <div class="n-row time-row">
       <div class="time truncate">
-        <Text size="sm" medium style="line-height:1.2rem">
-          {logMeta.endDate.format(`ddd ${dtFormat.time}`)}
-          <span class="text-inverse-3">{logMeta.endDate.format(`${dtFormat.date}`)}</span>
-        </Text>
-        <Text size="sm" className="text-inverse-2">
-          <Text inline size="xs" className="" faded>{time.fromNow(logMeta.endDate)}</Text>
+        <div class="filler">
           {#if displayLog.lat}
             <button
-              style="display:inline-flex"
+              style="display:inline-flex; margin-left:-4px; padding-left:4px;"
               on:click={(event) => {
                 Interact.showLocations([displayLog]);
                 event.stopPropagation();
               }}
-              class="btn btn-xs btn-badge btn-light text-normal location-badge truncate">
+              class="btn btn-xs btn-clear text-normal location-badge truncate">
               <LocationBadge location={displayLog} />
             </button>
           {/if}
+          <Text inline size="xs" className="" faded>{time.fromNow(logMeta.endDate)}</Text>
+        </div>
+        <Text size="sm" medium>
+          {logMeta.endDate.format(`ddd ${dtFormat.time}`)}
+          <span class="text-inverse-3">{logMeta.endDate.format(`${dtFormat.date}`)}</span>
         </Text>
       </div>
       <div class="filler" />

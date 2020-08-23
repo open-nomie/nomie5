@@ -24,7 +24,5 @@
 {#if location}
   {#if name}
     <div class="truncate">{name}</div>
-  {:else}
-    <NIcon name="pin" className="fill-white" style="margin:0 auto;" size="16" />
-  {/if}
+  {:else}📍{/if}
 {/if}
