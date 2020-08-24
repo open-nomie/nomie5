@@ -15,9 +15,11 @@ context("App", () => {
     cy.get(".n-toolbar-grid > .btn").eq(1).click();
     cy.wait(200);
     cy.get(".n-toolbar-grid > .btn").eq(1).click();
-    cy.wait(200);
+    cy.wait(400);
     cy.get(".n-toolbar-grid > .btn").eq(1).click();
-    cy.wait(200);
+    cy.wait(400);
+    cy.get(".n-toolbar-grid > .btn").eq(1).click();
+    cy.wait(400);
     cy.get(".top > :nth-child(2)").click();
     cy.wait(200);
     cy.get(".n-toolbar-grid > .btn").eq(1).click();
@@ -35,8 +37,7 @@ context("App", () => {
     cy.wait(200);
     cy.get(".library-modal > .n-modal > .n-modal-footer > .btn").click();
     cy.wait(300);
-
-    cy.get(".left > .btn > .n-icon").click();
+    // cy.get(".left > .btn > .n-icon").click();
   };
 
   const trackWater = () => {
@@ -187,21 +188,37 @@ context("App", () => {
     cy.wait(400);
   };
 
+  const enableFeatures = () => {
+    cy.get('[href="/settings"]').click();
+    cy.wait(200);
+    // Enable People
+    cy.get("[name=onoffswitch]").eq(0).type("true", { force: true });
+    cy.wait(200);
+    // Enable Dashboard
+    cy.get("[name=onoffswitch]").eq(1).type("true", { force: true });
+    cy.wait(200);
+    // Go back home
+    cy.get('.n-row > [href="/"]').click();
+
+    cy.wait(200);
+  };
+
   const initBasic = () => {
     window.localStorage.clear();
     window.indexedDB.deleteDatabase("localforage");
     onboard();
     selectStarters();
+    enableFeatures();
   };
 
-  const exportData = ()=>{
+  const exportData = () => {
     cy.get('[href="/settings"]').click();
     cy.wait(400);
-  }
+  };
 
   const testPerson = () => {
     // Type
-    cy.get("#textarea-capture-note").type("hello there @bob, I hope you are well!");
+    cy.get("#textarea-capture-note").type("hello there @bob, I hope you are well! Also, let's add @billy, @frank and @chunk");
     cy.get(".save-button").click();
     cy.get('[href="/people"]').click();
     cy.wait(400);
@@ -237,22 +254,22 @@ context("App", () => {
     testPerson();
   });
 
-  it("Should properly track using the tracker buttons", () => {
-    // testTips();
-    useTrackers();
-  });
+  // it("Should properly track using the tracker buttons", () => {
+  //   // testTips();
+  //   useTrackers();
+  // });
 
-  it("Should create and be able to use a multi-tracker", () => {
-    createMultiTracker();
-  });
+  // it("Should create and be able to use a multi-tracker", () => {
+  //   createMultiTracker();
+  // });
 
-  it("should be able to create a log via a note", () => {
-    testCaptureForm();
-  });
+  // it("should be able to create a log via a note", () => {
+  //   testCaptureForm();
+  // });
 
-  it("should have all the things in history", () => {
-    testHistory();
-  });
+  // it("should have all the things in history", () => {
+  //   testHistory();
+  // });
 });
 
 // cy.wait(200);
