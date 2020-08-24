@@ -123,7 +123,7 @@
       Interact.blocker("Requesting an API Key...");
       state.message = "Registering...";
       await NAPI.register();
-      Interact.blocker("Installing new API Key");
+      Interact.blocker("Installing new API Key...");
       await tick(500);
       window.location.reload();
     },
