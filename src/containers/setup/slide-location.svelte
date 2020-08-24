@@ -20,7 +20,7 @@
           <NIcon name="pin" />
         </div>
         Track Location
-        <div slot="right">
+        <div slot="right" class="ml-2">
           <NToggle
             bind:value={$UserStore.alwaysLocate}
             on:change={(event) => {

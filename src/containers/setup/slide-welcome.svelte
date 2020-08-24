@@ -2,7 +2,7 @@
   import TrackerButton from "../../containers/board/tracker-button.svelte";
   import { Interact } from "../../store/interact";
   import math from "../../utils/math/math";
-  import config from "../../../config/global";
+  import config from "../../config/appConfig";
   import { onMount, onDestroy } from "svelte";
   import Text from "../../components/text/text.svelte";
   import Icon from "../../components/icon/icon.svelte";
@@ -40,7 +40,7 @@
   onMount(() => {
     emojiRotater = setInterval(() => {
       emoji = math.random(emojis);
-    }, 500);
+    }, 1200);
   });
   onDestroy(() => {
     clearInterval(emojiRotater);
@@ -62,13 +62,19 @@
 
 <section class="slide slide-1 slide-welcome">
   <div class="top center-grow mx-auto" style="max-width:320px; padding:16px;">
-    <TrackerButton on:click={testTrackerTap} size={100} tracker={{ label: '', emoji: emoji }} value={testValue} {positivity} />
-    <Text bold center lineHeightMd className="mt-4">Hi! I'm Nomie, an open source life tracker that's completely private and free.</Text>
+    <img src="/images/nomie-head-on.png" style="width:60%; max-width:300px;" alt="nomie-head-on" />
+    <Text bold center lineHeightMd className="mt-4">
+      Hi! I'm Nomie.
+      <br />
+      The completely private,
+      <br />
+      free & open life tracker.
+    </Text>
     <Text size="xs" lineHeightMd center faded className="mt-2 mb-2">
       <Icon name="warning" size="14" />
       <strong>Terms</strong>
       Nomie is offered "as is", without warranty. Happy Data, LLC disclaims any liability for damanges resulting from using Nomie. Nomie is
-      not a medical device, nor should it be used as such.
+      not a medical device, nor should it be used as such. MIT License
     </Text>
     <!-- <Text size="sm">
       By

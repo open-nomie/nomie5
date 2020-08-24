@@ -12,6 +12,7 @@
   import ExportRoute from "./export.svelte";
   import PeopleRoute from "./people.svelte";
   import TrackerDesigner from "./tracker-designer.svelte";
+  import Setup from "./setup.svelte";
 
   import FileBrowser from "./file-browser.svelte";
 </script>
@@ -33,4 +34,5 @@
   <Route path="/files/*path" let:params>
     <FileBrowser path={params.path} />
   </Route>
+  <Route path="/setup" component={Setup} />
 </Router>

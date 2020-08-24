@@ -36,6 +36,7 @@
       box-shadow: var(--box-shadow-float);
       background-color: var(--color-solid);
       border: none;
+      max-width: 320px;
       &.active {
         background-color: var(--color-primary-bright);
         color: #fff;

@@ -19,19 +19,20 @@
       on:click={() => {
         UserStore.setStorage('local');
       }}>
-      <div class="text-md font-weight-bold">This Device Only</div>
-      <div class="text-sm" className="">Stored unencrypted ONLY on this device.</div>
+      <Text lineHeightMd bold>{Lang.t('storage.local_title', 'This Device Only')}</Text>
+      <Text size="xs" faded className="">Stored unencrypted ONLY on this device.</Text>
     </button>
     <button
       class="btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
       on:click={() => {
         UserStore.setStorage('blockstack');
       }}>
-      <div class="text-md font-weight-bold">Encrypted in the Cloud</div>
-      <div class="text-sm">
+      <Text lineHeightMd bold>Encrypted in the Cloud</Text>
+      <Text size="xs" faded>
         Multiple device support with end-to-end encryption
         <strong>by Blockstack.</strong>
-      </div>
+      </Text>
+
     </button>
     <p class="text-faded-3 mt-2">
       You can always change this later.

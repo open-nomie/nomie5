@@ -119,6 +119,7 @@ button:focus {
 }
 
 .btn {
+  border: none;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   border-radius: 8px;
@@ -163,7 +164,6 @@ button:focus {
     box-shadow: 0px 3px 6px -3px var(--color-primary-bright);
     // background-color: --color-primary;
   }
-  border: none;
 }
 
 .btn-outline-dark {
@@ -216,16 +216,16 @@ button:focus {
     // color: var(--color-primary);
     // transform: scale(1.06);
   }
-  .text-md {
-    font-weight: bold;
-    margin-bottom: 6px;
-  }
-  .text-sm {
-    font-size: 0.72rem !important;
-    line-height: 1rem !important;
-    font-weight: 400;
-    opacity: 0.7;
-  }
+  // .text-md {
+  //   font-weight: bold;
+  //   margin-bottom: 6px;
+  // }
+  // .text-sm {
+  //   font-size: 0.72rem !important;
+  //   line-height: 1rem !important;
+  //   font-weight: 400;
+  //   opacity: 0.7;
+  // }
   &:after {
   }
   &.active {

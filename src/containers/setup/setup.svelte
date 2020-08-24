@@ -123,7 +123,7 @@
   </main>
   <div class="n-toolbar-grid" slot="footer">
     {#if state.activeSlide > 0}
-      <button class="btn btn-clear filler left " on:click={methods.back}>Back</button>
+      <button class="btn btn-clear filler left text-inverse-2" on:click={methods.back}>Back</button>
     {/if}
 
     <div class="main">
