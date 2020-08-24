@@ -144,6 +144,7 @@
       .hour {
         width: calc(100% / 24);
         font-size: 0.4rem;
+        display: relative;
       }
     }
 

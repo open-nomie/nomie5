@@ -21,13 +21,13 @@
   export let title = "";
   export let color = "#4d84a1";
   export let points;
-  // export let activeIndex;
+  export let activeIndex;
   export let xFormat = (x) => x;
   export let yFormat = (y) => y;
-  export let hideYTicks = false;
-  export let hideXTicks = false;
-  export let type = "bar";
-  export let beginAtZero = true;
+  export let hideYTicks: boolean = false;
+  export let hideXTicks: boolean = false;
+  export let type: string = "bar";
+  export let beginAtZero: boolean = true;
 
   // Generate a random ID for this Component
   const chartId = `chart-${nid()}`;
@@ -140,7 +140,7 @@
       if (passed.length) {
         selected = points[passed[0]._index];
       }
-      // dispatch("tap", selected);
+      dispatch("tap", selected);
     });
   }
 
@@ -173,7 +173,7 @@
           Interact.onThisDay(selected.date.toDate());
         }}>
         {selected.x}
-        <NIcon name="more" size="14" />
+        <NIcon name="chevronRight" size="14" />
       </Button>
 
     </div>

@@ -13,6 +13,7 @@ import type { ITrackableElementType } from "../trackable-element/trackable-eleme
 import getDayOfWeek from "./day-of-week";
 import getTimeOfDay from "./time-of-day";
 import type { ITrackerMath } from "../tracker/tracker";
+import math from "../../utils/math/math";
 
 export type IStatsChartUnit = "day" | "week" | "month" | "quarter" | "year";
 export type IStatsChartMode = "d" | "w" | "m" | "q" | "y";
@@ -77,6 +78,8 @@ export interface IStats {
   tod: IStatsTod;
   min: IStatsMaxMin;
   max: IStatsMaxMin;
+  distance?: number;
+  _stats?: StatsProcessor;
 }
 
 const console = new Logger("📊 V5 Stats");
@@ -155,6 +158,31 @@ export default class StatsProcessor implements IStats {
       unitFormat = "YYYY-MM";
     }
     return unitFormat;
+  }
+
+  public getScore(): { score: number; emoji: string } {
+    let scores = [];
+    this.rows.forEach((row) => {
+      let score = row.score || row.calculateScore();
+      scores.push(score);
+    });
+    let score = math.sum(scores);
+    if (score > 0) {
+      return {
+        score,
+        emoji: "😄",
+      };
+    } else if (score < 0) {
+      return {
+        score,
+        emoji: "😞",
+      };
+    } else {
+      return {
+        score: 0,
+        emoji: "😐",
+      };
+    }
   }
 
   /**
@@ -436,6 +464,7 @@ export default class StatsProcessor implements IStats {
     let minMax = this.getMinMaxFromValueMap(valueMap);
     let chart = this.getChartData(valueMapTotals);
     return {
+      _stats: this,
       type: this.trackableElement.type,
       trackableElement: this.trackableElement,
       math: this.math,

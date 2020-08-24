@@ -13,10 +13,10 @@
   import TimeOfDay from "../../components/time-of-day/time-of-day.svelte";
   import DayOfWeek from "../../components/day-of-week/day-of-week.svelte";
 
-  import { strToColor } from "../../components/dymoji/dymoji";
+  // import { strToColor } from "../../components/dymoji/dymoji";
 
   // Utils
-  import NomieUOM from "../../utils/nomie-uom/nomie-uom";
+  // import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import tick from "../../utils/tick/tick";
   import math from "../../utils/math/math";
   import Storage from "../../modules/storage/storage";
@@ -48,6 +48,13 @@
   import { Lang } from "../../store/lang";
   import { TrackerStore } from "../../store/tracker-store";
   import { PeopleStore } from "../../store/people-store";
+
+  import StatsOverview from "./stats-overview.svelte";
+  import StatsCompare from "./stats-compare.svelte";
+  import Button from "../../components/button/button.svelte";
+  import Text from "../../components/text/text.svelte";
+  import NPaths from "../../paths";
+  import StatsTime from "./stats-time.svelte";
 
   export const timeSpans = {
     d: { id: "d", label: "D", title: "Day", unit: "day" },
@@ -154,24 +161,6 @@
     },
   ];
 
-  function getScore() {
-    let scores = [];
-    state.stats.rows.forEach((row) => {
-      let score = row.score || row.calculateScore();
-      scores.push(score);
-    });
-    let score = math.sum(scores);
-    let final = 0;
-
-    if (score > 0) {
-      return `${score} 😄`;
-    } else if (score < 0) {
-      return `${score} 😞`;
-    } else {
-      return `0 😐`;
-    }
-  }
-
   function getDataViewButtons() {
     return Object.keys(dataViews)
       .map((optionId) => {
@@ -235,13 +224,6 @@
     return dayjs(state.date);
   }
 
-  function removeCompare(compare) {
-    state.compare = state.compare.filter((row) => {
-      return row != compare;
-    });
-    rememberCompare();
-  }
-
   function getTrackableElement(str) {
     let type = extractor.toElement(str);
     if (type.type == "tracker") {
@@ -250,222 +232,38 @@
     return type;
   }
 
-  function scoreDistance(distance) {
-    if (distance >= 100) {
-      return 1;
-    } else {
-      return Math.abs(Math.round(distance - 100));
-    }
-  }
-
-  /**
-   * RSquared
-   * A crazy ass function!!!
-   * This will load up the the stats for EVERY tracker
-   * for the current time period, and run a
-   * RSquared distance function on each to identify
-   * any that have simular patterns.
-   */
-  async function findRelatedTrackers() {
-    Interact.blocker("Looking for related...");
-    // Clear Compare
-    state.compare = [];
-    await tick(40);
-    let compareItems = {};
-    let trackerTags = Object.keys($TrackerStore.trackers);
-    let activeTrackerValues = state.stats.chart.values.map((point) => point.y);
-    // Loop over trackers
-    for (var i = 0; i < trackerTags.length; i++) {
-      let tag = trackerTags[i]; // get tag
-      let tracker = $TrackerStore.trackers[tag]; // get tracker
-      let results = await getTrackerStats(tracker); // get stats
-      let compareValues = results.stats.chart.values.map((point) => point.y); // get y values
-      let distance = await DataDistance.score(activeTrackerValues, compareValues); // calculate distance
-      results.distance = distance;
-      compareItems[tag] = {
-        stats: results,
-        distance: distance,
-      };
-    }
-    // Generate Results
-    let maxScore = 0;
-    let results = Object.keys(compareItems)
-      .map((tag) => {
-        return {
-          tag,
-          stats: compareItems[tag].stats,
-          value: compareItems[tag].distance,
-        };
-      })
-      // Remove any 0 values (exact match)
-      .filter((r) => r.value && !isNaN(r.value))
-      .sort((a, b) => {
-        if (a.value > maxScore) {
-          maxScore = a.value;
-        }
-        // Sort by Lowest value
-        return a.value > b.value ? -1 : 1;
-      })
-      // Remove anything over 5000 and only 5
-      .filter((r, index) => {
-        if (index < 11) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-      .map((r) => {
-        r.stats.distance = math.percentage(maxScore, r.value);
-        return r;
-      });
-
-    // Loop over results
-    for (var i = 0; i < results.length; i++) {
-      let tag = results[i].tag;
-      let tracker = $TrackerStore.trackers[tag];
-      if (tracker) {
-        let stats = compareItems[tag].stats;
-        state.compare.push(stats);
-      }
-    }
-    // Hit it again for svelte array
-    state.compare = state.compare;
-    // Save trackers for later
-    rememberCompare();
-    // Close blocker
-    Interact.stopBlocker();
-  }
-
-  async function getTrackerStats(tracker) {
-    let compareObj = new StatsRef({
-      type: "tracker",
-      key: tracker.tag,
-      label: tracker.label,
-      base: tracker,
-      is24Hour: $UserStore.meta.is24Hour,
-    });
-    await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
-    return compareObj;
-  }
-
-  async function compareTracker() {
-    let trackers = await Interact.select("tracker", true);
-    if (trackers.length) {
-      for (var i = 0; i < trackers.length; i++) {
-        const tracker = trackers[i];
-        const compareObj = await getTrackerStats(tracker);
-        state.compare.push(compareObj);
-      }
-      state.compare = state.compare;
-      rememberCompare();
-    }
-  }
-
-  function rememberCompare() {
-    let comparing = state.compare.map((statRef) => statRef.getSearchTerm());
-    remember("compare", comparing);
-  }
-
-  async function comparePerson() {
-    let people = await Interact.select("person", true);
-    if (people.length) {
-      for (var i = 0; i < people.length; i++) {
-        const person = people[i];
-        let compareObj = new StatsRef({
-          type: "person",
-          key: person.username,
-          label: person.displayName,
-          base: person,
-          is24Hour: $UserStore.meta.is24Hour,
-        });
-        await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
-        state.compare.push(compareObj);
-      }
-      state.compare = state.compare;
-      rememberCompare();
-    }
-  }
-
-  async function compareContext() {
-    let contexts = await Interact.select("context", true);
-    if (contexts.length) {
-      for (var i = 0; i < contexts.length; i++) {
-        const context = contexts[i];
-        let compareObj = new StatsRef({
-          type: "context",
-          key: context,
-          label: context,
-          base: context,
-          is24Hour: $UserStore.meta.is24Hour,
-        });
-        await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
-        state.compare.push(compareObj);
-      }
-      state.compare = state.compare;
-      rememberCompare();
-    }
-  }
-
-  async function compareSearchTerm() {
-    let item = await Interact.prompt("Term");
-    if (item) {
-      let compareObj = new StatsRef({
-        type: "search",
-        key: item,
-        label: item,
-        base: item,
-        is24Hour: $UserStore.meta.is24Hour,
-      });
-      await compareObj.getStats(state.timeSpan, getFromDate(), getToDate());
-      state.compare.push(compareObj);
-    }
-    state.compare = state.compare;
-    rememberCompare();
-  }
-
-  async function compareType() {
-    let types = ["Tracker", "Person", "Context", "Search Term", "Pick for me"];
-    Interact.popmenu({
-      buttons: types.map((type) => {
-        return {
-          title: `${type}...`,
-          async click() {
-            switch (type) {
-              case "Tracker":
-                await compareTracker();
-                setView(dataViews.compare);
-                break;
-              case "Person":
-                await comparePerson();
-                setView(dataViews.compare);
-                break;
-              case "Context":
-                await compareContext();
-                setView(dataViews.compare);
-                break;
-              case "Search Term":
-                await compareSearchTerm();
-                setView(dataViews.compare);
-                break;
-              case "Pick for me":
-                await findRelatedTrackers();
-                setView(dataViews.compare);
-                break;
-            }
-          },
-        };
-      }),
-    });
-  }
-
   function onMoreTap() {
-    let buttons = [];
-    const compare = {
-      title: "Compare to...",
-      click() {
-        compareType();
+    let buttons = [
+      {
+        title: "View Streak",
+        click: () => {
+          Interact.openStreak(state.currentTerm);
+        },
       },
-    };
+      {
+        title: `Edit ${state.currentTerm}`,
+        click: () => {
+          if (state.trackableElement.type == "tracker") {
+            Interact.editTracker(TrackerStore.byTag(state.trackableElement.id));
+          } else if (state.trackableElement.type == "person") {
+            Interact.person(state.trackableElement.id);
+          }
+        },
+      },
+      {
+        title: `Search for ${state.currentTerm}`,
+        click() {
+          close();
+          navigate(NPaths.routes.search(state.trackableElement.prefix + state.trackableElement.id));
+        },
+      },
+    ];
+    Interact.popmenu({ title: "Options", buttons });
+  }
+
+  function onCalendarTap() {
+    let buttons = [];
+
     const gotoToday = {
       title: "Today",
       click: () => {
@@ -494,73 +292,22 @@
         changeDate(date);
       },
     };
-    const viewStreak = {
-      title: "View Streak",
-      click: () => {
-        Interact.openStreak(state.currentTerm);
-      },
-    };
 
-    const editElement = {
-      title: `Edit ${state.currentTerm}`,
-      click: () => {
-        if (state.trackableElement.type == "tracker") {
-          Interact.editTracker(TrackerStore.byTag(state.trackableElement.id));
-        } else if (state.trackableElement.type == "person") {
-          Interact.person(state.trackableElement.id);
-        }
-      },
-    };
-
-    buttons.push(compare);
     if (dayjs().format("DD-MM-YYYY") !== state.date.format("DD-MM-YYYY")) {
       buttons.push(gotoToday);
     }
     buttons.push(startOfWeek);
     buttons.push(startOfMonth);
     buttons.push(startOfYear);
-    buttons.push(viewStreak);
-    // If it's a person or tracker
-    if (state.trackableElement.type.search(/tracker|person/) > -1) {
-      buttons.push(editElement);
-    }
 
     //state.trackableElement
-    Interact.popmenu({ title: "Stat Options", buttons });
+    Interact.popmenu({ title: "Go to...", buttons });
   }
 
   function getLastTerm() {
     let lastTerm = $Interact.stats.terms[$Interact.stats.terms.length - 1];
     return lastTerm;
   }
-
-  async function loadSavedCompares(queryPayload) {
-    let savedCompares = remember("compare");
-    // If we do - then lets load them each up
-    if (state.compare.length == 0 && savedCompares) {
-      // Loop over compares
-      (savedCompares || [])
-        .filter((row) => row)
-        .forEach((searchTerm) => {
-          let type = extractor.toElement(searchTerm);
-          type.obj = type.type == "tracker" ? TrackerStore.byTag(type.id) : {};
-          state.compare.push(
-            new StatsRef({
-              type: type.type,
-              key: type.id,
-              math: type.obj.math || "sum",
-              label: type.id,
-              base: type.obj,
-              is24Hour: $UserStore.meta.is24Hour,
-            })
-          );
-        });
-    }
-    // Get Stats for Compares
-    for (let i = 0; i < state.compare.length; i++) {
-      let stats = await state.compare[i].getStats(state.timeSpan, queryPayload.start, queryPayload.end);
-    }
-  } // end load saved compares
 
   async function getStats() {
     state.loading = true;
@@ -591,17 +338,16 @@
     });
 
     // See if we have any saved compares
-    loadSavedCompares(queryPayload);
 
     state.related = statsV5.getRelated();
     await tick(100);
-    state.compare = state.compare;
+    // state.compare = state.compare;
 
     state.loading = false;
   } // end getStats()
 
   function getDayRange() {
-    return state.date.format("ddd MMM D, YYYY");
+    return state.date.format(`ddd ${dateFormat}`);
   }
 
   function loadPreviousDate() {
@@ -623,9 +369,9 @@
     const from = getFromDate();
     const to = getToDate();
     if (to.format("MMM") !== from.format("MMM")) {
-      return `${from.format("MMM D")} - ${to.format("MMM D YYYY")}`;
+      return `${from.format(dateFormatShort)} - ${to.format(dateFormat)}`;
     } else {
-      return `${from.format("MMM D")} - ${to.format("D YYYY")}`;
+      return `${from.format(dateFormatShort)} - ${to.format(`${dateFormatShort} YYYY`)}`;
     }
   }
 
@@ -660,24 +406,16 @@
       .filter((row) => row);
   }
 
-  function formatValue(value, includeUnit) {
-    let tracker = state.tracker;
-    if (state.tracker) {
-      return state.tracker.displayValue(value, includeUnit);
-    }
-    return value;
-  }
-
   function getMonthRange() {
     const from = getFromDate();
     const to = getToDate();
-    return `${from.add(1, "day").format("MMM D")} - ${to.format("MMM D YYYY")}`;
+    return `${from.add(1, "day").format(dateFormatShort)} - ${to.format(dateFormat)}`;
   }
 
   function getYearRange() {
     const from = getFromDate();
     const to = getToDate();
-    return `${from.add(1, "month").format("MMM D YYYY")} - ${to.format("MMM D YYYY")}`;
+    return `${from.add(1, "month").format(dateFormat)} - ${to.format(dateFormat)}`;
   }
 
   function gettimeRangeText() {
@@ -748,16 +486,7 @@
     } else {
       state.selected.rows = rows;
     }
-
     return state.selected.rows;
-  }
-
-  function getLogs() {
-    if (state.selected.rows) {
-      return state.selected.rows;
-    } else {
-      return state.stats.rows;
-    }
   }
 
   async function main() {
@@ -810,7 +539,8 @@
   }
 
   $: timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
-  $: dateFormat = $UserStore.meta.is24Hour ? "DD/MM/YYYY" : "MMM Do YYYY";
+  $: dateFormat = $UserStore.meta.is24Hour ? "Do MMM YYYY" : "MMM Do YYYY";
+  $: dateFormatShort = $UserStore.meta.is24Hour ? "Do MMM" : "MMM Do";
 
   function onSwipeDown(e) {
     close();
@@ -827,6 +557,10 @@
     overflow: hidden;
   }
 
+  :global(.chart-item) {
+    position: relative;
+  }
+
   .time-range {
     font-size: 0.9rem;
     font-weight: 500;
@@ -835,42 +569,6 @@
   }
   :global(.stats-modal .n-modal) {
     max-width: 500px !important;
-  }
-
-  :global(.chart-item.solo.n-item) {
-    margin: 8pt 0;
-    width: calc(100% - 0px);
-    border-radius: 0px;
-  }
-
-  :global(.chart-item) {
-    position: relative;
-    .btn-close {
-      position: absolute;
-      top: 5px;
-      left: 6px;
-      padding: 0;
-      height: 20px;
-      width: 20px;
-      border: solid 1px var(--color-solid-2);
-      background-color: var(--color-solid);
-      svg {
-        height: 18px;
-        width: 18px;
-      }
-    }
-  }
-
-  .distance {
-    font-size: 12px;
-    color: var(--color-solid-3);
-    position: absolute;
-    top: 10px;
-    right: 16px;
-    text-align: center;
-  }
-  :global(.chart-item .btn-close svg) {
-    fill: var(--color-inverse) !important;
   }
 </style>
 
@@ -912,17 +610,18 @@
       <NButtonGroup size="sm" buttons={timeViewButtons} />
     </div>
 
-    <NToolbarGrid>
-      <button class="btn btn-clear text-primary-bright clickable pr-1 pl-1" slot="left" on:click={loadPreviousDate}>
+    <div class="n-toolbar n-row px-3 pt-2 pb-3">
+      <Text size="sm" bold className="filler" truncate>{state.range}</Text>
+      <Button color="clear" className="px-1" on:click={loadPreviousDate}>
         <NIcon name="chevronLeft" className="fill-primary-bright" />
-        Prev
-      </button>
-      <div class="time-range truncate" slot="main">{state.range}</div>
-      <button class="btn btn-clear text-primary-bright clickable pl-1 pr-1" slot="right" on:click={loadNextDate}>
-        Next
+      </Button>
+      <Button color="clear" className="px-1" on:click={onCalendarTap}>
+        <NIcon name="calendar" className="fill-primary-bright" />
+      </Button>
+      <Button color="clear" className="px-1" on:click={loadNextDate}>
         <NIcon name="chevronRight" className="fill-primary-bright" />
-      </button>
-    </NToolbarGrid>
+      </Button>
+    </div>
 
     {#if state.loading}
       <div class="container n-panel center-all" style="height:140px;">
@@ -965,128 +664,26 @@
 
   {#if !state.loading}
     {#if state.dataView == 'compare'}
-      <div class="charts">
-
-        {#each state.compare as compare (compare.id)}
-          {#if compare.stats}
-            <NItem className="solo chart-item">
-              {#if compare.distance}
-                <div class="distance">
-                  <strong>{compare.distance.toFixed(0)}</strong>
-                </div>
-              {/if}
-
-              <NBarChart
-                height={120}
-                hideYTicks
-                title={`${compare.getSearchTerm()}`}
-                color={compare.getTracker().color}
-                labels={compare.stats.chart.values.map((point) => point.x)}
-                points={compare.stats.chart.values}
-                on:swipeLeft={loadNextDate}
-                on:swipeRight={loadPreviousDate}
-                xFormat={(x, index) => {
-                  return x;
-                }}
-                on:more={(evt) => {
-                  Interact.onThisDay(evt.detail.date.toDate());
-                }}
-                on:titleClick={(event) => {
-                  Interact.openStats(compare.getSearchTerm());
-                }}
-                on:tap={(event) => {
-                  setSelected(event.detail);
-                }}
-                yFormat={(y) => {
-                  return compare.getTracker().displayValue(y);
-                }}
-                activeIndex={state.selected.index} />
-
-              <button
-                class="btn btn-clear btn-close"
-                on:click={() => {
-                  removeCompare(compare);
-                }}>
-                <NIcon name="close" className="fill-white" size="16" />
-              </button>
-            </NItem>
-          {/if}
-        {/each}
-      </div>
-
-      {#if state.compare.length == 0}
-        <div class="p-2" />
-      {/if}
-
-      <div class="p-2 pt-2">
-        <button class="btn btn-light btn-block" on:click={compareType}>{Lang.t('stats.select-comparison', 'Select Comparison')}...</button>
-      </div>
+      <StatsCompare
+        {remember}
+        fromDate={getFromDate()}
+        toDate={getToDate()}
+        timeSpan={state.timeSpan}
+        stats={state.stats}
+        selected={state.selected}
+        on:dateSelected={(evt) => {
+          setSelected(evt.detail);
+        }} />
     {/if}
     {#if state.dataView == 'map'}
       <NMap small locations={getLocations()} className="flex-grow flex-shrink" />
     {/if}
     {#if state.stats}
       {#if state.dataView == 'overview'}
-        <div class="overview py-2 flex-grow flex-shrink">
-          {#if state.stats.math == 'sum'}
-            <NItem className="solo" title="Total">
-              <div slot="right" class="text-lg text-inverse">{formatValue(state.stats.sum)}</div>
-            </NItem>
-          {/if}
-          <NItem className="solo" title="Average">
-            <div slot="right" class="text-lg text-inverse">{formatValue(state.stats.avg)}</div>
-          </NItem>
-          {#if state.stats.max.value > state.stats.min.value}
-            <NItem className="solo" title="Range">
-              <div slot="right" class="text-lg text-inverse value">
-                {formatValue(state.stats.min.value, false)}
-                <span class="text-faded-2 font-weight-normal">to</span>
-                {formatValue(state.stats.max.value)}
-              </div>
-            </NItem>
-          {/if}
-          <NItem className="solo" title="Score">
-            <div slot="right" class="text-lg text-inverse">{getScore()}</div>
-          </NItem>
-
-          {#if state.related.length}
-            <HScroller className="related-items p-2 px-3">
-              {#each state.related as item}
-                {#if item.search != state.currentTerm}
-                  <button
-                    class="btn btn-badge"
-                    on:click={() => {
-                      Interact.openStats(item.search);
-                    }}>
-                    {#if item.type == 'person'}
-                      <Dymoji person={$PeopleStore.people[item.value]} className="mr-2" size={20} radius={0.3} />
-                    {/if}
-                    {#if item.type == 'tracker'}{TrackerStore.byTag(item.value).emoji}{/if}
-                    {item.search}
-                    <span class="count">{item.count}</span>
-                  </button>
-                {/if}
-              {/each}
-            </HScroller>
-          {/if}
-
-        </div>
+        <StatsOverview stats={state.stats} />
         <!-- end over view -->
       {:else if state.dataView == 'time'}
-        <div class="bg-solid py-2 pr-2 pl-0">
-          <NTimeGrid
-            term={state.currentTerm}
-            color={state.currentColor}
-            rows={state.stats.rows}
-            style="min-height:100px;max-height:100px" />
-
-        </div>
-        <div class="bg-solid p-2">
-          <TimeOfDay statsTod={state.stats.tod} color={state.currentColor} />
-        </div>
-        <div class="bg-solid p-2">
-          <DayOfWeek height={90} statsDow={state.stats.dow} color={state.currentColor} />
-        </div>
+        <StatsTime color={state.currentColor} term={state.currentTerm} stats={state.stats} />
       {:else if state.dataView == 'logs'}
         {#if state.timeSpan == 'y'}
           <div class="p-4 text-sm text-center text-inverse-2">Logs not yet available for a full year</div>
@@ -1105,6 +702,7 @@
 
           <NLogList
             compact
+            limit={30}
             on:textClick={(evt) => {
               if (evt.detail.type == 'tracker') {
                 Interact.openStats(`#${evt.detail.id}`);
@@ -1119,28 +717,6 @@
             style="min-height:100%"
             className="bg-solid-1 flex-grow flex-shrink" />
         {/if}
-
-        <!-- {#if state.dataView == 'logs' && (state.timeSpan != 'y' && state.selected.index !== undefined)}
-          <NLogList
-            compact
-            on:textClick={evt => {
-              if (evt.detail.type == 'tracker') {
-                Interact.openStats(`#${evt.detail.id}`);
-              } else {
-                Interact.openStats(`${evt.detail.raw}`);
-              }
-            }}
-            on:trackerClick={evt => {
-              Interact.openStats(`#${evt.detail.tag}`);
-            }}
-            logs={state.selected.rows || state.stats.rows}
-            style="min-height:100%"
-            className="bg-solid-1 flex-grow flex-shrink" />
-        {:else if state.dataView == 'logs' && state.timeSpan == 'y'}
-          <div class="p-4 text-sm text-center">
-            Select a chart month to see the logs.
-          </div>
-        {/if} -->
       {/if}
     {/if}
   {/if}
