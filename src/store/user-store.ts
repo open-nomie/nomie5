@@ -9,15 +9,14 @@ import Logger from "../utils/log/log";
 import { writable } from "svelte/store";
 
 // Modules
-import Storage from "../modules/storage/storage";
-import locate from "../modules/locate/locate";
+import Storage, { getStorageType, setStorage } from "../modules/storage/storage";
 
 // Stores
 import { TrackerStore } from "./tracker-store";
 import { BoardStore } from "./boards";
 
-import config from "../../config/global";
-import { LedgerStore } from "./ledger";
+import config from "../config/appConfig";
+import { Interact } from "./interact";
 
 // Consts
 const console = new Logger("🤠 userStore");
@@ -25,6 +24,9 @@ const console = new Logger("🤠 userStore");
 declare let blockstack: any;
 const UserSession = new blockstack.UserSession();
 
+/**
+ * Define User Store Interfaces
+ */
 export interface IUserMeta {
   lock: boolean;
   pin?: number;
@@ -37,10 +39,9 @@ export interface IUserMeta {
 export interface IUserLocalSettings {
   compactButtons: boolean;
 }
-type StorageType = "blockstack" | "local" | "pouchdb";
 
 export interface IUserState {
-  storageType: StorageType;
+  storageType: string;
   ready: boolean;
   signedIn?: boolean;
   launchCount: number;
@@ -50,8 +51,9 @@ export interface IUserState {
   alwaysLocate: boolean;
   theme: string;
   theme_accent: string;
-  location: any;
+  location?: any;
   autoImportApi: boolean;
+  needsOnboarding: boolean;
   meta: IUserMeta;
   locked: boolean;
   localSettings: IUserLocalSettings;
@@ -62,18 +64,26 @@ const userInit = () => {
   let listeners = [];
   // User State
   let state: IUserState = {
-    storageType: Storage.local.get("root/storage_type"),
+    // SEt the storage type
+    storageType: getStorageType(),
+    // Is User Ready
     ready: false,
+    // Is the user signedin
     signedIn: undefined,
-    launchCount: Storage.local.get("root/launch_count") || 0,
-    profile: {
-      username: null,
-    },
+    // Number of times app launched
+    launchCount: JSON.parse(localStorage.getItem(`n4/storage/root/launch_count`) || "0"),
+    // Locate when tracking?
     alwaysLocate: JSON.parse(localStorage.getItem(config.always_locate_key) || "false"),
+    // App Theme
     theme: localStorage.getItem(config.theme_key) || "auto",
     theme_accent: localStorage.getItem(`${config.theme_key}-accent`) || "default",
-    location: null,
-    autoImportApi: false,
+    // location: undefined,
+    autoImportApi: JSON.parse(localStorage.getItem("napi-auto") || "false"),
+    // Should user be redirected to /setup
+    needsOnboarding: false,
+    locked: false,
+    // Meta options are synced with blockstack
+    // so its available on all devices
     meta: {
       lock: false,
       pin: undefined,
@@ -81,10 +91,14 @@ const userInit = () => {
       firstDayOfWeek: "1", // 1: Sunday, 2: Monday, etc.
       lastBackup: undefined,
     },
+    // Local settings are only for a specific device
     localSettings: {
-      compactButtons: Storage.local.get("settings/compactButtons") || false,
+      compactButtons: JSON.parse(localStorage.getItem(`${config.data_root}/settings/compactButtons`) || "false"),
     },
-    locked: true,
+    // Blockstack profile holder - not active used
+    profile: {
+      username: null,
+    },
   };
 
   const { subscribe, set, update } = writable(state);
@@ -129,46 +143,33 @@ const userInit = () => {
       // Lets get dark Mode
 
       // Count launch
-      state.launchCount++;
-      Storage.local.put("root/launch_count", state.launchCount);
+      console.log("User initialize", {
+        state,
+      });
+      if (!state.storageType) {
+        // If no storage type - let's on board the user.
+        update((_state) => {
+          _state.signedIn = false;
+          _state.launchCount = 0;
 
-      // Load up the first date found.
-      LedgerStore.getFirstDate();
-
-      if (!Storage._storageType()) {
-        // If no storage type selected
-        // they're not signed in - this should trigger onboarding
-        // in App.svelte
-        update((p) => {
-          p.signedIn = false;
-          p.launchCount = 0;
-          return p;
+          return _state;
         });
       } else {
         // Storage is set - wait for it to be ready
-        Storage.onReady(() => {
-          methods
-            .bootstrap()
-            .then(() => {
-              update((d) => {
-                d.ready = true;
-                d.signedIn = true;
-                d.profile = Storage.getProfile();
-                // d.localSettings.compactButtons = Storage.local.get("settings/compactButtons");
-
-                return d;
-              });
-            })
-            .catch((e) => {
-              console.error(e.message);
+        Storage.onReady(async () => {
+          console.log("Userstore -> Storage.onReady()");
+          try {
+            await methods.bootstrap();
+            update((_state) => {
+              _state.ready = true;
+              _state.signedIn = true;
+              _state.profile = Storage.getProfile();
+              return _state;
             });
+          } catch (e) {
+            Interact.error(e.message);
+          }
         }); // end storage on Ready
-
-        /**
-         * Initiate the Storage Engine
-         * This will do the work depending on if its
-         * blockstack (requiring a login) or localForage
-         */
         Storage.init();
       }
 
@@ -180,8 +181,7 @@ const userInit = () => {
       type = ["blockstack", "local", "pouchdb"].indexOf(type) > -1 ? type : "local";
       update((d) => {
         d.storageType = type;
-        Storage.local.put("root/storage_type", type);
-        d.launchCount = state.launchCount;
+        setStorage(type);
         return d;
       });
       return type;
@@ -207,31 +207,38 @@ const userInit = () => {
      * Set Profile and Signin
      */
     setProfile(profile) {},
-    bootstrap() {
+    async bootstrap() {
+      console.log("User.bootstrap()");
       // First lets get the TrackerStore loaded
+      state.launchCount++;
+      Storage.local.put("root/launch_count", state.launchCount);
+      // Load up the first date found.
+      // LedgerStore.getFirstDate();
+      // Prepare prmpses
       let promises = [];
       promises.push(methods.loadMeta());
       promises.push(methods.loadTrackersAndBoards());
-      return Promise.all(promises)
-        .then(() => {
-          return methods.fireReady(state);
-        })
-        .catch((e) => {
-          console.error("bootstrap", e.message);
-          alert(e.message);
-        });
+
+      try {
+        await Promise.all(promises);
+        return methods.fireReady(state);
+      } catch (e) {
+        Interact.error(e.message);
+      }
     },
-    loadTrackersAndBoards() {
-      return TrackerStore.initialize(this).then((trackers) => {
-        // Now lets load the BoardStore and pass these trackers
-        return BoardStore.initialize(this, trackers).then(() => {
-          // Now let's fire off that we're ready
-          if (state.alwaysLocate) {
-            locate();
-          }
-          return { trackers };
-        });
-      });
+    async loadTrackersAndBoards() {
+      await TrackerStore.initialize(this);
+      return await BoardStore.initialize();
+      // return TrackerStore.initialize(this).then((trackers) => {
+      // Now lets load the BoardStore and pass these trackers
+      // return BoardStore.initialize(this, trackers).then(() => {
+      //   // Now let's fire off that we're ready
+      //   if (state.alwaysLocate) {
+      //     locate();
+      //   }
+      //   return { trackers };
+      // });
+      // });
     },
     reset() {
       update((u) => state);
@@ -306,7 +313,6 @@ const userInit = () => {
       localStorage.setItem(`${config.theme_key}-accent`, accent);
       document.body.classList.add(`theme-${theme}`);
       document.body.classList.add(`${accent}`);
-
       update((u) => {
         u.theme = theme;
         return u;
@@ -379,8 +385,6 @@ const userInit = () => {
     set,
     update,
     ...methods,
-    boards: BoardStore,
-    trackers: TrackerStore,
   };
 };
 

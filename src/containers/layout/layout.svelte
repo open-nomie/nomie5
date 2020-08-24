@@ -1,10 +1,10 @@
 <script lang="ts">
   import AppTabs from "../../containers/layout/tabs.svelte";
 
-  export let style = "";
-  export let className = "";
+  export let style: string = "";
+  export let className: string = "";
   export let pageTitle = undefined;
-  export let showTabs = true;
+  export let showTabs: boolean = true;
   export let headerClassNames = "";
 
   declare var window: any;

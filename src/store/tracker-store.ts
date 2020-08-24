@@ -7,7 +7,7 @@ import Tracker from "../modules/tracker/tracker";
 import StarterPack from "../modules/packs/default-trackers";
 
 // Config
-import config from "../../config/global";
+import config from "../config/appConfig";
 
 import snakeCase from "../utils/snake-case/snake-case";
 import tick from "../utils/tick/tick";
@@ -22,10 +22,15 @@ import { Lang } from "./lang";
 
 // Utils
 import Logger from "../utils/log/log";
+import type { ITrackers } from "../modules/import/import";
 
 const console = new Logger("🌟 TrackerStore 🌟");
 
 class TrackerStoreState {
+  trackers: ITrackers;
+  showTimers: boolean;
+  timers: Array<any>;
+
   constructor() {
     this.trackers = {};
     this.showTimers = false;
@@ -56,7 +61,7 @@ class TrackerStoreState {
 const trackerStoreState = new TrackerStoreState();
 
 const trackerStoreInit = () => {
-  const { update, subscribe, set, get } = writable(trackerStoreState);
+  const { update, subscribe, set } = writable(trackerStoreState);
   const methods = {
     /**
      * Initialization
@@ -217,11 +222,6 @@ const trackerStoreInit = () => {
       return methods.getByTag(tag);
     },
 
-    tagExists(tag) {
-      let trackers = this.getAll();
-      return trackers.hasOwnProperty(tag) ? true : false;
-    },
-
     /**
      *  Populate Nomie with a starter Pack
      *
@@ -259,7 +259,7 @@ const trackerStoreInit = () => {
         Promise.all(promises)
           .then((res) => {
             // Reinitalize the board with the new trackers
-            BoardStore.initialize(this.data());
+            BoardStore.initialize();
             resolve(res);
           })
           .catch(reject);
@@ -298,7 +298,7 @@ const trackerStoreInit = () => {
       }
     },
     async duplicateTracker(tracker) {
-      const label = await Interact.prompt(
+      const label: any = await Interact.prompt(
         "New Label",
         `This will create a duplicate tracker with ${tracker.label}'s settings, but a new tag and label`
       );
@@ -309,7 +309,7 @@ const trackerStoreInit = () => {
           Interact.alert(Lang.t("general.error"), `#${newTag} already exists.`);
         } else {
           // Create new one
-          let newTracker = new Tracker(tracker);
+          let newTracker: Tracker = new Tracker(tracker);
           newTracker.tag = newTag;
           newTracker.label = label;
           // Save the Tracker
@@ -354,11 +354,11 @@ const trackerStoreInit = () => {
       inputFile.type = "file";
       inputFile.click();
       // Input change
-      inputFile.onchange = (event) => {
+      inputFile.onchange = (event: any) => {
         let reader = new FileReader();
-        let file = event.target.files[0];
+        let file: any = event.target.files[0];
         // file on loaded
-        reader.onload = async (theFile) => {
+        reader.onload = async (theFile: any) => {
           try {
             // get data
             let fileData = JSON.parse(theFile.target.result);

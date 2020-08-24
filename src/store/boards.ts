@@ -11,7 +11,7 @@ import { navigate } from "svelte-routing";
 import Storage from "../modules/storage/storage";
 
 // Stores
-import config from "../../config/global";
+import config from "../config/appConfig";
 
 // Utils
 
@@ -19,14 +19,15 @@ import Logger from "../utils/log/log";
 import type { ITrackers } from "../modules/import/import";
 import { Interact } from "./interact";
 import nid from "../modules/nid/nid";
+import Board from "../modules/board/board";
+import Export from "../modules/export/export";
+import { TrackerStore } from "./tracker-store";
 
 //
 
 const console = new Logger("♟ BoardStore ♟");
 
 const boardsInit = () => {
-  let trackers = {};
-
   let base = {
     active: localStorage.getItem("active-board") || "all",
     boards: [],
@@ -37,15 +38,14 @@ const boardsInit = () => {
   const { subscribe, set, update } = writable(base);
 
   const methods = {
-    initialize(UserStore, tkrs: ITrackers) {
-      trackers = tkrs;
-      let boardData = Storage.get(`${config.data_root}/boards.json`).then((boards) => {
-        if (boards) {
-          methods.load(boards);
-        }
-        return boards;
-      });
-      return boardData;
+    async initialize() {
+      console.log("Board Initialize()");
+      // trackers = tkrs;
+      let boards = await Storage.get(`${config.data_root}/boards.json`);
+      if (boards) {
+        methods.load(boards);
+      }
+      return boards;
     },
     setActive(id) {
       if (id) {
@@ -56,6 +56,13 @@ const boardsInit = () => {
           return bs;
         });
       }
+    },
+    export(id: string) {
+      const boards = methods.data();
+      const trackers = TrackerStore.data();
+      console.log({ boards, trackers });
+      let exporter = new Export({ boards: boards });
+      console;
     },
     move(dir: "next" | "previous") {
       update((state) => {
@@ -79,7 +86,7 @@ const boardsInit = () => {
     previous() {
       methods.move("previous");
     },
-    load(boards) {
+    load(boards: Array<Board>) {
       return update((bs) => {
         let map = {};
         // Filter out duplicate ID boards
@@ -108,7 +115,7 @@ const boardsInit = () => {
     _save() {
       let boards;
       update((d) => {
-        let boards = d.boards;
+        boards = d.boards;
         return d;
       });
       if (boards) {
