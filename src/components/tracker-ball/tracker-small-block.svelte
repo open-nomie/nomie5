@@ -3,6 +3,7 @@
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import AvatarBall from "../tracker-ball/ball.svelte";
   import { PeopleStore } from "../../store/people-store";
+  import Text from "../text/text.svelte";
   const dispatch = createEventDispatcher();
 
   export let element = undefined;
@@ -58,10 +59,13 @@
           style={` width:24px; border-radius:32%; overflow:hidden; flex-shrink:0; margin-right:10px;`} />
       {/if}
     {/if}
-    <main class="{truncate ? 'truncate' : ''} w-100">
-      <div class="{truncate ? 'truncate' : ''} label text-inverse">{(element.obj || {}).label || element.id}</div>
+    <main class="{truncate ? 'truncate' : ''} text-left w-100">
+      <Text size="sm" truncate>{(element.obj || {}).label || element.id}</Text>
+
+      <!-- <div class="{truncate ? 'truncate' : ''} label text-inverse">{(element.obj || {}).label || element.id}</div> -->
       {#if shouldShowValue(element)}
-        <div class="value text-inverse">{NomieUOM.format(element.value, (element.obj || {}).uom) || ''}</div>
+        <Text bold style="white-space:pre">{NomieUOM.format(element.value, (element.obj || {}).uom) || ''}</Text>
+        <!-- <div class="value text-inverse">{NomieUOM.format(element.value, (element.obj || {}).uom) || ''}</div> -->
       {/if}
     </main>
   </button>

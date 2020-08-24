@@ -162,7 +162,8 @@
     if (state.searchTerm && state.searchTerm.length) {
       methods.clearSearch();
     } else {
-      navigate("/history");
+      // navigate("/history");
+      window.history.back();
     }
   }
 

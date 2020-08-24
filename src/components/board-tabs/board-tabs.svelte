@@ -44,6 +44,9 @@
       display: none;
     }
   }
+  button.inactive {
+    opacity: 0.7;
+  }
 </style>
 
 <NHScroller activeIndex={state.activeIndex} className="n-board-tabs">

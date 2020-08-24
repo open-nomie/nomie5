@@ -64,6 +64,7 @@
 
   import OfflineQueue from "../../components/offline-queue/offline-queue.svelte";
   import TimeSelect from "../../components/date-time-bar/time-select.svelte";
+  import NPaths from "../../paths";
 
   // Consts
   const console = new Logger("board.svelte");
@@ -146,9 +147,9 @@
 
   function editBoard() {
     if (!$BoardStore.activeBoard) {
-      navigate(`/board/all`);
+      navigate(NPaths.routes.board("all"));
     } else {
-      navigate(`/board/${$BoardStore.activeBoard.id}`);
+      navigate(NPaths.routes.board($BoardStore.activeBoard.id));
     }
   }
   async function deleteBoard() {
@@ -627,7 +628,7 @@
         <!-- IF MORE THAN 13 TRACKERS - SHOW SEARCH ICON-->
         {#if Object.keys($TrackerStore.trackers).length > 13}
           <button class="btn tab tap-icon mt-2 pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
-            <Icon name="search" size={18} className={state.searching ? 'fill-primary-bright' : 'fill-inverse-2'} />
+            <Icon name="search" size={20} className={state.searching ? 'fill-primary-bright' : 'fill-inverse-2'} />
           </button>
         {:else}
           <div class="pr-2" />

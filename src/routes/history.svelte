@@ -170,23 +170,24 @@
       state.location.lat = null;
       state.location.lng = null;
     },
-    clearSearch() {
-      showSearch = false;
-      state.searchTerm = "";
-    },
     previous() {
       methods.getDate(state.date.subtract(1, "day"));
     },
     getDate(date) {
       state.date = date;
       methods.getLogs();
+      methods.scrollTop();
     },
     next() {
       methods.getDate(state.date.add(1, "day"));
     },
+    scrollTop() {
+      document.getElementById("nomie-main").scrollTo(0, 0);
+    },
     goto(date) {
       state.date = date;
       methods.getLogs();
+      methods.scrollTop();
     },
     search() {
       navigate("/search");
@@ -277,10 +278,9 @@
 
   async function refresh() {
     refreshing = true;
-
     await tick(500);
     await methods.getLogs(true);
-    LedgerStore.getMemories();
+    await LedgerStore.getMemories();
     refreshing = false;
   }
 
@@ -390,9 +390,9 @@
   <header slot="header">
     <NToolbar className="container animate in {showSearch ? 'hidden' : 'visible'}">
       <button class="btn btn-clear btn-icon tap-icon" on:click={methods.search}>
-        <NIcon name="search" size="24" />
+        <NIcon name="search" size="20" />
       </button>
-      <div class="{isToday ? 'text-inverse-2' : 'not-today text-red'} filler pl-2 truncate history-title show-scrolled">
+      <div class=" filler pl-2 truncate history-title show-scrolled">
 
         <span class="font-weight-bold mx-1">{state.date.format('ddd')}</span>
         {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
@@ -405,7 +405,7 @@
         <NIcon name="chevronLeft" size="24" />
       </button>
       <button class="btn btn-clear btn-icon tap-icon" on:click={methods.selectDate}>
-        <NIcon name="calendar" size="18" />
+        <NIcon name="calendar" size="18" className={isToday ? '' : 'fill-red'} />
       </button>
       <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.next}>
         <NIcon name="chevronRight" size="24" />
