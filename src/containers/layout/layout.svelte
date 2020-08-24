@@ -12,8 +12,9 @@
   function generateContent() {
     return new Array(300).fill("hello").join(" ");
   }
-  let scollingTimeout;
 
+  // Controll Scrolling
+  let scollingTimeout;
   function scrolling(evt: any) {
     window.clearTimeout(scollingTimeout);
     document.body.classList.add("scrolling");
@@ -50,7 +51,7 @@
     </header>
     <div class="layout-header-fade" />
   {/if}
-  <main class="layout-main" on:scroll={scrolling}>
+  <main id="nomie-main" class="layout-main" on:scroll={scrolling}>
     {#if hasContent}
       <slot name="content" />
     {:else}
