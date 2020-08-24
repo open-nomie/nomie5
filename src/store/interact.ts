@@ -587,7 +587,7 @@ const interactInit = () => {
         }, options.timeout);
       }
     },
-    error(message) {
+    async error(message) {
       return methods.alert(Lang.t("general.error", "Error"), message);
     },
     confirm(title: string, message: string, ok?: string, cancel?: string) {
