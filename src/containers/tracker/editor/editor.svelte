@@ -23,7 +23,7 @@
   import PointsEditor from "../points-editor.svelte";
 
   // Stores
-  import config from "../../../../config/global";
+  import config from "../../../config/appConfig";
   import { UserStore } from "../../../store/user-store";
   import { Interact } from "../../../store/interact";
   import { TrackerStore } from "../../../store/tracker-store";

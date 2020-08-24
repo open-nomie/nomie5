@@ -12,7 +12,7 @@ import Logger from "../utils/log/log";
 // Vendors
 import Storage from "../modules/storage/storage";
 
-import config from "../../config/global";
+import config from "../config/appConfig";
 import Location from "../modules/locate/Location";
 import distance from "../modules/locate/distance";
 

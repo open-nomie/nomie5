@@ -24,7 +24,7 @@ function getTrackers(fileData: any): ITrackers {
     // Search for an emoti by name
     // let emojis = EmojiSearch(ot.label.toLowerCase());
     // Set new tracker object
-    let tracker: ITracker = {
+    let tracker: any = {
       tag: dashCase(ot.label),
       label: ot.label,
       color: ot.color,

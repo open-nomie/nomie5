@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import config from "../../../config/global";
+  import config from "../../config/appConfig";
   import LogList from "./log-list.svelte";
   import NItem from "../list-item/list-item.svelte";
   import NSpinner from "../spinner/spinner.svelte";
@@ -15,7 +15,7 @@
   import Text from "../text/text.svelte";
   import { UserStore } from "../../store/user-store";
   import Storage from "../../modules/storage/storage";
-  import global from "../../../config/global";
+  import global from "../../config/appConfig";
   import Spinner from "../spinner/spinner.svelte";
 
   export let term = null;

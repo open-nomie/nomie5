@@ -21,7 +21,7 @@
   import LogItem from "../components/list-item-log/list-item-log.svelte";
   import NSearchBar from "../components/search-bar/search-bar.svelte";
 
-  import config from "../../config/global";
+  import config from "../config/appConfig";
 
   // Containers
   import NMap from "../containers/map/map.svelte";
@@ -41,7 +41,7 @@
   import { Device } from "../store/device-store";
   import Storage from "../modules/storage/storage";
   import { getURLParams } from "../utils/url-parser/url-parser";
-  import global from "../../config/global";
+  import global from "../config/appConfig";
   import Icon from "../components/icon/icon.svelte";
   import Text from "../components/text/text.svelte";
 

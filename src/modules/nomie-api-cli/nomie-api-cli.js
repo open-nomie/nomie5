@@ -7,7 +7,7 @@
  */
 
 import Storage from "../storage/storage";
-import Config from "../../../config/global";
+import Config from "../../config/appConfig";
 
 const NAPI_STORE_PATH = `${Config.data_root}/napi.json`;
 

@@ -13,7 +13,7 @@
   import NPage from "../containers/layout/page.svelte";
 
   // config
-  import faq from "../../config/faq";
+  import faq from "../config/faq";
 
   export let path = null;
 </script>

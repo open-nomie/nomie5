@@ -6,10 +6,11 @@ import Logger from "../utils/log/log";
 
 // Vendors
 import Storage from "../modules/storage/storage";
-import config from "../../config/global";
-import { Dashboard } from "../modules/dashboard/dashboard";
+import config from "../config/appConfig";
+
 import { Widget } from "../modules/dashboard/widget";
 import { Interact } from "./interact";
+import { Dashboard } from "../modules/dashboard/dashboard";
 
 // Stores
 

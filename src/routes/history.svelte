@@ -24,7 +24,7 @@
   import NSearchBar from "../components/search-bar/search-bar.svelte";
   import OfflineQueue from "../components/offline-queue/offline-queue.svelte";
 
-  import config from "../../config/global";
+  import config from "../config/appConfig";
 
   // Containers
   import NMap from "../containers/map/map.svelte";

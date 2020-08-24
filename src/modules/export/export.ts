@@ -1,7 +1,7 @@
 // Modules
 import Storage from "../storage/storage";
 // stores
-import config from "../../../config/global";
+import config from "../../config/appConfig";
 import { LedgerStore } from "../../store/ledger";
 import { Interact } from "../../store/interact";
 import { PeopleStore } from "../../store/people-store";
@@ -10,6 +10,11 @@ import { DashboardStore } from "../../store/dashboard-store";
 import { ContextStore } from "../../store/context-store";
 //vendors
 import dayjs from "dayjs";
+import type Board from "../board/board";
+import type NLog from "../nomie-log/nomie-log";
+import type { Dashboard } from "../dashboard/dashboard";
+import type Location from "../locate/Location";
+import type { ITrackers, IPeople } from "../import/import";
 
 export interface IBackupItems {
   nomie: {
@@ -18,12 +23,12 @@ export interface IBackupItems {
     startDate: string;
     endDate: string;
   };
-  boards: Array<any>;
-  events: Array<any>;
-  trackers: any;
-  people: any;
-  locations: Array<any>;
-  dashboards: Array<any>;
+  boards: Array<Board>;
+  events: Array<NLog>;
+  trackers: ITrackers;
+  people: IPeople;
+  locations: Array<Location>;
+  dashboards: Array<Dashboard>;
   context: Array<string>;
 }
 
@@ -43,13 +48,13 @@ export default class Export {
         startDate: new Date().toJSON(),
         endDate: new Date().toJSON(),
       },
-      boards: [],
-      events: [],
-      trackers: {},
-      people: {},
-      locations: [],
-      dashboards: [],
-      context: [],
+      boards: options.boards || [],
+      events: options.events || [],
+      trackers: options.trackers || {},
+      people: options.people || {},
+      locations: options.locations || [],
+      dashboards: options.dashboards || [],
+      context: options.context || [],
     };
   }
 

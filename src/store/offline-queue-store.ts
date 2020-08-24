@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import config from "../../config/global";
+import config from "../config/appConfig";
 // utils
 import NStorage from "../modules/storage/storage";
 import NLog from "../modules/nomie-log/nomie-log";

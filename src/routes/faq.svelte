@@ -14,7 +14,7 @@
   import NLayout from "../containers/layout/layout.svelte";
 
   // config
-  import faq from "../../config/faq";
+  import faq from "../config/faq";
 </script>
 
 <NLayout className="faq" pageTitle="Common Questions about Nomie" showTabs={false}>

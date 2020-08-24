@@ -1,5 +1,6 @@
 import type NLog from "../nomie-log/nomie-log";
 import type { Dashboard } from "../dashboard/dashboard";
+import type TrackerConfig from "../tracker/tracker";
 import type { ITracker } from "../tracker/tracker";
 import { N1ImportNormalizer } from "./import.n1";
 import { N2ImportNormalizer } from "./import.n2";
@@ -9,7 +10,7 @@ import type { IPerson } from "../person/person";
 // import type { ILocation } from "../locate/Location";
 
 export interface ITrackers {
-  [key: string]: ITracker;
+  [key: string]: TrackerConfig;
 }
 
 export interface IPeople {

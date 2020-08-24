@@ -14,7 +14,7 @@ import Logger from "../utils/log/log";
 import Storage from "../modules/storage/storage";
 
 // Get Config
-import config from "../../config/global";
+import config from "../config/appConfig";
 import dayjs from "dayjs";
 
 // Stores

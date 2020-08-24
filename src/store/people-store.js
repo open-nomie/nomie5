@@ -16,7 +16,7 @@ import NomieLog from "../modules/nomie-log/nomie-log";
 import Storage from "../modules/storage/storage";
 
 // Get Config
-import config from "../../config/global";
+import config from "../config/appConfig";
 
 import { LedgerStore } from "./ledger";
 import { Interact } from "./interact";

@@ -40,7 +40,7 @@
   import { ContextStore } from "../store/context-store";
 
   // Config
-  import config from "../../config/global";
+  import config from "../config/appConfig";
   import Features from "../containers/settings/features.svelte";
   import Tweaks from "../containers/settings/tweaks.svelte";
   import Text from "../components/text/text.svelte";
@@ -404,6 +404,13 @@ Note: Your data will not automatically move over. You'll first need to export it
               </NItem>
               <NItem title="Built">
                 <span slot="right">APP_BUILD_DATE</span>
+              </NItem>
+              <NItem
+                title="Setup Complete"
+                on:click={() => {
+                  navigate('/setup');
+                }}>
+                <span slot="right" class="text-primary-bright">Show Again</span>
               </NItem>
             </div>
           {/if}

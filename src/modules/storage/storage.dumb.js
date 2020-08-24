@@ -5,7 +5,7 @@
  */
 
 import { tick } from "svelte";
-import Config from "../../../config/global";
+import Config from "../../config/appConfig";
 
 // Vendors
 

@@ -4966,6 +4966,7 @@ button:focus {
   opacity: 0.3; }
 
 .btn {
+  border: none;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   border-radius: 8px;
@@ -4994,8 +4995,7 @@ button:focus {
 
 .btn-primary {
   background-color: var(--color-primary-bright);
-  box-shadow: 0px 6px 12px -6px var(--color-primary-bright);
-  border: none; }
+  box-shadow: 0px 6px 12px -6px var(--color-primary-bright); }
   .btn-primary:hover {
     color: #fff;
     box-shadow: 0px 3px 6px -3px var(--color-primary-bright); }
@@ -5039,14 +5039,6 @@ button:focus {
     .btn-content {
       max-width: 280px;
       width: 280px; } }
-  .btn-content .text-md {
-    font-weight: bold;
-    margin-bottom: 6px; }
-  .btn-content .text-sm {
-    font-size: 0.72rem !important;
-    line-height: 1rem !important;
-    font-weight: 400;
-    opacity: 0.7; }
   .btn-content.active {
     content: "✓";
     border: none;
@@ -5274,6 +5266,17 @@ body {
   --color-translucent: rgba(255, 255, 255, 0.89);
   --input-background: #eee;
   --input-focus-background: #fff;
+  --color-grey-0: rgb(5, 5, 5);
+  --color-grey-1: rgb(25, 25, 25);
+  --color-grey-2: rgb(50, 50, 50);
+  --color-grey-3: rgb(75, 75, 75);
+  --color-grey-4: rgb(100, 100, 100);
+  --color-grey-5: rgb(125, 125, 125);
+  --color-grey-6: rgb(150, 150, 150);
+  --color-grey-7: rgb(175, 175, 175);
+  --color-grey-8: rgb(200, 200, 200);
+  --color-grey-9: rgb(225, 225, 225);
+  --color-grey-10: rgb(250, 250, 250);
   --box-shadow-tight: 0px 3px 5px -2px rgba(0, 0, 0, 0.2);
   --box-shadow: 0px 8px 18px -10px rgba(0, 0, 0, 0.2);
   --box-shadow-float: 0 4px 8px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.08), 0 0 2px rgba(0, 0, 0, 0.14);
@@ -5358,6 +5361,17 @@ body.theme-dark {
   --header-fade: linear-gradient(180deg, rgba(0, 0, 0, 1) 35%, rgba(20, 20, 20, 0) 100%);
   --footer-background: rgba(10, 10, 10, 1);
   --footer-fade: linear-gradient(0deg, rgba(10, 10, 10, 1) 52%, rgba(10, 10, 10, 0.711922268907563) 72%, rgba(10, 10, 10, 0) 100%);
+  --color-grey-10: rgb(5, 5, 5);
+  --color-grey-9: rgb(25, 25, 25);
+  --color-grey-8: rgb(50, 50, 50);
+  --color-grey-7: rgb(75, 75, 75);
+  --color-grey-6: rgb(100, 100, 100);
+  --color-grey-5: rgb(125, 125, 125);
+  --color-grey-4: rgb(150, 150, 150);
+  --color-grey-3: rgb(175, 175, 175);
+  --color-grey-2: rgb(200, 200, 200);
+  --color-grey-1: rgb(225, 225, 225);
+  --color-grey-0: rgb(250, 250, 250);
   --header-background: #111;
   --tabs-background: #111;
   --tracker-background: rgb(5, 5, 5);
@@ -5368,7 +5382,7 @@ body.theme-dark {
   --color-solid-half: rgb(14, 9, 9);
   --color-solid-1: rgb(35, 35, 35);
   --color-solid-2: rgb(39, 39, 39);
-  --color-solid-3: rgb(73, 73, 73);
+  --color-solid-3: rgb(50, 50, 50);
   --color-inverse: #fff;
   --color-inverse-1: #eee;
   --color-inverse-2: #ccc;
@@ -7363,7 +7377,8 @@ aside.n-panel {
     color: var(--color-inverse);
     box-shadow: var(--box-shadow-float);
     background-color: var(--color-solid);
-    border: none; }
+    border: none;
+    max-width: 320px; }
     .page-setup .slide .btn-content.active {
       background-color: var(--color-primary-bright);
       color: #fff; }

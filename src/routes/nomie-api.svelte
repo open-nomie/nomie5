@@ -31,7 +31,7 @@
   // containers
   import NPage from "../containers/layout/page.svelte";
   // config
-  import faq from "../../config/faq";
+  import faq from "../config/faq";
   // Stores
   import { LedgerStore } from "../store/ledger";
   import { Interact } from "../store/interact";

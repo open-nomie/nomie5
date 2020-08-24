@@ -37,7 +37,7 @@
   import { DashboardStore } from "../../store/dashboard-store";
   import { LedgerStore } from "./../../store/ledger.js";
   import { PeopleStore } from "./../../store/people-store.js";
-  import { TrackerStore } from "./../../store/tracker-store.js";
+  import { TrackerStore } from "../../store/tracker-store";
   import { LastUsed } from "../../store/last-used";
   import type Person from "../../modules/person/person";
   import HScroller from "../../components/h-scroller/h-scroller.svelte";
