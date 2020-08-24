@@ -55,6 +55,7 @@
   import Text from "../../components/text/text.svelte";
   import NPaths from "../../paths";
   import StatsTime from "./stats-time.svelte";
+  import regex from "../../utils/regex";
 
   export const timeSpans = {
     d: { id: "d", label: "D", title: "Day", unit: "day" },
@@ -451,7 +452,11 @@
 
   async function setSelected(selected) {
     if (state.selected !== selected) {
-      _setSelected(selected);
+      try {
+        _setSelected(selected);
+      } catch (e) {
+        Interact.error(e.message);
+      }
     }
   }
   async function _setSelected(selected) {
@@ -481,7 +486,7 @@
 
     if (dataViews.logs.focused) {
       state.selected.rows = rows.filter((row) => {
-        return row.note.match(state.trackableElement.toSearchTerm());
+        return row.note.match(regex.escape(state.trackableElement.toSearchTerm()));
       });
     } else {
       state.selected.rows = rows;

@@ -1,6 +1,6 @@
 import searchTokenizer from "./search-tokenizer";
 import latinize from "./latinize";
-import regex from "../../utils/regex";
+import regex from "../regex";
 
 export interface ISearchOptions {
   fields?: Array<string>;

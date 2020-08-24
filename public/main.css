@@ -5240,7 +5240,7 @@ body {
   overflow: hidden;
   --color-darkest: #fff;
   --color-darkest-translucent: rgba(255, 255, 255, 0.89);
-  --color-bg: #f8f8f8;
+  --color-bg: #eee;
   --space-gap: 8pt;
   --color-input-background: rgba(0, 0, 0, 0.1);
   --tracker-background: #fff;
@@ -6922,7 +6922,8 @@ aside.n-panel {
   flex-direction: row;
   flex-wrap: wrap;
   padding: 0 6px 10px;
-  justify-content: flex-start; }
+  justify-content: flex-start;
+  padding: 6px; }
   .tracker-grid button {
     width: calc(50% - 1px);
     min-height: 70px; }
@@ -6932,7 +6933,7 @@ aside.n-panel {
 
 .n-tracker-value-grid-button {
   justify-content: flex-start;
-  padding: 0;
+  padding: 0 0 0;
   min-height: 50px; }
   .n-tracker-value-grid-button:active {
     background-color: var(--color-solid-1); }
@@ -6985,24 +6986,24 @@ aside.n-panel {
       margin-right: 6px; }
 
 .n-item-log {
-  width: calc(100% - 16pt);
-  margin: 16pt 8pt;
+  width: calc(100% - 16px);
+  margin: 16px 8px;
   padding: 0px;
-  border-radius: 16pt;
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: var(--box-shadow); }
   .n-item-log .time-row {
-    padding: 8pt 16pt; }
-    .n-item-log .time-row .date-ago {
-      font-size: 10pt;
-      opacity: 0.5; }
+    padding: 8px 16px 16px;
+    border-bottom: solid 1px var(--color-solid-1);
+    margin-bottom: 2px; }
   .n-item-log .main {
     padding-left: 0; }
+  .n-item-log .context.n-row {
+    background-color: var(--color-solid-half); }
   .n-item-log .n-note-textualized {
-    padding: 16pt !important;
+    padding: 16px !important;
     font-size: 1.1rem;
-    line-height: 136%;
-    border-top: solid 1px var(--color-solid-2); }
+    line-height: 136%; }
     .n-item-log .n-note-textualized.long-note {
       font-size: 0.97rem; }
   .n-item-log .trackers-list {

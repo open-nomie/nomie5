@@ -1,6 +1,7 @@
 import snakeCase from "../../utils/snake-case/snake-case";
 import stringToValue from "../../utils/string-to-value/string-to-value";
 import extractor from "../../utils/extract/extract";
+import regex from "../../utils/regex";
 
 export type ITrackableElementType = "tracker" | "person" | "context" | "generic" | "line-break" | "link";
 export interface ITrackableElement {
@@ -93,6 +94,8 @@ export default class TrackableElement {
   }
 
   public toSearchTerm(): string {
+    // let term = regex.escape(`${this.prefix}${this.id}`);
+    // console.log({ toSearchTerm: term });
     return `${this.prefix}${this.id}`;
   }
 }
