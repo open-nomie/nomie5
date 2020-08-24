@@ -24,18 +24,18 @@
   <div class="overview py-2 flex-grow flex-shrink">
     {#if stats.math == 'sum'}
       <ListItem className="solo" title="Total">
-        <div slot="right" class="text-lg text-inverse">{formatValue(stats.sum)}</div>
+        <div slot="right" class="text-lg text-inverse">{formatValue(math.round(stats.sum, 100))}</div>
       </ListItem>
     {/if}
     <ListItem className="solo" title="Average">
-      <div slot="right" class="text-lg text-inverse">{formatValue(stats.avg)}</div>
+      <div slot="right" class="text-lg text-inverse">{formatValue(math.round(stats.avg, 100))}</div>
     </ListItem>
     {#if stats.max.value > stats.min.value}
       <ListItem className="solo" title="Range">
         <div slot="right" class="text-lg text-inverse value">
-          {formatValue(stats.min.value, false)}
+          {formatValue(math.round(stats.min.value, 100), false)}
           <span class="text-faded-2 font-weight-normal">to</span>
-          {formatValue(stats.max.value)}
+          {formatValue(math.round(stats.max.value, 100))}
         </div>
       </ListItem>
     {/if}

@@ -27,31 +27,23 @@
     color: var(--color-inverse);
     line-height: 116%;
     white-space: normal;
+    line-height: 125%;
+
+    &.line-height-md {
+      line-height: 140%;
+    }
 
     &.xs {
       font-size: 0.7rem;
-      &.line-height-md {
-        line-height: 0.8rem;
-      }
     }
     &.sm {
       font-size: 0.85rem;
-      line-height: 0.95rem;
-      &.line-height-md {
-        line-height: 1rem;
-      }
     }
     &.md {
       font-size: 1rem;
-      &.line-height-md {
-        line-height: 1.2rem;
-      }
     }
     &.lg {
       font-size: 1.25rem;
-      &.line-height-md {
-        line-height: 1.4rem;
-      }
     }
 
     &.faded {

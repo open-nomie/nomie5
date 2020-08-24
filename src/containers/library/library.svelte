@@ -106,7 +106,6 @@
           </div>
         {/if}
         <TrackerButton
-          hideMore={true}
           {tracker}
           on:click={() => {
             toggleTrackerInstalled(tracker);
