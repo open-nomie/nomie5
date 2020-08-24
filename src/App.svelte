@@ -39,7 +39,7 @@
   import { DashboardStore } from "./store/dashboard-store"; // Store for holding Post Context (categories)
   import { AppStore } from "./store/app-store";
   import { Locations } from "./store/locations";
-  import config from "../config/global";
+  import config from "./config/appConfig";
   import { OfflineQueue } from "./store/offline-queue-store";
   // import Storage from "./containers/storage/storage.svelte";
   import Storage from "./modules/storage/storage";
@@ -137,59 +137,16 @@
     hidden = "webkitHidden";
     visibilityChange = "webkitvisibilitychange";
   }
-  // document.addEventListener(
-  //   visibilityChange,
-  //   () => {
-  //     methods.setDocParams({ hidden });
-  //   },
-  //   false
-  // );
-
-  /**
-   * Offline Watching
-   */
 
   window.addEventListener("load", () => {
     methods.setDocParams();
   });
 
-  /**
-   * Scroll Monitoring
-   * adds a window var and class to body that denotes scrolling
-   * this will used to stop events from happening on tracker buttons
-   * when the user is scrolling
-   */
-  // window.scrolling = false;
-  // let scollingTimeout;
-
-  // window.addEventListener(
-  //   "scroll",
-  //   (event) => {
-  //     console.log("Scrolling");
-  //     // Clear our timeout throughout the scroll
-  //     window.clearTimeout(scollingTimeout);
-  //     // Set a timeout to run after scrolling ends
-  //     scollingTimeout = setTimeout(function () {
-  //       document.body.classList.remove("scrolling");
-  //     }, 200);
-  //     document.body.classList.add("scrolling");
-  //   },
-  //   false
-  // );
-
-  /**
-   * Lastly...
-   *
-   * USER SETUP
-   * Main Script to initialize the user
-   *
-   */
-
-  UserStore.initialize();
   let ready = false;
 
   // Used to make sure that boards and trackers are loaded
   UserStore.onReady(async () => {
+    console.log("User on Ready");
     // Set the user if they're logged in
     ready = true;
 
@@ -201,54 +158,61 @@
 
     // Run any commands if needed
     setTimeout(() => {
-      // If there are any URL caommands, it will run here.
+      // Pull upp the offline queue
       OfflineQueue.init();
+      // If there are any URL caommands, it will run here.
       CommanderStore.run();
       // If they have the API - it will load here
       NomieAPI.load();
     }, 500);
   });
 
-  // onMount(() => {});
+  onMount(() => {
+    UserStore.initialize();
+  });
 </script>
 
-{#if $UserStore.signedIn === true && !newDay}
-  <RouterView />
-  <WhatsNewModal />
-{:else if $UserStore.signedIn == undefined || newDay}
-  <div class="empty-notice" style="height:calc(100vh - 75px)">
-    <Spinner />
-  </div>
-{:else if $UserStore.signedIn === false}
+{#if !ready && $UserStore.signedIn === false}
   <SetupRoute />
 {/if}
 
-<!-- Global Modals, alerts, menus, etc-->
-{#if $Interact.stats.terms.length}
-  <StatsModal />
-{/if}
-{#if $TrackerLibrary.show}
-  <LibraryModal />
-{/if}
-{#if $Interact.people.active}
-  <PersonModal />
-{/if}
-{#if $Interact.blocker.show}
-  <div id="ui-blocker" class="full-screen bg-translucent n-panel center-all">
-    <Spinner size="16" />
-    <span class="text-white ml-2">{$Interact.blocker.message}</span>
-  </div>
-{/if}
-<Interactions />
-<StreakModal />
-<OnThisDayModal />
-<!-- 
+{#if ready}
+  {#if $UserStore.signedIn === true && !newDay}
+    <RouterView />
+    <WhatsNewModal />
+  {:else if $UserStore.signedIn == undefined || newDay}
+    <div class="empty-notice" style="height:calc(100vh - 75px)">
+      <Spinner />
+    </div>
+  {/if}
+
+  <!-- Global Modals, alerts, menus, etc-->
+  {#if $Interact.stats.terms.length}
+    <StatsModal />
+  {/if}
+  {#if $TrackerLibrary.show}
+    <LibraryModal />
+  {/if}
+  {#if $Interact.people.active}
+    <PersonModal />
+  {/if}
+  {#if $Interact.blocker.show}
+    <div id="ui-blocker" class="full-screen bg-translucent n-panel center-all">
+      <Spinner size="16" />
+      <span class="text-white ml-2">{$Interact.blocker.message}</span>
+    </div>
+  {/if}
+  <Interactions />
+  <StreakModal />
+  <OnThisDayModal />
+  <!-- 
   TODO: .. 
   <OnThisDayModal /> -->
 
-{#if $UserStore.storageType == 'blockstack' && $Device.offline}
-  <div class="offline-notice text-center">No connection to Blockstack.</div>
+  {#if $UserStore.storageType == 'blockstack' && $Device.offline}
+    <div class="offline-notice text-center">No connection to Blockstack.</div>
+  {/if}
+  <div id="photo-holder">
+    <img id="photo-holder-image" alt="avatar-holder" />
+  </div>
 {/if}
-<div id="photo-holder">
-  <img id="photo-holder-image" alt="avatar-holder" />
-</div>

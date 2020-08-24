@@ -9,7 +9,7 @@
 import LocalForageEngine from "./engine.localforage";
 import BlockStackEngine from "./engine.blockstack";
 import PouchDBEngine from "./engine.pouchdb";
-import Config from "../../../config/global";
+import Config from "../../config/appConfig";
 
 class SideStore {
   dbPath: string;
@@ -27,23 +27,40 @@ class SideStore {
   }
 }
 
+export function getStorageType() {
+  let type: string = localStorage.getItem("n4/storage/root/storage_type");
+  if (type) {
+    return type.replace(/\"/g, "");
+  } else {
+    return null;
+  }
+}
+
+export type StorageTypes = "local" | "blockstack" | "pouchdb";
+
+export function setStorage(type: StorageTypes) {
+  localStorage.setItem("n4/storage/root/storage_type", type);
+}
+
+console.log("Storage type", getStorageType());
+
 const Storage = {
   engines: {
     blockstack: BlockStackEngine,
     local: LocalForageEngine,
     pouchdb: PouchDBEngine,
   },
-  engine: null,
+  engine: getStorageType(),
   // Get user storage type
-  storageType() {
+  storageType(): string {
     return this.engine || this._storageType() || "local";
     // return "pouchdb";
   },
   _storageType() {
-    return this.local.get("root/storage_type");
+    return getStorageType();
   },
-  setType(type) {
-    this.local.put("root/storage_type", type);
+  setType(type: StorageTypes) {
+    setStorage(type);
   },
   getEngine() {
     try {
@@ -91,6 +108,7 @@ const Storage = {
   },
   // This local is reference to storage on the device ONLY... Regardless of storage engine.
   // So this  stuff wouldn't sync with blockstack or other storage engines
+  // Aug 24th Also adding some migration
   local: {
     get(path) {
       return JSON.parse(localStorage.getItem(`n4/storage/${path}`) || "null");

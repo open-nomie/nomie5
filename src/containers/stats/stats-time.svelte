@@ -7,7 +7,7 @@
 
   export let term: string;
   export let color: string;
-  export let rows: Array<NLog>;
+  // export let rows: Array<NLog>;
   export let stats: IStats;
 </script>
 

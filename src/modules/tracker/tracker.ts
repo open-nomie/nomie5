@@ -28,7 +28,7 @@ export interface ITracker {
   include?: string; // Content to always include when tracking this tracker
   note?: string; // Content to include when a note tracker
   hidden?: boolean; // Hidden from All Board
-  started?: Date; // If its started (and a timer based tracker)
+  started?: number; // If its started (and a timer based tracker)
   picks?: Array<string>; // Picks for a Picker type of tracker
 }
 
@@ -52,7 +52,7 @@ export default class TrackerConfig {
   include?: string; // Content to always include when tracking this tracker
   note?: string; // Content to include when a note tracker
   hidden?: boolean; // Hidden from All Board
-  started?: Date; // If its started (and a timer based tracker)
+  started?: number; // If its started (and a timer based tracker)
   picks?: Array<string>; // Picks for a Picker type of tracker
   private _dirty?: boolean;
 
