@@ -9,6 +9,7 @@
   import { Lang } from "../../store/lang";
   import { TrackerStore } from "../../store/tracker-store";
   import { FeatureStore } from "../../store/feature-store";
+  import NPaths from "../../paths";
   const state = {
     mounted: false,
   };
@@ -106,13 +107,6 @@
       transform: scale(1.1);
       &:after {
         content: "";
-        // position: absolute;
-        // bottom: -6px;
-        // left: 20%;
-        // right: 20%;
-        // height: 4px;
-        // border-radius: 2px;
-        // background-color: var(--color-primary-bright);
       }
     }
   }
@@ -122,13 +116,13 @@
   <nav id="app-tabs" class="">
     <div class="n-row mw-500px mx-auto">
 
-      <Link to="/history">
+      <Link to={NPaths.routes.history()}>
         <Icon name="calendar" />
         <label>{Lang.t('tabs.history')}</label>
       </Link>
 
       {#if $FeatureStore.dashboard}
-        <Link to="/dashboard">
+        <Link to={NPaths.routes.dashboard()}>
           <Icon name="report" />
           <label>{Lang.t('tabs.dashboard', 'Dash')}</label>
         </Link>
@@ -143,13 +137,13 @@
       </Link>
 
       {#if $FeatureStore.people}
-        <Link to="/people">
+        <Link to={NPaths.routes.people()}>
           <Icon name="people" />
           <label>{Lang.t('tabs.people')}</label>
         </Link>
       {/if}
 
-      <Link to="/settings">
+      <Link to={NPaths.routes.settings()}>
         <Icon name="settings" />
         <label>{Lang.t('tabs.settings')}</label>
       </Link>
