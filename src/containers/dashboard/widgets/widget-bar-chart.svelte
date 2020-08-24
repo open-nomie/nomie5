@@ -2,6 +2,7 @@
   import BarChart from "../../../components/charts/bar-chart-2.svelte";
   import { getWidgetColor } from "../dashboard-helpers";
   import type { Widget } from "../../../modules/dashboard/widget";
+  import { element } from "svelte/internal";
   export let widget: Widget;
 </script>
 
@@ -25,11 +26,12 @@
       color={getWidgetColor(widget)}
       labels={widget.stats.chart.values.map((point) => point.x)}
       points={widget.stats.chart.values}
-      xFormat={(x, index) => {
-        return x;
-      }}
       yFormat={(y) => {
-        return y;
+        if (widget.element.type == 'tracker') {
+          return widget.element.obj.displayValue(y);
+        } else {
+          return y;
+        }
       }} />
   </div>
 {/if}
