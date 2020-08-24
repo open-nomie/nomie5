@@ -183,7 +183,7 @@
         className={logMeta.trackers.length ? '' : 'pb-2'} />
     {/if}
 
-    {#if logMeta.trackers.length || logMeta.people.length || logMeta.context.length}
+    {#if logMeta.trackers.length || logMeta.people.length}
       <div class="tracker-grid n-row">
         {#each displayLog.people as person}
           <NTrackerSmallBlock
@@ -218,20 +218,20 @@
             }} />
         {/each}
       </div>
-      {#if logMeta.context.length}
-        <div class="context n-row px-2 pb-2">
-          {#each logMeta.context as context}
-            <button
-              class="btn btn-badge faded"
-              on:click={() => {
-                Interact.openStats(`+${context}`);
-                dispatch('contextClick', { context: context, log });
-              }}>
-              +{context.id}
-            </button>
-          {/each}
-        </div>
-      {/if}
+    {/if}
+    {#if logMeta.context.length}
+      <div class="context n-row px-2 py-1">
+        {#each logMeta.context as context}
+          <button
+            class="btn btn-badge btn-xs faded"
+            on:click={() => {
+              Interact.openStats(context.raw);
+              dispatch('contextClick', { context: context, log });
+            }}>
+            +{context.id}
+          </button>
+        {/each}
+      </div>
     {/if}
 
   </NItem>

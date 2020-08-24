@@ -29,7 +29,7 @@
     white-space: normal;
 
     &.xs {
-      font-size: 0.65rem;
+      font-size: 0.7rem;
       &.line-height-md {
         line-height: 0.8rem;
       }

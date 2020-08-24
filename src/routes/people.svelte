@@ -21,6 +21,7 @@
   import { PeopleStore } from "../store/people-store";
   import { Interact } from "../store/interact";
   import { LedgerStore } from "../store/ledger";
+  import Text from "../components/text/text.svelte";
 
   let state = {
     people: [],
@@ -128,7 +129,7 @@
       {/if}
 
       {#each state.people as person}
-        <NItem truncate clickable={false} className="py-2 clickable solo box-shadow mb-3 mr-0 filler">
+        <NItem bottomLine truncate clickable={false} className="py-3">
           <div slot="left">
             {#if $PeopleStore.people[person] && $PeopleStore.people[person].avatar}
               <AvatarBall size={48} avatar={$PeopleStore.people[person].avatar} style={`border-radius:32%; overflow:hidden`} />
@@ -136,27 +137,27 @@
               <AvatarBall size={48} username={$PeopleStore.people[person].displayName} style={`border-radius:32%; overflow:hidden`} />
             {/if}
           </div>
-          <div class="title truncate w-100">{($PeopleStore.people[person] || {}).displayName}</div>
+          <Text medium lineHeightMd truncate>{($PeopleStore.people[person] || {}).displayName}</Text>
           {#if $PeopleStore.people[person] && $PeopleStore.people[person].last}
-            <div class="note">{dayjs($PeopleStore.people[person].last).fromNow()}</div>
+            <Text size="sm" faded className="mt-1">{dayjs($PeopleStore.people[person].last).fromNow()}</Text>
           {/if}
           <div slot="right" class="n-row">
             <button
-              class="btn btn-clear tap-icon p-1 mr-1"
+              class="btn btn-clear tap-icon px-3 mr-1"
               on:click={(evt) => {
                 personClicked(person);
               }}>
-              <NIcon name="addOutline" className="fill-primary-bright" size={18} />
+              <NIcon name="addOutline" className="fill-primary-bright" size={24} />
             </button>
             <button
-              class="btn btn-clear tap-icon "
+              class="btn btn-clear tap-icon px-3"
               on:click={(evt) => {
                 evt.preventDefault();
                 evt.stopImmediatePropagation();
                 evt.stopPropagation();
                 Interact.openStats(`@${person}`);
               }}>
-              <NIcon name="chart" className="fill-primary-bright" size={18} />
+              <NIcon name="chart" className="fill-primary-bright" size={24} />
             </button>
           </div>
         </NItem>
