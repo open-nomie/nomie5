@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   //Vendors
   import { onMount } from "svelte";
   import { navigate, Router, Route } from "svelte-routing";
@@ -43,6 +43,7 @@
 
   let state = {
     registered: false,
+    message: null,
     ready: false,
     logs: [],
     hidden: [],
@@ -69,7 +70,7 @@
     let apiKey = null;
     let privateKey = null;
 
-    apiKey = await Interact.prompt("API Key");
+    apiKey = await Interact.prompt("API Key", "Paste your API key");
     privateKey = await Interact.prompt("Private Key", "Paste your privatekey", {
       valueType: "textarea",
     });
@@ -89,7 +90,6 @@
   const methods = {
     init() {
       // Let's look for NomieAPICli
-
       NAPI.onReady(() => {
         if (NAPI.isRegistered()) {
           methods.getLogs();
@@ -119,40 +119,37 @@
     toggleShowPrivateKey() {
       state.showPrivateKey = !state.showPrivateKey;
     },
-    register() {
-      state.ready = false;
+    async register() {
+      Interact.blocker("Requesting an API Key...");
       state.message = "Registering...";
-      NAPI.register().then((payload) => {
-        methods.init();
-      });
+      await NAPI.register();
+      Interact.blocker("Installing new API Key");
+      await tick(500);
+      window.location.reload();
     },
-    getLogs() {
+    async getLogs() {
       state.ready = false;
-      return NAPI.logs().then((logs) => {
-        state.ready = true;
-        state.logs = logs.sort((a, b) => {
-          return a.date > b.date ? -1 : 1;
-        });
-        return state.logs;
+      let logs: Array<any> = await NAPI.logs();
+      state.ready = true;
+      state.logs = logs.sort((a, b) => {
+        return a.date > b.date ? -1 : 1;
       });
+      return state.logs;
     },
-    clear() {
-      NAPI.clear().then(() => {
-        state.logs = [];
-      });
+    async clear() {
+      await NAPI.clear();
+      state.logs = [];
     },
-    unregister() {
-      Interact.confirm("Destroy this API Key?", "This cannot be undone").then((res) => {
-        if (res === true) {
-          NAPI.unregister()
-            .then(() => {
-              state.registered = false;
-            })
-            .catch((e) => {
-              Interact.alert("Error", e.message);
-            });
+    async unregister() {
+      let confirmed: boolean = await Interact.confirm("Destroy this API Key?", "This cannot be undone");
+      if (confirmed === true) {
+        try {
+          await NAPI.unregister();
+          state.registered = false;
+        } catch (e) {
+          Interact.error(e.message);
         }
-      });
+      }
     },
     confirmClear() {
       Interact.confirm("Clear Logs?", "This will delete the remaining items and cannot be undone.").then((res) => {
@@ -266,7 +263,7 @@
                   methods.capture(apiLog);
                 }}>
                 {#if state.capturingId === apiLog.id}
-                  <Spinner color="#FFF" size="24" />
+                  <Spinner color="#FFF" size={24} />
                   Saving
                 {:else}
                   <NIcon name="checkmarkOutline" className="fill-white mr-2" />
