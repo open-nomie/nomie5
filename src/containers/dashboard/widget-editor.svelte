@@ -165,6 +165,9 @@
   .widget-top {
     box-shadow: var(--box-shadow-float);
   }
+  .dashwidget-editor {
+    min-height: 300px;
+  }
 </style>
 
 <div class="dashwidget-editor">

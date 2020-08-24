@@ -390,7 +390,7 @@
   <header slot="header">
     <NToolbar className="container animate in {showSearch ? 'hidden' : 'visible'}">
       <button class="btn btn-clear btn-icon tap-icon" on:click={methods.search}>
-        <NIcon name="search" size="20" />
+        <NIcon name="search" size={24} />
       </button>
       <div class=" filler pl-2 truncate history-title show-scrolled">
 
@@ -402,13 +402,13 @@
         <!-- end text middle -->
       </div>
       <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.previous}>
-        <NIcon name="chevronLeft" size="24" />
+        <NIcon name="chevronLeft" size={24} />
       </button>
       <button class="btn btn-clear btn-icon tap-icon" on:click={methods.selectDate}>
-        <NIcon name="calendar" size="18" className={isToday ? '' : 'fill-red'} />
+        <NIcon name="calendar" size={24} className={isToday ? '' : 'fill-red'} />
       </button>
       <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.next}>
-        <NIcon name="chevronRight" size="24" />
+        <NIcon name="chevronRight" size={24} />
       </button>
     </NToolbar>
 
@@ -428,7 +428,7 @@
   <main slot="content" class="page page-history flex-column">
 
     <div class="container p-0">
-      <Text size="xl" bold className="history-title px-3">
+      <Text size="xl" bold className="history-title px-3 mt-2">
         {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
       </Text>
 
