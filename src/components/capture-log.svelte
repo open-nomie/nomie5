@@ -201,11 +201,15 @@
       $ActiveLogStore.score = $ActiveLogStore.score || ScoreNote($ActiveLogStore.note, new Date().getTime());
     },
     async logSave() {
+      saving = true;
+      console.log("Save Log - starts now", "");
       methods.calculateScore();
       try {
         await LedgerStore.saveLog($ActiveLogStore); // TODO: Make ledger task instead
+        saving = false;
       } catch (e) {
         console.error("Error in capture-log logSave", e.message);
+        saving = false;
       }
       methods.clear();
     },
@@ -526,7 +530,7 @@
   -->
 
   <div class="capture-log">
-    <div class="save-progress {saved ? 'saved' : ''} {saving ? 'saving' : ''}" />
+    <div class="save-progress {saved ? 'saved' : ''} {saving ? 'saving' : ''} {$LedgerStore.saving ? 'saving' : ''}" />
     <div class="container p-0">
 
       <!-- Auto Complet e-->
@@ -562,18 +566,17 @@
           on:keydown={methods.keyPress}
           on:paste={methods.keyPress} />
 
-        {#if !saving}
-          <button class="save-button" on:click={methods.logSave}>
-            <NIcon name="sendFilled" style="fill: #FFF;" size="16" />
-          </button>
-        {:else}
+        {#if $LedgerStore.saving}
           <button class="save-button">
             <NSpinner size={20} color="#FFFFFF" />
+          </button>
+        {:else}
+          <button class="save-button" on:click={methods.logSave}>
+            <NIcon name="sendFilled" style="fill: #FFF;" size="16" />
           </button>
         {/if}
       </div>
     </div>
-
   </div>
   {#if state.advanced}
     <div class="advanced">

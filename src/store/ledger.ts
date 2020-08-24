@@ -35,7 +35,7 @@ import arrayUtils from "../utils/array/array_utils";
 import textUtils from "../utils/text/text";
 
 // Config
-import config from "../../config/global";
+import config from "../config/appConfig";
 
 // Stores
 import { Interact } from "./interact";
@@ -162,8 +162,10 @@ const ledgerInit = () => {
      * first track
      */
     async getFirstDate(fresh = false) {
+      // Let's get the cache if one exists
       let defaultPayload = { date: null, lastChecked: null };
       let bookDetails = Storage.local.get(`firstBook`) || defaultPayload;
+      // If the cache is older than 2 days - let's refresh
       let age = bookDetails.lastChecked ? Math.abs(dayjs(bookDetails.lastChecked).diff(dayjs(), "day")) : 100;
       if (age > 2 || fresh) {
         // Get list of books
@@ -509,24 +511,24 @@ const ledgerInit = () => {
     async saveLog(log): Promise<void> {
       log = await methods.prepareLog(log);
       try {
-        if (!window.offline || Storage.getEngine().name !== "Blockstack") {
-          return await this._saveLog(log);
-        } else {
-          throw Error("offline");
-        }
+        await this._saveLog(log);
       } catch (e) {
         /**
          * Check if Offline or GaiaHub Error
          */
-        if (e.message.match(/(fetch|offline|connect)/) && Storage.getEngine().name == "Blockstack") {
+        if (Storage.storageType() == "blockstack") {
           // Save this to the Offline Queue
           let saved = await OfflineQueue.record(log);
           if (saved) {
-            Interact.toast("😐 Cloud Save Failed", {
+            Interact.toast("😐 Saving to blockstack failed", {
               description: `Log has been saved to the Offline Queue`,
               timeout: 3000,
             });
             ActiveLogStore.clear();
+            update((state) => {
+              state.saving = false;
+              return state;
+            });
             methods.hooks.run("onLogSaved", log);
           } else {
             throw new Error("save failed to queue");
@@ -536,7 +538,10 @@ const ledgerInit = () => {
         }
       }
     },
-
+    /**
+     * Real Save Log function - used only in saveLog method.
+     * @param log
+     */
     async _saveLog(log: NLog) {
       // Set up a holder for current state
       let currentState = state({
@@ -544,28 +549,28 @@ const ledgerInit = () => {
       });
 
       try {
-        // Set the time
-
         // Set the date for the book
         let date = dayjs(new Date(log.end)).format(config.book_time_format);
-
         // Set Path
         let bookPath = `${config.data_root}/books/${date}`; // path to book
-        // Update if out of sync with Server
-
         // Get the Book - if its blockstack then make sure it exists
         let book = await methods.getBookWithSync(date);
-        book.push(log); // push log
+        // Push the log
+        book.push(log);
         // Save Book.
-        await Storage.put(bookPath, book); // put the content
-        currentState.books[date] = book; // update state
+        await Storage.put(bookPath, book);
+        // Set the current state book to this one
+        currentState.books[date] = book;
         // Save Last Update to server
         let timeString = new Date().toJSON();
+        // get the Last Updated
         let lastDatePath = methods.getLastUpdatePath(date);
         //await - removing to see if that speeds things up
         // Split this off, so it doesn't slow down the rest
         setTimeout(() => {
+          // Put the last Used
           Storage.put(lastDatePath, timeString);
+          // Add lastUpdated to state
           currentState.booksLastUpdate[date] = timeString;
           // Set the Last Used for Trackers in this log
           LastUsed.record(log);
@@ -601,7 +606,7 @@ const ledgerInit = () => {
         return { log, date };
       } catch (e) {
         console.error("_saveLog error", e.message);
-        throw e;
+        throw new Error(e.message);
       }
     },
 
@@ -613,21 +618,21 @@ const ledgerInit = () => {
      * @param {Array} logs
      */
     async deleteLogs(logs) {
-      return new Promise((resolve, reject) => {
-        // Set up target books
-        let targets = {};
-        // Loop over the Logs
-        logs.forEach((log) => {
-          // Determin the book it's from by the date
-          let book = dayjs(log.end).format(config.book_time_format);
-          // Set book if not set
-          targets[book] = targets[book] || [];
-          // Push Log ID to book
-          targets[book].push(log._id);
-        });
-        // Holder of Promises - kinda of like me as a dad - it's empty by default.
-        let promises = [];
-        // Loop over targe books
+      // Set up target books
+      let targets = {};
+      // Loop over the Logs
+      logs.forEach((log) => {
+        // Determin the book it's from by the date
+        let book = dayjs(log.end).format(config.book_time_format);
+        // Set book if not set
+        targets[book] = targets[book] || [];
+        // Push Log ID to book
+        targets[book].push(log._id);
+      });
+      // Holder of Promises - kinda of like me as a dad - it's empty by default.
+      let promises = [];
+      // Loop over targe books
+      update((_state) => {
         Object.keys(targets).forEach(async (date) => {
           // Use date to get the book
           let book = await methods.getBook(date);
@@ -639,23 +644,18 @@ const ledgerInit = () => {
           });
           // Update the store to use the new book
           // TODO: this doesn't seem to be trigger a change in History.svetle
-          update((b) => {
-            b.books[date] = newBook;
-            return b;
-          });
+          _state.books[date] = newBook;
+
           // Add to promise the saving of the book
           promises.push(methods.putBook(date, newBook));
         });
-        // Wait for all promises to be finished, then resolve
-        Promise.all(promises)
-          .then((results) => {
-            // Delete them from the local logs
-            // methods.deleteCachedLogsById(logIds);
-            methods.hooks.run("onLogsDeleted", results);
-            resolve(promises);
-          })
-          .catch(reject);
+
+        return _state;
       });
+      // Wait for all promises to be finished, then resolve
+      let results = await Promise.all(promises);
+      methods.hooks.run("onLogsDeleted", results);
+      return results;
     },
     import(rows, statusFunc) {
       statusFunc = statusFunc || function () {};
@@ -750,7 +750,7 @@ const ledgerInit = () => {
 
       if (yearsDiff > 1) {
         for (var y = 0; y < yearsDiff; y++) {
-          if (y !== 0 && y < 5) {
+          if (y !== 0 && y < 6) {
             times.push(dayjs().subtract(y, "year"));
           }
         }
@@ -809,7 +809,8 @@ const ledgerInit = () => {
       // End Time
       let endTime = dayjs(options.end || new Date()).endOf("day");
       // Diff Betwen the two
-      let diff = endTime.diff(startTime, config.book_time_unit);
+      const bookFormat: any = config.book_time_unit || "week";
+      let diff = endTime.diff(startTime, bookFormat);
       // Define array of "book paths" to get
       let books_to_get = [];
       let state = methods.getState(); // get ledger state;
@@ -825,7 +826,7 @@ const ledgerInit = () => {
           // Push each of the formated dates YYYY-w to an array
           books_to_get.push(
             dayjs(startTime)
-              .add(i + 1, config.book_time_unit)
+              .add(i + 1, bookFormat)
               .format(config.book_time_format)
           );
         }
