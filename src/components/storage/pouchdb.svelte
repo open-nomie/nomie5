@@ -10,6 +10,7 @@
   import Storage from "../../modules/storage/storage";
   import Remote from "../../modules/remote/remote";
   import URLParser from "../../utils/url-parser/url-parser"; // Get URL Parser
+  import Button from "../button/button.svelte";
 
   let pouchEngine; // Holder for the pouchEngine
   let connecting = false;
@@ -25,6 +26,7 @@
     },
     success: false,
     syncing: false,
+    canSync: false,
   };
 
   const methods = {
@@ -36,6 +38,7 @@
         state.form.username = state.remote.username;
         state.form.password = state.remote.password;
         state.form.database = state.remote.database;
+        state.canSync = true;
       }
     },
     isValidURL() {
@@ -53,50 +56,54 @@
         password: state.form.password || "".length ? state.form.password : null,
         syncEnabled: true,
       });
+      state.canSync = true;
       pouchEngine.saveRemote(remote);
     },
     startSync() {
       state.syncing = true;
+      state.remote.syncEnabled = true;
+      pouchEngine.saveRemote(state.remote);
       pouchEngine.startSync();
     },
     stopSync() {
       state.syncing = false;
       pouchEngine.stopSync();
+      state.remote.syncEnabled = false;
     },
     async connect() {
-      connecting = true;
-      let connection = methods.getConnectionURL();
-      // Make a connection to pouch
-      let testPouch = new PouchDB(connection, {
-        auth: {
-          username: state.form.username,
-          password: state.form.password,
-        },
-      });
-      testPouch
-        .info()
-        .then(async (info) => {
-          // If we get some data back - we're good
-          // See if user wants to save this.
-          let shouldSave = await Interact.confirm(
-            Lang.t("general.success"),
-            "Connected successfully! Would you like to save this connection?"
-          );
-          // If should save
-          if (shouldSave) {
-            methods.saveRemote();
-            setTimeout(() => {
-              methods.startSync();
-              state.syncing = true;
-            }, 120);
-          }
-          connecting = false;
-        })
-        .catch((e) => {
-          console.error("error connecting", e.message);
-          Interact.alert(Lang.t("general.error-connecting", "Error Connecting"), Lang.t("storage.pouchdb.credentials-failed", e.message));
-          connecting = false;
+      try {
+        connecting = true;
+        let connection = methods.getConnectionURL();
+        // Make a connection to pouch
+        let testPouch = new PouchDB(connection, {
+          auth: {
+            username: state.form.username,
+            password: state.form.password,
+          },
         });
+        // Try and get info
+        let test = await testPouch.info();
+        console.log("CouchTest", test);
+        // Confirm that we should save it - if it doesn't error
+        let shouldSave = await Interact.confirm(
+          Lang.t("general.success"),
+          "Connected successfully! Would you like to save this connection?"
+        );
+        // If should save
+        if (shouldSave) {
+          methods.saveRemote();
+          setTimeout(() => {
+            methods.startSync();
+            state.syncing = true;
+            state.remote.syncEnabled = true;
+          }, 120);
+        }
+        connecting = false;
+      } catch (e) {
+        console.error("error connecting", e.message);
+        Interact.alert(Lang.t("general.error-connecting", "Error Connecting"), Lang.t("storage.pouchdb.credentials-failed", e.message));
+        connecting = false;
+      }
     },
     /**
      * Generate a Connection URL for Pouch
@@ -115,17 +122,14 @@
         state.isValidSyncURL = urlDetails.valid;
         let connection = null;
         if (mask) {
-          connection = `${urlDetails.protocol}//${state.form.username}:${dotted(state.form.password)}@${urlDetails.host}${
-            urlDetails.pathname
+          connection = `${urlDetails.url.protocol}//${state.form.username}:${dotted(state.form.password)}@${urlDetails.url.host}${
+            urlDetails.url.pathname
           }${state.form.database}`;
         } else {
-          connection = `${urlDetails.protocol}//${urlDetails.host}/${state.form.database}`;
+          connection = `${urlDetails.url.protocol}//${urlDetails.url.host}/${state.form.database}`;
         }
         return connection;
       } catch (e) {
-        console.error("Thrown error on urlparser", e);
-        // alert(e.message);
-        // It's an invalid URL
         state.isValidSyncURL = false;
         return "";
       }
@@ -164,6 +168,8 @@
     pouchEngine = Storage.getEngine();
     // Get Remote Settings
     state.remote = pouchEngine.getRemote();
+
+    console.log("State Remove", state.remote);
     // Wait for it to be ready
     pouchEngine.onReady(() => {
       // Wait for syncer to turn on
@@ -179,22 +185,23 @@
 
 {#if pouchEngine}
   <div class="pouchdb storage-option">
-    <NItem>
-      <div class="truncate">Sync to CouchDB</div>
-      <div slot="right">
-        <NToggle
-          bind:value={state.remote.syncEnabled}
-          on:change={(event) => {
-            if (event.detail == false) {
-              methods.stopSync();
-            } else if (event.detail === true) {
-              pouchEngine.startSync();
-            }
-          }} />
-      </div>
-    </NItem>
+    {#if state.canSync}
+      <NItem title="Sync">
+        <div slot="right">
+          <NToggle
+            bind:value={state.remote.syncEnabled}
+            on:change={(event) => {
+              if (event.detail == false) {
+                methods.stopSync();
+              } else if (event.detail === true) {
+                methods.startSync();
+              }
+            }} />
+        </div>
+      </NItem>
+    {/if}
 
-    {#if state.syncing}
+    <!-- {#if state.syncing}
       <div class="data-syncing">
         <NItem title="Syncing" className="text-red clickable" on:click={methods.stopSync}>
           <div slot="right">
@@ -202,11 +209,11 @@
           </div>
         </NItem>
       </div>
-    {/if}
+    {/if} -->
 
     {#if !state.syncing}
       <div class="data-sync-enabled">
-        <NItem description="Host your own CouchDB server and to sync your data in near-real time across multiple devices." />
+        <NItem description="BETA! Host your own CouchDB server and to sync your data in near-real-time." />
 
         <NItem className="input py-0">
           <NInput
@@ -222,9 +229,9 @@
             <div class="n-row text-xs" style="flex-wrap:wrap">
               <div class="mr-1">
                 <strong>
-                  {state.urlDetails.protocol == 'https:' ? 'Secure' : 'Not Secure'}:
+                  {state.urlDetails.url.protocol == 'https:' ? 'Secure' : 'Not Secure'}:
                 </strong>
-                {state.urlDetails.protocol == 'https:' ? '★' : '✗'}
+                {state.urlDetails.url.protocol == 'https:' ? '★' : '✗'}
               </div>
               <div class="mr-1">
                 <strong>Host:</strong>
@@ -269,17 +276,21 @@
           </div>
         </NItem>
 
-        <NItem className="text-xs text-faded-3">{connectionString}</NItem>
-        {#if state.isValidSyncURL}
-          {#if !connecting}
-            <NItem className="clickable text-primary text-center" on:click={methods.connect}>Connect...</NItem>
-          {:else}
-            <NItem className="clickable text-primary text-center" on:click={methods.connect}>
-              <NSpinner size={20} />
-              Connecting...
-            </NItem>
-          {/if}
+        {#if connectionString}
+          <NItem className="text-xs text-faded-3">{connectionString}</NItem>
         {/if}
+        <NItem>
+          {#if state.isValidSyncURL}
+            {#if !connecting}
+              <Button block size="sm" on:click={methods.connect}>Connect...</Button>
+            {:else}
+              <Button block size="sm">
+                <NSpinner size={20} />
+                Connecting...
+              </Button>
+            {/if}
+          {/if}
+        </NItem>
 
       </div>
     {/if}
