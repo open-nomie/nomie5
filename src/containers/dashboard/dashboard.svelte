@@ -357,7 +357,7 @@
   }
 
   async function deleteDashboard() {
-    let confirmed = await Interact.confirm("Delete dashboard?", "You cannot undo this action.");
+    let confirmed = await Interact.confirm(`Delete ${activeDashboard.label} dashboard?`, "This cannot be undone, just rebuilt.");
     if (confirmed) {
       await DashboardStore.delete(activeDashboard);
     }
@@ -420,8 +420,8 @@
           {#if people && trackers}
             {#if activeDashboard.widgets.length == 0}
               <div class="center-all p-5 n-panel vertical">
-                <Text faded size="lg">😔 Empty Dashboard</Text>
-                <Button size="xs" className="mt-2" on:click={newWidget}>Add a Widget...</Button>
+                <Text faded size="md">Empty Dashboard</Text>
+                <Button size="xs" className="mt-4" on:click={newWidget}>Add a Widget</Button>
               </div>
             {/if}
 
@@ -437,7 +437,7 @@
         <div class="board-actions filler">
           <div class="btn-group filler">
             <Button on:click={newWidget} color="clear">
-              <Text size="sm">{Lang.t('general.add', 'Add')} Widget</Text>
+              <Text size="sm">{Lang.t('general.add', 'Add')}</Text>
             </Button>
             <Button on:click={toggleEdit} color="clear">
               <Text size="sm">{Lang.t('general.edit', 'Edit')}</Text>

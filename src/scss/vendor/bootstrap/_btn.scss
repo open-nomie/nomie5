@@ -118,6 +118,15 @@ button:focus {
   opacity: 0.3;
 }
 
+.pop-menu .btn[disabled] {
+  background-color: var(--color-grey-9);
+  color: var(--color-inverse-3);
+  opacity: 0.65;
+}
+
+.pop-menu .btn:focus {
+}
+
 .btn {
   border: none;
   cursor: pointer;
@@ -362,7 +371,7 @@ button:focus {
   border: none;
   color: var(--color-inverse-1);
   &[disabled] {
-    opacity: 0.2;
+    opacity: 0.5;
   }
 }
 .btn-square {

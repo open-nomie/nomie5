@@ -4965,6 +4965,11 @@ button:focus {
 .btn:disabled {
   opacity: 0.3; }
 
+.pop-menu .btn[disabled] {
+  background-color: var(--color-grey-9);
+  color: var(--color-inverse-3);
+  opacity: 0.65; }
+
 .btn {
   border: none;
   cursor: pointer;
@@ -5148,7 +5153,7 @@ button:focus {
   border: none;
   color: var(--color-inverse-1); }
   .btn-clear[disabled] {
-    opacity: 0.2; }
+    opacity: 0.5; }
 
 .btn-square {
   border-radius: 0 !important; }
@@ -7344,89 +7349,89 @@ aside.n-panel {
       bottom: 1000px;
       opacity: 0; }
 
-.page-setup .setup-main {
-  flex-grow: 1;
-  flex-shrink: 1;
-  display: flex;
-  height: 100%;
-  align-items: center;
-  justify-content: center; }
-
-.page-setup .center-grow {
-  flex-grow: 1;
-  flex-shrink: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column; }
-  .page-setup .center-grow a {
-    color: var(--color-inverse);
-    border-bottom: dotted 1px #ccc; }
-
-.page-setup .slide {
-  z-index: 10;
-  flex-grow: 1;
-  flex-shrink: 1;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s ease-in-out;
-  background-color: var(--local-background);
-  color: var(--color-inverse);
-  margin: 0 16px; }
-  .page-setup .slide .btn-content {
-    color: var(--color-inverse);
-    box-shadow: var(--box-shadow-float);
-    background-color: var(--color-solid);
-    border: none;
-    max-width: 320px; }
-    .page-setup .slide .btn-content.active {
-      background-color: var(--color-primary-bright);
-      color: #fff; }
-  .page-setup .slide a {
-    color: var(--color-primary-bright) !important;
-    text-decoration: underline;
-    border-bottom: none !important; }
-  .page-setup .slide p {
-    max-width: 400px; }
-  .page-setup .slide .top {
-    flex-direction: column;
-    flex-grow: 0;
-    flex-shrink: 0;
+.page-setup {
+  background-color: var(--color-solid) !important; }
+  .page-setup .setup-main {
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center; }
+  .page-setup .center-grow {
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    align-items: center; }
-    .page-setup .slide .top h1 {
-      text-align: center;
-      padding-top: env(safe-area-inset-top); }
-    .page-setup .slide .top p {
-      font-size: 0.8rem;
-      line-height: 1rem;
-      opacity: 0.7;
-      text-align: center; }
-  @media (min-width: 600px) {
-    .page-setup .slide .mobile-message {
-      display: none; } }
-  .page-setup .slide .bottom {
-    z-index: 0;
-    flex-grow: 0;
-    flex-shrink: 0;
-    height: calc(50vh - 20px);
+    flex-direction: column; }
+    .page-setup .center-grow a {
+      color: var(--color-inverse);
+      border-bottom: dotted 1px #ccc; }
+  .page-setup .slide {
+    z-index: 10;
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
     flex-direction: column;
-    padding: 0 16px; }
-    .page-setup .slide .bottom h1 {
-      font-size: 1.5rem;
-      font-weight: bolder;
-      text-align: center; }
-      @media (max-width: 349.98px) {
-        .page-setup .slide .bottom h1 {
-          font-size: 1.2rem; } }
-    .page-setup .slide .bottom p {
-      font-size: 0.8rem;
-      line-height: 120%;
-      text-align: center;
-      color: var(--color-inverse-3); }
-      @media (max-width: 349.98px) {
-        .page-setup .slide .bottom p {
-          font-size: 0.7rem; } }
+    transition: all 0.3s ease-in-out;
+    background-color: var(--bg-solid);
+    color: var(--color-inverse);
+    margin: 0 16px; }
+    .page-setup .slide .btn-content {
+      color: var(--color-inverse);
+      box-shadow: var(--box-shadow-float);
+      background-color: var(--color-solid);
+      border: none;
+      max-width: 320px; }
+      .page-setup .slide .btn-content.active {
+        background-color: var(--color-primary-bright);
+        color: #fff; }
+    .page-setup .slide a {
+      color: var(--color-primary-bright) !important;
+      text-decoration: underline;
+      border-bottom: none !important; }
+    .page-setup .slide p {
+      max-width: 400px; }
+    .page-setup .slide .top {
+      flex-direction: column;
+      flex-grow: 0;
+      flex-shrink: 0;
+      justify-content: center;
+      align-items: center; }
+      .page-setup .slide .top h1 {
+        text-align: center;
+        padding-top: env(safe-area-inset-top); }
+      .page-setup .slide .top p {
+        font-size: 0.8rem;
+        line-height: 1rem;
+        opacity: 0.7;
+        text-align: center; }
+    @media (min-width: 600px) {
+      .page-setup .slide .mobile-message {
+        display: none; } }
+    .page-setup .slide .bottom {
+      z-index: 0;
+      flex-grow: 0;
+      flex-shrink: 0;
+      height: calc(50vh - 20px);
+      flex-direction: column;
+      padding: 0 16px; }
+      .page-setup .slide .bottom h1 {
+        font-size: 1.5rem;
+        font-weight: bolder;
+        text-align: center; }
+        @media (max-width: 349.98px) {
+          .page-setup .slide .bottom h1 {
+            font-size: 1.2rem; } }
+      .page-setup .slide .bottom p {
+        font-size: 0.8rem;
+        line-height: 120%;
+        text-align: center;
+        color: var(--color-inverse-3); }
+        @media (max-width: 349.98px) {
+          .page-setup .slide .bottom p {
+            font-size: 0.7rem; } }
 
 /**
 THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 
@@ -7445,17 +7450,20 @@ TODO: Organize main into components or containers.
 .gap {
   height: 16px; }
 
-.board-actions {
-  max-width: 300px !important; }
-  .board-actions .btn-group {
-    background-color: var(--color-solid);
-    box-shadow: var(--box-shadow-tight); }
-    .board-actions .btn-group .btn .n-text {
-      color: var(--color-inverse-2) !important; }
-    .board-actions .btn-group .btn {
-      border-right: solid 1px var(--color-solid-1); }
-      .board-actions .btn-group .btn:last-child {
-        border-right: none; }
+.board-actions .btn-group {
+  flex-grow: 0;
+  flex-shrink: 1;
+  display: flex;
+  background-color: var(--color-solid);
+  box-shadow: var(--box-shadow-tight); }
+  .board-actions .btn-group .btn .n-text {
+    color: var(--color-inverse-2) !important; }
+  .board-actions .btn-group .btn {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    border-right: solid 1px var(--color-solid-1); }
+    .board-actions .btn-group .btn:last-child {
+      border-right: none; }
 
 .library-modal .n-modal-body {
   background-color: var(--color-bg) !important; }

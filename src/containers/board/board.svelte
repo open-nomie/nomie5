@@ -46,7 +46,7 @@
   import ScoreTracker from "../../modules/scoring/score-tracker";
 
   // data
-  import tips from "../../../config/tips";
+  import tips from "../../config/tips";
 
   //Stores
   import { ActiveLogStore } from "../../store/active-log";
@@ -198,6 +198,42 @@
         )
         .filter((tracker) => tracker);
     }
+  }
+
+  async function boardOptions() {
+    let buttons = [
+      {
+        title: "Add a Tracker",
+        async click() {
+          await tick(200);
+          methods.addButtonTap();
+        },
+      },
+      {
+        title: "Reorder Trackers",
+        async click() {
+          editBoard();
+        },
+      },
+      {
+        title: "Delete Tab...",
+        disabled: $BoardStore.active === "all",
+        async click() {
+          deleteBoard();
+        },
+      },
+      {
+        title: "Share as Tracker Pack",
+        click() {
+          console.log("Download", $BoardStore);
+        },
+      },
+    ];
+
+    Interact.popmenu({
+      title: `Board Options`,
+      buttons: buttons,
+    });
   }
 
   // Component Methods
@@ -548,7 +584,6 @@
 
   .n-board {
     padding: 0px 0px;
-    background-color: var(--color-bg);
     min-height: 50vh;
     display: flex;
     flex-direction: column;
@@ -787,13 +822,14 @@
           <!-- Include User Tips - shit should be a component -->
 
         </main>
-        <div class="board-actions mt-5 mb-2" style="min-width:200px;">
+        <div class="board-actions mt-5 mb-2" style="min-width:140px;">
           <div class="btn-group filler">
             <Button on:click={editBoard} color="clear">
-              <Text size="sm">{Lang.t('general.edit-tab', 'Edit Tab')}</Text>
+              <Text size="sm">{Lang.t('general.edit', 'Edit')}</Text>
             </Button>
-            <Button on:click={deleteBoard} color="clear" disabled={!$BoardStore.activeBoard}>
-              <Text size="sm">{Lang.t('general.delete', 'Delete')}</Text>
+            <Button on:click={boardOptions} color="clear">
+              <Text size="sm">{Lang.t('general.more', 'More')}</Text>
+              <Icon name="chevronDown" size={14} className="ml-1" />
             </Button>
           </div>
 

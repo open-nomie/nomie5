@@ -148,6 +148,7 @@
     <div class="list">
       {#each buttons as button}
         <button
+          disabled={button.disabled}
           class="btn btn-block btn-light btn-lg {button.description ? 'btn-desc' : ''}"
           on:click|stopPropagation={() => {
             button.click();

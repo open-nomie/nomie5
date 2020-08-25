@@ -78,14 +78,18 @@ TODO: Organize main into components or containers.
 }
 
 .board-actions {
-  max-width: 300px !important;
   .btn-group {
+    flex-grow: 0;
+    flex-shrink: 1;
+    display: flex;
     background-color: var(--color-solid);
     box-shadow: var(--box-shadow-tight);
     .btn .n-text {
       color: var(--color-inverse-2) !important;
     }
     .btn {
+      padding-left: 14px !important;
+      padding-right: 14px !important;
       border-right: solid 1px var(--color-solid-1);
       &:last-child {
         border-right: none;
