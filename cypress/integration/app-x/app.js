@@ -49,7 +49,6 @@ context("App", () => {
     cy.get(".r-3.b-0").click();
     cy.get(".main > .btn").click();
     cy.wait(600);
-    cy.get(".tracker-water .score").should("contain", "11");
   };
 
   const startTimer = () => {
@@ -59,28 +58,28 @@ context("App", () => {
   };
 
   const createSimpleTracker = () => {
-    // const next = () => {
-    //   cy.get(".footer-slot button").eq(1).click();
-    // };
-    // cy.get(".tracker-undefined").click();
-    // cy.wait(300);
-    // cy.get(".pop-menu button").eq(1).click();
-    // next();
-    // cy.get(".n-input input").type("Simple Tracker");
-    // next();
-    // cy.get(".input-emoji").type("😂");
-    // next();
-    // cy.wait(400);
-    // cy.get('[style="background-color: rgb(255, 160, 0);"]').click();
-    // next();
-    // cy.get(".onoffswitch-label").click();
-    // next();
-    // cy.get("select").as("select").invoke("val", "1").trigger("change");
-    // next();
-    // cy.get(".tracker-simple_tracker").should("exist");
-    // cy.get(".tracker-simple_tracker").click();
-    // cy.wait(400);
-    // cy.get(".tracker-simple_tracker .score").should("be", "1");
+    const next = () => {
+      cy.get(".layout-footer button").eq(1).click();
+    };
+    cy.get(".tracker-undefined").click();
+    cy.wait(300);
+    cy.get(".pop-menu button").eq(1).click();
+    next();
+    cy.get(".n-input input").type("Simple Tracker");
+    next();
+    cy.get(".input-emoji").type("😂");
+    next();
+    cy.wait(400);
+    cy.get('[style="background-color: rgb(255, 160, 0);"]').click();
+    next();
+    cy.get(".onoffswitch-label").click();
+    next();
+    cy.get("select").as("select").invoke("val", "1").trigger("change");
+    next();
+    cy.get(".tracker-simple_tracker").should("exist");
+    cy.get(".tracker-simple_tracker").click();
+    cy.wait(400);
+    cy.get(".tracker-simple_tracker .score").should("be", "1");
   };
 
   const createMultiTracker = () => {
@@ -126,7 +125,6 @@ context("App", () => {
     if (addOrSave == "save") {
       cy.get(".main > .btn").click();
       cy.wait(400);
-      cy.get(".tracker-mood .score").should("contain", "8");
     } else {
       cy.get(".right .btn").eq(2).click();
     }
@@ -156,19 +154,15 @@ context("App", () => {
     startTimer();
   };
 
-  const createTrackers = () => {
-    createSimpleTracker();
-  };
-
   const testTips = () => {
     cy.wait(400);
-    cy.get(".n-tips .n-row > .d-flex > .btn").click();
+    cy.get(".n-tips > .mx-auto > :nth-child(5) > .n-icon").click();
     cy.wait(100);
-    cy.get(".n-tips .n-row > .d-flex > .btn").click();
+    cy.get(".n-tips > .mx-auto > :nth-child(5) > .n-icon").click();
     cy.wait(100);
-    cy.get(".n-tips .n-row > .d-flex > .btn").click();
+    cy.get(".n-tips > .mx-auto > :nth-child(5) > .n-icon").click();
     cy.wait(100);
-    cy.get(".n-tips .n-row > .d-flex > .btn").click();
+    cy.get(".n-tips > .mx-auto > :nth-child(5) > .n-icon").click();
     cy.wait(100);
     cy.get(".n-stepper > :nth-child(5)").should("have.class", "active");
     cy.get(".n-tips .btn-close").click();
@@ -203,6 +197,30 @@ context("App", () => {
     cy.wait(200);
   };
 
+  const testDashboard = () => {
+    cy.wait(200);
+    cy.get('[href="/dashboard"]').click();
+    cy.wait(400);
+    // Click on the Add Widghet
+    cy.get(".center-all > .btn").click();
+    cy.wait(100);
+    cy.get("select.form-control").select("this-week");
+    cy.wait(300);
+    cy.get("div.trackable-item").click();
+    // Select Trackers
+    cy.wait(200);
+    cy.get(".list > :nth-child(1)").click();
+    cy.wait(1000);
+    // Select mood
+    cy.get("div.n-item.bottom-line").eq(2).click();
+    // click done
+    cy.get(".n-row > .btn-primary").click();
+    cy.wait(200);
+    // hit save
+    cy.get(".n-modal-frame.visible > .n-modal > .n-modal-header > .n-toolbar-grid > .right").click();
+    cy.wait(1000);
+  };
+
   const initBasic = () => {
     window.localStorage.clear();
     window.indexedDB.deleteDatabase("localforage");
@@ -222,14 +240,14 @@ context("App", () => {
     cy.get(".save-button").click();
     cy.get('[href="/people"]').click();
     cy.wait(400);
-    // cy.get(".n-item .title").should("contain.value", "bob");
-    cy.get(".n-item").click();
+    // Tap on the check-in for the person created
+    cy.get(".n-item.py-3 .btn").eq(2).click();
     cy.wait(400);
     cy.get(".person-checkin textarea").type(" and I are going to test +nomie!");
     cy.get(".btn-group > :nth-child(5)").click();
     cy.get(".person-checkin > .btn-block").click();
     cy.wait(2000);
-    cy.get('[slot="left"] > .btn > .n-icon').click();
+    cy.get(".n-item.py-3 .btn").eq(2).click();
     cy.wait(400);
     // View Logs
     cy.get(".person-modal .n-modal-header .btn-group .btn").eq(0).click();
@@ -237,7 +255,7 @@ context("App", () => {
       .find(".n-item")
       .then((listing) => {
         // const count = Cypress.$(listing).length;
-        expect(listing).to.have.length(2);
+        expect(listing).to.contain("@bob");
       });
     // Close modal
     cy.get(".person-modal .left > .btn > .n-icon").click();
@@ -250,26 +268,37 @@ context("App", () => {
     // exportData();
   });
 
+  it("should be able to create a log via a note", () => {
+    testCaptureForm();
+  });
+
+  it("Should properly track using the tracker buttons", () => {
+    useTrackers();
+  });
+
+  it("Should properly test the tips", () => {
+    testTips();
+  });
+
   it("Should properly handle adding a person via a note", () => {
     testPerson();
   });
 
-  // it("Should properly track using the tracker buttons", () => {
-  //   // testTips();
-  //   useTrackers();
-  // });
+  it("Should create and be able to use a multi-tracker", () => {
+    createMultiTracker();
+  });
 
-  // it("Should create and be able to use a multi-tracker", () => {
-  //   createMultiTracker();
-  // });
+  it("should create a simple tracker", () => {
+    createSimpleTracker();
+  });
 
-  // it("should be able to create a log via a note", () => {
-  //   testCaptureForm();
-  // });
+  it("should test the dashboard", () => {
+    testDashboard();
+  });
 
-  // it("should have all the things in history", () => {
-  //   testHistory();
-  // });
+  it("should have all the things in history", () => {
+    testHistory();
+  });
 });
 
 // cy.wait(200);

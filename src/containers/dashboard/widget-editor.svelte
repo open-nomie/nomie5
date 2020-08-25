@@ -199,7 +199,7 @@
       {/if}
       {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('timeframe') > -1}
         <ListItem bottomLine title="Timeframe">
-          <select bind:value={dateType} slot="right" class="form-control flex-shrink" style="margin-left:10px !important">
+          <select bind:value={dateType} slot="right" class="form-control time-frame-select flex-shrink" style="margin-left:10px !important">
             <option>Select</option>
             {#each timeFrames as timeFrame}
               <option value={timeFrame.id}>{timeFrame.label}</option>
@@ -208,7 +208,7 @@
         </ListItem>
       {/if}
       {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('element') > -1}
-        <ListItem on:click={selectType} title={`${!value.element ? '⚠️ ' : ''}Trackable Item`}>
+        <ListItem className="trackable-item" on:click={selectType} title={`${!value.element ? '⚠️ ' : ''}Trackable Item`}>
           <div slot="right" class="mr-2">
             {#if value.element}
               <TrackerSmallBlock truncate element={value.element} on:click={selectType} style="min-height:40px; max-width:150px" />
