@@ -67,12 +67,12 @@
 
   $: if ($UserStore.meta.is24Hour) {
     dtFormat = {
-      date: "Do MMM YYYY",
+      date: "ddd Do MMM YYYY",
       time: "H:mm",
     };
   } else {
     dtFormat = {
-      date: "MMM Do YYYY",
+      date: "ddd MMM Do YYYY",
       time: "h:mma",
     };
   }
@@ -148,8 +148,8 @@
           <Text inline size="xs" className="" faded>{time.fromNow(logMeta.endDate)}</Text>
         </div>
         <Text size="sm" medium>
-          {logMeta.endDate.format(`ddd ${dtFormat.time}`)}
-          <span class="text-inverse-3">{logMeta.endDate.format(`${dtFormat.date}`)}</span>
+          {logMeta.endDate.format(`${dtFormat.time}`)}
+          <Text inline size="sm" faded>{logMeta.endDate.format(`${dtFormat.date}`)}</Text>
         </Text>
       </div>
       <div class="filler" />

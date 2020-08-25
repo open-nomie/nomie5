@@ -295,6 +295,7 @@
       methods.refreshSearch();
     }
     window.scrollTo(0, 0);
+    document.body.classList.remove("scrolled");
     refresh();
 
     onLogUpdate = LedgerStore.hook("onLogUpdate", async (log) => {
@@ -393,12 +394,13 @@
         <NIcon name="search" size={24} />
       </button>
       <div class=" filler pl-2 truncate history-title show-scrolled">
+        <Text>
+          {#if refreshing}
+            <Spinner size="16" />
+          {/if}
+          {state.date.format('ddd')} {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
+        </Text>
 
-        <span class="font-weight-bold mx-1">{state.date.format('ddd')}</span>
-        {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
-        {#if refreshing}
-          <Spinner size="16" />
-        {/if}
         <!-- end text middle -->
       </div>
       <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.previous}>

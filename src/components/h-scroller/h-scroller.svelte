@@ -28,9 +28,13 @@
           });
         }
 
-        scroller.addEventListener("scroll", (evt) => {
-          scroller.setAttribute("data-scroll", evt.target.scrollLeft);
-        });
+        scroller.addEventListener(
+          "scroll",
+          (evt) => {
+            scroller.setAttribute("data-scroll", evt.target.scrollLeft);
+          },
+          { passive: true }
+        );
 
         ready = true;
       }

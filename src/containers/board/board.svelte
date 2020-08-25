@@ -210,7 +210,7 @@
         },
       },
       {
-        title: "Reorder Trackers",
+        title: "Edit / Reorder Trackers",
         async click() {
           editBoard();
         },
@@ -651,19 +651,19 @@
 </style>
 
 <!-- Start App Layout -->
-<NLayout pageTitle={appTitle} headerClassNames={'bg-solid'}>
+<NLayout pageTitle={appTitle}>
   <header slot="header">
     {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
       <div class="container p-0 n-row h-100">
         {#if $TrackerStore.timers.length}
-          <button class="btn tab tap-icon pl-3 pr-1 mt-2" on:click={TrackerStore.toggleTimers}>
-            <Icon name="time" size={18} className="fill-red-pulse" />
+          <button class="btn tab tap-icon pl-3 pr-1" on:click={TrackerStore.toggleTimers}>
+            <Icon name="time" size={24} className="fill-red-pulse" />
           </button>
         {/if}
         <!-- IF MORE THAN 13 TRACKERS - SHOW SEARCH ICON-->
         {#if Object.keys($TrackerStore.trackers).length > 13}
-          <button class="btn tab tap-icon mt-2 pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
-            <Icon name="search" size={20} className={state.searching ? 'fill-primary-bright' : 'fill-inverse-2'} />
+          <button class="btn tab tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
+            <Icon name="search" size={24} className={state.searching ? 'fill-red' : ''} />
           </button>
         {:else}
           <div class="pr-2" />
@@ -677,22 +677,23 @@
             methods.stopSearch();
             BoardStore.setActive(event.detail.id, event.detail);
           }}>
-          <div slot="right" class="n-row">
+          <div slot="right" class="n-row ml-2">
+            <div class="filler" />
             <button
               id="create-tab"
-              class="btn btn-clear mt-2 px-2"
+              class="btn btn-clear px-2 tap-icon"
               on:click={() => {
                 methods.newBoard();
               }}>
-              <Icon name="newTab" size="18" />
+              <Icon name="newTab" size="24" />
             </button>
             {#if $BoardStore.boards.length > 2}
               <button
-                class="btn btn-clear mt-2 px-2"
+                class="btn btn-clear px-2 tap-icon"
                 on:click={() => {
                   Interact.toggleBoardSorter();
                 }}>
-                <Icon name="arrowsLeftRight" size="18" />
+                <Icon name="arrowsLeftRight" size="24" />
               </button>
             {/if}
           </div>
@@ -824,11 +825,8 @@
         </main>
         <div class="board-actions mt-5 mb-2" style="min-width:140px;">
           <div class="btn-group filler">
-            <Button on:click={editBoard} color="clear">
-              <Text size="sm">{Lang.t('general.edit', 'Edit')}</Text>
-            </Button>
             <Button on:click={boardOptions} color="clear">
-              <Text size="sm">{Lang.t('general.more', 'More')}</Text>
+              <Text size="sm">{Lang.t('general.options', 'Options')}</Text>
               <Icon name="chevronDown" size={14} className="ml-1" />
             </Button>
           </div>

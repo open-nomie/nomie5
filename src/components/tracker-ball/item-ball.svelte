@@ -3,6 +3,7 @@
   import { createEventDispatcher } from "svelte";
   import dayjs from "dayjs";
   import NBall from "./ball.svelte";
+  import Text from "../text/text.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -45,7 +46,7 @@
     <NBall {username} {emoji} {avatar} {color} size={small ? 80 : 102} />
   </div>
 
-  <div class="username text-inverse-2 text-sm truncate-1">{label}</div>
+  <Text className="ball-label truncate-2">{label}</Text>
   {#if note}
     <div class="last text-xs text-faded-3">{note}</div>
   {/if}

@@ -18,6 +18,7 @@
   export let ariaLabel = "";
   export let solo = false;
   export let bottomLine = false;
+  export let topLine = false;
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty("left");
   const has_right = (arguments[1].$$slots || {}).hasOwnProperty("right");
@@ -114,6 +115,7 @@
     class="n-item {compact ? 'compact' : ''}
     {className}
     {bottomLine ? 'bottom-line' : ''}
+    {topLine ? 'top-line' : ''}
     {solo ? 'solo' : ''}
     "
     :alt="title">

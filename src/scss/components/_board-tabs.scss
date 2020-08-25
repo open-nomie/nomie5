@@ -1,16 +1,16 @@
 @import "../utils/variables";
 .n-board-tabs {
   width: 100%;
-  min-height: 50px;
+  min-height: var(--header-height);
   -webkit-overflow-scrolling: touch;
 
   box-shadow: inset 3px 0px 4px rgba(0, 0, 0, 0);
   transition: all 0.2s ease-in-out;
 
-  background-color: var(--color-solid);
+  background-color: var(--color-bg);
 
   &:not([data-scroll="0"]) {
-    box-shadow: inset 2px 0px 1px var(--color-faded) !important;
+    box-shadow: inset 2px 0px 1px rgba(100, 100, 100, 0.1) !important;
     z-index: 10;
   }
 
@@ -20,43 +20,44 @@
   }
   .tap-icon {
     margin-top: 6px !important;
-    flex-grow: 1;
   }
 
   .tab {
     color: var(--color-inverse-3);
     border: none;
     background: transparent;
-    padding: 6px 10px;
+    padding: 3px 10px;
     min-width: 45px;
     max-width: 120px;
     width: auto;
     flex-shrink: 0;
-    height: 40px;
-    margin-top: 10px;
+    height: 34px;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-grow: 0;
     text-align: center;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     transition: all 0.2s ease-in-out;
     &.selected {
-      background-color: var(--color-bg);
+      position: relative !important;
+      background-color: var(--color-solid);
       color: var(--color-inverse);
-      // box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1), 0px 6px 7px -2px rgba($primaryBright, 0.1);
+      padding: 3px 18px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--box-shadow-tight);
       // border-bottom: solid 2px var(--color-primary-bright);
-      &:before {
-        content: "";
-        position: absolute;
-        bottom: 45px;
+      &:after {
+        content: "ddd";
+        position: absolute !important;
+        bottom: 0;
+        top: 0;
+        left: 0;
+        right: 0;
         z-index: 100;
-        height: 4px;
-        background-color: var(--color-solid);
-        background-color: red !important;
+        background-color: var(--color-primary) !important;
       }
     }
     &:last-child {

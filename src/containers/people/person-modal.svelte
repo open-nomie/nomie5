@@ -138,7 +138,7 @@
   }
 </style>
 
-<Modal className="person-modal" bodyClass="bg-solid-1" show={domVisible} type="bottom-slideup">
+<Modal className="person-modal" bodyClass="bg-solid" show={domVisible} type="bottom-slideup">
   <header class="w-100" slot="header" on:swipedown={close}>
     <NToolbarGrid>
       <button slot="left" class="btn btn-clear btn-icon tap-icon" on:click={close}>
@@ -180,15 +180,10 @@
     {:else if state.view == 'edit'}
       <div class="edit p-3">
 
-        <NItem className="bg-transparent">
-          <NInput type="text" placeholder="Display Name" bind:value={activePerson.displayName} />
-        </NItem>
+        <NInput type="text" className="mb-2" placeholder="Display Name" bind:value={activePerson.displayName} />
+        <NInput type="textarea" placeholder="Notes" className="mb-2" bind:value={activePerson.notes} />
 
-        <NItem className="bg-transparent">
-          <NInput type="textarea" placeholder="Notes" bind:value={activePerson.notes} />
-        </NItem>
-
-        <NItem className="bg-transparent">
+        <NItem className="bg-transparent p-0">
           <div
             slot="left"
             on:click={() => {
@@ -220,11 +215,9 @@
 
         </NItem>
 
-        <NItem className="bg-transparent">
-          <button class="btn btn-block btn-secondary my-4" on:click={saveActivePerson}>Save @{activePerson.username}</button>
-        </NItem>
+        <button class="btn btn-block btn-primary mt-5 mb-2" on:click={saveActivePerson}>Save @{activePerson.username}</button>
 
-        <NItem className="bg-transparent text-red text-sm text-center" on:click={deleteUser}>Delete @{activePerson.username}...</NItem>
+        <NItem className="bg-transparent text-solid-3 text-sm text-center" on:click={deleteUser}>Delete @{activePerson.username}...</NItem>
       </div>
     {:else if state.view == 'logs'}
       <NLogListLoader compact term={`@${activePerson.username}`} />

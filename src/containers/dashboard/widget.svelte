@@ -72,17 +72,17 @@
   :global(.dashboard-widget.over .widget-footer .n-text, .dashboard-widget.under .widget-footer .n-text) {
     color: #fff !important;
   }
-  :global(.dashboard-widget.widget-red .widget-footer) {
-    background-color: var(--color-red);
+  :global(.dashboard-widget.widget-red .widget-footer .n-text) {
+    color: var(--color-red) !important;
   }
-  :global(.dashboard-widget.widget-blue .widget-footer) {
-    background-color: var(--color-blue);
+  :global(.dashboard-widget.widget-blue .widget-footer .n-text) {
+    color: var(--color-blue) !important;
   }
-  :global(.dashboard-widget.widget-green .widget-footer) {
-    background-color: var(--color-green);
+  :global(.dashboard-widget.widget-green .widget-footer .n-text) {
+    color: var(--color-green) !important;
   }
-  :global(.dashboard-widget.widget-orange .widget-footer) {
-    background-color: var(--color-orange);
+  :global(.dashboard-widget.widget-orange .widget-footer .n-text) {
+    color: var(--color-orange) !important;
   }
   :global(.dashboard-widget) {
     margin: 8px;
@@ -200,7 +200,7 @@
         on:click={() => {
           dispatch('click');
         }}>
-        <Icon name="settings" size="16" />
+        <Icon name="settings" style="fill: var(--color-solid-1)" size="16" />
       </Button>
     </div>
     <div class="widget-main">

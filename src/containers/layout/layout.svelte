@@ -8,6 +8,7 @@
   export let headerClassNames = "";
 
   declare var window: any;
+  let scrollArea: HTMLElement;
 
   function generateContent() {
     return new Array(300).fill("hello").join(" ");
@@ -49,9 +50,9 @@
     <header class="layout-header {headerClassNames}">
       <slot name="header" />
     </header>
-    <div class="layout-header-fade" />
+    <!-- <div class="layout-header-fade" /> -->
   {/if}
-  <main id="nomie-main" class="layout-main" on:scroll={scrolling}>
+  <main id="nomie-main" bind:this={scrollArea} class="layout-main" on:scroll={scrolling}>
     {#if hasContent}
       <slot name="content" />
     {:else}

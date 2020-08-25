@@ -35,6 +35,7 @@ export interface IUserMeta {
   lastBackup?: Date;
   boardsEnabled?: boolean;
   canEditFiles?: boolean;
+  hideLabels: boolean;
 }
 export interface IUserLocalSettings {
   compactButtons: boolean;
@@ -90,6 +91,7 @@ const userInit = () => {
       is24Hour: false,
       firstDayOfWeek: "1", // 1: Sunday, 2: Monday, etc.
       lastBackup: undefined,
+      hideLabels: false,
     },
     // Local settings are only for a specific device
     localSettings: {

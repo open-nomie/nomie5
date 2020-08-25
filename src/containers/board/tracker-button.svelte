@@ -29,7 +29,7 @@
   const dispatch = createEventDispatcher();
 
   let data = {
-    pressing: false
+    pressing: false,
   };
 
   let timeout = null;
@@ -58,7 +58,7 @@
     },
     mousedown() {
       data.pressing = true;
-    }
+    },
   };
 </script>
 
@@ -81,7 +81,6 @@
 <div
   on:click={methods.click}
   on:longtap={methods.longPress}
-  on:touchstart={methods.mousedown}
   on:mousedown={methods.mousedown}
   on:touchend={methods.mouseup}
   on:contextmenu={methods.rightclick}

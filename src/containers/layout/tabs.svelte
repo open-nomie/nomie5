@@ -10,9 +10,12 @@
   import { TrackerStore } from "../../store/tracker-store";
   import { FeatureStore } from "../../store/feature-store";
   import NPaths from "../../paths";
+  import { UserStore } from "../../store/user-store";
   const state = {
     mounted: false,
   };
+
+  $: hideLabels = $UserStore.meta.hideLabels;
 
   onMount(() => {
     state.mounted = true;
@@ -118,13 +121,17 @@
 
       <Link to={NPaths.routes.history()}>
         <Icon name="calendar" />
-        <label>{Lang.t('tabs.history')}</label>
+        {#if !hideLabels}
+          <label>{Lang.t('tabs.history')}</label>
+        {/if}
       </Link>
 
       {#if $FeatureStore.dashboard}
         <Link to={NPaths.routes.dashboard()}>
           <Icon name="report" />
-          <label>{Lang.t('tabs.dashboard', 'Dash')}</label>
+          {#if !hideLabels}
+            <label>{Lang.t('tabs.dashboard', 'Dash')}</label>
+          {/if}
         </Link>
       {/if}
 
@@ -133,19 +140,25 @@
           <div class="notification" />
         {/if}
         <Icon name="tracker" />
-        <label>{Lang.t('general.trackers', 'Track')}</label>
+        {#if !hideLabels}
+          <label>{Lang.t('general.trackers', 'Track')}</label>
+        {/if}
       </Link>
 
       {#if $FeatureStore.people}
         <Link to={NPaths.routes.people()}>
           <Icon name="people" />
-          <label>{Lang.t('tabs.people')}</label>
+          {#if !hideLabels}
+            <label>{Lang.t('tabs.people')}</label>
+          {/if}
         </Link>
       {/if}
 
       <Link to={NPaths.routes.settings()}>
         <Icon name="settings" />
-        <label>{Lang.t('tabs.settings')}</label>
+        {#if !hideLabels}
+          <label>{Lang.t('tabs.settings')}</label>
+        {/if}
       </Link>
 
     </div>

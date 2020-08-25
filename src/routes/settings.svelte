@@ -156,14 +156,20 @@ Note: Your data will not automatically move over. You'll first need to export it
         },
         {
           title: `${$UserStore.storageType === "blockstack" ? "✓" : ""} Blockstack`,
-          description: Lang.t("storage.blockstack_description", "Stored encryted with Blockstack's file storage. FREE"),
+          description: Lang.t(
+            "storage.blockstack_description",
+            "Sync across multiple devices using Blockstack's free and encrypted storage."
+          ),
           click() {
             methods.switchStorage("blockstack");
           },
         },
         {
-          title: `${$UserStore.storageType === "pouchdb" ? "✓" : ""} ${Lang.t("storage.pouchdb_title", "Device & CouchDB (beta)")}`,
-          description: Lang.t("storage.pouchdb_description", "Have a CouchDB server? Sync in near-real time. BETA"),
+          title: `${$UserStore.storageType === "pouchdb" ? "✓" : ""} ${Lang.t("storage.pouchdb_title", "CouchDB (beta)")}`,
+          description: Lang.t(
+            "storage.pouchdb_description",
+            "Sync your data in real to a remote CouchDB server. ⚠️ Not good for multiple devices."
+          ),
           click() {
             methods.switchStorage("pouchdb");
           },
@@ -196,13 +202,13 @@ Note: Your data will not automatically move over. You'll first need to export it
     <div class="n-toolbar-grid container">
       <div class="left" />
       <div class="main">
-        <h1>{Lang.t('settings.settings')}</h1>
+        <Text bold>{Lang.t('settings.settings')}</Text>
       </div>
       <div class="right">
         <button on:click={methods.faq} class="btn tap-text">{Lang.t('general.faq')}</button>
       </div>
     </div>
-    <div class="n-toolbar px-2 container">
+    <div class="n-toolbar px-2 pb-1 container">
       <NButtonGroup
         buttons={[{ label: 'Features', active: view == 'features', click() {
               changeView('features');
@@ -230,7 +236,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               DATA VIEW
               *******************************************
             -->
-            <div class="n-list solo mb-3">
+            <div class="n-list mb-3">
               <NItem itemDivider>Import Data</NItem>
               <NItem className="clickable" title={Lang.t('settings.nomie-api')} on:click={() => navigate('/api')}>
                 <span slot="left">🕸</span>
@@ -240,7 +246,6 @@ Note: Your data will not automatically move over. You'll first need to export it
 
               </NItem>
               <NItem
-                bottomLine
                 className="clickable"
                 title={`${Lang.t('settings.import-from-backup')}`}
                 on:click={() => {
@@ -253,21 +258,21 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <input slot="right" class="d-none" type="file" bind:this={fileInput} on:change={methods.onImportFile} />
               </NItem>
 
-              <NItem itemDivider>Export Data</NItem>
+              <NItem itemDivider topLine>Export Data</NItem>
               <NItem clickable title={Lang.t('settings.generate-backup')} to="/settings/export/backup">
                 <span slot="left">📦</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
               </NItem>
-              <NItem bottomLine clickable title={Lang.t('settings.generate-csv')} to="/settings/export/csv">
+              <NItem clickable title={Lang.t('settings.generate-csv')} to="/settings/export/csv">
                 <span slot="left">📃</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
               </NItem>
 
-              <NItem itemDivider>Storage Location</NItem>
+              <NItem itemDivider topLine>Storage Location</NItem>
               <NItem on:click={methods.storageMenu}>
                 <span slot="left">☁️</span>
                 {#if $UserStore.storageType === 'local'}
@@ -290,7 +295,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <PouchDBOptions />
               {/if}
 
-              <NItem itemDivider>Data Management</NItem>
+              <NItem itemDivider topLine>Data Management</NItem>
               <NItem
                 title="Browse Files..."
                 on:click={() => {
@@ -335,89 +340,90 @@ Note: Your data will not automatically move over. You'll first need to export it
               *******************************************
             -->
 
-            <div class="n-list solo mb-3">
+            <NItem itemDivider>Join the Community</NItem>
+            <NItem title="Learn More">
+              <span slot="right">
+                <a href="https://nomie.app?s=dap" class="btn btn-clear text-primary-bright" target="_system">Nomie.app</a>
+              </span>
+            </NItem>
+            <NItem title="Become a Patron">
 
-              <NItem title="Learn More" bottomLine>
-                <span slot="right">
-                  <a href="https://nomie.app?s=dap" class="btn btn-clear text-primary-bright" target="_system">Website</a>
-                </span>
-              </NItem>
-              <NItem title="Become a Patron" bottomLine>
+              <span slot="right">
+                <a href="https://www.patreon.com/nomieapp" class="btn btn-clear text-primary-bright" target="_system">Patreon</a>
+              </span>
+            </NItem>
+            <NItem title="Reddit r/nomie">
+              <span slot="right">
+                <a href="https://reddit.com/r/nomie" class="btn btn-clear text-primary-bright" target="_system">r/nomie</a>
+              </span>
+            </NItem>
 
-                <span slot="right">
-                  <a href="https://www.patreon.com/nomieapp" class="btn btn-clear text-primary-bright" target="_system">Patreon</a>
-                </span>
-              </NItem>
-              <NItem title="Reddit r/nomie" bottomLine>
-                <span slot="right">
-                  <a href="https://reddit.com/r/nomie" class="btn btn-clear text-primary-bright" target="_system">r/nomie</a>
-                </span>
-              </NItem>
+            <NItem title="Open Source">
+              <span slot="right">
+                <a href="https://github.com/open-nomie/nomie" class="btn btn-clear text-primary-bright" target="_system">Github</a>
+              </span>
+            </NItem>
 
-              <NItem title="Open Source">
-                <span slot="right">
-                  <a href="https://github.com/open-nomie/nomie" class="btn btn-clear text-primary-bright" target="_system">Github</a>
-                </span>
-              </NItem>
-            </div>
-            <div class="n-list solo mb-3">
-              <NItem title={Lang.t('general.trackers', 'Tracker Count')}>
-                <span slot="right">{TrackerStore.getAsArray().length}</span>
-              </NItem>
+            <NItem itemDivider topLine>App Details</NItem>
+            <NItem title={Lang.t('general.trackers', 'Tracker Count')}>
+              <span slot="right">{TrackerStore.getAsArray().length}</span>
+            </NItem>
 
-              <NItem title={Lang.t('general.first_log', 'First Log')}>
-                <div class="" slot="right">
-                  {#await LedgerStore.getFirstDate()}
-                    Loading...
-                  {:then date}
-                    <div class="text-sm">
-                      {date.format('MMMM YYYY')}
-                      <br />
-                      ({date.fromNow()})
-                    </div>
-                  {/await}
-                  <!--  -->
-                </div>
-              </NItem>
-              <NItem title={Lang.t('general.launch-count', 'Launch Count')}>
-                <div class="n-row" slot="right">
-                  <button class="btn btn-clear" on:click={UserStore.resetLaunchCount}>
-                    <NIcon name="delete" className="fill-red" size="18" />
-                  </button>
-                  {$UserStore.launchCount}
-                </div>
-              </NItem>
-              <NItem title={Lang.t('general.device', 'Device')}>
-                <span slot="right">{$Device.device}</span>
-              </NItem>
-              <NItem title={Lang.t('general.platform', 'Platform')}>
-                <span slot="right">{$Device.platform}</span>
-              </NItem>
-              <NItem title={Lang.t('general.pwa', 'PWA')}>
-                <span slot="right">{$Device.pwa}</span>
-              </NItem>
-              <NItem title="Version">
-                <span slot="right" class="n-row">
-                  <span>APP_VERSION</span>
-                  <Button size="xs" on:click={AppStore.reveal} className="ml-2">What's new</Button>
-                </span>
-              </NItem>
-              <NItem title="Built">
-                <span slot="right">APP_BUILD_DATE</span>
-              </NItem>
-              <NItem
-                title="Setup Complete"
-                on:click={() => {
-                  navigate('/setup');
-                }}>
-                <span slot="right" class="text-primary-bright">Show Again</span>
-              </NItem>
-            </div>
+            <NItem title={Lang.t('general.first_log', 'First Log')}>
+              <div class="" slot="right">
+                {#await LedgerStore.getFirstDate()}
+                  Loading...
+                {:then date}
+                  <div class="text-sm">
+                    {date.format('MMMM YYYY')}
+                    <br />
+                    ({date.fromNow()})
+                  </div>
+                {/await}
+                <!--  -->
+              </div>
+            </NItem>
+            <NItem title={Lang.t('general.launch-count', 'Launch Count')}>
+              <div class="n-row" slot="right">
+                <button class="btn btn-clear" on:click={UserStore.resetLaunchCount}>
+                  <NIcon name="delete" className="fill-red" size="18" />
+                </button>
+                {$UserStore.launchCount}
+              </div>
+            </NItem>
+            <NItem title={Lang.t('general.device', 'Device')}>
+              <span slot="right">{$Device.device}</span>
+            </NItem>
+            <NItem title={Lang.t('general.platform', 'Platform')}>
+              <span slot="right">{$Device.platform}</span>
+            </NItem>
+            <NItem title={Lang.t('general.pwa', 'PWA')}>
+              <span slot="right">{$Device.pwa}</span>
+            </NItem>
+
+            <NItem itemDivider topLine>Version Details</NItem>
+            <NItem title="Version">
+              <span slot="right" class="n-row">
+                <span>APP_VERSION</span>
+                <Button size="xs" on:click={AppStore.reveal} className="ml-2">What's new</Button>
+              </span>
+            </NItem>
+            <NItem title="Built">
+              <span slot="right">APP_BUILD_DATE</span>
+            </NItem>
+            <NItem
+              title="Setup Complete"
+              on:click={() => {
+                navigate('/setup');
+              }}>
+              <span slot="right" class="text-primary-bright">Show Again</span>
+            </NItem>
           {/if}
           <!-- END Views -->
 
           <div class="n-list solo mt-3 py-2">
-            <NItem title="Nomie needs you! 🥺">
+            <NItem title="Nomie needs your help!">
+
               <Text size="sm" faded>Help keep Nomie development moving forward, free, no ads, and open.</Text>
             </NItem>
             <NItem
@@ -427,15 +433,15 @@ Note: Your data will not automatically move over. You'll first need to export it
               on:click={() => {
                 window.open(config.patreon, '_system');
               }}>
-              <span slot="left">🙏</span>
+
               <Text size="xs" color="inverse-2" className="mt-1">Pick from 1 of 3 Patreon levels</Text>
               <div slot="right" class="pr-2">
-                <Icon name="link" className="fill-primary" />
+                <Icon name="chevronRight" className="fill-primary" />
               </div>
             </NItem>
           </div>
 
-          <NItem solo className="mt-3">
+          <NItem className="mt-3">
             <div slot="left">
               <Text>🆘</Text>
             </div>

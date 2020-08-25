@@ -338,7 +338,7 @@
     border-radius: 4px;
   }
   .capture-log {
-    // border-top: solid 1px rgba(0, 0, 0, 0.1);
+    background-color: var(--footer-background);
     padding: 10px;
     // background-color: var(--header-background);
     // backdrop-filter: saturate(180%) blur(20px);
@@ -486,11 +486,15 @@
     min-height: 40px;
     max-height: 200px;
     border-radius: 20px;
-    background-color: var(--input-background);
+    background-color: var(--color-solid-1);
     // box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     transition: all 0.2s ease-in-out;
-    border: solid 1px var(--color-faded-1);
+    // border: solid 1px var(--color-faded-1);
+
+    &:focus {
+      border: solid 1px red;
+    }
 
     .save-button {
       display: none;

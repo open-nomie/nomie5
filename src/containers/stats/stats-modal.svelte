@@ -451,7 +451,7 @@
    */
 
   async function setSelected(selected) {
-    if (state.selected !== selected) {
+    if (selected && state.selected !== selected) {
       try {
         _setSelected(selected);
       } catch (e) {

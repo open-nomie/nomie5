@@ -2,9 +2,9 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding: 0 6px 10px;
+
   justify-content: flex-start;
-  padding: 6px;
+  padding: 0 6px;
   button {
     width: calc(50% - 1px);
     min-height: 70px;
@@ -85,14 +85,17 @@
   }
   width: calc(100% - 16px);
   margin: 16px 8px;
-  padding: 0px;
+
+  @include media-breakpoint-up(md) {
+    padding: 8px;
+  }
+
+  padding: 4px;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: var(--box-shadow);
   .time-row {
-    padding: 8px 16px 16px;
-    border-bottom: solid 1px var(--color-solid-1);
-    margin-bottom: 2px;
+    padding: 8px 16px 0px;
   }
 
   .main {

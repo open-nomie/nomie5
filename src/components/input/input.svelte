@@ -69,10 +69,6 @@
   @import "../../scss/utils/_utils";
   $height: 54px;
 
-  .n-input-container.with-label.compact .n-input-wrapper.has-input .n-input label {
-    transform: translateY(-4px) !important;
-  }
-
   .n-input-container {
     position: relative;
     width: auto;
@@ -82,6 +78,8 @@
     flex-shrink: 1;
     margin-bottom: 4pt;
     margin-top: 4pt;
+    background-color: var(--color-solid-1);
+    border-radius: 6px;
 
     .helper {
       font-size: 0.65rem;
@@ -139,10 +137,15 @@
       }
     }
 
+    //   .n-input-container.with-label.compact .n-input-wrapper.has-input .n-input label {
+    //   transform: translateY(-6px) !important;
+    // }
+
     &.compact {
-      &.has-input {
+      .has-input {
         label {
-          transform: translateY(-4px) !important;
+          transform: translateY(-6px) !important;
+          font-size: 0.7rem;
         }
       }
       // background-color: blue !important;
@@ -156,30 +159,15 @@
           textarea {
             min-height: 40px;
             height: 40px;
-            font-size: 1rem;
+            font-size: 0.8rem !important;
+            background-color: var(--color-solid-1) !important;
           }
         }
       }
     }
 
-    // &.solo.compact {
-    //   // background-color: blue !important;
-    //   .n-input-wrapper {
-    //     min-height: 32px;
-    //     height: 32px;
-    //     .n-input {
-    //       height: 32px;
-    //       input,
-    //       select,
-    //       textarea {
-    //         height: 31px;
-    //         font-size: 1rem;
-    //       }
-    //     }
-    //   }
-    // }
-
     .n-input-wrapper {
+      transition: all 0.2s ease-in-out;
       // position: relative;
       min-height: $height;
       display: flex;
@@ -191,13 +179,31 @@
       flex-grow: 1;
       flex-shrink: 1;
       transition: all 0.2s ease-in-out;
-      background-color: var(--color-solid-half);
       border-radius: 12px;
-      border: solid 1px var(--color-faded-1);
+      &:before {
+        transition: all 0.2s ease-in-out;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+        pointer-events: none;
+      }
 
       &.has-focus {
-        box-shadow: 0px 3px 7px -2px rgba($primaryBright, 0.1);
-        background-color: var(--input-focus-background);
+        &:before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          box-shadow: 0px 0px 1px 2px var(--color-primary);
+          opacity: 0.3;
+          border-radius: 6px;
+        }
       }
 
       textarea {
@@ -240,7 +246,8 @@
           outline: none;
           &:disabled {
             background-color: transparent !important;
-            color: var(--color-inverse-2);
+            // color: var(--color-inverse-2);
+            opacity: 0.7;
           }
           // border: none;
         }

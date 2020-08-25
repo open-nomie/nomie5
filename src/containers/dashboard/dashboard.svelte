@@ -389,24 +389,26 @@
   }
 </style>
 
-<NLayout className="dasboard" headerClassNames="bg-solid" pageTitle="Dashboard" showTabs={true}>
-  <div slot="header" class="n-row pl-2 container">
-    <HScroller activeIndex={$DashboardStore.activeIndex} className="n-board-tabs">
-      {#each dashboards || [] as board, i (board.id)}
-        <button
-          class="tab board-{board.id}
-          {i == $DashboardStore.activeIndex ? 'selected' : 'inactive'}"
-          on:click={() => {
-            DashboardStore.toIndex(i);
-          }}>
-          {board.label}
-        </button>
-      {/each}
-    </HScroller>
-    <Button color="clear" className="mt-2" on:click={DashboardStore.newDashboard}>
-      <Icon name="newTab" size="18" />
-    </Button>
-  </div>
+<NLayout className="dasboard" headerClassNames="fill-header" pageTitle="Dashboard" showTabs={true}>
+  <header slot="header">
+    <div class="container n-row pl-2 pr-0 pb-0 pt-1 h-100">
+      <HScroller activeIndex={$DashboardStore.activeIndex} className="n-board-tabs">
+        {#each dashboards || [] as board, i (board.id)}
+          <button
+            class="tab board-{board.id}
+            {i == $DashboardStore.activeIndex ? 'selected' : 'inactive'}"
+            on:click={() => {
+              DashboardStore.toIndex(i);
+            }}>
+            {board.label}
+          </button>
+        {/each}
+      </HScroller>
+      <Button color="clear" className="tap-icon py-1" on:click={DashboardStore.newDashboard}>
+        <Icon name="newTab" size="20" />
+      </Button>
+    </div>
+  </header>
   {#if activeDashboard && !loading}
     <div class="container h-100">
       {#if editMode}

@@ -41,7 +41,7 @@
   };
 </script>
 
-<div class="n-list solo my-2">
+<div class="n-list my-2">
   <ListItem bottomLine className="py-2" title="People Tracking" description="Keep track of those you interact with the most">
     <div slot="right" class="pl-2">
       <ToggleSwitch
@@ -75,7 +75,6 @@
   </ListItem>
   <!-- Pin Code -->
   <ListItem
-    bottomLine
     title={Lang.t('settings.require-pin')}
     description="Require a pin to launch Nomie. Warning if you lose your pin, there's nothing you can do.">
     <div slot="right" class="ml-2">

@@ -101,7 +101,7 @@
 </style>
 
 <NLayout pageTitle="People">
-  <div slot="header">
+  <div slot="header" class="pb-1">
     <NSearchBar on:change={searchPeople} on:clear={clearSearch} placeholder="Search People..." autocomplete>
       <button on:click={addPerson} slot="right" class="btn btn-icon btn-clear">
         <NIcon name="userAdd" className="fill-primary-bright" />

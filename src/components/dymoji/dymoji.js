@@ -63,7 +63,7 @@ export default class Face {
       `border-radius: ${this.config.size * this.config.radius}px;`,
       `position:relative; background-color: ${this.color};`,
       `width:${this.config.size}px; height:${this.config.size}px;`,
-      `box-shadow:inset 0px -4px 10px rgba(0,0,0,0.2),inset 0px 4px 10px 3px rgba(255,255,255,0.1)`,
+      // `box-shadow:inset 0px -4px 10px rgba(0,0,0,0.2),inset 0px 4px 10px 3px rgba(255,255,255,0.1)`,
     ];
     //${pickedWear}
     // ${base.join("")}

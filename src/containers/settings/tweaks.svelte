@@ -21,7 +21,7 @@
   TWEAKS VIEW
   *******************************************
 -->
-<div class="n-list solo">
+<div class="n-list">
   <!-- Use Location -->
 
   <NItem itemDivider>Style</NItem>
@@ -62,8 +62,9 @@
     </div>
   </NItem>
 
-  <NItem bottomLine title={Lang.t('settings.small-tracker-buttons', 'Small Trackers')}>
-    <span slot="left">▪️</span>
+  <NItem title={Lang.t('settings.small-tracker-buttons', 'Small Trackers')}>
+    <span slot="left">🐭</span>
+    <Text size="xs" faded>Shrinks the tracker buttons for smaller devices</Text>
     <div slot="right">
       <NToggle
         bind:value={$UserStore.localSettings.compactButtons}
@@ -77,17 +78,25 @@
     </div>
   </NItem>
 
+  <NItem title={Lang.t('settings.hide-tab-labels', 'Hide App Tab Labels')}>
+    <span slot="left">🗂</span>
+    <Text size="xs" faded>Hide "History, Dash, Track, People, Setting" labels</Text>
+    <div slot="right">
+      <NToggle bind:value={$UserStore.meta.hideLabels} on:change={methods.settingChange} />
+    </div>
+  </NItem>
+
   <!-- Tracker Board Tabs -->
-  {#if $BoardStore.boards.length == 0}
+  <!-- {#if $BoardStore.boards.length == 0}
     <NItem title={Lang.t('settings.enable-boards')}>
       <span slot="left">🗂</span>
       <div slot="right">
         <NToggle bind:value={$UserStore.meta.boardsEnabled} on:change={methods.settingChange} />
       </div>
     </NItem>
-  {/if}
+  {/if} -->
 
-  <NItem className="mt-1" itemDivider>Locale</NItem>
+  <NItem itemDivider topLine>Locale</NItem>
   <!-- 24 Hour -->
 
   <!-- firstDayOfWeek -->

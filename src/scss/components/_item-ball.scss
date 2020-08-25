@@ -40,27 +40,28 @@ $sizeLg: $trackerBallSize * 2;
     border: none;
     padding: 0;
     background-color: var(--color-solid);
-    box-shadow: var(--box-shadow-float);
+    box-shadow: var(--box-shadow);
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .username {
+  .ball-label {
     font-weight: 400;
+    font-size: 0.8rem !important;
+    margin-top: 10px;
+    line-height: 1rem;
     width: 100%;
     text-align: center;
     text-overflow: ellipsis;
     overflow: hidden;
-    color: var(--color-inverse-1);
-    margin-top: 10px;
-    line-height: 1rem;
+    color: var(--color-inverse-2) !important;
   }
 
   &:active {
     transform: scale(0.9);
-    .avatar {
-      box-shadow: var(--box-shadow-tight);
+    .avatar-ball {
+      box-shadow: var(--box-shadow-float);
     }
   }
   .last.today {
@@ -121,7 +122,7 @@ $sizeLg: $trackerBallSize * 2;
         min-width: 100px;
       }
     }
-    .username {
+    .ball-label {
       margin-top: 6px;
       font-size: 80% !important;
     }
