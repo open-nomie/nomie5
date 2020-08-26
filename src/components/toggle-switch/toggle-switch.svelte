@@ -42,7 +42,7 @@
       height: $height;
       padding: 0;
       line-height: $height;
-      border: 2px solid var(--color-grey-9);
+      border: 2px solid var(--color-grey-6);
       border-radius: $height;
       background-color: var(--color-solid-1);
       transition: background-color 0.2s ease-in-out;
@@ -59,7 +59,7 @@
       top: 0;
       bottom: 0;
       right: 22px;
-      border: 2px solid var(--color-grey-8);
+      border: 2px solid var(--color-grey-6);
       border-radius: $height;
       transition: all 0.2s ease-in-out 0s;
     }

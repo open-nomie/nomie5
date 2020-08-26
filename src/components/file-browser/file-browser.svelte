@@ -320,26 +320,26 @@
           {#each state.files as file}
             {#if !isFile(file)}
               <NItem
-                className="clickable bottom-line"
+                bottomLine
+                detail
                 on:click={() => {
                   navigate(getPath(file));
                 }}>
                 {file}
-                <div slot="right">
-                  <span class="text-sm text-faded-1">Folder</span>
-                  <NIcon name="chevronRight" className="fill-faded-2" />
+                <div slot="left">
+                  <span class="text-md">🗂</span>
                 </div>
               </NItem>
             {:else}
               <NItem
-                className="clickable bottom-line"
+                bottomLine
+                detail
                 on:click={() => {
                   navigate(getPath(file));
                 }}>
                 {file}
-                <div slot="right">
-                  <span class="text-sm text-faded-1">File</span>
-                  <NIcon name="chevronRight" className="fill-faded-2" />
+                <div slot="left">
+                  <span class="text-md">📝</span>
                 </div>
               </NItem>
             {/if}

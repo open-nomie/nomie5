@@ -78,8 +78,9 @@
     flex-shrink: 1;
     margin-bottom: 4pt;
     margin-top: 4pt;
-    background-color: var(--color-solid-1);
+    background-color: var(--color-solid);
     border-radius: 6px;
+    border: solid 1px var(--color-faded-1);
 
     .helper {
       font-size: 0.65rem;
@@ -160,7 +161,7 @@
             min-height: 40px;
             height: 40px;
             font-size: 0.8rem !important;
-            background-color: var(--color-solid-1) !important;
+            background-color: var(--color-solid) !important;
           }
         }
       }

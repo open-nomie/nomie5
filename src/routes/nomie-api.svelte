@@ -38,6 +38,9 @@
   import { UserStore } from "../store/user-store";
   import { NomieAPI } from "../store/napi";
   import { Lang } from "../store/lang";
+  import Button from "../components/button/button.svelte";
+  import appConfig from "../config/appConfig";
+  import Text from "../components/text/text.svelte";
 
   let NAPI = new NomieAPICli({ domain: "nomieapi.com/.netlify/functions" });
 
@@ -53,6 +56,7 @@
     capturingId: null,
     apiExample: null,
     showPrivateKey: false,
+    showExample: false,
   };
 
   $: autoImportAPI = $NomieAPI.autoImport;
@@ -307,20 +311,23 @@
       <div class="n-list solo mt-3 mb-3">
         <NItem className="">
           <NInput label="Your API Key" bind:value={state.apiKey}>
-            <button
-              class="btn btn-clear tap-icon"
-              slot="right"
-              on:click={() => {
-                copy(state.apiKey);
-              }}>
-              <NIcon name="copy" className="fill-primary-bright" />
-            </button>
+            <div slot="right">
+              <Button
+                className="tap-icon"
+                color="transparent"
+                shape="circle"
+                on:click={() => {
+                  copy(state.apiKey);
+                }}>
+                <NIcon name="copy" size="24" className="fill-primary-bright" />
+              </Button>
+            </div>
           </NInput>
           <!-- <div>
           <input type="text" class="form-control mt-1" value={state.apiKey} />
         </div> -->
         </NItem>
-        <NItem title="Private Key" on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
+        <NItem delay={0} clickable title="Private Key" on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
           <button class="btn btn-clear text-primary-bright" slot="right">
             <NIcon name="chevron{state.showPrivateKey ? 'Up' : 'Down'}" />
           </button>
@@ -342,24 +349,86 @@
         {/if}
       </div>
 
-      <NItem title="Example POST" className="solo mt-3" on:click={() => (state.showExample = !state.showExample)}>
-        <button slot="right" class="btn btn-clear">
-          <NIcon name="chevron{state.showExample ? 'Up' : 'Down'}" />
-        </button>
-      </NItem>
-      {#if state.showExample}
-        <NItem className="px-3 pb-2 bg-transparent">
-          <p class="text-sm">POST JSON to: https://nomieapi.com/log</p>
-          <textarea class="form-control" style="height:120px" bind:value={state.apiExample} />
-          <p class="text-sm mt-1">fields: note, api_key, lat, lng, date, source</p>
+      <div class="n-list solo mt-2 mb-2">
+        <NItem title="Example POST" clickable delay={0} on:click={() => (state.showExample = !state.showExample)}>
+          <div slot="right">
+            <NIcon name="chevron{state.showExample ? 'Up' : 'Down'}" />
+          </div>
         </NItem>
-      {/if}
-      <div item-divider />
+        {#if state.showExample}
+          <NItem>
+            <textarea class="form-control" style="height:90px; font-size:11px; font-family:monospace" bind:value={state.apiExample} />
+          </NItem>
+          <NItem compact title="URL" className="py-0">
+            <div slot="right" class="n-row">
+              {appConfig.api}/log
+              <Button
+                className="tap-icon"
+                color="transparent"
+                shape="circle"
+                on:click={() => {
+                  copy(`${appConfig.api}/log`);
+                }}>
+                <NIcon name="copy" size="24" className="fill-primary-bright" />
+              </Button>
+            </div>
+          </NItem>
+          <NItem compact title="METHOD" className="py-0">
+            <span slot="right">POST application/json</span>
+          </NItem>
+          <NItem itemDivider compact topLine>Fields</NItem>
+          <NItem compact title="note (required)" className="py-1">
+            <Text size="sm" faded>Accepts any text, including #tracker, @people, etc.</Text>
+          </NItem>
+          <NItem compact title="api_key (required)" className="py-1">
+            <Text size="sm" faded>The api key provided above</Text>
+          </NItem>
 
-      <NItem className="text-red text-center solo mt-4" on:click={methods.forget}>Forget API Key...</NItem>
-      <div item-divider />
-      <NItem className="text-red text-center solo" on:click={methods.unregister}>Destroy API Key...</NItem>
-      <div item-divider />
+          <NItem compact title="date (optional)" className="py-1">
+            <Text size="sm" faded>Any javascript friend Date format</Text>
+          </NItem>
+
+          <NItem compact title="lat (optional)" className="py-1">
+            <Text size="sm" faded>Records Latitude</Text>
+          </NItem>
+
+          <NItem compact title="lng (optional)" className="py-1">
+            <Text size="sm" faded>Records Longitude</Text>
+          </NItem>
+
+          <NItem compact title="source (optional)" className="py-1 mb-2">
+            <Text size="sm" faded>Source of the request (not currently displayed)</Text>
+          </NItem>
+
+          <!-- <p class="text-sm mt-1">
+              <strong>FIELDS</strong>
+              <br />
+              <strong>note *</strong>
+              Accepts any text, including #tracker, @people, etc.
+              <br />
+              <strong>api_key *</strong>
+              The api key provided above
+              <br />
+              <strong>date</strong>
+              Any javascript friendly date format
+              <br />
+              <strong>lat</strong>
+              Latitude
+              <br />
+              <strong>lng</strong>
+              Longitude
+              <br />
+              <strong>source</strong>
+              Source of the request (not currently displayed)
+              <br />
+            </p> -->
+        {/if}
+      </div>
+
+      <div class="n-row px-3 my-4">
+        <Button color="transparent" className="mr-1 text-danger" block on:click={methods.forget}>Forget API Key...</Button>
+        <Button color="transparent" className="ml-1 text-danger" block on:click={methods.unregister}>Destroy API Key...</Button>
+      </div>
     {/if}
   </div>
 

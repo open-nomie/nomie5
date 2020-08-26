@@ -185,6 +185,7 @@
     flex-shrink: 1;
     max-width: 100%;
     // padding-left: 4pt;
+    padding-right: 4px;
   }
 
   .n-note-textualized {
@@ -217,25 +218,26 @@
   }
 
   .main {
+    padding-top: 2px;
+    padding-bottom: 2px;
     flex-grow: 1;
     flex-shrink: 1;
     // TODO: see if making main overflow hidden was a bad idea
     // overflow: hidden;
-    h4,
-    .title {
-      font-size: 1.1rem;
-      margin: 2px 0;
-      line-height: 1.36rem !important;
-      font-weight: 600;
-    }
+    // h4,
+    // .title {
+    //   font-size: 1.1rem;
+    //   margin: 2px 0;
+    //   line-height: 1.36rem !important;
+    //   font-weight: 600;
+    // }
 
     p,
     .note,
     .description {
       margin: 2px 0;
-      color: var(--color-inverse-3);
+      color: var(--color-inverse-2);
       line-height: 132%;
-      font-size: 0.82rem;
 
       &.sm,
       &.small {

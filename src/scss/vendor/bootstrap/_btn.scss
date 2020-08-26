@@ -297,7 +297,8 @@ button:focus {
 }
 
 .btn-group {
-  background-color: var(--color-solid-2);
+  background-color: var(--color-solid);
+  box-shadow: var(--box-shadow-float);
   padding: 3px;
   border-radius: 12px;
   height: 40px;
@@ -355,6 +356,7 @@ button:focus {
 }
 .btn-transparent {
   background-color: none;
+  color: var(--color-inverse-2);
 }
 .btn-square {
   border-radius: 0 !important;

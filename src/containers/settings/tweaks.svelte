@@ -63,7 +63,7 @@
 
   <NItem title={Lang.t('settings.small-tracker-buttons', 'Small Trackers')}>
     <span slot="left">🐭</span>
-    <Text size="xs" faded>Shrinks the tracker buttons for smaller devices</Text>
+    <Text size="sm" faded>Shrinks the tracker buttons for smaller devices</Text>
     <div slot="right">
       <NToggle
         bind:value={$UserStore.localSettings.compactButtons}
@@ -79,7 +79,7 @@
 
   <NItem title={Lang.t('settings.hide-tab-labels', 'Hide App Tab Labels')}>
     <span slot="left">🗂</span>
-    <Text size="xs" faded>Hide "History, Dash, Track, People, Setting" labels</Text>
+    <Text size="sm" faded>Hide "History, Dash, Track, People, Setting" labels</Text>
     <div slot="right">
       <NToggle bind:value={$UserStore.meta.hideLabels} on:change={methods.settingChange} />
     </div>

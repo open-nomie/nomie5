@@ -5110,7 +5110,8 @@ button:focus {
   color: var(--color-primary); }
 
 .btn-group {
-  background-color: var(--color-solid-2);
+  background-color: var(--color-solid);
+  box-shadow: var(--box-shadow-float);
   padding: 3px;
   border-radius: 12px;
   height: 40px; }
@@ -5156,7 +5157,8 @@ button:focus {
     opacity: 0.5; }
 
 .btn-transparent {
-  background-color: none; }
+  background-color: none;
+  color: var(--color-inverse-2); }
 
 .btn-square {
   border-radius: 0 !important; }
@@ -6314,7 +6316,8 @@ body.scrolling .mini-map {
   .n-item .main {
     flex-grow: 1;
     flex-shrink: 1;
-    max-width: 100%; }
+    max-width: 100%;
+    padding-right: 4px; }
   .n-item .n-note-textualized {
     max-width: 100%;
     overflow-x: auto; }
@@ -6331,21 +6334,16 @@ body.scrolling .mini-map {
   .n-item .left .zmdi .icon {
     font-size: 24px !important; }
   .n-item .main {
+    padding-top: 2px;
+    padding-bottom: 2px;
     flex-grow: 1;
     flex-shrink: 1; }
-    .n-item .main h4,
-    .n-item .main .title {
-      font-size: 1.1rem;
-      margin: 2px 0;
-      line-height: 1.36rem !important;
-      font-weight: 600; }
     .n-item .main p,
     .n-item .main .note,
     .n-item .main .description {
       margin: 2px 0;
-      color: var(--color-inverse-3);
-      line-height: 132%;
-      font-size: 0.82rem; }
+      color: var(--color-inverse-2);
+      line-height: 132%; }
       .n-item .main p.sm, .n-item .main p.small,
       .n-item .main .note.sm,
       .n-item .main .note.small,

@@ -233,7 +233,8 @@
     ];
 
     Interact.popmenu({
-      title: `${$BoardStore.activeBoard.label} Tab Options`,
+      title: `${$BoardStore.activeBoard ? $BoardStore.activeBoard.label : "All Trackers"}`,
+      description: "Tab Options",
       buttons: buttons,
     });
   }

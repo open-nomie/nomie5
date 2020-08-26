@@ -3,11 +3,12 @@
   import { navigate } from "svelte-routing";
 
   import NIcon from "../../components/icon/icon.svelte";
+  import Button from "../button/button.svelte";
 
   export let to = undefined;
 
   const dispatch = createEventDispatcher();
-  const onClick = event => {
+  const onClick = (event) => {
     if (to) {
       navigate(to);
     } else {
@@ -23,6 +24,6 @@
   }
 </style>
 
-<button class="btn tap-icon" on:click={onClick}>
+<Button shape="circle" color="transparent" icon className="tap-icon" on:click={onClick}>
   <NIcon name="arrowBack" />
-</button>
+</Button>

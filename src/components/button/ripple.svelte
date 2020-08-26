@@ -21,7 +21,6 @@
       hits = hits.slice(0, 2);
     }
     hits = hits;
-    console.log(`hits length ${hits.length}`);
   }
 </script>
 
@@ -40,23 +39,28 @@
     width: 2px;
     height: 2px;
     border-radius: 50%;
-    background-color: var(--color-translucent-inverse);
     top: 5px;
     left: 20px;
-    opacity: 0.3;
+    opacity: 0;
   }
   .ball.grow {
     animation: ripple 1s;
+    background-color: var(--color-translucent-inverse);
   }
 
   @keyframes ripple {
     0% {
-      width: 2px;
-      height: 2px;
-      opacity: 0.4;
+      width: 0px;
+      height: 0px;
+      opacity: 0;
+    }
+    2% {
+      width: 4px;
+      height: 4px;
+      opacity: 0.2;
     }
     100% {
-      transform: scale(100);
+      transform: scale(120);
       opacity: 0;
     }
   }

@@ -5,6 +5,7 @@
   import Ripple from "../button/ripple.svelte";
   import Hit from "../button/ripple-hit";
   import tick from "../../utils/tick/tick";
+  import Icon from "../icon/icon.svelte";
 
   export let title = undefined;
   export let description = undefined;
@@ -24,6 +25,7 @@
   export let bottomLine: boolean = false;
   export let topLine: boolean = false;
   export let delay: number = undefined;
+  export let detail: boolean = false;
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty("left");
   const has_right = (arguments[1].$$slots || {}).hasOwnProperty("right");
@@ -35,15 +37,15 @@
 
   const methods = {
     async tap(event) {
-      // let timeout = 200;
-      // if (delay !== undefined) {
-      //   timeout = delay;
-      // } else if (!clickable) {
-      //   timeout = 0;
-      // }
-      // await tick(timeout);
+      let timeout = 0;
+      if (delay !== undefined) {
+        timeout = delay;
+      } else if (clickable || detail) {
+        timeout = 200;
+      }
+      await tick(timeout);
       if (href) {
-        window.location.href = href;
+        window.open(href, "_system");
       } else if (to) {
         navigate(to);
       }
@@ -71,7 +73,7 @@
   };
 </script>
 
-{#if clickable}
+{#if clickable || detail}
   <button
     {id}
     aria-label={ariaLabel}
@@ -98,20 +100,23 @@
     {/if}
     <div class="main {truncate ? 'truncate' : ''}">
       {#if title}
-        <NText size="md" tag="div" medium>{title}</NText>
+        <NText size="md" tag="div" className="title">{title}</NText>
       {/if}
       {#if description}
-        <NText size="sm" lineHeightMd className="mt-1" faded>{description}</NText>
+        <NText size="sm" lineHeightMd faded className="description">{description}</NText>
       {/if}
       <slot />
     </div>
 
-    {#if has_right}
-      <div class="right">
+    {#if has_right || detail}
+      <div class="right d-flex align-items-center">
         <slot name="right" />
+        {#if detail}
+          <Icon name="chevronRight" className="fill-faded-2" style="margin-left:6px; margin-right:-10px;" />
+        {/if}
       </div>
     {/if}
-    {#if clickable}
+    {#if clickable || detail}
       <Ripple bind:hit />
     {/if}
   </button>
@@ -145,7 +150,7 @@
         <NText size="md" tag="div" className="title" medium>{title}</NText>
       {/if}
       {#if description}
-        <NText size="sm" lineHeightMd className="mt-1" faded>{description}</NText>
+        <NText size="sm" lineHeightMd className="description" faded>{description}</NText>
       {/if}
       <slot />
     </div>
