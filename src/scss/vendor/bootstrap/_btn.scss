@@ -322,9 +322,13 @@ button:focus {
     flex-shrink: 1;
     padding: 0 6px 0px !important;
     line-height: 100%;
+    box-shadow: none;
 
     border-radius: 12px !important;
     font-size: 0.8rem;
+    &:focus {
+      box-shadow: none !important;
+    }
     &.active {
       background-color: var(--color-primary-bright) !important;
       color: #fff;
@@ -333,7 +337,10 @@ button:focus {
       box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.14);
       border-radius: 11px !important;
       font-size: 0.8rem;
+      border: none;
+      outline: none !important;
     }
+
     i.zmdi {
       font-size: 1.4rem;
     }

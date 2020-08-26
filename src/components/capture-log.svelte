@@ -492,10 +492,6 @@
     transition: all 0.2s ease-in-out;
     // border: solid 1px var(--color-faded-1);
 
-    &:focus {
-      border: solid 1px red;
-    }
-
     .save-button {
       display: none;
     }
@@ -586,7 +582,7 @@
     <div class="advanced">
       <div class="container">
         <!-- Score -->
-        <NItem truncate compact className="bg-transparent clickable mr-2 solo text-sm">
+        <NItem truncate compact className="mr-2 solo text-sm">
           <NPositivitySelector
             size="xl"
             score={$ActiveLogStore.score}
@@ -595,7 +591,7 @@
             }} />
         </NItem>
         <!-- Location -->
-        <NItem truncate className="bg-transparent clickable mr-2 solo text-sm" on:click={methods.toggleCustomLocation}>
+        <NItem truncate className="clickable mr-2 solo text-sm" on:click={methods.toggleCustomLocation}>
           <div slot="left" class="text-sm text-bold">
             <NIcon name="pin" className="mr-2 fill-inverse-2" size="16" />
           </div>

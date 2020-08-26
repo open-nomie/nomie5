@@ -101,5 +101,7 @@
 <div class="n-hscroller {className}" data-scroll="0" bind:this={scroller}>
   <div class="wrapper" bind:this={wrapper}>
     <slot />
+    <div class="filler" />
+    <slot name="right" />
   </div>
 </div>

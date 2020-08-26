@@ -45,6 +45,7 @@
   import { Lang } from "../../store/lang";
   import Spinner from "../../components/spinner/spinner.svelte";
   import { widgetTypes } from "./widgetTypes";
+  import { truncateText } from "../../utils/text/text";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
   let people: any; // holder of User People - loaded from subscribe
@@ -387,26 +388,31 @@
   :global(.dashboard-widget.type-map) {
     height: 260px;
   }
+  :global(.dashboard .tab) {
+    max-width: 100px;
+  }
 </style>
 
 <NLayout className="dasboard" headerClassNames="fill-header" pageTitle="Dashboard" showTabs={true}>
   <header slot="header">
-    <div class="container n-row pl-2 pr-0 pb-0 pt-1 h-100">
+    <div class="container n-row pl-2 pr-0 h-100">
       <HScroller activeIndex={$DashboardStore.activeIndex} className="n-board-tabs">
         {#each dashboards || [] as board, i (board.id)}
           <button
-            class="tab board-{board.id}
-            {i == $DashboardStore.activeIndex ? 'selected' : 'inactive'}"
+            class="tab board-{board.id} truncate-1 {i == $DashboardStore.activeIndex ? 'selected' : 'inactive'}"
             on:click={() => {
               DashboardStore.toIndex(i);
             }}>
-            {board.label}
+            {truncateText(board.label, 12)}
           </button>
         {/each}
+        <div slot="right">
+          <Button color="clear" className="tap-icon py-1" on:click={DashboardStore.newDashboard}>
+            <Icon name="newTab" size="24" />
+          </Button>
+        </div>
       </HScroller>
-      <Button color="clear" className="tap-icon py-1" on:click={DashboardStore.newDashboard}>
-        <Icon name="newTab" size="20" />
-      </Button>
+
     </div>
   </header>
   {#if activeDashboard && !loading}

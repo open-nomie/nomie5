@@ -346,8 +346,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <a href="https://nomie.app?s=dap" class="btn btn-clear text-primary-bright" target="_system">Nomie.app</a>
               </span>
             </NItem>
-            <NItem title="Become a Patron">
-
+            <NItem title="Become a Patron" clickable>
               <span slot="right">
                 <a href="https://www.patreon.com/nomieapp" class="btn btn-clear text-primary-bright" target="_system">Patreon</a>
               </span>

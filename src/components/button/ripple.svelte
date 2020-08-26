@@ -1,28 +1,76 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
   import { tweened } from "svelte/motion";
   import { backOut } from "svelte/easing";
 
-  export let x, y, sizeIn, size, speed, rippleBlur, opacityIn;
+  export let hit: Array<number>;
 
-  onMount(() => {
-    rippleOpacity.set(0);
-    rippleSize.set(size);
-  });
+  let lastHit;
+  let hideTimeout;
+  let show = false;
 
-  const rippleSize = tweened(sizeIn, { duration: speed }),
-    rippleOpacity = tweened(opacityIn, { duration: speed + speed * 2.5, easing: backOut });
+  let x;
+  let y;
+
+  $: if (hit && hit.join(",") !== lastHit) {
+    show = false;
+    console.log("Ripple FIre!");
+    lastHit = hit.join(",");
+    x = hit[0];
+    y = hit[1];
+    setTimeout(() => {
+      show = true;
+    }, 1);
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(() => {
+      show = false;
+      setTimeout(() => {
+        hit = undefined;
+      }, 10);
+    }, 1000);
+  }
 </script>
 
-<style>
-  circle {
-    fill: var(--ripple);
+<style lang="scss">
+  .ripple {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+  }
+  .ball {
+    transition: all 0.5s ease-in-out;
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.4);
+    top: 5px;
+    left: 20px;
+    opacity: 0.7;
+  }
+  .ball.grow {
+    animation: ripple 1s;
+  }
+
+  @keyframes ripple {
+    0% {
+      width: 2px;
+      height: 2px;
+      opacity: 1;
+    }
+    100% {
+      transform: scale(50);
+      opacity: 0;
+    }
   }
 </style>
 
-<defs>
-  <filter id="f1" x="0" y="0">
-    <feGaussianBlur in="SourceGraphic" stdDeviation={rippleBlur} />
-  </filter>
-</defs>
-<circle cx={x} cy={y} r={$rippleSize} opacity={$rippleOpacity} filter="url(#f1)" />
+<div class="ripple">
+  {#if hit}
+    <div class="ball" class:grow={show} style="top:{y}px;left:{x}px;" />
+  {/if}
+</div>
+
+<!-- style="top:{y}px;left:{x}px;" -->

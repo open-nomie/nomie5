@@ -105,6 +105,9 @@ export default [
     ],
     watch: {
       clearScreen: true,
+      chokidar: {
+        usePolling: true,
+      },
     },
   },
   {

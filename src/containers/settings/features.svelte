@@ -2,7 +2,7 @@
   import ListItem from "../../components/list-item/list-item.svelte";
   import ToggleSwitch from "../../components/toggle-switch/toggle-switch.svelte";
   import { FeatureStore } from "../../store/feature-store";
-  import Booster from "../booster/booster.svelte";
+
   import { Lang } from "../../store/lang";
   import { UserStore } from "../../store/user-store";
   import { Interact } from "../../store/interact";
@@ -82,5 +82,3 @@
     </div>
   </ListItem>
 </div>
-
-<!-- <Booster /> -->
