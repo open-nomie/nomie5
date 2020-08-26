@@ -21,6 +21,8 @@
   import { Lang } from "../../store/lang";
   import { Interact } from "../../store/interact";
   import { TrackerStore } from "../../store/tracker-store";
+  import Text from "../../components/text/text.svelte";
+  import Button from "../../components/button/button.svelte";
 
   let step = 0;
   let maxSteps = 4;
@@ -28,10 +30,7 @@
   let stepCount = 0;
 
   const cancel = async () => {
-    let confirmed = await Interact.confirm(
-      "Are you sure?",
-      "Any changes will be lost"
-    );
+    let confirmed = await Interact.confirm("Are you sure?", "Any changes will be lost");
     if (confirmed) {
       TrackerDesignerStore.clear();
       navigate("/");
@@ -65,7 +64,7 @@
       title: "Tracker label",
       validate() {
         return $TrackerDesignerStore.tracker.label.length > 1;
-      }
+      },
     };
     const positivity = {
       component: StepPositivity,
@@ -76,49 +75,49 @@
         } else {
           return true;
         }
-      }
+      },
     };
     const emoji = {
       component: StepEmoji,
       title: "Select the emoji",
       validate() {
         return $TrackerDesignerStore.tracker.emoji;
-      }
+      },
     };
     const calc = {
       title: "Totals Calculation",
       component: StepCalc,
       validate() {
         return $TrackerDesignerStore.tracker.math;
-      }
+      },
     };
     const color = {
       title: "Pick Tracker Color",
       component: StepColor,
       validate() {
         return $TrackerDesignerStore.tracker.color;
-      }
+      },
     };
     const type = {
       title: "Pick Tracker Type",
       component: StepType,
       validate() {
         return $TrackerDesignerStore.tracker.type;
-      }
+      },
     };
     const defaultValue = {
       title: "Set Tracker Defaults",
       component: StepDefaults,
       validate() {
         return $TrackerDesignerStore.tracker.type;
-      }
+      },
     };
     const uom = {
       title: "Unit of Measurement",
       component: StepUOM,
       validate() {
         return $TrackerDesignerStore.tracker.uom;
-      }
+      },
     };
 
     let _steps = [];
@@ -136,16 +135,7 @@
         _steps = [type, label, emoji, color, defaultValue];
         break;
       default:
-        _steps = [
-          type,
-          label,
-          emoji,
-          color,
-          uom,
-          defaultValue,
-          calc,
-          positivity
-        ];
+        _steps = [type, label, emoji, color, uom, defaultValue, calc, positivity];
         break;
     }
     stepCount = _steps.length;
@@ -187,31 +177,29 @@
 
 <NLayout showTabs={false}>
 
-  <div
-    slot="header"
-    class="bg-bg pt-1 tracker-preview"
-    style="background-color:{$TrackerDesignerStore.tracker.color};
-    box-shadow:0px 10px 10px -9px {$TrackerDesignerStore.tracker.color}">
+  <div slot="header" class="tracker-preview" style="background-color:{$TrackerDesignerStore.tracker.color};">
 
-    <div class="n-toolbar-grid">
-      <button class="btn btn-clear text-white left" on:click={cancel}>
-        <NIcon name="close" className="fill-white" size="32" />
-      </button>
+    <div class="n-toolbar-grid h-100">
+      <div class="left">
+        <Button color="circle" className="tap-icon" on:click={cancel}>
+          <NIcon name="close" className="fill-white" size="24" />
+        </Button>
+      </div>
       <div class="main text-white text-center">
-        <div>#{step + 1}. {activeStep.title}</div>
-        <NStepper steps={stepCount} current={step} />
+        <Text size="sm" style="color:#FFF" class="mb-1">#{step + 1}. {activeStep.title}</Text>
+        <NStepper steps={stepCount} current={step} style="max-width:90px;" />
       </div>
     </div>
 
-    <div class="n-row align-top">
+    <!-- <div class="n-row align-top">
       <div class="text-bold filler text-center mb-2">
         <NTrackerButton tracker={$TrackerDesignerStore.tracker} />
       </div>
-    </div>
+    </div> -->
 
   </div>
 
-  <main slot="content" class="bg-solid main-body pt-4 pb-4">
+  <main slot="content" class="bg-bg main-body pt-4 pb-4">
     {#if activeStep}
       <svelte:component this={activeStep.component} />
     {/if}
@@ -220,18 +208,12 @@
   <footer slot="footer" class="bg-solid">
     <div class="container-sm">
       <NToolbar className="">
-        <button
-          on:click={previousStep}
-          disabled={step == 0}
-          class="btn btn-block btn-dark mr-1 my-0">
-          Previous
-        </button>
-        <button
-          on:click={nextStep}
-          class="btn btn-block ml-1 my-0 btn-primary"
-          disabled={!canGoNext}>
+        <Button on:click={previousStep} disabled={step == 0} color="transparent" size="lg" block className="mr-1 my-2">
+          {Lang.t('general.back', 'Back')}
+        </Button>
+        <Button on:click={nextStep} size="lg" block disabled={!canGoNext}>
           {step == getSteps().length - 1 ? Lang.t('general.create', 'Create') : Lang.t('general.next', 'Next')}
-        </button>
+        </Button>
       </NToolbar>
     </div>
   </footer>

@@ -42,6 +42,10 @@ const DeviceStoreInit = () => {
     iOS() {
       return (navigator.platform || "").toLowerCase().match(/iphone|ipad|ipod/gi) ? true : false;
     },
+    scrollToTop() {
+      document.getElementById("nomie-main").scrollTo(0, 0);
+      document.body.classList.remove("scrolled");
+    },
     init() {
       const fireChange = () => {
         if (navigator.onLine) {

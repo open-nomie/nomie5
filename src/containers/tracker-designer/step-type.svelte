@@ -5,13 +5,13 @@
   import NItem from "../../components/list-item/list-item.svelte";
   import NIcon from "../../components/icon/icon.svelte";
 
-  const types = Object.keys(TrackerTypes).map(key => {
+  const types = Object.keys(TrackerTypes).map((key) => {
     let type = TrackerTypes[key];
     type._key = key;
     return type;
   });
 
-  const selectType = type => {
+  const selectType = (type) => {
     $TrackerDesignerStore.tracker.type = type._key;
     if (type._key == "timer") {
       $TrackerDesignerStore.tracker.uom = "timer";
@@ -31,13 +31,16 @@
   }
 </style>
 
-<div class="step emoji n-panel vertical scroll-y">
+<div class="step n-panel vertical scroll-y">
   <section class="container-xs">
 
-    <div class="n-list">
+    <div class="n-list bg-transparent">
       {#each types as type}
         <NItem
-          className="type-{type._key} clickable {$TrackerDesignerStore.tracker.type == type._key ? 'active' : ''}}"
+          delay={0}
+          clickable
+          className="type-{type._key}
+          {$TrackerDesignerStore.tracker.type == type._key ? 'active solo' : 'bg-transparent'}"
           on:click={() => {
             selectType(type);
           }}>
@@ -48,11 +51,9 @@
               <NIcon name="radio" />
             {/if}
           </div>
-          <div
-            class={`title text-md ${$TrackerDesignerStore.tracker.type == type._key ? 'font-weight-bold' : ''}`}>
-            {type.label}
-          </div>
+          <div class={`title text-md ${$TrackerDesignerStore.tracker.type == type._key ? 'font-weight-bold' : ''}`}>{type.label}</div>
           <div class="description text-sm text-faded-3">{type.description}</div>
+          <div slot="right" />
         </NItem>
       {/each}
     </div>

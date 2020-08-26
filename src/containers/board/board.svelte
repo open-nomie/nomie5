@@ -65,6 +65,7 @@
   import OfflineQueue from "../../components/offline-queue/offline-queue.svelte";
   import TimeSelect from "../../components/date-time-bar/time-select.svelte";
   import NPaths from "../../paths";
+  import { Device } from "../../store/device-store";
 
   // Consts
   const console = new Logger("board.svelte");
@@ -205,12 +206,12 @@
       {
         title: "Add a Tracker",
         async click() {
-          await tick(200);
+          await tick(500);
           methods.addButtonTap();
         },
       },
       {
-        title: "Edit / Reorder Trackers",
+        title: "Edit / Reorder",
         async click() {
           editBoard();
         },
@@ -222,16 +223,17 @@
           deleteBoard();
         },
       },
-      {
-        title: "Share as Tracker Pack",
-        click() {
-          console.log("Download", $BoardStore);
-        },
-      },
+
+      // {
+      //   title: "Share as Tracker Pack",
+      //   click() {
+      //     console.log("Download", $BoardStore);
+      //   },
+      // },
     ];
 
     Interact.popmenu({
-      title: `Board Options`,
+      title: `${$BoardStore.activeBoard.label} Tab Options`,
       buttons: buttons,
     });
   }
@@ -510,6 +512,8 @@
   let lastTrackers;
 
   onMount(() => {
+    console.log("Board Mounted");
+    Device.scrollToTop();
     trackerUnsub = TrackerStore.subscribe((trackerStore) => {
       setTimeout(() => {
         boardTrackers = boardTrackers;
@@ -679,22 +683,25 @@
           }}>
           <div slot="right" class="n-row ml-2">
             <div class="filler" />
-            <button
-              id="create-tab"
-              class="btn btn-clear px-2 tap-icon"
+            <Button
+              color="transparent"
+              icon
+              className="mx-2 mr-3 tap-icon"
               on:click={() => {
                 methods.newBoard();
               }}>
               <Icon name="newTab" size="24" />
-            </button>
+            </Button>
             {#if $BoardStore.boards.length > 2}
-              <button
-                class="btn btn-clear px-2 tap-icon"
+              <Button
+                color="transparent"
+                icon
+                className="px-2 tap-icon"
                 on:click={() => {
                   Interact.toggleBoardSorter();
                 }}>
                 <Icon name="arrowsLeftRight" size="24" />
-              </button>
+              </Button>
             {/if}
           </div>
         </NBoardTabs>

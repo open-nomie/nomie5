@@ -14,6 +14,7 @@
 
     <Text size="md" bold className="mb-2">{Lang.t('setup.choose-theme', `Choose your Theme`)}</Text>
     <Button
+      delay={20}
       className="btn-block my-3 btn btn-content {state.theme == 'light' ? 'active' : ''}"
       on:click={() => {
         UserStore.setTheme('light');
@@ -22,6 +23,7 @@
       <div class="text-lg">Light</div>
     </Button>
     <Button
+      delay={20}
       className="btn-block my-3 btn btn-content {state.theme == 'dark' ? 'active' : ''}"
       on:click={() => {
         UserStore.setTheme('dark');
@@ -30,6 +32,7 @@
       <div class="text-lg">Dark</div>
     </Button>
     <Button
+      delay={20}
       className="btn-block my-3 btn btn-content {state.theme == 'auto' ? 'active' : ''}"
       on:click={() => {
         UserStore.setTheme('auto');
