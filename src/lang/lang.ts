@@ -4,14 +4,14 @@ import SimplifiedChinese from "./zh-cn";
 export default {
   en: {
     label: "English",
-    lang: English
+    lang: English,
   },
   it: {
     label: "Italian",
-    lang: Italian
+    lang: Italian,
   },
   zhcn: {
     label: "Simplified Chinese",
-    lang: SimplifiedChinese
-  }
+    lang: SimplifiedChinese,
+  },
 };
