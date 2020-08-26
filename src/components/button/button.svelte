@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import Ripple from "./Ripple.svelte";
+  import Ripple from "./ripple.svelte";
 
   const dispatch = createEventDispatcher();
 

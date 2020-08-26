@@ -6230,7 +6230,7 @@ body.scrolling .mini-map {
   display: flex;
   align-items: center;
   justify-content: stretch;
-  padding: 10px 16px;
+  padding: 10px 20px;
   cursor: pointer;
   min-height: 46px;
   max-width: 100vw;

@@ -373,11 +373,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                 {#await LedgerStore.getFirstDate()}
                   Loading...
                 {:then date}
-                  <div class="text-sm">
-                    {date.format('MMMM YYYY')}
-                    <br />
-                    ({date.fromNow()})
-                  </div>
+                  <div class="text-sm">{date.format('MMM YYYY')}</div>
                 {/await}
                 <!--  -->
               </div>
@@ -400,22 +396,18 @@ Note: Your data will not automatically move over. You'll first need to export it
               <span slot="right">{$Device.pwa}</span>
             </NItem>
 
-            <NItem itemDivider topLine>Version Details</NItem>
-            <NItem title="Version">
+            <NItem itemDivider topLine>Version</NItem>
+            <NItem title="Version APP_VERSION " description="Built APP_BUILD_DATE ">
               <span slot="right" class="n-row">
-                <span>APP_VERSION</span>
                 <Button size="xs" on:click={AppStore.reveal} className="ml-2">What's new</Button>
               </span>
             </NItem>
-            <NItem title="Built">
-              <span slot="right">APP_BUILD_DATE</span>
-            </NItem>
             <NItem
-              title="Setup Complete"
+              title="Onboarded"
               on:click={() => {
                 navigate('/setup');
               }}>
-              <span slot="right" class="text-primary-bright">Show Again</span>
+              <span slot="right" class="text-primary-bright">Redo Setup</span>
             </NItem>
           {/if}
           <!-- END Views -->

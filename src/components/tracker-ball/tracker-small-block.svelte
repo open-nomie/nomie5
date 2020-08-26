@@ -4,6 +4,7 @@
   import AvatarBall from "../tracker-ball/ball.svelte";
   import { PeopleStore } from "../../store/people-store";
   import Text from "../text/text.svelte";
+  import Button from "../button/button.svelte";
   const dispatch = createEventDispatcher();
 
   export let element = undefined;
@@ -30,9 +31,10 @@
 
 {#if element}
 
-  <button
+  <Button
+    color="none"
     {style}
-    class="btn n-tracker-value-grid-button {solo ? 'solo' : ''}
+    className="btn n-tracker-value-grid-button {solo ? 'solo' : ''}
     {xs ? 'size-xs' : ''}
     {novalue ? 'novalue' : ''}
     "
@@ -68,5 +70,5 @@
         <!-- <div class="value text-inverse">{NomieUOM.format(element.value, (element.obj || {}).uom) || ''}</div> -->
       {/if}
     </main>
-  </button>
+  </Button>
 {/if}
