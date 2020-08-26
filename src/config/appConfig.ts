@@ -14,4 +14,5 @@ export default {
   support_email: "support@happydata.org",
   support_contact: "Email Brandon",
   patreon: "https://www.patreon.com/bePatron?u=40136531",
+  api: "https://nomieapi.com",
 };
