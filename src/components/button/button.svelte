@@ -35,9 +35,12 @@
   {style}
   {disabled}
   class={`btn ${block ? 'btn-block' : ''} btn-${type} btn-${shape} btn-${color} btn-${size} ${className}`}
+  on:mousedown={(evt) => {
+    console.log(evt);
+    console.log(`${evt.offsetX},${evt.offsetY}`);
+    hit = [evt.offsetX, evt.offsetY];
+  }}
   on:click={(evt) => {
-    console.log({ evt, layers: { x: evt.layerX, y: evt.layerY } });
-    hit = [evt.layerX, evt.layerY];
     dispatch('click');
   }}>
   <Ripple bind:this={ripple} bind:hit />

@@ -87,6 +87,9 @@ const boardsInit = () => {
       methods.move("previous");
     },
     load(boards: Array<Board>) {
+      boards = boards.map((board) => {
+        return board instanceof Board ? board : new Board(board);
+      });
       return update((bs) => {
         let map = {};
         // Filter out duplicate ID boards

@@ -44,6 +44,7 @@
   import { Device } from "../store/device-store";
   import Storage from "../modules/storage/storage";
   import Text from "../components/text/text.svelte";
+  import Button from "../components/button/button.svelte";
 
   /**
    * I've messed this all up again. but it's faster and more responsivle
@@ -389,10 +390,10 @@
 <NLayout pageTitle={appTitle}>
 
   <header slot="header">
-    <NToolbar className="container animate in {showSearch ? 'hidden' : 'visible'}">
-      <button class="btn btn-clear btn-icon tap-icon" on:click={methods.search}>
+    <NToolbar className="container px-2">
+      <Button color="none" shape="circle" className="tap-icon" on:click={methods.search}>
         <NIcon name="search" size={24} />
-      </button>
+      </Button>
       <div class=" filler pl-2 truncate history-title show-scrolled">
         <Text>
           {#if refreshing}
@@ -403,15 +404,15 @@
 
         <!-- end text middle -->
       </div>
-      <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.previous}>
+      <Button color="circle" className="tap-icon" on:click={methods.previous}>
         <NIcon name="chevronLeft" size={24} />
-      </button>
-      <button class="btn btn-clear btn-icon tap-icon" on:click={methods.selectDate}>
+      </Button>
+      <Button color="none" shape="circle" className="tap-icon" on:click={methods.selectDate}>
         <NIcon name="calendar" size={24} className={isToday ? '' : 'fill-red'} />
-      </button>
-      <button class="btn btn-clear btn-icon text-xl tap-icon" on:click={methods.next}>
+      </Button>
+      <Button color="none" shape="circle" className="tap-icon" on:click={methods.next}>
         <NIcon name="chevronRight" size={24} />
-      </button>
+      </Button>
     </NToolbar>
 
     <!-- hasResults={(searchLogs || []).length > 0} -->

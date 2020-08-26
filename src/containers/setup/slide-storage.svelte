@@ -4,6 +4,7 @@
   import NItem from "../../components/list-item/list-item.svelte";
   import NIcon from "../../components/icon/icon.svelte";
   import Text from "../../components/text/text.svelte";
+  import Button from "../../components/button/button.svelte";
 
   const state = {
     theme: "auto",
@@ -14,16 +15,16 @@
   <div class="top center-grow">
     <Text size="md" bold className="mb-2">{Lang.t('setup.pick-data-storage', `Choose your data's location...`)}</Text>
 
-    <button
-      class=" btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
+    <Button
+      className=" btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
       on:click={() => {
         UserStore.setStorage('local');
       }}>
       <Text lineHeightMd bold>{Lang.t('storage.local_title', 'This Device Only')}</Text>
       <Text size="xs" faded className="">Stored unencrypted ONLY on this device.</Text>
-    </button>
-    <button
-      class="btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
+    </Button>
+    <Button
+      className="btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
       on:click={() => {
         UserStore.setStorage('blockstack');
       }}>
@@ -33,7 +34,7 @@
         <strong>by Blockstack.</strong>
       </Text>
 
-    </button>
+    </Button>
     <p class="text-faded-3 mt-2">
       You can always change this later.
       <br />

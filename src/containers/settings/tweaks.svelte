@@ -24,67 +24,68 @@
 <div class="n-list">
   <!-- Use Location -->
 
-  <NItem itemDivider>Style</NItem>
-  <NItem title={Lang.t('settings.theme')}>
-    <span slot="left">💡</span>
-    <div slot="right">
-      <select
-        class="form-control"
-        style="min-width:100px;width:100px"
-        bind:value={$UserStore.theme}
-        on:change={(event) => {
-          UserStore.setTheme($UserStore.theme, $UserStore.theme_accent);
-        }}>
-        <option value="auto">Auto</option>
-        <option value="dark">Dark</option>
-        <option value="light">Light</option>
-      </select>
+  <div class="n-list">
+    <NItem itemDivider>Style</NItem>
+    <NItem title={Lang.t('settings.theme')}>
+      <span slot="left">💡</span>
+      <div slot="right">
+        <select
+          class="form-control"
+          style="min-width:100px;width:100px"
+          bind:value={$UserStore.theme}
+          on:change={(event) => {
+            UserStore.setTheme($UserStore.theme, $UserStore.theme_accent);
+          }}>
+          <option value="auto">Auto</option>
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+        </select>
 
-    </div>
-  </NItem>
+      </div>
+    </NItem>
+    <NItem title={Lang.t('settings.theme_accent', 'Color Accent')}>
+      <span slot="left">🎨</span>
+      <div slot="right">
+        <select
+          class="form-control"
+          style="min-width:100px;width:100px"
+          bind:value={$UserStore.theme_accent}
+          on:change={(event) => {
+            UserStore.setTheme($UserStore.theme, $UserStore.theme_accent);
+          }}>
+          <option value="default">Blue</option>
+          <option value="mint">Mint</option>
+          <option value="pink">Pink</option>
+          <option value="orange">Orange</option>
+        </select>
 
-  <NItem title={Lang.t('settings.theme_accent', 'Color Accent')}>
-    <span slot="left">🎨</span>
-    <div slot="right">
-      <select
-        class="form-control"
-        style="min-width:100px;width:100px"
-        bind:value={$UserStore.theme_accent}
-        on:change={(event) => {
-          UserStore.setTheme($UserStore.theme, $UserStore.theme_accent);
-        }}>
-        <option value="default">Blue</option>
-        <option value="mint">Mint</option>
-        <option value="pink">Pink</option>
-        <option value="orange">Orange</option>
-      </select>
+      </div>
+    </NItem>
 
-    </div>
-  </NItem>
+    <NItem title={Lang.t('settings.small-tracker-buttons', 'Small Trackers')}>
+      <span slot="left">🐭</span>
+      <Text size="xs" faded>Shrinks the tracker buttons for smaller devices</Text>
+      <div slot="right">
+        <NToggle
+          bind:value={$UserStore.localSettings.compactButtons}
+          on:change={(change) => {
+            UserStore.update((state) => {
+              state.localSettings.compactButtons = change.detail === false ? false : true;
+              Storage.local.put('settings/compactButtons', state.localSettings.compactButtons);
+              return state;
+            });
+          }} />
+      </div>
+    </NItem>
 
-  <NItem title={Lang.t('settings.small-tracker-buttons', 'Small Trackers')}>
-    <span slot="left">🐭</span>
-    <Text size="xs" faded>Shrinks the tracker buttons for smaller devices</Text>
-    <div slot="right">
-      <NToggle
-        bind:value={$UserStore.localSettings.compactButtons}
-        on:change={(change) => {
-          UserStore.update((state) => {
-            state.localSettings.compactButtons = change.detail === false ? false : true;
-            Storage.local.put('settings/compactButtons', state.localSettings.compactButtons);
-            return state;
-          });
-        }} />
-    </div>
-  </NItem>
-
-  <NItem title={Lang.t('settings.hide-tab-labels', 'Hide App Tab Labels')}>
-    <span slot="left">🗂</span>
-    <Text size="xs" faded>Hide "History, Dash, Track, People, Setting" labels</Text>
-    <div slot="right">
-      <NToggle bind:value={$UserStore.meta.hideLabels} on:change={methods.settingChange} />
-    </div>
-  </NItem>
+    <NItem title={Lang.t('settings.hide-tab-labels', 'Hide App Tab Labels')}>
+      <span slot="left">🗂</span>
+      <Text size="xs" faded>Hide "History, Dash, Track, People, Setting" labels</Text>
+      <div slot="right">
+        <NToggle bind:value={$UserStore.meta.hideLabels} on:change={methods.settingChange} />
+      </div>
+    </NItem>
+  </div>
 
   <!-- Tracker Board Tabs -->
   <!-- {#if $BoardStore.boards.length == 0}
@@ -96,7 +97,7 @@
     </NItem>
   {/if} -->
 
-  <NItem itemDivider topLine>Locale</NItem>
+  <NItem itemDivider>Locale</NItem>
   <!-- 24 Hour -->
 
   <!-- firstDayOfWeek -->

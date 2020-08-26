@@ -4,7 +4,7 @@ button:focus {
 
 .btn:focus,
 .btn.focus {
-  box-shadow: inherit;
+  box-shadow: inherit !important;
 }
 
 .btn-row {
@@ -198,22 +198,7 @@ button:focus {
   box-shadow: var(--box-shadow-float);
   color: var(--color-primary);
   transition: all 0.2s ease-in-out;
-  &:hover {
-    // color: var(--color-primary);
-    // transform: scale(1.06);
-  }
-  // .text-md {
-  //   font-weight: bold;
-  //   margin-bottom: 6px;
-  // }
-  // .text-sm {
-  //   font-size: 0.72rem !important;
-  //   line-height: 1rem !important;
-  //   font-weight: 400;
-  //   opacity: 0.7;
-  // }
-  &:after {
-  }
+
   &.active {
     content: "✓";
     border: none;
@@ -223,15 +208,15 @@ button:focus {
       color: #fff !important;
     }
     &:after {
-      $height: 24px;
+      $height: 32px;
       position: absolute;
       font-size: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      top: -#{$height * 0.5};
-      left: -#{$height * 0.5};
+      top: #{$height * 0.25};
+      left: #{$height * 0.25};
       width: $height;
       height: $height;
       background-color: var(--color-solid);

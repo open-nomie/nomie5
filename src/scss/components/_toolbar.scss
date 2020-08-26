@@ -11,6 +11,30 @@
 .n-toolbar-grid .btn {
   color: var(--color-inverse-1);
 }
+.n-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  height: 50px;
+  padding: 0 0px;
+
+  .left,
+  .right {
+    min-width: 25%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .left {
+    // justify-content: flex-start;
+  }
+  .right {
+    // justify-content: flex-end;
+  }
+}
 
 .n-toolbar-grid {
   color: var(--color-inverse);

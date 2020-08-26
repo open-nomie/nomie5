@@ -37,6 +37,7 @@
   import { Lang } from "../../store/lang";
   import { Device } from "../../store/device-store";
   import { Interact } from "../../store/interact";
+  import Button from "../../components/button/button.svelte";
 
   // TODO: UserSession shouldn't be in here - login should be fired by Storage.
   const UserSession = new blockstack.UserSession();
@@ -121,25 +122,29 @@
   <main slot="content" class="setup-main">
     <svelte:component this={slides[state.activeSlide]} />
   </main>
-  <div class="n-toolbar-grid" slot="footer">
-    {#if state.activeSlide > 0}
-      <button class="btn btn-clear filler left text-inverse-2" on:click={methods.back}>Back</button>
-    {/if}
-
-    <div class="main">
+  <div class="n-toolbar n-row" slot="footer">
+    <div class="left">
+      {#if state.activeSlide > 0}
+        <Button color="clear" className="btn btn-clear filler left text-inverse-2 px-2" on:click={methods.back}>Back</Button>
+      {/if}
+    </div>
+    <div class="filler" />
+    <div class="main" style="max-width:120px;">
       <NStepper steps={slides.length} stepClass="primary-bright" current={state.activeSlide} />
     </div>
-
-    {#if (slides[state.activeSlide] == StorageSlide && $UserStore.storageType) || slides[state.activeSlide] != StorageSlide}
-      {#if !state.redirecting}
-        <button class="btn btn-clear filler right text-primary-bright" on:click={methods.next}>
-          {#if state.activeSlide == 0}I&nbsp;agree{:else}Next{/if}
-        </button>
-      {:else}
-        <button class="btn btn-clear disabled right" disabled="true">
-          <strong>Redirecting...</strong>
-        </button>
+    <div class="filler" />
+    <div class="right">
+      {#if (slides[state.activeSlide] == StorageSlide && $UserStore.storageType) || slides[state.activeSlide] != StorageSlide}
+        {#if !state.redirecting}
+          <Button color="clear" className="btn btn-clear filler right text-primary-bright px-2" on:click={methods.next}>
+            {#if state.activeSlide == 0}I&nbsp;agree{:else}Next{/if}
+          </Button>
+        {:else}
+          <button class="btn btn-clear disabled right" disabled="true">
+            <strong>Redirecting...</strong>
+          </button>
+        {/if}
       {/if}
-    {/if}
+    </div>
   </div>
 </NLayout>

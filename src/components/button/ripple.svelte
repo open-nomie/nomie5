@@ -3,7 +3,18 @@
   import { tweened } from "svelte/motion";
   import { backOut } from "svelte/easing";
 
-  export let hit: Array<number>;
+  class Hit {
+    x: number;
+    y: number;
+    id: number;
+    constructor(hit: Array<number>) {
+      this.x = hit[0];
+      this.y = hit[1];
+      this.id = Math.random();
+    }
+  }
+
+  export let hit: Array<number> = undefined;
 
   let lastHit;
   let hideTimeout;
@@ -12,22 +23,18 @@
   let x;
   let y;
 
-  $: if (hit && hit.join(",") !== lastHit) {
-    show = false;
-    console.log("Ripple FIre!");
-    lastHit = hit.join(",");
-    x = hit[0];
-    y = hit[1];
-    setTimeout(() => {
-      show = true;
-    }, 1);
-    clearTimeout(hideTimeout);
-    hideTimeout = setTimeout(() => {
-      show = false;
-      setTimeout(() => {
-        hit = undefined;
-      }, 10);
-    }, 1000);
+  let hits: Array<Hit> = [];
+
+  $: if (hits.length > 2) {
+    hits = hits.splice(3);
+  }
+
+  $: if (hit && hit.length == 2) {
+    hits.unshift(new Hit(hit));
+    if (hits.length > 5) {
+      hits.slice(0, 5);
+    }
+    hits = hits;
   }
 </script>
 
@@ -61,16 +68,14 @@
       opacity: 1;
     }
     100% {
-      transform: scale(50);
+      transform: scale(100);
       opacity: 0;
     }
   }
 </style>
 
 <div class="ripple">
-  {#if hit}
-    <div class="ball" class:grow={show} style="top:{y}px;left:{x}px;" />
-  {/if}
+  {#each hits as _hit (`${_hit.id}`)}
+    <div class="ball grow" style="top:{_hit.y}px;left:{_hit.x}px;" />
+  {/each}
 </div>
-
-<!-- style="top:{y}px;left:{x}px;" -->

@@ -441,9 +441,6 @@ Note: Your data will not automatically move over. You'll first need to export it
           </div>
 
           <NItem className="mt-3">
-            <div slot="left">
-              <Text>🆘</Text>
-            </div>
             {`${Lang.t('general.questions')}`}
             <div slot="right">
               <Text size="sm" className="mr-1">
@@ -455,11 +452,10 @@ Note: Your data will not automatically move over. You'll first need to export it
           </NItem>
 
           <NItem className="bg-transparent">
-            <div class="px-2 py-4">
+            <div class="px-2 py-4 text-center">
               <Text size="sm">&copy; Copyright 2014 - {dayjs().format('YYYY')}</Text>
               <Text size="sm" inline faded>All Rights Reserved</Text>
               <Text size="sm" inline>
-                Nomie&reg; by
                 <a class="text-primary-bright" href="https://www.happydata.org" traget="_system">Happy Data, LLC</a>
               </Text>
             </div>
