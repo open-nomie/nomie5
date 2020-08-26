@@ -4,6 +4,7 @@
   export let dark = false;
   export let stepClass = "";
   export let single = false;
+  export let style = "";
 
   let _steps = [];
   $: if (steps || current) {
@@ -30,8 +31,9 @@
       border: solid 1px var(--color-translucent);
       opacity: 0.5;
       height: 8px;
-      flex-grow: 1;
-      flex-shrink: 1;
+      width: 8px;
+      flex-grow: 0;
+      flex-shrink: 0;
       margin: 0 2px;
       min-width: 8px;
       border-radius: 4px;
@@ -59,7 +61,7 @@
   }
 </style>
 
-<div class="n-stepper {dark ? 'dark' : 'light'}">
+<div class="n-stepper {dark ? 'dark' : 'light'}" {style}>
   {#each _steps as step}
     <div class="step {stepClass} {step ? 'active' : 'inactive'}" />
   {/each}

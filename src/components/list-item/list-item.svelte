@@ -4,6 +4,7 @@
   import { createEventDispatcher } from "svelte";
   import Ripple from "../button/ripple.svelte";
   import Hit from "../button/ripple-hit";
+  import tick from "../../utils/tick/tick";
 
   export let title = undefined;
   export let description = undefined;
@@ -22,6 +23,7 @@
   export let solo: boolean = false;
   export let bottomLine: boolean = false;
   export let topLine: boolean = false;
+  export let delay: number = undefined;
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty("left");
   const has_right = (arguments[1].$$slots || {}).hasOwnProperty("right");
@@ -32,22 +34,21 @@
   let hit: Array<number>;
 
   const methods = {
-    tap(event) {
-      setTimeout(
-        () => {
-          if (href) {
-            // event.preventDefault();
-            window.location.href = href;
-          } else if (to) {
-            navigate(to);
-          } else {
-            // this.$emit("click", this.$props);
-          }
-          dispatch("click", {});
-          dispatch("tap", {});
-        },
-        clickable ? 200 : 0
-      );
+    async tap(event) {
+      // let timeout = 200;
+      // if (delay !== undefined) {
+      //   timeout = delay;
+      // } else if (!clickable) {
+      //   timeout = 0;
+      // }
+      // await tick(timeout);
+      if (href) {
+        window.location.href = href;
+      } else if (to) {
+        navigate(to);
+      }
+      dispatch("click", {});
+      dispatch("tap", {});
     },
     doubletap(evt) {
       dispatch("dbltap", evt);

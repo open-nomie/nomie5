@@ -190,10 +190,11 @@ Note: Your data will not automatically move over. You'll first need to export it
   function changeView(v) {
     view = v;
     Storage.local.put("settings/view", v);
+    Device.scrollToTop();
   }
   // const setTimeout = setTimeout;
   onMount(() => {
-    window.scrollTo(0, 0);
+    Device.scrollToTop();
   });
 </script>
 
@@ -238,15 +239,14 @@ Note: Your data will not automatically move over. You'll first need to export it
             -->
             <div class="n-list mb-3">
               <NItem itemDivider>Import Data</NItem>
-              <NItem className="clickable" title={Lang.t('settings.nomie-api')} on:click={() => navigate('/api')}>
+              <NItem clickable title={Lang.t('settings.nomie-api')} on:click={() => navigate('/api')}>
                 <span slot="left">🕸</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
-
               </NItem>
               <NItem
-                className="clickable"
+                clickable
                 title={`${Lang.t('settings.import-from-backup')}`}
                 on:click={() => {
                   showImporter = true;
@@ -257,7 +257,8 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </span>
                 <input slot="right" class="d-none" type="file" bind:this={fileInput} on:change={methods.onImportFile} />
               </NItem>
-
+            </div>
+            <div class="n-list mb-3">
               <NItem itemDivider topLine>Export Data</NItem>
               <NItem clickable title={Lang.t('settings.generate-backup')} to="/settings/export/backup">
                 <span slot="left">📦</span>
@@ -271,7 +272,8 @@ Note: Your data will not automatically move over. You'll first need to export it
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
               </NItem>
-
+            </div>
+            <div class="n-list mb-3">
               <NItem itemDivider topLine>Storage Location</NItem>
               <NItem on:click={methods.storageMenu}>
                 <span slot="left">☁️</span>
@@ -294,14 +296,14 @@ Note: Your data will not automatically move over. You'll first need to export it
               {#if $UserStore.storageType === 'pouchdb'}
                 <PouchDBOptions />
               {/if}
-
+            </div>
+            <div class="n-list mb-3">
               <NItem itemDivider topLine>Data Management</NItem>
               <NItem
                 title="Browse Files..."
                 on:click={() => {
                   navigate('/files');
-                }}
-                className="clickable">
+                }}>
                 <span slot="left">📂</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
@@ -331,8 +333,6 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <span slot="left">👨‍👨‍👧‍👧</span>
               </NItem>
             </div> -->
-
-            <NItem className="solo text-red text-center my-4" on:click={methods.deleteEverything}>Reset & Delete all Nomie Data...</NItem>
           {:else if view == 'about'}
             <!--
               *******************************************
@@ -432,19 +432,23 @@ Note: Your data will not automatically move over. You'll first need to export it
             </NItem>
           </div>
 
-          <NItem className="mt-3">
-            {`${Lang.t('general.questions')}`}
+          <NItem className="bg-transparent mt-4" title="Danger Zone">
+            <div slot="left">
+              <Text size="lg">⚠️</Text>
+            </div>
             <div slot="right">
-              <Text size="sm" className="mr-1">
-                <a class="text-primary-bright" href={`mailto:${config.support_email}?subject=Nomie APP_VERSION`}>
-                  {config.support_contact}
-                </a>
-              </Text>
+              <Button color="danger" size="sm" on:click={methods.deleteEverything}>Destory all Data</Button>
             </div>
           </NItem>
 
           <NItem className="bg-transparent">
             <div class="px-2 py-4 text-center">
+              <Text size="md" className="mb-2">
+                {`${Lang.t('general.questions')}`}
+                <a class="text-primary-bright" href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>
+                  {config.support_contact}
+                </a>
+              </Text>
               <Text size="sm">&copy; Copyright 2014 - {dayjs().format('YYYY')}</Text>
               <Text size="sm" inline faded>All Rights Reserved</Text>
               <Text size="sm" inline>

@@ -325,7 +325,8 @@
   @import "../scss/utils/__utils.scss";
 
   :global(#note-capture) {
-    background-color: var(--color-solid);
+    background-color: var(--footer-background);
+    padding-bottom: 4px;
   }
 
   :global(.capture-log .tracker-list) {
@@ -351,11 +352,11 @@
   }
 
   .advanced {
-    background-color: var(--color-inverse-2);
     position: relative;
     z-index: 1200;
     margin-top: 10px;
     padding-top: 1px;
+    padding-bottom: 10px;
   }
 
   .autocomplete-results {

@@ -24,8 +24,11 @@
 
 <style lang="scss">
   @import "../../scss/utils/__utils.scss";
+
   #app-tabs {
-    height: calc(62px + env(safe-area-inset-bottom));
+    --tab-height: 65px;
+
+    height: calc(#{var(--tab-height)} + env(safe-area-inset-bottom));
     padding-bottom: calc(env(safe-area-inset-bottom));
     background-color: var(--footer-background);
     display: flex;
@@ -33,11 +36,23 @@
     align-items: stretch;
     z-index: 1200;
     flex-shrink: 0;
+    // padding-top: 10px;
+
+    &.compact {
+      --tab-height: 50px;
+      height: calc(#{var(--tab-height)} + env(safe-area-inset-bottom));
+      .n-row {
+        max-height: var(--tab-height);
+        min-height: var(--tab-height);
+        height: var(--tab-height);
+      }
+    }
+
     .n-row {
       z-index: 10;
-      max-height: 60px;
-      min-height: 60px;
-      height: 60px;
+      max-height: var(--tab-height);
+      min-height: var(--tab-height);
+      height: var(--tab-height);
       flex-shrink: 0;
     }
     .notification {
@@ -116,7 +131,7 @@
 </style>
 
 {#if state.mounted}
-  <nav id="app-tabs" class="">
+  <nav id="app-tabs" class={hideLabels ? 'compact' : ''}>
     <div class="n-row mw-500px mx-auto">
 
       <Link to={NPaths.routes.history()}>

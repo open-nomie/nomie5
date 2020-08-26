@@ -327,6 +327,7 @@
 // }
 
 .n-list {
+  background-color: var(--color-solid);
   &.solo,
   [solo] {
     width: calc(100% - 16px);

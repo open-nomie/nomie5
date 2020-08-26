@@ -126,12 +126,12 @@
   <div class="date-time-bar-wrapper {calendarPosition == 'top' ? 'calendar-top' : 'calendar-bottom'}">
     <div class="date-time-bar">
       <Button
-        className="date"
+        className="date justify-content-start"
         color="clear"
         on:click={() => {
           toggleOpen();
         }}>
-        <Text size="md" color={_opened ? 'primary-bright' : ''} truncate>
+        <Text size="md" className="text-align-left" color={_opened ? 'primary-bright' : ''} truncate>
           {$UserStore.meta.is24Hour ? _date.format('ddd D MMM YYYY') : _date.format('ddd MMM D YYYY')}
         </Text>
       </Button>

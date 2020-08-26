@@ -45,7 +45,8 @@
     }
   }
   button.inactive {
-    opacity: 0.7;
+    opacity: 0.8;
+    color: var(--color-grey-4);
   }
 </style>
 

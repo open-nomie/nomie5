@@ -72,10 +72,11 @@
 <style>
   .time-select {
     padding: 2px 8px;
+    margin-right: 10px;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     flex-shrink: 1;
     flex-grow: 1;
     color: var(--color-inverse-2);

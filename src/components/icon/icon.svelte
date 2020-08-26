@@ -117,6 +117,8 @@
 <style>
   :global(.n-icon) {
     fill: var(--color-inverse);
+    flex-grow: 0;
+    flex-shrink: 0;
   }
   :global(.tap-icon .n-icon, .tap-icon .n-icon) {
     fill: var(--color-primary-bright);

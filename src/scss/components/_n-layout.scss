@@ -36,6 +36,7 @@ body.scrolled {
     flex-grow: 1;
     flex-shrink: 0;
     z-index: 4;
+    transition: all 0.2s ease-in-out;
   }
   main.layout-main {
     -webkit-overflow-scrolling: touch;
@@ -46,7 +47,7 @@ body.scrolled {
     margin-top: calc(var(--header-height) * -1);
     padding-top: var(--header-height);
     z-index: 1;
-    border-bottom: solid 1px var(--color-grey-8);
+    border-bottom: solid 1px var(--color-grey-7);
   }
 
   &.no-tabs {

@@ -141,7 +141,7 @@
                 Interact.showLocations([displayLog]);
                 event.stopPropagation();
               }}
-              class="btn btn-xs btn-clear text-normal location-badge truncate">
+              class="btn btn-sm btn-clear text-normal location-badge truncate">
               <LocationBadge location={displayLog} />
             </button>
           {/if}

@@ -15,16 +15,13 @@
 
   let hits: Array<Hit> = [];
 
-  $: if (hits.length > 2) {
-    hits = hits.splice(3);
-  }
-
   $: if (hit && hit.length == 2) {
     hits.unshift(new Hit(hit));
-    if (hits.length > 5) {
-      hits.slice(0, 5);
+    if (hits.length > 3) {
+      hits = hits.slice(0, 2);
     }
     hits = hits;
+    console.log(`hits length ${hits.length}`);
   }
 </script>
 
