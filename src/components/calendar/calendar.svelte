@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   // Port and modification from vue-sweet-calendar
   // https://github.com/maryayi/vue-sweet-calendar/blob/master/src/components/Calendar.vue
 
@@ -12,6 +12,7 @@
 
   // vendors
   import dayjs from "dayjs";
+  import type { Dayjs } from "dayjs";
 
   // Utils & modules
   import Logger from "../../utils/log/log";
@@ -25,12 +26,17 @@
   import Text from "../../components/text/text.svelte";
   import NPositivityBar from "../../components/positivity-bar/positivity-bar.svelte";
 
+  import NextPrevCal from "../../components/next-prev-cal/next-prev-cal.svelte";
+
   const console = new Logger("📅 calendar/calendar");
   const dispatch = createEventDispatcher();
 
   // Props
-  export let initialDate = new Date();
+  export let initialDate = dayjs();
   export let size = "md";
+  export let className = "";
+
+  let firstDayOfWeek;
 
   // Updating to be react...
   $: firstDayOfWeek = $UserStore.meta.firstDayOfWeek || 1; // 1: Sunday, 2: Monday, etc.
@@ -43,7 +49,7 @@
 
   // Data
   export let state = {
-    date: dayjs(initialDate),
+    date: initialDate.format ? initialDate : dayjs(initialDate),
     today: new Date(),
     weekdays: null,
     percentage: null,
@@ -64,7 +70,7 @@
     mounted = false;
   });
 
-  let days = null;
+  let days: Array<any>;
   let day = null;
 
   let startWeekDayOfMonth = state.date.startOf("month").toDate().getDay() + 1;
@@ -107,11 +113,11 @@
     let emptyDays = Array((startWeekDayOfMonth - firstDayOfWeek + 7) % 7).fill(null);
     // Create array of days for this month
     let nonEmptyDays = Array(numberOfDays)
-      .fill()
-      .map((item, index) => dayjs(monthStartDate).add(index, "days"));
+      .fill(0)
+      .map((item, index) => dayjs(monthStartDate).add(index, "day"));
     // Merge the arrays
     days = emptyDays.concat(nonEmptyDays);
-    state.percentage = nonEmptyDays / (emptyDays + nonEmptyDays);
+    state.percentage = nonEmptyDays.length / (emptyDays.length + nonEmptyDays.length);
   }
 
   // If date change - do the magic.
@@ -144,9 +150,11 @@
       }, 1);
     },
     // Go to Today
-    goToday() {
+    goToday(withClick: boolean = true) {
       state.date = dayjs();
-      dispatch("dayClick", state.date);
+      if (withClick) {
+        dispatch("dayClick", state.date);
+      }
     },
     /**
      * Generate the Style for the Provided Day
@@ -263,13 +271,11 @@
     .active {
       position: relative;
       &:before {
-        content: "";
-        height: 4px;
-        border-radius: 2px;
-        background-color: var(--color-primary-bright);
-        bottom: -3px;
-        left: 0;
-        right: 0;
+        content: "✔";
+        font-size: 10px;
+        color: var(--color-green);
+        top: -4px;
+        right: -4px;
         position: absolute;
       }
     }
@@ -291,8 +297,8 @@
       .header {
         align-items: center;
         display: grid;
-        grid-column-gap: 5px;
-        grid-template-columns: 1fr 30px 50px 30px;
+        grid-column-gap: 4px;
+        grid-template-columns: 1fr 24px 50px 24px;
         margin: 6px 0;
         margin-left: 16px;
         .month {
@@ -314,7 +320,7 @@
       .body {
         align-items: center;
         display: grid;
-        grid-row-gap: 8px;
+        grid-row-gap: 4px;
         grid-template-columns: repeat(7, 1fr);
         grid-template-rows: repeat(7, 1fr);
         justify-items: center;
@@ -390,28 +396,25 @@
 </style>
 
 {#if state.date && mounted}
-  <div class="sweet-calendar {size}">
+  <div class="sweet-calendar {className} {size}">
     <div class="sweet-container calendar">
       {#if showHeader}
-        <div class="header">
+        <div class="header pr-3">
           <div class="month filler">
             <Text size="sm" bold>{selectedMonthName} {selectedYear}</Text>
           </div>
-          <button class="btn btn-sm btn-clear left-arrow" on:click={methods.prevMonth}>
-            <NIcon name="chevronLeft" className="fill-primary-bright" />
-          </button>
-          <button class="btn btn-sm btn-clear goto-today" on:click={methods.goToday}>
-            <Text size="xs">{Lang.t('general.today', 'Today')}</Text>
-          </button>
-          <button class="btn btn-sm btn-clear right-arrow" on:click={methods.nextMonth}>
-            <NIcon name="chevronRight" className="fill-primary-bright" />
-          </button>
+          <NextPrevCal
+            on:previous={methods.prevMonth}
+            on:next={methods.nextMonth}
+            on:calendar={() => {
+              methods.goToday(false);
+            }} />
         </div>
       {/if}
 
       <div class="body">
         {#each state.weekdays || [] as day, index}
-          <div class="day-name" title={day}>{day[0]}</div>
+          <div class="day-name" aria-label={day}>{day[0]}</div>
         {/each}
         {#each days || [] as day}
           <div class="day-container clickable">

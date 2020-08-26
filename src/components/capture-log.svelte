@@ -204,8 +204,11 @@
       saving = true;
       console.log("Save Log - starts now", "");
       methods.calculateScore();
+      console.log("Score Calculated", "");
       try {
+        console.log("Start Ledger Save Log", "");
         await LedgerStore.saveLog($ActiveLogStore); // TODO: Make ledger task instead
+        console.log("Ledger Save Complete", "");
         saving = false;
       } catch (e) {
         console.error("Error in capture-log logSave", e.message);
@@ -321,7 +324,7 @@
 <style lang="scss">
   @import "../scss/utils/__utils.scss";
 
-  #note-capture {
+  :global(#note-capture) {
     background-color: var(--color-solid);
   }
 
@@ -338,18 +341,21 @@
     border-radius: 4px;
   }
   .capture-log {
-    background-color: var(--footer-background);
     padding: 10px;
     // background-color: var(--header-background);
     // backdrop-filter: saturate(180%) blur(20px);
     // border-top: solid 1px var(--header-background);
+    padding-bottom: 0;
     position: relative;
     z-index: 1;
   }
 
   .advanced {
+    background-color: var(--color-inverse-2);
     position: relative;
     z-index: 1200;
+    margin-top: 10px;
+    padding-top: 1px;
   }
 
   .autocomplete-results {
@@ -490,7 +496,7 @@
     // box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     transition: all 0.2s ease-in-out;
-    // border: solid 1px var(--color-faded-1);
+    border: solid 1px var(--color-faded-1);
 
     .save-button {
       display: none;
@@ -591,7 +597,7 @@
             }} />
         </NItem>
         <!-- Location -->
-        <NItem truncate className="clickable mr-2 solo text-sm" on:click={methods.toggleCustomLocation}>
+        <NItem truncate clickable className="mr-2 solo text-sm" on:click={methods.toggleCustomLocation}>
           <div slot="left" class="text-sm text-bold">
             <NIcon name="pin" className="mr-2 fill-inverse-2" size="16" />
           </div>
@@ -616,22 +622,25 @@
         </NItem>
         <!-- Date / Time -->
 
-        <DateTimeBar
-          date={$ActiveLogStore.end}
-          on:change={(evt) => {
-            $ActiveLogStore.end = dayjs(evt.detail).toDate().getTime();
-          }}>
-          <div slot="left">
-            <NIcon name="calendar" className="ml-2 fill-inverse-2" size="16" />
-          </div>
-          <div slot="right">
-            {#if $ActiveLogStore.end}
-              <button class="btn btn-icon mr-2" on:click|stopPropagation={methods.clearDate}>
-                <NIcon name="close" className="fill-inverse" size="22" />
-              </button>
-            {/if}
-          </div>
-        </DateTimeBar>
+        <NItem solo className="p-0" style="overflow:hidden">
+          <DateTimeBar
+            date={$ActiveLogStore.end}
+            calendarClass="px-2 mb-1"
+            on:change={(evt) => {
+              $ActiveLogStore.end = dayjs(evt.detail).toDate().getTime();
+            }}>
+            <div slot="left">
+              <NIcon name="calendar" className="ml-2 fill-inverse-2" size="16" />
+            </div>
+            <div slot="right">
+              {#if $ActiveLogStore.end}
+                <button class="btn btn-icon mr-2" on:click|stopPropagation={methods.clearDate}>
+                  <NIcon name="close" className="fill-inverse" size="22" />
+                </button>
+              {/if}
+            </div>
+          </DateTimeBar>
+        </NItem>
 
         <!-- <NItem compact truncate className="bg-transparent mt-1 mb-2 mr-2 solo text-sm" on:click={methods.selectDate}>
           

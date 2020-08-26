@@ -236,7 +236,10 @@ button:focus {
   font-size: 26px !important;
   padding-left: 10px;
   padding-right: 10px;
+  border-radius: 50px;
   outline: 0 !important;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 .btn-primary {
@@ -294,7 +297,7 @@ button:focus {
 }
 
 .btn-group {
-  background-color: var(--color-solid-1);
+  background-color: var(--color-solid-2);
   padding: 3px;
   border-radius: 12px;
   height: 40px;
@@ -349,6 +352,9 @@ button:focus {
   &[disabled] {
     opacity: 0.5;
   }
+}
+.btn-transparent {
+  background-color: none;
 }
 .btn-square {
   border-radius: 0 !important;

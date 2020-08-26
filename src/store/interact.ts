@@ -20,7 +20,7 @@
 import { writable } from "svelte/store";
 import { navigate } from "svelte-routing";
 // vendors
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 // utils
 import Logger from "../utils/log/log";
@@ -401,13 +401,12 @@ const interactInit = () => {
         return s;
       });
     },
-    async selectDate(date = new Date()) {
-      let selectedDate = await Interact.prompt("Date / Time", null, {
+    async selectDate(starterDate: Date = new Date()) {
+      let selectedDate: any = await Interact.prompt("Date / Time", null, {
         valueType: "datetime",
-        value: dayjs(new Date(date)).format("YYYY-MM-DDTHH:mm"),
+        value: starterDate,
       });
-      let localizedDate = time.datetimeLocal(selectedDate);
-      return localizedDate.getTime();
+      return selectedDate.getTime();
     },
     editLog(log) {
       log = new NomieLog(log);

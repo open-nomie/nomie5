@@ -77,6 +77,21 @@ TODO: Organize main into components or containers.
   height: 16px;
 }
 
+hr.divider {
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-top: solid 1px var(--color-grey-7);
+  border-bottom: none;
+  &.center {
+    margin-left: 24px !important;
+    margin-right: 24px !important;
+  }
+  &.indent {
+    margin-left: 20px;
+  }
+}
+
 .board-actions {
   .btn-group {
     flex-grow: 0;

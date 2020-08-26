@@ -17,11 +17,10 @@
 </style>
 
 <div class="n-date-picker p-3">
-  <input
-    type="date"
-    class="form-control"
-    bind:value={date}
-    on:change={event => {
+  <DateTimeBar
+    open
+    {date}
+    on:change={(event) => {
       dispatch('change', date);
     }} />
 </div>

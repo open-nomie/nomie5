@@ -40,6 +40,7 @@
   import { LedgerStore } from "../../store/ledger";
   import { BoardStore } from "../../store/boards";
   import { TrackerStore } from "../../store/tracker-store";
+  import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
 
   let promptInput;
   let logEditorTracker;
@@ -152,7 +153,17 @@
       type="number"
       class="form-control mt-2" />
   {:else if $Interact.prompt.valueType == 'datetime'}
-    <input
+    <DateTimeBar
+      opened
+      calendarPosition="top"
+      bind:date={$Interact.prompt.value}
+      on:change={(evt) => {
+        Interact.update((state) => {
+          state.prompt.value = evt.detail.toDate();
+          return state;
+        });
+      }} />
+    <!-- <input
       name="value"
       title="input value"
       bind:this={promptInput}
@@ -160,7 +171,7 @@
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
       type="datetime-local"
-      class="form-control mt-2" />
+      class="form-control mt-2" /> -->
   {:else}
     <input
       title="input value"
