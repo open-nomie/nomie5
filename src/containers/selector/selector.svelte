@@ -17,6 +17,7 @@
   import { Interact } from "../../store/interact";
   import { ContextStore } from "../../store/context-store";
   import { Lang } from "../../store/lang";
+  import Button from "../../components/button/button.svelte";
 
   // Props
   export let show = false;
@@ -30,7 +31,7 @@
   let state = {
     selected: [],
     items: [],
-    multiple
+    multiple,
   };
 
   // Holder of the alphabet for the list
@@ -46,7 +47,7 @@
       case "tracker":
         state.title = multiple ? "Select Trackers" : "Select a Tracker";
         state.items = Object.keys($TrackerStore.trackers || {})
-          .map(tag => {
+          .map((tag) => {
             return $TrackerStore.trackers[tag];
           })
           .sort((a, b) => {
@@ -58,7 +59,7 @@
         state.title = multiple ? "Select People" : "Select a Person";
 
         state.items = Object.keys($PeopleStore.people || {})
-          .map(username => {
+          .map((username) => {
             return $PeopleStore.people[username];
           })
           .sort((a, b) => {
@@ -70,7 +71,7 @@
         state.title = "Select Context";
 
         state.items = Object.keys($ContextStore || {})
-          .map(tag => {
+          .map((tag) => {
             return $ContextStore[tag];
           })
           .sort((a, b) => {
@@ -131,7 +132,7 @@
         // if it's less than 10 trackers - just show them without the letters
         return true;
       }
-    }
+    },
   };
 </script>
 
@@ -143,12 +144,7 @@
 </style>
 
 {#if show}
-  <NModal
-    title={state.title}
-    type="fullscreen"
-    className="tracker-selector-modal"
-    allowClose={true}
-    on:close={methods.close}>
+  <NModal title={state.title} type="fullscreen" className="tracker-selector-modal" allowClose={true} on:close={methods.close}>
 
     {#if state.items.length == 0}
       <NItem class="text-inverse-2">Nothing found</NItem>
@@ -158,9 +154,7 @@
       <div class="list trackers">
         {#each state.items as item}
           {#if !methods.alphaGroupExists(item.label)}
-            <NItem
-              className="bg-light text-faded sticky-top"
-              title={item.label.substr(0, 1).toUpperCase()} />
+            <NItem className="bg-light text-faded sticky-top" title={item.label.substr(0, 1).toUpperCase()} />
           {/if}
           <NItem
             className="bottom-line"
@@ -186,9 +180,7 @@
       <div class="list people">
         {#each state.items as person}
           {#if !methods.alphaGroupExists(person.displayName)}
-            <NItem
-              className="bg-light text-faded sticky-top"
-              title={person.displayName.substr(0, 1).toUpperCase()} />
+            <NItem className="bg-light text-faded sticky-top" title={person.displayName.substr(0, 1).toUpperCase()} />
           {/if}
           <NItem
             className="bottom-line {state.selected.indexOf(person) > -1 ? 'bg-selected' : ''}"
@@ -213,9 +205,7 @@
       <div class="list context">
         {#each state.items as context}
           {#if !methods.alphaGroupExists(context)}
-            <NItem
-              className="bg-light text-faded sticky-top"
-              title={context.substr(0, 1).toUpperCase()} />
+            <NItem className="bg-light text-faded sticky-top" title={context.substr(0, 1).toUpperCase()} />
           {/if}
           <NItem
             className="bottom-line {state.selected.indexOf(context) > -1 ? 'bg-selected' : ''}"
@@ -235,18 +225,16 @@
       </div>
     {/if}
     <div slot="footer" class="n-row">
-      <button class="btn btn-light btn-lg w-100 mr-2" on:click={methods.close}>
-        {Lang.t('general.close')}
-      </button>
+      <Button color="light" size="lg" className="w-100 mr-2" on:click={methods.close}>{Lang.t('general.close')}</Button>
       {#if state.selected.length > 0}
-        <button
-          transition:fade
-          class="btn btn-primary btn-lg w-100"
+        <Button
+          size="lg"
+          className="w-100"
           on:click={() => {
             dispatch('select', state.selected);
           }}>
           {Lang.t('general.done', 'Done')}
-        </button>
+        </Button>
       {/if}
     </div>
   </NModal>

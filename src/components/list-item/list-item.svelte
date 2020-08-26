@@ -1,7 +1,10 @@
-<script>
+<script lang="ts">
   import { navigate, Link } from "svelte-routing";
   import NText from "../text/text.svelte";
   import { createEventDispatcher } from "svelte";
+  import Ripple from "../button/ripple.svelte";
+  import Hit from "../button/ripple-hit";
+
   export let title = undefined;
   export let description = undefined;
   // export let borderBottom = false;
@@ -11,14 +14,14 @@
   export let id = null;
   export let className = "";
   export let itemDivider = undefined;
-  export let compact = false;
-  export let truncate = false;
+  export let compact: boolean = false;
+  export let truncate: boolean = false;
   export let style = "";
-  export let clickable = false;
+  export let clickable: boolean = false;
   export let ariaLabel = "";
-  export let solo = false;
-  export let bottomLine = false;
-  export let topLine = false;
+  export let solo: boolean = false;
+  export let bottomLine: boolean = false;
+  export let topLine: boolean = false;
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty("left");
   const has_right = (arguments[1].$$slots || {}).hasOwnProperty("right");
@@ -26,18 +29,25 @@
 
   const dispatch = createEventDispatcher();
 
+  let hit: Array<number>;
+
   const methods = {
     tap(event) {
-      if (href) {
-        // event.preventDefault();
-        window.location.href = href;
-      } else if (to) {
-        navigate(to);
-      } else {
-        // this.$emit("click", this.$props);
-      }
-      dispatch("click", {});
-      dispatch("tap", {});
+      setTimeout(
+        () => {
+          if (href) {
+            // event.preventDefault();
+            window.location.href = href;
+          } else if (to) {
+            navigate(to);
+          } else {
+            // this.$emit("click", this.$props);
+          }
+          dispatch("click", {});
+          dispatch("tap", {});
+        },
+        clickable ? 200 : 0
+      );
     },
     doubletap(evt) {
       dispatch("dbltap", evt);
@@ -67,6 +77,9 @@
     on:tap={methods.tap}
     on:dbltap={methods.doubletap}
     on:longtap={methods.longtap}
+    on:mousedown={(evt) => {
+      hit = [evt.offsetX, evt.offsetY];
+    }}
     on:contextmenu={(evt) => {
       dispatch('contextmenu', evt);
       return false;
@@ -75,8 +88,7 @@
     {style}
     class="n-item {compact ? 'compact' : ''}
     {className}
-    {bottomLine ? 'bottom-line' : ''}
-    {clickable ? 'clickable' : ''}"
+    {bottomLine ? 'bottom-line' : ''}"
     :alt="title">
     {#if has_left}
       <div class="left">
@@ -88,7 +100,7 @@
         <NText size="md" tag="div" medium>{title}</NText>
       {/if}
       {#if description}
-        <p class="description">{description}</p>
+        <NText size="sm" lineHeightMd className="mt-1" faded>{description}</NText>
       {/if}
       <slot />
     </div>
@@ -97,6 +109,9 @@
       <div class="right">
         <slot name="right" />
       </div>
+    {/if}
+    {#if clickable}
+      <Ripple bind:hit />
     {/if}
   </button>
 {:else}
@@ -129,7 +144,7 @@
         <NText size="md" tag="div" className="title" medium>{title}</NText>
       {/if}
       {#if description}
-        <p class="description">{description}</p>
+        <NText size="sm" lineHeightMd className="mt-1" faded>{description}</NText>
       {/if}
       <slot />
     </div>

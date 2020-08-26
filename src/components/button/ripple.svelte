@@ -2,21 +2,11 @@
   import { onMount } from "svelte";
   import { tweened } from "svelte/motion";
   import { backOut } from "svelte/easing";
-
-  class Hit {
-    x: number;
-    y: number;
-    id: number;
-    constructor(hit: Array<number>) {
-      this.x = hit[0];
-      this.y = hit[1];
-      this.id = Math.random();
-    }
-  }
+  import Hit from "./ripple-hit";
 
   export let hit: Array<number> = undefined;
 
-  let lastHit;
+  let lastHit: Hit;
   let hideTimeout;
   let show = false;
 
@@ -45,6 +35,7 @@
     right: 0;
     bottom: 0;
     top: 0;
+    overflow: hidden;
   }
   .ball {
     transition: all 0.5s ease-in-out;
@@ -52,10 +43,10 @@
     width: 2px;
     height: 2px;
     border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: var(--color-translucent-inverse);
     top: 5px;
     left: 20px;
-    opacity: 0.7;
+    opacity: 0.3;
   }
   .ball.grow {
     animation: ripple 1s;
@@ -65,7 +56,7 @@
     0% {
       width: 2px;
       height: 2px;
-      opacity: 1;
+      opacity: 0.4;
     }
     100% {
       transform: scale(100);

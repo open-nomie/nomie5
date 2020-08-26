@@ -12,6 +12,10 @@
   export let block = false;
   export let style = "";
   export let disabled = false;
+  export let delay = 300;
+  export let icon = false;
+  export let title = undefined;
+  export let ariaLabel = undefined;
 
   let hit;
   let ripple;
@@ -34,14 +38,16 @@
 <button
   {style}
   {disabled}
-  class={`btn ${block ? 'btn-block' : ''} btn-${type} btn-${shape} btn-${color} btn-${size} ${className}`}
+  class={`btn ${block ? 'btn-block' : ''} ${icon ? 'btn-icon' : ''} btn-${type} btn-${shape} btn-${color} btn-${size} ${className}`}
   on:mousedown={(evt) => {
-    console.log(evt);
-    console.log(`${evt.offsetX},${evt.offsetY}`);
     hit = [evt.offsetX, evt.offsetY];
   }}
+  {title}
+  area-label={ariaLabel || title}
   on:click={(evt) => {
-    dispatch('click');
+    setTimeout(() => {
+      dispatch('click');
+    }, delay);
   }}>
   <Ripple bind:this={ripple} bind:hit />
   <slot />

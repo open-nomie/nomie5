@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
   import NToolbar from "../toolbar/toolbar.svelte";
   import NItem from "../list-item/list-item.svelte";
   import { createEventDispatcher, onMount, onDestroy } from "svelte";
   import { Lang } from "../../store/lang";
+  import Button from "../button/button.svelte";
   const dispatch = createEventDispatcher();
 
   export let title = undefined;
@@ -12,10 +13,19 @@
   export let show = true;
 
   const methods = {
-    backgroundClicked(event) {
-      dispatch("close");
+    backgroundClicked(event: any) {
+      const ele: HTMLElement = event.toElement;
+      if (ele.classList.contains("pop-menu")) {
+        console.log(event);
+        dispatch("close", event);
+      }
     },
   };
+
+  function close(evt) {
+    dispatch("close", evt);
+  }
+
   let escListener;
   $: if (show) {
     escListener = document.addEventListener("keyup", (evt) => {
@@ -29,6 +39,7 @@
 </script>
 
 <style lang="scss" type="text/scss">
+  $radius: 1rem;
   :global(.pop-menu) {
     position: fixed;
     top: 0;
@@ -37,6 +48,14 @@
     right: 0;
     z-index: 2000;
     padding-bottom: env(safe-area-inset-bottom);
+
+    .list {
+      border-radius: $radius;
+      background-color: var(--color-solid);
+      max-height: 60vh;
+      overflow-y: scroll;
+    }
+
     &:before {
       content: "";
       background-color: var(--color-full-screen);
@@ -84,41 +103,6 @@
       justify-content: stretch;
       align-content: stretch;
 
-      .btn {
-        $radius: 1rem;
-        border-radius: 0;
-        margin-bottom: 0;
-        margin-top: 0;
-        border: solid 1px var(--color-solid-1);
-        &:hover {
-          transform: scale(1) !important;
-          color: var(--color-inverse) !important;
-        }
-        &:first-child {
-          border-top-right-radius: $radius;
-          border-top-left-radius: $radius;
-        }
-        &:nth-last-child(2) {
-          border-bottom-right-radius: $radius;
-          border-bottom-left-radius: $radius;
-        }
-        &:last-child {
-          border-radius: $radius;
-          margin-top: 10px;
-        }
-        &:active {
-          transform: scale(0.98);
-        }
-        &:hover {
-          transform: none;
-          // background-color: var(--color-faded) !important;
-        }
-        &.btn-danger:hover {
-          background-color: var(--color-red) !important;
-          color: #fff;
-        }
-      }
-
       .card-body {
         flex-grow: 1;
         flex-shrink: 1;
@@ -130,6 +114,38 @@
         min-width: 100px;
       }
     }
+  }
+  :global(.pop-menu .list .btn) {
+    border-radius: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    border: none;
+    box-shadow: none !important;
+    &:hover {
+      transform: scale(1) !important;
+      color: var(--color-inverse) !important;
+      background-color: var(--color-solid) !important;
+    }
+    &:first-child {
+      border-top-right-radius: $radius;
+      border-top-left-radius: $radius;
+    }
+    &:last-child() {
+      border-bottom-right-radius: $radius;
+      border-bottom-left-radius: $radius;
+    }
+    &:active {
+      // transform: scale(0.98);
+    }
+    &:hover {
+      transform: none;
+      color: inherit;
+      // background-color: var(--color-faded) !important;
+    }
+  }
+  :global(.pop-menu .btn-danger:hover, .pop-menu.btn-danger:active) {
+    background-color: var(--color-red) !important;
+    color: rgba(128, 2, 2, 0.9) !important;
   }
 </style>
 
@@ -146,27 +162,37 @@
       </div>
     {/if}
     <div class="list">
-      {#each buttons as button}
-        <button
+      {#each buttons as button, index}
+        <Button
+          block
+          color="light"
+          size="lg"
           disabled={button.disabled}
-          class="btn btn-block btn-light btn-lg {button.description ? 'btn-desc' : ''}"
-          on:click|stopPropagation={() => {
+          className={button.description ? 'btn-desc' : ''}
+          on:click={(evt) => {
             button.click();
-            dispatch('close');
+            close(evt);
           }}>
           <div class="title">{button.title}</div>
           {#if button.description}
             <div class="description">{button.description}</div>
           {/if}
-        </button>
+        </Button>
+        {#if index !== buttons.length - 1}
+          <hr class="divider center" />
+        {/if}
       {/each}
-      <button
-        class="btn btn-block btn-danger btn-lg"
-        on:click|stopPropagation={() => {
-          dispatch('close');
-        }}>
-        {Lang.t('general.cancel')}
-      </button>
+
     </div>
+    <Button
+      block
+      className="mt-2"
+      color="danger"
+      size="lg"
+      on:click={(evt) => {
+        close(evt);
+      }}>
+      {Lang.t('general.cancel')}
+    </Button>
   </div>
 </div>

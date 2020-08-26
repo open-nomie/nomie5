@@ -27,6 +27,7 @@
   import { Interact } from "../../../store/interact";
   import { Lang } from "../../../store/lang";
   import Icon from "../../../components/icon/icon.svelte";
+  import Button from "../../../components/button/button.svelte";
 
   // Props
   export let tracker = undefined; // You can provide a tracker
@@ -221,47 +222,61 @@
 
     {#if data.tracker}
       <div class="left">
-        <button
-          aria-label="Cancel"
+        <Button
+          color="transparent"
+          shape="round"
+          size="lg"
+          style="width:40px; height:40px;"
+          title="Cancel"
           on:click={() => {
             methods.onCancel();
-          }}
-          class="btn btn-clear btn-lg">
+          }}>
           <Icon name="close" size="42" />
-        </button>
+        </Button>
       </div>
       <!-- end left toolbar -->
 
       <div class="main px-2">
 
         {#if (data.tracker.type == 'timer' && data.value) || (data.tracker.type != 'timer' && $Interact.trackerInput.allowSave !== false)}
-          <button
+          <Button
+            size="lg"
+            shape="round"
+            block
             style="max-width:130px"
             on:click={methods.onSave}
-            class="btn btn-primary btn-lg text-white btn-block "
-            aria-label="Save this log">
+            className="text-white"
+            title="Save this log">
             {saveLabel}
-          </button>
+          </Button>
         {/if}
 
         {#if data.tracker.type == 'timer' && !data.tracker.started && !data.value}
-          <button
+          <Button
+            color="success"
+            shape="round"
+            size="lg"
+            block
             on:click={methods.startTimer}
             style="max-width:130px"
-            aria-label="Start Timer"
-            class="btn btn-success btn-lg btn-block text-white">
+            title="Start Timer"
+            className="text-white">
             {Lang.t('general.start', 'Start')}
-          </button>
+          </Button>
         {/if}
 
         {#if data.tracker.type == 'timer' && data.tracker.started !== null}
-          <button
+          <Button
+            color="danger"
+            shape="round"
+            size="lg"
+            block
             on:click={methods.stopTimer}
             style="max-width:130px"
-            aria-label="Stop Timer"
-            class="btn btn-danger text-white btn-lg btn-block {data.tracker.started > 0 ? '' : 'd-none'}">
+            title="Stop Timer"
+            className="text-white {data.tracker.started > 0 ? '' : 'd-none'}">
             {Lang.t('general.stop', 'Stop')}
-          </button>
+          </Button>
         {/if}
 
       </div>
@@ -270,17 +285,21 @@
       <div class="right">
 
         {#if (data.tracker.type !== 'timer' || data.value) && hideAdd !== true}
-          <button
+          <Button
+            color="transparent"
+            shape="round"
+            style="width:40px; height:40px;"
+            size="lg"
             on:click={methods.onAdd}
             title="Add this to the note, but don't save yet"
-            class="btn btn-clear btn-lg {tracker.started ? 'd-none' : ''}">
+            className={tracker.started ? 'd-none' : ''}>
             <!-- local hack to make plus match with close-->
             {#if !$Interact.trackerInput.allowSave}
               <NIcon name="chevronRight" size="42" />
             {:else}
               <NIcon name="add" size="46" />
             {/if}
-          </button>
+          </Button>
         {/if}
       </div>
       <!-- end toolbar-grid right -->

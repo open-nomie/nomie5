@@ -44,6 +44,7 @@
   import global from "../config/appConfig";
   import Icon from "../components/icon/icon.svelte";
   import Text from "../components/text/text.svelte";
+  import Button from "../components/button/button.svelte";
 
   /**
    * I've messed this all up again. but it's faster and more responsivle
@@ -224,14 +225,14 @@
 <NLayout pageTitle={appTitle} showTabs={false}>
 
   <header slot="header">
-    <div class="n-row container">
-      <button class="btn btn-clear btn-icon tap-icon pr-1" on:click={back}>
+    <div class="n-row container h-100 px-2">
+      <Button color="transparent" icon className="tap-icon pr-1" on:click={back}>
         {#if state.searchTerm && state.searchTerm.length > 0}
-          <NIcon name="close" />
+          <NIcon name="close" size="24" />
         {:else}
-          <NIcon name="arrowBack" />
+          <NIcon name="arrowBack" size="24" />
         {/if}
-      </button>
+      </Button>
       <div class="filler">
         <!-- on:change={methods.searchChange} -->
         <NSearchBar

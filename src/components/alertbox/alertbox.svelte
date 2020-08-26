@@ -2,6 +2,7 @@
   import NToolbar from "../toolbar/toolbar.svelte";
   import NText from "../text/text.svelte";
   import { createEventDispatcher } from "svelte";
+  import Button from "../button/button.svelte";
   const dispatch = createEventDispatcher();
 
   export let title = undefined;
@@ -15,7 +16,7 @@
   let escListener;
   $: if (show) {
     hasSlot = arguments[1].$$slots || {}.default;
-    escListener = document.addEventListener("keyup", evt => {
+    escListener = document.addEventListener("keyup", (evt) => {
       if (evt.key == "Escape") {
         methods.onCancel();
       }
@@ -38,7 +39,7 @@
         onInteract(false);
         dispatch("close");
       }
-    }
+    },
   };
 </script>
 
@@ -114,14 +115,10 @@
   }
 </style>
 
-<div
-  class="full-screen dark-glass alert-dialog {show === true ? 'visible' : 'hidden'}">
+<div class="full-screen dark-glass alert-dialog {show === true ? 'visible' : 'hidden'}">
   <div class="alert-dialog-window card">
     {#if title}
-      <div
-        class="card-title {!hasSlot && !message ? 'message-less' : 'message'}">
-        {title}
-      </div>
+      <div class="card-title {!hasSlot && !message ? 'message-less' : 'message'}">{title}</div>
     {/if}
 
     {#if message && !hasSlot}
@@ -141,18 +138,9 @@
 
     <div class="p-1 d-flex flex-row footer">
       {#if cancel}
-        <button
-          class="btn btn-lg btn-light mr-1 flex-grow"
-          on:click={methods.onCancel}>
-          {cancel}
-        </button>
+        <Button color="transparent" size="lg" block className="mr-1 flex-grow" on:click={methods.onCancel}>{cancel}</Button>
       {/if}
-
-      <button
-        class="btn btn-lg btn-primary ml-1 flex-grow"
-        on:click={methods.onOk}>
-        {ok}
-      </button>
+      <Button block size="lg" className="ml-1 flex-grow" on:click={methods.onOk}>{ok}</Button>
     </div>
   </div>
 </div>
