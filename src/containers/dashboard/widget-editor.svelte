@@ -198,21 +198,26 @@
         <Input placeholder="Message" type="text" bind:value={value.description} />
       {/if}
       {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('timeframe') > -1}
-        <ListItem bottomLine title="Timeframe">
-          <select bind:value={dateType} slot="right" class="form-control time-frame-select flex-shrink" style="margin-left:10px !important">
-            <option>Select</option>
-            {#each timeFrames as timeFrame}
-              <option value={timeFrame.id}>{timeFrame.label}</option>
-            {/each}
-          </select>
-        </ListItem>
+        <Input bind:value={dateType} type="select" label="Timeframe">
+          <option>Select</option>
+          {#each timeFrames as timeFrame}
+            <option value={timeFrame.id}>{timeFrame.label}</option>
+          {/each}
+        </Input>
       {/if}
       {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('element') > -1}
-        <ListItem className="trackable-item" on:click={selectType} title={`${!value.element ? '⚠️ ' : ''}Trackable Item`}>
-          <div slot="right" class="mr-2">
+        <ListItem
+          clickable
+          delay={0}
+          className="px-2 trackable-item"
+          on:click={selectType}
+          title={`${!value.element ? '⚠️ ' : ''}Trackable Item`}>
+          <div slot="right">
             {#if value.element}
               <TrackerSmallBlock truncate element={value.element} on:click={selectType} style="min-height:40px; max-width:150px" />
-            {:else}Select{/if}
+            {:else}
+              <Text className="text-primary-bright">Select</Text>
+            {/if}
           </div>
         </ListItem>
       {/if}
@@ -224,13 +229,11 @@
         </ListItem>
       {/if}
     {:else if editorView == 'style'}
-      <ListItem title="Widget Size">
-        <select slot="right" bind:value={value.size} class="form-control flex-shrink">
-          <option value="sm">Small</option>
-          <option value="md">Medium</option>
-          <option value="lg">Large</option>
-        </select>
-      </ListItem>
+      <Input type="select" label="Widget Size" bind:value={value.size}>
+        <option value="sm">Small</option>
+        <option value="md">Medium</option>
+        <option value="lg">Large</option>
+      </Input>
       {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('cond-style') > -1}
         <!-- <div class="conditional-styling n-list {conditionalStyling ? 'solo framed' : ''}"> -->
         <ListItem title="Conditional Colors">

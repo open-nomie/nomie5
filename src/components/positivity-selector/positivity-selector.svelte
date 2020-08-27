@@ -17,6 +17,7 @@
 <style>
   :global(.positivity-selector) {
     padding: 0px !important;
+    box-shadow: none !important;
   }
   :global(.positivity-selector .text-xl) {
     line-height: 21px;

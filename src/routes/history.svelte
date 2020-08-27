@@ -476,14 +476,14 @@
           <div class="memories">
             {#each $LedgerStore.memories as log}
               <div class="memories-log-header">
-                <button
-                  class="btn btn-clear"
+                <Button
+                  color="clear"
                   on:click={() => {
                     methods.goto(dayjs(log.end));
                   }}>
                   From {dayjs(log.end).fromNow()}
                   <NIcon name="chevronRight" className="fill-white" />
-                </button>
+                </Button>
               </div>
               <LogItem
                 className="aged"

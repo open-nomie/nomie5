@@ -395,7 +395,7 @@
 
 <NLayout className="dasboard" headerClassNames="fill-header" pageTitle="Dashboard" showTabs={true}>
   <header slot="header">
-    <div class="container n-row pl-2 pr-0 h-100">
+    <div class="container n-row pl-2 pr-0 h-100" style="padding-top:4px;">
       <HScroller activeIndex={$DashboardStore.activeIndex} className="n-board-tabs">
         {#each dashboards || [] as board, i (board.id)}
           <button

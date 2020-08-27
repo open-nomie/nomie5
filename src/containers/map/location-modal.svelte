@@ -194,7 +194,8 @@
           <NSortableList key="id" bind:items={state.locations} handle=".menu" on:update={sorted} let:item>
 
             <NItem
-              className="clickable"
+              clickable
+              className="py-1"
               on:click={() => {
                 if (state.mode == 'view') {
                   select(item);
@@ -211,12 +212,12 @@
                 {/if}
               </div>
 
-              <h1 class="title truncate-2 {state.active && item.hash == state.active.hash ? 'text-primary' : ''} my-2">
+              <Text truncate2 className="title {state.active && item.hash == state.active.hash ? 'text-primary' : ''}">
                 {item.name}
                 {#if state.active && item.hash == state.active.hash}
                   <NIcon name="checkmark" className="fill-primary" />
                 {/if}
-              </h1>
+              </Text>
 
               <div slot="right" class="n-row">
                 {#if state.mode == 'edit'}

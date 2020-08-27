@@ -200,7 +200,7 @@
         on:click={() => {
           dispatch('click');
         }}>
-        <Icon name="settings" style="fill: var(--color-solid-1)" size="16" />
+        <Icon name="settings" style="fill: var(--color-inverse-2)" size="16" />
       </Button>
     </div>
     <div class="widget-main">

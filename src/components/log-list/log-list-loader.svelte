@@ -90,6 +90,7 @@
 
 <div class="log-list-loader">
   <LogList
+    className="bg-transparent"
     {compact}
     {logs}
     on:trackerClick={(event) => {

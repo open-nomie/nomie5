@@ -138,6 +138,7 @@
 
         {#each state.trackers as tracker (tracker.tag)}
           <TrackerSmallBlock
+            style="min-width:140px;"
             solo
             element={{ id: tracker.tag, value: tracker.value, type: 'tracker', obj: tracker.tracker }}
             on:click={() => {}} />

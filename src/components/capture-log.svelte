@@ -589,7 +589,7 @@
     <div class="advanced">
       <div class="container">
         <!-- Score -->
-        <NItem truncate compact className="mr-2 solo text-sm">
+        <NItem truncate compact className="mr-2 solo text-sm p-0">
           <NPositivitySelector
             size="xl"
             score={$ActiveLogStore.score}

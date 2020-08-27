@@ -83,10 +83,10 @@
   }
 </style>
 
-<NToolbar className="search-bar container {className}" {style}>
+<div className="n-toolbar n-row search-bar container {className}" {style}>
   {#if searchTerm && showClose}
-    <button class="btn btn-sm btn-clear btn-action-clear" on:click={fireClear} style="margin-left:-10px;">
-      <NIcon name="close" size="32" />
+    <button class="btn btn-sm btn-clear btn-action-clear mr-2" on:click={fireClear} style="margin-left:-10px;">
+      <NIcon name="close" />
     </button>
   {/if}
   <div class="n-row">
@@ -103,4 +103,4 @@
       <button class="btn btn-sm text-inverse-2" on:click={fireSearch}>Search</button>
     {/if}
   </div>
-</NToolbar>
+</div>

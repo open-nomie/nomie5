@@ -226,11 +226,11 @@
 
   <header slot="header">
     <div class="n-row container h-100 px-2">
-      <Button color="transparent" icon className="tap-icon pr-1" on:click={back}>
+      <Button color="transparent" shape="circle" icon className="tap-icon mr-2" on:click={back}>
         {#if state.searchTerm && state.searchTerm.length > 0}
-          <NIcon name="close" size="24" />
+          <NIcon name="close" />
         {:else}
-          <NIcon name="arrowBack" size="24" />
+          <NIcon name="arrowBack" />
         {/if}
       </Button>
       <div class="filler">
@@ -258,6 +258,7 @@
         <NLogListLoader
           term={state.searchTerm}
           limit={20}
+          className="bg-transparent"
           on:textClick={(event) => {
             methods.textClick(event);
           }}
@@ -278,7 +279,8 @@
               <button
                 class="btn btn-clear"
                 slot="right"
-                on:click|preventDefault={() => {
+                on:click|stopPropagation|preventDefault={(evt) => {
+                  evt.stopImmediatePropagation();
                   deleteSearch(term);
                 }}>
                 <Icon name="closeOutline" className="fill-inverse-2" />

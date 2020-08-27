@@ -26,6 +26,8 @@
       color={getWidgetColor(widget)}
       labels={widget.stats.chart.values.map((point) => point.x)}
       points={widget.stats.chart.values}
+      hideXTicks={widget.size == 'sm'}
+      hideYTicks={widget.size == 'sm'}
       yFormat={(y) => {
         if (widget.element.type == 'tracker') {
           return widget.element.obj.displayValue(y);
