@@ -46,6 +46,7 @@
   import { PeopleStore } from "../store/people-store";
   import { ContextStore } from "../store/context-store";
   import Text from "./text/text.svelte";
+  import PositivityMenu from "./positivity-selector/positivity-menu.svelte";
 
   // Consts
   const console = new Logger("capture-log");
@@ -202,13 +203,11 @@
     },
     async logSave() {
       saving = true;
-      console.log("Save Log - starts now", "");
+
       methods.calculateScore();
-      console.log("Score Calculated", "");
+
       try {
-        console.log("Start Ledger Save Log", "");
         await LedgerStore.saveLog($ActiveLogStore); // TODO: Make ledger task instead
-        console.log("Ledger Save Complete", "");
         saving = false;
       } catch (e) {
         console.error("Error in capture-log logSave", e.message);
@@ -573,6 +572,7 @@
           on:keydown={methods.keyPress}
           on:paste={methods.keyPress} />
 
+        <PositivityMenu bind:score={$ActiveLogStore.score} />
         {#if $LedgerStore.saving}
           <button class="save-button">
             <NSpinner size={20} color="#FFFFFF" />
@@ -589,14 +589,14 @@
     <div class="advanced">
       <div class="container">
         <!-- Score -->
-        <NItem truncate compact className="mr-2 solo text-sm p-0">
+        <!-- <NItem truncate compact className="mr-2 solo text-sm p-0">
           <NPositivitySelector
             size="xl"
             score={$ActiveLogStore.score}
             on:change={(evt) => {
               $ActiveLogStore.score = evt.detail;
             }} />
-        </NItem>
+        </NItem> -->
         <!-- Location -->
         <NItem truncate clickable className="mr-2 solo text-sm" on:click={methods.toggleCustomLocation}>
           <div slot="left" class="text-sm text-bold">

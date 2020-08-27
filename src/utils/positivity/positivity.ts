@@ -3,10 +3,24 @@ import type Record from "../../modules/nomie-log/nomie-log";
 import TrackableElement from "../../modules/trackable-element/trackable-element";
 import type TrackerConfig from "../../modules/tracker/tracker";
 import ScoreTracker from "../../modules/scoring/score-tracker";
+import appConfig from "../../config/appConfig";
 export interface IPositivityResults {
   positive: number;
   negative: number;
   neutral: number;
+}
+export interface IPositivityEmoji {
+  emoji: string;
+  score: number;
+}
+
+export function getEmojiFromScore(score: number, onlyEmoji: boolean = false): IPositivityEmoji | string {
+  let match = appConfig.positivity.find((es: IPositivityEmoji) => {
+    return es.score == score;
+  });
+  if (match) {
+    return onlyEmoji ? match.emoji : match;
+  }
 }
 
 export function positivityFromLogs(logs: Array<any>, target?: TrackableElement): IPositivityResults {

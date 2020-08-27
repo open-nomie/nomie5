@@ -1,58 +1,62 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import appConfig from "../../config/appConfig";
+  import tick from "../../utils/tick/tick";
   import NButtonGroup from "../button-group/button-group.svelte";
+  import Button from "../button/button.svelte";
 
   const dispatch = createEventDispatcher();
 
   export let score = 0;
   export let className = "";
   export let style = "";
-  export let size = "md";
+  export const size = "md";
 
-  function onChange() {
+  async function onChange(sc) {
+    score = sc;
+    await tick(200);
     dispatch("change", score);
   }
 </script>
 
 <style>
-  :global(.positivity-selector) {
-    padding: 0px !important;
-    box-shadow: none !important;
+  :global(.n-positivity-selector) {
+    height: 50px;
+    border-radius: 25px;
+    padding: 2px;
+    width: 250px;
   }
-  :global(.positivity-selector .text-xl) {
-    line-height: 21px;
-    font-size: 30px;
+
+  :global(.n-positivity-selector .btn) {
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+    padding: 2px;
+    border: solid 1px transparent;
+    background-color: var(--color-solid);
   }
-  :global(.positivity-selector .btn) {
-    opacity: 0.5 !important;
+  :global(.n-positivity-selector .btn.inactive) {
+    transform: scale(0.7);
+    opacity: 0.8;
   }
-  :global(.positivity-selector .btn.active) {
-    opacity: 1 !important;
-  }
-  :global(.positivity-selector .btn.active) {
-    border: none !important;
-    transform: scale(1.1) !important;
+  :global(.n-positivity-selector .btn.active) {
+    border: solid 1px var(--color-primary-bright);
+    box-shadow: var(--box-shadow-tight);
   }
 </style>
 
-<NButtonGroup
-  inverse
-  {style}
-  className={`${className} positivity-selector`}
-  labelClass="emoji text-{size}"
-  buttons={[{ label: '😩', active: score === -2, click: () => {
-        score = -2;
-        onChange();
-      } }, { label: '😞', active: score === -1, click: () => {
-        score = -1;
-        onChange();
-      } }, { label: '😐', active: score === 0, click: () => {
-        score = 0;
-        onChange();
-      } }, { label: '🙂', active: score === 1, click: () => {
-        score = 1;
-        onChange();
-      } }, { label: '😁', active: score === 2, click: () => {
-        score = 2;
-        onChange();
-      } }]} />
+<div class="n-positivity-selector bg-solid box-shadow n-row {className}">
+  {#each appConfig.positivity as posEmoji}
+    <Button
+      on:click={() => {
+        onChange(posEmoji.score);
+      }}
+      size="lg"
+      shape="round"
+      color="transparent"
+      className={score == posEmoji.score ? 'active' : 'inactive'}
+      style="font-size:32px">
+      {posEmoji.emoji}
+    </Button>
+  {/each}
+</div>

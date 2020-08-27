@@ -5393,7 +5393,7 @@ body.theme-dark {
   --tracker-background: rgb(5, 5, 5);
   --color-darkest-translucent: rgba(0, 0, 0, 0.7);
   --color-darkest: #000;
-  --color-bg: rgb(14, 14, 14);
+  --color-bg: rgb(24, 24, 24);
   --color-solid: rgb(5, 5, 5);
   --color-solid-half: rgb(14, 9, 9);
   --color-solid-1: rgb(35, 35, 35);
@@ -7035,7 +7035,8 @@ aside.n-panel {
   .n-item-log .main {
     padding-left: 0; }
   .n-item-log .context.n-row {
-    background-color: var(--color-solid-half); }
+    border-top: solid 1px var(--color-solid-1);
+    padding: 4px 6px; }
   .n-item-log .n-note-textualized {
     padding: 16px !important;
     font-size: 1.1rem;
@@ -7229,6 +7230,10 @@ body.scrolled header.layout-header {
   .n-layout .layout-header header,
   .n-layout .layout-header header .container {
     min-height: var(--header-height); }
+  .n-layout .layout-header header {
+    display: flex;
+    flex-direction: row;
+    align-items: center; }
   .n-layout header.layout-header {
     background-color: var(--color-bg);
     min-height: var(--header-height);

@@ -15,4 +15,11 @@ export default {
   support_contact: "Email Brandon",
   patreon: "https://www.patreon.com/bePatron?u=40136531",
   api: "https://nomieapi.com",
+  positivity: [
+    { emoji: "😡", score: -2 },
+    { emoji: "👎", score: -1 },
+    { emoji: "😐", score: 0 },
+    { emoji: "👍", score: 1 },
+    { emoji: "🤗", score: 2 },
+  ],
 };

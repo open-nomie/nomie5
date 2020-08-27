@@ -46,7 +46,7 @@
   area-label={ariaLabel || title}
   on:click={(evt) => {
     setTimeout(() => {
-      dispatch('click');
+      dispatch('click', evt);
     }, delay);
   }}>
   <Ripple bind:this={ripple} bind:hit />

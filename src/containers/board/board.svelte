@@ -659,7 +659,7 @@
 <NLayout pageTitle={appTitle}>
   <header slot="header">
     {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
-      <div class="container p-0 n-row h-100">
+      <div class="p-0 n-row h-100">
         {#if $TrackerStore.timers.length}
           <button class="btn tab tap-icon pl-3 pr-1" on:click={TrackerStore.toggleTimers}>
             <Icon name="time" size={24} className="fill-red-pulse" />
