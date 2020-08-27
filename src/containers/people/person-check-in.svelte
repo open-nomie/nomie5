@@ -62,9 +62,10 @@
         state.note = payload.note;
       }} />
   </div>
-  <div class="mt-2">
+  <div class="mt-2 text-center">
     <NPositivitySelector
       score={state.score}
+      className="mx-auto"
       size="xl"
       on:change={(evt) => {
         state.score = evt.detail;

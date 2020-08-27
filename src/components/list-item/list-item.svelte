@@ -50,8 +50,8 @@
       } else if (to) {
         navigate(to);
       }
-      dispatch("click", {});
-      dispatch("tap", {});
+      dispatch("click", event);
+      dispatch("tap", event);
     },
     doubletap(evt) {
       dispatch("dbltap", evt);

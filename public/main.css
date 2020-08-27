@@ -6307,11 +6307,15 @@ body.scrolling .mini-map {
     align-items: center; }
   .n-item .left {
     padding-right: 16px;
-    margin-right: 8px; }
+    margin-right: 8px;
+    z-index: 100; }
   .n-item .right {
     text-align: right;
     display: flex;
-    flex-wrap: nowrap; }
+    flex-wrap: nowrap;
+    z-index: 100; }
+  .n-item .ripple {
+    z-index: 0; }
   .n-item .main {
     flex-grow: 1;
     flex-shrink: 1;

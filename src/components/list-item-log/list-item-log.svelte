@@ -32,6 +32,7 @@
   import Text from "../text/text.svelte";
   import TrackableElement from "../../modules/trackable-element/trackable-element";
   import { getEmojiFromScore } from "../../utils/positivity/positivity";
+  import Button from "../button/button.svelte";
 
   // props
   export let log = undefined;
@@ -138,13 +139,16 @@
       {/if}
 
       {#if hideMore !== true}
-        <button
+        <Button
+          shape="circle"
+          color="transparent"
           on:click={(event) => {
             Interact.logOptions(displayLog);
           }}
-          class="btn btn-clear btn-sm more-button clickable ml-1">
+          className="ml-2"
+          style="margin-right:-10px;">
           <NIcon name="more" className="fill-primary-bright" size="32" />
-        </button>
+        </Button>
       {/if}
 
     </div>

@@ -506,10 +506,6 @@ const interactInit = () => {
 
         let initial = [
           {
-            title: `${Lang.t("general.share", "Share")}...`,
-            click: actions.shareLog,
-          },
-          {
             title: `${Lang.t("general.edit", "Edit")}...`,
             click: actions.editLog,
           },
@@ -529,6 +525,10 @@ const interactInit = () => {
               clipboard(log.note);
               Interact.toast("📋  Note text copied");
             },
+          },
+          {
+            title: `${Lang.t("general.share-as-image", "Share as Image")}...`,
+            click: actions.shareLog,
           },
         ];
 

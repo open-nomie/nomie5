@@ -97,6 +97,7 @@
   let loading = true;
   let book = undefined;
   let locations = [];
+  let mode = "view";
   // let dayScore = 0;
 
   $: appTitle = `🔍 Search ${state.searchTerm}`;
@@ -114,6 +115,14 @@
           log: log,
         };
       });
+  }
+
+  function toggleEditMode() {
+    if (mode == "edit") {
+      mode = "view";
+    } else {
+      mode = "edit";
+    }
   }
 
   // Methods
@@ -267,24 +276,53 @@
           }} />
       {:else}
         {#if lastSearches.length}
-          <NItem itemDivider compact className="bg-transparent">Previous Searches</NItem>
-          {#each lastSearches as term}
+          <NItem itemDivider compact className="bg-transparent">
+            Previous Searches
+            <div slot="right">
+              {#if mode != 'edit'}
+                <Button
+                  color="transparent"
+                  size="sm"
+                  on:click={() => {
+                    toggleEditMode();
+                  }}>
+                  {Lang.t('general.edit', 'Edit')}
+                </Button>
+              {:else}
+                <Button
+                  size="sm"
+                  on:click={() => {
+                    toggleEditMode();
+                  }}>
+                  {Lang.t('general.done', 'Done')}
+                </Button>
+              {/if}
+            </div>
+          </NItem>
+          {#each lastSearches as term (term)}
             <NItem
+              clickable
               bottomLine
-              on:click={() => {
-                state.searchTerm = term;
-                methods.onSearchEnter({ detail: term });
+              on:click={(evt) => {
+                if (mode == 'view') {
+                  console.log('target', evt.detail);
+                  state.searchTerm = term;
+                  methods.onSearchEnter({ detail: term });
+                }
               }}>
               <Text>{term}</Text>
-              <button
-                class="btn btn-clear"
-                slot="right"
-                on:click|stopPropagation|preventDefault={(evt) => {
-                  evt.stopImmediatePropagation();
-                  deleteSearch(term);
-                }}>
-                <Icon name="closeOutline" className="fill-inverse-2" />
-              </button>
+              <div slot="right">
+                {#if mode == 'edit'}
+                  <Button
+                    size="sm"
+                    color="danger"
+                    on:click={() => {
+                      deleteSearch(term);
+                    }}>
+                    Delete
+                  </Button>
+                {/if}
+              </div>
             </NItem>
           {/each}
         {/if}

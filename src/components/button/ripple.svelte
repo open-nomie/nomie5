@@ -32,6 +32,7 @@
     bottom: 0;
     top: 0;
     overflow: hidden;
+    pointer-events: none;
   }
   .ball {
     transition: all 0.5s ease-in-out;
@@ -44,7 +45,7 @@
     opacity: 0;
   }
   .ball.grow {
-    animation: ripple 1s;
+    animation: ripple 2s;
     background-color: var(--color-translucent-inverse);
   }
 
@@ -54,13 +55,15 @@
       height: 0px;
       opacity: 0;
     }
-    2% {
+    1% {
       width: 4px;
       height: 4px;
       opacity: 0.2;
     }
     100% {
-      transform: scale(120);
+      width: 100px;
+      height: 100px;
+      transform: scale(20);
       opacity: 0;
     }
   }

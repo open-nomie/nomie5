@@ -173,11 +173,17 @@
   .left {
     padding-right: 16px;
     margin-right: 8px;
+    z-index: 100;
   }
   .right {
     text-align: right;
     display: flex;
     flex-wrap: nowrap;
+    z-index: 100;
+  }
+
+  .ripple {
+    z-index: 0;
   }
 
   .main {

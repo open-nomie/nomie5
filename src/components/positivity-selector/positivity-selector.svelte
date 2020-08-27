@@ -40,8 +40,7 @@
     opacity: 0.8;
   }
   :global(.n-positivity-selector .btn.active) {
-    border: solid 1px var(--color-primary-bright);
-    box-shadow: var(--box-shadow-tight);
+    box-shadow: var(--box-shadow);
   }
 </style>
 
