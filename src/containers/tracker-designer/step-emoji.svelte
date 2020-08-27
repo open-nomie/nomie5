@@ -5,9 +5,7 @@
   import NInput from "../../components/input/input.svelte";
   let tag = "";
   $: if ($TrackerDesignerStore.tracker) {
-    tag = $TrackerDesignerStore.tracker.toTag(
-      $TrackerDesignerStore.tracker.label
-    );
+    tag = $TrackerDesignerStore.tracker.toTag($TrackerDesignerStore.tracker.label);
     if ($TrackerDesignerStore.tracker.emoji == "⚪️") {
       $TrackerDesignerStore.tracker.emoji = math.random(["💡", "🔥", "🧐"]);
     }
@@ -28,15 +26,14 @@
 </style>
 
 <div class="step emoji n-panel vertical center-all">
+  <NItem title="Pick a nice looking Emoji or Initials" className="text-center bg-transparent mb-3" />
   <input
     type="input"
-    on:focus={evt => {
+    on:focus={(evt) => {
       evt.target.select();
     }}
     bind:value={$TrackerDesignerStore.tracker.emoji}
     class="form-control input-lg input-emoji"
     placeholder="" />
-  <NItem className="text-sm text-faded-3 compact text-center">
-    Pick Tracker Emoji
-  </NItem>
+
 </div>

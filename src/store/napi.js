@@ -22,10 +22,11 @@ import { LedgerStore } from "./ledger";
 import { Interact } from "./interact";
 // import { TrackerStore } from "./tracker-store";
 import tick from "../utils/tick/tick";
+import appConfig from "../config/appConfig";
 
 const console = new Logger("🚦 Nomie API");
 // Todo consider making this configurable
-const NAPI = new NomieAPICli({ domain: "nomieapi.com" });
+const NAPI = new NomieAPICli({ domain: appConfig.api.split("//")[1] });
 
 // Nomie API Store
 let autoImporterInterval;

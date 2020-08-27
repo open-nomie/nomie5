@@ -15,6 +15,7 @@
 
   export let style = "";
   export let className = "";
+  export let itemClass = "";
   export let list = [];
   export let editWithText = false;
   // export let mode = "edit";
@@ -89,23 +90,21 @@
 </script>
 
 <div class="n-picker-list {className}" {style}>
-  <NItem title="Add items to pick from">
-    <div class="note">Example: #tracker, #trackerValues(3), @people and +context</div>
-  </NItem>
+  <NItem
+    title="Add items to pick from"
+    className={itemClass}
+    bg="transparent"
+    description="Example: #tracker, #trackerValues(3), @people and +context" />
   {#if ready}
     {#if !editWithText}
-      <NItem>
+      <div class="sortable-list {itemClass}">
         <NInput compact on:enter={add} placeholder="Add an Item" bind:value={activeValue}>
-          <button slot="right" class="btn btn-clear" disabled={!activeValue} on:click={add}>
-            <NIcon name="addOutline" />
-          </button>
+          <button slot="right" class="btn btn-clear text-primary btn-sm mr-1" disabled={!activeValue} on:click={add}>+Add</button>
         </NInput>
-      </NItem>
-      <div class="sortable-list p-2 px-3">
-
+        <hr class="divider center my-2" />
         <NSortableList items={list || []} handle=".menu-handle" on:update={sorted} let:item>
           <NItem
-            className="bottom-line {activeItem == item ? 'active' : ''}"
+            className="bg-solid px-2 py-1"
             on:click={() => {
               if (activeItem == item) {
                 activeItem = null;
@@ -150,20 +149,22 @@
           inputStyle="height:40vh; font-size:0.9rem; line-height:200%" />
       </div>
     {/if}
+
     <div class="n-row px-2 pb-1">
       <div class="filler" />
       {#if editWithText}
-        <Button size="xs" color="primary" on:click={updateWithText}>Done Editing</Button>
+        <Button size="sm" color="primary" on:click={updateWithText}>Done Editing</Button>
       {:else}
         <Button
-          size="xs"
-          color="light"
+          size="sm"
+          color="transparent"
           on:click={() => {
             editWithText = true;
           }}>
           Edit as Text
         </Button>
       {/if}
+      <div class="filler" />
     </div>
   {/if}
 </div>

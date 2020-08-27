@@ -238,7 +238,7 @@
 
       <div class="main px-2">
 
-        {#if (data.tracker.type == 'timer' && data.value) || (data.tracker.type != 'timer' && $Interact.trackerInput.allowSave !== false)}
+        {#if (data.tracker.type == 'timer' && data.value && $Interact.trackerInput.allowSave !== false) || (data.tracker.type != 'timer' && $Interact.trackerInput.allowSave !== false)}
           <Button
             size="lg"
             shape="round"
@@ -251,7 +251,7 @@
           </Button>
         {/if}
 
-        {#if data.tracker.type == 'timer' && !data.tracker.started && !data.value}
+        {#if data.tracker.type == 'timer' && !data.tracker.started && !data.value && $Interact.trackerInput.allowSave !== false}
           <Button
             color="success"
             shape="round"

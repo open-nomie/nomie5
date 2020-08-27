@@ -3,11 +3,11 @@ import { Lang } from "../../store/lang";
 export default {
   tick: {
     label: Lang.t("tracker.type.simple", "Simple Tracker"),
-    description: Lang.t("tracker.type.simple_description", "Good for tracking pooping, gluten, and other one off trackers."),
+    description: Lang.t("tracker.type.simple_description", "Good for tracking 1 thing at a time, like Pooped, Ate Gluten, etc."),
   },
   value: {
     label: Lang.t("tracker.type.value", "Numeric Input"),
-    description: Lang.t("tracker.type.value_description", "Enter a number value. Great for tracking fluids, medicines, distance"),
+    description: Lang.t("tracker.type.value_description", "Good for tracking fluids, medicines, distance"),
   },
   range: {
     label: Lang.t("tracker.type.range", "Range"),

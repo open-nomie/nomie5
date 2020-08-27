@@ -40,7 +40,7 @@
           delay={0}
           clickable
           className="type-{type._key}
-          {$TrackerDesignerStore.tracker.type == type._key ? 'active solo' : 'bg-transparent'}"
+          {$TrackerDesignerStore.tracker.type == type._key ? 'active solo text-primary-bright' : 'bg-transparent'}"
           on:click={() => {
             selectType(type);
           }}>

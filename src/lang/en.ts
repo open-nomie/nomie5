@@ -154,7 +154,7 @@ export default {
       count: "Count",
       default: "Default",
       positivity: "Positivity",
-      positivity_description: "Is this a positive, negative or neutral behavior?",
+      positivity_description: "Is this a positive, negative or neutral behavior / activity?",
       neutral: "Neutral",
       positive: "Positive",
       negative: "Negative",

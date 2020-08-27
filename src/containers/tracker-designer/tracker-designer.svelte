@@ -23,6 +23,7 @@
   import { TrackerStore } from "../../store/tracker-store";
   import Text from "../../components/text/text.svelte";
   import Button from "../../components/button/button.svelte";
+  import Icon from "../../components/icon/icon.svelte";
 
   let step = 0;
   let maxSteps = 4;
@@ -129,7 +130,7 @@
         _steps = [type, label, emoji, color, defaultValue];
         break;
       case "timer":
-        _steps = [type, label, emoji, color, defaultValue, calc, positivity];
+        _steps = [type, defaultValue, label, emoji, color, defaultValue, calc, positivity];
         break;
       case "picker":
         _steps = [type, label, emoji, color, defaultValue];
@@ -179,15 +180,14 @@
 
   <div slot="header" class="tracker-preview" style="background-color:{$TrackerDesignerStore.tracker.color};">
 
-    <div class="n-toolbar-grid h-100">
+    <div class="n-toolbar-grid h-100" style="min-height:60px">
       <div class="left">
         <Button color="circle" className="tap-icon" on:click={cancel}>
           <NIcon name="close" className="fill-white" size="24" />
         </Button>
       </div>
       <div class="main text-white text-center">
-        <Text size="sm" style="color:#FFF" class="mb-1">#{step + 1}. {activeStep.title}</Text>
-        <NStepper steps={stepCount} current={step} style="max-width:90px;" />
+        <Text size="sm" style="color:#FFF">Step {step + 1}: {activeStep.title}</Text>
       </div>
     </div>
 
@@ -205,17 +205,17 @@
     {/if}
   </main>
 
-  <footer slot="footer" class="bg-solid">
-    <div class="container-sm">
+  <footer slot="footer" class="" style="height:60px; background-color:var(--footer-background)">
+    <div class="container-sm pt-1">
       <NToolbar className="">
-        <Button on:click={previousStep} disabled={step == 0} color="transparent" size="lg" block className="mr-1 my-2">
+        <Button on:click={previousStep} disabled={step == 0} color="transparent" block className="mr-1 my-2">
           {Lang.t('general.back', 'Back')}
         </Button>
-        <Button on:click={nextStep} size="lg" block disabled={!canGoNext}>
+        <Button on:click={nextStep} block color="transparent" disabled={!canGoNext} className="mt-0 text-primary-bright">
           {step == getSteps().length - 1 ? Lang.t('general.create', 'Create') : Lang.t('general.next', 'Next')}
+          <Icon name="chevronRight" size="20" className="fill-primary-bright" />
         </Button>
       </NToolbar>
     </div>
   </footer>
-
 </NLayout>

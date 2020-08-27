@@ -349,12 +349,13 @@ button:focus {
 .btn-clear {
   background-color: none;
   border: none;
-  color: var(--color-inverse-1);
+  color: var(--color-inverse-2);
   &[disabled] {
     opacity: 0.5;
   }
 }
-.btn-transparent {
+.btn-transparent,
+.btn-transparent:active {
   background-color: none;
   color: var(--color-inverse-2);
 }

@@ -47,7 +47,7 @@
     }
 
     &.faded {
-      opacity: 0.5;
+      opacity: 0.7;
     }
     &.xl {
       font-size: 1.5rem;

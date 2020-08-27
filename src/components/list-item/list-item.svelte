@@ -14,6 +14,7 @@
   export let href = undefined;
   export let to = undefined;
   export let id = null;
+  export let bg = undefined;
   export let className = "";
   export let itemDivider = undefined;
   export let compact: boolean = false;
@@ -91,7 +92,10 @@
     {style}
     class="n-item {compact ? 'compact' : ''}
     {className}
-    {bottomLine ? 'bottom-line' : ''}"
+    {bottomLine ? 'bottom-line' : ''}
+    {topLine ? 'top-line' : ''}
+    {solo ? 'solo' : ''}
+    {bg ? `bg-${bg}` : ''}"
     :alt="title">
     {#if has_left}
       <div class="left">
@@ -138,6 +142,7 @@
     {bottomLine ? 'bottom-line' : ''}
     {topLine ? 'top-line' : ''}
     {solo ? 'solo' : ''}
+    {bg ? `bg-${bg}` : ''}
     "
     :alt="title">
     {#if has_left}

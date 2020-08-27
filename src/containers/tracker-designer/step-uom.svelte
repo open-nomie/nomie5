@@ -9,33 +9,21 @@
 
   let tag = "";
   $: if ($TrackerDesignerStore.tracker) {
-    tag = $TrackerDesignerStore.tracker.toTag(
-      $TrackerDesignerStore.tracker.label
-    );
+    tag = $TrackerDesignerStore.tracker.toTag($TrackerDesignerStore.tracker.label);
   }
 </script>
 
 <div class="step label n-panel center-all vertical">
   <section class="container-xs">
-    <NItem className="pad">
-      <div class="title">Unit of Measure</div>
-      <div class="note">
-        How will {$TrackerDesignerStore.tracker.label} be measured?
-      </div>
-    </NItem>
-    <NItem className="pad">
+    <NItem title="How should '{$TrackerDesignerStore.tracker.label}' be measured?" className="text-center bg-transparent" />
+    <NItem className="bg-transparent py-0">
       {#if $TrackerDesignerStore.tracker.type !== 'timer' && $TrackerDesignerStore.tracker.type !== 'note' && $TrackerDesignerStore.tracker.type !== 'tick'}
-        <NInput
-          type="select"
-          placeholder="Measurement"
-          bind:value={$TrackerDesignerStore.tracker.uom}>
+        <NInput type="select" placeholder="Measurement" bind:value={$TrackerDesignerStore.tracker.uom}>
           {#each Object.keys(groupedUOMs) as groupKey (groupKey)}
             <option disabled>-- {groupKey}</option>
             {#each groupedUOMs[groupKey] as uom (`${groupKey}-${uom.key}`)}
-              <option
-                value={uom.key}
-                disabled={uom.key == 'time' && $TrackerDesignerStore.tracker.type != 'timer'}>
-                {NomieUOM.plural(uom.key)}
+              <option value={uom.key} disabled={uom.key == 'time' && $TrackerDesignerStore.tracker.type != 'timer'}>
+                {NomieUOM.plural(uom.key)} ({NomieUOM.abv(uom.key)})
               </option>
             {/each}
           {/each}

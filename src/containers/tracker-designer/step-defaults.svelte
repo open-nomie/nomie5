@@ -9,78 +9,59 @@
   import { Interact } from "../../store/interact";
   import PickerList from "../../components/picker-list/picker-list.svelte";
 
-  const getTrackerInput = async target => {
-    const response = await Interact.trackerInput(
-      $TrackerDesignerStore.tracker,
-      { value: $TrackerDesignerStore.tracker.default, allowSave: false }
-    );
+  const getTrackerInput = async (target) => {
+    const response = await Interact.trackerInput($TrackerDesignerStore.tracker, {
+      value: $TrackerDesignerStore.tracker.default,
+      allowSave: false,
+    });
     if (response && response.value) {
       $TrackerDesignerStore.tracker[target] = response.value;
     }
   };
 </script>
 
-<div
-  class="step label n-panel vertical scroll-y {$TrackerDesignerStore.tracker.type == 'range' ? '' : 'center-all'}">
+<div class="step label n-panel vertical scroll-y {$TrackerDesignerStore.tracker.type == 'range' ? '' : 'center-all'}">
   <section class="container-xs">
 
     {#if ['tick', 'note', 'picker'].indexOf($TrackerDesignerStore.tracker.type) == -1}
-      <NItem>
-        <div class="title text-md flex-grow w-100">
-          Default
-          {#if $TrackerDesignerStore.tracker.default}
-            <span class="text-faded">
-              {$TrackerDesignerStore.tracker.displayValue($TrackerDesignerStore.tracker.default)}
-            </span>
-          {/if}
-        </div>
-        <div slot="right">
-          <NInput
-            type="number"
-            pattern="[0-9\.\-]"
-            bind:value={$TrackerDesignerStore.tracker.default}
-            placeholder="Default Value">
-            <button
-              class="btn btn-icon clickable mr-2"
-              slot="right"
-              on:click={() => {
-                getTrackerInput('default');
-              }}>
-              <NIcon name="addOutline" />
-            </button>
-          </NInput>
-        </div>
+      <NItem title="Want to set a default value?" className="bg-transparent text-center py-0" />
+      <NItem className="bg-transparent">
+        <NInput type="number" pattern="[0-9\.\-]" bind:value={$TrackerDesignerStore.tracker.default} placeholder="Default Value ">
+          <div slot="right" class="text-faded-2 text-sm text-right">
+            {$TrackerDesignerStore.tracker.default ? $TrackerDesignerStore.tracker.displayValue($TrackerDesignerStore.tracker.default) : ''}
+          </div>
+          <button
+            class="btn btn-icon clickable mr-2"
+            slot="right"
+            on:click={() => {
+              getTrackerInput('default');
+            }}>
+            <NIcon name="addOutline" />
+          </button>
+        </NInput>
+
       </NItem>
     {/if}
 
     {#if $TrackerDesignerStore.tracker.type == 'picker'}
-      <PickerList
-        bind:value={$TrackerDesignerStore.tracker.picks}
-        on:change={evt => {
-          $TrackerDesignerStore.tracker.picks = evt.detail;
-        }} />
+      <PickerList bind:list={$TrackerDesignerStore.tracker.picks} on:change={(evt) => {}} />
     {/if}
 
     {#if $TrackerDesignerStore.tracker.type == 'note'}
-      <NItem>
+      <NItem className="bg-transparent">
         <textarea
           bind:value={$TrackerDesignerStore.tracker.note}
           placeholder={Lang.t('tracker.note-placeholder')}
           class="form-control w-100 mt-2" />
       </NItem>
-      <NItem description={Lang.t('tracker.note-description')} />
+      <NItem className="bg-transparent" description={Lang.t('tracker.note-description')} />
     {/if}
 
     {#if $TrackerDesignerStore.tracker.type == 'tick'}
-      <NItem>
-        <div class="content">
-          <div class="title text-md">
-            {Lang.t('tracker.save-on-tap', 'Save on Tap')}
-          </div>
-          <div class="note">
-            Automatically saves the tracker note when tapped
-          </div>
-        </div>
+      <NItem
+        className="bg-transparent"
+        title={Lang.t('tracker.save-on-tap', 'Save on Tap')}
+        description="Automatically save this tracker when it's tapped?">
         <div slot="right">
           <NToggle bind:value={$TrackerDesignerStore.tracker.one_tap} />
         </div>
@@ -88,44 +69,33 @@
     {/if}
     {#if $TrackerDesignerStore.tracker.type == 'range'}
       <hr class="my-0" />
-      <NItem>
-        <span class="title">Min</span>
-        <div slot="right">
-          <NInput
-            type="number"
-            pattern="[0-9\.\-]"
-            bind:value={$TrackerDesignerStore.tracker.min}
-            placeholder="Min Value">
-            <button
-              class="btn btn-icon clickable mr-2"
-              slot="right"
-              on:click={() => {
-                getTrackerInput('min');
-              }}>
-              <NIcon name="addOutline" />
-            </button>
-          </NInput>
-        </div>
-      </NItem>
-
-      <NItem>
-        <span class="title">Max</span>
-        <div slot="right">
-          <NInput
-            type="number"
-            pattern="[0-9\.\-]"
-            bind:value={$TrackerDesignerStore.tracker.max}
-            placeholder="Max Value">
-            <button
-              class="btn btn-icon clickable mr-2"
-              slot="right"
-              on:click={() => {
-                getTrackerInput('max');
-              }}>
-              <NIcon name="addOutline" />
-            </button>
-          </NInput>
-        </div>
+      <NItem className="bg-transparent">
+        <NInput type="number" pattern="[0-9\.\-]" bind:value={$TrackerDesignerStore.tracker.min} placeholder="Min Value">
+          <div slot="right" class="text-faded-2 text-sm text-right">
+            {$TrackerDesignerStore.tracker.min ? $TrackerDesignerStore.tracker.displayValue($TrackerDesignerStore.tracker.min) : ''}
+          </div>
+          <button
+            class="btn btn-icon clickable mr-2"
+            slot="right"
+            on:click={() => {
+              getTrackerInput('min');
+            }}>
+            <NIcon name="addOutline" />
+          </button>
+        </NInput>
+        <NInput type="number" pattern="[0-9\.\-]" bind:value={$TrackerDesignerStore.tracker.max} placeholder="Max Value">
+          <div slot="right" class="text-faded-2 text-sm text-right">
+            {$TrackerDesignerStore.tracker.max ? $TrackerDesignerStore.tracker.displayValue($TrackerDesignerStore.tracker.max) : ''}
+          </div>
+          <button
+            class="btn btn-icon clickable mr-2"
+            slot="right"
+            on:click={() => {
+              getTrackerInput('max');
+            }}>
+            <NIcon name="addOutline" />
+          </button>
+        </NInput>
       </NItem>
     {/if}
   </section>

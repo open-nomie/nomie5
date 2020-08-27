@@ -76,6 +76,10 @@ TODO: Organize main into components or containers.
 .gap {
   height: 16px;
 }
+.gap.xs {
+  height: 2px;
+  width: 2px;
+}
 
 hr.divider {
   margin: 0;

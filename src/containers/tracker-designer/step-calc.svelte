@@ -9,26 +9,28 @@
     {
       id: "sum",
       label: "Sum",
-      description: "Sum daily totals. Good for temps, water, distance"
+      description: "Add totals together. Good for water, distances, sleep, walking",
     },
     {
       id: "mean",
       label: "Average",
-      description: "Average daily totals. Good for mood, stress, feelings"
-    }
+      description: "Average daily totals. Good for mood, stress, feelings, temp",
+    },
   ];
 
-  const selectType = type => {
+  const selectType = (type) => {
     $TrackerDesignerStore.tracker.math = type.id;
   };
 </script>
 
 <div class="step emoji n-panel vertical center-all">
   <section class="container-xs">
-    <div class="n-list">
+    <NItem title="How should we calculate totals for the day, week and month?" className="bg-transparent text-center" />
+    <div class="n-list bg-transparent">
       {#each types as type}
         <NItem
-          className="clickable {$TrackerDesignerStore.tracker.math == type.id ? 'active' : ''}}"
+          clickable
+          className={$TrackerDesignerStore.tracker.math == type.id ? 'active solo text-primary-bright' : 'bg-transparent'}
           on:click={() => {
             selectType(type);
           }}>
@@ -39,10 +41,7 @@
               <NIcon name="radio" />
             {/if}
           </div>
-          <div
-            class={`title text-md ${$TrackerDesignerStore.tracker.math == type.id ? 'font-weight-bold' : ''}`}>
-            {type.label}
-          </div>
+          <div class={`title text-md ${$TrackerDesignerStore.tracker.math == type.id ? 'font-weight-bold' : ''}`}>{type.label}</div>
           <div class="description text-sm text-faded-3">{type.description}</div>
         </NItem>
       {/each}

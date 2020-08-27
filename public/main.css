@@ -5152,11 +5152,12 @@ button:focus {
 .btn-clear {
   background-color: none;
   border: none;
-  color: var(--color-inverse-1); }
+  color: var(--color-inverse-2); }
   .btn-clear[disabled] {
     opacity: 0.5; }
 
-.btn-transparent {
+.btn-transparent,
+.btn-transparent:active {
   background-color: none;
   color: var(--color-inverse-2); }
 
@@ -6205,11 +6206,9 @@ body.scrolling .mini-map {
   border-radius: 6px;
   margin: 6px 8px;
   background-color: var(--color-faded); }
-  .n-picker-list ul .n-item {
-    background-color: transparent; }
-    .n-picker-list ul .n-item.active {
-      font-weight: bold !important;
-      border-bottom: solid 1px var(--color-primary-bright); }
+  .n-picker-list ul .n-item.active {
+    font-weight: bold !important;
+    border-bottom: solid 1px var(--color-primary-bright); }
 
 .n-item {
   text-align: left;
@@ -6406,6 +6405,10 @@ body.scrolling .mini-map {
     overflow: hidden;
     background-color: var(--color-solid);
     padding: 0px 0; }
+    @media (min-width: 600px) {
+      .n-list.solo,
+      .n-list [solo] {
+        padding: 16px !important; } }
   .n-list.framed {
     border: solid 1px var(--color-solid-2) !important; }
   @media (min-width: 350px) {
@@ -7456,6 +7459,10 @@ TODO: Organize main into components or containers.
 
 .gap {
   height: 16px; }
+
+.gap.xs {
+  height: 2px;
+  width: 2px; }
 
 hr.divider {
   margin: 0;

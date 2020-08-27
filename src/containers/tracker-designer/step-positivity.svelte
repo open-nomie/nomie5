@@ -7,9 +7,9 @@
 
   let positivity = "0";
 
-  const pointsChange = evt => {
+  const pointsChange = (evt) => {
     setTimeout(() => {
-      TrackerDesignerStore.update(state => {
+      TrackerDesignerStore.update((state) => {
         state.tracker = evt.detail;
         return state;
       });
@@ -17,20 +17,11 @@
   };
 </script>
 
-<div
-  class="step label n-panel vertical {$TrackerDesignerStore.tracker.score == 'custom' ? 'scroll-y' : 'center-all'}">
+<div class="step label n-panel vertical {$TrackerDesignerStore.tracker.score == 'custom' ? 'scroll-y' : 'center-all'}">
   <section class="container-xs">
-    <NItem className="mb-2">
-      <div class="text-md">
-        <strong>{Lang.t('tracker.positivity')}</strong>
-        <span class="text-faded-3">
-          {Lang.t('tracker.positivity_description')}
-        </span>
-      </div>
-
-    </NItem>
-    <PointsEditor
-      tracker={$TrackerDesignerStore.tracker}
-      on:trackerChange={pointsChange} />
+    <NItem title={Lang.t('tracker.positivity_description')} className=" text-center bg-transparent" />
+    <div class="px-2 pb-2">
+      <PointsEditor tracker={$TrackerDesignerStore.tracker} on:trackerChange={pointsChange} />
+    </div>
   </section>
 </div>

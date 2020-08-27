@@ -241,8 +241,8 @@
           width: 100%;
           transition: all 0.2s ease-in-out;
           margin: 0;
-          padding-left: 8pt;
-          padding-right: 8pt;
+          padding-left: 8px;
+          padding-right: 8px;
           background-color: transparent !important;
           outline: none;
           &:disabled {
@@ -254,7 +254,7 @@
         }
         textarea {
           min-height: 90px;
-          padding-top: 8pt;
+          padding-top: 8px;
           color: var(--color-inverse);
         }
       }

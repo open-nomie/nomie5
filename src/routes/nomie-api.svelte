@@ -327,9 +327,15 @@
           <input type="text" class="form-control mt-1" value={state.apiKey} />
         </div> -->
         </NItem>
-        <NItem delay={0} clickable title="Private Key" on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
+        <NItem
+          delay={0}
+          compact
+          clickable
+          title="Private Key"
+          className="py-1"
+          on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
           <button class="btn btn-clear text-primary-bright" slot="right">
-            <NIcon name="chevron{state.showPrivateKey ? 'Up' : 'Down'}" />
+            <NIcon size="16" name="chevron{state.showPrivateKey ? 'Up' : 'Down'}" />
           </button>
         </NItem>
         {#if state.showPrivateKey}
