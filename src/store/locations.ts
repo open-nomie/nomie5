@@ -56,14 +56,13 @@ const LocationsInit = () => {
           .sort((a, b) => {
             return a.distance > b.distance ? 1 : -1;
           })
-          .find((loc) => loc.distance < 0.5);
-
+          .find((loc) => loc.distance < 0.1);
         return locations;
       });
       if (match) {
         return match.location;
       } else {
-        return location;
+        return null;
       }
     },
     getAll(): Array<Location> {

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { Locations } from "../../store/locations";
   import NIcon from "../icon/icon.svelte";
   import textUtils from "../../utils/text/text";
@@ -14,7 +14,7 @@
     name = location.location;
     if (!name) {
       let nearest = Locations.findClosestTo({ lat, lng });
-      if (nearest.name) {
+      if (nearest && nearest.name) {
         name = nearest.name;
       }
     }

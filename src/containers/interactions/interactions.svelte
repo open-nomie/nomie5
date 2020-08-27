@@ -41,6 +41,8 @@
   import { BoardStore } from "../../store/boards";
   import { TrackerStore } from "../../store/tracker-store";
   import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
+  import LocationModal from "../../containers/map/location-modal.svelte";
+  import LocationViewerModal from "../map/location-viewer-modal.svelte";
 
   let promptInput;
   let logEditorTracker;
@@ -280,17 +282,7 @@
 {/if}
 
 {#if $Interact.locationViewer.show}
-  <!-- TODO make this use the Location Modal in the future -->
-  <NModal
-    show={true}
-    fullscreen
-    flexBody
-    allowClose={true}
-    title={$Interact.locationViewer.locations[0].title || 'Location'}
-    on:close={Interact.dismissLocations}>
-    <NMap locations={$Interact.locationViewer.locations} />
-    <div class="mt-2" slot="footer" />
-  </NModal>
+  <LocationViewerModal show={true} locations={$Interact.locationViewer.locations} on:close={Interact.dismissLocations} />
 {/if}
 {#if $Interact.logEditor.show}
   <LogEditor
