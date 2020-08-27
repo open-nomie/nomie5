@@ -416,8 +416,8 @@
 
   <main slot="content" class="page page-history flex-column">
 
-    <div class="container p-0">
-      <Text size="xl" bold className="history-title px-3 mt-2">
+    <div class="container p-0 px-1">
+      <Text size="xl" bold className="history-title px-2 mt-2">
         {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
       </Text>
 
@@ -469,7 +469,7 @@
 
     </div>
 
-    <div class="bg-primary-bright">
+    <div class="bg-primary-bright mt-3">
       <div class="container p-0">
         <!-- Show History if exists -->
         {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}

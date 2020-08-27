@@ -31,6 +31,7 @@
   import dayjs from "dayjs";
   import Text from "../text/text.svelte";
   import TrackableElement from "../../modules/trackable-element/trackable-element";
+  import { getEmojiFromScore } from "../../utils/positivity/positivity";
 
   // props
   export let log = undefined;
@@ -89,16 +90,6 @@
 </script>
 
 <style lang="scss">
-  .log-photo-wrapper {
-    margin-left: -20px;
-    margin-right: -20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--color-faded-1);
-    margin-bottom: 20px;
-  }
-
   .divider {
     font-size: 0.9rem;
     font-weight: 500;
@@ -107,20 +98,6 @@
   .n-row.context {
     justify-content: flex-start;
     flex-wrap: wrap;
-  }
-  .score-mark {
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
-    width: 4px;
-    border-radius: 2px;
-    height: 4px;
-    &.positive {
-      background-color: var(--color-green);
-    }
-    &.negative {
-      background-color: var(--color-red);
-    }
   }
   .more-button {
     margin-right: -8pt;
@@ -145,7 +122,7 @@
               <LocationBadge location={displayLog} />
             </button>
           {/if}
-          <Text inline size="xs" className="" faded>{time.fromNow(logMeta.endDate)}</Text>
+          <Text inline size="sm" className="" faded>{time.fromNow(logMeta.endDate)}</Text>
         </div>
         <Text size="sm" medium>
           {logMeta.endDate.format(`${dtFormat.time}`)}
@@ -157,7 +134,7 @@
 
       <!-- SCORE display -->
       {#if displayLog.score}
-        <div class="score-mark {displayLog.score > 0 ? 'positive' : 'negative'}" />
+        <div class="score-mark {displayLog.score > 0 ? 'positive' : 'negative'}">{getEmojiFromScore(displayLog.score, true)}</div>
       {/if}
 
       {#if hideMore !== true}
@@ -220,7 +197,7 @@
       </div>
     {/if}
     {#if logMeta.context.length}
-      <div class="context n-row px-2 py-1">
+      <div class="context n-row">
         {#each logMeta.context as context}
           <button
             class="btn btn-badge btn-xs faded"

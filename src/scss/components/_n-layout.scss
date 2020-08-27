@@ -29,6 +29,11 @@ body.scrolled {
   .layout-header header .container {
     min-height: var(--header-height);
   }
+  .layout-header header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 
   header.layout-header {
     background-color: var(--color-bg);

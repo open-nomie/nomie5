@@ -39,7 +39,7 @@
     // padding-top: 10px;
 
     &.compact {
-      --tab-height: 50px;
+      --tab-height: 55px;
       height: calc(#{var(--tab-height)} + env(safe-area-inset-bottom));
       .n-row {
         max-height: var(--tab-height);

@@ -285,6 +285,9 @@
               {/if}
             </div>
             <h1 slot="main">{title}</h1>
+            <div slot="right">
+              <slot name="headerRight" />
+            </div>
           </NToolbarGrid>
         {/if}
       </div>

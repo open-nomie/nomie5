@@ -103,7 +103,8 @@
   }
 
   .context.n-row {
-    background-color: var(--color-solid-half);
+    border-top: solid 1px var(--color-solid-1);
+    padding: 4px 6px;
   }
 
   .n-note-textualized {
