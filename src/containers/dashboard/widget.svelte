@@ -186,7 +186,7 @@
 
   .widget-size-sm {
     min-width: calc(25% - 16px) !important;
-    // max-width: calc(25% - 16px);
+    max-width: calc(50% - 16px);
   }
 
   @include media-breakpoint-down(sm) {

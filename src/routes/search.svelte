@@ -293,6 +293,8 @@
               {:else}
                 <Button
                   size="sm"
+                  color="transparent"
+                  className="text-red"
                   on:click={() => {
                     toggleEditMode();
                   }}>
@@ -303,7 +305,7 @@
           </NItem>
           {#each lastSearches as term (term)}
             <NItem
-              clickable
+              clickable={mode !== 'edit'}
               bottomLine
               on:click={(evt) => {
                 if (mode == 'view') {

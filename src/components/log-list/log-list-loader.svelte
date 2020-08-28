@@ -17,6 +17,7 @@
   import Storage from "../../modules/storage/storage";
   import global from "../../config/appConfig";
   import Spinner from "../spinner/spinner.svelte";
+  import Button from "../button/button.svelte";
 
   export let term = null;
   export let limit = 20;
@@ -106,19 +107,20 @@
       dispatch('moreClick', event.detail);
     }} />
   {#if !loading && logs.length == 0}
-    <div class="p-2 text-center text-faded-2">Sorry, no results found</div>
+    <div class="p-2 text-center text-faded-2">No results found for this time period.</div>
   {/if}
   {#if !loading && lastTo}
     <NItem className="py-2 bg-transparent mb-2">
-      <button class="btn btn-outline btn-light btn-block mx-auto" style="max-width:300px;" on:click={search}>Search More ...</button>
+      <Button block color="light" className="mx-auto" style="max-width:300px;" on:click={search}>Search More...</Button>
       <Text size="sm" faded center className="mt-2">Place in time: {lastFrom.format(dtFormat.date)}</Text>
     </NItem>
   {:else if loading}
     <NItem className="py-2 bg-transparent mb-2">
-      <button class="btn btn-outline btn-light btn-block mx-auto" style="max-width:300px;" disabled>
+      <Button block color="light" className="mx-auto" style="max-width:300px;" disabled>
         <Spinner size={18} className="mr-2" />
         Searching...
-      </button>
+      </Button>
+      <Text size="sm" faded center className="mt-2">Looking through history</Text>
     </NItem>
   {/if}
 
