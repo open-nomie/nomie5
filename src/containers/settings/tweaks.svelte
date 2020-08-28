@@ -52,10 +52,12 @@
         on:change={(event) => {
           UserStore.setTheme($UserStore.theme, $UserStore.theme_accent);
         }}>
-        <option value="default">Blue</option>
-        <option value="mint">Mint</option>
-        <option value="pink">Pink</option>
-        <option value="orange">Orange</option>
+        <option value="default">Nomie</option>
+        <option value="mint">Shamrock</option>
+        <option value="teal">Seafoam</option>
+        <option value="pink">KPop</option>
+        <option value="orange">Fire</option>
+        <option value="purple">Lilac</option>
       </select>
 
     </div>

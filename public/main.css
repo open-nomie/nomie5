@@ -5231,6 +5231,14 @@ body.mint {
   --color-primary-bright: #1fb182;
   --color-primary: #1fb182; }
 
+body.teal {
+  --color-primary-bright: #10c4b5;
+  --color-primary: rgb(25, 156, 115); }
+
+body.purple {
+  --color-primary-bright: #ac0add;
+  --color-primary: #9409be; }
+
 body.orange {
   --color-primary-bright: #ef8354;
   --color-primary: #ef8354; }
