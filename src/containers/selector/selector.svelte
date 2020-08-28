@@ -157,6 +157,7 @@
             <NItem className="bg-light text-faded sticky-top" title={item.label.substr(0, 1).toUpperCase()} />
           {/if}
           <NItem
+            clickable
             className="bottom-line"
             title={item.label}
             on:click={() => {
@@ -183,6 +184,7 @@
             <NItem className="bg-light text-faded sticky-top" title={person.displayName.substr(0, 1).toUpperCase()} />
           {/if}
           <NItem
+            clickable
             className="bottom-line {state.selected.indexOf(person) > -1 ? 'bg-selected' : ''}"
             title={person.displayName}
             on:click={() => {
@@ -208,6 +210,7 @@
             <NItem className="bg-light text-faded sticky-top" title={context.substr(0, 1).toUpperCase()} />
           {/if}
           <NItem
+            clickable
             className="bottom-line {state.selected.indexOf(context) > -1 ? 'bg-selected' : ''}"
             title={'+' + context}
             on:click={() => {

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   //svelte
   import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
@@ -27,6 +27,9 @@
   export let height = undefined;
   export let className = "";
   export let style = "";
+  export let lock: boolean = false;
+
+  declare var L: any;
 
   // consts
   const dispatch = createEventDispatcher();
@@ -72,7 +75,7 @@
   }
 
   $: if (picker && MAP && locations.length == 0) {
-    locate().then((location) => {
+    locate().then((location: { latitude: number; longitude: number }) => {
       locations.push({
         lat: location.latitude,
         lng: location.longitude,
@@ -226,7 +229,7 @@
         maxZoom: 18,
       }).addTo(MAP);
 
-      var myIcon = window.L.icon({
+      var myIcon = L.icon({
         iconUrl: "/images/map/map-marker.svg",
         iconRetinaUrl: "/images/map/map-marker.svg",
         iconSize: [32, 32],
@@ -278,7 +281,7 @@
           return c;
         };
         //let pathLine =
-        window.L.polyline(connectTheDots(locations), {
+        L.polyline(connectTheDots(locations), {
           color: "rgba(2.7%, 52.5%, 100%, 0.378)",
         }).addTo(MAP);
       } else {
@@ -449,6 +452,16 @@
     }
   }
 
+  .map-lock-cover {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 2000;
+  }
+
   .n-map-container .n-map {
     width: 100%;
     height: 100%;
@@ -463,6 +476,9 @@
   class="{className} n-map-container {small ? 'small ' : ''}"
   style="{height ? `height: ${height}px;` : `min-height: ${data.height}px;`}
   {style}">
+  {#if lock}
+    <div class="map-lock-cover" />
+  {/if}
   {#if picker}
     <div class="picker-cover">
       <div class="picker-target">
@@ -499,88 +515,89 @@
     <div {id} class="n-map" />
   </div>
 
-  {#if picker && 1 == 2}
-    <div class="location-name {data.showLocations ? 'expanded' : 'collapsed'}">
-      <div class="row">
-        <div class="left">
-          <button
-            class="btn btn-clear btn-icon"
-            disabled={!picker}
-            on:click={() => {
-              data.showLocations = !data.showLocations;
-            }}>
+</div>
 
-            {#if data.showLocations}
-              <NIcon name="chevronDown" />
-            {:else}
-              <NIcon name="menu" />
-            {/if}
+<!-- 
+{#if picker && 1 == 2}
+<div class="location-name {data.showLocations ? 'expanded' : 'collapsed'}">
+  <div class="row">
+    <div class="left">
+      <button
+        class="btn btn-clear btn-icon"
+        disabled={!picker}
+        on:click={() => {
+          data.showLocations = !data.showLocations;
+        }}>
 
-          </button>
-        </div>
-
-        <div
-          class="name flex-grow"
-          on:click={() => {
-            data.showLocations = !data.showLocations;
-          }}>
-          {data.locationName || 'Locations'}
-        </div>
-
-        {#if data.showLocations && data.locationName}
-          <div class="right">
-            <div class="btn btn-clear text-primary" on:click={methods.saveLocation}>Save</div>
-          </div>
+        {#if data.showLocations}
+          <NIcon name="chevronDown" />
+        {:else}
+          <NIcon name="menu" />
         {/if}
 
+      </button>
+    </div>
+
+    <div
+      class="name flex-grow"
+      on:click={() => {
+        data.showLocations = !data.showLocations;
+      }}>
+      {data.locationName || 'Locations'}
+    </div>
+
+    {#if data.showLocations && data.locationName}
+      <div class="right">
+        <div class="btn btn-clear text-primary" on:click={methods.saveLocation}>Save</div>
       </div>
-      {#if data.showLocations}
-        <div class="locations list">
-          {#if $Locations.length == 0}
-            <div class="empty-notice" style="max-height:120px;">No Saved Locations</div>
-          {/if}
-          {#each $Locations as location}
-            <Item borderBottom compact className="compact text-primary">
-              <button
-                slot="left"
-                class="btn btn-clear btn-icon text-red"
-                on:click={() => {
-                  methods.setLocation(location);
-                }}>
+    {/if}
 
-                <NIcon name="radio" />
-              </button>
-              <div
-                class="text-md text-inverse font-weight-bold"
-                on:click={() => {
-                  methods.setLocation(location);
-                }}>
-                {location.name}
-              </div>
-              <div slot="right" class="n-row" style="min-width:50px;">
-                <button
-                  class="btn btn-clear mr-2"
-                  on:click={(evt) => {
-                    methods.editName(location);
-                  }}>
-                  <NIcon name="edit" size="24" />
-                </button>
-                <button
-                  class="btn btn-clear"
-                  on:click={(evt) => {
-                    methods.deleteLocation(location);
-                  }}>
-                  <NIcon name="delete" className="fill-red" />
-                </button>
-              </div>
-
-            </Item>
-          {/each}
-          <div class="gap" />
-        </div>
+  </div>
+  {#if data.showLocations}
+    <div class="locations list">
+      {#if $Locations.length == 0}
+        <div class="empty-notice" style="max-height:120px;">No Saved Locations</div>
       {/if}
+      {#each $Locations as location}
+        <Item borderBottom compact className="compact text-primary">
+          <button
+            slot="left"
+            class="btn btn-clear btn-icon text-red"
+            on:click={() => {
+              methods.setLocation(location);
+            }}>
 
+            <NIcon name="radio" />
+          </button>
+          <div
+            class="text-md text-inverse font-weight-bold"
+            on:click={() => {
+              methods.setLocation(location);
+            }}>
+            {location.name}
+          </div>
+          <div slot="right" class="n-row" style="min-width:50px;">
+            <button
+              class="btn btn-clear mr-2"
+              on:click={(evt) => {
+                methods.editName(location);
+              }}>
+              <NIcon name="edit" size="24" />
+            </button>
+            <button
+              class="btn btn-clear"
+              on:click={(evt) => {
+                methods.deleteLocation(location);
+              }}>
+              <NIcon name="delete" className="fill-red" />
+            </button>
+          </div>
+
+        </Item>
+      {/each}
+      <div class="gap" />
     </div>
   {/if}
 
 </div>
+{/if} -->

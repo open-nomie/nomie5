@@ -13,6 +13,8 @@
   export let solo = false;
   export let xs = false;
   export let novalue = false;
+  export let className = "";
+  export let value = undefined;
 
   let hasEmojiSlot = arguments[1].$$slots || {}.emoji;
 
@@ -34,7 +36,7 @@
   <Button
     color="none"
     {style}
-    className="btn n-tracker-value-grid-button {solo ? 'solo' : ''}
+    className="btn {className} n-tracker-value-grid-button {solo ? 'solo' : ''}
     {xs ? 'size-xs' : ''}
     {novalue ? 'novalue' : ''}
     "
@@ -63,11 +65,10 @@
     {/if}
     <main class="{truncate ? 'truncate' : ''} text-left w-100">
       <Text size="sm" truncate>{(element.obj || {}).label || element.id}</Text>
-
-      <!-- <div class="{truncate ? 'truncate' : ''} label text-inverse">{(element.obj || {}).label || element.id}</div> -->
       {#if shouldShowValue(element)}
         <Text bold style="white-space:pre">{NomieUOM.format(element.value, (element.obj || {}).uom) || ''}</Text>
-        <!-- <div class="value text-inverse">{NomieUOM.format(element.value, (element.obj || {}).uom) || ''}</div> -->
+      {:else if value}
+        <Text style="white-space:pre" faded size="sm">{value}</Text>
       {/if}
     </main>
   </Button>

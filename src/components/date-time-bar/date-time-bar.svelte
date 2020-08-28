@@ -148,7 +148,6 @@
         <Calendar
           className={calendarClass}
           on:dayClick={(evt) => {
-            console.log('calendar day click', evt.detail);
             let calDate = evt.detail.hour(_date.hour()).minute(_date.minute());
             setDate(calDate);
           }}

@@ -41,6 +41,7 @@
   import Link24 from "carbon-icons-svelte/lib/Link24";
   import Report24 from "carbon-icons-svelte/lib/Report24";
   import Shuffle24 from "carbon-icons-svelte/lib/Shuffle24";
+  import Scale24 from "carbon-icons-svelte/lib/Scale24";
   import ArrowsHorizontal24 from "carbon-icons-svelte/lib/ArrowsHorizontal24";
 
   export let name = "add";
@@ -54,6 +55,7 @@
     addOutline: AddAlt24,
     calendar: Calendar24,
     people: Events24,
+    scale: Scale24,
     settings: Settings24,
     search: Search24,
     userAdd: UserFollow24,

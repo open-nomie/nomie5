@@ -591,9 +591,9 @@
     <NToolbarGrid>
       <div slot="left" className="truncate" style="min-width:100px;">
         {#if $Interact.stats.terms.length == 1}
-          <button class="btn btn-clear tap-icon clickable" on:click={close}>
+          <Button shape="circle" color="transparent" on:click={close}>
             <NIcon name="close" />
-          </button>
+          </Button>
         {:else}
           <button class="btn btn-clear tap-icon clickable pl-1" on:click={back}>
             <NIcon name="arrowBack" size="28" />
@@ -719,10 +719,8 @@
             </NToolbar>
           {/if}
 
-          <NLogList
-            compact
-            limit={30}
-            on:textClick={(evt) => {
+          <!--
+              on:textClick={(evt) => {
               if (evt.detail.type == 'tracker') {
                 Interact.openStats(`#${evt.detail.id}`);
               } else {
@@ -732,6 +730,11 @@
             on:trackerClick={(evt) => {
               Interact.openStats(`#${evt.detail.tag}`);
             }}
+            -->
+
+          <NLogList
+            compact
+            limit={30}
             logs={state.selected.rows || state.stats.rows}
             style="min-height:100%"
             className="bg-solid-1 flex-grow flex-shrink" />

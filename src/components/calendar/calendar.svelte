@@ -339,7 +339,7 @@
           width: 100%;
           .day {
             align-content: center;
-            border-radius: 50%;
+            border-radius: 32%;
             box-sizing: content-box;
             color: var(--color-inverse-2);
             display: flex;
