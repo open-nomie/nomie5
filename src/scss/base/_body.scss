@@ -19,7 +19,8 @@ body {
   width: 50%;
 }
 
-body.no-scroll {
+body {
+  border: solid 2px blue;
   overflow: hidden;
   position: fixed;
   top: 0;

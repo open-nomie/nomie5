@@ -15,6 +15,11 @@ export interface IPositivityEmoji {
 }
 
 export function getEmojiFromScore(score: number, onlyEmoji: boolean = false): IPositivityEmoji | string {
+  if (score < -2) {
+    score = -2;
+  } else if (score > 2) {
+    score = 2;
+  }
   let match = appConfig.positivity.find((es: IPositivityEmoji) => {
     return es.score == score;
   });

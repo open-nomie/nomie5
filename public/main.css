@@ -5219,7 +5219,8 @@ body {
 .w-50 {
   width: 50%; }
 
-body.no-scroll {
+body {
+  border: solid 2px blue;
   overflow: hidden;
   position: fixed;
   top: 0;
@@ -7053,8 +7054,6 @@ aside.n-panel {
     padding: 16px !important;
     font-size: 1.1rem;
     line-height: 136%; }
-    .n-item-log .n-note-textualized.long-note {
-      font-size: 0.97rem; }
   .n-item-log .trackers-list {
     border-top: solid 1px var(--color-solid-1); }
     .n-item-log .trackers-list .n-item {
@@ -7465,10 +7464,12 @@ THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED
 TODO: Organize main into components or containers. 
 **/
 .location-badge {
-  padding: 2px 4px !important;
+  cursor: pointer;
+  padding: 2px 0px !important;
   max-width: 100px;
   text-transform: capitalize !important;
   border: none;
+  margin-right: 4px;
   color: var(--color-primary-bright); }
   @media (min-width: 600px) {
     .location-badge {

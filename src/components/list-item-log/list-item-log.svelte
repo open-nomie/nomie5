@@ -111,21 +111,18 @@
     <!-- Show the Trackers within this Log Item -->
     <div class="n-row time-row">
       <div class="time truncate">
-        <div class="filler">
+        <div class="filler n-row justify-content-start">
           {#if displayLog.lat}
-            <button
-              style="display:inline-flex; margin-left:-4px; padding-left:4px;"
+            <LocationBadge
+              location={displayLog}
               on:click={(event) => {
                 Interact.showLocations([displayLog]);
                 event.stopPropagation();
-              }}
-              class="btn btn-sm btn-clear text-normal location-badge truncate">
-              <LocationBadge location={displayLog} />
-            </button>
+              }} />
           {/if}
           <Text inline size="sm" className="" faded>{time.fromNow(logMeta.endDate)}</Text>
         </div>
-        <Text size="sm" medium>
+        <Text size="sm" medium className="filler">
           {logMeta.endDate.format(`${dtFormat.time}`)}
           <Text inline size="sm" faded>{logMeta.endDate.format(`${dtFormat.date}`)}</Text>
         </Text>

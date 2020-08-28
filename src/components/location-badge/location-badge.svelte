@@ -3,7 +3,12 @@
   import NIcon from "../icon/icon.svelte";
   import textUtils from "../../utils/text/text";
   import Text from "../text/text.svelte";
+  import { createEventDispatcher } from "svelte";
   export let location;
+  export let style = "";
+  export let className = "";
+
+  const dispatch = createEventDispatcher();
 
   let name = null;
   let lat = null;
@@ -23,7 +28,13 @@
 </script>
 
 {#if location}
-  {#if name}
-    <Text size="sm" bold className="text-primary">{name}</Text>
-  {:else}📍{/if}
+  <span
+    class="location-badge"
+    on:click={(evt) => {
+      dispatch('click', evt);
+    }}>
+    {#if name}
+      <Text size="sm" bold className="text-primary {className}" {style} truncate>{name}</Text>
+    {:else}📍{/if}
+  </span>
 {/if}
