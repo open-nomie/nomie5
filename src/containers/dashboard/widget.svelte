@@ -26,6 +26,7 @@
 
   import { LastUsed } from "../../store/last-used";
   import { Interact } from "../../store/interact";
+  import { DashboardStore } from "../../store/dashboard-store";
 
   const dispatch = createEventDispatcher();
   const id = nid();
@@ -58,15 +59,50 @@
 <style lang="scss">
   @import "../../scss/utils/_utils";
 
-  .dashboard-text {
-    padding: 8px 16px;
-    min-width: 100%;
+  :global(.dashboard-text) {
+    padding: 4px 16px;
+    min-width: 100% !important;
     flex-grow: 1;
     display: flex;
     width: 100%;
     font-size: 0.9rem;
     color: var(--color-inverse-2);
     align-items: center;
+    text-align: center !important;
+    justify-content: center;
+    max-width: 100% !important;
+
+    &.widget-size-md {
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 8px 16px;
+      line-height: 1.1rem;
+    }
+    &.widget-size-lg {
+      padding: 8px 16px;
+      font-size: 1.6rem;
+      line-height: 1.7rem;
+      font-weight: 700;
+      padding: 16px;
+    }
+  }
+
+  :global(.dashboard-text + .dashboard-text) {
+    padding-top: 0px !important;
+    padding-bottom: 16px;
+  }
+
+  .dashboard-widget {
+    max-height: 300px;
+    position: relative;
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
   }
 
   :global(.dashboard-widget.over .widget-footer .n-text, .dashboard-widget.under .widget-footer .n-text) {
@@ -84,15 +120,30 @@
   :global(.dashboard-widget.widget-orange .widget-footer .n-text) {
     color: var(--color-orange) !important;
   }
+
+  :global(.dashboard-widget.widget-red:after) {
+    background-color: var(--color-red) !important;
+  }
+  :global(.dashboard-widget.widget-blue:after) {
+    background-color: var(--color-blue) !important;
+  }
+  :global(.dashboard-widget.widget-green:after) {
+    background-color: var(--color-green) !important;
+  }
+  :global(.dashboard-widget.widget-orange:after) {
+    background-color: var(--color-orange) !important;
+  }
+
   :global(.dashboard-widget) {
     margin: 8px;
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
     background-color: var(--color-solid);
     border-radius: 16px;
     box-shadow: var(--box-shadow-float);
     overflow: hidden;
-    flex-shrink: 0;
+    flex-shrink: 1;
+    flex-grow: 1;
 
     // min-width: 148px;
     // @include media-breakpoint-down(xs) {
@@ -106,8 +157,6 @@
     //   max-width: calc(50% - 16px);
     // }
 
-    flex-shrink: 1;
-    flex-grow: 1;
     .widget-header,
     .widget-footer {
       padding: 6px 8px;
@@ -127,17 +176,17 @@
 
   .widget-size-lg {
     min-width: calc(100% - 16px) !important;
-    max-width: calc(100% - 16px);
+    // max-width: calc(100% - 16px);
   }
 
   .widget-size-md {
     min-width: calc(50% - 16px) !important;
-    max-width: calc(50% - 16px);
+    // max-width: calc(50% - 16px);
   }
 
   .widget-size-sm {
     min-width: calc(25% - 16px) !important;
-    max-width: calc(25% - 16px);
+    // max-width: calc(25% - 16px);
   }
 
   @include media-breakpoint-down(sm) {
@@ -193,10 +242,20 @@
         on:click={() => {
           Interact.openStats(widget.element.toSearchTerm());
         }} />
+      <div class="filler" />
       <Button
         size="xs"
         color="clear"
-        className="p-0"
+        className="p-1 font-weight-normal"
+        on:click={() => {
+          DashboardStore.pickSize(widget);
+        }}>
+        {widget.size}
+      </Button>
+      <Button
+        size="xs"
+        color="clear"
+        className="p-1"
         on:click={() => {
           dispatch('click');
         }}>

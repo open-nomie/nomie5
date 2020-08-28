@@ -46,6 +46,7 @@
   import Spinner from "../../components/spinner/spinner.svelte";
   import { widgetTypes } from "./widgetTypes";
   import { truncateText } from "../../utils/text/text";
+  import { UserStore } from "../../store/user-store";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
   let people: any; // holder of User People - loaded from subscribe
@@ -61,6 +62,8 @@
   let activeDashboard: Dashboard = { id: "fake", label: "Loading...", widgets: [] }; // Set a default dasboard
   let stopRefresh;
   let loading = false;
+
+  let dtFormat;
   /**
    * Toggle Edit more
    */
@@ -207,6 +210,9 @@
         let start = widget.getStartDate();
         let end = widget.getEndDate();
 
+        widget.dateFormat = (dtFormat || { date: "MMM Do YYYY" }).date;
+        widget.timeFormat = (dtFormat || { time: "h:mma" }).time;
+
         // TODO make this work for all trackable elements
         if (widget.type == "last-used") {
           if (widget.element.type == "tracker") {
@@ -259,6 +265,7 @@
           };
           // Generate the Stats
           widget.stats = statsV5.generate(statsConfig);
+
           // Generate the Positivity
           widget.positivity = positivityFromLogs(widget.logs, widget.element);
         }
@@ -332,6 +339,8 @@
    * On Mount / On Destroy
    **/
   onMount(() => {
+    dtFormat = UserStore.getDateTimeFormat();
+
     unsubTrackers = TrackerStore.subscribe((tkrs) => {
       if (tkrs.trackers) {
         trackers = tkrs.trackers;
@@ -377,7 +386,7 @@
     flex-direction: row;
     flex-wrap: wrap;
     padding: 10px 4px 16px;
-    justify-content: center;
+    justify-content: stretch;
     align-content: flex-start;
     min-height: 70vh;
   }
@@ -387,6 +396,9 @@
   }
   :global(.dashboard-widget.type-map) {
     height: 260px;
+  }
+  :global(.dashboard-widget.type-text) {
+    text-align: center;
   }
   :global(.dashboard .tab) {
     max-width: 100px;
@@ -418,18 +430,23 @@
   {#if activeDashboard && !loading}
     <div class="container h-100">
       {#if editMode}
-        <div class="n-toolbar n-row px-2 mt-2">
+        <div class="n-toolbar n-row px-2 mt-2 mb-2">
           <Input type="text" placeholder="Dashboard Label" bind:value={activeDashboard.label} />
           <Button color="clear" className="text-primary-bright" on:click={done}>{editMode ? 'Done' : 'Edit'}</Button>
         </div>
+        <hr class="divider center my-3" />
       {/if}
       {#if !editMode && ready}
         <div class="dashboard-wrapper" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
           {#if people && trackers}
             {#if activeDashboard.widgets.length == 0}
               <div class="center-all p-5 n-panel vertical">
-                <Text faded size="md">Empty Dashboard</Text>
-                <Button size="xs" className="mt-4" on:click={newWidget}>Add a Widget</Button>
+                <Text faded size="md" center>
+                  {Lang.t('dashboard.empty-message', 'Fresh Dashboard! Get started by adding the first Widget')}
+                </Text>
+                <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={newWidget}>
+                  {Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
+                </Button>
               </div>
             {/if}
 
@@ -470,11 +487,15 @@
             DashboardStore.save();
           }}
           let:item>
-          <ListItem solo className="pb-2" title={item.getTitle()}>
-            <Text size="sm">
+          <ListItem solo className="pb-2">
+            {#if item.type == 'text'}
+              <Text size="md" truncate>{item.description}</Text>
+            {:else}
+              <TrackerSmallBlock xs truncate novalue element={item.element} value={item.type} />
+            {/if}
+            <div slot="right" class="text-sm text-faded-2 pr-2">
               {#if item.timeRange}{item.timeRange.getLabel()}{/if}
-              <span class="opacity-5">{item.type}</span>
-            </Text>
+            </div>
             <div slot="right" class="menu-handle">
               <Icon name="menu" />
             </div>
@@ -505,4 +526,5 @@
   {#if editingWidget}
     <WidgetEditor bind:value={editingWidget} on:close={clearEditing} />
   {/if}
+  <div slot="footer" />
 </Modal>

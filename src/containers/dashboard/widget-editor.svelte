@@ -26,6 +26,7 @@
   import { Dashboard } from "../../modules/dashboard/dashboard";
 
   export let value: Widget = null;
+  const dispatch = createEventDispatcher();
 
   let dateType;
   let widget;
@@ -33,10 +34,15 @@
   let widgetTypeId;
   let widgetType: IWidgetType;
   let conditionalStyling: boolean = false;
+  let editorView = "options";
 
   $: if (widgetTypeId) {
     widgetType = widgetTypes.find((widgetType) => widgetType.id == widgetTypeId);
     value.type = widgetTypeId;
+    if ([...widgetType.optional, ...widgetType.requires].indexOf("cond-style") == -1) {
+      // Doesn't support conditional styling.. remove that setting
+      value.compareValue = undefined;
+    }
   }
 
   /**
@@ -50,13 +56,34 @@
     }
   }
 
-  $: if (conditionalStyling === false) {
-    // value.compareValue = undefined;
+  let editorButtons = [];
+
+  $: if (value) {
+    editorButtons = [
+      {
+        label: "Configure",
+        active: editorView === "options",
+        click() {
+          changeView("options");
+        },
+      },
+      {
+        label: "Style",
+        active: editorView === "style",
+        click() {
+          changeView("style");
+        },
+      },
+      {
+        label: "More",
+        active: editorView === "more",
+        hide: value._editing ? false : true,
+        click() {
+          changeView("more");
+        },
+      },
+    ];
   }
-
-  const dispatch = createEventDispatcher();
-
-  let editorView = "options";
 
   function changeView(view) {
     editorView = view;
@@ -166,47 +193,51 @@
     box-shadow: var(--box-shadow-float);
   }
   .dashwidget-editor {
+    flex-grow: 1;
+    flex-shrink: 1;
     min-height: 300px;
+    background-color: var(--color-bg);
+  }
+  .widget-views {
+    padding: 16px;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
   }
 </style>
 
 <div class="dashwidget-editor">
 
-  <div class="widget-top p-2">
+  <div class="widget-top p-2 bg-solid">
     <Input type="select" placeholder="Widget" bind:value={widgetTypeId}>
       <option>Select a Widget</option>
       {#each widgetTypes as widgetType}
         <option value={widgetType.id}>{widgetType.label}</option>
       {/each}
     </Input>
-
-    <ButtonGroup
-      className="my-2"
-      size="sm"
-      buttons={[{ label: 'Configure', active: editorView === 'options', click() {
-            changeView('options');
-          } }, { label: 'Style', active: editorView === 'style', click() {
-            changeView('style');
-          } }, { label: 'More', active: editorView === 'more', click() {
-            changeView('more');
-          } }]} />
   </div>
 
-  <div class="widget-views p-2">
+  <div class="widget-views">
+    <ButtonGroup className="my-2" size="sm" buttons={editorButtons} />
+
     {#if editorView == 'options'}
       {#if widgetTypeId == 'text'}
-        <Input placeholder="Message" type="text" bind:value={value.description} />
+        <ListItem className="p-0" bg="transparent">
+          <Input placeholder="Message" type="textarea" rows={2} bind:value={value.description} />
+        </ListItem>
       {/if}
       {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('timeframe') > -1}
-        <Input bind:value={dateType} type="select" label="Timeframe">
-          <option>Select</option>
-          {#each timeFrames as timeFrame}
-            <option value={timeFrame.id}>{timeFrame.label}</option>
-          {/each}
-        </Input>
+        <ListItem className="p-0" bg="transparent">
+          <Input bind:value={dateType} type="select" label="Timeframe">
+            <option>Select</option>
+            {#each timeFrames as timeFrame}
+              <option value={timeFrame.id}>{timeFrame.label}</option>
+            {/each}
+          </Input>
+        </ListItem>
       {/if}
       {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('element') > -1}
         <ListItem
+          bg="transparent"
           clickable
           delay={0}
           className="px-2 trackable-item"
@@ -214,35 +245,42 @@
           title={`${!value.element ? '⚠️ ' : ''}Trackable Item`}>
           <div slot="right">
             {#if value.element}
-              <TrackerSmallBlock truncate element={value.element} on:click={selectType} style="min-height:40px; max-width:150px" />
+              <TrackerSmallBlock
+                truncate
+                element={value.element}
+                on:click={selectType}
+                className="px-2"
+                style="background-color:var(--color-solid); min-height:40px; min-width:100px; max-width:150px;" />
             {:else}
-              <Text className="text-primary-bright">Select</Text>
+              <Text className="text-primary-bright">Select Tracker</Text>
             {/if}
           </div>
         </ListItem>
       {/if}
       {#if widgetTypeId == 'value' && value.timeRange && ['today', 'yesterday'].indexOf(value.timeRange.id) == -1}
-        <ListItem title="Include Average">
+        <ListItem bg="transparent" title="Include Average" className="p-0">
           <div slot="right">
             <ToggleSwitch bind:value={value.includeAvg} />
           </div>
         </ListItem>
       {/if}
     {:else if editorView == 'style'}
-      <Input type="select" label="Widget Size" bind:value={value.size}>
-        <option value="sm">Small</option>
-        <option value="md">Medium</option>
-        <option value="lg">Large</option>
-      </Input>
+      <ListItem bg="transparent" className="p-0">
+        <Input type="select" label="Widget Size" bind:value={value.size}>
+          <option value="sm">Small</option>
+          <option value="md">Medium</option>
+          <option value="lg">Large</option>
+        </Input>
+      </ListItem>
       {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('cond-style') > -1}
         <!-- <div class="conditional-styling n-list {conditionalStyling ? 'solo framed' : ''}"> -->
-        <ListItem title="Conditional Colors">
+        <ListItem bg="transparent" title="Conditional Colors" className="p-0">
           <div slot="right">
             <ToggleSwitch bind:value={conditionalStyling} />
           </div>
         </ListItem>
         {#if conditionalStyling}
-          <ListItem title="Compare Value">
+          <ListItem bg="transparent" title="Compare Value" className="p-0">
             <div slot="right">
               <Input
                 pattern="[0-9]*"
@@ -263,7 +301,7 @@
               </Input>
             </div>
           </ListItem>
-          <ListItem>
+          <ListItem bg="transparent" className="p-0">
             <div class="under" slot="left">
               <div class="text-center">
                 <Text className="mb-2" size="sm">Under value color</Text>
@@ -282,19 +320,19 @@
       {/if}
     {:else if editorView == 'more'}
       {#if value._editing}
-        <ListItem clickable on:click={moveWidget}>
+        <ListItem bg="transparent" clickable on:click={moveWidget}>
           <div slot="left">
             <Icon name="shuffle" className="fill-primary-bright" />
           </div>
           Move Widget
         </ListItem>
-        <ListItem clickable on:click={duplicateWidget}>
+        <ListItem bg="transparent" clickable on:click={duplicateWidget}>
           <div slot="left">
             <Icon name="copy" className="fill-primary-bright" />
           </div>
           Duplicate Widget
         </ListItem>
-        <ListItem clickable on:click={deleteWidget}>
+        <ListItem bg="transparent" clickable on:click={deleteWidget}>
           <div slot="left">
             <Icon name="delete" className="fill-red" />
           </div>

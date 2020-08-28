@@ -4,6 +4,7 @@ import nid from "../nid/nid";
 import type NLog from "../nomie-log/nomie-log";
 import { strToColor } from "../../components/dymoji/dymoji";
 import { UserStore } from "../../store/user-store";
+import { truncateText } from "../../utils/text/text";
 /**
  * Widget Date
  * The blockdate is either the start or end of a TimeFrame
@@ -139,6 +140,8 @@ export class Widget implements IWidget {
   positivity?: any;
   stats?: any;
   lastUsed?: any;
+  timeFormat: string = "h:mm a";
+  dateFormat: string = "MMM Do YYYY";
 
   constructor(payload?: IWidget) {
     if (payload) {
@@ -178,7 +181,9 @@ export class Widget implements IWidget {
     }
   }
   getTitle(): string {
-    if (this.element) {
+    if (this.type == "text") {
+      return truncateText(this.description, 30);
+    } else if (this.element && this.element.id) {
       return this.element.id;
     } else {
       return "unknown";

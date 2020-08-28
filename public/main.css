@@ -5144,7 +5144,7 @@ button:focus {
   .btn-group.inverse {
     background-color: transparent; }
     .btn-group.inverse .btn {
-      opacity: 0.4; }
+      color: var(--color-inverse-2); }
       .btn-group.inverse .btn.active {
         opacity: 1;
         background-color: var(--color-solid-2) !important; }
@@ -5904,7 +5904,7 @@ select {
   width: 100%; }
 
 .container {
-  max-width: 800px !important; }
+  max-width: 1000px !important; }
 
 .btn,
 a,

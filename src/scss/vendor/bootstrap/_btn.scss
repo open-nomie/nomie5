@@ -337,7 +337,7 @@ button:focus {
   &.inverse {
     background-color: transparent;
     .btn {
-      opacity: 0.4;
+      color: var(--color-inverse-2);
       &.active {
         opacity: 1;
         background-color: var(--color-solid-2) !important;
