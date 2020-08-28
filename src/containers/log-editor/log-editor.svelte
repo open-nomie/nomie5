@@ -22,6 +22,10 @@
   import NInput from "../../components/input/input.svelte";
   import NIcon from "../../components/icon/icon.svelte";
   import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
+  import ButtonGroup from "../../components/button-group/button-group.svelte";
+  import { Lang } from "../../store/lang";
+  import ListItem from "../../components/list-item/list-item.svelte";
+  import { Locations } from "../../store/locations";
 
   // Props
   export let log = undefined;
@@ -47,6 +51,7 @@
   const methods = {
     init() {
       if (log) {
+        console.log("initing");
         state.log = new NomieLog(log);
         state.dateTimeValue = dayjs(new Date(log.end)).format("YYYY-MM-DDTHH:mm");
       }
@@ -74,6 +79,16 @@
       // dispatch("close");
     },
   };
+
+  async function selectLocation() {
+    let location = await Locations.selectLocation();
+    console.log("LocaTION", location);
+    if (location) {
+      state.log.lat = location.lat;
+      state.log.lng = location.lng;
+      state.log.location = location.name;
+    }
+  }
 
   onMount(() => {
     methods.init();
@@ -125,35 +140,17 @@
 
 {#if state.log}
   <NModal title="Log Options" className="log-editor">
-    <div class="btn-group w-100 m-2" slot="header">
-      <button
-        class="btn -text {state.view === 'note' ? 'active' : ''}"
-        on:click={() => {
-          methods.setView('note');
-        }}>
-        Note
-      </button>
-      <button
-        class="btn -text {state.view === 'score' ? 'active' : ''}"
-        on:click={() => {
-          methods.setView('score');
-        }}>
-        Score
-      </button>
-      <button
-        class="btn -location {state.view === 'where' ? 'active' : ''}"
-        on:click={() => {
-          methods.setView('where');
-        }}>
-        Where
-      </button>
-      <button
-        class="btn {state.view === 'when' ? 'active' : ''}"
-        on:click={() => {
-          methods.setView('when');
-        }}>
-        When
-      </button>
+    <div slot="header" class="w-100 p-2">
+      <ButtonGroup
+        buttons={[{ label: Lang.t('general.note', 'Note'), active: state.view === 'note', click() {
+              methods.setView('note');
+            } }, { label: Lang.t('general.score', 'Score'), active: state.view === 'score', click() {
+              methods.setView('score');
+            } }, { label: Lang.t('general.where', 'Where'), active: state.view === 'where', click() {
+              methods.setView('where');
+            } }, { label: Lang.t('general.when', 'When'), active: state.view === 'when', click() {
+              methods.setView('when');
+            } }]} />
     </div>
 
     <div class="view-port">
@@ -171,14 +168,20 @@
 
         </div>
       {:else if state.view == 'where'}
-        <NMap
-          locations={methods.getLocations()}
-          picker={true}
-          on:change={(event) => {
-            state.log.lat = event.detail.lat;
-            state.log.lng = event.detail.lng;
-            state.log.location = event.detail.location;
-          }} />
+        {#if state.log.lat}
+          <div style="height:200px; max-height:200px; min-height:200px; overflow:hidden">
+            <NMap
+              style="max-height:200px;"
+              locations={[{ lat: state.log.lat, lng: state.log.lng, name: state.log.location }]}
+              picker={true}
+              on:change={(event) => {
+                state.log.lat = event.detail.lat;
+                state.log.lng = event.detail.lng;
+                state.log.location = event.detail.location;
+              }} />
+          </div>
+        {/if}
+        <ListItem compact clickable detail on:click={selectLocation}>Pick from my locations</ListItem>
       {:else if state.view == 'score'}
         <div class="score center-content">
           <NPositivitySelector

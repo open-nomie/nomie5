@@ -53,7 +53,10 @@
     height: `100px`,
   };
 
-  $: if (locations) {
+  let lastLocations;
+
+  $: if (locations && JSON.stringify(locations) !== lastLocations) {
+    lastLocations = JSON.stringify(locations);
     setTimeout(async () => {
       await methods.init();
       methods.renderMap();
@@ -350,6 +353,7 @@
     position: relative;
     min-height: 100%;
     flex-grow: 1;
+    flex-shrink: 1;
     .n-map-wrapper {
       position: absolute;
       top: 0;

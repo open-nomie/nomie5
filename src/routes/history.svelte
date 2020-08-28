@@ -48,7 +48,7 @@
   import NextPrevCal from "../components/next-prev-cal/next-prev-cal.svelte";
 
   export const location = undefined;
-  export let style = undefined;
+  export const style = undefined;
 
   /**
    * I've messed this all up again. but it's faster and more responsivle

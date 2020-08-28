@@ -49,7 +49,7 @@
       dispatch('click', evt);
     }, delay);
   }}>
-  <Ripple bind:this={ripple} bind:hit />
+  <Ripple bind:hit />
   <slot />
 
 </button>

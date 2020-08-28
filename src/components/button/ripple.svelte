@@ -32,7 +32,7 @@
     bottom: 0;
     top: 0;
     overflow: hidden;
-    pointer-events: none;
+    z-index: 1000;
   }
   .ball {
     transition: all 0.5s ease-in-out;

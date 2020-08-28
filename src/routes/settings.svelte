@@ -48,6 +48,9 @@
   import Icon from "../components/icon/icon.svelte";
   import { AppStore } from "../store/app-store";
 
+  export const location = undefined;
+  export const style = undefined;
+
   // consts
   // const Export = new Exporter();
 

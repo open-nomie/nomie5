@@ -15,6 +15,8 @@ import Storage from "../modules/storage/storage";
 import config from "../config/appConfig";
 import Location from "../modules/locate/Location";
 import distance from "../modules/locate/distance";
+import { Interact } from "./interact";
+import { Lang } from "./lang";
 
 // Stores
 
@@ -41,6 +43,24 @@ const LocationsInit = () => {
         return locations;
       });
       return this.write(theLocations);
+    },
+
+    selectLocation(): Promise<Location> {
+      return new Promise((resolve, reject) => {
+        let locations = methods.getAll();
+        let buttons: Array<any> = locations.map((location) => {
+          return {
+            title: location.name,
+            click() {
+              resolve(location);
+            },
+          };
+        });
+        Interact.popmenu({
+          title: Lang.t("locations.select-a-location", "Select a Location"),
+          buttons: buttons,
+        });
+      });
     },
 
     findClosestTo(location): Location {

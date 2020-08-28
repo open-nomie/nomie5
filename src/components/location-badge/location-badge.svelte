@@ -2,6 +2,7 @@
   import { Locations } from "../../store/locations";
   import NIcon from "../icon/icon.svelte";
   import textUtils from "../../utils/text/text";
+  import Text from "../text/text.svelte";
   export let location;
 
   let name = null;
@@ -23,6 +24,6 @@
 
 {#if location}
   {#if name}
-    <div class="truncate">{name}</div>
+    <Text size="sm" bold className="text-primary">{name}</Text>
   {:else}📍{/if}
 {/if}

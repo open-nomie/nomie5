@@ -224,14 +224,14 @@
       <div class="left">
         <Button
           color="transparent"
-          shape="round"
+          shape="circle"
           size="lg"
           style="width:40px; height:40px;"
           title="Cancel"
           on:click={() => {
             methods.onCancel();
           }}>
-          <Icon name="close" size="42" />
+          <Icon name="close" size="40" />
         </Button>
       </div>
       <!-- end left toolbar -->
@@ -287,15 +287,15 @@
         {#if (data.tracker.type !== 'timer' || data.value) && hideAdd !== true}
           <Button
             color="transparent"
-            shape="round"
-            style="width:40px; height:40px;"
+            shape="circle"
+            style="width:42px; height:42px;"
             size="lg"
             on:click={methods.onAdd}
             title="Add this to the note, but don't save yet"
             className={tracker.started ? 'd-none' : ''}>
             <!-- local hack to make plus match with close-->
             {#if !$Interact.trackerInput.allowSave}
-              <NIcon name="chevronRight" size="42" />
+              <NIcon name="chevronRight" size="40" />
             {:else}
               <NIcon name="add" size="46" />
             {/if}

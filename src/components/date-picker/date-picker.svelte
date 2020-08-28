@@ -3,6 +3,7 @@
   import dayjs from "dayjs";
   // utils
   import { createEventDispatcher } from "svelte";
+  import DateTimeBar from "../date-time-bar/date-time-bar.svelte";
 
   // data
   export let date = dayjs().format("YYYY-MM-DD");
