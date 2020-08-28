@@ -21,7 +21,7 @@
 
   export let term = null;
   export let limit = 20;
-
+  export let className = "";
   export let compact = false;
 
   let loading = false;
@@ -91,7 +91,7 @@
 
 <div class="log-list-loader">
   <LogList
-    className="bg-transparent"
+    className="bg-transparent {className}"
     {compact}
     {logs}
     on:trackerClick={(event) => {
