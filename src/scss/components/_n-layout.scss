@@ -1,7 +1,5 @@
-body.scrolled {
-  header.layout-header {
-    box-shadow: var(--box-shadow-float);
-  }
+header.layout-header.scrolled {
+  box-shadow: var(--box-shadow-float);
 }
 
 .n-layout {

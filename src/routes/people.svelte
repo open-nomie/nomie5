@@ -22,6 +22,7 @@
   import { Interact } from "../store/interact";
   import { LedgerStore } from "../store/ledger";
   import Text from "../components/text/text.svelte";
+  import Button from "../components/button/button.svelte";
 
   let state = {
     people: [],
@@ -101,20 +102,25 @@
 </style>
 
 <NLayout pageTitle="People">
-  <div slot="header" class="pb-1">
-    <NSearchBar on:change={searchPeople} on:clear={clearSearch} placeholder="Search People..." autocomplete>
-      <button on:click={addPerson} slot="right" class="btn btn-icon btn-clear">
-        <NIcon name="userAdd" className="fill-primary-bright" />
-      </button>
-
-    </NSearchBar>
+  <div slot="header">
+    <div class="container px-2" style="margin-top:2px;">
+      <NSearchBar on:change={searchPeople} on:clear={clearSearch} placeholder="Search People..." autocomplete>
+        <button on:click={addPerson} slot="right" class="btn btn-icon btn-clear">
+          <NIcon name="userAdd" className="fill-primary-bright" />
+        </button>
+      </NSearchBar>
+    </div>
   </div>
 
   <div slot="content" class="container">
-    <div class="n-list my-2">
+    <div class="n-list my-2 bg-transparent">
       {#if !state.people.length && !state.searchTerm && state.initialized}
-        <NItem className=" py-3 bg-transparent">
-          <div class="text-md text-center">Track and monitor how you interact with your friends and family.</div>
+        <NItem className="mt-5 py-3" bg="transparent">
+          <div class="text-md text-center">
+            Track & monitor how you interact
+            <br />
+            with your friends and family.
+          </div>
           <div class="text-sm mt-2 text-center">
             <span class="fake-link" on:click={addPerson}>Add a person</span>
             or
@@ -137,20 +143,24 @@
               <AvatarBall size={48} username={$PeopleStore.people[person].displayName} style={`border-radius:32%; overflow:hidden`} />
             {/if}
           </div>
-          <Text medium lineHeightMd truncate>{($PeopleStore.people[person] || {}).displayName}</Text>
+          <Text size="md" lineHeightMd truncate>{($PeopleStore.people[person] || {}).displayName}</Text>
           {#if $PeopleStore.people[person] && $PeopleStore.people[person].last}
-            <Text size="sm" faded className="mt-1">{dayjs($PeopleStore.people[person].last).fromNow()}</Text>
+            <Text size="sm" faded>{dayjs($PeopleStore.people[person].last).fromNow()}</Text>
           {/if}
           <div slot="right" class="n-row">
-            <button
-              class="btn btn-clear tap-icon px-3 mr-1"
+            <Button
+              shape="round"
+              color="transparent"
+              className="px-3 mr-1"
               on:click={(evt) => {
                 personClicked(person);
               }}>
               <NIcon name="addOutline" className="fill-primary-bright" size={24} />
-            </button>
-            <button
-              class="btn btn-clear tap-icon px-3"
+            </Button>
+            <Button
+              shape="circle"
+              color="transparent"
+              className="tap-icon mx-2"
               on:click={(evt) => {
                 evt.preventDefault();
                 evt.stopImmediatePropagation();
@@ -158,7 +168,7 @@
                 Interact.openStats(`@${person}`);
               }}>
               <NIcon name="chart" className="fill-primary-bright" size={24} />
-            </button>
+            </Button>
           </div>
         </NItem>
       {/each}

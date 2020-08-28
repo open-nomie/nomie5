@@ -83,12 +83,8 @@
   }
 </style>
 
-<div className="n-toolbar n-row search-bar container {className}" {style}>
-  {#if searchTerm && showClose}
-    <button class="btn btn-sm btn-clear btn-action-clear mr-2" on:click={fireClear} style="margin-left:-10px;">
-      <NIcon name="close" />
-    </button>
-  {/if}
+<div className="n-toolbar n-row search-bar {className}" {style}>
+
   <div class="n-row">
     <NInput solo compact bind:this={_elInput} bind:value={searchTerm} on:change={fireChange} on:enter={fireSearch} {placeholder}>
       <div slot="left" class="pl-2">
@@ -96,6 +92,11 @@
       </div>
       <div slot="right">
         <slot name="right-inside" />
+        {#if searchTerm && showClose}
+          <button class="btn btn-sm btn-clear btn-action-clear mr-2" on:click={fireClear} style="margin-left:-10px;">
+            <NIcon name="close" />
+          </button>
+        {/if}
       </div>
     </NInput>
     <slot name="right" />
