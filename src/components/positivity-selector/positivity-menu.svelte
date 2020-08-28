@@ -5,6 +5,7 @@
   import Button from "../button/button.svelte";
   import PositivitySelector from "./positivity-selector.svelte";
   export let score = 0;
+  export let closeBackgroundTap: boolean = false;
 
   let selected: any;
   let showMenu: boolean = false;
@@ -29,13 +30,17 @@
   }
 </style>
 
-<div class="positivity-menu-pop animate up" style="left:{x}px;" class:visible={showMenu} class:hidden={!showMenu}>
+<div class="positivity-menu-pop animate up" style="left:{x}px; z-index:2020" class:visible={showMenu} class:hidden={!showMenu}>
   <PositivitySelector
     bind:score
     on:change={() => {
       toggle();
     }} />
 </div>
+
+{#if showMenu && closeBackgroundTap}
+  <div class="full-screen opacity-0" on:click={toggle} />
+{/if}
 
 <Button
   size="sm"

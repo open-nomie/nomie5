@@ -22,6 +22,7 @@ import nid from "../modules/nid/nid";
 import Board from "../modules/board/board";
 import Export from "../modules/export/export";
 import { TrackerStore } from "./tracker-store";
+import { Device } from "./device-store";
 
 //
 
@@ -49,11 +50,12 @@ const boardsInit = () => {
     setActive(id) {
       if (id) {
         localStorage.setItem("active-board", id);
-        return update((bs) => {
+        update((bs) => {
           bs.active = id;
           bs.activeBoard = bs.boards.find((b) => b.id == bs.active);
           return bs;
         });
+        Device.scrollToTop();
       }
     },
     export(id: string) {
@@ -80,9 +82,11 @@ const boardsInit = () => {
     },
     next() {
       methods.move("next");
+      Device.scrollToTop();
     },
     previous() {
       methods.move("previous");
+      Device.scrollToTop();
     },
     load(boards: Array<Board>) {
       boards = boards.map((board) => {

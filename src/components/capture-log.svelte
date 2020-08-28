@@ -558,7 +558,7 @@
           {#if state.advanced}
             <NIcon name="chevronDown" className="fill-white" />
           {:else}
-            <NIcon name="more" className="fill-inverse-2" />
+            <NIcon name="chevronRight" className="fill-inverse-2" />
           {/if}
         </button>
 
@@ -572,7 +572,7 @@
           on:keydown={methods.keyPress}
           on:paste={methods.keyPress} />
 
-        <PositivityMenu bind:score={$ActiveLogStore.score} />
+        <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} />
         {#if $LedgerStore.saving}
           <button class="save-button">
             <NSpinner size={20} color="#FFFFFF" />

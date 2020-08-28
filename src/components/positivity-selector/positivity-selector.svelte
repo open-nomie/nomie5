@@ -25,6 +25,7 @@
     border-radius: 25px;
     padding: 2px;
     width: 250px;
+    background-color: var(--color-solid-1);
   }
 
   :global(.n-positivity-selector .btn) {
@@ -33,14 +34,20 @@
     border-radius: 25px;
     padding: 2px;
     border: solid 1px transparent;
-    background-color: var(--color-solid);
+    background-color: var(--color-solid-1);
   }
   :global(.n-positivity-selector .btn.inactive) {
-    transform: scale(0.7);
-    opacity: 0.8;
+    opacity: 0.7;
   }
+
+  :global(.n-positivity-selector .btn:hover) {
+    opacity: 1;
+  }
+
   :global(.n-positivity-selector .btn.active) {
     box-shadow: var(--box-shadow);
+    background-color: var(--color-solid);
+    opacity: 1;
   }
 </style>
 
