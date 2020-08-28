@@ -5219,8 +5219,8 @@ body {
 .w-50 {
   width: 50%; }
 
-body {
-  border: solid 2px blue;
+body,
+html {
   overflow: hidden;
   position: fixed;
   top: 0;
@@ -7227,7 +7227,7 @@ aside.n-panel {
   right: 0;
   z-index: 5000; }
 
-body.scrolled header.layout-header {
+header.layout-header.scrolled {
   box-shadow: var(--box-shadow-float); }
 
 .n-layout {

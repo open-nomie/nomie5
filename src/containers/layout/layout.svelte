@@ -1,5 +1,6 @@
 <script lang="ts">
   import AppTabs from "../../containers/layout/tabs.svelte";
+  import { onMount } from "svelte";
 
   export let style: string = "";
   export let className: string = "";
@@ -9,6 +10,8 @@
 
   declare var window: any;
   let scrollArea: HTMLElement;
+  let scrolling: Boolean = false;
+  let scrolled: Boolean = false;
 
   function generateContent() {
     return new Array(300).fill("hello").join(" ");
@@ -16,24 +19,29 @@
 
   // Controll Scrolling
   let scollingTimeout;
-  function scrolling(evt: any) {
-    window.clearTimeout(scollingTimeout);
-    document.body.classList.add("scrolling");
-    if (evt.target.scrollTop > 50) {
-      document.body.classList.add("scrolled");
-    } else {
-      document.body.classList.remove("scrolled");
+  let startTimeout;
+  function _onScroll(evt: any) {
+    clearTimeout(startTimeout);
+    clearTimeout(scollingTimeout);
+    if (!scrolling) {
+      scrolling = true;
+      scrolled = true;
     }
-    window.scrolling = true;
     scollingTimeout = setTimeout(() => {
-      document.body.classList.remove("scrolling");
-      window.scrolling = false;
-    }, 100);
+      if (evt.target.scrollTop > 50) {
+        scrolled = true;
+      } else {
+        scrolled = false;
+      }
+      scrolling = false;
+    }, 200);
   }
 
   $: hasHeader = (arguments[1].$$slots || {}).hasOwnProperty("header");
   $: hasFooter = (arguments[1].$$slots || {}).hasOwnProperty("footer");
   $: hasContent = (arguments[1].$$slots || {}).hasOwnProperty("content");
+
+  onMount(() => {});
 </script>
 
 <svelte:head>
@@ -47,12 +55,11 @@
   {showTabs ? 'has-tabs' : 'no-tabs'}"
   {style}>
   {#if hasHeader}
-    <header class="layout-header {headerClassNames}">
+    <header class="layout-header {headerClassNames} {scrolled ? 'scrolled' : ''} {scrolling ? 'scrolling' : ''}">
       <slot name="header" />
     </header>
-    <!-- <div class="layout-header-fade" /> -->
   {/if}
-  <main id="nomie-main" bind:this={scrollArea} class="layout-main" on:scroll={scrolling}>
+  <main id="nomie-main" bind:this={scrollArea} class="layout-main" on:scroll={_onScroll}>
     {#if hasContent}
       <slot name="content" />
     {:else}
