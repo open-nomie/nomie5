@@ -83,7 +83,7 @@
         });
         // Try and get info
         let test = await testPouch.info();
-        console.log("CouchTest", test);
+
         // Confirm that we should save it - if it doesn't error
         let shouldSave = await Interact.confirm(
           Lang.t("general.success"),
@@ -168,8 +168,6 @@
     pouchEngine = Storage.getEngine();
     // Get Remote Settings
     state.remote = pouchEngine.getRemote();
-
-    console.log("State Remove", state.remote);
     // Wait for it to be ready
     pouchEngine.onReady(() => {
       // Wait for syncer to turn on

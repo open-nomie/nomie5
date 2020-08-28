@@ -39,7 +39,6 @@ const boardsInit = () => {
 
   const methods = {
     async initialize() {
-      console.log("Board Initialize()");
       // trackers = tkrs;
       let boards = await Storage.get(`${config.data_root}/boards.json`);
       if (boards) {
@@ -60,7 +59,6 @@ const boardsInit = () => {
     export(id: string) {
       const boards = methods.data();
       const trackers = TrackerStore.data();
-      console.log({ boards, trackers });
       let exporter = new Export({ boards: boards });
       console;
     },

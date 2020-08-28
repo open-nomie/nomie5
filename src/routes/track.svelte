@@ -14,7 +14,8 @@
   import { UserStore } from "../store/user-store";
   import { TrackerStore } from "../store/tracker-store";
 
-  export let location = "";
+  export const location = undefined;
+  export const style = undefined;
 
   const data = {
     editMode: false,
@@ -40,7 +41,7 @@
 </script>
 
 <style>
-  #note-capture {
+  /* #note-capture {
     position: fixed;
     bottom: 40px;
     bottom: calc(40px + env(safe-area-inset-bottom, 0px));
@@ -53,7 +54,7 @@
     display: flex;
     justify-content: stretch;
     width: 100vw;
-  }
+  } */
 </style>
 
 <Board />

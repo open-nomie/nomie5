@@ -305,7 +305,6 @@
               bottomLine
               on:click={(evt) => {
                 if (mode == 'view') {
-                  console.log('target', evt.detail);
                   state.searchTerm = term;
                   methods.onSearchEnter({ detail: term });
                 }

@@ -6,7 +6,7 @@
   import PositivitySelector from "./positivity-selector.svelte";
   export let score = 0;
 
-  let selected: IPositivityEmoji;
+  let selected: any;
   let showMenu: boolean = false;
   $: selected = getEmojiFromScore(score);
 
@@ -14,7 +14,6 @@
 
   function toggle(evt?) {
     if (evt && !showMenu) {
-      console.log(evt);
       x = evt.detail.pageX - 240;
     }
     showMenu = !showMenu;
@@ -46,5 +45,5 @@
   className="positivity-emoji-btn"
   on:mouseover={toggle}
   on:click={toggle}>
-  {#if selected}{selected.emoji}{/if}
+  {#if selected && selected.emoji}{selected.emoji}{/if}
 </Button>

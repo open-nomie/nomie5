@@ -513,7 +513,6 @@
   let lastTrackers;
 
   onMount(() => {
-    console.log("Board Mounted");
     Device.scrollToTop();
     trackerUnsub = TrackerStore.subscribe((trackerStore) => {
       setTimeout(() => {

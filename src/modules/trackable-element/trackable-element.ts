@@ -94,8 +94,6 @@ export default class TrackableElement {
   }
 
   public toSearchTerm(): string {
-    // let term = regex.escape(`${this.prefix}${this.id}`);
-    // console.log({ toSearchTerm: term });
     return `${this.prefix}${this.id}`;
   }
 }

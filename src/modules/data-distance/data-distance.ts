@@ -21,7 +21,7 @@ const rS = (ar1, ar2) => {
           }
         });
       } catch (e) {
-        console.log(`error getting distance`, ar1.length, ar2.length);
+        console.error(`error getting distance`, ar1.length, ar2.length);
         resolve(0);
       }
     }

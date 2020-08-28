@@ -145,9 +145,6 @@ const userInit = () => {
       // Lets get dark Mode
 
       // Count launch
-      console.log("User initialize", {
-        state,
-      });
       if (!state.storageType) {
         // If no storage type - let's on board the user.
         update((_state) => {
@@ -159,7 +156,6 @@ const userInit = () => {
       } else {
         // Storage is set - wait for it to be ready
         Storage.onReady(async () => {
-          console.log("Userstore -> Storage.onReady()");
           try {
             await methods.bootstrap();
             update((_state) => {
@@ -210,7 +206,6 @@ const userInit = () => {
      */
     setProfile(profile) {},
     async bootstrap() {
-      console.log("User.bootstrap()");
       // First lets get the TrackerStore loaded
       state.launchCount++;
       Storage.local.put("root/launch_count", state.launchCount);

@@ -45,7 +45,7 @@
   import Storage from "./modules/storage/storage";
 
   // Set a better console
-  const console = new Logger("App.svelte");
+  const console = new Logger("APP");
   ComposiGestures.default.gestures();
 
   /**
@@ -146,7 +146,10 @@
 
   // Used to make sure that boards and trackers are loaded
   UserStore.onReady(async () => {
-    console.log("User on Ready");
+    console.log("🌳🌳🌳🌳🌳🌳🌳🌳🌳🐘🌳🌳🌳🌳🌳🌳🌳🌳🌳");
+    console.log("🌳🌳🌳🌳🌳🌳 Welcome to 🌳🌳🌳🌳🌳🌳🌳🌳");
+    console.log("🌳🌳🌳🌳🌳🌳 NOMIE APP_VERSION 🌳🌳🌳🌳🌳🌳🌳");
+    console.log("🌳🌳🌳🌳🌳🌳🌳🌳🌳🐘🌳🌳🌳🌳🌳🌳🌳🌳🌳🌳");
     // Set the user if they're logged in
     ready = true;
 

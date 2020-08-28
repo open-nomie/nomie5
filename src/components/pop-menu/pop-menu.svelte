@@ -16,7 +16,6 @@
     backgroundClicked(event: any) {
       const ele: HTMLElement = event.toElement;
       if (ele.classList.contains("pop-menu")) {
-        console.log(event);
         dispatch("close", event);
       }
     },

@@ -21,10 +21,8 @@
   let loc: Location;
 
   async function saveUnknown() {
-    console.log("save unknown", loc);
     if (loc) {
       let name: any = await Interact.prompt("Location Name", null);
-      console.log({ name });
       if (name) {
         loc.name = name;
         try {

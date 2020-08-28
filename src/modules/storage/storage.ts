@@ -42,8 +42,6 @@ export function setStorage(type: StorageTypes) {
   localStorage.setItem("n4/storage/root/storage_type", type);
 }
 
-console.log("Storage type", getStorageType());
-
 const Storage = {
   engines: {
     blockstack: BlockStackEngine,
