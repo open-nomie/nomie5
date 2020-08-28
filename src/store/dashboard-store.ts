@@ -11,6 +11,8 @@ import config from "../config/appConfig";
 import { Widget } from "../modules/dashboard/widget";
 import { Interact } from "./interact";
 import { Dashboard } from "../modules/dashboard/dashboard";
+import { Device } from "./device-store";
+import { Lang } from "./lang";
 
 // Stores
 
@@ -74,6 +76,37 @@ const DashboardStoreInit = (): any => {
         }
         methods.saveIndex(state.activeIndex);
         return state;
+      });
+    },
+    async pickSize(widget: Widget) {
+      async function setWidgetSize(sz) {
+        widget.size = sz;
+        await methods.save();
+      }
+
+      let sizes = [
+        {
+          title: Lang.t("general.small", "Small"),
+          click() {
+            setWidgetSize("sm");
+          },
+        },
+        {
+          title: Lang.t("general.medium", "Medium"),
+          click() {
+            setWidgetSize("md");
+          },
+        },
+        {
+          title: Lang.t("general.large", "Large"),
+          click() {
+            setWidgetSize("lg");
+          },
+        },
+      ];
+      Interact.popmenu({
+        title: Lang.t("dashboard.change-widget-size", "Change Widget Size"),
+        buttons: sizes,
       });
     },
     async newDashboard() {

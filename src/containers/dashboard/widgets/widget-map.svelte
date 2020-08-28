@@ -6,6 +6,6 @@
 
 {#if widget}
   <div class="map-value" style="width:100%;">
-    <Map height={190} records={widget.stats.rows} />
+    <Map height={190} lock records={widget.stats.rows} />
   </div>
 {/if}
