@@ -1,4 +1,5 @@
 import Geohash from "latlon-geohash";
+import nid from "../nid/nid";
 
 export interface ILocation {
   lat: number;
@@ -20,7 +21,7 @@ export default class Location {
     this.lng = starter.lng;
     this.name = starter.name;
     this.hash = starter.hash || this.getGeoHash();
-    this.id = starter.id || this.hash; // deprecated
+    this.id = starter.id || `${this.hash}:${nid(4)}`; // deprecated
   }
   getGeoHash(): string {
     return Geohash.encode(this.lat, this.lng, 10);

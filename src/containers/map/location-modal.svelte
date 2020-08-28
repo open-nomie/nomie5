@@ -194,7 +194,7 @@
           <NSortableList key="id" bind:items={state.locations} handle=".menu" on:update={sorted} let:item>
 
             <NItem
-              clickable
+              clickable={state.mode != 'edit'}
               className="py-1"
               on:click={() => {
                 if (state.mode == 'view') {

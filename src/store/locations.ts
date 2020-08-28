@@ -34,15 +34,28 @@ const LocationsInit = () => {
      * it will update or insert if ifs new
      * @param {Location} location
      */
-    async save(location) {
+    async save(location: Location) {
       location = location instanceof Location ? location : new Location(location);
-      let theLocations;
+      let _locs: Array<Location>;
+
       update((locations) => {
-        locations.push(location);
-        theLocations = locations;
-        return locations;
+        let found;
+        _locs = locations.map((_loc: Location) => {
+          // If found, it's an update
+          if (_loc.id == location.id) {
+            found = true;
+            return location;
+          } else {
+            return _loc;
+          }
+        });
+        // If not found, it's an insert
+        if (!found) {
+          _locs.push(location);
+        }
+        return _locs;
       });
-      return this.write(theLocations);
+      return this.write(_locs);
     },
 
     selectLocation(): Promise<Location> {
