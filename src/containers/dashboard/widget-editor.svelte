@@ -38,10 +38,12 @@
 
   $: if (widgetTypeId) {
     widgetType = widgetTypes.find((widgetType) => widgetType.id == widgetTypeId);
-    value.type = widgetTypeId;
-    if ([...widgetType.optional, ...widgetType.requires].indexOf("cond-style") == -1) {
-      // Doesn't support conditional styling.. remove that setting
-      value.compareValue = undefined;
+    if (widgetType) {
+      value.type = widgetTypeId;
+      if ([...widgetType.optional, ...widgetType.requires].indexOf("cond-style") == -1) {
+        // Doesn't support conditional styling.. remove that setting
+        value.compareValue = undefined;
+      }
     }
   }
 

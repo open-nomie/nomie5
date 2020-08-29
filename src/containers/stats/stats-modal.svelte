@@ -57,6 +57,7 @@
   import StatsTime from "./stats-time.svelte";
   import regex from "../../utils/regex";
   import NextPrevCal from "../../components/next-prev-cal/next-prev-cal.svelte";
+  import { SearchStore } from "../../store/search-store";
 
   export const timeSpans = {
     d: { id: "d", label: "D", title: "Day", unit: "day" },
@@ -256,7 +257,7 @@
         title: `Search for ${state.currentTerm}`,
         click() {
           close();
-          navigate(NPaths.routes.search(state.trackableElement.prefix + state.trackableElement.id));
+          SearchStore.search(state.trackableElement.prefix + state.trackableElement.id);
         },
       },
     ];

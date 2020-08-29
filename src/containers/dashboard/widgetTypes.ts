@@ -23,7 +23,7 @@ export const widgetTypes: Array<IWidgetType> = [
   // {
   //   label: "Streak",
   //   id: "streak",
-  //   requires: ["element"],
+  //   requires: ["element", "timeframe"],
   //   optional: [],
   // },
   {

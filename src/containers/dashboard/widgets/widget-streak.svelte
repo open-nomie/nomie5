@@ -2,10 +2,27 @@
   import Calendar from "../../../components/calendar/calendar.svelte";
   import dayjs from "dayjs";
   import type { Widget } from "../../../modules/dashboard/widget";
+  import { onMount } from "svelte";
 
   let _elCalendar;
 
   export let widget: Widget;
+
+  let streakCount: number = 0;
+
+  function countDays(): number {
+    let count = 0;
+    return count;
+  }
+
+  async function main() {
+    let days = 0;
+    let count = 0;
+    let streakData: any = widget.stats._stats.getStreakData();
+    streakCount = streakData.streak;
+  }
+
+  onMount(main);
 </script>
 
 <style>
@@ -16,14 +33,5 @@
 </style>
 
 {#if widget && widget.element.type == 'tracker'}
-  <div class="calendar-wrapper">
-    <Calendar
-      bind:this={_elCalendar}
-      color={widget.element.obj.color}
-      tracker={widget.element.obj}
-      showHeader={false}
-      on:dayClick={(event) => {}}
-      initialDate={new Date()}
-      events={widget.stats.rows} />
-  </div>
+  <div class="calendar-wrapper">{streakCount}</div>
 {:else}Streaks currently only support Trackers{/if}
