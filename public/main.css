@@ -5419,7 +5419,7 @@ body.theme-dark {
   --color-faded-1: rgba(255, 255, 255, 0.1);
   --color-faded-2: rgba(255, 255, 255, 0.2);
   --color-faded-3: rgba(255, 255, 255, 0.4);
-  --color-full-screen: rgba(0, 0, 0, 0.7);
+  --color-full-screen: rgba(70, 70, 70, 0.86);
   --color-background-selected: rgba($primaryBright, 0.82);
   --box-shadow: 0px -2px 2px rgba(255, 255, 255, 0.06), 0px 8px 10px rgba(0, 0, 0, 0.3);
   --box-shadow-tight: 0px -2px 2px rgba(255, 255, 255, 0.06), 0px 4px 6px -1px rgba(0, 0, 0, 0.4);
@@ -6502,7 +6502,7 @@ body.scrolling .n-tracker-button {
   pointer-events: none !important; }
 
 .share-image-component {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--color-full-screen);
   position: fixed;
   top: 0;
   bottom: 0;
@@ -7505,8 +7505,7 @@ hr.divider {
     color: var(--color-inverse-2) !important; }
   .board-actions .btn-group .btn {
     padding-left: 14px !important;
-    padding-right: 14px !important;
-    border-right: solid 1px var(--color-solid-1); }
+    padding-right: 14px !important; }
     .board-actions .btn-group .btn:last-child {
       border-right: none; }
 

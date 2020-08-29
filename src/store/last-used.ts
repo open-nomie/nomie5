@@ -90,10 +90,6 @@ const LastUsedStore = () => {
     },
   };
 
-  setTimeout(() => {
-    methods.init();
-  }, 120);
-
   return {
     update,
     subscribe,
