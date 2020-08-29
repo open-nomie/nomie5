@@ -1,22 +1,11 @@
-<script>
-  /**
-   * History Tab
-   * A big collection of all things history
-   *
-   * TODO: Have it react when the ledger change, not a hard refresh
-   */
-
+<script lang="ts">
   // svelte
   import { navigate, Router, Route } from "svelte-routing";
   import { onMount, onDestroy } from "svelte";
   // components
   import NItem from "../components/list-item/list-item.svelte";
-  import NPoints from "../components/points/points.svelte";
-  import NIcon from "../components/icon/icon.svelte";
+  import Icon from "../components/icon/icon.svelte";
   import NLogListLoader from "../components/log-list/log-list-loader.svelte";
-  import NToolbar from "../components/toolbar/toolbar.svelte";
-  import NToolbarGrid from "../components/toolbar/toolbar-grid.svelte";
-  import NModal from "../components/modal/modal.svelte";
   import Spinner from "../components/spinner/spinner.svelte";
   import LogItem from "../components/list-item-log/list-item-log.svelte";
   import NSearchBar from "../components/search-bar/search-bar.svelte";
@@ -31,23 +20,21 @@
   import tick from "../utils/tick/tick";
 
   // Stores
-  import { UserStore } from "../store/user-store";
   import { Interact } from "../store/interact";
-  import { TrackerStore } from "../store/tracker-store";
-  import { LedgerStore } from "../store/ledger";
   import { Lang } from "../store/lang";
 
-  import { HistoryPage } from "../store/history-page";
   import { Device } from "../store/device-store";
   import Storage from "../modules/storage/storage";
   import { getURLParams } from "../utils/url-parser/url-parser";
   import global from "../config/appConfig";
-  import Icon from "../components/icon/icon.svelte";
   import Text from "../components/text/text.svelte";
   import Button from "../components/button/button.svelte";
+  import { SearchStore, SearchTerm } from "../store/search-store";
 
   export const location = undefined;
   export const style = undefined;
+
+  export let term;
   /**
    * I've messed this all up again. but it's faster and more responsivle
    * TODO: refactor so it's clean and using the proper amount of Store vs local
@@ -58,65 +45,35 @@
   let appTitle = null;
   let showSearch = false;
 
-  let lastSearches = [];
+  let logResults: Array<any> = [];
+
+  let searchTerm: SearchTerm;
 
   const state = {
     date: dayjs(new Date()),
-    logs: [],
-    trackers: {},
-    ledger: null,
-    searchTerm: "",
-    searchResults: null,
-    searchMode: false,
-    selected: {},
-    selectCount: 0,
+    searchTerm: searchTerm,
     editMode: false,
-
-    location: {
-      name: null,
-      lat: null,
-      lng: null,
-    },
-    locations: [],
-    loading: true,
     showAllLocations: false,
   }; // Assign State to compiled history page
 
+  $: state.searchTerm = $SearchStore.active;
+
   let refreshing = false;
 
-  let local = {
-    searchMode: false,
-  };
-
-  // $: searchMode = (state.searchTerm || "").length ? true : false;
-  let searchMode = false;
-  $: if (state.searchTerm && !searchMode) {
-    searchMode = true;
-  }
-
-  let logs = []; // holder of the logs
-  let searchLogs = undefined; // hodler of searched logs
   let loading = true;
   let book = undefined;
   let locations = [];
   let mode = "view";
+  let refreshMap: boolean = false;
   // let dayScore = 0;
 
-  $: appTitle = `🔍 Search ${state.searchTerm}`;
+  $: appTitle = `🔍 Search ${(state.searchTerm || {}).term || ""}`;
 
-  $: if (searchLogs || logs) {
-    locations = (searchLogs || logs)
-      .filter((log) => {
-        return log.lat;
-      })
-      .map((log) => {
-        return {
-          lat: log.lat,
-          lng: log.lng,
-          name: log.location,
-          log: log,
-        };
-      });
+  $: if (logResults) {
+    refreshMap = true;
+    setTimeout(() => {
+      refreshMap = false;
+    }, 12);
   }
 
   function toggleEditMode() {
@@ -130,37 +87,30 @@
   // Methods
   const methods = {
     async doSearch(event) {
-      state.searchTerm = null;
+      $SearchStore.active = null;
       let trackableElement = event.detail;
       tick(100);
       if (trackableElement.type == "tracker") {
-        state.searchTerm = `#${trackableElement.id}`;
+        $SearchStore.active = new SearchTerm(`#${trackableElement.id}`);
       } else {
-        state.searchTerm = `${trackableElement.raw}`;
+        $SearchStore.active = new SearchTerm(`${trackableElement.raw}`);
       }
       showSearch = true;
-
-      methods.onSearchEnter();
+      methods.onSearchEnter(event);
     },
-
     async textClick(event) {
       let trackableElement = event.detail;
       Interact.elementOptions(trackableElement);
     },
-
     clearSearch() {
+      window.history.replaceState({}, document.title, window.location.href.split("?")[0]);
       showSearch = false;
-      state.searchTerm = "";
+      $SearchStore.active = null;
     },
-
-    searchChange(evt) {
-      state.searchTerm = evt.detail;
-      showSearch = false;
+    searchChange(evt: string | any) {
+      let term = typeof evt == "string" ? evt : evt.detail;
+      SearchStore.search(term);
       window.scrollTo(0, 0);
-      if (lastSearches.indexOf(state.searchTerm) == -1) {
-        lastSearches.push(state.searchTerm);
-        Storage.local.put(SEARCHES_PATH, lastSearches);
-      }
     },
     async onSearchEnter(evt) {
       methods.searchChange(evt);
@@ -171,11 +121,11 @@
   };
 
   function back() {
-    if (state.searchTerm && state.searchTerm.length) {
+    if (state.searchTerm && state.searchTerm.term) {
       methods.clearSearch();
     } else {
-      // navigate("/history");
-      window.history.back();
+      navigate("/history");
+      // window.history.back();
     }
   }
 
@@ -189,25 +139,13 @@
   let onLogSaved;
   let onLogsDeleted;
 
-  function deleteSearch(term) {
-    lastSearches = lastSearches.filter((t) => {
-      return t !== term;
-    });
-    Storage.local.put(SEARCHES_PATH, lastSearches);
+  function deleteSearch(searchTerm: SearchTerm) {
+    SearchStore.remove(searchTerm);
   }
 
-  // WHen mounted.
   onMount(() => {
-    lastSearches = Storage.local.get(SEARCHES_PATH) || [];
-
-    const urlParams = getURLParams(window.location.href);
-    if (urlParams.q) {
-      state.searchTerm = decodeURIComponent(urlParams.q);
-    }
     window.scrollTo(0, 0);
-    refresh();
   });
-  onDestroy(() => {});
 </script>
 
 <style lang="scss" type="text/scss">
@@ -238,10 +176,10 @@
   <header slot="header">
     <div class="n-row container h-100 px-2">
       <Button color="transparent" shape="circle" icon className="tap-icon mr-2" on:click={back}>
-        {#if state.searchTerm && state.searchTerm.length > 0}
-          <NIcon name="close" />
+        {#if state.searchTerm && state.searchTerm.term}
+          <Icon name="close" />
         {:else}
-          <NIcon name="arrowBack" />
+          <Icon name="arrowBack" />
         {/if}
       </Button>
       <div class="filler">
@@ -249,7 +187,7 @@
         <NSearchBar
           showClose={false}
           className="filler"
-          searchTerm={state.searchTerm}
+          searchTerm={(state.searchTerm || {}).term || ''}
           placeholder="Search History..."
           on:clear={methods.clearSearch}
           on:search={methods.onSearchEnter} />
@@ -265,9 +203,10 @@
   <main slot="content" class="page page-search">
 
     <div class="container p-0">
-      {#if state.searchTerm && state.searchTerm.length}
+      {#if state.searchTerm && state.searchTerm.term}
         <NLogListLoader
-          term={state.searchTerm}
+          bind:results={logResults}
+          term={state.searchTerm.term}
           limit={20}
           className="bg-transparent"
           on:textClick={(event) => {
@@ -277,7 +216,7 @@
             Interact.logOptions(event.detail).then(() => {});
           }} />
       {:else}
-        {#if lastSearches.length}
+        {#if $SearchStore.saved.length}
           <NItem itemDivider compact className="bg-transparent">
             Previous Searches
             <div slot="right">
@@ -303,24 +242,24 @@
               {/if}
             </div>
           </NItem>
-          {#each lastSearches as term (term)}
+          {#each $SearchStore.saved as searchTerm (searchTerm.term)}
             <NItem
               clickable={mode !== 'edit'}
               bottomLine
               on:click={(evt) => {
                 if (mode == 'view') {
-                  state.searchTerm = term;
-                  methods.onSearchEnter({ detail: term });
+                  $SearchStore.active = searchTerm;
+                  methods.onSearchEnter({ detail: searchTerm });
                 }
               }}>
-              <Text>{term}</Text>
+              <Text>{searchTerm.term}</Text>
               <div slot="right">
                 {#if mode == 'edit'}
                   <Button
                     size="sm"
                     color="danger"
                     on:click={() => {
-                      deleteSearch(term);
+                      deleteSearch(searchTerm);
                     }}>
                     Delete
                   </Button>
@@ -329,33 +268,42 @@
             </NItem>
           {/each}
         {/if}
-        <div class="empty-notice">Search to begin</div>
+        <div class="empty-notice">
+          <div style="width:250px;">
+            {#if !$SearchStore.saved.length}
+              <Icon name="search" size="120" className="fill-primary-bright mb-4" />
+            {/if}
+            <Text size="lg" className="mb-2">History Search</Text>
+            <Text size="sm" faded>
+              Nome will search 6 months at a time, starting from the most recent records. Use AND and OR to refine your search.
+            </Text>
+          </div>
+        </div>
       {/if}
 
       <!-- end history -->
 
     </div>
-
-    {#if locations.length && !loading && !state.searchTerm}
+    {#if state.searchTerm && logResults.length && !refreshMap}
       {#if !state.showAllLocations}
         <div
           class="mini-map closed"
           on:click={() => {
             state.showAllLocations = !state.showAllLocations;
           }}>
-          <NMap {locations} />
+          <NMap records={logResults} />
         </div>
       {:else}
         <div class="mini-map opened">
-          <NMap {locations} />
-          <button
-            class="btn btn-icon btn-round map-btn close-btn"
+          <NMap records={logResults} />
+          <Button
+            color="light"
+            shape="circle"
             on:click={() => {
               state.showAllLocations = !state.showAllLocations;
             }}>
-            <NIcon name="closeFilled" size="48" />
-          </button>
-
+            <Icon name="closeFilled" size="32" />
+          </Button>
         </div>
       {/if}
     {/if}

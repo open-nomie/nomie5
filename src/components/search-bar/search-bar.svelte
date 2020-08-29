@@ -86,7 +86,7 @@
 <div className="n-toolbar n-row search-bar {className}" {style}>
 
   <div class="n-row">
-    <NInput solo compact bind:this={_elInput} bind:value={searchTerm} on:change={fireChange} on:enter={fireSearch} {placeholder}>
+    <NInput solo {compact} bind:this={_elInput} bind:value={searchTerm} on:change={fireChange} on:enter={fireSearch} {placeholder}>
       <div slot="left" class="pl-2">
         <NIcon name="search" style="height:20px; width: 20px; opacity:0.3; margin-top:-4px;" />
       </div>

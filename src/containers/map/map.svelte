@@ -16,6 +16,7 @@
   import { Lang } from "../../store/lang";
 
   import tick from "../../utils/tick/tick";
+  import Page from "../layout/page.svelte";
 
   // props
   export let locations = [];
@@ -41,6 +42,7 @@
   // Leaflet Map Holder
   let MAP = undefined;
   let _el;
+  let mapReady: boolean = false;
 
   // Local State
   let data = {
@@ -56,35 +58,57 @@
   let lastLocations;
 
   $: if (locations && JSON.stringify(locations) !== lastLocations) {
-    lastLocations = JSON.stringify(locations);
-    setTimeout(async () => {
+    try {
+      lastLocations = JSON.stringify(locations);
+      initAndRender();
+    } catch (e) {
+      console.error(`Location change error`, e.message);
+    }
+  }
+
+  async function initAndRender() {
+    try {
       await methods.init();
       methods.renderMap();
-    }, 12);
+      mapReady = true;
+    } catch (e) {
+      mapReady = false;
+      console.error(`init and render error`, e.message);
+    }
   }
 
   $: if (!locations.length && records.length) {
-    let locs = records
-      .filter((r) => r.lat)
-      .map((record) => {
-        return {
-          lat: record.lat,
-          lng: record.lng,
-          name: record.location,
-          log: record,
-        };
-      });
-    locations = locs;
+    try {
+      let locs = records
+        .filter((r) => r.lat)
+        .map((record) => {
+          return {
+            lat: record.lat,
+            lng: record.lng,
+            name: record.location,
+            log: record,
+          };
+        });
+      locations = locs;
+    } catch (e) {
+      console.error(`Location || record length reaction error`, e.mesasge);
+    }
   }
 
   $: if (picker && MAP && locations.length == 0) {
-    locate().then((location: { latitude: number; longitude: number }) => {
-      locations.push({
-        lat: location.latitude,
-        lng: location.longitude,
-      });
-      MAP.setView(L.latLng(location.latitude, location.longitude), 12);
-    });
+    try {
+      locate()
+        .then((location: { latitude: number; longitude: number }) => {
+          locations.push({
+            lat: location.latitude,
+            lng: location.longitude,
+          });
+          MAP.setView(L.latLng(location.latitude, location.longitude), 12);
+        })
+        .catch((e) => {});
+    } catch (e) {
+      console.error("Picker reaction error", e.message);
+    }
   }
 
   // methods
@@ -96,7 +120,7 @@
 
       /** Initialize map **/
       return new Promise((resolve, reject) => {
-        if (!MAP) {
+        if (document.getElementById(id)) {
           MAP = new L.Map(id).fitWorld();
           var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
 
@@ -168,15 +192,18 @@
             searchController.addTo(MAP);
             MAP.on("moveend", onMove);
           }
+
+          // Clean up the layers
+          MAP.eachLayer(function (layer) {
+            MAP.removeLayer(layer);
+          });
+
+          // return map
+          mapReady = true;
+          resolve(MAP);
+        } else {
+          mapReady = false;
         } // end no map
-
-        // Clean up the layers
-        MAP.eachLayer(function (layer) {
-          MAP.removeLayer(layer);
-        });
-
-        // return map
-        resolve(MAP);
       });
     },
     deleteLocation(location) {
@@ -221,90 +248,92 @@
     },
 
     renderMap() {
-      let mapTheme = `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`;
-      if (document.body.classList.contains("theme-dark")) {
-        mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png`;
-      }
-      // Add Attribution
-      L.tileLayer(mapTheme, {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/">OSM</a> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-        maxZoom: 18,
-      }).addTo(MAP);
-
-      var myIcon = L.icon({
-        iconUrl: "/images/map/map-marker.svg",
-        iconRetinaUrl: "/images/map/map-marker.svg",
-        iconSize: [32, 32],
-        iconAnchor: [9, 21],
-        popupAnchor: [0, -14],
-      });
-
-      let latLngArray = locations.map((loc) => {
-        return [loc.lat, loc.lng];
-      });
-
-      // Quick Add Marker Function
-      let addMarker = (latLng, name, click) => {
-        let mkr = new L.marker(latLng, {
-          icon: myIcon,
-        });
-        // If location name is present (TODO) show it in a popup
-        if (name) {
-          mkr.bindPopup(name);
+      if (_el) {
+        let mapTheme = `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`;
+        if (document.body.classList.contains("theme-dark")) {
+          mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png`;
         }
-        mkr.on("click", click);
-        mkr.addTo(MAP);
-      };
-
-      /**
-       * PIN RENDERING
-       * If maxDistance between them is greater than 0.1 km
-       */
-      let maxDistance = distance.furthest(latLngArray);
-      if (maxDistance > 0.4) {
-        // Loop over locaitons provided in props
-        locations.forEach((loc) => {
-          addMarker([loc.lat, loc.lng], loc.name, () => {
-            // On Marker Click
-            data.activeLocation = loc;
-            // If a log exists - show the Share Log popup
-            if (loc.log) {
-              Interact.shareLog(loc.log);
-            }
-          });
-        });
-
-        let connectTheDots = (data) => {
-          // TODO: Look at making this curved dotted lines - and not just straight ones
-          var c = [];
-          data.forEach((location) => {
-            c.push([location.lat, location.lng]);
-          });
-          return c;
-        };
-        //let pathLine =
-        L.polyline(connectTheDots(locations), {
-          color: "rgba(2.7%, 52.5%, 100%, 0.378)",
+        // Add Attribution
+        L.tileLayer(mapTheme, {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/">OSM</a> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+          maxZoom: 18,
         }).addTo(MAP);
-      } else {
-        // Max Distance is not enough to justify rendering a bunch of pins
-        if (locations.length) {
-          addMarker([locations[0].lat, locations[0].lng], locations[0].name, () => {
-            data.activeLocation = locations[0];
-            if (data.activeLocation.log) {
-              Interact.shareLog(data.activeLocation.log);
-            }
+
+        var myIcon = L.icon({
+          iconUrl: "/images/map/map-marker.svg",
+          iconRetinaUrl: "/images/map/map-marker.svg",
+          iconSize: [32, 32],
+          iconAnchor: [9, 21],
+          popupAnchor: [0, -14],
+        });
+
+        let latLngArray = locations.map((loc) => {
+          return [loc.lat, loc.lng];
+        });
+
+        // Quick Add Marker Function
+        let addMarker = (latLng, name, click) => {
+          let mkr = new L.marker(latLng, {
+            icon: myIcon,
           });
+          // If location name is present (TODO) show it in a popup
+          if (name) {
+            mkr.bindPopup(name);
+          }
+          mkr.on("click", click);
+          mkr.addTo(MAP);
+        };
+
+        /**
+         * PIN RENDERING
+         * If maxDistance between them is greater than 0.1 km
+         */
+        let maxDistance = distance.furthest(latLngArray);
+        if (maxDistance > 0.4) {
+          // Loop over locaitons provided in props
+          locations.forEach((loc) => {
+            addMarker([loc.lat, loc.lng], loc.name, () => {
+              // On Marker Click
+              data.activeLocation = loc;
+              // If a log exists - show the Share Log popup
+              if (loc.log) {
+                Interact.shareLog(loc.log);
+              }
+            });
+          });
+
+          let connectTheDots = (data) => {
+            // TODO: Look at making this curved dotted lines - and not just straight ones
+            var c = [];
+            data.forEach((location) => {
+              c.push([location.lat, location.lng]);
+            });
+            return c;
+          };
+          //let pathLine =
+          L.polyline(connectTheDots(locations), {
+            color: "rgba(2.7%, 52.5%, 100%, 0.378)",
+          }).addTo(MAP);
+        } else {
+          // Max Distance is not enough to justify rendering a bunch of pins
+          if (locations.length) {
+            addMarker([locations[0].lat, locations[0].lng], locations[0].name, () => {
+              data.activeLocation = locations[0];
+              if (data.activeLocation.log) {
+                Interact.shareLog(data.activeLocation.log);
+              }
+            });
+          }
         }
-      }
 
-      // Make the map fit the bounds of all locations provided
-      if (latLngArray.length) {
-        MAP.fitBounds(latLngArray);
-      }
+        // Make the map fit the bounds of all locations provided
+        if (latLngArray.length) {
+          MAP.fitBounds(latLngArray);
+        }
 
-      MAP.invalidateSize();
+        MAP.invalidateSize();
+      }
     },
     getLocation(lat, lng) {
       return new Promise((resolve, reject) => {
@@ -339,9 +368,7 @@
 
   // On Mount
   onMount(async () => {
-    await tick(120);
-    await methods.init();
-    methods.renderMap();
+    initAndRender();
   });
 </script>
 
@@ -498,13 +525,6 @@
           style="enable-background:new 0 0 60 60;"
           xml:space="preserve">
           <g>
-            <!-- <path
-              d="M59,29h-2.025C56.458,14.907,45.093,3.542,31,3.025V1c0-0.553-0.447-1-1-1s-1,0.447-1,1v2.025
-              C14.907,3.542,3.542,14.907,3.025,29H1c-0.553,0-1,0.447-1,1s0.447,1,1,1h2.025C3.542,45.093,14.907,56.458,29,56.975V59
-              c0,0.553,0.447,1,1,1s1-0.447,1-1v-2.025C45.093,56.458,56.458,45.093,56.975,31H59c0.553,0,1-0.447,1-1S59.553,29,59,29z
-              M31,54.975V53c0-0.553-0.447-1-1-1s-1,0.447-1,1v1.975C16.01,54.46,5.54,43.99,5.025,31H7c0.553,0,1-0.447,1-1s-0.447-1-1-1H5.025
-              C5.54,16.01,16.01,5.54,29,5.025V7c0,0.553,0.447,1,1,1s1-0.447,1-1V5.025C43.99,5.54,54.46,16.01,54.975,29H53
-              c-0.553,0-1,0.447-1,1s0.447,1,1,1h1.975C54.46,43.99,43.99,54.46,31,54.975z" /> -->
             <path
               d="M42,29h-5.08c-0.441-3.059-2.861-5.479-5.92-5.92V18c0-0.553-0.447-1-1-1s-1,0.447-1,1v5.08
               c-3.059,0.441-5.479,2.862-5.92,5.92H18c-0.553,0-1,0.447-1,1s0.447,1,1,1h5.08c0.441,3.059,2.861,5.479,5.92,5.92V42
@@ -520,88 +540,3 @@
   </div>
 
 </div>
-
-<!-- 
-{#if picker && 1 == 2}
-<div class="location-name {data.showLocations ? 'expanded' : 'collapsed'}">
-  <div class="row">
-    <div class="left">
-      <button
-        class="btn btn-clear btn-icon"
-        disabled={!picker}
-        on:click={() => {
-          data.showLocations = !data.showLocations;
-        }}>
-
-        {#if data.showLocations}
-          <NIcon name="chevronDown" />
-        {:else}
-          <NIcon name="menu" />
-        {/if}
-
-      </button>
-    </div>
-
-    <div
-      class="name flex-grow"
-      on:click={() => {
-        data.showLocations = !data.showLocations;
-      }}>
-      {data.locationName || 'Locations'}
-    </div>
-
-    {#if data.showLocations && data.locationName}
-      <div class="right">
-        <div class="btn btn-clear text-primary" on:click={methods.saveLocation}>Save</div>
-      </div>
-    {/if}
-
-  </div>
-  {#if data.showLocations}
-    <div class="locations list">
-      {#if $Locations.length == 0}
-        <div class="empty-notice" style="max-height:120px;">No Saved Locations</div>
-      {/if}
-      {#each $Locations as location}
-        <Item borderBottom compact className="compact text-primary">
-          <button
-            slot="left"
-            class="btn btn-clear btn-icon text-red"
-            on:click={() => {
-              methods.setLocation(location);
-            }}>
-
-            <NIcon name="radio" />
-          </button>
-          <div
-            class="text-md text-inverse font-weight-bold"
-            on:click={() => {
-              methods.setLocation(location);
-            }}>
-            {location.name}
-          </div>
-          <div slot="right" class="n-row" style="min-width:50px;">
-            <button
-              class="btn btn-clear mr-2"
-              on:click={(evt) => {
-                methods.editName(location);
-              }}>
-              <NIcon name="edit" size="24" />
-            </button>
-            <button
-              class="btn btn-clear"
-              on:click={(evt) => {
-                methods.deleteLocation(location);
-              }}>
-              <NIcon name="delete" className="fill-red" />
-            </button>
-          </div>
-
-        </Item>
-      {/each}
-      <div class="gap" />
-    </div>
-  {/if}
-
-</div>
-{/if} -->

@@ -39,6 +39,8 @@ import { Lang } from "./lang";
 import type { ILocation } from "../modules/locate/Location";
 import type { ITrackerInputResult } from "../modules/tracker/tracker-inputer";
 import TrackableElement from "../modules/trackable-element/trackable-element";
+import NPaths from "../paths";
+import { SearchStore } from "./search-store";
 
 const console = new Logger("✋ Interact");
 
@@ -343,7 +345,7 @@ const interactInit = () => {
         {
           title: `Search for ${tracker ? tracker.label : trackableElement.raw}`,
           click: () => {
-            navigate(`/search?q=${encodeURIComponent(trackableElement.prefix + trackableElement.id)}`);
+            SearchStore.search(trackableElement.prefix + trackableElement.id);
           },
         },
       ];

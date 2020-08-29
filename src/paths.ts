@@ -5,8 +5,8 @@ const NPaths = {
     board(id) {
       return `/board/${id}`;
     },
-    search(query: string) {
-      return `/search?q=${encodeURIComponent(query)}`;
+    search() {
+      return `/search`;
     },
     history() {
       return `/history`;
@@ -19,6 +19,11 @@ const NPaths = {
     },
     settings() {
       return "/settings";
+    },
+  },
+  storage: {
+    search() {
+      return `${config.data_root}/searches`;
     },
   },
   local: {

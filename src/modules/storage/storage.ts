@@ -11,7 +11,7 @@ import BlockStackEngine from "./engine.blockstack";
 import PouchDBEngine from "./engine.pouchdb";
 import Config from "../../config/appConfig";
 
-class SideStore {
+export class SideStore {
   dbPath: string;
   data: any;
   constructor(path) {

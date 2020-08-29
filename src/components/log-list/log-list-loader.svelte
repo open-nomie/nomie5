@@ -24,6 +24,8 @@
   export let className = "";
   export let compact = false;
 
+  export let results = [];
+
   let loading = false;
   let logs = [];
 
@@ -72,6 +74,7 @@
     lastTo = to;
     await tick(12);
     loading = false;
+    results = logs;
   }
 
   function cancelSearch() {
