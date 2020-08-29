@@ -51,7 +51,6 @@
   const methods = {
     init() {
       if (log) {
-        console.log("initing");
         state.log = new NomieLog(log);
         state.dateTimeValue = dayjs(new Date(log.end)).format("YYYY-MM-DDTHH:mm");
       }
@@ -82,7 +81,6 @@
 
   async function selectLocation() {
     let location = await Locations.selectLocation();
-    console.log("LocaTION", location);
     if (location) {
       state.log.lat = location.lat;
       state.log.lng = location.lng;

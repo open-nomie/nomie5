@@ -227,7 +227,6 @@
       // {
       //   title: "Share as Tracker Pack",
       //   click() {
-      //     console.log("Download", $BoardStore);
       //   },
       // },
     ];
