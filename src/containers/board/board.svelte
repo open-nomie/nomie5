@@ -728,7 +728,7 @@
   <div slot="content" class="container board-container">
 
     {#if state.searching}
-      <div>
+      <div class="px-2">
         <NSearchBar
           bind:this={_elSearchBar}
           className="mt-2"
