@@ -453,9 +453,7 @@
             on:contextClick={(event) => {
               methods.contextTapped(event.detail.context, log);
             }}
-            on:textClick={(event) => {
-              methods.textClick(event);
-            }}
+            
             on:moreClick={(event) => {
               Interact.logOptions(log).then(() => {});
             }} 
@@ -477,7 +475,7 @@
             {#each $LedgerStore.memories as log}
               <div class="memories-log-header">
                 <Button
-                  color="clear"
+                  color="transparent"
                   on:click={() => {
                     methods.goto(dayjs(log.end));
                   }}>
@@ -488,20 +486,8 @@
               <LogItem
                 className="aged"
                 {log}
-                on:trackerClick={(event) => {
-                  methods.trackerTapped(event.detail.tracker, log);
-                }}
-                on:personClick={(event) => {
-                  methods.personTapped(event.detail.person, log);
-                }}
-                on:contextClick={(event) => {
-                  methods.contextTapped(event.detail.context, log);
-                }}
                 on:textClick={(event) => {
                   methods.textClick(event);
-                }}
-                on:moreClick={(event) => {
-                  Interact.logOptions(log).then(() => {});
                 }} />
             {/each}
           </div>
@@ -522,13 +508,14 @@
       {:else}
         <div class="mini-map opened">
           <NMap {locations} />
-          <button
-            class="btn btn-icon btn-round map-btn close-btn"
+          <Button
+            color="light"
+            shape="circle"
             on:click={() => {
               state.showAllLocations = !state.showAllLocations;
             }}>
-            <NIcon name="closeFilled" size="48" />
-          </button>
+            <Icon name="closeFilled" size="32" />
+          </Button>
 
         </div>
       {/if}
