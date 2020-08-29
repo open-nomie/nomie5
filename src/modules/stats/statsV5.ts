@@ -14,7 +14,7 @@ import getDayOfWeek from "./day-of-week";
 import getTimeOfDay from "./time-of-day";
 import type { ITrackerMath } from "../tracker/tracker";
 import math from "../../utils/math/math";
-import NLog from "../nomie-log/nomie-log";
+import type NLog from "../nomie-log/nomie-log";
 
 export type IStatsChartUnit = "day" | "week" | "month" | "quarter" | "year";
 export type IStatsChartMode = "d" | "w" | "m" | "q" | "y";
