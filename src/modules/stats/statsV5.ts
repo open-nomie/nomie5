@@ -14,6 +14,7 @@ import getDayOfWeek from "./day-of-week";
 import getTimeOfDay from "./time-of-day";
 import type { ITrackerMath } from "../tracker/tracker";
 import math from "../../utils/math/math";
+import NLog from "../nomie-log/nomie-log";
 
 export type IStatsChartUnit = "day" | "week" | "month" | "quarter" | "year";
 export type IStatsChartMode = "d" | "w" | "m" | "q" | "y";
@@ -39,6 +40,10 @@ interface IDow {
   fri: IStatDow;
   sat: IStatDow;
   sun: IStatDow;
+}
+
+export interface IStatsValueMap {
+  [key: string]: Array<number>;
 }
 
 export interface IStatsTodUnit {
@@ -79,6 +84,7 @@ export interface IStats {
   min: IStatsMaxMin;
   max: IStatsMaxMin;
   distance?: number;
+  streak?: any;
   _stats?: StatsProcessor;
 }
 
@@ -104,6 +110,10 @@ export default class StatsProcessor implements IStats {
   toDate: Dayjs;
   mode: IStatsChartMode;
   is24Hour: boolean;
+  streak?: any;
+  _stats?: StatsProcessor;
+  valueMap: IStatsValueMap;
+
   constructor(starter: any = {}) {
     // Set Defaults
     this.rows = starter.rows || [];
@@ -160,6 +170,71 @@ export default class StatsProcessor implements IStats {
     return unitFormat;
   }
 
+  getDayMap(): { [key: string]: number } {
+    let map: any = {};
+    let diff: number = Math.abs(this.fromDate.diff(this.toDate, "day")) + 1;
+    for (var i = 1; i < diff; i++) {
+      map[this.fromDate.add(i, "day").format("YYYY-MM-DD")] = 0;
+    }
+    return map;
+  }
+
+  getStreakData(): {
+    coverage: number;
+    days: number;
+    on: number;
+    off: number;
+    streak: number;
+  } {
+    let dayMap = this.getDayMap();
+    this.rows.forEach((row: NLog) => {
+      let key = dayjs(new Date(row.end)).format("YYYY-MM-DD");
+      if (dayMap[key]) {
+        dayMap[key]++;
+      }
+    });
+    // loop over totals
+    let totals = Object.keys(dayMap)
+      .map((dateKey: string) => {
+        return {
+          key: dateKey,
+          count: dayMap[dateKey],
+        };
+      })
+      .sort((a, b) => {
+        return a.key < b.key ? 1 : -1;
+      });
+    // Find the first index with 0 count.
+    let firstZero = totals.findIndex((row) => row.count == 0);
+    // If -1 it's completed every day
+    if (firstZero == -1) {
+      return {
+        coverage: 1,
+        streak: Object.keys(dayMap).length,
+        days: totals.length,
+        on: totals.length,
+        off: 0,
+      };
+    } else {
+      let totalOn = totals.filter((row) => {
+        return row.count > 0;
+      }).length;
+      let totalOff = totals.filter((row) => {
+        return row.count == 0;
+      }).length;
+      // Return the Streak payload
+      return {
+        coverage: math.percentage(totalOn, totalOff),
+        streak: firstZero,
+        days: totals.length,
+        on: totalOn,
+        off: totals.filter((row) => {
+          return row.count === 0;
+        }).length,
+      };
+    }
+  }
+
   public getScore(): { score: number; emoji: string } {
     let scores = [];
     this.rows.forEach((row) => {
@@ -193,7 +268,7 @@ export default class StatsProcessor implements IStats {
    * }
    * @param {Array} rows
    */
-  getValueMap(overrideRows): any {
+  getValueMap(overrideRows, _unitFormat?: string): any {
     let rows = overrideRows || this.rows;
     let valueMap = {};
 
@@ -204,7 +279,7 @@ export default class StatsProcessor implements IStats {
       if (!row.trackers) {
         row.getMeta();
       }
-      let unitFormat = this.getUnitFormat(); // get unit for time format
+      let unitFormat = _unitFormat || this.getUnitFormat(); // get unit for time format
       let unitKey = dayjs(row.end).format(unitFormat); // generate unit Key
       // Fill in the Value Map with an empty array if not exist
       valueMap[unitKey] = valueMap[unitKey] || [];
@@ -361,13 +436,14 @@ export default class StatsProcessor implements IStats {
    * returns the chart data fro a given type
    * @param {*} valueMapTotals
    */
-  getChartData(valueMapTotals) {
+  getChartData(valueMapTotals, modeOverride?: "d" | "w" | "m" | "q" | "y") {
     // If it's a date mode
-    if (this.mode == "d") {
+    let mode = modeOverride || this.mode;
+    if (mode == "d") {
       let { labels, values } = this.getChartDataByType("hour", "H", this.is24Hour ? "H" : "ha", valueMapTotals);
 
       return {
-        mode: this.mode,
+        mode: mode,
         labels,
         values,
       };
@@ -375,31 +451,31 @@ export default class StatsProcessor implements IStats {
     } else if (this.mode == "w") {
       let { labels, values } = this.getChartDataByType("day", "YYYY-MM-DD", "dd Do", valueMapTotals);
       return {
-        mode: this.mode,
+        mode: mode,
         labels,
         values,
       };
       // if it's a month mode
-    } else if (this.mode == "m") {
+    } else if (mode == "m") {
       let { labels, values } = this.getChartDataByType("day", "YYYY-MM-DD", "M/D", valueMapTotals);
       return {
-        mode: this.mode,
+        mode: mode,
         labels,
         values,
       };
       // If it's a year mode
-    } else if (this.mode == "q") {
+    } else if (mode == "q") {
       let { labels, values } = this.getChartDataByType("week", "YYYY-w", "Ww", valueMapTotals);
       return {
-        mode: this.mode,
+        mode: mode,
         labels,
         values,
       };
       // If it's a year mode
-    } else if (this.mode == "y") {
+    } else if (mode == "y") {
       let { labels, values } = this.getChartDataByType("month", "YYYY-MM", "MMM", valueMapTotals);
       return {
-        mode: this.mode,
+        mode: mode,
         labels,
         values,
       };
@@ -459,9 +535,9 @@ export default class StatsProcessor implements IStats {
   }
 
   generateResults(): IStats {
-    let valueMap = this.getValueMap(this.rows);
-    let valueMapTotals = this.getValueMapTotals(valueMap);
-    let minMax = this.getMinMaxFromValueMap(valueMap);
+    this.valueMap = this.getValueMap(this.rows);
+    let valueMapTotals = this.getValueMapTotals(this.valueMap);
+    let minMax = this.getMinMaxFromValueMap(this.valueMap);
     let chart = this.getChartData(valueMapTotals);
     return {
       _stats: this,
@@ -474,6 +550,7 @@ export default class StatsProcessor implements IStats {
       sum: valueMapTotals.sum,
       min: minMax.min,
       max: minMax.max,
+      // streak: this.getStreakData(),
       dow: getDayOfWeek(this.rows), // day of week
       tod: getTimeOfDay(this.rows), // time of day
     };
