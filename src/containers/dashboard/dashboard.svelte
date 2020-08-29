@@ -472,7 +472,7 @@
             </Button>
           </div>
         </div>
-        <div class="mt-3" />
+        <div class="mt-3 p-2" />
       {:else if ready}
         <SortableList
           items={activeDashboard.widgets || []}

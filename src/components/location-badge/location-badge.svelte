@@ -34,7 +34,7 @@
       dispatch('click', evt);
     }}>
     {#if name}
-      <Text size="sm" bold className="text-primary {className}" {style} truncate>{name}</Text>
+      <Text size="sm" bold className="text-inverse-1 {className}" {style} truncate>{name}</Text>
     {:else}📍{/if}
   </span>
 {/if}

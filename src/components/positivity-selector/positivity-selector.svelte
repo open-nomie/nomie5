@@ -51,7 +51,7 @@
   }
 </style>
 
-<div class="n-positivity-selector bg-solid box-shadow n-row {className}">
+<div class="n-positivity-selector bg-solid box-shadow n-row {className}" {style}>
   {#each appConfig.positivity as posEmoji}
     <Button
       on:click={() => {
