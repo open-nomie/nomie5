@@ -21,7 +21,7 @@
   export let title = "";
   export let color = "#4d84a1";
   export let points;
-  export let activeIndex = undefined;
+  export const activeIndex = undefined;
   export let xFormat = (x) => x;
   export let yFormat = (y) => y;
   export let hideYTicks: boolean = false;
