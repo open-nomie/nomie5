@@ -19,6 +19,7 @@
   import { Interact } from "../store/interact";
   import { Lang } from "../store/lang";
   import dayjs from "dayjs";
+  import Csvr from "../containers/csvr/csvr.svelte";
 
   // Setup the Exporter
   // const Export = new Exporter();
@@ -99,6 +100,8 @@
 
   {#if type == 'csv'}
     <div class="container csv">
+
+      <Csvr />
 
       <NItem className="mx-2 bg-transparent">
         <p class="text-sm">{Lang.t('export.csv.description')}</p>

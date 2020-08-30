@@ -19,6 +19,7 @@
   export let solo = false;
   export let compact = false;
   export let rows = 2;
+  export let accept = "png,jpeg,jpg,csv";
 
   export let autocomplete = undefined;
   export let autocorrect = undefined;
@@ -285,6 +286,21 @@
           {autocomplete}
           {autocorrect}
           {autocapitalize}
+          {placeholder}
+          on:keyup={change}
+          on:focus={focus}
+          on:blur={blur} />
+      {:else if type == 'file'}
+        <input
+          bind:this={_elInput}
+          {disabled}
+          {inputmode}
+          type="file"
+          style={inputStyle}
+          class={inputClass}
+          {pattern}
+          {accept}
+          bind:value
           {placeholder}
           on:keyup={change}
           on:focus={focus}

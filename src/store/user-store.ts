@@ -17,6 +17,7 @@ import { BoardStore } from "./boards";
 
 import config from "../config/appConfig";
 import { Interact } from "./interact";
+import is from "../utils/is/is";
 
 // Consts
 const console = new Logger("🤠 userStore");
@@ -27,6 +28,9 @@ const UserSession = new blockstack.UserSession();
 /**
  * Define User Store Interfaces
  */
+export interface IUserMetaStore {
+  [key: string]: any;
+}
 export interface IUserMeta {
   lock: boolean;
   pin?: number;
@@ -35,7 +39,8 @@ export interface IUserMeta {
   lastBackup?: Date;
   boardsEnabled?: boolean;
   canEditFiles?: boolean;
-  hideLabels: boolean;
+  hideLabels?: boolean;
+  store?: IUserMetaStore;
 }
 export interface IUserLocalSettings {
   compactButtons: boolean;
@@ -92,6 +97,7 @@ const userInit = () => {
       firstDayOfWeek: "1", // 1: Sunday, 2: Monday, etc.
       lastBackup: undefined,
       hideLabels: false,
+      store: {},
     },
     // Local settings are only for a specific device
     localSettings: {
@@ -159,6 +165,7 @@ const userInit = () => {
           try {
             await methods.bootstrap();
             update((_state) => {
+              _state.meta.store = Storage.get(config.user_meta_path) || {};
               _state.ready = true;
               _state.signedIn = true;
               _state.profile = Storage.getProfile();
@@ -256,6 +263,35 @@ const userInit = () => {
         return usr;
       });
     },
+
+    async mstore(key?: string, value?: any, remove?: boolean): Promise<any> {
+      let response: any;
+      update((state) => {
+        try {
+          if (key && !value) {
+            // Get
+            response = Promise.resolve(state.meta.store[key]);
+          } else if (key && is.truthy(value)) {
+            // Put
+            state.meta.store[key] = value;
+            response = Storage.put(config.user_meta_path, state.meta);
+          } else if (!key && !value && !remove) {
+            // Get all Stored items
+            response = Promise.resolve(state.meta.store);
+          } else if (key && remove) {
+            // Remove
+            delete state.meta.store[key];
+            response = Storage.put(config.user_meta_path, state.meta);
+          }
+        } catch (e) {
+          console.error(`meta error ${e.message}`);
+        }
+        return state;
+      });
+
+      return await response;
+    },
+
     meta(): IUserMeta {
       return methods.data().meta;
     },
