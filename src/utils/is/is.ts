@@ -1,3 +1,5 @@
+import { isTruthy } from "../truthy/truthy";
+
 export default {
   emoji(emoji) {
     const ranges = [
@@ -8,5 +10,8 @@ export default {
     } else {
       return false;
     }
+  },
+  truthy(v: any) {
+    return isTruthy(v);
   },
 };

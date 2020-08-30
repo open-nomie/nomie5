@@ -133,11 +133,16 @@
     },
     async getLogs() {
       state.ready = false;
-      let logs: Array<any> = await NAPI.logs();
-      state.ready = true;
-      state.logs = logs.sort((a, b) => {
-        return a.date > b.date ? -1 : 1;
-      });
+      try {
+        let logs: Array<any> = await NAPI.logs();
+        state.ready = true;
+        state.logs = logs.sort((a, b) => {
+          return a.date > b.date ? -1 : 1;
+        });
+      } catch (e) {
+        console.log(e);
+        state.ready = true;
+      }
       return state.logs;
     },
     async clear() {
@@ -200,31 +205,33 @@
   }
 </style>
 
-<NLayout className="stats" pageTitle="Nomie API" showTabs={false}>
+<NLayout className="stats" showTabs={false}>
 
   <header slot="header">
-    <div class="n-toolbar-grid">
-      <div class="left">
-        <NBackButton />
+    <div class="container">
+      <div class="n-toolbar-grid">
+        <div class="left">
+          <NBackButton />
+        </div>
+        <div class="main">
+          <h1 class="title">Nomie API</h1>
+        </div>
+        <div class="right">
+          {#if state.registered}
+            <button class="btn btn-clear tap-text mr-2" on:click={methods.getLogs}>Check</button>
+          {/if}
+        </div>
       </div>
-      <div class="main">
-        <h1 class="title">Nomie API</h1>
-      </div>
-      <div class="right">
-        {#if state.registered}
-          <button class="btn btn-clear tap-text mr-2" on:click={methods.getLogs}>Check</button>
+      <div class="n-row px-3 container">
+        {#if state.ready && state.registered}
+          <NButtonGroup
+            buttons={[{ label: 'Settings', active: state.view == 'settings', click() {
+                  methods.setView('settings');
+                } }, { label: `Captured (${state.logs.length})`, active: state.view == 'captured', click() {
+                  methods.setView('captured');
+                } }]} />
         {/if}
       </div>
-    </div>
-    <div class="n-row px-3 container">
-      {#if state.ready && state.registered}
-        <NButtonGroup
-          buttons={[{ label: 'Settings', active: state.view == 'settings', click() {
-                methods.setView('settings');
-              } }, { label: `Captured (${state.logs.length})`, active: state.view == 'captured', click() {
-                methods.setView('captured');
-              } }]} />
-      {/if}
     </div>
   </header>
 
