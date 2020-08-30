@@ -124,7 +124,7 @@
 
 {#if _date}
   <div class="date-time-bar-wrapper {calendarPosition == 'top' ? 'calendar-top' : 'calendar-bottom'}">
-    <div class="date-time-bar">
+    <div class="date-time-bar" {style}>
       <Button
         className="date justify-content-start"
         color="clear"
