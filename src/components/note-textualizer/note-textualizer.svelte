@@ -17,7 +17,7 @@
   const dispatch = createEventDispatcher();
 
   const state = {
-    words: []
+    words: [],
   };
 
   let actual = 0;
@@ -37,17 +37,15 @@
     },
     note_to_array(str) {
       let parsed = extractor.parse(str, { includeGeneric: true });
-      let matches = parsed.filter(trackableElement => {
-        return (
-          ("person", "context", "generic").indexOf(trackableElement.type) > -1
-        );
+      let matches = parsed.filter((trackableElement) => {
+        return ("person", "context", "generic").indexOf(trackableElement.type) > -1;
       });
       actual = matches.length;
       return parsed;
-    }
+    },
   };
 
-  state.words = methods.note_to_array(note);
+  $: state.words = methods.note_to_array(note);
 </script>
 
 <style lang="scss">
@@ -90,9 +88,7 @@
 </style>
 
 {#if actual}
-  <div
-    class="n-note-textualized {className}
-    {state.words.length > 20 ? 'long-note' : 'short-note'}">
+  <div class="n-note-textualized {className} {state.words.length > 20 ? 'long-note' : 'short-note'}">
     {#each state.words as word}
       {#if word.type === 'tracker'}
         <span

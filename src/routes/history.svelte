@@ -339,15 +339,16 @@
 
   .history-title {
     transition: all 0.2s ease-in-out;
+    padding-left: 4px;
   }
 
-  :global(body.scrolled .history-title.hide-scrolled) {
+  :global(.scrolled .history-title.hide-scrolled) {
     opacity: 0;
   }
   :global(body .history-title.show-scrolled) {
     opacity: 0;
   }
-  :global(body.scrolled .history-title.show-scrolled) {
+  :global(.scrolled .history-title.show-scrolled) {
     opacity: 1;
   }
 
@@ -428,9 +429,7 @@
         </div>
       {:else if logs.length === 0 && !showSearch}
         {#if !searchMode}
-          <div class="empty-notice" style="max-height:200px;">{Lang.t('history.no-records-found')}</div>
-        {:else}
-          <div class="empty-notice">{state.date.format('YYYY')} {Lang.t('history.no-records-found')}</div>
+          <div class="empty-notice" style="height:30vh;">{Lang.t('history.no-records-found')}</div>
         {/if}
         <!-- If Logs and Not refreshing  -->
       {:else}
@@ -496,30 +495,6 @@
       </div>
     </div>
 
-    {#if locations.length && !loading && !state.searchTerm}
-      {#if !state.showAllLocations}
-        <div
-          class="mini-map closed"
-          on:click={() => {
-            state.showAllLocations = !state.showAllLocations;
-          }}>
-          <NMap {locations} />
-        </div>
-      {:else}
-        <div class="mini-map opened">
-          <NMap {locations} />
-          <Button
-            color="light"
-            shape="circle"
-            on:click={() => {
-              state.showAllLocations = !state.showAllLocations;
-            }}>
-            <Icon name="closeFilled" size="32" />
-          </Button>
-
-        </div>
-      {/if}
-    {/if}
     {#if !isToday && !searchMode}
       <button
         class="btn btn-sm btn-light btn-round today-btn"
@@ -530,6 +505,34 @@
       </button>
     {/if}
   </main>
+
+  <div slot="bottom" class="map-base">
+    {#if locations.length && !loading && !state.searchTerm}
+      {#if !state.showAllLocations}
+        <div
+          class="mini-map closed"
+          on:click={() => {
+            state.showAllLocations = !state.showAllLocations;
+          }}>
+          <NMap {locations} />
+        </div>
+      {:else}
+        <div class="content-map">
+          <NMap {locations} />
+          <Button
+            color="light"
+            shape="circle"
+            on:click={() => {
+              state.showAllLocations = !state.showAllLocations;
+            }}>
+            <NIcon name="closeFilled" size="32" />
+          </Button>
+
+        </div>
+      {/if}
+    {/if}
+
+  </div>
   <!-- end header-content content -->
 
 </NLayout>

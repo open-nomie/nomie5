@@ -75,8 +75,7 @@ export default {
     export: {
       csv: {
         download: "Download CSV...",
-        description:
-          "Export your individual tracker data to CSV. Only one year at a time is supported. Please note, that CSV exports cannot currently be imported back into Nomie. ",
+        description: "Export your individual tracker data to CSV. Only one year at a time is supported.",
       },
       backup: {
         description: `Create an importable backup file. This allows you to transfer your data from one device to another using a single JSON file that contains ALL of you Nomie data.`,

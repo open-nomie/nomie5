@@ -302,6 +302,9 @@
           {accept}
           bind:value
           {placeholder}
+          on:change={(evt) => {
+            dispatch('change', evt);
+          }}
           on:keyup={change}
           on:focus={focus}
           on:blur={blur} />

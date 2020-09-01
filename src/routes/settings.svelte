@@ -260,6 +260,12 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </span>
                 <input slot="right" class="d-none" type="file" bind:this={fileInput} on:change={methods.onImportFile} />
               </NItem>
+              <NItem clickable title={`${Lang.t('settings.import-from-csv', 'Import from CSV')}`} to="/settings/import/csv">
+                <span slot="left">📄</span>
+                <span slot="right">
+                  <NIcon name="chevronRight" className="fill-faded-2" />
+                </span>
+              </NItem>
             </div>
             <div class="n-list pb-2">
               <NItem itemDivider>Export Data</NItem>

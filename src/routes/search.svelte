@@ -284,7 +284,8 @@
       <!-- end history -->
 
     </div>
-    {#if state.searchTerm && logResults.length && !refreshMap}
+    <!--
+      {#if state.searchTerm && logResults.length && !refreshMap}
       {#if !state.showAllLocations}
         <div
           class="mini-map closed"
@@ -307,6 +308,7 @@
         </div>
       {/if}
     {/if}
+    -->
 
   </main>
   <!-- end header-content content -->

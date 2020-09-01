@@ -186,6 +186,7 @@
     <Button
       block
       className="mt-2"
+      style="flex-shrink:0"
       color="danger"
       size="lg"
       on:click={(evt) => {

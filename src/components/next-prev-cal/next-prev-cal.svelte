@@ -5,6 +5,8 @@
   import Icon from "../icon/icon.svelte";
 
   export let isToday: boolean = true;
+  export let hideCal: boolean = false;
+  export let style: string = "";
 
   const dispatch = createEventDispatcher();
 </script>
@@ -15,7 +17,7 @@
   }
 </style>
 
-<div class="next-prev-cal n-row w-auto">
+<div class="next-prev-cal n-row w-auto" {style}>
   <Button
     color="circle"
     className="tap-icon"
@@ -25,16 +27,18 @@
     }}>
     <Icon name="chevronLeft" size="24" />
   </Button>
-  <Button
-    color="none"
-    shape="circle"
-    delay={0}
-    className="tap-icon"
-    on:click={() => {
-      dispatch('calendar');
-    }}>
-    <Icon name="calendar" size="24" className={isToday ? '' : 'fill-red'} />
-  </Button>
+  {#if !hideCal}
+    <Button
+      color="none"
+      shape="circle"
+      delay={0}
+      className="tap-icon"
+      on:click={() => {
+        dispatch('calendar');
+      }}>
+      <Icon name="calendar" size="24" className={isToday ? '' : 'fill-red'} />
+    </Button>
+  {/if}
   <Button
     color="none"
     shape="circle"

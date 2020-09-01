@@ -54,7 +54,10 @@ export default [
       format: "iife",
       name: "nomie",
       file: "public/bundle.js",
-      globals: {},
+      globals: {
+        papaparse: "papaparse",
+      },
+      intro: "const global = window;",
       indent: false,
     },
     plugins: [
