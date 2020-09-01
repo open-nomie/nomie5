@@ -1,5 +1,13 @@
 // Nomie ID
-import URLParser from "./url-parser";
+import URLParser, { getURLParams } from "./url-parser";
+
+describe("module/url-parser", () => {
+  it("should get url params", () => {
+    let url = "https://google.com/?q=Whats up&name=brandon&s=1234,4232&size=8";
+    let parsed = getURLParams(url);
+    expect(parsed.name).toBe("brandon");
+  });
+});
 
 describe("modules/url-parser", function () {
   it("url should be truthy", () => {
@@ -25,7 +33,6 @@ describe("modules/url-parser", function () {
   });
   it("url should be invalid", () => {
     let url = URLParser("google.com");
-
     expect(url.valid).toEqual(false);
   });
 });
