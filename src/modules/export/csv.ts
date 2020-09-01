@@ -1,6 +1,5 @@
 import { LedgerStore } from "../../store/ledger";
-import { TrackerStore } from "../../store/tracker-store";
-import Tracker from "../../modules/tracker/tracker";
+import Tracker from "../tracker/tracker";
 import dayjs from "dayjs";
 
 import download from "../download/download";
@@ -121,10 +120,7 @@ export default class CSV {
 
     // generate CSV array
     let csvArray = this.logsToCSV(logs, trackers);
-    let filename = `n-${dayjs(start).format("YYYY-MM-DD")}-${dayjs(end).format("YYYY-MM-DD")}.${nid(trackers).substr(
-      0,
-      5
-    )}.APP_VERSION.csv`;
+    let filename = `n-${dayjs(start).format("YYYY-MM-DD")}-${dayjs(end).format("YYYY-MM-DD")}.${nid(6)}.APP_VERSION.csv`;
     download.csv(filename, csvArray.join("\r\n"));
     // this.download(filename, csvArray.join("\r\n"));
   }

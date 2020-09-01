@@ -1,15 +1,25 @@
 import NLog from "../../modules/nomie-log/nomie-log";
 import Papa from "papaparse";
 import dayjs from "dayjs";
+import nid from "../nid/nid";
 
+export interface IFieldMapItem {
+  index: number;
+  name?: string;
+}
 export interface IImportConfig {
-  hasHeaders: boolean;
-  template: string;
-  locationNameField?: string;
-  endField: number; // end date
-  latField?: number;
-  lngField?: number;
-  sourceField?: number;
+  name?: string;
+  id?: string;
+  hasHeaders?: boolean;
+  template?: string;
+  fieldMap?: {
+    lat?: number;
+    lng?: number;
+    location?: number;
+    end?: number;
+    start?: number;
+    source?: number;
+  };
 }
 
 export interface IImportFields {
@@ -28,17 +38,35 @@ class CSVRImport {
       cursor: number;
     };
   };
+  name: string;
   nlogs: Array<NLog>;
   config: IImportConfig;
   errors: Array<any>;
+
   constructor(config: IImportConfig) {
-    this.config = config;
+    this.config = config || {
+      name: this.config.name || this.name || "Untitled",
+      fieldMap: {},
+    };
+    this.config.fieldMap = this.config.fieldMap || {};
+    this.config.name = this.config.name || this.name || "Untitled";
+    this.config.id = this.config.id || nid(8);
   }
   public csv(content: string): CSVRImport {
-    this.parsed = Papa.parse(content);
+    try {
+      this.parsed = Papa.parse(content.trim());
+    } catch (e) {
+      console.log("Papa parse: Line 59 csvr-import", e.message);
+    }
     return this;
   }
-  private toFields(row: Array<string>): IImportFields {
+  public setName(filename: string): void {
+    this.name = filename;
+  }
+  public length() {
+    return this.parsed?.data?.length || 0;
+  }
+  private toFields(row: Array<string> = []): IImportFields {
     let fields = {};
     row.forEach((cell: string, index: number) => {
       fields[`f${index}`] = cell;
@@ -55,34 +83,57 @@ class CSVRImport {
   public getHeaders(): Array<string> {
     return this.parsed.data[0];
   }
+
+  public toLog(row: Array<any>, index?: number): NLog {
+    let log: NLog;
+    try {
+      let fields: IImportFields = this.toFields(row);
+      let note = this.fieldsToNote(fields);
+      log = new NLog({
+        note,
+        end: dayjs(row[this.config.fieldMap.end]).toDate().getTime(),
+      });
+      if (this.config.fieldMap.start !== undefined) {
+        log.start = dayjs(row[this.config.fieldMap.start]).toDate().getTime();
+      }
+      if (this.config.fieldMap.lat !== undefined && this.config.fieldMap.lat !== undefined) {
+        log.lat = parseFloat(row[this.config.fieldMap.lat]);
+        log.lng = parseFloat(row[this.config.fieldMap.lng]);
+      }
+      if (this.config.fieldMap.location !== undefined) {
+        log.location = row[this.config.fieldMap.location];
+      }
+      if (this.config.fieldMap.source !== undefined) {
+        if (typeof this.config.fieldMap.source == "number") {
+          log.source = row[this.config.fieldMap.source];
+        } else if (typeof this.config.fieldMap.source == "string") {
+          log.source = this.config.fieldMap.source;
+        }
+      } else {
+        log.source = "importer";
+      }
+    } catch (e) {
+      console.log("toLog Error", e.message);
+      log = new NLog({ note: `Invalid row data` });
+    }
+    return log;
+  }
+
   public toLogs(): Array<NLog> {
     let logs: Array<NLog> = [];
-    let rows = this.parsed.data;
+    let rows = this.parsed.data || [];
     rows.forEach((row: Array<string>, index: number) => {
       try {
-        let fields: IImportFields = this.toFields(row);
-        let note = this.fieldsToNote(fields);
-        let log = new NLog({
-          note,
-          end: dayjs(row[this.config.endField]).toDate().getTime(),
-        });
-        if (this.config.latField && this.config.lngField) {
-          log.lat = parseFloat(row[this.config.latField]);
-          log.lng = parseFloat(row[this.config.latField]);
-        }
-        if (this.config.locationNameField) {
-          log.location = row[this.config.locationNameField];
-        }
-        if (this.config.sourceField) {
-          log.source = row[this.config.sourceField];
-        } else {
-          log.source = "importer";
-        }
+        let log = this.toLog(row, index);
         logs.push(log);
       } catch (e) {
+        console.log(e);
         this.errors.push(`Row #${index} errored: ${e.message}`);
       }
     });
+    if (this.config.hasHeaders) {
+      logs.shift();
+    }
     return logs;
   }
 }

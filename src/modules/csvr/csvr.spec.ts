@@ -15,8 +15,9 @@ Peed,2020-08-11T08:28:00.000-04:00`;
 describe("CSVR Import Tests", () => {
   const importer = new CSVRImport({
     template: "#{f0} #zeno imported #{f1}",
-    hasHeaders: true,
-    endField: 1,
+    fieldMap: {
+      end: 1,
+    },
   });
 
   it("should do something", () => {

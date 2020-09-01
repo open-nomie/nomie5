@@ -15,5 +15,3 @@
   }
   onMount(main);
 </script>
-
-CSV BUILDER

@@ -30,7 +30,7 @@
   <Route path="/faq" component={FAQRoute} />
   <Route path="/api" component={NomieAPIRoute} />
   <Route path="/settings/export/:type" component={ExportRoute} />
-  <!-- <Route path="/settings/import/csv" component={CsvImport} /> -->
+  <Route path="/settings/import/csv" component={CsvImport} />
   <Route path="/settings/export" component={ExportRoute} />
   <Route path="/tracker/design" component={TrackerDesigner} />
   <Route path="/files/*path" let:params>

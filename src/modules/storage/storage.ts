@@ -42,6 +42,25 @@ export function setStorage(type: StorageTypes) {
   localStorage.setItem("n4/storage/root/storage_type", type);
 }
 
+export interface IStorage {
+  engines: {
+    blockstack: BlockStackEngine;
+    local: LocalForageEngine;
+    pouchdb: PouchDBEngine;
+  };
+  engine: any;
+  storageType(): string;
+  get(path: string): Promise<any>;
+  put(path: string, content: any): Promise<any>;
+  delete(path: string): Promise<any>;
+  list(): Promise<any>;
+  local: {
+    get(path: string): any;
+    put(path: string, content: any): any;
+    remove(path: string): void;
+  };
+}
+
 const Storage = {
   engines: {
     blockstack: BlockStackEngine,
@@ -113,6 +132,9 @@ const Storage = {
     },
     put(path, value) {
       return localStorage.setItem(`n4/storage/${path}`, JSON.stringify(value));
+    },
+    remove(path) {
+      return localStorage.removeItem(`n4/storage/${path}`);
     },
   },
   SideStore,
