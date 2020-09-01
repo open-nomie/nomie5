@@ -156,7 +156,7 @@
         on:textClick={(evt) => {
           dispatch('textClick', evt.detail);
         }}
-        note={displayLog.note}
+        bind:note={displayLog.note}
         {trackers}
         className={logMeta.trackers.length ? '' : 'pb-2'} />
     {/if}

@@ -22,8 +22,14 @@ const NPaths = {
     },
   },
   storage: {
+    trackers() {
+      return `${config.data_root}/trackers.json`;
+    },
     search() {
-      return `${config.data_root}/searches`;
+      return `${config.data_root}/searches.json`;
+    },
+    book(id: string) {
+      return `${config.data_root}/books/${id}`;
     },
   },
   local: {

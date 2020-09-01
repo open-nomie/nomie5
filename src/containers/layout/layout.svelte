@@ -40,6 +40,7 @@
   $: hasHeader = (arguments[1].$$slots || {}).hasOwnProperty("header");
   $: hasFooter = (arguments[1].$$slots || {}).hasOwnProperty("footer");
   $: hasContent = (arguments[1].$$slots || {}).hasOwnProperty("content");
+  $: hasBottom = (arguments[1].$$slots || {}).hasOwnProperty("bottom");
 
   onMount(() => {});
 </script>
@@ -66,6 +67,11 @@
       <slot />
     {/if}
   </main>
+  {#if hasBottom}
+    <main id="nomie-main-bottom">
+      <slot name="bottom" />
+    </main>
+  {/if}
   {#if hasFooter}
     <footer class="layout-footer">
       <slot name="footer" />

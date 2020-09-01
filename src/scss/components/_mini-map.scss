@@ -107,12 +107,27 @@ body.scrolling {
   padding: 0;
 }
 
+.content-map {
+  height: 40vh;
+  width: 100vw;
+  position: relative;
+
+  .btn {
+    position: absolute;
+    z-index: 2000;
+    bottom: 16px;
+    right: 50%;
+    margin-right: -25px;
+  }
+}
+
 .mini-map {
   position: fixed;
-  bottom: 70px;
+  z-index: 1000;
+  bottom: 90px;
   right: 26px;
-  height: 100px;
-  width: 100px;
+  height: 80px;
+  width: 80px;
   transition: all 0.2s ease-in-out;
 
   .location-name {
@@ -155,22 +170,22 @@ body.scrolling {
   }
 
   &.opened {
+    position: relative;
     transition: all 0.2s ease-in-out;
     display: flex;
     justify-content: center;
     align-items: center;
     color: var(--color-inverse);
-    height: 50%;
+    height: 45vh;
     min-height: 250;
     max-height: 700px;
-    border-radius: 25px;
+    border-radius: 0;
     z-index: 2000;
-    left: 16px;
-    right: 16px;
-    width: calc(100% - 32px);
-    bottom: 80px;
+
+    width: 100vw;
+
     border: solid 1px var(--color-faded-2);
-    box-shadow: 0px 4px 20px -2px rgba(0, 0, 0, 0.4);
+
     .zmdi {
       font-size: 1.4rem;
     }
