@@ -18,6 +18,7 @@ import { BoardStore } from "./boards";
 import config from "../config/appConfig";
 import { Interact } from "./interact";
 import is from "../utils/is/is";
+import { LedgerStore } from "./ledger";
 
 // Consts
 const console = new Logger("🤠 userStore");
@@ -162,10 +163,12 @@ const userInit = () => {
       } else {
         // Storage is set - wait for it to be ready
         Storage.onReady(async () => {
+          // initialize the User store now that
+          // storage is ready
+          LedgerStore.init();
           try {
             await methods.bootstrap();
             update((_state) => {
-              _state.meta.store = Storage.get(config.user_meta_path) || {};
               _state.ready = true;
               _state.signedIn = true;
               _state.profile = Storage.getProfile();
@@ -275,6 +278,7 @@ const userInit = () => {
             // Put
             state.meta.store[key] = value;
             response = Storage.put(config.user_meta_path, state.meta);
+            console.log("saving to storage");
           } else if (!key && !value && !remove) {
             // Get all Stored items
             response = Promise.resolve(state.meta.store);

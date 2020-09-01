@@ -23,6 +23,7 @@ import { Lang } from "./lang";
 // Utils
 import Logger from "../utils/log/log";
 import type { ITrackers } from "../modules/import/import";
+import NPaths from "../paths";
 
 const console = new Logger("🌟 TrackerStore 🌟");
 
@@ -90,7 +91,7 @@ const trackerStoreInit = () => {
         updateTrackers(data);
       };
       // Get Trackers from Storage - pass Updated function if it updates later on.
-      let trackers = await Storage.get(`${config.data_root}/trackers.json`, onTrackersUpdated);
+      let trackers = await Storage.get(NPaths.storage.trackers(), onTrackersUpdated);
       // If don't have trackers - show the selector
       if (!trackers) {
         /// It's their first time
@@ -267,7 +268,7 @@ const trackerStoreInit = () => {
     },
     put() {
       let data = methods.data();
-      return Storage.put(`${config.data_root}/trackers.json`, data.trackers);
+      return Storage.put(NPaths.storage.trackers(), data.trackers);
     },
     /**
      * Save The Tracker Store
@@ -275,27 +276,37 @@ const trackerStoreInit = () => {
      * Optionally provide an object of trackers.
      * This will merge with existing.
      */
-    save(trackers) {
-      if (trackers) {
-        let mergedTrackers;
-        update((state) => {
-          mergedTrackers = { ...state.trackers, ...trackers };
-          Object.keys(mergedTrackers).forEach((tag) => {
-            mergedTrackers[tag] = new Tracker(mergedTrackers[tag]);
-          });
-          state.trackers = mergedTrackers;
-          return state;
+    save(trackers: ITrackers = {}) {
+      let mergedTrackers;
+      update((state) => {
+        mergedTrackers = { ...state.trackers, ...trackers };
+        Object.keys(mergedTrackers).forEach((tag) => {
+          mergedTrackers[tag] = new Tracker(mergedTrackers[tag]);
         });
-        return Storage.put(`${config.data_root}/trackers.json`, mergedTrackers);
-      } else {
-        return new Promise((resolve, reject) => {
-          update((state) => {
-            // Save
-            methods.save(state.trackers).then(resolve).catch(reject);
-            return state;
-          });
-        });
-      }
+        state.trackers = mergedTrackers;
+        return state;
+      });
+      return Storage.put(NPaths.storage.trackers(), mergedTrackers);
+      // if (trackers) {
+      //   let mergedTrackers;
+      //   update((state) => {
+      //     mergedTrackers = { ...state.trackers, ...trackers };
+      //     Object.keys(mergedTrackers).forEach((tag) => {
+      //       mergedTrackers[tag] = new Tracker(mergedTrackers[tag]);
+      //     });
+      //     state.trackers = mergedTrackers;
+      //     return state;
+      //   });
+      //   return Storage.put(`${config.data_root}/trackers.json`, mergedTrackers);
+      // } else {
+      //   return new Promise((resolve, reject) => {
+      //     update((state) => {
+      //       // Save
+      //       methods.save(state.trackers).then(resolve).catch(reject);
+      //       return state;
+      //     });
+      //   });
+      // }
     },
     async duplicateTracker(tracker) {
       const label: any = await Interact.prompt(
