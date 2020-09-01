@@ -18,13 +18,13 @@ export interface IPeople {
 }
 
 export interface INormalizedImport {
-  trackers: ITrackers;
-  boards: Array<any>;
-  context: Array<string>;
-  people: IPeople;
-  locations: Array<Location>;
-  dashboards: Array<Dashboard>;
-  logs: Array<NLog>;
+  trackers?: ITrackers;
+  boards?: Array<any>;
+  context?: Array<string>;
+  people?: IPeople;
+  locations?: Array<Location>;
+  dashboards?: Array<Dashboard>;
+  logs?: Array<NLog>;
 }
 
 // TODO: replace this with the util version

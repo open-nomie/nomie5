@@ -74,7 +74,10 @@
     async finish() {
       // Get a new latest book
       await LedgerStore.getFirstDate(true);
-      document.location.href = "/";
+      let confirmed = await Interact.confirm("Import Complete. Restart?", `It's best to reload Nomie after an import`);
+      if (confirmed) {
+        document.location.href = "/";
+      }
     },
     // On Import File
     // Process the file - see if we can do anything with it.
@@ -233,7 +236,7 @@
           importingAll = false;
           Interact.toast("Import Finishing...");
           await LedgerStore.getFirstDate(true);
-          window.location.href = "/";
+          methods.finish();
         } catch (e) {
           console.error(e.message);
           Interact.alert("Error", e.message);

@@ -15,6 +15,7 @@ import { DashboardStore } from "../../store/dashboard-store";
 import math from "../../utils/math/math";
 import type { INormalizedImport } from "./import";
 import Location from "../locate/Location";
+import NLog from "../nomie-log/nomie-log";
 
 type IImportTypes = "dashboards" | "locations" | "people" | "trackers" | "logs" | "context";
 export interface IImportStatus {
@@ -37,6 +38,13 @@ export default class ImportLoader {
     if (this.changeListeners.indexOf(func) == -1) {
       this.changeListeners.push(func);
     }
+  }
+
+  public logs(logs: Array<NLog>) {
+    this.normalized = {
+      logs,
+    };
+    return this;
   }
 
   public async openPayload(payload: IBackupItems) {
