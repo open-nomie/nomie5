@@ -34,11 +34,6 @@
   export const location = undefined;
   export const style = undefined;
 
-  export let term;
-  /**
-   * I've messed this all up again. but it's faster and more responsivle
-   * TODO: refactor so it's clean and using the proper amount of Store vs local
-   */
   const SEARCHES_PATH = `${global.data_root}/searches`;
 
   let searchInput;
