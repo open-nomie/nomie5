@@ -188,11 +188,6 @@
 <Toast />
 
 <NLocationModal />
-
-{#if ($UserStore.meta || {}).lock}
-  <PinLock />
-{/if}
-
 <!-- Tracker Editor -->
 
 <NTrackerEditor
@@ -249,6 +244,14 @@
 
 <!-- Tracker Input -->
 
+<!--
+  $ActiveLogStore.score = ActiveLogStore.calculateScore($ActiveLogStore.note, $TrackerStore.trackers);
+      console.log('Tracker Input on save', event.detail, $ActiveLogStore);
+      LedgerStore.saveLog($ActiveLogStore).then(() => {
+        ActiveLogStore.clear();
+      });
+-->
+
 {#if $Interact.trackerInput.show}
   <TrackerInput
     on:save={(event) => {
@@ -256,10 +259,6 @@
         $Interact.trackerInput.onInteract(event.detail);
       }
       Interact.dismissTrackerInput();
-      $ActiveLogStore.score = ActiveLogStore.calculateScore($ActiveLogStore.note, $TrackerStore.trackers);
-      LedgerStore.saveLog($ActiveLogStore).then(() => {
-        ActiveLogStore.clear();
-      });
     }}
     on:add={(event) => {
       if ($Interact.trackerInput.onInteract) {
