@@ -3,18 +3,32 @@
   import Keypad from "./keypad.svelte";
   // Stores
   import { UserStore } from "../../store/user-store";
+  import nid from "../../modules/nid/nid";
 
+  import Storage from "../../modules/storage/storage";
+  import { onMount } from "svelte";
+  import { Interact } from "../../store/interact";
+
+  let _pin;
   let pin;
-  $: view = pin ? pin.replace(/\d(?!$)/g, " • ") : "Enter Pin";
-  $: locked = $UserStore.locked || false;
-  $: accessPin = $UserStore.meta.pin || null;
+  let locked = false;
+  $: view = _pin ? _pin.replace(/\d(?!$)/g, " • ") : "Enter Pin";
+  $: shouldLock = $UserStore.meta.lock || false;
+  $: accessPin = $UserStore.meta.access_pin || null;
+  $: if (accessPin) {
+    if (accessPin == pin) {
+      locked = false;
+    } else {
+      locked = shouldLock;
+    }
+  }
 
   const methods = {
     submit() {
-      if (`${pin} ` === `${accessPin} `) {
-        UserStore.unlock();
-      } else {
-        methods.shake();
+      // encode the pin
+      pin = nid(_pin);
+      if (pin !== accessPin) {
+        Interact.alert(`Invalid Pin`, "Please try again.");
       }
     },
     shake() {
@@ -34,7 +48,7 @@
   }
 </style>
 
-<div class="full-screen flex-column bg-primary {$UserStore.locked && accessPin ? 'visible' : 'hidden'}">
+<div class="lock-screen full-screen flex-column bg-primary-bright {locked && accessPin ? 'visible' : 'hidden'}">
   <h1>{view}</h1>
-  <Keypad bind:value={pin} on:submit={methods.submit} />
+  <Keypad bind:value={_pin} on:submit={methods.submit} />
 </div>

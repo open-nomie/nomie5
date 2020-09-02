@@ -2,6 +2,7 @@
   //svelte
   import { createEventDispatcher } from "svelte";
   import { tap } from "@sveltejs/gestures";
+  import Button from "../../components/button/button.svelte";
 
   // Props
   export let value = "";
@@ -10,9 +11,9 @@
   const dispatch = createEventDispatcher();
 
   // Methods
-  const select = num => () => (value += num);
+  const select = (num) => () => (value += num);
   const clear = () => (value = "");
-  const submit = event => {
+  const submit = (event) => {
     setTimeout(() => {
       dispatch("submit");
       event.stopPropagation();
@@ -20,7 +21,7 @@
   };
 </script>
 
-<style>
+<style lang="scss">
   .keypad {
     display: grid;
     grid-template-columns: repeat(3, 5em);
@@ -28,32 +29,25 @@
     grid-gap: 0.5em;
   }
 
-  button {
-    margin: 0;
-    color: var(--color-solid-2);
-    touch-action: manipulation;
-  }
-  button:hover,
-  button:focus {
-    color: var(--color-solid-3);
+  :global(.keypad button) {
+    color: #fff;
+    &:hover {
+      color: #fff;
+    }
   }
 </style>
 
 <div class="keypad">
-  <button class="btn btn-clear" on:click={select(1)}>1</button>
-  <button class="btn btn-clear" on:click={select(2)}>2</button>
-  <button class="btn btn-clear" on:click={select(3)}>3</button>
-  <button class="btn btn-clear" on:click={select(4)}>4</button>
-  <button class="btn btn-clear" on:click={select(5)}>5</button>
-  <button class="btn btn-clear" on:click={select(6)}>6</button>
-  <button class="btn btn-clear" on:click={select(7)}>7</button>
-  <button class="btn btn-clear" on:click={select(8)}>8</button>
-  <button class="btn btn-clear" on:click={select(9)}>9</button>
-  <button class="btn btn-clear" disabled={!value} on:click={clear}>
-    Clear
-  </button>
-  <button class="btn btn-clear" on:click={select(0)}>0</button>
-  <button class="btn btn-clear" disabled={!value} on:click={submit}>
-    Submit
-  </button>
+  <Button delay={0} shape="round" color="transparent" on:click={select(1)}>1</Button>
+  <Button delay={0} shape="round" color="transparent" on:click={select(2)}>2</Button>
+  <Button delay={0} shape="round" color="transparent" on:click={select(3)}>3</Button>
+  <Button delay={0} shape="round" color="transparent" on:click={select(4)}>4</Button>
+  <Button delay={0} shape="round" color="transparent" on:click={select(5)}>5</Button>
+  <Button delay={0} shape="round" color="transparent" on:click={select(6)}>6</Button>
+  <Button delay={0} shape="round" color="transparent" on:click={select(7)}>7</Button>
+  <Button delay={0} shape="round" color="transparent" on:click={select(8)}>8</Button>
+  <Button delay={0} shape="round" color="transparent" on:click={select(9)}>9</Button>
+  <Button delay={0} shape="round" color="transparent" disabled={!value} on:click={clear}>Clear</Button>
+  <Button delay={0} shape="round" color="transparent" on:click={select(0)}>0</Button>
+  <Button delay={0} shape="round" color="transparent" disabled={!value} on:click={submit}>Submit</Button>
 </div>

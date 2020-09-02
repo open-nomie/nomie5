@@ -6,6 +6,7 @@
   import { Lang } from "../../store/lang";
   import { UserStore } from "../../store/user-store";
   import { Interact } from "../../store/interact";
+  import nid from "../../modules/nid/nid";
 
   let methods = {
     settingChange() {
@@ -15,26 +16,23 @@
       let shouldLock = change.detail;
 
       if (shouldLock === true) {
-        if (($UserStore.meta.pin || "").length == 0) {
-          // TODO: figure out how to handle a cancel in the interact prompt
-          let pin: any = await Interact.prompt(Lang.t("settings.pin-details"), null, {
-            value: "",
-            valueType: "number",
-          });
+        let pin: any = await Interact.prompt(Lang.t("settings.pin-details"), null, {
+          value: "",
+          valueType: "number",
+        });
 
-          if (!pin) {
-            $UserStore.meta.lock = false;
-            $UserStore.meta.pin = null;
-            UserStore.saveMeta();
-          } else {
-            $UserStore.meta.lock = true;
-            $UserStore.meta.pin = parseInt(pin);
-            UserStore.saveMeta();
-          }
+        if (!pin) {
+          $UserStore.meta.lock = false;
+          $UserStore.meta.access_pin = null;
+          UserStore.saveMeta();
+        } else {
+          $UserStore.meta.lock = true;
+          $UserStore.meta.access_pin = nid(`${pin}`.trim());
+          UserStore.saveMeta();
         }
       } else {
         $UserStore.meta.lock = false;
-        $UserStore.meta.pin = null;
+        $UserStore.meta.access_pin = null;
         UserStore.saveMeta();
       }
     },

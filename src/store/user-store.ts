@@ -34,7 +34,7 @@ export interface IUserMetaStore {
 }
 export interface IUserMeta {
   lock: boolean;
-  pin?: number;
+  access_pin?: string;
   is24Hour?: boolean;
   firstDayOfWeek: "1" | "2"; // 1: Sunday, 2: Monday, etc.
   lastBackup?: Date;
@@ -93,7 +93,7 @@ const userInit = () => {
     // so its available on all devices
     meta: {
       lock: false,
-      pin: undefined,
+      access_pin: undefined,
       is24Hour: false,
       firstDayOfWeek: "1", // 1: Sunday, 2: Monday, etc.
       lastBackup: undefined,
@@ -258,12 +258,6 @@ const userInit = () => {
       update((u) => {
         u.alwaysLocate = bool;
         return u;
-      });
-    },
-    unlock() {
-      update((usr) => {
-        usr.locked = false;
-        return usr;
       });
     },
 
