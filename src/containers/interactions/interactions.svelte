@@ -242,33 +242,23 @@
   <NShareImage />
 {/if}
 
-<!-- Tracker Input -->
-
-<!--
-  $ActiveLogStore.score = ActiveLogStore.calculateScore($ActiveLogStore.note, $TrackerStore.trackers);
-      console.log('Tracker Input on save', event.detail, $ActiveLogStore);
-      LedgerStore.saveLog($ActiveLogStore).then(() => {
-        ActiveLogStore.clear();
-      });
--->
-
 {#if $Interact.trackerInput.show}
   <TrackerInput
     on:save={(event) => {
       if ($Interact.trackerInput.onInteract) {
-        $Interact.trackerInput.onInteract(event.detail);
+        $Interact.trackerInput.onInteract(event.detail, 'save');
       }
       Interact.dismissTrackerInput();
     }}
     on:add={(event) => {
       if ($Interact.trackerInput.onInteract) {
-        $Interact.trackerInput.onInteract(event.detail);
+        $Interact.trackerInput.onInteract(event.detail, 'add');
       }
       Interact.dismissTrackerInput();
     }}
     on:cancel={() => {
       if ($Interact.trackerInput.onInteract) {
-        $Interact.trackerInput.onInteract(null);
+        $Interact.trackerInput.onInteract(null, 'cancelled');
       }
       Interact.dismissTrackerInput();
     }}

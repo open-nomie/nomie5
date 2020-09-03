@@ -386,10 +386,15 @@
     async trackerTapped(tracker) {
       let inputer = new TrackerInputer(tracker, $TrackerStore);
       let note = await inputer.getElements();
-      ActiveLogStore.addElement(note.join(" "));
-      // If one tap, auto save it.
-      await LedgerStore.saveLog($ActiveLogStore);
-      await ActiveLogStore.clear();
+
+      if (note.length) {
+        ActiveLogStore.addElement(note.join(" "));
+        if (inputer.lastAction == "save") {
+          await LedgerStore.saveLog($ActiveLogStore);
+          await ActiveLogStore.clear();
+        }
+      }
+
       return note;
     },
 

@@ -267,8 +267,12 @@ const interactInit = () => {
           s.trackerInput.tracker = tracker;
           s.trackerInput.allowSave = allowSave;
           s.trackerInput.value = value;
-          s.trackerInput.onInteract = (tracker) => {
-            resolve(tracker);
+          s.trackerInput.onInteract = (tracker, action: string = "unknown") => {
+            if (action !== "cancelled") {
+              console.log("oninteract", action);
+              tracker.action = action;
+              resolve(tracker);
+            }
           };
           return s;
         });
