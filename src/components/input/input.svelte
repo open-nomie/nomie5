@@ -20,6 +20,7 @@
   export let compact = false;
   export let rows = 2;
   export let accept = "png,jpeg,jpg,csv";
+  export let name = false;
 
   export let autocomplete = undefined;
   export let autocorrect = undefined;
@@ -278,6 +279,7 @@
           bind:this={_elInput}
           {disabled}
           {inputmode}
+          {name}
           type="email"
           style={inputStyle}
           class={inputClass}
@@ -295,6 +297,7 @@
           bind:this={_elInput}
           {disabled}
           {inputmode}
+          {name}
           type="file"
           style={inputStyle}
           class={inputClass}
