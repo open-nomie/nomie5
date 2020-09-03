@@ -200,6 +200,7 @@
     <div class="container p-0">
       {#if state.searchTerm && state.searchTerm.term}
         <NLogListLoader
+          fullDate={true}
           bind:results={logResults}
           term={state.searchTerm.term}
           limit={20}

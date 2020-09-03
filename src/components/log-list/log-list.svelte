@@ -10,6 +10,7 @@
   export let compact = false;
   export let style = "";
   export let className = "";
+  export let fullDate = false;
 
   let loading = false;
   // export let hideMore = false;
@@ -40,18 +41,19 @@
   <div class="n-list {className}" {style}>
     {#each internalLogs as log (log._key)}
       <LogItem
+        {fullDate}
         className={compact ? 'compact' : ''}
         {log}
-        on:trackerClick={event => {
+        on:trackerClick={(event) => {
           dispatch('trackerClick', event.detail);
         }}
-        on:locationClick={event => {
+        on:locationClick={(event) => {
           dispatch('locationClick', event.detail);
         }}
-        on:textClick={event => {
+        on:textClick={(event) => {
           dispatch('textClick', event.detail);
         }}
-        on:moreClick={event => {
+        on:moreClick={(event) => {
           dispatch('moreClick', event.detail);
         }} />
     {/each}

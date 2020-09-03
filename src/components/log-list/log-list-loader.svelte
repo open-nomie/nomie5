@@ -23,7 +23,7 @@
   export let limit = 20;
   export let className = "";
   export let compact = false;
-
+  export let fullDate = true;
   export let results = [];
 
   let loading = false;
@@ -94,6 +94,7 @@
 
 <div class="log-list-loader">
   <LogList
+    {fullDate}
     className="bg-transparent {className}"
     {compact}
     {logs}

@@ -54,7 +54,7 @@
     showPhoto: false,
   };
 
-  $: if (log) {
+  $: if (log && log !== displayLog) {
     displayLog = new NomieLog(log);
     logMeta = displayLog.getMeta();
     logMeta.trackers = logMeta.trackers.map((trackerElement) => {
@@ -62,8 +62,6 @@
       return trackerElement;
     });
   }
-
-  $: fullDate = log && new Date(log.end).toDateString() !== new Date().toDateString() ? true : false;
 
   let dtFormat;
 
@@ -124,7 +122,9 @@
         </div>
         <Text size="sm" medium className="filler">
           {logMeta.endDate.format(`${dtFormat.time}`)}
-          <Text inline size="sm" faded>{logMeta.endDate.format(`${dtFormat.date}`)}</Text>
+          {#if fullDate}
+            <Text inline size="sm" faded>{logMeta.endDate.format(`${dtFormat.date}`)}</Text>
+          {/if}
         </Text>
       </div>
       <div class="filler" />

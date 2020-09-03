@@ -708,7 +708,7 @@
         {#if state.timeSpan == 'y'}
           <div class="p-4 text-sm text-center text-inverse-2">Logs not yet available for a full year</div>
         {:else}
-          {#if state.selected.rows}
+          <!-- {#if state.selected.rows}
             <NToolbar className="text-center mt-2">
               <div class="filler" />
               <NButtonGroup buttons={logViewButtons} />
@@ -718,27 +718,15 @@
               </button>
               <div class="filler" />
             </NToolbar>
-          {/if}
-
-          <!--
-              on:textClick={(evt) => {
-              if (evt.detail.type == 'tracker') {
-                Interact.openStats(`#${evt.detail.id}`);
-              } else {
-                Interact.openStats(`${evt.detail.raw}`);
-              }
-            }}
-            on:trackerClick={(evt) => {
-              Interact.openStats(`#${evt.detail.tag}`);
-            }}
-            -->
+          {/if} -->
 
           <NLogList
+            fullDate
             compact
             limit={30}
             logs={state.selected.rows || state.stats.rows}
             style="min-height:100%"
-            className="bg-solid-1 flex-grow flex-shrink" />
+            className="bg-bg flex-grow flex-shrink" />
         {/if}
       {/if}
     {/if}
