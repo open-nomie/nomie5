@@ -700,7 +700,7 @@
     {/if}
     {#if state.stats}
       {#if state.dataView == 'overview'}
-        <StatsOverview stats={state.stats} />
+        <StatsOverview stats={state.stats} tracker={state.tracker} />
         <!-- end over view -->
       {:else if state.dataView == 'time'}
         <StatsTime color={state.currentColor} term={state.currentTerm} stats={state.stats} />
