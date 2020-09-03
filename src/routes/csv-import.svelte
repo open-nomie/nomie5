@@ -84,7 +84,6 @@
   $: view = views.find((v) => v.id == stepId);
 
   function setFieldMap(name: string, index) {
-    console.log("Set Field Map", name, index);
     activeImporter.config.fieldMap[name] = activeMapIndex;
     refresh();
   }
@@ -136,7 +135,6 @@
   ];
 
   function mapField(fieldIndex) {
-    console.log("Field Map", fieldIndex);
     activeMapIndex = fieldIndex;
     Interact.popmenu({
       title: `Map ${activeImporter ? activeImporter.getHeaders()[fieldIndex] : "Unknown"}`,
@@ -145,7 +143,6 @@
   }
 
   function refresh() {
-    console.log("Refresh");
     refreshing = true;
     tick(100, () => {
       refreshing = false;
@@ -172,7 +169,7 @@
       await importer.logs(activeImporter.toLogs()).importLogs((status: any) => {
         Interact.toast(status.message, { perm: true });
       });
-      console.log("Done Importing");
+
       Interact.toast(`Import complete`, { perm: false });
     }
   }
@@ -234,7 +231,7 @@
 
   async function openTemplate(config: IImportConfig) {
     activeImporter = new CSVRImport(config);
-    console.log("Open Template", config, activeImporter);
+
     stepId = "template";
   }
 
@@ -255,7 +252,6 @@
 
   async function save() {
     try {
-      console.log("save", activeImporter);
       let found = null;
       templates = templates.map((template: IImportConfig) => {
         let isMatch = template.id == activeImporter.config.id;
@@ -278,7 +274,7 @@
 
   async function main() {
     let savedImports = await UserStore.mstore("csv_templates");
-    console.log("Saved Imports?", savedImports);
+
     templates = savedImports || [];
   }
   onMount(main);

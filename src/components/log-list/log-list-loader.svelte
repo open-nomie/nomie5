@@ -78,7 +78,7 @@
   }
 
   function cancelSearch() {
-    canceled = true;
+    cancelled = true;
   }
 
   onMount(() => {

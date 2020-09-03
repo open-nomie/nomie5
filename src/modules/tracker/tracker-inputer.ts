@@ -61,7 +61,6 @@ export default class TrackerInputer {
 
   async getTrackerInputAsString(tracker: TrackerConfig, value?: number, allowSave: boolean = false): Promise<string> {
     const response: any = await Interact.trackerInput(tracker, { value, allowSave });
-    console.log({ response });
     if (response && response.tracker) {
       return `#${response.tracker.tag}(${response.value}) ${response.suffix || ""}`;
     } else {
@@ -135,7 +134,6 @@ export default class TrackerInputer {
     if (input.action) {
       this.lastAction = input.action;
     }
-    console.log("getTrackerInput", { input });
     return input;
   }
 
@@ -187,7 +185,6 @@ export default class TrackerInputer {
        * Catch all for other tracker inputs
        */
       let results: ITrackerInputResult = await this.getTrackerInput(this.tracker, { value: defaultValue, allowSave: true });
-      console.log("getElements", { results });
       if (results) {
         // Push results
         note.push(`#${results.tracker.tag}${results.value ? `(${results.value})` : ``}`);
@@ -201,7 +198,6 @@ export default class TrackerInputer {
         }
       }
     }
-    console.log("tracker-inputer - Returning note", note);
     return note;
   }
 }

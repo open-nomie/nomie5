@@ -56,7 +56,7 @@ class CSVRImport {
     try {
       this.parsed = Papa.parse(content.trim());
     } catch (e) {
-      console.log("Papa parse: Line 59 csvr-import", e.message);
+      console.error("Papa parse: Line 59 csvr-import", e.message);
     }
     return this;
   }
@@ -113,7 +113,7 @@ class CSVRImport {
         log.source = "importer";
       }
     } catch (e) {
-      console.log("toLog Error", e.message);
+      console.error("toLog Error", e.message);
       log = new NLog({ note: `Invalid row data` });
     }
     return log;

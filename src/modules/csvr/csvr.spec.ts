@@ -31,7 +31,6 @@ describe("CSVR Import Tests", () => {
   it("should generate some logs!", () => {
     importer.csv(zeno);
     let logs: Array<NLog> = importer.toLogs();
-    console.log(logs[2]);
     expect(dayjs(logs[1].end).format("YYYY MM DD h:mm a")).toBe("2020 08 30 8:28 am");
     expect(logs[1].note).toContain("#Peed");
     expect(logs.length).toBe(9);

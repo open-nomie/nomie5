@@ -269,7 +269,6 @@ const interactInit = () => {
           s.trackerInput.value = value;
           s.trackerInput.onInteract = (tracker, action: string = "unknown") => {
             if (action !== "cancelled") {
-              console.log("oninteract", action);
               tracker.action = action;
               resolve(tracker);
             }

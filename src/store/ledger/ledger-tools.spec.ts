@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 
 import appConfig from "../../config/appConfig";
+appConfig.book_time_format = "YYYY-MM";
+
 describe("Ledger Tools test sweeeeet", () => {
   let ledgerTools = new LedgerTools(DumbStorage);
   let baseDate = dayjs();
@@ -57,10 +59,10 @@ describe("Ledger Tools test sweeeeet", () => {
   //   expect(dayjs().format(appConfig.book_time_format)).toBe("something");
   // });
 
-  // it("should get first book date", async () => {
-  //   let firstDate = await ledgerTools.getFirstDate(true);
-  //   expect(firstDate).toBe("waht");
-  // });
+  it("should get first book date", async () => {
+    let firstDate = await ledgerTools.getFirstDate(true);
+    expect(dayjs(firstDate).format("YYYY-MM-DD")).toBe(dayjs().startOf("month").format("YYYY-MM-DD"));
+  });
 
   it("should clean a dirty Object, and create a clean NLog", () => {
     let log = {

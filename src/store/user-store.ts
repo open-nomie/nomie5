@@ -272,7 +272,6 @@ const userInit = () => {
             // Put
             state.meta.store[key] = value;
             response = Storage.put(config.user_meta_path, state.meta);
-            console.log("saving to storage");
           } else if (!key && !value && !remove) {
             // Get all Stored items
             response = Promise.resolve(state.meta.store);

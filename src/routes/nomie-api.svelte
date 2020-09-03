@@ -140,7 +140,7 @@
           return a.date > b.date ? -1 : 1;
         });
       } catch (e) {
-        console.log(e);
+        console.error(e);
         state.ready = true;
       }
       return state.logs;
