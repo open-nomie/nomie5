@@ -50,11 +50,6 @@
   export const location = undefined;
   export const style = undefined;
 
-  /**
-   * I've messed this all up again. but it's faster and more responsivle
-   * TODO: refactor so it's clean and using the proper amount of Store vs local
-   */
-
   let datePicker;
   let searchInput;
   let appTitle = null;

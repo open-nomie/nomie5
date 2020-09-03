@@ -67,6 +67,7 @@
           type.obj = type.type == "tracker" ? TrackerStore.byTag(type.id) : {};
           state.compare.push(
             new StatsRef({
+              id: `compare-${Math.random()}`,
               type: type.type,
               key: type.id,
               math: type.obj.math || "sum",

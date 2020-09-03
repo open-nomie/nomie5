@@ -45,6 +45,7 @@
   import Storage from "./modules/storage/storage";
   import { LastUsed } from "./store/last-used";
   import { SearchStore } from "./store/search-store";
+  import PinLock from "./containers/pin-lock/pin-lock.svelte";
 
   // Set a better console
   const console = new Logger("APP");
@@ -212,9 +213,7 @@
   <Interactions />
   <StreakModal />
   <OnThisDayModal />
-  <!-- 
-  TODO: .. 
-  <OnThisDayModal /> -->
+  <PinLock />
 
   {#if $UserStore.storageType == 'blockstack' && $Device.offline}
     <div class="offline-notice text-center">No connection to Blockstack.</div>
