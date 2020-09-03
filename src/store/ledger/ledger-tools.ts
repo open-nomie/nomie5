@@ -138,20 +138,24 @@ export default class LedgerTools {
       const books = await this.listBooks();
       if (books.length) {
         const firstBook = books[0].replace(appConfig.book_root + "/", "");
-        let bookYearWeekSplit = firstBook.split("-");
-        console.log({ bookYearWeekSplit });
-        let day = 1 + (bookYearWeekSplit[1] - 1) * 7; // 1st of January + 7 days for each week
-        console.log({ day });
-        let frankenDate = new Date(bookYearWeekSplit[0], 0, day);
-        console.log({ frankenDate });
-        // Create date from book name
-        let date = dayjs(frankenDate, appConfig.book_time_format);
+
+        let date = dayjs(firstBook, appConfig.book_time_format);
+        // console.log({ autoDate: autoDate.format("YYYY MMM DD ddd") });
+
+        // let bookYearWeekSplit = firstBook.split("-");
+        // console.log({ bookYearWeekSplit });
+
+        // let day = 1 + (bookYearWeekSplit[1] - 1) * 7; // 1st of January + 7 days for each week
+        // console.log({ day });
+        // let frankenDate = new Date(bookYearWeekSplit[0], 0, day);
+        // console.log({ frankenDate });
+        // // Create date from book name
+        // let date = dayjs(frankenDate, appConfig.book_time_format);
         // Store it locally so we don't have to look it up all the time.
         this.storage.local.put("firstBook", {
           date: date.toDate().getTime(),
           lastChecked: new Date().getTime(),
         });
-        console.log("What do we have", date.format("YYYY MM DD"));
         return date;
       } else {
         return dayjs();
