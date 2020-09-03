@@ -124,17 +124,21 @@
 
 {#if _date}
   <div class="date-time-bar-wrapper {calendarPosition == 'top' ? 'calendar-top' : 'calendar-bottom'}">
+
     <div class="date-time-bar" {style}>
-      <Button
-        className="date justify-content-start"
-        color="clear"
-        on:click={() => {
-          toggleOpen();
-        }}>
-        <Text size="md" className="text-align-left" color={_opened ? 'primary-bright' : ''} truncate>
-          {$UserStore.meta.is24Hour ? _date.format('ddd D MMM YYYY') : _date.format('ddd MMM D YYYY')}
-        </Text>
-      </Button>
+      <div class="n-row">
+        <slot name="left" />
+        <Button
+          className="date justify-content-start flex-grow "
+          color="clear"
+          on:click={() => {
+            toggleOpen();
+          }}>
+          <Text size="sm" className="text-align-left" color={_opened ? 'primary-bright' : ''} truncate>
+            {$UserStore.meta.is24Hour ? _date.format('ddd D MMM YYYY') : _date.format('ddd MMM D YYYY')}
+          </Text>
+        </Button>
+      </div>
 
       <TimeSelect
         is24Hour={$UserStore.meta.is24Hour ? true : false}

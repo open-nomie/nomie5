@@ -20,7 +20,9 @@
   import NIcon from "../components/icon/icon.svelte";
   import NCell from "../components/cell/cell.svelte";
   import NPoints from "../components/points/points.svelte";
+  import Button from "../components/button/button.svelte";
   import dayjs from "dayjs";
+  import type { OpUnitType } from "dayjs";
 
   import domtoimage from "dom-to-image-chrome-fix";
   import Dymoji from "../components/dymoji/dymoji.svelte";
@@ -47,6 +49,7 @@
   import { ContextStore } from "../store/context-store";
   import Text from "./text/text.svelte";
   import PositivityMenu from "./positivity-selector/positivity-menu.svelte";
+  import Icon from "../components/icon/icon.svelte";
 
   // Consts
   const console = new Logger("capture-log");
@@ -88,22 +91,9 @@
   // TODO: Add a media/photo type of thing that can be added to a log..
 
   const methods = {
-    setDate() {
-      state.date = time.datetimeLocal(state.dateStarter);
-      $ActiveLogStore.start = state.date.getTime();
-      $ActiveLogStore.end = state.date.getTime();
-      state.showCustomDate = false;
-    },
-    async selectDate() {
-      let date = await Interact.selectDate($ActiveLogStore.end ? new Date($ActiveLogStore.end) : new Date());
-
-      if (date) {
-        await tick(10);
-        ActiveLogStore.update((log) => {
-          log.end = date;
-          return log;
-        });
-      }
+    dateAdd(count: number, unit: OpUnitType) {
+      let newDate = dayjs($ActiveLogStore.end || new Date()).add(count, unit);
+      $ActiveLogStore.end = newDate.toDate().getTime();
     },
     clearDate() {
       state.date = null;
@@ -116,20 +106,20 @@
       $ActiveLogStore.lng = null;
       $ActiveLogStore.location = null;
     },
-    toggleCustomDate() {
-      if (state.date) {
-        // They clicked it - solets clear it
-        state.date = null;
-      } else {
-        state.showCustomDate = true;
-      }
-    },
+    // toggleCustomDate() {
+    //   if (state.date) {
+    //     // They clicked it - solets clear it
+    //     state.date = null;
+    //   } else {
+    //     state.showCustomDate = true;
+    //   }
+    // },
     async toggleCustomLocation() {
       if ($ActiveLogStore.lat) {
         $ActiveLogStore.lat = null;
         $ActiveLogStore.lng = null;
       } else {
-        let location = await Interact.pickLocation();
+        let location: any = await Interact.pickLocation();
         if (location) {
           $ActiveLogStore.lat = location.lat;
           $ActiveLogStore.lng = location.lng;
@@ -292,10 +282,6 @@
         }
       }, 120);
     },
-
-    ifPopulated() {
-      return $ActiveLogStore.lat || ($ActiveLogStore.note.trim() || "").length > 0;
-    },
   };
 
   // Clear the settings when saved
@@ -332,14 +318,6 @@
     margin-top: -10px !important;
   }
 
-  .post-score {
-    position: absolute;
-    top: -10px;
-    background-color: var(--color-solid);
-    box-shadow: var(--box-shadow);
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
   .capture-log {
     padding: 10px;
     // background-color: var(--header-background);
@@ -358,86 +336,6 @@
     padding-bottom: 10px;
   }
 
-  .autocomplete-results {
-    background-color: var(--color-solid-1);
-    margin: 0px;
-    border-radius: 2px;
-    padding: 2px;
-    transition: all 0.2s ease-in-out;
-    z-index: 100;
-    &.animate {
-      &.visible {
-        transition: all 0.2s ease-in-out;
-        opacity: 1;
-      }
-      &.hidden {
-        max-height: 0px !important;
-        padding: 0;
-        overflow: hidden;
-        margin: 0;
-        transition: all 0.2s ease-in-out;
-        opacity: 0;
-        pointer-events: none;
-        transform: translateY(60px);
-      }
-    }
-
-    .tracker-list {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-    }
-    .btn {
-      flex-grow: 1;
-      flex-shrink: 1;
-      box-shadow: var(--box-shadow-tight);
-      background-color: var(--color-solid);
-      color: var(--color-inverse-2);
-      margin: 3px;
-      font-size: 0.82rem;
-      padding: 5px 6px;
-    }
-  }
-
-  .more-options {
-    position: relative;
-    z-index: 130;
-    padding: 0px 10px 10px;
-    margin-top: -12px;
-    // background-color: var(--header-background);
-
-    .advanced-options-list {
-      transition: all 0.2s ease-in-out;
-      border: none !important;
-
-      .btn-primary {
-        background-color: var(--color-primary-bright);
-        color: #fff;
-      }
-      &.hidden {
-        height: 1px;
-        overflow: hidden;
-        opacity: 0;
-      }
-      &.visible {
-        height: fit-content;
-      }
-    }
-  }
-  .advanced-toggle {
-    background-color: transparent;
-    color: var(--color-inverse);
-    border: none;
-    display: block;
-    width: 100%;
-    outline: none !important;
-    transition: all 0.2s ease-in-out;
-
-    &.active {
-      color: $red;
-      font-size: 33px;
-    }
-  }
   .save-progress {
     position: absolute;
     top: -4px;
@@ -603,9 +501,9 @@
             <NIcon name="pin" className="mr-2 fill-inverse-2" size="16" />
           </div>
           {#if !$ActiveLogStore.lat}
-            <Text size="md">{Lang.t('general.location', 'Location')}</Text>
+            <Text size="sm">{Lang.t('general.location', 'Location')}</Text>
           {:else}
-            <Text size="md">
+            <Text size="sm">
               {$ActiveLogStore.location || `${math.round($ActiveLogStore.lat, 100)},${math.round($ActiveLogStore.lng, 100)}`}
             </Text>
           {/if}
@@ -615,9 +513,9 @@
                 <NIcon name="close" className="fill-inverse" size="22" />
               </button>
             {:else if $UserStore.alwaysLocate}
-              <Text faded className="pr-1">Current</Text>
+              <Text size="sm" faded className="pr-1">Current</Text>
             {:else}
-              <Text faded className="pr-1">None</Text>
+              <Text size="sm" faded className="pr-1">None</Text>
             {/if}
           </div>
         </NItem>
@@ -631,7 +529,26 @@
               $ActiveLogStore.end = dayjs(evt.detail).toDate().getTime();
             }}>
             <div slot="left">
-              <NIcon name="calendar" className="ml-2 fill-inverse-2" size="16" />
+              <Button
+                size="xs"
+                color="transparent"
+                className="px-1"
+                delay={0}
+                on:click={() => {
+                  methods.dateAdd(-1, 'day');
+                }}>
+                <Icon name="chevronLeft" size="14" />
+              </Button>
+              <Button
+                size="xs"
+                color="transparent"
+                className="px-1"
+                delay={0}
+                on:click={() => {
+                  methods.dateAdd(1, 'day');
+                }}>
+                <Icon name="chevronRight" size="14" />
+              </Button>
             </div>
             <div slot="right">
               {#if $ActiveLogStore.end}

@@ -23,10 +23,10 @@
 
 <style>
   .positivity-menu-pop {
-    position: fixed;
+    position: absolute;
     width: 240px;
-    bottom: calc(100px + env(safe-area-inset-bottom));
-    z-index: 1000;
+    bottom: calc(50px + env(safe-area-inset-bottom));
+    z-index: 3000;
   }
 </style>
 
