@@ -6,10 +6,6 @@
   import { createEventDispatcher } from "svelte";
 
   // Modules
-  // import NomieLog from "../../modules/nomie-log/nomie-log";
-  // import Tracker from "../../modules/tracker/tracker";
-  // import Location from "../../modules/locate/Location";
-  // import Importer from "../../modules/import/import";
   import ImportLoader from "../../modules/import/import-loader";
 
   // Utils
@@ -19,22 +15,15 @@
   // components
   import NModal from "../../components/modal/modal.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
-  // import NIcon from "../../components/icon/icon.svelte";
-  // import NSpinner from "../../components/spinner/spinner.svelte";
 
   // Stores
   import { Interact } from "../../store/interact";
   import { LedgerStore } from "../../store/ledger";
-  // import { TrackerStore } from "../../store/tracker-store";
-  // import { BoardStore } from "../../store/boards";
-  // import { PeopleStore } from "../../store/people-store";
-  // import { Locations } from "../../store/locations";
   import { Lang } from "../../store/lang";
   import Button from "../../components/button/button.svelte";
-  // import { DashboardStore } from "../../store/dashboard-store";
-  // import { ContextStore } from "../../store/context-store";
   import TagBadge from "../../components/tag-badge/tag-badge.svelte";
   import ImporterItem from "./importer-item.svelte";
+  import ProgressBar from "../../components/progress-bar/progress-bar.svelte";
 
   let fileInput; // holder of dom element self
   let fileData = null; // holder of file content
@@ -170,8 +159,13 @@
       return await methods.run(
         "logs",
         async () => {
+          importing.logs.running = true;
           return await importLoader.importLogs((progress) => {
-            importing.logs.progress = progress;
+            importing.logs.progress = progress.progress;
+            if (progress.step == progress.total) {
+              importing.logs.done = true;
+              importing.logs.running = false;
+            }
           });
         },
         confirmation
@@ -233,6 +227,8 @@
           });
           importing.all.running = false;
           importing.all.done = true;
+          importing.logs.done = true;
+          importing.logs.running = false;
           importingAll = false;
           Interact.toast("Import Finishing...");
           await LedgerStore.getFirstDate(true);
@@ -270,7 +266,6 @@
         <Button
           block
           color="primary"
-          shape="round"
           on:click={() => {
             fileInput.click();
           }}>
@@ -296,7 +291,6 @@
 
       {#if (importLoader.normalized.logs || []).length > 0}
         <ImporterItem
-          key="logs"
           emoji="⏰"
           title="Logs"
           count={(importLoader.normalized.logs || []).length}
@@ -305,15 +299,7 @@
             methods.importLogs(true);
           }}>
           {#if importing.logs.running}
-            <div class="progress" style="min-width:200px;">
-              <div
-                class="progress-bar progress-bar-striped progress-bar-animated"
-                role="progressbar"
-                aria-valuenow={importing.logs.progress}
-                aria-valuemin="0"
-                aria-valuemax="100"
-                style="width: {importing.logs.progress}%" />
-            </div>
+            <ProgressBar percentage={importing.logs.progress} className="mt-2" />
           {/if}
         </ImporterItem>
       {/if}

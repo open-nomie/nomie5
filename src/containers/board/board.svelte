@@ -388,10 +388,8 @@
       let note = await inputer.getElements();
       ActiveLogStore.addElement(note.join(" "));
       // If one tap, auto save it.
-      if (tracker.one_tap) {
-        await LedgerStore.saveLog($ActiveLogStore);
-        await ActiveLogStore.clear();
-      }
+      await LedgerStore.saveLog($ActiveLogStore);
+      await ActiveLogStore.clear();
       return note;
     },
 

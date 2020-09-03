@@ -107,11 +107,13 @@ export default class ImportLoader {
         let progress;
         if (status.step < status.total) {
           progress = math.round(100 - ((status.total - status.step) / status.total) * 100);
+        } else if (status.step == status.total) {
+          progress = 100;
         } else {
           progress = 0;
         }
         if (onProgress) {
-          onProgress({ message: `Step ${status.step} of ${status.total}`, progress });
+          onProgress({ message: `Step ${status.step} of ${status.total}`, progress, step: status.step, total: status.total });
         }
       }
     });

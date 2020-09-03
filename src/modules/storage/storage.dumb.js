@@ -46,7 +46,7 @@ const FakeEngine = {
   },
 };
 
-const Storage = {
+export const DumbStorage = {
   // Get user storage type
   storageType() {
     return this._storageType() || "local.dumb";
@@ -98,4 +98,4 @@ const Storage = {
   SideStore,
 };
 
-export default Storage;
+export default DumbStorage;

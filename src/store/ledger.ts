@@ -48,15 +48,18 @@ import type NLog from "../modules/nomie-log/nomie-log";
 import { OfflineQueue } from "./offline-queue-store";
 import { ActiveLogStore } from "./active-log";
 import nid from "../modules/nid/nid";
+import NPaths from "../paths";
+import LedgerTools, { IQueryOptions } from "./ledger/ledger-tools";
+import { LedgerImporter } from "./ledger/ledger-importer";
+import { ITrackersSummary } from "./ledger/ledger-tools";
+import { logAppendLocationIfNeeded } from "./ledger/ledger-add-location";
 
-const console = new Logger("🧺 store/ledger.js");
+const console = new Logger("🧺 store/ledger.js", false);
 // Hooky is for firing off generic events
 
-declare let window: any;
-
-export interface IBooks {}
-
 export interface IToday {}
+export type IBooks = Array<ILedgerBook>;
+export type ILedgerBook = Array<NLog>;
 
 export interface ILedgerState {
   books: IBooks;
@@ -67,6 +70,8 @@ export interface ILedgerState {
   hash?: string;
   memories: Array<NLog>;
 }
+
+let ledgerTools: LedgerTools;
 
 // initialize the Store
 const ledgerInit = () => {
@@ -83,7 +88,7 @@ const ledgerInit = () => {
     memories: [],
   };
 
-  function state(s: any) {
+  function state(s: any = {}) {
     let _state;
     update((state) => {
       _state = { ...state, ...s };
@@ -94,6 +99,10 @@ const ledgerInit = () => {
 
   const methods = {
     hooks: new Hooky(),
+    async init() {
+      ledgerTools = new LedgerTools(Storage);
+      return true;
+    },
     /**
      * Filter Logs by start and end dates
      * @param {Array} logs
@@ -114,37 +123,9 @@ const ledgerInit = () => {
      *
      * @param {String} bookDateString
      */
-    async getBook(bookDateString, realResponse = false) {
-      // Get the book from storage
-      let bookRaw = await Storage.get(`${config.book_root}/${bookDateString}`);
-      let book = null;
-      // Return book with Nomie Logs
-      if (realResponse) {
-        // return a real response - if no book return null
-        // otherwise return array
-        if (bookRaw) {
-          book = (bookRaw || [])
-            .map((log) => {
-              return new NomieLog(log);
-            })
-            .filter((log) => {
-              return log.isValid();
-            });
-          return book;
-        } else {
-          return null;
-        }
-      } else {
-        // Return an array even if no book is found
-        book = (bookRaw || [])
-          .map((log) => {
-            return new NomieLog(log);
-          })
-          .filter((log) => {
-            return log.isValid();
-          });
-        return book;
-      }
+
+    async getBook(dateString: string, allowUndefined: boolean = false): Promise<any> {
+      return await ledgerTools.getBook(dateString, allowUndefined);
     },
     /**
      * Put a Book
@@ -152,8 +133,8 @@ const ledgerInit = () => {
      * @param {String} bookDateString 2012-12-31
      * @param {Array} rows
      */
-    async putBook(bookDateString, rows) {
-      return await Storage.put(`${config.data_root}/books/${bookDateString}`, rows);
+    async putBook(bookDateString: string, rows: ILedgerBook): Promise<any> {
+      return await ledgerTools.saveBook(bookDateString, rows);
     },
     /**
      * Get the First Book
@@ -162,126 +143,47 @@ const ledgerInit = () => {
      * first track
      */
     async getFirstDate(fresh = false) {
-      // Let's get the cache if one exists
-      let defaultPayload = { date: null, lastChecked: null };
-      let bookDetails = Storage.local.get(`firstBook`) || defaultPayload;
-      // If the cache is older than 2 days - let's refresh
-      let age = bookDetails.lastChecked ? Math.abs(dayjs(bookDetails.lastChecked).diff(dayjs(), "day")) : 100;
-      if (age > 2 || fresh) {
-        // Get list of books
-        const books = await methods.listBooks();
-        if (books.length) {
-          const firstBook = books[0].replace(config.book_root + "/", "");
-          let bookYearWeekSplit = firstBook.split("-");
-          let day = 1 + (bookYearWeekSplit[1] - 1) * 7; // 1st of January + 7 days for each week
-          let frankenDate = new Date(bookYearWeekSplit[0], 0, day);
-          // Create date from book name
-          let date = dayjs(frankenDate, config.book_time_format);
-          // Store it locally so we don't have to look it up all the time.
-          Storage.local.put("firstBook", {
-            date: date.toDate().getTime(),
-            lastChecked: new Date().getTime(),
-          });
-          return date;
-        } else {
-          return dayjs();
-        }
-      } else {
-        return dayjs(bookDetails.date);
-      }
+      return ledgerTools.getFirstDate(fresh);
     },
-    /**
-     * Filter Documents - Get the Books
-     * this will only find documents with the data/v01/book prefix
-     */
-    listBooks() {
-      return Storage.list().then((files) => {
-        return files.filter((f) => {
-          return f.search(`${config.book_root}/`) > -1;
-        });
-      });
+    async listBooks() {
+      return ledgerTools.listBooks();
     },
     getLastUsed() {
       return LastUsed;
     },
-    extractTrackerTagAndValues(logs) {
-      logs = logs || [];
-
-      // Setup Tracker Map
-      let trackers = {};
-      // Loop over each log
-      logs.forEach((log) => {
-        // If log is not expanded, expand it
-        if (!log.trackers) {
-          log = new NomieLog(log);
-          log.getMeta();
-        }
-        // Loop over each tracker
-        log.trackers.forEach((trackerElement) => {
-          trackerElement = trackerElement instanceof TrackableElement ? trackerElement : new TrackableElement(trackerElement);
-          let tag = trackerElement.id;
-          trackers[tag] = trackers[tag] || {
-            values: [],
-            tag: tag,
-            hours: [],
-            logs: [],
-          };
-          // Push the value to values array
-          trackers[tag].values.push(trackerElement.value);
-          // Add the Logs for Today - so we can calcuate the score
-          if (trackers[tag].logs.indexOf(log) == -1) {
-            trackers[tag].logs.push(log);
-          }
-          // Get and set hour for the tracker time ball
-          let hour = parseInt(dayjs(log.end).format("H"));
-          if (trackers[tag].hours.indexOf(hour) == -1) {
-            trackers[tag].hours.push(hour);
-          }
-        });
-      });
-      return trackers;
+    extractTrackerTagAndValues(logs): ITrackersSummary {
+      return ledgerTools.getTrackersAndValuesFromLogs(logs);
     },
 
-    /**
-     * Create a hash for Today
-     * This helps us monitor any changes on state.hash
-     * @param {Object} today
-     */
-    hashTodayPayload(today) {
-      let nodes = Object.keys(today).map((tag) => {
-        return `${tag}-${today[tag].values.join(",")}`;
-      });
-      return nid(nodes.join(","));
-    },
     /**
      * Get Today
      * Returns today's book
      */
     async getToday() {
+      let _state: ILedgerState = methods.getState();
       let todayKey = dayjs().format(config.book_time_format);
-
-      if (base.books[todayKey]) {
-        return methods.todayReady();
+      if (_state.books[todayKey]) {
+        _state = methods.todayReady(_state);
       } else {
         let book = await methods.getBook(todayKey);
-        base.books[todayKey] = book || [];
-        base.booksLastUpdate[todayKey] = await methods.getLastUpdate(todayKey);
-        return methods.todayReady();
+        _state.books[todayKey] = book || [];
+        _state.booksLastUpdate[todayKey] = await methods.getLastUpdate(todayKey);
+        _state = methods.todayReady(_state);
       }
+      update((state: any) => {
+        return { ...state, ..._state };
+      });
     },
     /**
      * todayReady
      * Update Today
      */
-    async todayReady() {
-      // Get the start of the day
-      let start = dayjs().startOf("day");
-      // Get end of day
-      let end = dayjs().endOf("day");
-      // Get the book key for today
-      let todayKey = dayjs().format(config.book_time_format);
+    todayReady(state: ILedgerState): ILedgerState {
+      let start = dayjs().startOf("day"); // Get the start of the day
+      let end = dayjs().endOf("day"); // Get end of day
+      let todayKey = dayjs().format(config.book_time_format); // Get the book key for today
       // Get all logs for the key
-      let allLogs = base.books[todayKey];
+      let allLogs = state.books[todayKey];
       // Extract just today's logs from the book
       let todaysLogs = methods.filterLogs(allLogs, {
         start: start.toDate(),
@@ -289,59 +191,17 @@ const ledgerInit = () => {
       });
 
       // Extract Trackers
-      let trackersUsed = methods.extractTrackerTagAndValues(todaysLogs);
-
+      let trackersUsed = ledgerTools.getTrackersAndValuesFromLogs(todaysLogs);
       // Setup data for update
-      let data;
-      update((state) => {
-        data = state;
-        state.today = trackersUsed;
-        state.hash = methods.hashTodayPayload(trackersUsed);
-        return state;
-      });
-      return data;
+      state.today = trackersUsed;
+      state.hash = ledgerTools.hashTrackersSummary(trackersUsed);
+      return state;
     },
     /**
      * Get the Users location if it's needed
      */
-    async locateIfNeeded() {
-      // Should we locate?
-      let shouldLocate = JSON.parse(localStorage.getItem(config.always_locate_key) || "false");
-      if (shouldLocate) {
-        try {
-          // Get the Location
-          let theLoc: any = await locate();
-          // make it a location
-          let location = new Location({ lat: theLoc.latitude, lng: theLoc.longitude });
-          // Find any favorited that are super close
-          let nearest = Locations.findClosestTo(location);
-          // If we have a nearest and a name
-          if (nearest && nearest.name) {
-            location.name = nearest.name;
-          }
-          // Return the match - or the location if we didnt any favorites
-          return location;
-        } catch (e) {
-          // Interact.alert("Error", e.message);
-        }
-      } else {
-        return null;
-      }
-    },
-    /**
-     * Update a Log
-     *
-     * This method will accept a single log, and save it to the correct book.
-     * This is a heavy function with the get and put of the book, so only use it when needed
-     */
-    getIndex(array, func) {
-      let index = undefined;
-      array.forEach((item, i) => {
-        if (func(item)) {
-          index = i;
-        }
-      });
-      return index;
+    async locateIfNeeded(log: NLog): Promise<NLog> {
+      return await logAppendLocationIfNeeded(log);
     },
     /**
      * UpdateLog
@@ -373,10 +233,7 @@ const ledgerInit = () => {
       let previousBook; // incase we're moving a log from one book to another
 
       // Set empty foundIndex
-      let foundIndex = methods.getIndex(book, (row) => {
-        return row._id == log._id;
-      });
-
+      let foundIndex = book.findIndex((r) => r._id == log._id);
       // Did we find anything?
       if (typeof foundIndex === "number") {
         // Update the row
@@ -416,34 +273,9 @@ const ledgerInit = () => {
      * Prepare a log
      */
     async prepareLog(log) {
-      // Make sure start and end are setup
-      log.end = log.end || new Date().getTime();
-      log.start = log.start || log.end - 1000;
-      // If it's not a NomieLog - make it one.
-      log = log instanceof NomieLog ? log : new NomieLog(log);
-      // Log is being prepared to save - on Before Save
+      log = await methods.locateIfNeeded(log);
       methods.hooks.run("onBeforeSave", log);
-      // Clean the dirty dirty
-      delete log._dirty;
-      delete log.trackers;
-      delete log.endDate;
-      delete log.startDate;
-      delete log.people;
-      delete log.context;
-      delete log.duration;
-      // Trim any white space from note
-      log.note = log.note.trim();
-      // Get location if it's needed
-      let location = await methods.locateIfNeeded();
-
-      // If we have a location add to log
-      if (location && !log.lat) {
-        // Add location Data
-        log.lat = location.lat;
-        log.lng = location.lng;
-        log.location = location.name;
-      }
-      log.source = log.source || "n5";
+      log = ledgerTools.prepareLogForSave(log);
       return log;
     },
     /**
@@ -452,7 +284,7 @@ const ledgerInit = () => {
      * @param {String} date YYYY-MM
      */
     getLastUpdatePath(date) {
-      return `${config.data_root}/books/${date}_last`;
+      return NPaths.storage.book(`${date}_last`);
     },
     /**
      * Get the Last Updataed Time for a book
@@ -470,12 +302,11 @@ const ledgerInit = () => {
     async getBookWithSync(date: string) {
       try {
         // The sync part - get book first
-        const book = await Storage.get(`${config.data_root}/books/${date}`);
+        const book = await Storage.get(NPaths.storage.book(date));
         // If no book and on blockstack
         if (!book && Storage.storageType() == "blockstack") {
           // Its blockstack, let's how this is for a new week.
           Interact.toast(`Creating ${dayjs().format(config.book_time_format)} in Blockstack`);
-
           return [];
         } else if (!book) {
           // It's local - so we will assume they're creating a new book
@@ -491,7 +322,7 @@ const ledgerInit = () => {
     }, // end update if out of sync
 
     async getLog(id, book) {
-      let bookData = await Storage.get(`${config.data_root}/books/${book}`);
+      let bookData = await Storage.get(NPaths.storage.book(book));
       let logRaw = bookData.find((row) => row._id == id);
       return logRaw ? new NomieLog(logRaw) : null;
     },
@@ -511,8 +342,9 @@ const ledgerInit = () => {
     async saveLog(log): Promise<void> {
       log = await methods.prepareLog(log);
       try {
-        await this._saveLog(log);
+        let saved = await this._saveLog(log);
       } catch (e) {
+        console.error("error Saving log", e);
         /**
          * Check if Offline or GaiaHub Error
          */
@@ -541,6 +373,7 @@ const ledgerInit = () => {
     /**
      * Real Save Log function - used only in saveLog method.
      * @param log
+     * TODO make this dry enough to put in its own ledgerTools function
      */
     async _saveLog(log: NLog) {
       // Set up a holder for current state
@@ -552,7 +385,7 @@ const ledgerInit = () => {
         // Set the date for the book
         let date = dayjs(new Date(log.end)).format(config.book_time_format);
         // Set Path
-        let bookPath = `${config.data_root}/books/${date}`; // path to book
+        let bookPath = NPaths.storage.book(date);
         // Get the Book - if its blockstack then make sure it exists
         let book = await methods.getBookWithSync(date);
         // Push the log
@@ -657,58 +490,34 @@ const ledgerInit = () => {
       methods.hooks.run("onLogsDeleted", results);
       return results;
     },
-    import(rows, statusFunc) {
-      statusFunc = statusFunc || function () {};
-      return new Promise((resolve, reject) => {
-        base.books = {};
-        rows.forEach((rawLog) => {
-          let log = rawLog instanceof NomieLog ? rawLog : new NomieLog(rawLog);
-          let bookKey = dayjs(new Date(log.end)).format(config.book_time_format);
-          base.books[bookKey] = base.books[bookKey] || [];
-          base.books[bookKey].push(log);
-        });
 
-        let bookDates = Object.keys(base.books).map((date) => {
-          return {
-            date: date,
-            records: base.books[date],
-          };
-        });
-
-        PromiseStep(
-          bookDates,
-          (row) =>
-            methods.putBook(row.date, row.records).then(() => {
-              statusFunc({});
-            }),
-          statusFunc
-        )
-          .then((finished) => {
-            resolve(finished);
-          })
-          .catch(reject);
-      });
-    },
-    /**
-     * Search for a Given term in a users nomie dataset
-     * @param {String} term
-     * @param {Number} year
+    /***
+     * Import Function
      */
-    async search(term, year) {
-      year = year || dayjs().format("YYYY");
-      let start = dayjs().year(year).startOf("year").toDate();
-
-      let end = dayjs(start).endOf("year").toDate();
-
-      let rows = await methods.query({ start, end, search: term });
-      return rows
-        .filter((row) => {
-          return JSON.stringify(row).toLowerCase().indexOf(term.toLowerCase()) > -1;
-        })
-        .sort((a, b) => {
-          return a.end > b.end ? -1 : 1;
-        });
+    async import(rows: Array<NLog>, statusFunc: Function) {
+      let importer = new LedgerImporter(Storage, rows, statusFunc, ledgerTools.getBook, ledgerTools.saveBook);
+      return await importer.import();
     },
+    // /**
+    //  * Search for a Given term in a users nomie dataset
+    //  * @param {String} term
+    //  * @param {Number} year
+    //  */
+    // async search(term, year) {
+    //   year = year || dayjs().format("YYYY");
+    //   let start = dayjs().year(year).startOf("year").toDate();
+
+    //   let end = dayjs(start).endOf("year").toDate();
+
+    //   let rows = await methods.query({ start, end, search: term });
+    //   return rows
+    //     .filter((row) => {
+    //       return JSON.stringify(row).toLowerCase().indexOf(term.toLowerCase()) > -1;
+    //     })
+    //     .sort((a, b) => {
+    //       return a.end > b.end ? -1 : 1;
+    //     });
+    // },
 
     async queryPerson(username, start, end) {
       let logs = await methods.query({ start, end, search: `@${username}` });
@@ -744,42 +553,7 @@ const ledgerInit = () => {
       });
     },
     async getMemories() {
-      let times = [];
-      let firstDate = await methods.getFirstDate();
-      let yearsDiff = dayjs().diff(firstDate, "year");
-
-      if (yearsDiff > 1) {
-        for (var y = 0; y < yearsDiff; y++) {
-          if (y !== 0 && y < 6) {
-            times.push(dayjs().subtract(y, "year"));
-          }
-        }
-      } else if (dayjs().diff(firstDate, "month") > 5) {
-        times.push(dayjs().subtract(6, "month"));
-      }
-
-      let lookupPromises = [];
-      times
-        .filter((time) => time)
-        .forEach((time) => {
-          lookupPromises.push(methods.getDay(time));
-        });
-
-      let years = await Promise.all(lookupPromises);
-      let memories = [];
-      years.forEach((day) => {
-        day = day
-          .filter((log) => {
-            return log.getScrubbedNote().length;
-          })
-          .sort((a, b) => {
-            return a.note.length < b.note.length ? 1 : -1;
-          });
-
-        if (day.length) {
-          memories.push(day[0]);
-        }
-      });
+      let memories = await ledgerTools.getMemories(methods.getDay);
       update((state) => {
         state.memories = memories;
         return state;
@@ -800,89 +574,9 @@ const ledgerInit = () => {
      * This is used for almost everything that needs logs.. Stats, History, Today, etc.
      * @param {Object} options
      */
-    async query(options) {
-      options = options || {};
-      // Fresh? Should pull from storage not cache
-      options.fresh = options.fresh ? options.fresh : false;
-      // Start
-      let startTime = dayjs(options.start || new Date()).startOf("day");
-      // End Time
-      let endTime = dayjs(options.end || new Date()).endOf("day");
-      // Diff Betwen the two
-      const bookFormat: any = config.book_time_unit || "week";
-      let diff = endTime.diff(startTime, bookFormat);
-      // Define array of "book paths" to get
-      let books_to_get = [];
-      let state = methods.getState(); // get ledger state;
-
-      // If there's no diff, no need get multiple books
-      if (diff === 0) {
-        books_to_get.push(endTime.format(config.book_time_format));
-      } else {
-        // We need to get multiple books.
-        books_to_get.push(startTime.format(config.book_time_format));
-        diff = diff + 1; // add one book for good measure
-        for (let i = 0; i < diff; i++) {
-          // Push each of the formated dates YYYY-w to an array
-          books_to_get.push(
-            dayjs(startTime)
-              .add(i + 1, bookFormat)
-              .format(config.book_time_format)
-          );
-        }
-      }
-
-      // Batch the Book Lookups
-      // This wil make blockstack looksup much faster.
-      const batch_all = async () => {
-        let rows = [];
-        let maxPerBatch = 10;
-        let chunks = arrayUtils.chunk(books_to_get, maxPerBatch);
-        for (var i = 0; i < chunks.length; i++) {
-          let books = await get_batch(chunks[i]);
-          books.forEach((book) => {
-            book.forEach((row) => {
-              row = row instanceof NomieLog ? row : new NomieLog(row);
-              rows.push(row);
-            });
-          });
-        }
-        return rows;
-      };
-
-      // Get a Specific Batch of Books
-      const get_batch = async (booksChunk) => {
-        let gets = [];
-        booksChunk.forEach((bookPath) => {
-          state.books[bookPath] = state.books[bookPath] || [];
-          if (state.books[bookPath].length == 0 || options.fresh === true) {
-            let getBook = methods.getBook(bookPath);
-            getBook.then((rows) => {
-              state.books[bookPath] = rows;
-            });
-            gets.push(getBook);
-          } else {
-            gets.push(Promise.resolve(state.books[bookPath]));
-          }
-        });
-        return Promise.all(gets);
-      };
-
-      /** Get all  */
-      let get_all = async () => {
-        let rows = await batch_all();
-        update((s) => {
-          return state;
-        });
-        return methods.filterLogs(rows, options);
-      }; // end get_all()
-
-      try {
-        let rows = await get_all();
-        return rows.sort((a, b) => (a.end < b.end ? 1 : -1));
-      } catch (e) {
-        console.error("Error caught ", e);
-      }
+    async query(options: IQueryOptions) {
+      let state = methods.getState();
+      return ledgerTools.query(options, state.books);
     },
   };
 
