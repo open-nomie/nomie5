@@ -159,7 +159,7 @@
 {#if $Interact.trackerEditor.show}
 
   <div class="n-tracker-editor">
-    <NModal type="fullscreen" allowClose on:close={methods.cancel}>
+    <NModal type="fullscreen" allowClose on:close={methods.cancel} style="z-index:2002">
 
       <header slot="header" class="n-toolbar-grid">
         <button class="left btn btn-clear text-primary-bright" on:click|preventDefault={methods.cancel}>Cancel</button>
@@ -216,7 +216,7 @@
         </NInput>
 
         {#if data.tracker.type == 'picker'}
-          <PickerList bind:list={data.tracker.picks} className="px-1" itemClass="px-1" on:change={(evt) => {}} />
+          <PickerList mode="edit" canSelect={false} bind:tracker={data.tracker} className="px-1" itemClass="px-1" on:change={(evt) => {}} />
         {/if}
 
         {#if data.tracker.type == 'tick'}

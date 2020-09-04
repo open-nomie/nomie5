@@ -107,8 +107,12 @@
   }
 
   function editTracker() {
-    Interact.editTracker(tracker);
-    Interact.dismissTrackerInput();
+    TrackerStore.trackerOptions(tracker, {
+      click() {
+        Interact.dismissTrackerInput();
+      },
+    });
+    // Interact.editTracker(tracker);
   }
 
   // When Component Mounts
@@ -143,6 +147,11 @@
       }
     }
   }
+  :global(.tracker-input .edit-toggle) {
+    position: fixed;
+    top: 20px;
+    z-index: 1000;
+  }
   .footer .btn {
     border-radius: 50px;
   }
@@ -163,7 +172,7 @@
       <span class="animate up text-md {data.ready ? 'visible' : 'hidden'}">{tracker.emoji} {tracker.label}</span>
     </div>
     <button class="btn btn-clear tap-icon right" on:click={editTracker}>
-      <NIcon name="edit" size="26" />
+      <NIcon name="more" size="26" />
     </button>
   </div>
   <!-- Is the data ready -->
@@ -180,11 +189,13 @@
             data.value = value.detail;
           }} />
       {:else if tracker.type === 'picker'}
-        <PickerInput
-          {tracker}
-          on:change={(evt) => {
-            data.suffix = evt.detail;
-          }} />
+        <div class="p-2">
+          <PickerInput
+            {tracker}
+            on:change={(evt) => {
+              data.suffix = evt.detail;
+            }} />
+        </div>
       {:else if tracker.type === 'value' || tracker.type === 'tick'}
         <div id="keypad-holder">
           <NCalculator

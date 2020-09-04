@@ -166,11 +166,11 @@
 
         </div>
       {:else if state.view == 'where'}
-        {#if state.log.lat}
+        {#if state.log}
           <div style="height:200px; max-height:200px; min-height:200px; overflow:hidden">
             <NMap
               style="max-height:200px;"
-              locations={[{ lat: state.log.lat, lng: state.log.lng, name: state.log.location }]}
+              locations={state.log.lat ? [{ lat: state.log.lat, lng: state.log.lng, name: state.log.location }] : []}
               picker={true}
               on:change={(event) => {
                 state.log.lat = event.detail.lat;

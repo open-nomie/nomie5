@@ -44,7 +44,12 @@
     {/if}
 
     {#if $TrackerDesignerStore.tracker.type == 'picker'}
-      <PickerList bind:list={$TrackerDesignerStore.tracker.picks} on:change={(evt) => {}} />
+      <PickerList
+        mode="edit"
+        canSelect="false"
+        showSaveEditButton={false}
+        bind:tracker={$TrackerDesignerStore.tracker}
+        on:change={(evt) => {}} />
     {/if}
 
     {#if $TrackerDesignerStore.tracker.type == 'note'}
