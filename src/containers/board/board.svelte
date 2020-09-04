@@ -223,12 +223,6 @@
           deleteBoard();
         },
       },
-
-      // {
-      //   title: "Share as Tracker Pack",
-      //   click() {
-      //   },
-      // },
     ];
 
     Interact.popmenu({
@@ -346,16 +340,6 @@
       });
     },
 
-    getLastUsed(tracker) {
-      if ($LastUsed.hasOwnProperty(tracker.tag)) {
-        let last = $LastUsed[tracker.tag];
-        if (last) {
-          return dayjs(last.log.end);
-        }
-      }
-      return null;
-    },
-
     /**
      * Create a new board
      * This will prompt the user to input a name
@@ -389,7 +373,7 @@
 
       if (note.length) {
         ActiveLogStore.addElement(note.join(" "));
-        if (inputer.lastAction == "save") {
+        if (inputer.lastAction == "save" || tracker.one_tap) {
           await LedgerStore.saveLog($ActiveLogStore);
           await ActiveLogStore.clear();
         }
@@ -441,49 +425,26 @@
     showTrackerOptions(tracker) {
       // Make it a real tracker in case it's not - doubling up shouldn't be a problem.
       tracker = new Tracker(tracker);
-      // Define buttons
-      let buttons = [
-        {
-          title: Lang.t("tracker.stats", "Stats"),
-          click() {
-            Interact.openStats(`#${tracker.tag}`);
-          },
-        },
-        {
-          title: Lang.t("tracker.streak", "Streak"),
-          click() {
-            Interact.openStreak(`#${tracker.tag}`);
-          },
-        },
-        {
-          title: Lang.t("tracker.edit-tracker", "Edit Tracker"),
-          click() {
-            Interact.editTracker(tracker);
-          },
-        },
-      ];
+
       // Remove Tracker Button Prompts
       const removeButton = {
         title: `${Lang.t("general.remove")}...`,
-        click() {
+        async click() {
           // If we're on All - warn the hell out of the user
           if ($BoardStore.active === "all") {
-            Interact.confirm(Lang.t("general.delete-from-nomie", { thing: tracker.label }), Lang.t("tracker.delete-description")).then(
-              (res) => {
-                if (res) {
-                  // User said to delete it - so delete it.
-                  TrackerStore.deleteTracker(tracker).then((done) => {});
-                }
-              }
+            const confirmed = Interact.confirm(
+              Lang.t("general.delete-from-nomie", { thing: tracker.label }),
+              Lang.t("tracker.delete-description")
             );
+            if (confirmed) {
+              TrackerStore.deleteTracker(tracker).then((done) => {});
+            }
           } else {
             // We're on another board - allow them to just remove the tracker
-            Interact.confirm(`Remove ${tracker.label} from this board?`, "You can always re-add it later").then((res) => {
-              if (res) {
-                // Remove it from the active Board
-                BoardStore.removeTrackerFromBoard(tracker, $BoardStore.active);
-              }
-            });
+            const confirmed = Interact.confirm(`Remove ${tracker.label} from this board?`, "You can always re-add it later");
+            if (confirmed) {
+              BoardStore.removeTrackerFromBoard(tracker, $BoardStore.active);
+            }
           }
         },
       };
@@ -497,14 +458,12 @@
         }
       }
       // Add Remove button to array
-      buttons.push(removeButton);
-
-      // Fire Pop menu
-      Interact.popmenu({
+      TrackerStore.trackerOptions(tracker, {
         title: `${tracker.emoji || "⚪️"} ${tracker.label || tracker.tag}`,
         description: subtitle,
-        buttons: buttons,
+        buttons: [removeButton],
       });
+      // Fire Pop menu
     }, // end showTrackerOptions
   };
 
@@ -560,11 +519,6 @@
 
     // Active Log Change
     activeLogUnsub = ActiveLogStore.subscribe((log) => {
-      /**
-       * Active Log Change
-       * When the log changes, extract the trackers so we can
-       * make them pulse
-       */
       state.addedTrackers = new NomieLog(log).getMeta().trackers.map((t) => t.id);
     });
     LedgerStore.getToday();

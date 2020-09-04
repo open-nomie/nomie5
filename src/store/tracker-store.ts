@@ -4,18 +4,16 @@ import { writable } from "svelte/store";
 // Modules
 import Storage from "../modules/storage/storage";
 import Tracker from "../modules/tracker/tracker";
-import StarterPack from "../modules/packs/default-trackers";
+import type { ITracker } from "../modules/tracker/tracker";
 
 // Config
-import config from "../config/appConfig";
 
 import snakeCase from "../utils/snake-case/snake-case";
 import tick from "../utils/tick/tick";
 import downloader from "../modules/download/download";
-import extractor from "../utils/extract/extract";
 
 // Stores
-import { Interact } from "./interact";
+import { Interact, IPopMenuOptions } from "./interact";
 import { BoardStore } from "./boards";
 import { TrackerLibrary } from "./tracker-library";
 import { Lang } from "./lang";
@@ -27,6 +25,8 @@ import NPaths from "../paths";
 
 const console = new Logger("🌟 TrackerStore 🌟");
 
+// NOTE: Having this be a class is pretty pointless, as it doesn't help the reactive stuff
+// Todo. eventually change this to a regular object
 class TrackerStoreState {
   trackers: ITrackers;
   showTimers: boolean;
@@ -221,6 +221,44 @@ const trackerStoreInit = () => {
 
     byTag(tag) {
       return methods.getByTag(tag);
+    },
+
+    async trackerOptions(tracker: ITracker, options: { title?: string; buttons?: Array<any>; description?: string; click?: Function }) {
+      options = options || {};
+      const click = () => {
+        if (options.click) {
+          options.click();
+        }
+      };
+      let buttons = [
+        {
+          title: Lang.t("tracker.stats", "Stats"),
+          click() {
+            Interact.openStats(`#${tracker.tag}`);
+            click();
+          },
+        },
+        {
+          title: Lang.t("tracker.streak", "Streak"),
+          click() {
+            Interact.openStreak(`#${tracker.tag}`);
+            click();
+          },
+        },
+        {
+          title: Lang.t("tracker.edit-tracker", "Edit Tracker"),
+          click() {
+            Interact.editTracker(tracker);
+            click();
+          },
+        },
+      ];
+      const trackerPopMenu: IPopMenuOptions = {
+        title: options.title || "Tracker Options",
+        description: options.description || undefined,
+        buttons: options.buttons ? [...buttons, ...options.buttons] : buttons,
+      };
+      return await Interact.popmenu(trackerPopMenu);
     },
 
     /**
