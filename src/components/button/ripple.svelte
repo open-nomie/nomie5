@@ -45,7 +45,7 @@
     opacity: 0;
   }
   .ball.grow {
-    animation: ripple 2s;
+    animation: ripple 1.5s;
     background-color: var(--color-translucent-inverse);
   }
 
@@ -61,8 +61,8 @@
       opacity: 0.2;
     }
     100% {
-      width: 100px;
-      height: 100px;
+      width: 150px;
+      height: 150px;
       transform: scale(20);
       opacity: 0;
     }

@@ -45,7 +45,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 2000;
+    z-index: 2002;
     padding-bottom: env(safe-area-inset-bottom);
 
     .list {

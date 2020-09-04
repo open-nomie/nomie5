@@ -127,7 +127,7 @@ class CSVRImport {
         let log = this.toLog(row, index);
         logs.push(log);
       } catch (e) {
-        console.log(e);
+        console.error(e);
         this.errors.push(`Row #${index} errored: ${e.message}`);
       }
     });

@@ -52,7 +52,7 @@
     left: 0;
     right: 0;
     z-index: 2200;
-    background-color: rgba(0, 0, 0, 0.88);
+    background-color: var(--color-full-screen);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -67,7 +67,7 @@
       opacity: 0;
       .card {
         opacity: 0;
-        transform: scaleY(0.1) scaleX(0.1);
+        // transform: scale(0.) translateY(30);
       }
     }
     .card {
@@ -115,7 +115,7 @@
   }
 </style>
 
-<div class="full-screen dark-glass alert-dialog {show === true ? 'visible' : 'hidden'}">
+<div class="full-screen alert-dialog {show === true ? 'visible' : 'hidden'}">
   <div class="alert-dialog-window card">
     {#if title}
       <div class="card-title {!hasSlot && !message ? 'message-less' : 'message'}">{title}</div>

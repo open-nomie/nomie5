@@ -5077,8 +5077,11 @@ button:focus {
   border: none;
   color: var(--color-inverse); }
   .btn-light:hover {
-    background-color: var(--color-solid-1);
-    color: var(--color-primary); }
+    background-color: var(--color-grey-9) !important;
+    color: var(--color-primary-bright) !important; }
+  .btn-light:active {
+    background-color: var(--color-grey-8) !important;
+    color: var(--color-primary-bright) !important; }
 
 .btn-circle {
   width: 40px;

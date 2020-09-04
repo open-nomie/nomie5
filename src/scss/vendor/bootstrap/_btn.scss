@@ -255,8 +255,12 @@ button:focus {
   border: none;
   color: var(--color-inverse);
   &:hover {
-    background-color: var(--color-solid-1);
-    color: var(--color-primary);
+    background-color: var(--color-grey-9) !important;
+    color: var(--color-primary-bright) !important;
+  }
+  &:active {
+    background-color: var(--color-grey-8) !important;
+    color: var(--color-primary-bright) !important;
   }
 }
 
