@@ -422,15 +422,6 @@ Note: Your data will not automatically move over. You'll first need to export it
             </NItem>
           </div>
 
-          <NItem className="bg-transparent mt-4" title="Danger Zone">
-            <div slot="left">
-              <Text size="lg">⚠️</Text>
-            </div>
-            <div slot="right">
-              <Button color="danger" size="sm" on:click={methods.deleteEverything}>Destory all Data</Button>
-            </div>
-          </NItem>
-
           <NItem className="bg-transparent">
             <div class="px-2 py-4 text-center">
               <Text size="md" className="mb-2">
@@ -444,6 +435,15 @@ Note: Your data will not automatically move over. You'll first need to export it
               <Text size="sm" inline>
                 <a class="text-primary-bright" href="https://www.happydata.org" traget="_system">Happy Data, LLC</a>
               </Text>
+            </div>
+          </NItem>
+
+          <NItem className="bg-transparent mt-4 mb-2" title="Danger Zone">
+            <div slot="left">
+              <Text size="lg">⚠️</Text>
+            </div>
+            <div slot="right">
+              <Button color="danger" size="sm" on:click={methods.deleteEverything}>Destory all Data</Button>
             </div>
           </NItem>
 

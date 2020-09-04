@@ -23,7 +23,7 @@
   export let className = "";
   export let itemClass = "";
   export let list: Array<any> = [];
-  export let editWithText = true;
+  // export let editWithText = true;
   export let mode = "select";
   export let tracker: ITracker;
   export let showHeaderContent: boolean = true;
