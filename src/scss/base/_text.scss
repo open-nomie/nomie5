@@ -34,15 +34,7 @@
 .bg-solid {
   background-color: var(--color-solid);
 }
-.fill-primary-bright {
-  fill: var(--color-primary-bright) !important;
-}
-.fill-green {
-  fill: var(--color-green) !important;
-}
-.fill-red {
-  fill: var(--color-red) !important;
-}
+
 .bg-red {
   background-color: var(--color-red) !important;
 }
@@ -55,18 +47,7 @@
 .bg-orange {
   background-color: var(--color-orange) !important;
 }
-.fill-inverse {
-  fill: var(--color-inverse) !important;
-}
-.fill-inverse-1 {
-  fill: var(--color-inverse-1) !important;
-}
-.fill-inverse-2 {
-  fill: var(--color-inverse-2) !important;
-}
-.fill-primary {
-  fill: var(--color-primary) !important;
-}
+
 .bg-solid-1 {
   background-color: var(--color-solid-1);
 }
@@ -113,21 +94,6 @@
 .font-140 {
   font-size: 1.4rem;
 }
-.fill-faded {
-  fill: var(--color-faded) !important;
-}
-.fill-faded-1 {
-  fill: var(--color-faded-1) !important;
-}
-.fill-white {
-  fill: #fff !important;
-}
-.fill-faded-2 {
-  fill: var(--color-faded-2) !important;
-}
-.fill-faded-3 {
-  fill: var(--color-faded-3) !important;
-}
 
 .text-faded {
   color: var(--color-faded) !important;
@@ -164,4 +130,43 @@
 
 .text-xxl {
   font-size: 2.3rem !important;
+}
+
+/// Icon Fills
+
+.fill-faded {
+  stroke: var(--color-faded) !important;
+}
+.fill-faded-1 {
+  stroke: var(--color-faded-1) !important;
+}
+.fill-white {
+  stroke: #fff !important;
+}
+.fill-faded-2 {
+  stroke: var(--color-faded-2) !important;
+}
+.fill-faded-3 {
+  stroke: var(--color-faded-3) !important;
+}
+.fill-primary-bright {
+  stroke: var(--color-primary-bright) !important;
+}
+.fill-green {
+  stroke: var(--color-green) !important;
+}
+.fill-red {
+  stroke: var(--color-red) !important;
+}
+.fill-inverse {
+  stroke: var(--color-inverse) !important;
+}
+.fill-inverse-1 {
+  stroke: var(--color-inverse-1) !important;
+}
+.fill-inverse-2 {
+  stroke: var(--color-inverse-2) !important;
+}
+.fill-primary {
+  stroke: var(--color-primary) !important;
 }

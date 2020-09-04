@@ -73,13 +73,13 @@
   }
 
   :global(#app-tabs a[aria-current="page"] svg) {
-    fill: var(--color-primary-bright) !important;
+    stroke: var(--color-primary-bright) !important;
     transform: scale(1.1);
     transition: all 0.2s ease-in-out;
   }
 
   :global(#app-tabs a[aria-current="page"] svg .fill) {
-    fill: var(--color-primary-bright) !important;
+    stroke: var(--color-primary-bright) !important;
   }
 
   :global(#app-tabs a) {
@@ -103,22 +103,10 @@
       margin-bottom: 0;
     }
 
-    &:after {
-      content: "";
-      // position: absolute;
-      // bottom: -6px;
-      // left: 40%;
-      // right: 40%;
-      // height: 0px;
-      // border-radius: 2px;
-      // background-color: rgba($primaryBright, 0);
-    }
-
     // When Active
     &[aria-current="page"] {
       color: var(--color-primary-bright);
       svg {
-        fill: var(--color-primary-bright);
         transform: scale(1.1);
         transition: all 0.2s ease-in-out;
       }
@@ -162,7 +150,7 @@
 
       {#if $FeatureStore.people}
         <Link to={NPaths.routes.people()}>
-          <Icon name="people" />
+          <Icon name="user" />
           {#if !hideLabels}
             <label>{Lang.t('tabs.people')}</label>
           {/if}

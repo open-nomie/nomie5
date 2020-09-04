@@ -47,8 +47,8 @@
   import Button from "../components/button/button.svelte";
   import NextPrevCal from "../components/next-prev-cal/next-prev-cal.svelte";
 
-  export const location = undefined;
-  export const style = undefined;
+  export let location = undefined;
+  export let style = undefined;
 
   let datePicker;
   let searchInput;

@@ -24,6 +24,8 @@
   import Text from "../components/text/text.svelte";
   import Button from "../components/button/button.svelte";
 
+  export let location = undefined;
+
   let state = {
     people: [],
     view: "time",

@@ -454,9 +454,9 @@
         class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 || $ActiveLogStore.photo ? 'populated' : 'empty'}">
         <button class="btn more-button btn-icon {state.advanced ? 'active' : ''}" on:click={toggleAdvanced}>
           {#if state.advanced}
-            <NIcon name="chevronDown" className="fill-white" />
+            <NIcon name="more" className="fill-white" />
           {:else}
-            <NIcon name="chevronRight" className="fill-inverse-2" />
+            <NIcon name="more" className="fill-grey-5" />
           {/if}
         </button>
 
@@ -477,7 +477,7 @@
           </button>
         {:else}
           <button class="save-button" on:click={methods.logSave}>
-            <NIcon name="sendFilled" style="fill: #FFF;" size="16" />
+            <NIcon name="arrowUp" style="fill: #FFF;" size="20" />
           </button>
         {/if}
       </div>

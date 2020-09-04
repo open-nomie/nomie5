@@ -509,8 +509,8 @@
     </div>
   {:else}
     <div class="n-panel center-all">
-      <Spinner size={18} style="margin-right:6px;" />
-      Loading...
+      <Spinner size={18} />
+      <NText size="sm" style="margin-left:10px;">Loading...</NText>
     </div>
   {/if}
 </NLayout>
