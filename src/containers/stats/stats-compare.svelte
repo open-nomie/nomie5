@@ -14,6 +14,7 @@
   import tick from "../../utils/tick/tick";
   import dataDistance from "../../modules/data-distance/data-distance";
   import math from "../../utils/math/math";
+  import Button from "../../components/button/button.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -365,7 +366,8 @@
     <div class="p-2" />
   {/if}
 
-  <div class="p-2 pt-2">
-    <button class="btn btn-light btn-block" on:click={compareType}>{Lang.t('stats.select-comparison', 'Select Comparison')}...</button>
+  <div class="p-2 pt-2 n-row">
+    <Button className="mr-1" block color="light" on:click={findRelatedTrackers}>{Lang.t('stats.find-related', 'Auto Compare')}...</Button>
+    <Button className="ml-1" block color="light" on:click={compareType}>{Lang.t('stats.select-comparison', 'Select Manually')}...</Button>
   </div>
 {/if}
