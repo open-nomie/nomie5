@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 export default {
   // move(arr, old_index, new_index) {
   //   if (new_index >= arr.length) {
@@ -14,18 +16,9 @@ export default {
     return [arr.splice(0, half), arr.splice(-half)];
   },
   unique(array) {
-    return [...new Set(array)];
+    return _.uniq(array);
   },
   chunk(array, chunkSize) {
-    var arrayOfArrays = [];
-
-    if (array.length <= chunkSize) {
-      arrayOfArrays.push(array);
-    } else {
-      for (var i = 0; i < array.length; i += chunkSize) {
-        arrayOfArrays.push(array.slice(i, i + chunkSize));
-      }
-    }
-    return arrayOfArrays;
+    return _.chunk(array, chunkSize);
   },
 };

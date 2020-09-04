@@ -1,12 +1,10 @@
 import calculate from "../calculate/calculate";
+import _ from "lodash";
+
 export default {
   // Sum an array
-  sum: (arr) => {
-    if (arr.length) {
-      return arr.reduce((sum, x) => sum + x);
-    } else {
-      return 0;
-    }
+  sum: (arr: Array<number>) => {
+    return (arr || []).length ? _.sum(arr) : 0;
   },
   // Round a number
   round: (num: number, amount?: number): number => {
@@ -14,43 +12,29 @@ export default {
     return Math.round(amount * num) / amount;
   },
   // Get max from array
-  max: (arr): number => {
-    if (arr.length) {
-      return Math.max(...arr);
-    } else {
-      return 0;
-    }
+  max: (arr: Array<number>): number => {
+    return (arr || []).length ? _.max([...arr]) : 0;
   },
   // Get the min from array
   min: (arr, includeZero = false) => {
     if (arr.length) {
       arr = includeZero == true ? arr : arr.filter((a) => a);
-      let min = Math.min(...arr);
-      return min;
+      return _.min(arr);
     } else {
       return 0;
     }
   },
   // Average an Array
-  average: (arr, ignoreZeros?) => {
+  average: (arr: Array<number>, ignoreZeros?: boolean): number => {
+    arr = arr || [0];
+    arr = arr.length ? arr : [0];
     if (ignoreZeros) {
-      arr = arr.filter((row) => {
-        if (row === 0) {
-          return false;
-        } else {
-          return true;
-        }
-      });
+      arr = ignoreZeros ? arr.filter((row) => row) : arr;
     }
-    if (arr.length) {
-      let v = arr.reduce((p, c) => p + c, 0) / arr.length;
-      return Math.round(100 * v) / 100;
-    } else {
-      return 0;
-    }
+    return _.round(_.mean(arr), 2) || 0;
   },
   // Get the percentage of 2 numbers
-  percentage: (n1, n2, flip?: boolean) => {
+  percentage: (n1, n2, flip?: boolean): number => {
     if (flip) {
       return ((n1 - n2) / n1) * 100;
     } else {
@@ -58,20 +42,15 @@ export default {
     }
   },
   // Random Range from to numbers
-  random_range: (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+  random_range: (min: number, max: number): number => {
+    return _.random(min, max);
   },
   // Random from Array
-  random: (arr) => {
-    if (arr.length) {
-      return arr[Math.floor(Math.random() * arr.length)];
-    } else {
-      return null;
-    }
+  random: (arr: Array<number>): any => {
+    return _.sample(arr);
   },
   //https://gist.github.com/IceCreamYou/6ffa1b18c4c8f6aeaad2
   percentile(arr) {
-    let min = this.min(arr, true) || 0;
     let max = this.max(arr);
     return arr.map((value, i) => {
       return this.round(this.percentage(max, value), 10);
