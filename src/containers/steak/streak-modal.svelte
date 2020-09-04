@@ -18,6 +18,8 @@
   import { Interact } from "../../store/interact";
   import { LedgerStore } from "../../store/ledger";
   import { TrackerStore } from "../../store/tracker-store";
+  import NextPrevCal from "../../components/next-prev-cal/next-prev-cal.svelte";
+  import Text from "../../components/text/text.svelte";
 
   const timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
   const dateFormat = $UserStore.meta.is24Hour ? "MM/DD/YYYY" : "MMM D YYYY";
@@ -130,15 +132,10 @@
         </button>
         <main slot="main">{$Interact.streak.show}</main>
       </NToolbarGrid>
-      <NToolbarGrid>
-        <main slot="main" class="w-100 text-center">{state.date.format('MMM YYYY')}</main>
-        <button class="btn btn-clear tap-icon" slot="left" on:click={prev}>
-          <NIcon name="chevronLeft" />
-        </button>
-        <button class="btn btn-clear tap-icon" slot="right" on:click={next}>
-          <NIcon name="chevronRight" />
-        </button>
-      </NToolbarGrid>
+      <div class="n-toolbar n-row px-3">
+        <Text bold className="filler">{state.date.format('MMM YYYY')}</Text>
+        <NextPrevCal on:next={next} on:previous={prev} hideCal={true} style="max-width:80px;" />
+      </div>
     </div>
     <div class="p-3">
 
