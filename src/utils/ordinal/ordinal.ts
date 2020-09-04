@@ -16,3 +16,4 @@ const Ordinal = (value) => {
 };
 
 export { Ordinal };
+export default Ordinal;
