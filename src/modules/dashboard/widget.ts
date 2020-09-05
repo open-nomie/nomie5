@@ -1,33 +1,34 @@
-import TrackableElement, { ITrackableElement } from "../trackable-element/trackable-element";
+import TrackableElement from "../trackable-element/trackable-element";
+import type { ITrackableElement } from "../trackable-element/trackable-element";
 import dayjs, { Dayjs, OpUnitType } from "dayjs";
 import nid from "../nid/nid";
 import type NLog from "../nomie-log/nomie-log";
 import { strToColor } from "../../components/dymoji/dymoji";
 import { UserStore } from "../../store/user-store";
 import { truncateText } from "../../utils/text/text";
+import NDate from "../../utils/ndate/ndate";
 /**
  * Widget Date
  * The blockdate is either the start or end of a TimeFrame
  * They can have a hard coded date, or be dynamically set
  * using add, subtract, startOf and endOf
  */
-export interface IWidgetDate {
+export interface WidgetDateConfig {
   date?: Dayjs;
   add?: Array<any>;
   subtract?: Array<any>;
-  startOf?: any;
-  endOf?: any;
-  toDate(): Date;
+  startOf?: OpUnitType;
+  endOf?: OpUnitType;
 }
 
-export class WidgetDate implements IWidgetDate {
+export class WidgetDate {
   date?: Dayjs;
-  subtract?: Array<any>;
   add?: Array<any>;
-  endOf?: OpUnitType;
+  subtract?: Array<any>;
   startOf?: OpUnitType;
+  endOf?: OpUnitType;
 
-  constructor(part: IWidgetDate) {
+  constructor(part: WidgetDateConfig) {
     if (part) {
       this.date = part.date;
       this.subtract = part.subtract;
@@ -37,8 +38,8 @@ export class WidgetDate implements IWidgetDate {
     }
   }
 
-  public toDate() {
-    let date = dayjs();
+  public toDate(): Dayjs {
+    let date = this.date ? this.date : dayjs();
     if (this.subtract instanceof Array) {
       date = date.subtract(this.subtract[0], this.subtract[1]);
     }
@@ -51,7 +52,7 @@ export class WidgetDate implements IWidgetDate {
     if (this.endOf) {
       date = date.endOf(this.endOf);
     }
-    return date.toDate();
+    return date;
   }
 }
 
@@ -63,12 +64,11 @@ export class WidgetDate implements IWidgetDate {
  * TODO: Make a custom option
  */
 
-export interface IWidgetTimeFrame {
+export interface WidgetTimeFrameConfig {
   id?: string;
   label?: string;
-  start: IWidgetDate;
-  end: IWidgetDate;
-  getLabel(): string;
+  start?: WidgetDateConfig;
+  end?: WidgetDateConfig;
 }
 
 export class WidgetTimeFrame {
@@ -77,13 +77,13 @@ export class WidgetTimeFrame {
   start: WidgetDate;
   end: WidgetDate;
 
-  constructor(payload: any = {}) {
+  constructor(payload: WidgetTimeFrameConfig) {
     this.label = payload.label;
     this.start = new WidgetDate(payload.start);
     this.end = new WidgetDate(payload.end);
-    this.id = payload.id;
-    this.id = this.id || nid();
+    this.id = payload.id || nid();
   }
+
   public getLabel(): string {
     let defaultDate = this.start.date ? `${this.start.date.format("MMM DD")} to ${this.end.date.format("MMM DD YYYY")}` : "Unknown";
     return this.label || defaultDate;
@@ -97,12 +97,12 @@ export class WidgetTimeFrame {
  * and what the timeframe is.
  */
 
-export interface IWidget {
-  element: ITrackableElement;
+export interface WidgetConfig {
+  element?: ITrackableElement;
   id?: string;
   size?: "sm" | "md" | "lg";
-  type: string;
-  timeRange: IWidgetTimeFrame;
+  type?: string;
+  timeRange?: WidgetTimeFrame;
   includeAvg?: boolean;
   description?: string;
   compareValue?: number;
@@ -114,65 +114,54 @@ export interface IWidget {
   positivity?: any;
   stats?: any;
   lastUsed?: any;
-  getTitle(): string;
-  getLabel(): string;
-  isValid(): boolean;
-  toObject(): any;
-  getStartDate(): Date;
-  getEndDate(): any;
-  getDateRange(): Array<Date>;
 }
 
-export class Widget implements IWidget {
-  element: ITrackableElement;
-  id?: string;
-  type: string = "value";
-  size?: "sm" | "md" | "lg";
-  timeRange: IWidgetTimeFrame;
-  includeAvg?: boolean = false;
-  description?: string;
-  compareValue?: number;
-  compareOverColor?: string;
-  compareUnderColor?: string;
-  _editing?: any;
-  math?: string;
-  logs?: Array<NLog>;
-  positivity?: any;
-  stats?: any;
-  lastUsed?: any;
-  timeFormat: string = "h:mm a";
-  dateFormat: string = "MMM Do YYYY";
+export class Widget {
+  public _editing?: any;
+  public compareOverColor?: string;
+  public compareUnderColor?: string;
+  public compareValue?: number;
+  public dateFormat: string;
+  public description?: string;
+  public element?: TrackableElement;
+  public id?: string;
+  public includeAvg?: boolean = false;
+  public lastUsed?: any;
+  public logs?: Array<NLog>;
+  public math?: string;
+  public positivity?: any;
+  public size?: "sm" | "md" | "lg" = "md";
+  public stats?: any;
+  public timeFormat?: string = "h:mm a";
+  public timeRange?: WidgetTimeFrame;
+  public type?: string = "value";
 
-  constructor(payload?: IWidget) {
-    if (payload) {
-      this.id = payload.id || nid();
-      this.type = payload.type;
-      this.description = payload.description;
+  constructor(payload?: WidgetConfig) {
+    payload = payload || {};
 
-      this.size = payload.size || "md";
-
-      if (typeof payload.compareValue == "string") {
-        payload.compareValue = parseFloat(payload.compareValue);
-      }
-      this.compareValue = payload.compareValue;
-      this.compareOverColor = payload.compareOverColor;
-      this.compareUnderColor = payload.compareUnderColor;
-
-      this.includeAvg = payload.includeAvg ? true : false;
-
-      if (payload.timeRange) {
-        this.timeRange = new WidgetTimeFrame(payload.timeRange);
-      }
-
-      if (payload.element) {
-        this.element = new TrackableElement({ id: payload.element.id, type: payload.element.type });
-      } else {
-        this.element = new TrackableElement(payload.element);
-      }
-    } else {
-      this.id = nid();
+    this.id = payload.id || nid();
+    this.type = payload.type;
+    this.description = payload.description;
+    this.size = payload.size || "md";
+    // Compare Value
+    if (typeof payload.compareValue == "string") {
+      payload.compareValue = parseFloat(payload.compareValue);
+    }
+    this.compareValue = payload.compareValue;
+    this.compareOverColor = payload.compareOverColor;
+    this.compareUnderColor = payload.compareUnderColor;
+    // Including Avg
+    this.includeAvg = payload.includeAvg ? true : false;
+    // If a timeRange
+    if (payload.timeRange) {
+      this.timeRange = new WidgetTimeFrame(payload.timeRange);
+    }
+    // If an element
+    if (payload.element) {
+      this.element = new TrackableElement({ id: payload.element.id, type: payload.element.type });
     }
   }
+
   getColor(): string {
     if (this.element && this.element.type == "tracker") {
       return this.element.obj.color;
@@ -180,6 +169,7 @@ export class Widget implements IWidget {
       return strToColor(this.element.id);
     }
   }
+
   getTitle(): string {
     if (this.type == "text") {
       return truncateText(this.description, 30);
@@ -206,12 +196,16 @@ export class Widget implements IWidget {
     return JSON.parse(JSON.stringify(this));
   }
 
-  private getStartOfWeek() {
-    let startOfWeek = dayjs().startOf("week");
-    if (UserStore.meta().firstDayOfWeek == "1") {
-      startOfWeek = startOfWeek.subtract(1, "day");
-    }
+  private getStartOfWeek(weekStartsOn: "1" | "2"): Dayjs {
+    let start = NDate.setFirstDayOfWeek(weekStartsOn).getFirstDayOfWeek();
+    let startOfWeek = dayjs(start).startOf("day");
     return startOfWeek;
+  }
+
+  private getEndOfWeek(weekStartsOn: "1" | "2"): Dayjs {
+    let end = NDate.setFirstDayOfWeek(weekStartsOn).getLastDayOfWeek();
+    let endOfWeek = end.endOf("day");
+    return endOfWeek;
   }
 
   /**
@@ -221,45 +215,50 @@ export class Widget implements IWidget {
    * hard code the this-week and last-week conditions.
    */
 
-  getStartDate(): Date {
+  getStartDate(weekStartsOn: "1" | "2"): Dayjs {
     if (this.timeRange && ["this-week", "last-week"].indexOf(this.timeRange.id) > -1) {
       // This is hacky
-      let startOfWeek = this.getStartOfWeek();
+      let startOfWeek = this.getStartOfWeek(weekStartsOn);
       switch (this.timeRange.id) {
         case "this-week":
-          return startOfWeek.startOf("day").toDate();
+          return startOfWeek.startOf("day");
           break;
         case "last-week":
-          return startOfWeek.startOf("day").subtract(7, "day").toDate();
+          return startOfWeek.startOf("day").subtract(7, "day");
           break;
       }
+    } else if (this.timeRange && this.timeRange.start && this.timeRange.start.date) {
+      // If a set Date
+      return this.timeRange.start.date;
     } else if (this.timeRange && this.timeRange.start) {
       return this.timeRange.start.toDate();
     } else {
-      return new Date();
+      return dayjs().startOf("day");
     }
   }
 
-  getEndDate() {
+  getEndDate(weekStartsOn: "1" | "2") {
     if (this.timeRange && ["this-week", "last-week"].indexOf(this.timeRange.id) > -1) {
       // This is hacky
-      let startOfWeek = this.getStartOfWeek();
+      let endOfWeek = this.getEndOfWeek(weekStartsOn);
       switch (this.timeRange.id) {
         case "this-week":
-          return startOfWeek.add(7, "day").endOf("day").toDate();
+          return endOfWeek.endOf("day");
           break;
         case "last-week":
-          return startOfWeek.add(7, "day").subtract(1, "week").endOf("day").toDate();
+          return endOfWeek.subtract(1, "week").endOf("day");
           break;
       }
+    } else if (this.timeRange && this.timeRange.end && this.timeRange.end.date) {
+      return this.timeRange.end.date;
     } else if (this.timeRange && this.timeRange.end) {
       return this.timeRange.end.toDate();
     } else {
-      return new Date();
+      return dayjs().endOf("day");
     }
   }
 
-  getDateRange() {
-    return [this.getStartDate(), this.getEndDate()];
+  getDateRange(weekStartsOn: "1" | "2") {
+    return [this.getStartDate(weekStartsOn), this.getEndDate(weekStartsOn)];
   }
 }
