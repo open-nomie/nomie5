@@ -13,25 +13,17 @@
 // Modules
 
 // Nomie log is the base Log item that is saved in a ledger
-import NomieLog from "../modules/nomie-log/nomie-log";
 import logFilter from "../modules/log-filter/log-filter.js";
-import extractor from "../utils/extract/extract";
-import TrackableElement from "../modules/trackable-element/trackable-element";
 // Storage for generic access to local,blockstack,pouch
 import Storage from "../modules/storage/storage";
-import Location from "../modules/locate/Location";
 // Hooks for firing off hooks
 import Hooky from "../modules/hooks/hooks";
 // Get the Geo Location module
-import locate from "../modules/locate/locate";
-
 // Utils
 import Logger from "../utils/log/log";
 import dayjs from "dayjs";
 import { writable } from "svelte/store";
-import PromiseStep from "../utils/promise-step/promise-step";
 import tick from "../utils/tick/tick";
-import arrayUtils from "../utils/array/array_utils";
 import textUtils from "../utils/text/text";
 
 // Config
@@ -42,17 +34,19 @@ import { Interact } from "./interact";
 import { LastUsed } from "./last-used";
 import { PeopleStore } from "./people-store";
 import { ContextStore } from "./context-store";
-
-import { Locations } from "./locations";
-import type NLog from "../modules/nomie-log/nomie-log";
 import { OfflineQueue } from "./offline-queue-store";
 import { ActiveLogStore } from "./active-log";
-import nid from "../modules/nid/nid";
+
 import NPaths from "../paths";
-import LedgerTools, { IQueryOptions } from "./ledger/ledger-tools";
+import NLog from "../modules/nomie-log/nomie-log";
+
+// Ledger specific
+import LedgerTools from "./ledger/ledger-tools";
 import { LedgerImporter } from "./ledger/ledger-importer";
-import { ITrackersSummary } from "./ledger/ledger-tools";
 import { logAppendLocationIfNeeded } from "./ledger/ledger-add-location";
+
+import type { IQueryOptions } from "./ledger/ledger-tools";
+import type { ITrackersSummary } from "./ledger/ledger-tools";
 
 const console = new Logger("🧺 store/ledger.js", false);
 // Hooky is for firing off generic events
@@ -208,10 +202,10 @@ const ledgerInit = () => {
      *
      * Updates a log - you must provide both the updated log, and the previous date it was saved on.
      *
-     * @param {NomieLog} log
+     * @param {NLog} log
      * @param {Date} previousEndDate
      */
-    async updateLog(log: NomieLog, previousEndDate?) {
+    async updateLog(log: NLog, previousEndDate?) {
       // Fire hooks
       methods.hooks.run("onBeforeUpdate", log);
       // Set saving
@@ -324,11 +318,11 @@ const ledgerInit = () => {
     async getLog(id, book) {
       let bookData = await Storage.get(NPaths.storage.book(book));
       let logRaw = bookData.find((row) => row._id == id);
-      return logRaw ? new NomieLog(logRaw) : null;
+      return logRaw ? new NLog(logRaw) : null;
     },
 
     async fastLog(note) {
-      let log = new NomieLog({ note });
+      let log = new NLog({ note });
       return methods.saveLog(log);
     },
 
@@ -337,7 +331,7 @@ const ledgerInit = () => {
      *
      * This is the main function to save a new log
      * It should not be used for updating
-     * @param {NomieLog} log
+     * @param {NLog} log
      */
     async saveLog(log): Promise<void> {
       log = await methods.prepareLog(log);
