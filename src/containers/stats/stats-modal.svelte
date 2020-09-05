@@ -408,6 +408,8 @@
 
     // Get Logs from the Ledger Store
     let results = await LedgerStore.query(queryPayload);
+
+    console.log("getStats() log results", results);
     // Prep Stats
     const statsV5 = new StatsV5({});
 
@@ -700,28 +702,7 @@
 
     <div class="n-toolbar n-row px-3 pt-2 pb-3">
       <Text size="sm" bold className="filler" truncate>{state.range}</Text>
-
       <NextPrevCal on:next={loadNextDate} on:previous={loadPreviousDate} on:calendar={onCalendarTap} />
-
-      <!-- <Button color="circle" className="tap-icon" delay={0} on:click={loadPreviousDate}>
-        <NIcon name="chevronLeft" size={24} />
-      </Button>
-      <Button color="none" shape="circle" delay={0} className="tap-icon" on:click={onCalendarTap}>
-        <NIcon name="calendar" size={24} className={isToday ? '' : 'fill-red'} />
-      </Button>
-      <Button color="none" shape="circle" delay={0} className="tap-icon" on:click={loadNextDate}>
-        <NIcon name="chevronRight" size={24} />
-      </Button>
-
-      <Button color="clear" className="px-1" on:click={loadPreviousDate}>
-        <NIcon name="chevronLeft" className="fill-primary-bright" />
-      </Button>
-      <Button color="clear" className="px-1" on:click={onCalendarTap}>
-        <NIcon name="calendar" className="fill-primary-bright" />
-      </Button>
-      <Button color="clear" className="px-1" on:click={loadNextDate}>
-        <NIcon name="chevronRight" className="fill-primary-bright" />
-      </Button> -->
     </div>
 
     {#if state.loading}

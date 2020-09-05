@@ -86,8 +86,7 @@ export default class LedgerTools {
     logs.forEach((log: NLog) => {
       log = log instanceof NLog ? log : new NLog(log);
       // Pro tip: Get meta if its not already present
-      //(!log.trackers) ? log.getMeta() : '';
-      log.getMeta().trackers;
+      !log.trackers ? log.getMeta() : "";
       // Loop over the Trackers Found
       log.trackers.forEach((trackableElement: TrackableElement) => {
         let tag = trackableElement.id;
@@ -217,7 +216,6 @@ export default class LedgerTools {
     }
 
     // Start
-
     let startTime = options.start.startOf("day");
     // End Time
     let endTime = options.end.endOf("day");
@@ -238,11 +236,6 @@ export default class LedgerTools {
     } else {
       // We need to get multiple books.
       booksToGet.push(startTime.format(appConfig.book_time_format));
-
-      /**
-       * Date Padding.
-       */
-
       diff = diff + 1; // add one book for good measure
       for (let i = 0; i < diff; i++) {
         // Push each of the formated dates YYYY-w to an array
@@ -262,7 +255,10 @@ export default class LedgerTools {
         books.forEach((book) => {
           book.forEach((row) => {
             row = row instanceof NLog ? row : new NLog(row);
-            rows.push(row);
+            // Remove duplicates
+            if (!rows.find((r: NLog) => r._id == row._id)) {
+              rows.push(row);
+            }
           });
         });
       }
@@ -292,6 +288,17 @@ export default class LedgerTools {
     /** Get all  */
     let get_all = async (): Promise<Array<NLog>> => {
       let rows = await batch_all();
+
+      rows = rows.filter((log: NLog, index: number) => {
+        let existing: number = rows.findIndex((_log: NLog) => _log._id == log._id);
+        if (existing > -1 && existing !== index) {
+          console.log("🧩🧩🧩 We have a Dup!!", log.note);
+          return false;
+        } else {
+          return true;
+        }
+      });
+
       return logFilter(rows, options);
     }; // end get_all()
 
