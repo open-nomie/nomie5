@@ -1,5 +1,5 @@
 import CSVRImport from "./csvr-import";
-import NLog from "../../modules/nomie-log/nomie-log";
+import type NLog from "../../modules/nomie-log/nomie-log";
 import dayjs from "dayjs";
 
 const zeno = `tag,timestamp
