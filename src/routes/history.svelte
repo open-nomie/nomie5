@@ -478,6 +478,7 @@
                 </Button>
               </div>
               <LogItem
+                fullDate
                 className="aged"
                 {log}
                 on:textClick={(event) => {
