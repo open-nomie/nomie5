@@ -15,6 +15,8 @@
   import dataDistance from "../../modules/data-distance/data-distance";
   import math from "../../utils/math/math";
   import Button from "../../components/button/button.svelte";
+  import Spinner from "../../components/spinner/spinner.svelte";
+  import Text from "../../components/text/text.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -79,6 +81,8 @@
           );
         });
     }
+    // Put it here to show its loading
+    state.compare = state.compare;
     // Get Stats for Compares
     for (let i = 0; i < state.compare.length; i++) {
       let stats = await state.compare[i].getStats(timeSpan, fromDate, toDate);
@@ -317,6 +321,7 @@
     {#each state.compare as compare (compare.id)}
       {#if compare.stats}
         <ListItem className="solo chart-item">
+
           {#if compare.distance}
             <div class="distance">
               <strong>{compare.distance.toFixed(0)}</strong>
@@ -355,8 +360,15 @@
             on:click={() => {
               removeCompare(compare);
             }}>
-            <Icon name="close" className="fill-white" size="16" />
+            <Icon name="close" size="16" />
           </button>
+        </ListItem>
+      {:else}
+        <ListItem className="solo chart-item">
+          <div slot="left" class="pl-3">
+            <Spinner size={18} />
+          </div>
+          <Text size="sm">${compare.getSearchTerm()} {Lang.t('general.loading', 'Loading')}</Text>
         </ListItem>
       {/if}
     {/each}

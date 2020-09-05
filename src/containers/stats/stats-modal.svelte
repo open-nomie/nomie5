@@ -1,17 +1,22 @@
-<script>
+<script lang="ts">
   //Vendors
   import { onMount } from "svelte";
   import { navigate, Router, Route } from "svelte-routing";
   import dayjs from "dayjs";
+  import type { Dayjs, OpUnitType } from "dayjs";
 
   // Modules
   import Tracker from "../../modules/tracker/tracker";
+  import TrackerConfig from "../../modules/tracker/tracker";
+  import type { ITracker } from "../../modules/tracker/tracker";
   import NLog from "../../modules/nomie-log/nomie-log";
   import StatsV5 from "../../modules/stats/statsV5";
   import StatsRef from "../../modules/stats/stats-ref";
 
   import TimeOfDay from "../../components/time-of-day/time-of-day.svelte";
   import DayOfWeek from "../../components/day-of-week/day-of-week.svelte";
+  import TrackableElement from "../../modules/trackable-element/trackable-element";
+  import type { ITrackableElement } from "../../modules/trackable-element/trackable-element";
 
   // import { strToColor } from "../../components/dymoji/dymoji";
 
@@ -58,7 +63,22 @@
   import regex from "../../utils/regex";
   import NextPrevCal from "../../components/next-prev-cal/next-prev-cal.svelte";
   import { SearchStore } from "../../store/search-store";
+  import NDate from "../../utils/ndate/ndate";
 
+  /**
+   * Time Spans available for stats - holding of various
+   * units and formats
+   **/
+  interface ITimeSpanUnit {
+    id: string;
+    label: string;
+    title: string;
+    unit: OpUnitType;
+    count?: number;
+  }
+  interface ITimeSpan {
+    [key: string]: ITimeSpanUnit;
+  }
   export const timeSpans = {
     d: { id: "d", label: "D", title: "Day", unit: "day" },
     w: { id: "w", label: "W", title: "Week", unit: "week" },
@@ -67,6 +87,10 @@
     y: { id: "y", label: "Y", title: "Year", unit: "year" },
   };
 
+  /**
+   * View Management
+   * Available view, labels, and whatnot
+   * **/
   const dataViews = {
     overview: { id: "overview", label: "Home" },
     compare: { id: "compare", label: "Compare" },
@@ -75,16 +99,23 @@
     logs: { id: "logs", label: "Logs", focused: true },
   };
 
-  const types = {
-    tracker: { prefix: "#" },
-    person: { prefix: "@" },
-    context: { prefix: "+" },
-    location: { prefix: "" },
-  };
+  // /**
+  //  * Type Shortcuts
+  //  * **/
+  // const types = {
+  //   tracker: { prefix: "#" },
+  //   person: { prefix: "@" },
+  //   context: { prefix: "+" },
+  //   location: { prefix: "" },
+  // };
 
+  /**
+   * Remember View Settings
+   * A fast way to store UI state in localstorage
+   * Good for remembering what they did last
+   * **/
   const viewMemory = new Storage.SideStore("stats-memory");
-
-  function remember(key, value) {
+  function remember(key: string, value?: any) {
     let base = `${getLastTerm()}-${key}`;
     if (key && value !== undefined) {
       viewMemory.put(base, value);
@@ -94,21 +125,49 @@
     }
   }
 
-  const state = {
-    currentTerm: null,
-    currentColor: "#444",
-    date: dayjs(),
-    timeSpan: remember("timeSpan") || "w",
-    dataView: remember("dataView") || "overview",
-    timeOption: [],
-    viewOption: [],
-    loading: true,
-    stats: null,
-    compare: [],
-    selected: { index: undefined, rows: null },
-    lookupStack: [],
-    related: [],
-  };
+  /**
+   * States Modal Main State
+   * Its a class because it's getting bit and complicated
+   * **/
+  class StatsModalState {
+    public currentTerm: any = null; // what's the search term @person #tracker +context
+    public currentColor: string = "#444"; // Default color
+    public date: Dayjs; // Setup the date
+    public timeSpan: string;
+    public dataView: string;
+    public timeOption: Array<any>;
+    public viewOption: Array<any>;
+    public loading: boolean;
+    public stats: any;
+    public compare: Array<any>;
+    public selected: { index: any; rows: any; date: any };
+    public lookupStack: Array<any>;
+    public related: Array<any>;
+    public trackableElement: TrackableElement;
+    public tracker: TrackerConfig;
+    public showAnimation: boolean = false;
+    public range: any = undefined;
+
+    constructor() {
+      this.currentColor = "#444";
+      this.date = dayjs();
+      this.timeSpan = remember("timeSpan") || "w";
+      this.dataView = remember("dataView") || "overview";
+      this.timeOption = [];
+      this.viewOption = [];
+      this.loading = true;
+      this.range = undefined;
+      this.stats = null;
+      this.compare = [];
+      this.selected = { index: undefined, rows: null, date: null };
+      this.lookupStack = [];
+      this.related = [];
+      this.trackableElement = undefined;
+      this.tracker = undefined;
+    }
+  }
+
+  const state = new StatsModalState();
 
   function setTimeView(option) {
     remember("timeSpan", option.id);
@@ -120,7 +179,7 @@
     state.dataView = option.id;
   }
 
-  function getTimeSpan() {
+  function getTimeSpan(): ITimeSpanUnit {
     return timeSpans[state.timeSpan];
   }
 
@@ -146,7 +205,7 @@
       active: dataViews.logs.focused,
       click() {
         dataViews.logs.focused = true;
-        if (state.selected) {
+        if (state.selected.index) {
           setSelected(state.selected);
         }
       },
@@ -164,6 +223,9 @@
     },
   ];
 
+  /**
+   * Generate the btn group buttons
+   * **/
   function getDataViewButtons() {
     return Object.keys(dataViews)
       .map((optionId) => {
@@ -183,10 +245,12 @@
       .filter((row) => row);
   }
 
+  // Close the stat window
   function close() {
     Interact.closeStats();
   }
 
+  // Back from the stack of stats
   function back() {
     Interact.update((state) => {
       state.stats.terms.pop();
@@ -195,7 +259,9 @@
     main();
   }
 
-  function getSearchTerm(type, text) {
+  // Generate a Search term for a text and type
+  // for example turn tracker + water into #water
+  function getSearchTerm(type, text): string {
     let response = "";
     switch (type) {
       case "tracker":
@@ -214,20 +280,37 @@
     return response;
   }
 
-  function getTitle() {
+  function getTitle(): string {
     return getLastTerm();
   }
 
-  function getFromDate() {
-    let timespan = getTimeSpan();
-    return getToDate().subtract(timespan.count || 1, timespan.unit);
+  /**
+   * Get the proper From Date to display
+   * BUG: This might have a probelm
+   * **/
+  function getFromDate(): Dayjs {
+    let timespan: ITimeSpanUnit = getTimeSpan();
+    let fromDate = getToDate()
+      .subtract(timespan.count || 1, timespan.unit)
+      .startOf("day");
+    // If its week or month, add a day to the start - #bug maybe?
+    fromDate = ["week"].indexOf(timespan.unit) > -1 ? fromDate.add(1, "day") : fromDate;
+    return fromDate;
   }
 
-  function getToDate() {
-    return dayjs(state.date);
+  /**
+   * Get End Date
+   * Returns a Dayjs version of the date
+   * **/
+  function getToDate(): Dayjs {
+    return dayjs(state.date).endOf("day");
   }
 
-  function getTrackableElement(str) {
+  /**
+   * Get a Trackable Element
+   * from a String.
+   * **/
+  function getTrackableElement(str): TrackableElement {
     let type = extractor.toElement(str);
     if (type.type == "tracker") {
       type.obj = $TrackerStore.trackers[type.id];
@@ -288,11 +371,9 @@
     const startOfWeek = {
       title: "Start of week",
       click: () => {
-        let date = state.date.startOf("week");
-        if (!$UserStore.meta.is24Hour) {
-          date = date.subtract(1, "day");
-        }
-        changeDate(date);
+        let date: Dayjs = NDate.setFirstDayOfWeek($UserStore.meta.firstDayOfWeek).getFirstDayOfWeek();
+
+        changeDate(date.startOf("day"));
       },
     };
 
@@ -314,7 +395,7 @@
 
   async function getStats() {
     state.loading = true;
-    let queryPayload = {
+    let queryPayload: any = {
       search: state.trackableElement,
       start: getFromDate(),
       end: getToDate(),
@@ -328,7 +409,7 @@
     // Get Logs from the Ledger Store
     let results = await LedgerStore.query(queryPayload);
     // Prep Stats
-    const statsV5 = new StatsV5();
+    const statsV5 = new StatsV5({});
 
     // Generate Stats
     state.stats = statsV5.generate({
@@ -349,26 +430,26 @@
     state.loading = false;
   } // end getStats()
 
-  function getDayRange() {
+  function getDayRange(): string {
     return state.date.format(`ddd ${dateFormat}`);
   }
 
-  function loadPreviousDate() {
+  function loadPreviousDate(): void {
     state.date = dayjs(state.date).subtract(1, getTimeSpan().unit);
     lastTimeSpan = null;
   }
 
-  function loadNextDate() {
+  function loadNextDate(): void {
     state.date = dayjs(state.date).add(1, getTimeSpan().unit);
     lastTimeSpan = null;
   }
 
-  function changeDate(date) {
+  function changeDate(date): void {
     state.date = date;
     lastTimeSpan = null;
   }
 
-  function getWeekRange() {
+  function getWeekRange(): string {
     const from = getFromDate();
     const to = getToDate();
     if (to.format("MMM") !== from.format("MMM")) {
@@ -421,7 +502,7 @@
     return `${from.add(1, "month").format(dateFormat)} - ${to.format(dateFormat)}`;
   }
 
-  function gettimeRangeText() {
+  function gettimeRangeText(): string {
     let range;
     switch (state.timeSpan) {
       case "d":
@@ -444,7 +525,7 @@
   }
 
   function clearSelected() {
-    state.selected = { index: undefined, rows: null };
+    state.selected = { index: undefined, rows: null, date: null };
   }
 
   /**
@@ -464,36 +545,36 @@
   async function _setSelected(selected) {
     state.selected = selected;
 
-    let payload = {
-      start: dayjs(state.selected.date).startOf("day"),
-      end: dayjs(state.selected.date).endOf("day"),
-      limit: 100,
-    };
-    // if day - normalize start and end
-    if (state.timeSpan == "d") {
-      payload.start = dayjs(state.selected.date).startOf("hour");
-      payload.end = dayjs(state.selected.date).endOf("hour");
-    } else if (state.timeSpan == "w" || state.timeSpan == "m") {
-      payload.start = dayjs(state.selected.date).startOf("day");
-      payload.end = dayjs(state.selected.date).endOf("day");
-    } else if (state.timeSpan == "q") {
-      payload.end = dayjs(state.selected.date).endOf("month");
-      payload.start = dayjs(payload.end).subtract(3, "month").startOf("month");
-    } else if (state.timeSpan == "y") {
-      payload.start = dayjs(state.selected.date).startOf("month");
-      payload.end = dayjs(state.selected.date).endOf("month");
-    }
+    // let payload = {
+    //   start: dayjs(state.selected.date).startOf("day"),
+    //   end: dayjs(state.selected.date).endOf("day"),
+    //   limit: 100,
+    // };
+    // // if day - normalize start and end
+    // if (state.timeSpan == "d") {
+    //   payload.start = dayjs(state.selected.date).startOf("hour");
+    //   payload.end = dayjs(state.selected.date).endOf("hour");
+    // } else if (state.timeSpan == "w" || state.timeSpan == "m") {
+    //   payload.start = dayjs(state.selected.date).startOf("day");
+    //   payload.end = dayjs(state.selected.date).endOf("day");
+    // } else if (state.timeSpan == "q") {
+    //   payload.end = dayjs(state.selected.date).endOf("month");
+    //   payload.start = dayjs(payload.end).subtract(3, "month").startOf("month");
+    // } else if (state.timeSpan == "y") {
+    //   payload.start = dayjs(state.selected.date).startOf("month");
+    //   payload.end = dayjs(state.selected.date).endOf("month");
+    // }
 
-    let rows = await LedgerStore.query(payload);
+    // let rows = await LedgerStore.query(payload);
 
-    if (dataViews.logs.focused) {
-      state.selected.rows = rows.filter((row) => {
-        return row.note.match(regex.escape(state.trackableElement.toSearchTerm()));
-      });
-    } else {
-      state.selected.rows = rows;
-    }
-    return state.selected.rows;
+    // if (dataViews.logs.focused) {
+    //   state.selected.rows = rows.filter((row) => {
+    //     return row.note.match(regex.escape(state.trackableElement.toSearchTerm()));
+    //   });
+    // } else {
+    //   state.selected.rows = rows;
+    // }
+    // return state.selected.rows;
   }
 
   async function main() {
