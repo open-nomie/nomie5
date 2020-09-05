@@ -17,6 +17,7 @@
   export let title = undefined;
   export let ariaLabel = undefined;
   export let prevent = false;
+  export let inline = false;
 
   let hit;
   let ripple;
@@ -34,12 +35,18 @@
     left: 0;
     bottom: 0;
   }
+  :global(.btn.btn-inline) {
+    display: inline-flex;
+  }
 </style>
 
 <button
   {style}
   {disabled}
-  class={`btn ${block ? 'btn-block' : ''} ${icon ? 'btn-icon' : ''} btn-${type} btn-${shape} btn-${color} btn-${size} ${className}`}
+  class={`btn ${block ? 'btn-block' : ''} ${icon ? 'btn-icon' : ''} 
+          btn-${type} btn-${shape} btn-${color} btn-${size} 
+          ${inline ? 'btn-inline' : ''}
+          ${className}`}
   on:mousedown={(evt) => {}}
   {title}
   area-label={ariaLabel || title}

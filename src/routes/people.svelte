@@ -24,7 +24,8 @@
   import Text from "../components/text/text.svelte";
   import Button from "../components/button/button.svelte";
 
-  export let location = undefined;
+  export let location = "";
+  console.log(location);
 
   let state = {
     people: [],
@@ -106,7 +107,7 @@
 <NLayout pageTitle="People">
   <div slot="header">
     <div class="container px-2" style="margin-top:2px;">
-      <NSearchBar on:change={searchPeople} on:clear={clearSearch} placeholder="Search People..." autocomplete>
+      <NSearchBar compact on:change={searchPeople} on:clear={clearSearch} placeholder="Search People..." autocomplete>
         <button on:click={addPerson} slot="right" class="btn btn-icon btn-clear">
           <NIcon name="userAdd" className="fill-primary-bright" />
         </button>
@@ -145,40 +146,40 @@
               <AvatarBall size={48} username={$PeopleStore.people[person].displayName} style={`border-radius:32%; overflow:hidden`} />
             {/if}
           </div>
-          <Text size="md" lineHeightMd truncate>{($PeopleStore.people[person] || {}).displayName}</Text>
+
+          <div class="n-row truncate-1">
+            <Button
+              color="clear"
+              size="xs"
+              inline
+              style="max-width:30px; width:24px;"
+              className="p-0 mr-2"
+              on:click={(evt) => {
+                Interact.openStats(`@${person}`);
+              }}>
+              <NIcon name="chart" className="fill-primary-bright" size={18} />
+            </Button>
+            <Text size="md" lineHeightMd truncate className="filler">{($PeopleStore.people[person] || {}).displayName}</Text>
+          </div>
+
           {#if $PeopleStore.people[person] && $PeopleStore.people[person].last}
             <Text size="sm" faded>{dayjs($PeopleStore.people[person].last).fromNow()}</Text>
           {/if}
           <div slot="right" class="n-row">
+
             <Button
-              shape="round"
-              color="transparent"
-              className="px-3 mr-1"
+              color="clear"
+              className=""
               on:click={(evt) => {
                 personClicked(person);
               }}>
-              <NIcon name="addOutline" className="fill-primary-bright" size={24} />
+              <Text size="xs" bold className="text-primary-bright text-uppercase">{Lang.t('people.check-in', 'Check-in')}</Text>
             </Button>
-            <Button
-              shape="circle"
-              color="transparent"
-              className="tap-icon mx-2"
-              on:click={(evt) => {
-                evt.preventDefault();
-                evt.stopImmediatePropagation();
-                evt.stopPropagation();
-                Interact.openStats(`@${person}`);
-              }}>
-              <NIcon name="chart" className="fill-primary-bright" size={24} />
-            </Button>
+
           </div>
         </NItem>
       {/each}
-      {#if state.people.length}
-        <div class="p-2 text-center">
-          <span class="fake-link" on:click={PeopleStore.searchForPeople}>Find recent @people</span>
-        </div>
-      {/if}
+
     </div>
   </div>
 </NLayout>

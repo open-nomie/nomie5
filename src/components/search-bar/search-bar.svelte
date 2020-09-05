@@ -57,7 +57,7 @@
   :global(.search-bar) {
     padding: 0 16pt;
     position: relative;
-    îdisplay: flex;
+    display: flex;
     flex-direction: row;
     align-items: center;
     flex-shrink: 0;
@@ -87,8 +87,8 @@
 
   <div class="n-row">
     <NInput solo {compact} bind:this={_elInput} bind:value={searchTerm} on:change={fireChange} on:enter={fireSearch} {placeholder}>
-      <div slot="left" class="pl-2">
-        <NIcon name="search" style="height:20px; width: 20px; opacity:0.3; margin-top:-4px;" />
+      <div slot="left" class="pl-2 d-flex">
+        <NIcon name="search" style="height:20px; width: 20px; opacity:0.3;" />
       </div>
       <div slot="right">
         <slot name="right-inside" />
