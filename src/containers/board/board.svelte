@@ -710,9 +710,10 @@
           <Spinner />
         </div>
       {:else}
-        {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 10 && $UserStore.storageType == 'local'}
+        {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 10 && $UserStore.storageType == 'local' && $UserStore.meta.hideBackup == false}
           <div class="container-sm">
             <div class="backup pt-2 pb-1 text-center">
+              <!--- If it's way back - it's not really set-->
               {#if daysSinceLastBackup > 1000}
                 <Text inline size="sm" faded>No known backups</Text>
               {:else}

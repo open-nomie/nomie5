@@ -63,9 +63,8 @@
     </div>
   </NItem>
 
-  <NItem title={Lang.t('settings.small-tracker-buttons', 'Small Trackers')}>
+  <NItem title={Lang.t('settings.small-tracker-buttons', 'Small Trackers Buttons')}>
     <span slot="left">🐭</span>
-    <Text size="sm" faded>Shrinks the tracker buttons for smaller devices</Text>
     <div slot="right">
       <NToggle
         bind:value={$UserStore.localSettings.compactButtons}
@@ -81,9 +80,15 @@
 
   <NItem title={Lang.t('settings.hide-tab-labels', 'Hide App Tab Labels')}>
     <span slot="left">🗂</span>
-    <Text size="sm" faded>Hide "History, Dash, Track, People, Setting" labels</Text>
     <div slot="right">
       <NToggle bind:value={$UserStore.meta.hideLabels} on:change={methods.settingChange} />
+    </div>
+  </NItem>
+
+  <NItem title={Lang.t('settings.hide-backup-reminder', 'Hide Backup Reminder')}>
+    <span slot="left">📕</span>
+    <div slot="right">
+      <NToggle bind:value={$UserStore.meta.hideBackup} on:change={methods.settingChange} />
     </div>
   </NItem>
 </div>
