@@ -79,7 +79,7 @@
       {
         label: "More",
         active: editorView === "more",
-        hide: value._editing ? false : true,
+        hide: !value.id ? false : true,
         click() {
           changeView("more");
         },
@@ -170,8 +170,9 @@
     } else {
       inputTracker = new TrackerConfig({ tag: value.element.obj.id, type: "numeric" });
     }
-    const tracker = TrackerStore.getByTag();
-    const response = await Interact.trackerInput(value.element.obj, { value: value.compareValue, allowSave: false });
+    // const tracker = TrackerStore.getByTag();
+    // was value.element.obj -- wth is this?
+    const response = await Interact.trackerInput(inputTracker, { value: value.compareValue, allowSave: false });
     if (response && response.value) {
       value.compareValue = response.value;
     }

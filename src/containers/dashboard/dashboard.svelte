@@ -3,10 +3,10 @@
   import { onMount, onDestroy } from "svelte";
 
   import dayjs from "dayjs";
+  import type { Dayjs } from "dayjs";
 
   import WidgetEle from "./widget.svelte";
   import WidgetEditor from "./widget-editor.svelte";
-
   // Components
   import Button from "../../components/button/button.svelte";
   import Icon from "./../../components/icon/icon.svelte";
@@ -17,7 +17,6 @@
   import Stepper from "../../components/stepper/stepper.svelte";
   import Text from "./../../components/text/text.svelte";
   import TrackerSmallBlock from "./../../components/tracker-ball/tracker-small-block.svelte";
-
   // modules
   import StatsProcessor from "../../modules/stats/statsV5";
   import { Widget } from "../../modules/dashboard/widget";
@@ -47,6 +46,7 @@
   import { widgetTypes } from "./widgetTypes";
   import { truncateText } from "../../utils/text/text";
   import { UserStore } from "../../store/user-store";
+  // import { getDashboardStartEndDates } from "./dashboard-helpers";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
   let people: any; // holder of User People - loaded from subscribe
@@ -62,7 +62,7 @@
   let activeDashboard: Dashboard = { id: "fake", label: "Loading...", widgets: [] }; // Set a default dasboard
   let stopRefresh;
   let loading = false;
-
+  let firstDayOfWeek: "1" | "2" = "1";
   let dtFormat;
   /**
    * Toggle Edit more
@@ -70,6 +70,8 @@
   function toggleEdit() {
     editMode = !editMode;
   }
+
+  $: firstDayOfWeek = $UserStore.meta.firstDayOfWeek;
 
   function canSave(testWidget: Widget) {
     let type = widgetTypes.find((wdgt) => wdgt.id == testWidget.type);
@@ -129,47 +131,23 @@
    * Get Start / End Dates from a Board
    * This will go through all blocks and find the full date range of the dasboard
    */
-  function getStartEndDates(dboard) {
-    let start = null;
-    let end = null;
-    // Loop over the blocks
-    dboard.widgets.forEach((widget: Widget) => {
-      // Get the date range for this block
-      let dateRange = widget.getDateRange();
-      // Start is first element
-      let widgetStart = dateRange[0];
-      // End is last element
-      let widgetEnd = dateRange[1];
-      // If block end is greater (in the future) than end
-      // save it as the winner
-      if (widgetEnd > end || !end) {
-        end = widgetEnd;
-      }
-      // If block start is less than (more in the past) then
-      // set it as the winner
-      if (widgetStart < start || !start) {
-        start = widgetStart;
-      }
-    });
-    // Return Earliest and latest dates
-    return { start, end };
-  }
+  // function getStartEndDates(dboard): { start: Dayjs; end: Dayjs } {
+  //   return getDashboardStartEndDates(dboard);
+  // }
 
   /**
    * Get the Logs for a widget
    */
   async function getLogsForWidget(widget: Widget): Promise<Array<any>> {
     let logs = []; // Holder of the logs
-
-    const dateRange = widget.getDateRange(); // Get Date Range for this widget.
+    let dateRange = widget.getDateRange($UserStore.meta.firstDayOfWeek); // Get Date Range for this widget.
     let start = dateRange[0]; // get  start
     let end = dateRange[1]; // get end
 
     if (widget.type == "streak") {
-      start = dayjs().startOf("month").toDate();
-      end = dayjs().endOf("month").toDate();
+      start = dayjs().startOf("month");
+      end = dayjs().endOf("month");
     }
-
     // Get the Logs based on the Type provided
     if (widget.element && widget.element.type == "tracker") {
       // Tracker Search
@@ -184,7 +162,6 @@
       // Generic Search
       logs = await LedgerStore.queryAll(widget.element.id, start, end);
     }
-
     return logs;
   }
 
@@ -207,8 +184,8 @@
       for (let i = 0; i < dboard.widgets.length; i++) {
         // Set the widget
         const widget: Widget = dboard.widgets[i] instanceof Widget ? dboard.widgets[i] : new Widget(dboard.widgets[i]);
-        let start = widget.getStartDate();
-        let end = widget.getEndDate();
+        let start = widget.getStartDate(firstDayOfWeek);
+        let end = widget.getEndDate(firstDayOfWeek);
 
         widget.dateFormat = (dtFormat || { date: "MMM Do YYYY" }).date;
         widget.timeFormat = (dtFormat || { time: "h:mma" }).time;
@@ -233,7 +210,7 @@
         } else if (widget.element && widget.type != "last-used") {
           widget.logs = await getLogsForWidget(widget);
 
-          const statsV5 = new StatsProcessor();
+          const statsV5 = new StatsProcessor({});
           // Generate Stats
           widget.math = widget.math || (widget.element.obj || {}).math || "sum";
           // Get dayjs Start Date
@@ -255,7 +232,7 @@
             mode = "m";
           }
           // Setup the Config to Pass to Stats
-          const statsConfig = {
+          const statsConfig: any = {
             rows: widget.logs,
             fromDate,
             toDate,
@@ -514,6 +491,7 @@
     </div>
   {/if}
 </NLayout>
+
 <Modal show={editingWidget !== undefined}>
   <div class="n-toolbar-grid" slot="header">
     <button class="btn btn-clear left text-primary-bright" on:click={clearEditing}>Close</button>

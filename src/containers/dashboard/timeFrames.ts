@@ -1,4 +1,6 @@
-export const timeFrames: Array<any> = [
+import type { WidgetTimeFrameConfig } from "../../modules/dashboard/widget";
+
+export const timeFrames: Array<WidgetTimeFrameConfig> = [
   {
     id: "today",
     label: "Today",
@@ -25,7 +27,7 @@ export const timeFrames: Array<any> = [
     id: "last-7",
     label: "Last 7 days",
     start: {
-      subtract: [7, "day"],
+      subtract: [6, "day"],
       startOf: "day",
     },
     end: {
@@ -36,7 +38,7 @@ export const timeFrames: Array<any> = [
     id: "last-30",
     label: "Last 30 days",
     start: {
-      subtract: [30, "day"],
+      subtract: [29, "day"],
       startOf: "day",
     },
     end: {
@@ -47,7 +49,7 @@ export const timeFrames: Array<any> = [
     id: "last-90",
     label: "Last 90 days",
     start: {
-      subtract: [90, "day"],
+      subtract: [89, "day"],
       startOf: "day",
     },
     end: {

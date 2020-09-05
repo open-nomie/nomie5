@@ -1,9 +1,9 @@
 import nid from "../nid/nid";
 import { Widget } from "./widget";
-import type { IWidget } from "./widget";
+import type { WidgetConfig } from "./widget";
 export class Dashboard {
   label: string;
-  widgets: Array<IWidget>;
+  widgets: Array<Widget>;
   id: string;
   created?: Date;
 
@@ -18,8 +18,8 @@ export class Dashboard {
       delete starter.blocks;
     }
 
-    this.widgets = (starter.widgets || []).map((widget: IWidget) => {
-      return new Widget(widget);
+    this.widgets = (starter.widgets || []).map((widget: WidgetConfig) => {
+      return widget instanceof Widget ? widget : new Widget(widget);
     });
   }
 }
