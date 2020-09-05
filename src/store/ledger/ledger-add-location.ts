@@ -1,4 +1,4 @@
-import NLog from "../../modules/nomie-log/nomie-log";
+import type NLog from "../../modules/nomie-log/nomie-log";
 import locate from "../../modules/locate/locate";
 import Location from "../../modules/locate/Location";
 import { Locations } from "../locations";
