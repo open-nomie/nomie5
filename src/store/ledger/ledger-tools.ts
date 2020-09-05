@@ -140,18 +140,7 @@ export default class LedgerTools {
         const firstBook = books[0].replace(appConfig.book_root + "/", "");
 
         let date = dayjs(firstBook, appConfig.book_time_format);
-        // console.log({ autoDate: autoDate.format("YYYY MMM DD ddd") });
 
-        // let bookYearWeekSplit = firstBook.split("-");
-        // console.log({ bookYearWeekSplit });
-
-        // let day = 1 + (bookYearWeekSplit[1] - 1) * 7; // 1st of January + 7 days for each week
-        // console.log({ day });
-        // let frankenDate = new Date(bookYearWeekSplit[0], 0, day);
-        // console.log({ frankenDate });
-        // // Create date from book name
-        // let date = dayjs(frankenDate, appConfig.book_time_format);
-        // Store it locally so we don't have to look it up all the time.
         this.storage.local.put("firstBook", {
           date: date.toDate().getTime(),
           lastChecked: new Date().getTime(),
@@ -210,31 +199,51 @@ export default class LedgerTools {
     options = options || {};
     // Fresh? Should pull from storage not cache
     options.fresh = options.fresh ? options.fresh : false;
+
+    if (options.start && (options.start instanceof Date || options.start instanceof Number)) {
+      options.start = dayjs(options.start);
+    } else if (!options.start) {
+      options.start = dayjs();
+    }
+
+    if (options.end && (options.end instanceof Date || options.end instanceof Number)) {
+      options.end = dayjs(options.end);
+    } else if (!options.end) {
+      options.end = dayjs();
+    }
+
     // Start
-    let startTime = dayjs(options.start || new Date()).startOf("day");
+
+    let startTime = options.start.startOf("day");
     // End Time
-    let endTime = dayjs(options.end || new Date()).endOf("day");
+    let endTime = options.end.endOf("day");
+
     // Diff Betwen the two
     const bookFormat: any = appConfig.book_time_unit || "week";
     // Diff
     let diff = endTime.diff(startTime, bookFormat);
     // Define array of "book paths" to get
-    let books_to_get = [];
+    let booksToGet = [];
 
     // If there's no diff, no need get multiple books
     if (diff === 0) {
-      books_to_get.push(endTime.format(appConfig.book_time_format));
+      // FOUND IT... This might be the problem...
+      let bookId = startTime.format(appConfig.book_time_format);
+      booksToGet.push(bookId);
+      booksToGet.push(startTime.add(1, bookFormat).format(appConfig.book_time_format));
     } else {
       // We need to get multiple books.
-      books_to_get.push(startTime.format(appConfig.book_time_format));
+      booksToGet.push(startTime.format(appConfig.book_time_format));
+
+      /**
+       * Date Padding.
+       */
+
       diff = diff + 1; // add one book for good measure
       for (let i = 0; i < diff; i++) {
         // Push each of the formated dates YYYY-w to an array
-        books_to_get.push(
-          dayjs(startTime)
-            .add(i + 1, bookFormat)
-            .format(appConfig.book_time_format)
-        );
+        let thisBookDateStr = dayjs(startTime).add(i, bookFormat);
+        booksToGet.push(thisBookDateStr.format(appConfig.book_time_format));
       }
     }
 
@@ -243,7 +252,7 @@ export default class LedgerTools {
     const batch_all = async (): Promise<ILedgerBook> => {
       let rows = [];
       let maxPerBatch = 10;
-      let chunks = array_utils.chunk(books_to_get, maxPerBatch);
+      let chunks = array_utils.chunk(booksToGet, maxPerBatch);
       for (var i = 0; i < chunks.length; i++) {
         let books = await get_batch(chunks[i]);
         books.forEach((book) => {
