@@ -5,6 +5,7 @@
   import math from "../../utils/math/math";
 
   import { tick, createEventDispatcher, onMount } from "svelte";
+  import Button from "../button/button.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -220,7 +221,7 @@
     animation: numberUp 0.4s ease-in-out;
     -webkit-animation: numberUp 0.4s ease-in-out;
   }
-  .btn {
+  :global(.n-calculator .btn) {
     touch-action: manipulation;
     border: none;
     color: var(--color-inverse);
@@ -231,15 +232,15 @@
     height: 64px;
     font-size: 26px;
   }
-  .btn.r-0 {
+  :global(.n-calculator .btn.r-0) {
     color: var(--color-inverse-1);
     background-color: transparent;
   }
-  .btn.b-3 {
+  :global(.n-calculator .btn.b-3) {
     color: var(--color-inverse-1);
     background-color: transparent;
   }
-  .btn.b-0.r-0 {
+  :global(.n-calculator .btn.b-0.r-0) {
     color: var(--color-red);
     background-color: transparent;
   }
@@ -267,13 +268,17 @@
     {#each buttons as buttonRow, rIndex}
       {#each buttonRow as button, bIndex}
         {#if button !== null}
-          <button
-            class="btn r-{rIndex} b-{bIndex}"
+          <Button
+            shape="circle"
+            color="light"
+            size="lg"
+            delay={0}
+            className="r-{rIndex} b-{bIndex}"
             on:click={() => {
               click(button);
             }}>
             {button}
-          </button>
+          </Button>
         {:else}
           <span class="empty" />
         {/if}
