@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import NText from "../text/text.svelte";
 
   import { fly } from "svelte/transition";
@@ -9,16 +9,16 @@
 
   const dispatch = createEventDispatcher();
   // Props
-  export let padding = false;
+  export let padding: boolean = false;
   export let title = "Modal";
-  export let allowClose = undefined;
-  export let fullscreen = false;
+  export let allowClose: boolean | undefined = undefined;
+  export let fullscreen: boolean = false;
   export let flexBody = undefined;
-  export let show = true; // Defaulted to true so it can be controlled by a parent component
-  export let className = undefined;
+  export let show: boolean = true; // Defaulted to true so it can be controlled by a parent component
+  export let className: string = "";
   export let type = "normal"; // cover, fullscreen, bottom, bottom-slide-up
   export let bodyClass = "";
-  export let closeOnBackgroundTap = false;
+  export let closeOnBackgroundTap: boolean = false;
 
   const has_header = (arguments[1].$$slots || {}).hasOwnProperty("header");
   const has_raw_header = (arguments[1].$$slots || {}).hasOwnProperty("raw-header");

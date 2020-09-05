@@ -1,35 +1,53 @@
 import dayjs from "dayjs";
 import math from "../../utils/math/math";
+import type { IStatDow } from "./statsV5";
 
-function DayOfWeek(rows, tag = null) {
-  let dow = {
+export interface IDow {
+  mon: IStatDow;
+  tue: IStatDow;
+  wed: IStatDow;
+  thu: IStatDow;
+  fri: IStatDow;
+  sat: IStatDow;
+  sun: IStatDow;
+}
+
+function DayOfWeek(rows, tag = null): IDow {
+  let dow: IDow = {
     mon: {
       count: 0,
       values: [],
+      percent: 0,
     },
     tue: {
       count: 0,
       values: [],
+      percent: 0,
     },
     wed: {
       count: 0,
       values: [],
+      percent: 0,
     },
     thu: {
       count: 0,
       values: [],
+      percent: 0,
     },
     fri: {
       count: 0,
       values: [],
+      percent: 0,
     },
     sat: {
       count: 0,
       values: [],
+      percent: 0,
     },
     sun: {
       count: 0,
       values: [],
+      percent: 0,
     },
   };
 
