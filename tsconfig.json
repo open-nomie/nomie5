@@ -3,7 +3,8 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "types": ["jest"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "importsNotUsedAsValues": "error"
   },
 
   "extends": "@tsconfig/svelte/tsconfig.json",

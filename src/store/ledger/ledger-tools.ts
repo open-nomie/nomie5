@@ -14,7 +14,7 @@ import type { Dayjs } from "dayjs";
 import type { IStorage } from "../../modules/storage/storage";
 import type { ILedgerBook, IBooks } from "../ledger";
 
-import { LedgerImporter } from "./ledger-importer";
+import type { LedgerImporter } from "./ledger-importer";
 
 export interface IQueryOptions {
   fresh?: boolean;
