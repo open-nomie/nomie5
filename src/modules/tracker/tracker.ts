@@ -10,7 +10,7 @@ export type ITrackerMath = "sum" | "mean";
 
 export interface ITracker {
   id?: string; // Id of Tracker
-  tag: string; // Tag of Tracker
+  tag?: string; // Tag of Tracker
   label?: string; // Label of the Tracker
   type?: ITrackerType; // Type of Tracker
   color?: string; // Color of Tracker

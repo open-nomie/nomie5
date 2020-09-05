@@ -12,6 +12,8 @@ export interface ITrackableElement {
   prefix?: any;
   remainder?: any;
   obj?: any;
+  getPrefix?: any;
+  toSearchTerm?: any;
 }
 
 export function toElement(str: string) {
@@ -19,14 +21,14 @@ export function toElement(str: string) {
 }
 
 export default class TrackableElement {
-  id: string;
-  type: ITrackableElementType;
+  id?: string;
+  type?: ITrackableElementType;
   raw?: string;
   value?: any;
   prefix?: any;
   remainder?: any;
   obj?: any;
-  constructor(starter: ITrackableElement) {
+  constructor(starter: any) {
     if (starter) {
       this.id = starter.id; // brandon of @brandon, meet of #meet, home of +home
       this.type = starter.type; // tracker, person, context

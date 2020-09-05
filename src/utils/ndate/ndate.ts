@@ -1,19 +1,22 @@
 // 1: Sunday, 2: Monday, etc.
 
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 const NDate = {
   firstDayOfWeek: "1", // default to Sunday
   // Set the day of week - based on the $UserStore.meta.firstDayOfWeek value
-  setFirstDayOfWeek(firstDayOfWeek: "1" | "2") {
+  setFirstDayOfWeek(firstDayOfWeek: "1" | "2"): any {
     NDate.firstDayOfWeek = firstDayOfWeek;
     return NDate;
   },
-  getFirstDayOfWeek() {
+  getFirstDayOfWeek(): Dayjs {
     return NDate.thisWeek()[0];
   },
+  getLastDayOfWeek(): Dayjs {
+    return NDate.thisWeek()[6];
+  },
   // Get this Week
-  thisWeek(): Array<Date> {
+  thisWeek(): Array<Dayjs> {
     let currentDay = dayjs().day();
     // Get default Week Start
     let thisWeekStart = dayjs().startOf("week");
@@ -30,14 +33,14 @@ const NDate = {
     let days = [];
     // Push days into array
     for (var i = 0; i < 7; i++) {
-      days.push(thisWeekStart.add(i, "day").toDate());
+      days.push(thisWeekStart.add(i, "day"));
     }
     return days;
   },
   // Get Last Week
-  lastWeek() {
+  lastWeek(): Array<Dayjs> {
     return NDate.thisWeek().map((date) => {
-      return dayjs(date).subtract(7, "day").toDate();
+      return dayjs(date).subtract(7, "day");
     });
   },
 };

@@ -168,12 +168,12 @@
     <div class="selected">
       <Button
         size="xs"
-        color="light"
+        color="dark"
         on:click={() => {
           Interact.onThisDay(selected.date.toDate());
         }}>
         {selected.x}
-        <NIcon name="chevronRight" size="14" />
+        <NIcon name="chevronRight" className="fill-white" size="14" />
       </Button>
 
     </div>

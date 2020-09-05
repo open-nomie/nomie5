@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
   import Sortable from "sortablejs";
   // DISPATCH REORDER
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
   // PROPS
-  export let items;
-  export let key;
-  export let handle = undefined;
+  export let items: Array<any>;
+  export let key: string;
+  export let handle: any = undefined;
 
   let sortableList;
 
