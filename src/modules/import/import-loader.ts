@@ -3,19 +3,17 @@ import type { IBackupItems } from "../export/export";
 
 import { ContextStore } from "../../store/context-store";
 import { PeopleStore } from "../../store/people-store";
-import { Interact } from "../../store/interact";
 import { LedgerStore } from "../../store/ledger";
 import { TrackerStore } from "../../store/tracker-store";
 import { BoardStore } from "../../store/boards";
 
 import { Locations } from "../../store/locations";
-import { Lang } from "../../store/lang";
 
 import { DashboardStore } from "../../store/dashboard-store";
 import math from "../../utils/math/math";
 import type { INormalizedImport } from "./import";
-import Location from "../locate/Location";
-import NLog from "../nomie-log/nomie-log";
+
+import type NLog from "../nomie-log/nomie-log";
 
 type IImportTypes = "dashboards" | "locations" | "people" | "trackers" | "logs" | "context";
 export interface IImportStatus {
