@@ -34,6 +34,11 @@
     multiple,
   };
 
+  function onDoubleTap(item) {
+    state.selected = [item];
+    dispatch("select", state.selected);
+  }
+
   // Holder of the alphabet for the list
   let alphaGroup = {};
 
@@ -160,6 +165,9 @@
             clickable
             className="bottom-line"
             title={item.label}
+            on:dbltap={() => {
+              onDoubleTap(item);
+            }}
             on:click={() => {
               methods.toggle(item);
             }}>
