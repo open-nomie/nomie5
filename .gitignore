@@ -4,3 +4,5 @@ public/bundle.*
 package-lock.json
 plugins/*
 public/vendors/*
+# Local Netlify folder
+.netlify
