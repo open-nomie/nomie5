@@ -270,15 +270,21 @@ export default class LedgerTools {
     // Get a Specific Batch of Books
     const get_batch = async (booksChunk): Promise<Array<ILedgerBook>> => {
       let gets = [];
+      // Loop over each book
       booksChunk.forEach((bookPath) => {
+        // Get the book if it current exists, or create it if not
         stateBooks[bookPath] = stateBooks[bookPath] || [];
+        // If the length is 0 or FRESH is tru,
         if (stateBooks[bookPath].length == 0 || options.fresh === true) {
+          // Generate promise and stuff the results in stateBooks
           let getBook = this.getBook(bookPath);
           getBook.then((rows) => {
             stateBooks[bookPath] = rows;
           });
+          // Push the promise
           gets.push(getBook);
         } else {
+          // Push automatically what we have in memory
           gets.push(Promise.resolve(stateBooks[bookPath]));
         }
       });
@@ -288,17 +294,6 @@ export default class LedgerTools {
     /** Get all  */
     let get_all = async (): Promise<Array<NLog>> => {
       let rows = await batch_all();
-
-      rows = rows.filter((log: NLog, index: number) => {
-        let existing: number = rows.findIndex((_log: NLog) => _log._id == log._id);
-        if (existing > -1 && existing !== index) {
-          console.log("🧩🧩🧩 We have a Dup!!", log.note);
-          return false;
-        } else {
-          return true;
-        }
-      });
-
       return logFilter(rows, options);
     }; // end get_all()
 

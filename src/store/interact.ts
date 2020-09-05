@@ -499,9 +499,14 @@ const interactInit = () => {
             });
           },
           async delete() {
-            let confirmed = await methods.confirm("Are you sure?", "Deleting a log cannot be undone.");
+            let confirmed = await methods.confirm("Delete this log?", "Are you sure? Deleting a log cannot be undone.");
             if (confirmed) {
-              await LedgerStore.deleteLogs([log]);
+              try {
+                await LedgerStore.deleteLogs([log]);
+                methods.toast(`Log deleted`);
+              } catch (e) {
+                methods.error(e.message);
+              }
               return { action: "deleted" };
             } else {
               return null;
