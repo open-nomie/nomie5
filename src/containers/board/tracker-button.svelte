@@ -1,6 +1,4 @@
 <script>
-  // TODO: Move this to components/tracker-button
-
   // svelte
   import { createEventDispatcher } from "svelte";
 

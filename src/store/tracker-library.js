@@ -44,9 +44,7 @@ const TrackerLibInit = () => {
         return state;
       });
     },
-    installBundle(bundle) {
-      // console.log("install this bundle", bundle);
-    },
+    installBundle(bundle) {},
     showFirst() {
       update((p) => {
         p.show = true;

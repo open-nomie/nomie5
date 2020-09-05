@@ -4,7 +4,6 @@ import dayjs, { Dayjs, OpUnitType } from "dayjs";
 import nid from "../nid/nid";
 import type NLog from "../nomie-log/nomie-log";
 import { strToColor } from "../../components/dymoji/dymoji";
-import { UserStore } from "../../store/user-store";
 import { truncateText } from "../../utils/text/text";
 import NDate from "../../utils/ndate/ndate";
 /**

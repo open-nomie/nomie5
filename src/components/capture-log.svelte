@@ -88,8 +88,6 @@
     state.dateFormated = dayjs($ActiveLogStore.end).format(`${dateFormat} ${timeFormat}`);
   }
 
-  // TODO: Add a media/photo type of thing that can be added to a log..
-
   const methods = {
     dateAdd(count: number, unit: OpUnitType) {
       let newDate = dayjs($ActiveLogStore.end || new Date()).add(count, unit);
@@ -197,7 +195,7 @@
       methods.calculateScore();
 
       try {
-        await LedgerStore.saveLog($ActiveLogStore); // TODO: Make ledger task instead
+        await LedgerStore.saveLog($ActiveLogStore);
         saving = false;
       } catch (e) {
         console.error("Error in capture-log logSave", e.message);

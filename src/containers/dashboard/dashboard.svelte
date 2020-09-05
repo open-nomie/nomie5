@@ -190,7 +190,6 @@
         widget.dateFormat = (dtFormat || { date: "MMM Do YYYY" }).date;
         widget.timeFormat = (dtFormat || { time: "h:mma" }).time;
 
-        // TODO make this work for all trackable elements
         if (widget.type == "last-used") {
           if (widget.element.type == "tracker") {
             widget.lastUsed = await LastUsed.get(widget.element.id);

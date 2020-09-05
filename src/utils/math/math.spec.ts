@@ -22,7 +22,6 @@ describe("utils/math", function () {
 
   it("should generate percentages", () => {
     let positivity = [10, 5, 2];
-    console.log("Positivity", positivity);
     expect(JSON.stringify(math.percentile(positivity))).toEqual(JSON.stringify([100, 50, 20]));
   });
 

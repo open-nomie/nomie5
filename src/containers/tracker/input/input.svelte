@@ -121,7 +121,6 @@
     if (value && !data.value) {
       data.value = value;
     } else {
-      // TODO: Figure out wtf is going on with value and data.value - can we just use value?
       data.value = tracker.default || 0;
       value = data.value;
     }

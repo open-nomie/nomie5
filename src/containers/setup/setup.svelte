@@ -1,7 +1,4 @@
 <script>
-  /**
-   * TODO: Make this design not suck! It's very boring.
-   */
   import { onMount } from "svelte";
 
   // modules

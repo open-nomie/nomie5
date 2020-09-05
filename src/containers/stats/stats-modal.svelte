@@ -409,7 +409,6 @@
     // Get Logs from the Ledger Store
     let results = await LedgerStore.query(queryPayload);
 
-    console.log("getStats() log results", results);
     // Prep Stats
     const statsV5 = new StatsV5({});
 
@@ -580,6 +579,7 @@
   }
 
   async function main() {
+    await tick(10);
     // Get term from Interact Store
     state.currentTerm = $Interact.stats.terms[$Interact.stats.terms.length - 1];
     // Get range and view options
@@ -592,10 +592,6 @@
     state.currentColor = state.tracker.color;
     getStats();
   }
-
-  onMount(() => {
-    main();
-  });
 
   /** Reactive Functions and Variables **/
   let lastTimeSpan = state.timeSpan;
