@@ -4,9 +4,11 @@ import TrackableElement from "../trackable-element/trackable-element";
 
 import searchItems from "../../utils/search/search-items";
 import latinize from "../../utils/search/latinize";
+import NLog from "../nomie-log/nomie-log";
 
 export default function (logs, filter) {
   filter = filter || { fuzzy: false };
+
   let term;
   if (filter.search instanceof TrackableElement) {
     term = latinize(filter.search.toSearchTerm());
@@ -21,14 +23,15 @@ export default function (logs, filter) {
 
   // Filter by date if provided
   if (filter.start || filter.end) {
-    logs = logs.filter((log) => {
+    logs = logs.filter((log: NLog) => {
+      log = log instanceof NLog ? log : new NLog(log);
       let pass = false;
-      if (filter.start && filter.end) {
-        pass = log.end >= filter.start && log.end <= filter.end;
+      if (filter.start && filter.end.valueOf()) {
+        pass = log.end >= filter.start.valueOf() && log.end <= filter.end.valueOf();
       } else if (filter.start) {
-        pass = log.end >= filter.start;
+        pass = log.end >= filter.start.valueOf();
       } else if (filter.end) {
-        pass = log.end <= filter.end;
+        pass = log.end <= filter.end.valueOf();
       }
       return pass;
     });

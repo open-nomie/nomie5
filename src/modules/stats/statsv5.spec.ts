@@ -1,9 +1,10 @@
 // import Stats from "../../../src/modules/stats/stats";
-import StatsV5 from "./statsV5";
+import StatsV5, { IStats } from "./statsV5";
 import NomieLog from "../nomie-log/nomie-log";
 import Tracker from "../tracker/tracker";
 import dayjs from "dayjs";
 import TrackableElement from "../trackable-element/trackable-element";
+import StatsProcessor from "./statsV5";
 
 // TODO: write tests for mean math trackers
 
@@ -47,38 +48,81 @@ describe("modules/stats/stats", function () {
     }),
   ];
 
-  const monthago = dayjs().subtract(30, "day");
-  const weekago = dayjs().subtract(7, "day");
-  const dayago = dayjs().subtract(1, "day");
-  const today = dayjs().endOf("day");
   const moodElement = new TrackableElement({
     type: "tracker",
     id: "mood",
     raw: "#mood",
     obj: new Tracker({ tag: "mood", ignore_zeros: true }),
   });
-  const goodElement = new TrackableElement({
-    type: "tracker",
-    id: "good",
-    raw: "#good",
+
+  let startTime = dayjs().subtract(1, "week");
+  let endTime = dayjs().endOf("day");
+
+  let timeStats = new StatsV5({
+    fromDate: startTime,
+    toDate: endTime,
+    rows,
+    math: "sum",
+    trackableElement: moodElement,
   });
 
-  let moodStats = new StatsV5({ math: "mean" });
-  let goodStats = new StatsV5({ math: "sum" });
-  let moodGenerated = moodStats.generate({ rows, fromDate: monthago, toDate: today, math: "mean", trackableElement: moodElement });
-  let goodGenerated = goodStats.generate({ rows, fromDate: monthago, toDate: today, math: "sum", trackableElement: goodElement });
+  it("should handle the right times", () => {
+    let stats: IStats = timeStats.generateResults();
+    expect(stats).toBeTruthy();
+    expect(timeStats.fromDate.format("YYYY-MM-DD")).toEqual(startTime.format("YYYY-MM-DD"));
+    expect(timeStats.toDate.format("YYYY-MM-DD")).toEqual(endTime.format("YYYY-MM-DD"));
 
-  it("stats initializes", () => {
-    expect(goodStats).toBeInstanceOf(StatsV5);
+    timeStats.init({
+      fromDate: startTime,
+      toDate: endTime,
+    });
+
+    expect(timeStats.fromDate.format("YYYY-MM-DD")).toEqual(startTime.format("YYYY-MM-DD"));
+    expect(timeStats.toDate.format("YYYY-MM-DD")).toEqual(endTime.format("YYYY-MM-DD"));
   });
 
-  it("should sum good properlty", () => {
-    expect(goodGenerated.sum).toEqual(38);
-  });
+  // const monthago = dayjs().subtract(30, "day");
+  // const weekago = dayjs().subtract(7, "day");
+  // const dayago = dayjs().subtract(1, "day");
+  // const today = dayjs().endOf("day");
+  // const moodElement = new TrackableElement({
+  //   type: "tracker",
+  //   id: "mood",
+  //   raw: "#mood",
+  //   obj: new Tracker({ tag: "mood", ignore_zeros: true }),
+  // });
+  // const goodElement = new TrackableElement({
+  //   type: "tracker",
+  //   id: "good",
+  //   raw: "#good",
+  // });
 
-  it("should mean mood properly", () => {
-    expect(moodGenerated.avg).toEqual(4);
-  });
+  // let moodStats = new StatsV5({ math: "mean" });
+  // let goodStats = new StatsV5({ math: "sum" });
+  // let moodGenerated = moodStats.generate({ rows, fromDate: monthago, toDate: today, math: "mean", trackableElement: moodElement });
+  // let goodGenerated = goodStats.generate({ rows, fromDate: monthago, toDate: today, math: "sum", trackableElement: goodElement });
+
+  // it("stats initializes", () => {
+  //   expect(goodStats).toBeInstanceOf(StatsV5);
+  // });
+
+  // it("should have the right start and end date", () => {
+  //   let testDate = dayjs(goodGenerated.start).format("YYYY-MM-DD");
+  //   let withDate = monthago.format("YYYY-MM-DD");
+  //   expect(testDate).toBe(withDate);
+
+  //   let testDateTo = dayjs(goodGenerated.start).format("YYYY-MM-DD");
+  //   let withDateTo = today.format("YYYY-MM-DD");
+  //   expect(testDateTo).toBe(withDateTo);
+  // });
+
+  // it("should sum good properlty", () => {
+  //   expect(goodGenerated.sum).toEqual(38);
+  // });
+
+  // it("should mean mood properly", () => {
+  //   expect(moodGenerated.avg).toEqual(4);
+  // });
 
   // it("should respect config order", () => {
   //   let stats = new StatsV5({ math: "mean", mode: "d" });

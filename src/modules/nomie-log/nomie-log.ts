@@ -3,7 +3,7 @@ import nid from "../nid/nid";
 // Modules
 import extractor from "../../utils/extract/extract";
 import ScoreNote from "../scoring/score-note";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import math from "../../utils/math/math";
 
 // import timespace from "@mapbox/timespace";
@@ -43,10 +43,9 @@ export default class NLog {
      * Nomie uses the End date as the primary time.
      * Currently as of 4.4.1 there is no active use of start..
      */
-    let end = starter.end ? new Date(starter.end) : new Date(); // set the end date
-    let start = starter.start ? new Date(starter.start) : end;
-    this.start = start.getTime();
-    this.end = end.getTime();
+
+    this.end = starter.end ? starter.end : new Date().getTime();
+    this.start = starter.start ? starter.start : this.end + 1000;
 
     // Score Calculation
     // This Might be a bad idea - but i'm doing it anyways
@@ -68,6 +67,13 @@ export default class NLog {
 
     // Get the source if provided
     this.source = starter.source || null;
+  }
+
+  endDayjs(): Dayjs {
+    return dayjs(this.end);
+  }
+  startDayjs(): Dayjs {
+    return dayjs(this.start);
   }
 
   // Get it as an object

@@ -1,20 +1,21 @@
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import type { Dayjs } from "dayjs";
 // Modules
 import Tracker from "../tracker/tracker";
-import NomieLog from "../nomie-log/nomie-log";
-import Log from "../nomie-log/nomie-log";
 import logFilter from "../log-filter/log-filter";
 // Utils
 import Logger from "../../utils/log/log";
 import _math from "../../utils/math/math";
-import type TrackableElement from "../trackable-element/trackable-element";
-import type { ITrackableElementType } from "../trackable-element/trackable-element";
 
-import getDayOfWeek from "./day-of-week";
 import getTimeOfDay from "./time-of-day";
+import getDayOfWeek from "./day-of-week";
+
+import NLog from "../nomie-log/nomie-log";
+
+import type { ITrackableElementType, ITrackableElement } from "../trackable-element/trackable-element";
+import type TrackableElement from "../trackable-element/trackable-element";
+import type { IDow } from "./day-of-week";
 import type { ITrackerMath } from "../tracker/tracker";
-import math from "../../utils/math/math";
-import type NLog from "../nomie-log/nomie-log";
 
 export type IStatsChartUnit = "day" | "week" | "month" | "quarter" | "year";
 export type IStatsChartMode = "d" | "w" | "m" | "q" | "y";
@@ -31,15 +32,6 @@ export interface IStatsChartValue {
   y: number;
   date: Dayjs;
   unit: IStatsChartUnit;
-}
-interface IDow {
-  mon: IStatDow;
-  tue: IStatDow;
-  wed: IStatDow;
-  thu: IStatDow;
-  fri: IStatDow;
-  sat: IStatDow;
-  sun: IStatDow;
 }
 
 export interface IStatsValueMap {
@@ -69,7 +61,7 @@ export interface IStatsMaxMin {
 
 export interface IStats {
   trackableElement: TrackableElement;
-  rows: Array<NomieLog>;
+  rows: Array<NLog>;
   type: ITrackableElementType;
   math: ITrackerMath;
   avg: number;
@@ -86,13 +78,25 @@ export interface IStats {
   distance?: number;
   streak?: any;
   _stats?: StatsProcessor;
+  start?: any;
+  end?: any;
 }
 
 const console = new Logger("📊 V5 Stats");
 
+export interface IStatsConfig {
+  fromDate?: Dayjs;
+  toDate?: Dayjs;
+  mode?: IStatsChartMode;
+  is24Hour?: boolean;
+  trackableElement?: TrackableElement;
+  rows?: Array<NLog>;
+  math?: ITrackerMath;
+  tracker?: Tracker;
+}
 export default class StatsProcessor implements IStats {
   trackableElement: TrackableElement;
-  rows: Array<NomieLog>;
+  rows: Array<NLog>;
   type: ITrackableElementType;
   math: ITrackerMath;
   avg: number;
@@ -114,27 +118,43 @@ export default class StatsProcessor implements IStats {
   _stats?: StatsProcessor;
   valueMap: IStatsValueMap;
 
-  constructor(starter: any = {}) {
+  constructor(starter: IStatsConfig) {
     // Set Defaults
+    starter = starter || {};
     this.rows = starter.rows || [];
-    this.fromDate = starter.fromDate || dayjs().subtract(1, "week");
-    this.toDate = starter.toDate || dayjs();
+
+    if (starter.fromDate) {
+      this.fromDate = starter.fromDate || dayjs().subtract(1, "week");
+    }
+    if (starter.toDate) {
+      this.toDate = starter.toDate || dayjs();
+    }
+
     this.mode = starter.mode || "w";
-    this.trackableElement = starter.trackableElement || null;
+    if (starter.trackableElement) {
+      this.trackableElement = starter.trackableElement;
+    }
     this.is24Hour = starter.is24Hour || false;
     this.math = starter.math || "sum";
   }
 
-  init(config) {
-    this.fromDate = config.fromDate || this.fromDate;
-    this.toDate = config.toDate || this.toDate;
+  init(config: IStatsConfig) {
+    if (config.fromDate) {
+      this.fromDate = dayjs(config.fromDate);
+    }
+    if (config.toDate) {
+      this.toDate = dayjs(config.toDate);
+    }
+
     this.mode = config.mode || this.mode;
     this.trackableElement = config.trackableElement || this.trackableElement;
     this.is24Hour = config.is24Hour || this.is24Hour;
     this.rows = config.rows || this.rows;
+
     if (config.math !== this.math && config.math) {
       this.math = config.math;
     }
+
     try {
       this.rows = logFilter(this.rows, { search: this.trackableElement.toSearchTerm() });
     } catch (e) {
@@ -147,7 +167,7 @@ export default class StatsProcessor implements IStats {
    * Generate Results from a Config
    * @param {Object} config
    */
-  generate(config = {}) {
+  generate(config: IStatsConfig) {
     this.init(config);
     return this.generateResults();
   }
@@ -224,7 +244,7 @@ export default class StatsProcessor implements IStats {
       }).length;
       // Return the Streak payload
       return {
-        coverage: math.percentage(totalOn, totalOff),
+        coverage: _math.percentage(totalOn, totalOff),
         streak: firstZero,
         days: totals.length,
         on: totalOn,
@@ -241,7 +261,7 @@ export default class StatsProcessor implements IStats {
       let score = row.score || row.calculateScore();
       scores.push(score);
     });
-    let score = math.sum(scores);
+    let score = _math.sum(scores);
     if (score > 0) {
       return {
         score,
@@ -275,7 +295,7 @@ export default class StatsProcessor implements IStats {
     // Loop Over each Row
     rows.forEach((row) => {
       // Expand Row if not expanded
-      row = row instanceof NomieLog ? row : new NomieLog(row);
+      row = row instanceof NLog ? row : new NLog(row);
       if (!row.trackers) {
         row.getMeta();
       }
@@ -336,15 +356,15 @@ export default class StatsProcessor implements IStats {
 
   /**
    * Get Related Items
-   * @param {Array} rows NomieLog
+   * @param {Array} rows NLog
    */
-  getRelated(overrideRows) {
+  getRelated(overrideRows?: Array<NLog>) {
     let rows = overrideRows || this.rows;
     let people = {};
     let context = {};
     let tags = {};
 
-    this.rows.forEach((row: NomieLog) => {
+    this.rows.forEach((row: NLog) => {
       if (!row.trackers) {
         row.getMeta();
       }
@@ -398,14 +418,14 @@ export default class StatsProcessor implements IStats {
     let values = []; // holds the values for the cahrt
     let unitValues = valueMapTotals.days; // Each of the individual x units for the chart
     // Get start
-
+    // Set the from date... if it's hour - keep it on the same day.
     let from = unit == "hour" ? this.toDate.startOf("day") : this.fromDate;
     // Get End
     let to = unit == "hour" ? this.toDate.endOf("day") : this.toDate;
     // Get Length between to and fromt
     let diff = to.diff(from, unit);
     // Loop over each diff
-    for (var i = 1; i <= diff; i++) {
+    for (var i = 0; i <= diff; i++) {
       // Get the unit format
       const unitDate = dayjs(from).add(i, unit);
       // Generate the key
@@ -553,6 +573,8 @@ export default class StatsProcessor implements IStats {
       // streak: this.getStreakData(),
       dow: getDayOfWeek(this.rows), // day of week
       tod: getTimeOfDay(this.rows), // time of day
+      start: this.fromDate,
+      end: this.toDate,
     };
   }
 }
