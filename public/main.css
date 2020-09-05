@@ -4906,6 +4906,9 @@ button:focus {
     width: 20px !important;
     height: 20px !important; }
 
+.btn svg {
+  stroke: var(--color-inverse); }
+
 .btn-badge {
   font-size: 0.8rem;
   padding: 3pt 6pt 3pt 6pt;
@@ -5581,39 +5584,63 @@ body.theme-dark {
 
 .fill-faded {
   stroke: var(--color-faded) !important; }
+  .fill-faded svg {
+    stroke: var(--color-faded) !important; }
 
 .fill-faded-1 {
   stroke: var(--color-faded-1) !important; }
+  .fill-faded-1 svg {
+    stroke: var(--color-faded-1) !important; }
 
 .fill-white {
   stroke: #fff !important; }
+  .fill-white svg {
+    stroke: #fff !important; }
 
 .fill-faded-2 {
   stroke: var(--color-faded-2) !important; }
+  .fill-faded-2 svg {
+    stroke: var(--color-faded-2) !important; }
 
 .fill-faded-3 {
   stroke: var(--color-faded-3) !important; }
+  .fill-faded-3 svg {
+    stroke: var(--color-faded-3) !important; }
 
 .fill-primary-bright {
   stroke: var(--color-primary-bright) !important; }
+  .fill-primary-bright svg {
+    stroke: var(--color-primary-bright) !important; }
 
 .fill-green {
   stroke: var(--color-green) !important; }
+  .fill-green svg {
+    stroke: var(--color-green) !important; }
 
 .fill-red {
   stroke: var(--color-red) !important; }
+  .fill-red svg {
+    stroke: var(--color-red) !important; }
 
 .fill-inverse {
   stroke: var(--color-inverse) !important; }
+  .fill-inverse svg {
+    stroke: var(--color-inverse) !important; }
 
 .fill-inverse-1 {
   stroke: var(--color-inverse-1) !important; }
+  .fill-inverse-1 svg {
+    stroke: var(--color-inverse-1) !important; }
 
 .fill-inverse-2 {
   stroke: var(--color-inverse-2) !important; }
+  .fill-inverse-2 svg {
+    stroke: var(--color-inverse-2) !important; }
 
 .fill-primary {
   stroke: var(--color-primary) !important; }
+  .fill-primary svg {
+    stroke: var(--color-primary) !important; }
 
 input[type="text"],
 input[type="email"],
@@ -7220,6 +7247,8 @@ aside.n-panel {
   color: var(--color-primary-bright); }
   .tap-icon.sm {
     font-size: 1.5rem !important; }
+  .tap-icon svg {
+    stroke: var(--color-primary-bright); }
   .tap-icon:focus, .tap-icon:active {
     transform: scale(0.9) !important; }
   .tap-icon:hover {

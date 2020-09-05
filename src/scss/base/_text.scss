@@ -135,38 +135,74 @@
 /// Icon Fills
 
 .fill-faded {
+  svg {
+    stroke: var(--color-faded) !important;
+  }
   stroke: var(--color-faded) !important;
 }
 .fill-faded-1 {
+  svg {
+    stroke: var(--color-faded-1) !important;
+  }
   stroke: var(--color-faded-1) !important;
 }
 .fill-white {
+  svg {
+    stroke: #fff !important;
+  }
   stroke: #fff !important;
 }
 .fill-faded-2 {
+  svg {
+    stroke: var(--color-faded-2) !important;
+  }
   stroke: var(--color-faded-2) !important;
 }
 .fill-faded-3 {
+  svg {
+    stroke: var(--color-faded-3) !important;
+  }
   stroke: var(--color-faded-3) !important;
 }
 .fill-primary-bright {
+  svg {
+    stroke: var(--color-primary-bright) !important;
+  }
   stroke: var(--color-primary-bright) !important;
 }
 .fill-green {
+  svg {
+    stroke: var(--color-green) !important;
+  }
   stroke: var(--color-green) !important;
 }
 .fill-red {
+  svg {
+    stroke: var(--color-red) !important;
+  }
   stroke: var(--color-red) !important;
 }
 .fill-inverse {
+  svg {
+    stroke: var(--color-inverse) !important;
+  }
   stroke: var(--color-inverse) !important;
 }
 .fill-inverse-1 {
+  svg {
+    stroke: var(--color-inverse-1) !important;
+  }
   stroke: var(--color-inverse-1) !important;
 }
 .fill-inverse-2 {
+  svg {
+    stroke: var(--color-inverse-2) !important;
+  }
   stroke: var(--color-inverse-2) !important;
 }
 .fill-primary {
+  svg {
+    stroke: var(--color-primary) !important;
+  }
   stroke: var(--color-primary) !important;
 }

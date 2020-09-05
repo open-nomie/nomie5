@@ -8,6 +8,10 @@
     font-size: 1.5rem !important;
   }
 
+  svg {
+    stroke: var(--color-primary-bright);
+  }
+
   &:focus,
   &:active {
     transform: scale(0.9) !important;

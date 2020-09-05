@@ -42,6 +42,10 @@ button:focus {
   // color: inherit;
 }
 
+.btn svg {
+  stroke: var(--color-inverse);
+}
+
 .btn-badge {
   font-size: 0.8rem;
   padding: 3pt 6pt 3pt 6pt;
