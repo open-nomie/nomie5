@@ -134,6 +134,7 @@ export class Widget {
   public timeFormat?: string = "h:mm a";
   public timeRange?: WidgetTimeFrame;
   public type?: string = "value";
+  public loading?: boolean = false;
 
   constructor(payload?: WidgetConfig) {
     payload = payload || {};

@@ -46,6 +46,7 @@
   import { widgetTypes } from "./widgetTypes";
   import { truncateText } from "../../utils/text/text";
   import { UserStore } from "../../store/user-store";
+  import tick from "../../utils/tick/tick";
   // import { getDashboardStartEndDates } from "./dashboard-helpers";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
@@ -165,6 +166,67 @@
     return logs;
   }
 
+  async function getWidgetStats(widget: Widget): Promise<Widget> {
+    let start = widget.getStartDate(firstDayOfWeek);
+    let end = widget.getEndDate(firstDayOfWeek);
+    if (widget.type == "last-used") {
+      if (widget.element.type == "tracker") {
+        widget.lastUsed = await LastUsed.get(widget.element.id);
+      } else if (widget.element.type == "person") {
+        let person: Person = await $PeopleStore.people[widget.element.id];
+        if (person) {
+          widget.lastUsed = person.last;
+        }
+      }
+      if (widget.lastUsed) {
+        let lastUsedDay = dayjs(widget.lastUsed);
+        let daysPast = Math.abs(dayjs().diff(lastUsedDay, "day"));
+        widget.stats = widget.stats || {};
+        widget.stats.daysPast = daysPast;
+      }
+    } else if (widget.element && widget.type != "last-used") {
+      widget.logs = await getLogsForWidget(widget);
+
+      const statsV5 = new StatsProcessor({});
+      // Generate Stats
+      widget.math = widget.math || (widget.element.obj || {}).math || "sum";
+      // Get dayjs Start Date
+      const fromDate = dayjs(start);
+      const toDate = dayjs(end);
+      const dayDiff = Math.abs(fromDate.diff(toDate, "day"));
+      // Set Default Mode to "Week"
+      let mode = "w";
+      // Determine Stat Mode based on number of days provided
+      if (dayDiff < 8) {
+        mode = "w";
+      } else if (dayDiff < 89) {
+        mode = "m";
+      } else if (dayDiff < 365) {
+        mode = "q";
+      } else if (dayDiff > 364) {
+        mode = "y";
+      } else {
+        mode = "m";
+      }
+      // Setup the Config to Pass to Stats
+      const statsConfig: any = {
+        rows: widget.logs,
+        fromDate,
+        toDate,
+        mode,
+        math: widget.math, //state.tracker.math
+        trackableElement: widget.element,
+      };
+      // Generate the Stats
+      widget.stats = statsV5.generate(statsConfig);
+
+      // Generate the Positivity
+      widget.positivity = positivityFromLogs(widget.logs, widget.element);
+    }
+    widget.loading = false;
+    return widget;
+  }
+
   /**
    * Load The Active Dashboard
    * This will take the current active dashboard from the store, loop over it, and build out
@@ -189,62 +251,8 @@
 
         widget.dateFormat = (dtFormat || { date: "MMM Do YYYY" }).date;
         widget.timeFormat = (dtFormat || { time: "h:mma" }).time;
+        widget.loading = true;
 
-        if (widget.type == "last-used") {
-          if (widget.element.type == "tracker") {
-            widget.lastUsed = await LastUsed.get(widget.element.id);
-          } else if (widget.element.type == "person") {
-            let person: Person = await $PeopleStore.people[widget.element.id];
-            if (person) {
-              widget.lastUsed = person.last;
-            }
-          }
-
-          if (widget.lastUsed) {
-            let lastUsedDay = dayjs(widget.lastUsed);
-            let daysPast = Math.abs(dayjs().diff(lastUsedDay, "day"));
-            widget.stats = widget.stats || {};
-            widget.stats.daysPast = daysPast;
-          }
-        } else if (widget.element && widget.type != "last-used") {
-          widget.logs = await getLogsForWidget(widget);
-
-          const statsV5 = new StatsProcessor({});
-          // Generate Stats
-          widget.math = widget.math || (widget.element.obj || {}).math || "sum";
-          // Get dayjs Start Date
-          const fromDate = dayjs(start);
-          const toDate = dayjs(end);
-          const dayDiff = Math.abs(fromDate.diff(toDate, "day"));
-          // Set Default Mode to "Week"
-          let mode = "w";
-          // Determine Stat Mode based on number of days provided
-          if (dayDiff < 8) {
-            mode = "w";
-          } else if (dayDiff < 89) {
-            mode = "m";
-          } else if (dayDiff < 365) {
-            mode = "q";
-          } else if (dayDiff > 364) {
-            mode = "y";
-          } else {
-            mode = "m";
-          }
-          // Setup the Config to Pass to Stats
-          const statsConfig: any = {
-            rows: widget.logs,
-            fromDate,
-            toDate,
-            mode,
-            math: widget.math, //state.tracker.math
-            trackableElement: widget.element,
-          };
-          // Generate the Stats
-          widget.stats = statsV5.generate(statsConfig);
-
-          // Generate the Positivity
-          widget.positivity = positivityFromLogs(widget.logs, widget.element);
-        }
         // Replace the widget with the new populated version.
         dboard.widgets[i] = widget;
       }
@@ -252,10 +260,17 @@
       console.error("No DBoard Found...");
     }
 
-    // Set the Active Dashboard
     activeDashboard = dboard || new Dashboard();
     ready = true;
     loading = false;
+
+    if (activeDashboard.widgets.length) {
+      for (let i = 0; i < activeDashboard.widgets.length; i++) {
+        activeDashboard.widgets[i] = await getWidgetStats(activeDashboard.widgets[i]);
+      }
+    }
+
+    // Set the Active Dashboard
   }
 
   /**
@@ -412,7 +427,7 @@
         </div>
         <hr class="divider center my-3" />
       {/if}
-      {#if !editMode && ready}
+      {#if !editMode && activeDashboard && activeDashboard.widgets}
         <div class="dashboard-wrapper" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
           {#if people && trackers}
             {#if activeDashboard.widgets.length == 0}

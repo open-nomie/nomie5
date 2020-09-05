@@ -27,6 +27,8 @@
   import { LastUsed } from "../../store/last-used";
   import { Interact } from "../../store/interact";
   import { DashboardStore } from "../../store/dashboard-store";
+  import Spinner from "../../components/spinner/spinner.svelte";
+  import { Lang } from "../../store/lang";
 
   const dispatch = createEventDispatcher();
   const id = nid();
@@ -263,24 +265,30 @@
       </Button>
     </div>
     <div class="widget-main">
-      {#if ['barchart', 'linechart'].indexOf(widget.type) > -1 && widget.stats && widget.stats.chart}
-        <WidgetBarChart {widget} />
-      {:else if widget.type == 'value' && widget.stats}
-        <WidgetValue {widget} />
-      {:else if widget.type == 'what-time'}
-        <WidgetWhatTime {widget} />
-      {:else if widget.type == 'last-used'}
-        <WidgetLastUsed {widget} />
-      {:else if widget.type == 'positivity' && widget.stats}
-        <WidgetPositivityPie {widget} />
-      {:else if widget.type == 'min-max' && widget.stats}
-        <WidgetMinMax {widget} />
-      {:else if widget.type == 'map' && widget.stats}
-        <WidgetMap {widget} />
-      {:else if widget.type == 'streak' && widget.stats}
-        <WidgetStreak {widget} />
+      {#if widget.stats}
+        {#if ['barchart', 'linechart'].indexOf(widget.type) > -1 && widget.stats && widget.stats.chart}
+          <WidgetBarChart {widget} />
+        {:else if widget.type == 'value' && widget.stats}
+          <WidgetValue {widget} />
+        {:else if widget.type == 'what-time'}
+          <WidgetWhatTime {widget} />
+        {:else if widget.type == 'last-used'}
+          <WidgetLastUsed {widget} />
+        {:else if widget.type == 'positivity' && widget.stats}
+          <WidgetPositivityPie {widget} />
+        {:else if widget.type == 'min-max' && widget.stats}
+          <WidgetMinMax {widget} />
+        {:else if widget.type == 'map' && widget.stats}
+          <WidgetMap {widget} />
+        {:else if widget.type == 'streak' && widget.stats}
+          <WidgetStreak {widget} />
+        {:else}
+          <div class="value">Unknown {widget.type}</div>
+        {/if}
       {:else}
-        <div class="value">Unknown {widget.type}</div>
+        <div class="value n-row">
+          <Spinner size={24} />
+        </div>
       {/if}
     </div>
     <div class="widget-footer n-row">
