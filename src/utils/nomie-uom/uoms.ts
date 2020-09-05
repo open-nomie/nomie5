@@ -140,15 +140,7 @@ export default {
     symbolAffix: "post",
     symbolSpace: false,
     display: function (v) {
-      if (v < 60) {
-        return v + "m";
-      } else if (v > 60 && v < 1441) {
-        return Math.round((v / 60) * 100) / 100 + "h";
-      } else if (v > 1440) {
-        return (v / 1440).toFixed(0) + "d";
-      } else {
-        return v + "m";
-      }
+      return time.secondsToTime(v * 60);
     },
   },
   hour: {
@@ -159,11 +151,7 @@ export default {
     symbolAffix: "post",
     symbolSpace: false,
     display: function (v) {
-      if (v < 168) {
-        return Math.round(v * 100) / 100 + "h";
-      } else {
-        return (v / 24).toFixed(0) + "d";
-      }
+      return time.secondsToTime(v * 60 * 60);
     },
   },
   day: {

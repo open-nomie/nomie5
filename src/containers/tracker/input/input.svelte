@@ -163,11 +163,7 @@
   bodyClass={`${tracker.type == 'picker' ? 'no-scroll' : ''}`}
   className="tracker-input">
   <div class="n-toolbar-grid n-row" slot="header">
-    <div class="left truncate pl-3">
-      <span class="animate truncate up {data.ready ? 'visible' : 'hidden'}">
-        {#if data.tracker && tracker.type !== 'picker'}{data.tracker.displayValue(data.value)}{/if}
-      </span>
-    </div>
+    <div class="left truncate pl-3" />
     <div class="main">
       <span class="animate up text-md {data.ready ? 'visible' : 'hidden'}">{tracker.emoji} {tracker.label}</span>
     </div>
@@ -182,6 +178,7 @@
 
       {#if tracker.type === 'range'}
         <SliderInput
+          {tracker}
           value={(data.value || tracker.min) + ''}
           min={(tracker.min || 0) + ''}
           max={(tracker.max || 0) + ''}

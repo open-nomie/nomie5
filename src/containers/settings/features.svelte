@@ -39,7 +39,7 @@
   };
 </script>
 
-<div class="n-list my-2">
+<div class="n-list my-2 features">
   <ListItem bottomLine className="py-2" title="People Tracking" description="Keep track of those you interact with the most">
     <div slot="right" class="pl-2">
       <ToggleSwitch

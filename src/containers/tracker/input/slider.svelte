@@ -1,9 +1,11 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import Text from "../../../components/text/text.svelte";
 
   export let min = "0";
   export let max = "10";
   export let value = "5";
+  export let tracker = undefined;
 
   let tempValue;
 
@@ -31,7 +33,6 @@
 
     .value {
       text-align: center;
-      font-weight: bold;
       font-size: 2rem;
       margin: 0 0 20px 0;
       line-height: 2rem;
@@ -100,8 +101,7 @@
     }
     input[type="range"]::-moz-range-thumb {
       $trackSize: $size * 0.9;
-      box-shadow: 5.4px 5.4px 6.5px rgba(0, 0, 0, 0.18),
-        0px 0px 5.4px rgba(13, 13, 13, 0.18);
+      box-shadow: 5.4px 5.4px 6.5px rgba(0, 0, 0, 0.18), 0px 0px 5.4px rgba(13, 13, 13, 0.18);
       border: 1px solid var(--color-inverse);
       height: $size * 0.9;
       width: $size * 0.9;
@@ -117,7 +117,15 @@
 </style>
 
 <div class="tracker-input slider">
-  <div class="value">{tempValue}</div>
+  <div class="value">
+
+    {#if tracker && tracker.uom !== 'num'}
+      <Text size="lg" bold className="text-primary-bright">{tracker.displayValue(tempValue)}</Text>
+      <Text size="sm" faded>{tempValue}</Text>
+    {:else if tracker}
+      <Text size="xxl" bold>{tempValue}</Text>
+    {/if}
+  </div>
   <input
     type="range"
     bind:value={tempValue}

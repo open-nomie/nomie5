@@ -29,6 +29,7 @@
       pin = nid(_pin);
       if (pin !== accessPin) {
         Interact.alert(`Invalid Pin`, "Please try again.");
+        _pin = "";
       }
     },
     shake() {

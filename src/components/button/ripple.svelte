@@ -26,6 +26,7 @@
 
 <style lang="scss">
   .ripple {
+    pointer-events: none;
     position: absolute;
     left: 0;
     right: 0;
