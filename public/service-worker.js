@@ -24,6 +24,7 @@ const PRECACHE_URLS = [
   "index.html",
   "manifest.json",
   "favicon.png",
+  "images/nomie-head-on.png",
   "images/icons/nomie-android-192.png",
   "./", // Alias for index.html
 ];
