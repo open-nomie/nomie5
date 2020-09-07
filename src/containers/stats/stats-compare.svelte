@@ -367,8 +367,8 @@
         <ListItem className="solo chart-item">
           <div slot="left" class="pl-3">
             <Spinner size={18} />
+            <Text size="sm" className="ml-2">{compare.getSearchTerm()}</Text>
           </div>
-          <Text size="sm">${compare.getSearchTerm()} {Lang.t('general.loading', 'Loading')}</Text>
         </ListItem>
       {/if}
     {/each}

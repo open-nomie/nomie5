@@ -30,6 +30,11 @@
     <ListItem className="solo" title="Average">
       <div slot="right" class="text-lg text-inverse">{formatValue(math.round(stats.avg, 100))}</div>
     </ListItem>
+    {#if stats._stats.mode !== 'd'}
+      <ListItem className="solo" title="Daily Average">
+        <div slot="right" class="text-lg text-inverse">{formatValue(math.round(stats.sum / stats.rows.length, 100))}</div>
+      </ListItem>
+    {/if}
     {#if stats.max.value > stats.min.value}
       <ListItem className="solo" title="Range">
         <div slot="right" class="text-lg text-inverse value">
