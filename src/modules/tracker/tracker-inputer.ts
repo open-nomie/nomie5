@@ -106,7 +106,6 @@ export default class TrackerInputer {
      */
     for (let i = 0; i < items.length; i++) {
       let response = await this.getTrackerInputAsString(items[i].tracker, items[i].value, i == items.length - 1);
-      console.log("input response in tracker-input for 109", response);
       this.lastAction = response.action;
       note.push(response.raw);
     }
@@ -133,7 +132,6 @@ export default class TrackerInputer {
     } else {
       let input: ITrackerInputResult = await this.getTrackerInputAsString(this.tracker);
       let noteContent = input.raw;
-      console.log("Note Content", noteContent);
       note.push(noteContent);
     }
     return note.join(" ");

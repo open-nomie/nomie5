@@ -24,8 +24,7 @@
   import Text from "../components/text/text.svelte";
   import Button from "../components/button/button.svelte";
 
-  export let location = undefined;
-  console.log(location);
+  export let location;
 
   let state = {
     people: [],

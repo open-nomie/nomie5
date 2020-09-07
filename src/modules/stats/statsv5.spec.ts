@@ -16,7 +16,6 @@ function rowMaker(count: number): Array<NLog> {
   let startDaysBack = 100;
   let date = dayjs().subtract(startDaysBack, "day");
   for (let i = 0; i <= startDaysBack; i++) {
-    // console.log(`creating row for ${date.add(i, "day").format("YYYY-MM-DD")}`);
     let log = new NLog({
       end: date.add(i, "day").valueOf(),
       note: `#fake(${i})`,
@@ -230,7 +229,6 @@ describe("modules/stats/stats", function () {
 // it("should generate the right number of labels for chart", () => {
 //   let daysAgo = dayjs().diff(monthago, "day");
 //   moodStats.generateResults();
-//   console.log({ moodStats });
 //   expect(moodStats.chart.labels.length).toEqual(daysAgo);
 //   expect(moodStats.chart.values.length).toEqual(daysAgo);
 // });

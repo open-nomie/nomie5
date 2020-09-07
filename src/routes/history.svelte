@@ -50,8 +50,6 @@
   export let location;
   export let style = undefined;
 
-  // console.log(`History ${location}`);
-
   let datePicker;
   let searchInput;
   let appTitle = null;
