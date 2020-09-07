@@ -15,9 +15,10 @@ export interface ITrackerInputerGetOptions {
 }
 export interface ITrackerInputResult {
   suffix?: string;
-  tracker: TrackerConfig;
-  value: number;
+  tracker?: TrackerConfig;
+  value?: number;
   action?: string;
+  raw?: string;
 }
 /**
  * Tracker Input
@@ -59,12 +60,17 @@ export default class TrackerInputer {
     });
   }
 
-  async getTrackerInputAsString(tracker: TrackerConfig, value?: number, allowSave: boolean = false): Promise<string> {
-    const response: any = await Interact.trackerInput(tracker, { value, allowSave });
+  async getTrackerInputAsString(tracker: TrackerConfig, value?: number, allowSave: boolean = false): Promise<ITrackerInputResult> {
+    const response: ITrackerInputResult = await Interact.trackerInput(tracker, { value, allowSave });
     if (response && response.tracker) {
-      return `#${response.tracker.tag}(${response.value}) ${response.suffix || ""}`;
+      return {
+        raw: `#${response.tracker.tag}(${response.value}) ${response.suffix || ""}`,
+        action: response.action,
+        tracker: response.tracker,
+        value: response.value,
+      };
     } else {
-      return ``;
+      return null;
     }
   }
 
@@ -74,7 +80,7 @@ export default class TrackerInputer {
    * and extracts the trackers, people and context.
    * @param {Tracker} tracker
    */
-  async getNoteTrackerInputAsString(tracker) {
+  async getNoteTrackerInputAsString(tracker): Promise<string> {
     // Set up the Note
     let note = [];
 
@@ -100,7 +106,9 @@ export default class TrackerInputer {
      */
     for (let i = 0; i < items.length; i++) {
       let response = await this.getTrackerInputAsString(items[i].tracker, items[i].value, i == items.length - 1);
-      note.push(response);
+      console.log("input response in tracker-input for 109", response);
+      this.lastAction = response.action;
+      note.push(response.raw);
     }
     // Merge all of the note array into a single string.
     return note.join(" ").replace(/  /g, " ");
@@ -120,11 +128,13 @@ export default class TrackerInputer {
       }
       note.push(content);
     } else if (this.tracker.type === "note") {
-      let input = await this.getNoteTrackerInputAsString(this.tracker);
+      let input: string = await this.getNoteTrackerInputAsString(this.tracker);
       note.push(input);
     } else {
-      let input = await this.getTrackerInputAsString(this.tracker);
-      note.push(input);
+      let input: ITrackerInputResult = await this.getTrackerInputAsString(this.tracker);
+      let noteContent = input.raw;
+      console.log("Note Content", noteContent);
+      note.push(noteContent);
     }
     return note.join(" ");
   }

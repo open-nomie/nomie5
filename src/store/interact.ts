@@ -259,6 +259,13 @@ const interactInit = () => {
         return s;
       });
     },
+    /**
+     * Tracker Input Action
+     * This is an important Interaction - used to get values
+     * from a specfic tracker
+     * @param tracker
+     * @param options
+     */
     async trackerInput(tracker, options: any = {}): Promise<ITrackerInputResult> {
       let value = options.value || null;
       let allowSave = options.allowSave === false ? false : true;
@@ -268,10 +275,10 @@ const interactInit = () => {
           s.trackerInput.tracker = tracker;
           s.trackerInput.allowSave = allowSave;
           s.trackerInput.value = value;
-          s.trackerInput.onInteract = (tracker, action: string = "unknown") => {
+          s.trackerInput.onInteract = (payload, action: string = "unknown") => {
             if (action !== "cancelled") {
-              tracker.action = action;
-              resolve(tracker);
+              payload.action = action;
+              resolve(payload);
             }
           };
           return s;
