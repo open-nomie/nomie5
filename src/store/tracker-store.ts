@@ -304,7 +304,7 @@ const trackerStoreInit = () => {
           .catch(reject);
       });
     },
-    put() {
+    async put() {
       let data = methods.data();
       return Storage.put(NPaths.storage.trackers(), data.trackers);
     },
@@ -314,10 +314,11 @@ const trackerStoreInit = () => {
      * Optionally provide an object of trackers.
      * This will merge with existing.
      */
-    save(trackers: ITrackers = {}) {
+    async save(trackers: ITrackers = {}) {
+      let existing = await Storage.get(NPaths.storage.trackers());
       let mergedTrackers;
       update((state) => {
-        mergedTrackers = { ...state.trackers, ...trackers };
+        mergedTrackers = { ...state.trackers, ...trackers, ...(existing || {}) };
         Object.keys(mergedTrackers).forEach((tag) => {
           mergedTrackers[tag] = new Tracker(mergedTrackers[tag]);
         });
