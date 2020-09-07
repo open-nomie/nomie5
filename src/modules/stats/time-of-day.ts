@@ -1,35 +1,42 @@
 import math from "../../utils/math/math";
+import type { IStatsTod } from "./statsV5";
+
 function TimeOfDay(rows, tag = null) {
-  let tod = {
+  let tod: IStatsTod = {
     early_morning: {
       count: 0,
       values: [],
       start: 0,
       end: 6,
+      percent: 0,
     },
     morning: {
       count: 0,
       values: [],
       start: 6,
       end: 12,
+      percent: 0,
     },
     afternoon: {
       count: 0,
       values: [],
       start: 12,
       end: 18,
+      percent: 0,
     },
     evening: {
       count: 0,
       values: [],
       start: 18,
       end: 21,
+      percent: 0,
     },
     night: {
       count: 0,
       values: [],
       start: 21,
       end: 24,
+      percent: 0,
     },
   };
 
