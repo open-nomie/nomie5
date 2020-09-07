@@ -34,7 +34,7 @@ export interface ITimeSpan {
 }
 
 export const timeSpans: ITimeSpan = {
-  d: { id: "d", format: "YYYY-MM-DD-H", label: "D", title: "Day", displayUnit: "hour", unit: "day" },
+  d: { id: "d", format: "YYYY-MM-DD-HH", label: "D", title: "Day", displayUnit: "hour", unit: "day" },
   w: { id: "w", format: "YYYY-MM-DD", label: "W", title: "Week", displayUnit: "day", unit: "week" },
   m: { id: "m", format: "YYYY-MM-DD", label: "M", title: "Month", displayUnit: "day", unit: "month" },
   q: { id: "q", format: "YYYY-MM-w", label: "3M", title: "Quarter", displayUnit: "week", unit: "month", count: 3 },
