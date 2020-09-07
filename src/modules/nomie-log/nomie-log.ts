@@ -45,7 +45,7 @@ export default class NLog {
      */
 
     this.end = starter.end ? starter.end : new Date().getTime();
-    this.start = starter.start ? starter.start : this.end + 1000;
+    this.start = starter.start ? starter.start : this.end - 1000;
 
     // Score Calculation
     // This Might be a bad idea - but i'm doing it anyways
