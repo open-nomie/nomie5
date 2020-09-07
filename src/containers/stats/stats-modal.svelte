@@ -288,7 +288,6 @@
    * **/
   function getToDate(): Dayjs {
     let toDate = dayjs(state.date).endOf("day");
-    console.log({ toDate: toDate.format("ddd MMM Do YYYY hh:mm a") });
     return toDate;
   }
 
@@ -529,37 +528,6 @@
   }
   async function _setSelected(selected) {
     state.selected = selected;
-
-    // let payload = {
-    //   start: dayjs(state.selected.date).startOf("day"),
-    //   end: dayjs(state.selected.date).endOf("day"),
-    //   limit: 100,
-    // };
-    // // if day - normalize start and end
-    // if (state.timeSpan == "d") {
-    //   payload.start = dayjs(state.selected.date).startOf("hour");
-    //   payload.end = dayjs(state.selected.date).endOf("hour");
-    // } else if (state.timeSpan == "w" || state.timeSpan == "m") {
-    //   payload.start = dayjs(state.selected.date).startOf("day");
-    //   payload.end = dayjs(state.selected.date).endOf("day");
-    // } else if (state.timeSpan == "q") {
-    //   payload.end = dayjs(state.selected.date).endOf("month");
-    //   payload.start = dayjs(payload.end).subtract(3, "month").startOf("month");
-    // } else if (state.timeSpan == "y") {
-    //   payload.start = dayjs(state.selected.date).startOf("month");
-    //   payload.end = dayjs(state.selected.date).endOf("month");
-    // }
-
-    // let rows = await LedgerStore.query(payload);
-
-    // if (dataViews.logs.focused) {
-    //   state.selected.rows = rows.filter((row) => {
-    //     return row.note.match(regex.escape(state.trackableElement.toSearchTerm()));
-    //   });
-    // } else {
-    //   state.selected.rows = rows;
-    // }
-    // return state.selected.rows;
   }
 
   async function main() {

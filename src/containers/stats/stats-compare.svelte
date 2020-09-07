@@ -205,9 +205,11 @@
     let compareItems = {};
     let trackerTags = Object.keys($TrackerStore.trackers);
     let activeTrackerValues = stats.chart.values.map((point) => point.y);
+    Interact.blocker(`Comparing against ${trackerTags.length} trackers...`);
     // Loop over trackers
     for (var i = 0; i < trackerTags.length; i++) {
       let tag = trackerTags[i]; // get tag
+      Interact.blocker(`Analyzing at ${tag}...`);
       let tracker = $TrackerStore.trackers[tag]; // get tracker
       let results: any = await getTrackerStats(tracker); // get stats
       let compareValues = results.stats.chart.values.map((point) => point.y); // get y values
