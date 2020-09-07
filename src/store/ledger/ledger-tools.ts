@@ -157,6 +157,10 @@ export default class LedgerTools {
     }
   }
 
+  /**
+   * Get Users Memeories
+   * @param getDayLookup -
+   */
   public async getMemories(getDayLookup: Function): Promise<Array<NLog>> {
     let times = [];
     let firstDate = await this.getFirstDate();
@@ -198,6 +202,11 @@ export default class LedgerTools {
     return memories;
   }
 
+  /**
+   * Nomie Core Record Query Function
+   * @param options - IQueryOptions
+   * @param existingBooks - pass any existing books to look for
+   */
   async query(options: IQueryOptions, existingBooks?: IBooks) {
     options = options || {};
     // Fresh? Should pull from storage not cache
@@ -215,28 +224,31 @@ export default class LedgerTools {
       options.end = dayjs();
     }
 
-    // Start
+    /**
+     * Get all books to cover this search query time frame
+     * logs could be stored across books so we will
+     * get the books, then query the results
+     */
+    // Set official start and end time
     let startTime = options.start.startOf("day");
-    // End Time
     let endTime = options.end.endOf("day");
-
     // Diff Betwen the two
     const bookFormat: any = appConfig.book_time_unit || "week";
-    // Diff
+    // How many different books do we need to get to cover this time span?
     let diff = endTime.diff(startTime, bookFormat);
     // Define array of "book paths" to get
     let booksToGet = [];
-
     // If there's no diff, no need get multiple books
     if (diff === 0) {
-      // FOUND IT... This might be the problem...
+      // It's only one book, but for the sake of wonkey monday settings
+      // lets get the book after it too
       let bookId = startTime.format(appConfig.book_time_format);
       booksToGet.push(bookId);
       booksToGet.push(startTime.add(1, bookFormat).format(appConfig.book_time_format));
     } else {
       // We need to get multiple books.
       booksToGet.push(startTime.format(appConfig.book_time_format));
-      diff = diff + 1; // add one book for good measure
+      diff = diff + 2; // add two book for good measure
       for (let i = 0; i < diff; i++) {
         // Push each of the formated dates YYYY-w to an array
         let thisBookDateStr = dayjs(startTime).add(i, bookFormat);

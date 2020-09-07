@@ -7,15 +7,16 @@
 
   // Modules
   import Tracker from "../../modules/tracker/tracker";
-  import TrackerConfig from "../../modules/tracker/tracker";
+  import type TrackerConfig from "../../modules/tracker/tracker";
   import type { ITracker } from "../../modules/tracker/tracker";
   import NLog from "../../modules/nomie-log/nomie-log";
-  import StatsV5 from "../../modules/stats/statsV5";
+  import StatsV5, { timeSpans } from "../../modules/stats/statsV5";
+  import type { ITimeSpanUnit, ITimeSpan } from "../../modules/stats/statsV5";
   import StatsRef from "../../modules/stats/stats-ref";
 
   import TimeOfDay from "../../components/time-of-day/time-of-day.svelte";
   import DayOfWeek from "../../components/day-of-week/day-of-week.svelte";
-  import TrackableElement from "../../modules/trackable-element/trackable-element";
+  import type TrackableElement from "../../modules/trackable-element/trackable-element";
   import type { ITrackableElement } from "../../modules/trackable-element/trackable-element";
 
   // import { strToColor } from "../../components/dymoji/dymoji";
@@ -69,23 +70,6 @@
    * Time Spans available for stats - holding of various
    * units and formats
    **/
-  interface ITimeSpanUnit {
-    id: string;
-    label: string;
-    title: string;
-    unit: OpUnitType;
-    count?: number;
-  }
-  interface ITimeSpan {
-    [key: string]: ITimeSpanUnit;
-  }
-  export const timeSpans = {
-    d: { id: "d", label: "D", title: "Day", unit: "day" },
-    w: { id: "w", label: "W", title: "Week", unit: "week" },
-    m: { id: "m", label: "M", title: "Month", unit: "month" },
-    q: { id: "q", label: "3M", title: "Quarter", unit: "month", count: 3 },
-    y: { id: "y", label: "Y", title: "Year", unit: "year" },
-  };
 
   /**
    * View Management
@@ -303,7 +287,9 @@
    * Returns a Dayjs version of the date
    * **/
   function getToDate(): Dayjs {
-    return dayjs(state.date).endOf("day");
+    let toDate = dayjs(state.date).endOf("day");
+    console.log({ toDate: toDate.format("ddd MMM Do YYYY hh:mm a") });
+    return toDate;
   }
 
   /**
@@ -401,10 +387,8 @@
       end: getToDate(),
     };
     // if day - normalize start and end
-    if (state.timeSpan == "d") {
-    }
-    queryPayload.start = dayjs(getFromDate()).startOf("day");
-    queryPayload.end = dayjs(getToDate()).endOf("day");
+    queryPayload.start = getFromDate();
+    queryPayload.end = getToDate();
 
     // Get Logs from the Ledger Store
     let results = await LedgerStore.query(queryPayload);
