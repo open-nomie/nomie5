@@ -163,7 +163,7 @@
   }
 </style>
 
-<div class="wrapper">
+<div class={`wrapper active-${activeIndex}`}>
   {#if selected && selected.unit == 'day'}
     <div class="selected">
       <Button
