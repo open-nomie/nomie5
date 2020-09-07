@@ -170,16 +170,17 @@
     },
     async capture(log) {
       state.capturingId = log.id;
-      await tick(1000);
-
-      let nLog = toLog(log); // convert to log
-      let response = LedgerStore.saveLog(nLog);
-
-      state.hidden.push(log.id);
-      state.hidden = state.hidden;
-      if (state.logs.length == state.hidden.length) {
-        // They've done all of them - clear it.
-        methods.clear();
+      await tick(400);
+      try {
+        let response = await NomieAPI.import([log]);
+        state.hidden.push(log.id);
+        state.hidden = state.hidden;
+        if (state.logs.length == state.hidden.length) {
+          // They've done all of them - clear it.
+          methods.clear();
+        }
+      } catch (e) {
+        console.error(e.message);
       }
     },
     setView(view) {
@@ -279,10 +280,10 @@
                 }}>
                 {#if state.capturingId === apiLog.id}
                   <Spinner color="#FFF" size={24} />
-                  Saving
+                  {Lang.t('general.saving', 'Saving')}
                 {:else}
                   <NIcon name="checkmarkOutline" className="fill-white mr-2" />
-                  Accept
+                  {Lang.t('general.accept', 'Accept')}
                 {/if}
               </Button>
             </div>

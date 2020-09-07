@@ -88,7 +88,7 @@ const nomieApiInit = () => {
       }
     },
     async import(logs) {
-      Interact.blocker(`Importing ${logs.length} notes from the API...`);
+      Interact.blocker(`Importing ${logs.length}  ${logs.length > 1 ? "notes" : "note"} from the API...`);
       // Wait a second
       await tick(500);
       // loop over each log
@@ -102,9 +102,9 @@ const nomieApiInit = () => {
         let log = logs[i];
         try {
           // Add the Date
-          log.end = new Date(log.date);
           // Convert it into an official Nomie Log
           let nLog = new NomieLog(log);
+          log.end = new Date(log.date).getTime();
           // Save the Log
           await LedgerStore.saveLog(nLog);
           // Push success
