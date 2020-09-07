@@ -1,6 +1,7 @@
 /**
  * Commander
- * Partial port + cleanup from Nomie 2 - currently only supports Notes.  Nomie 2 supported all sorts of wacky shit
+ * Partial port + cleanup from Nomie 2 - currently only supports Notes.
+ * Nomie 2 supported all sorts of wacky shit
  */
 
 // Svelte

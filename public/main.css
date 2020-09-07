@@ -5481,6 +5481,8 @@ body.theme-dark {
 
 .text-red {
   color: #e94151 !important; }
+  .text-red .n-text {
+    color: #e94151 !important; }
 
 .text-green {
   color: #38a83f !important; }

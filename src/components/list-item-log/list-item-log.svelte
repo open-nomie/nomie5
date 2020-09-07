@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
   // Svelte
   import { createEventDispatcher, onMount } from "svelte";
 
   // Modules
-  import NomieLog from "../../modules/nomie-log/nomie-log";
+  import NLog from "../../modules/nomie-log/nomie-log";
   import Tracker from "../../modules/tracker/tracker";
 
   // components
@@ -41,12 +41,14 @@
   export let focus = false;
   export let fullDate = false;
   export let hideMore = undefined;
+  export let moreOveride: boolean = false;
+  export let hideDelete: boolean = false;
 
   // consts
   const dispatch = createEventDispatcher();
 
-  let displayLog;
-  let logMeta;
+  let displayLog: NLog;
+  let logMeta: any;
 
   let trackers = $TrackerStore.trackers;
 
@@ -55,7 +57,7 @@
   };
 
   $: if (log && log !== displayLog) {
-    displayLog = new NomieLog(log);
+    displayLog = new NLog(log);
     logMeta = displayLog.getMeta();
     logMeta.trackers = logMeta.trackers.map((trackerElement) => {
       trackerElement.obj = TrackerStore.getByTag(trackerElement.id);
@@ -140,7 +142,11 @@
           shape="circle"
           color="transparent"
           on:click={(event) => {
-            Interact.logOptions(displayLog);
+            if (moreOveride) {
+              dispatch('more', displayLog);
+            } else {
+              Interact.logOptions(displayLog, { hideDelete });
+            }
           }}
           className="ml-2"
           style="margin-right:-10px;">
@@ -173,9 +179,9 @@
             }}>
             <span slot="emoji" class="emoji">
               {#if $PeopleStore.people[person.id]}
-                <NBall size="40" radius="0.3" avatar={$PeopleStore.people[person.id].avatar} username={person.id} className="ml-2" />
+                <NBall size={40} radius={0.3} avatar={$PeopleStore.people[person.id].avatar} username={person.id} className="ml-2" />
               {:else}
-                <NBall size="40" username={person.id} className="ml-2" radius="0.3" />
+                <NBall size={40} username={person.id} className="ml-2" radius={0.3} />
               {/if}
             </span>
           </NTrackerSmallBlock>

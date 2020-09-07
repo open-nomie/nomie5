@@ -1,7 +1,6 @@
 import snakeCase from "../../utils/snake-case/snake-case";
 import stringToValue from "../../utils/string-to-value/string-to-value";
 import extractor from "../../utils/extract/extract";
-import regex from "../../utils/regex";
 
 export type ITrackableElementType = "tracker" | "person" | "context" | "generic" | "line-break" | "link";
 export interface ITrackableElement {
@@ -29,7 +28,7 @@ export default class TrackableElement {
   remainder?: any;
   obj?: any;
   constructor(starter: any) {
-    if (starter) {
+    if (typeof starter == "object") {
       this.id = starter.id; // brandon of @brandon, meet of #meet, home of +home
       this.type = starter.type; // tracker, person, context
       this.raw = starter.raw; // the raw string

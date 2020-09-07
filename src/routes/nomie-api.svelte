@@ -160,6 +160,7 @@
         }
       }
     },
+
     confirmClear() {
       Interact.confirm("Clear Logs?", "This will delete the remaining items and cannot be undone.").then((res) => {
         if (res) {
@@ -170,8 +171,10 @@
     async capture(log) {
       state.capturingId = log.id;
       await tick(1000);
+
       let nLog = toLog(log); // convert to log
       let response = LedgerStore.saveLog(nLog);
+
       state.hidden.push(log.id);
       state.hidden = state.hidden;
       if (state.logs.length == state.hidden.length) {
@@ -187,9 +190,9 @@
     },
   };
 
-  function toLog(apiLog) {
-    let log = new NLog(apiLog);
-    log.end = apiLog.date;
+  function toLog(apiLog): NLog {
+    let log: NLog = new NLog(apiLog);
+    log.end = dayjs(apiLog.date).valueOf();
     return log;
   }
 
@@ -264,11 +267,12 @@
       <div class="n-list">
         {#each state.logs as apiLog, index}
           {#if state.hidden.indexOf(apiLog.id) === -1}
-            <NLogItem log={toLog(apiLog)} />
+            <NLogItem hideDelete log={toLog(apiLog)} />
             <div class="n-row px-2">
 
-              <button
-                class="btn btn-outlined btn-success ml-2 btn-block my-0"
+              <Button
+                color="success"
+                block
                 disabled={state.capturingId === apiLog.id}
                 on:click={() => {
                   methods.capture(apiLog);
@@ -280,7 +284,7 @@
                   <NIcon name="checkmarkOutline" className="fill-white mr-2" />
                   Accept
                 {/if}
-              </button>
+              </Button>
             </div>
           {/if}
           <hr />
@@ -315,7 +319,7 @@
         </div>
       </NItem>
 
-      <div class="n-list solo mt-3 mb-3">
+      <div class="n-list mb-3">
         <NItem className="">
           <NInput label="Your API Key" bind:value={state.apiKey}>
             <div slot="right">
@@ -362,7 +366,7 @@
         {/if}
       </div>
 
-      <div class="n-list solo mt-2 mb-2">
+      <div class="n-list mt-2 mb-2">
         <NItem title="Example POST" clickable delay={0} on:click={() => (state.showExample = !state.showExample)}>
           <div slot="right">
             <NIcon name="chevron{state.showExample ? 'Up' : 'Down'}" />
@@ -438,10 +442,10 @@
         {/if}
       </div>
 
-      <div class="n-row px-3 my-4">
-        <Button color="transparent" className="mr-1 text-danger" block on:click={methods.forget}>Forget API Key...</Button>
-        <Button color="transparent" className="ml-1 text-danger" block on:click={methods.unregister}>Destroy API Key...</Button>
-      </div>
+      <div class="mt-4" />
+      <NItem itemDivider>Danger Zone</NItem>
+      <NItem title="Forget API Key..." className="text-red" on:click={methods.forget} />
+      <NItem title="Destroy API Key..." className="text-red" on:click={methods.unregister} />
     {/if}
   </div>
 

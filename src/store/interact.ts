@@ -41,6 +41,7 @@ import type { ITrackerInputResult } from "../modules/tracker/tracker-inputer";
 import TrackableElement from "../modules/trackable-element/trackable-element";
 import NPaths from "../paths";
 import { SearchStore } from "./search-store";
+import { init } from "i18next";
 
 const console = new Logger("✋ Interact");
 
@@ -433,7 +434,7 @@ const interactInit = () => {
         return s;
       });
     },
-    logOptions(log) {
+    logOptions(log, options: any = {}) {
       log = new NomieLog(log);
       if (!log.trackers) {
         log.expanded();
@@ -520,10 +521,6 @@ const interactInit = () => {
             click: actions.editLog,
           },
           {
-            title: `${Lang.t("general.delete", "Delete")}...`,
-            click: actions.delete,
-          },
-          {
             title: `${Lang.t("general.on-this-day", "On this Day")}...`,
             click: () => {
               Interact.onThisDay(new Date(log.end));
@@ -541,7 +538,12 @@ const interactInit = () => {
             click: actions.shareLog,
           },
         ];
-
+        if (!options.hideDelete) {
+          initial.push({
+            title: `${Lang.t("general.delete", "Delete")}...`,
+            click: actions.delete,
+          });
+        }
         methods.popmenu({ title: "Log Options", buttons: initial });
       }); // end return promise
     },

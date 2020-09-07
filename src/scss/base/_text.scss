@@ -24,6 +24,9 @@
 }
 .text-red {
   color: $red !important;
+  .n-text {
+    color: $red !important;
+  }
 }
 .text-green {
   color: $green !important;
