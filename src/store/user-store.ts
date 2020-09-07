@@ -224,10 +224,7 @@ const userInit = () => {
       // Load up the first date found.
       // LedgerStore.getFirstDate();
       // Prepare prmpses
-      let promises = [];
-      promises.push(methods.loadMeta());
-      promises.push(methods.loadTrackersAndBoards());
-
+      let promises = [methods.loadMeta(), TrackerStore.initialize(this), BoardStore.initialize()];
       try {
         await Promise.all(promises);
         return methods.fireReady(state);
@@ -235,20 +232,7 @@ const userInit = () => {
         Interact.error(e.message);
       }
     },
-    async loadTrackersAndBoards() {
-      await TrackerStore.initialize(this);
-      return await BoardStore.initialize();
-      // return TrackerStore.initialize(this).then((trackers) => {
-      // Now lets load the BoardStore and pass these trackers
-      // return BoardStore.initialize(this, trackers).then(() => {
-      //   // Now let's fire off that we're ready
-      //   if (state.alwaysLocate) {
-      //     locate();
-      //   }
-      //   return { trackers };
-      // });
-      // });
-    },
+
     reset() {
       update((u) => state);
     },
@@ -378,37 +362,8 @@ const userInit = () => {
     storage() {
       return Storage;
     },
-    /**
-     * ListFiles()
-     * List all files for a user
-     * TODO: move this to modules/storage
-     */
     listFiles() {
-      // let data = methods.data();
-      // let storageType = Storage.local.get('root/storage_type');
       return Storage.list();
-      // return new Promise((resolve, reject) => {
-      // 	let files = [];
-      // 	if (data.storageType === 'blockstack') {
-      // 		blockstack
-      // 			.listFiles(file => {
-      // 				if (files.indexOf(file) == -1) {
-      // 					files.push(file);
-      // 				}
-      // 				return true;
-      // 			})
-      // 			.then(() => {
-      // 				resolve(files);
-      // 			});
-      // 	} else if (data.storageType === 'local') {
-      // 		localforage.keys().then(keys => {
-      // 			files = keys;
-      // 			resolve(files);
-      // 		});
-      // 	} else {
-      // 		alert('No storage type found for ' + data.storageType);
-      // 	}
-      // });
     },
   };
 
