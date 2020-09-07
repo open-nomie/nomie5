@@ -5,12 +5,14 @@
 
   // Components
   import Icon from "../../components/icon/icon.svelte";
+  import AppTab from "../../components/app-tab/app-tab.svelte";
 
   import { Lang } from "../../store/lang";
   import { TrackerStore } from "../../store/tracker-store";
   import { FeatureStore } from "../../store/feature-store";
   import NPaths from "../../paths";
   import { UserStore } from "../../store/user-store";
+  import Features from "../settings/features.svelte";
   const state = {
     mounted: false,
   };
@@ -55,114 +57,51 @@
       height: var(--tab-height);
       flex-shrink: 0;
     }
-    .notification {
-      position: absolute;
-      top: 0;
-      right: calc(50% - 15px);
-      width: 6px;
-      height: 6px;
-      background-color: var(--color-red);
-      border-radius: 3px;
-    }
+  }
+  :global(#app-tabs .notification) {
+    position: absolute;
+    top: 8px;
+    right: calc(50% - 15px);
+    width: 6px;
+    height: 6px;
+    background-color: var(--color-red);
+    border-radius: 3px;
   }
 
-  :global(#app-tabs a svg) {
-    height: 24px !important;
-    width: 24px !important;
-    margin-bottom: 3px;
-  }
+  // :global(#app-tabs a svg) {
+  //   height: 24px !important;
+  //   width: 24px !important;
+  //   margin-bottom: 3px;
+  // }
 
-  :global(#app-tabs a[aria-current="page"] svg) {
-    stroke: var(--color-primary-bright) !important;
-    transform: scale(1.1);
-    transition: all 0.2s ease-in-out;
-  }
+  // :global(#app-tabs a[aria-current="page"] svg) {
+  //   stroke: var(--color-primary-bright) !important;
+  //   transform: scale(1.1);
+  //   transition: all 0.2s ease-in-out;
+  // }
 
-  :global(#app-tabs a[aria-current="page"] svg .fill) {
-    stroke: var(--color-primary-bright) !important;
-  }
-
-  :global(#app-tabs a) {
-    color: var(--color-inverse-2);
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    padding: 4px 10px 0;
-    font-size: 0.7rem;
-    text-decoration: none;
-    // opacity: 0.6;
-    transition: all 0.2s ease-in-out;
-    min-width: 30px;
-    width: 100%;
-    i {
-      font-size: 1.2rem;
-      transition: all 0.2s ease-in-out;
-    }
-    label {
-      margin-bottom: 0;
-    }
-
-    // When Active
-    &[aria-current="page"] {
-      color: var(--color-primary-bright);
-      svg {
-        transform: scale(1.1);
-        transition: all 0.2s ease-in-out;
-      }
-      transform: scale(1.1);
-      &:after {
-        content: "";
-      }
-    }
-  }
+  // :global(#app-tabs a[aria-current="page"] svg .fill) {
+  //   stroke: var(--color-primary-bright) !important;
+  // }
 </style>
 
 {#if state.mounted}
   <nav id="app-tabs" class={hideLabels ? 'compact' : ''}>
     <div class="n-row mw-500px mx-auto">
 
-      <Link to={NPaths.routes.history()}>
-        <Icon name="calendar" />
-        {#if !hideLabels}
-          <label>{Lang.t('tabs.history')}</label>
-        {/if}
-      </Link>
-
+      <AppTab link={NPaths.routes.history()} icon="calendar" label={Lang.t('tabs.history')} />
       {#if $FeatureStore.dashboard}
-        <Link to={NPaths.routes.dashboard()}>
-          <Icon name="report" />
-          {#if !hideLabels}
-            <label>{Lang.t('tabs.dashboard', 'Dash')}</label>
-          {/if}
-        </Link>
+        <AppTab link={NPaths.routes.dashboard()} icon="report" label={Lang.t('tabs.dashboard', 'Dash')} />
       {/if}
-
-      <Link to="/">
+      <AppTab link="/" icon="grid" label={Lang.t('tabs.track', 'Track')}>
         {#if $TrackerStore.timers.length}
           <div class="notification" />
         {/if}
-        <Icon name="tracker" />
-        {#if !hideLabels}
-          <label>{Lang.t('general.trackers', 'Track')}</label>
-        {/if}
-      </Link>
-
+      </AppTab>
       {#if $FeatureStore.people}
-        <Link to={NPaths.routes.people()}>
-          <Icon name="user" />
-          {#if !hideLabels}
-            <label>{Lang.t('tabs.people')}</label>
-          {/if}
-        </Link>
+        <AppTab link={NPaths.routes.people()} icon="user" label={Lang.t('tabs.people', 'People')} />
       {/if}
-
-      <Link to={NPaths.routes.settings()}>
-        <Icon name="settings" />
-        {#if !hideLabels}
-          <label>{Lang.t('tabs.settings')}</label>
-        {/if}
-      </Link>
+      <AppTab link={NPaths.routes.settings()} icon="settings" label={Lang.t('tabs.settings', 'Settings')} />
 
     </div>
   </nav>
