@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs, { OpUnitType } from "dayjs";
 import type { Dayjs } from "dayjs";
 // Modules
 import Tracker from "../tracker/tracker";
@@ -19,6 +19,28 @@ import type { ITrackerMath } from "../tracker/tracker";
 
 export type IStatsChartUnit = "day" | "week" | "month" | "quarter" | "year";
 export type IStatsChartMode = "d" | "w" | "m" | "q" | "y";
+
+export interface ITimeSpanUnit {
+  id: string;
+  label: string;
+  title: string;
+  unit: OpUnitType;
+  displayUnit: OpUnitType;
+  format: string;
+  count?: number;
+}
+export interface ITimeSpan {
+  [key: string]: ITimeSpanUnit;
+}
+
+export const timeSpans: ITimeSpan = {
+  d: { id: "d", format: "YYYY-MM-DD-H", label: "D", title: "Day", displayUnit: "hour", unit: "day" },
+  w: { id: "w", format: "YYYY-MM-DD", label: "W", title: "Week", displayUnit: "day", unit: "week" },
+  m: { id: "m", format: "YYYY-MM-DD", label: "M", title: "Month", displayUnit: "day", unit: "month" },
+  q: { id: "q", format: "YYYY-MM-w", label: "3M", title: "Quarter", displayUnit: "week", unit: "month", count: 3 },
+  y: { id: "y", format: "YYYY-MM", label: "Y", title: "Year", displayUnit: "month", unit: "year" },
+};
+
 export interface IStatDow {
   count: number;
   percent: number;
@@ -123,12 +145,11 @@ export default class StatsProcessor implements IStats {
     starter = starter || {};
     this.rows = starter.rows || [];
 
-    if (starter.fromDate) {
-      this.fromDate = starter.fromDate || dayjs().subtract(1, "week");
-    }
-    if (starter.toDate) {
-      this.toDate = starter.toDate || dayjs();
-    }
+    this.fromDate = starter.fromDate || dayjs().subtract(1, "week");
+    this.toDate = starter.toDate || dayjs();
+
+    this.fromDate = this.fromDate.startOf("day");
+    this.toDate = this.toDate.endOf("day");
 
     this.mode = starter.mode || "w";
     if (starter.trackableElement) {
@@ -155,11 +176,10 @@ export default class StatsProcessor implements IStats {
       this.math = config.math;
     }
 
-    try {
+    if (this.trackableElement) {
       this.rows = logFilter(this.rows, { search: this.trackableElement.toSearchTerm() });
-    } catch (e) {
-      console.error(e.message);
-      console.error(`Filtering logs failed, is a trackableElement provided?`, this.trackableElement);
+    } else {
+      this.rows = [];
     }
   }
 
@@ -177,17 +197,17 @@ export default class StatsProcessor implements IStats {
    * Get Unit dayjs Format
    */
   getUnitFormat() {
-    let unitFormat;
-    if (this.mode == "d") {
-      unitFormat = "H";
-    } else if (this.mode == "w" || this.mode == "m") {
-      unitFormat = "YYYY-MM-DD";
-    } else if (this.mode == "q") {
-      unitFormat = "YYYY-w";
-    } else if (this.mode == "y") {
-      unitFormat = "YYYY-MM";
-    }
-    return unitFormat;
+    return timeSpans[this.mode].format;
+    // if (this.mode == "d") {
+    //   unitFormat = "H";
+    // } else if (this.mode == "w" || this.mode == "m") {
+    //   unitFormat = "YYYY-MM-DD";
+    // } else if (this.mode == "q") {
+    //   unitFormat = "YYYY-w";
+    // } else if (this.mode == "y") {
+    //   unitFormat = "YYYY-MM";
+    // }
+    // return unitFormat;
   }
 
   getDayMap(): { [key: string]: number } {
@@ -280,6 +300,18 @@ export default class StatsProcessor implements IStats {
     }
   }
 
+  getStarterValueMap(): IStatsValueMap {
+    let valueMap = {};
+    let start = this.fromDate;
+    let end = this.toDate;
+    let timespan: ITimeSpanUnit = timeSpans[this.mode];
+    let diff = Math.abs(start.diff(end, timespan.displayUnit)) + 1;
+    for (let i = 0; i < diff; i++) {
+      valueMap[end.subtract(i, timespan.displayUnit).format(timespan.format)] = [];
+    }
+    return valueMap;
+  }
+
   /**
    * Generate a Value Map
    * {
@@ -290,33 +322,38 @@ export default class StatsProcessor implements IStats {
    */
   getValueMap(overrideRows, _unitFormat?: string): any {
     let rows = overrideRows || this.rows;
-    let valueMap = {};
-
+    let valueMap = this.getStarterValueMap();
+    const acceptableDates: Array<string> = Object.keys(valueMap);
     // Loop Over each Row
     rows.forEach((row) => {
       // Expand Row if not expanded
       row = row instanceof NLog ? row : new NLog(row);
-      if (!row.trackers) {
-        row.getMeta();
-      }
+      row.getMeta();
+      //
       let unitFormat = _unitFormat || this.getUnitFormat(); // get unit for time format
       let unitKey = dayjs(row.end).format(unitFormat); // generate unit Key
+
       // Fill in the Value Map with an empty array if not exist
-      valueMap[unitKey] = valueMap[unitKey] || [];
-      // If it's a person or context, just count 1
-      if (this.trackableElement.type == "person" || this.trackableElement.type == "context") {
-        valueMap[unitKey].push(1);
-      } else {
-        // It's a tracker
-        row.trackers
-          // filter only matches for thie trackableElement
-          .filter((te) => {
-            return te.id == this.trackableElement.id;
-          })
-          .forEach((trackerElement) => {
-            valueMap[unitKey].push(trackerElement.value);
-          });
-      }
+      if (acceptableDates.indexOf(unitKey) > -1) {
+        valueMap[unitKey] = valueMap[unitKey] || [];
+
+        // If it's a person or context, just count 1
+        if (this.trackableElement.type == "person" || this.trackableElement.type == "context") {
+          valueMap[unitKey].push(1);
+        } else {
+          // It's a tracker
+          row.trackers
+            // filter only matches for the trackableElement
+            .filter((te) => {
+              // Only return trackers with the matching Trackable Element Id
+              return te.id == this.trackableElement.id;
+            })
+            .forEach((trackerElement) => {
+              // Push their value
+              valueMap[unitKey].push(trackerElement.value);
+            });
+        }
+      } // end if it's an acceptable date range
     });
     return valueMap;
   }
@@ -459,8 +496,9 @@ export default class StatsProcessor implements IStats {
   getChartData(valueMapTotals, modeOverride?: "d" | "w" | "m" | "q" | "y") {
     // If it's a date mode
     let mode = modeOverride || this.mode;
+    let timespan: ITimeSpanUnit = timeSpans[mode];
     if (mode == "d") {
-      let { labels, values } = this.getChartDataByType("hour", "H", this.is24Hour ? "H" : "ha", valueMapTotals);
+      let { labels, values } = this.getChartDataByType(timespan.displayUnit, timespan.format, this.is24Hour ? "H" : "ha", valueMapTotals);
 
       return {
         mode: mode,
@@ -469,7 +507,7 @@ export default class StatsProcessor implements IStats {
       };
       // If it's a week mode
     } else if (this.mode == "w") {
-      let { labels, values } = this.getChartDataByType("day", "YYYY-MM-DD", "dd Do", valueMapTotals);
+      let { labels, values } = this.getChartDataByType(timespan.displayUnit, timespan.format, "dd Do", valueMapTotals);
       return {
         mode: mode,
         labels,
@@ -477,7 +515,7 @@ export default class StatsProcessor implements IStats {
       };
       // if it's a month mode
     } else if (mode == "m") {
-      let { labels, values } = this.getChartDataByType("day", "YYYY-MM-DD", "M/D", valueMapTotals);
+      let { labels, values } = this.getChartDataByType(timespan.displayUnit, timespan.format, "M/D", valueMapTotals);
       return {
         mode: mode,
         labels,
@@ -485,7 +523,7 @@ export default class StatsProcessor implements IStats {
       };
       // If it's a year mode
     } else if (mode == "q") {
-      let { labels, values } = this.getChartDataByType("week", "YYYY-w", "Ww", valueMapTotals);
+      let { labels, values } = this.getChartDataByType(timespan.displayUnit, timespan.format, "Ww", valueMapTotals);
       return {
         mode: mode,
         labels,
@@ -493,7 +531,7 @@ export default class StatsProcessor implements IStats {
       };
       // If it's a year mode
     } else if (mode == "y") {
-      let { labels, values } = this.getChartDataByType("month", "YYYY-MM", "MMM", valueMapTotals);
+      let { labels, values } = this.getChartDataByType(timespan.displayUnit, timespan.format, "MMM", valueMapTotals);
       return {
         mode: mode,
         labels,
