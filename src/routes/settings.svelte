@@ -68,6 +68,15 @@
   let fileInput;
   let showImporter = false;
 
+  let st = 0;
+  function specialTap() {
+    st = st + 1;
+    if (st > 9) {
+      UserStore.unlockHiddenFeatures();
+      Interact.alert("🎁 Special Features Unlocked", "Hey you! 💘");
+    }
+  }
+
   let methods = {
     sign_out() {
       UserStore.signout();
@@ -432,7 +441,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                   {config.support_contact}
                 </a>
               </Text>
-              <Text size="sm">&copy; Copyright 2014 - {dayjs().format('YYYY')}</Text>
+              <Text size="sm" on:click={specialTap}>&copy; Copyright 2014 - {dayjs().format('YYYY')}</Text>
               <Text size="sm" inline faded>All Rights Reserved</Text>
               <Text size="sm" inline>
                 <a class="text-primary-bright" href="https://www.happydata.org" traget="_system">Happy Data, LLC</a>

@@ -79,4 +79,17 @@
       <ToggleSwitch value={$UserStore.meta.lock} on:change={methods.lockToggle} />
     </div>
   </ListItem>
+  {#if $UserStore.meta.hiddenFeatures}
+    <ListItem
+      title={Lang.t('settings.enable-timemachin', 'Enable Time Machine')}
+      description="Control the date and time of the main tracker board.">
+      <div slot="right" class="ml-2">
+        <ToggleSwitch
+          value={$FeatureStore.timemachine}
+          on:change={(change) => {
+            FeatureStore.toggle('timemachine', change.detail);
+          }} />
+      </div>
+    </ListItem>
+  {/if}
 </div>

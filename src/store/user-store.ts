@@ -45,6 +45,7 @@ export interface IUserMeta {
   hideLabels?: boolean;
   store?: IUserMetaStore;
   hideBackup?: boolean;
+  hiddenFeatures?: boolean;
 }
 export interface IUserLocalSettings {
   compactButtons: boolean;
@@ -103,6 +104,7 @@ const userInit = () => {
       hideLabels: false,
       hideBackup: false,
       store: {},
+      hiddenFeatures: false,
     },
     // Local settings are only for a specific device
     localSettings: {
@@ -123,6 +125,13 @@ const userInit = () => {
     async saveLastBackupDate() {
       update((state: IUserState) => {
         state.meta.lastBackup = new Date();
+        return state;
+      });
+      return methods.saveMeta();
+    },
+    unlockHiddenFeatures() {
+      update((state: IUserState) => {
+        state.meta.hiddenFeatures = true;
         return state;
       });
       return methods.saveMeta();
