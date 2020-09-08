@@ -17,6 +17,7 @@
   import Button from "../../components/button/button.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
   import Text from "../../components/text/text.svelte";
+  import Toast from "../../components/toast/toast.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -179,7 +180,7 @@
     });
   }
 
-  async function getTrackerStats(tracker) {
+  async function getTrackerStats(tracker): Promise<StatsRef> {
     let compareObj = new StatsRef({
       type: "tracker",
       key: tracker.tag,
@@ -200,21 +201,22 @@
    * any that have simular patterns.
    */
   async function findRelatedTrackers() {
-    Interact.blocker("Looking for related...");
+    console.log("Looking for related");
+
     // Clear Compare
     state.compare = [];
     await tick(40);
     let compareItems = {};
     let trackerTags = Object.keys($TrackerStore.trackers);
+    console.log({ trackerTags });
     let activeTrackerValues = stats.chart.values.map((point) => point.y);
-    Interact.blocker(`Comparing against ${trackerTags.length} trackers...`);
-    // Loop over trackers
-    let prom;
-    for (var i = 0; i < trackerTags.length; i++) {
-      let tag = trackerTags[i]; // get tag
-      Interact.blocker(`Analyzing at ${tag}...`);
-      let tracker = $TrackerStore.trackers[tag]; // get tracker
-      let results: any = getTrackerStats(tracker).then(async (results) => {
+    Interact.toast(`Comparing against ${trackerTags.length} trackers...`, { perm: true });
+
+    const _getStats = async (tag) => {
+      let tracker = $TrackerStore.trackers[tag];
+      let results = await getTrackerStats(tracker);
+      if (results.stats.rows.length > 0) {
+        Interact.toast(`Looking at ${tag}...`, { perm: true });
         let compareValues = results.stats.chart.values.map((point) => point.y); // get y values
         let distance = await dataDistance.score(activeTrackerValues, compareValues); // calculate distance
         results.distance = distance;
@@ -222,7 +224,13 @@
           stats: results,
           distance: distance,
         };
-      }); // get stats
+      }
+      return true;
+    };
+
+    // Loop over trackers
+    for (var i = 0; i < trackerTags.length; i++) {
+      await _getStats(trackerTags[i]); // get stats
     }
     // Generate Results
     let maxScore = 0;
@@ -270,7 +278,7 @@
     // Save trackers for later
     rememberCompare();
     // Close blocker
-    Interact.stopBlocker();
+    Interact.toast("Compare complete", { perm: false });
   }
 
   function removeCompare(compare) {
