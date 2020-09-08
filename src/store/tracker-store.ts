@@ -315,17 +315,21 @@ const trackerStoreInit = () => {
      * This will merge with existing.
      */
     async save(trackers: ITrackers = {}) {
+      // Pull existing trackers from storage (for blockstack and pouch)
       let existing = await Storage.get(NPaths.storage.trackers());
-      let mergedTrackers;
+      let merged: ITrackers;
       update((state) => {
-        mergedTrackers = { ...(existing || {}), ...state.trackers, ...trackers };
-        Object.keys(mergedTrackers).forEach((tag) => {
-          mergedTrackers[tag] = new Tracker(mergedTrackers[tag]);
+        merged = { ...state.trackers, ...trackers };
+        if (existing && typeof existing == "object") {
+          merged = { ...existing, ...merged };
+        }
+        Object.keys(merged).forEach((tag) => {
+          merged[tag] = new Tracker(merged[tag]);
         });
-        state.trackers = mergedTrackers;
+        state.trackers = merged;
         return state;
       });
-      return Storage.put(NPaths.storage.trackers(), mergedTrackers);
+      return Storage.put(NPaths.storage.trackers(), merged);
       // if (trackers) {
       //   let mergedTrackers;
       //   update((state) => {
