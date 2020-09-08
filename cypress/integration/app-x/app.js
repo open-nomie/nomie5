@@ -177,12 +177,12 @@ context("App", () => {
   };
 
   const testHistory = () => {
-    cy.get('[href="/history"]').click();
+    cy.get(".tab-History").click();
     cy.wait(400);
   };
 
   const enableFeatures = () => {
-    cy.get('[href="/settings"]').click();
+    cy.get(".tab-Settings").click();
     cy.wait(200);
     // Enable People
     cy.get("[name=onoffswitch]").eq(0).type("true", { force: true });
@@ -191,14 +191,14 @@ context("App", () => {
     cy.get("[name=onoffswitch]").eq(1).type("true", { force: true });
     cy.wait(200);
     // Go back home
-    cy.get('.n-row > [href="/"]').click();
+    cy.get(".tab-Track").click();
 
     cy.wait(200);
   };
 
   const testDashboard = () => {
     cy.wait(200);
-    cy.get('[href="/dashboard"]').click();
+    cy.get(".tab-Dash").click();
     cy.wait(400);
     // Click on the Add Widghet
     cy.get(".center-all > .btn").click();
@@ -225,7 +225,7 @@ context("App", () => {
   };
 
   const testPin = () => {
-    cy.get('[href="/settings"]').click();
+    cy.get(".tab-Settings").click();
     cy.wait(1000);
     cy.get(".features [name=onoffswitch]").eq(3).type("true", { force: true });
     cy.wait(1000);
@@ -261,7 +261,7 @@ context("App", () => {
     cy.get(".keypad > :nth-child(12)").click();
 
     cy.wait(500);
-    cy.get('.n-row > [href="/"]').click();
+    cy.get(".tab-Track").click();
   };
 
   const initBasic = () => {
@@ -273,7 +273,7 @@ context("App", () => {
   };
 
   const exportData = () => {
-    cy.get('[href="/settings"]').click();
+    cy.get(".tab-Settings").click();
     cy.wait(400);
   };
 
@@ -281,7 +281,7 @@ context("App", () => {
     // Type
     cy.get("#textarea-capture-note").type("hello there @bob, I hope you are well! Also, let's add @billy, @frank and @chunk");
     cy.get(".save-button").click();
-    cy.get('[href="/people"]').click();
+    cy.get(".tab-People").click();
     cy.wait(400);
     // Tap on the check-in for the person created
     cy.get(".n-list .n-item .right .btn").eq(2).click();
@@ -305,7 +305,7 @@ context("App", () => {
     // Close modal
     cy.get(".person-modal .left > .btn > .n-icon").click();
     cy.wait(400);
-    cy.get('.n-row > [href="/"]').click();
+    cy.get(".tab-Track").click();
   };
 
   it("Should On Boarding with Local", () => {

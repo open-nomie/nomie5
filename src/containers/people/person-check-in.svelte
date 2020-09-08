@@ -76,7 +76,7 @@
     <button class="btn btn-block btn-primary mt-4" on:click={checkIn}>Check-In</button>
   {:else if state.checkingIn}
     <button class="btn btn-block btn-light mt-4" disabled>
-      <Spinner size={24} className="mr-3" />
+      <Spinner size={24} />
       <div class="ml-2">Checking In...</div>
     </button>
   {/if}

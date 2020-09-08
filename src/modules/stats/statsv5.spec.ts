@@ -219,7 +219,7 @@ describe("modules/stats/stats", function () {
     let valueMap = goodStats.getValueMap(rows);
     let minmax = goodStats.getMinMaxFromValueMap(valueMap);
 
-    expect(minmax.min.value).toEqual(4);
+    expect(minmax.min.value).toEqual(16);
     expect(minmax.max.value).toEqual(22);
   });
 });

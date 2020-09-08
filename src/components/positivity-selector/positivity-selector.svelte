@@ -10,7 +10,7 @@
   export let score = 0;
   export let className = "";
   export let style = "";
-  export const size = "md";
+  export let size = "md";
 
   async function onChange(sc) {
     score = sc;
@@ -51,7 +51,7 @@
   }
 </style>
 
-<div class="n-positivity-selector bg-solid box-shadow n-row {className}" {style}>
+<div class="n-positivity-selector bg-solid box-shadow n-row {className} size-{size}" {style}>
   {#each appConfig.positivity as posEmoji}
     <Button
       on:click={() => {

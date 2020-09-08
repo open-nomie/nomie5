@@ -62,7 +62,7 @@
   }
 </style>
 
-<div class="tab-wrap">
+<div class="tab-wrap tab-{label}">
   <Link to={link}>
     <slot />
     <Icon name={icon} />
