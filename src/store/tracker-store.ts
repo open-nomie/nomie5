@@ -318,7 +318,7 @@ const trackerStoreInit = () => {
       let existing = await Storage.get(NPaths.storage.trackers());
       let mergedTrackers;
       update((state) => {
-        mergedTrackers = { ...state.trackers, ...trackers, ...(existing || {}) };
+        mergedTrackers = { ...(existing || {}), ...state.trackers, ...trackers };
         Object.keys(mergedTrackers).forEach((tag) => {
           mergedTrackers[tag] = new Tracker(mergedTrackers[tag]);
         });
