@@ -289,7 +289,7 @@
           {autocorrect}
           {autocapitalize}
           {placeholder}
-          on:keyup={change}
+          on:input={change}
           on:focus={focus}
           on:blur={blur} />
       {:else if type == 'file'}
@@ -308,7 +308,7 @@
           on:change={(evt) => {
             dispatch('change', evt);
           }}
-          on:keyup={change}
+          on:input={change}
           on:focus={focus}
           on:blur={blur} />
       {:else if type == 'password'}
@@ -325,7 +325,7 @@
           {autocorrect}
           {autocapitalize}
           {placeholder}
-          on:keyup={change}
+          on:input={change}
           on:focus={focus}
           on:blur={blur} />
       {:else if type == 'number'}
@@ -341,7 +341,7 @@
           {autocorrect}
           {autocapitalize}
           {placeholder}
-          on:keyup={change}
+          on:input={change}
           on:focus={focus}
           on:blur={blur} />
       {:else if type == 'select'}
@@ -359,7 +359,7 @@
           {autocorrect}
           {autocapitalize}
           {placeholder}
-          on:keyup={change}
+          on:input={change}
           on:focus={focus}
           on:blur={blur}
           bind:value />
@@ -378,7 +378,7 @@
           {autocorrect}
           {autocapitalize}
           {placeholder}
-          on:keyup={change}
+          on:input={change}
           on:focus={focus}
           on:blur={blur} />
       {/if}
