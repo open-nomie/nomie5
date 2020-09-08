@@ -21,13 +21,11 @@ import is from "../utils/is/is";
 import { LedgerStore } from "./ledger";
 import Timer from "../utils/timer/timer";
 
-import * as blockstack2 from "blockstack";
-
 // Consts
 const console = new Logger("🤠 userStore");
 const timer = new Timer("UserStore", false);
 
-// declare let blockstack: any;
+declare let blockstack: any;
 const UserSession = new blockstack.UserSession();
 
 /**
@@ -218,7 +216,7 @@ const userInit = () => {
       localStorage.clear();
       // Storage.clear(); // no we shouldn't clear all storage.
       try {
-        // blockstack.signUserOut(window.location.origin);
+        blockstack.signUserOut(window.location.origin);
       } catch (e) {}
       window.location.href = window.location.href;
     },
