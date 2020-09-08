@@ -138,7 +138,7 @@
   }
 </style>
 
-<Modal className="person-modal" bodyClass="bg-solid" show={domVisible} type="bottom-slideup">
+<Modal className="person-modal" bodyClass="bg-bg" show={domVisible} type="bottom-slideup">
   <header class="w-100" slot="header" on:swipedown={close}>
     <NToolbarGrid>
       <button slot="left" class="btn btn-clear btn-icon tap-icon" on:click={close}>

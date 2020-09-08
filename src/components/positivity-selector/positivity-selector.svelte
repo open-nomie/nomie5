@@ -25,7 +25,7 @@
     border-radius: 25px;
     padding: 2px;
     width: 250px;
-    background-color: var(--color-solid-1);
+    background-color: var(--color-solid);
   }
 
   :global(.n-positivity-selector .btn) {
@@ -34,10 +34,11 @@
     border-radius: 25px;
     padding: 2px;
     border: solid 1px transparent;
-    background-color: var(--color-solid-1);
+    background-color: var(--color-solid);
   }
   :global(.n-positivity-selector .btn.inactive) {
     opacity: 0.7;
+    transform: scale(0.65);
   }
 
   :global(.n-positivity-selector .btn:hover) {
