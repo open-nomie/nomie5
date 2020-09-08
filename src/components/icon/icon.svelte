@@ -45,6 +45,8 @@
     ViewGrid,
     X,
     XCircle,
+    DotsVertical,
+    ChartPie,
   } from "svelte-hero-icons";
 
   export let name = "add";
@@ -76,10 +78,12 @@
     delete: Trash,
     download: Download,
     edit: Pencil,
+    pieChart: ChartPie,
     grid: ViewGrid,
     link: Link,
     menu: Menu,
     more: DotsHorizontal,
+    moreVertical: DotsVertical,
     newTab: FolderAdd,
     people: UserGroup,
     pin: LocationMarker,

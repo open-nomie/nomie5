@@ -1,4 +1,6 @@
 <script>
+  import Icon from "../../components/icon/icon.svelte";
+
   // svelte
   import { createEventDispatcher } from "svelte";
 
@@ -10,6 +12,8 @@
 
   // Components
   import Counter from "../../components/counter/counter.svelte";
+  import { Interact } from "../../store/interact";
+  import { TrackerStore } from "../../store/tracker-store";
 
   // Props
   export let tracker = new Tracker();
@@ -61,6 +65,18 @@
 </script>
 
 <style lang="scss" type="text/scss">
+  :global(.tracker-button-wrapper .more) {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    z-index: 1400;
+    padding: 0px;
+    height: 25px;
+    border-radius: 12px;
+  }
+  :global(.tracker-button-wrapper .more svg) {
+    stroke: var(--color-solid-2) !important;
+  }
   .tracker-ball {
     svg {
       display: none;
@@ -72,6 +88,7 @@
   }
   .tracker-button-wrapper {
     border-radius: 40px;
+    position: relative;
   }
   // Moved to /scss/components/_tracker-button.scss
 </style>
@@ -88,6 +105,15 @@
   {data.pressing ? 'pressing' : ''}
   {className}
   {disabled ? 'disabled' : ''}">
+  <button
+    class="btn btn-clear more"
+    on:click|preventDefault={(evt) => {
+      evt.preventDefault();
+      evt.stopPropagation();
+      TrackerStore.trackerOptions(tracker);
+    }}>
+    <Icon name="pieChart" size="16" />
+  </button>
   <TrackerBall {id} {tracker} score={value} {positivity}>
     {#if tracker.started}
       <div class="center countdown">
