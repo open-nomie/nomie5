@@ -3,6 +3,7 @@ export default class Timer {
   started: number;
   display: boolean = true;
   constructor(name: string, display: boolean = true) {
+    this.display = display;
     this.name = name;
   }
 

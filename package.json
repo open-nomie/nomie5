@@ -141,6 +141,7 @@
     "yargs-parser": "^18.1.3"
   },
   "dependencies": {
+    "@blockstack/connect": "^2.12.1",
     "@composi/gestures": "^1.0.9",
     "blockstack": "^19.3.0",
     "bootstrap": "^4.3.1",

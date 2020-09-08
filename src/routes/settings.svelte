@@ -401,19 +401,21 @@ Note: Your data will not automatically move over. You'll first need to export it
               on:click={() => {
                 navigate('/setup');
               }}>
-              <span slot="right" class="text-primary-bright">Redo Setup</span>
+              <span slot="right" class="text-primary-bright">{Lang.t('settings.redo-setup', 'Redo Setup')}</span>
             </NItem>
           {/if}
           <!-- END Views -->
 
-          <div class="n-list solo mt-3 py-2">
-            <NItem title="Nomie needs your help!">
-
-              <Text size="sm" faded>Help keep Nomie development moving forward, free, no ads, and open.</Text>
+          <div class="n-list solo mt-3">
+            <NItem title={Lang.t('settings.nomie-needs-you', 'Nomie needs You!')}>
+              <Text size="sm" faded>
+                {Lang.t('settings.become-a-patron-message', 'Help keep Nomie development moving forward, free, no ads, and open.')}
+              </Text>
+              <img src="/images/nomie-head-on.png" height="75" alt="Nomie" slot="left" class="pr-0" />
             </NItem>
             <NItem
               detail
-              title="Become a Patron"
+              title={Lang.t('general.become-a-patron', 'Become a Patron')}
               className="text-primary-bright"
               on:click={() => {
                 window.open(config.patreon, '_system');
@@ -438,10 +440,8 @@ Note: Your data will not automatically move over. You'll first need to export it
             </div>
           </NItem>
 
-          <NItem className="bg-transparent mt-4 mb-2" title="Danger Zone">
-            <div slot="left">
-              <Text size="lg">⚠️</Text>
-            </div>
+          <NItem className="bg-transparent mt-4 mb-2" title="⚠️ Danger Zone">
+
             <div slot="right">
               <Button color="danger" size="sm" on:click={methods.deleteEverything}>Destory all Data</Button>
             </div>
