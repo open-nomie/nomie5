@@ -35,6 +35,7 @@
   let activeValue = null;
   let activeItem = null;
   let textList;
+  let hasChanges = false;
 
   function toggleEditMode() {
     mode = mode == "edit" ? "select" : "edit";
@@ -47,10 +48,11 @@
   }
 
   function textListChanged(evt) {
-    let newList = textList.getValue().split("\n");
-    if (newList.join(",") !== list.join(",")) {
-      tracker.picks = newList;
-    }
+    tracker.picks = textList
+      .getValue()
+      .split("\n")
+      .filter((d) => d.length);
+    hasChanges = true;
   }
 
   function updateListAndSave() {
@@ -73,6 +75,7 @@
 
   onMount(() => {
     ready = true;
+    hasChanges = false;
   });
 </script>
 
@@ -97,9 +100,16 @@
       <div class="n-row px-2 py-4 filler">
 
         {#if canSelect && showSaveEditButton !== false}
-          <Button size="sm" className="text-primary-bright" block color="transparent" on:click={updateListAndSave}>
-            <Icon name="arrowBack" className="mr-2 fill-primary-bright" />
-            Done Editing?
+          <Button
+            size="xs"
+            className={`${hasChanges ? 'text-primary-bright' : 'text-inverse-2'}`}
+            block
+            color="transparent"
+            on:click={updateListAndSave}>
+            {#if hasChanges}
+              <Icon name="checkmarkOutline" className={`fill-primary-bright mr-2`} />
+            {/if}
+            {Lang.t('general.save-list-edits', 'Save List Edits')}
           </Button>
         {/if}
         <!-- {#if editWithText}
@@ -121,9 +131,9 @@
 {:else if mode == 'select'}
   <div class="n-picker-list select">
     <PickerSelect {tracker} on:change={fireSelectChange}>
-      <div slot="bottom" class="n-row filler pt-2 pb-2 px-2">
-        <Button size="sm" className="text-primary-bright" block color="transparent" on:click={toggleEditMode}>
-          <Icon name="edit" className="mr-2 fill-primary-bright" />
+      <div slot="bottom" class="n-row filler pt-2 pb-2 px-2 mt-2">
+        <Button size="xs" className="text-primary-bright" block color="transparent" on:click={toggleEditMode}>
+          <Icon name="edit" className="mr-2 fill-primary-bright" size={'16'} />
           Edit Pick List
         </Button>
       </div>
