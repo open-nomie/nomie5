@@ -70,7 +70,7 @@ const trackerStoreInit = () => {
      * This takes place in the user store. Once the user is loaded, it will
      * initialize trackers and the boards. Then fire off the user ready command
      */
-    async initialize(UserStore) {
+    async initialize(UserStore): Promise<any> {
       // Create standalone function to update the tracker data
       let updateTrackers = (trackers) => {
         update((state) => {
@@ -102,6 +102,7 @@ const trackerStoreInit = () => {
         // We have trackers - so update them.
         updateTrackers(trackers);
       }
+      return this;
     },
     toggleTimers() {
       update((state) => {

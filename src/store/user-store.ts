@@ -19,11 +19,15 @@ import config from "../config/appConfig";
 import { Interact } from "./interact";
 import is from "../utils/is/is";
 import { LedgerStore } from "./ledger";
+import Timer from "../utils/timer/timer";
+
+import * as blockstack2 from "blockstack";
 
 // Consts
 const console = new Logger("🤠 userStore");
+const timer = new Timer("UserStore", false);
 
-declare let blockstack: any;
+// declare let blockstack: any;
 const UserSession = new blockstack.UserSession();
 
 /**
@@ -150,6 +154,8 @@ const userInit = () => {
       return format;
     },
     initialize() {
+      timer.start();
+      timer.check("initialize()");
       // Set Dark or Light Mode
       // Lets get dark Mode
 
@@ -167,9 +173,11 @@ const userInit = () => {
         Storage.onReady(async () => {
           // initialize the User store now that
           // storage is ready
+          timer.check("Storage Ready");
           LedgerStore.init();
           try {
             await methods.bootstrap();
+            timer.check("Bootstrap() complete");
             update((_state) => {
               _state.ready = true;
               _state.signedIn = true;
@@ -180,6 +188,7 @@ const userInit = () => {
             Interact.error(e.message);
           }
         }); // end storage on Ready
+        timer.check("Storage Init Fired");
         Storage.init();
       }
 
@@ -209,7 +218,7 @@ const userInit = () => {
       localStorage.clear();
       // Storage.clear(); // no we shouldn't clear all storage.
       try {
-        blockstack.signUserOut(window.location.origin);
+        // blockstack.signUserOut(window.location.origin);
       } catch (e) {}
       window.location.href = window.location.href;
     },
@@ -299,6 +308,7 @@ const userInit = () => {
         }
         return usr;
       });
+      return value;
     },
     /**
      * Save the Meta object for this user

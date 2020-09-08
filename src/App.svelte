@@ -22,6 +22,7 @@
 
   // Utils
   import Logger from "./utils/log/log";
+  import Timer from "./utils/timer/timer";
 
   import RouterView from "./routes/routes.svelte";
 
@@ -46,9 +47,13 @@
   import { LastUsed } from "./store/last-used";
   import { SearchStore } from "./store/search-store";
   import PinLock from "./containers/pin-lock/pin-lock.svelte";
+  import tick from "./utils/tick/tick";
 
   // Set a better console
   const console = new Logger("APP");
+  const timer = new Timer("App.svelte", false);
+
+  timer.start();
   ComposiGestures.default.gestures();
 
   /**
@@ -93,6 +98,7 @@
 
   const methods = {
     hideSplashScreen() {
+      timer.check("Hide Splashscreen");
       document.querySelectorAll(".delete-on-app").forEach((d) => {
         d.classList.add("deleted");
         setTimeout(() => {
@@ -114,7 +120,7 @@
         document.body.classList.add(`theme-${theme}`);
       }
       document.body.classList.add(theme_accent);
-      methods.hideSplashScreen();
+      tick(100, methods.hideSplashScreen);
     },
   };
 
@@ -130,7 +136,6 @@
    */
   let hidden, visibilityChange, router;
   if (typeof document.hidden !== "undefined") {
-    // Opera 12.10 and Firefox 18 and later support
     hidden = "hidden";
     visibilityChange = "visibilitychange";
   } else if (typeof document.msHidden !== "undefined") {
@@ -149,13 +154,14 @@
 
   // Used to make sure that boards and trackers are loaded
   UserStore.onReady(async () => {
+    timer.check("UserStore.onReady fired");
     console.log("🌳🌳🌳🌳🌳🌳🌳🌳🌳🐘🌳🌳🌳🌳🌳🌳🌳🌳🌳");
     console.log("🌳🌳🌳🌳🌳🌳 Welcome to 🌳🌳🌳🌳🌳🌳🌳🌳");
     console.log("🌳🌳🌳🌳🌳🌳 NOMIE APP_VERSION 🌳🌳🌳🌳🌳🌳🌳");
     console.log("🌳🌳🌳🌳🌳🌳🌳🌳🌳🐘🌳🌳🌳🌳🌳🌳🌳🌳🌳🌳");
     // Set the user if they're logged in
     ready = true;
-
+    timer.check("Starting Store Intialization sync");
     PeopleStore.init(); // Initialize the People Store
     Locations.init(); // Initialize Location Store
     ContextStore.init(); // check if this is a new version
@@ -176,6 +182,7 @@
   });
 
   onMount(() => {
+    timer.check("onMount");
     UserStore.initialize();
   });
 </script>
@@ -184,41 +191,41 @@
   <SetupRoute />
 {/if}
 
-{#if ready}
-  {#if $UserStore.signedIn === true && !newDay}
-    <RouterView />
-    <WhatsNewModal />
-  {:else if $UserStore.signedIn == undefined || newDay}
-    <div class="empty-notice" style="height:calc(100vh - 75px)">
-      <Spinner />
-    </div>
-  {/if}
-
-  <!-- Global Modals, alerts, menus, etc-->
-  {#if $Interact.stats.terms.length}
-    <StatsModal />
-  {/if}
-  {#if $TrackerLibrary.show}
-    <LibraryModal />
-  {/if}
-  {#if $Interact.people.active}
-    <PersonModal />
-  {/if}
-  {#if $Interact.blocker.show}
-    <div id="ui-blocker" class="full-screen bg-translucent n-panel center-all">
-      <Spinner size="16" />
-      <span class="text-white ml-2">{$Interact.blocker.message}</span>
-    </div>
-  {/if}
-  <Interactions />
-  <StreakModal />
-  <OnThisDayModal />
-  <PinLock />
-
-  {#if $UserStore.storageType == 'blockstack' && $Device.offline}
-    <div class="offline-notice text-center">No connection to Blockstack.</div>
-  {/if}
-  <div id="photo-holder">
-    <img id="photo-holder-image" alt="avatar-holder" />
+<!-- {#if ready} -->
+{#if $UserStore.signedIn === true && !newDay}
+  <RouterView />
+  <WhatsNewModal />
+{:else if $UserStore.signedIn == undefined || newDay}
+  <div class="empty-notice" style="height:calc(100vh - 75px)">
+    <Spinner />
   </div>
 {/if}
+
+<!-- Global Modals, alerts, menus, etc-->
+{#if ready && $Interact.stats.terms.length}
+  <StatsModal />
+{/if}
+{#if ready && $TrackerLibrary.show}
+  <LibraryModal />
+{/if}
+{#if ready && $Interact.people.active}
+  <PersonModal />
+{/if}
+{#if $Interact.blocker.show}
+  <div id="ui-blocker" class="full-screen bg-translucent n-panel center-all">
+    <Spinner size="16" />
+    <span class="text-white ml-2">{$Interact.blocker.message}</span>
+  </div>
+{/if}
+<Interactions />
+<StreakModal />
+<OnThisDayModal />
+<PinLock />
+
+{#if $UserStore.storageType == 'blockstack' && $Device.offline}
+  <div class="offline-notice text-center">No connection to Blockstack.</div>
+{/if}
+<div id="photo-holder">
+  <img id="photo-holder-image" alt="avatar-holder" />
+</div>
+<!-- {/if} -->
