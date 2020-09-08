@@ -19,6 +19,7 @@ class StatsReference {
   math: ITrackerMath;
   is24Hour: boolean;
   id: string;
+  distance?: any;
 
   constructor(starter?: any) {
     starter = starter || {};

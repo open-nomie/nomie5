@@ -85,7 +85,9 @@
     state.compare = state.compare;
     // Get Stats for Compares
     for (let i = 0; i < state.compare.length; i++) {
-      let stats = await state.compare[i].getStats(timeSpan, fromDate, toDate);
+      state.compare[i].getStats(timeSpan, fromDate, toDate).then(() => {
+        state.compare = state.compare;
+      });
     }
     state.compare = state.compare;
   } // end load saved compares
@@ -207,18 +209,20 @@
     let activeTrackerValues = stats.chart.values.map((point) => point.y);
     Interact.blocker(`Comparing against ${trackerTags.length} trackers...`);
     // Loop over trackers
+    let prom;
     for (var i = 0; i < trackerTags.length; i++) {
       let tag = trackerTags[i]; // get tag
       Interact.blocker(`Analyzing at ${tag}...`);
       let tracker = $TrackerStore.trackers[tag]; // get tracker
-      let results: any = await getTrackerStats(tracker); // get stats
-      let compareValues = results.stats.chart.values.map((point) => point.y); // get y values
-      let distance = await dataDistance.score(activeTrackerValues, compareValues); // calculate distance
-      results.distance = distance;
-      compareItems[tag] = {
-        stats: results,
-        distance: distance,
-      };
+      let results: any = getTrackerStats(tracker).then(async (results) => {
+        let compareValues = results.stats.chart.values.map((point) => point.y); // get y values
+        let distance = await dataDistance.score(activeTrackerValues, compareValues); // calculate distance
+        results.distance = distance;
+        compareItems[tag] = {
+          stats: results,
+          distance: distance,
+        };
+      }); // get stats
     }
     // Generate Results
     let maxScore = 0;
