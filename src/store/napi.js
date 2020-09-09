@@ -104,7 +104,7 @@ const nomieApiInit = () => {
           // Add the Date
           // Convert it into an official Nomie Log
           let nLog = new NomieLog(log);
-          log.end = new Date(log.date).getTime();
+          nLog.end = new Date(log.date).getTime();
           // Save the Log
           await LedgerStore.saveLog(nLog);
           // Push success
