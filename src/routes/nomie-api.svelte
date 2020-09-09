@@ -172,8 +172,7 @@
       state.capturingId = log.id;
       await tick(400);
       try {
-        // Converting APIv1 Log to Nomie Log;
-        log = toLog(log);
+        // Converting APIv1 Log to Nomie
         let response = await NomieAPI.import([log]);
         state.hidden.push(log.id);
         state.hidden = state.hidden;
