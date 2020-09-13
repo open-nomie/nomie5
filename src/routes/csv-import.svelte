@@ -27,6 +27,7 @@
   import Importer from "../modules/import/import";
   import ImportLoader from "../modules/import/import-loader";
   import ToggleSwitch from "../components/toggle-switch/toggle-switch.svelte";
+  import dayjs from "dayjs";
 
   let stepId: string = "home";
   let templates: Array<IImportConfig> = [];
@@ -50,7 +51,7 @@
   async function nextPreview() {
     let current = previewIndex + 0;
     previewIndex == undefined;
-    if (current < activeImporter.length() - 1) {
+    if (current < activeImporter.length()) {
       previewIndex = current + 1;
     } else {
       previewIndex = 0;
@@ -88,9 +89,23 @@
     refresh();
   }
 
+  let dtFormat: { date: string; time: string };
+
+  $: if ($UserStore.meta.is24Hour) {
+    dtFormat = {
+      date: "ddd Do MMM YYYY",
+      time: "H:mm",
+    };
+  } else {
+    dtFormat = {
+      date: "ddd MMM Do YYYY",
+      time: "h:mma",
+    };
+  }
+
   const fieldMapButtons = [
     {
-      title: "End Time",
+      title: "End Time* Req",
       required: true,
       id: "end",
       click() {
@@ -161,10 +176,17 @@
 
   async function startImport() {
     let confirmed = await Interact.confirm(
-      `Import ${activeImporter.length()} new notes into Nomie?`,
-      `If you haven't backed up in a while, now would be a good time to do that.`
+      `Warning`,
+      `This will add ${activeImporter.length()} new records to your data. Be 100% sure everything is accurate. 
+      If you're unsure, launch Nomie in a private browswer and test on a local only account. Also, backup if you haven't for a while.`
     );
     if (confirmed) {
+      if (activeImporter.length() > 1000) {
+        Interact.toast(`Importer starting. With this many records it might freeze the UI, just give it time...`, { perm: true });
+      } else {
+        Interact.toast(`Importer starting up...`, { perm: true });
+      }
+
       let importer = new ImportLoader();
       await importer.logs(activeImporter.toLogs()).importLogs((status: any) => {
         Interact.toast(status.message, { perm: true });
@@ -401,24 +423,29 @@
               await addToImporter(evt);
             }} />
         {:else}
-          <div class="n-toolbar-grid">
+          <div class="n-toolbar n-row px-3">
             <div class="main">Map Fields</div>
-            <!-- <div class="right">
-              <NextPrevCal style="max-width:60px;" hideCal={true} on:next={nextPreview} on:previous={previousPreview} />
-            </div> -->
+            <div class="filler" />
+            <NextPrevCal hideCal={true} on:next={nextPreview} on:previous={previousPreview} />
           </div>
+
           {#each fieldMapButtons as logField}
-            <ListItem title={logField.title}>
+            <ListItem
+              clickable
+              title={`${logField.title}`}
+              on:click={() => {
+                selectField(logField);
+              }}>
               {#if is.truthy(activeImporter.config.fieldMap[logField.id])}
+                {#if logField.id == 'end' || logField.id == 'start'}
+                  <Text size="sm" bold>
+                    Parsed: {dayjs(previewRow[activeImporter.config.fieldMap[logField.id]]).format(`${dtFormat.date} ${dtFormat.time}`)}
+                  </Text>
+                {/if}
                 <Text size="sm" faded>{previewRow[activeImporter.config.fieldMap[logField.id]]}</Text>
               {/if}
               <div slot="right">
-                <Button
-                  color="transparent"
-                  className="text-primary-bright"
-                  on:click={() => {
-                    selectField(logField);
-                  }}>
+                <Button color="transparent" className="text-primary-bright">
                   {#if is.truthy(activeImporter.config.fieldMap[logField.id])}
                     f{activeImporter.config.fieldMap[logField.id]}
                   {:else}Select{/if}
@@ -499,14 +526,14 @@
     {#if previewLog && is.truthy(previewIndex) && activeImporter.parsed}
       <div class="examples bg-inverse-2 p-2">
         <div class="n-toolbar n-row pl-2">
-          <div class="main">Preview {previewIndex} of {activeImporter.length() - 1}</div>
+          <div class="main">Preview {previewIndex} of {activeImporter.length()}</div>
           <div class="filler" />
           <NextPrevCal hideCal={true} on:next={nextPreview} on:previous={previousPreview} />
         </div>
         <ListItemLog log={previewLog} />
       </div>
       <ListItem>
-        <Button block on:click={startImport}>Import {activeImporter.length() - 1} Logs...</Button>
+        <Button block on:click={startImport}>Import {activeImporter.length()} Logs...</Button>
       </ListItem>
     {/if}
   </main>
