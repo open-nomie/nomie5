@@ -21,6 +21,7 @@ export interface IQueryOptions {
   start?: Dayjs;
   end?: Dayjs;
   search?: string;
+  fuzzy?: boolean;
 }
 
 type IBook = Array<NLog>;
@@ -207,17 +208,19 @@ export default class LedgerTools {
    * @param options - IQueryOptions
    * @param existingBooks - pass any existing books to look for
    */
-  async query(options: IQueryOptions, existingBooks?: IBooks) {
+  async query(options: IQueryOptions, existingBooks: IBooks = []) {
     options = options || {};
-    // Fresh? Should pull from storage not cache
-    options.fresh = options.fresh ? options.fresh : false;
 
+    // Fresh? Should pull from storage not cache
+    options.fresh = options.fresh === false ? false : true;
+
+    // Set Start Time - default to 30 days agao
     if (options.start && (options.start instanceof Date || options.start instanceof Number)) {
       options.start = dayjs(options.start);
     } else if (!options.start) {
-      options.start = dayjs();
+      options.start = dayjs().subtract(30, "day");
     }
-
+    // Set End Time - default to today
     if (options.end && (options.end instanceof Date || options.end instanceof Number)) {
       options.end = dayjs(options.end);
     } else if (!options.end) {
@@ -286,8 +289,17 @@ export default class LedgerTools {
       booksChunk.forEach((bookPath) => {
         // Get the book if it current exists, or create it if not
         stateBooks[bookPath] = stateBooks[bookPath] || [];
-        // If the length is 0 or FRESH is tru,
-        if (stateBooks[bookPath].length == 0 || options.fresh === true) {
+
+        /**
+         * If the Options.fresh is TRUE (default)
+         * it should get the book from the storage lookup first
+         * otherwise, it should just look at the existing books
+         * that were passed to the this query.
+         *
+         * If it's a fresh look up, the results will be sent back up to the ledger and stored
+         * for future query lookups.
+         */
+        if (options.fresh !== false) {
           // Generate promise and stuff the results in stateBooks
           let getBook = this.getBook(bookPath);
           getBook.then((rows) => {
@@ -306,12 +318,16 @@ export default class LedgerTools {
     /** Get all  */
     let get_all = async (): Promise<Array<NLog>> => {
       let rows = await batch_all();
-      return logFilter(rows, options);
+      let filtered = logFilter(rows, options);
+      return filtered;
     }; // end get_all()
 
     try {
       let rows: Array<NLog> = await get_all();
-      return rows.sort((a, b) => (a.end < b.end ? 1 : -1));
+      return {
+        books: stateBooks,
+        logs: rows.sort((a, b) => (a.end < b.end ? 1 : -1)),
+      };
     } catch (e) {
       console.error("Error caught ", e);
     }
