@@ -48,7 +48,7 @@ import { logAppendLocationIfNeeded } from "./ledger/ledger-add-location";
 import type { IQueryOptions } from "./ledger/ledger-tools";
 import type { ITrackersSummary } from "./ledger/ledger-tools";
 
-const console = new Logger("🧺 store/ledger.js", false);
+const console = new Logger("🧺 store/ledger.js", true);
 // Hooky is for firing off generic events
 
 export interface IToday {}
@@ -570,7 +570,22 @@ const ledgerInit = () => {
      */
     async query(options: IQueryOptions) {
       let state = methods.getState();
-      return ledgerTools.query(options, state.books);
+      let ledgerResults = await ledgerTools.query(options, state.books);
+
+      /**
+       * If this is a fresh call (default)
+       * then let's take the book results and
+       * save them to the ledger for faster
+       * lookups
+       */
+      if (options.fresh !== false) {
+        update((state) => {
+          state.books = { ...state.books, ...ledgerResults.books };
+          return state;
+        });
+      }
+      // return ledgerTools.query(options, state.books);
+      return ledgerResults.logs;
     },
   };
 
