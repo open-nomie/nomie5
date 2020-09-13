@@ -10,8 +10,8 @@
 
   declare var window: any;
   let scrollArea: HTMLElement;
-  let scrolling: Boolean = false;
-  let scrolled: Boolean = false;
+  let scrolling: boolean = false;
+  let scrolled: boolean = false;
 
   function generateContent() {
     return new Array(300).fill("hello").join(" ");

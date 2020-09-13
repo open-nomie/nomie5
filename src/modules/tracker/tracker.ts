@@ -15,7 +15,7 @@ export interface ITracker {
   type?: ITrackerType; // Type of Tracker
   color?: string; // Color of Tracker
   math?: ITrackerMath; // Sum Mean?
-  ignore_zeros?: Boolean; // Ignore Zeros when doing maths
+  ignore_zeros?: boolean; // Ignore Zeros when doing maths
   uom?: string; // Unit of Measure KEY
   emoji?: string; // Emoji for the Tracker
   default?: number; // Default value for a tracker
@@ -39,7 +39,7 @@ export default class TrackerConfig {
   type?: ITrackerType; // Type of Tracker
   color?: string; // Color of Tracker
   math?: ITrackerMath; // Sum Mean?
-  ignore_zeros?: Boolean; // Ignore Zeros when doing maths
+  ignore_zeros?: boolean; // Ignore Zeros when doing maths
   uom?: string; // Unit of Measure KEY
   emoji?: string; // Emoji for the Tracker
   default?: number; // Default value for a tracker
