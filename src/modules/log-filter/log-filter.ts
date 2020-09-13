@@ -1,37 +1,39 @@
-import extractor from "../../utils/extract/extract";
-import tokenizer from "search-text-tokenizer";
 import TrackableElement from "../trackable-element/trackable-element";
-
 import searchItems from "../../utils/search/search-items";
 import latinize from "../../utils/search/latinize";
 import NLog from "../nomie-log/nomie-log";
 
-export default function (logs, filter) {
+export default function (searchLogs: Array<NLog>, filter) {
+  let logs: Array<NLog> = searchLogs || [];
+
   filter = filter || { fuzzy: false };
 
   let term;
   if (filter.search instanceof TrackableElement) {
     term = latinize(filter.search.toSearchTerm());
-  } else {
+  } else if (filter.search) {
     term = latinize(filter.search);
   }
 
   // If a search term is provided, filter it
   if (term) {
-    logs = searchItems(term, logs, { fields: ["note"], fuzzy: filter.fuzzy });
+    logs = searchItems(term, searchLogs, { fields: ["note"], fuzzy: filter.fuzzy });
   }
 
   // Filter by date if provided
   if (filter.start || filter.end) {
+    let start = filter.start?.valueOf();
+    let end = filter.end?.valueOf();
+
     logs = logs.filter((log: NLog) => {
       log = log instanceof NLog ? log : new NLog(log);
       let pass = false;
-      if (filter.start && filter.end.valueOf()) {
-        pass = log.end >= filter.start.valueOf() && log.end <= filter.end.valueOf();
+      if (start && end) {
+        pass = log.end >= start && log.end <= end;
       } else if (filter.start) {
-        pass = log.end >= filter.start.valueOf();
+        pass = log.end >= start;
       } else if (filter.end) {
-        pass = log.end <= filter.end.valueOf();
+        pass = log.end <= end;
       }
       return pass;
     });

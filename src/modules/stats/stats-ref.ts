@@ -2,13 +2,14 @@
 import { strToColor } from "../../components/dymoji/dymoji";
 import Tracker from "../tracker/tracker";
 import type { ITrackerMath } from "../tracker/tracker";
-import StatsV5 from "./statsV5";
+import StatsV5, { ITimeSpan, ITimeSpanUnit, ITimeSpanKey } from "./statsV5";
 import type { IStats } from "./statsV5";
 import extractor from "../../utils/extract/extract";
 
 // Stores
 import { LedgerStore } from "../../store/ledger";
 import nid from "../nid/nid";
+import type { Dayjs } from "dayjs";
 
 class StatsReference {
   type: string;
@@ -50,7 +51,7 @@ class StatsReference {
     }
   }
 
-  async getStats(timeSpan, fromDate, toDate) {
+  async getStats(timeSpan: ITimeSpanKey, fromDate: Dayjs, toDate: Dayjs, fresh: boolean = false) {
     // Prepare the Stat Processor
     const statsV5 = new StatsV5({ is24Hour: this.is24Hour });
     try {
@@ -59,8 +60,9 @@ class StatsReference {
       // Create Search Payload
       let payload = {
         search: searchTerm,
-        start: fromDate.toDate(),
-        end: toDate.toDate(),
+        start: fromDate,
+        end: toDate,
+        fresh: fresh,
       };
       // Get Resutls from Ledger
       let results = await LedgerStore.query(payload);

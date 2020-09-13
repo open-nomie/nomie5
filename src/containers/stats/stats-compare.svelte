@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { ITracker } from "../../modules/tracker/tracker";
-  import type { IStats } from "../../modules/stats/statsV5";
+  import type { IStats, ITimeSpanKey, ITimeSpanUnit } from "../../modules/stats/statsV5";
   import ListItem from "../../components/list-item/list-item.svelte";
   import BarChart from "../../components/charts/bar-chart-2.svelte";
   import { Interact } from "../../store/interact";
@@ -24,11 +24,18 @@
   export let stats: IStats;
   export let fromDate: any;
   export let toDate: any;
-  export let timeSpan: string;
+  export let timeSpan: ITimeSpanKey;
   export let remember: Function;
   export let selected: any;
 
-  const state = {
+  interface StatComareState {
+    compare: Array<StatsRef>;
+    selected: {
+      index: number;
+    };
+  }
+
+  const state: StatComareState = {
     compare: [],
     selected: {
       index: null,
@@ -86,7 +93,7 @@
     state.compare = state.compare;
     // Get Stats for Compares
     for (let i = 0; i < state.compare.length; i++) {
-      state.compare[i].getStats(timeSpan, fromDate, toDate).then(() => {
+      state.compare[i].getStats(timeSpan, fromDate, toDate, false).then(() => {
         state.compare = state.compare;
       });
     }
@@ -201,14 +208,11 @@
    * any that have simular patterns.
    */
   async function findRelatedTrackers() {
-    console.log("Looking for related");
-
     // Clear Compare
     state.compare = [];
     await tick(40);
     let compareItems = {};
     let trackerTags = Object.keys($TrackerStore.trackers);
-    console.log({ trackerTags });
     let activeTrackerValues = stats.chart.values.map((point) => point.y);
     Interact.toast(`Comparing against ${trackerTags.length} trackers...`, { perm: true });
 

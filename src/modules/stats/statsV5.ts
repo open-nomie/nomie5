@@ -19,6 +19,7 @@ import type { ITrackerMath } from "../tracker/tracker";
 
 export type IStatsChartUnit = "day" | "week" | "month" | "quarter" | "year";
 export type IStatsChartMode = "d" | "w" | "m" | "q" | "y";
+export type ITimeSpanKey = IStatsChartMode;
 
 export interface ITimeSpanUnit {
   id: string;
