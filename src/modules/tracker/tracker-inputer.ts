@@ -8,6 +8,7 @@ import NomieLog from "../nomie-log/nomie-log";
 import { TrackerStore } from "../../store/tracker-store";
 import type TrackerConfig from "./tracker";
 import { ITrackers } from "../import/import";
+import is from "../../utils/is/is";
 
 export interface ITrackerInputerGetOptions {
   value?: number;
@@ -163,7 +164,7 @@ export default class TrackerInputer {
      * Ticks are a simple tracker - just tapp it.
      */
     options = options || { value: null };
-    let defaultValue: number = options.value !== undefined ? options.value : this.tracker.default;
+    let defaultValue: number = is.truthy(options.value) ? options.value : this.tracker.default;
     if (this.tracker.type == "tick") {
       // Push tag(default) or just tag if no default
       note.push(`#${this.tracker.tag}${defaultValue ? `(${defaultValue})` : ``}`);
