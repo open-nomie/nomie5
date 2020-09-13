@@ -105,7 +105,7 @@
   {data.pressing ? 'pressing' : ''}
   {className}
   {disabled ? 'disabled' : ''}">
-  <button
+  <!-- <button
     class="btn btn-clear more"
     on:click|preventDefault={(evt) => {
       evt.preventDefault();
@@ -113,7 +113,7 @@
       TrackerStore.trackerOptions(tracker);
     }}>
     <Icon name="pieChart" size="16" />
-  </button>
+  </button> -->
   <TrackerBall {id} {tracker} score={value} {positivity}>
     {#if tracker.started}
       <div class="center countdown">
