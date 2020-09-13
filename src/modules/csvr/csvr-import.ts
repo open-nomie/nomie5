@@ -64,7 +64,11 @@ class CSVRImport {
     this.name = filename;
   }
   public length() {
-    return this.parsed?.data?.length || 0;
+    if (this.config.hasHeaders) {
+      return (this.parsed?.data?.length || 1) - 1;
+    } else {
+      this.parsed?.data?.length || 0;
+    }
   }
   private toFields(row: Array<string> = []): IImportFields {
     let fields = {};
