@@ -210,17 +210,18 @@
   async function findRelatedTrackers() {
     // Clear Compare
     state.compare = [];
-    await tick(40);
+    await tick(200);
     let compareItems = {};
     let trackerTags = Object.keys($TrackerStore.trackers);
     let activeTrackerValues = stats.chart.values.map((point) => point.y);
-    Interact.toast(`Comparing against ${trackerTags.length} trackers...`, { perm: true });
-
-    const _getStats = async (tag) => {
+    Interact.blocker(`Comparing against ${trackerTags.length} trackers...`, { perm: true });
+    await tick(20);
+    const _getStats = async (tag, index, total) => {
       let tracker = $TrackerStore.trackers[tag];
+      Interact.blocker(`Comparing ${math.round(math.percentage(total, index))}%`, { perm: true });
+      await tick(1);
       let results = await getTrackerStats(tracker);
       if (results.stats.rows.length > 0) {
-        Interact.toast(`Looking at ${tag}...`, { perm: true });
         let compareValues = results.stats.chart.values.map((point) => point.y); // get y values
         let distance = await dataDistance.score(activeTrackerValues, compareValues); // calculate distance
         results.distance = distance;
@@ -234,7 +235,7 @@
 
     // Loop over trackers
     for (var i = 0; i < trackerTags.length; i++) {
-      await _getStats(trackerTags[i]); // get stats
+      await _getStats(trackerTags[i], i, trackerTags.length); // get stats
     }
     // Generate Results
     let maxScore = 0;
@@ -282,7 +283,8 @@
     // Save trackers for later
     rememberCompare();
     // Close blocker
-    Interact.toast("Compare complete", { perm: false });
+    Interact.stopBlocker();
+    // Interact.toast("Compare complete", { perm: false });
   }
 
   function removeCompare(compare) {
