@@ -559,12 +559,13 @@ export default class StatsProcessor implements IStats {
     };
     // Hold all values for total sum and avg
     let allValues = [];
+    let ignoreZeros = this.getTracker().ignore_zeros;
     // Loop over the days provided
     Object.keys(newMap.days).forEach((date) => {
       let values = newMap.days[date];
       // If we should ignore zeros, then
       // filter them out.
-      let ignoreZeros = this.getTracker().ignore_zeros;
+
       if (ignoreZeros) {
         values = values.filter((v) => {
           return v !== 0 ? true : false;
@@ -588,8 +589,7 @@ export default class StatsProcessor implements IStats {
     }); // end loop over each day
 
     newMap.sum = _math.sum(allValues);
-    newMap.avg = _math.average(allValues, true);
-
+    newMap.avg = _math.average(allValues, ignoreZeros);
     return newMap;
   }
 
