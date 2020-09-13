@@ -51,7 +51,7 @@
   async function nextPreview() {
     let current = previewIndex + 0;
     previewIndex == undefined;
-    if (current < activeImporter.length()) {
+    if (current < activeImporter.length() - 1) {
       previewIndex = current + 1;
     } else {
       previewIndex = 0;
@@ -60,7 +60,7 @@
   async function previousPreview() {
     let current = previewIndex + 0;
     previewIndex == undefined;
-    if (current !== 0) {
+    if (current !== 1) {
       previewIndex = current - 1;
     } else {
       previewIndex = activeImporter.length() - 1;
