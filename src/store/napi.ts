@@ -23,6 +23,7 @@ import { Interact } from "./interact";
 // import { TrackerStore } from "./tracker-store";
 import tick from "../utils/tick/tick";
 import appConfig from "../config/appConfig";
+import dayjs from "dayjs";
 
 const console = new Logger("🚦 Nomie API");
 // Todo consider making this configurable
@@ -32,7 +33,16 @@ const NAPI = new NomieAPICli({ domain: appConfig.api.split("//")[1] });
 let autoImporterInterval;
 const nomieApiInit = () => {
   // const listeners = [];
-  let _state = {
+
+  interface ApiStateConfig {
+    registered: boolean;
+    apiKey: string | undefined;
+    privateKey: string | undefined;
+    autoImport: boolean;
+    ready: boolean;
+  }
+
+  let _state: ApiStateConfig = {
     registered: false,
     apiKey: null,
     privateKey: null,
@@ -104,6 +114,7 @@ const nomieApiInit = () => {
           // Add the Date
           // Convert it into an official Nomie Log
           let nLog = new NomieLog(log);
+          // nLog.end = dayjs(log.date).toDate().getTime();
           nLog.end = new Date(log.date).getTime();
           // Save the Log
           await LedgerStore.saveLog(nLog);
