@@ -12,7 +12,7 @@ context("App", () => {
     cy.wait(1000);
     cy.get(".layout-footer .n-toolbar .btn").eq(0).click();
     cy.wait(200);
-    cy.get("div.right > .btn").click();
+    cy.get(".layout-footer .n-toolbar .btn").eq(0).click();
     cy.wait(200);
     cy.get(".layout-footer .n-toolbar .btn").eq(1).click();
     cy.wait(400);
@@ -21,8 +21,8 @@ context("App", () => {
     cy.get(".layout-footer .n-toolbar .btn").eq(1).click();
     cy.wait(400);
     cy.get(".top > :nth-child(2)").click();
-    cy.wait(200);
-    cy.get("div.right > .btn").click();
+    cy.wait(400);
+    cy.get(".layout-footer .n-toolbar .btn").eq(1).click();
     cy.wait(1000);
   };
 
