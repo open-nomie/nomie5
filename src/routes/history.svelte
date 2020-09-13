@@ -145,7 +145,7 @@
       Interact.elementOptions(trackableElement);
     },
     async getLogs(fresh) {
-      fresh = fresh ? fresh : false;
+      fresh = fresh === false ? false : true;
       loading = true;
       // Query the Ledger for Posts on this day.
       let canLookup = true;
@@ -154,8 +154,8 @@
       }
       if (canLookup) {
         logs = await LedgerStore.query({
-          start: state.date.startOf("day").toDate(),
-          end: state.date.endOf("day").toDate(),
+          start: state.date.startOf("day"),
+          end: state.date.endOf("day"),
           fresh: fresh,
         });
         loading = false;
