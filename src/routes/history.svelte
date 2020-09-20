@@ -11,17 +11,13 @@
   import { onMount, onDestroy } from "svelte";
 
   // components
-  import NItem from "../components/list-item/list-item.svelte";
-  import NPoints from "../components/points/points.svelte";
   import NIcon from "../components/icon/icon.svelte";
-  import NLogListLoader from "../components/log-list/log-list-loader.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
-  import NToolbarGrid from "../components/toolbar/toolbar-grid.svelte";
   import NModal from "../components/modal/modal.svelte";
   import Spinner from "../components/spinner/spinner.svelte";
   import NDatePicker from "../components/date-picker/date-picker.svelte";
   import LogItem from "../components/list-item-log/list-item-log.svelte";
-  import NSearchBar from "../components/search-bar/search-bar.svelte";
+
   import OfflineQueue from "../components/offline-queue/offline-queue.svelte";
 
   import config from "../config/appConfig";
@@ -36,11 +32,9 @@
   // Stores
   import { UserStore } from "../store/user-store";
   import { Interact } from "../store/interact";
-  import { TrackerStore } from "../store/tracker-store";
   import { LedgerStore } from "../store/ledger";
   import { Lang } from "../store/lang";
 
-  import { HistoryPage } from "../store/history-page";
   import { Device } from "../store/device-store";
   import Storage from "../modules/storage/storage";
   import Text from "../components/text/text.svelte";
@@ -50,8 +44,6 @@
   export let location;
   export let style = undefined;
 
-  let datePicker;
-  let searchInput;
   let appTitle = null;
   let showSearch = false;
 
@@ -95,14 +87,7 @@
   let logs = []; // holder of the logs
   let searchLogs = undefined; // hodler of searched logs
   let loading = true;
-  let book = undefined;
   let locations = [];
-  let dayScore = 0;
-
-  // Used for checking things
-  const checks = {
-    list_date: {},
-  };
 
   /// Watchers for when we're in edit mode
   // and when we have selected more than one.
@@ -115,11 +100,6 @@
     activeDate = state.date;
     isToday = new Date().toDateString() == state.date.toDate().toDateString();
   }
-
-  // Filter logs for today
-  const filterActiveDate = (log) => {
-    return log.end >= state.date.startOf("day").toDate().getTime() && log.end <= state.date.endOf("day").toDate().getTime();
-  };
 
   $: appTitle = `History ${state.date.format("YYYY-MM-DD")}`;
 

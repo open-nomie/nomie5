@@ -1,9 +1,13 @@
 <script>
+  import Text from "../text/text.svelte";
+
   import { onMount } from "svelte";
   import NItem from "../list-item/list-item.svelte";
   import LogItem from "../list-item-log/list-item-log.svelte";
   import NSpinner from "../spinner/spinner.svelte";
+  import TimeGap from "../time-gap/time-gap.svelte";
   import { createEventDispatcher } from "svelte";
+  import dayjs from "dayjs";
   const dispatch = createEventDispatcher();
 
   export let logs = null;
@@ -11,6 +15,7 @@
   export let style = "";
   export let className = "";
   export let fullDate = false;
+  export let showTimeDiff = false;
 
   let loading = false;
   // export let hideMore = false;
@@ -39,7 +44,7 @@
   </div>
 {:else}
   <div class="n-list {className}" {style}>
-    {#each internalLogs as log (log._key)}
+    {#each internalLogs as log, index (log._key)}
       <LogItem
         {fullDate}
         className={compact ? 'compact' : ''}
@@ -56,6 +61,9 @@
         on:moreClick={(event) => {
           dispatch('moreClick', event.detail);
         }} />
+      {#if showTimeDiff && index !== internalLogs.length - 1}
+        <TimeGap log1={log} log2={internalLogs[index + 1]} />
+      {/if}
     {/each}
   </div>
 {/if}

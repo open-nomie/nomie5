@@ -201,6 +201,7 @@
       {#if state.searchTerm && state.searchTerm.term}
         <NLogListLoader
           fullDate={true}
+          showTimeDiff={true}
           bind:results={logResults}
           term={state.searchTerm.term}
           limit={20}

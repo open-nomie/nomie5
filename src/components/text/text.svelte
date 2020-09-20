@@ -4,20 +4,20 @@
 
   export let size = "md";
   // export let color = undefined;
-  export let bold = undefined;
-  export let medium = undefined;
-  export let tag = "div";
-  export let className = "";
-  export let faded = false;
-  export let style = "";
-  export let center = false;
-  export let truncate = false;
-  export let truncate2 = false;
-  export let truncate3 = false;
+  export let bold: boolean = false;
+  export let center: boolean = false;
+  export let className: string = "";
   export let color = "";
-  export let underline = false;
-  export let inline = false;
-  export let lineHeightMd = false;
+  export let faded: boolean = false;
+  export let inline: boolean = false;
+  export let lineHeightMd: boolean = false;
+  export let medium: boolean = false;
+  export let style = "";
+  export let tag = "div";
+  export let truncate: boolean = false;
+  export let truncate2: boolean = false;
+  export let truncate3: boolean = false;
+  export let underline: boolean = false;
 
   const dispatch = createEventDispatcher();
 </script>
