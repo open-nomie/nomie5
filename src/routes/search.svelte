@@ -34,11 +34,11 @@
   export const location = undefined;
   export const style = undefined;
 
-  const SEARCHES_PATH = `${global.data_root}/searches`;
+  // const SEARCHES_PATH = `${global.data_root}/searches`;
 
-  let searchInput;
+  // let searchInput;
   let appTitle = null;
-  let showSearch = false;
+  let showSearch: boolean = false;
 
   let logResults: Array<any> = [];
 
@@ -53,23 +53,15 @@
 
   $: state.searchTerm = $SearchStore.active;
 
-  let refreshing = false;
+  let refreshing: boolean = false;
 
-  let loading = true;
-  let book = undefined;
-  let locations = [];
+  let loading: boolean = true;
+
   let mode = "view";
-  let refreshMap: boolean = false;
+
   // let dayScore = 0;
 
   $: appTitle = `🔍 Search ${(state.searchTerm || {}).term || ""}`;
-
-  $: if (logResults) {
-    refreshMap = true;
-    setTimeout(() => {
-      refreshMap = false;
-    }, 12);
-  }
 
   function toggleEditMode() {
     if (mode == "edit") {
@@ -180,6 +172,7 @@
       <div class="filler">
         <!-- on:change={methods.searchChange} -->
         <NSearchBar
+          compact
           showClose={false}
           className="filler"
           searchTerm={(state.searchTerm || {}).term || ''}
@@ -281,31 +274,6 @@
       <!-- end history -->
 
     </div>
-    <!--
-      {#if state.searchTerm && logResults.length && !refreshMap}
-      {#if !state.showAllLocations}
-        <div
-          class="mini-map closed"
-          on:click={() => {
-            state.showAllLocations = !state.showAllLocations;
-          }}>
-          <NMap records={logResults} />
-        </div>
-      {:else}
-        <div class="mini-map opened">
-          <NMap records={logResults} />
-          <Button
-            color="light"
-            shape="circle"
-            on:click={() => {
-              state.showAllLocations = !state.showAllLocations;
-            }}>
-            <Icon name="closeFilled" size="32" />
-          </Button>
-        </div>
-      {/if}
-    {/if}
-    -->
 
   </main>
   <!-- end header-content content -->

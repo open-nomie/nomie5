@@ -25,8 +25,22 @@
   onMount(main);
 </script>
 
+<style lang="scss">
+  .time-gap {
+    font-size: small;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .time-gap .buffer {
+    border-bottom: solid 1px var(--color-solid-2);
+  }
+</style>
+
 {#if diff > 1}
   <div class="time-gap">
-    <Text center faded size="sm">{display}</Text>
+    <span class="buffer filler" />
+    <Text center faded size="sm" className="mx-4">{display}</Text>
+    <span class="buffer filler" />
   </div>
 {/if}
