@@ -80,6 +80,14 @@
     </div>
   </ListItem>
   {#if $UserStore.meta.hiddenFeatures}
-    <ListItem title="Soon my friend!" />
+    <ListItem title={Lang.t('settings.enable-advanced-buttons', 'Advanced Tracker Buttons')} description="Use advanced tracker button">
+      <div slot="right" class="ml-2">
+        <ToggleSwitch
+          value={$FeatureStore.advancedButtons}
+          on:change={(change) => {
+            FeatureStore.toggle('advancedButtons', change.detail);
+          }} />
+      </div>
+    </ListItem>
   {/if}
 </div>

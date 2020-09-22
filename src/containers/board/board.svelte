@@ -58,14 +58,16 @@
   import { Lang } from "../../store/lang";
   import { TrackerLibrary } from "../../store/tracker-library";
   import { LastUsed } from "../../store/last-used";
+  import { FeatureStore } from "../../store/feature-store";
   import Button from "../../components/button/button.svelte";
   import Text from "../../components/text/text.svelte";
   import exportData from "../../modules/export/export-helper";
 
   import OfflineQueue from "../../components/offline-queue/offline-queue.svelte";
-  import TimeSelect from "../../components/date-time-bar/time-select.svelte";
+
   import NPaths from "../../paths";
   import { Device } from "../../store/device-store";
+  import ShortcutButton from "../../components/shortcut-button/shortcut-button.svelte";
 
   // Consts
   const console = new Logger("board.svelte");
@@ -338,6 +340,14 @@
       Interact.editTracker().then((tracker) => {
         BoardStore.addTracker(tracker);
       });
+    },
+
+    getLastUsed(tracker) {
+      if ($LastUsed[tracker.tag]) {
+        return dayjs($LastUsed[tracker.tag].date).fromNow();
+      } else {
+        return undefined;
+      }
     },
 
     /**
@@ -727,6 +737,7 @@
         <main class="n-board h-100" on:swipeleft={BoardStore.next} on:swiperight={BoardStore.previous}>
           {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
             <div class="trackers n-grid framed mt-2" style="min-height:auto">
+
               {#each TrackerStore.state.runningTimers() as tracker}
                 <NTrackerButton
                   {tracker}
@@ -756,21 +767,38 @@
               {/if}
             {/if}
             <!-- lastUsed={methods.getLastUsed(tracker)} -->
-            {#each foundTrackers || boardTrackers as tracker}
-              <NTrackerButton
-                {tracker}
-                value={methods.getTrackerValue(tracker)}
-                hoursUsed={methods.getHoursUsed(tracker)}
-                positivity={methods.getPositivity(tracker)}
-                on:click={() => {
-                  methods.trackerTapped(tracker);
-                }}
-                disabled={state.savingTrackers.indexOf(tracker.tag) > -1}
-                className={`${state.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${state.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
-                on:longpress={() => {
-                  methods.showTrackerOptions(tracker);
-                }} />
-            {/each}
+            {#if $FeatureStore.advancedButtons}
+              {#each foundTrackers || boardTrackers as tracker}
+                <ShortcutButton
+                  title={tracker.label}
+                  subtitle={methods.getLastUsed(tracker)}
+                  emoji={tracker.emoji}
+                  value={methods.getTrackerValue(tracker)}
+                  color={tracker.color}
+                  on:click={() => {
+                    methods.trackerTapped(tracker);
+                  }}
+                  on:more={() => {
+                    methods.showTrackerOptions(tracker);
+                  }} />
+              {/each}
+            {:else}
+              {#each foundTrackers || boardTrackers as tracker}
+                <NTrackerButton
+                  {tracker}
+                  value={methods.getTrackerValue(tracker)}
+                  hoursUsed={methods.getHoursUsed(tracker)}
+                  positivity={methods.getPositivity(tracker)}
+                  on:click={() => {
+                    methods.trackerTapped(tracker);
+                  }}
+                  disabled={state.savingTrackers.indexOf(tracker.tag) > -1}
+                  className={`${state.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${state.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
+                  on:longpress={() => {
+                    methods.showTrackerOptions(tracker);
+                  }} />
+              {/each}
+            {/if}
             {#if !state.searching && $BoardStore.active !== '_timers'}
               <NTrackerButton
                 on:click={methods.addButtonTap}
