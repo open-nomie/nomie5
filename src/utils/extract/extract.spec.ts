@@ -59,7 +59,7 @@ describe("utils/extractor", function () {
     expect(parsed[2].remainder).toEqual("'s");
   });
 
-  it("should parse 60,000 complicated notes in less than 4 seconds", () => {
+  it("should parse 60,000 complicated notes in less than 5 seconds", () => {
     let notes = [];
     let parsed = tester({
       name: "baseline",
@@ -68,7 +68,7 @@ describe("utils/extractor", function () {
         notes.push(extractor.parse(note));
       },
     });
-    expect(parsed).toBeLessThan(4000);
+    expect(parsed).toBeLessThan(5000);
   });
 
   it("Should handle #test_time: #sample #dooo", () => {
