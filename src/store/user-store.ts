@@ -73,6 +73,9 @@ export interface IUserState {
 // Store Initlization
 const userInit = () => {
   let listeners = [];
+  // Using local storage because we need this before Storage can be initialized...
+  // But this is pretty hacky and should be improved
+  let useCompactButtons = JSON.parse(localStorage.getItem(`${config.data_root}/settings/compactButtons`) || "false");
   // User State
   let state: IUserState = {
     // SEt the storage type
@@ -108,7 +111,7 @@ const userInit = () => {
     },
     // Local settings are only for a specific device
     localSettings: {
-      compactButtons: JSON.parse(localStorage.getItem(`${config.data_root}/settings/compactButtons`) || "false"),
+      compactButtons: useCompactButtons,
     },
     // Blockstack profile holder - not active used
     profile: {
