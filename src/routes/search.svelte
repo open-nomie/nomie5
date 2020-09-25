@@ -271,40 +271,13 @@
             {/if}
             <Text size="lg" className="mb-2">History Search</Text>
             <Text size="sm" faded>
-              Nome will search 6 months at a time, starting from the most recent records. Use AND and OR to refine your search.
+              Nomie will search 6 months at a time, starting from the most recent records. Use AND and OR to refine your search.
             </Text>
           </div>
         </div>
       {/if}
-
       <!-- end history -->
-
     </div>
-    <!--
-      {#if state.searchTerm && logResults.length && !refreshMap}
-      {#if !state.showAllLocations}
-        <div
-          class="mini-map closed"
-          on:click={() => {
-            state.showAllLocations = !state.showAllLocations;
-          }}>
-          <NMap records={logResults} />
-        </div>
-      {:else}
-        <div class="mini-map opened">
-          <NMap records={logResults} />
-          <Button
-            color="light"
-            shape="circle"
-            on:click={() => {
-              state.showAllLocations = !state.showAllLocations;
-            }}>
-            <Icon name="closeFilled" size="32" />
-          </Button>
-        </div>
-      {/if}
-    {/if}
-    -->
 
   </main>
   <!-- end header-content content -->
