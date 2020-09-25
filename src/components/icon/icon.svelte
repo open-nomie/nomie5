@@ -47,6 +47,7 @@
     XCircle,
     DotsVertical,
     ChartPie,
+    DotsCircleHorizontal,
   } from "svelte-hero-icons";
 
   export let name = "add";
@@ -83,6 +84,7 @@
     link: Link,
     menu: Menu,
     more: DotsHorizontal,
+    moreOutline: DotsCircleHorizontal,
     moreVertical: DotsVertical,
     newTab: FolderAdd,
     people: UserGroup,

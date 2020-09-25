@@ -23,6 +23,7 @@
   import { LedgerStore } from "../store/ledger";
   import Text from "../components/text/text.svelte";
   import Button from "../components/button/button.svelte";
+  import ShortcutButton from "../components/shortcut-button/shortcut-button.svelte";
 
   export let location;
 
@@ -136,7 +137,35 @@
         <NItem>Nothing found for @{state.searchTerm}</NItem>
       {/if}
 
-      {#each state.people as person}
+      <div class="trackers n-grid">
+        {#each state.people as person}
+          <ShortcutButton
+            on:more={() => {
+              Interact.openStats(`@${person}`);
+            }}
+            on:click={() => {
+              personClicked(person);
+            }}
+            title={($PeopleStore.people[person] || {}).displayName}
+            subtitle={$PeopleStore.people[person] && $PeopleStore.people[person].last ? dayjs($PeopleStore.people[person].last).fromNow() : undefined}>
+            <div slot="emoji">
+              {#if $PeopleStore.people[person] && $PeopleStore.people[person].avatar}
+                <AvatarBall
+                  size={42}
+                  avatar={$PeopleStore.people[person].avatar}
+                  style={`border-radius:32%; overflow:hidden; box-shadow:var(--box-shadow-tight)`} />
+              {:else if $PeopleStore.people[person] && $PeopleStore.people[person].displayName}
+                <AvatarBall
+                  size={42}
+                  username={$PeopleStore.people[person].displayName}
+                  style={`border-radius:32%; overflow:hidden; box-shadow:var(--box-shadow-tight)`} />
+              {/if}
+            </div>
+          </ShortcutButton>
+        {/each}
+      </div>
+
+      <!-- {#each state.people as person}
         <NItem bottomLine truncate clickable={false} className="py-3">
           <div slot="left">
             {#if $PeopleStore.people[person] && $PeopleStore.people[person].avatar}
@@ -177,7 +206,7 @@
 
           </div>
         </NItem>
-      {/each}
+      {/each} -->
 
     </div>
   </div>

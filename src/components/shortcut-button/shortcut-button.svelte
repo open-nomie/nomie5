@@ -2,13 +2,15 @@
   import { createEventDispatcher } from "svelte";
 
   import Button from "../button/button.svelte";
+  import Icon from "../icon/icon.svelte";
   import Text from "../text/text.svelte";
 
   export let title: string | undefined;
   export let subtitle: string | undefined;
   export let value: string | undefined;
   export let color: string | undefined;
-  export let emoji: string = "⚪️";
+  export let emoji: string | undefined;
+  export let titleSize: string = "sm";
 
   const dispatch = createEventDispatcher();
 
@@ -36,26 +38,52 @@
     height: 140px;
     border-radius: 22px;
     margin: 6px;
-    padding: 16px;
-    box-shadow: var(--box-shadow-float);
+    padding: 14px;
+    box-shadow: var(--box-shadow-float) !important;
+    overflow: hidden;
+
+    transition: all 0.2s ease-in-out;
 
     .emoji {
-      transition: all 0.2s ease-in-out;
       font-size: 34px;
       line-height: 34px;
-      text-shadow: 0px 5px 6px rgba(0, 0, 0, 0.23);
+      text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.23);
     }
 
     &.no-value {
       background-color: var(--color-solid);
-
       button.more {
         border: solid 1px var(--color-solid-2) !important;
         color: var(--color-solid-2) !important;
       }
     }
 
+    &:before {
+      transition: all 0.4s ease-in-out;
+      content: "";
+      z-index: 0;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.12);
+      opacity: 0;
+      transform: translateX(-180px);
+    }
+
+    &.has-value {
+      position: relative;
+
+      &:before {
+        transform: translateY(0px);
+        opacity: 1;
+      }
+    }
+
     .bottom {
+      position: relative;
+      z-index: 10;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
@@ -64,6 +92,8 @@
     }
 
     .top {
+      position: relative;
+      z-index: 10;
       flex-grow: 0;
       flex-shrink: 0;
     }
@@ -81,11 +111,14 @@
   :global(.shortcut-button.has-value .n-text) {
     color: #fff !important;
   }
+  :global(.shortcut-button.has-value svg) {
+    stroke: #fff !important;
+  }
 </style>
 
 <Button
   className="shortcut-button d-flex flex-column {value ? 'has-value' : 'no-value'}"
-  style={`${value ? `background-color:${color}` : ''}`}
+  style={`${value ? `background-color:${color}` : 'background-color:var(--color-solid)'}`}
   on:longpress={() => {
     dispatch('longpress');
   }}
@@ -93,16 +126,23 @@
     dispatch('click');
   }}>
   <div class="n-row top">
-    <div class="emoji">{emoji}</div>
-    <button class="more d-inline-flex justify-content-center align-items-center" on:click|preventDefault|stopPropagation={more}>•••</button>
+    <div class="emoji">
+      {#if emoji}{emoji}{/if}
+      <slot name="emoji" />
+    </div>
+    <button class="btn more btn-icon p-0" on:click|preventDefault|stopPropagation={more}>
+      <Icon name="more" size="16" />
+    </button>
   </div>
   <div class="bottom w-100 text-left">
-    <Text size="sm">{title}</Text>
+    {#if title}
+      <Text size={titleSize} leading1 style="margin-bottom:6px">{title}</Text>
+    {/if}
     {#if value}
-      <Text size="lg">{value}</Text>
+      <Text size="md" leading1 style="margin-bottom:6px">{value}</Text>
     {/if}
     {#if subtitle}
-      <Text size="xs" truncate faded>{subtitle}</Text>
+      <Text size="xs" truncate leading1 faded>{subtitle}</Text>
     {/if}
   </div>
 </Button>

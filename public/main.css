@@ -5288,6 +5288,7 @@ body {
   --color-full-screen: rgba(0, 0, 0, 0.7);
   --color-background-selected: rgba(32, 105, 157, 0.1);
   --color-translucent: rgba(255, 255, 255, 0.89);
+  --color-translucent-1: rgba(255, 255, 255, 0.1);
   --color-translucent-inverse: rgba(0, 0, 0, 0.79);
   --input-background: #eee;
   --input-focus-background: #fff;
@@ -5443,6 +5444,7 @@ body.theme-dark {
   --input-background: #111;
   --input-focus-background: #000;
   --color-translucent: rgba(0, 0, 0, 0.79);
+  --color-translucent-1: rgba(0, 0, 0, 0.4);
   --color-translucent-inverse: rgba(255, 255, 255, 0.79); }
 
 .truncate {
