@@ -165,6 +165,7 @@ export default class TrackerInputer {
      */
     options = options || { value: null };
     let defaultValue: number = is.truthy(options.value) ? options.value : this.tracker.default;
+    console.log("Tracker Type", this.tracker.type);
     if (this.tracker.type == "tick") {
       // Push tag(default) or just tag if no default
       note.push(`#${this.tracker.tag}${is.truthy(defaultValue) ? `(${defaultValue})` : ``}`);
@@ -196,7 +197,12 @@ export default class TrackerInputer {
       let results: ITrackerInputResult = await this.getTrackerInput(this.tracker, { value: defaultValue, allowSave: true });
       if (results) {
         // Push results
-        note.push(`#${results.tracker.tag}${is.truthy(results.value) ? `(${results.value})` : ``}`);
+        if (results.tracker.type == "picker") {
+          // Ignore zero results from the picker type
+          note.push(`#${results.tracker.tag}${results.value ? `(${results.value})` : ``}`);
+        } else {
+          note.push(`#${results.tracker.tag}${is.truthy(results.value) ? `(${results.value})` : ``}`);
+        }
         // If there's an include
         if (this.tracker.include) {
           note.push(this.tracker.getIncluded(is.truthy(results.value) ? results.value : 1));
