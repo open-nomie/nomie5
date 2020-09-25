@@ -14,6 +14,7 @@
   };
 
   $: if (statsTod) {
+    console.log({ statsTod });
     points = Object.keys(statsTod).map((key) => {
       return {
         x: labels[key],
