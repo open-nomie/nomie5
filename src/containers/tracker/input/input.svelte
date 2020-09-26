@@ -201,6 +201,7 @@
             }}
             on:change={(changedValue) => {
               data.value = changedValue.detail;
+              data = data;
             }} />
         </div>
       {:else if tracker.type === 'timer'}

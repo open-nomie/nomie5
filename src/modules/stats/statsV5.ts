@@ -611,7 +611,7 @@ export default class StatsProcessor implements IStats {
       max: minMax.max,
       // streak: this.getStreakData(),
       dow: getDayOfWeek(this.rows), // day of week
-      tod: getTimeOfDay(this.rows), // time of day
+      tod: getTimeOfDay(this.rows, this.trackableElement.id, this.math), // time of day
       start: this.fromDate,
       end: this.toDate,
     };

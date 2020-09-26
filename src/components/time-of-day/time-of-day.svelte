@@ -14,10 +14,11 @@
   };
 
   $: if (statsTod) {
+    console.log({ statsTod });
     points = Object.keys(statsTod).map((key) => {
       return {
         x: labels[key],
-        y: statsTod[key].count,
+        y: statsTod[key].total,
       };
     });
   }

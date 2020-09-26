@@ -8,6 +8,7 @@
   // import Storage from "../storage/storage.svelte";
   import Storage from "../../modules/storage/storage";
   import Text from "../../components/text/text.svelte";
+  import appConfig from "../../config/appConfig";
 
   let methods = {
     settingChange() {
@@ -63,7 +64,7 @@
     </div>
   </NItem>
 
-  <NItem title={Lang.t('settings.small-tracker-buttons', 'Small Trackers Buttons')}>
+  <NItem title={Lang.t('settings.small-tracker-buttons', 'Small Tracker Buttons')}>
     <span slot="left">🐭</span>
     <div slot="right">
       <NToggle
@@ -71,7 +72,7 @@
         on:change={(change) => {
           UserStore.update((state) => {
             state.localSettings.compactButtons = change.detail === false ? false : true;
-            Storage.local.put('settings/compactButtons', state.localSettings.compactButtons);
+            localStorage.setItem(`${appConfig.data_root}/settings/compactButtons`, JSON.stringify(state.localSettings.compactButtons));
             return state;
           });
         }} />

@@ -1,7 +1,9 @@
 import math from "../../utils/math/math";
+import type NLog from "../nomie-log/nomie-log";
+import type { ITrackerMath } from "../tracker/tracker";
 import type { IStatsTod } from "./statsV5";
 
-function TimeOfDay(rows, tag = null) {
+function TimeOfDay(rows, tag = null, mathType: ITrackerMath = "sum") {
   let tod: IStatsTod = {
     early_morning: {
       count: 0,
@@ -40,13 +42,13 @@ function TimeOfDay(rows, tag = null) {
     },
   };
 
-  rows.forEach((row) => {
+  rows.forEach((row: NLog) => {
     let hour = new Date(row.end).getHours();
     Object.keys(tod).forEach((id) => {
       let thisTod = tod[id];
       if (hour >= thisTod.start && hour <= thisTod.end) {
         thisTod.count++;
-        thisTod.values.push(tag ? row.getTrackerValue(tag) : 1);
+        thisTod.values.push(tag ? row.getTrackerValue(tag, mathType) : 1);
       }
     });
   });
@@ -56,6 +58,8 @@ function TimeOfDay(rows, tag = null) {
 
   Object.keys(tod).forEach((key, index) => {
     tod[key].percent = countPercentages[index];
+    tod[key].math = mathType;
+    tod[key].total = mathType === "sum" ? math.sum(tod[key].values) : math.average(tod[key].values);
   });
 
   return tod;

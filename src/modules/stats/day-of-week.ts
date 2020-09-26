@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import math from "../../utils/math/math";
+import type { ITrackerMath } from "../tracker/tracker";
 import type { IStatDow } from "./statsV5";
 
 export interface IDow {
@@ -12,7 +13,7 @@ export interface IDow {
   sun: IStatDow;
 }
 
-function DayOfWeek(rows, tag = null): IDow {
+function DayOfWeek(rows, tag = null, mathType: ITrackerMath = "sum"): IDow {
   let dow: IDow = {
     mon: {
       count: 0,
@@ -56,7 +57,7 @@ function DayOfWeek(rows, tag = null): IDow {
     let thisDow = dow[day];
     if (thisDow) {
       thisDow.count++;
-      thisDow.values.push(tag ? row.getTrackerValue(tag) : 1);
+      thisDow.values.push(tag ? row.getTrackerValue(tag, mathType) : 1);
     }
   });
 
@@ -65,6 +66,7 @@ function DayOfWeek(rows, tag = null): IDow {
 
   Object.keys(dow).forEach((key, index) => {
     dow[key].percent = countPercentages[index];
+    dow[key].total = mathType == "sum" ? math.sum(dow[key].values) : math.average(dow[key].valuels);
   });
 
   return dow;

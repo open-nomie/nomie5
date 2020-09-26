@@ -265,14 +265,12 @@
             {/if}
             <Text size="lg" className="mb-2">History Search</Text>
             <Text size="sm" faded>
-              Nome will search 6 months at a time, starting from the most recent records. Use AND and OR to refine your search.
+              Nomie will search 6 months at a time, starting from the most recent records. Use AND and OR to refine your search.
             </Text>
           </div>
         </div>
       {/if}
-
       <!-- end history -->
-
     </div>
 
   </main>
