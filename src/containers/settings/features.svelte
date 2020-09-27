@@ -49,11 +49,7 @@
         }} />
     </div>
   </ListItem>
-  <ListItem
-    bottomLine
-    className="py-2"
-    title="Dashboard"
-    description="Enabled customized dashboards with charts, values, positivity and more. ">
+  <ListItem bottomLine className="py-2" title="Personal Dashboard" description="A dedicated tab for creating custom views of your data">
     <div slot="right" class="ml-2">
       <ToggleSwitch
         value={$FeatureStore.dashboard}
@@ -72,9 +68,7 @@
     </div>
   </ListItem>
   <!-- Pin Code -->
-  <ListItem
-    title={Lang.t('settings.require-pin')}
-    description="Require a pin to launch Nomie. Warning if you lose your pin, there's nothing you can do.">
+  <ListItem title={Lang.t('settings.require-pin')} description="Require a pin to launch Nomie. Don't forget it!">
     <div slot="right" class="ml-2">
       <ToggleSwitch value={$UserStore.meta.lock} on:change={methods.lockToggle} />
     </div>
