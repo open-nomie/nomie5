@@ -97,7 +97,7 @@
     searchTerm: null, // the search term the user is typing
     activeTip: 0, // index of the current tip to show
     hideTips: false, // temp hide - it will stop showing after 12 launches.
-    view: localStorage.getItem("board-view") || "detail",
+    view: localStorage.getItem("board-view") || "button",
   };
 
   /**
@@ -122,10 +122,8 @@
         return $TrackerStore.trackers[tag];
       })
       .filter((tracker) => {
-        console.log("tracker", tracker);
         return tracker.started;
       });
-    console.log({ timers });
   }
 
   // Check if it's ready
@@ -420,43 +418,42 @@
      * Used to get the current value of today for a given tracker
      * This will total or avg their values depending on the tracker calcuate
      */
-    getTrackerValue(tracker) {
-      // Default to null
-      let value = null;
+    // getTrackerValue(tracker) {
+    //   // Default to null
+    //   let value = null;
 
-      // Does this tracker exist in today's map?
-      if (today.hasOwnProperty(tracker.tag)) {
-        // What type of Math should we do?
-        if (tracker.math === "sum") {
-          // Sum it up!
-          value = math.round(math.sum(today[tracker.tag].values));
-        } else {
-          // Round things!
-          value = math.round(math.average(today[tracker.tag].values));
-        }
-      }
-      return value ? NomieUOM.format(value, tracker.uom) : null;
-    },
-    getPositivity(tracker) {
-      let value = methods.getTrackerValue(tracker);
-      value = value || 0;
-      return ScoreTracker(value, tracker);
-    },
+    //   // Does this tracker exist in today's map?
+    //   if (today.hasOwnProperty(tracker.tag)) {
+    //     // What type of Math should we do?
+    //     if (tracker.math === "sum") {
+    //       // Sum it up!
+    //       value = math.round(math.sum(today[tracker.tag].values));
+    //     } else {
+    //       // Round things!
+    //       value = math.round(math.average(today[tracker.tag].values));
+    //     }
+    //   }
+    //   return value ? NomieUOM.format(value, tracker.uom) : null;
+    // },
+    // getPositivity(tracker) {
+    //   let value = methods.getTrackerValue(tracker);
+    //   value = value || 0;
+    //   return ScoreTracker(value, tracker);
+    // },
     /**
      * Get Hours Used
      * Used for generating the time-balls on the trackers
      * It maybe shouldn't be here, but it is for now
      */
-    getHoursUsed(tracker) {
-      if (today.hasOwnProperty(tracker.tag)) {
-        return today[tracker.tag].hours;
-      } else {
-        return [];
-      }
-    },
+    // getHoursUsed(tracker) {
+    //   if (today.hasOwnProperty(tracker.tag)) {
+    //     return today[tracker.tag].hours;
+    //   } else {
+    //     return [];
+    //   }
+    // },
     // Show Tracker Options
     showTrackerOptions(tracker) {
-      console.log("hello?", tracker);
       // Make it a real tracker in case it's not - doubling up shouldn't be a problem.
       tracker = new Tracker(tracker);
 
@@ -584,29 +581,6 @@
     @include media-breakpoint-up(md) {
       padding-top: 20px;
     }
-
-    .new-user {
-      font-size: 0.7rem;
-      max-width: 280px;
-      border-radius: 30px;
-      background-color: transparent;
-      border: var(--modal-border);
-      color: var(--color-inverse-2);
-      margin: 10px auto;
-      padding: 6px 20px;
-      line-height: 115%;
-      flex-grow: 0;
-      .main {
-        text-align: center;
-      }
-      .btn {
-        &:active {
-          color: var(--color-inverse);
-        }
-      }
-    }
-  }
-  .n-add-button {
   }
   .no-trackers {
     min-height: 300px;
@@ -618,21 +592,6 @@
     align-items: center;
   }
 
-  :global(.board-edit-button) {
-    display: flex;
-    align-items: center;
-    padding: 0px 16px;
-    justify-content: center;
-    min-width: 40px;
-    min-height: 40px;
-    height: 40px;
-    flex-grow: 0;
-    flex-shrink: 0;
-    border-radius: 20px;
-    font-size: 16px;
-    background-color: var(--color-solid-2);
-    color: var(--color-inverse-1) !important;
-  }
   :global(.board-actions) {
     display: flex;
     align-items: center;
@@ -759,7 +718,7 @@
         {/if}
         <OfflineQueue />
         {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
-          <div class="n-list solo" style="min-height:auto">
+          <div class="n-list solo pb-2" style="min-height:auto">
             <ListItem compact>
               <Text size="sm">Running Timers</Text>
               <div slot="right">
@@ -797,39 +756,44 @@
             view={state.view}
             trackers={foundTrackers || boardTrackers}
             on:tap={(evt) => {
-              console.log('on tap', evt);
               methods.trackerTapped(evt.detail);
             }}
             on:more={(evt) => {
-              console.log(' on more');
               methods.showTrackerOptions(evt.detail);
             }} />
-
-          <!-- <div class="board-actions">
-            <button on:click={editBoard} style="color:#FFF" class="btn btn btn-round board-edit-button clickable">
-              <Text>Edit Tab</Text>
-            </button>
-          </div> -->
 
           <!-- Include User Tips - shit should be a component -->
 
         </main>
         <div class="board-actions mt-5 mb-2 n-row" style="min-width:200px;">
-          <div class="btn-group mr-1">
-            <Button
-              on:click={() => {
-                setView('list');
-              }}>
-              <Icon name="menu" className={`${state.view == 'list' ? 'fill-primary' : ''}`} />
-            </Button>
-            <Button
-              on:click={() => {
-                setView('detail');
-              }}>
-              <Icon name="grid" className={`${state.view == 'detail' ? 'fill-primary' : ''}`} />
-            </Button>
-          </div>
-
+          {#if $UserStore.meta.hiddenFeatures}
+            <div class="btn-group mr-1 compact">
+              <Button
+                icon
+                className="px-1"
+                on:click={() => {
+                  setView('button');
+                }}>
+                <Icon size="18" name="buttonView" className={`${state.view == 'button' ? 'fill-primary' : ''}`} />
+              </Button>
+              <Button
+                icon
+                className="px-1"
+                on:click={() => {
+                  setView('list');
+                }}>
+                <Icon size="18" name="list" className={`${state.view == 'list' ? 'fill-primary' : ''}`} />
+              </Button>
+              <Button
+                icon
+                className="px-0"
+                on:click={() => {
+                  setView('detail');
+                }}>
+                <Icon size="18" name="detailView" className={`${state.view == 'detail' ? 'fill-primary' : ''}`} />
+              </Button>
+            </div>
+          {/if}
           <div class="btn-group ml-1 mr-1">
             <Button on:click={methods.addButtonTap} class="px-1">
               <Icon name="add" size={14} className="mr-1" />
@@ -838,8 +802,7 @@
           </div>
           <div class="btn-group ml-1">
             <Button on:click={boardOptions} color="clear" class="px-1">
-              <Text size="sm">{Lang.t('general.more', 'More')}</Text>
-              <Icon name="chevronDown" size={14} className="ml-1" />
+              <Text size="sm">{Lang.t('general.options', 'Options')}</Text>
             </Button>
           </div>
 

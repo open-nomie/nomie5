@@ -70,13 +70,13 @@
             toggle(pick);
           }}>
           <LabelMeta str={pick} titleClass={active.indexOf(pick) > -1 ? 'text-white' : ''} />
-          <button class="btn btn-clear" slot="right">
+          <div slot="right">
             {#if active.indexOf(pick) > -1}
-              <NIcon name="radioFilled" className="fill-white" />
-            {:else}
-              <NIcon name="radio" className="fill-primary-bright" />
+              <div class="badge badge-primary">
+                <NIcon name="checkmark" className="fill-white" size="16" />
+              </div>
             {/if}
-          </button>
+          </div>
         </NItem>
       {/if}
     {/each}

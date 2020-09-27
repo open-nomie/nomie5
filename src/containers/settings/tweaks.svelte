@@ -66,7 +66,7 @@
 
   <hr class="divider center my-1" />
 
-  <NItem title={Lang.t('settings.small-tracker-buttons', 'Small Tracker Buttons')}>
+  <NItem title={Lang.t('settings.small-tracker-buttons', 'Compact Tracker Buttons')}>
     <span slot="left">🐭</span>
     <div slot="right">
       <NToggle

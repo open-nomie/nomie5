@@ -176,9 +176,9 @@
             </span>
             <span slot="right">
               {#if state.selected.indexOf(item) > -1}
-                <NIcon name="radioFilled" className="fill-primary-bright" />
-              {:else}
-                <NIcon name="radio" className="fill-primary-bright" />
+                <div class="badge badge-primary">
+                  <NIcon name="checkmark" className="fill-white" size="16" />
+                </div>
               {/if}
             </span>
           </NItem>
@@ -203,9 +203,9 @@
             </span>
             <span slot="right">
               {#if state.selected.indexOf(person) > -1}
-                <NIcon name="radioFilled" className="fill-primary-bright" />
-              {:else}
-                <NIcon name="radio" className="fill-primary-bright" />
+                <div class="badge badge-primary">
+                  <NIcon name="checkmark" className="fill-white" size="16" />
+                </div>
               {/if}
             </span>
           </NItem>
@@ -226,9 +226,9 @@
             }}>
             <span slot="right">
               {#if state.selected.indexOf(context) > -1}
-                <NIcon name="radioFilled" className="fill-primary-bright" />
-              {:else}
-                <NIcon name="radio" className="fill-primary-bright" />
+                <div class="badge badge-primary">
+                  <NIcon name="checkmark" className="fill-white" size="16" />
+                </div>
               {/if}
             </span>
           </NItem>

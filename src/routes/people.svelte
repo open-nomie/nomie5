@@ -140,14 +140,18 @@
       <div class="trackers n-grid">
         {#each state.people as person}
           <ShortcutButton
+            compact
+            hideValue
+            moreIcon="chart"
             on:more={() => {
               Interact.openStats(`@${person}`);
             }}
+            title="@{($PeopleStore.people[person] || {}).displayName}"
+            subtitle={$PeopleStore.people[person].last ? dayjs($PeopleStore.people[person].last).fromNow() : 'no date'}
+            value={dayjs($PeopleStore.people[person].last).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD') ? 1 : 0}
             on:click={() => {
               personClicked(person);
-            }}
-            title={($PeopleStore.people[person] || {}).displayName}
-            subtitle={$PeopleStore.people[person] && $PeopleStore.people[person].last ? dayjs($PeopleStore.people[person].last).fromNow() : undefined}>
+            }}>
             <div slot="emoji">
               {#if $PeopleStore.people[person] && $PeopleStore.people[person].avatar}
                 <AvatarBall

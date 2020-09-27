@@ -14,13 +14,16 @@
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import math from "../../utils/math/math";
   import time from "../../utils/time/time";
+  import { UserStore } from "../../store/user-store";
+  import TrackerButton from "./tracker-button.svelte";
+  import ScoreTracker from "../../modules/scoring/score-tracker";
 
   const dispatch = createEventDispatcher();
 
   export let trackers: Array<ITracker>;
   export let hideMore: boolean = false;
 
-  export let view: "list" | "detail" | "button" | string = localStorage.getItem("board-view") || "detail";
+  export let view: "list" | "detail" | "button" | string = localStorage.getItem("board-view") || "button";
 
   function getLastUsed(tracker) {
     if ($LastUsed[tracker.tag]) {
@@ -35,7 +38,21 @@
     return values.length;
   }
 
-  function getTodaysValue(tracker): string | number {
+  function getHoursUsed(tracker) {
+    if ($LedgerStore.today.hasOwnProperty(tracker.tag)) {
+      return $LedgerStore.today[tracker.tag].hours;
+    } else {
+      return [];
+    }
+  }
+
+  function getPositivity(tracker) {
+    let value = getTodaysValue(tracker, false);
+    value = value || 0;
+    return ScoreTracker(value, tracker);
+  }
+
+  function getTodaysValue(tracker, format: boolean = true): string | number {
     let value = null;
     // Does this tracker exist in today's map?
     if ($LedgerStore.today.hasOwnProperty(tracker.tag)) {
@@ -48,7 +65,11 @@
         value = math.round(math.average($LedgerStore.today[tracker.tag].values));
       }
     }
-    return value ? NomieUOM.format(value, tracker.uom) : null;
+    if (format) {
+      return value ? NomieUOM.format(value, tracker.uom) : null;
+    } else {
+      return value;
+    }
   }
 </script>
 
@@ -73,14 +94,12 @@
   {#each trackers as tracker}
     <ListItem
       clickable
-      className="tracker-{tracker.tag} tracker-list-item flex-shrink-off {getTodaysValue(tracker) ? 'has-value' : 'no-value'}"
+      className="tracker-{tracker.tag} py-1 tracker-list-item flex-shrink-off {getTodaysValue(tracker) ? 'has-value' : 'no-value'}"
       compact
       on:click={() => {
         dispatch('tap', tracker);
       }}>
-
       <div class="highlight" style="background-color:{tracker.color}" />
-
       <span slot="left">
         <Text size="xxl">{tracker.emoji}</Text>
       </span>
@@ -100,10 +119,11 @@
         {#if !hideMore}
           <button
             class="btn btn-icon btn-light"
+            style="height:26px;"
             on:click|preventDefault|stopPropagation={() => {
               dispatch('more', tracker);
             }}>
-            <Icon name="more" />
+            <Icon name="more" size="18" />
           </button>
         {/if}
       </span>
@@ -113,6 +133,7 @@
   <div class="trackers n-grid">
     {#each trackers as tracker}
       <ShortcutButton
+        compact={$UserStore.localSettings.compactButtons}
         title={tracker.label}
         subtitle={!tracker.started ? getLastUsed(tracker) : null}
         emoji={tracker.emoji}
@@ -135,4 +156,22 @@
       </ShortcutButton>
     {/each}
   </div>
+{:else if view == 'button'}
+  <div class="trackers n-grid">
+    {#each trackers as tracker}
+      <TrackerButton
+        {tracker}
+        value={getTodaysValue(tracker)}
+        hoursUsed={getHoursUsed(tracker)}
+        positivity={getPositivity(tracker)}
+        on:click={() => {
+          dispatch('tap', tracker);
+        }}
+        on:longpress={() => {
+          dispatch('more', tracker);
+        }} />
+    {/each}
+  </div>
 {/if}
+
+<!--    className={`${state.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${state.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`} -->

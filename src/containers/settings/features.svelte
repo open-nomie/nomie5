@@ -73,7 +73,7 @@
       <ToggleSwitch value={$UserStore.meta.lock} on:change={methods.lockToggle} />
     </div>
   </ListItem>
-  {#if $UserStore.meta.hiddenFeatures}
+  <!-- {#if $UserStore.meta.hiddenFeatures}
     <ListItem title={Lang.t('settings.enable-advanced-buttons', 'Advanced Tracker Buttons')} description="Use advanced tracker button">
       <div slot="right" class="ml-2">
         <ToggleSwitch
@@ -83,5 +83,5 @@
           }} />
       </div>
     </ListItem>
-  {/if}
+  {/if} -->
 </div>

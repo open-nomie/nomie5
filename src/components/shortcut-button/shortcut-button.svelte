@@ -1,24 +1,26 @@
 <script lang="ts">
   import type { fill, tap } from "lodash";
   import { createEventDispatcher } from "svelte";
+  import { UserStore } from "../../store/user-store";
 
   import Button from "../button/button.svelte";
   import Icon from "../icon/icon.svelte";
   import Text from "../text/text.svelte";
 
-  export let title: string | undefined;
-  export let subtitle: string | undefined;
-  export let value: string | undefined;
-  export let color: string | undefined;
-  export let emoji: string | undefined;
+  export let title: string | undefined = undefined;
+  export let subtitle: string | undefined = undefined;
+  export let value: string | undefined = undefined;
+  export let color: string | undefined = undefined;
+  export let emoji: string | undefined = undefined;
   export let titleSize: string = "sm";
   export let taps: number = 0;
   export let hideMore: boolean = false;
+  export let hideValue: boolean = false;
   export let className: string = "";
+  export let compact: boolean = false;
+  export let moreIcon: string = "more";
 
   const dispatch = createEventDispatcher();
-
-  const has_subtitle_slot = (arguments[1].$$slots || {}).hasOwnProperty("subtitle");
 
   async function more() {
     dispatch("more");
@@ -29,28 +31,54 @@
   @import "../../scss/utils/_utils";
 
   :global(.shortcut-button) {
+    position: relative;
     color: var(--color-inverse-2);
 
+    .title {
+      font-weight: 500;
+    }
     .title,
     .subtitle,
     .value {
       line-height: 100%;
       margin-bottom: 4px;
+      width: 100%;
     }
     .value {
       font-weight: bold;
     }
 
-    &:hover {
+    &:hover,
+    &:active {
       color: var(--color-inverse-2);
     }
 
-    @include media-breakpoint-down(xs) {
-      width: calc(33% - 12px);
+    &:active,
+    &:focus {
+      box-shadow: var(--box-shadow-tight) !important;
+    }
+
+    &.compact {
+      .emoji {
+        font-size: 30px;
+        line-height: 100%;
+      }
+      .title {
+        font-size: medium !important;
+      }
+      .value {
+        font-size: medium !important;
+      }
+      .subtitle {
+        font-size: x-small !important;
+      }
+      height: 120px;
     }
 
     @include media-breakpoint-down(sm) {
       width: calc(33% - 12px);
+      min-width: calc(33% - 12px);
+      max-width: calc(33% - 12px);
       .title {
         font-size: 0.8rem !important;
       }
@@ -63,7 +91,9 @@
     }
 
     @include media-breakpoint-up(md) {
-      width: 180px;
+      width: 150px;
+      min-width: 150px;
+      max-width: 150px;
       .title {
         font-size: medium !important;
       }
@@ -77,7 +107,6 @@
 
     flex-grow: 1;
     flex-shrink: 0;
-    max-width: 180px;
     height: 144px;
     border-radius: 22px;
     margin: 6px;
@@ -146,7 +175,7 @@
     }
 
     button.more {
-      position: absolute;
+      position: static;
       top: -2px;
       right: -2px;
       width: 20px;
@@ -158,6 +187,9 @@
       color: rgba(255, 255, 255, 0.6);
       svg {
         stroke: var(--color-inverse-3) !important;
+      }
+      &.icon-other {
+        border: none;
       }
     }
     .highlight {
@@ -174,6 +206,7 @@
       flex-direction: row;
       align-items: center;
       justify-content: stretch;
+      opacity: 0.2;
       .bar {
         border-radius: 2px;
         height: 3px;
@@ -187,17 +220,39 @@
   :global(.shortcut-button.has-value .highlight) {
     // color: #fff !important;
     transform: scaleX(100%);
-    opacity: 1;
+    opacity: 0.2;
   }
 
   :global(.shortcut-button.has-value svg) {
-    // stroke: #fff !important;
+    stroke: #fff !important;
+  }
+  :global(.shortcut-button.has-value) {
+    color: #fff;
+    .more {
+      border: solid 1px rgba(255, 255, 255, 0.6);
+    }
+    &:before {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.12);
+    }
+  }
+  :global(.shortcut-button.has-value .n-text) {
+    color: #fff !important;
+  }
+  :global(.shortcut-button.has-value .n-counter) {
+    color: #fff !important;
   }
 </style>
 
 <Button
-  className="{className} shortcut-button d-flex flex-column {value ? 'has-value' : 'no-value'}"
-  style={`background-color:var(--color-solid);`}
+  color="clear"
+  className="{className} shortcut-button d-flex flex-column {value ? 'has-value' : 'no-value'}
+  {compact ? 'compact' : ''}"
+  style={`background-color:${value ? color || 'var(--color-primary)' : 'var(--color-solid)'};`}
   on:longpress={() => {
     dispatch('longpress');
   }}
@@ -206,7 +261,7 @@
   }}>
   <div class="highlight">
     {#each new Array(taps) as tap}
-      <div class="bar {tap}" style={value ? `background-color:${color}` : ''} />
+      <div class="bar {tap}" style={value ? `background-color:#FFF` : ''} />
     {/each}
   </div>
   <div class="n-row top">
@@ -215,8 +270,8 @@
       <slot name="emoji" />
     </div>
     {#if !hideMore}
-      <button class="btn more btn-icon p-0" on:click|preventDefault|stopPropagation={more}>
-        <Icon name="more" size="16" />
+      <button class="btn more {moreIcon !== 'more' ? 'icon-other' : ''} btn-icon p-0" on:click|preventDefault|stopPropagation={more}>
+        <Icon name={moreIcon} size="16" />
       </button>
     {/if}
   </div>
@@ -225,12 +280,12 @@
     {#if title}
       <div class="title" style="margin-bottom:4px">{title}</div>
     {/if}
-    {#if value}
+    {#if value && !hideValue}
       <div class="value" style="margin-bottom:4px">{value}</div>
     {/if}
     {#if subtitle}
       <div class="subtitle" style="opacity:0.6; margin-bottom:4px;">{subtitle}</div>
     {/if}
-    <slot name="subtitle" />
+    <slot name="subtitle" class="what" />
   </div>
 </Button>
