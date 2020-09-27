@@ -452,7 +452,7 @@ Note: Your data will not automatically move over. You'll first need to export it
           <NItem className="bg-transparent mt-4 mb-2" title="⚠️ Danger Zone">
 
             <div slot="right">
-              <Button color="danger" size="sm" on:click={methods.deleteEverything}>Destory all Data</Button>
+              <Button color="danger" size="sm" on:click={methods.deleteEverything}>Destroy all Data</Button>
             </div>
           </NItem>
 
