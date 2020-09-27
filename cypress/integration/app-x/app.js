@@ -238,7 +238,7 @@ context("App", () => {
     cy.get(".list > :nth-child(7)").click();
     cy.wait(400);
     // Hit Cancel first -- to see if this gets deleted
-    cy.get(".p-1 > .btn-transparent").click();
+    cy.get(".visible > .alert-dialog-window > .p-1 > .btn-transparent").click();
     cy.wait(500);
     cy.get(".trackers").then((node) => {
       expect(node.html().search(".tracker-water")).to.be.gt(-1);
@@ -300,7 +300,6 @@ context("App", () => {
     window.indexedDB.deleteDatabase("localforage");
     onboard();
     selectStarters();
-    enableFeatures();
   };
 
   const exportData = () => {
@@ -373,6 +372,22 @@ context("App", () => {
     return cy.get(".tab-Track").click();
   };
 
+  it("should enable features", () => {
+    enableFeatures();
+  });
+
+  it("Should properly track using the tracker buttons", () => {
+    useTrackers();
+  });
+
+  it("should test adding a tab", () => {
+    testTabs();
+  });
+
+  it("should delete a tracker", () => {
+    testDeleteingTracker();
+  });
+
   it("should create a multi tracker", () => {
     createMultiTracker();
   });
@@ -383,10 +398,6 @@ context("App", () => {
 
   it("should be able to create a log via a note", () => {
     testCaptureForm();
-  });
-
-  it("Should properly track using the tracker buttons", () => {
-    useTrackers();
   });
 
   it("Should properly test the tips", () => {
@@ -407,13 +418,5 @@ context("App", () => {
 
   it("should have all the things in history", () => {
     testHistory();
-  });
-
-  it("should test adding a tab", () => {
-    testTabs();
-  });
-
-  it("should delete a tracker", () => {
-    testDeleteingTracker();
   });
 });
