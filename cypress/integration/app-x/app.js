@@ -57,7 +57,8 @@ context("App", () => {
     cy.get(".btn-success").click();
   };
 
-  const createSimpleTracker = () => {
+  const createSimpleTracker = (name = "Simple Tracker", emoji = "🤘") => {
+    let trackerTag = name.replace(/ /, "_").toLowerCase();
     const next = () => {
       cy.get(".n-layout footer button.btn.btn-block").eq(1).click();
     };
@@ -65,9 +66,9 @@ context("App", () => {
     cy.wait(300);
     cy.get(".pop-menu button").eq(1).click();
     next();
-    cy.get(".n-input input").type("Simple Tracker");
+    cy.get(".n-input input").type(name);
     next();
-    cy.get(".input-emoji").type("😂");
+    cy.get(".input-emoji").type(emoji);
     next();
     cy.wait(400);
     cy.get('[style="background-color: rgb(255, 160, 0);"]').click();
@@ -76,10 +77,10 @@ context("App", () => {
     next();
     cy.get("select").as("select").invoke("val", "1").trigger("change");
     next();
-    cy.get(".tracker-simple_tracker").should("exist");
-    cy.get(".tracker-simple_tracker").click();
+    cy.get(`.tracker-${trackerTag}`).should("exist");
+    cy.get(`.tracker-${trackerTag}`).click();
     cy.wait(400);
-    cy.get(".tracker-simple_tracker .score").should("be", "1");
+    cy.get(`.tracker-${trackerTag} .score`).should("be", "1");
   };
 
   const createMultiTracker = () => {
@@ -142,6 +143,7 @@ context("App", () => {
     cy.get(".footer > .right > .btn").click();
     cy.wait(500);
     cy.get("#textarea-capture-note").should("contain.value", "#mood(8)");
+    cy.get("#textarea-capture-note").should("contain.value", "#check_up ");
     cy.wait(500);
     cy.get(".save-button").click();
     // cy.get(".n-modal-footer > .footer > .btn-primary").click();
@@ -222,6 +224,35 @@ context("App", () => {
 
     cy.get("div.n-modal-header> div > button").eq(1).click();
     cy.wait(1000);
+  };
+
+  const longPressTracker = (tag) => {
+    cy.wait(100);
+    cy.get(`.tracker-${tag}`).trigger("mousedown");
+  };
+
+  const testDeleteingTracker = () => {
+    cy.get(".tab-Track").click();
+    longPressTracker("water");
+    cy.wait(400);
+    cy.get(".list > :nth-child(7)").click();
+    cy.wait(400);
+    // Hit Cancel first -- to see if this gets deleted
+    cy.get(".p-1 > .btn-transparent").click();
+    cy.wait(500);
+    cy.get(".trackers").then((node) => {
+      expect(node.html().search(".tracker-water")).to.be.gt(-1);
+    });
+    cy.wait(500);
+    longPressTracker("water");
+    cy.wait(400);
+    cy.get(".list > :nth-child(7)").click();
+    cy.wait(400);
+    cy.get(".visible > .alert-dialog-window > .p-1 > .btn-primary").click();
+    cy.wait(600);
+    cy.get(".trackers").then((node) => {
+      expect(node.html().search(".tracker-water")).to.be.eq(-1);
+    });
   };
 
   const testPin = () => {
@@ -305,12 +336,45 @@ context("App", () => {
     // Close modal
     cy.get(".person-modal .left > .btn > .n-icon").click();
     cy.wait(400);
-    cy.get(".tab-Track").click();
+    goHome();
+  };
+
+  const testTabs = () => {
+    goHome();
+    cy.wait(200);
+    // Click tab icon
+    cy.get("header > .n-toolbar-grid > .right > .btn").click();
+    cy.wait(300);
+    cy.get(".form-control").type("Test Tab");
+    cy.wait(100);
+    cy.get(".visible > .alert-dialog-window > .p-1 > .btn-primary").click();
+    cy.wait(100);
+    cy.get(".tracker-undefined").click();
+    cy.wait(300);
+    cy.get(".pop-menu button").eq(1).click();
+    cy.wait(400);
+    cy.get(".tracker-selector-modal .n-item").eq(0).click();
+    cy.wait(400);
+    cy.get(".n-row > .btn-primary").click();
+    // cy.wait(400);
+    // cy.get(".tracker-water").then((node) => {
+    //   expect(node.text()).to.contain("Drank Water");
+    // });
+    cy.wait(500);
+    cy.get(".board-all").click();
   };
 
   it("Should On Boarding with Local", () => {
     initBasic();
     // exportData();
+  });
+
+  const goHome = async () => {
+    return cy.get(".tab-Track").click();
+  };
+
+  it("should create a multi tracker", () => {
+    createMultiTracker();
   });
 
   it("should test the PIN", () => {
@@ -333,10 +397,6 @@ context("App", () => {
     testPerson();
   });
 
-  it("Should create and be able to use a multi-tracker", () => {
-    createMultiTracker();
-  });
-
   it("should create a simple tracker", () => {
     createSimpleTracker();
   });
@@ -348,77 +408,12 @@ context("App", () => {
   it("should have all the things in history", () => {
     testHistory();
   });
+
+  it("should test adding a tab", () => {
+    testTabs();
+  });
+
+  it("should delete a tracker", () => {
+    testDeleteingTracker();
+  });
 });
-
-// cy.wait(200);
-
-// cy.get(".footer-buttons > .btn")
-//   .contains("Next")
-//   .click();
-
-// cy.wait(300);
-
-// cy.get(
-//   ".full-screen.visible > .alert-dialog-window > .p-2 > .btn-primary"
-// ).click();
-
-// cy.wait(200);
-
-// cy.get(".board-actions > .btn").click();
-// cy.wait(200);
-// cy.get('input[name="label"]').type("Test Tracker");
-// cy.get('input[name="emoji"]').type("🚦");
-// cy.wait(200);
-// cy.get(".n-modal-footer > .btn-primary").click();
-// cy.wait(200);
-// cy.get(".tracker-test_tracker > .emoji").click();
-// cy.wait(200);
-// cy.get(".save-button").click();
-// cy.wait(1000);
-// cy.get(".tracker-test_tracker .value").contains("1");
-// cy.get(".tracker-test_tracker > .emoji").click();
-// cy.wait(200);
-// cy.get(".save-button").click();
-// cy.wait(1000);
-// cy.get(".tracker-test_tracker .value").contains("2");
-
-// cy.wait(200);
-// // Add a board
-// cy.get(".add-board").click();
-// cy.wait(400);
-// // Add the name Test Board
-// cy.get(".slot-holder > .form-control").type("Test Board");
-// cy.wait(400);
-// // Click OK
-// cy.get(
-//   ".full-screen.visible > .alert-dialog-window > .p-2 > .btn-primary"
-// ).click();
-// cy.wait(400);
-// // Click confirmed ok
-// cy.get(".full-screen.visible > .alert-dialog-window > .p-2 > .btn").click();
-// cy.wait(400);
-// //
-// cy.get(".board-actions > :nth-child(1)").click();
-// cy.wait(400);
-// // Select "Existing Trackers"
-// cy.get(".list > :nth-child(2)").click();
-// cy.wait(500);
-// // select first two from tracker list
-// cy.get(".n-modal .list > :nth-child(1)").click();
-// cy.get(".n-modal .list > :nth-child(2)").click();
-// cy.get(".n-modal .n-row > .btn-primary").click();
-// // We should be in the test board with the new trackers
-
-// // Click the water tracker
-// cy.get(".tracker-water").click();
-
-// cy.wait(200);
-// // Clcik the save button
-// cy.get(".n-modal-footer > .footer > .btn-primary").click();
-
-// cy.wait(400);
-// cy.get(".tracker-water .value").contains("12 oz");
-
-// cy.get('.footer-buttons > .btn')
-// 	.contains('Login/Register')
-// 	.click();

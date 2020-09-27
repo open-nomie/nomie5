@@ -315,9 +315,10 @@ const trackerStoreInit = () => {
      * Optionally provide an object of trackers.
      * This will merge with existing.
      */
-    async save(trackers: ITrackers = {}) {
+    async save(trackers: ITrackers = {}, getFresh: boolean = true) {
       // Pull existing trackers from storage (for blockstack and pouch)
-      let existing = await Storage.get(NPaths.storage.trackers());
+      // let existing = await Storage.get(NPaths.storage.trackers());
+      let existing = getFresh ? await Storage.get(NPaths.storage.trackers()) : undefined;
       let merged: ITrackers;
       update((state) => {
         merged = { ...state.trackers, ...trackers };
@@ -386,13 +387,17 @@ const trackerStoreInit = () => {
         }
       }
     },
+    /**
+     * Perm Delete a Tracker
+     * @param tracker
+     */
     deleteTracker(tracker) {
       let response;
       update((state) => {
         state.trackers = state.trackers || {};
         delete state.trackers[tracker.tag];
         try {
-          response = methods.save(state.trackers);
+          response = methods.save(state.trackers, false);
         } catch (e) {
           alert(e.message);
         }
