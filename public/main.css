@@ -6544,8 +6544,10 @@ body.scrolling .mini-map {
   flex-grow: 1; }
   .input-model.type-range .keypad-holder {
     display: none; }
-  .input-model.type-value .tracker-input.slider {
-    display: none; }
+  .input-model.type-value {
+    background-color: var(--color-grey-8); }
+    .input-model.type-value .tracker-input.slider {
+      display: none; }
 
 body.scrolling .n-tracker-button {
   pointer-events: none !important; }
@@ -7372,6 +7374,9 @@ header.layout-header.scrolled {
   display: flex;
   align-items: center;
   justify-content: center; }
+  .loading-screen.deleted {
+    pointer-events: none;
+    transform: translateY(600px); }
   .loading-screen:before {
     transition: all 0.5s ease-in-out;
     content: "";

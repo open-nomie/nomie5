@@ -10,6 +10,8 @@
   justify-content: center;
 
   &.deleted {
+    pointer-events: none;
+    transform: translateY(600px);
   }
 
   &:before {

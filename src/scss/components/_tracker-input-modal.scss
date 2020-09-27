@@ -79,6 +79,7 @@
     }
   }
   &.type-value {
+    background-color: var(--color-grey-8);
     .tracker-input.slider {
       display: none;
     }

@@ -68,6 +68,10 @@
   import NPaths from "../../paths";
   import { Device } from "../../store/device-store";
   import ShortcutButton from "../../components/shortcut-button/shortcut-button.svelte";
+  import time from "../../utils/time/time";
+  import Counter from "../../components/counter/counter.svelte";
+  import ListItem from "../../components/list-item/list-item.svelte";
+  import TrackersList from "./trackers.svelte";
 
   // Consts
   const console = new Logger("board.svelte");
@@ -93,6 +97,7 @@
     searchTerm: null, // the search term the user is typing
     activeTip: 0, // index of the current tip to show
     hideTips: false, // temp hide - it will stop showing after 12 launches.
+    view: localStorage.getItem("board-view") || "detail",
   };
 
   /**
@@ -147,6 +152,11 @@
       state.addedTrackers = [];
     });
   });
+
+  function setView(view) {
+    localStorage.setItem("board-view", view);
+    state.view = view;
+  }
 
   function editBoard() {
     if (!$BoardStore.activeBoard) {
@@ -344,7 +354,7 @@
 
     getLastUsed(tracker) {
       if ($LastUsed[tracker.tag]) {
-        return dayjs($LastUsed[tracker.tag].date).fromNow();
+        return time.fromNow($LastUsed[tracker.tag].date);
       } else {
         return undefined;
       }
@@ -433,6 +443,7 @@
     },
     // Show Tracker Options
     showTrackerOptions(tracker) {
+      console.log("hello?", tracker);
       // Make it a real tracker in case it's not - doubling up shouldn't be a problem.
       tracker = new Tracker(tracker);
 
@@ -738,21 +749,18 @@
           {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
             <div class="trackers n-grid framed mt-2" style="min-height:auto">
 
-              {#each TrackerStore.state.runningTimers() as tracker}
-                <NTrackerButton
-                  {tracker}
-                  value={methods.getTrackerValue(tracker)}
-                  hoursUsed={methods.getHoursUsed(tracker)}
-                  positivity={methods.getPositivity(tracker)}
-                  on:click={() => {
-                    methods.trackerTapped(tracker);
-                  }}
-                  disabled={state.savingTrackers.indexOf(tracker.tag) > -1}
-                  className={`${state.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${state.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
-                  on:longpress={() => {
-                    methods.showTrackerOptions(tracker);
-                  }} />
-              {/each}
+              <TrackersList
+                view="list"
+                trackers={TrackerStore.state.runningTimers()}
+                on:tap={(evt) => {
+                  console.log('on tap', evt);
+                  methods.trackerTapped(evt.detail);
+                }}
+                on:more={(evt) => {
+                  console.log(' on more');
+                  methods.showTrackerOptions(evt.detail);
+                }} />
+
               <button class="btn-close" on:click={TrackerStore.hideTimers}>
                 <Icon name="chevronUp" className="fill-inverse" />
               </button>
@@ -767,43 +775,19 @@
               {/if}
             {/if}
             <!-- lastUsed={methods.getLastUsed(tracker)} -->
-            {#if $FeatureStore.advancedButtons}
-              {#each foundTrackers || boardTrackers as tracker}
-                <ShortcutButton
-                  title={tracker.label}
-                  subtitle={methods.getLastUsed(tracker)}
-                  emoji={tracker.emoji}
-                  value={methods.getTrackerValue(tracker)}
-                  color={tracker.color}
-                  on:click={() => {
-                    methods.trackerTapped(tracker);
-                  }}
-                  on:more={() => {
-                    methods.showTrackerOptions(tracker);
-                  }} />
-              {/each}
-            {:else}
-              {#each foundTrackers || boardTrackers as tracker}
-                <NTrackerButton
-                  {tracker}
-                  value={methods.getTrackerValue(tracker)}
-                  hoursUsed={methods.getHoursUsed(tracker)}
-                  positivity={methods.getPositivity(tracker)}
-                  on:click={() => {
-                    methods.trackerTapped(tracker);
-                  }}
-                  disabled={state.savingTrackers.indexOf(tracker.tag) > -1}
-                  className={`${state.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${state.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
-                  on:longpress={() => {
-                    methods.showTrackerOptions(tracker);
-                  }} />
-              {/each}
-            {/if}
-            {#if !state.searching && $BoardStore.active !== '_timers'}
-              <NTrackerButton
-                on:click={methods.addButtonTap}
-                tracker={{ label: Lang.t('tracker.add-tracker', 'Add Tracker'), emoji: '➕' }} />
-            {/if}
+            <!-- {#if true === true} -->
+            <TrackersList
+              view={state.view}
+              trackers={foundTrackers || boardTrackers}
+              on:tap={(evt) => {
+                console.log('on tap', evt);
+                methods.trackerTapped(evt.detail);
+              }}
+              on:more={(evt) => {
+                console.log(' on more');
+                methods.showTrackerOptions(evt.detail);
+              }} />
+
           </div>
 
           <!-- <div class="board-actions">
@@ -815,10 +799,31 @@
           <!-- Include User Tips - shit should be a component -->
 
         </main>
-        <div class="board-actions mt-5 mb-2" style="min-width:140px;">
-          <div class="btn-group filler">
-            <Button on:click={boardOptions} color="clear">
-              <Text size="sm">{Lang.t('general.options', 'Options')}</Text>
+        <div class="board-actions mt-5 mb-2 n-row" style="min-width:200px;">
+          <div class="btn-group mr-1">
+            <Button
+              on:click={() => {
+                setView('list');
+              }}>
+              <Icon name="menu" className={`${state.view == 'list' ? 'fill-primary' : ''}`} />
+            </Button>
+            <Button
+              on:click={() => {
+                setView('detail');
+              }}>
+              <Icon name="grid" className={`${state.view == 'detail' ? 'fill-primary' : ''}`} />
+            </Button>
+          </div>
+
+          <div class="btn-group ml-1 mr-1">
+            <Button on:click={methods.addButtonTap} class="px-1">
+              <Icon name="add" size={14} className="mr-1" />
+              <Text size="sm">Add</Text>
+            </Button>
+          </div>
+          <div class="btn-group ml-1">
+            <Button on:click={boardOptions} color="clear" class="px-1">
+              <Text size="sm">{Lang.t('general.more', 'More')}</Text>
               <Icon name="chevronDown" size={14} className="ml-1" />
             </Button>
           </div>

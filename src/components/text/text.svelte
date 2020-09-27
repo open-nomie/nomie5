@@ -46,27 +46,30 @@
       line-height: 150%;
     }
 
+    &.xxs {
+      font-size: xx-small;
+    }
     &.xs {
-      font-size: 0.7rem;
+      font-size: x-small;
     }
     &.sm {
-      font-size: 0.85rem;
+      font-size: small;
     }
     &.md {
-      font-size: 1rem;
+      font-size: medium;
     }
     &.lg {
-      font-size: 1.25rem;
+      font-size: large;
     }
 
     &.faded {
       opacity: 0.7;
     }
     &.xl {
-      font-size: 1.5rem;
+      font-size: x-large;
     }
     &.xxl {
-      font-size: 2rem;
+      font-size: xx-large;
     }
     &.font-weight-bold {
       font-weight: bold;

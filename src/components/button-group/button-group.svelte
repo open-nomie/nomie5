@@ -21,6 +21,12 @@
 </script>
 
 <style lang="scss">
+  :global(.btn-group .btn) {
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
   // .btn-group {
   //   &.inverse {
   //     button {

@@ -3,6 +3,7 @@
   export let started = undefined;
   export let lg = undefined;
   export let className = "";
+  export let color = "var(--color-red)";
 
   onMount(() => {
     if (started) {
@@ -30,16 +31,10 @@
       let hours = "";
 
       if (parseInt(minutes) > 59) {
-        hours = this.normalizeTime(
-          Math.floor(parseInt(minutes) / 60).toString()
-        );
-        minutes = this.normalizeTime(
-          (parseInt(minutes) - parseInt(hours) * 60).toString()
-        );
+        hours = this.normalizeTime(Math.floor(parseInt(minutes) / 60).toString());
+        minutes = this.normalizeTime((parseInt(minutes) - parseInt(hours) * 60).toString());
       }
-      seconds = this.normalizeTime(
-        Math.floor(parseInt(seconds) % 60).toString()
-      );
+      seconds = this.normalizeTime(Math.floor(parseInt(seconds) % 60).toString());
 
       minutes = this.normalizeTime(minutes);
 
@@ -57,14 +52,13 @@
 
     msToSecond(ms) {
       return ms / 1000;
-    }
+    },
   };
 </script>
 
 <style lang="scss">
   @import "../../scss/utils/_utils";
   .n-counter {
-    background-color: var(--color-red);
     color: #fff;
     font-size: 0.7rem;
     font-weight: bold;
@@ -90,4 +84,4 @@
   }
 </style>
 
-<div class="n-counter {className} {lg ? 'large' : 'small'}">{value}</div>
+<div class="n-counter {className} {lg ? 'large' : 'small'}" style={`background-color:${color}`}>{value}</div>
