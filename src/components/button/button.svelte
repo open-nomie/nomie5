@@ -18,6 +18,7 @@
   export let ariaLabel = undefined;
   export let prevent = false;
   export let inline = false;
+  export let text = false;
 
   let hit;
   let ripple;
@@ -46,6 +47,7 @@
   class={`btn ${block ? 'btn-block' : ''} ${icon ? 'btn-icon' : ''} 
           btn-${type} btn-${shape} btn-${color} btn-${size} 
           ${inline ? 'btn-inline' : ''}
+          ${text ? 'btn-text' : ''}
           ${className}`}
   on:mousedown={(evt) => {}}
   {title}

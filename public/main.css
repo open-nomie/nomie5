@@ -5110,7 +5110,17 @@ button:focus {
     font-size: 2.5rem; }
 
 .btn.btn-text {
-  color: var(--color-primary); }
+  color: var(--color-primary);
+  background-color: transparent;
+  box-shadow: none;
+  font-size: medium;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.06rem; }
+  .btn.btn-text:active {
+    background-color: transparent !important;
+    color: var(--color-primary) !important;
+    opacity: 0.86; }
 
 .btn-group {
   background-color: var(--color-solid);

@@ -13,6 +13,8 @@
   export let emoji: string | undefined;
   export let titleSize: string = "sm";
   export let taps: number = 0;
+  export let hideMore: boolean = false;
+  export let className: string = "";
 
   const dispatch = createEventDispatcher();
 
@@ -25,17 +27,52 @@
 
 <style lang="scss">
   @import "../../scss/utils/_utils";
+
   :global(.shortcut-button) {
+    color: var(--color-inverse-2);
+
+    .title,
+    .subtitle,
+    .value {
+      line-height: 100%;
+      margin-bottom: 4px;
+    }
+    .value {
+      font-weight: bold;
+    }
+
+    &:hover {
+      color: var(--color-inverse-2);
+    }
+
     @include media-breakpoint-down(xs) {
       width: calc(33% - 12px);
     }
 
-    @include media-breakpoint-up(sm) {
+    @include media-breakpoint-down(sm) {
       width: calc(33% - 12px);
+      .title {
+        font-size: 0.8rem !important;
+      }
+      .value {
+        font-size: large;
+      }
+      .subtitle {
+        font-size: small !important;
+      }
     }
 
     @include media-breakpoint-up(md) {
       width: 180px;
+      .title {
+        font-size: medium !important;
+      }
+      .value {
+        font-size: large;
+      }
+      .subtitle {
+        font-size: small !important;
+      }
     }
 
     flex-grow: 1;
@@ -159,7 +196,7 @@
 </style>
 
 <Button
-  className="shortcut-button d-flex flex-column {value ? 'has-value' : 'no-value'}"
+  className="{className} shortcut-button d-flex flex-column {value ? 'has-value' : 'no-value'}"
   style={`background-color:var(--color-solid);`}
   on:longpress={() => {
     dispatch('longpress');
@@ -177,20 +214,22 @@
       {#if emoji}{emoji}{/if}
       <slot name="emoji" />
     </div>
-    <button class="btn more btn-icon p-0" on:click|preventDefault|stopPropagation={more}>
-      <Icon name="more" size="16" />
-    </button>
+    {#if !hideMore}
+      <button class="btn more btn-icon p-0" on:click|preventDefault|stopPropagation={more}>
+        <Icon name="more" size="16" />
+      </button>
+    {/if}
   </div>
   <slot />
   <div class="bottom w-100 text-left" style="padding-bottom:6px;">
     {#if title}
-      <Text size={titleSize} leading1 style="margin-bottom:4px">{title}</Text>
+      <div class="title" style="margin-bottom:4px">{title}</div>
     {/if}
     {#if value}
-      <Text size="lg" bold leading1 style="margin-bottom:4px">{value}</Text>
+      <div class="value" style="margin-bottom:4px">{value}</div>
     {/if}
     {#if subtitle}
-      <Text size="xs" truncate leading1 faded style="opacity:0.6; margin-bottom:4px;">{subtitle}</Text>
+      <div class="subtitle" style="opacity:0.6; margin-bottom:4px;">{subtitle}</div>
     {/if}
     <slot name="subtitle" />
   </div>

@@ -115,6 +115,19 @@
     checking: false,
   };
 
+  let timers = [];
+  $: if ($TrackerStore) {
+    timers = Object.keys($TrackerStore.trackers)
+      .map((tag) => {
+        return $TrackerStore.trackers[tag];
+      })
+      .filter((tracker) => {
+        console.log("tracker", tracker);
+        return tracker.started;
+      });
+    console.log({ timers });
+  }
+
   // Check if it's ready
   const checkIfReady = (requester) => {
     if (isReady.done == false) {
@@ -745,50 +758,52 @@
           </div>
         {/if}
         <OfflineQueue />
-        <main class="n-board h-100" on:swipeleft={BoardStore.next} on:swiperight={BoardStore.previous}>
-          {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
-            <div class="trackers n-grid framed mt-2" style="min-height:auto">
-
-              <TrackersList
-                view="list"
-                trackers={TrackerStore.state.runningTimers()}
-                on:tap={(evt) => {
-                  console.log('on tap', evt);
-                  methods.trackerTapped(evt.detail);
-                }}
-                on:more={(evt) => {
-                  console.log(' on more');
-                  methods.showTrackerOptions(evt.detail);
-                }} />
-
-              <button class="btn-close" on:click={TrackerStore.hideTimers}>
-                <Icon name="chevronUp" className="fill-inverse" />
-              </button>
-            </div>
-          {/if}
-          <!-- Loop over trackers -->
-          <div class="trackers n-grid">
-
-            {#if (foundTrackers || boardTrackers || []).length === 0}
-              {#if foundTrackers != null}
-                <div class="no-trackers">{Lang.t('board.no-search-results', 'No trackers found')}</div>
-              {/if}
-            {/if}
-            <!-- lastUsed={methods.getLastUsed(tracker)} -->
-            <!-- {#if true === true} -->
+        {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
+          <div class="n-list solo" style="min-height:auto">
+            <ListItem compact>
+              <Text size="sm">Running Timers</Text>
+              <div slot="right">
+                <Button text size="xs" on:click={TrackerStore.toggleTimers}>Close</Button>
+              </div>
+            </ListItem>
             <TrackersList
-              view={state.view}
-              trackers={foundTrackers || boardTrackers}
+              view="list"
+              trackers={timers}
               on:tap={(evt) => {
-                console.log('on tap', evt);
                 methods.trackerTapped(evt.detail);
               }}
               on:more={(evt) => {
-                console.log(' on more');
                 methods.showTrackerOptions(evt.detail);
               }} />
 
           </div>
+        {/if}
+        <main class="n-board h-100" on:swipeleft={BoardStore.next} on:swiperight={BoardStore.previous}>
+          <!-- Loop over trackers -->
+
+          {#if (foundTrackers || boardTrackers || []).length === 0}
+            {#if foundTrackers != null}
+              <div class="no-trackers">{Lang.t('board.no-search-results', 'No trackers found')}</div>
+            {:else}
+              <div class="no-trackers d-flex flex-column align-items-center justify-content-center">
+                {Lang.t('board.add-some-trackers', 'Sure is empty in here')}
+                <Button text on:click={methods.addButtonTap}>Add a Tracker</Button>
+              </div>
+            {/if}
+          {/if}
+          <!-- lastUsed={methods.getLastUsed(tracker)} -->
+          <!-- {#if true === true} -->
+          <TrackersList
+            view={state.view}
+            trackers={foundTrackers || boardTrackers}
+            on:tap={(evt) => {
+              console.log('on tap', evt);
+              methods.trackerTapped(evt.detail);
+            }}
+            on:more={(evt) => {
+              console.log(' on more');
+              methods.showTrackerOptions(evt.detail);
+            }} />
 
           <!-- <div class="board-actions">
             <button on:click={editBoard} style="color:#FFF" class="btn btn btn-round board-edit-button clickable">

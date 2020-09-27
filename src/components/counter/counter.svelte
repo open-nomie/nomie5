@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import Icon from "../icon/icon.svelte";
   export let started = undefined;
   export let lg = undefined;
   export let className = "";
@@ -59,19 +60,13 @@
 <style lang="scss">
   @import "../../scss/utils/_utils";
   .n-counter {
-    color: #fff;
+    display: inline;
     font-size: 0.7rem;
     font-weight: bold;
-    height: 20px;
-    line-height: 20px;
-    padding: 0 4px;
-    border-radius: 4px;
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-content: center;
 
     &.large {
+      display: flex;
+      padding: 12px;
       font-size: 40px;
       flex-grow: 1;
       text-align: center;
@@ -84,4 +79,9 @@
   }
 </style>
 
-<div class="n-counter {className} {lg ? 'large' : 'small'}" style={`background-color:${color}`}>{value}</div>
+<div class="n-counter {className} {lg ? 'large' : 'small'}" style={`color:${color}`}>
+  {#if !lg}
+    <Icon name="time" size="12" />
+  {/if}
+  {value}
+</div>

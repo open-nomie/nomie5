@@ -18,6 +18,7 @@
   const dispatch = createEventDispatcher();
 
   export let trackers: Array<ITracker>;
+  export let hideMore: boolean = false;
 
   export let view: "list" | "detail" | "button" | string = localStorage.getItem("board-view") || "detail";
 
@@ -60,25 +61,31 @@
     width: 3px;
     border-radius: 2px;
   }
+  :global(.tracker-list-item.no-value) {
+    background-color: transparent;
+    .highlight {
+      display: none;
+    }
+  }
 </style>
 
 {#if view == 'list'}
   {#each trackers as tracker}
     <ListItem
       clickable
-      className="tracker-list-item"
+      className="tracker-{tracker.tag} tracker-list-item flex-shrink-off {getTodaysValue(tracker) ? 'has-value' : 'no-value'}"
       compact
       on:click={() => {
         dispatch('tap', tracker);
       }}>
-      {#if getTodaysValue(tracker)}
-        <div class="highlight" style="background-color:{tracker.color}" />
-      {/if}
+
+      <div class="highlight" style="background-color:{tracker.color}" />
+
       <span slot="left">
         <Text size="xxl">{tracker.emoji}</Text>
       </span>
       <div>
-        <Text>{tracker.label}</Text>
+        <Text size="md">{tracker.label}</Text>
         {#if getLastUsed(tracker)}
           <Text size="sm" faded>{getLastUsed(tracker) || undefined}</Text>
         {/if}
@@ -90,36 +97,42 @@
         {/if}
       </span>
       <span slot="right">
-        <button
-          class="btn btn-icon btn-light"
-          on:click|preventDefault|stopPropagation={() => {
-            dispatch('more', tracker);
-          }}>
-          <Icon name="more" />
-        </button>
+        {#if !hideMore}
+          <button
+            class="btn btn-icon btn-light"
+            on:click|preventDefault|stopPropagation={() => {
+              dispatch('more', tracker);
+            }}>
+            <Icon name="more" />
+          </button>
+        {/if}
       </span>
     </ListItem>
   {/each}
 {:else if view == 'detail'}
-  {#each trackers as tracker}
-    <ShortcutButton
-      title={tracker.label}
-      subtitle={!tracker.started ? getLastUsed(tracker) : null}
-      emoji={tracker.emoji}
-      value={getTodaysValue(tracker)}
-      taps={getTotalTaps(tracker)}
-      color={tracker.color}
-      on:click={() => {
-        dispatch('tap', tracker);
-      }}
-      on:more={() => {
-        dispatch('more', tracker);
-      }}>
-      <div slot="subtitle">
-        {#if tracker.started}
-          <Counter started={tracker.started} color={tracker.color} />
-        {/if}
-      </div>
-    </ShortcutButton>
-  {/each}
+  <div class="trackers n-grid">
+    {#each trackers as tracker}
+      <ShortcutButton
+        title={tracker.label}
+        subtitle={!tracker.started ? getLastUsed(tracker) : null}
+        emoji={tracker.emoji}
+        value={getTodaysValue(tracker)}
+        taps={getTotalTaps(tracker)}
+        color={tracker.color}
+        className="tracker-{tracker.tag}"
+        {hideMore}
+        on:click={() => {
+          dispatch('tap', tracker);
+        }}
+        on:more={() => {
+          dispatch('more', tracker);
+        }}>
+        <div slot="subtitle">
+          {#if tracker.started}
+            <Counter started={tracker.started} color={tracker.color} />
+          {/if}
+        </div>
+      </ShortcutButton>
+    {/each}
+  </div>
 {/if}

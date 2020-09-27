@@ -302,6 +302,17 @@ button:focus {
 
 .btn.btn-text {
   color: var(--color-primary);
+  background-color: transparent;
+  box-shadow: none;
+  font-size: medium;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.06rem;
+  &:active {
+    background-color: transparent !important;
+    color: var(--color-primary) !important;
+    opacity: 0.86;
+  }
 }
 
 .btn-group {

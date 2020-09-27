@@ -22,6 +22,7 @@ import { Lang } from "./lang";
 import Logger from "../utils/log/log";
 import type { ITrackers } from "../modules/import/import";
 import NPaths from "../paths";
+import { Device } from "./device-store";
 
 const console = new Logger("🌟 TrackerStore 🌟");
 
@@ -106,6 +107,9 @@ const trackerStoreInit = () => {
     },
     toggleTimers() {
       update((state) => {
+        if (!state.showTimers) {
+          Device.scrollToTop();
+        }
         state.showTimers = !state.showTimers;
         return state;
       });
