@@ -107,7 +107,7 @@
         <NText size="md" tag="div" className="title">{title}</NText>
       {/if}
       {#if description}
-        <NText size="sm" lineHeightMd faded className="description">{description}</NText>
+        <NText size="sm" leading2 faded className="description">{description}</NText>
       {/if}
       <slot />
     </div>
@@ -155,7 +155,7 @@
         <NText size="md" tag="div" className="title" medium>{title}</NText>
       {/if}
       {#if description}
-        <NText size="sm" lineHeightMd className="description" faded>{description}</NText>
+        <NText size="sm" leading1 className="description" faded>{description}</NText>
       {/if}
       <slot />
     </div>

@@ -453,12 +453,12 @@
         async click() {
           // If we're on All - warn the hell out of the user
           if ($BoardStore.active === "all") {
-            const confirmed = Interact.confirm(
+            const confirmed = await Interact.confirm(
               Lang.t("general.delete-from-nomie", { thing: tracker.label }),
               Lang.t("tracker.delete-description")
             );
             if (confirmed) {
-              TrackerStore.deleteTracker(tracker).then((done) => {});
+              await TrackerStore.deleteTracker(tracker).then((done) => {});
             }
           } else {
             // We're on another board - allow them to just remove the tracker
@@ -637,7 +637,7 @@
     {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
       <div class="container p-0 n-row h-100">
         {#if $TrackerStore.timers.length}
-          <button class="btn tab tap-icon pl-3 pr-1" on:click={TrackerStore.toggleTimers}>
+          <button class="btn tab tap-icon pl-3 pr-2" on:click={TrackerStore.toggleTimers}>
             <Icon name="time" size={24} className="fill-red-pulse" />
           </button>
         {/if}
