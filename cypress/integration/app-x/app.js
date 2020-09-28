@@ -27,13 +27,17 @@ context("App", () => {
   };
 
   const selectStarters = () => {
-    cy.get(".n-modal-frame .tracker-option").eq(0).click();
+    cy.get(".tracker-mood").click();
     cy.wait(200);
-    cy.get(".n-modal-frame .tracker-option").eq(1).click();
+    cy.get(".tracker-sleep").click();
     cy.wait(200);
-    cy.get(".n-modal-frame .tracker-option").eq(2).click();
+    cy.get(".tracker-water").click();
     cy.wait(200);
-    cy.get(".n-modal-frame .tracker-option").eq(3).click();
+    cy.get(".tracker-pooped").click();
+    cy.wait(200);
+    cy.get(".tracker-sex").click();
+    cy.wait(200);
+    cy.get(".tracker-sleep_quality").click();
     cy.wait(200);
     cy.get(".library-modal > .n-modal > .n-modal-footer > .btn").click();
     cy.wait(300);
@@ -62,7 +66,7 @@ context("App", () => {
     const next = () => {
       cy.get(".n-layout footer button.btn.btn-block").eq(1).click();
     };
-    cy.get(".tracker-undefined").click();
+    cy.get(".btn-group.mr-1").click();
     cy.wait(300);
     cy.get(".pop-menu button").eq(1).click();
     next();
@@ -87,7 +91,7 @@ context("App", () => {
     const next = () => {
       cy.get(".layout-footer button").eq(1).click();
     };
-    cy.get(".tracker-undefined").click();
+    cy.get(".btn-group.mr-1").click();
     cy.wait(300);
     cy.get(".pop-menu button").eq(1).click();
     cy.wait(300);
@@ -348,7 +352,8 @@ context("App", () => {
     cy.wait(100);
     cy.get(".visible > .alert-dialog-window > .p-1 > .btn-primary").click();
     cy.wait(100);
-    cy.get(".tracker-undefined").click();
+    // Click Add Button
+    cy.get(".btn-group.mr-1").click();
     cy.wait(300);
     cy.get(".pop-menu button").eq(1).click();
     cy.wait(400);
