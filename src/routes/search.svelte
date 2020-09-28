@@ -30,6 +30,8 @@
   import Text from "../components/text/text.svelte";
   import Button from "../components/button/button.svelte";
   import { SearchStore, SearchTerm } from "../store/search-store";
+  import ButtonGroup from "../components/button-group/button-group.svelte";
+  import Search from "../containers/search/search.svelte";
 
   export const location = undefined;
   export const style = undefined;
@@ -158,19 +160,38 @@
   }
 </style>
 
-<NLayout pageTitle={appTitle} showTabs={false}>
+<Search />
 
-  <header slot="header">
+<!-- <NLayout pageTitle={appTitle} showTabs={false}>
+
+  <header slot="header" class="flex-column">
+    <div class="n-toolbar-grid">
+      <div class="left">
+        <Button color="transparent" shape="circle" icon className="tap-icon mr-2" on:click={back}>
+          {#if state.searchTerm && state.searchTerm.term}
+            <Icon name="close" />
+          {:else}
+            <Icon name="arrowBack" />
+          {/if}
+        </Button>
+      </div>
+      <div class="main">
+        <div class="btn-group">
+          <Button icon>
+            <Icon name="calendar" />
+          </Button>
+          <Button icon>
+            <Icon name="detailView" />
+          </Button>
+          <Button icon>
+            <Icon name="userperuserson" />
+          </Button>
+        </div>
+      </div>
+    </div>
     <div class="n-row container h-100 px-2">
-      <Button color="transparent" shape="circle" icon className="tap-icon mr-2" on:click={back}>
-        {#if state.searchTerm && state.searchTerm.term}
-          <Icon name="close" />
-        {:else}
-          <Icon name="arrowBack" />
-        {/if}
-      </Button>
+
       <div class="filler">
-        <!-- on:change={methods.searchChange} -->
         <NSearchBar
           compact
           showClose={false}
@@ -183,11 +204,9 @@
 
     </div>
 
-    <!-- hasResults={(searchLogs || []).length > 0} -->
-
+ 
   </header>
-  <!-- end header-content header -->
-
+ 
   <main slot="content" class="page page-search">
 
     <div class="container p-0">
@@ -270,10 +289,10 @@
           </div>
         </div>
       {/if}
-      <!-- end history -->
+      
     </div>
 
   </main>
-  <!-- end header-content content -->
+  
 
-</NLayout>
+</NLayout> -->

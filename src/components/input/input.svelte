@@ -290,6 +290,9 @@
           {autocapitalize}
           {placeholder}
           on:input={change}
+          on:change={(evt) => {
+            dispatch('change', evt);
+          }}
           on:focus={focus}
           on:blur={blur} />
       {:else if type == 'file'}
@@ -378,6 +381,11 @@
           {autocorrect}
           {autocapitalize}
           {placeholder}
+          on:keyup={(evt) => {
+            if (evt.key == 'Enter') {
+              dispatch('enter', value);
+            }
+          }}
           on:input={change}
           on:focus={focus}
           on:blur={blur} />

@@ -86,10 +86,11 @@ button:focus {
 
 .btn-sm {
   border-radius: 6pt !important;
+  font-size: small;
 }
 
 .btn-xs {
-  font-size: 0.65rem !important;
+  font-size: x-small;
   padding: 2px 10px;
   text-transform: uppercase;
   font-weight: bold;
@@ -301,16 +302,15 @@ button:focus {
 }
 
 .btn.btn-text {
-  color: var(--color-primary);
+  color: var(--color-primary-bright);
   background-color: transparent;
   box-shadow: none;
-  font-size: medium;
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 0.06rem;
   &:active {
     background-color: transparent !important;
-    color: var(--color-primary) !important;
+    color: var(--color-primary-bright);
     opacity: 0.86;
   }
 }
