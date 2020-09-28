@@ -7,7 +7,7 @@ import PromiseStep from "../../utils/promise-step/promise-step";
 import NomieLog from "../nomie-log/nomie-log";
 import { TrackerStore } from "../../store/tracker-store";
 import type TrackerConfig from "./tracker";
-import { ITrackers } from "../import/import";
+import type { ITrackers } from "../import/import";
 import is from "../../utils/is/is";
 
 export interface ITrackerInputerGetOptions {
@@ -34,19 +34,19 @@ export default class TrackerInputer {
     value: Array<Function>;
   };
   lastAction: string;
-  $TrackerStore: any;
+  trackers: ITrackers;
   /**
    * Constructor
    * Pass in tracker and the tracker store $ object
    */
-  constructor(tracker, $TrackerStore) {
+  constructor(tracker, trackers: ITrackers) {
     this.tracker = tracker;
     this.value = 0;
     this.listeners = {
       cancel: [],
       value: [],
     };
-    this.$TrackerStore = $TrackerStore;
+    this.trackers = trackers;
   }
   // Listeners
   on(type: string, func: Function): void {
@@ -95,7 +95,7 @@ export default class TrackerInputer {
     let items = trackerElements.map((trackerElement) => {
       let tag = trackerElement.id;
       return {
-        tracker: this.$TrackerStore.trackers[tag] || new Tracker({ tag: tag }),
+        tracker: this.trackers[tag] || new Tracker({ tag: tag }),
         value: trackerElement.value, // not being used?
       };
     });
@@ -157,7 +157,7 @@ export default class TrackerInputer {
   //       return { people, context, trackerElements};
   // }
 
-  async getElements(options: ITrackerInputerGetOptions): Promise<Array<string>> {
+  async getElements(options: ITrackerInputerGetOptions = {}): Promise<Array<string>> {
     const note = [];
     /**
      * Tick Tracker Types

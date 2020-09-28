@@ -71,6 +71,7 @@ const SearchStoreInit = () => {
         state.saved = state.saved
           .filter((d) => d)
           .map((term: SearchTerm) => {
+            console.log("init search store", term);
             return new SearchTerm(term);
           });
         return state;

@@ -94,10 +94,12 @@
   {#each trackers as tracker}
     <ListItem
       clickable
-      className="tracker-{tracker.tag} py-1 tracker-list-item flex-shrink-off {getTodaysValue(tracker) ? 'has-value' : 'no-value'}"
+      className="tracker-{tracker.tag} py-2 tracker-list-item flex-shrink-off {getTodaysValue(tracker) ? 'has-value' : 'no-value'}"
       compact
-      on:click={() => {
-        dispatch('tap', tracker);
+      on:click={(evt) => {
+        if (['svg'].indexOf(evt.detail.target.tagName) == -1) {
+          dispatch('tap', tracker);
+        }
       }}>
       <div class="highlight" style="background-color:{tracker.color}" />
       <span slot="left">
@@ -118,12 +120,14 @@
       <span slot="right">
         {#if !hideMore}
           <button
-            class="btn btn-icon btn-light"
-            style="height:26px;"
-            on:click|preventDefault|stopPropagation={() => {
+            class="btn btn-icon btn-light prevent"
+            style="height:26px;z-index:1000"
+            on:click|preventDefault|stopPropagation={(evt) => {
+              evt.stopImmediatePropagation();
+              evt.preventDefault();
               dispatch('more', tracker);
             }}>
-            <Icon name="more" size="18" />
+            <Icon name="more" size="18" className="prevent" />
           </button>
         {/if}
       </span>

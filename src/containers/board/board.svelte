@@ -399,7 +399,7 @@
     },
 
     async trackerTapped(tracker) {
-      let inputer = new TrackerInputer(tracker, $TrackerStore);
+      let inputer = new TrackerInputer(tracker, $TrackerStore.trackers);
       let note = await inputer.getElements();
 
       if (note.length) {

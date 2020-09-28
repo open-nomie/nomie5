@@ -4,6 +4,7 @@
 import NomieUOM from "../../utils/nomie-uom/nomie-uom";
 import extract from "../../utils/extract/extract";
 import nid from "../nid/nid";
+import TrackableElement from "../trackable-element/trackable-element";
 
 export type ITrackerType = "tick" | "value" | "range" | "picker" | "note" | "timer";
 export type ITrackerMath = "sum" | "mean";
@@ -126,6 +127,23 @@ export default class TrackerConfig {
   getIncluded(value) {
     let includedStr = (this.include || "").replace(/\*/g, value || "");
     return includedStr.trim();
+  }
+
+  getTrackableElement(): TrackableElement {
+    return new TrackableElement({
+      id: this.tag,
+      type: "tracker",
+      raw: `#${this.tag}`,
+      obj: this,
+    });
+
+    // this.id = starter.id; // brandon of @brandon, meet of #meet, home of +home
+    // this.type = starter.type; // tracker, person, context
+    // this.raw = starter.raw; // the raw string
+    // this.value = starter.value; // any value passed or 1
+    // this.prefix = starter.prefix; // @ # or +
+    // this.remainder = starter.remainder; // holder of any characters after this
+    // this.obj = starter.obj; // holder of related things
   }
 
   // Make the tag look good if no label is provided

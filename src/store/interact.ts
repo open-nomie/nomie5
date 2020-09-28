@@ -39,9 +39,14 @@ import { Lang } from "./lang";
 import type { ILocation } from "../modules/locate/Location";
 import type { ITrackerInputResult } from "../modules/tracker/tracker-inputer";
 import TrackableElement from "../modules/trackable-element/trackable-element";
+import TrackerInputer from "../modules/tracker/tracker-inputer";
 import NPaths from "../paths";
 import { SearchStore } from "./search-store";
+import { SearchTerm } from "./search-store";
+import { ActiveLogStore } from "./active-log";
 import { init } from "i18next";
+import type TrackerConfig from "../modules/tracker/tracker";
+import type { ITrackers } from "../modules/import/import";
 
 const console = new Logger("✋ Interact");
 
@@ -62,107 +67,101 @@ export interface IPopMenuOptions {
 }
 
 const interactInit = () => {
-  let getBaseState = () => {
-    return {
-      stats: {
-        activeTag: null,
-        terms: [],
-      },
-      alert: {
-        show: false,
-        title: null,
-        message: null,
-        ok: "Ok",
-        cancel: null,
-        onInteract: null,
-      },
-      blocker: {
-        show: false,
-        message: null,
-      },
-      streak: {
-        show: null,
-      },
-      shareImage: {
-        log: null,
-        color: null,
-      },
-      boardSorter: {
-        show: false,
-      },
-      people: {
-        active: null,
-      },
-      trackerSelector: {
-        show: false,
-        multiple: false,
-        onInteract: null,
-      },
-      selector: {
-        show: false,
-        multiple: false,
-        onInteract: null,
-        type: "tracker",
-      },
-      onThisDay: null,
-      trackerEditor: {
-        show: false,
-        tracker: null,
-        onInteract: null,
-      },
-      trackerInput: {
-        show: false,
-        tracker: null,
-        onInteract: null,
-        value: null,
-        allowSave: true,
-      },
-      logEditor: {
-        show: false,
-        log: null,
-        onInteract: null,
-        tag: null,
-        value: null,
-      },
-      toast: {
-        show: false,
-        message: null,
-        detail: null,
-        buttonLabel: undefined,
-        click: undefined,
-        description: undefined,
-      },
-      popmenu: {
-        show: false,
-        title: null,
-        description: null,
-        buttons: [],
-      },
-      locationFinder: {
-        show: false,
-        onInteract: null,
-        location: null,
-      },
-      locationViewer: {
-        show: false,
-        locations: null,
-      },
-      prompt: {
-        show: false,
-        placeholder: undefined,
-        message: undefined,
-        title: undefined,
-        value: undefined,
-        valueType: undefined,
-        cancel: undefined,
-        onInteract: undefined,
-      },
-    };
-  };
-
-  let state = getBaseState();
-
-  const { update, subscribe, set } = writable(state);
+  const { update, subscribe, set } = writable({
+    stats: {
+      activeTag: null,
+      terms: [],
+    },
+    alert: {
+      show: false,
+      title: null,
+      message: null,
+      ok: "Ok",
+      cancel: null,
+      onInteract: null,
+    },
+    blocker: {
+      show: false,
+      message: null,
+    },
+    streak: {
+      show: null,
+    },
+    shareImage: {
+      log: null,
+      color: null,
+    },
+    boardSorter: {
+      show: false,
+    },
+    people: {
+      active: null,
+    },
+    trackerSelector: {
+      show: false,
+      multiple: false,
+      onInteract: null,
+    },
+    selector: {
+      show: false,
+      multiple: false,
+      onInteract: null,
+      type: "tracker",
+    },
+    onThisDay: null,
+    trackerEditor: {
+      show: false,
+      tracker: null,
+      onInteract: null,
+    },
+    trackerInput: {
+      show: false,
+      tracker: null,
+      onInteract: null,
+      value: null,
+      allowSave: true,
+    },
+    logEditor: {
+      show: false,
+      log: null,
+      onInteract: null,
+      tag: null,
+      value: null,
+    },
+    toast: {
+      show: false,
+      message: null,
+      detail: null,
+      buttonLabel: undefined,
+      click: undefined,
+      description: undefined,
+    },
+    popmenu: {
+      show: false,
+      title: null,
+      description: null,
+      buttons: [],
+    },
+    locationFinder: {
+      show: false,
+      onInteract: null,
+      location: null,
+    },
+    locationViewer: {
+      show: false,
+      locations: null,
+    },
+    prompt: {
+      show: false,
+      placeholder: undefined,
+      message: undefined,
+      title: undefined,
+      value: undefined,
+      valueType: undefined,
+      cancel: undefined,
+      onInteract: undefined,
+    },
+  });
 
   const methods = {
     alert(title: string, message?: string, ok?: string) {
@@ -338,6 +337,21 @@ const interactInit = () => {
     shareLog(log) {
       Interact.openShareImage(log);
     },
+
+    async trackerTap(tracker: TrackerConfig, trackers: ITrackers) {
+      let inputer = new TrackerInputer(tracker, trackers);
+      console.log("Getting tracker input", tracker);
+      let note = await inputer.getElements();
+
+      if (note.length) {
+        ActiveLogStore.addElement(note.join(" "));
+        if (inputer.lastAction == "save" || tracker.one_tap) {
+          await LedgerStore.saveLog(ActiveLogStore.asLog());
+          await ActiveLogStore.clear();
+        }
+      }
+    },
+
     elementOptions(element: TrackableElement) {
       let trackableElement = element instanceof TrackableElement ? element : new TrackableElement(element);
       let tracker = trackableElement.type == "tracker" ? TrackerStore.getByTag(trackableElement.id) : null;

@@ -15,11 +15,11 @@
 
   let state = {
     partialTag: null,
-    results: []
+    results: [],
   };
 
   async function getTrackerInput(tracker) {
-    let inputer = new TrackerInputer(tracker, $TrackerStore);
+    let inputer = new TrackerInputer(tracker, $TrackerStore.trackers);
     return await inputer.getNoteString();
   }
 
@@ -38,38 +38,38 @@
     try {
       if (type == "tracker") {
         let tkrs = Object.keys($TrackerStore.trackers || {})
-          .map(tag => {
+          .map((tag) => {
             return $TrackerStore.trackers[tag];
           })
-          .filter(trk => {
+          .filter((trk) => {
             return trk.tag.search(searchTag.replace("#", "")) > -1;
           });
         return tkrs.length ? tkrs : null;
 
         // Search for People
       } else if (type === "person") {
-        let people = Object.keys($PeopleStore.people).filter(person => {
+        let people = Object.keys($PeopleStore.people).filter((person) => {
           return person.search(searchTag.toLowerCase()) > -1;
         });
         return people.length
-          ? people.map(username => {
+          ? people.map((username) => {
               return {
                 tag: username,
                 emoji: "👤",
-                type: "person"
+                type: "person",
               };
             })
           : null;
 
         // Search for Context
       } else if (type === "context") {
-        let context = $ContextStore.filter(term => {
+        let context = $ContextStore.filter((term) => {
           let text = searchTag.replace("+", "").toLowerCase();
           term = term.toLowerCase();
           return term.search(text.toLowerCase()) > -1;
         });
         return context.length
-          ? context.map(c => {
+          ? context.map((c) => {
               return { tag: c, emoji: "💡", type: "context", note: `+${c}` };
             })
           : null;
@@ -77,7 +77,7 @@
     } catch (e) {}
   };
 
-  const onSelect = async tracker => {
+  const onSelect = async (tracker) => {
     let note = "";
     let partialTag = "";
     if (tracker.type === "person") {
@@ -91,7 +91,7 @@
       partialTag = `#${state.partialTag.replace("#", "")}`;
     }
     // Split Input to in array
-    const inputParts = input.split(" ").filter(word => {
+    const inputParts = input.split(" ").filter((word) => {
       return word != partialTag;
     });
     inputParts.push(note + " ");
@@ -102,7 +102,7 @@
     state.results = null;
   };
 
-  const onInput = str => {
+  const onInput = (str) => {
     let value = str;
     let last = value.charAt(value.length - 1);
     if (last == " ") {
@@ -195,8 +195,7 @@
 </style>
 
 <!--  -->
-<div
-  class="{scroller ? 'scroller' : 'no-scroller'} autocomplete-results animate {(state.results || []).length ? 'visible' : 'hidden'}">
+<div class="{scroller ? 'scroller' : 'no-scroller'} autocomplete-results animate {(state.results || []).length ? 'visible' : 'hidden'}">
   <div class="container p-0 tracker-list">
     <button class="btn btn-round btn-icon px-0" on:click={close}>
       <NIcon name="close" />
@@ -208,18 +207,12 @@
           onSelect(tracker);
         }}>
         {#if tracker.type == 'person'}
-          <Dymoji
-            person={$PeopleStore.people[tracker.tag]}
-            className="mr-2"
-            size={20}
-            radius={0.3} />
+          <Dymoji person={$PeopleStore.people[tracker.tag]} className="mr-2" size={20} radius={0.3} />
         {:else}{tracker.emoji}{/if}
         <div style="max-width:120px;" class="ml-1 truncate">
           {#if tracker.type == 'person'}
             {$PeopleStore.people[tracker.tag].displayName}
-          {:else if tracker.type == 'context'}
-            {tracker.tag}
-          {:else}{tracker.label}{/if}
+          {:else if tracker.type == 'context'}{tracker.tag}{:else}{tracker.label}{/if}
         </div>
       </button>
     {/each}

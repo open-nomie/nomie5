@@ -47,10 +47,4 @@
         Interact.logOptions(event.detail).then(() => {});
       }} />
   </section>
-{:else}
-  <section class="search-results history n-panel empty center-all column px-4">
-    <Text size="sm" faded center className="mb-4">
-      Search 6 months at a time, starting from the most recent records. Use AND and OR to refine your search.
-    </Text>
-  </section>
 {/if}
