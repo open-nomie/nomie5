@@ -31,6 +31,18 @@
   @import "../../scss/utils/_utils";
 
   :global(.shortcut-button) {
+    flex-grow: 1;
+    flex-shrink: 0;
+    height: 144px;
+    justify-content: stretch;
+    border-radius: 22px;
+    margin: 6px;
+    padding: 14px 14px 6px 14px;
+    box-shadow: var(--box-shadow-float) !important;
+    overflow: hidden;
+
+    transition: all 0.2s ease-in-out;
+
     position: relative;
     color: var(--color-inverse-2);
 
@@ -64,7 +76,7 @@
         line-height: 100%;
       }
       .title {
-        font-size: medium !important;
+        font-size: 0.8rem !important;
       }
       .value {
         font-size: medium !important;
@@ -73,6 +85,10 @@
         font-size: x-small !important;
       }
       height: 120px;
+    }
+
+    @include media-breakpoint-down(xs) {
+      padding: 12px 12px 4px 12px;
     }
 
     @include media-breakpoint-down(sm) {
@@ -104,17 +120,6 @@
         font-size: small !important;
       }
     }
-
-    flex-grow: 1;
-    flex-shrink: 0;
-    height: 144px;
-    border-radius: 22px;
-    margin: 6px;
-    padding: 14px 14px 6px 14px;
-    box-shadow: var(--box-shadow-float) !important;
-    overflow: hidden;
-
-    transition: all 0.2s ease-in-out;
 
     .emoji {
       font-size: 40px;

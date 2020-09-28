@@ -321,12 +321,7 @@ button:focus {
   padding: 3px;
   border-radius: 12px;
   height: 40px;
-  &.compact {
-    .btn {
-      padding-left: 7px !important;
-      padding-right: 7px !important;
-    }
-  }
+
   .btn {
     background: transparent !important;
     border: none;

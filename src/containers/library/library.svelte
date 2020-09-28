@@ -121,9 +121,6 @@
           <Text size="xxl">{tracker.emoji}</Text>
         </div>
         <div slot="right">
-          <div class="badge badge-green flex-grow-off flex-shrink-off">
-            <NIcon name="checkmark" className="fill-white" size="16" />
-          </div>
           {#if $TrackerStore.trackers.hasOwnProperty(tracker.tag) || installed.hasOwnProperty(tracker.tag)}
             <div class="badge badge-green">
               <NIcon name="checkmark" className="fill-white" size="16" />

@@ -5128,9 +5128,6 @@ button:focus {
   padding: 3px;
   border-radius: 12px;
   height: 40px; }
-  .btn-group.compact .btn {
-    padding-left: 7px !important;
-    padding-right: 7px !important; }
   .btn-group .btn {
     background: transparent !important;
     border: none;
@@ -7572,11 +7569,6 @@ hr.divider {
   box-shadow: var(--box-shadow-tight); }
   .board-actions .btn-group .btn .n-text {
     color: var(--color-inverse-2) !important; }
-  .board-actions .btn-group .btn {
-    padding-left: 14px !important;
-    padding-right: 14px !important; }
-    .board-actions .btn-group .btn:last-child {
-      border-right: none; }
 
 .library-modal .n-modal-body {
   background-color: var(--color-bg) !important; }
