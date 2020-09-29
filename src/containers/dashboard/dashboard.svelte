@@ -313,6 +313,17 @@
     editingWidget = undefined;
   }
 
+  async function deleteWidget(widget: Widget) {
+    let confirmed = await Interact.confirm(
+      `${Lang.t("general.remove", "Remove")} ${widget.getTitle()} ${Lang.t("general.widget", "widget")}?`,
+      "Are you sure you want to remove this widget from this dashboard?"
+    );
+    if (confirmed) {
+      await DashboardStore.deleteWidget(widget);
+      loadActiveDashboard();
+    }
+  }
+
   /**
    * Rename a Dashboard
    */
@@ -451,7 +462,7 @@
           {/if}
         </div>
         <div class="board-actions filler">
-          <div class="btn-group filler">
+          <div class="btn-group" style="width:200px;">
             <Button on:click={newWidget} color="clear">
               <Text size="sm">{Lang.t('general.add', 'Add')}</Text>
             </Button>
@@ -479,6 +490,11 @@
           }}
           let:item>
           <ListItem solo className="pb-2">
+            <div slot="left">
+              <Button icon color="clear" on:click={() => deleteWidget(item)}>
+                <Icon name="delete" />
+              </Button>
+            </div>
             {#if item.type == 'text'}
               <Text size="md" truncate>{item.description}</Text>
             {:else}
