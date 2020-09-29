@@ -38,6 +38,7 @@
   import SearchTrackers from "./search-trackers.svelte";
   import SearchPeople from "./search-people.svelte";
   import SearchRecent from "./search-recent.svelte";
+  import Modal from "../../components/modal/modal.svelte";
 
   export const location = undefined;
   export const style = undefined;
@@ -92,10 +93,10 @@
   };
 
   function back() {
-    if (state.searchTerm && state.searchTerm.term) {
-      methods.clearSearch();
+    if ($SearchStore.active) {
+      SearchStore.clear();
     } else {
-      navigate("/history");
+      SearchStore.close();
       // window.history.back();
     }
   }
@@ -106,18 +107,20 @@
 </script>
 
 <style lang="scss" type="text/scss">
-
+  :global(.search-modal) {
+    z-index: 1300 !important;
+  }
 </style>
 
-<main class="n-panel search-container column fixed">
-  <section class="n-panel header column stiff">
+<Modal show={$SearchStore.show} fullscreen bodyClass="bg-bg" className="search-modal">
+  <div slot="raw-header">
     <nav class="n-row px-2 py-1">
       <div class="left" style="width:40px;">
         <Button color="transparent" shape="circle" icon className="tap-icon mr-2" on:click={back}>
           <Icon name="close" />
         </Button>
       </div>
-      <div class="filler btn-group compact px-2 py-1">
+      <div class="filler btn-group compact px-2">
         <Button
           size="sm"
           on:click={() => {
@@ -145,18 +148,18 @@
       </div>
       <div style="width:40px" />
     </nav>
-  </section>
-
-  {#if $SearchStore.view === 'history'}
-    <SearchHistory {term} />
-  {:else if $SearchStore.view === 'trackers'}
-    <SearchTrackers {term} />
-  {:else if $SearchStore.view === 'people'}
-    <SearchPeople {term} />
-  {/if}
-
-  {#if !$SearchStore.active}
-    <SearchRecent />
-  {/if}
-
-</main>
+  </div>
+  <main>
+    {#if $SearchStore.view === 'history'}
+      <SearchHistory {term} />
+    {:else if $SearchStore.view === 'trackers'}
+      <SearchTrackers {term} />
+    {:else if $SearchStore.view === 'people'}
+      <SearchPeople {term} />
+    {/if}
+    {#if !$SearchStore.active}
+      <SearchRecent />
+    {/if}
+  </main>
+  <div slot="footer" />
+</Modal>

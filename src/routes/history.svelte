@@ -40,6 +40,7 @@
   import Text from "../components/text/text.svelte";
   import Button from "../components/button/button.svelte";
   import NextPrevCal from "../components/next-prev-cal/next-prev-cal.svelte";
+  import { SearchStore } from "../store/search-store";
 
   export let location;
   export let style = undefined;
@@ -170,7 +171,7 @@
       methods.scrollTop();
     },
     search() {
-      navigate("/search");
+      SearchStore.view("history");
     },
     // searchChange(evt) {
     //   state.searchTerm = evt.detail;

@@ -16,11 +16,8 @@
   let savedTrackers: Array<TrackerConfig>;
 
   $: if ($SearchStore.saved.length || $SearchStore.view) {
-    console.log(`🥇 changes in the search store`, $SearchStore.view);
-
     // Get SavedTerms array
     savedTerms = $SearchStore.saved.filter((st: SearchTerm) => {
-      console.log("Saved Search Term", st.type, $SearchStore.view);
       return st.type === $SearchStore.view;
     });
 
@@ -72,24 +69,28 @@
       <div class="n-list">
         <Trackers
           view="list"
-          trackers={savedTrackers}
+          trackers={savedTrackers.reverse()}
           on:more={(evt) => {
             const tracker = evt.detail;
-            Interact.elementOptions(tracker.getTrackableElement());
+            Interact.elementOptions(tracker.getTrackableElement(), () => {
+              SearchStore.close();
+            });
             evt.stopPropagation();
             evt.preventDefault();
           }}
           on:tap={(evt) => {
             Interact.trackerTap(evt.detail, $TrackerStore.trackers);
+            SearchStore.close();
           }} />
       </div>
     {:else}
-      {#each savedTerms as searchTerm (searchTerm.term)}
+      {#each savedTerms.reverse() as searchTerm (searchTerm.term)}
         <ListItem title={searchTerm.term}>
           <div slot="right">
             <Button
+              text
               size="sm"
-              color="danger"
+              style="color:var(--color-red)"
               on:click={() => {
                 SearchStore.remove(searchTerm);
               }}>

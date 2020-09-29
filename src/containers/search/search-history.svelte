@@ -28,7 +28,14 @@
 </script>
 
 <section class="n-panel stiff">
-  <SearchBar compact className="filler" searchTerm={term || ''} placeholder="Search History..." on:search={search} on:clear={clear} />
+  <SearchBar
+    compact
+    className="filler"
+    autofocus
+    searchTerm={term || ''}
+    placeholder="Search History..."
+    on:search={search}
+    on:clear={clear} />
 </section>
 
 {#if term}

@@ -50,7 +50,7 @@ interface ISearchStoreState {
 }
 
 const SearchStoreInit = () => {
-  let _state: ISearchStoreState = { saved: [], active: null, show: true, view: "history" };
+  let _state: ISearchStoreState = { saved: [], active: null, show: false, view: "history" };
 
   const { update, subscribe, set } = writable(_state);
 
@@ -71,7 +71,6 @@ const SearchStoreInit = () => {
         state.saved = state.saved
           .filter((d) => d)
           .map((term: SearchTerm) => {
-            console.log("init search store", term);
             return new SearchTerm(term);
           });
         return state;
@@ -115,6 +114,13 @@ const SearchStoreInit = () => {
     save(searchTerm?: SearchTerm) {
       update((state) => {
         state = saveTerm(state, searchTerm);
+        return state;
+      });
+    },
+    close() {
+      update((state) => {
+        state.active = undefined;
+        state.show = false;
         return state;
       });
     },

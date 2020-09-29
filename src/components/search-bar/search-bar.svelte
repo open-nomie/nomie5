@@ -16,6 +16,7 @@
   export let className = "";
   export let compact = false;
   export let showClose = true;
+  export let autofocus = false;
 
   let _elInput;
   // export let hasResults = false;
@@ -90,6 +91,7 @@
     <NInput
       solo
       {compact}
+      {autofocus}
       className="mt-0"
       bind:this={_elInput}
       bind:value={searchTerm}

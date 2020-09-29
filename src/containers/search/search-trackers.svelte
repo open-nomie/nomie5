@@ -33,28 +33,29 @@
     }
   }
 
+  function clear() {
+    SearchStore.clear();
+    term = undefined;
+  }
+
   function more(evt: CustomEvent) {
     const tracker: TrackerConfig = evt.detail;
     Interact.elementOptions(tracker.getTrackableElement());
   }
   async function trackerTap(evt: CustomEvent) {
     const tracker: TrackerConfig = evt.detail;
-    console.log("tapped passing to interact", tracker);
-
     SearchStore.save(
       new SearchTerm({
         term: `#${tracker.tag}`,
         type: "trackers",
       })
     );
-
     await Interact.trackerTap(tracker, $TrackerStore.trackers);
-    console.log("did it finish?");
   }
 </script>
 
 <section class="n-panel stiff">
-  <SearchBar compact className="filler" searchTerm={term || ''} placeholder="Search Trackers..." on:change={change} />
+  <SearchBar compact className="filler" searchTerm={term || ''} on:clear={clear} placeholder="Search Trackers..." on:change={change} />
   <!-- 
   on:clear={methods.clearSearch}
   on:search={methods.onSearchEnter}  -->
