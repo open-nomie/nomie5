@@ -340,9 +340,7 @@ const interactInit = () => {
 
     async trackerTap(tracker: TrackerConfig, trackers: ITrackers) {
       let inputer = new TrackerInputer(tracker, trackers);
-      console.log("Getting tracker input", tracker);
       let note = await inputer.getElements();
-
       if (note.length) {
         ActiveLogStore.addElement(note.join(" "));
         if (inputer.lastAction == "save" || tracker.one_tap) {
@@ -350,9 +348,10 @@ const interactInit = () => {
           await ActiveLogStore.clear();
         }
       }
+      return note;
     },
 
-    elementOptions(element: TrackableElement) {
+    elementOptions(element: TrackableElement, callback?: Function) {
       let trackableElement = element instanceof TrackableElement ? element : new TrackableElement(element);
       let tracker = trackableElement.type == "tracker" ? TrackerStore.getByTag(trackableElement.id) : null;
 
@@ -364,6 +363,9 @@ const interactInit = () => {
               Interact.openStats(`#${trackableElement.id}`);
             } else {
               Interact.openStats(trackableElement.raw);
+            }
+            if (callback) {
+              callback();
             }
           },
         },
@@ -379,6 +381,9 @@ const interactInit = () => {
           title: `Check-In`,
           click: () => {
             Interact.person(trackableElement.id);
+            if (callback) {
+              callback();
+            }
           },
         });
       }
