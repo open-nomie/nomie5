@@ -22,9 +22,10 @@
   export let accept = "png,jpeg,jpg,csv";
   export let name = false;
 
-  export let autocomplete = undefined;
-  export let autocorrect = undefined;
-  export let autocapitalize = undefined;
+  export let autocomplete = false;
+  export let autocorrect = false;
+  export let autocapitalize = false;
+  export let autofocus = false;
 
   let focused = false;
   let hit = false;
@@ -328,6 +329,7 @@
           {autocorrect}
           {autocapitalize}
           {placeholder}
+          {autofocus}
           on:input={change}
           on:focus={focus}
           on:blur={blur} />
@@ -344,6 +346,7 @@
           {autocorrect}
           {autocapitalize}
           {placeholder}
+          {autofocus}
           on:input={change}
           on:focus={focus}
           on:blur={blur} />
@@ -362,6 +365,7 @@
           {autocorrect}
           {autocapitalize}
           {placeholder}
+          {autofocus}
           on:input={change}
           on:focus={focus}
           on:blur={blur}
