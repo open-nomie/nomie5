@@ -95,7 +95,7 @@
     <ListItem
       clickable
       className="tracker-{tracker.tag} py-2 tracker-list-item flex-shrink-off {getTodaysValue(tracker) ? 'has-value' : 'no-value'}"
-      compact
+      compact={$UserStore.localSettings.compactButtons}
       on:click={(evt) => {
         if (['svg'].indexOf(evt.detail.target.tagName) == -1) {
           dispatch('tap', tracker);
@@ -103,7 +103,7 @@
       }}>
       <div class="highlight" style="background-color:{tracker.color}" />
       <span slot="left">
-        <Text size="xxl">{tracker.emoji}</Text>
+        <Text size={$UserStore.localSettings.compactButtons ? 'xl' : 'xxl'}>{tracker.emoji}</Text>
       </span>
       <div>
         <Text size="md">{tracker.label}</Text>

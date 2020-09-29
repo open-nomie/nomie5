@@ -72,6 +72,7 @@
   import Counter from "../../components/counter/counter.svelte";
   import ListItem from "../../components/list-item/list-item.svelte";
   import TrackersList from "./trackers.svelte";
+  import { SearchStore } from "../../store/search-store";
 
   // Consts
   const console = new Logger("board.svelte");
@@ -272,15 +273,16 @@
     },
     // Toggle if the user is searching or not.
     async toggleSearch() {
-      if (state.searching) {
-        methods.stopSearch();
-      } else {
-        state.searching = true;
-        await tick(200);
-        if (_elSearchBar) {
-          _elSearchBar.focus();
-        }
-      }
+      SearchStore.view("trackers");
+      // if (state.searching) {
+      //   methods.stopSearch();
+      // } else {
+      //   state.searching = true;
+      //   await tick(200);
+      //   if (_elSearchBar) {
+      //     _elSearchBar.focus();
+      //   }
+      // }
     },
     stopSearch() {
       state.searchTerm = null;
@@ -399,18 +401,19 @@
     },
 
     async trackerTapped(tracker) {
-      let inputer = new TrackerInputer(tracker, $TrackerStore.trackers);
-      let note = await inputer.getElements();
+      return Interact.trackerTap(tracker, $TrackerStore.trackers);
+      // let inputer = new TrackerInputer(tracker, $TrackerStore.trackers);
+      // let note = await inputer.getElements();
 
-      if (note.length) {
-        ActiveLogStore.addElement(note.join(" "));
-        if (inputer.lastAction == "save" || tracker.one_tap) {
-          await LedgerStore.saveLog($ActiveLogStore);
-          await ActiveLogStore.clear();
-        }
-      }
+      // if (note.length) {
+      //   ActiveLogStore.addElement(note.join(" "));
+      //   if (inputer.lastAction == "save" || tracker.one_tap) {
+      //     await LedgerStore.saveLog($ActiveLogStore);
+      //     await ActiveLogStore.clear();
+      //   }
+      // }
 
-      return note;
+      // return note;
     },
 
     /**
