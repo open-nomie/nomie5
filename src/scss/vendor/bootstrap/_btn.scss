@@ -301,13 +301,16 @@ button:focus {
   }
 }
 
-.btn.btn-text {
+.btn-text {
   color: var(--color-primary-bright);
   background-color: transparent;
   box-shadow: none;
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 0.06rem;
+  font-size: 0.8rem;
+  border-radius: 8px;
+
   &:active {
     background-color: transparent !important;
     color: var(--color-primary-bright);
