@@ -434,7 +434,9 @@
       {#if editMode}
         <div class="n-toolbar n-row px-2 mt-2 mb-2">
           <Input type="text" placeholder="Dashboard Label" bind:value={activeDashboard.label} />
-          <Button color="clear" className="text-primary-bright" on:click={done}>{editMode ? 'Done' : 'Edit'}</Button>
+          <Button color="clear" text className="text-primary-bright" on:click={done}>
+            {!editMode ? Lang.t('general.edit', 'Edit') : Lang.t('general.done', 'Done')}
+          </Button>
         </div>
         <hr class="divider center my-3" />
       {/if}
