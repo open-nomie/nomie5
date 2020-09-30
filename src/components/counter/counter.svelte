@@ -5,6 +5,7 @@
   export let lg = undefined;
   export let className = "";
   export let color = "var(--color-red)";
+  export let filled = false;
 
   onMount(() => {
     if (started) {
@@ -62,6 +63,8 @@
   .n-counter {
     font-size: 0.7rem;
     font-weight: bold;
+    display: flex;
+    align-items: center;
 
     &.large {
       display: flex;
@@ -75,10 +78,18 @@
       height: 50px;
       color: var(--color-inverse-2);
     }
+    &.filled {
+      border-radius: 4px;
+      padding: 1px 6px;
+    }
   }
 </style>
 
-<div class="n-counter {className} {lg ? 'large' : 'small'}" style={`color:${color}`}>
+<div
+  class="n-counter {className}
+  {lg ? 'large' : 'small'}
+  {filled ? 'filled' : ''}"
+  style={`color:${filled ? '#FFF' : color}; background-color:${filled ? color : 'transparent'}`}>
   {#if !lg}
     <Icon name="time" size="12" />
   {/if}

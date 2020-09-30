@@ -798,13 +798,12 @@
             </div>
           {/if}
           <div class="btn-group ml-1 mr-1">
-            <Button on:click={methods.addButtonTap} class="px-1">
-              <Icon name="add" size={14} className="mr-1" />
-              <Text size="sm">Add</Text>
+            <Button on:click={methods.addButtonTap} class="px-2">
+              <Text size="sm">Add Tracker</Text>
             </Button>
           </div>
           <div class="btn-group ml-1">
-            <Button on:click={boardOptions} color="clear" class="px-1">
+            <Button on:click={boardOptions} color="clear" class="px-2">
               <Text size="sm">{Lang.t('general.options', 'Options')}</Text>
             </Button>
           </div>

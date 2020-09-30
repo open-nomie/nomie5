@@ -40,7 +40,7 @@
 </script>
 
 <div class="n-list my-2 features">
-  <ListItem bottomLine className="py-2" title="People Tracking" description="Keep track of those you interact with the most">
+  <ListItem className="py-2" title="People Tracking" description="Keep track of those you interact with the most">
     <div slot="right" class="pl-2">
       <ToggleSwitch
         value={$FeatureStore.people}
@@ -49,7 +49,8 @@
         }} />
     </div>
   </ListItem>
-  <ListItem bottomLine className="py-2" title="Personal Dashboard" description="A dedicated tab for creating custom views of your data">
+  <hr class="divider center" />
+  <ListItem className="py-2" title="Personal Dashboard" description="A dedicated tab for creating custom views of your data">
     <div slot="right" class="ml-2">
       <ToggleSwitch
         value={$FeatureStore.dashboard}
@@ -58,7 +59,8 @@
         }} />
     </div>
   </ListItem>
-  <ListItem bottomLine title={Lang.t('settings.use-location')} description="Lookup location each time you save a log">
+  <hr class="divider center" />
+  <ListItem title={Lang.t('settings.use-location')} description="Lookup location each time you save a log">
     <div slot="right" class="ml-2">
       <ToggleSwitch
         bind:value={$UserStore.alwaysLocate}
@@ -67,6 +69,7 @@
         }} />
     </div>
   </ListItem>
+  <hr class="divider center" />
   <!-- Pin Code -->
   <ListItem title={Lang.t('settings.require-pin')} description="Require a pin to launch Nomie. Don't forget it!">
     <div slot="right" class="ml-2">

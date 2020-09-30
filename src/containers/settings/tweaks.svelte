@@ -43,6 +43,9 @@
 
     </div>
   </NItem>
+
+  <hr class="divider center" />
+
   <NItem title={Lang.t('settings.theme_accent', 'Color Accent')}>
     <span slot="left">🎨</span>
     <div slot="right">
@@ -89,6 +92,8 @@
       <NToggle bind:value={$UserStore.meta.hideLabels} on:change={methods.settingChange} />
     </div>
   </NItem>
+
+  <hr class="divider center" />
 
   <NItem title={Lang.t('settings.hide-backup-reminder', 'Hide backup reminder')}>
     <span slot="left">📕</span>

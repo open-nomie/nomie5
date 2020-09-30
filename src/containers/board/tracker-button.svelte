@@ -117,7 +117,7 @@
   <TrackerBall {id} {tracker} score={value} {positivity}>
     {#if tracker.started}
       <div class="center countdown">
-        <Counter started={tracker.started} />
+        <Counter started={tracker.started} filled />
       </div>
     {/if}
     {#if hoursUsed.length}
