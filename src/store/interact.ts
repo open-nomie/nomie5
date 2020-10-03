@@ -392,13 +392,16 @@ const interactInit = () => {
         buttons: buttons,
       });
     },
-    select(type = "tracker", multiple = false) {
+    select(type = "tracker", multiple = false, options: any = {}) {
       return new Promise((resolve, reject) => {
         update((state) => {
           state.selector.multiple = multiple;
           state.selector.show = true;
           state.selector.type = type;
           state.selector.onInteract = (itemArray) => {
+            if (options.filter) {
+              itemArray = itemArray.filter(options.filter);
+            }
             resolve(itemArray);
           };
           return state;
@@ -414,8 +417,8 @@ const interactInit = () => {
     /**
      * Select a Multiple Tracker
      */
-    selectTrackers() {
-      return methods.select("tracker", true);
+    selectTrackers(options: any = {}) {
+      return methods.select("tracker", true, options);
     },
     dismissTrackerSelector() {
       update((s) => {

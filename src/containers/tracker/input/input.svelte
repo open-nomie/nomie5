@@ -164,7 +164,10 @@
   <div class="n-toolbar-grid n-row" slot="header">
     <div class="left truncate pl-3" />
     <div class="main">
-      <span class="animate up text-md {data.ready ? 'visible' : 'hidden'}">{tracker.emoji} {tracker.label}</span>
+      <span class="animate up text-md {data.ready ? 'visible' : 'hidden'}">
+        <span style="color:{tracker.color}" class="mr-1">{tracker.emoji}</span>
+        {tracker.label}
+      </span>
     </div>
     <button class="btn btn-clear tap-icon right" on:click={editTracker}>
       <NIcon name="more" size="26" />
@@ -185,13 +188,11 @@
             data.value = value.detail;
           }} />
       {:else if tracker.type === 'picker'}
-        <div class="p-2">
-          <PickerInput
-            {tracker}
-            on:change={(evt) => {
-              data.suffix = evt.detail;
-            }} />
-        </div>
+        <PickerInput
+          {tracker}
+          on:change={(evt) => {
+            data.suffix = evt.detail;
+          }} />
       {:else if tracker.type === 'value' || tracker.type === 'tick'}
         <div id="keypad-holder">
           <NCalculator
