@@ -1,16 +1,8 @@
 <script lang="ts">
-  import type { t } from "i18next";
-  import LogListLoader from "../../components/log-list/log-list-loader.svelte";
   import SearchBar from "../../components/search-bar/search-bar.svelte";
-  import Text from "../../components/text/text.svelte";
-  import type { ITrackers } from "../../modules/import/import";
-  import type NLog from "../../modules/nomie-log/nomie-log";
-  import TrackableElement from "../../modules/trackable-element/trackable-element";
   import type TrackerConfig from "../../modules/tracker/tracker";
-  import TrackerInputer from "../../modules/tracker/tracker-inputer";
-  import { ActiveLogStore } from "../../store/active-log";
   import { Interact } from "../../store/interact";
-  import { LedgerStore } from "../../store/ledger";
+
   import { SearchStore, SearchTerm } from "../../store/search-store";
   import { TrackerStore } from "../../store/tracker-store";
   import TrackerList from "../board/trackers.svelte";
@@ -56,14 +48,11 @@
 
 <section class="n-panel stiff">
   <SearchBar compact className="filler" searchTerm={term || ''} on:clear={clear} placeholder="Search Trackers..." on:change={change} />
-  <!-- 
-  on:clear={methods.clearSearch}
-  on:search={methods.onSearchEnter}  -->
 </section>
 {#if term}
   <section class="search-results trackers n-panel scroll-y column">
     {#if trackers.length}
-      <TrackerList view="list" {trackers} on:tap={trackerTap} on:more={more} />
+      <TrackerList view="list" {trackers} on:tap={trackerTap} on:more={more} hideAdd />
     {/if}
   </section>
 {/if}

@@ -169,7 +169,7 @@
           size="lg"
           disabled={button.disabled}
           style="padding-top:8px; padding-bottom:8px;"
-          className="
+          className="pop-button pop-button-{index}
           {button.description ? 'btn-desc' : ''}"
           on:click={(evt) => {
             button.click();

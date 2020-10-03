@@ -24,6 +24,7 @@
   import Text from "../components/text/text.svelte";
   import Button from "../components/button/button.svelte";
   import ShortcutButton from "../components/shortcut-button/shortcut-button.svelte";
+  import { SearchStore } from "../store/search-store";
 
   export let location;
 
@@ -105,14 +106,25 @@
 </style>
 
 <NLayout pageTitle="People">
+
   <div slot="header">
-    <div class="container px-2" style="margin-top:2px;">
-      <NSearchBar compact on:change={searchPeople} on:clear={clearSearch} placeholder="Search People..." autocomplete>
-        <button on:click={addPerson} slot="right" class="btn btn-icon btn-clear">
-          <NIcon name="userAdd" className="fill-primary-bright" />
-        </button>
-      </NSearchBar>
-    </div>
+    <NToolbar className="container px-2">
+      <Button
+        color="none"
+        shape="circle"
+        className="tap-icon"
+        on:click={() => {
+          SearchStore.view('people');
+        }}>
+        <NIcon name="search" size={24} />
+      </Button>
+      <div class="filler pl-2 truncate">
+        <Text center bold>{Lang.t('tabs.people', 'People')}</Text>
+      </div>
+      <Button color="none" shape="circle" className="tap-icon" on:click={addPerson}>
+        <NIcon name="userAdd" className="fill-primary-bright" />
+      </Button>
+    </NToolbar>
   </div>
 
   <div slot="content" class="container">
@@ -137,6 +149,7 @@
         <NItem>Nothing found for @{state.searchTerm}</NItem>
       {/if}
 
+      <!-- value={dayjs($PeopleStore.people[person].last).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD') ? 1 : 0} -->
       <div class="trackers n-grid">
         {#each state.people as person}
           <ShortcutButton
@@ -146,9 +159,8 @@
             on:more={() => {
               Interact.openStats(`@${person}`);
             }}
-            title="@{($PeopleStore.people[person] || {}).displayName}"
+            title={($PeopleStore.people[person] || {}).displayName}
             subtitle={$PeopleStore.people[person].last ? dayjs($PeopleStore.people[person].last).fromNow() : 'no date'}
-            value={dayjs($PeopleStore.people[person].last).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD') ? 1 : 0}
             on:click={() => {
               personClicked(person);
             }}>

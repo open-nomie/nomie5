@@ -241,6 +241,7 @@
     },
     cancel() {
       data.tracker = new Tracker({});
+      forcedAdvanced = false;
       dispatch("close");
     },
   };
@@ -315,7 +316,7 @@
         placeholder={Lang.t('tracker.type')}
         bind:value={data.tracker.type} /> -->
 
-      <ListItem title={Lang.t('tracker.type')} on:click={methods.selectType} className="py-3 mb-1">
+      <ListItem title={Lang.t('tracker.type')} on:click={methods.selectType} className="tracker-type py-3 mb-1">
         <div slot="right" class="n-row">
           <Text faded>{(getTypeDetails(data.tracker.type) || {}).label}</Text>
           <div class="mx-1">{(getTypeDetails(data.tracker.type) || {}).emoji}</div>

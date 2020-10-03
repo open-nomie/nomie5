@@ -86,7 +86,7 @@ export default class TrackerInputer {
     let note = [];
 
     // Get Tracker tags from this trackers note
-    const trackerElements = extractor.trackers(tracker.note);
+    const trackerElements = extractor.trackers(tracker.note || "");
 
     // Add this trackers tag for logging
     note.push(`#${tracker.tag}`);

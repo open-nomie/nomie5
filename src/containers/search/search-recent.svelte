@@ -8,7 +8,7 @@
   import type { SearchTerm } from "../../store/search-store";
   import { TrackerStore } from "../../store/tracker-store";
   import TrackerConfig from "../../modules/tracker/tracker";
-  import Trackers from "../board/trackers.svelte";
+  import TrackerList from "../board/trackers.svelte";
   import { Interact } from "../../store/interact";
 
   let mode = "view";
@@ -67,8 +67,9 @@
   {#if $SearchStore.view === 'trackers'}
     {#if mode !== 'edit'}
       <div class="n-list">
-        <Trackers
+        <TrackerList
           view="list"
+          hideAdd
           trackers={savedTrackers.reverse()}
           on:more={(evt) => {
             const tracker = evt.detail;
