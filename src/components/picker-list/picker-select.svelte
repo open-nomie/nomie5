@@ -57,7 +57,7 @@
 </style>
 
 <div class="tracker-input picker">
-  <div class="n-list solo">
+  <div class="n-list">
     {#each tracker.picks || [] as pick}
       {#if isHeader(pick)}
         <NItem className="item-divider compact">{pick.replace(' :', '')}</NItem>
@@ -65,11 +65,11 @@
         <NItem
           compact
           clickable
-          className="bottom-line compact {active.indexOf(pick) > -1 ? 'bg-primary-bright' : ''}"
+          className="px-3 compact {active.indexOf(pick) > -1 ? 'bg-solid-1' : ''}"
           on:click={() => {
             toggle(pick);
           }}>
-          <LabelMeta str={pick} titleClass={active.indexOf(pick) > -1 ? 'text-white' : ''} />
+          <LabelMeta str={pick} titleClass={active.indexOf(pick) > -1 ? 'text-primary-bright' : 'text-inverse'} />
           <div slot="right">
             {#if active.indexOf(pick) > -1}
               <div class="badge badge-primary">
@@ -78,6 +78,7 @@
             {/if}
           </div>
         </NItem>
+        <hr class="divider center" />
       {/if}
     {/each}
     <!-- <NItem>

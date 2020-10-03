@@ -24,6 +24,9 @@
 
   import { Ordinal } from "../../utils/ordinal/ordinal";
   import Button from "../../components/button/button.svelte";
+  import SortableList from "../../components/sortable-list/sortable-list.svelte";
+  import is from "../../utils/is/is";
+  import Icon from "../../components/icon/icon.svelte";
 
   // Prosp
   export let tracker = undefined;
@@ -91,10 +94,10 @@
       state.showConditionForm = false;
       methods.change();
     },
-    save() {
-      TrackerStore.saveTracker(tracker).then(() => {
-        dispatch("save", tracker);
-      });
+    async save() {
+      await TrackerStore.saveTracker(tracker);
+      dispatch("save", tracker);
+      Interact.toast(`${tracker.label} saved`);
     },
     removeCondition(index) {
       tracker.score_calc = tracker.score_calc.filter((row, ind) => {
@@ -116,19 +119,45 @@
 </style>
 
 {#if tracker}
+  <NInput listItem type="select" bind:value={tracker.score} on:change={methods.change} label={Lang.t('tracker.positivity')}>
+    <option value="0" selected>😐 {Lang.t('tracker.neutral')}</option>
+    <option value="1">😊 {Lang.t('tracker.positive')}</option>
+    <option value="-1">😩 {Lang.t('tracker.negative')}</option>
+    <option value="custom">🛠 {Lang.t('general.customize')}</option>
+  </NInput>
   <div class="points-editor">
     <div class="n-list mb-0 bg-transparent">
-
-      <NInput type="select" bind:value={tracker.score} on:change={methods.change} label="Tracker {Lang.t('tracker.positivity')}">
-        <option value="0" selected>😐 {Lang.t('tracker.neutral')}</option>
-        <option value="1">😊 {Lang.t('tracker.positive')}</option>
-        <option value="-1">😩 {Lang.t('tracker.negative')}</option>
-        <option value="custom">🛠 {Lang.t('general.customize')}</option>
-      </NInput>
-
       {#if tracker.score === 'custom'}
-        <hr class="divider center my-2" />
-        {#each tracker.score_calc || [] as condition, index}
+        <SortableList
+          bind:items={tracker.score_calc}
+          handle=".menu-handle"
+          key="index"
+          on:update={(evt) => {
+            console.log('Sorted', eval.detail);
+          }}
+          let:item
+          let:index>
+          <NItem className="pl-2">
+            <NText size="sm">{index === 0 ? 'IF:' : 'ELSE:'} {scoreOptions[item.if] || 'Unknown'} is {item.is} {item.v}</NText>
+            <button
+              slot="left"
+              on:click={() => {
+                methods.removeCondition(index);
+              }}
+              class="btn btn-sm btn-clear btn-icon text-danger mr-2"
+              aria-label="Remove Condition">
+              <NIcon name="remove" className="fill-red" />
+            </button>
+            <span slot="right">
+              <NPoints points={item.sc} />
+            </span>
+            <div slot="right" class="menu-handle px-1 ml-2">
+              <Icon name="menu" size="20" />
+            </div>
+          </NItem>
+        </SortableList>
+
+        <!-- {#each tracker.score_calc || [] as condition, index}
           <NItem className="pl-2">
             <NText size="sm">
               {index === 0 ? 'IF:' : 'ELSE:'} {scoreOptions[condition.if] || 'Unknown'} is {condition.is} {condition.v}
@@ -148,27 +177,29 @@
               </NCell>
             </span>
           </NItem>
-        {/each}
+        {/each} -->
 
         {#if state.showConditionForm}
-          <hr class="divider center my-2" />
-          <div class="condition-form mt-2">
-            <NInput type="select" bind:value={state.genesisCalc.if} label={tracker.score_calc || [].length == 0 ? 'IF' : 'ELSE'}>
-              <option value="value">Tracked Value</option>
-              <option value="hour">Hour of Day</option>
-              <option value="month">Day of Month</option>
+          <div class="n-list solo condition-form mt-2" style="padding:8px !important">
+
+            <!-- If condition -->
+            <NInput type="select" label="Trigger" bind:value={state.genesisCalc.if}>
+              <option value="value">{tracker.score_calc || [].length == 0 ? 'If' : 'Else'} Tracked Value</option>
+              <option value="hour">{tracker.score_calc || [].length == 0 ? 'If' : 'Else'} Hour of Day</option>
+              <option value="month">{tracker.score_calc || [].length == 0 ? 'If' : 'Else'} Day of Month</option>
             </NInput>
 
+            <!-- Greater / Less -->
             <div class="n-row mt-1">
-
-              <NInput type="select" style="width:60%" className="mr-2" bind:value={state.genesisCalc.is} label="IS">
-                <option value="gt">Greater</option>
-                <option value="gte">Greater or Equal</option>
-                <option value="lt">Less</option>
-                <option value="lte">Less or Equal</option>
+              <NInput type="select" label="Comparison" style="width:60%" className="mr-2" bind:value={state.genesisCalc.is}>
+                <option value="gt">is Greater</option>
+                <option value="gte">is Greater or Equal</option>
+                <option value="lt">is Less</option>
+                <option value="lte">is Less or Equal</option>
                 <option value="eq">Equals</option>
               </NInput>
 
+              <!-- Compare Value -->
               {#if state.genesisCalc.if == 'hour'}
                 <NInput type="select" placeholder="Than" bind:value={state.genesisCalc.v}>
                   {#each methods.getHours() as hour}
@@ -191,6 +222,7 @@
 
             </div>
 
+            <!-- Set Score To -->
             <NInput type="select" label="Set Score To:" bind:value={state.genesisCalc.sc}>
               <option>{Lang.t('general.select', 'Select')}</option>
               <option value="-2">😩 -2</option>
@@ -200,29 +232,35 @@
               <option value="2">😊 +2</option>
             </NInput>
 
-            <NItem className="py-0 px-0 bg-transparent">
-              <div slot="left">
-                <Button
-                  size="sm"
-                  color="transparent"
-                  on:click={() => {
-                    state.showConditionForm = false;
-                  }}>
-                  {Lang.t('general.cancel', 'Cancel')}
-                </Button>
-              </div>
-              <div slot="right">
-                <Button size="md" disabled={!state.genesisCalc.sc} on:click={methods.saveCondition}>{Lang.t('general.add', 'Add')}</Button>
-              </div>
-            </NItem>
+            <!-- Save Bar -->
+            <div class="n-row py-2 px-3">
+              <Button
+                text
+                size="sm"
+                className="left text-primary-bright"
+                color="transparent"
+                on:click={() => {
+                  state.showConditionForm = false;
+                }}>
+                {Lang.t('general.cancel', 'Cancel')}
+              </Button>
+              <div class="filler" />
+              <Button
+                color="primary"
+                size="sm"
+                className="right"
+                disabled={!is.truthy(state.genesisCalc.sc)}
+                on:click={methods.saveCondition}>
+                {Lang.t('tracker.add-condition', 'Add Rule')}
+              </Button>
+
+            </div>
+
           </div>
         {:else}
-          <NItem
-            title="Add a Condition..."
-            className="text-primary text-center my-1 bg-transparent"
-            on:click={() => {
-              state.showConditionForm = true;
-            }} />
+          <Button text color="clear" className="text-primary-bright" block center on:click={() => (state.showConditionForm = true)}>
+            {Lang.t('tracker.create-condition', 'Create a Positivity Rule...')}
+          </Button>
         {/if}
       {/if}
     </div>

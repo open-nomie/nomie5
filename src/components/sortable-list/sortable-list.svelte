@@ -15,7 +15,6 @@
     let newList = [...items];
     let tempItem = "temp";
     let movedItem = newList[from];
-
     // Cut in the temp Item
     newList.splice(to, 0, tempItem);
     // FILTER OUT MOVED ITEM
@@ -26,7 +25,6 @@
       .map((item) => {
         return item !== tempItem ? item : movedItem;
       });
-
     dispatch("update", newList);
   };
 
@@ -38,18 +36,19 @@
     }
   }
 
-  onMount(() => {
-    setTimeout(() => {
-      if (sortableList) {
-        let sortable = Sortable.create(sortableList, {
-          handle: handle,
-          onEnd: function (evt) {
-            reorder(evt.newDraggableIndex, evt.oldDraggableIndex);
-          },
-        });
-      }
+  function main() {
+    Sortable.create(sortableList, {
+      handle: handle,
+      onEnd: function (evt) {
+        reorder(evt.newDraggableIndex, evt.oldDraggableIndex);
+        // main();
+      },
     });
-  });
+  }
+
+  $: if (sortableList) {
+    main();
+  }
 </script>
 
 <style>

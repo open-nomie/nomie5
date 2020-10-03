@@ -4971,6 +4971,7 @@ button:focus {
     transition: all 0.2s ease-in-out;
     transform: scale(0.97) !important; }
   .btn.btn-desc {
+    font-size: 1rem;
     text-align: left;
     align-items: flex-start;
     flex-direction: column; }
@@ -4979,7 +4980,7 @@ button:focus {
       line-height: 130%;
       margin-bottom: 5px; }
     .btn.btn-desc .title {
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 500; }
 
 .btn-block + .btn-block {
@@ -5114,11 +5115,12 @@ button:focus {
   color: var(--color-primary-bright);
   background-color: transparent;
   box-shadow: none;
-  text-transform: uppercase;
   font-weight: 700;
-  letter-spacing: 0.06rem;
   font-size: 0.8rem;
   border-radius: 8px; }
+  .btn-text.btn-clear:active, .btn-text.btn-clear:hover {
+    color: var(--color-primary-bright);
+    opacity: 0.9; }
   .btn-text:active {
     background-color: transparent !important;
     color: var(--color-primary-bright);
@@ -6517,6 +6519,9 @@ body.scrolling .mini-map {
   height: 100%;
   background-color: var(--color-bg);
   position: relative; }
+  .n-modal-frame.tracker-input .input-model.type-picker .picker-list-wrapper {
+    width: calc(100% - 60px);
+    height: calc(100% - 60px); }
   .n-modal-frame.tracker-input .input-model.type-picker .n-list {
     box-shadow: var(--box-shadow-float);
     position: absolute;
@@ -6524,7 +6529,6 @@ body.scrolling .mini-map {
     left: 20px;
     bottom: 20px;
     right: 20px;
-    width: calc(100% - 60px);
     overflow-y: scroll; }
     .n-modal-frame.tracker-input .input-model.type-picker .n-list .n-item {
       min-height: 30px;
