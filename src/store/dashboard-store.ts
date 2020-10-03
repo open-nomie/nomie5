@@ -38,7 +38,7 @@ const DashboardStoreInit = (): any => {
       update((state: IDashboardStore) => {
         dashboards = dashboards || [];
         if (dashboards.length > lastIndex) {
-          state.activeIndex = lastIndex;
+          state.activeIndex = lastIndex || 0;
         }
         state.dashboards = dashboards
           .map((dashboard) => {

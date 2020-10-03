@@ -446,7 +446,7 @@
             {#if activeDashboard.widgets.length == 0}
               <div class="center-all p-5 n-panel vertical">
                 <Text faded size="md" center>
-                  {Lang.t('dashboard.empty-message', 'Fresh Dashboard! Get started by adding the first Widget')}
+                  {Lang.t('dashboard.empty-message', 'Add different charts, stats, and other widgets to create your own custom views of your life.')}
                 </Text>
                 <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={newWidget}>
                   {Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
