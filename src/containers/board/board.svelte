@@ -274,15 +274,6 @@
     // Toggle if the user is searching or not.
     async toggleSearch() {
       SearchStore.view("trackers");
-      // if (state.searching) {
-      //   methods.stopSearch();
-      // } else {
-      //   state.searching = true;
-      //   await tick(200);
-      //   if (_elSearchBar) {
-      //     _elSearchBar.focus();
-      //   }
-      // }
     },
     stopSearch() {
       state.searchTerm = null;
@@ -293,12 +284,6 @@
     addButtonTap() {
       let buttons = [];
       // Add Library Button
-      buttons.push({
-        title: Lang.t("board.browse-starter-trackers"),
-        click() {
-          TrackerLibrary.toggle();
-        },
-      });
       // If NOT "all" Board
       if ($BoardStore.active != "all") {
         // Add "Existing Tracker" button
@@ -316,10 +301,17 @@
       }
       // Add "Create Tracker" button
       buttons.push({
-        title: Lang.t("board.create-custom-tracker"),
+        title: Lang.t("board.create-custom-tracker", "Create a Tracker"),
         click() {
-          // methods.trackerEditor();
-          navigate("/tracker/design");
+          methods.trackerEditor();
+          // navigate("/tracker/design");
+        },
+      });
+
+      buttons.push({
+        title: Lang.t("board.browse-starter-trackers"),
+        click() {
+          TrackerLibrary.toggle();
         },
       });
 
@@ -616,14 +608,9 @@
             <Icon name="time" size={24} className="fill-red-pulse" />
           </button>
         {/if}
-        <!-- IF MORE THAN 13 TRACKERS - SHOW SEARCH ICON-->
-        {#if Object.keys($TrackerStore.trackers).length > 13}
-          <button class="btn tab tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
-            <Icon name="search" size={24} className={state.searching ? 'fill-red' : ''} />
-          </button>
-        {:else}
-          <div class="pr-2" />
-        {/if}
+        <button class="btn tab tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
+          <Icon name="search" size={24} className={state.searching ? 'fill-red' : ''} />
+        </button>
 
         <NBoardTabs
           boards={methods.injectAllBoard($BoardStore.boards || [])}
@@ -661,12 +648,15 @@
       </div>
     {:else}
       <NToolbarGrid>
-        <div slot="left">
+        <div slot="left" class="d-flex">
           {#if $TrackerStore.timers.length}
             <button class="btn tool tap-icon pl-2" on:click={TrackerStore.toggleTimers}>
               <Icon name="time" size={20} className="fill-red-pulse" />
             </button>
           {/if}
+          <button class="btn tab tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
+            <Icon name="search" size={24} className={state.searching ? 'fill-red' : ''} />
+          </button>
         </div>
         <div slot="main" class="align-items-center">
           <LogoType size={20} on:click={methods.enableBoards} />
@@ -734,6 +724,7 @@
               on:tap={(evt) => {
                 methods.trackerTapped(evt.detail);
               }}
+              hideAdd
               on:more={(evt) => {
                 methods.showTrackerOptions(evt.detail);
               }} />
@@ -743,7 +734,7 @@
         <main class="n-board h-100" on:swipeleft={BoardStore.next} on:swiperight={BoardStore.previous}>
           <!-- Loop over trackers -->
 
-          {#if (foundTrackers || boardTrackers || []).length === 0}
+          <!-- {#if (foundTrackers || boardTrackers || []).length === 0}
             {#if foundTrackers != null}
               <div class="no-trackers">{Lang.t('board.no-search-results', 'No trackers found')}</div>
             {:else}
@@ -752,7 +743,7 @@
                 <Button text on:click={methods.addButtonTap}>Add a Tracker</Button>
               </div>
             {/if}
-          {/if}
+          {/if} -->
           <!-- lastUsed={methods.getLastUsed(tracker)} -->
           <!-- {#if true === true} -->
           <TrackersList
@@ -761,6 +752,7 @@
             on:tap={(evt) => {
               methods.trackerTapped(evt.detail);
             }}
+            on:add={methods.addButtonTap}
             on:more={(evt) => {
               methods.showTrackerOptions(evt.detail);
             }} />
@@ -768,7 +760,7 @@
           <!-- Include User Tips - shit should be a component -->
 
         </main>
-        <div class="board-actions mt-5 mb-2 n-row" style="min-width:200px;">
+        <div class="board-actions mt-5 mb-2 n-row" style="min-width:300px;">
           {#if $UserStore.meta.hiddenFeatures}
             <div class="btn-group mr-1 compact">
               <Button
@@ -797,16 +789,9 @@
               </Button>
             </div>
           {/if}
-          <div class="btn-group ml-1 mr-1">
-            <Button on:click={methods.addButtonTap} class="px-2">
-              <Text size="sm">Add Tracker</Text>
-            </Button>
-          </div>
-          <div class="btn-group ml-1">
-            <Button on:click={boardOptions} color="clear" class="px-2">
-              <Text size="sm">{Lang.t('general.options', 'Options')}</Text>
-            </Button>
-          </div>
+          <Button on:click={boardOptions} color="light" className="py-2 mx-2">
+            <Text>{Lang.t('general.options', 'Tab Options')}</Text>
+          </Button>
 
         </div>
         <NTip {tips} />

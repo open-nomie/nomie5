@@ -17,12 +17,13 @@
   import { UserStore } from "../../store/user-store";
   import TrackerButton from "./tracker-button.svelte";
   import ScoreTracker from "../../modules/scoring/score-tracker";
+  import { Lang } from "../../store/lang";
 
   const dispatch = createEventDispatcher();
 
   export let trackers: Array<ITracker>;
   export let hideMore: boolean = false;
-
+  export let hideAdd: boolean = false;
   export let view: "list" | "detail" | "button" | string = localStorage.getItem("board-view") || "button";
 
   function getLastUsed(tracker) {
@@ -102,8 +103,8 @@
         }
       }}>
       <div class="highlight" style="background-color:{tracker.color}" />
-      <span slot="left">
-        <Text size={$UserStore.localSettings.compactButtons ? 'xl' : 'xxl'}>{tracker.emoji}</Text>
+      <span slot="left" class="n-row justify-content-center" style="width:40px;">
+        <Text style="color:{tracker.color}" size={$UserStore.localSettings.compactButtons ? 'xl' : 'xxl'}>{tracker.emoji}</Text>
       </span>
       <div>
         <Text size="md">{tracker.label}</Text>
@@ -133,6 +134,17 @@
       </span>
     </ListItem>
   {/each}
+  {#if !hideAdd}
+    <ListItem
+      clickable
+      title={Lang.t('tracker.add-tracker')}
+      on:click={() => dispatch('add')}
+      className="tracker-add py-2 tracker-list-item flex-shrink-off no-value">
+      <div slot="left">
+        <Text size={$UserStore.localSettings.compactButtons ? 'xl' : 'xxl'}>➕</Text>
+      </div>
+    </ListItem>
+  {/if}
 {:else if view == 'detail'}
   <div class="trackers n-grid">
     {#each trackers as tracker}
@@ -159,6 +171,17 @@
         </div>
       </ShortcutButton>
     {/each}
+    {#if !hideAdd}
+      <ShortcutButton
+        compact={$UserStore.localSettings.compactButtons}
+        title={Lang.t('tracker.add-tracker')}
+        emoji="➕"
+        className="tracker-add"
+        hideMore={true}
+        on:click={() => {
+          dispatch('add');
+        }} />
+    {/if}
   </div>
 {:else if view == 'button'}
   <div class="trackers n-grid">
@@ -175,6 +198,13 @@
           dispatch('more', tracker);
         }} />
     {/each}
+    {#if !hideAdd}
+      <TrackerButton
+        tracker={{ tag: 'add', label: Lang.t('tracker.add-tracker'), emoji: '➕' }}
+        on:click={(evt) => {
+          dispatch('add', evt);
+        }} />
+    {/if}
   </div>
 {/if}
 

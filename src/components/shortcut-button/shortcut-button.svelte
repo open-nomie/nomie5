@@ -52,7 +52,7 @@
     .title,
     .subtitle,
     .value {
-      line-height: 100%;
+      line-height: 112%;
       margin-bottom: 4px;
       width: 100%;
     }
@@ -126,16 +126,11 @@
       line-height: 40px;
       text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.23);
       letter-spacing: -6px;
-      color: var(--color-inverse-3);
+      color: var(--color-inverse);
       white-space: nowrap;
     }
 
     &.no-value {
-      // background-color: var(--color-solid);
-      // button.more {
-      //   border: solid 1px var(--color-solid-2) !important;
-      //   color: var(--color-solid-2) !important;
-      // }
     }
 
     &:before {
@@ -180,8 +175,8 @@
     }
 
     button.more {
-      position: static;
-      top: -2px;
+      position: absolute;
+      top: 0;
       right: -2px;
       width: 20px;
       height: 20px;
@@ -270,7 +265,7 @@
     {/each}
   </div>
   <div class="n-row top">
-    <div class="emoji">
+    <div class="emoji" style={value ? 'color:#FFF' : `color:${color}`}>
       {#if emoji}{emoji}{/if}
       <slot name="emoji" />
     </div>

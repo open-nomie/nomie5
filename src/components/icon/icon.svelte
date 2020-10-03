@@ -49,6 +49,8 @@
     ChartPie,
     DotsCircleHorizontal,
     ViewList,
+    Eye,
+    EyeOff,
   } from "svelte-hero-icons";
 
   import buttonView from "./n-icons/button-view.svelte";
@@ -113,6 +115,8 @@
     user: User,
     buttonView: buttonView,
     detailView: detailView,
+    eye: Eye,
+    eyeOff: EyeOff,
   };
 </script>
 
