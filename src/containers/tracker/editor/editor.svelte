@@ -293,8 +293,10 @@
         {/if}
       </div>
 
+      <!-- Colort Selector -->
       <ColorPicker bind:value={data.tracker.color} className="mb-1 tracker-color" />
 
+      <!-- Tracker Label input -->
       <NInput
         listItem
         className="mb-1 tracker-label"
@@ -302,44 +304,17 @@
         name="label"
         placeholder={Lang.t('tracker.label', 'Tracker Label')}
         bind:value={data.tracker.label}
-        on:keyup={methods.labelChanged}>
-        <!-- <div slot="right">
-          <Text size="sm" faded>#{data.tracker.tag}</Text>
-        </div> -->
-      </NInput>
+        on:keyup={methods.labelChanged} />
 
-      <!-- <NInput
-        listItem
-        type="select"
-        name="type"
-        className="mb-1 tracker-type"
-        placeholder={Lang.t('tracker.type')}
-        bind:value={data.tracker.type} /> -->
+      <!-- Tracker Type Selector -->
 
-      <ListItem title={Lang.t('tracker.type')} on:click={methods.selectType} className="tracker-type py-3 mb-1">
+      <ListItem on:click={methods.selectType} className="tracker-type py-3 mb-1">
+        {Lang.t('tracker.type')}
         <div slot="right" class="n-row">
-          <Text faded>{(getTypeDetails(data.tracker.type) || {}).label}</Text>
-          <div class="mx-1">{(getTypeDetails(data.tracker.type) || {}).emoji}</div>
+          <Text size="lg">{(getTypeDetails(data.tracker.type) || {}).label}</Text>
           <Icon name="chevronDown" className="ml-2" />
         </div>
       </ListItem>
-
-      <!-- <div class="n-list">
-        {#each data.types as type, index}
-          <NItem compact title={type.label} description={type.description}>
-            <div slot="right">
-              {#if type.id == data.tracker.type}
-                <NIcon name="checkmarkFilled" className="fill-primary-bright" />
-              {:else}
-                <NIcon name="radio" />
-              {/if}
-            </div>
-          </NItem>
-          {#if index < data.types.length}
-            <hr class="divider center" />
-          {/if}
-        {/each}
-      </div> -->
 
       {#if data.tracker.type == 'picker'}
         <PickerList

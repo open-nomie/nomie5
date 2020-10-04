@@ -27,6 +27,8 @@
   import SortableList from "../../components/sortable-list/sortable-list.svelte";
   import is from "../../utils/is/is";
   import Icon from "../../components/icon/icon.svelte";
+  import Text from "../../components/text/text.svelte";
+  import ListItem from "../../components/list-item/list-item.svelte";
 
   // Prosp
   export let tracker = undefined;
@@ -126,19 +128,12 @@
     <option value="custom">🛠 {Lang.t('general.customize')}</option>
   </NInput>
   <div class="points-editor">
-    <div class="n-list mb-0 bg-transparent">
+    <div class="n-list mb-2 bg-transparent solo">
       {#if tracker.score === 'custom'}
-        <SortableList
-          bind:items={tracker.score_calc}
-          handle=".menu-handle"
-          key="index"
-          on:update={(evt) => {
-            console.log('Sorted', eval.detail);
-          }}
-          let:item
-          let:index>
+        <SortableList bind:items={tracker.score_calc} handle=".menu-handle" key="index" let:item let:index>
           <NItem className="pl-2">
-            <NText size="sm">{index === 0 ? 'IF:' : 'ELSE:'} {scoreOptions[item.if] || 'Unknown'} is {item.is} {item.v}</NText>
+            <!-- {index === 0 ? 'IF:' : 'ELSE:'} -->
+            <NText size="sm">If {scoreOptions[item.if] || 'Unknown'} is {item.is} {item.v}</NText>
             <button
               slot="left"
               on:click={() => {
@@ -156,29 +151,6 @@
             </div>
           </NItem>
         </SortableList>
-
-        <!-- {#each tracker.score_calc || [] as condition, index}
-          <NItem className="pl-2">
-            <NText size="sm">
-              {index === 0 ? 'IF:' : 'ELSE:'} {scoreOptions[condition.if] || 'Unknown'} is {condition.is} {condition.v}
-            </NText>
-            <button
-              slot="left"
-              on:click={() => {
-                methods.removeCondition(index);
-              }}
-              class="btn btn-sm btn-clear btn-icon text-danger"
-              aria-label="Remove Condition">
-              <NIcon name="remove" className="fill-red" />
-            </button>
-            <span slot="right">
-              <NCell gap="true">
-                <NPoints points={condition.sc} />
-              </NCell>
-            </span>
-          </NItem>
-        {/each} -->
-
         {#if state.showConditionForm}
           <div class="n-list solo condition-form mt-2" style="padding:8px !important">
 
@@ -257,10 +229,19 @@
             </div>
 
           </div>
-        {:else}
-          <Button text color="clear" className="text-primary-bright" block center on:click={() => (state.showConditionForm = true)}>
-            {Lang.t('tracker.create-condition', 'Create a Positivity Rule...')}
-          </Button>
+        {/if}
+
+        {#if !state.showConditionForm}
+          <hr class="divider center" />
+          <ListItem on:click={() => (state.showConditionForm = true)}>
+            <div slot="left" class="p-0">
+              <NIcon name="add" className="fill-primary-bright" />
+            </div>
+            <Text className="text-primary-bright">{Lang.t('tracker.create-condition', 'New Positivity Rule...')}</Text>
+            <span slot="right">
+              <Text size="xs" faded className="text-right">{Lang.t('positivity.sort-message', 'First true wins')}</Text>
+            </span>
+          </ListItem>
         {/if}
       {/if}
     </div>

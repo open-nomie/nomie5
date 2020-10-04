@@ -76,7 +76,6 @@
   let previewSwitch = false;
 
   function togglePreview() {
-    console.log("toggle preview");
     previewSwitch = !previewSwitch;
   }
 
