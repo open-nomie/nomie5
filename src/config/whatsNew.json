@@ -1,1 +1,409 @@
-{"features":[{"version":"5.4.4","title":"new tracker editor"},{"version":"5.4.4","title":"tracker positivity sorting"},{"version":"5.4.4","title":"unified search added to people view"},{"version":"5.4.0","title":"Hey Nomie fam! As the crazy 2020 summer rolls to a close, I present to you another Nomie updat to fix bugs, and to launch handful of new features. I hope you like it. -B"},{"version":"5.3.24","title":"Auto related lookup now has a progress indicator, and is faster."},{"version":"5.3.23","title":"Daily average added to stats overview"},{"version":"5.3.21","title":"Double tap support on the select tracker/people/context popup"},{"version":"5.3.21","title":"New hide backup reminder tweak"},{"version":"5.3.20","title":"Improved search, saved search results, AND/OR operator and Latin support"},{"version":"5.3.19","title":"Saving of Location from the location viewer."},{"version":"5.3.19","title":"Positivity selector like Facebook's reaction popup"},{"version":"5.3.19","title":"Multiple dashboard widget sizes"},{"version":"5.3.15","title":"Multiple theme accent color options"},{"version":"5.3.14","title":" Duplicate and Move widget"},{"version":"5.3.12","title":"New/Improved UOMs: New Pages, mg/dl. Seconds, Minutes now show as 00:00:00"},{"version":"5.3.11","title":"Min-Max dashboard widget"},{"version":"5.3.11","title":"Map dashboard widget"},{"version":"5.3.10","title":"On enter+command or enter+ctrl to save a note - props to @podiboq"},{"version":"5.3.10","title":"Line chart dashboard widget"},{"version":"5.3.7","title":"Swipe between tracker board tabs"},{"version":"5.3.7","title":"Dedicated search view"},{"version":"5.3.4","title":"Improved date / time editing"},{"version":"5.3.3","title":"Tap to close Toast notifications"}],"fixes":[{"version":"5.4.4","title":"select first dashboard if non selected before"},{"version":"5.4.3","title":"unable to delete a tracker"},{"version":"5.4.2","title":"time of day, day of week - showing count and not value"},{"version":"5.4.2","title":"spelling error"},{"version":"5.4.1","title":"small tracker buttons not sticking"},{"version":"5.4.1","title":"picker assigning a (0) value for main tag"},{"version":"5.4.0","title":"supporting tracker input values of 0"},{"version":"5.3.29","title":"adding additional details and warnings to csv import"},{"version":"5.3.29","title":"improving awful compare loading time with blockstack"},{"version":"5.3.29","title":"adding proper ignore zero to stats, additional stat tests"},{"version":"5.3.29","title":"default value for one-tap trackers no working"},{"version":"5.3.29","title":"allowing going to the end of importer preview"},{"version":"5.3.28","title":"removing log conversion, letting it happen in napi.import"},{"version":"5.3.27","title":"api logs ignoring date attribute"},{"version":"5.3.26","title":"user-store blockstack artifact"},{"version":"5.3.26","title":"allowing stats to calculate at the same time"},{"version":"5.3.26","title":"improving stat compare speed"},{"version":"5.3.25","title":"tracker updates not being saved properly"},{"version":"5.3.25","title":"trackers not updating properly on update"},{"version":"5.3.25","title":"input not responding to emoji inputs"},{"version":"5.3.25","title":"updating pickerlist not catching last item"},{"version":"5.3.24","title":"fixing day chart data format issue"},{"version":"5.3.24","title":"save and + not saving properly on some trackers"},{"version":"5.3.24","title":"nomie api date loading issues"},{"version":"5.3.24","title":"trying to improve loading time"},{"version":"5.3.24","title":"loading trackers from storage before saving new ones"},{"version":"5.3.23","title":"working on api loading issues"},{"version":"5.3.23","title":"adding +1 to end time of ledger lookups"},{"version":"5.3.23","title":"adding empty start date to be 1s before end date"},{"version":"5.3.22","title":"removing duplicates from ledger book overlap"},{"version":"5.3.22","title":"individual widget loading opposed to blocking full ui"},{"version":"5.3.21","title":"widget dynamic timerange to show proper number of days"},{"version":"5.3.21","title":"showing loading of compare charts"},{"version":"5.3.21","title":"adding full date to memory view"},{"version":"5.3.21","title":"type error"},{"version":"5.3.20","title":"unable to delete search term"},{"version":"5.3.20","title":"setting up init for search, and last used"},{"version":"5.3.20","title":"memories opening too many stat views"},{"version":"5.3.19","title":"locking map from scrolling as a widget"},{"version":"5.3.18","title":"improving the ugly ass tracker designer"},{"version":"5.3.17","title":"auto reloading app after registering API"},{"version":"5.3.17","title":"pouchdb not connecting error"},{"version":"5.3.16","title":"breaking apart stats for easier maintainability"},{"version":"5.3.16","title":"adding back in scroll detection"},{"version":"5.3.16","title":"interact error bug"},{"version":"5.3.15","title":"better handling of local date and time formats"},{"version":"5.3.15","title":"add ago back to time ago lookup"},{"version":"5.3.15","title":"when tapping stats on people, check-in is showing too"},{"version":"5.3.14","title":"catch API import problems"},{"version":"5.3.13","title":"dashboard fix this/last week chart"},{"version":"5.3.12","title":"time select bug"},{"version":"5.3.11","title":"removing default blue selection on tiny-color-picker"},{"version":"5.3.11","title":"time-select am/pm bug - thanks Alex"},{"version":"5.3.10","title":"making notes in history clickable again"},{"version":"5.3.8","title":"removing revision limit from couchdb"},{"version":"5.3.8","title":"removing md5 except for in nid"},{"version":"5.3.7","title":"date/time styling"},{"version":"5.3.7","title":"fixing from now for future dates"},{"version":"5.3.7","title":"better clickable affect, design consistency for dash and track"},{"version":"5.3.5","title":"one tap tracker not clearing note field"},{"version":"5.3.3","title":"blockstack signout now promps user"},{"version":"5.3.3","title":"clearing capture log after offline log has been saved"},{"version":"5.3.2","title":"streak not launching for certain trackers"},{"version":"5.3.1","title":"multi tracker was ignoring picker lists results"},{"version":"5.3.0","title":"truncating location name on log list item"},{"version":"5.3.0","title":"removing invalid block spec"}],"chores":[{"version":"5.4.4","title":"language updates"},{"version":"5.4.3","title":"release v5.4.3"},{"version":"5.4.3","title":"updating e2e testing"},{"version":"5.4.2","title":"release v5.4.2"},{"version":"5.4.1","title":"release v5.4.1"},{"version":"5.4.0","title":"release v5.4.0"},{"version":"5.4.0","title":"test improvements"},{"version":"5.3.30","title":"ts cleanup"},{"version":"5.3.30","title":"updating onboard tests"},{"version":"5.3.30","title":"release v5.3.30"},{"version":"5.3.30","title":"prep for 5.4 rollout"}],"build_date":"2020-10-04T19:38:54.483Z"}
+{
+  "features": [
+    {
+      "version": "5.4.4",
+      "title": "new tracker editor"
+    },
+    {
+      "version": "5.4.4",
+      "title": "tracker positivity sorting"
+    },
+    {
+      "version": "5.4.4",
+      "title": "unified search added to people view"
+    },
+    {
+      "version": "5.4.0",
+      "title": "Hey Nomie fam! As the crazy 2020 summer rolls to a close, I present to you another Nomie updat to fix bugs, and to launch handful of new features. I hope you like it. -B"
+    },
+    {
+      "version": "5.3.24",
+      "title": "Auto related lookup now has a progress indicator, and is faster."
+    },
+    {
+      "version": "5.3.23",
+      "title": "Daily average added to stats overview"
+    },
+    {
+      "version": "5.3.21",
+      "title": "Double tap support on the select tracker/people/context popup"
+    },
+    {
+      "version": "5.3.21",
+      "title": "New hide backup reminder tweak"
+    },
+    {
+      "version": "5.3.20",
+      "title": "Improved search, saved search results, AND/OR operator and Latin support"
+    },
+    {
+      "version": "5.3.19",
+      "title": "Saving of Location from the location viewer."
+    },
+    {
+      "version": "5.3.19",
+      "title": "Positivity selector like Facebook's reaction popup"
+    },
+    {
+      "version": "5.3.19",
+      "title": "Multiple dashboard widget sizes"
+    },
+    {
+      "version": "5.3.15",
+      "title": "Multiple theme accent color options"
+    },
+    {
+      "version": "5.3.14",
+      "title": " Duplicate and Move widget"
+    },
+    {
+      "version": "5.3.12",
+      "title": "New/Improved UOMs: New Pages, mg/dl. Seconds, Minutes now show as 00:00:00"
+    },
+    {
+      "version": "5.3.11",
+      "title": "Min-Max dashboard widget"
+    },
+    {
+      "version": "5.3.11",
+      "title": "Map dashboard widget"
+    },
+    {
+      "version": "5.3.10",
+      "title": "On enter+command or enter+ctrl to save a note - props to @podiboq"
+    },
+    {
+      "version": "5.3.10",
+      "title": "Line chart dashboard widget"
+    },
+    {
+      "version": "5.3.7",
+      "title": "Swipe between tracker board tabs"
+    },
+    {
+      "version": "5.3.7",
+      "title": "Dedicated search view"
+    },
+    {
+      "version": "5.3.4",
+      "title": "Improved date / time editing"
+    },
+    {
+      "version": "5.3.3",
+      "title": "Tap to close Toast notifications"
+    }
+  ],
+  "fixes": [
+    {
+      "version": "5.4.4",
+      "title": "select first dashboard if non selected before"
+    },
+    {
+      "version": "5.4.3",
+      "title": "unable to delete a tracker"
+    },
+    {
+      "version": "5.4.2",
+      "title": "time of day, day of week - showing count and not value"
+    },
+    {
+      "version": "5.4.2",
+      "title": "spelling error"
+    },
+    {
+      "version": "5.4.1",
+      "title": "small tracker buttons not sticking"
+    },
+    {
+      "version": "5.4.1",
+      "title": "picker assigning a (0) value for main tag"
+    },
+    {
+      "version": "5.4.0",
+      "title": "supporting tracker input values of 0"
+    },
+    {
+      "version": "5.3.29",
+      "title": "adding additional details and warnings to csv import"
+    },
+    {
+      "version": "5.3.29",
+      "title": "improving awful compare loading time with blockstack"
+    },
+    {
+      "version": "5.3.29",
+      "title": "adding proper ignore zero to stats, additional stat tests"
+    },
+    {
+      "version": "5.3.29",
+      "title": "default value for one-tap trackers no working"
+    },
+    {
+      "version": "5.3.29",
+      "title": "allowing going to the end of importer preview"
+    },
+    {
+      "version": "5.3.28",
+      "title": "removing log conversion, letting it happen in napi.import"
+    },
+    {
+      "version": "5.3.27",
+      "title": "api logs ignoring date attribute"
+    },
+    {
+      "version": "5.3.26",
+      "title": "user-store blockstack artifact"
+    },
+    {
+      "version": "5.3.26",
+      "title": "allowing stats to calculate at the same time"
+    },
+    {
+      "version": "5.3.26",
+      "title": "improving stat compare speed"
+    },
+    {
+      "version": "5.3.25",
+      "title": "tracker updates not being saved properly"
+    },
+    {
+      "version": "5.3.25",
+      "title": "trackers not updating properly on update"
+    },
+    {
+      "version": "5.3.25",
+      "title": "input not responding to emoji inputs"
+    },
+    {
+      "version": "5.3.25",
+      "title": "updating pickerlist not catching last item"
+    },
+    {
+      "version": "5.3.24",
+      "title": "fixing day chart data format issue"
+    },
+    {
+      "version": "5.3.24",
+      "title": "save and + not saving properly on some trackers"
+    },
+    {
+      "version": "5.3.24",
+      "title": "nomie api date loading issues"
+    },
+    {
+      "version": "5.3.24",
+      "title": "trying to improve loading time"
+    },
+    {
+      "version": "5.3.24",
+      "title": "loading trackers from storage before saving new ones"
+    },
+    {
+      "version": "5.3.23",
+      "title": "working on api loading issues"
+    },
+    {
+      "version": "5.3.23",
+      "title": "adding +1 to end time of ledger lookups"
+    },
+    {
+      "version": "5.3.23",
+      "title": "adding empty start date to be 1s before end date"
+    },
+    {
+      "version": "5.3.22",
+      "title": "removing duplicates from ledger book overlap"
+    },
+    {
+      "version": "5.3.22",
+      "title": "individual widget loading opposed to blocking full ui"
+    },
+    {
+      "version": "5.3.21",
+      "title": "widget dynamic timerange to show proper number of days"
+    },
+    {
+      "version": "5.3.21",
+      "title": "showing loading of compare charts"
+    },
+    {
+      "version": "5.3.21",
+      "title": "adding full date to memory view"
+    },
+    {
+      "version": "5.3.21",
+      "title": "type error"
+    },
+    {
+      "version": "5.3.20",
+      "title": "unable to delete search term"
+    },
+    {
+      "version": "5.3.20",
+      "title": "setting up init for search, and last used"
+    },
+    {
+      "version": "5.3.20",
+      "title": "memories opening too many stat views"
+    },
+    {
+      "version": "5.3.19",
+      "title": "locking map from scrolling as a widget"
+    },
+    {
+      "version": "5.3.18",
+      "title": "improving the ugly ass tracker designer"
+    },
+    {
+      "version": "5.3.17",
+      "title": "auto reloading app after registering API"
+    },
+    {
+      "version": "5.3.17",
+      "title": "pouchdb not connecting error"
+    },
+    {
+      "version": "5.3.16",
+      "title": "breaking apart stats for easier maintainability"
+    },
+    {
+      "version": "5.3.16",
+      "title": "adding back in scroll detection"
+    },
+    {
+      "version": "5.3.16",
+      "title": "interact error bug"
+    },
+    {
+      "version": "5.3.15",
+      "title": "better handling of local date and time formats"
+    },
+    {
+      "version": "5.3.15",
+      "title": "add ago back to time ago lookup"
+    },
+    {
+      "version": "5.3.15",
+      "title": "when tapping stats on people, check-in is showing too"
+    },
+    {
+      "version": "5.3.14",
+      "title": "catch API import problems"
+    },
+    {
+      "version": "5.3.13",
+      "title": "dashboard fix this/last week chart"
+    },
+    {
+      "version": "5.3.12",
+      "title": "time select bug"
+    },
+    {
+      "version": "5.3.11",
+      "title": "removing default blue selection on tiny-color-picker"
+    },
+    {
+      "version": "5.3.11",
+      "title": "time-select am/pm bug - thanks Alex"
+    },
+    {
+      "version": "5.3.10",
+      "title": "making notes in history clickable again"
+    },
+    {
+      "version": "5.3.8",
+      "title": "removing revision limit from couchdb"
+    },
+    {
+      "version": "5.3.8",
+      "title": "removing md5 except for in nid"
+    },
+    {
+      "version": "5.3.7",
+      "title": "date/time styling"
+    },
+    {
+      "version": "5.3.7",
+      "title": "fixing from now for future dates"
+    },
+    {
+      "version": "5.3.7",
+      "title": "better clickable affect, design consistency for dash and track"
+    },
+    {
+      "version": "5.3.5",
+      "title": "one tap tracker not clearing note field"
+    },
+    {
+      "version": "5.3.3",
+      "title": "blockstack signout now promps user"
+    },
+    {
+      "version": "5.3.3",
+      "title": "clearing capture log after offline log has been saved"
+    },
+    {
+      "version": "5.3.2",
+      "title": "streak not launching for certain trackers"
+    },
+    {
+      "version": "5.3.1",
+      "title": "multi tracker was ignoring picker lists results"
+    },
+    {
+      "version": "5.3.0",
+      "title": "truncating location name on log list item"
+    },
+    {
+      "version": "5.3.0",
+      "title": "removing invalid block spec"
+    }
+  ],
+  "chores": [
+    {
+      "version": "5.4.4",
+      "title": "language updates"
+    },
+    {
+      "version": "5.4.3",
+      "title": "release v5.4.3"
+    },
+    {
+      "version": "5.4.3",
+      "title": "updating e2e testing"
+    },
+    {
+      "version": "5.4.2",
+      "title": "release v5.4.2"
+    },
+    {
+      "version": "5.4.1",
+      "title": "release v5.4.1"
+    },
+    {
+      "version": "5.4.0",
+      "title": "release v5.4.0"
+    },
+    {
+      "version": "5.4.0",
+      "title": "test improvements"
+    },
+    {
+      "version": "5.3.30",
+      "title": "ts cleanup"
+    },
+    {
+      "version": "5.3.30",
+      "title": "updating onboard tests"
+    },
+    {
+      "version": "5.3.30",
+      "title": "release v5.3.30"
+    },
+    {
+      "version": "5.3.30",
+      "title": "prep for 5.4 rollout"
+    }
+  ],
+  "build_date": "2020-10-04T19:38:54.483Z"
+}
