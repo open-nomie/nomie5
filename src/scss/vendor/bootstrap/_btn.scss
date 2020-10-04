@@ -86,10 +86,11 @@ button:focus {
 
 .btn-sm {
   border-radius: 6pt !important;
+  font-size: small;
 }
 
 .btn-xs {
-  font-size: 0.65rem !important;
+  font-size: x-small;
   padding: 2px 10px;
   text-transform: uppercase;
   font-weight: bold;
@@ -127,6 +128,7 @@ button:focus {
   }
 
   &.btn-desc {
+    font-size: 1rem;
     text-align: left;
     align-items: flex-start;
     flex-direction: column;
@@ -136,7 +138,7 @@ button:focus {
       margin-bottom: 5px;
     }
     .title {
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 500;
     }
   }
@@ -300,8 +302,29 @@ button:focus {
   }
 }
 
-.btn.btn-text {
-  color: var(--color-primary);
+.btn-text {
+  color: var(--color-primary-bright);
+  background-color: transparent;
+  box-shadow: none;
+  // text-transform: uppercase;
+  font-weight: 700;
+  // letter-spacing: 0.06rem;
+  font-size: 0.8rem;
+  border-radius: 8px;
+
+  &.btn-clear {
+    &:active,
+    &:hover {
+      color: var(--color-primary-bright);
+      opacity: 0.9;
+    }
+  }
+
+  &:active {
+    background-color: transparent !important;
+    color: var(--color-primary-bright);
+    opacity: 0.86;
+  }
 }
 
 .btn-group {
@@ -310,6 +333,7 @@ button:focus {
   padding: 3px;
   border-radius: 12px;
   height: 40px;
+
   .btn {
     background: transparent !important;
     border: none;

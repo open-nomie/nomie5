@@ -193,7 +193,7 @@ const commanderInit = () => {
       } else if (urlParams.hasOwnProperty("tracker")) {
         let tracker = TrackerStore.getByTag(urlParams.tracker);
         let value = urlParams.value ? parseFloat(urlParams.value) : undefined;
-        let inputer = new TrackerInputer(tracker, TrackerStore.data());
+        let inputer = new TrackerInputer(tracker, TrackerStore.data().trackers);
         let note = await inputer.getElements({ value });
         ActiveLogStore.addElement(note.join(" "));
         window.history.pushState({}, document.title, "/");

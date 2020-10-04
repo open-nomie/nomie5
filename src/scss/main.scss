@@ -108,14 +108,15 @@ hr.divider {
     .btn .n-text {
       color: var(--color-inverse-2) !important;
     }
-    .btn {
-      padding-left: 14px !important;
-      padding-right: 14px !important;
 
-      &:last-child {
-        border-right: none;
-      }
-    }
+    // .btn {
+    //   padding-left: 14px !important;
+    //   padding-right: 14px !important;
+
+    //   &:last-child {
+    //     border-right: none;
+    //   }
+    // }
   }
 }
 

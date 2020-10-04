@@ -27,13 +27,17 @@ context("App", () => {
   };
 
   const selectStarters = () => {
-    cy.get(".n-modal-frame .tracker-option").eq(0).click();
+    cy.get(".tracker-mood").click();
     cy.wait(200);
-    cy.get(".n-modal-frame .tracker-option").eq(1).click();
+    cy.get(".tracker-sleep").click();
     cy.wait(200);
-    cy.get(".n-modal-frame .tracker-option").eq(2).click();
+    cy.get(".tracker-water").click();
     cy.wait(200);
-    cy.get(".n-modal-frame .tracker-option").eq(3).click();
+    cy.get(".tracker-pooped").click();
+    cy.wait(200);
+    cy.get(".tracker-sex").click();
+    cy.wait(200);
+    cy.get(".tracker-sleep_quality").click();
     cy.wait(200);
     cy.get(".library-modal > .n-modal > .n-modal-footer > .btn").click();
     cy.wait(300);
@@ -57,65 +61,7 @@ context("App", () => {
     cy.get(".btn-success").click();
   };
 
-  const createSimpleTracker = (name = "Simple Tracker", emoji = "🤘") => {
-    let trackerTag = name.replace(/ /, "_").toLowerCase();
-    const next = () => {
-      cy.get(".n-layout footer button.btn.btn-block").eq(1).click();
-    };
-    cy.get(".tracker-undefined").click();
-    cy.wait(300);
-    cy.get(".pop-menu button").eq(1).click();
-    next();
-    cy.get(".n-input input").type(name);
-    next();
-    cy.get(".input-emoji").type(emoji);
-    next();
-    cy.wait(400);
-    cy.get('[style="background-color: rgb(255, 160, 0);"]').click();
-    next();
-    cy.get(".onoffswitch-label").click();
-    next();
-    cy.get("select").as("select").invoke("val", "1").trigger("change");
-    next();
-    cy.get(`.tracker-${trackerTag}`).should("exist");
-    cy.get(`.tracker-${trackerTag}`).click();
-    cy.wait(400);
-    cy.get(`.tracker-${trackerTag} .score`).should("be", "1");
-  };
-
-  const createMultiTracker = () => {
-    const next = () => {
-      cy.get(".layout-footer button").eq(1).click();
-    };
-    cy.get(".tracker-undefined").click();
-    cy.wait(300);
-    cy.get(".pop-menu button").eq(1).click();
-    cy.wait(300);
-    cy.get(".n-item.type-note").click();
-    cy.wait(300);
-    next();
-    cy.wait(300);
-    cy.get(".n-input input").type("Check up");
-    next();
-    cy.get(".input-emoji").type("✅");
-    next();
-    cy.wait(400);
-    cy.get('[style="background-color: rgb(255, 160, 0);"]').click();
-    next();
-    cy.get("textarea").type("#mood #sleep_quality");
-    next();
-    trackMulti();
-    cy.wait(400);
-
-    // cy.get(".onoffswitch-label").click();
-    // next();
-    // cy.get("select").as("select").invoke("val", "1").trigger("change");
-    // next();
-    // cy.get(".tracker-simple_tracker").should("exist");
-    // cy.get(".tracker-simple_tracker").click();
-    // cy.wait(400);
-    // cy.get(".tracker-simple_tracker .score").should("be", "1");
-  };
+  
 
   const trackMood = (addOrSave = "save") => {
     cy.get(".tracker-mood").click();
@@ -131,23 +77,6 @@ context("App", () => {
     // cy.get(".n-modal-footer > .footer > .btn-primary").click();
   };
 
-  const trackMulti = (addOrSave = "save") => {
-    cy.get(".tracker-check_up").click();
-    cy.wait(500);
-    cy.get(".tracker-input.slider input").as("range").invoke("val", 8).trigger("change");
-    cy.wait(100);
-    cy.get(".footer > .right > .btn").click();
-    cy.wait(500);
-    cy.get(".tracker-input.slider input").as("range").invoke("val", 5).trigger("change");
-    cy.wait(100);
-    cy.get(".footer > .right > .btn").click();
-    cy.wait(500);
-    cy.get("#textarea-capture-note").should("contain.value", "#mood(8)");
-    cy.get("#textarea-capture-note").should("contain.value", "#check_up ");
-    cy.wait(500);
-    cy.get(".save-button").click();
-    // cy.get(".n-modal-footer > .footer > .btn-primary").click();
-  };
 
   const useTrackers = () => {
     trackWater();
@@ -348,7 +277,8 @@ context("App", () => {
     cy.wait(100);
     cy.get(".visible > .alert-dialog-window > .p-1 > .btn-primary").click();
     cy.wait(100);
-    cy.get(".tracker-undefined").click();
+    // Click Add Button
+    cy.get(".btn-group.mr-1").click();
     cy.wait(300);
     cy.get(".pop-menu button").eq(1).click();
     cy.wait(400);
@@ -363,60 +293,153 @@ context("App", () => {
     cy.get(".board-all").click();
   };
 
-  it("Should On Boarding with Local", () => {
-    initBasic();
-    // exportData();
-  });
+  const createTracker = (options={})=>{
+    // Click Add Tracker
+    cy.get('.tracker-add > .item-ball').click();
+    cy.wait(200);
+    // click create a tracker in pop menu
+    cy.get('.list > :nth-child(1)').click();
+    cy.wait(200);
+    cy.get('.n-tracker-editor .emoji-editor input').type(options.emoji || '🎭');
+    cy.get('.n-tracker-editor .tracker-label input').type(options.label || `Test ${options.type || 'Tracker'}`)
+
+    options.type = options.type || "tick"
+
+    // open advanced 
+    cy.get('.advanced-toggler').click();
+    cy.wait(200);
+
+    // Open the Tracker Type Selector
+    cy.get('.tracker-type').click();
+    cy.wait(400);
+
+    switch(options.type) {
+      case 'tick':
+        cy.get('.pop-button-0').click();
+        cy.wait(400);
+        if(options.one_tap) {
+          cy.get('.tracker-one-tap .onoffswitch').click();
+          
+        }
+      break
+
+      case "value":
+        cy.get('.pop-button-1').click();
+        cy.wait(100);
+      break;
+
+      case "range":
+        cy.get('.pop-button-2').click();
+        cy.wait(100);
+      break;
+
+      case "picker":
+        cy.get('.pop-button-3').click();
+        cy.wait(100);
+      break;
+
+      case "timer":
+        cy.get('.pop-button-4').click();
+        cy.wait(100);
+      break;
+
+      case "note":
+        cy.get('.pop-button-5').click();
+        cy.wait(100);
+        cy.get('.tracker-note > .n-input-wrapper textarea').type(options.note)
+      break;
+    }
+
+    if(options.math) {
+      cy.get('.tracker-math > .n-input-wrapper > .n-input > select').select(options.math);
+    }
+
+    if(options.default) {
+      cy.get('.tracker-default input').type(options.default);
+    }
+
+    cy.wait(300);
+    // Save Button
+    cy.get('.n-tracker-editor > .n-modal-frame > .n-modal > .n-modal-header > .n-toolbar-grid > .right').click();
+    
+  }
+
+
 
   const goHome = async () => {
     return cy.get(".tab-Track").click();
   };
 
-  it("should enable features", () => {
-    enableFeatures();
-  });
+//   tick
+// value
+// range
+// picker
+// timer
+// note
 
-  it("Should properly track using the tracker buttons", () => {
-    useTrackers();
-  });
+  const tests = [
+    {
+      it: "should onboard with localstorage",
+      run: initBasic,
+    },
+    {
+      it: "should create a tally tracker",
+      run: ()=>{
+        return createTracker({
+          type: 'tick',
+          label: "Tick Tracker",
+          emoji: "🏄‍♀️",
+          one_tap: true
+        })
+      }
+    },
+    {
+      it: "should create a value tracker",
+      run: ()=>{
+        return createTracker({
+          type: 'value',
+          label: "Value Tracker",
+          emoji: "💰",
+          default: 12
+        })
+      }
+    },
+    {
+      it: "should create a note tracker",
+      run: ()=>{
+        return createTracker({
+          type: 'note',
+          label: "Note Tracker",
+          emoji: "📒",
+          note: "#value_tracker #tick_tracker"
+        })
+      }
+    },
+    {
+      it: "should create a timer tracker",
+      run: ()=>{
+        return createTracker({
+          type: 'timer',
+          label: "Timer Tracker",
+          emoji: "⏰"
+        })
+      }
+    },
+    { it: "should enable features", run: enableFeatures },
+    { it: "Should properly track using the tracker buttons", run: useTrackers },
+    { it: "should test adding a tab", run: testTabs },
+    { it: "should delete a tracker", run: testDeleteingTracker },
+    // { it: "should create a multi tracker", run: createMultiTracker },
+    { it: "should test the PIN", run: testPin },
+    { it: "should be able to create a log via a note", run: testCaptureForm },
+    { it: "Should properly test the tips", run: testTips },
+    { it: "Should properly handle adding a person via a note", run: testPerson },
+    // { it: "should create a simple tracker", run: createSimpleTracker },
+    { it: "should test the dashboard", run: testDashboard },
+    { it: "should have all the things in history", run: testHistory },
+  ];
+  
 
-  it("should test adding a tab", () => {
-    testTabs();
-  });
-
-  it("should delete a tracker", () => {
-    testDeleteingTracker();
-  });
-
-  it("should create a multi tracker", () => {
-    createMultiTracker();
-  });
-
-  it("should test the PIN", () => {
-    testPin();
-  });
-
-  it("should be able to create a log via a note", () => {
-    testCaptureForm();
-  });
-
-  it("Should properly test the tips", () => {
-    testTips();
-  });
-
-  it("Should properly handle adding a person via a note", () => {
-    testPerson();
-  });
-
-  it("should create a simple tracker", () => {
-    createSimpleTracker();
-  });
-
-  it("should test the dashboard", () => {
-    testDashboard();
-  });
-
-  it("should have all the things in history", () => {
-    testHistory();
-  });
-});
+  tests.forEach((test)=>{
+    it(test.it, ()=>test.run())
+  })

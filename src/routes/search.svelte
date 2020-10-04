@@ -30,15 +30,17 @@
   import Text from "../components/text/text.svelte";
   import Button from "../components/button/button.svelte";
   import { SearchStore, SearchTerm } from "../store/search-store";
+  import ButtonGroup from "../components/button-group/button-group.svelte";
+  import Search from "../containers/search/search.svelte";
 
   export const location = undefined;
   export const style = undefined;
 
-  const SEARCHES_PATH = `${global.data_root}/searches`;
+  // const SEARCHES_PATH = `${global.data_root}/searches`;
 
-  let searchInput;
+  // let searchInput;
   let appTitle = null;
-  let showSearch = false;
+  let showSearch: boolean = false;
 
   let logResults: Array<any> = [];
 
@@ -53,23 +55,15 @@
 
   $: state.searchTerm = $SearchStore.active;
 
-  let refreshing = false;
+  let refreshing: boolean = false;
 
-  let loading = true;
-  let book = undefined;
-  let locations = [];
+  let loading: boolean = true;
+
   let mode = "view";
-  let refreshMap: boolean = false;
+
   // let dayScore = 0;
 
   $: appTitle = `🔍 Search ${(state.searchTerm || {}).term || ""}`;
-
-  $: if (logResults) {
-    refreshMap = true;
-    setTimeout(() => {
-      refreshMap = false;
-    }, 12);
-  }
 
   function toggleEditMode() {
     if (mode == "edit") {
@@ -166,20 +160,40 @@
   }
 </style>
 
-<NLayout pageTitle={appTitle} showTabs={false}>
+<Search />
 
-  <header slot="header">
+<!-- <NLayout pageTitle={appTitle} showTabs={false}>
+
+  <header slot="header" class="flex-column">
+    <div class="n-toolbar-grid">
+      <div class="left">
+        <Button color="transparent" shape="circle" icon className="tap-icon mr-2" on:click={back}>
+          {#if state.searchTerm && state.searchTerm.term}
+            <Icon name="close" />
+          {:else}
+            <Icon name="arrowBack" />
+          {/if}
+        </Button>
+      </div>
+      <div class="main">
+        <div class="btn-group">
+          <Button icon>
+            <Icon name="calendar" />
+          </Button>
+          <Button icon>
+            <Icon name="detailView" />
+          </Button>
+          <Button icon>
+            <Icon name="userperuserson" />
+          </Button>
+        </div>
+      </div>
+    </div>
     <div class="n-row container h-100 px-2">
-      <Button color="transparent" shape="circle" icon className="tap-icon mr-2" on:click={back}>
-        {#if state.searchTerm && state.searchTerm.term}
-          <Icon name="close" />
-        {:else}
-          <Icon name="arrowBack" />
-        {/if}
-      </Button>
+
       <div class="filler">
-        <!-- on:change={methods.searchChange} -->
         <NSearchBar
+          compact
           showClose={false}
           className="filler"
           searchTerm={(state.searchTerm || {}).term || ''}
@@ -190,17 +204,16 @@
 
     </div>
 
-    <!-- hasResults={(searchLogs || []).length > 0} -->
-
+ 
   </header>
-  <!-- end header-content header -->
-
+ 
   <main slot="content" class="page page-search">
 
     <div class="container p-0">
       {#if state.searchTerm && state.searchTerm.term}
         <NLogListLoader
           fullDate={true}
+          showTimeDiff={true}
           bind:results={logResults}
           term={state.searchTerm.term}
           limit={20}
@@ -276,10 +289,10 @@
           </div>
         </div>
       {/if}
-      <!-- end history -->
+      
     </div>
 
   </main>
-  <!-- end header-content content -->
+  
 
-</NLayout>
+</NLayout> -->

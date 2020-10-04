@@ -42,6 +42,7 @@
   import { Locations } from "./store/locations";
   import config from "./config/appConfig";
   import { OfflineQueue } from "./store/offline-queue-store";
+  import SearchModal from "./containers/search/search.svelte";
   // import Storage from "./containers/storage/storage.svelte";
   import Storage from "./modules/storage/storage";
   import { LastUsed } from "./store/last-used";
@@ -221,6 +222,7 @@
 <StreakModal />
 <OnThisDayModal />
 <PinLock />
+<SearchModal />
 
 {#if $UserStore.storageType == 'blockstack' && $Device.offline}
   <div class="offline-notice text-center">No connection to Blockstack.</div>

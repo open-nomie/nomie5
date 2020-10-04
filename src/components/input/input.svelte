@@ -1,6 +1,7 @@
 <script>
   import NIcon from "../icon/icon.svelte";
   import { createEventDispatcher, onMount } from "svelte";
+  import is from "../../utils/is/is";
   const dispatch = createEventDispatcher();
 
   export let label = null;
@@ -15,16 +16,18 @@
   export let inputClass = "";
   export let pattern = "";
   export let width = "";
-  export let disabled = false;
-  export let solo = false;
-  export let compact = false;
+  export let disabled = undefined;
+  export let solo = undefined;
+  export let listItem = undefined;
+  export let compact = undefined;
   export let rows = 2;
   export let accept = "png,jpeg,jpg,csv";
-  export let name = false;
+  export let name = undefined;
 
   export let autocomplete = undefined;
   export let autocorrect = undefined;
   export let autocapitalize = undefined;
+  export let autofocus = undefined;
 
   let focused = false;
   let hit = false;
@@ -54,7 +57,7 @@
     dispatch("change", value);
   };
 
-  $: if (value !== null && (value || "").length > 0) {
+  $: if (value && value.length > 0) {
     hasInput = true;
   } else {
     hasInput = false;
@@ -64,12 +67,24 @@
     if (type == "select") {
       hasInput = true;
     }
+    if (value && `${value}`.length) {
+      hasInput = true;
+    }
+    if (autofocus) {
+      setTimeout(() => {
+        _elInput.focus();
+      }, 300);
+    }
   });
 </script>
 
 <style lang="scss">
   @import "../../scss/utils/_utils";
   $height: 54px;
+
+  :global(.n-input-container.list-item div.n-input label) {
+    left: 20px !important;
+  }
 
   .n-input-container {
     position: relative;
@@ -88,6 +103,16 @@
       font-size: 0.65rem;
       opacity: 0.5;
       padding: 6px;
+    }
+
+    &.list-item {
+      background-color: var(--color-solid);
+      padding: 4px 12px;
+      border-radius: 0;
+      border: none;
+      .n-input-wrapper {
+        border-radius: 0;
+      }
     }
 
     .select-arrow {
@@ -232,7 +257,7 @@
           pointer-events: none;
           font-size: 0.7rem;
           position: absolute;
-          top: 8px;
+          top: 7px;
           left: 10px;
           margin: 0;
           padding: 0;
@@ -267,13 +292,16 @@
 <div
   class="n-input-container {className}
   {compact ? 'compact' : ''}
+  {listItem ? 'list-item' : ''}
   {solo ? 'solo' : 'with-label'}"
   style="{width ? `max-width:${width}; width:${width}; ` : ``}
   {style}">
   <div class="n-input-wrapper {hasInput ? 'has-input' : 'no-input'} {focused ? 'has-focus' : 'no-focus'}">
     <slot name="left" />
     <div class="n-input">
-      <label>{label || placeholder}</label>
+      {#if label || placeholder}
+        <label>{label || placeholder}</label>
+      {/if}
       {#if type == 'email'}
         <input
           bind:this={_elInput}
@@ -290,6 +318,9 @@
           {autocapitalize}
           {placeholder}
           on:input={change}
+          on:change={(evt) => {
+            dispatch('change', evt);
+          }}
           on:focus={focus}
           on:blur={blur} />
       {:else if type == 'file'}
@@ -378,6 +409,11 @@
           {autocorrect}
           {autocapitalize}
           {placeholder}
+          on:keyup={(evt) => {
+            if (evt.key == 'Enter') {
+              dispatch('enter', value);
+            }
+          }}
           on:input={change}
           on:focus={focus}
           on:blur={blur} />

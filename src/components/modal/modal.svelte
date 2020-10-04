@@ -16,9 +16,11 @@
   export let flexBody = undefined;
   export let show: boolean = true; // Defaulted to true so it can be controlled by a parent component
   export let className: string = "";
-  export let type = "normal"; // cover, fullscreen, bottom, bottom-slide-up
-  export let bodyClass = "";
+  export let type: string = "normal"; // cover, fullscreen, bottom, bottom-slide-up
+  export let bodyClass: string = "";
   export let closeOnBackgroundTap: boolean = false;
+
+  declare var arguments: Array<any>;
 
   const has_header = (arguments[1].$$slots || {}).hasOwnProperty("header");
   const has_raw_header = (arguments[1].$$slots || {}).hasOwnProperty("raw-header");

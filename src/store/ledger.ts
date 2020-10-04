@@ -47,11 +47,22 @@ import { logAppendLocationIfNeeded } from "./ledger/ledger-add-location";
 
 import type { IQueryOptions } from "./ledger/ledger-tools";
 import type { ITrackersSummary } from "./ledger/ledger-tools";
+import type { ITracker, ITrackerMath } from "../modules/tracker/tracker.js";
+import math from "../utils/math/math.js";
+import NomieUOM from "../utils/nomie-uom/nomie-uom.js";
 
 const console = new Logger("🧺 store/ledger.js", true);
 // Hooky is for firing off generic events
 
-export interface IToday {}
+export interface IToday {
+  [key: string]: {
+    hours: Array<number>;
+    logs: Array<NLog>;
+    tag: string;
+    values: Array<number>;
+  };
+}
+
 export type IBooks = Array<ILedgerBook>;
 export type ILedgerBook = Array<NLog>;
 
@@ -191,6 +202,7 @@ const ledgerInit = () => {
       state.hash = ledgerTools.hashTrackersSummary(trackersUsed);
       return state;
     },
+
     /**
      * Get the Users location if it's needed
      */

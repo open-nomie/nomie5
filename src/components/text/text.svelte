@@ -4,20 +4,23 @@
 
   export let size = "md";
   // export let color = undefined;
-  export let bold = undefined;
-  export let medium = undefined;
-  export let tag = "div";
-  export let className = "";
-  export let faded = false;
-  export let style = "";
-  export let center = false;
-  export let truncate = false;
-  export let truncate2 = false;
-  export let truncate3 = false;
+  export let bold: boolean = false;
+  export let center: boolean = false;
+  export let className: string = "";
   export let color = "";
-  export let underline = false;
-  export let inline = false;
-  export let lineHeightMd = false;
+  export let faded: boolean = false;
+  export let inline: boolean = false;
+  export let lineHeightMd: boolean = false;
+  export let medium: boolean = false;
+  export let style = "";
+  export let tag = "div";
+  export let truncate: boolean = false;
+  export let truncate2: boolean = false;
+  export let truncate3: boolean = false;
+  export let underline: boolean = false;
+  export let leading1: boolean = false;
+  export let leading2: boolean = false;
+  export let leading3: boolean = false;
 
   const dispatch = createEventDispatcher();
 </script>
@@ -33,27 +36,40 @@
       line-height: 140%;
     }
 
+    &.leading1 {
+      line-height: 100%;
+    }
+    &.leading2 {
+      line-height: 120%;
+    }
+    &.leading3 {
+      line-height: 150%;
+    }
+
+    &.xxs {
+      font-size: xx-small;
+    }
     &.xs {
-      font-size: 0.7rem;
+      font-size: x-small;
     }
     &.sm {
-      font-size: 0.85rem;
+      font-size: small;
     }
     &.md {
-      font-size: 1rem;
+      font-size: medium;
     }
     &.lg {
-      font-size: 1.25rem;
+      font-size: large;
     }
 
     &.faded {
-      opacity: 0.7;
+      opacity: 0.6;
     }
     &.xl {
-      font-size: 1.5rem;
+      font-size: x-large;
     }
     &.xxl {
-      font-size: 2rem;
+      font-size: xx-large;
     }
     &.font-weight-bold {
       font-weight: bold;
@@ -70,7 +86,7 @@
     on:click={() => {
       dispatch('click');
     }}
-    class="n-text {` ${size || 'sm'} ${className} text-${color} ${truncate ? 'truncate' : ''} ${truncate2 ? 'truncate-2' : ''} ${truncate3 ? 'truncate-3' : ''} ${lineHeightMd ? 'line-height-md' : ''} ${center ? 'text-center' : ''} ${underline ? 'text-underline' : ''} ${faded ? 'faded ' : ''} ${bold ? 'font-weight-bold ' : ''} ${medium ? 'font-weight-medium ' : ''}`.trim()}">
+    class="n-text {` ${leading1 ? 'leading1' : ''} ${leading2 ? 'leading2' : ''} ${leading3 ? 'leading3' : ''} ${size || 'sm'} ${className} text-${color} ${truncate ? 'truncate' : ''} ${truncate2 ? 'truncate-2' : ''} ${truncate3 ? 'truncate-3' : ''} ${lineHeightMd ? 'line-height-md' : ''} ${center ? 'text-center' : ''} ${underline ? 'text-underline' : ''} ${faded ? 'faded ' : ''} ${bold ? 'font-weight-bold ' : ''} ${medium ? 'font-weight-medium ' : ''}`.trim()}">
     <slot />
   </span>
 {:else}
@@ -79,7 +95,7 @@
     on:click={() => {
       dispatch('click');
     }}
-    class="n-text {` ${size || 'sm'} ${className} text-${color} ${truncate ? 'truncate' : ''} ${truncate2 ? 'truncate-2' : ''} ${truncate3 ? 'truncate-3' : ''} ${lineHeightMd ? 'line-height-md' : ''} ${center ? 'text-center' : ''} ${underline ? 'text-underline' : ''} ${faded ? 'faded ' : ''} ${bold ? 'font-weight-bold ' : ''} ${medium ? 'font-weight-medium ' : ''}`.trim()}">
+    class="n-text {` ${leading1 ? 'leading1' : ''} ${leading2 ? 'leading2' : ''} ${leading3 ? 'leading3' : ''} ${size || 'sm'} ${className} text-${color} ${truncate ? 'truncate' : ''} ${truncate2 ? 'truncate-2' : ''} ${truncate3 ? 'truncate-3' : ''} ${lineHeightMd ? 'line-height-md' : ''} ${center ? 'text-center' : ''} ${underline ? 'text-underline' : ''} ${faded ? 'faded ' : ''} ${bold ? 'font-weight-bold ' : ''} ${medium ? 'font-weight-medium ' : ''}`.trim()}">
     <slot />
   </div>
 {/if}

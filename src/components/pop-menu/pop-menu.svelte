@@ -4,6 +4,7 @@
   import { createEventDispatcher, onMount, onDestroy } from "svelte";
   import { Lang } from "../../store/lang";
   import Button from "../button/button.svelte";
+  import Text from "../text/text.svelte";
   const dispatch = createEventDispatcher();
 
   export let title = undefined;
@@ -167,14 +168,16 @@
           color="light"
           size="lg"
           disabled={button.disabled}
-          className={button.description ? 'btn-desc' : ''}
+          style="padding-top:8px; padding-bottom:8px;"
+          className="pop-button pop-button-{index}
+          {button.description ? 'btn-desc' : ''}"
           on:click={(evt) => {
             button.click();
             close(evt);
           }}>
-          <div class="title">{button.title}</div>
+          {button.title}
           {#if button.description}
-            <div class="description">{button.description}</div>
+            <Text size="sm" leading2 faded className="mb-1">{button.description}</Text>
           {/if}
         </Button>
         {#if index !== buttons.length - 1}

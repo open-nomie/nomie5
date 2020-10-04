@@ -47,7 +47,14 @@
     XCircle,
     DotsVertical,
     ChartPie,
+    DotsCircleHorizontal,
+    ViewList,
+    Eye,
+    EyeOff,
   } from "svelte-hero-icons";
+
+  import buttonView from "./n-icons/button-view.svelte";
+  import detailView from "./n-icons/detail-view.svelte";
 
   export let name = "add";
   export let style = undefined;
@@ -81,8 +88,10 @@
     pieChart: ChartPie,
     grid: ViewGrid,
     link: Link,
+    list: ViewList,
     menu: Menu,
     more: DotsHorizontal,
+    moreOutline: DotsCircleHorizontal,
     moreVertical: DotsVertical,
     newTab: FolderAdd,
     people: UserGroup,
@@ -104,6 +113,10 @@
     tracker: ViewGrid,
     userAdd: UserAdd,
     user: User,
+    buttonView: buttonView,
+    detailView: detailView,
+    eye: Eye,
+    eyeOff: EyeOff,
   };
 </script>
 

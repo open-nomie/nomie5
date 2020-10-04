@@ -3,9 +3,10 @@
 
   // Math will do the calculatng
   import math from "../../utils/math/math";
-
-  import { tick, createEventDispatcher, onMount } from "svelte";
+  import _ from "lodash";
+  import { tick, createEventDispatcher, onMount, onDestroy } from "svelte";
   import Button from "../button/button.svelte";
+  import is from "../../utils/is/is";
 
   const dispatch = createEventDispatcher();
 
@@ -20,13 +21,35 @@
   let tapped = false;
 
   onMount(() => {
-    if (value) {
+    if (is.truthy(value)) {
       buffer = [value];
       change();
     }
   });
 
+  const buttons = [
+    ["C", "+/-", "%", "/"],
+    [7, 8, 9, "*"],
+    [4, 5, 6, "-"],
+    [1, 2, 3, "+"],
+    ["⌫", 0, ".", null],
+  ];
+
+  function handleKeydown(evt) {
+    const key = evt.key;
+    const valid = buttons.find((row) => {
+      return row.find((b) => `${b}` === `${key}`);
+    });
+    if (valid) {
+      insertBuffer(key);
+    } else if (key == "Backspace") {
+      insertBuffer("⌫");
+    }
+  }
+
   function change() {
+    // buffer = buffer.filter((b) => is.truthy(b));
+
     if (buffer.length == 1) {
       globalAnswer = buffer[0];
     } else if (buffer.length) {
@@ -34,19 +57,12 @@
     } else {
       globalAnswer = 0;
     }
-    if (globalAnswer != value) {
-      dispatch("change", globalAnswer);
-    }
+    dispatch("change", globalAnswer);
+    // if (globalAnswer != value) {
+    //   dispatch("change", globalAnswer);
+    // }
     getFontSize();
   }
-
-  const buttons = [
-    ["C", "+/-", "%", "/"],
-    [7, 8, 9, "*"],
-    [4, 5, 6, "-"],
-    [1, 2, 3, "+"],
-    [null, 0, ".", null],
-  ];
 
   function calculateBuffer() {
     return math.calculate(buffer);
@@ -54,7 +70,7 @@
 
   function click(input) {
     // If we should clear a default and one exists
-    if (!tapped && value && defaultEphemeral) {
+    if (!tapped && is.truthy(value) && defaultEphemeral) {
       value = 0;
       clearBuffer();
       tapped = true;
@@ -68,6 +84,15 @@
 
   function isNumber(input) {
     return !isNaN(input) && input !== null;
+  }
+
+  function deleteLast() {
+    // buffer = _.dropRight(buffer);
+    if (buffer.length) {
+      let value = `${buffer[buffer.length - 1]}`;
+      buffer[buffer.length - 1] = _.dropRight(value.split("")).join("");
+      change();
+    }
   }
 
   // Insert a key or operator into the buffer
@@ -96,6 +121,9 @@
         case "C":
           buffer = [];
           change();
+          break;
+        case "⌫":
+          deleteLast();
           break;
         case "+/-":
           if (globalAnswer > 0) {
@@ -246,6 +274,7 @@
   }
 </style>
 
+<svelte:window on:keydown={handleKeydown} />
 <div class="n-calculator">
   <div class="calc-screen">
     {#if displayFormat}

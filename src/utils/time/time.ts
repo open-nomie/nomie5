@@ -46,23 +46,7 @@ export default {
     if (fromNow == "a few seconds ago") {
       v = "now";
     } else {
-      v = fromNow
-        .trim()
-        .split(" ")
-        .map((w) => {
-          switch (w) {
-            case "minutes":
-              return "mins";
-              break;
-            case "hours":
-              return "hrs";
-              break;
-            default:
-              return w;
-              break;
-          }
-        })
-        .join(" ");
+      v = v.replace("minutes", "min").replace("seconds", "sec").replace("months", "mon").replace("hours", "hrs");
     }
     return v;
   },

@@ -313,6 +313,17 @@
     editingWidget = undefined;
   }
 
+  async function deleteWidget(widget: Widget) {
+    let confirmed = await Interact.confirm(
+      `${Lang.t("general.remove", "Remove")} ${widget.getTitle()} ${Lang.t("general.widget", "widget")}?`,
+      "Are you sure you want to remove this widget from this dashboard?"
+    );
+    if (confirmed) {
+      await DashboardStore.deleteWidget(widget);
+      loadActiveDashboard();
+    }
+  }
+
   /**
    * Rename a Dashboard
    */
@@ -423,7 +434,9 @@
       {#if editMode}
         <div class="n-toolbar n-row px-2 mt-2 mb-2">
           <Input type="text" placeholder="Dashboard Label" bind:value={activeDashboard.label} />
-          <Button color="clear" className="text-primary-bright" on:click={done}>{editMode ? 'Done' : 'Edit'}</Button>
+          <Button color="clear" text className="text-primary-bright" on:click={done}>
+            {!editMode ? Lang.t('general.edit', 'Edit') : Lang.t('general.done', 'Done')}
+          </Button>
         </div>
         <hr class="divider center my-3" />
       {/if}
@@ -433,7 +446,7 @@
             {#if activeDashboard.widgets.length == 0}
               <div class="center-all p-5 n-panel vertical">
                 <Text faded size="md" center>
-                  {Lang.t('dashboard.empty-message', 'Fresh Dashboard! Get started by adding the first Widget')}
+                  {Lang.t('dashboard.empty-message', 'Add different charts, stats, and other widgets to create your own custom views of your life.')}
                 </Text>
                 <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={newWidget}>
                   {Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
@@ -451,7 +464,7 @@
           {/if}
         </div>
         <div class="board-actions filler">
-          <div class="btn-group filler">
+          <div class="btn-group" style="width:200px;">
             <Button on:click={newWidget} color="clear">
               <Text size="sm">{Lang.t('general.add', 'Add')}</Text>
             </Button>
@@ -479,6 +492,11 @@
           }}
           let:item>
           <ListItem solo className="pb-2">
+            <div slot="left">
+              <Button icon color="clear" on:click={() => deleteWidget(item)}>
+                <Icon name="delete" />
+              </Button>
+            </div>
             {#if item.type == 'text'}
               <Text size="md" truncate>{item.description}</Text>
             {:else}

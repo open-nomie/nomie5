@@ -41,7 +41,7 @@ export default {
       year: "Anno",
       map: "Mappa",
       time: "Orario",
-      close: "Chiudi"
+      close: "Chiudi",
     },
     stats: {
       when: "Quando",
@@ -49,38 +49,40 @@ export default {
       where: "Dove",
       streak: "Serie",
       logs: "Registro",
-      "all-logs": "Tutti i registri"
+      "all-logs": "Tutti i registri",
     },
     tabs: {
       track: "Track",
       history: "Storico",
       settings: "Impostazioni",
-      plugins: "Plugin"
+      plugins: "Plugin",
+      people: "Persone",
+      dash: "Dash",
     },
     history: {
-      "no-records-found": "Nessun elemento trovato"
+      "no-records-found": "Nessun elemento trovato",
     },
     export: {
       csv: {
         download: "Scarica CSV...",
         description:
-          "Esporta i dati dei tuoi tracker in CSV. È supportato solo un anno alla volta. Tieni presente che le esportazioni in CSV non possono essere reimportate in Nomie al momento. "
+          "Esporta i dati dei tuoi tracker in CSV. È supportato solo un anno alla volta. Tieni presente che le esportazioni in CSV non possono essere reimportate in Nomie al momento. ",
       },
       backup: {
         description: `Crea un file di backup importabile. Questo ti permette di trasferire i tuoi dati da un dispositivo all'altro usando un unico file JSON che contiene TUTTI i tuoi dati di Nomie.`,
-        download: "Scarica file di backup..."
-      }
+        download: "Scarica file di backup...",
+      },
     },
     board: {
       "board-empty": "Sembra sia vuoto!",
       "edit-board": `Modifica scheda`,
       "board-label": "Etichetta della scheda",
-      "create-custom-tracker": "Crea tracker personalizzato",
+      "create-custom-tracker": "Crea tracker",
       "add-existing-tracker": "Aggiungi tracker esistente",
       "browse-starter-trackers": "Sfoglia catalogo",
       "add-a-board": "Aggiungi una scheda",
       "add-a-board-description": `Le schede ti aiutano ad organizzare i tracker. Per esempio: socialità, cibo, esercizio fisico possono contenere tracker specifici per tali attività. Puoi avere lo stesso tracker su più schede.`,
-      "board-input-placeholder": "Nome scheda o emoji 👍"
+      "board-input-placeholder": "Nome scheda o emoji 👍",
     },
     settings: {
       language: "Lingua",
@@ -118,7 +120,7 @@ export default {
       "pin-details": "Inserisci un PIN da 1 a 6 cifre",
       "aggressive-sync": "Sicronizzazione aggressiva",
       "aggressive-description": `Usi Nomie su più dispositivi? Abilita la sincronizzazione aggressiva
-            per sincronizzare più frequentemente`
+            per sincronizzare più frequentemente`,
     },
     tracker: {
       "things-to-track": "Catalogo tracker",
@@ -142,7 +144,7 @@ export default {
       "note-description": `Combina più tracker insieme usando i loro
       #hashtag. Per esempio, #mood #qualità_sonno. Nomie ti chiederà
             i valori richiesti uno per uno.`,
-      "delete-description": `Puoi sempre ricrearlo più tardi. I dati storici non verranno cancellati.`
-    }
-  }
+      "delete-description": `Puoi sempre ricrearlo più tardi. I dati storici non verranno cancellati.`,
+    },
+  },
 };

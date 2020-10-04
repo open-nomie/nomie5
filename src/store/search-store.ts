@@ -25,6 +25,7 @@ const console = new Logger("🕵️‍♂️ $Search Store");
 export class SearchTerm {
   term: string;
   date: Date;
+  type: SearchModes;
   constructor(item) {
     if (typeof item == "string") {
       this.term = item;
@@ -33,20 +34,23 @@ export class SearchTerm {
       this.term = item.term;
       this.date = new Date();
     }
+    this.type = item.type || "history";
   }
 }
 
 // Nomie API Store
 
 let SearchStorage: SideStore;
-
+export type SearchModes = "trackers" | "history" | "people";
 interface ISearchStoreState {
   saved: Array<SearchTerm>;
   active: SearchTerm;
+  view: SearchModes;
+  show: boolean;
 }
 
 const SearchStoreInit = () => {
-  let _state: ISearchStoreState = { saved: [], active: null };
+  let _state: ISearchStoreState = { saved: [], active: null, show: false, view: "history" };
 
   const { update, subscribe, set } = writable(_state);
 
@@ -64,21 +68,59 @@ const SearchStoreInit = () => {
       SearchStorage = new SideStore("search");
       update((state) => {
         state.saved = SearchStorage.get(NPaths.storage.search()) || [];
-        state.saved = state.saved.filter((d) => d);
+        state.saved = state.saved
+          .filter((d) => d)
+          .map((term: SearchTerm) => {
+            return new SearchTerm(term);
+          });
+        return state;
+      });
+    },
+    view(view: SearchModes) {
+      update((state) => {
+        state.view = view;
+        state.show = true;
+        return state;
+      });
+    },
+    clear() {
+      update((state) => {
+        state.active = undefined;
+        return state;
+      });
+    },
+    hide() {
+      update((state) => {
+        state.show = false;
         return state;
       });
     },
     search(term: string) {
       update((state) => {
         state.active = new SearchTerm(term);
+        state.active.type = state.view;
         state = saveTerm(state, state.active);
         return state;
       });
       navigate(NPaths.routes.search());
     },
+    setActiveTerm(searchTerm?: SearchTerm) {
+      update((state) => {
+        state = saveTerm(state, searchTerm);
+        state.active = searchTerm;
+        return state;
+      });
+    },
     save(searchTerm?: SearchTerm) {
       update((state) => {
         state = saveTerm(state, searchTerm);
+        return state;
+      });
+    },
+    close() {
+      update((state) => {
+        state.active = undefined;
+        state.show = false;
         return state;
       });
     },

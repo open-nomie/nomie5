@@ -58,14 +58,21 @@
   import { Lang } from "../../store/lang";
   import { TrackerLibrary } from "../../store/tracker-library";
   import { LastUsed } from "../../store/last-used";
+  import { FeatureStore } from "../../store/feature-store";
   import Button from "../../components/button/button.svelte";
   import Text from "../../components/text/text.svelte";
   import exportData from "../../modules/export/export-helper";
 
   import OfflineQueue from "../../components/offline-queue/offline-queue.svelte";
-  import TimeSelect from "../../components/date-time-bar/time-select.svelte";
+
   import NPaths from "../../paths";
   import { Device } from "../../store/device-store";
+  import ShortcutButton from "../../components/shortcut-button/shortcut-button.svelte";
+  import time from "../../utils/time/time";
+  import Counter from "../../components/counter/counter.svelte";
+  import ListItem from "../../components/list-item/list-item.svelte";
+  import TrackersList from "./trackers.svelte";
+  import { SearchStore } from "../../store/search-store";
 
   // Consts
   const console = new Logger("board.svelte");
@@ -91,6 +98,7 @@
     searchTerm: null, // the search term the user is typing
     activeTip: 0, // index of the current tip to show
     hideTips: false, // temp hide - it will stop showing after 12 launches.
+    view: localStorage.getItem("board-view") || "button",
   };
 
   /**
@@ -107,6 +115,17 @@
     done: false,
     checking: false,
   };
+
+  let timers = [];
+  $: if ($TrackerStore) {
+    timers = Object.keys($TrackerStore.trackers)
+      .map((tag) => {
+        return $TrackerStore.trackers[tag];
+      })
+      .filter((tracker) => {
+        return tracker.started;
+      });
+  }
 
   // Check if it's ready
   const checkIfReady = (requester) => {
@@ -145,6 +164,11 @@
       state.addedTrackers = [];
     });
   });
+
+  function setView(view) {
+    localStorage.setItem("board-view", view);
+    state.view = view;
+  }
 
   function editBoard() {
     if (!$BoardStore.activeBoard) {
@@ -249,15 +273,7 @@
     },
     // Toggle if the user is searching or not.
     async toggleSearch() {
-      if (state.searching) {
-        methods.stopSearch();
-      } else {
-        state.searching = true;
-        await tick(200);
-        if (_elSearchBar) {
-          _elSearchBar.focus();
-        }
-      }
+      SearchStore.view("trackers");
     },
     stopSearch() {
       state.searchTerm = null;
@@ -268,12 +284,6 @@
     addButtonTap() {
       let buttons = [];
       // Add Library Button
-      buttons.push({
-        title: Lang.t("board.browse-starter-trackers"),
-        click() {
-          TrackerLibrary.toggle();
-        },
-      });
       // If NOT "all" Board
       if ($BoardStore.active != "all") {
         // Add "Existing Tracker" button
@@ -291,10 +301,17 @@
       }
       // Add "Create Tracker" button
       buttons.push({
-        title: Lang.t("board.create-custom-tracker"),
+        title: Lang.t("board.create-custom-tracker", "Create a Tracker"),
         click() {
-          // methods.trackerEditor();
-          navigate("/tracker/design");
+          methods.trackerEditor();
+          // navigate("/tracker/design");
+        },
+      });
+
+      buttons.push({
+        title: Lang.t("board.browse-starter-trackers"),
+        click() {
+          TrackerLibrary.toggle();
         },
       });
 
@@ -340,6 +357,14 @@
       });
     },
 
+    getLastUsed(tracker) {
+      if ($LastUsed[tracker.tag]) {
+        return time.fromNow($LastUsed[tracker.tag].date);
+      } else {
+        return undefined;
+      }
+    },
+
     /**
      * Create a new board
      * This will prompt the user to input a name
@@ -368,18 +393,19 @@
     },
 
     async trackerTapped(tracker) {
-      let inputer = new TrackerInputer(tracker, $TrackerStore);
-      let note = await inputer.getElements();
+      return Interact.trackerTap(tracker, $TrackerStore.trackers);
+      // let inputer = new TrackerInputer(tracker, $TrackerStore.trackers);
+      // let note = await inputer.getElements();
 
-      if (note.length) {
-        ActiveLogStore.addElement(note.join(" "));
-        if (inputer.lastAction == "save" || tracker.one_tap) {
-          await LedgerStore.saveLog($ActiveLogStore);
-          await ActiveLogStore.clear();
-        }
-      }
+      // if (note.length) {
+      //   ActiveLogStore.addElement(note.join(" "));
+      //   if (inputer.lastAction == "save" || tracker.one_tap) {
+      //     await LedgerStore.saveLog($ActiveLogStore);
+      //     await ActiveLogStore.clear();
+      //   }
+      // }
 
-      return note;
+      // return note;
     },
 
     /**
@@ -387,40 +413,40 @@
      * Used to get the current value of today for a given tracker
      * This will total or avg their values depending on the tracker calcuate
      */
-    getTrackerValue(tracker) {
-      // Default to null
-      let value = null;
+    // getTrackerValue(tracker) {
+    //   // Default to null
+    //   let value = null;
 
-      // Does this tracker exist in today's map?
-      if (today.hasOwnProperty(tracker.tag)) {
-        // What type of Math should we do?
-        if (tracker.math === "sum") {
-          // Sum it up!
-          value = math.round(math.sum(today[tracker.tag].values));
-        } else {
-          // Round things!
-          value = math.round(math.average(today[tracker.tag].values));
-        }
-      }
-      return value ? NomieUOM.format(value, tracker.uom) : null;
-    },
-    getPositivity(tracker) {
-      let value = methods.getTrackerValue(tracker);
-      value = value || 0;
-      return ScoreTracker(value, tracker);
-    },
+    //   // Does this tracker exist in today's map?
+    //   if (today.hasOwnProperty(tracker.tag)) {
+    //     // What type of Math should we do?
+    //     if (tracker.math === "sum") {
+    //       // Sum it up!
+    //       value = math.round(math.sum(today[tracker.tag].values));
+    //     } else {
+    //       // Round things!
+    //       value = math.round(math.average(today[tracker.tag].values));
+    //     }
+    //   }
+    //   return value ? NomieUOM.format(value, tracker.uom) : null;
+    // },
+    // getPositivity(tracker) {
+    //   let value = methods.getTrackerValue(tracker);
+    //   value = value || 0;
+    //   return ScoreTracker(value, tracker);
+    // },
     /**
      * Get Hours Used
      * Used for generating the time-balls on the trackers
      * It maybe shouldn't be here, but it is for now
      */
-    getHoursUsed(tracker) {
-      if (today.hasOwnProperty(tracker.tag)) {
-        return today[tracker.tag].hours;
-      } else {
-        return [];
-      }
-    },
+    // getHoursUsed(tracker) {
+    //   if (today.hasOwnProperty(tracker.tag)) {
+    //     return today[tracker.tag].hours;
+    //   } else {
+    //     return [];
+    //   }
+    // },
     // Show Tracker Options
     showTrackerOptions(tracker) {
       // Make it a real tracker in case it's not - doubling up shouldn't be a problem.
@@ -550,29 +576,6 @@
     @include media-breakpoint-up(md) {
       padding-top: 20px;
     }
-
-    .new-user {
-      font-size: 0.7rem;
-      max-width: 280px;
-      border-radius: 30px;
-      background-color: transparent;
-      border: var(--modal-border);
-      color: var(--color-inverse-2);
-      margin: 10px auto;
-      padding: 6px 20px;
-      line-height: 115%;
-      flex-grow: 0;
-      .main {
-        text-align: center;
-      }
-      .btn {
-        &:active {
-          color: var(--color-inverse);
-        }
-      }
-    }
-  }
-  .n-add-button {
   }
   .no-trackers {
     min-height: 300px;
@@ -584,21 +587,6 @@
     align-items: center;
   }
 
-  :global(.board-edit-button) {
-    display: flex;
-    align-items: center;
-    padding: 0px 16px;
-    justify-content: center;
-    min-width: 40px;
-    min-height: 40px;
-    height: 40px;
-    flex-grow: 0;
-    flex-shrink: 0;
-    border-radius: 20px;
-    font-size: 16px;
-    background-color: var(--color-solid-2);
-    color: var(--color-inverse-1) !important;
-  }
   :global(.board-actions) {
     display: flex;
     align-items: center;
@@ -620,14 +608,9 @@
             <Icon name="time" size={24} className="fill-red-pulse" />
           </button>
         {/if}
-        <!-- IF MORE THAN 13 TRACKERS - SHOW SEARCH ICON-->
-        {#if Object.keys($TrackerStore.trackers).length > 13}
-          <button class="btn tab tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
-            <Icon name="search" size={24} className={state.searching ? 'fill-red' : ''} />
-          </button>
-        {:else}
-          <div class="pr-2" />
-        {/if}
+        <button class="btn tab tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
+          <Icon name="search" size={24} className={state.searching ? 'fill-red' : ''} />
+        </button>
 
         <NBoardTabs
           boards={methods.injectAllBoard($BoardStore.boards || [])}
@@ -665,12 +648,15 @@
       </div>
     {:else}
       <NToolbarGrid>
-        <div slot="left">
+        <div slot="left" class="d-flex">
           {#if $TrackerStore.timers.length}
             <button class="btn tool tap-icon pl-2" on:click={TrackerStore.toggleTimers}>
               <Icon name="time" size={20} className="fill-red-pulse" />
             </button>
           {/if}
+          <button class="btn tab tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
+            <Icon name="search" size={24} className={state.searching ? 'fill-red' : ''} />
+          </button>
         </div>
         <div slot="main" class="align-items-center">
           <LogoType size={20} on:click={methods.enableBoards} />
@@ -724,76 +710,88 @@
           </div>
         {/if}
         <OfflineQueue />
-        <main class="n-board h-100" on:swipeleft={BoardStore.next} on:swiperight={BoardStore.previous}>
-          {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
-            <div class="trackers n-grid framed mt-2" style="min-height:auto">
-              {#each TrackerStore.state.runningTimers() as tracker}
-                <NTrackerButton
-                  {tracker}
-                  value={methods.getTrackerValue(tracker)}
-                  hoursUsed={methods.getHoursUsed(tracker)}
-                  positivity={methods.getPositivity(tracker)}
-                  on:click={() => {
-                    methods.trackerTapped(tracker);
-                  }}
-                  disabled={state.savingTrackers.indexOf(tracker.tag) > -1}
-                  className={`${state.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${state.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
-                  on:longpress={() => {
-                    methods.showTrackerOptions(tracker);
-                  }} />
-              {/each}
-              <button class="btn-close" on:click={TrackerStore.hideTimers}>
-                <Icon name="chevronUp" className="fill-inverse" />
-              </button>
-            </div>
-          {/if}
-          <!-- Loop over trackers -->
-          <div class="trackers n-grid">
+        {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
+          <div class="n-list solo pb-2" style="min-height:auto">
+            <ListItem compact>
+              <Text size="sm">Running Timers</Text>
+              <div slot="right">
+                <Button text size="xs" on:click={TrackerStore.toggleTimers}>Close</Button>
+              </div>
+            </ListItem>
+            <TrackersList
+              view="list"
+              trackers={timers}
+              on:tap={(evt) => {
+                methods.trackerTapped(evt.detail);
+              }}
+              hideAdd
+              on:more={(evt) => {
+                methods.showTrackerOptions(evt.detail);
+              }} />
 
-            {#if (foundTrackers || boardTrackers || []).length === 0}
-              {#if foundTrackers != null}
-                <div class="no-trackers">{Lang.t('board.no-search-results', 'No trackers found')}</div>
-              {/if}
-            {/if}
-            <!-- lastUsed={methods.getLastUsed(tracker)} -->
-            {#each foundTrackers || boardTrackers as tracker}
-              <NTrackerButton
-                {tracker}
-                value={methods.getTrackerValue(tracker)}
-                hoursUsed={methods.getHoursUsed(tracker)}
-                positivity={methods.getPositivity(tracker)}
-                on:click={() => {
-                  methods.trackerTapped(tracker);
-                }}
-                disabled={state.savingTrackers.indexOf(tracker.tag) > -1}
-                className={`${state.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${state.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`}
-                on:longpress={() => {
-                  methods.showTrackerOptions(tracker);
-                }} />
-            {/each}
-            {#if !state.searching && $BoardStore.active !== '_timers'}
-              <NTrackerButton
-                on:click={methods.addButtonTap}
-                tracker={{ label: Lang.t('tracker.add-tracker', 'Add Tracker'), emoji: '➕' }} />
-            {/if}
           </div>
+        {/if}
+        <main class="n-board h-100" on:swipeleft={BoardStore.next} on:swiperight={BoardStore.previous}>
+          <!-- Loop over trackers -->
 
-          <!-- <div class="board-actions">
-            <button on:click={editBoard} style="color:#FFF" class="btn btn btn-round board-edit-button clickable">
-              <Text>Edit Tab</Text>
-            </button>
-          </div> -->
+          <!-- {#if (foundTrackers || boardTrackers || []).length === 0}
+            {#if foundTrackers != null}
+              <div class="no-trackers">{Lang.t('board.no-search-results', 'No trackers found')}</div>
+            {:else}
+              <div class="no-trackers d-flex flex-column align-items-center justify-content-center">
+                {Lang.t('board.add-some-trackers', 'Sure is empty in here')}
+                <Button text on:click={methods.addButtonTap}>Add a Tracker</Button>
+              </div>
+            {/if}
+          {/if} -->
+          <!-- lastUsed={methods.getLastUsed(tracker)} -->
+          <!-- {#if true === true} -->
+          <TrackersList
+            view={state.view}
+            trackers={foundTrackers || boardTrackers}
+            on:tap={(evt) => {
+              methods.trackerTapped(evt.detail);
+            }}
+            on:add={methods.addButtonTap}
+            on:more={(evt) => {
+              methods.showTrackerOptions(evt.detail);
+            }} />
 
           <!-- Include User Tips - shit should be a component -->
 
         </main>
-        <div class="board-actions mt-5 mb-2" style="min-width:140px;">
-          <div class="btn-group filler">
-            <Button on:click={boardOptions} color="clear">
-              <Text size="sm">{Lang.t('general.options', 'Options')}</Text>
-              <Icon name="chevronDown" size={14} className="ml-1" />
-            </Button>
-          </div>
+        <div class="board-actions mt-5 mb-2 n-row" style="min-width:300px;">
+          {#if $UserStore.meta.hiddenFeatures}
+            <div class="btn-group mr-1 compact">
+              <Button
+                icon
+                className="px-1"
+                on:click={() => {
+                  setView('button');
+                }}>
+                <Icon size="18" name="buttonView" className={`${state.view == 'button' ? 'fill-primary' : ''}`} />
+              </Button>
+              <Button
+                icon
+                className="px-1"
+                on:click={() => {
+                  setView('list');
+                }}>
+                <Icon size="18" name="list" className={`${state.view == 'list' ? 'fill-primary' : ''}`} />
+              </Button>
+              <Button
+                icon
+                className="px-0"
+                on:click={() => {
+                  setView('detail');
+                }}>
+                <Icon size="18" name="detailView" className={`${state.view == 'detail' ? 'fill-primary' : ''}`} />
+              </Button>
+            </div>
+          {/if}
+          <Button on:click={boardOptions} color="light" className="py-2 mx-2">
+            <Text>{Lang.t('general.options', 'Tab Options')}</Text>
+          </Button>
 
         </div>
         <NTip {tips} />

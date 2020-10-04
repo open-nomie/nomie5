@@ -34,8 +34,12 @@ const DashboardStoreInit = (): any => {
   const methods = {
     async init(): Promise<void> {
       let dashboards = await methods.get();
-      update((state: any) => {
+      const lastIndex = Storage.local.get("dashboard/lastIndex");
+      update((state: IDashboardStore) => {
         dashboards = dashboards || [];
+        if (dashboards.length > lastIndex) {
+          state.activeIndex = lastIndex || 0;
+        }
         state.dashboards = dashboards
           .map((dashboard) => {
             return dashboard instanceof Dashboard ? dashboard : new Dashboard(dashboard);

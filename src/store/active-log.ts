@@ -7,22 +7,21 @@ import ScoreNote from "../modules/scoring/score-note";
 const console = new Logger("✴️ store/active-log.js");
 
 const activeLogInit = () => {
-  let base = new NomieLog();
+  let base = new NomieLog({});
   // Start with empty time - let ledger set it one.
   base.end = null;
   base.start = null;
 
   const { subscribe, set, update } = writable(base);
-
   const hooky = new Hooky();
 
   const methods = {
     clear() {
-      return update((n) => {
-        n = new NomieLog();
-        n.start = null;
-        n.end = null;
-        return n;
+      return update((state) => {
+        state = new NomieLog({});
+        state.start = null;
+        state.end = null;
+        return state;
       });
     },
     hook(hookType, func) {
@@ -30,53 +29,53 @@ const activeLogInit = () => {
       hooky.hook(hookType, func);
     },
     updateNote(note) {
-      update((b) => {
-        b.note = note;
+      update((state) => {
+        state.note = note;
         // this.runHook('onUpdate', b);
-        hooky.run("onUpdate", b);
-        return b;
+        hooky.run("onUpdate", state);
+        return state;
       });
     },
     asLog() {
       let log;
-      update((b) => {
-        log = new NomieLog(b);
-        return b;
+      update((state) => {
+        log = new NomieLog(state);
+        return state;
       });
       return log;
     },
-    calculateScore(note) {
+    calculateScore(note: string) {
       return ScoreNote(note, new Date().getTime());
     },
-    removeStr(str) {
-      update((b) => {
-        b.note = b.note
+    removeStr(str: string) {
+      update((state) => {
+        state.note = state.note
           .split(" ")
           .filter((word) => {
             return word !== str;
           })
           .join(" ");
-        return b;
+        return state;
       });
     },
     addElement(element) {
       update((state) => {
         let note = (state.note || "").trim().split(" ");
         note.push(element);
-        state.note = note.join(" ");
+        state.note = note.join(" ") + " ";
         // hooky.run("onAddElement", { element });
         return state;
       });
     },
     addTag(tag, value) {
-      update((b) => {
+      update((state) => {
         if (!isNaN(parseFloat(value))) {
-          b.note = `${b.note} #${tag}(${value}) `;
+          state.note = `${state.note} #${tag}(${value}) `;
         } else {
-          b.note = `${b.note} #${tag} `;
+          state.note = `${state.note} #${tag} `;
         }
         hooky.run("onAddTag", { tag, value });
-        return b;
+        return state;
       });
     },
   };

@@ -336,29 +336,29 @@
     let buttons = [];
 
     const gotoToday = {
-      title: "Today",
+      title: Lang.t("general.today", "Today"),
       click: () => {
         changeDate(dayjs());
       },
     };
     const startOfMonth = {
-      title: "Start of month",
+      title: Lang.t("time.start-of-month", "Start of month"),
       click: () => {
         changeDate(state.date.startOf("month").subtract(1, "day"));
       },
     };
     const startOfYear = {
-      title: "Start of year",
+      title: Lang.t("time.start-of-year", "Start of year"),
       click: () => {
         changeDate(state.date.startOf("year"));
       },
     };
     const startOfWeek = {
-      title: "Start of week",
+      title: Lang.t("time.start-of-week", "Start of week"),
       click: () => {
+        // TODO: Bug getting the wrong start of the week
         let date: Dayjs = NDate.setFirstDayOfWeek($UserStore.meta.firstDayOfWeek).getFirstDayOfWeek();
-
-        changeDate(date.startOf("day"));
+        changeDate(date);
       },
     };
 
@@ -370,7 +370,7 @@
     buttons.push(startOfYear);
 
     //state.trackableElement
-    Interact.popmenu({ title: "Go to...", buttons });
+    Interact.popmenu({ title: Lang.t("general.goto", "Go to..."), buttons });
   }
 
   function getLastTerm() {

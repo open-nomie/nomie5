@@ -12,6 +12,9 @@
   import { Interact } from "../../store/interact";
   import { UserStore } from "../../store/user-store";
   import tick from "../../utils/tick/tick";
+  import TrackerList from "../board/trackers.svelte";
+  import ListItem from "../../components/list-item/list-item.svelte";
+  import Text from "../../components/text/text.svelte";
 
   let installed = {}; // hol der for anything installed during the opening
 
@@ -23,13 +26,17 @@
   });
 
   $: if ($TrackerLibrary && !trackers.length && ready) {
-    trackers = $TrackerLibrary.trackers.map((tracker) => {
-      if (tracker.uom == "oz" && $UserStore.meta.is24Hour === true) {
-        tracker.uom = "milliliter";
-        tracker.default = "350";
-      }
-      return tracker;
-    });
+    trackers = $TrackerLibrary.trackers
+      .map((tracker) => {
+        if (tracker.uom == "oz" && $UserStore.meta.is24Hour === true) {
+          tracker.uom = "milliliter";
+          tracker.default = "350";
+        }
+        return tracker;
+      })
+      .filter((tracker) => {
+        return !$TrackerStore.trackers[tracker.tag];
+      });
   }
 
   function isInstalled(tracker) {
@@ -88,7 +95,7 @@
 <Modal
   type={$TrackerLibrary.first ? 'fullscreen' : 'fullscreen'}
   show={true}
-  className="library-modal"
+  className="library-modal bg-solid"
   title={Lang.t('tracker.things-to-track')}>
 
   {#if $TrackerLibrary.first}
@@ -97,20 +104,30 @@
     </div>
   {/if}
 
-  <div class="n-grid">
+  <div class="n-list solo">
+    {#if trackers.length == 0}
+      <Text size="lg" center className="p-4">Wow! You've installed all the trackers.</Text>
+    {/if}
     {#each trackers as tracker, index (tracker.tag)}
-      <div class="tracker-option">
-        {#if $TrackerStore.trackers.hasOwnProperty(tracker.tag) || installed.hasOwnProperty(tracker.tag)}
-          <div class="badge badge-green">
-            <NIcon name="checkmark" className="fill-white" size="16" />
-          </div>
-        {/if}
-        <TrackerButton
-          {tracker}
-          on:click={() => {
-            toggleTrackerInstalled(tracker);
-          }} />
-      </div>
+      <ListItem
+        className="tracker-{tracker.tag} index-{index}"
+        title={tracker.label}
+        description={`${tracker.type} ${tracker.math}`}
+        clickable
+        on:click={() => {
+          toggleTrackerInstalled(tracker);
+        }}>
+        <div slot="left">
+          <Text size="xxl">{tracker.emoji}</Text>
+        </div>
+        <div slot="right">
+          {#if $TrackerStore.trackers.hasOwnProperty(tracker.tag) || installed.hasOwnProperty(tracker.tag)}
+            <div class="badge badge-green">
+              <NIcon name="checkmark" className="fill-white" size="16" />
+            </div>
+          {/if}
+        </div>
+      </ListItem>
     {/each}
   </div>
   <button

@@ -25,6 +25,7 @@
   export let compact = false;
   export let fullDate = true;
   export let results = [];
+  export let showTimeDiff = false;
 
   let loading = false;
   let logs = [];
@@ -77,9 +78,9 @@
     results = logs;
   }
 
-  function cancelSearch() {
-    cancelled = true;
-  }
+  // function cancelSearch() {
+  //   cancelled = true;
+  // }
 
   onMount(() => {
     reset();
@@ -98,6 +99,7 @@
     className="bg-transparent {className}"
     {compact}
     {logs}
+    {showTimeDiff}
     on:trackerClick={(event) => {
       dispatch('trackerClick', event.detail);
     }}
@@ -121,7 +123,7 @@
   {:else if loading}
     <NItem className="py-2 bg-transparent mb-2">
       <Button block color="light" className="mx-auto" style="max-width:300px;" disabled>
-        <Spinner size={18} className="mr-2" />
+        <Spinner size={18} />
         Searching...
       </Button>
       <Text size="sm" faded center className="mt-2">Looking through history</Text>

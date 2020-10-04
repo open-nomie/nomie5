@@ -1,9 +1,17 @@
 export default class PositivityCondition {
-	constructor(starter) {
-		starter = starter || {};
-		this.if = starter.if || 'value';
-		this.is = starter.is || 'gt';
-		this.v = starter.v || 1;
-		this.sc = starter.sc || 3;
-	}
+  constructor(starter) {
+    starter = starter || {};
+    this.if = starter.if || "value";
+    this.is = starter.is || "gt";
+    this.v = starter.v || 1;
+    // Score
+    this.sc = starter.sc || undefined;
+  }
+
+  get score() {
+    return this.sc;
+  }
+  set score(score) {
+    this.sc = score;
+  }
 }

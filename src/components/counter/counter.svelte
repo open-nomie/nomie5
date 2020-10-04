@@ -1,8 +1,11 @@
 <script>
   import { onMount } from "svelte";
+  import Icon from "../icon/icon.svelte";
   export let started = undefined;
   export let lg = undefined;
   export let className = "";
+  export let color = "var(--color-red)";
+  export let filled = false;
 
   onMount(() => {
     if (started) {
@@ -30,16 +33,10 @@
       let hours = "";
 
       if (parseInt(minutes) > 59) {
-        hours = this.normalizeTime(
-          Math.floor(parseInt(minutes) / 60).toString()
-        );
-        minutes = this.normalizeTime(
-          (parseInt(minutes) - parseInt(hours) * 60).toString()
-        );
+        hours = this.normalizeTime(Math.floor(parseInt(minutes) / 60).toString());
+        minutes = this.normalizeTime((parseInt(minutes) - parseInt(hours) * 60).toString());
       }
-      seconds = this.normalizeTime(
-        Math.floor(parseInt(seconds) % 60).toString()
-      );
+      seconds = this.normalizeTime(Math.floor(parseInt(seconds) % 60).toString());
 
       minutes = this.normalizeTime(minutes);
 
@@ -57,27 +54,21 @@
 
     msToSecond(ms) {
       return ms / 1000;
-    }
+    },
   };
 </script>
 
 <style lang="scss">
   @import "../../scss/utils/_utils";
   .n-counter {
-    background-color: var(--color-red);
-    color: #fff;
     font-size: 0.7rem;
     font-weight: bold;
-    height: 20px;
-    line-height: 20px;
-    padding: 0 4px;
-    border-radius: 4px;
     display: flex;
-    width: 100%;
-    justify-content: center;
-    align-content: center;
+    align-items: center;
 
     &.large {
+      display: flex;
+      padding: 12px;
       font-size: 40px;
       flex-grow: 1;
       text-align: center;
@@ -87,7 +78,20 @@
       height: 50px;
       color: var(--color-inverse-2);
     }
+    &.filled {
+      border-radius: 4px;
+      padding: 1px 6px;
+    }
   }
 </style>
 
-<div class="n-counter {className} {lg ? 'large' : 'small'}">{value}</div>
+<div
+  class="n-counter {className}
+  {lg ? 'large' : 'small'}
+  {filled ? 'filled' : ''}"
+  style={`color:${filled ? '#FFF' : color}; background-color:${filled ? color : 'transparent'}`}>
+  {#if !lg}
+    <Icon name="time" size="12" />
+  {/if}
+  {value}
+</div>

@@ -34,6 +34,11 @@
     background-color: var(--color-bg);
     position: relative;
 
+    .picker-list-wrapper {
+      width: calc(100% - 60px);
+      height: calc(100% - 60px);
+    }
+
     .n-list {
       box-shadow: var(--box-shadow-float);
       position: absolute;
@@ -41,7 +46,7 @@
       left: 20px;
       bottom: 20px;
       right: 20px;
-      width: calc(100% - 60px);
+      // width: calc(100% - 60px);
       overflow-y: scroll;
       .n-item {
         min-height: 30px;
@@ -79,6 +84,7 @@
     }
   }
   &.type-value {
+    background-color: var(--color-grey-8);
     .tracker-input.slider {
       display: none;
     }

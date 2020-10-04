@@ -23,6 +23,10 @@
   import { LedgerStore } from "../store/ledger";
   import Text from "../components/text/text.svelte";
   import Button from "../components/button/button.svelte";
+  import ShortcutButton from "../components/shortcut-button/shortcut-button.svelte";
+
+  import { SearchStore } from "../store/search-store";
+  import ShortcutUserButton from "../components/shortcut-button/shortcut-user-button.svelte";
 
   export let location;
 
@@ -104,14 +108,25 @@
 </style>
 
 <NLayout pageTitle="People">
+
   <div slot="header">
-    <div class="container px-2" style="margin-top:2px;">
-      <NSearchBar compact on:change={searchPeople} on:clear={clearSearch} placeholder="Search People..." autocomplete>
-        <button on:click={addPerson} slot="right" class="btn btn-icon btn-clear">
-          <NIcon name="userAdd" className="fill-primary-bright" />
-        </button>
-      </NSearchBar>
-    </div>
+    <NToolbar className="container px-2">
+      <Button
+        color="none"
+        shape="circle"
+        className="tap-icon"
+        on:click={() => {
+          SearchStore.view('people');
+        }}>
+        <NIcon name="search" size={24} />
+      </Button>
+      <div class="filler pl-2 truncate">
+        <Text center bold>{Lang.t('tabs.people', 'People')}</Text>
+      </div>
+      <Button color="none" shape="circle" className="tap-icon" on:click={addPerson}>
+        <NIcon name="userAdd" className="fill-primary-bright" />
+      </Button>
+    </NToolbar>
   </div>
 
   <div slot="content" class="container">
@@ -136,7 +151,21 @@
         <NItem>Nothing found for @{state.searchTerm}</NItem>
       {/if}
 
-      {#each state.people as person}
+      <!-- value={dayjs($PeopleStore.people[person].last).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD') ? 1 : 0} -->
+      <div class="trackers n-grid">
+        {#each state.people as person}
+          <ShortcutUserButton
+            person={$PeopleStore.people[person]}
+            on:click={() => {
+              personClicked(person);
+            }}
+            on:more={() => {
+              Interact.openStats(`@${person}`);
+            }} />
+        {/each}
+      </div>
+
+      <!-- {#each state.people as person}
         <NItem bottomLine truncate clickable={false} className="py-3">
           <div slot="left">
             {#if $PeopleStore.people[person] && $PeopleStore.people[person].avatar}
@@ -177,7 +206,7 @@
 
           </div>
         </NItem>
-      {/each}
+      {/each} -->
 
     </div>
   </div>
