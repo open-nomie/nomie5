@@ -71,7 +71,9 @@
       hasInput = true;
     }
     if (autofocus) {
-      _elInput.focus();
+      setTimeout(() => {
+        _elInput.focus();
+      }, 300);
     }
   });
 </script>

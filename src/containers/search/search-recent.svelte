@@ -108,7 +108,11 @@
         bottomLine
         on:click={(evt) => {
           if (mode == 'view') {
-            $SearchStore.active = searchTerm;
+            SearchStore.update((state) => {
+              state.active = searchTerm;
+              state.view = searchTerm.type;
+              return state;
+            });
           }
         }}>
         <Text>{searchTerm.term}</Text>

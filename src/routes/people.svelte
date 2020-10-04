@@ -24,7 +24,9 @@
   import Text from "../components/text/text.svelte";
   import Button from "../components/button/button.svelte";
   import ShortcutButton from "../components/shortcut-button/shortcut-button.svelte";
+
   import { SearchStore } from "../store/search-store";
+  import ShortcutUserButton from "../components/shortcut-button/shortcut-user-button.svelte";
 
   export let location;
 
@@ -152,32 +154,14 @@
       <!-- value={dayjs($PeopleStore.people[person].last).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD') ? 1 : 0} -->
       <div class="trackers n-grid">
         {#each state.people as person}
-          <ShortcutButton
-            compact
-            hideValue
-            moreIcon="chart"
-            on:more={() => {
-              Interact.openStats(`@${person}`);
-            }}
-            title={($PeopleStore.people[person] || {}).displayName}
-            subtitle={$PeopleStore.people[person].last ? dayjs($PeopleStore.people[person].last).fromNow() : 'no date'}
+          <ShortcutUserButton
+            person={$PeopleStore.people[person]}
             on:click={() => {
               personClicked(person);
-            }}>
-            <div slot="emoji">
-              {#if $PeopleStore.people[person] && $PeopleStore.people[person].avatar}
-                <AvatarBall
-                  size={42}
-                  avatar={$PeopleStore.people[person].avatar}
-                  style={`border-radius:32%; overflow:hidden; box-shadow:var(--box-shadow-tight)`} />
-              {:else if $PeopleStore.people[person] && $PeopleStore.people[person].displayName}
-                <AvatarBall
-                  size={42}
-                  username={$PeopleStore.people[person].displayName}
-                  style={`border-radius:32%; overflow:hidden; box-shadow:var(--box-shadow-tight)`} />
-              {/if}
-            </div>
-          </ShortcutButton>
+            }}
+            on:more={() => {
+              Interact.openStats(`@${person}`);
+            }} />
         {/each}
       </div>
 

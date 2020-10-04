@@ -30,9 +30,15 @@
     term = undefined;
   }
 
+  function close() {
+    clear();
+    SearchStore.close();
+  }
+
   function more(evt: CustomEvent) {
     const tracker: TrackerConfig = evt.detail;
     Interact.elementOptions(tracker.getTrackableElement());
+    close();
   }
   async function trackerTap(evt: CustomEvent) {
     const tracker: TrackerConfig = evt.detail;
@@ -42,12 +48,20 @@
         type: "trackers",
       })
     );
-    await Interact.trackerTap(tracker, $TrackerStore.trackers);
+    Interact.trackerTap(tracker, $TrackerStore.trackers);
+    close();
   }
 </script>
 
-<section class="n-panel stiff">
-  <SearchBar compact className="filler" searchTerm={term || ''} on:clear={clear} placeholder="Search Trackers..." on:change={change} />
+<section class="n-panel stiff pt-2">
+  <SearchBar
+    autofocus
+    compact
+    className="filler"
+    searchTerm={term || ''}
+    on:clear={clear}
+    placeholder="Search Trackers..."
+    on:change={change} />
 </section>
 {#if term}
   <section class="search-results trackers n-panel scroll-y column">

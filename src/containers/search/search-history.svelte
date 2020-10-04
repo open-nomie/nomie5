@@ -27,7 +27,7 @@
   }
 </script>
 
-<section class="n-panel stiff">
+<section class="n-panel stiff pt-2">
   <SearchBar
     compact
     className="filler"
