@@ -4,7 +4,7 @@
 
   // components
   import NText from "../../components/text/text.svelte";
-  import NCell from "../../components/cell/cell.svelte";
+
   import NIcon from "../../components/icon/icon.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NPoints from "../../components/points/points.svelte";

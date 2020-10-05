@@ -18,7 +18,6 @@
   //Components
   import NItem from "../components/list-item/list-item.svelte";
   import NIcon from "../components/icon/icon.svelte";
-  import NCell from "../components/cell/cell.svelte";
   import NPoints from "../components/points/points.svelte";
   import Button from "../components/button/button.svelte";
   import dayjs from "dayjs";

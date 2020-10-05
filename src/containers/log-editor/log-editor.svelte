@@ -18,7 +18,7 @@
   import AutoComplete from "../../components/auto-complete/auto-complete.svelte";
   import HScroller from "../../components/h-scroller/h-scroller.svelte";
   import NMap from "../../containers/map/map.svelte";
-  import NCell from "../../components/cell/cell.svelte";
+
   import NInput from "../../components/input/input.svelte";
   import NIcon from "../../components/icon/icon.svelte";
   import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
