@@ -1,34 +1,21 @@
 <script>
   import { onMount } from "svelte";
-  import AvatarBall from "../components/tracker-ball/ball.svelte";
-  import ButtonGroup from "../components/button-group/button-group.svelte";
-  import Dymoji from "../components/dymoji/dymoji.svelte";
-  import ItemBall from "../components/tracker-ball/item-ball.svelte";
   import NItem from "../components/list-item/list-item.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
+  import Text from "../components/text/text.svelte";
   import NIcon from "../components/icon/icon.svelte";
-  import PersonBall from "../components/tracker-ball/person-ball.svelte";
-  import NSearchBar from "../components/search-bar/search-bar.svelte";
+  import Button from "../components/button/button.svelte";
   import NLayout from "../containers/layout/layout.svelte";
-  import NTip from "../components/tip/tip.svelte";
-
-  import tick from "../utils/tick/tick";
-  import dayjs from "dayjs";
-
-  import Person from "../modules/person/person";
+  import ShortcutUserButton from "../components/shortcut-button/shortcut-user-button.svelte";
 
   import { Lang } from "../store/lang";
   import { PeopleStore } from "../store/people-store";
   import { Interact } from "../store/interact";
   import { LedgerStore } from "../store/ledger";
-  import Text from "../components/text/text.svelte";
-  import Button from "../components/button/button.svelte";
-  import ShortcutButton from "../components/shortcut-button/shortcut-button.svelte";
-
   import { SearchStore } from "../store/search-store";
-  import ShortcutUserButton from "../components/shortcut-button/shortcut-user-button.svelte";
 
-  export let location;
+  import dayjs from "dayjs";
+  export const location = undefined;
 
   let state = {
     people: [],

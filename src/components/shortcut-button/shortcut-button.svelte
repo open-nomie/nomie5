@@ -5,14 +5,14 @@
 
   import Button from "../button/button.svelte";
   import Icon from "../icon/icon.svelte";
-  import Text from "../text/text.svelte";
+  // import Text from "../text/text.svelte";
 
   export let title: string | undefined = undefined;
   export let subtitle: string | undefined = undefined;
   export let value: string | undefined = undefined;
   export let color: string | undefined = undefined;
   export let emoji: string | undefined = undefined;
-  export let titleSize: string = "sm";
+  // export let titleSize: string = "sm";
   export let taps: number = 0;
   export let hideMore: boolean = false;
   export let hideValue: boolean = false;

@@ -42,7 +42,7 @@
   import NextPrevCal from "../components/next-prev-cal/next-prev-cal.svelte";
   import { SearchStore } from "../store/search-store";
 
-  export let location;
+  export const location = undefined;
   export let style = undefined;
 
   let appTitle = null;

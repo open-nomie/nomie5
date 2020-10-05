@@ -4,7 +4,7 @@
   import Dashboard from "../containers/dashboard/dashboard.svelte";
   export const path = undefined;
   export const style = undefined;
-  export let location = undefined;
+  export const location = undefined;
 </script>
 
 <Dashboard />

@@ -1,7 +1,7 @@
 <script>
   import Board from "../containers/board/board.svelte";
-  export let location = "";
-  export let style = "";
+  export const location = undefined;
+  export const style = "";
 </script>
 
 <Board />

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import buttonView from "./n-icons/button-view.svelte";
+  import detailView from "./n-icons/detail-view.svelte";
   import RadioButtonChecked24 from "carbon-icons-svelte/lib/RadioButtonChecked24";
   import Shuffle24 from "carbon-icons-svelte/lib/Shuffle24";
   import RadioButton24 from "carbon-icons-svelte/lib/RadioButton24";
@@ -52,9 +54,6 @@
     Eye,
     EyeOff,
   } from "svelte-hero-icons";
-
-  import buttonView from "./n-icons/button-view.svelte";
-  import detailView from "./n-icons/detail-view.svelte";
 
   export let name = "add";
   export let style = undefined;
