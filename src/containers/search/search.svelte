@@ -73,7 +73,7 @@
           <Icon name="close" />
         </Button>
       </div>
-      <div class="filler btn-group compact px-2">
+      <div class="filler btn-group compact px-2" style="box-shadow:none;">
         <Button
           size="sm"
           on:click={() => {

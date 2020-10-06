@@ -17,9 +17,11 @@
 
   $: if ($SearchStore.saved.length || $SearchStore.view) {
     // Get SavedTerms array
-    savedTerms = $SearchStore.saved.filter((st: SearchTerm) => {
-      return st.type === $SearchStore.view;
-    });
+    savedTerms = $SearchStore.saved
+      .filter((st: SearchTerm) => {
+        return st.type === $SearchStore.view;
+      })
+      .reverse();
 
     if ($SearchStore.view === "trackers") {
       savedTrackers = savedTerms.map((searchTerm: SearchTerm) => {
