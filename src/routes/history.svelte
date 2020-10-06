@@ -417,27 +417,6 @@
               methods.textClick(event);
             }} />
         {/each}
-
-        <!--
-          on:trackerClick={(event) => {
-              methods.trackerTapped(event.detail.tracker, log);
-            }}
-            on:personClick={(event) => {
-              methods.personTapped(event.detail.person, log);
-            }}
-            on:contextClick={(event) => {
-              methods.contextTapped(event.detail.context, log);
-            }}
-            
-            on:moreClick={(event) => {
-              Interact.logOptions(log).then(() => {});
-            }} 
-        -->
-
-        <!--
-          Search Results
-          If Search Mode and We have Logs
-        -->
       {/if}
 
     </div>

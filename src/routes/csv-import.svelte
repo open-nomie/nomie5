@@ -7,7 +7,6 @@
   import CSVRImport from "../modules/csvr/csvr-import";
   import type { IImportConfig } from "../modules/csvr/csvr-import";
   import Layout from "../containers/layout/layout.svelte";
-  import BackButton from "../components/back-button/back-button.svelte";
   import ListItem from "../components/list-item/list-item.svelte";
   import FileUploader from "../components/file-uploader/file-uploader.svelte";
   import Input from "../components/input/input.svelte";
@@ -23,8 +22,6 @@
   import ListItemLog from "../components/list-item-log/list-item-log.svelte";
   import NextPrevCal from "../components/next-prev-cal/next-prev-cal.svelte";
   import type NLog from "../modules/nomie-log/nomie-log";
-  import Alertbox from "../components/alertbox/alertbox.svelte";
-  import Importer from "../modules/import/import";
   import ImportLoader from "../modules/import/import-loader";
   import ToggleSwitch from "../components/toggle-switch/toggle-switch.svelte";
   import dayjs from "dayjs";
