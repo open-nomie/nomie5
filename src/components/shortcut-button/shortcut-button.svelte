@@ -122,12 +122,14 @@
     }
 
     .emoji {
-      font-size: 40px;
-      line-height: 40px;
+      font-size: 2rem;
+      line-height: 100%;
       text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.23);
       letter-spacing: -6px;
       color: var(--color-inverse);
       white-space: nowrap;
+      width: 100%;
+      text-align: left;
     }
 
     &.no-value {
@@ -172,6 +174,7 @@
       z-index: 10;
       flex-grow: 0;
       flex-shrink: 0;
+      width: 100%;
     }
 
     button.more {
