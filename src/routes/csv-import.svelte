@@ -339,7 +339,7 @@
             }} />
         </ListItem>
         <ListItem bg="transparent">
-          <Text size="sm" faded>Select any CSV to begin. You can then map the apporpirate fields</Text>
+          <Text size="sm" faded>Select any CSV to begin. You can then map the appropriate fields</Text>
         </ListItem>
 
         <ListItem itemDivider compact className="bg-transparent">
