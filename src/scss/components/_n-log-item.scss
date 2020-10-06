@@ -2,14 +2,20 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-
+  align-items: center;
   justify-content: flex-start;
   padding: 0 6px;
   button {
-    width: calc(50% - 1px);
-    min-height: 70px;
+    // margin-right: 4px;
+    margin-bottom: 4px;
+    padding: 6px;
+    width: calc(50% - 5px);
+    min-height: 50px;
     @include media-breakpoint-up(md) {
       width: calc(25% - 1px);
+    }
+    @include media-breakpoint-up(lg) {
+      width: calc(20% - 1px);
     }
   }
 }
@@ -17,8 +23,7 @@
 .n-tracker-value-grid-button {
   justify-content: flex-start;
   // box-shadow: var(--box-shadow-float);
-  padding: 0 0 0;
-  min-height: 50px;
+  padding: 6px;
 
   &:active {
     background-color: var(--color-solid-1);
@@ -32,12 +37,15 @@
   }
 
   .emoji {
-    font-size: 40px;
-    width: 60px;
+    font-size: 2rem;
+    min-width: 40px;
+    max-width: 67px;
     line-height: 20px;
     flex-shrink: 0;
-    letter-spacing: -24px;
-    padding-right: 24px;
+    letter-spacing: -6px;
+    padding-right: 20px;
+    white-space: nowrap;
+    display: inline-block;
   }
   &.truncate {
     .label {

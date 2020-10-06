@@ -7036,19 +7036,24 @@ aside.n-panel {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-start;
   padding: 0 6px; }
   .tracker-grid button {
-    width: calc(50% - 1px);
-    min-height: 70px; }
+    margin-bottom: 4px;
+    padding: 6px;
+    width: calc(50% - 5px);
+    min-height: 50px; }
     @media (min-width: 600px) {
       .tracker-grid button {
         width: calc(25% - 1px); } }
+    @media (min-width: 980px) {
+      .tracker-grid button {
+        width: calc(20% - 1px); } }
 
 .n-tracker-value-grid-button {
   justify-content: flex-start;
-  padding: 0 0 0;
-  min-height: 50px; }
+  padding: 6px; }
   .n-tracker-value-grid-button:active {
     background-color: var(--color-solid-1); }
   .n-tracker-value-grid-button.solo {
@@ -7057,12 +7062,15 @@ aside.n-panel {
     padding: 4px 12px 6px 0px;
     margin: 4px; }
   .n-tracker-value-grid-button .emoji {
-    font-size: 40px;
-    width: 60px;
+    font-size: 2rem;
+    min-width: 40px;
+    max-width: 67px;
     line-height: 20px;
     flex-shrink: 0;
-    letter-spacing: -24px;
-    padding-right: 24px; }
+    letter-spacing: -6px;
+    padding-right: 20px;
+    white-space: nowrap;
+    display: inline-block; }
   .n-tracker-value-grid-button.truncate .label {
     max-width: calc(100% - 1px);
     display: -webkit-box;

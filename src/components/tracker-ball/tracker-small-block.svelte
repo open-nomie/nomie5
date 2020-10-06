@@ -49,7 +49,7 @@
     {#if hasEmojiSlot}
       <slot name="emoji" />
     {:else if element.type == 'tracker'}
-      <span class="emoji" style={`color:${(element.obj || {}).color || '#CCC'}`}>{(element.obj || {}).emoji || '⚪️'}</span>
+      <div class="emoji" style={`color:${(element.obj || {}).color || '#CCC'}`}>{(element.obj || {}).emoji || '⚪️'}</div>
     {:else if element.type == 'person'}
       {#if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].avatar}
         <AvatarBall
