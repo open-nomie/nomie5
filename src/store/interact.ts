@@ -372,7 +372,7 @@ const interactInit = () => {
         {
           title: `Search for ${tracker ? tracker.label : trackableElement.raw}`,
           click: () => {
-            SearchStore.search(trackableElement.prefix + trackableElement.id);
+            SearchStore.search(trackableElement.prefix + trackableElement.id, "history");
           },
         },
       ];

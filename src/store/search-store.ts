@@ -79,6 +79,7 @@ const SearchStoreInit = () => {
     view(view: SearchModes) {
       update((state) => {
         state.view = view;
+        state.active = undefined;
         state.show = true;
         return state;
       });
@@ -95,14 +96,17 @@ const SearchStoreInit = () => {
         return state;
       });
     },
-    search(term: string) {
+    search(term: string, view: SearchModes = "history") {
       update((state) => {
+        if (view) {
+          state.view = view;
+        }
         state.active = new SearchTerm(term);
         state.active.type = state.view;
         state = saveTerm(state, state.active);
         return state;
       });
-      navigate(NPaths.routes.search());
+      // navigate(NPaths.routes.search());
     },
     setActiveTerm(searchTerm?: SearchTerm) {
       update((state) => {
