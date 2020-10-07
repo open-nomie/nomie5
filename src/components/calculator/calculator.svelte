@@ -179,21 +179,6 @@
     .buttons {
       grid-template-columns: 25% 25% 25% 25%;
       grid-template-rows: 60px 60px;
-      .btn {
-        width: 100%;
-        font-weight: 600;
-        height: 45px;
-      }
-    }
-  }
-  @include media-breakpoint-up(sm) {
-    .buttons {
-      grid-template-columns: 80px 80px 80px 80px;
-      grid-template-rows: 80px 80px;
-      .btn {
-        width: 75px;
-        height: 75px;
-      }
     }
   }
 
@@ -256,9 +241,14 @@
     margin: 4px;
     border-radius: 50%;
     line-height: 100%;
-    width: 64px;
-    height: 64px;
+    width: 62px;
+    height: 62px;
     font-size: 26px;
+    @include media-breakpoint-down(xs) {
+      height: 50px;
+      width: 50px;
+      font-size: 20px;
+    }
   }
   :global(.n-calculator .btn.r-0) {
     color: var(--color-inverse-1);

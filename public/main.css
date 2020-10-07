@@ -7126,7 +7126,7 @@ aside.n-panel {
     padding: 4px 6px; }
   .n-item-log .n-note-textualized {
     padding: 16px !important;
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 136%; }
   .n-item-log .trackers-list {
     border-top: solid 1px var(--color-solid-1); }

@@ -67,22 +67,6 @@
     background-color: var(--color-red);
     border-radius: 3px;
   }
-
-  // :global(#app-tabs a svg) {
-  //   height: 24px !important;
-  //   width: 24px !important;
-  //   margin-bottom: 3px;
-  // }
-
-  // :global(#app-tabs a[aria-current="page"] svg) {
-  //   stroke: var(--color-primary-bright) !important;
-  //   transform: scale(1.1);
-  //   transition: all 0.2s ease-in-out;
-  // }
-
-  // :global(#app-tabs a[aria-current="page"] svg .fill) {
-  //   stroke: var(--color-primary-bright) !important;
-  // }
 </style>
 
 {#if state.mounted}

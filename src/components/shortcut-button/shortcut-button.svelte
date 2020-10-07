@@ -30,6 +30,18 @@
 <style lang="scss">
   @import "../../scss/utils/_utils";
 
+  @mixin generateLabelSizes($base) {
+    .title {
+      font-size: $base * 0.8;
+    }
+    .value {
+      font-size: $base;
+    }
+    .subtitle {
+      font-size: $base * 0.7;
+    }
+  }
+
   :global(.shortcut-button) {
     flex-grow: 1;
     flex-shrink: 0;
@@ -40,14 +52,12 @@
     padding: 14px 14px 6px 14px;
     box-shadow: var(--box-shadow-float) !important;
     overflow: hidden;
-
     transition: all 0.2s ease-in-out;
-
     position: relative;
     color: var(--color-inverse-2);
 
     .title {
-      font-weight: 500;
+      font-weight: 600;
     }
     .title,
     .subtitle,
@@ -70,55 +80,33 @@
       box-shadow: var(--box-shadow-tight) !important;
     }
 
+    @include generateLabelSizes(1.1rem);
+
     &.compact {
       .emoji {
         font-size: 30px;
         line-height: 100%;
       }
-      .title {
-        font-size: 0.8rem !important;
+      @include generateLabelSizes(0.96rem);
+      height: 124px;
+      .highlight {
+        display: none;
       }
-      .value {
-        font-size: medium !important;
-      }
-      .subtitle {
-        font-size: x-small !important;
-      }
-      height: 120px;
     }
 
     @include media-breakpoint-down(xs) {
-      padding: 12px 12px 4px 12px;
     }
 
     @include media-breakpoint-down(sm) {
       width: calc(33% - 12px);
       min-width: calc(33% - 12px);
       max-width: calc(33% - 12px);
-      .title {
-        font-size: 0.8rem !important;
-      }
-      .value {
-        font-size: large;
-      }
-      .subtitle {
-        font-size: small !important;
-      }
     }
 
     @include media-breakpoint-up(md) {
       width: 150px;
       min-width: 150px;
       max-width: 150px;
-      .title {
-        font-size: medium !important;
-      }
-      .value {
-        font-size: large;
-      }
-      .subtitle {
-        font-size: small !important;
-      }
     }
 
     .emoji {
@@ -130,9 +118,6 @@
       white-space: nowrap;
       width: 100%;
       text-align: left;
-    }
-
-    &.no-value {
     }
 
     &:before {
@@ -282,13 +267,13 @@
   <slot />
   <div class="bottom w-100 text-left" style="padding-bottom:6px;">
     {#if title}
-      <div class="title" style="margin-bottom:4px">{title}</div>
+      <div class="title">{title}</div>
     {/if}
     {#if value && !hideValue}
-      <div class="value" style="margin-bottom:4px">{value}</div>
+      <div class="value">{value}</div>
     {/if}
     {#if subtitle}
-      <div class="subtitle" style="opacity:0.6; margin-bottom:4px;">{subtitle}</div>
+      <div class="subtitle truncate" style="opacity:0.6;">{subtitle}</div>
     {/if}
     <slot name="subtitle" class="what" />
   </div>

@@ -47,29 +47,29 @@
     }
 
     &.xxs {
-      font-size: xx-small;
+      font-size: 0.6rem;
     }
     &.xs {
-      font-size: x-small;
+      font-size: 0.7rem;
     }
     &.sm {
-      font-size: small;
+      font-size: 0.85rem;
     }
     &.md {
-      font-size: medium;
+      font-size: 1rem;
     }
     &.lg {
-      font-size: large;
+      font-size: 1.15rem;
     }
 
     &.faded {
       opacity: 0.6;
     }
     &.xl {
-      font-size: x-large;
+      font-size: 1.3rem;
     }
     &.xxl {
-      font-size: xx-large;
+      font-size: 1.45rem;
     }
     &.font-weight-bold {
       font-weight: bold;
