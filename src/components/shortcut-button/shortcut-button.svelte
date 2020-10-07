@@ -159,23 +159,23 @@
     }
 
     .bottom {
+      position: relative;
+      z-index: 10;
       display: flex;
       flex-direction: column;
-      flex-grow: 0;
-      flex-shrink: 0;
+      flex-grow: 1;
+      flex-shrink: 1;
       justify-content: flex-end;
       padding-bottom: 6px;
-      position: relative;
       width: 100%;
-      z-index: 10;
     }
 
     .top {
+      position: relative;
+      z-index: 10;
       flex-grow: 0;
       flex-shrink: 0;
-      position: relative;
       width: 100%;
-      z-index: 10;
     }
 
     button.more {
