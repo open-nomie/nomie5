@@ -4941,10 +4941,10 @@ button:focus {
 
 .btn-sm, .btn-group-sm > .btn {
   border-radius: 6pt !important;
-  font-size: small; }
+  font-size: medium; }
 
 .btn-xs {
-  font-size: x-small;
+  font-size: small;
   padding: 2px 10px;
   text-transform: uppercase;
   font-weight: bold; }
