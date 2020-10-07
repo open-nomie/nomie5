@@ -50,10 +50,6 @@
       on:textClick={(event) => {
         Interact.elementOptions(event.detail);
       }}
-      on:trackerClick={(event) => {
-        console.log(event.detail);
-        Interact.elementOptions(event.detail);
-      }}
       on:moreClick={(event) => {
         Interact.logOptions(event.detail).then(() => {});
       }} />
