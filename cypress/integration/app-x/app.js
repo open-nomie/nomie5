@@ -184,44 +184,75 @@ context("App", () => {
     });
   };
 
-  const testPin = () => {
+  const testPin = (shouldBeValid = true) => {
     cy.get(".tab-Settings").click();
     cy.wait(1000);
-    cy.get(".features [name=onoffswitch]").eq(3).type("true", { force: true });
+    cy.get(".features .toggle-pin-button").click();
     cy.wait(1000);
-    cy.get(".slot-holder > .form-control").type(1234);
-    cy.wait(600);
-    cy.get(".visible > .alert-dialog-window > .p-1 > .btn-primary").click();
 
-    // Bad Pin
-    cy.wait(1000);
-    cy.get(".keypad > :nth-child(2)").click();
-    cy.wait(100);
-    cy.get(".keypad > :nth-child(1)").click();
-    cy.wait(100);
-    cy.get(".keypad > :nth-child(3)").click();
-    cy.wait(100);
-    cy.get(".keypad > :nth-child(4)").click();
-    cy.wait(100);
-    cy.get(".keypad > :nth-child(12)").click();
-    cy.wait(1000);
-    cy.get(".alert-dialog.visible > .alert-dialog-window > .p-1 > .btn").click();
-    cy.wait(300);
+    cy.get('.keypad > :nth-child(1)').click();
+    cy.get('.keypad > :nth-child(2)').click();
+    cy.get('.keypad > :nth-child(3)').click();
+    cy.get('.keypad > :nth-child(5)').click();
+    // submit 
+    cy.get('.keypad > :nth-child(12)').click();
+    cy.wait(400);
+    /// CONFIRM INCORRECTLY 
+    cy.get('.keypad > :nth-child(1)').click();
+    cy.get('.keypad > :nth-child(2)').click();
+    cy.get('.keypad > :nth-child(3)').click();
 
-    // Good Pin
-    cy.wait(1000);
-    cy.get(".keypad > :nth-child(1)").click();
-    cy.wait(100);
-    cy.get(".keypad > :nth-child(2)").click();
-    cy.wait(100);
-    cy.get(".keypad > :nth-child(3)").click();
-    cy.wait(100);
-    cy.get(".keypad > :nth-child(4)").click();
-    cy.wait(100);
-    cy.get(".keypad > :nth-child(12)").click();
+    if(shouldBeValid) {
+      cy.get('.keypad > :nth-child(5)').click();
+    } else {
+      cy.get('.keypad > :nth-child(4)').click();
+    }
 
-    cy.wait(500);
-    cy.get(".tab-Track").click();
+    // submit 
+    cy.get('.keypad > :nth-child(12)').click();
+    cy.wait(400);
+
+    if(!shouldBeValid) {
+      cy.get('.visible > .alert-dialog-window > .p-1 > .btn').click();  
+    } else {
+      cy.get(".features .toggle-pin-button").then(node=>{
+        expect(node).to.contain('Disable');
+      });
+    }
+
+    // cy.get(".slot-holder > .form-control").type(1234);
+    // cy.wait(600);
+    // cy.get(".visible > .alert-dialog-window > .p-1 > .btn-primary").click();
+
+    // // Bad Pin
+    // cy.wait(1000);
+    // cy.get(".keypad > :nth-child(2)").click();
+    // cy.wait(100);
+    // cy.get(".keypad > :nth-child(1)").click();
+    // cy.wait(100);
+    // cy.get(".keypad > :nth-child(3)").click();
+    // cy.wait(100);
+    // cy.get(".keypad > :nth-child(4)").click();
+    // cy.wait(100);
+    // cy.get(".keypad > :nth-child(12)").click();
+    // cy.wait(1000);
+    // cy.get(".alert-dialog.visible > .alert-dialog-window > .p-1 > .btn").click();
+    // cy.wait(300);
+
+    // // Good Pin
+    // cy.wait(1000);
+    // cy.get(".keypad > :nth-child(1)").click();
+    // cy.wait(100);
+    // cy.get(".keypad > :nth-child(2)").click();
+    // cy.wait(100);
+    // cy.get(".keypad > :nth-child(3)").click();
+    // cy.wait(100);
+    // cy.get(".keypad > :nth-child(4)").click();
+    // cy.wait(100);
+    // cy.get(".keypad > :nth-child(12)").click();
+
+    // cy.wait(500);
+    // cy.get(".tab-Track").click();
   };
 
   const initBasic = () => {
@@ -277,12 +308,15 @@ context("App", () => {
     cy.wait(100);
     cy.get(".visible > .alert-dialog-window > .p-1 > .btn-primary").click();
     cy.wait(100);
+
     // Click Add Button
-    cy.get(".btn-group.mr-1").click();
+    cy.get(".tracker-add").click();
     cy.wait(300);
-    cy.get(".pop-menu button").eq(1).click();
+    cy.get(".pop-menu button").eq(0).click();
     cy.wait(400);
-    cy.get(".tracker-selector-modal .n-item").eq(0).click();
+    cy.get('.tracker-selector-modal .select-item').eq(1).click();
+    cy.wait(400);
+    cy.get('.tracker-selector-modal .select-item').eq(2).click();
     cy.wait(400);
     cy.get(".n-row > .btn-primary").click();
     // cy.wait(400);
@@ -290,7 +324,7 @@ context("App", () => {
     //   expect(node.text()).to.contain("Drank Water");
     // });
     cy.wait(500);
-    cy.get(".board-all").click();
+    // cy.get(".board-all").click();
   };
 
   const createTracker = (options={})=>{
@@ -429,12 +463,11 @@ context("App", () => {
     { it: "Should properly track using the tracker buttons", run: useTrackers },
     { it: "should test adding a tab", run: testTabs },
     { it: "should delete a tracker", run: testDeleteingTracker },
-    // { it: "should create a multi tracker", run: createMultiTracker },
-    { it: "should test the PIN", run: testPin },
+    { it: "should test a bad pin PIN", run: ()=>{ testPin(false) } },
+    { it: "should test a good pin PIN", run: ()=>{ testPin(true) } },
     { it: "should be able to create a log via a note", run: testCaptureForm },
     { it: "Should properly test the tips", run: testTips },
     { it: "Should properly handle adding a person via a note", run: testPerson },
-    // { it: "should create a simple tracker", run: createSimpleTracker },
     { it: "should test the dashboard", run: testDashboard },
     { it: "should have all the things in history", run: testHistory },
   ];

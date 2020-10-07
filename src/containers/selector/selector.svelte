@@ -163,7 +163,7 @@
           {/if}
           <NItem
             clickable
-            className="bottom-line"
+            className="bottom-line select-item"
             title={item.label}
             on:dbltap={() => {
               onDoubleTap(item);
@@ -193,7 +193,7 @@
           {/if}
           <NItem
             clickable
-            className="bottom-line {state.selected.indexOf(person) > -1 ? 'bg-selected' : ''}"
+            className="select-item bottom-line {state.selected.indexOf(person) > -1 ? 'bg-selected' : ''}"
             title={person.displayName}
             on:click={() => {
               methods.toggle(person);
@@ -219,7 +219,7 @@
           {/if}
           <NItem
             clickable
-            className="bottom-line {state.selected.indexOf(context) > -1 ? 'bg-selected' : ''}"
+            className="select-item bottom-line {state.selected.indexOf(context) > -1 ? 'bg-selected' : ''}"
             title={'+' + context}
             on:click={() => {
               methods.toggle(context);
