@@ -20,6 +20,7 @@
   import { Lang } from "../../store/lang";
   import ToggleSwitch from "../toggle-switch/toggle-switch.svelte";
   import Text from "../text/text.svelte";
+  import MassEditor from "../../containers/mass-editor/mass-editor.svelte";
 
   const state = {
     title: "File Browser",
@@ -31,6 +32,7 @@
     file: null,
     loading: true,
     edit: false,
+    showMassEditor: false,
   };
 
   let fileContent;
@@ -354,6 +356,17 @@
             <ToggleSwitch bind:value={$UserStore.meta.canEditFiles} on:change={UserStore.saveMeta} />
           </div>
         </NItem>
+        {#if $UserStore.meta.canEditFiles}
+          <hr class="divider center" />
+          <NItem
+            className="bg-transparent"
+            title="{Lang.t('settings.find-and-replace')}..."
+            on:click={() => {
+              state.showMassEditor = true;
+            }}>
+            <span slot="left">🕵️‍♂️</span>
+          </NItem>
+        {/if}
       </div>
     </div>
   </NLayout>
@@ -426,4 +439,12 @@
       {/if}
     </div>
   </NLayout>
+{/if}
+
+{#if state.showMassEditor}
+  <MassEditor
+    on:close={() => {
+      state.showMassEditor = false;
+    }}
+    show={state.showMassEditor} />
 {/if}

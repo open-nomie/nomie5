@@ -130,7 +130,8 @@ export default {
             You should export your data first, then import it once the switch is complete. 
             You can always switch back`,
       "switch-to-local-confirm": "Switch to Local?",
-      "pin-details": "Enter 1 to 6 digit pin",
+      "pin-details": "Set your Pin",
+      "pin-requirements": "Between 1 and 6 digits",
       "aggressive-sync": "Aggressive Sync",
       "aggressive-description": `Using Nomie on multiple devices? Enable Aggressive Sync
             to sync more frequently`,

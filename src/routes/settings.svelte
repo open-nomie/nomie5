@@ -90,9 +90,7 @@
     sign_in() {
       UserStore.redirectToSignIn();
     },
-    closeMassEditor() {
-      data.showMassEditor = false;
-    },
+
     bookAge(date) {
       return dayjs(`${date}-01`).fromNow();
     },
@@ -249,6 +247,43 @@ Note: Your data will not automatically move over. You'll first need to export it
               DATA VIEW
               *******************************************
             -->
+            <div class="n-list">
+              <NItem itemDivider>Storage Location</NItem>
+              <NItem on:click={methods.storageMenu}>
+                <span slot="left">☁️</span>
+                <Text>
+                  {#if $UserStore.storageType === 'local'}
+                    This device only
+                  {:else if $UserStore.storageType === 'pouchdb'}
+                    {Lang.t('storage.pouchdb', 'Local + CouchDB')}
+                  {:else if $UserStore.storageType === 'blockstack'}{Lang.t('storage.blockstack', 'Blockstack')}{/if}
+                </Text>
+                <div slot="right">
+                  <Text size="sm" className="text-primary-bright">Change</Text>
+                </div>
+              </NItem>
+
+              {#if $UserStore.storageType === 'blockstack'}
+                <BlockstackOptions />
+              {/if}
+              {#if $UserStore.storageType === 'local'}
+                <LocalstorageOptions />
+              {/if}
+              {#if $UserStore.storageType === 'pouchdb'}
+                <PouchDBOptions />
+              {/if}
+              <hr class="divider center" />
+              <NItem
+                detail
+                title="Browse Files..."
+                on:click={() => {
+                  navigate('/files');
+                }}>
+                <span slot="left">📂</span>
+              </NItem>
+
+            </div>
+
             <div class="n-list pb-2">
               <NItem itemDivider>Import Data</NItem>
               <NItem clickable title={Lang.t('settings.nomie-api')} on:click={() => navigate('/api')}>
@@ -285,51 +320,6 @@ Note: Your data will not automatically move over. You'll first need to export it
               <NItem detail title={Lang.t('settings.generate-csv')} to="/settings/export/csv">
                 <span slot="left">📃</span>
               </NItem>
-            </div>
-            <div class="n-list pb-2">
-              <NItem itemDivider>Storage Location</NItem>
-              <NItem on:click={methods.storageMenu}>
-                <span slot="left">☁️</span>
-                {#if $UserStore.storageType === 'local'}
-                  This device only
-                {:else if $UserStore.storageType === 'pouchdb'}
-                  {Lang.t('storage.pouchdb', 'Local + CouchDB')}
-                {:else if $UserStore.storageType === 'blockstack'}{Lang.t('storage.blockstack', 'Blockstack')}{/if}
-                <div slot="right">
-                  <Text size="sm" className="text-primary-bright">Change</Text>
-                </div>
-              </NItem>
-
-              {#if $UserStore.storageType === 'blockstack'}
-                <BlockstackOptions />
-              {/if}
-              {#if $UserStore.storageType === 'local'}
-                <LocalstorageOptions />
-              {/if}
-              {#if $UserStore.storageType === 'pouchdb'}
-                <PouchDBOptions />
-              {/if}
-            </div>
-            <div class="n-list pb-2">
-              <NItem itemDivider>Data Management</NItem>
-              <NItem
-                detail
-                title="Browse Files..."
-                on:click={() => {
-                  navigate('/files');
-                }}>
-                <span slot="left">📂</span>
-              </NItem>
-
-              <NItem
-                detail
-                title="{Lang.t('settings.find-and-replace')}..."
-                on:click={() => {
-                  data.showMassEditor = true;
-                }}>
-                <span slot="left">🕵️‍♂️</span>
-              </NItem>
-
             </div>
 
             <!-- <div class="n-list solo my-2">
@@ -465,8 +455,6 @@ Note: Your data will not automatically move over. You'll first need to export it
   <!-- end content slot-->
 
 </NLayout>
-
-<MassEditor on:close={methods.closeMassEditor} show={data.showMassEditor} />
 
 {#if showImporter}
   <ImporterModal on:dismiss={() => (showImporter = false)} />
