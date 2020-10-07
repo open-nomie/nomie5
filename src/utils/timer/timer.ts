@@ -12,12 +12,14 @@ export default class Timer {
       this.started = new Date().getTime();
       console.log(`⏱ 🟢 ${this.name} - Started`);
     }
+    return this;
   }
 
   check(name) {
     if (this.display) {
       console.log(`⏱ ✅ ${this.name}: ${name} - ${new Date().getTime() - this.started}ms`);
     }
+    return this;
   }
 
   done() {

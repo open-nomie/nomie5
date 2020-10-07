@@ -47,6 +47,7 @@ import { ActiveLogStore } from "./active-log";
 import { init } from "i18next";
 import type TrackerConfig from "../modules/tracker/tracker";
 import type { ITrackers } from "../modules/import/import";
+import Timer from "../utils/timer/timer";
 
 const console = new Logger("✋ Interact");
 
@@ -344,16 +345,24 @@ const interactInit = () => {
       Interact.openShareImage(log);
     },
 
-    async trackerTap(tracker: TrackerConfig, trackers: ITrackers) {
+    async trackerTap(tracker: TrackerConfig, trackers: ITrackers): Promise<any> {
+      // let timer = new Timer("saving", true).start();
+      // timer.check("Tracker Tap Complete");
       let inputer = new TrackerInputer(tracker, trackers);
       let note = await inputer.getElements();
+      // timer.check(`Awaited inputer.getElements()`);
       if (note.length) {
         ActiveLogStore.addElement(note.join(" "));
         if (inputer.lastAction == "save" || tracker.one_tap) {
+          // timer.check("🎟 Start the saving of note = call ledger save log");
           await LedgerStore.saveLog(ActiveLogStore.asLog());
+          // timer.check("🎟 Save log is good. call ca");
           await ActiveLogStore.clear();
+          // timer.check("🎟  Done waiting");
+          return note;
         }
       }
+      // timer.done();
       return note;
     },
 

@@ -398,18 +398,10 @@ context("App", () => {
     
   }
 
-
-
   const goHome = async () => {
     return cy.get(".tab-Track").click();
   };
 
-//   tick
-// value
-// range
-// picker
-// timer
-// note
 
   const tests = [
     {
