@@ -44,7 +44,7 @@
   //   placeholder = `${Lang.t("general.search", "Search")} ${_.capitalize(view)}...`;
   // };
 
-  $: if ($SearchStore.view) {
+  $: if ($SearchStore.view && $SearchStore.show === true) {
     console.log("Search setting view");
     placeholder = `${Lang.t("general.search", "Search")} ${_.capitalize($SearchStore.view)}...`;
     // setView(view);
@@ -103,14 +103,14 @@
     </nav>
   </div>
   <main>
-    {#if $SearchStore.view === 'history'}
+    {#if $SearchStore.view === 'history' && $SearchStore.show}
       <SearchHistory term={($SearchStore.active || {}).term} />
-    {:else if $SearchStore.view === 'trackers'}
+    {:else if $SearchStore.view === 'trackers' && $SearchStore.show}
       <SearchTrackers term={($SearchStore.active || {}).term} />
-    {:else if $SearchStore.view === 'people'}
+    {:else if $SearchStore.view === 'people' && $SearchStore.show}
       <SearchPeople term={($SearchStore.active || {}).term} />
     {/if}
-    {#if !$SearchStore.active}
+    {#if !$SearchStore.active && $SearchStore.show}
       <SearchRecent />
     {/if}
   </main>
