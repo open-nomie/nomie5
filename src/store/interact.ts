@@ -84,6 +84,12 @@ const interactInit = () => {
       show: false,
       message: null,
     },
+    pin: {
+      title: "Enter Pin",
+      canClose: false,
+      show: false,
+      onPin: (v: string) => {},
+    },
     streak: {
       show: null,
     },
@@ -434,6 +440,31 @@ const interactInit = () => {
         s.selector.multiple = false;
         s.selector.onInteract = null;
         return s;
+      });
+    },
+    cancelPin() {
+      setTimeout(() => {
+        update((state) => {
+          state.pin.show = false;
+          state.pin.onPin = (v: string) => {};
+          state.pin.canClose = false;
+          state.pin.title = "Enter Pin";
+          return state;
+        });
+      }, 200);
+    },
+    inputPin(title?: string, canClose: boolean = false): Promise<string> {
+      return new Promise((resolve) => {
+        update((state) => {
+          state.pin.show = true;
+          state.pin.title = title || state.pin.title;
+          state.pin.canClose = canClose;
+          state.pin.onPin = (value: string) => {
+            resolve(value);
+            methods.cancelPin();
+          };
+          return state;
+        });
       });
     },
     async selectDate(starterDate: Date = new Date()) {

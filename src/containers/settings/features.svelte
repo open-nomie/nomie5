@@ -7,33 +7,72 @@
   import { UserStore } from "../../store/user-store";
   import { Interact } from "../../store/interact";
   import nid from "../../modules/nid/nid";
+  import tick from "../../utils/tick/tick";
+  import { onMount } from "svelte";
+  import Button from "../../components/button/button.svelte";
+
+  let hasPin: boolean = false;
+
+  $: if (($UserStore.meta.access_pin || "").length) {
+    hasPin = true;
+  }
+
+  onMount(() => {
+    if ($UserStore.meta.access_pin) {
+      hasPin = true;
+    }
+  });
 
   let methods = {
     settingChange() {
       UserStore.saveMeta();
     },
-    async lockToggle(change) {
-      let shouldLock = change.detail;
 
-      if (shouldLock === true) {
-        let pin: any = await Interact.prompt(Lang.t("settings.pin-details"), null, {
-          value: "",
-          valueType: "number",
-        });
-
-        if (!pin) {
-          $UserStore.meta.lock = false;
-          $UserStore.meta.access_pin = null;
-          UserStore.saveMeta();
+    async getNewPin(): Promise<string | undefined> {
+      let pin: any = await Interact.inputPin(Lang.t("settings.pin-details"), true);
+      if (pin) {
+        await tick(300);
+        let confirmPin: any = await Interact.inputPin(Lang.t("settings.confirm-pin", "Confirm Pin"), true);
+        if (!confirmPin) {
+          return undefined;
+        } else if (pin == confirmPin) {
+          return pin;
         } else {
-          $UserStore.meta.lock = true;
-          $UserStore.meta.access_pin = nid(`${pin}`.trim());
-          UserStore.saveMeta();
+          Interact.error(Lang.t("settings.pins-do-not-match", "Pins do not match"));
+          return undefined;
+        }
+      }
+    },
+
+    async lockToggle(change) {
+      await tick(100);
+      let shouldLock = change;
+      if (shouldLock === true) {
+        hasPin = false;
+        console.log("Setting has Pin to false");
+        let pin: any = await methods.getNewPin();
+        if (!pin) {
+          console.log("no pin set to false");
+          UserStore.saveMeta({
+            lock: false,
+            access_pin: null,
+          });
+        } else {
+          console.log("has pin, set to tru", pin);
+          UserStore.saveMeta({
+            lock: true,
+            access_pin: pin,
+          });
         }
       } else {
-        $UserStore.meta.lock = false;
-        $UserStore.meta.access_pin = null;
-        UserStore.saveMeta();
+        let confirmDisable = await Interact.confirm("Disable Pin?");
+        if (confirmDisable) {
+          UserStore.saveMeta({
+            lock: false,
+            access_pin: null,
+          });
+          hasPin = false;
+        }
       }
     },
   };
@@ -73,7 +112,28 @@
   <!-- Pin Code -->
   <ListItem title={Lang.t('settings.require-pin')} description="Require a pin to launch Nomie. Don't forget it!">
     <div slot="right" class="ml-2">
-      <ToggleSwitch value={$UserStore.meta.lock} on:change={methods.lockToggle} />
+      {#if hasPin}
+        <Button
+          className="toggle-pin-button"
+          size="sm"
+          color="danger"
+          on:click={() => {
+            methods.lockToggle(false);
+          }}>
+          {Lang.t('general.disable', 'Disable')}
+        </Button>
+      {:else}
+        <Button
+          className="toggle-pin-button"
+          size="sm"
+          on:click={() => {
+            methods.lockToggle(true);
+          }}>
+          {Lang.t('settings.set-pin', 'Set Pin')}
+        </Button>
+      {/if}
+      <!-- <ToggleSwitch value={hasPin} on:change={methods.lockToggle} />
+      {hasPin ? 'has pin' : 'has no pin'} -->
     </div>
   </ListItem>
   <!-- {#if $UserStore.meta.hiddenFeatures}

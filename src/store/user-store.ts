@@ -20,6 +20,8 @@ import { Interact } from "./interact";
 import is from "../utils/is/is";
 import { LedgerStore } from "./ledger";
 import Timer from "../utils/timer/timer";
+import { Lang } from "./lang";
+import tick from "../utils/tick/tick";
 
 // Consts
 const console = new Logger("🤠 userStore");
@@ -68,6 +70,7 @@ export interface IUserState {
   meta: IUserMeta;
   locked: boolean;
   localSettings: IUserLocalSettings;
+  pinUnlocked: boolean;
 }
 
 // Store Initlization
@@ -117,6 +120,7 @@ const userInit = () => {
     profile: {
       username: null,
     },
+    pinUnlocked: false,
   };
 
   const { subscribe, set, update } = writable(state);
@@ -318,16 +322,55 @@ const userInit = () => {
         }
         return usr;
       });
+      // Does the user have an access_pin?
+      // If so, let's require a pin
+      if (value && value.access_pin) {
+        methods.getRequiredPin();
+      }
       return value;
+    },
+    async getRequiredPin() {
+      // Give the UI time to catch up
+      await tick(200);
+      // Get the pin from the user
+      let pin = await Interact.inputPin(Lang.t("settings.pin-required", "Pin Required"));
+      // Default to locked
+      let isUnlocked: boolean = false;
+      // If we have a pin
+      if (pin) {
+        // Get the state and update accordingly
+        update((state) => {
+          // Does the user provided pin match whats in meta.access_pin
+          if (pin === state.meta.access_pin) {
+            state.pinUnlocked = true;
+            isUnlocked = true;
+          } else {
+            state.pinUnlocked = false;
+          }
+          return state;
+        });
+        // If it's still unlocked - it failed.
+        if (!isUnlocked) {
+          Interact.alert(Lang.t("settings.pin-invalid", "Invalid Pin, try again"));
+          // Call this again
+          return methods.getRequiredPin();
+        }
+      } else {
+        // No pin - call this again.
+        return methods.getRequiredPin();
+      }
     },
     /**
      * Save the Meta object for this user
      */
-    saveMeta() {
-      let usr = methods.data();
-      if (Object.keys(usr.meta).length) {
-        return Storage.put(config.user_meta_path, usr.meta);
-      }
+    saveMeta(payload: any = {}) {
+      let meta;
+      update((state) => {
+        meta = { ...(state.meta || {}), ...payload };
+        state.meta = meta;
+        return state;
+      });
+      return Storage.put(config.user_meta_path, meta);
     },
     // Get the current state
     data() {
