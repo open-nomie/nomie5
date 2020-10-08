@@ -37,7 +37,6 @@
   transition: all 0.2s ease-in-out;
   text-decoration: none;
   color: var(--color-inverse);
-  font-size: 1rem;
   flex-shrink: 0;
   background-color: var(--color-solid);
   display: flex !important;
@@ -247,7 +246,7 @@
 
       &.sm,
       &.small {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
       }
     }
   }

@@ -112,6 +112,7 @@
       // let isDarkMode = false;
       let theme = localStorage.getItem(config.theme_key) || "auto";
       let theme_accent = localStorage.getItem(`${config.theme_key}-accent`) || "default";
+      let font_size = localStorage.getItem("font-size") || "md";
       document.body.className = "";
       if (theme === "auto" && isDarkMode) {
         document.body.classList.add("theme-dark");
@@ -120,6 +121,7 @@
       } else {
         document.body.classList.add(`theme-${theme}`);
       }
+      document.body.classList.add(`font-size-${font_size}`);
       document.body.classList.add(theme_accent);
       tick(100, methods.hideSplashScreen);
     },

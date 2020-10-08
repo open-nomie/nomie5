@@ -95,6 +95,7 @@
     }
 
     @include media-breakpoint-down(xs) {
+      @include generateLabelSizes(0.96rem);
     }
 
     @include media-breakpoint-down(sm) {
@@ -143,25 +144,28 @@
       }
     }
 
+    .top,
     .bottom {
+      width: 100%;
+      max-width: 100%;
+      min-width: 100%;
       position: relative;
       z-index: 10;
       display: flex;
+    }
+
+    .bottom {
       flex-direction: column;
       flex-grow: 1;
       flex-shrink: 1;
       justify-content: flex-end;
       padding-bottom: 6px;
-      width: 100%;
     }
 
-    .top {
-      position: relative;
-      z-index: 10;
-      flex-grow: 0;
-      flex-shrink: 0;
-      width: 100%;
-    }
+    // .top {
+    //   flex-grow: 0;
+    //   flex-shrink: 0;
+    // }
 
     button.more {
       position: absolute;
@@ -270,7 +274,7 @@
       <div class="title">{title}</div>
     {/if}
     {#if value && !hideValue}
-      <div class="value">{value}</div>
+      <div class="value truncate">{value}</div>
     {/if}
     {#if subtitle}
       <div class="subtitle truncate" style="opacity:0.6;">{subtitle}</div>

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import NItem from "../../components/list-item/list-item.svelte";
   import { UserStore } from "../../store/user-store";
   import NToggle from "../../components/toggle-switch/toggle-switch.svelte";
@@ -9,10 +9,23 @@
   import Storage from "../../modules/storage/storage";
   import Text from "../../components/text/text.svelte";
   import appConfig from "../../config/appConfig";
+  import ButtonGroup from "../../components/button-group/button-group.svelte";
+  import Button from "../../components/button/button.svelte";
+  import { onMount } from "svelte";
+
+  let fontSize = localStorage.getItem("font-size") || "md";
 
   let methods = {
     settingChange() {
       UserStore.saveMeta();
+    },
+    changeFontSize(size: "sm" | "md" | "lg") {
+      if (["sm", "md", "lg"].indexOf(size) > -1) {
+        localStorage.setItem("font-size", size);
+        fontSize = size;
+        document.body.classList.remove("font-size-lg", "font-size-sm", "font-size-md");
+        document.body.classList.add(`font-size-${size}`);
+      }
     },
   };
 </script>
@@ -43,6 +56,37 @@
 
     </div>
   </NItem>
+  <NItem title={Lang.t('settings.base-font-size', 'Base Font Size')}>
+    <span slot="left">🅰</span>
+    <div slot="right">
+      <div class="btn-group">
+        <Button
+          icon
+          className={`${fontSize === 'sm' ? 'btn-primary active' : ''}`}
+          on:click={() => {
+            methods.changeFontSize('sm');
+          }}>
+          <span style="font-size:9px">A</span>
+        </Button>
+        <Button
+          icon
+          className={`${fontSize === 'md' ? 'btn-primary active' : ''}`}
+          on:click={() => {
+            methods.changeFontSize('md');
+          }}>
+          <span style="font-size:13px">A</span>
+        </Button>
+        <Button
+          icon
+          className={`${fontSize === 'lg' ? 'btn-primary active' : ''}`}
+          on:click={() => {
+            methods.changeFontSize('lg');
+          }}>
+          <span style="font-size:16px">A</span>
+        </Button>
+      </div>
+    </div>
+  </NItem>
 
   <hr class="divider center" />
 
@@ -63,7 +107,6 @@
         <option value="orange">Fire</option>
         <option value="purple">Lilac</option>
       </select>
-
     </div>
   </NItem>
 

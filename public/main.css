@@ -55,13 +55,21 @@ html {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 
-article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
+article,
+aside,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section {
   display: block; }
 
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
   color: #212529;
@@ -76,7 +84,12 @@ hr {
   height: 0;
   overflow: visible; }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin-top: 0;
   margin-bottom: 0.5rem; }
 
@@ -113,7 +126,7 @@ dt {
   font-weight: 700; }
 
 dd {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   margin-left: 0; }
 
 blockquote {
@@ -134,10 +147,10 @@ sup {
   vertical-align: baseline; }
 
 sub {
-  bottom: -.25em; }
+  bottom: -0.25em; }
 
 sup {
-  top: -.5em; }
+  top: -0.5em; }
 
 a {
   color: #20699d;
@@ -269,7 +282,7 @@ legend {
   width: 100%;
   max-width: 100%;
   padding: 0;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   font-size: 1.5rem;
   line-height: inherit;
   color: inherit;
@@ -4941,10 +4954,10 @@ button:focus {
 
 .btn-sm, .btn-group-sm > .btn {
   border-radius: 6pt !important;
-  font-size: medium; }
+  font-size: 0.8rem; }
 
 .btn-xs {
-  font-size: small;
+  font-size: 0.7rem;
   padding: 2px 10px;
   text-transform: uppercase;
   font-weight: bold; }
@@ -5225,12 +5238,11 @@ body {
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   font-family: -apple-system, BlinkMacSystemFont, Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-  -webkit-text-size-adjust: auto;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-size: 18px;
-  background-color: var(--color-bg); }
+  background-color: var(--color-bg);
+  font-size: var(--base-font-size); }
 
 .w-50 {
   width: 50%; }
@@ -5243,6 +5255,21 @@ html {
   bottom: 0;
   left: 0;
   right: 0; }
+
+body.font-size-sm {
+  --base-font-size: 16px;
+  font-size: 16px; }
+
+body.font-size-md {
+  --base-font-size: 18px;
+  font-size: 18px; }
+
+button {
+  font-size: var(--base-font-size); }
+
+body.font-size-lg {
+  --base-font-size: 20px;
+  font-size: 20px; }
 
 body.mint {
   --color-primary-bright: #1fb182;
@@ -5484,6 +5511,15 @@ body.theme-dark {
 
 .text-bold {
   font-weight: 600; }
+
+.font-weight-medium {
+  font-weight: 500 !important; }
+
+.font-weight-bold {
+  font-weight: 600 !important; }
+
+.font-weight-bolder {
+  font-weight: 700 !important; }
 
 .text-bolder {
   font-weight: 800; }
@@ -6294,7 +6330,6 @@ body.scrolling .mini-map {
   transition: all 0.2s ease-in-out;
   text-decoration: none;
   color: var(--color-inverse);
-  font-size: 1rem;
   flex-shrink: 0;
   background-color: var(--color-solid);
   display: flex !important;
@@ -6422,7 +6457,7 @@ body.scrolling .mini-map {
       .n-item .main .note.small,
       .n-item .main .description.sm,
       .n-item .main .description.small {
-        font-size: 0.8rem; }
+        font-size: 0.9rem; }
   .n-item .left .btn-icon,
   .n-item .right .btn-icon {
     max-width: 26px !important;

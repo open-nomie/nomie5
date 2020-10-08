@@ -104,7 +104,7 @@
     {/if}
     <div class="main {truncate ? 'truncate' : ''}">
       {#if title}
-        <NText size="md" tag="div" leading2 className="title">{title}</NText>
+        <NText size="md" tag="div" leading2 className="title" medium>{title}</NText>
       {/if}
       {#if description}
         <NText size="sm" leading3 faded className="description">{description}</NText>

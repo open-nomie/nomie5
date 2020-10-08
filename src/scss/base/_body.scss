@@ -6,12 +6,14 @@ body {
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   font-family: -apple-system, BlinkMacSystemFont, Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-  -webkit-text-size-adjust: auto;
+  // -webkit-text-size-adjust: auto;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-size: 18px;
+  // font-size: 18px;
   background-color: var(--color-bg);
+  font-size: var(--base-font-size);
+
   // padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
@@ -28,6 +30,29 @@ html {
   left: 0;
   right: 0;
 }
+
+// Font Sizes
+
+body.font-size-sm {
+  --base-font-size: 16px;
+  font-size: 16px;
+}
+
+body.font-size-md {
+  --base-font-size: 18px;
+  font-size: 18px;
+}
+
+button {
+  font-size: var(--base-font-size);
+}
+
+body.font-size-lg {
+  --base-font-size: 20px;
+  font-size: 20px;
+}
+
+// Theme Accents
 
 body.mint {
   --color-primary-bright: #1fb182;

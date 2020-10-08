@@ -286,7 +286,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 
             <div class="n-list pb-2">
               <NItem itemDivider>Import Data</NItem>
-              <NItem clickable title={Lang.t('settings.nomie-api')} on:click={() => navigate('/api')}>
+              <NItem clickable title={Lang.t('settings.nomie-api', 'Nomie API')} on:click={() => navigate('/api')}>
                 <span slot="left">🕸</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
