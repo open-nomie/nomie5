@@ -143,7 +143,7 @@
       flex-direction: row;
       .hour {
         width: calc(100% / 24);
-        font-size: 0.4rem;
+        font-size: 0.4em;
         display: relative;
       }
     }

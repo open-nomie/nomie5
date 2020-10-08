@@ -67,7 +67,7 @@
     flex-grow: 1;
     display: flex;
     width: 100%;
-    font-size: 0.9rem;
+    font-size: 0.9em;
     color: var(--color-inverse-2);
     align-items: center;
     text-align: center !important;
@@ -75,15 +75,15 @@
     max-width: 100% !important;
 
     &.widget-size-md {
-      font-size: 1rem;
+      font-size: 1em;
       font-weight: 500;
       padding: 8px 16px;
-      line-height: 1.1rem;
+      line-height: 1.1em;
     }
     &.widget-size-lg {
       padding: 8px 16px;
-      font-size: 1.6rem;
-      line-height: 1.7rem;
+      font-size: 1.6em;
+      line-height: 1.7em;
       font-weight: 700;
       padding: 16px;
     }
@@ -213,13 +213,13 @@
     height: 100%;
     padding: 2px 8px;
     .current {
-      font-size: 2rem;
+      font-size: 2em;
       line-height: 100%;
       text-align: center;
     }
     &.value-sm {
       .current {
-        font-size: 1.4rem;
+        font-size: 1.4em;
       }
       .avg {
         opacity: 0.6;
@@ -227,7 +227,7 @@
     }
     &.last-used {
       .current {
-        font-size: 1.5rem;
+        font-size: 1.5em;
       }
     }
   }

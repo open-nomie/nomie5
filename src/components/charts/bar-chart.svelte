@@ -149,7 +149,7 @@
     top: -2px;
     left: 20px;
 
-    font-size: 0.7rem;
+    font-size: 0.7em;
     color: var(--color-inverse);
   }
   .active-item {
@@ -162,7 +162,7 @@
     // box-shadow: var(--box-shadow-tight);
     z-index: 120;
     padding: 4px 10px;
-    font-size: 0.7rem;
+    font-size: 0.7em;
     display: flex;
 
     .value {

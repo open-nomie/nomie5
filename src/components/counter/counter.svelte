@@ -61,7 +61,7 @@
 <style lang="scss">
   @import "../../scss/utils/_utils";
   .n-counter {
-    font-size: 0.7rem;
+    font-size: 0.7em;
     font-weight: bold;
     display: flex;
     align-items: center;

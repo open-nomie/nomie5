@@ -37,7 +37,7 @@
   }
 
   .emoji {
-    font-size: 2rem;
+    font-size: 2em;
     min-width: 40px;
     max-width: 67px;
     line-height: 20px;
@@ -56,12 +56,12 @@
   .label {
     text-align: left;
     font-weight: 500;
-    font-size: 0.9rem;
+    font-size: 0.9em;
     opacity: 0.8;
   }
   .value {
-    font-size: 1.1rem;
-    line-height: 1.2rem;
+    font-size: 1.1em;
+    line-height: 1.2em;
     text-align: left;
     font-weight: 600;
     @include truncate();
@@ -117,11 +117,11 @@
 
   .n-note-textualized {
     padding: 16px !important;
-    font-size: 1rem;
+    font-size: 1em;
     line-height: 136%;
 
     // &.long-note {
-    //   font-size: 0.97rem;
+    //   font-size: 0.97em;
     // }
   }
 
@@ -143,7 +143,7 @@
   //       .main {
   //         div,
   //         .left {
-  //           font-size: 0.9rem !important;
+  //           font-size: 0.9em !important;
   //         }
   //       }
   //     }
@@ -157,13 +157,13 @@
   //       margin-bottom: -2px;
 
   //       .time {
-  //         font-size: 0.8rem;
+  //         font-size: 0.8em;
   //       }
   //     }
   //     .n-note-textualized {
   //       padding-top: 4px;
-  //       font-size: 1rem !important;
-  //       line-height: 1.2rem !important;
+  //       font-size: 1em !important;
+  //       line-height: 1.2em !important;
   //     }
   //     .n-item {
   //       min-height: 30px;

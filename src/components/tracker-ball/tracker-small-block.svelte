@@ -64,7 +64,7 @@
       {/if}
     {/if}
     <main class="{truncate ? 'truncate' : ''} text-left w-100">
-      <Text style="font-size:0.8rem" truncate>{(element.obj || {}).label || element.id}</Text>
+      <Text truncate size="sm">{(element.obj || {}).label || element.id}</Text>
       {#if shouldShowValue(element)}
         <Text bold style="white-space:pre">{NomieUOM.format(element.value, (element.obj || {}).uom) || ''}</Text>
       {:else if value}

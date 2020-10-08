@@ -37,39 +37,39 @@
     }
 
     &.leading1 {
-      line-height: 100%;
+      line-height: 1.25em;
     }
     &.leading2 {
-      line-height: 120%;
+      line-height: 1.5em;
     }
     &.leading3 {
-      line-height: 150%;
+      line-height: 1.8em;
     }
 
     &.xxs {
-      font-size: 0.6rem;
+      font-size: 0.6em;
     }
     &.xs {
-      font-size: 0.7rem;
+      font-size: 0.7em;
     }
     &.sm {
-      font-size: 0.85rem;
+      font-size: 0.85em;
     }
     &.md {
-      font-size: 1rem;
+      font-size: 1em;
     }
     &.lg {
-      font-size: 1.15rem;
+      font-size: 1.15em;
     }
 
     &.faded {
       opacity: 0.6;
     }
     &.xl {
-      font-size: 1.3rem;
+      font-size: 1.3em;
     }
     &.xxl {
-      font-size: 1.45rem;
+      font-size: 1.45em;
     }
     &.font-weight-bold {
       font-weight: bold;

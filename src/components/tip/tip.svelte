@@ -81,8 +81,8 @@
     // box-shadow: var(--box-shadow-float);
 
     .tip {
-      font-size: 0.8rem;
-      line-height: 1.2rem;
+      font-size: 0.8em;
+      line-height: 1.2em;
       text-align: center;
       color: var(--color-inverse-2);
     }

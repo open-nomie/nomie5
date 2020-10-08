@@ -39,7 +39,7 @@
 </script>
 
 <style lang="scss" type="text/scss">
-  $radius: 1rem;
+  $radius: 1em;
   :global(.pop-menu) {
     position: fixed;
     top: 0;
@@ -94,7 +94,7 @@
       flex-grow: 1;
       background-color: var(--color-darkest-translucent);
       color: var(--color-inverse-1);
-      border-radius: 1.2rem;
+      border-radius: 1.2em;
       border: var(--modal-border);
       box-shadow: var(--box-shadow-float);
       padding: 10px;

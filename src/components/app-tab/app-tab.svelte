@@ -30,7 +30,7 @@
     justify-content: center;
     position: relative;
     padding: 6px 10px;
-    font-size: 0.7rem;
+    font-size: 0.7em;
     height: 100%;
     text-decoration: none;
     flex-grow: 1;
@@ -41,7 +41,7 @@
     width: 100%;
     i {
       pointer-events: none;
-      font-size: 1.2rem;
+      font-size: 1.2em;
       transition: all 0.2s ease-in-out;
     }
     label {

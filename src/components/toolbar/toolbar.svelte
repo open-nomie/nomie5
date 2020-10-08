@@ -17,7 +17,7 @@
     h1,
     h2,
     h3 {
-      font-size: 1rem !important;
+      font-size: 1em !important;
       margin: 0;
     }
 
@@ -59,7 +59,7 @@
     border-radius: 0 !important;
     outline: none !important;
     padding: 0 10px;
-    font-size: 1rem;
+    font-size: 1em;
   }
 </style>
 

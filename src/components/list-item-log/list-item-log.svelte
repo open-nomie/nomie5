@@ -92,7 +92,7 @@
 
 <style lang="scss">
   .divider {
-    font-size: 0.9rem;
+    font-size: 0.9em;
     font-weight: 500;
   }
 
@@ -150,7 +150,7 @@
           }}
           className="ml-2"
           style="margin-right:-10px;">
-          <NIcon name="more" className="fill-primary-bright" size="32" />
+          <NIcon name="more" className="fill-primary-bright" size="24" />
         </Button>
       {/if}
 

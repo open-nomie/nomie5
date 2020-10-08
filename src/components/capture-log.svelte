@@ -373,7 +373,7 @@
     flex-shrink: 0;
     margin-bottom: 6px;
     border: none;
-    font-size: 0.9rem;
+    font-size: 0.9em;
     color: #fff;
     svg {
       fill: #fff;
@@ -415,7 +415,7 @@
       color: var(--color-inverse-1);
       margin: 0 16px;
       margin-right: 0px;
-      font-size: 1rem;
+      font-size: 1em;
       &:focus,
       &:active {
         outline: none;

@@ -115,7 +115,7 @@
   .view-port {
     min-height: 200px;
     textarea {
-      font-size: 1rem;
+      font-size: 1em;
       height: 275px;
     }
 

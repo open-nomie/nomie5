@@ -7,7 +7,7 @@
 
 <style>
   .current {
-    font-size: 1.5rem;
+    font-size: 1.5em;
   }
 </style>
 

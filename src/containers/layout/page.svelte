@@ -18,7 +18,7 @@
 <style>
   .title {
     color: var(--color-inverse);
-    font-size: 1rem;
+    font-size: 1em;
   }
 </style>
 

@@ -122,7 +122,7 @@
         @include media-breakpoint-up(md) {
           max-width: 500px;
           max-height: 700px;
-          border-radius: 0.7rem;
+          border-radius: 0.7em;
         }
       }
     }
@@ -161,7 +161,7 @@
     max-width: 400px;
     position: relative;
     margin: 10px;
-    border-radius: 1.2rem;
+    border-radius: 1.2em;
     display: flex;
     flex-direction: column;
     justify-content: stretch;
@@ -177,7 +177,7 @@
       }
       overflow-y: auto;
       overflow-x: hidden;
-      // border-radius: 1.2rem;
+      // border-radius: 1.2em;
       z-index: 1;
     }
 

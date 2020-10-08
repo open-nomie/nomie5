@@ -392,8 +392,10 @@ const userInit = () => {
       localStorage.setItem(`${config.theme_key}-accent`, accent);
       document.body.classList.add(`theme-${theme}`);
       document.body.classList.add(`${accent}`);
+      document.body.classList.add(`font-size-${localStorage.getItem("font-size") || "md"}`);
       update((u) => {
         u.theme = theme;
+        u.theme_accent = accent;
         return u;
       });
     },

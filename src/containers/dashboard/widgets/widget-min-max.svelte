@@ -22,7 +22,7 @@
   }
 
   :global(.widget-size-lg .min-max, .widget-size-sm .n-text.xl) {
-    font-size: 1.4rem;
+    font-size: 1.4em;
   }
   :global(.widget-size-lg .min-max, .widget-size-md .min-max) {
     flex-direction: row;

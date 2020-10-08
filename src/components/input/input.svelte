@@ -100,7 +100,7 @@
     border: solid 1px var(--color-faded-1);
 
     .helper {
-      font-size: 0.65rem;
+      font-size: 0.65em;
       opacity: 0.5;
       padding: 6px;
     }
@@ -138,12 +138,12 @@
             select {
               padding-top: 14px;
               padding-bottom: 0px;
-              font-size: 1.05rem;
+              font-size: 1.05em;
             }
             textarea {
               padding-top: 22px;
               padding-bottom: 0px;
-              font-size: 1.05rem;
+              font-size: 1.05em;
             }
           }
         }
@@ -173,7 +173,7 @@
       .has-input {
         label {
           transform: translateY(-6px) !important;
-          font-size: 0.7rem;
+          font-size: 0.7em;
         }
       }
       // background-color: blue !important;
@@ -187,7 +187,7 @@
           textarea {
             min-height: 40px;
             height: 40px;
-            font-size: 0.8rem !important;
+            font-size: 0.8em !important;
             background-color: var(--color-solid) !important;
           }
         }
@@ -255,7 +255,7 @@
           opacity: 0;
           transform: translateY(20px);
           pointer-events: none;
-          font-size: 0.7rem;
+          font-size: 0.7em;
           position: absolute;
           top: 7px;
           left: 10px;

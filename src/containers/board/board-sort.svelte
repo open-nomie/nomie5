@@ -35,7 +35,7 @@
     width: 36px;
   }
   .emoji-only {
-    font-size: 2.4rem;
+    font-size: 2.4em;
   }
 </style>
 

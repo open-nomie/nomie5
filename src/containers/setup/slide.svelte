@@ -25,7 +25,7 @@
     }
 
     h1 {
-      font-size: 1.2rem;
+      font-size: 1.2em;
       font-weight: bolder;
       text-align: center;
       max-width: 240px;
@@ -34,10 +34,10 @@
     }
     .content {
       padding: 0 0 20px;
-      font-size: 1rem;
+      font-size: 1em;
     }
     p {
-      font-size: 0.8rem;
+      font-size: 0.8em;
       font-weight: 200;
       opacity: 0.77;
       text-align: center;

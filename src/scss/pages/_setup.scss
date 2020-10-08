@@ -68,8 +68,8 @@
         padding-top: env(safe-area-inset-top);
       }
       p {
-        font-size: 0.8rem;
-        line-height: 1rem;
+        font-size: 0.8em;
+        line-height: 1em;
         opacity: 0.7;
         text-align: center;
       }
@@ -90,21 +90,21 @@
       padding: 0 16px;
 
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.5em;
         font-weight: bolder;
         text-align: center;
         @include media-breakpoint-down(xs) {
-          font-size: 1.2rem;
+          font-size: 1.2em;
         }
       }
 
       p {
-        font-size: 0.8rem;
+        font-size: 0.8em;
         line-height: 120%;
         text-align: center;
         color: var(--color-inverse-3);
         @include media-breakpoint-down(xs) {
-          font-size: 0.7rem;
+          font-size: 0.7em;
         }
       }
     }

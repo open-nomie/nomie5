@@ -105,7 +105,7 @@
       background-color: var(--color-solid);
       color: var(--color-primary-bright);
       margin: 0px;
-      font-size: 0.7rem;
+      font-size: 0.7em;
     }
     button.date {
       border-right: solid 1px var(--color-solid-2);

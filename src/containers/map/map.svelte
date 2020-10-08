@@ -396,7 +396,7 @@
     left: 0px;
     right: 0px;
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 0.9em;
     height: $locationHeight;
     display: flex;
     flex-direction: column;
@@ -456,8 +456,8 @@
         text-align: left;
         width: calc(100% - 90px);
         margin: 0 auto;
-        font-size: 0.7rem;
-        line-height: 0.8rem;
+        font-size: 0.7em;
+        line-height: 0.8em;
         align-self: center;
         flex-grow: 1;
         flex-shrink: 1;

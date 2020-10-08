@@ -112,7 +112,7 @@
 
 <style lang="scss">
   .pos-label {
-    font-size: 1.2rem;
+    font-size: 1.2em;
     display: none;
     min-width: 70px;
     text-transform: uppercase;

@@ -67,13 +67,37 @@
 .bg-solid-2 {
   background-color: var(--color-solid-2);
 }
-.bg-primary-bright,
-.bg-blue {
+
+.bg-primary-bright {
   background-color: var(--color-primary-bright) !important;
+}
+.bg-blue {
+  background-color: var(--color-blue) !important;
+}
+
+.bg-mint {
+  background-color: var(--color-mint-bright) !important;
+}
+
+.bg-teal {
+  background-color: var(--color-teal-bright) !important;
+}
+
+.bg-purple {
+  background-color: var(--color-purple-bright) !important;
+}
+
+.bg-orange {
+  background-color: var(--color-orange-bright) !important;
+}
+
+.bg-pink {
+  background-color: var(--color-pink-bright) !important;
 }
 .bg-primary {
   background-color: var(--color-primary) !important;
 }
+
 .bg-inverse {
   background-color: var(--color-inverse);
 }
@@ -102,10 +126,10 @@
   font-weight: bold;
 }
 .font-120 {
-  font-size: 1.2rem;
+  font-size: 1.2em;
 }
 .font-140 {
-  font-size: 1.4rem;
+  font-size: 1.4em;
 }
 
 .text-faded {
@@ -122,27 +146,27 @@
 }
 
 .text-xs {
-  font-size: 0.6rem !important;
-  line-height: 0.8rem;
+  font-size: 0.6em !important;
+  line-height: 0.8em;
 }
 .text-sm {
-  font-size: 0.85rem !important;
-  line-height: 1.2rem;
+  font-size: 0.85em !important;
+  line-height: 1.2em;
 }
 .text-md {
-  font-size: 1rem !important;
-  line-height: 1.3rem;
+  font-size: 1em !important;
+  line-height: 1.3em;
 }
 .text-lg {
-  font-size: 1.3rem !important;
+  font-size: 1.3em !important;
 }
 
 .text-xl {
-  font-size: 1.6rem !important;
+  font-size: 1.6em !important;
 }
 
 .text-xxl {
-  font-size: 2.3rem !important;
+  font-size: 2.3em !important;
 }
 
 /// Icon Fills
@@ -218,4 +242,33 @@
     stroke: var(--color-primary) !important;
   }
   stroke: var(--color-primary) !important;
+}
+
+// Borders
+
+.border-blue {
+  border-color: var(--color-blue) !important;
+}
+
+.border-mint {
+  border-color: var(--color-mint-bright) !important;
+}
+
+.border-teal {
+  border-color: var(--color-teal-bright) !important;
+}
+
+.border-purple {
+  border-color: var(--color-purple-bright) !important;
+}
+
+.border-orange {
+  border-color: var(--color-orange-bright) !important;
+}
+
+.border-pink {
+  border-color: var(--color-pink-bright) !important;
+}
+.border-primary {
+  border-color: var(--color-primary) !important;
 }

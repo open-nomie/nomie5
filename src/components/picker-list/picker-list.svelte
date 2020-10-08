@@ -110,7 +110,7 @@
           value={list.join('\n')}
           bind:this={textList}
           on:change={textListChanged}
-          inputStyle="height:40vh; font-size:0.8rem; line-height:150%" />
+          inputStyle="height:40vh; font-size:0.8em; line-height:150%" />
 
         <div class="n-row px-2 py-4 filler">
           {#if canSelect && showSaveEditButton !== false}

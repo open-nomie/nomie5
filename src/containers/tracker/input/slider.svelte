@@ -33,9 +33,8 @@
 
     .value {
       text-align: center;
-      font-size: 2rem;
       margin: 0 0 20px 0;
-      line-height: 2rem;
+
       color: var(--color-inverse);
       position: absolute;
       bottom: 10px;
@@ -118,7 +117,6 @@
 
 <div class="tracker-input slider">
   <div class="value">
-
     {#if tracker && tracker.uom !== 'num'}
       <Text size="lg" bold className="text-primary-bright">{tracker.displayValue(tempValue)}</Text>
       <Text size="sm" faded>{tempValue}</Text>

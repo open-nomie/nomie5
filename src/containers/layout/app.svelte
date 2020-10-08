@@ -55,7 +55,7 @@
   :global(.header-slot .btn) {
     // text-transform: uppercase;
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 0.9em;
   }
   .header-slot {
     padding-top: env(safe-area-inset-top);
@@ -74,7 +74,7 @@
     h1,
     h2,
     h3 {
-      font-size: 1rem;
+      font-size: 1em;
     }
     .header-fade {
       position: absolute;

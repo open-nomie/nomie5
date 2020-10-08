@@ -111,7 +111,7 @@
     resize() {
       if (boxDom.style) {
         boxDom.style.height = `${boxDom.offsetWidth}px`;
-        noteDom.style.fontSize = `${methods.fontSize($Interact.shareImage.log.note)}rem`;
+        noteDom.style.fontSize = `${methods.fontSize($Interact.shareImage.log.note)}em`;
         ready = true;
       }
     },

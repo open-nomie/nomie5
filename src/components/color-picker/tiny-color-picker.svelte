@@ -1,43 +1,41 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   export let value;
+  export let colors: Array<string> = ["green", "orange", "red", "blue"];
+  export let size = 24;
+  export let className = "";
+  const dispatch = createEventDispatcher();
+
+  let selected;
+  $: if (value && value !== selected) {
+    console.log("Value change", value);
+    selected = value;
+  }
 </script>
 
 <style lang="scss">
   .tiny-color-picker {
   }
   button {
-    width: 24px;
-    height: 24px;
     border: none;
     padding: 0;
     margin: 4px;
     border-radius: 50%;
-    opacity: 0.3;
-    &.active {
-      opacity: 1;
+    &.not-selected {
+      border-width: 2px;
+      border-style: solid;
+      background-color: transparent;
     }
   }
 </style>
 
-<div class="tiny-color-picker n-row">
-  <button
-    on:click={() => {
-      value = 'green';
-    }}
-    class="bg-green {value == 'green' ? 'active' : ''}" />
-  <button
-    on:click={() => {
-      value = 'orange';
-    }}
-    class="bg-orange {value == 'orange' ? 'active' : ''}" />
-  <button
-    on:click={() => {
-      value = 'red';
-    }}
-    class="bg-red {value == 'red' ? 'active' : ''}" />
-  <button
-    on:click={() => {
-      value = 'blue';
-    }}
-    class="bg-blue {value == 'blue' ? 'active' : ''}" />
+<div class="tiny-color-picker n-row {className}">
+  {#each colors as color}
+    <button
+      style={`height:${size}px;width:${size}px;`}
+      on:click={() => {
+        dispatch('change', color);
+      }}
+      class={`${selected == color ? `selected bg-${color}` : `not-selected border-${color}`}`} />
+  {/each}
 </div>

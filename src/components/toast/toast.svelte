@@ -75,13 +75,13 @@
     <ListItem style="background-color:transparent">
       <Text size="md" style="color:#FFF" truncate>{$Interact.toast.message}</Text>
       {#if $Interact.toast.description}
-        <Text size="sm" style="color:#FFF; opacity:0.75; margin-top:2px; line-height:1.1rem;">{$Interact.toast.description}</Text>
+        <Text size="sm" style="color:#FFF; opacity:0.75; margin-top:2px; line-height:1.1em;">{$Interact.toast.description}</Text>
       {/if}
       <div slot="right">
         {#if $Interact.toast.buttonLabel && $Interact.toast.click}
           <Button
             color="clear"
-            style="font-weight:bold; color:#FFF; text-transform:uppercase; font-size:0.9rem"
+            style="font-weight:bold; color:#FFF; text-transform:uppercase; font-size:0.9em"
             on:click={$Interact.toast.click}>
             {$Interact.toast.buttonLabel}
           </Button>

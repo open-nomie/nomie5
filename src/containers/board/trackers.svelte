@@ -107,9 +107,9 @@
         <Text style="color:{tracker.color}" size={$UserStore.localSettings.compactButtons ? 'xl' : 'xxl'}>{tracker.emoji}</Text>
       </span>
       <div>
-        <Text size="md">{tracker.label}</Text>
+        <Text size="md" leading2>{tracker.label}</Text>
         {#if getLastUsed(tracker)}
-          <Text size="sm" faded>{getLastUsed(tracker) || undefined}</Text>
+          <Text size="sm" faded leading2>{getLastUsed(tracker) || undefined}</Text>
         {/if}
       </div>
       <span slot="right" class="mr-2">
@@ -139,7 +139,7 @@
       clickable
       title={Lang.t('tracker.add-tracker')}
       on:click={() => dispatch('add')}
-      className="tracker-add py-2 tracker-list-item flex-shrink-off no-value">
+      className="tracker-add py-3 tracker-list-item flex-shrink-off no-value">
       <div slot="left">
         <Text size={$UserStore.localSettings.compactButtons ? 'xl' : 'xxl'}>➕</Text>
       </div>

@@ -134,7 +134,7 @@
     overflow: hidden;
   }
   :global(.person-checkin .btn-group .active div) {
-    font-size: 2rem !important;
+    font-size: 2em !important;
   }
 </style>
 

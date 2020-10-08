@@ -71,7 +71,7 @@
       }
     }
     .card {
-      border-radius: 1.2rem;
+      border-radius: 1.2em;
       transition: all 0.2s ease-in-out;
       max-width: 400px;
       max-height: 80vh;
@@ -104,7 +104,7 @@
       border-top: solid 1px var(--color-faded-1);
       button {
         min-width: 120px;
-        border-radius: 0.9rem;
+        border-radius: 0.9em;
       }
     }
     .btn-toolbar {

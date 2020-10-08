@@ -600,10 +600,10 @@
   }
 
   .time-range {
-    font-size: 0.9rem;
+    font-size: 0.9em;
     font-weight: 500;
     text-align: center;
-    line-height: 1rem;
+    line-height: 1em;
   }
   :global(.stats-modal .n-modal) {
     max-width: 500px !important;

@@ -217,12 +217,12 @@
       left: 8pt;
       opacity: 0.8;
       color: #999;
-      font-size: 0.8rem;
+      font-size: 0.8em;
     }
     .buffer {
       height: 20px;
       min-height: 22px;
-      font-size: 0.8rem;
+      font-size: 0.8em;
       color: #999;
 
       span {

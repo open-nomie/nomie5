@@ -129,7 +129,7 @@ abbr[data-original-title] {
 }
 
 address {
-  margin-bottom: 1rem;
+  margin-bottom: 1em;
   font-style: normal;
   line-height: inherit;
 }
@@ -138,7 +138,7 @@ ol,
 ul,
 dl {
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 1em;
 }
 
 ol ol,
@@ -153,12 +153,12 @@ dt {
 }
 
 dd {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.5em;
   margin-left: 0; // Undo browser default
 }
 
 blockquote {
-  margin: 0 0 1rem;
+  margin: 0 0 1em;
 }
 
 b,
@@ -241,7 +241,7 @@ pre {
   // Remove browser default top margin
   margin-top: 0;
   // Reset browser default of `1em` to use `rem`s
-  margin-bottom: 1rem;
+  margin-bottom: 1em;
   // Don't allow content to break outside
   overflow: auto;
 }
@@ -252,7 +252,7 @@ pre {
 
 figure {
   // Apply a consistent margin strategy (matches our type styles).
-  margin: 0 0 1rem;
+  margin: 0 0 1em;
 }
 
 //
@@ -423,7 +423,7 @@ legend {
   width: 100%;
   max-width: 100%; // 1
   padding: 0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.5em;
   @include font-size(1.5rem);
   line-height: inherit;
   color: inherit; // 2

@@ -80,14 +80,14 @@
       box-shadow: var(--box-shadow-tight) !important;
     }
 
-    @include generateLabelSizes(1.1rem);
+    @include generateLabelSizes(1.1em);
 
     &.compact {
       .emoji {
         font-size: 30px;
         line-height: 100%;
       }
-      @include generateLabelSizes(0.96rem);
+      @include generateLabelSizes(0.96em);
       height: 124px;
       .highlight {
         display: none;
@@ -95,7 +95,7 @@
     }
 
     @include media-breakpoint-down(xs) {
-      @include generateLabelSizes(0.96rem);
+      @include generateLabelSizes(0.96em);
     }
 
     @include media-breakpoint-down(sm) {
@@ -111,7 +111,7 @@
     }
 
     .emoji {
-      font-size: 2rem;
+      font-size: 2em;
       line-height: 100%;
       text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.23);
       letter-spacing: -6px;
@@ -160,17 +160,25 @@
       flex-shrink: 1;
       justify-content: flex-end;
       padding-bottom: 6px;
+      position: absolute;
+      bottom: 6px;
+      left: 14px;
+      right: 14px;
     }
 
-    // .top {
-    //   flex-grow: 0;
-    //   flex-shrink: 0;
-    // }
+    .top {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      left: 14px;
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
 
     button.more {
       position: absolute;
       top: 0;
-      right: -2px;
+      right: 26px;
       width: 20px;
       height: 20px;
       border-radius: 50%;

@@ -1,7 +1,7 @@
 .card {
   $padding: 16px;
   $footerPadding: 8px;
-  border-radius: 0.5rem;
+  border-radius: 0.5em;
   display: flex;
   flex-direction: column;
   z-index: 120;
@@ -24,12 +24,12 @@
   }
   p,
   .card-body {
-    font-size: 0.9rem;
+    font-size: 0.9em;
   }
   .card-title {
     $paddingTop: $padding * 0.7;
     padding: $padding;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 1em;
   }
 }

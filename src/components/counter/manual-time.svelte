@@ -165,7 +165,7 @@
       display: flex;
       flex-direction: column;
       label {
-        font-size: 0.9rem;
+        font-size: 0.9em;
         color: var(--color-inverse-3);
         margin-top: 10px;
       }

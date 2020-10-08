@@ -248,15 +248,15 @@
   @import "../../scss/utils/_utils";
 
   .sweet-calendar.sm {
-    --cal-font-size: 0.5rem;
+    --cal-font-size: 0.5em;
     --cal-day-size: 16px;
   }
   .sweet-calendar.md {
-    --cal-font-size: 0.8rem;
+    --cal-font-size: 0.8em;
     --cal-day-size: 20px;
   }
   .sweet-calendar.lg {
-    --cal-font-size: 0.8rem;
+    --cal-font-size: 0.8em;
     --cal-day-size: 24px;
   }
 
@@ -327,7 +327,7 @@
         .day-name {
           color: var(--color-inverse);
           font-weight: bold;
-          font-size: 0.6rem;
+          font-size: 0.6em;
           height: 18px;
         }
         .day-container {

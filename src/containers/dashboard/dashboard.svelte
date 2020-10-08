@@ -465,15 +465,9 @@
         </div>
         <div class="board-actions filler">
           <div class="btn-group" style="width:200px;">
-            <Button on:click={newWidget} color="clear">
-              <Text size="sm">{Lang.t('general.add', 'Add')}</Text>
-            </Button>
-            <Button on:click={toggleEdit} color="clear">
-              <Text size="sm">{Lang.t('general.edit', 'Edit')}</Text>
-            </Button>
-            <Button on:click={deleteDashboard} color="clear">
-              <Text size="sm">{Lang.t('general.delete', 'Delete')}</Text>
-            </Button>
+            <Button on:click={newWidget} color="clear">{Lang.t('general.add', 'Add')}</Button>
+            <Button on:click={toggleEdit} color="clear">{Lang.t('general.edit', 'Edit')}</Button>
+            <Button on:click={deleteDashboard} color="clear">{Lang.t('general.delete', 'Delete')}</Button>
           </div>
         </div>
         <div class="mt-3 p-2" />
