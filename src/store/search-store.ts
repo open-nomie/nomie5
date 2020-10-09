@@ -103,6 +103,7 @@ const SearchStoreInit = () => {
         }
         state.active = new SearchTerm(term);
         state.active.type = state.view;
+        state.show = true;
         state = saveTerm(state, state.active);
         return state;
       });

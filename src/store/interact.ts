@@ -48,6 +48,7 @@ import { init } from "i18next";
 import type TrackerConfig from "../modules/tracker/tracker";
 import type { ITrackers } from "../modules/import/import";
 import Timer from "../utils/timer/timer";
+import tick from "../utils/tick/tick";
 
 const console = new Logger("✋ Interact");
 
@@ -386,7 +387,8 @@ const interactInit = () => {
         },
         {
           title: `Search for ${tracker ? tracker.label : trackableElement.raw}`,
-          click: () => {
+          click: async () => {
+            await tick(200);
             SearchStore.search(trackableElement.prefix + trackableElement.id, "history");
           },
         },
