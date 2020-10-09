@@ -34,22 +34,22 @@ html {
 // Font Sizes
 body.font-size-xs {
   --base-font-size: 16px;
-  font-size: 16px;
+  font-size: var(--base-font-size);
 }
 
 body.font-size-sm {
-  --base-font-size: 18px;
-  font-size: 18px;
+  --base-font-size: 17px;
+  font-size: var(--base-font-size);
 }
 
 body.font-size-md {
-  --base-font-size: 20px;
-  font-size: 20px;
+  --base-font-size: 18px;
+  font-size: var(--base-font-size);
 }
 
 body.font-size-lg {
-  --base-font-size: 22px;
-  font-size: 22px;
+  --base-font-size: 19px;
+  font-size: var(--base-font-size);
 }
 
 button {

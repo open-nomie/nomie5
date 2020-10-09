@@ -8,6 +8,7 @@
   import TrackerInputer from "../../modules/tracker/tracker-inputer";
 
   import { createEventDispatcher } from "svelte";
+  import Button from "../button/button.svelte";
   const dispatch = createEventDispatcher();
 
   export let input = null;
@@ -197,12 +198,15 @@
 <!--  -->
 <div class="{scroller ? 'scroller' : 'no-scroller'} autocomplete-results animate {(state.results || []).length ? 'visible' : 'hidden'}">
   <div class="container p-0 tracker-list">
-    <button class="btn btn-round btn-icon px-0" on:click={close}>
+    <Button size="xs" icon on:click={close}>
       <NIcon name="close" />
-    </button>
+    </Button>
     {#each state.results || [] as tracker (tracker.tag)}
-      <button
-        class="btn btn-badge bg-solid-1"
+      <Button
+        size="xs"
+        className="m-1"
+        color="light"
+        shape="rounded"
         on:click={() => {
           onSelect(tracker);
         }}>
@@ -214,7 +218,7 @@
             {$PeopleStore.people[tracker.tag].displayName}
           {:else if tracker.type == 'context'}{tracker.tag}{:else}{tracker.label}{/if}
         </div>
-      </button>
+      </Button>
     {/each}
     <div class="filler" />
   </div>
