@@ -138,9 +138,9 @@ export default {
     },
     tracker: {
       "things-to-track": "Tracker Library",
-      "pick-at-least-one": "Add at least one tracker to continue...",
+      "pick-at-least-one": "Pick (at least) 1 tracker to continue...",
       "install-tracker-question": "Install {{tracker}}?",
-      "add-tracker": "Add a Tracker",
+      "add-tracker": "Add Tracker",
       "edit-tracker": "Edit Tracker",
       "tracker-selector": "Tracker Selector",
       label: "Tracker Label",

@@ -12,11 +12,12 @@
   import NIcon from "../icon/icon.svelte";
 
   function getStyle(active) {
-    if (inverse && color && active) {
-      return `background-color:${color} !important; color:#FFF; box-shadow: 0px 3px 10px -3px ${color};`;
-    } else {
-      return ``;
-    }
+    // if (inverse && color && active) {
+    //   return `background-color:${color} !important; color:#FFF; box-shadow: 0px 3px 10px -3px ${color};`;
+    // } else {
+    //   return ``;
+    // }
+    return "";
   }
 </script>
 
@@ -34,16 +35,11 @@
   // }
 </style>
 
-{#if buttons.length}
-  <div class="btn-group w-100 {inverse ? 'inverse' : ''} {className}" {style}>
+<div class="nbtn-group {inverse ? 'inverse' : ''} {className}" {style}>
+  {#if buttons.length}
     {#each buttons as button, index (button.label + button.icon)}
       {#if button.hide !== false}
-        <Button
-          delay={0}
-          className="btn {button.active ? 'active' : ''} btn-{size}
-          "
-          style={getStyle(button.active)}
-          on:click={button.click}>
+        <Button color="" delay={0} {size} className={button.active ? 'active' : 'text-solid-1'} on:click={button.click}>
           {#if button.label}
             <div class={labelClass}>{button.label}</div>
           {:else if button.icon}
@@ -52,5 +48,7 @@
         </Button>
       {/if}
     {/each}
-  </div>
-{/if}
+  {:else}
+    <slot />
+  {/if}
+</div>

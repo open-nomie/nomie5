@@ -20,6 +20,7 @@
   import { TrackerStore } from "../../store/tracker-store";
   import NextPrevCal from "../../components/next-prev-cal/next-prev-cal.svelte";
   import Text from "../../components/text/text.svelte";
+  import Button from "../../components/button/button.svelte";
 
   const timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
   const dateFormat = $UserStore.meta.is24Hour ? "MM/DD/YYYY" : "MMM D YYYY";
@@ -127,9 +128,11 @@
   <NModal show={$Interact.streak.show} type="bottom-slideup">
     <div slot="header" class="w-100">
       <NToolbarGrid>
-        <button class="btn btn-clear tap-icon" slot="left" on:click={Interact.closeStreak}>
-          <NIcon name="close" />
-        </button>
+        <div slot="left">
+          <Button icon className="tap-icon" on:click={Interact.closeStreak}>
+            <NIcon name="close" />
+          </Button>
+        </div>
         <main slot="main">{$Interact.streak.show}</main>
       </NToolbarGrid>
       <div class="n-toolbar n-row px-3">

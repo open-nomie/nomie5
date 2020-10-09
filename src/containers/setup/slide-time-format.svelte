@@ -11,23 +11,31 @@
 </script>
 
 <section class="slide slide-time-format">
-  <div class="top center-grow pt-3">
-    <Text size="md" bold className="mb-2">{Lang.t('setup.choose-time-format', `Which time looks right?`)}</Text>
+  <div class="top center-grow pt-3 mx-auto" style="width:300px;">
+    <Text size="md" bold className="mb-4">{Lang.t('setup.choose-time-format', `Which time looks right?`)}</Text>
     <Button
-      className="btn-block my-3 btn btn-content {$UserStore.meta.is24Hour ? 'active' : ''}"
+      className="mb-3"
+      block
+      size="lg"
+      delay={20}
+      color={$UserStore.meta.is24Hour ? 'primary' : 'light'}
       on:click={() => {
         $UserStore.meta.is24Hour = true;
         UserStore.saveMeta();
       }}>
-      <div class="text-lg">{dayjs().format('HH:mm')}</div>
+      {dayjs().format('HH:mm')}
     </Button>
     <Button
-      className="btn-block my-3 btn btn-content {!$UserStore.meta.is24Hour ? 'active' : ''}"
+      className="mb-3"
+      block
+      size="lg"
+      delay={20}
+      color={!$UserStore.meta.is24Hour ? 'primary' : 'light'}
       on:click={() => {
         $UserStore.meta.is24Hour = false;
         UserStore.saveMeta();
       }}>
-      <div class="text-lg">{dayjs().format('h:mm a')}</div>
+      {dayjs().format('h:mm a')}
     </Button>
   </div>
 

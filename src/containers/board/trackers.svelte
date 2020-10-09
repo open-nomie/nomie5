@@ -18,6 +18,7 @@
   import TrackerButton from "./tracker-button.svelte";
   import ScoreTracker from "../../modules/scoring/score-tracker";
   import { Lang } from "../../store/lang";
+  import Button from "../../components/button/button.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -103,13 +104,18 @@
         }
       }}>
       <div class="highlight" style="background-color:{tracker.color}" />
-      <span slot="left" class="n-row justify-content-center" style="width:40px;">
-        <Text style="color:{tracker.color}" size={$UserStore.localSettings.compactButtons ? 'xl' : 'xxl'}>{tracker.emoji}</Text>
-      </span>
+      <div slot="left" class="n-row justify-content-center truncate pr-0">
+        <Text
+          center
+          style="color:{tracker.color}; width:40px; white-space:pre; max-width:40px; min-width:40px; overflow:visible"
+          size={$UserStore.localSettings.compactButtons ? 'xl' : 'xxl'}>
+          {tracker.emoji}
+        </Text>
+      </div>
       <div>
         <Text size="md" leading2>{tracker.label}</Text>
         {#if getLastUsed(tracker)}
-          <Text size="sm" faded leading2>{getLastUsed(tracker) || undefined}</Text>
+          <Text size={$UserStore.localSettings.compactButtons ? 'xs' : 'sm'} faded leading2>{getLastUsed(tracker) || undefined}</Text>
         {/if}
       </div>
       <span slot="right" class="mr-2">
@@ -120,28 +126,28 @@
       </span>
       <span slot="right">
         {#if !hideMore}
-          <button
-            class="btn btn-icon btn-light prevent"
-            style="height:26px;z-index:1000"
-            on:click|preventDefault|stopPropagation={(evt) => {
-              evt.stopImmediatePropagation();
-              evt.preventDefault();
+          <Button
+            shape="circle"
+            color="light"
+            style="z-index:1000"
+            on:click={(evt) => {
               dispatch('more', tracker);
             }}>
-            <Icon name="more" size="18" className="prevent" />
-          </button>
+            <Icon name="more" size="18" className="prevent fill-inverse-1" />
+          </Button>
         {/if}
       </span>
     </ListItem>
   {/each}
   {#if !hideAdd}
     <ListItem
+      compact={$UserStore.localSettings.compactButtons}
       clickable
       title={Lang.t('tracker.add-tracker')}
       on:click={() => dispatch('add')}
       className="tracker-add py-3 tracker-list-item flex-shrink-off no-value">
       <div slot="left">
-        <Text size={$UserStore.localSettings.compactButtons ? 'xl' : 'xxl'}>➕</Text>
+        <Text style="width:40px;" center size={$UserStore.localSettings.compactButtons ? 'xl' : 'xxl'}>➕</Text>
       </div>
     </ListItem>
   {/if}

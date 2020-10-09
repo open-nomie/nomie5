@@ -47,6 +47,7 @@
   import { truncateText } from "../../utils/text/text";
   import { UserStore } from "../../store/user-store";
   import tick from "../../utils/tick/tick";
+  import ButtonGroup from "../../components/button-group/button-group.svelte";
   // import { getDashboardStartEndDates } from "./dashboard-helpers";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
@@ -463,12 +464,12 @@
             {/each}
           {/if}
         </div>
-        <div class="board-actions filler">
-          <div class="btn-group" style="width:200px;">
+        <div class="board-actions filler mb-2">
+          <ButtonGroup style="max-width:230px;">
             <Button on:click={newWidget} color="clear">{Lang.t('general.add', 'Add')}</Button>
             <Button on:click={toggleEdit} color="clear">{Lang.t('general.edit', 'Edit')}</Button>
             <Button on:click={deleteDashboard} color="clear">{Lang.t('general.delete', 'Delete')}</Button>
-          </div>
+          </ButtonGroup>
         </div>
         <div class="mt-3 p-2" />
       {:else if ready}
@@ -520,12 +521,15 @@
 
 <Modal show={editingWidget !== undefined}>
   <div class="n-toolbar-grid" slot="header">
-    <button class="btn btn-clear left text-primary-bright" on:click={clearEditing}>Close</button>
-    <div class="main">Widget Editor</div>
-    <button class="btn btn-clear right text-primary-bright" on:click={saveEditingWidget}>
-      {#if editingWidget && editingWidget._editing}{Lang.t('general.update', 'Update')}{:else}{Lang.t('general.save', 'Save')}{/if}
-    </button>
-
+    <div class="left">
+      <Button color="primary" type="clear" on:click={clearEditing}>Close</Button>
+    </div>
+    <div class="main">{Lang.t('dashboard.widget-editor', 'Widget Editor')}</div>
+    <div class="right">
+      <Button color="primary" type="clear" on:click={saveEditingWidget}>
+        {#if editingWidget && editingWidget._editing}{Lang.t('general.update', 'Update')}{:else}{Lang.t('general.save', 'Save')}{/if}
+      </Button>
+    </div>
   </div>
   {#if editingWidget}
     <WidgetEditor bind:value={editingWidget} on:close={clearEditing} />

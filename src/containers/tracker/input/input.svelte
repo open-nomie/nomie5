@@ -169,9 +169,11 @@
         {tracker.label}
       </span>
     </div>
-    <button class="btn btn-clear tap-icon right" on:click={editTracker}>
-      <NIcon name="more" size="26" />
-    </button>
+    <div class="right">
+      <Button icon on:click={editTracker}>
+        <NIcon name="more" size="26" className="fill-primary-bright" />
+      </Button>
+    </div>
   </div>
   <!-- Is the data ready -->
   {#if data.ready === true}
@@ -234,13 +236,12 @@
         <Button
           color="transparent"
           shape="circle"
-          size="lg"
-          style="width:40px; height:40px;"
+          size="xl"
           title="Cancel"
           on:click={() => {
             methods.onCancel();
           }}>
-          <Icon name="close" size="40" />
+          <Icon name="close" size="40" className="fill-inverse" />
         </Button>
       </div>
       <!-- end left toolbar -->
@@ -297,16 +298,15 @@
           <Button
             color="transparent"
             shape="circle"
-            style="width:42px; height:42px;"
-            size="lg"
+            size="xl"
             on:click={methods.onAdd}
             title="Add this to the note, but don't save yet"
             className={tracker.started ? 'd-none' : ''}>
             <!-- local hack to make plus match with close-->
             {#if !$Interact.trackerInput.allowSave}
-              <NIcon name="chevronRight" size="40" />
+              <NIcon name="chevronRight" className="fill-inverse" />
             {:else}
-              <NIcon name="add" size="46" />
+              <NIcon name="add" className="fill-inverse" />
             {/if}
           </Button>
         {/if}

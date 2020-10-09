@@ -38,16 +38,16 @@
 </style>
 
 <div class="keypad">
-  <Button delay={0} shape="round" color="transparent" on:click={select(1)}>1</Button>
-  <Button delay={0} shape="round" color="transparent" on:click={select(2)}>2</Button>
-  <Button delay={0} shape="round" color="transparent" on:click={select(3)}>3</Button>
-  <Button delay={0} shape="round" color="transparent" on:click={select(4)}>4</Button>
-  <Button delay={0} shape="round" color="transparent" on:click={select(5)}>5</Button>
-  <Button delay={0} shape="round" color="transparent" on:click={select(6)}>6</Button>
-  <Button delay={0} shape="round" color="transparent" on:click={select(7)}>7</Button>
-  <Button delay={0} shape="round" color="transparent" on:click={select(8)}>8</Button>
-  <Button delay={0} shape="round" color="transparent" on:click={select(9)}>9</Button>
-  <Button delay={0} shape="round" color="transparent" disabled={!value} on:click={clear}>Clear</Button>
-  <Button delay={0} shape="round" color="transparent" on:click={select(0)}>0</Button>
-  <Button delay={0} shape="round" color="transparent" disabled={!value} on:click={submit}>Submit</Button>
+  <Button delay={0} color="clear" on:click={select(1)}>1</Button>
+  <Button delay={0} color="clear" on:click={select(2)}>2</Button>
+  <Button delay={0} color="clear" on:click={select(3)}>3</Button>
+  <Button delay={0} color="clear" on:click={select(4)}>4</Button>
+  <Button delay={0} color="clear" on:click={select(5)}>5</Button>
+  <Button delay={0} color="clear" on:click={select(6)}>6</Button>
+  <Button delay={0} color="clear" on:click={select(7)}>7</Button>
+  <Button delay={0} color="clear" on:click={select(8)}>8</Button>
+  <Button delay={0} color="clear" on:click={select(9)}>9</Button>
+  <Button delay={0} color="clear" disabled={!value} on:click={clear}>Clear</Button>
+  <Button delay={0} color="clear" on:click={select(0)}>0</Button>
+  <Button delay={0} color="clear" disabled={!value} on:click={submit}>Submit</Button>
 </div>

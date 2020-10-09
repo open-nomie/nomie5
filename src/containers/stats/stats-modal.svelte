@@ -623,25 +623,25 @@
     <NToolbarGrid>
       <div slot="left" className="truncate" style="min-width:100px;">
         {#if $Interact.stats.terms.length == 1}
-          <Button shape="circle" color="transparent" on:click={close}>
-            <NIcon name="close" />
+          <Button icon color="transparent" on:click={close}>
+            <NIcon name="close" className="fill-primary-bright" />
           </Button>
         {:else}
-          <button class="btn btn-clear tap-icon clickable pl-1" on:click={back}>
-            <NIcon name="arrowBack" size="28" />
+          <Button icon class="pl-1" on:click={back}>
+            <NIcon name="arrowBack" size="28" className="fill-primary-bright" />
             <small class="text-sm text-inverse-2 ml-1 truncate" style="max-width:60px;">
               {$Interact.stats.terms[$Interact.stats.terms.length - 2]}
             </small>
-          </button>
+          </Button>
         {/if}
       </div>
 
       <h1 class="title truncate" slot="main">{state.currentTerm}</h1>
 
       <div slot="right" style="min-width:100px" class="toolbar-buttons align-right">
-        <button class="btn btn-clear tap-icon clickable" on:click={onMoreTap}>
-          <NIcon name="more" />
-        </button>
+        <Button icon on:click={onMoreTap}>
+          <NIcon name="more" className="fill-primary-bright" />
+        </Button>
       </div>
     </NToolbarGrid>
     <div class="n-row pb-2 px-2">

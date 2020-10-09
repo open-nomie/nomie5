@@ -73,6 +73,8 @@
   import ListItem from "../../components/list-item/list-item.svelte";
   import TrackersList from "./trackers.svelte";
   import { SearchStore } from "../../store/search-store";
+  import ButtonGroup from "../../components/button-group/button-group.svelte";
+  import Card from "../../components/card/card.svelte";
 
   // Consts
   const console = new Logger("board.svelte");
@@ -94,8 +96,6 @@
     showStartPacks: false, // shows the start library
     savingTrackers: [], // to highlight trackers that are being saved
     addedTrackers: [], // Visually showing what trackers are in the notes field
-    searching: false, // if the user is searching
-    searchTerm: null, // the search term the user is typing
     activeTip: 0, // index of the current tip to show
     hideTips: false, // temp hide - it will stop showing after 12 launches.
     view: localStorage.getItem("board-view") || "button",
@@ -160,7 +160,7 @@
     LedgerStore.hook("onLogSaved", (log) => {
       // Clear saving states
       state.savingTrackers = [];
-      state.searching = false;
+
       state.addedTrackers = [];
     });
   });
@@ -259,27 +259,12 @@
   // Component Methods
   const methods = {
     // When user starts searching
-    searchKeypress() {
-      // Find trackers matching query
-      foundTrackers = Object.keys($TrackerStore.trackers)
-        .map((tag) => {
-          return $TrackerStore.trackers[tag];
-        })
-        .filter((tracker) => {
-          // Search the tag and the label
-          let regex = new RegExp((state.searchTerm || "").trim(), "gi");
-          return `${tracker.tag}-${tracker.label}`.search(regex) > -1;
-        });
-    },
+
     // Toggle if the user is searching or not.
     async toggleSearch() {
       SearchStore.view("trackers");
     },
-    stopSearch() {
-      state.searchTerm = null;
-      state.searching = false;
-      foundTrackers = null;
-    },
+
     // When the user wants to add a new tracker
     addButtonTap() {
       let buttons = [];
@@ -600,46 +585,42 @@
 
 <!-- Start App Layout -->
 <NLayout pageTitle={appTitle}>
-  <header slot="header">
+  <header slot="header" class="container">
     {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
-      <div class="container p-0 n-row h-100">
+      <div class="n-toolbar n-row px-3 h-100">
         {#if $TrackerStore.timers.length}
-          <button class="btn tab tap-icon pl-3 pr-2" on:click={TrackerStore.toggleTimers}>
-            <Icon name="time" size={24} className="fill-red-pulse" />
-          </button>
+          <Button icon on:click={TrackerStore.toggleTimers} className="mr-1">
+            <Icon name="time" size={24} className="fill-red" />
+          </Button>
         {/if}
-        <button class="btn tab tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
-          <Icon name="search" size={24} className={state.searching ? 'fill-red' : ''} />
-        </button>
-
+        <Button icon className="tap-icon" on:click={methods.toggleSearch}>
+          <Icon name="search" size={24} />
+        </Button>
         <NBoardTabs
           boards={methods.injectAllBoard($BoardStore.boards || [])}
           active={$BoardStore.active}
           on:create={methods.newBoard}
           on:tabTap={(event) => {
-            methods.stopSearch();
             BoardStore.setActive(event.detail.id, event.detail);
           }}>
           <div slot="right" class="n-row ml-2">
             <div class="filler" />
             <Button
-              color="transparent"
               icon
-              className="mx-2 mr-3 tap-icon"
+              className="mx-2 mr-1"
               on:click={() => {
                 methods.newBoard();
               }}>
-              <Icon name="newTab" size="24" />
+              <Icon name="newTab" size="24" className="fill-primary-bright" />
             </Button>
             {#if $BoardStore.boards.length > 2}
               <Button
-                color="transparent"
                 icon
-                className="px-2 tap-icon"
+                className="pr-3 tap-icon"
                 on:click={() => {
                   Interact.toggleBoardSorter();
                 }}>
-                <Icon name="arrowsLeftRight" size="24" />
+                <Icon name="arrowsLeftRight" size="24" className="fill-primary-bright" />
               </Button>
             {/if}
           </div>
@@ -650,46 +631,30 @@
       <NToolbarGrid>
         <div slot="left" class="d-flex">
           {#if $TrackerStore.timers.length}
-            <button class="btn tool tap-icon pl-2" on:click={TrackerStore.toggleTimers}>
-              <Icon name="time" size={20} className="fill-red-pulse" />
-            </button>
+            <Button icon className="tool pl-1" on:click={TrackerStore.toggleTimers}>
+              <Icon name="time" size={20} className="fill-red" />
+            </Button>
           {/if}
-          <button class="btn tab tap-icon pr-2 {$TrackerStore.timers.length ? 'pl-1' : ''}" on:click={methods.toggleSearch}>
-            <Icon name="search" size={24} className={state.searching ? 'fill-red' : ''} />
-          </button>
+          <div class="pr-1 pl-2 {$TrackerStore.timers.length ? '' : ''}">
+            <Button color="clear" on:click={methods.toggleSearch}>
+              <Icon name="search" size={24} className={state.searching ? 'fill-red' : 'fill-primary-bright'} />
+            </Button>
+          </div>
         </div>
         <div slot="main" class="align-items-center">
-          <LogoType size={20} on:click={methods.enableBoards} />
+          <LogoType color="rgba(155,155,155,0.5)" size={20} on:click={methods.enableBoards} />
         </div>
-        <button slot="right" class="btn btn-clear btn-icon tap-icon" on:click={methods.enableBoards}>
-          <Icon name="newTab" size="20" />
-        </button>
+        <div slot="right">
+          <Button icon on:click={methods.enableBoards}>
+            <Icon name="newTab" size="20" className="fill-primary-bright" />
+          </Button>
+        </div>
       </NToolbarGrid>
     {/if}
   </header>
   <!-- end header-->
   <div slot="content" class="container board-container">
 
-    {#if state.searching}
-      <div class="px-2">
-        <NSearchBar
-          bind:this={_elSearchBar}
-          className="mt-2"
-          autocomplete
-          on:clear={() => {
-            state.searchTerm = null;
-          }}
-          on:change={(value) => {
-            state.searchTerm = value.detail;
-            methods.searchKeypress();
-          }}
-          placeholder="{Lang.t('general.search-trackers', 'Search Trackers')}...">
-          <button slot="right-inside" class="btn btn-clear" on:click={methods.toggleSearch}>
-            <Icon name="close" className="fill-faded-2" />
-          </button>
-        </NSearchBar>
-      </div>
-    {/if}
     {#if user}
       {#if !isReady.done}
         <div class="empty-notice">
@@ -711,41 +676,31 @@
         {/if}
         <OfflineQueue />
         {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
-          <div class="n-list solo pb-2" style="min-height:auto">
-            <ListItem compact>
-              <Text size="sm">Running Timers</Text>
-              <div slot="right">
-                <Button text size="xs" on:click={TrackerStore.toggleTimers}>Close</Button>
-              </div>
-            </ListItem>
-            <TrackersList
-              view="list"
-              trackers={timers}
-              on:tap={(evt) => {
-                methods.trackerTapped(evt.detail);
-              }}
-              hideAdd
-              on:more={(evt) => {
-                methods.showTrackerOptions(evt.detail);
-              }} />
+          <div class="container">
+            <Card>
+              <ListItem compact>
+                <Text size="sm">Running Timers</Text>
+                <div slot="right">
+                  <Button text size="xs" on:click={TrackerStore.toggleTimers}>Close</Button>
+                </div>
+              </ListItem>
+              <TrackersList
+                view="list"
+                trackers={timers}
+                on:tap={(evt) => {
+                  methods.trackerTapped(evt.detail);
+                }}
+                hideAdd
+                on:more={(evt) => {
+                  methods.showTrackerOptions(evt.detail);
+                }} />
 
+            </Card>
           </div>
         {/if}
         <main class="n-board h-100" on:swipeleft={BoardStore.next} on:swiperight={BoardStore.previous}>
           <!-- Loop over trackers -->
 
-          <!-- {#if (foundTrackers || boardTrackers || []).length === 0}
-            {#if foundTrackers != null}
-              <div class="no-trackers">{Lang.t('board.no-search-results', 'No trackers found')}</div>
-            {:else}
-              <div class="no-trackers d-flex flex-column align-items-center justify-content-center">
-                {Lang.t('board.add-some-trackers', 'Sure is empty in here')}
-                <Button text on:click={methods.addButtonTap}>Add a Tracker</Button>
-              </div>
-            {/if}
-          {/if} -->
-          <!-- lastUsed={methods.getLastUsed(tracker)} -->
-          <!-- {#if true === true} -->
           <TrackersList
             view={state.view}
             trackers={foundTrackers || boardTrackers}
@@ -760,39 +715,38 @@
           <!-- Include User Tips - shit should be a component -->
 
         </main>
-        <div class="board-actions mt-5 mb-2 n-row" style="min-width:300px;">
+        <div class="board-actions mt-5 mb-3 n-row" style="min-width:310px;">
           {#if $UserStore.meta.hiddenFeatures}
-            <div class="btn-group mr-1 compact">
+            <ButtonGroup className="mr-2 box-shadow-tight">
               <Button
                 icon
-                className="px-1"
+                className={`${state.view == 'button' ? 'active' : ''}`}
                 on:click={() => {
                   setView('button');
                 }}>
-                <Icon size="18" name="buttonView" className={`${state.view == 'button' ? 'fill-primary' : ''}`} />
+                <Icon size="18" name="buttonView" />
               </Button>
               <Button
                 icon
-                className="px-1"
+                className={`${state.view == 'list' ? 'active' : ''}`}
                 on:click={() => {
                   setView('list');
                 }}>
-                <Icon size="18" name="list" className={`${state.view == 'list' ? 'fill-primary' : ''}`} />
+                <Icon size="18" name="list" />
               </Button>
               <Button
                 icon
-                className="px-0"
+                className={`${state.view == 'detail' ? 'active' : ''}`}
                 on:click={() => {
                   setView('detail');
                 }}>
-                <Icon size="18" name="detailView" className={`${state.view == 'detail' ? 'fill-primary' : ''}`} />
+                <Icon size="18" name="detailView" />
               </Button>
-            </div>
+            </ButtonGroup>
           {/if}
-          <Button on:click={boardOptions} color="light" className="py-2 mx-2">
-            <Text>{Lang.t('general.options', 'Tab Options')}</Text>
-          </Button>
-
+          <ButtonGroup className="mr-2 box-shadow-tight" style="max-width:150px">
+            <Button on:click={boardOptions}>{Lang.t('board.edit-sort', 'Edit / Sort')}...</Button>
+          </ButtonGroup>
         </div>
         <NTip {tips} />
       {/if}

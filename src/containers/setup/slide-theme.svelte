@@ -10,35 +10,43 @@
 </script>
 
 <section class="slide slide-theme">
-  <div class="top center-grow pt-3">
-
-    <Text size="md" bold className="mb-2">{Lang.t('setup.choose-theme', `Choose your Theme`)}</Text>
+  <div class="top center-grow pt-3 mx-auto" style="width:300px;">
+    <Text size="md" bold className="mb-4">{Lang.t('setup.choose-theme', `Choose your Theme`)}</Text>
     <Button
+      className="mb-3"
+      block
+      size="lg"
       delay={20}
-      className="btn-block my-3 btn btn-content {state.theme == 'light' ? 'active' : ''}"
+      color={state.theme == 'light' ? 'primary' : 'light'}
       on:click={() => {
         UserStore.setTheme('light');
         state.theme = 'light';
       }}>
-      <div class="text-lg">Light</div>
+      Light
     </Button>
     <Button
+      className="mb-3"
       delay={20}
-      className="btn-block my-3 btn btn-content {state.theme == 'dark' ? 'active' : ''}"
+      block
+      size="lg"
+      color={state.theme == 'dark' ? 'primary' : 'light'}
       on:click={() => {
         UserStore.setTheme('dark');
         state.theme = 'dark';
       }}>
-      <div class="text-lg">Dark</div>
+      Dark
     </Button>
     <Button
+      className="mb-3"
       delay={20}
-      className="btn-block my-3 btn btn-content {state.theme == 'auto' ? 'active' : ''}"
+      block
+      size="lg"
+      color={state.theme == 'auto' ? 'primary' : 'light'}
       on:click={() => {
         UserStore.setTheme('auto');
         state.theme = 'auto';
       }}>
-      <div class="text-lg">Automatic</div>
+      Automatic
     </Button>
   </div>
 

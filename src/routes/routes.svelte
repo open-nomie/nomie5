@@ -12,11 +12,13 @@
   import SettingsRoute from "./settings.svelte";
   import Setup from "./setup.svelte";
   import TrackRoute from "./track.svelte";
+  import TestRoute from "./tests/tests.svelte";
 </script>
 
 <Router>
   <Route path="/" component={TrackRoute} />
   <Route path="/api" component={NomieAPIRoute} />
+  <Route path="/test" component={TestRoute} />
   <Route path="/board/:id" component={BoardEditorRoute} />
   <Route path="/dashboard" component={Dashboard} />
   <Route path="/faq" component={FAQRoute} />

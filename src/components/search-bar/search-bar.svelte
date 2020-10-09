@@ -104,9 +104,9 @@
       <div slot="right">
         <slot name="right-inside" />
         {#if searchTerm && showClose}
-          <button class="btn btn-sm btn-clear btn-action-clear mr-2" on:click={fireClear} style="margin-left:-10px;">
-            <NIcon name="close" />
-          </button>
+          <Button icon className=" btn-action-clear mr-2" on:click={fireClear} style="margin-left:-10px;">
+            <NIcon name="close" className="fill-inverse-2" />
+          </Button>
         {/if}
       </div>
     </NInput>

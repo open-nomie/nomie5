@@ -34,7 +34,6 @@
     .value {
       text-align: center;
       margin: 0 0 20px 0;
-
       color: var(--color-inverse);
       position: absolute;
       bottom: 10px;

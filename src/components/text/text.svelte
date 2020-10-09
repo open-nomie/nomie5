@@ -69,7 +69,7 @@
       font-size: 1.3em;
     }
     &.xxl {
-      font-size: 1.45em;
+      font-size: 1.6em;
     }
     &.font-weight-bold {
       font-weight: bold;

@@ -9,6 +9,7 @@
     box-shadow: var(--box-shadow-tight);
     border-radius: 6px;
     margin: 8px;
+    overflow: hidden;
   }
 </style>
 

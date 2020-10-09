@@ -223,7 +223,7 @@
         </div>
         <div class="right">
           {#if state.registered}
-            <button class="btn btn-clear tap-text mr-2" on:click={methods.getLogs}>Check</button>
+            <Button type="clear" on:click={methods.getLogs}>Check</Button>
           {/if}
         </div>
       </div>
@@ -307,7 +307,7 @@
     {:else}
       <!-- We're In the Settings Tab
         -->
-      <NItem title="Auto Accept" className="solo py-2 mb-3" description="Auto import and accept API logs">
+      <NItem title="Auto Accept" className="py-2 mb-3" description="Auto import and accept API logs">
         <div slot="right">
           <NToggle
             bind:value={autoImportAPI}
@@ -340,16 +340,10 @@
           <input type="text" class="form-control mt-1" value={state.apiKey} />
         </div> -->
         </NItem>
-        <NItem
-          delay={0}
-          compact
-          clickable
-          title="Private Key"
-          className="py-1"
-          on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
-          <button class="btn btn-clear text-primary-bright" slot="right">
+        <NItem delay={0} clickable title="Private Key" className="py-1" on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
+          <div slot="right">
             <NIcon size="16" name="chevron{state.showPrivateKey ? 'Up' : 'Down'}" />
-          </button>
+          </div>
         </NItem>
         {#if state.showPrivateKey}
           <NItem className="px-3 pb-3">
@@ -371,29 +365,30 @@
       <div class="n-list mt-2 mb-2">
         <NItem title="Example POST" clickable delay={0} on:click={() => (state.showExample = !state.showExample)}>
           <div slot="right">
-            <NIcon name="chevron{state.showExample ? 'Up' : 'Down'}" />
+            <NIcon name="chevron{state.showExample ? 'Up' : 'Down'}" size="16" />
           </div>
         </NItem>
         {#if state.showExample}
           <NItem>
-            <textarea class="form-control" style="height:90px; font-size:11px; font-family:monospace" bind:value={state.apiExample} />
+            <textarea class="form-control" style="height:120px; font-size:0.7em; font-family:monospace" bind:value={state.apiExample} />
           </NItem>
           <NItem compact title="URL" className="py-0">
             <div slot="right" class="n-row">
-              {appConfig.api}/log
+
               <Button
-                className="tap-icon"
-                color="transparent"
-                shape="circle"
+                icon
                 on:click={() => {
                   copy(`${appConfig.api}/log`);
                 }}>
                 <NIcon name="copy" size="24" className="fill-primary-bright" />
               </Button>
+              <Text size="sm">{appConfig.api}/log</Text>
             </div>
           </NItem>
           <NItem compact title="METHOD" className="py-0">
-            <span slot="right">POST application/json</span>
+            <span slot="right">
+              <Text size="sm">POST application/json</Text>
+            </span>
           </NItem>
           <NItem itemDivider compact topLine>Fields</NItem>
           <NItem compact title="note (required)" className="py-1">

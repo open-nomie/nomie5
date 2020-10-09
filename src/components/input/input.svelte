@@ -421,9 +421,7 @@
     </div>
     <slot name="right">
       {#if type == 'select'}
-        <button class="btn btn-clear select-arrow">
-          <NIcon name="chevronDown" />
-        </button>
+        <NIcon name="chevronDown" className="fill-inverse-2 mr-3" size="16" />
       {/if}
     </slot>
 

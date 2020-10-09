@@ -110,17 +110,18 @@
       }
     }
     .btn-toolbar {
-      .btn {
+      .nbtn {
         min-width: 100px;
       }
     }
   }
-  :global(.pop-menu .list .btn) {
+  :global(.pop-menu .list .nbtn) {
     border-radius: 0;
     margin-bottom: 0;
     margin-top: 0;
     border: none;
     box-shadow: none !important;
+    background-color: transparent;
     &:hover {
       transform: scale(1) !important;
       color: var(--color-inverse) !important;
@@ -143,7 +144,7 @@
       // background-color: var(--color-faded) !important;
     }
   }
-  :global(.pop-menu .btn-danger:hover, .pop-menu.btn-danger:active) {
+  :global(.pop-menu .nbtn-danger:hover, .pop-menu.nbtn-danger:active) {
     background-color: var(--color-red) !important;
     color: rgba(128, 2, 2, 0.9) !important;
   }
@@ -161,7 +162,7 @@
         {/if}
       </div>
     {/if}
-    <div class="list">
+    <div class="list bg-solid">
       {#each buttons as button, index}
         <Button
           block
@@ -170,7 +171,7 @@
           disabled={button.disabled}
           style="padding-top:8px; padding-bottom:8px;"
           className="pop-button pop-button-{index}
-          {button.description ? 'btn-desc' : ''}"
+          {button.description ? 'nbtn-desc' : ''}"
           on:click={(evt) => {
             button.click();
             close(evt);

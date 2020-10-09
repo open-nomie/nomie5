@@ -14,39 +14,35 @@
 <style>
   .next-prev-cal {
     max-width: 120px;
+    min-width: 80px;
   }
 </style>
 
 <div class="next-prev-cal n-row w-auto" {style}>
   <Button
-    color="circle"
-    className="tap-icon"
+    icon
     delay={0}
     on:click={() => {
       dispatch('previous');
     }}>
-    <Icon name="chevronLeft" size="24" />
+    <Icon name="chevronLeft" size="24" className="fill-primary-bright" />
   </Button>
   {#if !hideCal}
     <Button
-      color="none"
-      shape="circle"
       delay={0}
-      className="tap-icon"
+      icon
       on:click={() => {
         dispatch('calendar');
       }}>
-      <Icon name="calendar" size="24" className={isToday ? '' : 'fill-red'} />
+      <Icon name="calendar" size="24" className={isToday ? 'fill-primary-bright' : 'fill-red'} />
     </Button>
   {/if}
   <Button
-    color="none"
-    shape="circle"
     delay={0}
-    className="tap-icon"
+    icon
     on:click={() => {
       dispatch('next');
     }}>
-    <Icon name="chevronRight" size="24" />
+    <Icon name="chevronRight" size="24" className="fill-primary-bright" />
   </Button>
 </div>

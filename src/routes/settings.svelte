@@ -216,7 +216,7 @@ Note: Your data will not automatically move over. You'll first need to export it
         <Text bold>{Lang.t('settings.settings')}</Text>
       </div>
       <div class="right">
-        <button on:click={methods.faq} class="btn tap-text">{Lang.t('general.faq')}</button>
+        <Button type="clear" color="primary" on:click={methods.faq}>{Lang.t('general.faq')}</Button>
       </div>
     </div>
     <div class="n-toolbar px-2 pb-1 container">
@@ -247,7 +247,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               DATA VIEW
               *******************************************
             -->
-            <div class="n-list">
+            <div class="n-list pb-2">
               <NItem itemDivider>Storage Location</NItem>
               <NItem on:click={methods.storageMenu}>
                 <span slot="left">☁️</span>
@@ -272,7 +272,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               {#if $UserStore.storageType === 'pouchdb'}
                 <PouchDBOptions />
               {/if}
-              <hr class="divider center" />
+
               <NItem
                 detail
                 title="Browse Files..."
@@ -372,9 +372,9 @@ Note: Your data will not automatically move over. You'll first need to export it
               </NItem>
               <NItem title={Lang.t('general.launch-count', 'Launch Count')}>
                 <div class="n-row" slot="right">
-                  <button class="btn btn-clear" on:click={UserStore.resetLaunchCount}>
+                  <Button icon size="sm" on:click={UserStore.resetLaunchCount}>
                     <NIcon name="delete" className="fill-red" size="18" />
-                  </button>
+                  </Button>
                   {$UserStore.launchCount}
                 </div>
               </NItem>

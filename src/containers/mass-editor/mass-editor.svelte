@@ -24,6 +24,7 @@
   import { LedgerStore } from "../../store/ledger";
   import { Interact } from "../../store/interact";
   import Text from "../../components/text/text.svelte";
+  import Button from "../../components/button/button.svelte";
 
   export let show = false;
 
@@ -210,7 +211,7 @@
 {#if show}
   <NModal class="mass-editor flex-shrink-off" title="Find and Replace">
 
-    <div class="p-2 pb-3">
+    <div class="p-1 pb-2">
       {#if state.error}
         <NItem>
           <div class="alert alert-danger">{state.error}</div>
@@ -258,12 +259,16 @@
               <Text size="sm" leading2 faded>Sample {state.example + 1} of {state.found.length}</Text>
               <Text size="sm">{methods.showReplace(state.found[state.example || 0].log.note)}</Text>
             </div>
-            <button class="btn btn-clear btn-icon tap-icon" slot="left" on:click={methods.previousSample}>
-              <NIcon name="chevronLeft" />
-            </button>
-            <button class="btn btn-clear btn-icon tap-icon" slot="right" on:click={methods.nextSample}>
-              <NIcon name="chevronRight" />
-            </button>
+            <div slot="left">
+              <Button icon on:click={methods.previousSample}>
+                <NIcon name="chevronLeft" />
+              </Button>
+            </div>
+            <div slot="right">
+              <Button icon on:click={methods.nextSample}>
+                <NIcon name="chevronRight" />
+              </Button>
+            </div>
           </NItem>
         {/if}
       {/if}
@@ -273,13 +278,13 @@
     <div slot="footer" class="n-row">
 
       {#if state.finding && state.finishedFinding}
-        <button class="btn btn-clear" on:click={methods.back}>Back</button>
-        <button class="btn btn-primary" on:click={methods.replace}>Replace All...</button>
+        <Button color="clear" on:click={methods.back}>Back</Button>
+        <Button color="primary" on:click={methods.replace}>Replace All...</Button>
       {:else if !state.finding && !state.found}
-        <button class="btn btn-clear" on:click={methods.close}>Cancel</button>
-        <button class="btn btn-primary" on:click={methods.find}>Find All...</button>
+        <Button color="clear" on:click={methods.close}>Cancel</Button>
+        <Button color="primary" on:click={methods.find}>Find All...</Button>
       {:else}
-        <button class="btn btn-clear" on:click={methods.back}>Back</button>
+        <Button color="clear" on:click={methods.back}>Back</Button>
       {/if}
     </div>
 

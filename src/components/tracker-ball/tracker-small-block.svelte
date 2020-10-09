@@ -34,9 +34,9 @@
 {#if element}
 
   <Button
-    color="none"
+    color="clear"
     {style}
-    className="btn {className} n-tracker-value-grid-button {solo ? 'solo' : ''}
+    className="{className} n-tracker-value-grid-button {solo ? 'solo' : ''}
     {xs ? 'size-xs' : ''}
     {novalue ? 'novalue' : ''}
     "

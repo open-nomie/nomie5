@@ -12,34 +12,46 @@
 </script>
 
 <section class="slide slide-4 slide-welcome {state.activeSlide === 5 ? 'active' : 'hidden'} {state.transitioning ? 'move' : ''}">
-  <div class="top center-grow">
-    <Text size="md" bold className="mb-2">{Lang.t('setup.pick-data-storage', `Choose your data's location...`)}</Text>
+  <div class="top center-grow pt-3 mx-auto" style="width:300px;">
+    <Text size="md" bold>{Lang.t('setup.pick-data-storage', `Choose your data's location...`)}</Text>
+    <Text size="xs" className="mb-4" faded>You can always change this later.</Text>
 
     <Button
-      className=" btn btn-content {$UserStore.storageType == 'local' ? 'active' : ''}"
+      className="mb-2"
+      block
+      size="lg"
+      delay={20}
+      color={$UserStore.storageType == 'local' ? 'primary' : 'light'}
       on:click={() => {
         UserStore.setStorage('local');
       }}>
-      <Text lineHeightMd bold>{Lang.t('storage.local_title', 'This Device Only')}</Text>
-      <Text size="xs" faded className="">Stored unencrypted ONLY on this device.</Text>
+      {Lang.t('storage.local_title', 'This Device Only')}
     </Button>
+    <Text size="sm" faded className="" center>
+      Stored on this device only. Good for playing around, but if you're serious - use the blockstack option.
+    </Text>
+
+    <hr class="divider my-3 w-100" />
+
     <Button
-      className="btn btn-content {$UserStore.storageType == 'blockstack' ? 'active' : ''}"
+      className="mb-2"
+      block
+      size="lg"
+      delay={20}
+      color={$UserStore.storageType == 'blockstack' ? 'primary' : 'light'}
       on:click={() => {
         UserStore.setStorage('blockstack');
       }}>
-      <Text lineHeightMd bold>Encrypted in the Cloud</Text>
-      <Text size="xs" faded>
-        Multiple device support with end-to-end encryption
-        <strong>by Blockstack.</strong>
-      </Text>
-
+      Encrypted in the Cloud
     </Button>
-    <p class="text-faded-3 mt-2">
-      You can always change this later.
-      <br />
-      <a href="https://blockstack.com" target="_blank">Learn more about Blockstack</a>
-    </p>
+    <Text size="sm" faded center>
+      Multiple device support with end-to-end encryption, using a free
+      <strong>
+        <a href="https://blockstack.com" target="_blank">Blockstack</a>
+      </strong>
+      account
+    </Text>
+
   </div>
 
 </section>

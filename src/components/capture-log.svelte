@@ -360,30 +360,10 @@
   }
 
   .save-button {
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 8px;
-    background-color: green;
-    flex-grow: 0;
-    flex-shrink: 0;
-    margin-bottom: 6px;
-    border: none;
-    font-size: 0.9em;
-    color: #fff;
-    svg {
-      fill: #fff;
-      height: 15px;
-      width: 15px;
-    }
   }
   .mask-textarea {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     min-height: 40px;
     max-height: 200px;
     border-radius: 20px;
@@ -413,8 +393,9 @@
       height: 40px;
       padding: 8px 0;
       color: var(--color-inverse-1);
-      margin: 0 16px;
-      margin-right: 0px;
+      // margin: 0 16px;
+      // margin-right: 0px;
+      margin-left: 8px;
       font-size: 1em;
       &:focus,
       &:active {
@@ -447,15 +428,14 @@
           });
         }} />
       <!-- Note Input -->
-      <div
-        class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 || $ActiveLogStore.photo ? 'populated' : 'empty'}">
-        <button class="btn more-button btn-icon {state.advanced ? 'active' : ''}" on:click={toggleAdvanced}>
+      <div class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 ? 'populated' : 'empty'}">
+        <Button size="sm" shape="circle" color={state.advanced ? 'primary' : 'clear'} className="ml-1" on:click={toggleAdvanced}>
           {#if state.advanced}
             <NIcon name="more" className="fill-white" />
           {:else}
             <NIcon name="more" className="fill-grey-5" />
           {/if}
-        </button>
+        </Button>
 
         <textarea
           id="textarea-capture-note"
@@ -469,13 +449,13 @@
 
         <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} />
         {#if $LedgerStore.saving}
-          <button class="save-button">
+          <Button className="save-button mx-1" shape="circle" color="success" size="sm">
             <NSpinner size={20} color="#FFFFFF" />
-          </button>
+          </Button>
         {:else}
-          <button class="save-button" on:click={methods.logSave}>
+          <Button className="save-button mx-1" shape="circle" color="success" size="sm" on:click={methods.logSave}>
             <NIcon name="arrowUp" style="fill: #FFF;" size="20" />
-          </button>
+          </Button>
         {/if}
       </div>
     </div>
@@ -506,9 +486,9 @@
           {/if}
           <div slot="right" class="n-row">
             {#if $ActiveLogStore.lat}
-              <button class="btn btn-clear btn-icon" on:click|stopPropagation={methods.clearLocation}>
-                <NIcon name="close" className="fill-inverse" size="22" />
-              </button>
+              <Button icon size="sm">
+                <Icon name="close" className="fill-inverse" on:click={methods.clearLocation} />
+              </Button>
             {:else if $UserStore.alwaysLocate}
               <Text size="sm" faded className="pr-1">Current</Text>
             {:else}

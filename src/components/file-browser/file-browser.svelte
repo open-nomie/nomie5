@@ -5,7 +5,6 @@
   import NSpinner from "../spinner/spinner.svelte";
   import NItem from "../list-item/list-item.svelte";
   import NIcon from "../icon/icon.svelte";
-  import NBackButton from "../back-button/back-button.svelte";
   import NLayout from "../../containers/layout/layout.svelte";
 
   // Utils and Modules
@@ -301,9 +300,9 @@
   <NLayout className="n-file-browser">
     <div class="n-toolbar-grid container" slot="header">
       <div class="left">
-        <button class="btn" on:click={back}>
-          <NIcon name="arrowBack" />
-        </button>
+        <Button icon on:click={back}>
+          <NIcon name="arrowBack" className="fill-primary-bright" />
+        </Button>
       </div>
       <div class="main">
         <h1 class="truncate">{state.title}</h1>
@@ -374,28 +373,28 @@
   <NLayout className="n-file-browser" showTabs={false}>
     <div class="n-toolbar-grid container" slot="header">
       <div class="left">
-        <button class="btn" on:click={back}>
-          <NIcon name="arrowBack" />
-        </button>
+        <Button icon on:click={back}>
+          <NIcon name="arrowBack" className="fill-primary-bright" />
+        </Button>
       </div>
       <div class="main">
         <h1 class="truncate">{state.file}</h1>
       </div>
       <div class="right toolbar-buttons">
-        <button
-          class="btn btn-clear"
+        <Button
+          icon
           on:click={() => {
             download(state.file);
           }}>
           <NIcon name="download" className="fill-primary-bright" />
-        </button>
-        <button
-          class="btn btn-clear"
+        </Button>
+        <Button
+          icon
           on:click={() => {
             deleteFile(state.file);
           }}>
           <NIcon name="delete" className="fill-red" />
-        </button>
+        </Button>
       </div>
     </div>
     <div class="content code-view h-100">

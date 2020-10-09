@@ -234,7 +234,7 @@
     animation: numberUp 0.4s ease-in-out;
     -webkit-animation: numberUp 0.4s ease-in-out;
   }
-  :global(.n-calculator .btn) {
+  :global(.n-calculator .nbtn) {
     touch-action: manipulation;
     border: none;
     color: var(--color-inverse);
@@ -250,16 +250,26 @@
       font-size: 20px;
     }
   }
-  :global(.n-calculator .btn.r-0) {
-    color: var(--color-inverse-1);
-    background-color: transparent;
+  :global(.n-calculator .nbtn.r-0) {
+    color: #fff;
+    background-color: var(--color-solid-1);
   }
-  :global(.n-calculator .btn.b-3) {
-    color: var(--color-inverse-1);
-    background-color: transparent;
+
+  :global(.n-calculator .nbtn.r-0.b-0) {
+    color: #fff;
+    background-color: var(--color-red);
   }
-  :global(.n-calculator .btn.b-0.r-0) {
-    color: var(--color-red);
+
+  :global(.n-calculator .nbtn.r-0.b-1, .n-calculator .nbtn.r-0.b-2) {
+    color: #fff;
+    background-color: #444;
+  }
+
+  :global(.n-calculator .nbtn.b-3) {
+    color: #fff;
+    background-color: var(--color-orange);
+  }
+  :global(.n-calculator .nbtn.b-0.r-4) {
     background-color: transparent;
   }
 </style>

@@ -24,6 +24,6 @@
   }
 </style>
 
-<Button shape="circle" color="transparent" icon className="tap-icon" on:click={onClick}>
-  <NIcon name="arrowBack" />
+<Button shape="circle" icon on:click={onClick}>
+  <NIcon name="arrowBack" className="fill-primary-bright" />
 </Button>

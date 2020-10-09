@@ -56,13 +56,14 @@
         let scrollTo = childEnd - child.offsetWidth * 0.5;
         let scrolledAmount = scroller.scrollLeft;
 
-        if (childEnd > scroller.offsetWidth * 0.5) {
-          scroller.scrollTo(scrollTo, 0);
-        } else if (scrolledAmount > childEnd) {
-          scroller.scrollTo(scrollTo, 0);
-        }
-
-        child.classList.add(activeClass);
+        setTimeout(() => {
+          if (childEnd > scroller.offsetWidth * 0.5) {
+            scroller.scrollTo(scrollTo, 0);
+          } else if (scrolledAmount > childEnd) {
+            scroller.scrollTo(scrollTo, 0);
+          }
+          child.classList.add(activeClass);
+        }, 60);
       } catch (e) {}
       ready = true;
     },

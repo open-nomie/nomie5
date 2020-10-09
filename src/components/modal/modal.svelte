@@ -6,6 +6,7 @@
 
   import NToolbarGrid from "../toolbar/toolbar-grid.svelte";
   import NIcon from "../icon/icon.svelte";
+  import Button from "../button/button.svelte";
 
   const dispatch = createEventDispatcher();
   // Props
@@ -277,13 +278,14 @@
           <NToolbarGrid>
             <div slot="left">
               {#if allowClose}
-                <button
-                  class="btn btn-clear btn-icon tap-icon"
+                <Button
+                  icon
+                  className="tap-icon"
                   on:click={() => {
                     dispatch('close');
                   }}>
                   <NIcon name="close" />
-                </button>
+                </Button>
               {/if}
             </div>
             <h1 slot="main">{title}</h1>

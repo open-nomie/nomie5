@@ -29,6 +29,9 @@
     border: solid 2px var(--color-solid);
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.06);
     transition: all 0.2s ease-in-out;
+    max-width: 20px;
+    height: 40px;
+    border-radius: 10px;
     &.selected {
       transform: scale(1.2);
       box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
@@ -42,7 +45,7 @@
     {#each colors as color, index}
       <button
         class="color-btn {color == value ? 'selected' : ''}"
-        style="height:{size}px;height:{size}px;border-radius:{size * 0.5}px; background-color:{color}"
+        style="background-color:{color}"
         on:click={() => {
           value = color;
         }} />
@@ -56,7 +59,7 @@
         on:click={() => {
           value = color;
         }}
-        style="height:{size}px; width:{size * 0.5}px;border-radius:{size * 0.5}px; background-color:{color}" />
+        style="padding:0px; width:20px; background-color:{color}" />
     {/each}
   </NHScroller>
 {/if}

@@ -4,32 +4,35 @@
   import dayjs from "dayjs";
   import Text from "../../components/text/text.svelte";
   import Button from "../../components/button/button.svelte";
-
-  const state = {
-    theme: "auto",
-  };
 </script>
 
 <section class="slide slide-time-format">
-  <div class="top center-grow pt-3">
-    <Text size="md" bold className="mb-2">{Lang.t('setup.choose-first-day-of-week', `Pick first day of the week`)}</Text>
+  <div class="top center-grow pt-3 mx-auto" style="width:300px;">
+    <Text size="md" bold className="mb-4">{Lang.t('setup.choose-first-day-of-week', `Pick first day of the week`)}</Text>
     <Button
-      className="btn-block my-3 btn btn-content {$UserStore.meta.firstDayOfWeek === '1' ? 'active' : ''}"
+      className="mb-3"
+      block
+      size="lg"
+      delay={20}
+      color={$UserStore.meta.firstDayOfWeek === '1' ? 'primary' : 'light'}
       on:click={() => {
         $UserStore.meta.firstDayOfWeek = '1';
         UserStore.saveMeta();
       }}>
-      <div class="text-lg">{Lang.t('settings.sunday')}</div>
+      {Lang.t('settings.sunday')}
     </Button>
     <Button
-      className="btn-block my-3 btn btn-content {$UserStore.meta.firstDayOfWeek === '2' ? 'active' : ''}"
+      className="mb-3"
+      block
+      size="lg"
+      delay={20}
+      color={$UserStore.meta.firstDayOfWeek === '2' ? 'primary' : 'light'}
       on:click={() => {
         $UserStore.meta.firstDayOfWeek = '2';
         UserStore.saveMeta();
       }}>
-      <div class="text-lg">{Lang.t('settings.monday')}</div>
+      {Lang.t('settings.monday')}
     </Button>
-
   </div>
 
 </section>

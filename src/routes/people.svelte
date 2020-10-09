@@ -96,7 +96,7 @@
 
 <NLayout pageTitle="People">
 
-  <div slot="header">
+  <div slot="header" class="n-row">
     <NToolbar className="container px-2">
       <Button
         color="none"

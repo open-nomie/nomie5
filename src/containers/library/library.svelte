@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import Modal from "../../components/modal/modal.svelte";
 
   import TrackerButton from "../../containers/board/tracker-button.svelte";
@@ -15,6 +15,9 @@
   import TrackerList from "../board/trackers.svelte";
   import ListItem from "../../components/list-item/list-item.svelte";
   import Text from "../../components/text/text.svelte";
+  import Button from "../../components/button/button.svelte";
+
+  import TrackerTypes from "../../modules/tracker-types/tracker-types";
 
   let installed = {}; // hol der for anything installed during the opening
 
@@ -41,6 +44,14 @@
 
   function isInstalled(tracker) {
     return $TrackerStore.trackers.hasOwnProperty(tracker.tag) || installed.hasOwnProperty(tracker.tag);
+  }
+
+  function getTypeLabel(id: string) {
+    if (TrackerTypes.hasOwnProperty(id)) {
+      return TrackerTypes[id].label;
+    } else {
+      return id;
+    }
   }
 
   async function toggleTrackerInstalled(tracker) {
@@ -112,7 +123,7 @@
       <ListItem
         className="tracker-{tracker.tag} index-{index}"
         title={tracker.label}
-        description={`${tracker.type} ${tracker.math}`}
+        description={`${getTypeLabel(tracker.type)}`}
         clickable
         on:click={() => {
           toggleTrackerInstalled(tracker);
@@ -130,11 +141,9 @@
       </ListItem>
     {/each}
   </div>
-  <button
-    slot="footer"
-    disabled={Object.keys(installed).length === 0 && $TrackerLibrary.first}
-    class="btn btn-primary filler btn-lg"
-    on:click={TrackerLibrary.toggle}>
-    {Lang.t('general.done')}
-  </button>
+  <div slot="footer">
+    <Button block disabled={Object.keys(installed).length === 0 && $TrackerLibrary.first} on:click={TrackerLibrary.toggle}>
+      {Lang.t('general.done', 'Done')}
+    </Button>
+  </div>
 </Modal>

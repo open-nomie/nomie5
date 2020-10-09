@@ -2,7 +2,7 @@ export default [
   "Tap a tracker button to record",
   "Press and hold a tracker for additional options",
   "Want dashboards and people tracking? Enable them in the Settings",
-  "Tap the ••• in the 'What's Up Field' to change the location, date and score",
+  "Tap the ••• in the 'What's Up' field to change the location, date and score",
   "The History tab shows you everything you've done",
   "Enable location tracking, Dashboards and People Tracking in Settings",
   "Tap the Tab icon in the upper right to enable Tracker Tabs",

@@ -21,6 +21,7 @@
   import SearchPeople from "./search-people.svelte";
   import SearchRecent from "./search-recent.svelte";
   import Modal from "../../components/modal/modal.svelte";
+  import ButtonGroup from "../../components/button-group/button-group.svelte";
 
   export const location = undefined;
   export const style = undefined;
@@ -73,9 +74,8 @@
           <Icon name="close" />
         </Button>
       </div>
-      <div class="filler btn-group compact px-2" style="box-shadow:none;">
+      <ButtonGroup>
         <Button
-          size="sm"
           on:click={() => {
             SearchStore.view('history');
           }}
@@ -83,7 +83,6 @@
           {Lang.t('general.history', 'History')}
         </Button>
         <Button
-          size="sm"
           on:click={() => {
             SearchStore.view('trackers');
           }}
@@ -91,14 +90,13 @@
           {Lang.t('general.trackers', 'Trackers')}
         </Button>
         <Button
-          size="sm"
           on:click={() => {
             SearchStore.view('people');
           }}
           className={$SearchStore.view == 'people' ? 'active' : ''}>
           {Lang.t('general.people', 'People')}
         </Button>
-      </div>
+      </ButtonGroup>
       <div style="width:40px" />
     </nav>
   </div>

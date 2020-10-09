@@ -199,8 +199,8 @@
       const buttons = Object.keys(trackerTypes).map((typeKey: ITrackerType) => {
         let type = trackerTypes[typeKey];
         return {
-          title: `${type.label} ${typeKey === data.tracker.type ? " ✅" : ""}`,
-          description: type.description,
+          title: `${type.emoji} ${type.label}`,
+          description: `${typeKey === data.tracker.type ? "**Active**" : ""} ${type.description}`,
           click() {
             if (data.tracker) {
               data.tracker.type = typeKey;
@@ -260,11 +260,13 @@
     <NModal type="fullscreen" allowClose on:close={methods.cancel} style="z-index:2002">
 
       <header slot="header" class="n-toolbar-grid">
-        <button class="left btn btn-clear text-primary-bright" on:click|preventDefault={methods.cancel}>Cancel</button>
+        <div class="left">
+          <Button type="clear" color="primary" on:click={methods.cancel}>Cancel</Button>
+        </div>
         <div class="main">{data.tracker._dirty ? 'Create' : 'Edit'} {data.tracker.label.length ? data.tracker.label : ''}</div>
-        <button disabled={!canSave} class="right btn btn-clear text-primary-bright" on:click={methods.saveTracker}>
-          {Lang.t('general.save')}
-        </button>
+        <div class="right">
+          <Button disabled={!canSave} color="primary" type="clear" on:click={methods.saveTracker}>{Lang.t('general.save')}</Button>
+        </div>
       </header>
 
       <div class="emoji-editor">
@@ -299,7 +301,7 @@
       <!-- Tracker Label input -->
       <NInput
         listItem
-        className="mb-1 tracker-label"
+        className="mb-2 tracker-label"
         type="text"
         name="label"
         placeholder={Lang.t('tracker.label', 'Tracker Label')}
@@ -308,11 +310,11 @@
 
       <!-- Tracker Type Selector -->
 
-      <ListItem on:click={methods.selectType} className="tracker-type py-3 mb-1">
-        {Lang.t('tracker.type')}
+      <ListItem on:click={methods.selectType} className="tracker-type py-3 mb-2">
+        {Lang.t('tracker.type', 'Tracker Type')}
         <div slot="right" class="n-row">
-          <Text size="lg">{(getTypeDetails(data.tracker.type) || {}).label}</Text>
-          <Icon name="chevronDown" className="ml-2" />
+          <Text bold>{(getTypeDetails(data.tracker.type) || {}).label}</Text>
+          <Icon name="chevronDown" className="fill-inverse-2 mr-3 ml-2" size="16" />
         </div>
       </ListItem>
 
@@ -329,7 +331,7 @@
       {#if data.tracker.type == 'tick'}
         <NItem
           title={Lang.t('tracker.save-on-tap')}
-          className="tracker-one-tap"
+          className="tracker-one-tap mb-2"
           description={Lang.t('tracker.save-on-tap-description', 'Save note immediately after tapping the button.')}>
           <div slot="right">
             <NToggle bind:value={data.tracker.one_tap} />
@@ -338,7 +340,7 @@
       {/if}
 
       {#if data.tracker.type == 'range'}
-        <ListItem className="py-0">
+        <ListItem className="py-0 mb-2">
           <div class="n-row">
             <NInput
               pattern="[0-9]*"
@@ -352,14 +354,16 @@
                 e.detail.target.select();
               }}
               bind:value={data.tracker.min}>
-              <button
-                class="btn btn-icon"
-                slot="right"
-                on:click={() => {
-                  getTrackerInput('min');
-                }}>
-                <NIcon name="addOutline" />
-              </button>
+              <div slot="right" class="pr-1">
+                <Button
+                  icon
+                  on:click={() => {
+                    getTrackerInput('min');
+                  }}>
+                  <NIcon name="addOutline" className="fill-inverse-2" />
+                </Button>
+              </div>
+
             </NInput>
             <NInput
               pattern="[0-9]*"
@@ -371,14 +375,15 @@
               placeholder={Lang.t('tracker.max', 'Max Value')}
               on:focus={(e) => e.detail.target.select()}
               bind:value={data.tracker.max}>
-              <button
-                class="btn btn-icon"
-                slot="right"
-                on:click={() => {
-                  getTrackerInput('max');
-                }}>
-                <NIcon name="addOutline" />
-              </button>
+              <div slot="right" class="pr-1">
+                <Button
+                  icon
+                  on:click={() => {
+                    getTrackerInput('max');
+                  }}>
+                  <NIcon name="addOutline" className="fill-inverse-2" />
+                </Button>
+              </div>
             </NInput>
           </div>
         </ListItem>
@@ -403,7 +408,7 @@
           on:select={async (evt) => {
             data.tracker.note = evt.detail.note + '';
           }} />
-        <NItem description={Lang.t('tracker.note-description')} className="mt-0" />
+        <NItem description={Lang.t('tracker.note-description')} className="mt-2" />
       {/if}
 
       <!-- ADVANCED OPTIONS -->
@@ -425,7 +430,12 @@
       {#if advanced}
         <!-- Advanced -->
         {#if data.tracker.type !== 'timer' && data.tracker.type !== 'note' && data.tracker.type !== 'picker'}
-          <NInput listItem placeholder={Lang.t('tracker.measure-by')} type="select" className="tracker-uom" bind:value={data.tracker.uom}>
+          <NInput
+            listItem
+            placeholder={Lang.t('tracker.measure-by')}
+            type="select"
+            className="tracker-uom mb-2"
+            bind:value={data.tracker.uom}>
             {#each Object.keys(data.groupedUOMs) as groupKey (groupKey)}
               <option disabled>-- {groupKey}</option>
               {#each data.groupedUOMs[groupKey] as uom (`${groupKey}-${uom.key}`)}
@@ -441,7 +451,7 @@
         <NInput
           listItem
           type="select"
-          className="tracker-math"
+          className="tracker-math mb-2"
           name="math"
           placeholder={Lang.t('tracker.calculate-total', 'Calculate Totals')}
           bind:value={data.tracker.math}>
@@ -451,7 +461,7 @@
         </NInput>
 
         {#if data.tracker.math !== 'sum'}
-          <NItem className="px-3 py-1 tracker-ignore-zeros" title="Ignore Zeros" description="Ignore zero values when averaging">
+          <NItem className="px-3 py-1 mb-2 tracker-ignore-zeros" title="Ignore Zeros" description="Ignore zero values when averaging">
             <div slot="right">
               <NToggle bind:value={data.tracker.ignore_zeros} />
             </div>
@@ -462,7 +472,7 @@
       {#if advanced && ['note', 'picker'].indexOf(data.tracker.type) === -1}
         <NInput
           listItem
-          className="tracker-default"
+          className="tracker-default mb-2"
           pattern="[0-9]*"
           inputmode="numeric"
           label={Lang.t('tracker.value', 'Default Value')}
@@ -473,14 +483,15 @@
               <Text size="xs" className="text-right text-primary-bright">{data.tracker.displayValue(data.tracker.default)}</Text>
             {/if}
           </span>
-          <button
-            class="btn btn-icon clickable mr-2"
-            slot="right"
-            on:click={() => {
-              getTrackerInput('default');
-            }}>
-            <NIcon name="addOutline" />
-          </button>
+          <div slot="right" class="pr-1">
+            <Button
+              icon
+              on:click={() => {
+                getTrackerInput('default');
+              }}>
+              <NIcon name="addOutline" className="fill-inverse-2" />
+            </Button>
+          </div>
         </NInput>
       {/if}
 

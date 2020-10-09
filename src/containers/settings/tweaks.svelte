@@ -12,6 +12,8 @@
   import ButtonGroup from "../../components/button-group/button-group.svelte";
   import Button from "../../components/button/button.svelte";
   import { onMount } from "svelte";
+  import TinyColorPicker from "../../components/color-picker/tiny-color-picker.svelte";
+  import _ from "lodash";
 
   let fontSize = localStorage.getItem("font-size") || "md";
 
@@ -19,11 +21,11 @@
     settingChange() {
       UserStore.saveMeta();
     },
-    changeFontSize(size: "sm" | "md" | "lg") {
-      if (["sm", "md", "lg"].indexOf(size) > -1) {
+    changeFontSize(size: "xs" | "sm" | "md" | "lg") {
+      if (["xs", "sm", "md", "lg"].indexOf(size) > -1) {
         localStorage.setItem("font-size", size);
         fontSize = size;
-        document.body.classList.remove("font-size-lg", "font-size-sm", "font-size-md");
+        document.body.classList.remove("font-size-xs", "font-size-lg", "font-size-sm", "font-size-md");
         document.body.classList.add(`font-size-${size}`);
       }
     },
@@ -42,58 +44,39 @@
   <NItem title={Lang.t('settings.theme')}>
     <span slot="left">💡</span>
     <div slot="right">
-      <select
-        class="form-control"
-        style="min-width:100px;width:100px"
-        bind:value={$UserStore.theme}
-        on:change={(event) => {
-          UserStore.setTheme($UserStore.theme, $UserStore.theme_accent);
-        }}>
-        <option value="auto">Auto</option>
-        <option value="dark">Dark</option>
-        <option value="light">Light</option>
-      </select>
-
-    </div>
-  </NItem>
-  <NItem title={Lang.t('settings.base-font-size', 'Base Font Size')}>
-    <span slot="left">🅰</span>
-    <div slot="right">
-      <div class="btn-group">
-        <Button
-          icon
-          className={`${fontSize === 'sm' ? 'btn-primary active' : ''}`}
-          on:click={() => {
-            methods.changeFontSize('sm');
-          }}>
-          <span style="font-size:9px">A</span>
-        </Button>
-        <Button
-          icon
-          className={`${fontSize === 'md' ? 'btn-primary active' : ''}`}
-          on:click={() => {
-            methods.changeFontSize('md');
-          }}>
-          <span style="font-size:13px">A</span>
-        </Button>
-        <Button
-          icon
-          className={`${fontSize === 'lg' ? 'btn-primary active' : ''}`}
-          on:click={() => {
-            methods.changeFontSize('lg');
-          }}>
-          <span style="font-size:16px">A</span>
-        </Button>
-      </div>
+      <ButtonGroup>
+        {#each ['light', 'dark', 'auto'] as theme}
+          <Button
+            style="padding:0 10px !important;"
+            color=""
+            size="sm"
+            className={`${$UserStore.theme === theme ? 'btn-white active' : ''}`}
+            on:click={() => {
+              UserStore.setTheme(theme, $UserStore.theme_accent);
+            }}>
+            {Lang.t(`settings.theme-${theme}`, _.capitalize(theme))}
+          </Button>
+        {/each}
+      </ButtonGroup>
     </div>
   </NItem>
 
   <hr class="divider center" />
 
-  <NItem title={Lang.t('settings.theme_accent', 'Color Accent')}>
+  <NItem title={Lang.t('settings.theme_accent', 'Accent')}>
     <span slot="left">🎨</span>
     <div slot="right">
-      <select
+      <TinyColorPicker
+        className="mt-1"
+        size={16}
+        colors={['blue', 'mint', 'teal', 'pink', 'orange', 'purple']}
+        value={$UserStore.theme_accent}
+        on:change={(evt) => {
+          console.log('On change?', evt);
+          UserStore.setTheme($UserStore.theme, evt.detail);
+        }} />
+
+      <!-- <select
         class="form-control"
         style="min-width:100px;width:100px"
         bind:value={$UserStore.theme_accent}
@@ -106,13 +89,33 @@
         <option value="pink">KPop</option>
         <option value="orange">Fire</option>
         <option value="purple">Lilac</option>
-      </select>
+      </select> -->
     </div>
   </NItem>
 
   <hr class="divider center my-1" />
 
-  <NItem title={Lang.t('settings.small-tracker-buttons', 'Compact Tracker Buttons')}>
+  <NItem title={Lang.t('settings.base-font-size', 'Text Size')}>
+    <span slot="left">🅰</span>
+    <div slot="right">
+      <ButtonGroup>
+        {#each ['xs', 'sm', 'md', 'lg'] as size, index}
+          <Button
+            className={`${fontSize === size ? 'active' : ''}`}
+            on:click={() => {
+              methods.changeFontSize(size);
+            }}>
+            <div style="font-size:{9 + index * 2}px;">A</div>
+          </Button>
+        {/each}
+
+      </ButtonGroup>
+    </div>
+  </NItem>
+
+  <hr class="divider center my-1" />
+
+  <NItem title={Lang.t('settings.small-tracker-buttons', 'Compact Trackers')}>
     <span slot="left">🐭</span>
     <div slot="right">
       <NToggle
@@ -160,17 +163,35 @@
   <!-- 24 Hour -->
 
   <!-- firstDayOfWeek -->
-  <NItem title={Lang.t('settings.first-day-of-week')}>
+  <NItem title={Lang.t('settings.first-day-of-week', 'Week Starts On')}>
     <span slot="left">🗓</span>
     <div slot="right">
-      <select
+      <ButtonGroup>
+        <Button
+          className={`${$UserStore.meta.firstDayOfWeek === '1' ? 'active' : ''}`}
+          on:click={() => {
+            $UserStore.meta.firstDayOfWeek = '1';
+            methods.settingChange();
+          }}>
+          {Lang.t('settings.sun', 'Sun')}
+        </Button>
+        <Button
+          className={`${$UserStore.meta.firstDayOfWeek === '2' ? 'active' : ''}`}
+          on:click={() => {
+            $UserStore.meta.firstDayOfWeek = '2';
+            methods.settingChange();
+          }}>
+          {Lang.t('settings.mon', 'Mon')}
+        </Button>
+      </ButtonGroup>
+      <!-- <select
         class="form-control"
         style="min-width:100px;width:100px"
         bind:value={$UserStore.meta.firstDayOfWeek}
         on:change={methods.settingChange}>
         <option value="1">{Lang.t('settings.sunday')}</option>
         <option value="2">{Lang.t('settings.monday')}</option>
-      </select>
+      </select> -->
     </div>
   </NItem>
   <!-- Language -->

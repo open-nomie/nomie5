@@ -42,13 +42,6 @@
   <div class="full-screen opacity-0" on:click={toggle} />
 {/if}
 
-<Button
-  size="sm"
-  shape="circle"
-  color="transparent"
-  style="font-size:22px"
-  className="positivity-emoji-btn"
-  on:mouseover={toggle}
-  on:click={toggle}>
+<Button size="sm" shape="circle" color="transparent" className="positivity-emoji-btn" on:mouseover={toggle} on:click={toggle}>
   {#if selected && selected.emoji}{selected.emoji}{/if}
 </Button>

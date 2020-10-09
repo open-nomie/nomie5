@@ -27,6 +27,7 @@
   import { LedgerStore } from "../../store/ledger";
   import { Interact } from "../../store/interact";
   import { PeopleStore } from "../../store/people-store";
+  import Button from "../../components/button/button.svelte";
 
   let domVisible = false;
   let avatarBase64 = null;
@@ -141,25 +142,27 @@
 <Modal className="person-modal" bodyClass="bg-bg" show={domVisible} type="bottom-slideup">
   <header class="w-100" slot="header" on:swipedown={close}>
     <NToolbarGrid>
-      <button slot="left" class="btn btn-clear btn-icon tap-icon" on:click={close}>
-        <NIcon name="close" />
-      </button>
+      <div slot="left">
+        <Button icon on:click={close}>
+          <NIcon name="close" className="fill-primary-bright" />
+        </Button>
+      </div>
       <div class="main">
         <div class="n-row">
           <Dymoji person={activePerson} size={26} radius={0.3} />
           &nbsp; {activePerson.getDisplayName()}
         </div>
       </div>
-      <button
-        slot="right"
-        class="btn btn-sm tap-icon"
-        on:click={() => {
-          close();
-          Interact.openStats(`@${activePerson.getUsername()}`);
-        }}>
-        <NIcon name="chart" size="22" />
-      </button>
-
+      <div slot="right">
+        <Button
+          icon
+          on:click={() => {
+            close();
+            Interact.openStats(`@${activePerson.getUsername()}`);
+          }}>
+          <NIcon name="chart" size="22" className="fill-primary-bright" />
+        </Button>
+      </div>
     </NToolbarGrid>
     <NToolbar>
       <ButtonGroup

@@ -134,15 +134,19 @@
           <NItem className="pl-2">
             <!-- {index === 0 ? 'IF:' : 'ELSE:'} -->
             <NText size="sm">If {scoreOptions[item.if] || 'Unknown'} is {item.is} {item.v}</NText>
-            <button
-              slot="left"
-              on:click={() => {
-                methods.removeCondition(index);
-              }}
-              class="btn btn-sm btn-clear btn-icon text-danger mr-2"
-              aria-label="Remove Condition">
-              <NIcon name="remove" className="fill-red" />
-            </button>
+            <div slot="left">
+              <Button
+                on:click={() => {
+                  methods.removeCondition(index);
+                }}
+                size="sm"
+                type="clear"
+                icon
+                className="mr-2">
+                <NIcon name="remove" className="fill-red" />
+              </Button>
+            </div>
+
             <span slot="right">
               <NPoints points={item.sc} />
             </span>
@@ -186,9 +190,11 @@
                 </NInput>
               {:else}
                 <NInput pattern="[0-9]*" style="width:40%;" type="text" label="Than" bind:value={state.genesisCalc.v}>
-                  <button slot="right" class="btn btn-clear tap-icon" on:click={getTrackerInput}>
-                    <NIcon name="addOutline" />
-                  </button>
+                  <div slot="right">
+                    <Button icon on:click={getTrackerInput}>
+                      <NIcon name="addOutline" className="fill-inverse-2" />
+                    </Button>
+                  </div>
                 </NInput>
               {/if}
 

@@ -5,7 +5,6 @@
   import NModal from "../../components/modal/modal.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NIcon from "../../components/icon/icon.svelte";
-  import NSearchBar from "../../components/search-bar/search-bar.svelte";
   import NSortableList from "../../components/sortable-list/sortable-list.svelte";
 
   import { Interact } from "../../store/interact";
@@ -14,6 +13,8 @@
   import locate from "../../modules/locate/locate";
   import math from "../../utils/math/math";
   import Text from "../../components/text/text.svelte";
+  import { Lang } from "../../store/lang";
+  import Button from "../../components/button/button.svelte";
 
   const state = {
     locations: [],
@@ -153,25 +154,28 @@
           }}>
           Done
         </button>
-      {:else}
-        <button
-          class="btn btn-clear text-primary-bright"
+      {:else if state.locations.length}
+        <Button
+          color="primary-bright"
+          type="clear"
           on:click={() => {
             state.mode = 'edit';
           }}>
-          Edit
-        </button>
+          {Lang.t('general.edit', 'Edit')}
+        </Button>
       {/if}
     </div>
     <main class="main truncate">
       <div class="truncate w-100">
         {#if state.active}
           {state.active.name}
-        {:else if state.mapLocation}{state.mapLocation.lat},{state.mapLocation.lng}{:else}Pick a Location{/if}
+        {:else if state.mapLocation}
+          {state.mapLocation.lat},{state.mapLocation.lng}
+        {:else}{Lang.t('locations.pick-a-location', 'Pick a Location')}{/if}
       </div>
     </main>
     <div class="right n-row">
-      <button class="btn btn-clear text-primary-bright" on:click={favorite}>Save</button>
+      <Button type="clear" color="primary-bright" on:click={favorite}>{Lang.t('general.save', 'Save')}</Button>
     </div>
   </header>
   {#if showModal}
@@ -277,5 +281,7 @@
     Select
   </button> -->
   {/if}
-  <button slot="footer" class="btn btn-block btn-primary" on:click={Interact.dismissPickLocation}>Close</button>
+  <div slot="footer">
+    <Button block on:click={Interact.dismissPickLocation}>{Lang.t('general.close', 'Close')}</Button>
+  </div>
 </NModal>

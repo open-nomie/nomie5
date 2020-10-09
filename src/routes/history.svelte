@@ -315,7 +315,7 @@
 
   .history-title {
     transition: all 0.2s ease-in-out;
-    padding-left: 4px;
+    padding-left: 16px;
   }
 
   :global(.scrolled .history-title.hide-scrolled) {
@@ -375,14 +375,13 @@
       <Button color="none" shape="circle" className="tap-icon" on:click={methods.search}>
         <NIcon name="search" size={24} />
       </Button>
-      <div class=" filler pl-2 truncate history-title show-scrolled">
+      <div class="filler truncate history-title show-scrolled">
         <Text>
           {#if refreshing}
             <Spinner size="16" />
           {/if}
           {state.date.format('ddd')} {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
         </Text>
-
         <!-- end text middle -->
       </div>
       <NextPrevCal on:previous={methods.previous} on:next={methods.next} on:calendar={methods.selectDate} {isToday} />
@@ -394,7 +393,7 @@
   <main slot="content" class="page page-history flex-column">
 
     <div class="container p-0 px-1">
-      <Text size="xl" bold className="history-title px-2 mt-2">
+      <Text size="xl" bold className="history-title pl-3 mt-2">
         {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
       </Text>
 

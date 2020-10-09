@@ -26,6 +26,7 @@
   import { Lang } from "../../store/lang";
   import ListItem from "../../components/list-item/list-item.svelte";
   import { Locations } from "../../store/locations";
+  import Button from "../../components/button/button.svelte";
 
   // Props
   export let log = undefined;
@@ -204,16 +205,18 @@
 
     <div class="buttons n-row" slot="footer">
       {#if !state.saving}
-        <button
-          class="btn btn-clear w-50"
+        <Button
+          size="lg"
+          className="w-50"
+          type="clear"
           on:click={() => {
             dispatch('close');
           }}>
           Cancel
-        </button>
-        <button class="btn btn-primary w-50" on:click={methods.save}>Save</button>
+        </Button>
+        <Button size="lg" className="w-50" on:click={methods.save}>Save</Button>
       {:else}
-        <button class="btn btn-primary w-100" disabled>Saving...</button>
+        <Button size="lg" className="w-100" disabled>Saving...</Button>
       {/if}
     </div>
 

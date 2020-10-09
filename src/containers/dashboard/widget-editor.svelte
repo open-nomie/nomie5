@@ -217,11 +217,10 @@
         <option value={widgetType.id}>{widgetType.label}</option>
       {/each}
     </Input>
+    <ButtonGroup className="mt-3" size="sm" buttons={editorButtons} />
   </div>
 
   <div class="widget-views">
-    <ButtonGroup className="my-2" size="sm" buttons={editorButtons} />
-
     {#if editorView == 'options'}
       {#if widgetTypeId == 'text'}
         <ListItem className="p-0" bg="transparent">
@@ -291,16 +290,20 @@
                 placeholder={widgetTypeId == 'value' ? 'Value' : widgetTypeId == 'last-used' ? 'Days' : 'Value'}
                 style="max-width:140px;"
                 bind:value={value.compareValue}>
-                <button
-                  class="btn btn-icon clickable mr-2"
-                  slot="right"
-                  on:click={async () => {
-                    getConditionalValue();
-                  }}>
-                  {#if value.element.type == 'tracker'}
-                    <Icon name="addOutline" />
-                  {/if}
-                </button>
+                <div slot="right">
+                  <Button
+                    icon
+                    className="mr-2"
+                    on:click={async () => {
+                      getConditionalValue();
+                    }}>
+                    {#if value.element.type == 'tracker'}
+                      <Icon name="addOutline" className="fill-inverse-2" />
+                    {/if}
+                  </Button>
+
+                </div>
+
               </Input>
             </div>
           </ListItem>
@@ -308,13 +311,23 @@
             <div class="under" slot="left">
               <div class="text-center">
                 <Text className="mb-2" size="sm">Under value color</Text>
-                <TinyColorPicker bind:value={value.compareUnderColor} />
+                <TinyColorPicker
+                  size={16}
+                  value={value.compareUnderColor}
+                  on:change={(evt) => {
+                    value.compareUnderColor = evt.detail;
+                  }} />
               </div>
             </div>
             <div class="over" slot="right">
               <div class="text-center">
                 <Text className="mb-2" size="sm">Over value color</Text>
-                <TinyColorPicker bind:value={value.compareOverColor} />
+                <TinyColorPicker
+                  size={16}
+                  value={value.compareOverColor}
+                  on:change={(evt) => {
+                    value.compareOverColor = evt.detail;
+                  }} />
               </div>
             </div>
           </ListItem>

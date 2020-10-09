@@ -5,6 +5,7 @@
   import NIcon from "../../components/icon/icon.svelte";
   import { Interact } from "../../store/interact";
   import nid from "../../modules/nid/nid";
+  import Button from "../button/button.svelte";
 
   export let tips = [];
   export let className = "";
@@ -92,18 +93,18 @@
 {#if show}
   <section class="n-tip-wrapper {className}">
     <div class="n-tips mx-auto" style="max-width:280px;">
-      <div class="mx-auto n-row">
+      <div class="mx-auto n-row my-2">
         <div class="filler" />
-        <button class="btn btn-clear btn-icon tap-icon" on:click={previousTip}>
-          <NIcon name="chevronLeft" size="20" />
-        </button>
+        <Button color="clear" icon on:click={previousTip}>
+          <NIcon name="chevronLeft" size="20" className="fill-inverse-1" />
+        </Button>
         <NStepper steps={tips.length} current={state.activeTip} dark />
-        <button class="btn-close text-lg flex-grow-off" on:click={hideTips}>
-          <NIcon name="close" size="9" />
-        </button>
-        <button class="btn btn-clear btn-icon tap-icon" on:click={nextTip}>
-          <NIcon name="chevronRight" size="20" />
-        </button>
+        <Button color="clear" icon on:click={hideTips}>
+          <NIcon name="close" size="18" className="fill-inverse" />
+        </Button>
+        <Button color="clear" icon on:click={nextTip}>
+          <NIcon name="chevronRight" size="20" className="fill-inverse-1" />
+        </Button>
         <div class="filler" />
       </div>
       <div class="n-row mb-2 px-4">

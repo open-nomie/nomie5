@@ -43,18 +43,20 @@
   }
 
   :global(.shortcut-button) {
+    --scb-pad: 14px;
+
     flex-grow: 1;
     flex-shrink: 0;
     height: 144px;
     justify-content: stretch;
     border-radius: 22px;
     margin: 6px;
-    padding: 14px 14px 6px 14px;
     box-shadow: var(--box-shadow-float) !important;
     overflow: hidden;
     transition: all 0.2s ease-in-out;
     position: relative;
     color: var(--color-inverse-2);
+    padding: 0;
 
     .title {
       font-weight: 600;
@@ -83,6 +85,7 @@
     @include generateLabelSizes(1.1em);
 
     &.compact {
+      --scb-pad: 12px;
       .emoji {
         font-size: 30px;
         line-height: 100%;
@@ -95,6 +98,7 @@
     }
 
     @include media-breakpoint-down(xs) {
+      --scb-pad: 14px;
       @include generateLabelSizes(0.96em);
     }
 
@@ -146,9 +150,6 @@
 
     .top,
     .bottom {
-      width: 100%;
-      max-width: 100%;
-      min-width: 100%;
       position: relative;
       z-index: 10;
       display: flex;
@@ -162,15 +163,14 @@
       padding-bottom: 6px;
       position: absolute;
       bottom: 6px;
-      left: 14px;
-      right: 14px;
+      left: var(--scb-pad);
+      right: var(--scb-pad);
     }
 
     .top {
       position: absolute;
-      top: 14px;
-      right: 14px;
-      left: 14px;
+      top: var(--scb-pad);
+      left: var(--scb-pad);
       flex-grow: 0;
       flex-shrink: 0;
     }
@@ -181,14 +181,14 @@
       right: 26px;
       width: 20px;
       height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 50%;
       background-color: transparent;
       font-size: 12px;
       border: solid 1px var(--color-inverse-3);
       color: rgba(255, 255, 255, 0.6);
-      svg {
-        stroke: var(--color-inverse-3) !important;
-      }
       &.icon-other {
         border: none;
       }
@@ -226,6 +226,12 @@
 
   :global(.shortcut-button.has-value svg) {
     stroke: #fff !important;
+  }
+  :global(.shortcut-button.no-value .more svg) {
+    stroke: rgba(150, 150, 150, 0.6) !important;
+  }
+  :global(.shortcut-button.no-value .more) {
+    border: solid 1px rgba(150, 150, 150, 0.6) !important;
   }
   :global(.shortcut-button.has-value) {
     color: #fff;
@@ -271,13 +277,13 @@
       <slot name="emoji" />
     </div>
     {#if !hideMore}
-      <button class="btn more {moreIcon !== 'more' ? 'icon-other' : ''} btn-icon p-0" on:click|preventDefault|stopPropagation={more}>
+      <button class="more {moreIcon !== 'more' ? 'icon-other' : ''} p-0" on:click|preventDefault|stopPropagation={more}>
         <Icon name={moreIcon} size="16" />
       </button>
     {/if}
   </div>
   <slot />
-  <div class="bottom w-100 text-left" style="padding-bottom:6px;">
+  <div class="bottom text-left" style="padding-bottom:6px;">
     {#if title}
       <div class="title">{title}</div>
     {/if}

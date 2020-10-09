@@ -91,7 +91,7 @@
   {filled ? 'filled' : ''}"
   style={`color:${filled ? '#FFF' : color}; background-color:${filled ? color : 'transparent'}`}>
   {#if !lg}
-    <Icon name="time" size="12" />
+    <Icon name="time" size="12" className="mr-1" />
   {/if}
   {value}
 </div>

@@ -5,7 +5,7 @@
   const dispatch = createEventDispatcher();
 
   export let size = "md";
-  export let type = "solid";
+  export let type = "";
   export let shape = "rounded";
   export let color = "primary";
   export let className = "";
@@ -44,15 +44,15 @@
 <button
   {style}
   {disabled}
-  class={`btn ${block ? 'btn-block' : ''} ${icon ? 'btn-icon' : ''} 
-          btn-${type} btn-${shape} btn-${color} btn-${size} 
-          ${inline ? 'btn-inline' : ''}
-          ${text ? 'btn-text' : ''}
+  class={`nbtn ${block ? 'nbtn-block' : ''} ${icon ? 'nbtn-icon' : ''} 
+          nbtn-${type} nbtn-${shape} nbtn-${color} nbtn-${size} 
+          ${inline ? 'nbtn-inline' : ''}
+          ${text ? 'nbtn-text' : ''}
           ${className}`}
   on:mousedown={(evt) => {}}
   {title}
   area-label={ariaLabel || title}
-  on:click={(evt) => {
+  on:click|preventDefault|stopPropagation={(evt) => {
     hit = [evt.offsetX, evt.offsetY];
     if (prevent) {
       evt.preventDefault();
