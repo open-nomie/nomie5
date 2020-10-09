@@ -147,13 +147,14 @@
   <header slot="header" class="n-toolbar-grid">
     <div class="left">
       {#if state.mode == 'edit'}
-        <button
-          class="btn btn-clear text-red"
-          on:click|preventDefault={() => {
+        <Button
+          color="danger"
+          type="clear"
+          on:click={() => {
             state.mode = 'view';
           }}>
           Done
-        </button>
+        </Button>
       {:else if state.locations.length}
         <Button
           color="primary-bright"
@@ -194,6 +195,25 @@
           </NItem>
         {/if}
 
+        <NItem
+          clickable
+          className="clickable text-primary"
+          on:click={() => {
+            currentLocation();
+          }}>
+          Use Current Location
+        </NItem>
+        {#if mapLocation && mapLocation.lat}
+          <NItem
+            clickable
+            className="clickable text-primary"
+            on:click={() => {
+              select(mapLocation);
+            }}>
+            Select {math.round(mapLocation.lat, 10000)},{math.round(mapLocation.lng, 10000)}
+          </NItem>
+        {/if}
+
         <div class="list-wrapper">
           <NSortableList key="id" bind:items={state.locations} handle=".menu" on:update={sorted} let:item>
 
@@ -225,20 +245,21 @@
 
               <div slot="right" class="n-row">
                 {#if state.mode == 'edit'}
-                  <button
-                    class="btn btn-clear text-primary-bright btn-sm"
-                    on:click|stopPropagation={() => {
+                  <Button
+                    icon
+                    className="tap-icon"
+                    on:click={() => {
                       rename(item);
                     }}>
                     <NIcon name="edit" />
-                  </button>
-                  <button
-                    class="btn btn-clear text-primary-bright btn-sm"
-                    on:click|stopPropagation={(evt) => {
+                  </Button>
+                  <Button
+                    icon
+                    on:click={(evt) => {
                       unfavorite(item);
                     }}>
                     <NIcon name="remove" className="fill-red" />
-                  </button>
+                  </Button>
                 {/if}
               </div>
 
@@ -247,24 +268,6 @@
           </NSortableList>
         </div>
 
-        <NItem
-          clickable
-          className="clickable text-primary"
-          on:click={() => {
-            currentLocation();
-          }}>
-          Use Current Location
-        </NItem>
-        {#if mapLocation && mapLocation.lat}
-          <NItem
-            clickable
-            className="clickable text-primary"
-            on:click={() => {
-              select(mapLocation);
-            }}>
-            Select {math.round(mapLocation.lat, 10000)},{math.round(mapLocation.lng, 10000)}
-          </NItem>
-        {/if}
       </div>
     </section>
 

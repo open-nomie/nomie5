@@ -171,10 +171,10 @@
       <Button shape="circle" color="transparent" on:click={Interact.closeShareImage}>
         <NIcon name="close" className="fill-white" />
       </Button>
-      <Button shape="circle" on:click={methods.capture}>
+      <Button size="lg" className="mx-1" shape="circle" on:click={methods.capture}>
         <NIcon name="share" className="fill-white" />
       </Button>
-      <Button shape="circle" on:click={methods.copy}>
+      <Button size="lg" className="mx-1" shape="circle" on:click={methods.copy}>
         <NIcon name="copy" className="fill-white" />
       </Button>
       <Button shape="circle" color="transparent" on:click={methods.randomTheme}>

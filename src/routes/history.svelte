@@ -426,14 +426,14 @@
         {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
           <div class="memories">
             {#each $LedgerStore.memories as log}
-              <div class="memories-log-header">
+              <div class="memories-log-header text-center">
                 <Button
-                  color="transparent"
+                  className="mx-auto"
                   on:click={() => {
                     methods.goto(dayjs(log.end));
                   }}>
                   From {dayjs(log.end).fromNow()}
-                  <NIcon name="chevronRight" className="fill-white" />
+                  <NIcon name="chevronRight" className="fill-white" size="18" />
                 </Button>
               </div>
               <LogItem
