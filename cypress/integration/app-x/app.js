@@ -10,19 +10,19 @@ context("App", () => {
   const onboard = () => {
     cy.visit("http://localhost:5000");
     cy.wait(1000);
-    cy.get(".layout-footer .n-toolbar .btn").eq(0).click();
+    cy.get(".layout-footer .n-toolbar .nbtn").eq(0).click();
     cy.wait(200);
-    cy.get(".layout-footer .n-toolbar .btn").eq(0).click();
+    cy.get(".layout-footer .n-toolbar .nbtn").eq(0).click();
     cy.wait(200);
-    cy.get(".layout-footer .n-toolbar .btn").eq(1).click();
+    cy.get(".layout-footer .n-toolbar .nbtn").eq(1).click();
     cy.wait(400);
-    cy.get(".layout-footer .n-toolbar .btn").eq(1).click();
+    cy.get(".layout-footer .n-toolbar .nbtn").eq(1).click();
     cy.wait(400);
-    cy.get(".layout-footer .n-toolbar .btn").eq(1).click();
+    cy.get(".layout-footer .n-toolbar .nbtn").eq(1).click();
     cy.wait(400);
-    cy.get(".top > :nth-child(2)").click();
+    cy.get(".top > :nth-child(3)").click();
     cy.wait(400);
-    cy.get(".layout-footer .n-toolbar .btn").eq(1).click();
+    cy.get(".layout-footer .n-toolbar .nbtn").eq(1).click();
     cy.wait(1000);
   };
 
@@ -39,7 +39,7 @@ context("App", () => {
     cy.wait(200);
     cy.get(".tracker-sleep_quality").click();
     cy.wait(200);
-    cy.get(".library-modal > .n-modal > .n-modal-footer > .btn").click();
+    cy.get('.library-modal > .n-modal > .n-modal-footer > [slot="footer"] > .nbtn').click();
     cy.wait(300);
     // cy.get(".left > .btn > .n-icon").click();
   };
@@ -51,14 +51,14 @@ context("App", () => {
     cy.get(".r-3.b-0").click();
     cy.wait(300);
     cy.get(".r-3.b-0").click();
-    cy.get(".main > .btn").click();
+    cy.get(".main > .nbtn").click();
     cy.wait(600);
   };
 
   const startTimer = () => {
     cy.get(".tracker-sleep").click();
     cy.wait(500);
-    cy.get(".btn-success").click();
+    cy.get('.main > .nbtn-success').click();
   };
 
   
@@ -69,10 +69,10 @@ context("App", () => {
     cy.get(".tracker-input.slider input").as("range").invoke("val", 8).trigger("change");
     cy.wait(400);
     if (addOrSave == "save") {
-      cy.get(".main > .btn").click();
+      cy.get(".main > .nbtn").click();
       cy.wait(400);
     } else {
-      cy.get(".right .btn").eq(2).click();
+      cy.get(".right .nbtn").eq(2).click();
     }
     // cy.get(".n-modal-footer > .footer > .btn-primary").click();
   };
@@ -95,12 +95,14 @@ context("App", () => {
     cy.get(".n-tips > .mx-auto > :nth-child(5) > .n-icon").click();
     cy.wait(100);
     cy.get(".n-stepper > :nth-child(5)").should("have.class", "active");
-    cy.get(".n-tips .btn-close").click();
+    // Click the close button
+    cy.get('.n-tips .mx-auto > :nth-child(4)').click();
     cy.wait(100);
-    cy.get(".visible > .alert-dialog-window > .p-1 > .btn-primary").click();
+    cy.get(".visible > .alert-dialog-window > .p-1 > .nbtn-primary").click();
   };
 
   const testCaptureForm = () => {
+    goHome();
     cy.get("#textarea-capture-note").type("#sample #data #mood(6)");
     cy.get(".save-button").click();
     cy.wait(200);
@@ -132,7 +134,7 @@ context("App", () => {
     cy.get(".tab-Dash").click();
     cy.wait(400);
     // Click on the Add Widghet
-    cy.get(".center-all > .btn").click();
+    cy.get(".center-all > .nbtn").click();
     cy.wait(100);
     cy.get("select").eq(0).select("barchart");
     cy.wait(100);
@@ -147,11 +149,10 @@ context("App", () => {
     cy.get(".n-modal-body .list .n-item").eq(2).click();
     // click done
     cy.wait(200);
-    cy.get(".n-row > .btn-primary").click();
+    cy.get(".n-row > .nbtn-primary").click();
     cy.wait(200);
     // hit save
-
-    cy.get("div.n-modal-header> div > button").eq(1).click();
+    cy.get('.n-modal-frame.visible > .n-modal > .n-modal-header > .n-toolbar-grid > .right > .nbtn').click();
     cy.wait(1000);
   };
 
@@ -163,11 +164,11 @@ context("App", () => {
   const testDeleteingTracker = () => {
     cy.get(".tab-Track").click();
     longPressTracker("water");
-    cy.wait(400);
+    cy.wait(700);
     cy.get(".list > :nth-child(7)").click();
     cy.wait(400);
     // Hit Cancel first -- to see if this gets deleted
-    cy.get(".visible > .alert-dialog-window > .p-1 > .btn-transparent").click();
+    cy.get(".visible > .alert-dialog-window > .p-1 > .nbtn-transparent").click();
     cy.wait(500);
     cy.get(".trackers").then((node) => {
       expect(node.html().search(".tracker-water")).to.be.gt(-1);
@@ -177,7 +178,7 @@ context("App", () => {
     cy.wait(400);
     cy.get(".list > :nth-child(7)").click();
     cy.wait(400);
-    cy.get(".visible > .alert-dialog-window > .p-1 > .btn-primary").click();
+    cy.get(".visible > .alert-dialog-window > .p-1 > .nbtn-primary").click();
     cy.wait(600);
     cy.get(".trackers").then((node) => {
       expect(node.html().search(".tracker-water")).to.be.eq(-1);
@@ -213,46 +214,13 @@ context("App", () => {
     cy.wait(400);
 
     if(!shouldBeValid) {
-      cy.get('.visible > .alert-dialog-window > .p-1 > .btn').click();  
+      cy.get('.visible > .alert-dialog-window > .p-1 > .nbtn').click();  
     } else {
       cy.get(".features .toggle-pin-button").then(node=>{
         expect(node).to.contain('Disable');
       });
     }
 
-    // cy.get(".slot-holder > .form-control").type(1234);
-    // cy.wait(600);
-    // cy.get(".visible > .alert-dialog-window > .p-1 > .btn-primary").click();
-
-    // // Bad Pin
-    // cy.wait(1000);
-    // cy.get(".keypad > :nth-child(2)").click();
-    // cy.wait(100);
-    // cy.get(".keypad > :nth-child(1)").click();
-    // cy.wait(100);
-    // cy.get(".keypad > :nth-child(3)").click();
-    // cy.wait(100);
-    // cy.get(".keypad > :nth-child(4)").click();
-    // cy.wait(100);
-    // cy.get(".keypad > :nth-child(12)").click();
-    // cy.wait(1000);
-    // cy.get(".alert-dialog.visible > .alert-dialog-window > .p-1 > .btn").click();
-    // cy.wait(300);
-
-    // // Good Pin
-    // cy.wait(1000);
-    // cy.get(".keypad > :nth-child(1)").click();
-    // cy.wait(100);
-    // cy.get(".keypad > :nth-child(2)").click();
-    // cy.wait(100);
-    // cy.get(".keypad > :nth-child(3)").click();
-    // cy.wait(100);
-    // cy.get(".keypad > :nth-child(4)").click();
-    // cy.wait(100);
-    // cy.get(".keypad > :nth-child(12)").click();
-
-    // cy.wait(500);
-    // cy.get(".tab-Track").click();
   };
 
   const initBasic = () => {
@@ -274,18 +242,19 @@ context("App", () => {
     cy.get(".tab-People").click();
     cy.wait(400);
     // Tap on the check-in for the person created
-    cy.get(".n-list .n-item .right .btn").eq(2).click();
+    
+    cy.get('.trackers > :nth-child(1)').click();
     cy.wait(400);
     cy.get(".person-checkin textarea").type(" and I are going to test +nomie!");
     // Select a positivity
     cy.get(".n-positivity-selector > :nth-child(4)").click();
-    cy.get(".person-checkin > .btn-block").click();
+    cy.get(".person-checkin > .nbtn-block").click();
     cy.wait(2000);
     // Click the person check in again.
-    cy.get(".n-list .n-item .right .btn").eq(2).click();
+    cy.get('.trackers > :nth-child(1)').click();
     cy.wait(400);
     // View Logs
-    cy.get(".person-modal .n-modal-header .btn-group .btn").eq(0).click();
+    cy.get(".person-modal .n-modal-header .nbtn-group .nbtn").eq(0).click();
     cy.get(".person-modal .log-list-loader > .n-list")
       .find(".n-item")
       .then((listing) => {
@@ -293,7 +262,7 @@ context("App", () => {
         expect(listing).to.contain("@bob");
       });
     // Close modal
-    cy.get(".person-modal .left > .btn > .n-icon").click();
+    cy.get('[slot="left"] > .nbtn').click();
     cy.wait(400);
     goHome();
   };
@@ -302,11 +271,12 @@ context("App", () => {
     goHome();
     cy.wait(200);
     // Click tab icon
-    cy.get("header > .n-toolbar-grid > .right > .btn").click();
+    cy.get('[slot="right"] > .nbtn > .n-icon > .hero').click();
+    // cy.get("header > .n-toolbar-grid > .right > .nbtn").click();
     cy.wait(300);
     cy.get(".form-control").type("Test Tab");
     cy.wait(100);
-    cy.get(".visible > .alert-dialog-window > .p-1 > .btn-primary").click();
+    cy.get(".visible > .alert-dialog-window > .p-1 > .nbtn-primary").click();
     cy.wait(100);
 
     // Click Add Button
@@ -314,11 +284,14 @@ context("App", () => {
     cy.wait(300);
     cy.get(".pop-menu button").eq(0).click();
     cy.wait(400);
+    
+    cy.get('.tracker-selector-modal .select-item').eq(0).click();
+    cy.wait(400);
     cy.get('.tracker-selector-modal .select-item').eq(1).click();
     cy.wait(400);
     cy.get('.tracker-selector-modal .select-item').eq(2).click();
     cy.wait(400);
-    cy.get(".n-row > .btn-primary").click();
+    cy.get('.n-modal-footer > .n-row > .nbtn-primary').click();
     // cy.wait(400);
     // cy.get(".tracker-water").then((node) => {
     //   expect(node.text()).to.contain("Drank Water");
