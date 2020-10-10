@@ -219,10 +219,6 @@ textarea {
   line-height: inherit; }
 
 button,
-input {
-  overflow: visible; }
-
-button,
 select {
   text-transform: none; }
 

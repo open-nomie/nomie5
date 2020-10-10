@@ -34,6 +34,7 @@
     top: 0;
     overflow: hidden;
     z-index: 1000;
+    border-radius: inherit;
   }
   .ball {
     transition: all 0.5s ease-in-out;

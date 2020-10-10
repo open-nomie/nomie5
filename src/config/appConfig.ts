@@ -1,7 +1,8 @@
 export default {
+  primary_color: "#319ed7",
   storage_engine: "local", // local or blockstack
-  book_time_format: "YYYY-w",
-  book_time_unit: "week",
+  book_time_format: "YYYY-w", // Careful changing this!! Its how all records are referenced. Changing it breaks everything.
+  book_time_unit: "week", // SERIOUSLY!
   data_root: "v5-data",
   data_people_key: "people-v5",
   book_root: "v5-data/books",
