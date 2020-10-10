@@ -31,6 +31,7 @@
   import { TrackerStore } from "../store/tracker-store";
   import { Interact } from "../store/interact";
   import { Lang } from "../store/lang";
+  import Button from "../components/button/button.svelte";
 
   const console = new Logger("🎲 Board Editor");
   let trackers = [];
@@ -233,7 +234,7 @@
             <NInput type="text" placeholder="Tab Label" bind:value={data.updatedLabel}>
               <div slot="right">
                 {#if data.updatedLabel != data.board.label}
-                  <button class="btn text-primary-bright" on:click={methods.save}>{Lang.t('general.save')}</button>
+                  <Button type="clear" color="primary-bright" on:click={methods.save}>{Lang.t('general.save')}</Button>
                 {/if}
               </div>
 
@@ -249,13 +250,14 @@
               </div>
               {item.label}
               <div slot="right" class="n-row">
-                <button
-                  class="btn btn-icon fill-red mr-2"
+                <Button
+                  icon
+                  className="mr-2"
                   on:click={(evt) => {
                     methods.removeTracker(evt, item);
                   }}>
                   <NIcon name="remove" className="fill-red" />
-                </button>
+                </Button>
 
               </div>
 
@@ -268,10 +270,10 @@
     {#if data.board.id != 'all'}
       <div class="n-row p-2">
         <div class="filler" />
-        <button class="btn btn btn-clear text-danger " on:click={methods.deleteBoard}>
+        <Button type="clear" on:click={methods.deleteBoard}>
           <NIcon name="delete" className="fill-red mr-2" />
           Delete Tab
-        </button>
+        </Button>
         <div class="filler" />
       </div>
     {/if}

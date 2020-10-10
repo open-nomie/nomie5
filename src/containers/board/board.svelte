@@ -235,7 +235,7 @@
         },
       },
       {
-        title: "Edit / Reorder",
+        title: `Edit / Sort ${$BoardStore.activeBoard ? $BoardStore.activeBoard.label : ""}...`,
         async click() {
           editBoard();
         },
