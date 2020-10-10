@@ -5,21 +5,22 @@ import dayjs, { Dayjs } from "dayjs";
 const NDate = {
   firstDayOfWeek: "1", // default to Sunday
   // Set the day of week - based on the $UserStore.meta.firstDayOfWeek value
-  setFirstDayOfWeek(firstDayOfWeek: "1" | "2"): any {
+  setFirstDayOfWeek(firstDayOfWeek: "1" | "2"): typeof NDate {
     NDate.firstDayOfWeek = firstDayOfWeek;
     return NDate;
   },
-  getFirstDayOfWeek(): Dayjs {
-    return NDate.thisWeek()[0];
+  getFirstDayOfWeek(starterDate?: Dayjs): Dayjs {
+    return NDate.thisWeek(starterDate)[0];
   },
-  getLastDayOfWeek(): Dayjs {
-    return NDate.thisWeek()[6];
+  getLastDayOfWeek(starterDate?: Dayjs): Dayjs {
+    return NDate.thisWeek(starterDate)[6];
   },
   // Get this Week
-  thisWeek(): Array<Dayjs> {
-    let currentDay = dayjs().day();
+  thisWeek(starterDate?: Dayjs): Array<Dayjs> {
+    starterDate = starterDate || dayjs();
+    let currentDay = starterDate.day();
     // Get default Week Start
-    let thisWeekStart = dayjs().startOf("week");
+    let thisWeekStart = starterDate.startOf("week");
     // If it's sunday and our week starts on monday
     if (currentDay === 0 && NDate.firstDayOfWeek == "2") {
       // Set the week back, and add a day
