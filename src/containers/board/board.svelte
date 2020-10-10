@@ -379,59 +379,7 @@
 
     async trackerTapped(tracker) {
       return Interact.trackerTap(tracker, $TrackerStore.trackers);
-      // let inputer = new TrackerInputer(tracker, $TrackerStore.trackers);
-      // let note = await inputer.getElements();
-
-      // if (note.length) {
-      //   ActiveLogStore.addElement(note.join(" "));
-      //   if (inputer.lastAction == "save" || tracker.one_tap) {
-      //     await LedgerStore.saveLog($ActiveLogStore);
-      //     await ActiveLogStore.clear();
-      //   }
-      // }
-
-      // return note;
     },
-
-    /**
-     * Get Tracker Value
-     * Used to get the current value of today for a given tracker
-     * This will total or avg their values depending on the tracker calcuate
-     */
-    // getTrackerValue(tracker) {
-    //   // Default to null
-    //   let value = null;
-
-    //   // Does this tracker exist in today's map?
-    //   if (today.hasOwnProperty(tracker.tag)) {
-    //     // What type of Math should we do?
-    //     if (tracker.math === "sum") {
-    //       // Sum it up!
-    //       value = math.round(math.sum(today[tracker.tag].values));
-    //     } else {
-    //       // Round things!
-    //       value = math.round(math.average(today[tracker.tag].values));
-    //     }
-    //   }
-    //   return value ? NomieUOM.format(value, tracker.uom) : null;
-    // },
-    // getPositivity(tracker) {
-    //   let value = methods.getTrackerValue(tracker);
-    //   value = value || 0;
-    //   return ScoreTracker(value, tracker);
-    // },
-    /**
-     * Get Hours Used
-     * Used for generating the time-balls on the trackers
-     * It maybe shouldn't be here, but it is for now
-     */
-    // getHoursUsed(tracker) {
-    //   if (today.hasOwnProperty(tracker.tag)) {
-    //     return today[tracker.tag].hours;
-    //   } else {
-    //     return [];
-    //   }
-    // },
     // Show Tracker Options
     showTrackerOptions(tracker) {
       // Make it a real tracker in case it's not - doubling up shouldn't be a problem.
@@ -452,9 +400,9 @@
             }
           } else {
             // We're on another board - allow them to just remove the tracker
-            const confirmed = Interact.confirm(`Remove ${tracker.label} from this board?`, "You can always re-add it later");
+            const confirmed = await Interact.confirm(`Remove ${tracker.label} from this board?`, "You can always re-add it later");
             if (confirmed) {
-              BoardStore.removeTrackerFromBoard(tracker, $BoardStore.active);
+              await BoardStore.removeTrackerFromBoard(tracker, $BoardStore.active);
             }
           }
         },
