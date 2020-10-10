@@ -718,18 +718,6 @@
         {#if state.timeSpan == 'y'}
           <div class="p-4 text-sm text-center text-inverse-2">Logs not yet available for a full year</div>
         {:else}
-          <!-- {#if state.selected.rows}
-            <NToolbar className="text-center mt-2">
-              <div class="filler" />
-              <NButtonGroup buttons={logViewButtons} />
-              <button class="btn btn-badge btn-xs clickable ml-2" on:click={clearSelected}>
-                {state.selected.point.x}
-                <NIcon name="close" size="22" />
-              </button>
-              <div class="filler" />
-            </NToolbar>
-          {/if} -->
-
           <NLogList
             fullDate
             compact

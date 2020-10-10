@@ -206,14 +206,17 @@
     {#if logMeta.context.length}
       <div class="context n-row">
         {#each logMeta.context as context}
-          <button
-            class="btn btn-badge btn-xs faded"
+          <Button
+            size="xs"
+            className="m-1 text-inverse-3"
+            shape="rounded"
+            color="light"
             on:click={() => {
               Interact.openStats(context.raw);
               dispatch('contextClick', { context: context, log });
             }}>
             +{context.id}
-          </button>
+          </Button>
         {/each}
       </div>
     {/if}

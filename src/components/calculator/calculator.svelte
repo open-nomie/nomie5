@@ -271,6 +271,7 @@
   }
   :global(.n-calculator .nbtn.b-0.r-4) {
     background-color: transparent;
+    box-shadow: none;
   }
 </style>
 

@@ -21,6 +21,7 @@
   import { Interact } from "../../store/interact";
   import { Lang } from "../../store/lang";
   import { LedgerStore } from "../../store/ledger";
+  import Button from "../../components/button/button.svelte";
 
   const state = {
     note: ` @${$Interact.people.active} `,
@@ -73,12 +74,12 @@
 
   </div>
   {#if !state.checkingIn && !state.checkedIn}
-    <button class="btn btn-block btn-primary mt-4" on:click={checkIn}>Check-In</button>
+    <Button block className="mt-4" on:click={checkIn}>Check-In</Button>
   {:else if state.checkingIn}
-    <button class="btn btn-block btn-light mt-4" disabled>
+    <Button block color="light" className="mt-4" disabled>
       <Spinner size={24} />
       <div class="ml-2">Checking In...</div>
-    </button>
+    </Button>
   {/if}
   <div class="text-center mt-4 animate up {state.checkedIn ? 'visible' : 'hidden'}">
     <NIcon name="checkmarkOutline" size="60" className="fill-green" />

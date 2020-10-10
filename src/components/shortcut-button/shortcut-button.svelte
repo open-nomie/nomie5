@@ -98,7 +98,7 @@
     }
 
     @include media-breakpoint-down(xs) {
-      --scb-pad: 14px;
+      --scb-pad: 12px;
       @include generateLabelSizes(0.96em);
     }
 

@@ -191,7 +191,7 @@
       <div class="n-panel vertical bg-solid scroll-y h-100">
         {#if state.locations.length == 0}
           <NItem>
-            <Text faded>No Favorites Found</Text>
+            <Text faded>{Lang.t('general.no-favorites-found', 'No Favorites Found')}</Text>
           </NItem>
         {/if}
 
@@ -270,19 +270,6 @@
 
       </div>
     </section>
-
-    <!-- <button
-    slot="footer"
-    class="btn btn-block btn-primary"
-    disabled={!state.active}
-    on:click={() => {
-      if ($Interact.locationFinder.onInteract) {
-        $Interact.locationFinder.onInteract(state.active);
-      }
-      Interact.dismissPickLocation();
-    }}>
-    Select
-  </button> -->
   {/if}
   <div slot="footer">
     <Button block on:click={Interact.dismissPickLocation}>{Lang.t('general.close', 'Close')}</Button>

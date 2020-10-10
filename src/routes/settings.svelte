@@ -9,17 +9,13 @@
   import NItem from "../components/list-item/list-item.svelte";
 
   import NIcon from "../components/icon/icon.svelte";
-  import NToggle from "../components/toggle-switch/toggle-switch.svelte";
-  import NToolbar from "../components/toolbar/toolbar.svelte";
   import NButtonGroup from "../components/button-group/button-group.svelte";
   import BlockstackOptions from "../components/storage/blockstack.svelte";
   import LocalstorageOptions from "../components/storage/localstorage.svelte";
   import PouchDBOptions from "../components/storage/pouchdb.svelte";
 
   // Containers
-  import StorageManager from "../containers/storage/storage.svelte";
   import ImporterModal from "../containers/importer/importer.svelte";
-  import MassEditor from "../containers/mass-editor/mass-editor.svelte";
 
   import NLayout from "../containers/layout/layout.svelte";
 
@@ -32,12 +28,8 @@
   import { LedgerStore } from "../store/ledger";
   import { Interact } from "../store/interact";
   import { TrackerStore } from "../store/tracker-store";
-  import { BoardStore } from "../store/boards";
-  import { NomieAPI } from "../store/napi";
   import { Lang } from "../store/lang";
-  import { PeopleStore } from "../store/people-store";
   import { Device } from "../store/device-store";
-  import { ContextStore } from "../store/context-store";
 
   // Config
   import config from "../config/appConfig";
@@ -405,7 +397,7 @@ Note: Your data will not automatically move over. You'll first need to export it
           {/if}
           <!-- END Views -->
 
-          <div class="n-list solo mt-3">
+          <div class="n-list solo my-3">
             <NItem title={Lang.t('settings.nomie-needs-you', 'Nomie needs You!')}>
               <Text size="sm" faded>
                 {Lang.t('settings.become-a-patron-message', 'Help keep Nomie development moving forward, free, no ads, and open.')}
@@ -423,24 +415,19 @@ Note: Your data will not automatically move over. You'll first need to export it
             </NItem>
           </div>
 
-          <NItem className="bg-transparent">
-            <div class="px-2 py-4 text-center">
-              <Text size="md" className="mb-2">
-                {`${Lang.t('general.questions')}`}
-                <a class="text-primary-bright" href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>
-                  {config.support_contact}
-                </a>
-              </Text>
-              <Text size="sm" on:click={specialTap}>&copy; Copyright 2014 - {dayjs().format('YYYY')}</Text>
-              <Text size="sm" inline faded>All Rights Reserved</Text>
-              <Text size="sm" inline>
-                <a class="text-primary-bright" href="https://www.happydata.org" traget="_system">Happy Data, LLC</a>
-              </Text>
+          <NItem title={Lang.t('general.questions')}>
+            <div slot="right">
+              <a href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>Email Brandon</a>
             </div>
           </NItem>
 
-          <NItem className="bg-transparent mt-4 mb-2" title="⚠️ Danger Zone">
+          <NItem title="Happy Data, LLC">
+            <div slot="right">
+              <Text size="sm" on:click={specialTap}>&copy; Copyright 2014 - {dayjs().format('YYYY')}</Text>
+            </div>
+          </NItem>
 
+          <NItem className="bg-transparent my-4" title="⚠️ Danger Zone">
             <div slot="right">
               <Button color="danger" size="sm" on:click={methods.deleteEverything}>Destroy all Data</Button>
             </div>

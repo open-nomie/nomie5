@@ -23,9 +23,9 @@
 <NModal type="bottom" show={$AppStore.whatsNew !== null}>
   <header slot="header" class="n-toolbar-grid">
     <div class="left">
-      <button class="btn btn-clear tap-icon" on:click={closeThisUpdate}>
+      <Button className="tap-icon" icon on:click={closeThisUpdate}>
         <NIcon name="close" />
-      </button>
+      </Button>
     </div>
     <div class="main p-2">
       <NText size="lg" center bold>Welcome to Nomie APP_VERSION 🥳</NText>
@@ -60,14 +60,16 @@
     {#if $AppStore.whatsNew.fixes.length}
       <NItem className="divider text-xs py-1 text-primary compact font-weight-bold">
         FIXES
-        <button
-          slot="right"
-          class="btn btn-clear btn-xs text-xs text-bold"
-          on:click={() => {
-            showFixes = !showFixes;
-          }}>
-          {showFixes ? 'HIDE' : 'VIEW'}
-        </button>
+        <div slot="right">
+          <Button
+            size="xs"
+            color="light"
+            on:click={() => {
+              showFixes = !showFixes;
+            }}>
+            {showFixes ? 'HIDE' : 'VIEW'}
+          </Button>
+        </div>
       </NItem>
       {#if showFixes}
         <div class="n-list compact">

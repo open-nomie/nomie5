@@ -81,10 +81,10 @@
     flex-grow: 1;
     color: var(--color-inverse-2);
     max-height: 30px;
-    font-size: 0.85em;
+    font-size: 0.9em;
   }
   select {
-    font-size: 0.85em;
+    font-size: 0.9em;
     flex-shrink: 0;
     flex-grow: 0;
     color: var(--color-primary-bright);

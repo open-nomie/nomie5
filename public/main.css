@@ -4835,6 +4835,9 @@ body.theme-dark {
 .bg-mint {
   background-color: var(--color-mint-bright) !important; }
 
+.bg-bg {
+  background-color: var(--color-bg); }
+
 .bg-teal {
   background-color: var(--color-teal-bright) !important; }
 
@@ -6907,9 +6910,6 @@ aside.n-panel {
   right: 0;
   z-index: 5000; }
 
-header.layout-header.scrolled {
-  box-shadow: var(--box-shadow-float); }
-
 .n-layout {
   position: fixed;
   display: flex;
@@ -6919,7 +6919,8 @@ header.layout-header.scrolled {
   left: 0;
   right: 0; }
   .n-layout .layout-header header,
-  .n-layout .layout-header header .container {
+  .n-layout .layout-header header .container,
+  .n-layout .layout-header .n-toolbar {
     min-height: var(--header-height); }
   .n-layout .layout-header header {
     display: flex;
@@ -6931,7 +6932,10 @@ header.layout-header.scrolled {
     flex-grow: 1;
     flex-shrink: 0;
     z-index: 4;
-    transition: all 0.2s ease-in-out; }
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0); }
+  .n-layout header.layout-header.scrolled {
+    box-shadow: var(--box-shadow-float); }
   .n-layout main.layout-main {
     -webkit-overflow-scrolling: touch;
     overflow-y: auto;

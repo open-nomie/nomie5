@@ -199,13 +199,14 @@
             {/if}
           </div>
 
-          <button
-            class="btn btn-fill btn-light btn-block"
+          <Button
+            block
+            color="light"
             on:click={() => {
               document.getElementById('avatarFileInput').click();
             }}>
             Select Photo...
-          </button>
+          </Button>
           <div class="file-input-wraper">
             <input
               class="form-control pb-2"
@@ -218,7 +219,7 @@
 
         </NItem>
 
-        <button class="btn btn-block btn-primary mt-5 mb-2" on:click={saveActivePerson}>Save @{activePerson.username}</button>
+        <Button block className="mt-5 mb-2" on:click={saveActivePerson}>Save @{activePerson.username}</Button>
 
         <NItem className="bg-transparent text-solid-3 text-sm text-center" on:click={deleteUser}>Delete @{activePerson.username}...</NItem>
       </div>

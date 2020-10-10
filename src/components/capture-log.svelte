@@ -429,7 +429,7 @@
         }} />
       <!-- Note Input -->
       <div class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 ? 'populated' : 'empty'}">
-        <Button size="sm" shape="circle" color={state.advanced ? 'primary' : 'clear'} className="ml-1" on:click={toggleAdvanced}>
+        <Button size="sm" shape="circle" color={state.advanced ? 'primary' : 'light'} className="ml-1" on:click={toggleAdvanced}>
           {#if state.advanced}
             <NIcon name="more" className="fill-white" />
           {:else}
@@ -478,11 +478,9 @@
             <NIcon name="pin" className="mr-2 fill-inverse-2" size="16" />
           </div>
           {#if !$ActiveLogStore.lat}
-            <Text size="sm">{Lang.t('general.location', 'Location')}</Text>
+            <Text>{Lang.t('general.location', 'Location')}</Text>
           {:else}
-            <Text size="sm">
-              {$ActiveLogStore.location || `${math.round($ActiveLogStore.lat, 100)},${math.round($ActiveLogStore.lng, 100)}`}
-            </Text>
+            <Text>{$ActiveLogStore.location || `${math.round($ActiveLogStore.lat, 100)},${math.round($ActiveLogStore.lng, 100)}`}</Text>
           {/if}
           <div slot="right" class="n-row">
             {#if $ActiveLogStore.lat}
@@ -490,9 +488,9 @@
                 <Icon name="close" className="fill-inverse" on:click={methods.clearLocation} />
               </Button>
             {:else if $UserStore.alwaysLocate}
-              <Text size="sm" faded className="pr-1">Current</Text>
+              <Text faded className="pr-1">Current</Text>
             {:else}
-              <Text size="sm" faded className="pr-1">None</Text>
+              <Text faded className="pr-1">None</Text>
             {/if}
           </div>
         </NItem>
