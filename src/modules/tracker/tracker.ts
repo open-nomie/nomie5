@@ -139,6 +139,10 @@ export default class TrackerConfig {
     return includedStr.trim();
   }
 
+  toTrackableElement(): TrackableElement {
+    return this.getTrackableElement();
+  }
+
   getTrackableElement(): TrackableElement {
     return new TrackableElement({
       id: this.tag,
