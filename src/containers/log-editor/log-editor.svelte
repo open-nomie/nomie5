@@ -27,6 +27,8 @@
   import ListItem from "../../components/list-item/list-item.svelte";
   import { Locations } from "../../store/locations";
   import Button from "../../components/button/button.svelte";
+  import tick from "../../utils/tick/tick";
+  import Icon from "../../components/icon/icon.svelte";
 
   // Props
   export let log = undefined;
@@ -39,8 +41,8 @@
   // Setup state
   let state = {
     view: "note",
-    dateTimeValue: null,
     saving: false,
+    mapReady: false,
   };
 
   // Watch for Log
@@ -53,8 +55,10 @@
     init() {
       if (log) {
         state.log = new NomieLog(log);
-        state.dateTimeValue = dayjs(new Date(log.end)).format("YYYY-MM-DDTHH:mm");
+        // Add a space to avoid auto complete
+        state.log.note = `${state.log.note} `;
       }
+      state.mapReady = true;
     },
     setView(view) {
       state.view = view;
@@ -72,9 +76,6 @@
     },
     save() {
       state.saving = true;
-      // let updatedDate = time.datetimeLocal(state.dateTimeValue);
-      // state.log.start = updatedDate.getTime();
-      // state.log.end = updatedDate.getTime();
       dispatch("save", state.log);
       // dispatch("close");
     },
@@ -83,9 +84,13 @@
   async function selectLocation() {
     let location = await Locations.selectLocation();
     if (location) {
+      state.mapReady = false;
       state.log.lat = location.lat;
       state.log.lng = location.lng;
       state.log.location = location.name;
+      console.log("Set new location", state.log);
+      await tick(10);
+      state.mapReady = true;
     }
   }
 
@@ -167,7 +172,7 @@
 
         </div>
       {:else if state.view == 'where'}
-        {#if state.log}
+        {#if state.log && state.mapReady}
           <div style="height:200px; max-height:200px; min-height:200px; overflow:hidden">
             <NMap
               style="max-height:200px;"
@@ -180,7 +185,13 @@
               }} />
           </div>
         {/if}
-        <ListItem compact clickable detail on:click={selectLocation}>Pick from my locations</ListItem>
+        {#if $Locations.length}
+          <ListItem compact clickable detail on:click={selectLocation} title={Lang.t('location.saved-locations', 'Saved Locations')}>
+            <div slot="left">
+              <Icon name="star" className="fill-orange" />
+            </div>
+          </ListItem>
+        {/if}
       {:else if state.view == 'score'}
         <div class="score center-content">
           <NPositivitySelector
