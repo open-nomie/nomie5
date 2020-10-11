@@ -25,6 +25,7 @@
   import ImportLoader from "../modules/import/import-loader";
   import ToggleSwitch from "../components/toggle-switch/toggle-switch.svelte";
   import dayjs from "dayjs";
+  import type { t } from "i18next";
 
   let stepId: string = "home";
   let templates: Array<IImportConfig> = [];
@@ -147,6 +148,7 @@
   ];
 
   function mapField(fieldIndex) {
+    console.log("Map Field", fieldIndex);
     activeMapIndex = fieldIndex;
     Interact.popmenu({
       title: `Map ${activeImporter ? activeImporter.getHeaders()[fieldIndex] : "Unknown"}`,
@@ -299,7 +301,7 @@
   onMount(main);
 </script>
 
-<Layout className="import">
+<Layout className="import" showTabs={false}>
   <div class="n-toolbar-grid container" slot="header">
     <div class="left">
       <Button shape="circle" color="transparent" on:click={back}>
@@ -325,6 +327,17 @@
     {#if view && view.id == 'home'}
       <div class="container p-0 import-csv-home">
 
+        <ListItem>
+          <Text size="md" leading3 bold>
+            <span class="nbtn nbtn-xs nbtn-danger nbtn-rounded">{Lang.t('general.beta', 'Beta')}</span>
+            Warning
+          </Text>
+          <Text size="sm" faded>
+            The importer is a work in progress and results may vary. Please make sure to check the previews before importing anything. Or
+            better yet, launch a private browser version of Nomie and give it a test there first.
+          </Text>
+        </ListItem>
+
         <ListItem itemDivider compact bg="transparent">Create an Importer</ListItem>
         <ListItem>
           <FileUploader
@@ -339,59 +352,60 @@
           <Text size="sm" faded>Select any CSV to begin. You can then map the appropriate fields</Text>
         </ListItem>
 
-        <ListItem itemDivider compact className="bg-transparent">
-          Import Templates
-          <div slot="right">
-            {#if listMode != 'edit'}
-              <Button
-                color="transparent"
-                size="sm"
-                on:click={() => {
-                  listMode = 'edit';
-                }}>
-                {Lang.t('general.edit', 'Edit')}
-              </Button>
-            {:else}
-              <Button
-                size="sm"
-                color="transparent"
-                className="text-red"
-                on:click={() => {
-                  listMode = 'list';
-                }}>
-                {Lang.t('general.done', 'Done')}
-              </Button>
-            {/if}
-          </div>
-
-        </ListItem>
-
-        {#each templates as template}
-          <ListItem
-            clickable={listMode == 'list'}
-            on:click={() => {
-              if (listMode == 'list') {
-                openTemplate(template);
-              }
-            }}>
-            <Text bold>{template.name}</Text>
-            <Text size="sm" faded>{template.template}{Object.keys(template.fieldMap)}</Text>
+        {#if templates.length}
+          <hr class="divider center my-2" />
+          <ListItem itemDivider compact className="bg-transparent">
+            {Lang.t('csv-import.saved-templates', 'Saved Templates')}
             <div slot="right">
-              {#if listMode == 'edit'}
+              {#if listMode != 'edit'}
+                <Button
+                  color="transparent"
+                  size="sm"
+                  on:click={() => {
+                    listMode = 'edit';
+                  }}>
+                  {Lang.t('general.edit', 'Edit')}
+                </Button>
+              {:else}
                 <Button
                   size="sm"
-                  color="danger"
-                  on:click={(evt) => {
-                    remove(template);
+                  color="transparent"
+                  className="text-red"
+                  on:click={() => {
+                    listMode = 'list';
                   }}>
-                  Delete
+                  {Lang.t('general.done', 'Done')}
                 </Button>
               {/if}
             </div>
+
           </ListItem>
-        {/each}
-        {#if templates.length == 0}
-          <ListItem>No Saved Templates</ListItem>
+
+          {#each templates as template}
+            <ListItem
+              detail
+              clickable={listMode == 'list'}
+              on:click={() => {
+                if (listMode == 'list') {
+                  openTemplate(template);
+                }
+              }}>
+              <Text bold>{template.name}</Text>
+              <Text size="sm" faded>{template.template}{Object.keys(template.fieldMap)}</Text>
+              <div slot="right">
+                {#if listMode == 'edit'}
+                  <Button
+                    size="sm"
+                    color="danger"
+                    on:click={(evt) => {
+                      remove(template);
+                    }}>
+                    Delete
+                  </Button>
+                {/if}
+              </div>
+            </ListItem>
+          {/each}
         {/if}
 
         <hr class="divider center my-3" />
@@ -415,13 +429,13 @@
         {#if !activeImporter.parsed}
           <FileUploader
             accept="csv"
-            label="Select CSV to Start"
+            label={Lang.t('csv-import.select-csv-file', 'Select CSV File...')}
             on:file={async (evt) => {
               await addToImporter(evt);
             }} />
         {:else}
           <div class="n-toolbar n-row px-3">
-            <div class="main">Map Fields</div>
+            <div class="main">{Lang.t('csv-import.map-fields', 'Map Fields')}</div>
             <div class="filler" />
             <NextPrevCal hideCal={true} on:next={nextPreview} on:previous={previousPreview} />
           </div>
