@@ -37,13 +37,19 @@
 
 <div class="nbtn-group {inverse ? 'inverse' : ''} {className}" {style}>
   {#if buttons.length}
-    {#each buttons as button, index (button.label + button.icon)}
+    {#each buttons as button}
       {#if button.hide !== false}
-        <Button color="" delay={0} {size} className={button.active ? 'active' : 'text-solid-1'} on:click={button.click}>
-          {#if button.label}
+        <Button
+          color=""
+          title={button.label}
+          delay={0}
+          {size}
+          className={button.active ? 'active' : 'text-solid-1'}
+          on:click={button.click}>
+          {#if button.icon}
+            <NIcon name={button.icon} className={`${button.active ? 'fill-primary-bright' : 'fill-inverse-1'} ${labelClass}`} />
+          {:else if button.label}
             <div class={labelClass}>{button.label}</div>
-          {:else if button.icon}
-            <NIcon name={button.icon} className={labelClass} />
           {/if}
         </Button>
       {/if}
