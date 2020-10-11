@@ -371,8 +371,65 @@ context("App", () => {
     
   }
 
+  const trackAndEditRecord = () => {
+
+    const textToAdd = `plus some from the edit`;
+
+    goHome();
+    cy.get('#textarea-capture-note').type("This is a test note for #editing +context @person");
+    cy.wait(100);
+    // Click Positivity 
+    cy.get('.positivity-emoji-btn').click();
+    cy.wait(100);
+    // Set positivity 
+    cy.get('.n-positivity-selector > :nth-child(5)').click();
+    cy.wait(100);
+    // click save
+    cy.get('.nbtn-success').click();
+    appTab('History');
+    // select ***
+    cy.get('.time-row > .nbtn').click();
+    cy.wait(100);
+    // Select Edit
+    cy.get('.pop-button-0').click();
+    cy.wait(100);
+    cy.get('.form-control').then(node=>{
+      let html = `${node.text()} - ${textToAdd}`;
+      cy.get('.form-control').type(html);
+    })
+    cy.wait(100);
+    cy.get('[title="When"]').click();
+
+    // Get active date 
+    cy.get('.n-calendar .day.active').then(node=>{
+      // Add one to the date for tomorrow
+      let date = parseInt(node.attr('data-day')) + 1;
+      cy.get(`.n-calendar .day[data-day="${date}"]`).click();
+    });
+    // Select the first sunday of the month
+    cy.wait(100);
+    // Click Save
+    cy.get('.buttons > .nbtn-').click();
+    cy.wait(100);
+    // Click next Day
+    cy.get('.next-prev-cal > :nth-child(3)').click();
+    cy.wait(100);
+    cy.get('.page-history').then((node)=>{
+      expect(node.text().replace(/ /g,'')).to.contain(textToAdd.replace(/ /g,''));
+    });
+
+    goHome();
+
+  };
+
   const goHome = async () => {
     return cy.get(".tab-Track").click();
+  };
+
+  const appTab = async (tabName) => {
+    cy.wait(100);
+    cy.get(`.tab-${tabName}`).click();
+    cy.wait(100);
   };
 
 
@@ -380,6 +437,10 @@ context("App", () => {
     {
       it: "should onboard with localstorage",
       run: initBasic,
+    },
+    {
+      it: "should track, and edit a record",
+      run: trackAndEditRecord,
     },
     {
       it: "should create a tally tracker",
