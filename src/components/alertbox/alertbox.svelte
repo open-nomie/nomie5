@@ -3,6 +3,7 @@
   import NText from "../text/text.svelte";
   import { createEventDispatcher } from "svelte";
   import Button from "../button/button.svelte";
+  import Text from "../text/text.svelte";
   const dispatch = createEventDispatcher();
 
   export let title = undefined;
@@ -129,7 +130,7 @@
       </div>
     {:else if hasSlot && message}
       <div class="slot-holder card-body pt-0">
-        <p>{message}</p>
+        <Text size="sm">{message}</Text>
         <slot />
       </div>
     {/if}

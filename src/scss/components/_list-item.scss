@@ -92,7 +92,7 @@
     letter-spacing: 0.04em;
     font-size: 14px !important;
     &.n-text {
-      font-size: 14px !important;
+      // font-size: 14px !important;
     }
   }
 
@@ -102,7 +102,7 @@
   &.just-content {
     background-color: transparent;
     color: var(--color-inverse-2);
-    font-size: 0.8em;
+    // font-size: 0.8em;
     padding-top: 10px;
     padding-bottom: 10px;
   }
@@ -114,7 +114,7 @@
     min-height: 30px;
 
     .n-text.md {
-      font-size: 0.8em;
+      // font-size: 0.8em;
     }
   }
 
@@ -209,12 +209,6 @@
   .right .btn-clear {
     margin-right: -10px !important;
   }
-  .right .zmdi .icon {
-    font-size: 24px !important;
-  }
-  .left .zmdi .icon {
-    font-size: 24px !important;
-  }
 
   &.clickable {
     // &:hover {
@@ -246,7 +240,7 @@
 
       &.sm,
       &.small {
-        font-size: 0.9em;
+        // font-size: 0.9em;
       }
     }
   }
@@ -264,14 +258,6 @@
     }
   }
   .right {
-    .zmdi {
-      font-size: 26px;
-    }
-    .btn,
-    a,
-    span {
-      // font-size: 0.9em;
-    }
     select {
       // min-width: 190px;
       // width: 190px;
@@ -283,8 +269,8 @@
   }
   main {
     small {
-      font-size: 0.8em !important;
-      line-height: 0.9em !important;
+      // font-size: 0.8em !important;
+      // line-height: 0.9em !important;
     }
   }
   &.text-primary {
