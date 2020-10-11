@@ -22,7 +22,6 @@
 
   // Utils
   import Logger from "./utils/log/log";
-  import Timer from "./utils/timer/timer";
 
   import RouterView from "./routes/routes.svelte";
 
@@ -52,9 +51,7 @@
 
   // Set a better console
   const console = new Logger("APP");
-  const timer = new Timer("App.svelte", false);
 
-  timer.start();
   ComposiGestures.default.gestures();
 
   /**
@@ -99,7 +96,6 @@
 
   const methods = {
     hideSplashScreen() {
-      timer.check("Hide Splashscreen");
       document.querySelectorAll(".delete-on-app").forEach((d) => {
         d.classList.add("deleted");
         setTimeout(() => {
@@ -157,14 +153,9 @@
 
   // Used to make sure that boards and trackers are loaded
   UserStore.onReady(async () => {
-    timer.check("UserStore.onReady fired");
-    console.log("🌳🌳🌳🌳🌳🌳🌳🌳🌳🐘🌳🌳🌳🌳🌳🌳🌳🌳🌳");
-    console.log("🌳🌳🌳🌳🌳🌳 Welcome to 🌳🌳🌳🌳🌳🌳🌳🌳");
-    console.log("🌳🌳🌳🌳🌳🌳 NOMIE APP_VERSION 🌳🌳🌳🌳🌳🌳🌳");
-    console.log("🌳🌳🌳🌳🌳🌳🌳🌳🌳🐘🌳🌳🌳🌳🌳🌳🌳🌳🌳🌳");
+    console.log("🌳🌳🌳🌳🌳 Welcome to NOMIE APP_VERSION 🌳🌳🌳🌳🌳");
     // Set the user if they're logged in
     ready = true;
-    timer.check("Starting Store Intialization sync");
     PeopleStore.init(); // Initialize the People Store
     Locations.init(); // Initialize Location Store
     ContextStore.init(); // check if this is a new version
@@ -185,7 +176,6 @@
   });
 
   onMount(() => {
-    timer.check("onMount");
     UserStore.initialize();
   });
 </script>
