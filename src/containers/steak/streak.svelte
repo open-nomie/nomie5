@@ -2,19 +2,19 @@
   import dayjs from "dayjs";
   import type { Dayjs } from "dayjs";
 
-  import Calendar from "../../components/calendar/calendar.svelte";
   import TrackableElement, { toElement } from "../../modules/trackable-element/trackable-element";
   import TrackerConfig from "../../modules/tracker/tracker";
+
+  import Calendar from "../../components/calendar/calendar.svelte";
+  import Spinner from "../../components/spinner/spinner.svelte";
+
+  import { TrackerStore } from "../../store/tracker-store";
+  import { UserStore } from "../../store/user-store";
 
   import StreakHelper from "./streak-helper";
   import type { StreakViewTypes } from "./streak-helper";
   import type { CalendarLog } from "./streak-helper";
-  import { onMount } from "svelte";
-  import { UserStore } from "../../store/user-store";
-  import type { subtract } from "lodash";
-  import { TrackerStore } from "../../store/tracker-store";
   import StreakDays from "./streak-days.svelte";
-  import Spinner from "../../components/spinner/spinner.svelte";
 
   export let term: string;
   export let selectedDate: Dayjs = dayjs();
@@ -22,26 +22,21 @@
   export let element: TrackableElement;
   export let className: string = "";
 
-  let _elCalendar: Calendar;
   let calendarLogs: Array<CalendarLog>;
   let mockTracker: TrackerConfig;
-  let trackable: TrackableElement;
   let lastTerm: string;
   let lastElement: TrackableElement;
 
   $: if (term && lastTerm !== term && !element) {
     lastTerm = term;
     element = toElement(term);
-    console.log("streak.svelte", "Term loaded", element);
     main();
   } else if (element && lastElement !== element) {
     lastElement = element;
-    console.log("streak.svelte", "Element loaded", element);
     main();
   }
 
   async function main() {
-    console.log("streak.svelte", { element });
     if (element) {
       mockTracker = element.type == "tracker" ? TrackerStore.getByTag(element.id) : new TrackerConfig({ tag: `${element.id}-mock` });
       let logs = await StreakHelper.getLogs(element, selectedDate, view, $UserStore.meta.firstDayOfWeek);

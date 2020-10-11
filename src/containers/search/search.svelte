@@ -27,37 +27,10 @@
   export const style = undefined;
 
   export const className = "";
-  // export let view: SearchModes = "history";
-  // export let term: string = undefined;
-
-  // const SEARCHES_PATH = `${global.data_root}/searches`;
-
-  // let searchInput;
-
-  // let logResults: Array<any> = [];
-
-  let placeholder: string = "Search...";
-
-  let searchMode: SearchModes = "history";
-  // const setView = (view: SearchModes) => {
-  //   console.log("Setting View to ", view);
-  //   // searchMode = view;
-  //   placeholder = `${Lang.t("general.search", "Search")} ${_.capitalize(view)}...`;
-  // };
-
-  $: if ($SearchStore.view && $SearchStore.show === true) {
-    console.log("Search setting view");
-    placeholder = `${Lang.t("general.search", "Search")} ${_.capitalize($SearchStore.view)}...`;
-    // setView(view);
-  }
 
   function back() {
     SearchStore.close();
   }
-
-  onMount(() => {
-    window.scrollTo(0, 0);
-  });
 </script>
 
 <style lang="scss" type="text/scss">

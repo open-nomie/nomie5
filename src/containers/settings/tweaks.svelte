@@ -72,24 +72,9 @@
         colors={['blue', 'mint', 'teal', 'pink', 'orange', 'purple']}
         value={$UserStore.theme_accent}
         on:change={(evt) => {
-          console.log('On change?', evt);
           UserStore.setTheme($UserStore.theme, evt.detail);
         }} />
 
-      <!-- <select
-        class="form-control"
-        style="min-width:100px;width:100px"
-        bind:value={$UserStore.theme_accent}
-        on:change={(event) => {
-          UserStore.setTheme($UserStore.theme, $UserStore.theme_accent);
-        }}>
-        <option value="default">Nomie</option>
-        <option value="mint">Shamrock</option>
-        <option value="teal">Seafoam</option>
-        <option value="pink">KPop</option>
-        <option value="orange">Fire</option>
-        <option value="purple">Lilac</option>
-      </select> -->
     </div>
   </NItem>
 

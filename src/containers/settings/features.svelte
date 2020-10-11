@@ -49,16 +49,13 @@
       let shouldLock = change;
       if (shouldLock === true) {
         hasPin = false;
-        console.log("Setting has Pin to false");
         let pin: any = await methods.getNewPin();
         if (!pin) {
-          console.log("no pin set to false");
           UserStore.saveMeta({
             lock: false,
             access_pin: null,
           });
         } else {
-          console.log("has pin, set to tru", pin);
           UserStore.saveMeta({
             lock: true,
             access_pin: pin,

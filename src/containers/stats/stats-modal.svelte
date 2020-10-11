@@ -1,47 +1,31 @@
 <script lang="ts">
   //Vendors
-  import { onMount } from "svelte";
-  import { navigate, Router, Route } from "svelte-routing";
   import dayjs from "dayjs";
   import type { Dayjs, OpUnitType } from "dayjs";
 
   // Modules
-  import Tracker from "../../modules/tracker/tracker";
   import type TrackerConfig from "../../modules/tracker/tracker";
-  import type { ITracker } from "../../modules/tracker/tracker";
-  import NLog from "../../modules/nomie-log/nomie-log";
   import StatsV5, { timeSpans } from "../../modules/stats/statsV5";
   import type { ITimeSpanUnit, ITimeSpan } from "../../modules/stats/statsV5";
-  import StatsRef from "../../modules/stats/stats-ref";
 
-  import TimeOfDay from "../../components/time-of-day/time-of-day.svelte";
-  import DayOfWeek from "../../components/day-of-week/day-of-week.svelte";
   import type TrackableElement from "../../modules/trackable-element/trackable-element";
-  import type { ITrackableElement } from "../../modules/trackable-element/trackable-element";
 
   // import { strToColor } from "../../components/dymoji/dymoji";
 
   // Utils
   // import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import tick from "../../utils/tick/tick";
-  import math from "../../utils/math/math";
   import Storage from "../../modules/storage/storage";
-  import DataDistance from "../../modules/data-distance/data-distance";
 
   import extractor from "../../utils/extract/extract";
 
   // Components
   import NModal from "../../components/modal/modal.svelte";
-  import Dymoji from "../../components/dymoji/dymoji.svelte";
   import NButtonGroup from "../../components/button-group/button-group.svelte";
-  import HScroller from "../../components/h-scroller/h-scroller.svelte";
-  import NToolbar from "../../components/toolbar/toolbar.svelte";
   import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
-  import NItem from "../../components/list-item/list-item.svelte";
   import NSpinner from "../../components/spinner/spinner.svelte";
   import NBarChart from "../../components/charts/bar-chart-2.svelte";
   import NLogList from "../../components/log-list/log-list.svelte";
-  import NTimeGrid from "../../components/day-time-grid/day-time-grid.svelte";
   import NIcon from "../../components/icon/icon.svelte";
 
   // Containers
@@ -53,20 +37,17 @@
   import { UserStore } from "../../store/user-store";
   import { Lang } from "../../store/lang";
   import { TrackerStore } from "../../store/tracker-store";
-  import { PeopleStore } from "../../store/people-store";
 
   import StatsOverview from "./stats-overview.svelte";
   import StatsCompare from "./stats-compare.svelte";
   import Button from "../../components/button/button.svelte";
   import Text from "../../components/text/text.svelte";
-  import NPaths from "../../paths";
   import StatsTime from "./stats-time.svelte";
-  import regex from "../../utils/regex";
   import NextPrevCal from "../../components/next-prev-cal/next-prev-cal.svelte";
   import { SearchStore } from "../../store/search-store";
   import NDate from "../../utils/ndate/ndate";
   import Streak from "../steak/streak.svelte";
-  import type { element } from "svelte/internal";
+
   import Card from "../../components/card/card.svelte";
 
   /**
@@ -86,16 +67,6 @@
     streak: { id: "streak", icon: "calendar", label: Lang.t("stats.streak", "Streak") },
     logs: { id: "logs", icon: "annotation", label: Lang.t("general.logs", "Logs"), focused: true },
   };
-
-  // /**
-  //  * Type Shortcuts
-  //  * **/
-  // const types = {
-  //   tracker: { prefix: "#" },
-  //   person: { prefix: "@" },
-  //   context: { prefix: "+" },
-  //   location: { prefix: "" },
-  // };
 
   /**
    * Remember View Settings
@@ -310,12 +281,12 @@
 
   function onMoreTap() {
     let buttons = [
-      {
-        title: "View Streak",
-        click: () => {
-          Interact.openStreak(state.currentTerm);
-        },
-      },
+      // {
+      //   title: "View Streak",
+      //   click: () => {
+      //     Interact.openStreak(state.currentTerm);
+      //   },
+      // },
       {
         title: `Edit ${state.currentTerm}`,
         click: () => {

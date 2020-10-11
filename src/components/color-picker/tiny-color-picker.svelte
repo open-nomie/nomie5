@@ -8,7 +8,6 @@
 
   let selected;
   $: if (value && value !== selected) {
-    console.log("Value change", value);
     selected = value;
   }
 </script>

@@ -25,7 +25,6 @@
         };
       })
       .reverse();
-    console.log({ loopOver });
   }
 </script>
 
