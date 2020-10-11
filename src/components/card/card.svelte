@@ -1,6 +1,11 @@
 <script>
+  import Text from "../text/text.svelte";
+
   export let className = "";
   export let style = "";
+  export let title = undefined;
+  export let pad = false;
+  export let compact = false;
 </script>
 
 <style>
@@ -8,11 +13,16 @@
     background-color: var(--color-solid);
     box-shadow: var(--box-shadow-tight);
     border-radius: 6px;
-    margin: 8px;
     overflow: hidden;
+  }
+  :global(.n-card.compact .title) {
+    font-size: 0.7em;
   }
 </style>
 
-<div class="n-card {className}" {style}>
+<div class="n-card {className} {pad ? 'p-3' : ''} {compact ? 'comapct' : ''}" {style}>
+  {#if title}
+    <Text size="sm" className="title {pad ? 'pb-3' : 'p-3'}" bold>{title}</Text>
+  {/if}
   <slot />
 </div>
