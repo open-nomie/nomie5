@@ -13,9 +13,7 @@
   // components
   import NIcon from "../components/icon/icon.svelte";
   import NToolbar from "../components/toolbar/toolbar.svelte";
-  import NModal from "../components/modal/modal.svelte";
   import Spinner from "../components/spinner/spinner.svelte";
-  import NDatePicker from "../components/date-picker/date-picker.svelte";
   import LogItem from "../components/list-item-log/list-item-log.svelte";
 
   import OfflineQueue from "../components/offline-queue/offline-queue.svelte";
@@ -52,20 +50,7 @@
     date: dayjs(new Date()),
     time_format: config.book_time_format,
     logs: [],
-    trackers: {},
     ledger: null,
-    searchTerm: "",
-    searchResults: null,
-    searchMode: false,
-    selected: {},
-    selectCount: 0,
-    editMode: false,
-    showDatePicker: false,
-    location: {
-      name: null,
-      lat: null,
-      lng: null,
-    },
     locations: [],
     loading: true,
     showAllLocations: false,
@@ -73,20 +58,7 @@
 
   let refreshing = false;
 
-  let local = {
-    showDatePicker: false,
-    datePickerValue: null,
-    searchMode: false,
-  };
-
-  // $: searchMode = (state.searchTerm || "").length ? true : false;
-  let searchMode = false;
-  $: if (state.searchTerm && !searchMode) {
-    searchMode = true;
-  }
-
   let logs = []; // holder of the logs
-  let searchLogs = undefined; // hodler of searched logs
   let loading = true;
   let locations = [];
 
@@ -103,21 +75,6 @@
   }
 
   $: appTitle = `History ${state.date.format("YYYY-MM-DD")}`;
-
-  $: if (searchLogs || logs) {
-    locations = (searchLogs || logs)
-      .filter((log) => {
-        return log.lat;
-      })
-      .map((log) => {
-        return {
-          lat: log.lat,
-          lng: log.lng,
-          name: log.location,
-          log: log,
-        };
-      });
-  }
 
   // Methods
   const methods = {
@@ -146,11 +103,7 @@
 
       return logs || [];
     },
-    clearLocation() {
-      state.location.name = null;
-      state.location.lat = null;
-      state.location.lng = null;
-    },
+
     previous() {
       methods.getDate(state.date.subtract(1, "day"));
     },
@@ -173,16 +126,6 @@
     search() {
       SearchStore.view("history");
     },
-    // searchChange(evt) {
-    //   state.searchTerm = evt.detail;
-    //   showSearch = false;
-    //   window.scrollTo(0, 0);
-    // },
-    // async onSearchEnter(evt) {
-    //   await tick(100);
-    //   window.scrollTo(0, 0);
-    //   showSearch = true;
-    // },
     trackerTapped(tracker, log) {
       Interact.openStats(`#${tracker.tag}`);
     },
@@ -193,11 +136,7 @@
       Interact.openStats(`+${context.id}`);
     },
     showLogOptions(log) {
-      Interact.logOptions(log).then((action) => {
-        if (searchMode) {
-          methods.refreshSearch();
-        }
-      });
+      Interact.logOptions(log);
     },
     selectDate() {
       let ranges = [
@@ -272,9 +211,6 @@
 
   // WHen mounted.
   onMount(() => {
-    if ((state.searchTerm || "").length > 1 && !searchLogs) {
-      methods.refreshSearch();
-    }
     window.scrollTo(0, 0);
     document.body.classList.remove("scrolled");
     refresh();
@@ -328,26 +264,12 @@
     opacity: 1;
   }
 
-  .map-btn {
-    position: absolute;
-    left: 10px;
-    bottom: 10px;
-    border-radius: 20px;
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-  .today-btn {
-    position: fixed;
-    left: 10px;
-    bottom: 10px;
-    border-radius: 20px;
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-  .close-btn {
-    left: auto;
-    right: 0px;
-    bottom: 0px !important;
+  :global(.close-btn) {
+    bottom: 20px !important;
+    z-index: 10;
+    position: absolute !important;
+    right: 50%;
+    margin-right: -16px;
   }
 
   .page-history {
@@ -402,11 +324,6 @@
         <div class="empty-notice">
           <Spinner />
         </div>
-      {:else if logs.length === 0 && !showSearch}
-        {#if !searchMode}
-          <div class="empty-notice" style="height:30vh;">{Lang.t('history.no-records-found')}</div>
-        {/if}
-        <!-- If Logs and Not refreshing  -->
       {:else}
         <!-- Loop over logs -->
         {#each logs as log, index}
@@ -450,19 +367,10 @@
       </div>
     </div>
 
-    {#if !isToday && !searchMode}
-      <button
-        class="btn btn-sm btn-light btn-round today-btn"
-        on:click={() => {
-          methods.goto(dayjs());
-        }}>
-        {Lang.t('general.today')}
-      </button>
-    {/if}
   </main>
 
   <div slot="bottom" class="map-base">
-    {#if locations.length && !loading && !state.searchTerm}
+    {#if locations.length && !loading}
       {#if !state.showAllLocations}
         <div
           class="mini-map closed"
@@ -475,12 +383,13 @@
         <div class="content-map">
           <NMap {locations} />
           <Button
-            color="light"
+            className="close-btn"
+            color="dark"
             shape="circle"
             on:click={() => {
               state.showAllLocations = !state.showAllLocations;
             }}>
-            <NIcon name="closeFilled" size="32" />
+            <NIcon name="close" size="32" />
           </Button>
 
         </div>
@@ -491,36 +400,3 @@
   <!-- end header-content content -->
 
 </NLayout>
-
-{#if state.location.lat}
-  <NModal show={true} title={state.location.name || 'Location'}>
-    <NMap locations={[state.location]} />
-    <button class="btn btn-lg btn-primary btn-block mb-0" on:click={methods.clearLocation} slot="footer">Close</button>
-  </NModal>
-{/if}
-
-{#if local.showDatePicker}
-  <NModal show={true} title={'Select a Date'}>
-    <NDatePicker
-      on:change={(event) => {
-        local.datePickerValue = event.detail;
-      }} />
-    <button
-      class="btn btn-lg btn-light btn-block m-0 mr-1"
-      on:click={() => {
-        local.showDatePicker = false;
-      }}
-      slot="footer">
-      Close
-    </button>
-    <button
-      class="btn btn-lg btn-primary btn-block m-0 ml-1"
-      on:click={() => {
-        local.showDatePicker = false;
-        methods.goto(dayjs(local.datePickerValue));
-      }}
-      slot="footer">
-      Go
-    </button>
-  </NModal>
-{/if}

@@ -47,6 +47,13 @@
     white-space: nowrap;
     display: inline-block;
   }
+
+  main {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
   &.truncate {
     .label {
       max-width: calc(100% - 1px);

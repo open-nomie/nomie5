@@ -6680,6 +6680,10 @@ aside.n-panel {
     padding-right: 20px;
     white-space: nowrap;
     display: inline-block; }
+  .n-tracker-value-grid-button main {
+    height: auto;
+    display: flex;
+    flex-direction: column; }
   .n-tracker-value-grid-button.truncate .label {
     max-width: calc(100% - 1px);
     display: -webkit-box;
