@@ -1,5 +1,5 @@
 <script lang="ts">
-  // Port and modification from vue-sweet-calendar
+  // Port and modification from vue-n-calendar
   // https://github.com/maryayi/vue-sweet-calendar/blob/master/src/components/Calendar.vue
 
   // svelte
@@ -25,6 +25,7 @@
   import NIcon from "../../components/icon/icon.svelte";
   import Text from "../../components/text/text.svelte";
   import NPositivityBar from "../../components/positivity-bar/positivity-bar.svelte";
+  import Spinner from "../../components/spinner/spinner.svelte";
 
   import NextPrevCal from "../../components/next-prev-cal/next-prev-cal.svelte";
 
@@ -35,6 +36,9 @@
   export let initialDate = dayjs();
   export let size = "md";
   export let className = "";
+  export let style = "";
+  export let height: any = undefined;
+  export let width: any = undefined;
 
   let firstDayOfWeek;
 
@@ -45,7 +49,11 @@
   export let events = [];
   export let offDays = [[1, 7]];
   export let showHeader = true;
+  export let showControls = true;
+  export let showDetails = true;
   export let tracker = null;
+  export let color: string = "#319ed7"; // TODO Make this pull from config
+  export let compact: boolean = false;
 
   // Data
   export let state = {
@@ -89,9 +97,9 @@
   $: if (initialDate) {
     state.date = dayjs(initialDate);
     state.weekdays = methods.generateWeekdayNames(firstDayOfWeek);
-    let positiveCount = 0;
-    let negativeCount = 0;
-    let neutralCount = 0;
+    positiveCount = 0;
+    negativeCount = 0;
+    neutralCount = 0;
   }
 
   function init() {
@@ -223,7 +231,11 @@
         const stateDateFormat = state.date.format("YYYY-MM-DD");
         const todayFormat = dayjs(state.today).format("YYYY-MM-DD");
         const activeToday = events.find((row) => {
-          return dayFormat === stateDateFormat;
+          if (dayFormat === stateDateFormat) {
+            return true;
+          } else {
+            return false;
+          }
         });
         let classes = [
           "day",
@@ -231,8 +243,7 @@
           `weekday-${day.toDate().getDay()}`,
           activeToday ? "selected" : "not-selected",
           offDays.includes(day.toDate().getDay()) ? "off-day" : null,
-          dayFormat === stateDateFormat ? "active" : "inactive",
-          dayFormat === todayFormat ? "today" : null,
+          dayFormat === todayFormat ? `today ${stateDateFormat ? "active" : "inactive"}` : null,
         ];
         return classes.join(" ");
       } catch (e) {
@@ -244,23 +255,23 @@
 </script>
 
 <style lang="scss">
-  // Partially based on https://www.npmjs.com/package/vue-sweet-calendar
+  // Partially based on https://www.npmjs.com/package/vue-n-calendar
   @import "../../scss/utils/_utils";
 
-  .sweet-calendar.sm {
+  .n-calendar.sm {
     --cal-font-size: 0.5em;
     --cal-day-size: 16px;
   }
-  .sweet-calendar.md {
+  .n-calendar.md {
     --cal-font-size: 0.8em;
     --cal-day-size: 20px;
   }
-  .sweet-calendar.lg {
+  .n-calendar.lg {
     --cal-font-size: 0.8em;
     --cal-day-size: 24px;
   }
 
-  .sweet-calendar {
+  .n-calendar {
     $off-day-background-color: #e5e5e5;
     $selected-color: #994242;
     $selection-hover-color: rgba($selected-color, 0.5);
@@ -291,7 +302,7 @@
         position: absolute;
       }
     }
-    .sweet-container {
+    .n-calendar-container {
       //   display: grid;
       //   grid-template-rows: 40px 1fr;
       .header {
@@ -362,7 +373,46 @@
           }
         }
       }
+    } //.n-calendar-container
+
+    // .n-calendar.compact
+    &.compact {
+      --cal-font-size: 0.4em;
+      --cal-day-size: 6px;
+
+      @include media-breakpoint-down(xs) {
+        --cal-font-size: 0.32em;
+        --cal-day-size: 3px;
+      }
+
+      line-height: var(--cal-font-size);
+      flex-grow: 0;
+      .n-calendar-container {
+        .header {
+          padding: 0px 0px 2px 0px !important;
+          display: block;
+          font-size: 0.9rem;
+          margin: 0 !important;
+        }
+        .body {
+          grid-row-gap: 0px;
+          grid-template-columns: repeat(7, 1fr);
+          grid-template-rows: repeat(7, 1fr);
+
+          .day-name {
+            font-size: 0.5em;
+            height: auto;
+            padding-top: 1px;
+            padding-bottom: 1px;
+          }
+          .day-container {
+            height: auto;
+            padding: 1px 0px !important;
+          }
+        }
+      }
     }
+
     .calendar {
       background-color: inherit;
       .body .day-container {
@@ -396,19 +446,25 @@
 </style>
 
 {#if state.date && mounted}
-  <div class="sweet-calendar {className} {size}">
-    <div class="sweet-container calendar">
+  <div
+    class="n-calendar {className}
+    {size}
+    {compact ? 'compact' : ''}"
+    style="{`${width ? `width:${width};` : ''} ${height ? `height:${height};` : ''} outline:none;  ${style}`};">
+    <div class="n-calendar-container calendar">
       {#if showHeader}
         <div class="header pr-3">
           <div class="month filler">
-            <Text size="sm" bold>{selectedMonthName} {selectedYear}</Text>
+            <Text size={compact ? 'xs' : 'sm'} bold>{selectedMonthName} {selectedYear}</Text>
           </div>
-          <NextPrevCal
-            on:previous={methods.prevMonth}
-            on:next={methods.nextMonth}
-            on:calendar={() => {
-              methods.goToday(false);
-            }} />
+          {#if showControls && !compact}
+            <NextPrevCal
+              on:previous={methods.prevMonth}
+              on:next={methods.nextMonth}
+              on:calendar={() => {
+                methods.goToday(false);
+              }} />
+          {/if}
         </div>
       {/if}
 
@@ -434,5 +490,11 @@
       </div>
     </div>
   </div>
-  <NPositivityBar positive={state.totals.positive} neutral={state.totals.neutral} negative={state.totals.negative} />
-{:else}Loading{/if}
+  {#if showDetails && !compact}
+    <NPositivityBar positive={state.totals.positive} neutral={state.totals.neutral} negative={state.totals.negative} />
+  {/if}
+{:else}
+  <div class="loading">
+    <Spinner />
+  </div>
+{/if}

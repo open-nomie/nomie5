@@ -65,6 +65,9 @@
   import NextPrevCal from "../../components/next-prev-cal/next-prev-cal.svelte";
   import { SearchStore } from "../../store/search-store";
   import NDate from "../../utils/ndate/ndate";
+  import Streak from "../steak/streak.svelte";
+  import type { element } from "svelte/internal";
+  import Card from "../../components/card/card.svelte";
 
   /**
    * Time Spans available for stats - holding of various
@@ -76,11 +79,12 @@
    * Available view, labels, and whatnot
    * **/
   const dataViews = {
-    overview: { id: "overview", label: "Home" },
-    compare: { id: "compare", label: "Compare" },
-    map: { id: "map", label: "Map" },
-    time: { id: "time", label: "Time" },
-    logs: { id: "logs", label: "Logs", focused: true },
+    overview: { id: "overview", icon: "home", label: Lang.t("general.home", "Home") },
+    compare: { id: "compare", icon: "beaker", label: Lang.t("stats.compare", "Relate") },
+    map: { id: "map", icon: "map", label: Lang.t("general.map", "Map") },
+    time: { id: "time", icon: "time", label: Lang.t("stats.time", "Time") },
+    streak: { id: "streak", icon: "calendar", label: Lang.t("stats.streak", "Streak") },
+    logs: { id: "logs", icon: "annotation", label: Lang.t("general.logs", "Logs"), focused: true },
   };
 
   // /**
@@ -217,6 +221,7 @@
         if ((option.excludeFrom || []).indexOf(state.timeSpan) == -1) {
           return {
             label: option.label,
+            icon: option.icon,
             active: state.dataView === optionId,
             click: () => {
               setView(option);
@@ -693,7 +698,7 @@
   </div>
 
   {#if !state.loading}
-    {#if state.dataView == 'compare'}
+    {#if state.dataView === 'compare'}
       <StatsCompare
         {remember}
         fromDate={getFromDate()}
@@ -705,16 +710,23 @@
           setSelected(evt.detail);
         }} />
     {/if}
-    {#if state.dataView == 'map'}
+    {#if state.dataView === 'streak'}
+      {#if state.trackableElement}
+        <Card className="p-3 m-2">
+          <Streak element={state.trackableElement} selectedDate={state.date} view={timeSpans[state.timeSpan].streakUnit} />
+        </Card>
+      {/if}
+    {/if}
+    {#if state.dataView === 'map'}
       <NMap small locations={getLocations()} className="flex-grow flex-shrink" />
     {/if}
     {#if state.stats}
-      {#if state.dataView == 'overview'}
+      {#if state.dataView === 'overview'}
         <StatsOverview stats={state.stats} tracker={state.tracker} />
         <!-- end over view -->
-      {:else if state.dataView == 'time'}
+      {:else if state.dataView === 'time'}
         <StatsTime color={state.currentColor} term={state.currentTerm} stats={state.stats} />
-      {:else if state.dataView == 'logs'}
+      {:else if state.dataView === 'logs'}
         {#if state.timeSpan == 'y'}
           <div class="p-4 text-sm text-center text-inverse-2">Logs not yet available for a full year</div>
         {:else}
