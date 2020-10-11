@@ -45,6 +45,7 @@
     UserGroup,
     ViewBoards,
     ViewGrid,
+    Home,
     X,
     XCircle,
     DotsVertical,
@@ -53,6 +54,9 @@
     ViewList,
     Eye,
     EyeOff,
+    Map,
+    Annotation,
+    Beaker,
   } from "svelte-hero-icons";
 
   export let name = "add";
@@ -63,6 +67,8 @@
 
   const icons = {
     add: Plus,
+    annotation: Annotation,
+    beaker: Beaker,
     addOutline: PlusCircle,
     arrowBack: ArrowLeft,
     arrowUp: ArrowUp,
@@ -80,6 +86,7 @@
     closeFilled: XCircle,
     closeOutline: XCircle,
     copy: ClipboardCopy,
+    home: Home,
     dashboard: ViewBoards,
     delete: Trash,
     download: Download,
@@ -88,6 +95,7 @@
     grid: ViewGrid,
     link: Link,
     list: ViewList,
+    map: Map,
     menu: Menu,
     more: DotsHorizontal,
     moreOutline: DotsCircleHorizontal,

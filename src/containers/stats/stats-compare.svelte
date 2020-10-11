@@ -395,11 +395,23 @@
   </div>
 
   {#if state.compare.length == 0}
-    <div class="p-2" />
+    <div class="p-3">
+      <Text bold center leading3>Compare Trackers</Text>
+      <Text size="sm" faded>
+        Find potentially related trackers. Have Nomie
+        <strong>Auto</strong>
+        find trackers using an
+        <span>
+          R
+          <sup>2</sup>
+        </span>
+        analysis, or select from your trackers manually.
+      </Text>
+    </div>
   {/if}
 
   <div class="p-2 pt-2 n-row">
-    <Button className="mr-1" block color="light" on:click={findRelatedTrackers}>{Lang.t('stats.find-related', 'Auto Compare')}...</Button>
-    <Button className="ml-1" block color="light" on:click={compareType}>{Lang.t('stats.select-comparison', 'Select Manually')}...</Button>
+    <Button className="mr-1" block color="light" on:click={findRelatedTrackers}>{Lang.t('stats.analyze', 'Auto')}</Button>
+    <Button className="ml-1" block color="light" on:click={compareType}>{Lang.t('general.manual', 'Select')}...</Button>
   </div>
 {/if}
