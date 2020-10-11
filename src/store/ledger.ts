@@ -218,6 +218,10 @@ const ledgerInit = () => {
      * @param {Date} previousEndDate
      */
     async updateLog(log: NLog, previousEndDate?) {
+      console.log("Update Log", {
+        log,
+        previousEndDate,
+      });
       // Fire hooks
       methods.hooks.run("onBeforeUpdate", log);
       // Set saving
@@ -235,13 +239,13 @@ const ledgerInit = () => {
       let isSameBook = bookDate === previousBookDate;
 
       // Get books
-      let book = await methods.getBook(bookDate);
-      let previousBook; // incase we're moving a log from one book to another
+      let book: ILedgerBook = await methods.getBook(bookDate);
 
+      let previousBook; // incase we're moving a log from one book to another
       // Set empty foundIndex
-      let foundIndex = book.findIndex((r) => r._id == log._id);
+      const foundIndex: number = book.findIndex((r) => r._id == log._id);
       // Did we find anything?
-      if (typeof foundIndex === "number") {
+      if (foundIndex > -1) {
         // Update the row
         book[foundIndex] = log;
       } else {

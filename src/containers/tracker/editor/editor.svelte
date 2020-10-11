@@ -265,7 +265,9 @@
         </div>
         <div class="main">{data.tracker._dirty ? 'Create' : 'Edit'} {data.tracker.label.length ? data.tracker.label : ''}</div>
         <div class="right">
-          <Button disabled={!canSave} color="primary" type="clear" on:click={methods.saveTracker}>{Lang.t('general.save')}</Button>
+          <Button className="save-action" disabled={!canSave} color="primary" type="clear" on:click={methods.saveTracker}>
+            {Lang.t('general.save')}
+          </Button>
         </div>
       </header>
 
