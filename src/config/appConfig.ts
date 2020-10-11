@@ -1,4 +1,5 @@
 export default {
+  patron_pin: "cb808de40d0152728640f0ec8c386303",
   primary_color: "#319ed7",
   storage_engine: "local", // local or blockstack
   book_time_format: "YYYY-w", // Careful changing this!! Its how all records are referenced. Changing it breaks everything.

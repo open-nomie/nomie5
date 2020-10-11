@@ -50,6 +50,7 @@
       if (shouldLock === true) {
         hasPin = false;
         let pin: any = await methods.getNewPin();
+        console.log({ pin });
         if (!pin) {
           UserStore.saveMeta({
             lock: false,

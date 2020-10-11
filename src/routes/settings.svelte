@@ -39,6 +39,9 @@
   import Button from "../components/button/button.svelte";
   import Icon from "../components/icon/icon.svelte";
   import { AppStore } from "../store/app-store";
+  import appConfig from "../config/appConfig";
+  import Confetti from "../components/confetti/confetti.svelte";
+  import tick from "../utils/tick/tick";
 
   export const location = undefined;
   export const style = undefined;
@@ -52,6 +55,8 @@
     showMassEditor: false,
   };
 
+  let showConfetti = false;
+
   $: alwaysLocate = $UserStore.alwaysLocate;
 
   let ledger = null;
@@ -61,11 +66,10 @@
   let showImporter = false;
 
   let st = 0;
-  function specialTap() {
+  async function specialTap() {
     st = st + 1;
     if (st > 9) {
-      UserStore.unlockHiddenFeatures();
-      Interact.alert("🎁 Special Features Unlocked", "Hey you! 💘");
+      methods.unlockFeatures();
     }
   }
 
@@ -75,6 +79,23 @@
     },
     share() {
       SocialShare(`I track my life with Nomie! It's free, private, and you get to design what you track. @nomieapp`, "https://nomie.app");
+    },
+    async unlockFeatures() {
+      UserStore.unlockHiddenFeatures();
+      Interact.alert("🎁  Patron Only Features Unlocked", "Hey you! Thank you for your continued support. 💘");
+      showConfetti = true;
+      await tick(6000);
+      showConfetti = false;
+      return true;
+    },
+    async tryPatronPin() {
+      let pin = await Interact.inputPin("Patron Key");
+      console.log({ pin });
+      if (pin === appConfig.patron_pin) {
+        methods.unlockFeatures();
+      } else {
+        Interact.alert(`Invalid Patron Pin`, `Please check the code and try again`);
+      }
     },
     locations() {
       Interact.pickLocation();
@@ -200,7 +221,12 @@ Note: Your data will not automatically move over. You'll first need to export it
   });
 </script>
 
+{#if showConfetti}
+  <Confetti />
+{/if}
+
 <NLayout pageTitle="Settings">
+
   <div slot="header">
     <div class="n-toolbar-grid container">
       <div class="left" />
@@ -398,21 +424,38 @@ Note: Your data will not automatically move over. You'll first need to export it
           {/if}
           <!-- END Views -->
 
-          <div class="n-list solo my-3">
-            <NItem title={Lang.t('settings.nomie-needs-you', 'Nomie needs You!')}>
-              <Text size="sm" faded>
-                {Lang.t('settings.become-a-patron-message', 'Help keep Nomie development moving forward, free, no ads, and open.')}
+          <div class="n-list my-3">
+            <NItem title={Lang.t('general.patron_only_features', 'Patron Only Features')}>
+              <Text size="xs" faded leading2 className="mt-1">
+                {Lang.t('settings.become-a-patron-message', 'Patrons help me keep Nomie moving forward with no ads, private, and open.')}
               </Text>
-              <img src="/images/nomie-head-on.png" height="75" alt="Nomie" slot="left" class="pr-0" />
+              <div slot="right">
+                {#if $UserStore.meta.hiddenFeatures}
+                  <Icon name="checkmarkOutline" />
+                {:else}
+                  <Button
+                    size="sm"
+                    on:click={() => {
+                      methods.tryPatronPin(true);
+                    }}>
+                    {Lang.t('settings.unlock', 'Unlock')}
+                  </Button>
+                {/if}
+              </div>
             </NItem>
+
             <NItem
               detail
-              title={Lang.t('general.become-a-patron', 'Become a Patron')}
+              compact
               className="text-primary-bright"
               on:click={() => {
                 window.open(config.patreon, '_system');
               }}>
-              <Text size="xs" color="inverse-2" className="mt-1">Pick from 1 of 3 Patreon levels</Text>
+              <Text size="xs" color="primary-bright" className="mt-1">
+                {#if $UserStore.meta.hiddenFeatures}
+                  👋 Hey Patron! Check out the latest on Patreon
+                {:else}{Lang.t('general.become-a-patron', 'Not a Patron?')} Join today for as low as $2{/if}
+              </Text>
             </NItem>
           </div>
 
