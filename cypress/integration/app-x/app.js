@@ -165,7 +165,8 @@ context("App", () => {
     cy.get(".tab-Track").click();
     longPressTracker("water");
     cy.wait(700);
-    cy.get(".list > :nth-child(7)").click();
+    // Click Remove...
+    cy.get('.pop-button-2').click();
     cy.wait(400);
     // Hit Cancel first -- to see if this gets deleted
     cy.get(".visible > .alert-dialog-window > .p-1 > .nbtn-transparent").click();
@@ -176,7 +177,8 @@ context("App", () => {
     cy.wait(500);
     longPressTracker("water");
     cy.wait(400);
-    cy.get(".list > :nth-child(7)").click();
+    // Click Remove
+    cy.get('.pop-button-2').click();
     cy.wait(400);
     cy.get(".visible > .alert-dialog-window > .p-1 > .nbtn-primary").click();
     cy.wait(600);
@@ -301,6 +303,7 @@ context("App", () => {
   };
 
   const createTracker = (options={})=>{
+    appTab('Track');
     // Click Add Tracker
     cy.get('.tracker-add > .item-ball').click();
     cy.wait(200);
@@ -403,22 +406,21 @@ context("App", () => {
     // Get active date 
     cy.get('.n-calendar .day.active').then(node=>{
       // Add one to the date for tomorrow
-      let date = parseInt(node.attr('data-day')) + 1;
+      let date = parseInt(node.attr('data-day')) - 1;
       cy.get(`.n-calendar .day[data-day="${date}"]`).click();
     });
-    // Select the first sunday of the month
-    cy.wait(100);
+    cy.wait(200);
     // Click Save
     cy.get('.buttons > .nbtn-').click();
-    cy.wait(100);
+    cy.wait(500);
     // Click next Day
-    cy.get('.next-prev-cal > :nth-child(3)').click();
-    cy.wait(100);
+    cy.get('.previous-action').click();
+    cy.wait(300);
     cy.get('.page-history').then((node)=>{
       expect(node.text().replace(/ /g,'')).to.contain(textToAdd.replace(/ /g,''));
     });
 
-    goHome();
+    // goHome();
 
   };
 
