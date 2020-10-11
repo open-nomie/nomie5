@@ -85,9 +85,6 @@ const getLogs = async (
   weekStartsOn: "1" | "2" = "1"
 ): Promise<Array<NLog>> => {
   let payload = getDateRange(date, view, weekStartsOn);
-  console.log(`Getting ${view} logs for ${date.format("ddd MMM Do YYYY")}`);
-  console.log("Start", payload.start.format("ddd MMM Do YYYY"));
-  console.log("End", payload.end.format("ddd MMM Do YYYY"));
 
   return await LedgerStore.query({
     search: element.toSearchTerm(),

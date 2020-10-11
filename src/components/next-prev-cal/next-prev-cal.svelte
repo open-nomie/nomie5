@@ -24,6 +24,7 @@
 
 <div class="next-prev-cal n-row w-auto" {style}>
   <Button
+    className="previous-action"
     icon
     delay={0}
     on:click={() => {
@@ -33,6 +34,7 @@
   </Button>
   {#if !hideCal}
     <Button
+      className="calendar-action"
       delay={0}
       icon
       on:click={() => {
@@ -42,6 +44,7 @@
     </Button>
   {/if}
   <Button
+    className="next-action"
     delay={0}
     icon
     on:click={() => {

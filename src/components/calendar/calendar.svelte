@@ -82,11 +82,18 @@
 
   let days: Array<any>;
   let day = null;
+  let displayMonthFormat = "MMMM";
+
+  $: if (compact) {
+    displayMonthFormat = "MMM";
+  } else {
+    displayMonthFormat = "MMMM";
+  }
 
   let startWeekDayOfMonth = state.date.startOf("month").toDate().getDay() + 1;
   let numberOfDays = state.date.daysInMonth();
   let selectedMonth = state.date.month();
-  let selectedMonthName = state.date.format("MMMM");
+  let selectedMonthName = state.date.format(displayMonthFormat);
   let selectedYear = state.date.format("YYYY");
   let monthStartDate = dayjs(state.date).startOf("month");
   let refreshing = false;
@@ -115,7 +122,7 @@
 
     numberOfDays = state.date.daysInMonth();
     selectedMonth = state.date.month();
-    selectedMonthName = state.date.format("MMMM");
+    selectedMonthName = state.date.format(displayMonthFormat);
     selectedYear = state.date.format("YYYY");
     monthStartDate = dayjs(state.date).startOf("month");
 
@@ -314,29 +321,7 @@
       .header {
         padding: 6px 12px;
       }
-      // .header {
-      //   align-items: center;
-      //   // display: grid;
-      //   // grid-column-gap: 4px;
-      //   // grid-template-columns: 1fr 24px 50px 24px;
-      //   margin: 6px 0;
-      //   margin-left: 16px;
-      //   .month {
-      //     flex-grow: 1;
-      //   }
-      //   .left-arrow {
-      //     justify-self: center;
-      //     span {
-      //       cursor: pointer;
-      //     }
-      //   }
-      //   .right-arrow {
-      //     justify-self: center;
-      //     span {
-      //       cursor: pointer;
-      //     }
-      //   }
-      // }
+
       .body {
         align-items: center;
         display: grid;
@@ -394,6 +379,9 @@
     &.compact {
       --cal-font-size: 0.4em;
       --cal-day-size: 6px;
+
+      min-width: 90px;
+      margin: 2px;
 
       @include media-breakpoint-down(xs) {
         --cal-font-size: 0.32em;
