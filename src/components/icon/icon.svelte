@@ -57,6 +57,7 @@
     Map,
     Annotation,
     Beaker,
+    Bell,
   } from "svelte-hero-icons";
 
   export let name = "add";
@@ -67,6 +68,7 @@
 
   const icons = {
     add: Plus,
+    bell: Bell,
     annotation: Annotation,
     beaker: Beaker,
     addOutline: PlusCircle,
