@@ -150,6 +150,7 @@
     <div class="animate up view date " class:visible={_opened && !hide} class:hidden={!_opened || hide}>
       {#if _opened}
         <Calendar
+          showCalControl={false}
           className={calendarClass}
           on:dayClick={(evt) => {
             let calDate = evt.detail.hour(_date.hour()).minute(_date.minute());

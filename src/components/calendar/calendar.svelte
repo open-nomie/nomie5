@@ -50,6 +50,7 @@
   export let offDays = [[1, 7]];
   export let showHeader = true;
   export let showControls = true;
+  export let showCalControl = true;
   export let showDetails = true;
   export let tracker = null;
   export let color: string = "#319ed7"; // TODO Make this pull from config
@@ -58,6 +59,7 @@
   // Data
   export let state = {
     date: initialDate.format ? initialDate : dayjs(initialDate),
+    selectedDate: initialDate.format ? initialDate : dayjs(initialDate),
     today: new Date(),
     weekdays: null,
     percentage: null,
@@ -129,6 +131,7 @@
   }
 
   // If date change - do the magic.
+
   let lastDate = null;
   $: if (state.date && state.date != lastDate) {
     init();
@@ -229,6 +232,7 @@
       try {
         const dayFormat = day.format("YYYY-MM-DD");
         const stateDateFormat = state.date.format("YYYY-MM-DD");
+        const selectedDateFormat = state.selectedDate.format("YYYY-MM-DD");
         const todayFormat = dayjs(state.today).format("YYYY-MM-DD");
         const activeToday = events.find((row) => {
           if (dayFormat === stateDateFormat) {
@@ -243,7 +247,9 @@
           `weekday-${day.toDate().getDay()}`,
           activeToday ? "selected" : "not-selected",
           offDays.includes(day.toDate().getDay()) ? "off-day" : null,
-          dayFormat === todayFormat ? `today ${stateDateFormat ? "active" : "inactive"}` : null,
+          dayFormat === todayFormat ? `today` : null,
+          // Todo figure out how to deal with this
+          dayFormat === selectedDateFormat ? "active" : "inactive",
         ];
         return classes.join(" ");
       } catch (e) {
@@ -306,28 +312,31 @@
       //   display: grid;
       //   grid-template-rows: 40px 1fr;
       .header {
-        align-items: center;
-        display: grid;
-        grid-column-gap: 4px;
-        grid-template-columns: 1fr 24px 50px 24px;
-        margin: 6px 0;
-        margin-left: 16px;
-        .month {
-          flex-grow: 1;
-        }
-        .left-arrow {
-          justify-self: center;
-          span {
-            cursor: pointer;
-          }
-        }
-        .right-arrow {
-          justify-self: center;
-          span {
-            cursor: pointer;
-          }
-        }
+        padding: 6px 12px;
       }
+      // .header {
+      //   align-items: center;
+      //   // display: grid;
+      //   // grid-column-gap: 4px;
+      //   // grid-template-columns: 1fr 24px 50px 24px;
+      //   margin: 6px 0;
+      //   margin-left: 16px;
+      //   .month {
+      //     flex-grow: 1;
+      //   }
+      //   .left-arrow {
+      //     justify-self: center;
+      //     span {
+      //       cursor: pointer;
+      //     }
+      //   }
+      //   .right-arrow {
+      //     justify-self: center;
+      //     span {
+      //       cursor: pointer;
+      //     }
+      //   }
+      // }
       .body {
         align-items: center;
         display: grid;
@@ -364,6 +373,12 @@
               background-color: #e5e5e5;
               font-weight: bold;
             }
+
+            &:active {
+              font-weight: bold;
+              background-color: var(--color-grey-8);
+            }
+
             span {
               font-size: var(--cal-font-size);
               margin: 0;
@@ -453,12 +468,13 @@
     style="{`${width ? `width:${width};` : ''} ${height ? `height:${height};` : ''} outline:none;  ${style}`};">
     <div class="n-calendar-container calendar">
       {#if showHeader}
-        <div class="header pr-3">
-          <div class="month filler">
+        <div class="header n-row">
+          <div class="month filler pr-3">
             <Text size={compact ? 'xs' : 'sm'} bold>{selectedMonthName} {selectedYear}</Text>
           </div>
           {#if showControls && !compact}
             <NextPrevCal
+              hideCal={!showCalControl}
               on:previous={methods.prevMonth}
               on:next={methods.nextMonth}
               on:calendar={() => {
@@ -477,7 +493,9 @@
             {#if day}
               <div
                 data-date={day.format('YYYY-MM-DD')}
+                data-day={day.format('DD')}
                 on:click={(event) => {
+                  state.selectedDate = day;
                   dispatch('dayClick', day);
                 }}
                 class={methods.getDayClass(day)}

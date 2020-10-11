@@ -4,12 +4,16 @@
   import ButtonGroup from "../../components/button-group/button-group.svelte";
   import Button from "../../components/button/button.svelte";
   import Calendar from "../../components/calendar/calendar.svelte";
+  import DateTime from "../../components/calendar/date-time";
+  import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
   import Icon from "../../components/icon/icon.svelte";
   import Text from "../../components/text/text.svelte";
   import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import Toolbar from "../../components/toolbar/toolbar.svelte";
   import Layout from "../../containers/layout/layout.svelte";
   import Streak from "../../containers/steak/streak.svelte";
+
+  let date = dayjs();
 </script>
 
 <Layout>
@@ -24,6 +28,18 @@
 
   <div class="p-4">
     <Text size="sm" faded>A set of base components for quick testing... I should be using Storybook, but have yet to do so.</Text>
+
+    <hr class="divider center my-2" />
+
+    <Text size="lg" leading3>Date Time Bar</Text>
+
+    <DateTimeBar
+      opened
+      style="padding:0px;"
+      bind:date
+      on:change={(evt) => {
+        console.log('New Date', evt.detail.format('ddd MMM Do YYYY hh:mm a'));
+      }} />
 
     <hr class="divider center my-2" />
 

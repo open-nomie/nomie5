@@ -14,7 +14,11 @@
 <style>
   .next-prev-cal {
     max-width: 120px;
-    min-width: 80px;
+    flex-shrink: 1;
+    flex-grow: 0;
+  }
+  :global(.next-prev-cal .nbtn) {
+    min-width: 40px;
   }
 </style>
 
