@@ -5,6 +5,7 @@
   import Button from "../../components/button/button.svelte";
   import Calendar from "../../components/calendar/calendar.svelte";
   import DateTime from "../../components/calendar/date-time";
+  import Card from "../../components/card/card.svelte";
   import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
   import Icon from "../../components/icon/icon.svelte";
   import Text from "../../components/text/text.svelte";
@@ -43,25 +44,30 @@
 
     <hr class="divider center my-2" />
 
-    <Text size="lg" leading3>Streaks</Text>
-    <Streak term="#mood" view="week" />
-    <Streak term="#mood" />
+    <Text size="lg" leading3 className="mb-2">Streaks</Text>
+
+    <Card pad className="mb-2" title="Streak Week">
+      <Streak term="#mood" view="week" />
+    </Card>
+    <Card pad className="mb-2" title="Streak Month & Quater">
+      <Streak term="#mood" />
+      <Streak term="#mood" view="quarter" />
+    </Card>
+    <Card pad className="mb-2" title="Streak Year">
+      <Streak term="#mood" view="year" />
+    </Card>
     <!-- <Streak term="#cider" view="quarter" />
     <Streak term="#sleep OR #mood" view="year" /> -->
 
     <hr class="divider center my-2" />
 
-    <Text size="lg" leading3>Calendar</Text>
+    <Text size="lg" leading3 className="mb-2">Calendar</Text>
 
-    <Calendar />
+    <Card className="mb-2" title="<Calendar />">
+      <Calendar />
+    </Card>
 
-    <div class="n-row">
-      <Calendar compact height="100px" showControls={false} initialDate={dayjs().subtract(2, 'month')} />
-      <Calendar compact height="100px" showControls={false} initialDate={dayjs().subtract(1, 'month')} />
-      <Calendar compact height="100px" showControls={false} />
-    </div>
-
-    <Text size="lg" leading3>Buttons</Text>
+    <Text size="lg" leading3 className="my-2">Buttons</Text>
     <hr class="divider center my-2" />
     <Button size="lg">Large Button</Button>
     <hr class="divider center my-2" />
