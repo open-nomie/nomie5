@@ -31,7 +31,7 @@
     line-height: 116%;
     white-space: normal;
     line-height: 125%;
-
+    vertical-align: middle;
     &.line-height-md {
       line-height: 140%;
     }

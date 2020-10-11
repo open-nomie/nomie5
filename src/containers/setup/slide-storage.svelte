@@ -27,7 +27,7 @@
       }}>
       {Lang.t('storage.local_title', 'This Device Only')}
     </Button>
-    <Text size="sm" faded className="" center>
+    <Text size="xs" faded className="" center>
       Stored on this device only. Good for playing around, but if you're serious - use the blockstack option.
     </Text>
 
@@ -44,7 +44,7 @@
       }}>
       Encrypted in the Cloud
     </Button>
-    <Text size="sm" faded center>
+    <Text size="xs" faded center>
       Multiple device support with end-to-end encryption, using a free
       <strong>
         <a href="https://blockstack.com" target="_blank">Blockstack</a>

@@ -88,7 +88,6 @@
       state.log.lat = location.lat;
       state.log.lng = location.lng;
       state.log.location = location.name;
-      console.log("Set new location", state.log);
       await tick(10);
       state.mapReady = true;
     }

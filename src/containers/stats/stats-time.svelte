@@ -12,12 +12,12 @@
   export let stats: IStats;
 </script>
 
-<Card className="mb-2 p-2">
+<Card pad className="m-2">
   <DayTimeGrid {term} {color} rows={stats.rows} style="min-height:100px;max-height:100px" />
 </Card>
-<Card className="mb-2 p-2">
+<Card pad className="m-2">
   <TimeOfDay statsTod={stats.tod} {color} />
 </Card>
-<Card className="mb-2 p-2">
+<Card pad className="m-2">
   <DayOfWeek height={90} statsDow={stats.dow} {color} />
 </Card>

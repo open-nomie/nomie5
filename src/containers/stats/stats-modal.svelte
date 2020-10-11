@@ -684,7 +684,11 @@
     {#if state.dataView === 'streak'}
       {#if state.trackableElement}
         <Card className="p-3 m-2">
-          <Streak element={state.trackableElement} selectedDate={state.date} view={timeSpans[state.timeSpan].streakUnit} />
+          {#if state.timeSpan !== 'd'}
+            <Streak element={state.trackableElement} selectedDate={state.date} view={timeSpans[state.timeSpan].streakUnit} />
+          {:else}
+            <Text faded>Streak view currently unavailable at the day level</Text>
+          {/if}
         </Card>
       {/if}
     {/if}

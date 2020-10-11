@@ -1,31 +1,37 @@
 <script lang="ts">
   //Vendors
   import { navigate, Router, Route } from "svelte-routing";
-
   import { onMount } from "svelte";
-  import { UserStore } from "../store/user-store";
-  import CSVRImport from "../modules/csvr/csvr-import";
-  import type { IImportConfig } from "../modules/csvr/csvr-import";
+  import dayjs from "dayjs";
+
   import Layout from "../containers/layout/layout.svelte";
+
+  // Components
   import ListItem from "../components/list-item/list-item.svelte";
   import FileUploader from "../components/file-uploader/file-uploader.svelte";
   import Input from "../components/input/input.svelte";
-  import { Lang } from "../store/lang";
   import Icon from "../components/icon/icon.svelte";
   import Button from "../components/button/button.svelte";
   import Text from "../components/text/text.svelte";
+  import ListItemLog from "../components/list-item-log/list-item-log.svelte";
+  import NextPrevCal from "../components/next-prev-cal/next-prev-cal.svelte";
+  import ToggleSwitch from "../components/toggle-switch/toggle-switch.svelte";
+
+  // Utils
   import { truncateText } from "../utils/text/text";
   import tick from "../utils/tick/tick";
   import is from "../utils/is/is";
-  import { Interact } from "../store/interact";
 
-  import ListItemLog from "../components/list-item-log/list-item-log.svelte";
-  import NextPrevCal from "../components/next-prev-cal/next-prev-cal.svelte";
+  // Modules
+  import type { IImportConfig } from "../modules/csvr/csvr-import";
   import type NLog from "../modules/nomie-log/nomie-log";
   import ImportLoader from "../modules/import/import-loader";
-  import ToggleSwitch from "../components/toggle-switch/toggle-switch.svelte";
-  import dayjs from "dayjs";
-  import type { t } from "i18next";
+  import CSVRImport from "../modules/csvr/csvr-import";
+
+  // Stores
+  import { UserStore } from "../store/user-store";
+  import { Interact } from "../store/interact";
+  import { Lang } from "../store/lang";
 
   let stepId: string = "home";
   let templates: Array<IImportConfig> = [];
@@ -148,7 +154,6 @@
   ];
 
   function mapField(fieldIndex) {
-    console.log("Map Field", fieldIndex);
     activeMapIndex = fieldIndex;
     Interact.popmenu({
       title: `Map ${activeImporter ? activeImporter.getHeaders()[fieldIndex] : "Unknown"}`,
@@ -333,8 +338,8 @@
             Warning
           </Text>
           <Text size="sm" faded>
-            The importer is a work in progress and results may vary. Please make sure to check the previews before importing anything. Or
-            better yet, launch a private browser version of Nomie and give it a test there first.
+            This CSV importer is a work-in-progress and results may vary. PLEASE make sure to check the previews before importing anything.
+            Or better yet, launch a private browser version of Nomie and give it a test there first.
           </Text>
         </ListItem>
 
