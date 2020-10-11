@@ -16,6 +16,7 @@ import type { ITrackableElementType, ITrackableElement } from "../trackable-elem
 import type TrackableElement from "../trackable-element/trackable-element";
 import type { IDow } from "./day-of-week";
 import type { ITrackerMath } from "../tracker/tracker";
+import type { StreakViewTypes } from "../../containers/steak/streak-helper";
 
 export type IStatsChartUnit = "day" | "week" | "month" | "quarter" | "year";
 export type IStatsChartMode = "d" | "w" | "m" | "q" | "y";
@@ -29,17 +30,18 @@ export interface ITimeSpanUnit {
   displayUnit: OpUnitType;
   format: string;
   count?: number;
+  streakUnit: StreakViewTypes;
 }
 export interface ITimeSpan {
   [key: string]: ITimeSpanUnit;
 }
 
 export const timeSpans: ITimeSpan = {
-  d: { id: "d", format: "YYYY-MM-DD-HH", label: "D", title: "Day", displayUnit: "hour", unit: "day" },
-  w: { id: "w", format: "YYYY-MM-DD", label: "W", title: "Week", displayUnit: "day", unit: "week" },
-  m: { id: "m", format: "YYYY-MM-DD", label: "M", title: "Month", displayUnit: "day", unit: "month" },
-  q: { id: "q", format: "YYYY-MM-w", label: "3M", title: "Quarter", displayUnit: "week", unit: "month", count: 3 },
-  y: { id: "y", format: "YYYY-MM", label: "Y", title: "Year", displayUnit: "month", unit: "year" },
+  d: { id: "d", format: "YYYY-MM-DD-HH", label: "D", title: "Day", displayUnit: "hour", unit: "day", streakUnit: "day" },
+  w: { id: "w", format: "YYYY-MM-DD", label: "W", title: "Week", displayUnit: "day", unit: "week", streakUnit: "week" },
+  m: { id: "m", format: "YYYY-MM-DD", label: "M", title: "Month", displayUnit: "day", unit: "month", streakUnit: "month" },
+  q: { id: "q", format: "YYYY-MM-w", label: "3M", title: "Quarter", displayUnit: "week", unit: "month", count: 3, streakUnit: "quarter" },
+  y: { id: "y", format: "YYYY-MM", label: "Y", title: "Year", displayUnit: "month", unit: "year", streakUnit: "year" },
 };
 
 export interface IStatDow {
