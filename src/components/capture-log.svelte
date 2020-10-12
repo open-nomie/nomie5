@@ -315,6 +315,13 @@
     margin-top: -10px !important;
   }
 
+  :global(.capture-log .mask-textarea .save-button) {
+    display: none;
+  }
+  :global(.capture-log .mask-textarea.populated .save-button) {
+    display: block;
+  }
+
   .capture-log {
     padding: 10px;
     // background-color: var(--header-background);
@@ -447,13 +454,13 @@
           on:keydown={methods.keyPress}
           on:paste={methods.keyPress} />
 
-        <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} />
+        <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} className="mr-2" />
         {#if $LedgerStore.saving}
-          <Button className="save-button mx-1" shape="circle" color="success" size="sm">
+          <Button className="save-button mr-2" shape="circle" color="success" size="sm">
             <NSpinner size={20} color="#FFFFFF" />
           </Button>
         {:else}
-          <Button className="save-button mx-1" shape="circle" color="success" size="sm" on:click={methods.logSave}>
+          <Button className="save-button mr-2" shape="circle" color="success" size="sm" on:click={methods.logSave}>
             <NIcon name="arrowUp" style="fill: #FFF;" size="20" />
           </Button>
         {/if}

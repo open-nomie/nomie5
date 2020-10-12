@@ -6,6 +6,7 @@
   import PositivitySelector from "./positivity-selector.svelte";
   export let score = 0;
   export let closeBackgroundTap: boolean = false;
+  export let className = "";
 
   let selected: any;
   let showMenu: boolean = false;
@@ -42,6 +43,6 @@
   <div class="full-screen opacity-0" on:click={toggle} />
 {/if}
 
-<Button size="sm" shape="circle" color="transparent" className="positivity-emoji-btn" on:mouseover={toggle} on:click={toggle}>
+<Button size="sm" shape="circle" color="transparent" className="positivity-emoji-btn {className}" on:mouseover={toggle} on:click={toggle}>
   {#if selected && selected.emoji}{selected.emoji}{/if}
 </Button>

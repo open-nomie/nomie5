@@ -42,6 +42,10 @@
     }
   }
 
+  :global(.shortcut-button .more.icon-other) {
+    border: none !important;
+  }
+
   :global(.shortcut-button) {
     --scb-pad: 14px;
 
@@ -189,9 +193,6 @@
       font-size: 12px;
       border: solid 1px var(--color-inverse-3);
       color: rgba(255, 255, 255, 0.6);
-      &.icon-other {
-        border: none;
-      }
     }
     .highlight {
       transition: all 0.2s ease-in-out;
@@ -228,10 +229,10 @@
     stroke: #fff !important;
   }
   :global(.shortcut-button.no-value .more svg) {
-    stroke: rgba(150, 150, 150, 0.6) !important;
+    stroke: rgba(150, 150, 150, 0.6);
   }
   :global(.shortcut-button.no-value .more) {
-    border: solid 1px rgba(150, 150, 150, 0.6) !important;
+    border: solid 1px rgba(150, 150, 150, 0.6);
   }
   :global(.shortcut-button.has-value) {
     color: #fff;
