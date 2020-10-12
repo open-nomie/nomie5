@@ -24,6 +24,7 @@
   import TagBadge from "../../components/tag-badge/tag-badge.svelte";
   import ImporterItem from "./importer-item.svelte";
   import ProgressBar from "../../components/progress-bar/progress-bar.svelte";
+  import type { t } from "i18next";
 
   let fileInput; // holder of dom element self
   let fileData = null; // holder of file content
@@ -285,7 +286,9 @@
     {:else if fileData}
       <NItem className="item-divider compact bg-faded" />
       <NItem title="From Nomie {fileData.nomie.number}">
-        <button slot="right" class="btn btn-clear text-danger" on:click={() => (fileData = null)}>{Lang.t('general.cancel')}</button>
+        <div slot="right">
+          <Button color="clear" className="text-danger" on:click={() => (fileData = null)}>{Lang.t('general.cancel')}</Button>
+        </div>
       </NItem>
       <NItem className="item-divider compact bg-faded" />
 
@@ -383,11 +386,11 @@
   <!-- Footer -->
   <div slot="footer" class="flex-grow">
     {#if importingAll === true}
-      <button class="btn btn-primary btn-block flex-grow btn-lg" disabled>Importing...</button>
+      <Button block size="lg" className="flex-grow" disabled>{Lang.t('import.import-all', 'Import All')}</Button>
     {:else if version && !importing.all.running && !importing.all.done}
-      <button class="btn btn-primary btn-block btn-lg btn-block" on:click={methods.importAll}>Import All</button>
+      <Button block size="lg" on:click={methods.importAll}>{Lang.t('import.import-all', 'Import All')}</Button>
     {:else if importing.all.done}
-      <button class="btn btn-primary btn-block btn-lg" on:click={methods.finish}>Finsished</button>
+      <Button block size="lg" on:click={methods.finish}>{Lang.t('general.finished', 'Finished')}</Button>
     {/if}
   </div>
 

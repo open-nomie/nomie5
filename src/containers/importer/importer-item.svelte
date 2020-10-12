@@ -3,6 +3,8 @@
   import Spinner from "../../components/spinner/spinner.svelte";
   import Icon from "../../components/icon/icon.svelte";
   import { createEventDispatcher } from "svelte";
+  import { Lang } from "../../store/lang";
+  import Button from "../../components/button/button.svelte";
 
   export let emoji = "🙃";
   export let title = "Unknown";
@@ -21,13 +23,13 @@
     {:else if status.done}
       <Icon name="checkmark" className="fill-primary-bright" />
     {:else}
-      <button
+      <Button
         class="btn text-primary btn-clear"
         on:click={() => {
           dispatch('import');
         }}>
-        Import
-      </button>
+        {Lang.t('import.import', 'Import')}
+      </Button>
     {/if}
   </div>
 </ListItem>
