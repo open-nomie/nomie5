@@ -107,7 +107,7 @@ const LocationsInit = () => {
       return all;
     },
     async write(payload): Promise<any> {
-      return Storage.put(`${config.data_root}/locations.json`, payload);
+      return await Storage.put(`${config.data_root}/locations.json`, payload);
     },
     async init() {
       let locations = await Storage.get(`${config.data_root}/locations.json`);
