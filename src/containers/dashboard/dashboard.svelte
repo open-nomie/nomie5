@@ -465,7 +465,7 @@
           {/if}
         </div>
         <div class="board-actions filler mb-2">
-          <ButtonGroup style="max-width:230px;">
+          <ButtonGroup style="max-width:230px;" className="box-shadow-tight">
             <Button on:click={newWidget} color="clear">{Lang.t('general.add', 'Add')}</Button>
             <Button on:click={toggleEdit} color="clear">{Lang.t('general.edit', 'Edit')}</Button>
             <Button on:click={deleteDashboard} color="clear">{Lang.t('general.delete', 'Delete')}</Button>

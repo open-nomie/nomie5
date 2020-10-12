@@ -670,7 +670,7 @@ const interactInit = () => {
       }
     },
     async error(message) {
-      return methods.alert(Lang.t("general.error", "Error"), message);
+      return methods.alert(`${Lang.t("general.error", "Error")}`, message);
     },
     confirm(title: string, message?: string, ok?: string, cancel?: string): Promise<boolean> {
       return new Promise((resolve, reject) => {

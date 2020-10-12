@@ -237,21 +237,14 @@ const trackerStoreInit = () => {
       };
       let buttons = [
         {
-          title: Lang.t("tracker.stats", "Stats"),
+          title: `${Lang.t("tracker.stats", "Stats")}`,
           click() {
             Interact.openStats(`#${tracker.tag}`);
             click();
           },
         },
-        // {
-        //   title: Lang.t("tracker.streak", "Streak"),
-        //   click() {
-        //     Interact.openStreak(`#${tracker.tag}`);
-        //     click();
-        //   },
-        // },
         {
-          title: Lang.t("tracker.edit-tracker", "Edit Tracker"),
+          title: `${Lang.t("tracker.edit-tracker", "Edit Tracker")}`,
           click() {
             Interact.editTracker(tracker);
             click();

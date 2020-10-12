@@ -238,16 +238,36 @@ Note: Your data will not automatically move over. You'll first need to export it
       </div>
     </div>
     <div class="n-toolbar px-2 pb-1 container">
-      <NButtonGroup
-        buttons={[{ label: 'Features', active: view == 'features', click() {
-              changeView('features');
-            } }, { label: 'Tweaks', active: view == 'tweaks', click() {
-              changeView('tweaks');
-            } }, { label: 'Data', active: view == 'data', click() {
-              changeView('data');
-            } }, { label: 'About', active: view == 'about', click() {
-              changeView('about');
-            } }]} />
+      <NButtonGroup>
+        <Button
+          className={view == 'features' ? 'active' : ''}
+          on:click={() => {
+            changeView('features');
+          }}>
+          {Lang.t('settings.tab-features', 'Features')}
+        </Button>
+        <Button
+          className={view == 'tweaks' ? 'active' : ''}
+          on:click={() => {
+            changeView('tweaks');
+          }}>
+          {Lang.t('settings.tab-tweaks', 'Tweaks')}
+        </Button>
+        <Button
+          className={view == 'data' ? 'active' : ''}
+          on:click={() => {
+            changeView('data');
+          }}>
+          {Lang.t('settings.tab-data', 'Data')}
+        </Button>
+        <Button
+          className={view == 'about' ? 'active' : ''}
+          on:click={() => {
+            changeView('about');
+          }}>
+          {Lang.t('settings.tab-about', 'About')}
+        </Button>
+      </NButtonGroup>
     </div>
   </div>
 
@@ -293,7 +313,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 
               <NItem
                 detail
-                title="Browse Files..."
+                title={Lang.t('general.browse-files', 'Browse Files...')}
                 on:click={() => {
                   navigate('/files');
                 }}>
@@ -303,7 +323,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             </div>
 
             <div class="n-list pb-2">
-              <NItem itemDivider>Import Data</NItem>
+              <NItem itemDivider>{Lang.t('settings.import-data', 'Import Data')}</NItem>
               <NItem clickable title={Lang.t('settings.nomie-api', 'Nomie API')} on:click={() => navigate('/api')}>
                 <span slot="left">🕸</span>
                 <span slot="right">
@@ -331,7 +351,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               </NItem>
             </div>
             <div class="n-list pb-2">
-              <NItem itemDivider>Export Data</NItem>
+              <NItem itemDivider>{Lang.t('settings.export-data', 'Export Data')}</NItem>
               <NItem detail title={Lang.t('settings.generate-backup')} to="/settings/export/backup">
                 <span slot="left">📦</span>
 
@@ -357,7 +377,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               *******************************************
             -->
             <div class="n-list pb-1">
-              <NItem itemDivider>Join the Community</NItem>
+              <NItem itemDivider>{Lang.t('settings.join-the-community', 'Join the Community')}</NItem>
               <NItem detail title="Learn More" href="https://nomie.app?s=dap">
                 <span slot="right" class="text-inverse-3">Nomie.app</span>
               </NItem>
@@ -453,7 +473,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               }}>
               <Text size="xs" color="primary-bright" className="mt-1">
                 {#if $UserStore.meta.hiddenFeatures}
-                  👋 Hey Patron! Check out the latest on Patreon
+                  🥳 Hey Patron! Check out the latest posts
                 {:else}{Lang.t('general.become-a-patron', 'Not a Patron?')} Join today for as low as $2{/if}
               </Text>
             </NItem>

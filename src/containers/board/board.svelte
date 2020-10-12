@@ -228,20 +228,20 @@
   async function boardOptions() {
     let buttons = [
       {
-        title: "Add a Tracker",
+        title: `${Lang.t("general.add-a-tracker", "Add a Tracker")}`,
         async click() {
           await tick(500);
           methods.addButtonTap();
         },
       },
       {
-        title: `Edit / Sort ${$BoardStore.activeBoard ? $BoardStore.activeBoard.label : ""}...`,
+        title: `${Lang.t("board.edit-sort", "Edit / Sort")} ${$BoardStore.activeBoard ? $BoardStore.activeBoard.label : ""}...`,
         async click() {
           editBoard();
         },
       },
       {
-        title: "Delete Tab...",
+        title: `${Lang.t("board.delete-board", "Delete Tab...")}`,
         disabled: $BoardStore.active === "all",
         async click() {
           deleteBoard();
@@ -251,7 +251,7 @@
 
     Interact.popmenu({
       title: `${$BoardStore.activeBoard ? $BoardStore.activeBoard.label : "All Trackers"}`,
-      description: "Tab Options",
+      description: `${Lang.t("board.board-options", "Tab Options")}`,
       buttons: buttons,
     });
   }
@@ -273,7 +273,7 @@
       if ($BoardStore.active != "all") {
         // Add "Existing Tracker" button
         buttons.push({
-          title: Lang.t("board.add-existing-tracker"),
+          title: `${Lang.t("board.add-existing-tracker")}`,
           click: async () => {
             let trackers = await Interact.selectTrackers();
 
@@ -286,7 +286,7 @@
       }
       // Add "Create Tracker" button
       buttons.push({
-        title: Lang.t("board.create-custom-tracker", "Create a Tracker"),
+        title: `${Lang.t("board.create-custom-tracker", "Create a Tracker")}`,
         click() {
           methods.trackerEditor();
           // navigate("/tracker/design");
@@ -294,14 +294,14 @@
       });
 
       buttons.push({
-        title: Lang.t("board.browse-starter-trackers"),
+        title: `${Lang.t("board.browse-starter-trackers")}`,
         click() {
           TrackerLibrary.toggle();
         },
       });
 
       buttons.push({
-        title: "Import from file",
+        title: `${Lang.t("general.import-from-file", "Import from File")}`,
         click() {
           TrackerStore.importFromFile();
         },
@@ -366,7 +366,7 @@
             BoardStore.setActive(board.id);
           });
         } else {
-          Interact.alert("Error", "Sorry, All is a reserved named");
+          Interact.error("Sorry, 'All' is a reserved word");
         }
       }
     },

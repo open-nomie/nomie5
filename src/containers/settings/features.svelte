@@ -77,7 +77,10 @@
 </script>
 
 <div class="n-list my-2 py-2 features">
-  <ListItem className="py-2" title="People Tracking" description="Keep track of those you interact with the most">
+  <ListItem
+    className="py-2"
+    title={Lang.t('settings.feature-people-tracking', 'People Tracking')}
+    description={Lang.t('settings.feature-people-description', 'Keep track of those you interact with the most')}>
     <div slot="right" class="pl-2">
       <ToggleSwitch
         value={$FeatureStore.people}
@@ -87,7 +90,10 @@
     </div>
   </ListItem>
   <hr class="divider center" />
-  <ListItem className="py-2" title="Personal Dashboard" description="A dedicated tab for creating custom views of your data">
+  <ListItem
+    className="py-2"
+    title={Lang.t('settings.feature-dashboard', 'Personal Dashboard')}
+    description={Lang.t('settings.feature-dashboard-description', 'A dedicated tab for creating custom views of your data')}>
     <div slot="right" class="ml-2">
       <ToggleSwitch
         value={$FeatureStore.dashboard}
@@ -97,7 +103,9 @@
     </div>
   </ListItem>
   <hr class="divider center" />
-  <ListItem title={Lang.t('settings.use-location')} description="Lookup location each time you save a log">
+  <ListItem
+    title={Lang.t('settings.use-location', 'Track Location')}
+    description={Lang.t('settings.use-location-description', 'Lookup location each time you save a log')}>
     <div slot="right" class="ml-2">
       <ToggleSwitch
         bind:value={$UserStore.alwaysLocate}
@@ -108,7 +116,9 @@
   </ListItem>
   <hr class="divider center" />
   <!-- Pin Code -->
-  <ListItem title={Lang.t('settings.require-pin')} description="Require a pin to launch Nomie. Don't forget it!">
+  <ListItem
+    title={Lang.t('settings.require-pin', 'Require Access Pin')}
+    description={Lang.t('settings.require-pin-description', "Require a pin to launch Nomie. Don't forget it!")}>
     <div slot="right" class="ml-2">
       {#if hasPin}
         <Button

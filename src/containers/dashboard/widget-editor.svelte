@@ -24,6 +24,7 @@
   import { DashboardStore } from "../../store/dashboard-store";
   import { Lang } from "../../store/lang";
   import { Dashboard } from "../../modules/dashboard/dashboard";
+  import type { t } from "i18next";
 
   export let value: Widget = null;
   const dispatch = createEventDispatcher();
@@ -63,21 +64,21 @@
   $: if (value) {
     editorButtons = [
       {
-        label: "Configure",
+        label: `${Lang.t("general.setup", "Setup")}`,
         active: editorView === "options",
         click() {
           changeView("options");
         },
       },
       {
-        label: "Style",
+        label: `${Lang.t("general.style", "Style")}`,
         active: editorView === "style",
         click() {
           changeView("style");
         },
       },
       {
-        label: "More",
+        label: `${Lang.t("general.more", "More")}`,
         active: editorView === "more",
         hide: !value.id ? false : true,
         click() {
@@ -212,154 +213,159 @@
 
   <div class="widget-top p-2 bg-solid">
     <Input type="select" placeholder="Widget" bind:value={widgetTypeId}>
-      <option>Select a Widget</option>
+      <option>{Lang.t('dashboard.select-a-widget', 'Select a Widget')}</option>
       {#each widgetTypes as widgetType}
         <option value={widgetType.id}>{widgetType.label}</option>
       {/each}
     </Input>
-    <ButtonGroup className="mt-3" size="sm" buttons={editorButtons} />
+    {#if widgetTypeId}
+      <ButtonGroup className="mt-3 widget-view-options" size="sm" buttons={editorButtons} />
+    {/if}
   </div>
-
-  <div class="widget-views">
-    {#if editorView == 'options'}
-      {#if widgetTypeId == 'text'}
-        <ListItem className="p-0" bg="transparent">
-          <Input placeholder="Message" type="textarea" rows={2} bind:value={value.description} />
-        </ListItem>
-      {/if}
-      {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('timeframe') > -1}
-        <ListItem className="p-0" bg="transparent">
-          <Input bind:value={dateType} type="select" label="Timeframe">
-            <option>Select</option>
-            {#each timeFrames as timeFrame}
-              <option value={timeFrame.id}>{timeFrame.label}</option>
-            {/each}
-          </Input>
-        </ListItem>
-      {/if}
-      {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('element') > -1}
-        <ListItem
-          bg="transparent"
-          clickable
-          delay={0}
-          className="px-2 trackable-item"
-          on:click={selectType}
-          title={`${!value.element ? '⚠️ ' : ''}Trackable Item`}>
-          <div slot="right">
-            {#if value.element}
-              <TrackerSmallBlock
-                truncate
-                element={value.element}
-                on:click={selectType}
-                className="px-2"
-                style="background-color:var(--color-solid); min-height:40px; min-width:100px; max-width:150px;" />
-            {:else}
-              <Text className="text-primary-bright">Select Tracker</Text>
-            {/if}
-          </div>
-        </ListItem>
-      {/if}
-      {#if widgetTypeId == 'value' && value.timeRange && ['today', 'yesterday'].indexOf(value.timeRange.id) == -1}
-        <ListItem bg="transparent" title="Include Average" className="p-0">
-          <div slot="right">
-            <ToggleSwitch bind:value={value.includeAvg} />
-          </div>
-        </ListItem>
-      {/if}
-    {:else if editorView == 'style'}
-      <ListItem bg="transparent" className="p-0">
-        <Input type="select" label="Widget Size" bind:value={value.size}>
-          <option value="sm">Small</option>
-          <option value="md">Medium</option>
-          <option value="lg">Large</option>
-        </Input>
-      </ListItem>
-      {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('cond-style') > -1}
-        <!-- <div class="conditional-styling n-list {conditionalStyling ? 'solo framed' : ''}"> -->
-        <ListItem bg="transparent" title="Conditional Colors" className="p-0">
-          <div slot="right">
-            <ToggleSwitch bind:value={conditionalStyling} />
-          </div>
-        </ListItem>
-        {#if conditionalStyling}
-          <ListItem bg="transparent" title="Compare Value" className="p-0">
+  {#if widgetTypeId}
+    <div class="widget-views">
+      {#if editorView == 'options'}
+        {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('element') > -1}
+          <ListItem
+            bg="transparent"
+            clickable
+            delay={0}
+            className="px-2 trackable-item"
+            on:click={selectType}
+            title={`${!value.element ? '⚠️ ' : ''} ${Lang.t('general.trackable-item', 'Trackable Item')}`}>
             <div slot="right">
-              <Input
-                pattern="[0-9]*"
-                inputmode="numeric"
-                placeholder={widgetTypeId == 'value' ? 'Value' : widgetTypeId == 'last-used' ? 'Days' : 'Value'}
-                style="max-width:140px;"
-                bind:value={value.compareValue}>
-                <div slot="right">
-                  <Button
-                    icon
-                    className="mr-2"
-                    on:click={async () => {
-                      getConditionalValue();
-                    }}>
-                    {#if value.element.type == 'tracker'}
-                      <Icon name="addOutline" className="fill-inverse-2" />
-                    {/if}
-                  </Button>
-
-                </div>
-
-              </Input>
-            </div>
-          </ListItem>
-          <ListItem bg="transparent" className="p-0">
-            <div class="under" slot="left">
-              <div class="text-center">
-                <Text className="mb-2" size="sm">Under value color</Text>
-                <TinyColorPicker
-                  size={16}
-                  value={value.compareUnderColor}
-                  on:change={(evt) => {
-                    value.compareUnderColor = evt.detail;
-                  }} />
-              </div>
-            </div>
-            <div class="over" slot="right">
-              <div class="text-center">
-                <Text className="mb-2" size="sm">Over value color</Text>
-                <TinyColorPicker
-                  size={16}
-                  value={value.compareOverColor}
-                  on:change={(evt) => {
-                    value.compareOverColor = evt.detail;
-                  }} />
-              </div>
+              {#if value.element}
+                <TrackerSmallBlock
+                  truncate
+                  element={value.element}
+                  on:click={selectType}
+                  className="px-2"
+                  style="background-color:var(--color-solid); min-height:40px; min-width:100px; max-width:150px;" />
+              {:else}
+                <Text className="text-primary-bright">{Lang.t('general.select')}...</Text>
+              {/if}
             </div>
           </ListItem>
         {/if}
-        <!-- </div> -->
-      {/if}
-    {:else if editorView == 'more'}
-      {#if value._editing}
-        <ListItem bg="transparent" clickable on:click={moveWidget}>
-          <div slot="left">
-            <Icon name="shuffle" className="fill-primary-bright" />
-          </div>
-          Move Widget
-        </ListItem>
-        <ListItem bg="transparent" clickable on:click={duplicateWidget}>
-          <div slot="left">
-            <Icon name="copy" className="fill-primary-bright" />
-          </div>
-          Duplicate Widget
-        </ListItem>
-        <ListItem bg="transparent" clickable on:click={deleteWidget}>
-          <div slot="left">
-            <Icon name="delete" className="fill-red" />
-          </div>
-          Delete Widget...
-        </ListItem>
-      {/if}
-    {/if}
 
-    <!-- {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('goal') > -1}
+        {#if widgetTypeId == 'text'}
+          <ListItem className="p-0" bg="transparent">
+            <Input placeholder="Message" type="textarea" rows={2} bind:value={value.description} />
+          </ListItem>
+        {/if}
+        {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('timeframe') > -1}
+          <ListItem className="p-0" bg="transparent">
+            <Input bind:value={dateType} type="select" label="Timeframe">
+              <option>Select</option>
+              {#each timeFrames as timeFrame}
+                <option value={timeFrame.id}>{timeFrame.label}</option>
+              {/each}
+            </Input>
+          </ListItem>
+        {/if}
+
+        {#if widgetTypeId == 'value' && value.timeRange && ['today', 'yesterday'].indexOf(value.timeRange.id) == -1}
+          <ListItem bg="transparent" title="Include Average" className="p-0">
+            <div slot="right">
+              <ToggleSwitch bind:value={value.includeAvg} />
+            </div>
+          </ListItem>
+        {/if}
+      {:else if editorView == 'style'}
+        <ListItem bg="transparent" className="p-0">
+          <Input type="select" label="Widget Size" bind:value={value.size}>
+            <option value="sm">Small</option>
+            <option value="md">Medium</option>
+            <option value="lg">Large</option>
+          </Input>
+        </ListItem>
+        {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('cond-style') > -1}
+          <!-- <div class="conditional-styling n-list {conditionalStyling ? 'solo framed' : ''}"> -->
+          <ListItem bg="transparent" title="Conditional Colors" className="p-0">
+            <div slot="right">
+              <ToggleSwitch bind:value={conditionalStyling} />
+            </div>
+          </ListItem>
+          {#if conditionalStyling}
+            <ListItem bg="transparent" title="Compare Value" className="p-0">
+              <div slot="right">
+                <Input
+                  pattern="[0-9]*"
+                  inputmode="numeric"
+                  placeholder={widgetTypeId == 'value' ? 'Value' : widgetTypeId == 'last-used' ? 'Days' : 'Value'}
+                  style="max-width:140px;"
+                  bind:value={value.compareValue}>
+                  <div slot="right">
+                    <Button
+                      icon
+                      className="mr-2"
+                      on:click={async () => {
+                        getConditionalValue();
+                      }}>
+                      {#if value.element.type == 'tracker'}
+                        <Icon name="addOutline" className="fill-inverse-2" />
+                      {/if}
+                    </Button>
+
+                  </div>
+
+                </Input>
+              </div>
+            </ListItem>
+            <ListItem bg="transparent" className="p-0">
+              <div class="under" slot="left">
+                <div class="text-center">
+                  <Text className="mb-2" size="sm">Under value color</Text>
+                  <TinyColorPicker
+                    size={16}
+                    value={value.compareUnderColor}
+                    on:change={(evt) => {
+                      value.compareUnderColor = evt.detail;
+                    }} />
+                </div>
+              </div>
+              <div class="over" slot="right">
+                <div class="text-center">
+                  <Text className="mb-2" size="sm">Over value color</Text>
+                  <TinyColorPicker
+                    size={16}
+                    value={value.compareOverColor}
+                    on:change={(evt) => {
+                      value.compareOverColor = evt.detail;
+                    }} />
+                </div>
+              </div>
+            </ListItem>
+          {/if}
+          <!-- </div> -->
+        {/if}
+      {:else if editorView == 'more'}
+        {#if value._editing}
+          <ListItem bg="transparent" clickable on:click={moveWidget}>
+            <div slot="left">
+              <Icon name="shuffle" className="fill-primary-bright" />
+            </div>
+            Move Widget
+          </ListItem>
+          <ListItem bg="transparent" clickable on:click={duplicateWidget}>
+            <div slot="left">
+              <Icon name="copy" className="fill-primary-bright" />
+            </div>
+            Duplicate Widget
+          </ListItem>
+          <ListItem bg="transparent" clickable on:click={deleteWidget}>
+            <div slot="left">
+              <Icon name="delete" className="fill-red" />
+            </div>
+            Delete Widget...
+          </ListItem>
+        {/if}
+      {/if}
+
+      <!-- {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('goal') > -1}
       <Input placeholder="Goal" type="number" bind:value={value.goal} />
     {/if} -->
 
-  </div>
+    </div>
+  {/if}
 </div>

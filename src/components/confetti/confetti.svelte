@@ -1,14 +1,12 @@
-<script>
+<script lang="ts">
   // Pulled from https://svelte.dev/tutorial/congratulations
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
 
-  export let show = false;
+  const characters = ["🥳", "🎉", "✨", "🔅"];
 
-  let characters = ["🥳", "🎉", "✨", "🔅"];
-
-  let confetti = new Array(100)
-    .fill()
+  let confetti: Array<any> = new Array(100)
+    .fill(0)
     .map((_, i) => {
       return {
         character: characters[i % characters.length],

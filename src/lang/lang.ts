@@ -1,6 +1,7 @@
 import English from "./en";
 import Italian from "./it";
 import SimplifiedChinese from "./zh-cn";
+import Fake from "./fake";
 export default {
   en: {
     label: "English",
@@ -13,5 +14,9 @@ export default {
   zhcn: {
     label: "Simplified Chinese",
     lang: SimplifiedChinese,
+  },
+  test: {
+    label: "Tester",
+    lang: Fake,
   },
 };

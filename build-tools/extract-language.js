@@ -1,7 +1,9 @@
 const findInFiles = require("find-in-files");
+const fs = require("fs");
 
 let strings = [];
-async function main() {
+
+async function getBaseLang(filler) {
   let files = await findInFiles.find(/Lang.t(.*?)\)/, "./src/", ".svelte$");
   //   console.log("Files", files);
 
@@ -17,11 +19,33 @@ async function main() {
     strings = [...strings, ...matches];
   });
 
-  console.log(stringsToObject(strings));
+  return stringsToObject(strings, filler);
+}
+
+async function generateModule(content) {
+  return `export default {
+    translation: ${JSON.stringify(content, null, 2)}
+  }`;
+}
+
+async function generate(filler) {
+  const base = await getBaseLang(filler);
+  fs.writeFileSync("./artifacts/lang.json", JSON.stringify(base, null, 2), "UTF-8");
+  return await generateModule(base);
+}
+
+async function main(id, filler = undefined, test = false) {
+  const module = await generate(filler);
+
+  if (test) {
+    fs.writeFileSync(`./artifacts/lang-${id}.ts`, module, "UTF-8");
+  } else {
+    fs.writeFileSync(`./src/lang/${id}.ts`, module, "UTF-8");
+  }
   //   console.log("strings", strings);
 }
 
-function stringsToObject(strArray) {
+function stringsToObject(strArray, filler) {
   let obj = {};
   console.log("Str Array", strArray);
   strArray
@@ -40,11 +64,11 @@ function stringsToObject(strArray) {
         if (index == 0) {
           obj[name] = obj[name] || {};
         } else if (index == 1) {
-          obj[nameSplit[index - 1]][name] = value;
+          obj[nameSplit[index - 1]][name] = filler || value;
         }
       });
     });
   return obj;
 }
 
-main();
+main("fake", "Test", false);

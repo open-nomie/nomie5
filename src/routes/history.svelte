@@ -162,7 +162,7 @@
         },
         {
           time: -1,
-          title: "Select Date...",
+          title: `${Lang.t("general.select-date", "Select Date")}...`,
           unit: "day",
         },
       ];
@@ -170,7 +170,7 @@
       if (!isToday) {
         ranges.unshift({
           days: 0,
-          title: "Go to Today",
+          title: `${Lang.t("history.go-to-today", "Go to Today")}`,
         });
       }
 
