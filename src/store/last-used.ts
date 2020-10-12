@@ -9,6 +9,20 @@ const lastUsedKey = "last-usage";
 
 import { LedgerStore } from "./ledger";
 import type { ITrackableElement } from "../modules/trackable-element/trackable-element";
+import { TrackerStore } from "./tracker-store";
+import { Interact } from "./interact";
+import { Lang } from "./lang";
+import appConfig from "../config/appConfig";
+
+export interface LastUsedItem {
+  book?: string;
+  date?: Date;
+  log?: string;
+}
+
+export interface LastUsedItems {
+  [key: string]: LastUsedItem;
+}
 
 /**
  * Last Used Store
@@ -17,16 +31,27 @@ import type { ITrackableElement } from "../modules/trackable-element/trackable-e
  * to find the last instance
  */
 const LastUsedStore = () => {
-  const { update, subscribe, set } = writable({});
+  const state: LastUsedItems = {};
+  const { update, subscribe, set } = writable(state);
 
   const methods = {
+    /**
+     * Init the Last Use Store
+     */
     async init() {
+      // Get from storage
       let fromStore = (await NStorage.get(`${config.data_root}/${lastUsedKey}`)) || {};
-      update((d) => {
-        d = fromStore;
-        return d;
+      // Update state
+      update((state: LastUsedItems) => {
+        state = fromStore;
+        return state;
       });
     },
+    /**
+     * Get Last Used for a specific item
+     * @param tag Tracker Tag
+     * @param type
+     */
     async get(tag: string, type?: ITrackableElement) {
       let found;
       // Find if it exists in the last used
@@ -47,6 +72,69 @@ const LastUsedStore = () => {
           return new Date(logs[0].end);
         }
         return null;
+      }
+    },
+    /**
+     * Force Update All Last Used
+     * this will look for the last 6 months
+     * and then put the most recent items as the last
+     * used date
+     */
+    async updateAll(): Promise<any> {
+      // Ate you sure?
+      const confirmed = await Interact.confirm(
+        `${Lang.t("tracker.update-all-tracker-last-used", "Update last used dates on all trackers?")}`
+      );
+      if (confirmed) {
+        // Block user
+        Interact.blocker(`${Lang.t("general.loading", "Loading...")}`);
+        // Get all trackers
+        const trackers = await TrackerStore.getAll();
+        // Get logs for last 1 year
+        let logs = await LedgerStore.query({ start: dayjs().subtract(1, "year") });
+        // Loop over logs expand and filter
+        logs = (logs || [])
+          .map((log) => {
+            log.expand();
+            return log;
+          })
+          .sort((l1, l2) => {
+            // Sort by newest first
+            return l2.end > l1.end ? 1 : -1;
+          });
+
+        // init final holder
+        let final = {};
+
+        // Loop over trackers
+        Object.keys(trackers).forEach((tag) => {
+          // Find a log that has this tracker
+          let log = logs.find((nlog) => {
+            return nlog.hasTracker(tag);
+          });
+          // Found one!
+          if (log) {
+            // Pass it up to final
+            final[tag] = {
+              date: new Date(log.end),
+              book: dayjs(log.end).format(appConfig.book_time_format),
+              log: log._id,
+            };
+          }
+        });
+
+        // Save to storage
+        await NStorage.put(`${config.data_root}/${lastUsedKey}`, final);
+
+        // Update Store
+        update((state) => {
+          state = final;
+          return state;
+        });
+
+        // Interact with User
+        Interact.stopBlocker();
+        Interact.toast(`${Lang.t("general.update-complete", "Update complete")}`);
       }
     },
     data() {

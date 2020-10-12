@@ -33,15 +33,20 @@
 
   // Config
   import config from "../config/appConfig";
+  // Comtainers
   import Features from "../containers/settings/features.svelte";
   import Tweaks from "../containers/settings/tweaks.svelte";
+  // Components
   import Text from "../components/text/text.svelte";
   import Button from "../components/button/button.svelte";
   import Icon from "../components/icon/icon.svelte";
-  import { AppStore } from "../store/app-store";
   import appConfig from "../config/appConfig";
   import Confetti from "../components/confetti/confetti.svelte";
+
   import tick from "../utils/tick/tick";
+
+  import { LastUsed } from "../store/last-used";
+  import { AppStore } from "../store/app-store";
 
   export const location = undefined;
   export const style = undefined;
@@ -358,6 +363,16 @@ Note: Your data will not automatically move over. You'll first need to export it
               </NItem>
               <NItem detail title={Lang.t('settings.generate-csv', 'Generate CSV')} to="/settings/export/csv">
                 <span slot="left">📃</span>
+              </NItem>
+            </div>
+
+            <div class="n-list pb-2">
+              <NItem itemDivider>{Lang.t('settings.miscellaneous', 'Miscellaneous')}</NItem>
+              <NItem title={Lang.t('settings.force-last-used-update', 'Force Update Tracker Last-Used')} on:click={LastUsed.updateAll}>
+                <span slot="left">🕰</span>
+              </NItem>
+              <NItem title={Lang.t('settings.translate-nomie', 'Help Translate Nomie')} to="/lang">
+                <span slot="left">ฬ</span>
               </NItem>
             </div>
 
