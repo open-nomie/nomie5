@@ -324,6 +324,10 @@
         <div class="empty-notice">
           <Spinner />
         </div>
+      {:else if !loading && !logs.length}
+        <div class="empty-notice">
+          <Text size="sm">{Lang.t('history.empty-day', 'No records found for this day')}</Text>
+        </div>
       {:else}
         <!-- Loop over logs -->
         {#each logs as log, index}
