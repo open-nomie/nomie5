@@ -54,7 +54,7 @@
             on:click={() => {
               UserStore.setTheme(theme, $UserStore.theme_accent);
             }}>
-            {Lang.t(`settings.theme-${theme}`, _.capitalize(theme))}
+            {_.capitalize(theme)}
           </Button>
         {/each}
       </ButtonGroup>
@@ -134,15 +134,6 @@
   </NItem>
 </div>
 
-<!-- Tracker Board Tabs -->
-<!-- {#if $BoardStore.boards.length == 0}
-    <NItem title={Lang.t('settings.enable-boards')}>
-      <span slot="left">🗂</span>
-      <div slot="right">
-        <NToggle bind:value={$UserStore.meta.boardsEnabled} on:change={methods.settingChange} />
-      </div>
-    </NItem>
-  {/if} -->
 <div class="n-list pb-2">
   <NItem itemDivider>Locale</NItem>
   <!-- 24 Hour -->
@@ -180,7 +171,7 @@
     </div>
   </NItem>
   <!-- Language -->
-  <NItem title={Lang.t('settings.language')}>
+  <NItem title={Lang.t('settings.language', 'Language')}>
     <span slot="left">🌎</span>
     <div slot="right">
       <select
@@ -198,7 +189,7 @@
     </div>
   </NItem>
 
-  <NItem title={Lang.t('settings.24-hour-clock')}>
+  <NItem title={Lang.t('settings.24-hour-clock', '24 hour clock')}>
     <span slot="left">⌚️</span>
     <div slot="right">
       <NToggle bind:value={$UserStore.meta.is24Hour} on:change={methods.settingChange} />

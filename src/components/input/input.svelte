@@ -101,8 +101,9 @@
 
     .helper {
       font-size: 0.65em;
-      opacity: 0.5;
-      padding: 6px;
+      color: var(--color-grey-5);
+      padding: 3px 6px;
+      background-color: var(--color-grey-9);
     }
 
     &.list-item {
@@ -179,14 +180,14 @@
       // background-color: blue !important;
       .n-input-wrapper {
         min-height: 40px;
-        height: 40px;
+        // height: 40px;
         .n-input {
-          height: 40px;
+          // height: 40px;
           input,
           select,
           textarea {
             min-height: 40px;
-            height: 40px;
+            // height: 40px;
             font-size: 0.8em !important;
             background-color: var(--color-solid) !important;
           }
@@ -252,12 +253,14 @@
 
         label {
           transition: all 0.2s ease-in-out;
+          line-height: 105%;
+          @include truncate(1);
           opacity: 0;
           transform: translateY(20px);
           pointer-events: none;
           font-size: 0.7em;
           position: absolute;
-          top: 7px;
+          top: 10px;
           left: 10px;
           margin: 0;
           padding: 0;

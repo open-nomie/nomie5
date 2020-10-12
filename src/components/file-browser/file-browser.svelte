@@ -359,7 +359,7 @@
           <hr class="divider center" />
           <NItem
             className="bg-transparent"
-            title="{Lang.t('settings.find-and-replace')}..."
+            title="{Lang.t('settings.find-and-replace', 'Find and Replace')}..."
             on:click={() => {
               state.showMassEditor = true;
             }}>

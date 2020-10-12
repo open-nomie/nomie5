@@ -104,14 +104,16 @@
       <Csvr />
 
       <NItem className="mx-2 bg-transparent">
-        <p class="text-sm">{Lang.t('export.csv.description')}</p>
+        <p class="text-sm">
+          {Lang.t('export.csv-description', 'Export individual tracker data to CSV. Only one year at a time is supported.')}
+        </p>
       </NItem>
 
       <div class="n-list solo">
         <NItem title="Trackers" on:click={methods.selectTrackers}>
           <div slot="right">
             {#if state.trackers.length == Object.keys($TrackerStore.trackers).length}
-              <div class="text-primary">All Trackers</div>
+              <div class="text-primary">{Lang.t('general.all-trackers', 'All Trackers')}</div>
             {:else}
               {#each state.trackers as tracker}{tracker.emoji}{/each}
             {/if}
@@ -126,7 +128,7 @@
       </div>
 
       <NItem
-        title={Lang.t('export.csv.download')}
+        title={Lang.t('export.csv-download', 'Download CSV...')}
         className="text-primary-bright clickable solo text-center"
         on:click={methods.exportCSV} />
     </div>
@@ -134,11 +136,13 @@
     <div class="container backup">
       <div class="gap" />
       <NItem className="px-3 bg-transparent">
-        <p class=" text-sm">{Lang.t('export.backup.description')}</p>
+        <p class=" text-sm">
+          {Lang.t('export.backup-description', 'Create an importable backup file. This allows you to transfer your data from one device to another using a single JSON file that contains ALL of you Nomie data.')}
+        </p>
       </NItem>
       <div class="gap" />
       <NItem
-        title={Lang.t('export.backup.download')}
+        title={Lang.t('export.backup-download', 'Download Backup')}
         className="text-primary-bright clickable solo text-center"
         on:click={methods.export} />
     </div>

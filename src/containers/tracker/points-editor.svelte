@@ -121,11 +121,11 @@
 </style>
 
 {#if tracker}
-  <NInput listItem type="select" bind:value={tracker.score} on:change={methods.change} label={Lang.t('tracker.positivity')}>
-    <option value="0" selected>😐 {Lang.t('tracker.neutral')}</option>
-    <option value="1">😊 {Lang.t('tracker.positive')}</option>
-    <option value="-1">😩 {Lang.t('tracker.negative')}</option>
-    <option value="custom">🛠 {Lang.t('general.customize')}</option>
+  <NInput listItem type="select" bind:value={tracker.score} on:change={methods.change} label={Lang.t('tracker.positivity', 'Positivity')}>
+    <option value="0" selected>😐 {Lang.t('tracker.neutral', 'Neutral')}</option>
+    <option value="1">😊 {Lang.t('tracker.positive', 'Positive')}</option>
+    <option value="-1">😩 {Lang.t('tracker.negative', 'Negative')}</option>
+    <option value="custom">🛠 {Lang.t('general.customize', 'Custom')}</option>
   </NInput>
   <div class="points-editor">
     <div class="n-list mb-2 bg-transparent solo">

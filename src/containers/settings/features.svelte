@@ -29,7 +29,7 @@
     },
 
     async getNewPin(): Promise<string | undefined> {
-      let pin: any = await Interact.inputPin(Lang.t("settings.pin-details"), true);
+      let pin: any = await Interact.inputPin(Lang.t("settings.pin-details", "Set your Pin"), true);
       if (pin) {
         await tick(300);
         let confirmPin: any = await Interact.inputPin(Lang.t("settings.confirm-pin", "Confirm Pin"), true);

@@ -4,6 +4,7 @@
   import { Lang } from "../../store/lang";
   import { Interact } from "../../store/interact";
   import Text from "../text/text.svelte";
+  import Button from "../button/button.svelte";
 
   const methods = {
     async signOut() {
@@ -23,9 +24,9 @@
     <div slot="left">🔌</div>
     {$UserStore.profile.username || 'Connected'}
     <div slot="right">
-      <button class="btn btn-small btn-clear" on:click={methods.signOut}>
-        <Text size="sm" className="text-primary-bright">{Lang.t('settings.sign-out')}</Text>
-      </button>
+      <Button type="clear" size="sm" on:click={methods.signOut}>
+        <Text size="sm" className="text-primary-bright">{Lang.t('settings.sign-out', 'Sign Out')}</Text>
+      </Button>
     </div>
   </NItem>
 </div>

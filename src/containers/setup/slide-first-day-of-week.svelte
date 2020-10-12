@@ -19,7 +19,7 @@
         $UserStore.meta.firstDayOfWeek = '1';
         UserStore.saveMeta();
       }}>
-      {Lang.t('settings.sunday')}
+      {`${Lang.t('settings.sunday', 'Sunday')}`}
     </Button>
     <Button
       className="mb-3"
@@ -31,7 +31,7 @@
         $UserStore.meta.firstDayOfWeek = '2';
         UserStore.saveMeta();
       }}>
-      {Lang.t('settings.monday')}
+      {`${Lang.t('settings.monday', 'Monday')}`}
     </Button>
   </div>
 

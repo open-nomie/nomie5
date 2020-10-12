@@ -20,6 +20,9 @@
   // }
 
   .layout-header header,
+  .layout-header [slot="header"],
+  .layout-header .n-toolbar-grid,
+  .layout-header .n-toolbar,
   .layout-header header .container,
   .layout-header .n-toolbar {
     min-height: var(--header-height);

@@ -273,7 +273,7 @@
       if ($BoardStore.active != "all") {
         // Add "Existing Tracker" button
         buttons.push({
-          title: `${Lang.t("board.add-existing-tracker")}`,
+          title: `${Lang.t("board.add-existing-tracker", "Pick from My Trackers")}`,
           click: async () => {
             let trackers = await Interact.selectTrackers();
 
@@ -294,7 +294,7 @@
       });
 
       buttons.push({
-        title: `${Lang.t("board.browse-starter-trackers")}`,
+        title: `${Lang.t("board.browse-starter-trackers", "Browse Library")}`,
         click() {
           TrackerLibrary.toggle();
         },
@@ -356,9 +356,16 @@
      * then create the new board
      */
     async newBoard() {
-      let res = await Interact.prompt(Lang.t("board.add-a-board"), Lang.t("board.add-a-board-description"), {
-        placeholder: Lang.t("board.board-input-placeholder"),
-      });
+      let res = await Interact.prompt(
+        `${Lang.t("board.add-a-board", "Add a Tab")}`,
+        `${Lang.t(
+          "board.add-a-board-description",
+          "Tabs help you organize your trackers. For example: social, food, and fitness can contain trackers specifically for those activies. You can have the same tracker on multiple tabs."
+        )}`,
+        {
+          placeholder: `${Lang.t("board.board-input-placeholder", "Tab name or Emoji 👍")}`,
+        }
+      );
       if (res) {
         let label = res.trim();
         if (label.toLowerCase() !== "all") {
@@ -392,8 +399,8 @@
           // If we're on All - warn the hell out of the user
           if ($BoardStore.active === "all") {
             const confirmed = await Interact.confirm(
-              Lang.t("general.delete-from-nomie", { thing: tracker.label }),
-              Lang.t("tracker.delete-description")
+              `${tracker.label} - ${Lang.t("general.delete-from-nomie", "Delete from Nomie?")}`,
+              `${Lang.t("tracker.delete-description", "No tracked data will be deleted. You can always recreate this tracker")}`
             );
             if (confirmed) {
               await TrackerStore.deleteTracker(tracker).then((done) => {});

@@ -73,7 +73,7 @@
   <nav id="app-tabs" class={hideLabels ? 'compact' : ''}>
     <div class="n-row mw-500px mx-auto">
 
-      <AppTab link={NPaths.routes.history()} icon="calendar" label={Lang.t('tabs.history')} />
+      <AppTab link={NPaths.routes.history()} icon="calendar" label={Lang.t('tabs.history', 'History')} />
       {#if $FeatureStore.dashboard}
         <AppTab link={NPaths.routes.dashboard()} icon="report" label={Lang.t('tabs.dashboard', 'Dash')} />
       {/if}

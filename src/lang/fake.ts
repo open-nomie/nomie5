@@ -19,6 +19,7 @@ export default {
     "saving": "Test",
     "accept": "Test",
     "select-date": "Test",
+    "all-trackers": "Test",
     "start": "Test",
     "end": "Test",
     "beta": "Test",
@@ -31,7 +32,6 @@ export default {
     "select": "Test",
     "cancel": "Test",
     "stop": "Test",
-    "delete-from-nomie": "Test",
     "notice": "Test",
     "sum": "Test",
     "avg": "Test",
@@ -62,6 +62,7 @@ export default {
     "update": "Test",
     "add-a-tracker": "Test",
     "import-from-file": "Test",
+    "delete-from-nomie": "Test",
     "no-known-backups": "Test",
     "backup-now": "Test",
     "error-connecting": "Test",
@@ -74,6 +75,7 @@ export default {
   "storage": {
     "local_title": "Test",
     "local_description": "Test",
+    "blockstack_title": "Test",
     "pouchdb_title": "Test",
     "type_selector_title": "Test",
     "pouchdb": "Test",
@@ -104,7 +106,6 @@ export default {
     "small-tracker-buttons": "Test",
     "hide-tab-labels": "Test",
     "hide-backup-reminder": "Test",
-    "enable-boards": "Test",
     "first-day-of-week": "Test",
     "sun": "Test",
     "mon": "Test",
@@ -144,8 +145,10 @@ export default {
     "empty-day": "Test"
   },
   "export": {
-    "csv": "Test",
-    "backup": "Test"
+    "csv-description": "Test",
+    "csv-download": "Test",
+    "backup-description": "Test",
+    "backup-download": "Test"
   },
   "csv-import": {
     "saved-templates": "Test",
@@ -161,6 +164,7 @@ export default {
     "negative": "Test",
     "add-condition": "Test",
     "create-condition": "Test",
+    "delete-from-nomie": "Test",
     "delete-description": "Test",
     "type": "Test",
     "label": "Test",
@@ -204,9 +208,6 @@ export default {
     "use-location": "Test",
     "choose-first-day-of-week": "Test"
   },
-  "Lang": {
-    "t`settings": "Test"
-  },
   "search": {
     "no-results": "Test"
   },
@@ -230,7 +231,6 @@ export default {
     "create-custom-tracker": "Test",
     "browse-starter-trackers": "Test",
     "add-a-board": "Test",
-    "add-a-board-description": "Test",
     "board-input-placeholder": "Test",
     "last-used": "Test",
     "sort-tabs": "Test"

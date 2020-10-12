@@ -155,8 +155,8 @@
 
   async function remove() {
     let confirmed = await Interact.confirm(
-      Lang.t("general.delete-from-nomie", { thing: tracker.label }),
-      Lang.t("tracker.delete-description")
+      `${tracker.label} - ${Lang.t("tracker.delete-from-nomie", "Delete from Nomie?")}`,
+      `${Lang.t("tracker.delete-description", "You can always recreate it later. No log data will be deleted.")} `
     );
     if (confirmed) {
       await TrackerStore.deleteTracker(tracker);
@@ -181,11 +181,11 @@
     },
     async editTag() {
       let tag: any = await Interact.prompt(
-        Lang.t("general.notice", "Notice"),
-        Lang.t(
+        `${Lang.t("general.notice", "Notice")}`,
+        `${Lang.t(
           "tracker.tag-no-change-message",
           "Once a tracker is saved, its tag can no longer be changed (easily). Make sure you like it!"
-        ),
+        )}`,
         {
           value: data.tracker.tag,
         }

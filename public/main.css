@@ -6905,6 +6905,9 @@ aside.n-panel {
   left: 0;
   right: 0; }
   .n-layout .layout-header header,
+  .n-layout .layout-header [slot="header"],
+  .n-layout .layout-header .n-toolbar-grid,
+  .n-layout .layout-header .n-toolbar,
   .n-layout .layout-header header .container,
   .n-layout .layout-header .n-toolbar {
     min-height: var(--header-height); }

@@ -111,7 +111,7 @@
 
   {#if $TrackerLibrary.first}
     <div class="px-2 pt-3 intro-message">
-      <NText size="sm" tag="div">{Lang.t('tracker.pick-at-least-one')}</NText>
+      <NText size="sm" tag="div">{Lang.t('tracker.pick-at-least-one', 'Pick at least 1 to continue')}</NText>
     </div>
   {/if}
 

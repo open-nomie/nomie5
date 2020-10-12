@@ -101,7 +101,7 @@
         connecting = false;
       } catch (e) {
         console.error("error connecting", e.message);
-        Interact.alert(Lang.t("general.error-connecting", "Error Connecting"), Lang.t("storage.pouchdb.credentials-failed", e.message));
+        Interact.alert(Lang.t("general.error-connecting", "Error Connecting"), e.message);
         connecting = false;
       }
     },

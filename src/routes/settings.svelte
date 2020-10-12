@@ -178,29 +178,29 @@ Note: Your data will not automatically move over. You'll first need to export it
           },
         },
         {
-          title: `${$UserStore.storageType === "blockstack" ? "✓" : ""} Blockstack`,
-          description: Lang.t(
+          title: `${$UserStore.storageType === "blockstack" ? "✓" : ""} ${Lang.t("storage.blockstack_title", "Blockstack")}`,
+          description: `${Lang.t(
             "storage.blockstack_description",
             "Sync across multiple devices using Blockstack's free and encrypted storage."
-          ),
+          )}`,
           click() {
             methods.switchStorage("blockstack");
           },
         },
         {
           title: `${$UserStore.storageType === "pouchdb" ? "✓" : ""} ${Lang.t("storage.pouchdb_title", "CouchDB (beta)")}`,
-          description: Lang.t(
+          description: `${Lang.t(
             "storage.pouchdb_description",
             "Sync your data in real to a remote CouchDB server. ⚠️ Not good for multiple devices."
-          ),
+          )}`,
           click() {
             methods.switchStorage("pouchdb");
           },
         },
       ];
       Interact.popmenu({
-        title: Lang.t("storage.type_selector_title", `Storage Options`),
-        description: Lang.t("storage.type_selector_title", `How would you like your data stored?`),
+        title: `${Lang.t("storage.type_selector_title", "Storage Options")}`,
+        description: `${Lang.t("storage.type_selector_title", "How would you like your data stored?")}`,
         buttons: buttons,
       });
     },
@@ -231,10 +231,10 @@ Note: Your data will not automatically move over. You'll first need to export it
     <div class="n-toolbar-grid container">
       <div class="left" />
       <div class="main">
-        <Text bold>{Lang.t('settings.settings')}</Text>
+        <Text bold>{Lang.t('settings.settings', 'Settings')}</Text>
       </div>
       <div class="right">
-        <Button type="clear" color="primary" on:click={methods.faq}>{Lang.t('general.faq')}</Button>
+        <Button type="clear" color="primary" on:click={methods.faq}>{Lang.t('general.faq', 'FAQ')}</Button>
       </div>
     </div>
     <div class="n-toolbar px-2 pb-1 container">
@@ -332,7 +332,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               </NItem>
               <NItem
                 clickable
-                title={`${Lang.t('settings.import-from-backup')}`}
+                title={`${Lang.t('settings.import-from-backup', 'Import from Backup')}`}
                 on:click={() => {
                   showImporter = true;
                 }}>
@@ -352,11 +352,11 @@ Note: Your data will not automatically move over. You'll first need to export it
             </div>
             <div class="n-list pb-2">
               <NItem itemDivider>{Lang.t('settings.export-data', 'Export Data')}</NItem>
-              <NItem detail title={Lang.t('settings.generate-backup')} to="/settings/export/backup">
+              <NItem detail title={Lang.t('settings.generate-backup', 'Generate Backup')} to="/settings/export/backup">
                 <span slot="left">📦</span>
 
               </NItem>
-              <NItem detail title={Lang.t('settings.generate-csv')} to="/settings/export/csv">
+              <NItem detail title={Lang.t('settings.generate-csv', 'Generate CSV')} to="/settings/export/csv">
                 <span slot="left">📃</span>
               </NItem>
             </div>
@@ -479,9 +479,9 @@ Note: Your data will not automatically move over. You'll first need to export it
             </NItem>
           </div>
 
-          <NItem title={Lang.t('general.questions')}>
+          <NItem title={Lang.t('general.questions', 'Questions?')}>
             <div slot="right">
-              <a href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>Email Brandon</a>
+              <a href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>{config.support_contact}</a>
             </div>
           </NItem>
 
@@ -491,9 +491,11 @@ Note: Your data will not automatically move over. You'll first need to export it
             </div>
           </NItem>
 
-          <NItem className="bg-transparent my-4" title="⚠️ Danger Zone">
+          <NItem className="bg-transparent my-4" title="⚠️ {Lang.t('settings.danger-zone', 'Danger Zone')}">
             <div slot="right">
-              <Button color="danger" size="sm" on:click={methods.deleteEverything}>Destroy all Data</Button>
+              <Button color="danger" size="sm" on:click={methods.deleteEverything}>
+                {Lang.t('settings.destroy-all-data', 'Destroy all Data')}
+              </Button>
             </div>
           </NItem>
 
