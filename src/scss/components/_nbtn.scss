@@ -12,9 +12,14 @@
 }
 
 .nbtn {
+  transition: all 0.2s ease-in-out;
   --button-base-size: var(--base-font-size);
   @include media-breakpoint-down(xs) {
     --button-base-size: calc(var(--base-font-size) * 0.9);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 
   @include nbtn(30px, 8px, 4px);
@@ -26,7 +31,6 @@
   padding-left: 16px;
   padding-right: 16px;
   box-shadow: var(--box-shadow-tight);
-  white-space: pre;
 }
 
 .nbtn:focus {

@@ -8,6 +8,7 @@
   import Card from "../../components/card/card.svelte";
   import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
   import Icon from "../../components/icon/icon.svelte";
+  import Spinner from "../../components/spinner/spinner.svelte";
   import Text from "../../components/text/text.svelte";
   import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import Toolbar from "../../components/toolbar/toolbar.svelte";
@@ -77,7 +78,10 @@
     <hr class="divider center my-2" />
     <Button size="xs">XSmall Button</Button>
     <hr class="divider center my-2" />
-    <Button block>Button Block</Button>
+    <Button block color="light">
+      <Spinner size="14" />
+      Button Block
+    </Button>
     <hr class="divider center my-2" />
     <div class="n-row">
       <Button icon className="mr-2" color="primary">

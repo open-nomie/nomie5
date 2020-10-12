@@ -44,12 +44,7 @@
 <button
   {style}
   {disabled}
-  class={`nbtn ${block ? 'nbtn-block' : ''} ${icon ? 'nbtn-icon' : ''} 
-          nbtn-${type} nbtn-${shape} nbtn-${color} nbtn-${size} 
-          ${inline ? 'nbtn-inline' : ''}
-          ${text ? 'nbtn-text' : ''}
-          ${className}`}
-  on:mousedown={(evt) => {}}
+  class={`nbtn ${block ? 'nbtn-block' : ''} ${icon ? 'nbtn-icon' : ''} nbtn-${type} nbtn-${shape} nbtn-${color} nbtn-${size} ${inline ? 'nbtn-inline' : ''} ${text ? 'nbtn-text' : ''} ${className}`}
   {title}
   area-label={ariaLabel || title}
   on:click|preventDefault|stopPropagation={(evt) => {
@@ -68,5 +63,4 @@
   }}>
   <Ripple bind:hit />
   <slot />
-
 </button>
