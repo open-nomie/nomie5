@@ -1,8 +1,10 @@
 <script lang="ts">
   import type { keys } from "localforage";
   import { onMount } from "svelte";
+  import { navigate } from "svelte-routing";
   import Button from "../../components/button/button.svelte";
   import Card from "../../components/card/card.svelte";
+  import Icon from "../../components/icon/icon.svelte";
   import Input from "../../components/input/input.svelte";
   import ListItem from "../../components/list-item/list-item.svelte";
   import Spacer from "../../components/spacer/spacer.svelte";
@@ -56,7 +58,17 @@
 <Layout showTabs={false}>
   <div slot="header">
     <ToolbarGrid>
-      <div slot="left" />
+      <div slot="left">
+        <Button
+          icon
+          className="tap-icon"
+          on:click={() => {
+            navigate('/settings');
+          }}>
+          <Icon name="arrowBack" />
+        </Button>
+
+      </div>
       <div slot="main">
         <Text bold>Nomie Language</Text>
       </div>
@@ -67,6 +79,12 @@
   </div>
 
   <main>
+    <Card pad>
+      <Text size="sm" leading2>
+        Want to help translate Nomie? Translate the following items. Once finished hit Send to Brandon. You can hit "save" to save your
+        progress locally.
+      </Text>
+    </Card>
     {#if activeLang}
       <Card pad title="Language Details">
         <Input compact placeholder="Language Name" bind:value={activeLang.name} />
