@@ -62,7 +62,7 @@
   }
 </style>
 
-<div class="tab-wrap tab-{label}">
+<div class="tab-wrap tab-{label}" aria-label={label}>
   <Link to={link}>
     <slot />
     <Icon name={icon} />

@@ -113,7 +113,7 @@
 </script>
 
 {#if showDom}
-  <NModal show={showWindow} type="bottom-slideup" bodyClass="bg-solid-1">
+  <NModal show={showWindow} type="bottom-slideup" bodyClass="bg-solid-1" ariaLabel="On this day">
     <header slot="header" class="w-100">
       <div class="n-toolbar-grid">
         <button class="btn btn-clear btn-icon tap-icon left" on:click={Interact.closeOnThisDay}>

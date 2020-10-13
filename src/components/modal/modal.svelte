@@ -20,6 +20,7 @@
   export let type: string = "normal"; // cover, fullscreen, bottom, bottom-slide-up
   export let bodyClass: string = "";
   export let closeOnBackgroundTap: boolean = false;
+  export let ariaLabel: string = "modal";
 
   declare var arguments: Array<any>;
 
@@ -261,7 +262,13 @@
   }
 </style>
 
-<div on:click={backgroundTap} class="n-modal-frame {className} type-{type} {domVisible ? 'visible' : 'hidden'}">
+<div
+  on:click={backgroundTap}
+  aria-modal
+  aria-label={ariaLabel}
+  aria-hidden={!domVisible}
+  class="n-modal-frame {className} type-{type}
+  {domVisible ? 'visible' : 'hidden'}">
   <div
     on:click|stopPropagation={() => {}}
     class="n-modal animate up {fullscreen ? 'full-screen-modal' : ''}

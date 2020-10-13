@@ -58,7 +58,11 @@
   }
 </style>
 
-<div class="lock-screen full-screen flex-column bg-primary-bright {$Interact.pin.show ? 'visible' : 'hidden'}">
+<div
+  aria-modal
+  aria-label="Lock Screen"
+  aria-hidden={!$Interact.pin.show}
+  class="lock-screen full-screen flex-column bg-primary-bright {$Interact.pin.show ? 'visible' : 'hidden'}">
   <Text center size="sm" faded className="text-white mb-2">{Lang.t('settings.pin-requirements', '1 to 6 digits')}</Text>
   <h1>{$Interact.pin.title}</h1>
   {#if $Interact.pin.show}
@@ -69,7 +73,7 @@
     <!-- Keypad Input -->
     <Keypad bind:value={_pin} on:submit={methods.submit} />
     {#if $Interact.pin.canClose}
-      <Button icon color="clear" className="pin-close-btn" on:click={methods.cancelInput}>
+      <Button icon color="clear" className="pin-close-btn" ariaLabel="Cancel" on:click={methods.cancelInput}>
         <Icon name="close" className="fill-white" size="32" />
       </Button>
     {/if}

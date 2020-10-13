@@ -125,7 +125,7 @@
 </style>
 
 {#if tracker}
-  <NModal show={$Interact.streak.show} type="bottom-slideup">
+  <NModal show={$Interact.streak.show} type="bottom-slideup" ariaLabel="Stats">
     <div slot="header" class="w-100">
       <NToolbarGrid>
         <div slot="left">

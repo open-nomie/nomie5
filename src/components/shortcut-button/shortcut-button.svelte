@@ -257,6 +257,7 @@
 </style>
 
 <Button
+  ariaLabel={title || 'button'}
   color="clear"
   className="{className} shortcut-button d-flex flex-column {value ? 'has-value' : 'no-value'}
   {compact ? 'compact' : ''}"

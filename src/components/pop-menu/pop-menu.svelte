@@ -13,6 +13,20 @@
   // export let cancel = undefined;
   export let show = true;
 
+  let showDom: boolean = false;
+  let showBase: boolean = false;
+  $: if (show) {
+    showBase = true;
+    setTimeout(() => {
+      showDom = true;
+    }, 200);
+  } else {
+    showDom = false;
+    setTimeout(() => {
+      showBase = false;
+    }, 200);
+  }
+
   const methods = {
     backgroundClicked(event: any) {
       const ele: HTMLElement = event.toElement;
@@ -150,53 +164,62 @@
   }
 </style>
 
-<div class="full-screen dark-glass pop-menu {show === true ? 'visible' : 'hidden'}" on:click={methods.backgroundClicked}>
-  <div class="card">
-    {#if title || description}
-      <div class="pb-3 pt-2 text-center">
-        {#if title}
-          <h5 class="text-center m-0 p-0 text-md text-inverse-2">{title}</h5>
-        {/if}
-        {#if description}
-          <p class="text-center m-0 p-0">{description}</p>
-        {/if}
-      </div>
-    {/if}
-    <div class="list bg-solid">
-      {#each buttons as button, index}
-        <Button
-          block
-          color="light"
-          size="lg"
-          disabled={button.disabled}
-          style="padding-top:8px; padding-bottom:8px;"
-          className="pop-button pop-button-{index}
-          {button.description ? 'nbtn-desc' : ''}"
-          on:click={(evt) => {
-            button.click();
-            close(evt);
-          }}>
-          {button.title}
-          {#if button.description}
-            <Text size="sm" leading2 faded className="mb-1">{button.description}</Text>
+{#if showBase}
+  <div
+    aria-modal
+    aria-hidden={!showDom}
+    aria-label={title || 'Pop Menu'}
+    class="full-screen dark-glass pop-menu {showDom === true ? 'visible' : 'hidden'}"
+    on:click={methods.backgroundClicked}>
+    <div class="card">
+      {#if title || description}
+        <div class="pb-3 pt-2 text-center">
+          {#if title}
+            <h5 class="text-center m-0 p-0 text-md text-inverse-2">{title}</h5>
           {/if}
-        </Button>
-        {#if index !== buttons.length - 1}
-          <hr class="divider center" />
-        {/if}
-      {/each}
+          {#if description}
+            <p class="text-center m-0 p-0">{description}</p>
+          {/if}
+        </div>
+      {/if}
+      <div class="list bg-solid">
+        {#each buttons as button, index}
+          <Button
+            block
+            color="light"
+            size="lg"
+            ariaLabel={button.title}
+            disabled={button.disabled}
+            style="padding-top:8px; padding-bottom:8px;"
+            className="pop-button pop-button-{index}
+            {button.description ? 'nbtn-desc' : ''}"
+            on:click={(evt) => {
+              button.click();
+              close(evt);
+            }}>
+            {button.title}
+            {#if button.description}
+              <Text size="sm" leading2 faded className="mb-1">{button.description}</Text>
+            {/if}
+          </Button>
+          {#if index !== buttons.length - 1}
+            <hr class="divider center" />
+          {/if}
+        {/each}
 
+      </div>
+      <Button
+        block
+        className="mt-2"
+        style="flex-shrink:0"
+        color="danger"
+        ariaLabel="Cancel"
+        size="lg"
+        on:click={(evt) => {
+          close(evt);
+        }}>
+        {Lang.t('general.cancel')}
+      </Button>
     </div>
-    <Button
-      block
-      className="mt-2"
-      style="flex-shrink:0"
-      color="danger"
-      size="lg"
-      on:click={(evt) => {
-        close(evt);
-      }}>
-      {Lang.t('general.cancel')}
-    </Button>
   </div>
-</div>
+{/if}

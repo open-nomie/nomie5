@@ -15,7 +15,15 @@
 
   let hasSlot = false;
   let escListener;
+
+  let showDom = false;
+  let showBase = false;
+
   $: if (show) {
+    showBase = true;
+    setTimeout(() => {
+      showDom = true;
+    }, 200);
     hasSlot = arguments[1].$$slots || {}.default;
     escListener = document.addEventListener("keyup", (evt) => {
       if (evt.key == "Escape") {
@@ -23,6 +31,10 @@
       }
     });
   } else {
+    showDom = false;
+    setTimeout(() => {
+      showBase = false;
+    }, 200);
     escListener = document.removeEventListener("keyup", () => {});
   }
 
@@ -116,32 +128,40 @@
   }
 </style>
 
-<div class="full-screen alert-dialog {show === true ? 'visible' : 'hidden'}">
-  <div class="alert-dialog-window card">
-    {#if title}
-      <div class="card-title {!hasSlot && !message ? 'message-less' : 'message'}">{title}</div>
-    {/if}
-
-    {#if message && !hasSlot}
-      <div class="card-body align-items-center pt-0">{message}</div>
-    {:else if hasSlot && !message}
-      <div class="slot-holder card-body pt-0">
-        <slot />
-      </div>
-    {:else if hasSlot && message}
-      <div class="slot-holder card-body pt-0">
-        <Text size="sm">{message}</Text>
-        <slot />
-      </div>
-    {/if}
-
-    <!-- -->
-
-    <div class="p-1 d-flex flex-row footer">
-      {#if cancel}
-        <Button color="transparent" size="lg" block className="mr-1 flex-grow" on:click={methods.onCancel}>{cancel}</Button>
+{#if showBase}
+  <div
+    class="full-screen alert-dialog {showDom === true ? 'visible' : 'hidden'}"
+    aria-modal
+    aria-hidden={!showDom}
+    aria-label="Alert Dialog">
+    <div class="alert-dialog-window card">
+      {#if title}
+        <div class="card-title {!hasSlot && !message ? 'message-less' : 'message'}">{title}</div>
       {/if}
-      <Button block size="lg" className="ml-1 flex-grow" on:click={methods.onOk}>{ok}</Button>
+
+      {#if message && !hasSlot}
+        <div class="card-body align-items-center pt-0">{message}</div>
+      {:else if hasSlot && !message}
+        <div class="slot-holder card-body pt-0">
+          <slot />
+        </div>
+      {:else if hasSlot && message}
+        <div class="slot-holder card-body pt-0">
+          <Text size="sm">{message}</Text>
+          <slot />
+        </div>
+      {/if}
+
+      <!-- -->
+
+      <div class="p-1 d-flex flex-row footer">
+        {#if cancel}
+          <Button color="transparent" ariaLabel={cancel} size="lg" block className="mr-1 flex-grow" on:click={methods.onCancel}>
+            {cancel}
+          </Button>
+        {/if}
+        <Button ariaLabel={ok} block size="lg" className="ml-1 flex-grow" on:click={methods.onOk}>{ok}</Button>
+      </div>
     </div>
   </div>
-</div>
+{/if}

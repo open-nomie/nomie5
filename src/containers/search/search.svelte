@@ -39,7 +39,7 @@
   }
 </style>
 
-<Modal show={$SearchStore.show} fullscreen bodyClass="bg-bg" className="search-modal">
+<Modal show={$SearchStore.show} fullscreen bodyClass="bg-bg" className="search-modal" ariaLabel="Search">
   <div slot="raw-header">
     <nav class="n-row px-2 py-1">
       <div class="left" style="width:40px;">
