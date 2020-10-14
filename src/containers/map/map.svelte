@@ -17,6 +17,8 @@
 
   import tick from "../../utils/tick/tick";
   import Page from "../layout/page.svelte";
+  import Button from "../../components/button/button.svelte";
+  import Icon from "../../components/icon/icon.svelte";
 
   // props
   export let locations = [];
@@ -29,6 +31,7 @@
   export let className = "";
   export let style = "";
   export let lock: boolean = false;
+  export let hideFavorite: boolean = false;
 
   declare var L: any;
 
@@ -111,6 +114,24 @@
     }
   }
 
+  async function selectSavedLocation() {
+    let buttons = $Locations.map((loc: Location) => {
+      return {
+        title: loc.name,
+        click: () => {
+          methods.setLocation(loc);
+          console.log("Firing location", loc.name);
+          dispatch("change", loc);
+        },
+      };
+    });
+
+    Interact.popmenu({
+      title: `${Lang.t("location.saved-locations", "Saved Locations")}`,
+      buttons,
+    });
+  }
+
   // methods
   export let methods = {
     init() {
@@ -171,7 +192,7 @@
                 new Location({
                   ...MAP.getCenter(),
                   ...{ location: data.locationName },
-                  ...{ name: null },
+                  ...{ name: data.locationName },
                 })
               );
             };
@@ -499,6 +520,14 @@
     // min-height: 260px;
     flex-grow: 1;
     flex-shrink: 1;
+    z-index: 100;
+  }
+  :global(.n-map-wrapper .favorites-button) {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 200;
+    background-color: rgba(255, 255, 255, 0.7);
   }
 </style>
 
@@ -537,6 +566,11 @@
   {/if}
   <div class="n-map-wrapper" style="bottom:{picker ? '1px' : '0'}">
     <div {id} class="n-map" />
+    {#if picker && $Locations.length && !hideFavorite}
+      <Button className="favorites-button tap-icon" shape="rounded" icon on:click={selectSavedLocation}>
+        <Icon name="star" size="18" />
+      </Button>
+    {/if}
   </div>
 
 </div>

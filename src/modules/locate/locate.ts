@@ -21,7 +21,7 @@ export default () => {
             resolve(payload);
           },
           (e) => {
-            console.error(e);
+            // console.error(e);
             reject(e);
           },
           {

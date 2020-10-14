@@ -15,12 +15,15 @@
   import Text from "../../components/text/text.svelte";
   import { Lang } from "../../store/lang";
   import Button from "../../components/button/button.svelte";
+  import Interactions from "../interactions/interactions.svelte";
+  import Spinner from "../../components/spinner/spinner.svelte";
 
   const state = {
     locations: [],
     active: null,
     mode: "view",
     mapLocation: null,
+    locating: false,
   };
 
   let unsub; // holder of the unsbuscribe object
@@ -78,16 +81,21 @@
   }
 
   async function currentLocation() {
-    let rawLoc = await locate();
-    if (rawLoc) {
-      let location = new Location({
-        lat: rawLoc.latitude,
-        lng: rawLoc.longitude,
-        name: rawLoc.location,
-      });
-
-      select(location);
+    state.locating = true;
+    try {
+      let rawLoc = await locate();
+      if (rawLoc) {
+        let location = new Location({
+          lat: rawLoc.latitude,
+          lng: rawLoc.longitude,
+          name: rawLoc.location,
+        });
+        select(location);
+      }
+    } catch (e) {
+      Interact.error(`${Lang.t("location.unable-to-get-your-location", "Unable to get your location")}`);
     }
+    state.locating = false;
   }
 
   async function rename(location) {
@@ -184,7 +192,7 @@
       <div className="n-panel" style="height:225px; border-bottom:var(--color-solid-2);">
         <!-- MAP -->
         <div style="height: 200px;">
-          <NMap on:change={mapChange} locations={state.active ? [state.active] : []} picker={true} bind:this={map} />
+          <NMap hideFavorite on:change={mapChange} locations={state.active ? [state.active] : []} picker={true} bind:this={map} />
         </div>
       </div>
       <!-- List Panel -->
@@ -197,11 +205,19 @@
 
         <NItem
           clickable
+          disabled={state.locating}
           className="clickable text-primary"
           on:click={() => {
             currentLocation();
           }}>
-          Use Current Location
+          {#if !state.locating}
+            {Lang.t('location.use-current-location', 'Use Current Location')}
+          {:else}{Lang.t('location.locating', 'Locating...')}{/if}
+          <div slot="right">
+            {#if state.locating}
+              <Spinner size="24" />
+            {/if}
+          </div>
         </NItem>
         {#if mapLocation && mapLocation.lat}
           <NItem
