@@ -17,8 +17,17 @@ declare let window: any;
 
 // Nomie API Store
 
+const DeviceInfo = {
+  appName: navigator.appName,
+  appCodeName: navigator.appCodeName,
+  appVersion: navigator.appVersion,
+  userAgent: navigator.userAgent,
+  product: navigator.product,
+};
+const DeviceInfoString = JSON.stringify(DeviceInfo).toLowerCase();
+
 const DeviceStoreInit = () => {
-  let deviceMatches = navigator.userAgent.toLowerCase().match(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i);
+  let deviceMatches = DeviceInfoString.match(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i);
   let device = deviceMatches ? deviceMatches[0] : "browser";
 
   const { update, subscribe, set } = writable({
@@ -28,6 +37,7 @@ const DeviceStoreInit = () => {
     device: device,
     offline: false,
     pwa: window.matchMedia("(display-mode: standalone)").matches,
+    info: DeviceInfo,
   });
 
   function state(s: any) {
@@ -46,6 +56,16 @@ const DeviceStoreInit = () => {
     scrollToTop() {
       document.getElementById("nomie-main").scrollTo(0, 0);
       document.body.classList.remove("scrolled");
+    },
+    open(url) {
+      window.open(url, "_system");
+    },
+    is(regex: string | RegExp) {
+      console.log("Is it", regex);
+      if (typeof regex === "string") {
+        regex = new RegExp(regex, "gi");
+      }
+      return DeviceInfoString.match(regex);
     },
     init() {
       const fireChange = () => {
@@ -70,6 +90,7 @@ const DeviceStoreInit = () => {
     update,
     set,
     ...methods,
+    info: DeviceInfo,
   };
 };
 
