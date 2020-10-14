@@ -187,6 +187,7 @@
       <ListItem title={Lang.t('general.positivity', 'Positivity')} className="my-3">
         <div slot="right">
           <NPositivitySelector
+            transparent
             size="md"
             score={state.log.score}
             on:change={(evt) => {

@@ -7,6 +7,7 @@
   export let score = 0;
   export let closeBackgroundTap: boolean = false;
   export let className = "";
+  export let size = "lg";
 
   let selected: any;
   let showMenu: boolean = false;
@@ -29,10 +30,15 @@
     bottom: calc(50px + env(safe-area-inset-bottom));
     z-index: 3000;
   }
+  :global(.positivity-emoji-btn) {
+    margin: 6px;
+    text-align: center;
+  }
 </style>
 
 <div class="positivity-menu-pop animate up" style="left:{x}px; z-index:2020" class:visible={showMenu} class:hidden={!showMenu}>
   <PositivitySelector
+    {size}
     bind:score
     on:change={() => {
       toggle();

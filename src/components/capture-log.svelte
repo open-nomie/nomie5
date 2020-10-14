@@ -343,7 +343,7 @@
   }
 
   :global(.mask-textarea .save-button, .mask-textarea .more-button) {
-    margin-bottom: 6px;
+    margin-bottom: 7px;
   }
 
   .save-progress {
@@ -464,7 +464,7 @@
           on:keydown={methods.keyPress}
           on:paste={methods.keyPress} />
 
-        <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} className="mr-2" />
+        <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} size="lg" className="mr-2" />
 
         {#if $LedgerStore.saving}
           <Button className="save-button mr-2" shape="circle" color="success" size="sm">
