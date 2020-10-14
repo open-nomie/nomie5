@@ -27,8 +27,19 @@
   let _opened: boolean = opened;
   let hide = false;
 
-  $: if (date !== lastDate) {
+  $: if (date && date !== lastDate) {
     init();
+  } else if (!date && lastDate) {
+    console.log("Was it cleared?");
+    init();
+  } else if (!date && !lastDate) {
+    console.log("Are we raw?");
+  } else {
+    console.log("Whats this?", date);
+  }
+
+  $: {
+    console.log(`🅰🅰🅰🅰 Date Time Bar Reaction`);
   }
 
   async function toggleOpen(): Promise<void> {
@@ -38,12 +49,15 @@
   function init() {
     // Get provided date - default to today
     date = date || new Date().getTime();
+    console.log("initializing date-time-bar", date);
     // SEt local date to maniuplate
     _date = date instanceof Date ? dayjs(date) : dayjs(new Date(date));
     // Set local opened
     _opened = opened;
     // Set last date to avoid uneeded reaction
     lastDate = date;
+
+    console.log("initing", lastDate);
   }
 
   /**

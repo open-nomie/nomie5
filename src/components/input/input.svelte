@@ -235,7 +235,7 @@
         }
       }
 
-      textarea {
+      textarea, input {
         border: none;
       }
 
@@ -362,6 +362,22 @@
           on:input={change}
           on:focus={focus}
           on:blur={blur} />
+      {:else if type == 'datetime-local'}
+          <input
+            bind:this={_elInput}
+            {disabled}
+            {inputmode}
+            type="datetime-local"
+            style={inputStyle}
+            class={inputClass}
+            bind:value
+            {autocomplete}
+            {autocorrect}
+            {autocapitalize}
+            {placeholder}
+            on:input={change}
+            on:focus={focus}
+            on:blur={blur} />
       {:else if type == 'number'}
         <input
           bind:this={_elInput}
