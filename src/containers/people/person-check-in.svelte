@@ -22,12 +22,17 @@
   import { Lang } from "../../store/lang";
   import { LedgerStore } from "../../store/ledger";
   import Button from "../../components/button/button.svelte";
+  import Row from "../../components/row/row.svelte";
+  import DatePicker from "../../components/date-picker/date-picker.svelte";
+  import ListItem from "../../components/list-item/list-item.svelte";
+  import Spacer from "../../components/spacer/spacer.svelte";
 
   const state = {
     note: ` @${$Interact.people.active} `,
     checkingIn: false,
     checkedIn: false,
     score: 0,
+    date: undefined,
   };
   const getPlaceholder = () => {
     return `What are you and @${$Interact.people.active} up to?`;
@@ -38,11 +43,20 @@
       let log = new NomieLog({
         note: state.note,
       });
+      // Set Score
       log.score = state.score;
+      // Set Date if set
+      if (state.date) {
+        log.end = state.date;
+      }
+      // Save to Ledger
       let saved = await LedgerStore.saveLog(log);
+      // Change UI Status
       state.checkingIn = false;
       state.checkedIn = true;
+      // Wait for 600 ms
       await tick(600);
+      // Announce change
       dispatch("checkedIn", saved);
     } catch (e) {
       Interact.alert("Error", e.message);
@@ -62,25 +76,33 @@
         let payload = evt.detail;
         state.note = payload.note;
       }} />
-  </div>
-  <div class="mt-2 text-center">
-    <NPositivitySelector
-      score={state.score}
-      className="mx-auto"
-      size="xl"
-      on:change={(evt) => {
-        state.score = evt.detail;
-      }} />
 
+    <ListItem solo className="mx-0 w-100 py-1">
+      <DatePicker bind:time={state.date} />
+    </ListItem>
   </div>
+
+  <Spacer className="mt-3" />
+
+  <NPositivitySelector
+    transparent
+    score={state.score}
+    size="lg"
+    on:change={(evt) => {
+      state.score = evt.detail;
+    }} />
+
+  <Spacer className="mt-3" />
+
   {#if !state.checkingIn && !state.checkedIn}
-    <Button block className="mt-4" on:click={checkIn}>Check-In</Button>
+    <Button block on:click={checkIn}>Check-In</Button>
   {:else if state.checkingIn}
-    <Button block color="light" className="mt-4" disabled>
+    <Button block color="light" disabled>
       <Spinner size={24} />
       <div class="ml-2">Checking In...</div>
     </Button>
   {/if}
+
   <div class="text-center mt-4 animate up {state.checkedIn ? 'visible' : 'hidden'}">
     <NIcon name="checkmarkOutline" size="60" className="fill-green" />
   </div>
