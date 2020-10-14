@@ -1,21 +1,25 @@
 <script>
   import dayjs from "dayjs";
+  import Avatar from "../../components/avatar/avatar.svelte";
 
   import ButtonGroup from "../../components/button-group/button-group.svelte";
   import Button from "../../components/button/button.svelte";
   import Calendar from "../../components/calendar/calendar.svelte";
   import DateTime from "../../components/calendar/date-time";
   import Card from "../../components/card/card.svelte";
-import DatePicker from "../../components/date-picker/date-picker.svelte";
+  import DatePicker from "../../components/date-picker/date-picker.svelte";
   import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
   import Icon from "../../components/icon/icon.svelte";
+  import PositivityBar from "../../components/positivity-bar/positivity-bar.svelte";
+  import PositivitySelector from "../../components/positivity-selector/positivity-selector.svelte";
+  import Row from "../../components/row/row.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
   import Text from "../../components/text/text.svelte";
   import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import Toolbar from "../../components/toolbar/toolbar.svelte";
   import Layout from "../../containers/layout/layout.svelte";
   import Streak from "../../containers/steak/streak.svelte";
-import { Device } from "../../store/device-store";
+  import { Device } from "../../store/device-store";
 
   let date = dayjs();
 </script>
@@ -35,12 +39,55 @@ import { Device } from "../../store/device-store";
 
     <hr class="divider center my-2" />
 
+    <Card title="Avatar" pad>
+
+      <Row className="mb-3">
+        <Avatar label="Brandon Corbin" size="lg" />
+        <Avatar label="Brandon Corbin" size="md" />
+        <Avatar label="Brandon Corbin" size="sm" />
+        <Avatar label="Brandon Corbin" size="xs" />
+      </Row>
+
+      <Row className="mb-3">
+        <Avatar emoji="🥳" size="lg" />
+        <Avatar emoji="🥳" size="md" />
+        <Avatar emoji="🥳" size="sm" />
+        <Avatar emoji="🥳" size="xs" />
+      </Row>
+
+      <Row>
+        <Avatar src="https://placehold.it/60x60" size="lg" />
+        <Avatar src="https://placehold.it/60x60" size="md" />
+        <Avatar src="https://placehold.it/60x60" size="sm" />
+        <Avatar src="https://placehold.it/60x60" size="xs" />
+      </Row>
+
+    </Card>
+
+    <hr class="divider center my-3" />
+
+    <Text size="lg" leading3 className="mb-2">Positivity</Text>
+
+    <Card title="Posivity Selector" pad className="mb-3">
+      <PositivitySelector size="sm" className="mb-2" />
+      <PositivitySelector size="md" className="mb-2" />
+      <PositivitySelector size="lg" className="mb-2" />
+    </Card>
+
+    <Card title="PositivityBar" pad>
+      <PositivityBar size="sm" />
+    </Card>
+
+    <hr class="divider center my-2" />
+
     <Text size="lg" leading3>Date Time Bar</Text>
 
-    <DatePicker date={dayjs()} className="mb-2" on:change={(evt)=>{
-      console.log("Date", evt.detail);  
-    }} />
-
+    <DatePicker
+      date={dayjs()}
+      className="mb-2"
+      on:change={(evt) => {
+        console.log('Date', evt.detail);
+      }} />
 
     <hr class="divider center my-2" />
 

@@ -59,7 +59,7 @@
   // Data
   export let state = {
     date: initialDate.format ? initialDate : dayjs(initialDate),
-    selectedDate: initialDate.format ? initialDate : dayjs(initialDate),
+    selectedDate: undefined, //initialDate.format ? initialDate : dayjs(initialDate)
     today: new Date(),
     weekdays: null,
     percentage: null,
@@ -239,8 +239,8 @@
       try {
         const dayFormat = day.format("YYYY-MM-DD");
         const stateDateFormat = state.date.format("YYYY-MM-DD");
-        const selectedDateFormat = state.selectedDate.format("YYYY-MM-DD");
-        const todayFormat = dayjs(state.today).format("YYYY-MM-DD");
+        const selectedDateFormat = (state.selectedDate || dayjs()).format("YYYY-MM-DD");
+        const todayFormat = dayjs().format("YYYY-MM-DD");
         const activeToday = events.find((row) => {
           if (dayFormat === stateDateFormat) {
             return true;
@@ -295,11 +295,14 @@
     .active {
       position: relative;
       &:before {
-        content: "✔";
-        font-size: 10px;
-        color: var(--color-green);
-        top: -4px;
-        right: -4px;
+        content: "";
+        // font-size: 10px;
+        border: solid 1px var(--color-green);
+        top: -1px;
+        right: -1px;
+        bottom: -1px;
+        left: -1px;
+        border-radius: 32%;
         position: absolute;
       }
     }
