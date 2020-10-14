@@ -1,4 +1,4 @@
-import text from "./text";
+import text, { initials } from "./text";
 
 describe("text tests", () => {
   it("should truncate", () => {
@@ -11,5 +11,14 @@ describe("text tests", () => {
   it("should truncate with the end", () => {
     let _txt = "abcdefghijklmnopqrstuvwxyz.gif";
     expect(text.truncate(_txt, 10, 4)).toBe("abcdef....gif");
+  });
+
+  it("should generate initials", () => {
+    expect(initials("brandon corbin")).toBe("BC");
+    expect(initials("Abraham Bart McSweeny McNight")).toBe("AM");
+    expect(initials("Jacob B Smith")).toBe("JS");
+    expect(initials("poooolboy")).toBe("PO");
+    expect(initials("p")).toBe("P");
+    expect(initials("")).toBe("NA");
   });
 });
