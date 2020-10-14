@@ -16,7 +16,7 @@
   import SortableList from "./../../components/sortable-list/sortable-list.svelte";
   import Stepper from "../../components/stepper/stepper.svelte";
   import Text from "./../../components/text/text.svelte";
-  import TrackerSmallBlock from "./../../components/tracker-ball/tracker-small-block.svelte";
+  import TrackerSmallBlock from "../../components/tracker-small-block/tracker-small-block.svelte";
   // modules
   import StatsProcessor from "../../modules/stats/statsV5";
   import { Widget } from "../../modules/dashboard/widget";

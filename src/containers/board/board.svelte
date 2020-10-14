@@ -18,11 +18,8 @@
   import { fade, fly } from "svelte/transition";
 
   // Components
-  import NTrackerButton from "./tracker-button.svelte";
-  import NToolbar from "../../components/toolbar/toolbar.svelte";
   import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import Icon from "../../components/icon/icon.svelte";
-  import NSearchBar from "../../components/search-bar/search-bar.svelte";
   import NModal from "../../components/modal/modal.svelte";
   import LogoType from "../../components/logo/logo.svelte";
   import NTip from "../../components/tip/tip.svelte";

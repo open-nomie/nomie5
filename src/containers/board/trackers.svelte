@@ -15,7 +15,7 @@
   import math from "../../utils/math/math";
   import time from "../../utils/time/time";
   import { UserStore } from "../../store/user-store";
-  import TrackerButton from "./tracker-button.svelte";
+  import TrackerButton from "../../components/classic-button/classic-button.svelte";
   import ScoreTracker from "../../modules/scoring/score-tracker";
   import { Lang } from "../../store/lang";
   import Button from "../../components/button/button.svelte";

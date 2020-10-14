@@ -8,15 +8,11 @@
 
   // components
   import NItem from "../list-item/list-item.svelte";
-  import NBall from "../tracker-ball/ball.svelte";
-  import Dymoji from "../dymoji/dymoji.svelte";
   import LocationBadge from "../location-badge/location-badge.svelte";
   import NIcon from "../icon/icon.svelte";
-  import NPoints from "../points/points.svelte";
-  import NText from "../text/text.svelte";
   import NNoteTextualizer from "../note-textualizer/note-textualizer.svelte";
 
-  import NTrackerSmallBlock from "../tracker-ball/tracker-small-block.svelte";
+  import NTrackerSmallBlock from "../tracker-small-block/tracker-small-block.svelte";
 
   // utils
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
@@ -33,6 +29,7 @@
   import TrackableElement from "../../modules/trackable-element/trackable-element";
   import { getEmojiFromScore } from "../../utils/positivity/positivity";
   import Button from "../button/button.svelte";
+  import Avatar from "../avatar/avatar.svelte";
 
   // props
   export let log = undefined;
@@ -173,17 +170,18 @@
           <NTrackerSmallBlock
             truncate={true}
             element={person}
+            value={undefined}
             on:click={() => {
               Interact.openStats(`@${person.id}`);
               dispatch('personClick', { person: person, log });
             }}>
-            <span slot="emoji" class="emoji">
+            <!-- <span slot="emoji" class="emoji">
               {#if $PeopleStore.people[person.id]}
-                <NBall size={40} radius={0.3} avatar={$PeopleStore.people[person.id].avatar} username={person.id} className="ml-2" />
+                <Avatar size={40} src={$PeopleStore.people[person.id].avatar} label={person.id} className="ml-2" />
               {:else}
-                <NBall size={40} username={person.id} className="ml-2" radius={0.3} />
+                <Avatar size={40} label={person.id} className="ml-2" />
               {/if}
-            </span>
+            </span> -->
           </NTrackerSmallBlock>
         {/each}
         {#each logMeta.trackers.filter((trk) => {

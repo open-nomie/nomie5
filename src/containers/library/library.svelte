@@ -1,7 +1,7 @@
 <script lang="ts">
   import Modal from "../../components/modal/modal.svelte";
 
-  import TrackerButton from "../../containers/board/tracker-button.svelte";
+  
   import NText from "../../components/text/text.svelte";
   import NIcon from "../../components/icon/icon.svelte";
 

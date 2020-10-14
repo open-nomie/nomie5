@@ -1,5 +1,4 @@
 <script>
-  import TrackerButton from "../../containers/board/tracker-button.svelte";
   import { Interact } from "../../store/interact";
   import math from "../../utils/math/math";
   import config from "../../config/appConfig";

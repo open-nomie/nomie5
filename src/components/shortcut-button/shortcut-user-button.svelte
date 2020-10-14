@@ -5,7 +5,8 @@
   import dayjs from "dayjs";
   import { createEventDispatcher } from "svelte";
   import { Interact } from "../../store/interact";
-  import Ball from "../tracker-ball/ball.svelte";
+
+  import Avatar from "../avatar/avatar.svelte";
   export let person: Person;
 
   const dispatch = createEventDispatcher();
@@ -25,11 +26,7 @@
       dispatch('click', person);
     }}>
     <div slot="emoji">
-      {#if person && person.avatar}
-        <Ball size={42} avatar={person.avatar} style={`border-radius:32%; overflow:hidden; box-shadow:var(--box-shadow-tight)`} />
-      {:else if person && person.displayName}
-        <Ball size={42} username={person.displayName} style={`border-radius:32%; overflow:hidden; box-shadow:var(--box-shadow-tight)`} />
-      {/if}
+      <Avatar size={48} src={person.avatar} label={person.displayName} />
     </div>
   </ShortcutButton>
 {/if}

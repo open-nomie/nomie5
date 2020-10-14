@@ -2,7 +2,7 @@
   import { Interact } from "../../store/interact";
   import Map from "./../map/map.svelte";
   import NoteTextualizer from "./../../components/note-textualizer/note-textualizer.svelte";
-  import TrackerSmallBlock from "./../../components/tracker-ball/tracker-small-block.svelte";
+  import TrackerSmallBlock from "../../components/tracker-small-block/tracker-small-block.svelte";
   import { UserStore } from "./../../store/user-store.js";
   import { TrackerStore } from "../../store/tracker-store";
   import { LedgerStore } from "../../store/ledger.js";

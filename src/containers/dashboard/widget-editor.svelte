@@ -2,7 +2,7 @@
   import Input from "../../components/input/input.svelte";
   import ListItem from "../../components/list-item/list-item.svelte";
   import { Widget, WidgetTimeFrame } from "../../modules/dashboard/widget";
-  import TrackerSmallBlock from "../../components/tracker-ball/tracker-small-block.svelte";
+  import TrackerSmallBlock from "../../components/tracker-small-block/tracker-small-block.svelte";
   import Button from "../../components/button/button.svelte";
   import Text from "../../components/text/text.svelte";
 

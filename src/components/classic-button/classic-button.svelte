@@ -1,19 +1,21 @@
 <script>
-  import Icon from "../../components/icon/icon.svelte";
+  import Icon from "../icon/icon.svelte";
 
   // svelte
   import { createEventDispatcher } from "svelte";
 
-  import TrackerBall from "../../components/tracker-ball/tracker-ball.svelte";
-
   // modules
   import Tracker from "../../modules/tracker/tracker";
-  import TimeBalls from "../../components/time-balls/time-balls.svelte";
+  import TimeBalls from "../time-balls/time-balls.svelte";
 
   // Components
-  import Counter from "../../components/counter/counter.svelte";
+  import Counter from "../counter/counter.svelte";
   import { Interact } from "../../store/interact";
   import { TrackerStore } from "../../store/tracker-store";
+  import { UserStore } from "../../store/user-store";
+  import ScorePill from "./score-pill.svelte";
+  import Ball from "./ball.svelte";
+  import Text from "../text/text.svelte";
 
   // Props
   export let tracker = new Tracker();
@@ -105,16 +107,40 @@
   {data.pressing ? 'pressing' : ''}
   {className}
   {disabled ? 'disabled' : ''}">
-  <!-- <button
-    class="btn btn-clear more"
-    on:click|preventDefault={(evt) => {
-      evt.preventDefault();
-      evt.stopPropagation();
-      TrackerStore.trackerOptions(tracker);
+
+  <button
+    {id}
+    class={`item-ball ${className} ${$UserStore.localSettings.compactButtons == true ? 'item-ball-small' : ''}`}
+    on:click={() => {
+      dispatch('click', tracker);
     }}>
-    <Icon name="pieChart" size="16" />
-  </button> -->
-  <TrackerBall {id} {tracker} score={value} {positivity}>
+    <!-- -->
+    <div class="avatar-ball">
+      {#if tracker.started}
+        <div class="center countdown">
+          <Counter started={tracker.started} filled />
+        </div>
+      {/if}
+      {#if hoursUsed.length}
+        <div class="balls">
+          <TimeBalls hours={hoursUsed} />
+        </div>
+      {/if}
+      {#if tracker.one_tap}
+        <div class="one-tap" />
+      {/if}
+      <ScorePill {positivity} score={value} />
+      <Ball
+        username={tracker.label}
+        emoji={tracker.emoji}
+        color={tracker.color}
+        size={$UserStore.localSettings.compactButtons ? 80 : 102} />
+    </div>
+
+    <Text className="ball-label truncate-2">{tracker.label}</Text>
+  </button>
+
+  <!-- <TrackerBall {id} {tracker} score={value} {positivity}>
     {#if tracker.started}
       <div class="center countdown">
         <Counter started={tracker.started} filled />
@@ -128,7 +154,7 @@
     {#if tracker.one_tap}
       <div class="one-tap" />
     {/if}
-  </TrackerBall>
+  </TrackerBall> -->
 
 </div>
 <!-- last.log.end -->

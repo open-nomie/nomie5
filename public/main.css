@@ -6654,16 +6654,6 @@ aside.n-panel {
     border-radius: 6px;
     padding: 4px 12px 6px 0px;
     margin: 4px; }
-  .n-tracker-value-grid-button .emoji {
-    font-size: 2em;
-    min-width: 40px;
-    max-width: 67px;
-    line-height: 20px;
-    flex-shrink: 0;
-    letter-spacing: -6px;
-    padding-right: 20px;
-    white-space: nowrap;
-    display: inline-block; }
   .n-tracker-value-grid-button main {
     height: auto;
     display: flex;

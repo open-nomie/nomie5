@@ -2,18 +2,14 @@
   import { onMount, onDestroy } from "svelte";
   import { Interact } from "../../store/interact";
   import { Lang } from "../../store/lang";
-  import math from "../../utils/math/math";
   import { UserStore } from "../../store/user-store";
   import { TrackerStore } from "../../store/tracker-store";
   import NNoteTextualizer from "../note-textualizer/note-textualizer.svelte";
-  import Tracker from "../../modules/tracker/tracker";
-  import TrackerButton from "../../containers/board/tracker-button.svelte";
   import Logo from "../logo/logo.svelte";
   import NIcon from "../icon/icon.svelte";
   import dayjs from "dayjs";
   import domtoimage from "dom-to-image-more";
   import tick from "../../utils/tick/tick";
-  import copyToClipboard from "../../utils/clipboard/clipboard";
   import extractor from "../../utils/extract/extract";
   import Button from "../button/button.svelte";
 

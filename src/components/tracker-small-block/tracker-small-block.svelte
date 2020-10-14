@@ -1,10 +1,10 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import NomieUOM from "../../utils/nomie-uom/nomie-uom";
-  import AvatarBall from "../tracker-ball/ball.svelte";
   import { PeopleStore } from "../../store/people-store";
   import Text from "../text/text.svelte";
   import Button from "../button/button.svelte";
+  import Avatar from "../avatar/avatar.svelte";
   const dispatch = createEventDispatcher();
 
   export let element = undefined;
@@ -20,6 +20,8 @@
 
   function shouldShowValue(trackerElement) {
     if (trackerElement.obj && trackerElement.obj.type == "picker") {
+      return false;
+    } else if (trackerElement.type == "person") {
       return false;
     } else if (trackerElement.obj && trackerElement.obj.type == "tick") {
       return trackerElement.value !== 1;
@@ -49,18 +51,13 @@
     {#if hasEmojiSlot}
       <slot name="emoji" />
     {:else if element.type == 'tracker'}
-      <div class="emoji" style={`color:${(element.obj || {}).color || '#CCC'}`}>{(element.obj || {}).emoji || '⚪️'}</div>
+      <Avatar size={40} emoji={(element.obj || {}).emoji} label={(element.obj || {}).id} className="mr-2" />
+      <!-- <div class="emoji" style={`color:${(element.obj || {}).color || '#CCC'}`}>{(element.obj || {}).emoji || '⚪️'}</div> -->
     {:else if element.type == 'person'}
       {#if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].avatar}
-        <AvatarBall
-          size={24}
-          avatar={$PeopleStore.people[element.id].avatar}
-          style={` width:24px; border-radius:32%; overflow:hidden; flex-shrink:0; margin-right:10px;`} />
+        <Avatar size={40} src={$PeopleStore.people[element.id].avatar} className="mr-2" />
       {:else if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].displayName}
-        <AvatarBall
-          size={24}
-          username={$PeopleStore.people[element.id].displayName}
-          style={` width:24px; border-radius:32%; overflow:hidden; flex-shrink:0; margin-right:10px;`} />
+        <Avatar size={40} label={$PeopleStore.people[element.id].displayName} className="mr-2" />
       {/if}
     {/if}
     <main class="{truncate ? 'truncate' : ''} text-left w-100">

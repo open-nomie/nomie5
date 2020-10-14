@@ -1,8 +1,11 @@
 <script lang="ts">
+  import type { join } from "lodash";
+  import { createEventDispatcher } from "svelte";
   import { initials } from "../../utils/text/text";
   import { strToColor } from "../dymoji/dymoji";
 
-  export let size: "xs" | "sm" | "md" | "lg" | "xl" = "md";
+  // export let size: "xs" | "sm" | "md" | "lg" | "xl" = "md";
+  export let size: number = 32;
   export let label: string = undefined;
   export let src: string = undefined;
   export let emoji: string = undefined;
@@ -10,26 +13,33 @@
   export let style: string = "";
   export let color: string = "transparent";
   export let circle: boolean = false;
+  export let className: string = "";
 
-  let generatedStyle: string = "";
+  const dispatch = createEventDispatcher();
+
+  let styles: Array<string> = [];
   let classList: Array<string> = [];
   $: {
-    classList = [];
-
+    classList = [className];
+    styles.push(`--avatar-size:${size}px`);
+    styles.push(`height:${size}px`);
+    styles.push(`width:${size}px`);
     // If it's a source
     if (src && src.length) {
       classList.push("src");
-      generatedStyle = `background-image:url(${src});`;
+      styles.push(`background-image:url(${src})`);
 
       /// If it's an emoji
     } else if (emoji && emoji.length) {
       classList.push("emoji");
+      styles.push(`background-color:${color}`);
 
       // If a Label is provided
     } else if (label && label.length) {
       classList.push("label");
       color = strToColor(label);
-      generatedStyle = `background-color:${color};`;
+      styles.push(`background-color:${color}`);
+      styles.push(`font-size: ${size * 0.5}px`);
     }
     // If Transparent
     if (transparent) {
@@ -42,8 +52,11 @@
     } else {
       classList.push("rounded");
     }
-    // Merge with props style
-    generatedStyle = `${generatedStyle} ${style}`;
+    // Merge with props styl
+  }
+
+  function click() {
+    dispatch("click");
   }
 </script>
 
@@ -58,26 +71,7 @@
     background-size: cover;
     background-position: center;
     overflow: hidden;
-  }
-
-  .n-avatar.xs {
-    --avatar-size: 16px;
-  }
-
-  .n-avatar.sm {
-    --avatar-size: 26px;
-  }
-
-  .n-avatar.md {
-    --avatar-size: 42px;
-  }
-
-  .n-avatar.lg {
-    --avatar-size: 70px;
-  }
-
-  .n-avatar.xl {
-    --avatar-size: 117px;
+    letter-spacing: normal;
   }
 
   .n-avatar.rounded {
@@ -98,11 +92,16 @@
     font-weight: bold;
   }
   .n-avatar.emoji {
-    font-size: calc(var(--avatar-size) * 0.7);
+    font-size: calc(var(--avatar-size) * 1);
+    box-shadow: none;
+    white-space: nowrap;
+    overflow: visible;
+  }
+  .n-avatar.src {
+    color: transparent;
   }
 </style>
 
-<div class="n-avatar {size} {classList.join(' ')}" style={generatedStyle}>
-  {#if emoji}{emoji}{/if}
-  {#if label}{initials(label)}{/if}
+<div class="n-avatar {size} {classList.join(' ')}" style={`${styles.join('; ')}; ${style}`} on:click|preventDefault={click}>
+  {#if emoji}{emoji}{:else if label}{initials(label)}{/if}
 </div>

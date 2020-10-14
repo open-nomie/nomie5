@@ -1,7 +1,7 @@
 <script lang="ts">
   import PositivityBar from "../../components/positivity-bar/positivity-bar.svelte";
   import BarChart from "../../components/charts/bar-chart-2.svelte";
-  import TrackerSmallBlock from "../../components/tracker-ball/tracker-small-block.svelte";
+  import TrackerSmallBlock from "../../components/tracker-small-block/tracker-small-block.svelte";
   import Text from "../../components/text/text.svelte";
   import { Widget } from "../../modules/dashboard/widget";
   import { createEventDispatcher } from "svelte";

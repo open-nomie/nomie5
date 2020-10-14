@@ -16,8 +16,6 @@
   import NText from "../components/text/text.svelte";
   import NInput from "../components/input/input.svelte";
   import NItem from "../components/list-item/list-item.svelte";
-  import NTrackerButton from "../containers/board/tracker-button.svelte";
-  import NBall from "../components/tracker-ball/ball.svelte";
   import NBackButton from "../components/back-button/back-button.svelte";
 
   import NSortableList from "../components/sortable-list/sortable-list.svelte";
@@ -32,6 +30,7 @@
   import { Interact } from "../store/interact";
   import { Lang } from "../store/lang";
   import Button from "../components/button/button.svelte";
+  import Avatar from "../components/avatar/avatar.svelte";
 
   const console = new Logger("🎲 Board Editor");
   let trackers = [];
@@ -246,7 +245,7 @@
             <NItem className="py-2 bottom-line">
               <div slot="left" class="menu-handle">
                 <NIcon className="fill-inverse mr-2" name="menu" />
-                <NBall className="frame" emoji={item.emoji} size={40} />
+                <Avatar emoji={item.emoji} size={40} />
               </div>
               {item.label}
               <div slot="right" class="n-row">
