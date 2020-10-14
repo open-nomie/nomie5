@@ -44,12 +44,12 @@
   }
 
   async function send() {
-    await Interact.alert(
-      "Sending a Language File",
-      `First, I'm going to download a file. Then I'll open up your email client to send that file to me.`
-    );
+    Interact.toast("Downloading...");
     await download.json(`${activeLang.name}.lang.json`, activeLang);
-    window.open(`mailto:support@happydata.org?subject=New Language File`, "_system");
+    let confirmed = await Interact.confirm("Compose Email to Brandon", `Shall I open an email to Brandon so you can send the file?`);
+    if (confirmed) {
+      window.open(`mailto:support@happydata.org?subject=New Language File&body=Attach downloaded file`, "_system");
+    }
   }
 
   onMount(main);
@@ -95,11 +95,11 @@
           {#each Object.keys(baseLang.translation[parentId]) as key}
             <Input
               compact
+              className="mb-2"
               rows={4}
               type={(baseLang.translation[parentId][key] || '').length > 20 ? 'textarea' : 'text'}
               placeholder={`${key}: ${baseLang.translation[parentId][key]}`}
               bind:value={activeLang.translation[parentId][key]} />
-            <hr class="divider" />
           {/each}
         </Card>
       {/each}

@@ -42,24 +42,24 @@
     <Card title="Avatar" pad>
 
       <Row className="mb-3">
-        <Avatar label="Brandon Corbin" size="lg" />
-        <Avatar label="Brandon Corbin" size="md" />
-        <Avatar label="Brandon Corbin" size="sm" />
-        <Avatar label="Brandon Corbin" size="xs" />
+        <Avatar label="Brandon Corbin" size={70} />
+        <Avatar label="Brandon Corbin" size={32} />
+        <Avatar label="Brandon Corbin" size={24} />
+        <Avatar label="Brandon Corbin" size={16} />
       </Row>
 
       <Row className="mb-3">
-        <Avatar emoji="🥳" size="lg" />
-        <Avatar emoji="🥳" size="md" />
-        <Avatar emoji="🥳" size="sm" />
-        <Avatar emoji="🥳" size="xs" />
+        <Avatar emoji="🥳" size={70} />
+        <Avatar emoji="🥳" size={32} />
+        <Avatar emoji="🥳" size={24} />
+        <Avatar emoji="🥳" size={16} />
       </Row>
 
       <Row>
-        <Avatar src="https://placehold.it/60x60" size="lg" />
-        <Avatar src="https://placehold.it/60x60" size="md" />
-        <Avatar src="https://placehold.it/60x60" size="sm" />
-        <Avatar src="https://placehold.it/60x60" size="xs" />
+        <Avatar src="https://placehold.it/60x60" size={70} />
+        <Avatar src="https://placehold.it/60x60" size={32} />
+        <Avatar src="https://placehold.it/60x60" size={24} />
+        <Avatar src="https://placehold.it/60x60" size={16} />
       </Row>
 
     </Card>

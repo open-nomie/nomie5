@@ -5,6 +5,7 @@ export default {
   "general": {
     "error": "Error",
     "faq": "FAQ",
+    "latest": "Latest",
     "browse-files": "Browse Files...",
     "type": "Finding old data",
     "trackers": "Trackers",
@@ -23,7 +24,7 @@ export default {
     "select-date": "Select Date",
     "all-trackers": "All Trackers",
     "start": "Start",
-    "end": null,
+    "end": "End",
     "beta": "Beta",
     "edit": "Edit",
     "done": "Done",
@@ -49,10 +50,13 @@ export default {
     "people": "People",
     "delete": "Delete",
     "no-favorites-found": "No Favorites Found",
+    "edit-log": "Edit Record",
+    "positivity": "Positivity",
     "note": "Note",
     "score": "Score",
     "where": "Where",
     "when": "When",
+    "finished": "Finished",
     "setup": "Setup",
     "style": "Style",
     "more": "More",
@@ -71,8 +75,7 @@ export default {
     "search": null,
     "save-list-edits": "Save List Edits",
     "whats-up": null,
-    "location": "Location",
-    "set-date": "Set Date"
+    "location": "Location"
   },
   "storage": {
     "local_title": "This Device Only",
@@ -89,6 +92,11 @@ export default {
     "tab-tweaks": "Tweaks",
     "tab-data": "Data",
     "tab-about": "About",
+    "patron-official": "Official Nomie Patron",
+    "become-a-patron": "Become a Patron",
+    "patron-description": "Starting at $2/mon for early features, exclusive content, and support.",
+    "patron-unlock": "Unlock",
+    "patron-join-now": "Join Now",
     "import-data": "Import Data",
     "nomie-api": "Nomie API",
     "import-from-backup": "Import from Backup",
@@ -96,6 +104,9 @@ export default {
     "export-data": "Export Data",
     "generate-backup": "Generate Backup",
     "generate-csv": "Generate CSV",
+    "miscellaneous": "Miscellaneous",
+    "force-last-used-update": "Force Update Tracker Last-Used",
+    "translate-nomie": "Help Translate Nomie",
     "join-the-community": "Join the Community",
     "redo-setup": "Redo Setup",
     "become-a-patron-message": "Patrons help me keep Nomie moving forward with no ads, private, and open.",
@@ -215,11 +226,18 @@ export default {
   "search": {
     "no-results": "No results found"
   },
+  "location": {
+    "saved-locations": "Saved Locations",
+    "unable-to-get-your-location": "Unable to get your location",
+    "use-current-location": "Use Current Location",
+    "locating": "Locating..."
+  },
   "locations": {
     "pick-a-location": "Pick a Location"
   },
-  "location": {
-    "saved-locations": "Saved Locations"
+  "import": {
+    "import-all": "Import All",
+    "import": "Import"
   },
   "dashboard": {
     "select-a-widget": "Select a Widget",
