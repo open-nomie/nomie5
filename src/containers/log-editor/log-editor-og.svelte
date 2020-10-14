@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   // Utils
   import Logger from "../../utils/log/log";
   import time from "../../utils/time/time";
@@ -29,17 +29,6 @@
   import Button from "../../components/button/button.svelte";
   import tick from "../../utils/tick/tick";
   import Icon from "../../components/icon/icon.svelte";
-  import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
-  import Text from "../../components/text/text.svelte";
-  import List from "../../components/list/list.svelte";
-  import Input from "../../components/input/input.svelte";
-  import DatePicker from "../../components/date-picker/date-picker.svelte";
-  import Map from "../../containers/map/map.svelte";
-  import { fade } from "svelte/transition";
-  import type NLog from "../../modules/nomie-log/nomie-log";
-  import math from "../../utils/math/math";
-  import { Interact } from "../../store/interact";
-  import type Location from "../../modules/locate/Location";
 
   // Props
   export let log = undefined;
@@ -49,17 +38,11 @@
   const console = new Logger("log-editor.svelte");
   const dispatch = createEventDispatcher();
 
-  interface LogEditorState {
-    log: NLog | undefined;
-    saving: boolean;
-    mapReady: boolean;
-  }
-
   // Setup state
-  let state: LogEditorState = {
+  let state = {
+    view: "note",
     saving: false,
     mapReady: false,
-    log: undefined,
   };
 
   // Watch for Log
@@ -76,6 +59,9 @@
         state.log.note = `${state.log.note} `;
       }
       state.mapReady = true;
+    },
+    setView(view) {
+      state.view = view;
     },
     getLocations() {
       let locations = [];
@@ -95,16 +81,15 @@
     },
   };
 
-  let toggleMap = false;
-
   async function selectLocation() {
-    // let location = await Locations.selectLocation();
-    let _location: any = await Interact.pickLocation();
-    if (_location) {
-      let location: Location = _location;
+    let location = await Locations.selectLocation();
+    if (location) {
+      state.mapReady = false;
       state.log.lat = location.lat;
       state.log.lng = location.lng;
       state.log.location = location.name;
+      await tick(10);
+      state.mapReady = true;
     }
   }
 
@@ -117,7 +102,7 @@
   :global(.log-editor) {
     z-index: 1301 !important;
   }
-  :global(.log-editor .n-map-container) {
+  :global(.log-editor .view-port .n-map-container) {
     height: 300px;
   }
 
@@ -126,95 +111,65 @@
     width: 100vw;
     max-width: 320px;
   }
+
+  :global(.log-editor .n-modal) {
+    max-width: 300px;
+    width: 300px;
+  }
+
+  .view-port {
+    min-height: 200px;
+    textarea {
+      font-size: 1em;
+      height: 275px;
+    }
+
+    .center-content {
+      display: flex;
+      width: 100%;
+      flex-grow: 1;
+      flex-shrink: 1;
+      height: 100%;
+      align-items: center;
+      padding: 16px;
+      height: 200px;
+    }
+    .date-time {
+      min-height: 350px;
+      padding: 0px;
+    }
+  }
 </style>
 
 {#if state.log}
-  <NModal className="log-editor" fullscreen bodyClass="bg-bg">
-    <div slot="header" class="w-100">
-      <ToolbarGrid>
-        <div slot="left">
-          <Button
-            icon
-            className="tap-icon"
-            on:click={() => {
-              dispatch('close');
-            }}>
-            <Icon name="close" />
-          </Button>
-        </div>
-        <div slot="main">
-          <Text>{Lang.t('general.edit-log', 'Edit Record')}</Text>
-        </div>
-        <div slot="right">
-          <Button type="clear" on:click={methods.save}>{Lang.t('general.save', 'Save')}</Button>
-        </div>
-      </ToolbarGrid>
+  <NModal title="Log Options" className="log-editor">
+    <div slot="header" class="w-100 p-2">
+      <ButtonGroup
+        buttons={[{ label: Lang.t('general.note', 'Note'), active: state.view === 'note', click() {
+              methods.setView('note');
+            } }, { label: Lang.t('general.score', 'Score'), active: state.view === 'score', click() {
+              methods.setView('score');
+            } }, { label: Lang.t('general.where', 'Where'), active: state.view === 'where', click() {
+              methods.setView('where');
+            } }, { label: Lang.t('general.when', 'When'), active: state.view === 'when', click() {
+              methods.setView('when');
+            } }]} />
     </div>
 
-    <List transparent>
-      <ListItem title="Location" className={toggleMap ? 'mt-3' : 'my-3'} on:click={selectLocation}>
-        <div slot="right" class="n-row">
-          {#if state.log.lat}
-            <Text size="sm">{state.log.location || `${math.round(state.log.lat, 100)},${math.round(state.log.lng, 100)}`}</Text>
-          {:else}
-            <Text size="sm">{Lang.t('general.select', 'Select')}</Text>
-          {/if}
-          <Icon name="chevronDown" size="16" className="ml-2" />
-        </div>
-      </ListItem>
-      {#if toggleMap}
-        <ListItem className="mb-3 p-0">
-          <Map
-            height="250"
-            picker
-            locations={state.log.lat ? [{ lat: state.log.lat, lng: state.log.lng, name: state.log.location }] : []}
-            on:location={(location) => {
-              console.log('Map on:location', location);
-            }}
-            on:change={(event) => {
-              console.log('Map on:change', event.detail);
-              state.log.lat = event.detail.lat;
-              state.log.lng = event.detail.lng;
-              state.log.location = event.detail.name;
-            }} />
-        </ListItem>
-      {/if}
-      <ListItem className="my-3 py-0" title={Lang.t('general.end', 'End')}>
-        <div slot="right">
-          <DatePicker bind:time={state.log.end} />
-        </div>
-      </ListItem>
-      <ListItem title={Lang.t('general.positivity', 'Positivity')} className="my-3">
-        <div slot="right">
-          <NPositivitySelector
-            size="md"
-            score={state.log.score}
-            on:change={(evt) => {
-              state.log.score = evt.detail;
-            }} />
-        </div>
-      </ListItem>
-
-      <ListItem className="my-3">
-        <textarea class="form-control text-md" rows="5" bind:this={textarea} bind:value={state.log.note} />
-        <AutoComplete
-          scroller
-          input={state.log.note}
-          on:select={(evt) => {
-            state.log.note = evt.detail.note;
-            textarea.focus();
-            textarea.setSelectionRange(textarea.value.length, textarea.value.length);
-          }} />
-      </ListItem>
-
-    </List>
-
-    <!-- <div class="view-port">
-
-      <div class="p-2" />
-
+    <div class="view-port">
       {#if state.view == 'note'}
+        <div class="p-2">
+          <textarea class="form-control" bind:this={textarea} bind:value={state.log.note} />
+          <AutoComplete
+            scroller
+            input={state.log.note}
+            on:select={(evt) => {
+              state.log.note = evt.detail.note;
+              textarea.focus();
+              textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+            }} />
 
+        </div>
       {:else if state.view == 'where'}
         {#if state.log && state.mapReady}
           <div style="height:200px; max-height:200px; min-height:200px; overflow:hidden">
@@ -256,9 +211,24 @@
             }} />
         </div>
       {/if}
-    </div> -->
+    </div>
 
-    <div class="buttons n-row" slot="footer" />
+    <div class="buttons n-row" slot="footer">
+      {#if !state.saving}
+        <Button
+          size="lg"
+          className="w-50"
+          type="clear"
+          on:click={() => {
+            dispatch('close');
+          }}>
+          Cancel
+        </Button>
+        <Button size="lg" className="w-50" on:click={methods.save}>Save</Button>
+      {:else}
+        <Button size="lg" className="w-100" disabled>Saving...</Button>
+      {/if}
+    </div>
 
   </NModal>
 {/if}

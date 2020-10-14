@@ -6,6 +6,7 @@
   import Calendar from "../../components/calendar/calendar.svelte";
   import DateTime from "../../components/calendar/date-time";
   import Card from "../../components/card/card.svelte";
+import DatePicker from "../../components/date-picker/date-picker.svelte";
   import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
   import Icon from "../../components/icon/icon.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
@@ -14,6 +15,7 @@
   import Toolbar from "../../components/toolbar/toolbar.svelte";
   import Layout from "../../containers/layout/layout.svelte";
   import Streak from "../../containers/steak/streak.svelte";
+import { Device } from "../../store/device-store";
 
   let date = dayjs();
 </script>
@@ -23,7 +25,7 @@
   <header slot="header">
     <ToolbarGrid>
       <div slot="main">
-        <Text bold center>Nomie UI Test</Text>
+        <Text bold center>Nomie UI Test {$Device.platform}</Text>
       </div>
     </ToolbarGrid>
   </header>
@@ -35,13 +37,10 @@
 
     <Text size="lg" leading3>Date Time Bar</Text>
 
-    <DateTimeBar
-      opened
-      style="padding:0px;"
-      bind:date
-      on:change={(evt) => {
-        console.log('New Date', evt.detail.format('ddd MMM Do YYYY hh:mm a'));
-      }} />
+    <DatePicker date={dayjs()} className="mb-2" on:change={(evt)=>{
+      console.log("Date", evt.detail);  
+    }} />
+
 
     <hr class="divider center my-2" />
 

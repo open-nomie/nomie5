@@ -23,8 +23,19 @@
   .n-positivity-selector {
     border-radius: 20px;
   }
+
   :global(.n-positivity-selector .nbtn.active) {
     box-shadow: var(--box-shadow-float);
+  }
+  :global(.n-positivity-selector .nbtn.sm) {
+    font-size: 24px;
+  }
+  :global(.n-positivity-selector .nbtn.md) {
+    font-size: 30px;
+  }
+
+  :global(.n-positivity-selector .nbtn.lg) {
+    font-size: 36px;
   }
 </style>
 
@@ -34,11 +45,11 @@
       on:click={() => {
         onChange(posEmoji.score);
       }}
-      size="lg"
-      shape="round"
+      {size}
+      style="padding:0"
+      shape="circle"
       color="transparent"
-      className={score == posEmoji.score ? 'active' : 'inactive'}
-      style="font-size:32px">
+      className={score == posEmoji.score ? 'active' : 'inactive'}>
       {posEmoji.emoji}
     </Button>
   {/each}
