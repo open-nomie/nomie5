@@ -1,6 +1,6 @@
 <script>
   // svelte
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
 
   export let activeIndex = undefined;
   export let activeClass = "active";
@@ -14,6 +14,8 @@
   $: if (activeIndex && ready) {
     methods.selectIndex(activeIndex);
   }
+
+  let scrollUnsub;
 
   // Methods
   const methods = {
@@ -57,12 +59,14 @@
         let scrolledAmount = scroller.scrollLeft;
 
         setTimeout(() => {
-          if (childEnd > scroller.offsetWidth * 0.5) {
-            scroller.scrollTo(scrollTo, 0);
-          } else if (scrolledAmount > childEnd) {
-            scroller.scrollTo(scrollTo, 0);
+          if (scroller) {
+            if (childEnd > scroller.offsetWidth * 0.5) {
+              scroller.scrollTo(scrollTo, 0);
+            } else if (scrolledAmount > childEnd) {
+              scroller.scrollTo(scrollTo, 0);
+            }
+            child.classList.add(activeClass);
           }
-          child.classList.add(activeClass);
         }, 60);
       } catch (e) {}
       ready = true;
@@ -73,6 +77,12 @@
     setTimeout(() => {
       methods.init();
     }, 10);
+  });
+
+  onDestroy(() => {
+    if (scroller) {
+      scroller.removeEventListener("scroll", () => {});
+    }
   });
 </script>
 
