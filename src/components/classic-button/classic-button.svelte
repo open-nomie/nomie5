@@ -140,21 +140,5 @@
     <Text className="ball-label truncate-2">{tracker.label}</Text>
   </button>
 
-  <!-- <TrackerBall {id} {tracker} score={value} {positivity}>
-    {#if tracker.started}
-      <div class="center countdown">
-        <Counter started={tracker.started} filled />
-      </div>
-    {/if}
-    {#if hoursUsed.length}
-      <div class="balls">
-        <TimeBalls hours={hoursUsed} />
-      </div>
-    {/if}
-    {#if tracker.one_tap}
-      <div class="one-tap" />
-    {/if}
-  </TrackerBall> -->
-
 </div>
 <!-- last.log.end -->

@@ -80,7 +80,7 @@
 
 <style lang="scss">
   @import "../../scss/utils/_utils";
-  $height: 54px;
+  $height: 42px;
 
   :global(.n-input-container.list-item div.n-input label) {
     left: 20px !important;
@@ -235,7 +235,8 @@
         }
       }
 
-      textarea, input {
+      textarea,
+      input {
         border: none;
       }
 
@@ -363,21 +364,21 @@
           on:focus={focus}
           on:blur={blur} />
       {:else if type == 'datetime-local'}
-          <input
-            bind:this={_elInput}
-            {disabled}
-            {inputmode}
-            type="datetime-local"
-            style={inputStyle}
-            class={inputClass}
-            bind:value
-            {autocomplete}
-            {autocorrect}
-            {autocapitalize}
-            {placeholder}
-            on:input={change}
-            on:focus={focus}
-            on:blur={blur} />
+        <input
+          bind:this={_elInput}
+          {disabled}
+          {inputmode}
+          type="datetime-local"
+          style={inputStyle}
+          class={inputClass}
+          bind:value
+          {autocomplete}
+          {autocorrect}
+          {autocapitalize}
+          {placeholder}
+          on:input={change}
+          on:focus={focus}
+          on:blur={blur} />
       {:else if type == 'number'}
         <input
           bind:this={_elInput}

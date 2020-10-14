@@ -77,9 +77,10 @@
   }
   :global(.search-bar input) {
     width: calc(100% - 30px); // account for icon pushing it out.
+    font-size: 100%;
   }
   :global(.search-bar .n-input-wrapper) {
-    min-height: 40px !important;
+    // min-height: 40px !important;
   }
   :global(.search-bar .n-input-container) {
     margin-bottom: 0 !important;
