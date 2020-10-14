@@ -19,6 +19,8 @@
   import arrayUtils from "../../utils/array/array_utils";
   import dayjs from "dayjs";
   import TrackerConfig from "../../modules/tracker/tracker";
+  import Button from "../../components/button/button.svelte";
+  import ListItemLog from "../../components/list-item-log/list-item-log.svelte";
 
   const state = {
     notes: [],
@@ -116,21 +118,21 @@
   <NModal show={showWindow} type="bottom-slideup" bodyClass="bg-solid-1" ariaLabel="On this day">
     <header slot="header" class="w-100">
       <div class="n-toolbar-grid">
-        <button class="btn btn-clear btn-icon tap-icon left" on:click={Interact.closeOnThisDay}>
+        <Button icon className="tap-icon left" on:click={Interact.closeOnThisDay}>
           <NIcon name="close" />
-        </button>
+        </Button>
         <div class="main">
           <Text>{dayjs($Interact.onThisDay).format('ddd MMM D, YYYY')}</Text>
           <Text className="text-faded-3" size="sm">{dayjs($Interact.onThisDay).fromNow()}</Text>
         </div>
         <div class="right">
           <div class="n-row">
-            <button class="btn btn-clear btn-icon tap-icon px-1" on:click={previousDay}>
+            <Button className="tap-icon px-1" on:click={previousDay}>
               <NIcon name="chevronLeft" />
-            </button>
-            <button class="btn btn-clear btn-icon tap-icon px-1" on:click={nextDay}>
+            </Button>
+            <Button className="tap-icon px-1" on:click={nextDay}>
               <NIcon name="chevronRight" />
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -138,7 +140,7 @@
 
         {#each state.trackers as tracker (tracker.tag)}
           <TrackerSmallBlock
-            style="min-width:140px;"
+            style="min-width:140px; padding:4px;"
             solo
             element={{ id: tracker.tag, value: tracker.value, type: 'tracker', obj: tracker.tracker }}
             on:click={() => {}} />
@@ -149,10 +151,11 @@
     {#if !loading}
       <section class="bg-solid-2">
         {#each state.notes as note}
-          <Card className="p-3">
+          <ListItemLog log={note} />
+          <!-- <Card className="p-3">
             <Text size="xs" className="mb-2 text-faded-2">{dayjs(note.end).format(UserStore.getTimeFormat())}</Text>
             <NoteTextualizer note={note.note} />
-          </Card>
+          </Card> -->
         {/each}
       </section>
     {/if}
