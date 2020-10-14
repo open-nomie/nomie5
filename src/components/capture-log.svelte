@@ -21,7 +21,7 @@
   import NPoints from "../components/points/points.svelte";
   import Button from "../components/button/button.svelte";
   import dayjs from "dayjs";
-  import type { OpUnitType } from "dayjs";
+  import type { OpUnitType, Dayjs } from "dayjs";
 
   import domtoimage from "dom-to-image-chrome-fix";
   import Dymoji from "../components/dymoji/dymoji.svelte";
@@ -49,6 +49,7 @@
   import Text from "./text/text.svelte";
   import PositivityMenu from "./positivity-selector/positivity-menu.svelte";
   import Icon from "../components/icon/icon.svelte";
+  import DatePicker from "./date-picker/date-picker.svelte";
 
   // Consts
   const console = new Logger("capture-log");
@@ -58,6 +59,7 @@
   let iOSFileInput;
   let saving = false;
   let saved = false;
+  // let activeLogDayjs: Dayjs;
 
   $: if ($LedgerStore.saving) {
     saving = true;
@@ -69,7 +71,7 @@
     date: null,
     dateStarter: dayjs().format("YYYY-MM-DDTHH:mm"),
     score: 0,
-    showCustomDate: false,
+    // showCustomDate: false,
     autocompleteResults: null,
     cursorIndex: null,
     partialTag: null,
@@ -82,21 +84,25 @@
   }
 
   $: if ($ActiveLogStore.end) {
+    console.log("ActiveLogStore.end", $ActiveLogStore);
     let timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
     let dateFormat = $UserStore.meta.is24Hour ? "MM/DD/YYYY" : "MMM D YYYY";
     state.dateFormated = dayjs($ActiveLogStore.end).format(`${dateFormat} ${timeFormat}`);
+    // activeLogDayjs = dayjs($ActiveLogStore.end);
   }
 
   const methods = {
     dateAdd(count: number, unit: OpUnitType) {
       let newDate = dayjs($ActiveLogStore.end || new Date()).add(count, unit);
+      // activeLogDayjs = newDate;
       $ActiveLogStore.end = newDate.toDate().getTime();
     },
     clearDate() {
+      // await tick(200);
       state.date = null;
       $ActiveLogStore.start = null;
       $ActiveLogStore.end = null;
-      state.showCustomDate = false;
+      // state.showCustomDate = false;
     },
     clearLocation() {
       $ActiveLogStore.lat = null;
@@ -263,7 +269,6 @@
           state.autocompleteResults = null;
         }
       }
-      methods.checkTextareaSize();
     },
     clear() {
       ActiveLogStore.clear();
@@ -324,9 +329,6 @@
 
   .capture-log {
     padding: 10px;
-    // background-color: var(--header-background);
-    // backdrop-filter: saturate(180%) blur(20px);
-    // border-top: solid 1px var(--header-background);
     padding-bottom: 0;
     position: relative;
     z-index: 1;
@@ -338,6 +340,10 @@
     margin-top: 10px;
     padding-top: 1px;
     padding-bottom: 10px;
+  }
+
+  :global(.mask-textarea .save-button, .mask-textarea .more-button) {
+    margin-bottom: 6px;
   }
 
   .save-progress {
@@ -366,11 +372,9 @@
     }
   }
 
-  .save-button {
-  }
   .mask-textarea {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     min-height: 40px;
     max-height: 200px;
     border-radius: 20px;
@@ -436,7 +440,12 @@
         }} />
       <!-- Note Input -->
       <div class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 ? 'populated' : 'empty'}">
-        <Button size="sm" shape="circle" color={state.advanced ? 'primary' : 'light'} className="ml-1" on:click={toggleAdvanced}>
+        <Button
+          size="sm"
+          shape="circle"
+          color={state.advanced ? 'primary' : 'light'}
+          className="ml-1 more-button"
+          on:click={toggleAdvanced}>
           {#if state.advanced}
             <NIcon name="more" className="fill-white" />
           {:else}
@@ -450,11 +459,13 @@
           disabled={saving || saved}
           bind:value={$ActiveLogStore.note}
           bind:this={textarea}
+          on:input={methods.checkTextareaSize}
           placeholder={Lang.t('general.whats-up')}
           on:keydown={methods.keyPress}
           on:paste={methods.keyPress} />
 
         <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} className="mr-2" />
+
         {#if $LedgerStore.saving}
           <Button className="save-button mr-2" shape="circle" color="success" size="sm">
             <NSpinner size={20} color="#FFFFFF" />
@@ -470,16 +481,6 @@
   {#if state.advanced}
     <div class="advanced">
       <div class="container">
-        <!-- Score -->
-        <!-- <NItem truncate compact className="mr-2 solo text-sm p-0">
-          <NPositivitySelector
-            size="xl"
-            score={$ActiveLogStore.score}
-            on:change={(evt) => {
-              $ActiveLogStore.score = evt.detail;
-            }} />
-        </NItem> -->
-        <!-- Location -->
         <NItem truncate clickable className="mr-2 solo text-sm" on:click={methods.toggleCustomLocation}>
           <div slot="left" class="text-sm text-bold">
             <NIcon name="pin" className="mr-2 fill-inverse-2" size="16" />
@@ -503,67 +504,50 @@
         </NItem>
         <!-- Date / Time -->
 
-        <NItem solo className="p-0" style="overflow:hidden">
-          <DateTimeBar
+        <NItem solo className="p-0 pr-1" style="overflow:hidden">
+          <DatePicker bind:time={$ActiveLogStore.end} />
+          <div slot="left" class="pl-2">
+            <Button
+              ariaLabel="Previous Day"
+              size="xs"
+              color="transparent"
+              className="px-1 previous-day-action"
+              delay={0}
+              on:click={() => {
+                methods.dateAdd(-1, 'day');
+              }}>
+              <Icon name="chevronLeft" size="14" />
+            </Button>
+            <Button
+              ariaLabel="Next Day"
+              size="xs"
+              color="transparent"
+              className="px-1 next-day-action"
+              delay={0}
+              on:click={() => {
+                methods.dateAdd(1, 'day');
+              }}>
+              <Icon name="chevronRight" size="14" />
+            </Button>
+          </div>
+          <div slot="right">
+            {#if $ActiveLogStore.end}
+              <Button className="mr-2" icon on:click={methods.clearDate} ariaLabel="Close Advanced">
+                <NIcon name="close" className="fill-inverse" size="22" />
+              </Button>
+            {/if}
+          </div>
+
+          <!-- <DateTimeBar
             date={$ActiveLogStore.end}
             calendarClass="px-2 mb-1"
             on:change={(evt) => {
               $ActiveLogStore.end = dayjs(evt.detail).toDate().getTime();
             }}>
-            <div slot="left">
-              <Button
-                size="xs"
-                color="transparent"
-                className="px-1"
-                delay={0}
-                on:click={() => {
-                  methods.dateAdd(-1, 'day');
-                }}>
-                <Icon name="chevronLeft" size="14" />
-              </Button>
-              <Button
-                size="xs"
-                color="transparent"
-                className="px-1"
-                delay={0}
-                on:click={() => {
-                  methods.dateAdd(1, 'day');
-                }}>
-                <Icon name="chevronRight" size="14" />
-              </Button>
-            </div>
-            <div slot="right">
-              {#if $ActiveLogStore.end}
-                <button class="btn btn-icon mr-2" on:click|stopPropagation={methods.clearDate}>
-                  <NIcon name="close" className="fill-inverse" size="22" />
-                </button>
-              {/if}
-            </div>
-          </DateTimeBar>
+            
+          </DateTimeBar> -->
         </NItem>
 
-        <!-- <NItem compact truncate className="bg-transparent mt-1 mb-2 mr-2 solo text-sm" on:click={methods.selectDate}>
-          
-          <div slot="left" class="text-sm text-bold">
-            <NIcon name="time" className="mr-2 fill-primary-bright" size="16" />
-          </div>
-          <div>
-            {#if !$ActiveLogStore.end}
-              {Lang.t('general.set-date', 'Set Date')}
-            {:else}
-              <strong>{state.dateFormated}</strong>
-            {/if}
-          </div>
-          <div slot="right" class="n-row">
-            {#if $ActiveLogStore.end}
-              <button class="btn btn-clear btn-icon" on:click|stopPropagation={methods.clearDate}>
-                <NIcon name="close" className="fill-red" size="22" />
-              </button>
-            {:else}
-              <label class="text-sm text-faded-3">Now</label>
-            {/if}
-          </div>
-        </NItem> -->
       </div>
     </div>
   {/if}
