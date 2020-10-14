@@ -120,7 +120,7 @@
         title: loc.name,
         click: () => {
           methods.setLocation(loc);
-          console.log("Firing location", loc.name);
+         
           dispatch("change", loc);
         },
       };

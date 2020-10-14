@@ -61,7 +61,6 @@ const DeviceStoreInit = () => {
       window.open(url, "_system");
     },
     is(regex: string | RegExp) {
-      console.log("Is it", regex);
       if (typeof regex === "string") {
         regex = new RegExp(regex, "gi");
       }

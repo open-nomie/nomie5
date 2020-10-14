@@ -97,7 +97,7 @@
     },
     async tryPatronPin() {
       let pin = await Interact.inputPin("Patron Key", true);
-      console.log({ pin });
+
       if (pin === appConfig.patron_pin) {
         methods.unlockFeatures();
       } else {
@@ -489,7 +489,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               <NItem title={Lang.t('general.pwa', 'PWA')}>
                 <span slot="right">{$Device.pwa}</span>
               </NItem>
-              <NItem title={"PWA"}>
+              <NItem title={'PWA'}>
                 <span slot="right">{$Device.pwa}</span>
               </NItem>
               <NItem title="UI Test" to="/test" />

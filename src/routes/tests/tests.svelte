@@ -82,12 +82,7 @@
 
     <Text size="lg" leading3>Date Time Bar</Text>
 
-    <DatePicker
-      date={dayjs()}
-      className="mb-2"
-      on:change={(evt) => {
-        console.log('Date', evt.detail);
-      }} />
+    <DatePicker date={dayjs()} className="mb-2" on:change={(evt) => {}} />
 
     <hr class="divider center my-2" />
 

@@ -218,10 +218,6 @@ const ledgerInit = () => {
      * @param {Date} previousEndDate
      */
     async updateLog(log: NLog, previousEndDate?) {
-      console.log("Update Log", {
-        log,
-        previousEndDate,
-      });
       // Fire hooks
       methods.hooks.run("onBeforeUpdate", log);
       // Set saving

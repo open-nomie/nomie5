@@ -84,7 +84,6 @@
   }
 
   $: if ($ActiveLogStore.end) {
-    console.log("ActiveLogStore.end", $ActiveLogStore);
     let timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
     let dateFormat = $UserStore.meta.is24Hour ? "MM/DD/YYYY" : "MMM D YYYY";
     state.dateFormated = dayjs($ActiveLogStore.end).format(`${dateFormat} ${timeFormat}`);

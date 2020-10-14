@@ -229,11 +229,9 @@ export default {
   "location": {
     "saved-locations": "Saved Locations",
     "unable-to-get-your-location": "Unable to get your location",
+    "pick-a-location": "Pick a Location",
     "use-current-location": "Use Current Location",
     "locating": "Locating..."
-  },
-  "locations": {
-    "pick-a-location": "Pick a Location"
   },
   "import": {
     "import-all": "Import All",

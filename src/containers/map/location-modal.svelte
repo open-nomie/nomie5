@@ -180,7 +180,7 @@
           {state.active.name}
         {:else if state.mapLocation}
           {state.mapLocation.lat},{state.mapLocation.lng}
-        {:else}{Lang.t('locations.pick-a-location', 'Pick a Location')}{/if}
+        {:else}{Lang.t('location.pick-a-location', 'Pick a Location')}{/if}
       </div>
     </main>
     <div class="right n-row">

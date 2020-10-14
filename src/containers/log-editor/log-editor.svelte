@@ -168,11 +168,7 @@
             height="250"
             picker
             locations={state.log.lat ? [{ lat: state.log.lat, lng: state.log.lng, name: state.log.location }] : []}
-            on:location={(location) => {
-              console.log('Map on:location', location);
-            }}
             on:change={(event) => {
-              console.log('Map on:change', event.detail);
               state.log.lat = event.detail.lat;
               state.log.lng = event.detail.lng;
               state.log.location = event.detail.name;
