@@ -45,7 +45,7 @@
   color: var(--color-solid);
 }
 .bg-solid {
-  background-color: var(--color-solid);
+  background-color: var(--color-solid) !important;
 }
 
 .bg-red {

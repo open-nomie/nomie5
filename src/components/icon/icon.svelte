@@ -58,6 +58,9 @@
     Annotation,
     Beaker,
     Bell,
+    LockClosed,
+    ArrowRight,
+    Cake,
   } from "svelte-hero-icons";
 
   export let name = "add";
@@ -69,14 +72,17 @@
   const icons = {
     add: Plus,
     bell: Bell,
+    lock: LockClosed,
     annotation: Annotation,
     beaker: Beaker,
     addOutline: PlusCircle,
     arrowBack: ArrowLeft,
+    arrowRight: ArrowRight,
     arrowUp: ArrowUp,
     arrowsLeftRight: SwitchHorizontal,
     calendar: Calendar,
     chart: ChartBar,
+    cake: Cake,
     checkmark: Check,
     checkmarkFilled: CheckCircle,
     checkmarkOutline: CheckCircle,

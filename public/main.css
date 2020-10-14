@@ -4802,7 +4802,7 @@ body.theme-dark {
   color: var(--color-solid); }
 
 .bg-solid {
-  background-color: var(--color-solid); }
+  background-color: var(--color-solid) !important; }
 
 .bg-red {
   background-color: var(--color-red) !important; }
@@ -6056,6 +6056,8 @@ body.scrolling .mini-map {
   background-color: var(--color-solid);
   margin-bottom: 16px;
   overflow: hidden; }
+  .n-list.transparent, .n-list[transparent] {
+    background-color: transparent; }
   .n-list.solo,
   .n-list [solo] {
     width: calc(100% - 16px);

@@ -119,10 +119,10 @@
             {/if}
           </div>
         </NItem>
-        <NItem title={Lang.t('general.start')}>
+        <NItem title={Lang.t('general.start', 'Start')}>
           <input type="date" class="form-control" bind:value={state.start} slot="right" />
         </NItem>
-        <NItem title={Lang.t('general.end')}>
+        <NItem title={Lang.t('general.end', 'End')}>
           <input type="date" class="form-control" bind:value={state.end} slot="right" />
         </NItem>
       </div>

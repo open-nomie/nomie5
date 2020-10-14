@@ -321,6 +321,10 @@
 
 .n-list {
   background-color: var(--color-solid);
+  &.transparent,
+  &[transparent] {
+    background-color: transparent;
+  }
   &.solo,
   [solo] {
     width: calc(100% - 16px);

@@ -47,6 +47,8 @@
 
   import { LastUsed } from "../store/last-used";
   import { AppStore } from "../store/app-store";
+  import ListItem from "../components/list-item/list-item.svelte";
+  import Spacer from "../components/spacer/spacer.svelte";
 
   export const location = undefined;
   export const style = undefined;
@@ -94,7 +96,7 @@
       return true;
     },
     async tryPatronPin() {
-      let pin = await Interact.inputPin("Patron Key");
+      let pin = await Interact.inputPin("Patron Key", true);
       console.log({ pin });
       if (pin === appConfig.patron_pin) {
         methods.unlockFeatures();
@@ -280,6 +282,52 @@ Note: Your data will not automatically move over. You'll first need to export it
     {#if $UserStore.meta}
       <div class="page page-settings">
         <div class="container p-0">
+
+          {#if $UserStore.meta.hiddenFeatures}
+            <ListItem className="mb-3" href={appConfig.patreonHome} detail compact>
+              <div slot="left">
+                <Icon name="cake" className="fill-primary-bright" size="28" />
+              </div>
+              <Text bold>{Lang.t('settings.patron-official', 'Official Nomie Patron')}</Text>
+              <div slot="right">
+                <Text size="sm">{Lang.t('general.latest', 'Latest')}</Text>
+              </div>
+            </ListItem>
+          {:else}
+            <ListItem compact>
+              <div slot="left" style="font-size:28px">🎁</div>
+              <Text bold>{Lang.t('settings.become-a-patron', 'Become a Patron')}</Text>
+              <Text size="sm" leading2 faded>
+                {Lang.t('settings.patron-description', 'Starting at $2/mon for early features, exclusive content, and support.')}
+              </Text>
+              <div slot="right" />
+            </ListItem>
+            <ListItem className="mb-3 pt-0" compact>
+              <div class="n-row">
+                <Spacer />
+                <Button
+                  areaLabel="Unlock"
+                  text
+                  size="sm"
+                  on:click={() => {
+                    methods.tryPatronPin(true);
+                  }}>
+                  {Lang.t('settings.patron-unlock', 'Unlock')}
+                </Button>
+                <Button
+                  ariaLabel="Join Now"
+                  text
+                  size="sm"
+                  click={() => {
+                    Device.open(appConfig.patreon);
+                  }}>
+                  {Lang.t('settings.patron-join-now', 'Join Now')}
+                </Button>
+                <Spacer />
+              </div>
+            </ListItem>
+          {/if}
+
           {#if view == 'features'}
             <Features />
           {:else if view == 'tweaks'}
@@ -441,6 +489,10 @@ Note: Your data will not automatically move over. You'll first need to export it
               <NItem title={Lang.t('general.pwa', 'PWA')}>
                 <span slot="right">{$Device.pwa}</span>
               </NItem>
+              <NItem title={"PWA"}>
+                <span slot="right">{$Device.pwa}</span>
+              </NItem>
+              <NItem title="UI Test" to="/test" />
             </div>
 
             <NItem itemDivider>Version</NItem>
@@ -459,7 +511,7 @@ Note: Your data will not automatically move over. You'll first need to export it
           {/if}
           <!-- END Views -->
 
-          <div class="n-list my-3">
+          <!-- <div class="n-list my-3">
             <NItem title={Lang.t('general.patron_only_features', 'Patron Only Features')}>
               <Text size="xs" faded leading2 className="mt-1">
                 {Lang.t('settings.become-a-patron-message', 'Patrons help me keep Nomie moving forward with no ads, private, and open.')}
@@ -488,11 +540,11 @@ Note: Your data will not automatically move over. You'll first need to export it
               }}>
               <Text size="xs" color="primary-bright" className="mt-1">
                 {#if $UserStore.meta.hiddenFeatures}
-                  🥳 Hey Patron! Check out the latest posts
+                  🥳 &nbsp; Hey Patron! Check out the latest posts
                 {:else}{Lang.t('general.become-a-patron', 'Not a Patron?')} Join today for as low as $2{/if}
               </Text>
             </NItem>
-          </div>
+          </div> -->
 
           <NItem title={Lang.t('general.questions', 'Questions?')}>
             <div slot="right">
