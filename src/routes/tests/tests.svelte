@@ -9,7 +9,9 @@
   import Card from "../../components/card/card.svelte";
   import DatePicker from "../../components/date-picker/date-picker.svelte";
   import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
+  import Divider from "../../components/divider/divider.svelte";
   import Icon from "../../components/icon/icon.svelte";
+  import Input from "../../components/input/input.svelte";
   import PositivityBar from "../../components/positivity-bar/positivity-bar.svelte";
   import PositivitySelector from "../../components/positivity-selector/positivity-selector.svelte";
   import Row from "../../components/row/row.svelte";
@@ -17,6 +19,7 @@
   import Text from "../../components/text/text.svelte";
   import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import Toolbar from "../../components/toolbar/toolbar.svelte";
+  import Empty from "../../containers/empty/empty.svelte";
   import Layout from "../../containers/layout/layout.svelte";
   import Streak from "../../containers/steak/streak.svelte";
   import { Device } from "../../store/device-store";
@@ -36,6 +39,24 @@
 
   <div class="p-4">
     <Text size="sm" faded>A set of base components for quick testing... I should be using Storybook, but have yet to do so.</Text>
+
+    <hr class="divider center my-2" />
+
+    <Card title="Empty" pad className="mb-3">
+      <Input type="text" placeholder="My Label" value="Normal" />
+      <Input type="text" solo placeholder="My Label" value="Solo" />
+    </Card>
+    <Card title="List Item Inputs" className="mb-3">
+      <Input type="text" listItem placeholder="My Label" value="List Item" />
+      <Divider inset />
+      <Input type="text" listItem placeholder="Phone Number" value="444-444-4444" />
+      <Divider inset />
+      <Input type="textarea" rows={4} listItem placeholder="My Label" value="List Item" />
+    </Card>
+
+    <Card title="Empty" pad>
+      <Empty title="Nothing Found" description="You could do something else" emoji="😂" />
+    </Card>
 
     <hr class="divider center my-2" />
 

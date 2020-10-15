@@ -44,6 +44,7 @@
   import Empty from "../containers/empty/empty.svelte";
   import type { t } from "i18next";
   import List from "../components/list/list.svelte";
+  import Divider from "../components/divider/divider.svelte";
 
   let NAPI = new NomieAPICli({ domain: "nomieapi.com/.netlify/functions" });
 
@@ -68,9 +69,9 @@
     state.apiExample = JSON.stringify({ note: "#mood(4)", api_key: state.apiKey }, null, 2);
   }
 
-  function copy(key) {
+  function copy(key, message?: string) {
     clipboard(key);
-    Interact.toast("Copied");
+    Interact.toast(message || "Copied");
   }
 
   async function installAPI() {
@@ -316,24 +317,26 @@
     {:else}
       <!-- We're In the Settings Tab
         -->
-      <NItem
-        title={Lang.t('nomie-api.auto-accept', 'Auto Accept')}
-        className="py-2 mb-3"
-        description={Lang.t('nomie-api.auto-import-description', 'Auto import API logs when Nomie launches')}>
-        <div slot="right">
-          <NToggle
-            bind:value={autoImportAPI}
-            on:change={(event) => {
-              if (autoImportAPI === true) {
-                NomieAPI.disableAutoImport();
-              } else {
-                NomieAPI.enableAutoImport();
-              }
-            }} />
-        </div>
-      </NItem>
+      <List>
+        <NItem
+          title={Lang.t('nomie-api.auto-accept', 'Auto Accept')}
+          className="py-2"
+          description={Lang.t('nomie-api.auto-import-description', 'Auto import API logs when Nomie launches')}>
+          <div slot="right">
+            <NToggle
+              bind:value={autoImportAPI}
+              on:change={(event) => {
+                if (autoImportAPI === true) {
+                  NomieAPI.disableAutoImport();
+                } else {
+                  NomieAPI.enableAutoImport();
+                }
+              }} />
+          </div>
+        </NItem>
+      </List>
 
-      <div class="n-list mb-3">
+      <List className="mb-3">
         <NItem className="">
           <NInput label={Lang.t('nomie-api.api-key', 'API Key')} bind:value={state.apiKey}>
             <div slot="right">
@@ -342,7 +345,7 @@
                 color="transparent"
                 shape="circle"
                 on:click={() => {
-                  copy(state.apiKey);
+                  copy(state.apiKey, `${Lang.t('nomie-api.api-key-copied', 'API Key Copied')}`);
                 }}>
                 <NIcon name="copy" size="24" className="fill-primary-bright" />
               </Button>
@@ -352,6 +355,7 @@
           <input type="text" class="form-control mt-1" value={state.apiKey} />
         </div> -->
         </NItem>
+        <Divider inset />
         <NItem
           delay={0}
           clickable
@@ -364,35 +368,28 @@
         </NItem>
         {#if state.showPrivateKey}
           <List className="px-3">
-            <NInput solo type="textarea" rows={5} inputStyle="font-size:12px;" value={state.privateKey}>
+            <NInput
+              label={Lang.t('nomie-api.private-key')}
+              listItem
+              type="textarea"
+              rows={5}
+              inputStyle="font-size:12px;"
+              value={state.privateKey}>
               <div slot="right">
                 <Button
                   icon
                   on:click={() => {
-                    copy(state.privateKey);
+                    copy(state.privateKey, `${Lang.t('nomie-api.private-key-copied', 'Private Key Copied')}`);
                   }}>
                   <NIcon size="16" name="copy" className="fill-primary-bright" />
                 </Button>
               </div>
             </NInput>
           </List>
-          <!-- <NItem className="px-3 pb-3">
-            <div>
-              <textarea type="text" class="form-control text-sm mt-1" style="min-height:100px;" value={state.privateKey} />
-              <div
-                class="p-2 text-center text-primary-bright text-sm"
-                on:click={() => {
-                  copy(state.privateKey);
-                }}>
-                <NIcon name="copy" size={20} className="fill-primary-bright mr-2" />
-                {Lang.t('general.copy')}
-              </div>
-            </div>
-          </NItem> -->
         {/if}
-      </div>
+      </List>
 
-      <div class="n-list mt-2 mb-2">
+      <List className="mt-2 mb-2">
         <NItem
           title={Lang.t('nomie-api.example-request', 'Example Request')}
           clickable
@@ -448,7 +445,7 @@
             <Text size="sm" faded>Source of the request (not currently displayed)</Text>
           </NItem>
         {/if}
-      </div>
+      </List>
 
       <div class="mt-4" />
       <NItem itemDivider>{Lang.t('settings.danger-zone')}</NItem>

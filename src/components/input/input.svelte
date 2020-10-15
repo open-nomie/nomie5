@@ -84,6 +84,10 @@
 
   :global(.n-input-container.list-item div.n-input label) {
     left: 20px !important;
+    top: 10px !important;
+  }
+  :global(.n-input-container.list-item .n-input-wrapper) {
+    border-radius: 0px !important;
   }
 
   .n-input-container {
@@ -111,9 +115,6 @@
       padding: 4px 12px;
       border-radius: 0;
       border: none;
-      .n-input-wrapper {
-        border-radius: 0;
-      }
     }
 
     .select-arrow {
@@ -173,7 +174,7 @@
     &.compact {
       .has-input {
         label {
-          transform: translateY(-6px) !important;
+          transform: translateY(-3px) !important;
           font-size: 0.7em;
         }
       }
@@ -240,6 +241,9 @@
         border: none;
       }
 
+      &.list-item {
+      }
+
       .n-input {
         // width: 100%;
         // min-width: 50px;
@@ -261,7 +265,7 @@
           pointer-events: none;
           font-size: 0.7em;
           position: absolute;
-          top: 10px;
+          top: 5px;
           left: 10px;
           margin: 0;
           padding: 0;
