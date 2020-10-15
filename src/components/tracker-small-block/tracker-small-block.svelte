@@ -38,13 +38,23 @@
   }
 </script>
 
+<style>
+  :global(.nbtn.tracker-small-block.size-md) {
+    height: 60px;
+  }
+  :global(.nbtn.tracker-small-block.size-xs) {
+    height: 30px;
+    padding: 1px 2px;
+  }
+</style>
+
 {#if element}
 
   <Button
     color="clear"
     {style}
-    className="{className} n-tracker-value-grid-button {solo ? 'solo' : ''}
-    {xs ? 'size-xs' : ''}
+    className="{className} tracker-small-block {solo ? 'solo' : ''}
+    {xs ? 'size-xs' : 'size-md'}
     {novalue ? 'novalue' : ''}
     "
     on:click={(event) => {

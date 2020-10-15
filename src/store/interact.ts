@@ -375,6 +375,7 @@ const interactInit = () => {
         {
           title: `View stats`,
           click: () => {
+            Interact.closeOnThisDay();
             if (tracker) {
               Interact.openStats(`#${trackableElement.id}`);
             } else {
@@ -388,6 +389,7 @@ const interactInit = () => {
         {
           title: `Search for ${tracker ? tracker.label : trackableElement.raw}`,
           click: async () => {
+            Interact.closeOnThisDay();
             await tick(200);
             SearchStore.search(trackableElement.prefix + trackableElement.id, "history");
           },
@@ -397,6 +399,7 @@ const interactInit = () => {
         buttons.push({
           title: `Check-In`,
           click: () => {
+            Interact.closeOnThisDay();
             Interact.person(trackableElement.id);
             if (callback) {
               callback();

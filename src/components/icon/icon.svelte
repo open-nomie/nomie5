@@ -61,6 +61,7 @@
     LockClosed,
     ArrowRight,
     Cake,
+    LightBulb,
   } from "svelte-hero-icons";
 
   export let name = "add";
@@ -103,6 +104,7 @@
     grid: ViewGrid,
     link: Link,
     list: ViewList,
+    bulb: LightBulb,
     map: Map,
     menu: Menu,
     more: DotsHorizontal,

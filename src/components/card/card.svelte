@@ -6,6 +6,7 @@
   export let title = undefined;
   export let pad = false;
   export let compact = false;
+  export let shadow = true;
 </script>
 
 <style>
@@ -20,7 +21,7 @@
   }
 </style>
 
-<div class="n-card {className} {pad ? 'p-3' : ''} {compact ? 'comapct' : ''}" {style}>
+<div class="n-card {className} {pad ? 'p-3' : ''} {compact ? 'comapct' : ''} {!shadow ? 'box-shadow-off' : ''}" {style}>
   {#if title}
     <Text size="sm" className="title {pad ? 'pb-3' : 'p-3'}" bold>{title}</Text>
   {/if}
