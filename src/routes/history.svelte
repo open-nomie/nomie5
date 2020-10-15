@@ -351,10 +351,11 @@
 
     </div>
 
-    <div class="bg-primary-bright mt-3">
-      <div class="container p-0 pb-4">
-        <!-- Show History if exists -->
-        {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
+    {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
+      <div class="bg-primary-bright mt-3">
+        <div class="container p-0 pb-4">
+          <!-- Show History if exists -->
+
           <div class="memories">
             {#each $LedgerStore.memories as log}
               <div class="memories-log-header text-center">
@@ -376,10 +377,11 @@
                 }} />
             {/each}
           </div>
-        {/if}
-        <!-- end history -->
+
+          <!-- end history -->
+        </div>
       </div>
-    </div>
+    {/if}
 
   </main>
 
