@@ -6646,7 +6646,8 @@ aside.n-panel {
 
 .n-tracker-value-grid-button {
   justify-content: flex-start;
-  padding: 6px; }
+  padding: 6px;
+  min-width: 126px; }
   .n-tracker-value-grid-button:active {
     background-color: var(--color-solid-1); }
   .n-tracker-value-grid-button.solo {
@@ -6683,6 +6684,7 @@ aside.n-panel {
   .n-tracker-value-grid-button.novalue .value {
     display: none; }
   .n-tracker-value-grid-button.size-xs {
+    min-width: 90px;
     padding: 0px;
     background-color: transparent !important;
     min-height: 24px;

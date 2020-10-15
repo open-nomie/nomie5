@@ -17,6 +17,11 @@
   export let value = undefined;
 
   let hasEmojiSlot = arguments[1].$$slots || {}.emoji;
+  let avatarSize = 40;
+
+  $: if (xs) {
+    avatarSize = 20;
+  }
 
   function shouldShowValue(trackerElement) {
     if (trackerElement.obj && trackerElement.obj.type == "picker") {
@@ -51,13 +56,13 @@
     {#if hasEmojiSlot}
       <slot name="emoji" />
     {:else if element.type == 'tracker'}
-      <Avatar size={40} emoji={(element.obj || {}).emoji} label={(element.obj || {}).id} className="mr-2" />
+      <Avatar size={avatarSize} emoji={(element.obj || {}).emoji} label={(element.obj || {}).id} className="mr-2" />
       <!-- <div class="emoji" style={`color:${(element.obj || {}).color || '#CCC'}`}>{(element.obj || {}).emoji || '⚪️'}</div> -->
     {:else if element.type == 'person'}
       {#if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].avatar}
-        <Avatar size={40} src={$PeopleStore.people[element.id].avatar} className="mr-2" />
+        <Avatar size={avatarSize} src={$PeopleStore.people[element.id].avatar} className="mr-2" />
       {:else if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].displayName}
-        <Avatar size={40} label={$PeopleStore.people[element.id].displayName} className="mr-2" />
+        <Avatar size={avatarSize} label={$PeopleStore.people[element.id].displayName} className="mr-2" />
       {/if}
     {/if}
     <main class="{truncate ? 'truncate' : ''} text-left w-100">

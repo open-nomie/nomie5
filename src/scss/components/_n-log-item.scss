@@ -66,7 +66,11 @@
       display: none;
     }
   }
+
+  min-width: 126px;
+
   &.size-xs {
+    min-width: 90px;
     padding: 0px;
     background-color: transparent !important;
     min-height: 24px;
