@@ -62,7 +62,7 @@
 
 <style>
   .n-avatar {
-    box-shadow: var(--box-shadow-tight);
+    /* box-shadow: var(--box-shadow-tight); */
     display: inline-flex;
     flex-grow: 0;
     flex-shrink: 0;

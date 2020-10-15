@@ -289,6 +289,9 @@ body {
 .box-shadow {
   box-shadow: var(--box-shadow);
 }
+.box-shadow-off {
+  box-shadow: none !important;
+}
 .box-shadow-inset-huge {
   box-shadow: var(--box-shadow-inset-huge);
 }
