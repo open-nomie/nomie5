@@ -260,7 +260,7 @@
     <div class="empty-notice" style="opacity:1; max-height:80%">
       <div class="text-center d-flex flex-column justify-content-center">
         <p class="text-sm text-faded-3 mb-4">
-          Import backups (not CSVs)
+          {Lang.t('settings.import-from-backup', 'Import backups (not CSV)')}
           <br />
           from Nomie 1, 2, 3, 4 and 5!
         </p>
@@ -270,7 +270,7 @@
           on:click={() => {
             fileInput.click();
           }}>
-          Select Nomie Backup...
+          {Lang.t('settings.select-nomie-backup', 'Select Nomie Backup...')}
         </Button>
         <input class="d-none" type="file" bind:this={fileInput} on:change={methods.onImportFile} />
       </div>
@@ -287,7 +287,7 @@
       <NItem className="item-divider compact bg-faded" />
       <NItem title="From Nomie {fileData.nomie.number}">
         <div slot="right">
-          <Button color="clear" className="text-danger" on:click={() => (fileData = null)}>{Lang.t('general.cancel')}</Button>
+          <Button color="clear" className="text-danger" on:click={() => (fileData = null)}>{Lang.t('general.cancel', 'Cancel')}</Button>
         </div>
       </NItem>
       <NItem className="item-divider compact bg-faded" />

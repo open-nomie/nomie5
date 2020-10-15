@@ -546,8 +546,6 @@
         </NItem>
       {/if}
 
-      <!-- <button slot="footer" on:click={methods.cancel} class="btn btn-light btn-lg flex-grow mr-1">{Lang.t('general.cancel')}</button>
-      <button slot="footer" class="btn btn-primary btn-lg flex-grow ml-1" on:click={methods.saveTracker}>{Lang.t('general.save')}</button> -->
       <div slot="footer" />
     </NModal>
 

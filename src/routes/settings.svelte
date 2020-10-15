@@ -339,7 +339,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               *******************************************
             -->
             <div class="n-list pb-2">
-              <NItem itemDivider>Storage Location</NItem>
+              <NItem itemDivider>{Lang.t('settings.storage-location', 'Storage Location')}</NItem>
               <NItem on:click={methods.storageMenu}>
                 <span slot="left">☁️</span>
                 <Text>
@@ -350,7 +350,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                   {:else if $UserStore.storageType === 'blockstack'}{Lang.t('storage.blockstack', 'Blockstack')}{/if}
                 </Text>
                 <div slot="right">
-                  <Text size="sm" className="text-primary-bright">Change</Text>
+                  <Text size="sm" className="text-primary-bright">{Lang.t('general.change', 'Change')}</Text>
                 </div>
               </NItem>
 
@@ -546,13 +546,14 @@ Note: Your data will not automatically move over. You'll first need to export it
             </NItem>
           </div> -->
 
-          <NItem title={Lang.t('general.questions', 'Questions?')}>
+          <NItem title={Lang.t('general.questions', 'Questions?')} class="mb-2">
             <div slot="right">
               <a href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>{config.support_contact}</a>
             </div>
           </NItem>
 
-          <NItem title="Happy Data, LLC">
+          <NItem>
+            <Text size="md">Happy Data, LLC</Text>
             <div slot="right">
               <Text size="sm" on:click={specialTap}>&copy; Copyright 2014 - {dayjs().format('YYYY')}</Text>
             </div>

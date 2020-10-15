@@ -41,7 +41,7 @@
 
 <div class="n-list pb-1">
   <NItem itemDivider>Style</NItem>
-  <NItem title={Lang.t('settings.theme')}>
+  <NItem title={Lang.t('settings.theme', 'Theme')}>
     <span slot="left">💡</span>
     <div slot="right">
       <ButtonGroup>
@@ -54,7 +54,7 @@
             on:click={() => {
               UserStore.setTheme(theme, $UserStore.theme_accent);
             }}>
-            {_.capitalize(theme)}
+            {Lang.t(`theme.${theme}`)}
           </Button>
         {/each}
       </ButtonGroup>

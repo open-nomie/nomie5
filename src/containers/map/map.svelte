@@ -120,7 +120,7 @@
         title: loc.name,
         click: () => {
           methods.setLocation(loc);
-         
+
           dispatch("change", loc);
         },
       };
@@ -260,7 +260,7 @@
           lng: data.lng,
         })
       ).then((loc) => {
-        Interact.toast(Lang.t("general.saved"));
+        Interact.toast(`${Lang.t("general.saved", "Saved")}`);
       });
       // Locations.save({
       //   name: data.locationName,

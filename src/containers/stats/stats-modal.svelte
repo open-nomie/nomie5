@@ -288,7 +288,7 @@
       //   },
       // },
       {
-        title: `Edit ${state.currentTerm}`,
+        title: `${Lang.t("general.edit")} ${state.currentTerm}`,
         click: () => {
           if (state.trackableElement.type == "tracker") {
             Interact.editTracker(TrackerStore.byTag(state.trackableElement.id));
@@ -298,14 +298,14 @@
         },
       },
       {
-        title: `Search for ${state.currentTerm}`,
+        title: `${Lang.t("general.search-for")} ${state.currentTerm}`,
         click() {
           close();
           SearchStore.search(state.trackableElement.prefix + state.trackableElement.id);
         },
       },
     ];
-    Interact.popmenu({ title: "Options", buttons });
+    Interact.popmenu({ title: `${Lang.t("general.options")}`, buttons });
   }
 
   function onCalendarTap() {

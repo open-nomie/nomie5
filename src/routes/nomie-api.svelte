@@ -41,6 +41,9 @@
   import Button from "../components/button/button.svelte";
   import appConfig from "../config/appConfig";
   import Text from "../components/text/text.svelte";
+  import Empty from "../containers/empty/empty.svelte";
+  import type { t } from "i18next";
+  import List from "../components/list/list.svelte";
 
   let NAPI = new NomieAPICli({ domain: "nomieapi.com/.netlify/functions" });
 
@@ -247,7 +250,10 @@
         <Spinner />
       </div>
     {:else if state.ready && !state.registered}
-      <NItem className="clickable text-primary solo text-center mb-3" on:click={methods.register} title="Generate API Key..." />
+      <NItem
+        className="clickable text-primary solo text-center mb-3"
+        on:click={methods.register}
+        title={Lang.t('nomie-api.generate-api-key', 'Generate API Key...')} />
 
       <NItem className="just-content">
         <p>
@@ -264,7 +270,10 @@
         </p>
       </NItem>
 
-      <NItem className="clickable text-primary mt-4 solo text-center mb-3" on:click={installAPI} title="Manually set API/Private Key..." />
+      <NItem
+        className="clickable text-primary mt-4 solo text-center mb-3"
+        on:click={installAPI}
+        title={Lang.t('nomie-api.manually-set-keys', 'Manually set API/Private Key...')} />
     {:else if state.view === 'captured'}
       <div class="n-list">
         {#each state.logs as apiLog, index}
@@ -297,17 +306,20 @@
         <NItem className="bg-transparent mb-3">
           <button on:click={methods.confirmClear} class="btn btn-outlined btn-danger mr-1 btn-block my-0">
             <NIcon name="closeOutline" className="fill-white mr-2" />
-            Clear Remaining
+            {Lang.t('nomie-api.clear-remaining', 'Clear Remaining')}
           </button>
         </NItem>
       {/if}
       {#if !state.logs.length}
-        <div class="empty-notice">No recent logs captured</div>
+        <Empty title={Lang.t('nomie-api.no-recent-logs-capture', 'No Recent Logs Captured')} emoji="🧐" />
       {/if}
     {:else}
       <!-- We're In the Settings Tab
         -->
-      <NItem title="Auto Accept" className="py-2 mb-3" description="Auto import and accept API logs">
+      <NItem
+        title={Lang.t('nomie-api.auto-accept', 'Auto Accept')}
+        className="py-2 mb-3"
+        description={Lang.t('nomie-api.auto-import-description', 'Auto import API logs when Nomie launches')}>
         <div slot="right">
           <NToggle
             bind:value={autoImportAPI}
@@ -323,7 +335,7 @@
 
       <div class="n-list mb-3">
         <NItem className="">
-          <NInput label="Your API Key" bind:value={state.apiKey}>
+          <NInput label={Lang.t('nomie-api.api-key', 'API Key')} bind:value={state.apiKey}>
             <div slot="right">
               <Button
                 className="tap-icon"
@@ -340,13 +352,31 @@
           <input type="text" class="form-control mt-1" value={state.apiKey} />
         </div> -->
         </NItem>
-        <NItem delay={0} clickable title="Private Key" className="py-1" on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
+        <NItem
+          delay={0}
+          clickable
+          title={Lang.t('nomie-api.private-key', 'Private Key')}
+          className="py-1"
+          on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
           <div slot="right">
             <NIcon size="16" name="chevron{state.showPrivateKey ? 'Up' : 'Down'}" />
           </div>
         </NItem>
         {#if state.showPrivateKey}
-          <NItem className="px-3 pb-3">
+          <List className="px-3">
+            <NInput solo type="textarea" rows={5} inputStyle="font-size:12px;" value={state.privateKey}>
+              <div slot="right">
+                <Button
+                  icon
+                  on:click={() => {
+                    copy(state.privateKey);
+                  }}>
+                  <NIcon size="16" name="copy" className="fill-primary-bright" />
+                </Button>
+              </div>
+            </NInput>
+          </List>
+          <!-- <NItem className="px-3 pb-3">
             <div>
               <textarea type="text" class="form-control text-sm mt-1" style="min-height:100px;" value={state.privateKey} />
               <div
@@ -355,15 +385,19 @@
                   copy(state.privateKey);
                 }}>
                 <NIcon name="copy" size={20} className="fill-primary-bright mr-2" />
-                Copy Private Key
+                {Lang.t('general.copy')}
               </div>
             </div>
-          </NItem>
+          </NItem> -->
         {/if}
       </div>
 
       <div class="n-list mt-2 mb-2">
-        <NItem title="Example POST" clickable delay={0} on:click={() => (state.showExample = !state.showExample)}>
+        <NItem
+          title={Lang.t('nomie-api.example-request', 'Example Request')}
+          clickable
+          delay={0}
+          on:click={() => (state.showExample = !state.showExample)}>
           <div slot="right">
             <NIcon name="chevron{state.showExample ? 'Up' : 'Down'}" size="16" />
           </div>
@@ -390,7 +424,7 @@
               <Text size="sm">POST application/json</Text>
             </span>
           </NItem>
-          <NItem itemDivider compact topLine>Fields</NItem>
+          <NItem itemDivider compact topLine>{Lang.t('nomie-api.fields', 'Fields')}</NItem>
           <NItem compact title="note (required)" className="py-1">
             <Text size="sm" faded>Accepts any text, including #tracker, @people, etc.</Text>
           </NItem>
@@ -413,36 +447,13 @@
           <NItem compact title="source (optional)" className="py-1 mb-2">
             <Text size="sm" faded>Source of the request (not currently displayed)</Text>
           </NItem>
-
-          <!-- <p class="text-sm mt-1">
-              <strong>FIELDS</strong>
-              <br />
-              <strong>note *</strong>
-              Accepts any text, including #tracker, @people, etc.
-              <br />
-              <strong>api_key *</strong>
-              The api key provided above
-              <br />
-              <strong>date</strong>
-              Any javascript friendly date format
-              <br />
-              <strong>lat</strong>
-              Latitude
-              <br />
-              <strong>lng</strong>
-              Longitude
-              <br />
-              <strong>source</strong>
-              Source of the request (not currently displayed)
-              <br />
-            </p> -->
         {/if}
       </div>
 
       <div class="mt-4" />
-      <NItem itemDivider>Danger Zone</NItem>
-      <NItem title="Forget API Key..." className="text-red" on:click={methods.forget} />
-      <NItem title="Destroy API Key..." className="text-red" on:click={methods.unregister} />
+      <NItem itemDivider>{Lang.t('settings.danger-zone')}</NItem>
+      <NItem title={Lang.t('nomie-api.forget-api', 'Forget API Key...')} className="text-red" on:click={methods.forget} />
+      <NItem title={Lang.t('nomie-api.destroy-api', 'Destroy API Key...')} className="text-red" on:click={methods.unregister} />
     {/if}
   </div>
 

@@ -473,7 +473,7 @@
           <ListItem>
             <Input
               type="textarea"
-              placeholder={Lang.t('csv-import-compose-note', 'Compose a note for this CSV data')}
+              placeholder={Lang.t('csv-import.compose-note', 'Compose a note for this CSV data')}
               rows={3}
               bind:value={activeImporter.config.template}>
               <div slot="right">
@@ -520,11 +520,7 @@
       <div class="container">
         <ListItem className="pb-0">{activeImporter.config.name} Importer</ListItem>
         <ListItem>
-          <Input
-            type="textarea"
-            placeholder={Lang.t('csv-import-compose-note', 'Compose a note for this CSV data')}
-            rows={3}
-            bind:value={activeImporter.config.template} />
+          <Input type="textarea" placeholder={Lang.t('csv-import.compose-note')} rows={3} bind:value={activeImporter.config.template} />
         </ListItem>
         {#if !activeImporter.parsed}
           <ListItem bg="transparent">

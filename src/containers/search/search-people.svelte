@@ -67,7 +67,7 @@
     searchTerm={term || ''}
     on:clear={clear}
     on:change={searchPeople}
-    placeholder="Search People..." />
+    placeholder={Lang.t('search.search-people', 'Search People...')} />
 
 </section>
 <section class="n-panel scroll-y column">

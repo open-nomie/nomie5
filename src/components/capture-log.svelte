@@ -459,7 +459,7 @@
           bind:value={$ActiveLogStore.note}
           bind:this={textarea}
           on:input={methods.checkTextareaSize}
-          placeholder={Lang.t('general.whats-up')}
+          placeholder={Lang.t('general.whats-up', "What's up?")}
           on:keydown={methods.keyPress}
           on:paste={methods.keyPress} />
 

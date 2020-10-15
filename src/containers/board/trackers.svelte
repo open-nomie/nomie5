@@ -143,7 +143,7 @@
     <ListItem
       compact={$UserStore.localSettings.compactButtons}
       clickable
-      title={Lang.t('tracker.add-tracker')}
+      title={Lang.t('tracker.add-tracker', 'Add Tracker')}
       on:click={() => dispatch('add')}
       className="tracker-add py-3 tracker-list-item flex-shrink-off no-value">
       <div slot="left">
@@ -180,7 +180,7 @@
     {#if !hideAdd}
       <ShortcutButton
         compact={$UserStore.localSettings.compactButtons}
-        title={Lang.t('tracker.add-tracker')}
+        title={Lang.t('tracker.add-tracker', 'Add Tracker')}
         emoji="➕"
         className="tracker-add"
         hideMore={true}
@@ -206,7 +206,7 @@
     {/each}
     {#if !hideAdd}
       <TrackerButton
-        tracker={{ tag: 'add', label: Lang.t('tracker.add-tracker'), emoji: '➕' }}
+        tracker={{ tag: 'add', label: `${Lang.t('tracker.add-tracker', 'Add Tracker')}`, emoji: '➕' }}
         on:click={(evt) => {
           dispatch('add', evt);
         }} />

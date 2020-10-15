@@ -223,3 +223,13 @@
   <img id="photo-holder-image" alt="avatar-holder" />
 </div>
 <!-- {/if} -->
+
+<!--
+  {Lang.t("tracker.stats", "Stats")}
+  {Lang.t("tracker.edit-tracker", "Edit Tracker")}
+  {Lang.t("theme.light", "Light")}
+  {Lang.t("theme.dark", "Dark")}
+  {Lang.t("theme.auto", "Auto")}
+  {Lang.t("general.search-for", "Search For")}
+  {Lang.t("general.options", "Options")}
+-->

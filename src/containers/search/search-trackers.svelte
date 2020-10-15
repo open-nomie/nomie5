@@ -2,6 +2,7 @@
   import SearchBar from "../../components/search-bar/search-bar.svelte";
   import type TrackerConfig from "../../modules/tracker/tracker";
   import { Interact } from "../../store/interact";
+  import { Lang } from "../../store/lang";
 
   import { SearchStore, SearchTerm } from "../../store/search-store";
   import { TrackerStore } from "../../store/tracker-store";
@@ -60,7 +61,7 @@
     className="filler"
     searchTerm={term || ''}
     on:clear={clear}
-    placeholder="Search Trackers..."
+    placeholder={Lang.t('search.search-trackers', 'Search Trackers...')}
     on:change={change} />
 </section>
 {#if term}

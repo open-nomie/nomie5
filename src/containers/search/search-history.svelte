@@ -4,6 +4,7 @@
   import Text from "../../components/text/text.svelte";
   import type NLog from "../../modules/nomie-log/nomie-log";
   import { Interact } from "../../store/interact";
+  import { Lang } from "../../store/lang";
   import { SearchStore, SearchTerm } from "../../store/search-store";
 
   export let term: string;
@@ -33,7 +34,7 @@
     className="filler"
     autofocus
     searchTerm={term || ''}
-    placeholder="Search History..."
+    placeholder={Lang.t('search.search-history', 'Search History...')}
     on:search={search}
     on:clear={clear} />
 </section>

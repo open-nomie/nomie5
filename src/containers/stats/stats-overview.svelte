@@ -4,6 +4,7 @@
   import type Tracker from "../../modules/tracker/tracker";
   import HScroller from "../../components/h-scroller/h-scroller.svelte";
   import math from "../../utils/math/math";
+  import { Lang } from "../../store/lang";
 
   export let stats: IStats;
   export let tracker: Tracker;
@@ -23,20 +24,20 @@
 {#if stats}
   <div class="overview py-2 flex-grow flex-shrink">
     {#if stats.math == 'sum'}
-      <ListItem className="solo" title="Total">
+      <ListItem className="solo" title={Lang.t('general.total', 'Total')}>
         <div slot="right" class="text-lg text-inverse">{formatValue(math.round(stats.sum, 100))}</div>
       </ListItem>
     {/if}
-    <ListItem className="solo" title="Average">
+    <ListItem className="solo" title={Lang.t('general.average', 'Average')}>
       <div slot="right" class="text-lg text-inverse">{formatValue(math.round(stats.avg, 100))}</div>
     </ListItem>
     {#if stats._stats.mode !== 'd'}
-      <ListItem className="solo" title="Daily Average">
+      <ListItem className="solo" title={Lang.t('stats.daily-average', 'Daily Average')}>
         <div slot="right" class="text-lg text-inverse">{formatValue(math.round(stats.sum / stats.rows.length, 100))}</div>
       </ListItem>
     {/if}
     {#if stats.max.value > stats.min.value}
-      <ListItem className="solo" title="Range">
+      <ListItem className="solo" title={Lang.t('stats.range', 'Range')}>
         <div slot="right" class="text-lg text-inverse value">
           {formatValue(math.round(stats.min.value, 100), false)}
           <span class="text-faded-2 font-weight-normal">to</span>
@@ -44,7 +45,7 @@
         </div>
       </ListItem>
     {/if}
-    <ListItem className="solo" title="Score">
+    <ListItem className="solo" title={Lang.t('general.score')}>
       <div slot="right" class="text-lg text-inverse">{getScore()}</div>
     </ListItem>
 

@@ -391,7 +391,7 @@
 
       // Remove Tracker Button Prompts
       const removeButton = {
-        title: `${Lang.t("general.remove")}...`,
+        title: `${(Lang.t("general.remove"), "Remove")}...`,
         async click() {
           // If we're on All - warn the hell out of the user
           if ($BoardStore.active === "all") {

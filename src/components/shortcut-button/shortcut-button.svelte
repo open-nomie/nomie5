@@ -55,7 +55,7 @@
     justify-content: stretch;
     border-radius: 22px;
     margin: 6px;
-    box-shadow: var(--box-shadow-float) !important;
+    box-shadow: var(--box-shadow-tight) !important;
     overflow: hidden;
     transition: all 0.2s ease-in-out;
     position: relative;
@@ -121,7 +121,7 @@
     .emoji {
       font-size: 2em;
       line-height: 100%;
-      text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.23);
+      // text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.23);
       letter-spacing: -6px;
       color: var(--color-inverse);
       white-space: nowrap;

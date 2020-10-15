@@ -527,7 +527,9 @@
     <div class="main">{Lang.t('dashboard.widget-editor', 'Widget Editor')}</div>
     <div class="right">
       <Button color="primary" type="clear" on:click={saveEditingWidget}>
-        {#if editingWidget && editingWidget._editing}{Lang.t('general.update', 'Update')}{:else}{Lang.t('general.save', 'Save')}{/if}
+        {#if editingWidget && editingWidget._editing}
+          {`${Lang.t('general.update', 'Update')}`}
+        {:else}{`${Lang.t('general.save', 'Save')}`}{/if}
       </Button>
     </div>
   </div>

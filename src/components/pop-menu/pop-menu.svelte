@@ -218,7 +218,7 @@
         on:click={(evt) => {
           close(evt);
         }}>
-        {Lang.t('general.cancel')}
+        {Lang.t('general.cancel', 'Cancel')}
       </Button>
     </div>
   </div>

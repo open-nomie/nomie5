@@ -683,8 +683,8 @@ const interactInit = () => {
             s.alert.title = title;
             s.alert.message = message;
             s.alert.cancel = null;
-            s.alert.ok = ok || "Ok";
-            s.alert.cancel = cancel || "Cancel";
+            s.alert.ok = ok || `${Lang.t("general.ok", "Ok")}`;
+            s.alert.cancel = cancel || `${Lang.t("general.cancel", "Cancel")}`;
             s.alert.onInteract = resolve;
             return s;
           });
@@ -739,7 +739,7 @@ const interactInit = () => {
             s.prompt.title = title;
             s.prompt.value = options.value || null;
             s.prompt.valueType = options.valueType || "text";
-            s.prompt.cancel = "Cancel";
+            s.prompt.cancel = `${Lang.t("general.cancel", "Cancel")}`;
             s.prompt.placeholder = options.placeholder || "";
             s.prompt.onInteract = (res) => {
               resolve(s.prompt.value);

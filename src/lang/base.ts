@@ -6,9 +6,10 @@ export default {
     "error": "Error",
     "faq": "FAQ",
     "latest": "Latest",
+    "change": "Change",
     "browse-files": "Browse Files...",
     "type": "Finding old data",
-    "trackers": "Trackers",
+    "trackers": "Tracker Count",
     "first_log": "First Log",
     "launch-count": "Launch Count",
     "device": "Device",
@@ -17,10 +18,11 @@ export default {
     "patron_only_features": "Patron Only Features",
     "become-a-patron": "Not a Patron?",
     "questions": "Questions?",
-    "success": null,
+    "success": "Success",
     "failure": "Failure",
     "saving": "Saving",
     "accept": "Accept",
+    "copy": null,
     "select-date": "Select Date",
     "all-trackers": "All Trackers",
     "start": "Start",
@@ -28,32 +30,38 @@ export default {
     "beta": "Beta",
     "edit": "Edit",
     "done": "Done",
-    "saved": null,
-    "save": null,
+    "saved": "Saved",
+    "save": "Save",
     "close": "Close",
     "customize": "Custom",
-    "select": null,
-    "cancel": null,
+    "select": "Select",
+    "cancel": "Cancel",
     "stop": "Stop",
     "notice": "Notice",
     "sum": "Sum",
     "avg": "Average",
     "download": "Download",
+    "total": "Total",
+    "average": "Average",
+    "score": "Score",
     "home": "Home",
     "map": "Map",
     "logs": "Logs",
+    "search-for": "Search For",
+    "options": "Options",
     "today": "Today",
     "goto": "Go to...",
-    "manual": "Select",
     "disable": "Disable",
     "history": "History",
     "people": "People",
+    "notes": "Notes",
+    "locations": "Locations",
+    "context": "Context",
     "delete": "Delete",
     "no-favorites-found": "No Favorites Found",
     "edit-log": "Edit Record",
     "positivity": "Positivity",
     "note": "Note",
-    "score": "Score",
     "where": "Where",
     "when": "When",
     "finished": "Finished",
@@ -61,7 +69,7 @@ export default {
     "style": "Style",
     "more": "More",
     "trackable-item": "Trackable Item",
-    "remove": null,
+    "remove": "Remove",
     "widget": "widget",
     "add": "Add",
     "loading": "Loading",
@@ -74,7 +82,7 @@ export default {
     "error-connecting": "Error Connecting",
     "search": null,
     "save-list-edits": "Save List Edits",
-    "whats-up": null,
+    "whats-up": "What's up?",
     "location": "Location"
   },
   "storage": {
@@ -82,7 +90,7 @@ export default {
     "local_description": "Good for getting started, but make sure you backup your data.",
     "blockstack_title": "Blockstack",
     "pouchdb_title": "CouchDB (beta",
-    "type_selector_title": "How would you like your data stored?",
+    "type_selector_title": "Storage Options",
     "pouchdb": "Local + CouchDB",
     "blockstack": "Blockstack"
   },
@@ -97,6 +105,7 @@ export default {
     "patron-description": "Starting at $2/mon for early features, exclusive content, and support.",
     "patron-unlock": "Unlock",
     "patron-join-now": "Join Now",
+    "storage-location": "Storage Location",
     "import-data": "Import Data",
     "nomie-api": "Nomie API",
     "import-from-backup": "Import from Backup",
@@ -113,9 +122,9 @@ export default {
     "unlock": "Unlock",
     "danger-zone": "Danger Zone",
     "destroy-all-data": "Destroy all Data",
-    "sunday": null,
-    "monday": null,
-    "theme": null,
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "theme": "Theme",
     "theme_accent": "Accent",
     "base-font-size": "Text Size",
     "small-tracker-buttons": "Compact Trackers",
@@ -140,6 +149,7 @@ export default {
     "set-pin": "Set Pin",
     "enable-advanced-buttons": "Advanced Tracker Buttons",
     "pin-requirements": "1 to 6 digits",
+    "select-nomie-backup": "Select Nomie Backup...",
     "sign-out": "Sign Out",
     "allow-file-editing": "Allow file editing",
     "find-and-replace": "Find and Replace"
@@ -155,6 +165,20 @@ export default {
     "track": "Track",
     "settings": "Settings"
   },
+  "nomie-api": {
+    "generate-api-key": "Generate API Key...",
+    "manually-set-keys": "Manually set API/Private Key...",
+    "clear-remaining": "Clear Remaining",
+    "no-recent-logs-capture": "No Recent Logs Captured",
+    "auto-accept": "Auto Accept",
+    "auto-import-description": "Auto import API logs when Nomie launches",
+    "api-key": "API Key",
+    "private-key": "Private Key",
+    "example-request": "Example Request",
+    "fields": "Fields",
+    "forget-api": "Forget API Key...",
+    "destroy-api": "Destroy API Key..."
+  },
   "history": {
     "go-to-today": "Go to Today",
     "empty-day": "No records found for this day"
@@ -168,9 +192,9 @@ export default {
   "csv-import": {
     "saved-templates": "Saved Templates",
     "select-csv-file": "Select CSV File...",
-    "map-fields": "Map Fields"
+    "map-fields": "Map Fields",
+    "compose-note": "Compose a note for this CSV data"
   },
-  "csv-import-compose-note": {},
   "tracker": {
     "tracker-selector": null,
     "positivity": "Positivity",
@@ -180,7 +204,7 @@ export default {
     "add-condition": "Add Rule",
     "create-condition": "New Positivity Rule...",
     "delete-from-nomie": "Delete from Nomie?",
-    "delete-description": "No tracked data will be deleted. You can always recreate this tracker",
+    "delete-description": "You can always recreate it later. No log data will be deleted.",
     "type": "Tracker Type",
     "label": "Tracker Label",
     "save-on-tap": null,
@@ -200,15 +224,21 @@ export default {
     "remove-tracker": "Delete Tracker",
     "things-to-track": null,
     "pick-at-least-one": "Pick at least 1 to continue",
-    "add-tracker": null
+    "add-tracker": "Add Tracker",
+    "stats": "Stats",
+    "edit-tracker": "Edit Tracker"
   },
   "positivity": {
     "sort-message": "First true wins"
   },
   "stats": {
+    "daily-average": "Daily Average",
+    "range": "Range",
     "compare": "Relate",
     "time": "Time",
     "streak": "Streak",
+    "compare-trackers": "Compare Trackers",
+    "compare-description": "Find potentially related trackers either automatically, or by selecting manually.",
     "analyze": "Auto"
   },
   "time": {
@@ -224,7 +254,16 @@ export default {
     "choose-first-day-of-week": "Pick first day of the week"
   },
   "search": {
-    "no-results": "No results found"
+    "search-trackers": "Search Trackers...",
+    "previous-searches": "Previous Searches",
+    "search-people": "Search People...",
+    "no-results": "No results found",
+    "search-history": "Search History..."
+  },
+  "on-this-day": {
+    "no-notes": "No Notes on this Day",
+    "no-people": "No People on this Day",
+    "no-context": "No Context on this Day"
   },
   "location": {
     "saved-locations": "Saved Locations",
@@ -257,6 +296,11 @@ export default {
   },
   "picker": {
     "title": "List one item per line"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "auto": "Auto"
   }
 }
   }

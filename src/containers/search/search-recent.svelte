@@ -41,7 +41,7 @@
 
 {#if savedTerms.length}
   <ListItem itemDivider compact className="bg-transparent">
-    Previous Searches
+    {Lang.t('search.previous-searches', 'Previous Searches')}
     <div slot="right">
       {#if mode != 'edit'}
         <Button

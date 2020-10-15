@@ -1,11 +1,11 @@
-import English from "./en";
 import Italian from "./it";
 import SimplifiedChinese from "./zh-cn";
 import Fake from "./fake";
+import base from "./base";
 export default {
   en: {
     label: "English",
-    lang: English,
+    lang: base,
   },
   it: {
     label: "Italian",

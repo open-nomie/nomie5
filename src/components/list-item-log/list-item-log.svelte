@@ -174,15 +174,7 @@
             on:click={() => {
               Interact.openStats(`@${person.id}`);
               dispatch('personClick', { person: person, log });
-            }}>
-            <!-- <span slot="emoji" class="emoji">
-              {#if $PeopleStore.people[person.id]}
-                <Avatar size={40} src={$PeopleStore.people[person.id].avatar} label={person.id} className="ml-2" />
-              {:else}
-                <Avatar size={40} label={person.id} className="ml-2" />
-              {/if}
-            </span> -->
-          </NTrackerSmallBlock>
+            }} />
         {/each}
         {#each logMeta.trackers.filter((trk) => {
           if (focus) {
