@@ -197,7 +197,7 @@
             <NIcon name="close" />
           </Button>
         </div>
-        <div class="main">
+        <div class="main py-1">
           <Text className="mt-1">{dayjs($Interact.onThisDay).format('ddd MMM D, YYYY')}</Text>
           <Row className="justify-content-center">
             <Text size="sm" className="mr-2">{activeView.label}</Text>
@@ -257,46 +257,49 @@
       {:else if view === 'notes'}
         {#if !state.notes.length}
           <Empty title={Lang.t('on-this-day.no-notes', 'No Notes on this Day')} emoji="✍🏽" />
+        {:else}
+          <div class="p-1">
+            {#each state.notes as note}
+              <ListItemLog log={note} />
+            {/each}
+          </div>
         {/if}
-        <div class="p-1">
-          {#each state.notes as note}
-            <ListItemLog log={note} />
-          {/each}
-        </div>
       {:else if view === 'people'}
         {#if !state.people.length}
           <Empty title={Lang.t('on-this-day.no-people', 'No People on this Day')} emoji="👨‍👩‍👧" />
+        {:else}
+          <div class="n-grid mt-3">
+            {#each state.people as person}
+              <ShortcutUserButton
+                {person}
+                on:click={() => {
+                  Interact.elementOptions(new TrackableElement({ id: person.username, raw: `@${person.username}`, type: 'person' }));
+                }}
+                on:more={() => {
+                  Interact.elementOptions(new TrackableElement({ id: person.username, raw: `@${person.username}`, type: 'person' }));
+                }} />
+            {/each}
+          </div>
         {/if}
-        <div class="n-grid mt-3">
-          {#each state.people as person}
-            <ShortcutUserButton
-              {person}
-              on:click={() => {
-                Interact.elementOptions(new TrackableElement({ id: person.username, raw: `@${person.username}`, type: 'person' }));
-              }}
-              on:more={() => {
-                Interact.elementOptions(new TrackableElement({ id: person.username, raw: `@${person.username}`, type: 'person' }));
-              }} />
-          {/each}
-        </div>
       {:else if view === 'context'}
         {#if !state.context.length}
           <Empty title={Lang.t('on-this-day.no-context', 'No Context on this Day')} emoji="🤷‍♂️" />
+        {:else}
+          <div class="n-grid mt-3">
+            {#each state.context as context}
+              <Button
+                shape="round"
+                size="lg"
+                color="light"
+                className="m-2"
+                on:click={() => {
+                  Interact.elementOptions(new TrackableElement({ id: context, raw: context, type: 'context' }));
+                }}>
+                {context}
+              </Button>
+            {/each}
+          </div>
         {/if}
-        <div class="n-grid mt-3">
-          {#each state.context as context}
-            <Button
-              shape="round"
-              size="lg"
-              color="light"
-              className="m-2"
-              on:click={() => {
-                Interact.elementOptions(new TrackableElement({ id: context, raw: context, type: 'context' }));
-              }}>
-              {context}
-            </Button>
-          {/each}
-        </div>
       {:else if view === 'locations'}
         <Map records={state.records} style="height:100%;" />
       {/if}
