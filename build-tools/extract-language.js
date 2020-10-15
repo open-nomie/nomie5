@@ -73,23 +73,38 @@ function stringsToObject(strArray, filler) {
       if (split.length > 1) {
         value = scrubWrappingQuotes(split.join(" ").replace(split[0], "").trim());
       }
-      let nameSplit = name.split(".");
 
-      nameSplit.forEach((nm, index) => {
-        if (index == 0) {
-          obj[nm] = obj[nm] || {};
-        } else if (index == 1) {
-          obj[nameSplit[index - 1]][nm] = filler || value;
-        } else if (index == 2) {
-          let base = obj[nameSplit[index - 2]];
-          console.log("Found a 3 level deep one", nm, base);
-          obj[nameSplit[index - 2]][nm] = filler || value;
-        }
-      });
+      if (!`${value}`.trim().length) {
+        value = null;
+      }
+
+      let nameSplit = name.split(".");
+      let sectionKey = nameSplit[0];
+      let partKey = nameSplit[1];
+
+      obj[sectionKey] = obj[sectionKey] || {};
+
+      if (filler) {
+        obj[sectionKey][partKey] = filler;
+      } else {
+        obj[sectionKey][partKey] = obj[sectionKey][partKey] || value;
+      }
+
+      // nameSplit.forEach((nm, index) => {
+      //   if (index == 0) {
+      //     obj[nm] = obj[nm] || {};
+      //   } else if (index == 1) {
+      //     let sectionKey = nameSplit[index - 1];
+      //     console.log({ sectionKey });
+      //     obj[sectionKey][nm] = filler || value;
+      //   }
+      // });
     });
   return obj;
 }
 // Build test one
 main("fake", undefined, true);
-// Build real one
+// // Generate Tester Lang
+main("fake", "TEST", false);
+// // Generate Base
 main("base", undefined, false);
