@@ -49,6 +49,7 @@
   import { AppStore } from "../store/app-store";
   import ListItem from "../components/list-item/list-item.svelte";
   import Spacer from "../components/spacer/spacer.svelte";
+  import List from "../components/list/list.svelte";
 
   export const location = undefined;
   export const style = undefined;
@@ -458,7 +459,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 
             <div class="n-list pb-1">
               <NItem itemDivider>App Details</NItem>
-              <NItem title={Lang.t('general.trackers', 'Tracker Count')}>
+              <NItem title={Lang.t('general.tracker-count', 'Tracker Count')}>
                 <span slot="right">{TrackerStore.getAsArray().length}</span>
               </NItem>
 
@@ -511,53 +512,20 @@ Note: Your data will not automatically move over. You'll first need to export it
           {/if}
           <!-- END Views -->
 
-          <!-- <div class="n-list my-3">
-            <NItem title={Lang.t('general.patron_only_features', 'Patron Only Features')}>
-              <Text size="xs" faded leading2 className="mt-1">
-                {Lang.t('settings.become-a-patron-message', 'Patrons help me keep Nomie moving forward with no ads, private, and open.')}
-              </Text>
+          <List className="mt-3">
+            <NItem title={Lang.t('general.questions', 'Questions?')} class="mb-2">
               <div slot="right">
-                {#if $UserStore.meta.hiddenFeatures}
-                  <Icon name="checkmarkOutline" />
-                {:else}
-                  <Button
-                    size="sm"
-                    on:click={() => {
-                      methods.tryPatronPin(true);
-                    }}>
-                    {Lang.t('settings.unlock', 'Unlock')}
-                  </Button>
-                {/if}
+                <a href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>{config.support_contact}</a>
               </div>
             </NItem>
 
-            <NItem
-              detail
-              compact
-              className="text-primary-bright"
-              on:click={() => {
-                window.open(config.patreon, '_system');
-              }}>
-              <Text size="xs" color="primary-bright" className="mt-1">
-                {#if $UserStore.meta.hiddenFeatures}
-                  🥳 &nbsp; Hey Patron! Check out the latest posts
-                {:else}{Lang.t('general.become-a-patron', 'Not a Patron?')} Join today for as low as $2{/if}
-              </Text>
+            <NItem>
+              <Text size="md">Happy Data, LLC</Text>
+              <div slot="right">
+                <Text size="sm" on:click={specialTap}>&copy; Copyright 2014 - {dayjs().format('YYYY')}</Text>
+              </div>
             </NItem>
-          </div> -->
-
-          <NItem title={Lang.t('general.questions', 'Questions?')} class="mb-2">
-            <div slot="right">
-              <a href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>{config.support_contact}</a>
-            </div>
-          </NItem>
-
-          <NItem>
-            <Text size="md">Happy Data, LLC</Text>
-            <div slot="right">
-              <Text size="sm" on:click={specialTap}>&copy; Copyright 2014 - {dayjs().format('YYYY')}</Text>
-            </div>
-          </NItem>
+          </List>
 
           <NItem className="bg-transparent my-4" title="⚠️ {Lang.t('settings.danger-zone', 'Danger Zone')}">
             <div slot="right">
