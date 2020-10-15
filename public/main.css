@@ -5797,8 +5797,8 @@ body.scrolling .mini-map {
     display: none !important; }
   @media (max-width: 400px) {
     .mini-map {
-      height: 80px;
-      width: 80px; } }
+      height: 60px;
+      width: 60px; } }
   .mini-map .leaflet-top,
   .mini-map .location-name,
   .mini-map .leaflet-bottom {
@@ -6774,11 +6774,10 @@ aside.n-panel {
       border-radius: 0;
       margin: 0; } }
   .memories .memories-log-header {
-    padding: 4pt 0;
-    font-size: 0.7em; }
+    padding: 4pt 0; }
     .memories .memories-log-header button {
       margin: 0 auto;
-      font-size: 0.9em;
+      font-size: 0.9rem;
       width: 75%;
       color: #fff;
       background-color: rgba(255, 255, 255, 0.1); }

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   /**
    * History Tab
    * A big collection of all things history
@@ -39,6 +39,8 @@
   import Button from "../components/button/button.svelte";
   import NextPrevCal from "../components/next-prev-cal/next-prev-cal.svelte";
   import { SearchStore } from "../store/search-store";
+  import type NLog from "../modules/nomie-log/nomie-log";
+  import Location from "../modules/locate/Location";
 
   export const location = undefined;
   export let style = undefined;
@@ -52,12 +54,10 @@
     logs: [],
     ledger: null,
     locations: [],
-    loading: true,
     showAllLocations: false,
   }; // Assign State to compiled history page
 
   let refreshing = false;
-
   let logs = []; // holder of the logs
   let loading = true;
   let locations = [];
@@ -82,7 +82,7 @@
       let trackableElement = event.detail;
       Interact.elementOptions(trackableElement);
     },
-    async getLogs(fresh) {
+    async getLogs(fresh?: boolean) {
       fresh = fresh === false ? false : true;
       loading = true;
       // Query the Ledger for Posts on this day.
@@ -96,11 +96,21 @@
           end: state.date.endOf("day"),
           fresh: fresh,
         });
-        loading = false;
-      } else {
-        loading = false;
       }
-
+      logs = logs || [];
+      locations = logs
+        .filter((log: NLog) => {
+          return log.lat;
+        })
+        .map((log: NLog) => {
+          return new Location({
+            lat: log.lat,
+            lng: log.lng,
+            name: log.location,
+            log: log,
+          });
+        });
+      loading = false;
       return logs || [];
     },
 
@@ -312,7 +322,7 @@
   </header>
   <!-- end header-content header -->
 
-  <main slot="content" class="page page-history flex-column">
+  <main slot="content" class="page page-history flex-column pb-5">
 
     <div class="container p-0 px-1">
       <Text size="xl" bold className="history-title pl-3 mt-2">
@@ -342,7 +352,7 @@
     </div>
 
     <div class="bg-primary-bright mt-3">
-      <div class="container p-0">
+      <div class="container p-0 pb-4">
         <!-- Show History if exists -->
         {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
           <div class="memories">
@@ -353,7 +363,7 @@
                   on:click={() => {
                     methods.goto(dayjs(log.end));
                   }}>
-                  From {dayjs(log.end).fromNow()}
+                  {dayjs(log.end).fromNow()}
                   <NIcon name="chevronRight" className="fill-white" size="18" />
                 </Button>
               </div>
