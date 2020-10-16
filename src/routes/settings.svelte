@@ -127,16 +127,21 @@
     },
     async deleteEverything() {
       try {
-        let res = await Interact.confirm("DANGER ZONE!", `This will destroy all of your data in Nomie. Are you sure?`, "Destroy");
+        let res = await Interact.confirm(
+          `${Lang.t("settings.danger-zone")}`,
+          `${Lang.t("settings.delete-warning", "This will destroy ALL data in Nomie. Are you absolutely sure?")}`,
+          `${Lang.t("settings.destroy", "Destroy")}`
+        );
         if (res) {
+          await tick(200);
           res = await Interact.confirm(
-            "Sorry! One last time.. Really?",
-            `You will basically be starting over from scratch... You good with that?`,
-            "Destroy!"
+            `${Lang.t("settings.danger-zone")}`,
+            `${Lang.t("settings.delete-warning-again", "So you REALLY want all ALL data in Nomie destroyed?")}`,
+            `${Lang.t("settings.destroy", "Destroy")}`
           );
 
           if (res === true) {
-            Interact.blocker("Deleting data...");
+            Interact.blocker(`${Lang.t("settings.deleting-data", "Deleting data...")}`);
             let files = await Storage.list();
 
             let promises = [];
@@ -379,7 +384,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             <div class="n-list pb-2">
               <NItem itemDivider>{Lang.t('settings.import-data', 'Import Data')}</NItem>
               <NItem clickable title={Lang.t('settings.nomie-api', 'Nomie API')} on:click={() => navigate('/api')}>
-                <span slot="left">🕸</span>
+                <span slot="left">🚚</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
@@ -417,11 +422,14 @@ Note: Your data will not automatically move over. You'll first need to export it
 
             <div class="n-list pb-2">
               <NItem itemDivider>{Lang.t('settings.miscellaneous', 'Miscellaneous')}</NItem>
-              <NItem title={Lang.t('settings.force-last-used-update', 'Force Update Tracker Last-Used')} on:click={LastUsed.updateAll}>
+              <NItem title={Lang.t('settings.update-last-used-date', "Update All Tracker's Last-Used")} on:click={LastUsed.updateAll}>
                 <span slot="left">🕰</span>
               </NItem>
-              <NItem title={Lang.t('settings.translate-nomie', 'Help Translate Nomie')} to="/lang">
-                <span slot="left">ฬ</span>
+              <NItem title={Lang.t('settings.translate-nomie', 'Help Translate Nomie')} to="/lang" detail>
+                <span slot="left">🌍</span>
+                <div slot="right">
+                  <div class="nbtn nbtn-xs nbtn-rounded nbtn-danger">Beta</div>
+                </div>
               </NItem>
             </div>
 

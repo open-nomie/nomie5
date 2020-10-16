@@ -108,8 +108,8 @@ function stringsToObject(strArray, filler) {
   return obj;
 }
 // Build test one
-main("fake", undefined, true);
+main("test", undefined, true);
 // // Generate Tester Lang
-main("fake", "TEST", false);
+main("test", "Nomie", false);
 // // Generate Base
 main("base", undefined, false);
