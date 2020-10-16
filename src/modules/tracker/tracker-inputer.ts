@@ -167,7 +167,7 @@ export default class TrackerInputer {
     let defaultValue: number = is.truthy(options.value) ? options.value : this.tracker.default;
     if (this.tracker.type == "tick") {
       // Push tag(default) or just tag if no default
-      note.push(`#${this.tracker.tag}${is.truthy(defaultValue) ? `(${defaultValue})` : ``}`);
+      note.push(`#${this.tracker.tag}${`${defaultValue}`.length ? `(${defaultValue})` : ``}`);
       // Check for include
       if (this.tracker.include) {
         note.push(this.tracker.getIncluded(defaultValue));
