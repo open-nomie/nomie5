@@ -16,6 +16,7 @@
   import ScorePill from "./score-pill.svelte";
   import Ball from "./ball.svelte";
   import Text from "../text/text.svelte";
+  import Button from "../button/button.svelte";
 
   // Props
   export let tracker = new Tracker();
@@ -24,6 +25,7 @@
   export let id = undefined;
   export let className = undefined;
   export let disabled = undefined;
+  export let hideMore = false;
   export let hoursUsed = [];
   // export let hideMore = false;
   // export let lastUsed = null; // or dayjs object
@@ -75,9 +77,11 @@
     padding: 0px;
     height: 25px;
     border-radius: 12px;
+    color: var(--color-inverse-2) !important;
   }
+
   :global(.tracker-button-wrapper .more svg) {
-    stroke: var(--color-solid-2) !important;
+    // stroke: var(--color-solid-3) !important;
   }
   .tracker-ball {
     svg {
@@ -139,6 +143,10 @@
 
     <Text className="ball-label truncate-2">{tracker.label}</Text>
   </button>
-
+  {#if !hideMore}
+    <Button icon size="sm" className="more" on:click={() => dispatch('more', tracker)}>
+      <Icon name="more" size={22} className="fill-solid-2" />
+    </Button>
+  {/if}
 </div>
 <!-- last.log.end -->

@@ -167,6 +167,9 @@
         on:click={() => {
           dispatch('tap', tracker);
         }}
+        on:longpress={() => {
+          dispatch('more', tracker);
+        }}
         on:more={() => {
           dispatch('more', tracker);
         }}>
@@ -200,12 +203,16 @@
         on:click={() => {
           dispatch('tap', tracker);
         }}
+        on:more={() => {
+          dispatch('more', tracker);
+        }}
         on:longpress={() => {
           dispatch('more', tracker);
         }} />
     {/each}
     {#if !hideAdd}
       <TrackerButton
+        hideMore={true}
         tracker={{ tag: 'add', label: `${Lang.t('tracker.add-tracker', 'Add Tracker')}`, emoji: '➕' }}
         on:click={(evt) => {
           dispatch('add', evt);
