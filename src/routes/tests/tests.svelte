@@ -45,6 +45,13 @@
     <Card title="Empty" pad className="mb-3">
       <Input type="text" placeholder="My Label" value="Normal" />
       <Input type="text" solo placeholder="My Label" value="Solo" />
+      <Input
+        type="textarea"
+        rows="2"
+        solo
+        placeholder="My Label"
+        label="Textarea"
+        value="A set of base components for quick testing... I should be using Storybook, but have yet to do so." />
     </Card>
     <Card title="List Item Inputs" className="mb-3">
       <Input type="text" listItem placeholder="My Label" value="List Item" />

@@ -57,7 +57,7 @@
     dispatch("change", value);
   };
 
-  $: if (value && value.length > 0) {
+  $: if (value && `${value}`.length > 0) {
     hasInput = true;
   } else {
     hasInput = false;
@@ -80,7 +80,7 @@
 
 <style lang="scss">
   @import "../../scss/utils/_utils";
-  $height: 42px;
+  $height: 48px;
 
   :global(.n-input-container.list-item div.n-input label) {
     left: 20px !important;
@@ -133,7 +133,7 @@
           .n-input {
             label {
               transition: all 0.2s ease-in-out;
-              opacity: 0.4;
+              opacity: 0.7;
               transform: translateY(0);
             }
             input,
@@ -155,13 +155,13 @@
     &.solo {
       // background-color: blue !important;
       .n-input-wrapper {
-        height: $height;
+        min-height: $height;
         .n-input {
-          height: $height;
+          min-height: $height;
           input,
           select,
           textarea {
-            height: $height - 1;
+            min-height: $height - 1;
           }
         }
       }
@@ -298,7 +298,8 @@
 </style>
 
 <div
-  class="n-input-container {className}
+  class="n-input-container n-input-type-{type}
+  {className}
   {compact ? 'compact' : ''}
   {listItem ? 'list-item' : ''}
   {solo ? 'solo' : 'with-label'}"
