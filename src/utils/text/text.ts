@@ -13,7 +13,7 @@ export function truncateText(str: string, len: number, showEnd: number = 0) {
 }
 
 export function initials(str: string): string {
-  str = str || "";
+  str = `${str}`;
   const split = str.split(" ");
   if (split.length > 1) {
     return `${split[0].substr(0, 1)}${split[split.length - 1].substr(0, 1)}`.toUpperCase();
