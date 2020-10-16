@@ -137,7 +137,7 @@
       <div class="gap" />
       <NItem className="px-3 bg-transparent">
         <p class=" text-sm">
-          {Lang.t('export.backup-description', 'Create an importable backup file. This allows you to transfer your data from one device to another using a single JSON file that contains ALL of you Nomie data.')}
+          {Lang.t('export.backup-description', 'Create an importable backup file. This allows you to transfer your data from one device to another using a single file (JSON) that contains ALL your Nomie data.')}
         </p>
       </NItem>
       <div class="gap" />
