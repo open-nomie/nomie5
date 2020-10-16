@@ -27,6 +27,7 @@
   export let topLine: boolean = false;
   export let delay: number = undefined;
   export let detail: boolean = false;
+  export let transparent: boolean = false;
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty("left");
   const has_right = (arguments[1].$$slots || {}).hasOwnProperty("right");
@@ -91,6 +92,7 @@
     item-divider={itemDivider}
     {style}
     class="n-item {compact ? 'compact' : ''}
+    {transparent ? 'bg-transparent' : ''}
     {className}
     {bottomLine ? 'bottom-line' : ''}
     {topLine ? 'top-line' : ''}
@@ -138,6 +140,7 @@
     item-divider={itemDivider}
     {style}
     class="n-item {compact ? 'compact' : ''}
+    {transparent ? 'bg-transparent' : ''}
     {className}
     {bottomLine ? 'bottom-line' : ''}
     {topLine ? 'top-line' : ''}

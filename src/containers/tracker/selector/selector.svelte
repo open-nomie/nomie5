@@ -25,7 +25,7 @@
   let state = {
     selected: {},
     trackers: [],
-    multiple
+    multiple,
   };
 
   // Holder of the alphabet for the list
@@ -33,18 +33,15 @@
 
   // When tracker store loads. Turn trackers into array sorted by label
   $: state.trackers = Object.keys($TrackerStore.trackers || {})
-    .map(tag => {
+    .map((tag) => {
       return $TrackerStore.trackers[tag];
     })
     .sort((a, b) => {
-      return a.label.substr(0, 1).toLowerCase() >=
-        b.label.substr(0, 1).toLowerCase()
-        ? 1
-        : -1;
+      return a.label.substr(0, 1).toLowerCase() >= b.label.substr(0, 1).toLowerCase() ? 1 : -1;
     });
 
   // When selected, auto create an array of selected trackers
-  $: state.selectedArray = Object.keys(state.selected).map(tag => {
+  $: state.selectedArray = Object.keys(state.selected).map((tag) => {
     alphaGroup = {};
     return state.selected[tag];
   });
@@ -85,7 +82,7 @@
         // if it's less than 10 trackers - just show them without the letters
         return true;
       }
-    }
+    },
   };
 </script>
 
@@ -98,7 +95,7 @@
 
 {#if show}
   <NModal
-    title={Lang.t('tracker.tracker-selector')}
+    title={Lang.t('general.tracker-selector', 'Tracker Selector')}
     type="fullscreen"
     className="tracker-selector-modal"
     allowClose={true}
@@ -106,9 +103,7 @@
     <div class="list">
       {#each state.trackers as tracker}
         {#if !methods.alphaGroupExists(tracker)}
-          <NItem
-            className="bg-light text-faded sticky-top"
-            title={tracker.label.substr(0, 1).toUpperCase()} />
+          <NItem className="bg-light text-faded sticky-top" title={tracker.label.substr(0, 1).toUpperCase()} />
         {/if}
         <NItem
           className="bottom-line {state.selected.hasOwnProperty(tracker.tag) ? 'bg-selected' : ''}"
@@ -128,9 +123,7 @@
       {/each}
     </div>
     <div slot="footer" class="n-row">
-      <button class="btn btn-light btn-lg w-100 mr-2" on:click={methods.close}>
-        {Lang.t('general.close')}
-      </button>
+      <button class="btn btn-light btn-lg w-100 mr-2" on:click={methods.close}>{Lang.t('general.close')}</button>
       {#if state.selectedArray.length > 0}
         <button
           transition:fade

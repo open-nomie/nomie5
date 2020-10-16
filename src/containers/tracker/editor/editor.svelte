@@ -9,7 +9,7 @@
    * God speed.
    */
 
-  import NItem from "../../../components/list-item/list-item.svelte";
+  import ListItem from "../../../components/list-item/list-item.svelte";
   import NModal from "../../../components/modal/modal.svelte";
   import NIcon from "../../../components/icon/icon.svelte";
   import NToggle from "../../../components/toggle-switch/toggle-switch.svelte";
@@ -38,7 +38,7 @@
   import Text from "../../../components/text/text.svelte";
   import Icon from "../../../components/icon/icon.svelte";
   import Button from "../../../components/button/button.svelte";
-  import ListItem from "../../../components/list-item/list-item.svelte";
+
   import is from "../../../utils/is/is";
   import trackerTypes from "../../../modules/tracker-types/tracker-types";
 
@@ -303,7 +303,7 @@
       <!-- Tracker Label input -->
       <NInput
         listItem
-        className="mb-2 tracker-label"
+        className="mb-3 tracker-label"
         type="text"
         name="label"
         placeholder={Lang.t('tracker.label', 'Tracker Label')}
@@ -312,7 +312,7 @@
 
       <!-- Tracker Type Selector -->
 
-      <ListItem on:click={methods.selectType} className="tracker-type py-3 mb-2">
+      <ListItem on:click={methods.selectType} className="tracker-type py-3 mb-3">
         {Lang.t('tracker.type', 'Tracker Type')}
         <div slot="right" class="n-row">
           <Text bold>{(getTypeDetails(data.tracker.type) || {}).label}</Text>
@@ -331,18 +331,18 @@
       {/if}
 
       {#if data.tracker.type == 'tick'}
-        <NItem
-          title={Lang.t('tracker.save-on-tap')}
-          className="tracker-one-tap mb-2"
+        <ListItem
+          title={Lang.t('tracker.save-on-tap', 'Save on Tap')}
+          className="tracker-one-tap mb-3"
           description={Lang.t('tracker.save-on-tap-description', 'Save note immediately after tapping the button.')}>
           <div slot="right">
             <NToggle bind:value={data.tracker.one_tap} />
           </div>
-        </NItem>
+        </ListItem>
       {/if}
 
       {#if data.tracker.type == 'range'}
-        <ListItem className="py-0 mb-2">
+        <ListItem className="py-0 mb-3">
           <div class="n-row">
             <NInput
               pattern="[0-9]*"
@@ -397,9 +397,9 @@
           type="textarea"
           className="tracker-note mb-0"
           bind:value={data.tracker.note}
-          placeholder={Lang.t('tracker.note-placeholder')}>
+          placeholder={Lang.t('tracker.note-placeholder', 'Any content including #tracker @people +context')}>
           <span slot="right">
-            <Button size="sm" icon shape="circle" color="transparent" on:click={methods.addTrackerToNote}>
+            <Button icon shape="circle" color="transparent" on:click={methods.addTrackerToNote}>
               <Icon name="addOutline" />
             </Button>
           </span>
@@ -410,7 +410,9 @@
           on:select={async (evt) => {
             data.tracker.note = evt.detail.note + '';
           }} />
-        <NItem description={Lang.t('tracker.note-description')} className="mt-2" />
+        <ListItem
+          transparent
+          description={Lang.t('tracker.note-description', 'Combine multiple trackers together using their #hashtags. For example, #mood #sleep_quality. Nomie will then ask for values one by one.')} />
       {/if}
 
       <!-- ADVANCED OPTIONS -->
@@ -434,9 +436,9 @@
         {#if data.tracker.type !== 'timer' && data.tracker.type !== 'note' && data.tracker.type !== 'picker'}
           <NInput
             listItem
-            placeholder={Lang.t('tracker.measure-by')}
+            placeholder={Lang.t('tracker.measure-by', 'Measure By')}
             type="select"
-            className="tracker-uom mb-2"
+            className="tracker-uom mb-3"
             bind:value={data.tracker.uom}>
             {#each Object.keys(data.groupedUOMs) as groupKey (groupKey)}
               <option disabled>-- {groupKey}</option>
@@ -453,7 +455,7 @@
         <NInput
           listItem
           type="select"
-          className="tracker-math mb-2"
+          className="tracker-math mb-3"
           name="math"
           placeholder={Lang.t('tracker.calculate-total', 'Calculate Totals')}
           bind:value={data.tracker.math}>
@@ -463,18 +465,18 @@
         </NInput>
 
         {#if data.tracker.math !== 'sum'}
-          <NItem className="px-3 py-1 mb-2 tracker-ignore-zeros" title="Ignore Zeros" description="Ignore zero values when averaging">
+          <ListItem className="px-3 py-1 mb-3 tracker-ignore-zeros" title="Ignore Zeros" description="Ignore zero values when averaging">
             <div slot="right">
               <NToggle bind:value={data.tracker.ignore_zeros} />
             </div>
-          </NItem>
+          </ListItem>
         {/if}
       {/if}
 
       {#if advanced && ['note', 'picker'].indexOf(data.tracker.type) === -1}
         <NInput
           listItem
-          className="tracker-default mb-2"
+          className="tracker-default mb-3"
           pattern="[0-9]*"
           inputmode="numeric"
           label={Lang.t('tracker.value', 'Default Value')}
@@ -498,52 +500,53 @@
       {/if}
 
       {#if advanced}
-        <PositivityEditor tracker={data.tracker} />
+        <PositivityEditor tracker={data.tracker} className="mb-3" />
       {/if}
 
       {#if data.tracker.type !== 'note' && data.tracker.type !== 'picker' && advanced}
-        <NInput
-          className="tracker-include"
-          listItem
-          type="textarea"
-          rows={2}
-          label={Lang.t('tracker.include', 'Additional note inserts')}
-          placeholder={Lang.t('tracker.include-placeholder', 'Insert additional #trackers, @people, and +context when using this tracker')}
-          bind:value={data.tracker.include} />
-        <AutoComplete
-          input={data.tracker.include}
-          scroller
-          on:select={async (evt) => {
-            data.tracker.include = evt.detail.note + '';
-          }} />
+        <ListItem>
+          <NInput
+            className="tracker-include"
+            type="textarea"
+            rows={2}
+            label={Lang.t('tracker.include', 'Also Include')}
+            placeholder={Lang.t('tracker.include-placeholder', 'Insert additional #trackers, @people, and +context when using this tracker')}
+            bind:value={data.tracker.include} />
+          <AutoComplete
+            input={data.tracker.include}
+            scroller
+            on:select={async (evt) => {
+              data.tracker.include = evt.detail.note + '';
+            }} />
+        </ListItem>
       {/if}
 
       {#if advanced}
-        <NItem bg="transparent" id="hide-all-board" title={Lang.t('tracker.hide-on-all-board', 'Hide on All Board')}>
+        <ListItem bg="transparent" id="hide-all-board" title={Lang.t('tracker.hide-on-all-board', 'Hide on All Board')}>
           <div slot="right">
             <NToggle bind:value={data.tracker.hidden} />
           </div>
-        </NItem>
+        </ListItem>
       {/if}
 
       {#if !data.tracker._dirty}
         <div class="p-4 mt-4" />
 
-        <NItem
+        <ListItem
           on:click={() => {
             TrackerStore.download(data.tracker);
           }}
           className="bottom-line">
           <div class="text-primary-bright">{Lang.t('general.download', 'Download')} .tkr</div>
           <div slot="right" class="text-faded-2">For Sharing</div>
-        </NItem>
-        <NItem on:click={duplicate} className="bottom-line">
+        </ListItem>
+        <ListItem on:click={duplicate} className="bottom-line">
           <div class="text-primary-bright">{Lang.t('tracker.duplicate-tracker', 'Duplicate Tracker')}</div>
-        </NItem>
+        </ListItem>
 
-        <NItem on:click={remove} className="bottom-line">
+        <ListItem on:click={remove} className="bottom-line">
           <div class="text-red">{Lang.t('tracker.remove-tracker', 'Delete Tracker')}</div>
-        </NItem>
+        </ListItem>
       {/if}
 
       <div slot="footer" />

@@ -227,7 +227,7 @@
       {
         title: `${Lang.t("general.add-a-tracker", "Add a Tracker")}`,
         async click() {
-          await tick(500);
+          await tick(300);
           methods.addButtonTap();
         },
       },
