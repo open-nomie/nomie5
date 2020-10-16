@@ -9,6 +9,7 @@
 
   import { createEventDispatcher } from "svelte";
   import Button from "../button/button.svelte";
+  import Avatar from "../avatar/avatar.svelte";
   const dispatch = createEventDispatcher();
 
   export let input = null;
@@ -199,7 +200,7 @@
 <div class="{scroller ? 'scroller' : 'no-scroller'} autocomplete-results animate {(state.results || []).length ? 'visible' : 'hidden'}">
   <div class="container p-0 tracker-list">
     <Button size="xs" icon on:click={close}>
-      <NIcon name="close" />
+      <NIcon name="close" className="fill-inverse-2" />
     </Button>
     {#each state.results || [] as tracker (tracker.tag)}
       <Button
@@ -210,9 +211,16 @@
         on:click={() => {
           onSelect(tracker);
         }}>
+
         {#if tracker.type == 'person'}
-          <Dymoji person={$PeopleStore.people[tracker.tag]} className="mr-2" size={20} radius={0.3} />
-        {:else}{tracker.emoji}{/if}
+          <Avatar
+            label={$PeopleStore.people[tracker.tag].username}
+            src={$PeopleStore.people[tracker.tag].avatar}
+            className="mr-2"
+            size={16} />
+        {:else}
+          <Avatar emoji={tracker.emoji} className="mr-2" size={16} />
+        {/if}
         <div style="max-width:120px;" class="ml-1 truncate">
           {#if tracker.type == 'person'}
             {$PeopleStore.people[tracker.tag].displayName}
