@@ -98,8 +98,10 @@ export default class LedgerTools {
           hours: [],
           logs: [],
         };
-        // Push the value to values array
-        trackers[tag].values.push(trackableElement.value);
+        // Push the value to values array - make sure to convert to number
+        let trackableElementValue = parseFloat(trackableElement.value);
+        let v: any = isNaN(trackableElementValue) ? 1 : trackableElementValue;
+        trackers[tag].values.push(v);
         // Add the Logs for Today - so we can calcuate the score
         if (trackers[tag].logs.indexOf(log) == -1) {
           trackers[tag].logs.push(log);
