@@ -1,31 +1,7 @@
 <script>
   export let hours = [];
-  export let base = [
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    21,
-    22,
-    23
-  ];
+  export let color = undefined;
+  export let base = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 </script>
 
 <style lang="scss">
@@ -56,7 +32,7 @@
   {#each base as hour}
     <div class="hour">
       {#if hours.indexOf(hour) > -1}
-        <div class="active" />
+        <div class="active" style={color ? `background-color:${color}` : ''} />
       {/if}
     </div>
   {/each}
