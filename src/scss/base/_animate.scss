@@ -14,6 +14,7 @@
   &.hidden {
     transition: all 0.2s ease-in-out;
     pointer-events: none;
+    opacity: 0;
   }
   &.visible {
     transition: all 0.2s ease-in-out;

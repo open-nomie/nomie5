@@ -50,6 +50,7 @@
   import ListItem from "../components/list-item/list-item.svelte";
   import Spacer from "../components/spacer/spacer.svelte";
   import List from "../components/list/list.svelte";
+  import Row from "../components/row/row.svelte";
 
   export const location = undefined;
   export const style = undefined;
@@ -300,17 +301,13 @@ Note: Your data will not automatically move over. You'll first need to export it
               </div>
             </ListItem>
           {:else}
-            <ListItem compact>
+            <ListItem compact className="mb-3">
               <div slot="left" style="font-size:28px">🎁</div>
               <Text bold>{Lang.t('settings.become-a-patron', 'Become a Patron')}</Text>
               <Text size="sm" leading2 faded>
                 {Lang.t('settings.patron-description', 'Starting at $2/mon for early features, exclusive content, and support.')}
               </Text>
-              <div slot="right" />
-            </ListItem>
-            <ListItem className="mb-3 pt-0" compact>
-              <div class="n-row">
-                <Spacer />
+              <Row insetLeft>
                 <Button
                   areaLabel="Unlock"
                   text
@@ -330,7 +327,8 @@ Note: Your data will not automatically move over. You'll first need to export it
                   {Lang.t('settings.patron-join-now', 'Join Now')}
                 </Button>
                 <Spacer />
-              </div>
+              </Row>
+              <div slot="right" />
             </ListItem>
           {/if}
 

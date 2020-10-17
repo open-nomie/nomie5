@@ -313,7 +313,7 @@
       <!-- Tracker Type Selector -->
 
       <ListItem on:click={methods.selectType} className="tracker-type py-3 mb-3">
-        {Lang.t('tracker.type', 'Tracker Type')}
+        {Lang.t('tracker.tracker-type', 'Tracker Type')}
         <div slot="right" class="n-row">
           <Text bold>{(getTypeDetails(data.tracker.type) || {}).label}</Text>
           <Icon name="chevronDown" className="fill-inverse-2 mr-3 ml-2" size="16" />
