@@ -157,9 +157,11 @@
       <ShortcutButton
         compact={$UserStore.localSettings.compactButtons}
         title={tracker.label}
+        hoursUsed={getHoursUsed(tracker)}
         subtitle={!tracker.started ? getLastUsed(tracker) : null}
         emoji={tracker.emoji}
         value={getTodaysValue(tracker)}
+        oneTap={tracker.one_tap}
         taps={getTotalTaps(tracker)}
         color={tracker.color}
         className="tracker-{tracker.tag}"
