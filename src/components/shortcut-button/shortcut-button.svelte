@@ -5,6 +5,7 @@
 
   import Button from "../button/button.svelte";
   import Icon from "../icon/icon.svelte";
+  import TimeBalls from "../time-balls/time-balls.svelte";
   // import Text from "../text/text.svelte";
 
   export let title: string | undefined = undefined;
@@ -19,6 +20,8 @@
   export let className: string = "";
   export let compact: boolean = false;
   export let moreIcon: string = "more";
+  export let oneTap: boolean = false;
+  export let hoursUsed = [];
 
   const dispatch = createEventDispatcher();
 
@@ -69,9 +72,13 @@
     .subtitle,
     .value {
       line-height: 112%;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       width: 100%;
     }
+    .subtitle {
+      margin-bottom: 5px;
+    }
+
     .value {
       font-weight: bold;
     }
@@ -96,9 +103,9 @@
       }
       @include generateLabelSizes(0.96em);
       height: 124px;
-      .highlight {
-        display: none;
-      }
+      // .highlight {
+      //   display: none;
+      // }
     }
 
     @include media-breakpoint-down(xs) {
@@ -192,7 +199,17 @@
       background-color: transparent;
       font-size: 12px;
       border: solid 1px var(--color-inverse-3);
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.4);
+
+      &:before {
+        content: "";
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        border-radius: 50%;
+      }
     }
     .highlight {
       transition: all 0.2s ease-in-out;
@@ -200,29 +217,20 @@
       bottom: 7px;
       left: 14px;
       right: 14px;
-      height: 3px;
-      border-radius: 2px;
+      height: 5px;
+      border-radius: 4px;
       overflow: hidden;
-      transform: scaleX(0%);
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: stretch;
-      opacity: 0.2;
-      .bar {
-        border-radius: 2px;
-        height: 3px;
-        flex-grow: 1;
-        flex-shrink: 1;
-        margin-right: 1px;
-        margin-left: 2px;
+      // transform: scaleX(0%);
+
+      &.one-tap {
+        background-color: var(--color-solid-2);
       }
     }
   }
   :global(.shortcut-button.has-value .highlight) {
-    // color: #fff !important;
-    transform: scaleX(100%);
-    opacity: 0.2;
+    &.one-tap {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+    }
   }
 
   :global(.shortcut-button.has-value svg) {
@@ -268,10 +276,8 @@
   on:click={() => {
     dispatch('click');
   }}>
-  <div class="highlight">
-    {#each new Array(taps) as tap}
-      <div class="bar {tap}" style={value ? `background-color:#FFF` : ''} />
-    {/each}
+  <div class="highlight {oneTap ? 'one-tap' : ''}">
+    <TimeBalls color="#FFF" hours={hoursUsed} />
   </div>
   <div class="n-row top">
     <div class="emoji" style={value ? 'color:#FFF' : `color:${color}`}>
@@ -295,6 +301,6 @@
     {#if subtitle}
       <div class="subtitle truncate" style="opacity:0.6;">{subtitle}</div>
     {/if}
-    <slot name="subtitle" class="what" />
+    <slot name="subtitle" />
   </div>
 </Button>
