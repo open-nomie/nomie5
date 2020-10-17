@@ -51,6 +51,7 @@
   import Spacer from "../components/spacer/spacer.svelte";
   import List from "../components/list/list.svelte";
   import Row from "../components/row/row.svelte";
+  import Divider from "../components/divider/divider.svelte";
 
   export const location = undefined;
   export const style = undefined;
@@ -468,7 +469,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 
               <NItem title={Lang.t('general.first_log', 'First Log')}>
                 <div class="" slot="right">
-                  {#await LedgerStore.getFirstDate()}
+                  {#await LedgerStore.getFirstDate(true)}
                     Loading...
                   {:then date}
                     <div class="text-sm">{date.format('MMM YYYY')}</div>
@@ -493,10 +494,8 @@ Note: Your data will not automatically move over. You'll first need to export it
               <NItem title={Lang.t('general.pwa', 'PWA')}>
                 <span slot="right">{$Device.pwa}</span>
               </NItem>
-              <NItem title={'PWA'}>
-                <span slot="right">{$Device.pwa}</span>
-              </NItem>
-              <NItem title="UI Test" to="/test" />
+              <Divider center />
+              <NItem title="UI Test" to="/test" detail />
             </div>
 
             <NItem itemDivider>Version</NItem>

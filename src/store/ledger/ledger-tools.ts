@@ -142,11 +142,31 @@ export default class LedgerTools {
     if (age > 2 || fresh) {
       // Get list of books
       const books = await this.listBooks();
+      // console.log("Books", books);
       if (books.length) {
-        const firstBook = books[0].replace(appConfig.book_root + "/", "");
+        let parsedBooks = books
+          .map((path: string) => {
+            let split = path.split("/");
+            if (split.length === 3) {
+              // Get book path YYYY-w (fucking lower case w SUCKS! - but stuck with it in Nomie 5)
+              let book = split[split.length - 1];
+              // Get year month from book
+              let yearMonSplit = book.split("-");
+              let year = parseInt(yearMonSplit[0]);
+              let dayOfYear = parseInt(yearMonSplit[1]) * 7 - 7;
+              // Typescript hack
+              let anyd: any = dayjs().year(year);
+              return dayjs(anyd.dayOfYear(dayOfYear));
+            } else {
+              return null;
+            }
+          })
+          .filter((d) => d)
+          .sort((a: Dayjs, b: Dayjs) => {
+            return a.unix() > b.unix() ? 1 : -1;
+          });
 
-        let date = dayjs(firstBook, appConfig.book_time_format);
-
+        let date = parsedBooks[0];
         this.storage.local.put("firstBook", {
           date: date.toDate().getTime(),
           lastChecked: new Date().getTime(),
