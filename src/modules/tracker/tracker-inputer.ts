@@ -146,17 +146,6 @@ export default class TrackerInputer {
     return input;
   }
 
-  // async getNoteElements():any {
-  //   const tempLog = new NomieLog({ note: this.tracker.note });
-  //       // Extract the meta data from the note
-  //       const meta = tempLog.getMeta();
-  //       // Get tag, context, people
-  //       let trackerElements = meta.trackers;
-  //       let context = meta.context;
-  //       let people = meta.people;
-  //       return { people, context, trackerElements};
-  // }
-
   async getElements(options: ITrackerInputerGetOptions = {}): Promise<Array<string>> {
     const note = [];
     /**
@@ -164,10 +153,12 @@ export default class TrackerInputer {
      * Ticks are a simple tracker - just tapp it.
      */
     options = options || { value: null };
+
     let defaultValue: number = is.truthy(options.value) ? options.value : this.tracker.default;
+
     if (this.tracker.type == "tick") {
-      // Push tag(default) or just tag if no default
-      note.push(`#${this.tracker.tag}${`${defaultValue}`.length ? `(${defaultValue})` : ``}`);
+      // Make sure
+      note.push(`#${this.tracker.tag}${`${defaultValue || ""}`.length ? `(${defaultValue})` : ``}`);
       // Check for include
       if (this.tracker.include) {
         note.push(this.tracker.getIncluded(defaultValue));
