@@ -23,7 +23,7 @@
   export let value = null;
   // export let refreshing = false;
   export let id = undefined;
-  export let className = undefined;
+  export let className = "";
   export let disabled = undefined;
   export let hideMore = false;
   export let hoursUsed = [];
@@ -69,20 +69,30 @@
 </script>
 
 <style lang="scss" type="text/scss">
+  :global(.tracker-button-wrapper.compact .more) {
+    top: 8px;
+  }
   :global(.tracker-button-wrapper .more) {
     position: absolute;
     top: 18px;
     right: 20px;
     z-index: 1400;
     padding: 0px;
-    height: 25px;
     border-radius: 12px;
     color: var(--color-inverse-2) !important;
+    overflow: visible;
+    &:before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      border-radius: 50%;
+      z-index: 1500;
+    }
   }
 
-  :global(.tracker-button-wrapper .more svg) {
-    // stroke: var(--color-solid-3) !important;
-  }
   .tracker-ball {
     svg {
       display: none;
@@ -108,16 +118,12 @@
   on:mouseout={methods.mouseup}
   on:mouseup={methods.mouseup}
   class="tracker-button-wrapper tracker-{tracker.tag}
+  {$UserStore.localSettings.compactButtons ? 'compact' : ''}
   {data.pressing ? 'pressing' : ''}
   {className}
   {disabled ? 'disabled' : ''}">
 
-  <button
-    {id}
-    class={`item-ball ${className} ${$UserStore.localSettings.compactButtons == true ? 'item-ball-small' : ''}`}
-    on:click={() => {
-      dispatch('click', tracker);
-    }}>
+  <button {id} class={`item-ball ${className} ${$UserStore.localSettings.compactButtons == true ? 'item-ball-small' : ''}`}>
     <!-- -->
     <div class="avatar-ball">
       {#if tracker.started}
