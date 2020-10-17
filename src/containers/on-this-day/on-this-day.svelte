@@ -239,20 +239,22 @@
     {#if !loading}
       {#if view === 'trackers'}
         <Card shadow={false} pad>
-          {#each state.trackers as tracker (tracker.tag)}
-            <TrackerSmallBlock
-              className="m-1"
-              style="width:150px;"
-              element={{ id: tracker.tag, value: tracker.value, type: 'tracker', obj: tracker.tracker }}
-              on:click={() => {
-                Interact.elementOptions(new TrackableElement({
-                    id: tracker.tag,
-                    value: tracker.value,
-                    type: 'tracker',
-                    obj: tracker.tracker,
-                  }));
-              }} />
-          {/each}
+          <div class="tracker-grid">
+            {#each state.trackers as tracker (tracker.tag)}
+              <TrackerSmallBlock
+                className="m-1"
+                style="width:150px;"
+                element={{ id: tracker.tag, value: tracker.value, type: 'tracker', obj: tracker.tracker }}
+                on:click={() => {
+                  Interact.elementOptions(new TrackableElement({
+                      id: tracker.tag,
+                      value: tracker.value,
+                      type: 'tracker',
+                      obj: tracker.tracker,
+                    }));
+                }} />
+            {/each}
+          </div>
         </Card>
       {:else if view === 'notes'}
         {#if !state.notes.length}
