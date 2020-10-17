@@ -270,8 +270,8 @@ context("App", () => {
   };
 
   const testTabs = () => {
-    goHome();
-    cy.wait(200);
+    appTab('Track');
+    cy.wait(500);
     // Click tab icon
     cy.get('[slot="right"] > .nbtn > .n-icon > .hero').click();
     // cy.get("header > .n-toolbar-grid > .right > .nbtn").click();
@@ -400,27 +400,16 @@ context("App", () => {
       let html = `${node.text()} - ${textToAdd}`;
       cy.get('.form-control').type(html);
     })
-    cy.wait(100);
-    cy.get('[title="When"]').click();
+   
+  
 
-    // Get active date 
-    cy.get('.n-calendar .day.active').then(node=>{
-      // Add one to the date for tomorrow
-      let date = parseInt(node.attr('data-day')) - 1;
-      cy.get(`.n-calendar .day[data-day="${date}"]`).click();
-    });
     cy.wait(200);
-    // Click Save
-    cy.get('.buttons > .nbtn-').click();
-    cy.wait(500);
-    // Click next Day
-    cy.get('.previous-action').click();
-    cy.wait(300);
-    cy.get('.page-history').then((node)=>{
-      expect(node.text().replace(/ /g,'')).to.contain(textToAdd.replace(/ /g,''));
-    });
+    // // Click Save
+    cy.get('[slot="right"] > .nbtn').click();
+    cy.wait(1000);
 
-    // goHome();
+
+    goHome();
 
   };
 
