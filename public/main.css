@@ -5154,7 +5154,8 @@ select {
   transition: all 0.2s ease-in-out; }
   .animate.hidden {
     transition: all 0.2s ease-in-out;
-    pointer-events: none; }
+    pointer-events: none;
+    opacity: 0; }
   .animate.visible {
     transition: all 0.2s ease-in-out;
     opacity: 1; }
