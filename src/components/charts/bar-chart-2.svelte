@@ -158,24 +158,50 @@
     width: 100%;
   }
   .wrapper .selected {
+    display: flex;
+    align-items: center;
     position: absolute;
     right: 16px;
+    background-color: #000;
+    color: #fff;
+    font-size: 12px;
+    line-height: 20px;
+    height: 20px;
+    border-radius: 10px;
+  }
+  .wrapper .selected button {
+    border: none;
+    background: none;
+    outline: none;
+    color: #fff;
+    height: 20px;
+    font-size: 12px !important;
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+  }
+  .wrapper .selected button:first {
+    border-radius: 0;
+    border-right: solid 1px rgba(255, 255, 255, 0.1);
   }
 </style>
 
 <div class={`wrapper active-${activeIndex}`}>
   {#if selected && selected.unit == 'day'}
     <div class="selected">
-      <Button
-        size="xs"
-        color="dark"
+      <button
+        on:click={() => {
+          selected = undefined;
+        }}>
+        <NIcon name="close" className="fill-white" size="12" />
+      </button>
+      <button
         on:click={() => {
           Interact.onThisDay(selected.date.toDate());
         }}>
         {selected.x}
-        <NIcon name="chevronRight" className="fill-white" size="14" />
-      </Button>
-
+        <NIcon name="chevronRight" className="fill-white" size="12" />
+      </button>
     </div>
   {/if}
   <canvas id={chartId} bind:this={_canvas} width="100%" {height} />
