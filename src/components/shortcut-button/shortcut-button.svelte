@@ -200,7 +200,10 @@
       font-size: 12px;
       border: solid 1px var(--color-inverse-3);
       color: rgba(255, 255, 255, 0.4);
-
+      outline: none;
+      &:focus {
+        outline: none;
+      }
       &:before {
         content: "";
         position: absolute;
