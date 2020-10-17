@@ -54,7 +54,7 @@
   }
 </script>
 
-<section class="n-panel stiff pt-2">
+<section class="n-panel stiff pt-2 mb-2">
   <SearchBar
     autofocus
     compact

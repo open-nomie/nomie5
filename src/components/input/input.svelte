@@ -165,6 +165,14 @@
           }
         }
       }
+      &.compact {
+        .n-input-wrapper {
+          min-height: auto;
+          .n-input {
+            min-height: auto;
+          }
+        }
+      }
     }
 
     //   .n-input-container.with-label.compact .n-input-wrapper.has-input .n-input label {

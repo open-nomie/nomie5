@@ -74,8 +74,8 @@
   }
   :global(.tracker-button-wrapper .more) {
     position: absolute;
-    top: 18px;
-    right: 20px;
+    top: 12px;
+    right: 15px;
     z-index: 1400;
     padding: 0px;
     border-radius: 12px;
