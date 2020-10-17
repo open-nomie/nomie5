@@ -91,11 +91,12 @@
     },
     async unlockFeatures() {
       UserStore.unlockHiddenFeatures();
-      Interact.alert("🎁  Patron Only Features Unlocked", "Hey you! Thank you for your continued support. 💘");
-      showConfetti = true;
-      await tick(6000);
-      showConfetti = false;
-      return true;
+      Interact.confetti({
+        show: true,
+        title: "🎁  Patron Only Features Unlocked",
+        message: "Hey you! Thank you for your continued support. 💘",
+        timeout: 5000,
+      });
     },
     async tryPatronPin() {
       let pin = await Interact.inputPin("Patron Key", true);
@@ -234,10 +235,6 @@ Note: Your data will not automatically move over. You'll first need to export it
     Device.scrollToTop();
   });
 </script>
-
-{#if showConfetti}
-  <Confetti />
-{/if}
 
 <NLayout pageTitle="Settings">
 

@@ -61,6 +61,13 @@ export interface IToastOptions {
   perm?: boolean;
 }
 
+export interface ConfettiOptions {
+  title?: string;
+  message?: string;
+  show?: boolean;
+  timeout?: number;
+}
+
 export interface IPopMenuOptions {
   show?: boolean;
   buttons: Array<any>;
@@ -109,6 +116,12 @@ const interactInit = () => {
       show: false,
       multiple: false,
       onInteract: null,
+    },
+    confetti: {
+      show: false,
+      title: undefined,
+      message: undefined,
+      timeout: undefined,
     },
     selector: {
       show: false,
@@ -185,7 +198,22 @@ const interactInit = () => {
         });
       });
     },
-
+    confetti(options: ConfettiOptions = {}) {
+      update((state) => {
+        state.confetti.show = options.show === false ? false : true;
+        // state.confetti.title = options.title;
+        // state.confetti.message = options.message;
+        if (options.title) {
+          methods.alert(options.title, options.message);
+        }
+        if (options.timeout) {
+          setTimeout(() => {
+            methods.confetti({ show: false, title: undefined, message: undefined, timeout: undefined });
+          }, options.timeout);
+        }
+        return state;
+      });
+    },
     onThisDay(date) {
       update((state) => {
         state.onThisDay = date;

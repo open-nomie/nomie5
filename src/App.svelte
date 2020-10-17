@@ -48,6 +48,7 @@
   import { SearchStore } from "./store/search-store";
   import PinLock from "./containers/pin-lock/pin-lock.svelte";
   import tick from "./utils/tick/tick";
+  import Confetti from "./components/confetti/confetti.svelte";
 
   // Set a better console
   const console = new Logger("APP");
@@ -215,6 +216,10 @@
 <OnThisDayModal />
 <PinLock />
 <SearchModal />
+
+{#if $Interact.confetti.show}
+  <Confetti />
+{/if}
 
 {#if $UserStore.storageType == 'blockstack' && $Device.offline}
   <div class="offline-notice text-center">No connection to Blockstack.</div>

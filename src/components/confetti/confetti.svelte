@@ -2,6 +2,7 @@
   // Pulled from https://svelte.dev/tutorial/congratulations
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
+  import { Interact } from "../../store/interact";
 
   const characters = ["🥳", "🎉", "✨", "🔅"];
 

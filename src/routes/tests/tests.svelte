@@ -23,6 +23,7 @@
   import Layout from "../../containers/layout/layout.svelte";
   import Streak from "../../containers/steak/streak.svelte";
   import { Device } from "../../store/device-store";
+  import { Interact } from "../../store/interact";
 
   let date = dayjs();
 </script>
@@ -42,7 +43,19 @@
 
     <hr class="divider center my-2" />
 
-    <Card title="Empty" pad className="mb-3">
+    <Card title="Confetti" className="mb-3" pad>
+
+      <Button
+        block
+        on:click={() => {
+          Interact.confetti({ title: '🚚 Oh yea!', message: 'Nice job my friend!', timeout: 5000 });
+        }}>
+        Test
+      </Button>
+
+    </Card>
+
+    <Card title="Inputs" pad className="mb-3">
       <Input type="text" placeholder="My Label" value="Normal" />
       <Input type="text" solo placeholder="My Label" value="Solo" />
       <Input
