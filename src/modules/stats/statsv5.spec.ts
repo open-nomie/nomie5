@@ -91,39 +91,39 @@ describe("modules/stats/stats", function () {
   let rows = [
     new NomieLog({
       note: `I'm  just a note #region`,
-      end: dayjs(`2020-09-20T01:38:46.393Z`).hour(1).toDate().getTime(),
+      end: dayjs().toDate().getTime(),
     }),
     new NomieLog({
       note: `I'm the #first #note #mood(6) and I'm #good(1)`,
-      end: dayjs(`2020-09-20T01:38:46.393Z`).hour(12).toDate().getTime(),
+      end: dayjs().toDate().getTime(),
     }),
     new NomieLog({
       note: `I'm the #last #note and I'm #bad and #good(2)`,
-      end: dayjs(`2020-09-20T01:38:46.393Z`).hour(6).toDate().getTime(),
+      end: dayjs().toDate().getTime(),
     }),
     new NomieLog({
       note: `#mood(0) is empty - and zero too`,
-      end: dayjs(`2020-09-21T01:38:46.393Z`).hour(6).toDate().getTime(),
+      end: dayjs().toDate().getTime(),
     }),
     new NomieLog({
       note: `#mood(0) is empty - and zero`,
-      end: dayjs(`2020-09-22T01:38:46.393Z`).hour(6).toDate().getTime(),
+      end: dayjs().toDate().getTime(),
     }),
     new NomieLog({
       note: `I'm a thing good! #soggy`,
-      end: dayjs(`2020-09-23T01:38:46.393Z`).hour(5).toDate().getTime(),
+      end: dayjs().toDate().getTime(),
     }),
     new NomieLog({
       note: `I'm the #middle #note and I'm #good(3) too`,
-      end: dayjs(`2020-09-19T01:38:46.393Z`).hour(5).toDate().getTime(),
+      end: dayjs().toDate().getTime(),
     }),
     new NomieLog({
       note: `I'm the #middle #note #mood(2) and I'm #good(4) too`,
-      end: dayjs(`2020-09-23T01:38:46.393Z`).subtract(6, "day").hour(5).toDate().getTime(),
+      end: dayjs().add(1, "day").toDate().getTime(),
     }),
     new NomieLog({
       note: `I'm the #middle #note and I'm  too`,
-      end: dayjs(`2020-09-23T01:38:46.393Z`).subtract(1, "month").hour(5).toDate().getTime(),
+      end: dayjs().subtract(1, "month").toDate().getTime(),
     }),
   ];
 
@@ -189,11 +189,11 @@ describe("modules/stats/stats", function () {
   });
 
   it("should sum good properly", () => {
-    expect(goodGenerated.sum).toEqual(10);
+    expect(goodGenerated.sum).toEqual(6);
   });
 
   it("should mean mood properly", () => {
-    expect(moodGenerated.avg).toEqual(4);
+    expect(moodGenerated.avg).toEqual(6);
   });
 
   it("should respect config order", () => {
@@ -219,8 +219,8 @@ describe("modules/stats/stats", function () {
     let valueMap = goodStats.getValueMap(rows);
     let minmax = goodStats.getMinMaxFromValueMap(valueMap);
 
-    expect(minmax.min.value).toEqual(3);
-    expect(minmax.max.value).toEqual(4);
+    expect(minmax.min.value).toEqual(6);
+    expect(minmax.max.value).toEqual(6);
   });
 });
 

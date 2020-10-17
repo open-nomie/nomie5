@@ -15,25 +15,25 @@ describe("Ledger Tools test sweeeeet", () => {
   logs.push(
     new NLog({
       note: "#dance(1) firefly freedom",
-      end: dayjs(baseDate).hour(10).toDate().getTime(),
+      end: dayjs(baseDate).toDate().getTime(),
     })
   );
   logs.push(
     new NLog({
       note: "#dance(4) free",
-      end: dayjs(baseDate).hour(11).toDate().getTime(),
+      end: dayjs(baseDate).toDate().getTime(),
     })
   );
   logs.push(
     new NLog({
       note: "#dance(1) freedom #tree #bird",
-      end: dayjs(baseDate).hour(12).toDate().getTime(),
+      end: dayjs(baseDate).toDate().getTime(),
     })
   );
   logs.push(
     new NLog({
       note: "#house for the #bird",
-      end: dayjs(baseDate).hour(12).toDate().getTime(),
+      end: dayjs(baseDate).toDate().getTime(),
     })
   );
 
@@ -125,7 +125,6 @@ describe("Ledger Tools test sweeeeet", () => {
   it("should get tracker values from logs (as used in today)", () => {
     let today = ledgerTools.getTrackersAndValuesFromLogs(logs);
     expect(today.dance).toBeTruthy();
-    expect(today.dance.hours.join(",")).toBe("10,11,12");
     expect(today.dance.values.join(",")).toBe("1,4,1");
   });
 });

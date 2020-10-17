@@ -302,6 +302,16 @@ context("App", () => {
     // cy.get(".board-all").click();
   };
 
+  const trackCreatedTracker = (options={}) => {
+    cy.get(`.tracker-${options.tag}`).click();
+  
+    if(options.one_tap) {
+      // Done
+    } else {
+
+    }
+  }
+
   const createTracker = (options={})=>{
     appTab('Track');
     // Click Add Tracker
@@ -311,10 +321,11 @@ context("App", () => {
     cy.get('.list > :nth-child(1)').click();
     cy.wait(200);
     cy.get('.n-tracker-editor .emoji-editor input').type(options.emoji || '🎭');
-    cy.get('.n-tracker-editor .tracker-label input').type(options.label || `Test ${options.type || 'Tracker'}`)
+    const label = options.label || `Test ${options.type || 'Tracker'}`;
+    cy.get('.n-tracker-editor .tracker-label input').type(label)
 
     options.type = options.type || "tick"
-
+    options.tag = label.replace(/ /g,'_').toLowerCase();
     // open advanced 
     cy.get('.advanced-toggler').click();
     cy.wait(200);
@@ -371,6 +382,11 @@ context("App", () => {
     cy.wait(300);
     // Save Button
     cy.get('.n-tracker-editor > .n-modal-frame > .n-modal > .n-modal-header > .n-toolbar-grid > .right').click();
+
+    appTab('Track');
+
+    // trackCreatedTracker(options);
+      
     
   }
 
