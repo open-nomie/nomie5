@@ -169,15 +169,13 @@ export default class LedgerTools {
           });
 
         let date = parsedBooks[0];
+        console.log("Date found", { date, book: books[0], parsed: parsedBooks[0] });
         if (date) {
           this.storage.local.put("firstBook", {
             date: date.toDate().getTime(),
             lastChecked: new Date().getTime(),
           });
-        } else {
-          console.log("No date found", { book: books[0], parsed: parsedBooks[0] });
         }
-
         return date;
       } else {
         return dayjs();
