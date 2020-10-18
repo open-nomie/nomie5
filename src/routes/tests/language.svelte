@@ -49,7 +49,6 @@
       activeLang.name = working.name || activeLang.name;
       activeLang.author = working.author || activeLang.author;
       activeLang.translation = _.defaultsDeep(working.translation || {}, activeLang.translation);
-      console.log(activeLang, working);
     }
   }
 

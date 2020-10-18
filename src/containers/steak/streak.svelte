@@ -48,7 +48,6 @@
       mockTracker = element.type == "tracker" ? TrackerStore.getByTag(element.id) : new TrackerConfig({ tag: `${element.id}-mock` });
       let logs = await StreakHelper.getLogs(element, selectedDate, view, $UserStore.meta.firstDayOfWeek);
       calendarLogs = StreakHelper.logsToCalendar(logs);
-      console.log({ calendarLogs });
     }
   }
 </script>
