@@ -16,6 +16,7 @@
   import type { StreakViewTypes } from "./streak-helper";
   import type { CalendarLog } from "./streak-helper";
   import StreakDays from "./streak-days.svelte";
+  import Row from "../../components/row/row.svelte";
 
   export let term: string;
   export let selectedDate: Dayjs = dayjs();
@@ -65,32 +66,32 @@
         <StreakDays logs={calendarLogs} date={selectedDate} days={7} />
       </div>
     {:else if view == 'quarter'}
-      <div class="n-row align-items-start">
+      <Row className="align-items-start">
         <Calendar tracker={mockTracker} compact initialDate={selectedDate.subtract(2, 'month')} events={calendarLogs} />
         <Calendar tracker={mockTracker} compact initialDate={selectedDate.subtract(1, 'month')} events={calendarLogs} />
         <Calendar tracker={mockTracker} compact initialDate={selectedDate} events={calendarLogs} />
-      </div>
+      </Row>
     {:else if view == 'year'}
-      <div class="n-row align-items-start">
+      <Row className="align-items-start">
         <Calendar tracker={mockTracker} compact initialDate={selectedDate} events={calendarLogs} />
         <Calendar tracker={mockTracker} compact initialDate={selectedDate.subtract(1, 'month')} events={calendarLogs} />
         <Calendar tracker={mockTracker} compact initialDate={selectedDate.subtract(2, 'month')} events={calendarLogs} />
-      </div>
-      <div class="n-row align-items-start">
+      </Row>
+      <Row className="align-items-start">
         <Calendar tracker={mockTracker} compact initialDate={selectedDate.subtract(3, 'month')} events={calendarLogs} />
         <Calendar tracker={mockTracker} compact initialDate={selectedDate.subtract(4, 'month')} events={calendarLogs} />
         <Calendar tracker={mockTracker} compact initialDate={selectedDate.subtract(5, 'month')} events={calendarLogs} />
-      </div>
-      <div class="n-row align-items-start">
+      </Row>
+      <Row className="align-items-start">
         <Calendar tracker={mockTracker} compact initialDate={selectedDate.subtract(6, 'month')} events={calendarLogs} />
         <Calendar tracker={mockTracker} compact initialDate={selectedDate.subtract(7, 'month')} events={calendarLogs} />
         <Calendar tracker={mockTracker} compact initialDate={selectedDate.subtract(8, 'month')} events={calendarLogs} />
-      </div>
-      <div class="n-row align-items-start">
+      </Row>
+      <Row className="align-items-start">
         <Calendar tracker={mockTracker} compact initialDate={selectedDate.subtract(9, 'month')} events={calendarLogs} />
         <Calendar tracker={mockTracker} compact initialDate={selectedDate.subtract(10, 'month')} events={calendarLogs} />
         <Calendar tracker={mockTracker} compact initialDate={selectedDate.subtract(11, 'month')} events={calendarLogs} />
-      </div>
+      </Row>
     {/if}
 
     <!-- <div class="n-panel center-all">
