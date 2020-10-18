@@ -75,6 +75,7 @@
     background-position: center;
     overflow: hidden;
     letter-spacing: normal;
+    color: var(--color-inverse);
   }
 
   .n-avatar.rounded {
