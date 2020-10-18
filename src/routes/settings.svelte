@@ -490,17 +490,20 @@ Note: Your data will not automatically move over. You'll first need to export it
             </div>
 
             <ListItem itemDivider>Version</ListItem>
-            <ListItem title="Version APP_VERSION " description="Built APP_BUILD_DATE ">
+            <ListItem title="Version APP_VERSION " description="Built APP_BUILD_DATE " detail on:click={AppStore.reveal}>
               <span slot="right" class="n-row">
-                <Button size="xs" on:click={AppStore.reveal} className="ml-2">What's new</Button>
+                <Button size="xs" className="ml-2">New</Button>
               </span>
             </ListItem>
             <ListItem
+              detail
               title="Onboarded"
               on:click={() => {
                 navigate('/setup');
               }}>
-              <span slot="right" class="text-primary-bright">{Lang.t('settings.redo-setup', 'Redo Setup')}</span>
+              <span slot="right" class="text-primary">
+                <Text size="sm">{Lang.t('settings.redo-setup', 'Redo Setup')}</Text>
+              </span>
             </ListItem>
           {/if}
           <!-- END Views -->

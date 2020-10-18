@@ -142,7 +142,6 @@ export default class LedgerTools {
     if (age > 2 || fresh) {
       // Get list of books
       const books = await this.listBooks();
-      // console.log("Books", books);
       if (books.length) {
         let parsedBooks = books
           .map((path: string) => {
@@ -153,7 +152,10 @@ export default class LedgerTools {
               // Get year month from book
               let yearMonSplit = book.split("-");
               let year = parseInt(yearMonSplit[0]);
-              let dayOfYear = parseInt(yearMonSplit[1]) * 7 - 7;
+              let week = parseInt(yearMonSplit[1]);
+
+              week = isNaN(week) ? 1 : week;
+              let dayOfYear = (week ? week : 1) * 7 - 7;
               // Typescript hack
               let anyd: any = dayjs().year(year);
               return dayjs(anyd.dayOfYear(dayOfYear));
@@ -167,10 +169,15 @@ export default class LedgerTools {
           });
 
         let date = parsedBooks[0];
-        this.storage.local.put("firstBook", {
-          date: date.toDate().getTime(),
-          lastChecked: new Date().getTime(),
-        });
+        if (date) {
+          this.storage.local.put("firstBook", {
+            date: date.toDate().getTime(),
+            lastChecked: new Date().getTime(),
+          });
+        } else {
+          console.log("No date found", { book: books[0], parsed: parsedBooks[0] });
+        }
+
         return date;
       } else {
         return dayjs();
