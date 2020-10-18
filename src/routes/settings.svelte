@@ -5,14 +5,18 @@
 
   import SocialShare from "../modules/share/share";
   import Storage from "../modules/storage/storage";
-  // Components
-  import NItem from "../components/list-item/list-item.svelte";
 
+  // Components
+  import ListItem from "../components/list-item/list-item.svelte";
   import NIcon from "../components/icon/icon.svelte";
   import NButtonGroup from "../components/button-group/button-group.svelte";
   import BlockstackOptions from "../components/storage/blockstack.svelte";
   import LocalstorageOptions from "../components/storage/localstorage.svelte";
   import PouchDBOptions from "../components/storage/pouchdb.svelte";
+  import Spacer from "../components/spacer/spacer.svelte";
+  import List from "../components/list/list.svelte";
+  import Row from "../components/row/row.svelte";
+  import Divider from "../components/divider/divider.svelte";
 
   // Containers
   import ImporterModal from "../containers/importer/importer.svelte";
@@ -41,17 +45,11 @@
   import Button from "../components/button/button.svelte";
   import Icon from "../components/icon/icon.svelte";
   import appConfig from "../config/appConfig";
-  import Confetti from "../components/confetti/confetti.svelte";
 
   import tick from "../utils/tick/tick";
 
   import { LastUsed } from "../store/last-used";
   import { AppStore } from "../store/app-store";
-  import ListItem from "../components/list-item/list-item.svelte";
-  import Spacer from "../components/spacer/spacer.svelte";
-  import List from "../components/list/list.svelte";
-  import Row from "../components/row/row.svelte";
-  import Divider from "../components/divider/divider.svelte";
 
   export const location = undefined;
   export const style = undefined;
@@ -64,8 +62,6 @@
     files: [],
     showMassEditor: false,
   };
-
-  let showConfetti = false;
 
   $: alwaysLocate = $UserStore.alwaysLocate;
 
@@ -341,8 +337,8 @@ Note: Your data will not automatically move over. You'll first need to export it
               *******************************************
             -->
             <div class="n-list pb-2">
-              <NItem itemDivider>{Lang.t('settings.storage-location', 'Storage Location')}</NItem>
-              <NItem on:click={methods.storageMenu}>
+              <ListItem itemDivider>{Lang.t('settings.storage-location', 'Storage Location')}</ListItem>
+              <ListItem on:click={methods.storageMenu}>
                 <span slot="left">☁️</span>
                 <Text>
                   {#if $UserStore.storageType === 'local'}
@@ -354,7 +350,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <div slot="right">
                   <Text size="sm" className="text-primary-bright">{Lang.t('general.change', 'Change')}</Text>
                 </div>
-              </NItem>
+              </ListItem>
 
               {#if $UserStore.storageType === 'blockstack'}
                 <BlockstackOptions />
@@ -366,26 +362,26 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <PouchDBOptions />
               {/if}
 
-              <NItem
+              <ListItem
                 detail
                 title={Lang.t('general.browse-files', 'Browse Files...')}
                 on:click={() => {
                   navigate('/files');
                 }}>
                 <span slot="left">📂</span>
-              </NItem>
+              </ListItem>
 
             </div>
 
             <div class="n-list pb-2">
-              <NItem itemDivider>{Lang.t('settings.import-data', 'Import Data')}</NItem>
-              <NItem clickable title={Lang.t('settings.nomie-api', 'Nomie API')} on:click={() => navigate('/api')}>
+              <ListItem itemDivider>{Lang.t('settings.import-data', 'Import Data')}</ListItem>
+              <ListItem clickable title={Lang.t('settings.nomie-api', 'Nomie API')} on:click={() => navigate('/api')}>
                 <span slot="left">🚚</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
-              </NItem>
-              <NItem
+              </ListItem>
+              <ListItem
                 clickable
                 title={`${Lang.t('settings.import-from-backup', 'Import from Backup')}`}
                 on:click={() => {
@@ -396,47 +392,42 @@ Note: Your data will not automatically move over. You'll first need to export it
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
                 <input slot="right" class="d-none" type="file" bind:this={fileInput} on:change={methods.onImportFile} />
-              </NItem>
-              <NItem clickable title={`${Lang.t('settings.import-from-csv', 'Import from CSV ')}`} to="/settings/import/csv">
+              </ListItem>
+              <ListItem clickable title={`${Lang.t('settings.import-from-csv', 'Import from CSV ')}`} to="/settings/import/csv">
                 <span slot="left">📄</span>
                 <span slot="right" class="n-row">
                   <div class="nbtn nbtn-xs nbtn-rounded nbtn-danger">Beta</div>
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
-              </NItem>
+              </ListItem>
             </div>
             <div class="n-list pb-2">
-              <NItem itemDivider>{Lang.t('settings.export-data', 'Export Data')}</NItem>
-              <NItem detail title={Lang.t('settings.generate-backup', 'Generate Backup')} to="/settings/export/backup">
+              <ListItem itemDivider>{Lang.t('settings.export-data', 'Export Data')}</ListItem>
+              <ListItem detail title={Lang.t('settings.generate-backup', 'Generate Backup')} to="/settings/export/backup">
                 <span slot="left">📦</span>
 
-              </NItem>
-              <NItem detail title={Lang.t('settings.generate-csv', 'Generate CSV')} to="/settings/export/csv">
+              </ListItem>
+              <ListItem detail title={Lang.t('settings.generate-csv', 'Generate CSV')} to="/settings/export/csv">
                 <span slot="left">📃</span>
-              </NItem>
+              </ListItem>
             </div>
 
             <div class="n-list pb-2">
-              <NItem itemDivider>{Lang.t('settings.miscellaneous', 'Miscellaneous')}</NItem>
-              <NItem title={Lang.t('settings.update-last-used-date', "Update All Tracker's Last-Used")} on:click={LastUsed.updateAll}>
+              <ListItem itemDivider>{Lang.t('settings.miscellaneous', 'Miscellaneous')}</ListItem>
+              <ListItem title={Lang.t('settings.update-last-used-date', "Update All Tracker's Last-Used")} on:click={LastUsed.updateAll}>
                 <span slot="left">🕰</span>
-              </NItem>
-              <NItem title={Lang.t('settings.translate-nomie', 'Help Translate Nomie')} to="/lang" detail>
-                <span slot="left">🌍</span>
-                <div slot="right">
-                  <div class="nbtn nbtn-xs nbtn-rounded nbtn-danger">Beta</div>
-                </div>
-              </NItem>
+              </ListItem>
+
             </div>
 
             <!-- <div class="n-list solo my-2">
               <Text bold className="my-3 mx-3">{Lang.t('general.type', 'Finding old data')}</Text>
-              <NItem bottomLine title="Find Context" on:click={ContextStore.searchForContext}>
+              <ListItem bottomLine title="Find Context" on:click={ContextStore.searchForContext}>
                 <span slot="left">💬</span>
-              </NItem>
-              <NItem title="Find People" on:click={PeopleStore.searchForPeople}>
+              </ListItem>
+              <ListItem title="Find People" on:click={PeopleStore.searchForPeople}>
                 <span slot="left">👨‍👨‍👧‍👧</span>
-              </NItem>
+              </ListItem>
             </div> -->
           {:else if view == 'about'}
             <!--
@@ -445,29 +436,29 @@ Note: Your data will not automatically move over. You'll first need to export it
               *******************************************
             -->
             <div class="n-list pb-1">
-              <NItem itemDivider>{Lang.t('settings.join-the-community', 'Join the Community')}</NItem>
-              <NItem detail title="Learn More" href="https://nomie.app?s=dap">
+              <ListItem itemDivider>{Lang.t('settings.join-the-community', 'Join the Community')}</ListItem>
+              <ListItem detail title="Learn More" href="https://nomie.app?s=dap">
                 <span slot="right" class="text-inverse-3">Nomie.app</span>
-              </NItem>
-              <NItem title="Become a Patron" detail href="https://www.patreon.com/nomieapp">
+              </ListItem>
+              <ListItem title="Become a Patron" detail href="https://www.patreon.com/nomieapp">
                 <span slot="right" class="text-inverse-3">Patreon</span>
-              </NItem>
-              <NItem title="Reddit r/nomie" detail href="https://reddit.com/r/nomie">
+              </ListItem>
+              <ListItem title="Reddit r/nomie" detail href="https://reddit.com/r/nomie">
                 <span slot="right" class="n-row text-inverse-3">/r/nomie</span>
-              </NItem>
+              </ListItem>
 
-              <NItem title="Open Source" detail href="https://github.com/open-nomie/nomie">
+              <ListItem title="Open Source" detail href="https://github.com/open-nomie/nomie">
                 <span slot="right" class="n-row text-inverse-3">GitHub</span>
-              </NItem>
+              </ListItem>
             </div>
 
             <div class="n-list pb-1">
-              <NItem itemDivider>App Details</NItem>
-              <NItem title={Lang.t('general.tracker-count', 'Tracker Count')}>
+              <ListItem itemDivider>App Details</ListItem>
+              <ListItem title={Lang.t('general.tracker-count', 'Tracker Count')}>
                 <span slot="right">{TrackerStore.getAsArray().length}</span>
-              </NItem>
+              </ListItem>
 
-              <NItem title={Lang.t('general.first_log', 'First Log')}>
+              <ListItem title={Lang.t('general.first_log', 'First Log')}>
                 <div class="" slot="right">
                   {#await LedgerStore.getFirstDate(true)}
                     Loading...
@@ -476,66 +467,76 @@ Note: Your data will not automatically move over. You'll first need to export it
                   {/await}
                   <!--  -->
                 </div>
-              </NItem>
-              <NItem title={Lang.t('general.launch-count', 'Launch Count')}>
+              </ListItem>
+              <ListItem title={Lang.t('general.launch-count', 'Launch Count')}>
                 <div class="n-row" slot="right">
                   <Button icon size="sm" on:click={UserStore.resetLaunchCount}>
                     <NIcon name="delete" className="fill-red" size="18" />
                   </Button>
                   {$UserStore.launchCount}
                 </div>
-              </NItem>
-              <NItem title={Lang.t('general.device', 'Device')}>
+              </ListItem>
+              <ListItem title={Lang.t('general.device', 'Device')}>
                 <span slot="right">{$Device.device}</span>
-              </NItem>
-              <NItem title={Lang.t('general.platform', 'Platform')}>
+              </ListItem>
+              <ListItem title={Lang.t('general.platform', 'Platform')}>
                 <span slot="right">{$Device.platform}</span>
-              </NItem>
-              <NItem title={Lang.t('general.pwa', 'PWA')}>
+              </ListItem>
+              <ListItem title={Lang.t('general.pwa', 'PWA')}>
                 <span slot="right">{$Device.pwa}</span>
-              </NItem>
+              </ListItem>
               <Divider center />
-              <NItem title="UI Test" to="/test" detail />
+              <ListItem title="UI Test" to="/test" detail />
             </div>
 
-            <NItem itemDivider>Version</NItem>
-            <NItem title="Version APP_VERSION " description="Built APP_BUILD_DATE ">
+            <ListItem itemDivider>Version</ListItem>
+            <ListItem title="Version APP_VERSION " description="Built APP_BUILD_DATE ">
               <span slot="right" class="n-row">
                 <Button size="xs" on:click={AppStore.reveal} className="ml-2">What's new</Button>
               </span>
-            </NItem>
-            <NItem
+            </ListItem>
+            <ListItem
               title="Onboarded"
               on:click={() => {
                 navigate('/setup');
               }}>
               <span slot="right" class="text-primary-bright">{Lang.t('settings.redo-setup', 'Redo Setup')}</span>
-            </NItem>
+            </ListItem>
           {/if}
           <!-- END Views -->
 
           <List className="mt-3">
-            <NItem title={Lang.t('general.questions', 'Questions?')} class="mb-2">
+            <ListItem title={Lang.t('settings.translate-nomie', 'Help Translate Nomie')} to="/lang" detail>
+              <span slot="left">🌍</span>
               <div slot="right">
-                <a href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>{config.support_contact}</a>
+                <div class="nbtn nbtn-xs nbtn-rounded nbtn-danger">Beta</div>
               </div>
-            </NItem>
+            </ListItem>
 
-            <NItem>
+            <ListItem title={Lang.t('general.questions', 'Questions?')} class="mb-2" detail>
+              <span slot="left">🆘</span>
+              <div slot="right">
+                <Text size="sm">
+                  <a href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>{config.support_contact}</a>
+                </Text>
+              </div>
+            </ListItem>
+
+            <ListItem>
               <Text size="md">Happy Data, LLC</Text>
               <div slot="right">
                 <Text size="sm" on:click={specialTap}>&copy; Copyright 2014 - {dayjs().format('YYYY')}</Text>
               </div>
-            </NItem>
+            </ListItem>
           </List>
 
-          <NItem className="bg-transparent my-4" title="⚠️ {Lang.t('settings.danger-zone', 'Danger Zone')}">
+          <ListItem className="bg-transparent my-4" title="⚠️ {Lang.t('settings.danger-zone', 'Danger Zone')}">
             <div slot="right">
               <Button color="danger" size="sm" on:click={methods.deleteEverything}>
                 {Lang.t('settings.destroy-all-data', 'Destroy all Data')}
               </Button>
             </div>
-          </NItem>
+          </ListItem>
 
         </div>
         <!-- end container -->
