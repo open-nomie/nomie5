@@ -244,6 +244,13 @@ const trackerStoreInit = () => {
           },
         },
         {
+          title: Lang.t("tracker.streak", "Streak"),
+          click() {
+            Interact.openStreak(`#${tracker.tag}`);
+            click();
+          },
+        },
+        {
           title: `${Lang.t("tracker.edit-tracker", "Edit Tracker")} `,
           click() {
             Interact.editTracker(tracker);

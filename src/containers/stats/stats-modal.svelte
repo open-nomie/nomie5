@@ -281,12 +281,12 @@
 
   function onMoreTap() {
     let buttons = [
-      // {
-      //   title: "View Streak",
-      //   click: () => {
-      //     Interact.openStreak(state.currentTerm);
-      //   },
-      // },
+      {
+        title: "View Streak",
+        click: () => {
+          Interact.openStreak(state.currentTerm);
+        },
+      },
       {
         title: `${Lang.t("general.edit")} ${state.currentTerm}`,
         click: () => {
