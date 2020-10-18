@@ -5,6 +5,7 @@
   import Text from "../text/text.svelte";
   import Button from "../button/button.svelte";
   import Avatar from "../avatar/avatar.svelte";
+  import Row from "../row/row.svelte";
   const dispatch = createEventDispatcher();
 
   export let element = undefined;
@@ -63,25 +64,28 @@
       dispatch('click', element);
       return false;
     }}>
-    {#if hasEmojiSlot}
-      <slot name="emoji" />
-    {:else if element.type == 'tracker'}
-      <Avatar size={avatarSize} emoji={(element.obj || {}).emoji} label={(element.obj || {}).id} className="mr-2" />
-      <!-- <div class="emoji" style={`color:${(element.obj || {}).color || '#CCC'}`}>{(element.obj || {}).emoji || '⚪️'}</div> -->
-    {:else if element.type == 'person'}
-      {#if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].avatar}
-        <Avatar size={avatarSize} src={$PeopleStore.people[element.id].avatar} className="mr-2" />
-      {:else if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].displayName}
-        <Avatar size={avatarSize} label={$PeopleStore.people[element.id].displayName} className="mr-2" />
+
+    <Row>
+      {#if hasEmojiSlot}
+        <slot name="emoji" />
+      {:else if element.type == 'tracker'}
+        <Avatar size={avatarSize} emoji={(element.obj || {}).emoji} label={(element.obj || {}).id} className="mr-2" />
+      {:else if element.type == 'person'}
+        {#if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].avatar}
+          <Avatar size={avatarSize} src={$PeopleStore.people[element.id].avatar} className="mr-2" />
+        {:else if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].displayName}
+          <Avatar size={avatarSize} label={$PeopleStore.people[element.id].displayName} className="mr-2" />
+        {/if}
       {/if}
-    {/if}
-    <main class="{truncate ? 'truncate' : ''} text-left w-100">
-      <Text truncate size="sm">{(element.obj || {}).label || element.id}</Text>
-      {#if shouldShowValue(element)}
-        <Text bold style="white-space:pre">{NomieUOM.format(element.value, (element.obj || {}).uom) || ''}</Text>
-      {:else if value}
-        <Text style="white-space:pre" faded size="sm">{value}</Text>
-      {/if}
-    </main>
+      <main class="{truncate ? 'truncate' : ''} text-left w-100">
+        <Text truncate size="sm">{(element.obj || {}).label || element.id}</Text>
+        {#if shouldShowValue(element)}
+          <Text bold style="white-space:pre">{NomieUOM.format(element.value, (element.obj || {}).uom) || ''}</Text>
+        {:else if value}
+          <Text style="white-space:pre" faded size="sm">{value}</Text>
+        {/if}
+      </main>
+    </Row>
+
   </Button>
 {/if}

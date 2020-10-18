@@ -19,6 +19,7 @@
   import ScoreTracker from "../../modules/scoring/score-tracker";
   import { Lang } from "../../store/lang";
   import Button from "../../components/button/button.svelte";
+  import Avatar from "../../components/avatar/avatar.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -104,13 +105,8 @@
         }
       }}>
       <div class="highlight" style="background-color:{tracker.color}" />
-      <div slot="left" class="n-row justify-content-center truncate pr-0">
-        <Text
-          center
-          style="color:{tracker.color}; width:40px; white-space:pre; max-width:40px; min-width:40px; overflow:visible"
-          size={$UserStore.localSettings.compactButtons ? 'xl' : 'xxl'}>
-          {tracker.emoji}
-        </Text>
+      <div slot="left" class="n-row justify-content-center pr-0">
+        <Avatar emoji={tracker.emoji} label={tracker.label} size={$UserStore.localSettings.compactButtons ? 30 : 40} />
       </div>
       <div>
         <Text size="md" leading2>{tracker.label}</Text>

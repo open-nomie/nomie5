@@ -3,6 +3,7 @@
   import { createEventDispatcher } from "svelte";
   import { initials } from "../../utils/text/text";
   import { strToColor } from "../dymoji/dymoji";
+  import emojiCount from "../../modules/emoji-count/emoji-count";
 
   // export let size: "xs" | "sm" | "md" | "lg" | "xl" = "md";
   export let size: number = 32;
@@ -23,7 +24,9 @@
     classList = [className];
     styles.push(`--avatar-size:${size}px`);
     styles.push(`height:${size}px`);
-    styles.push(`width:${size}px`);
+    if (!emoji) {
+      styles.push(`width:${size}px`);
+    }
     // If it's a source
     if (src && src.length) {
       classList.push("src");
@@ -92,7 +95,7 @@
     font-weight: bold;
   }
   .n-avatar.emoji {
-    font-size: calc(var(--avatar-size) * 1);
+    font-size: calc(var(--avatar-size) * 0.9);
     box-shadow: none;
     white-space: nowrap;
     overflow: visible;
@@ -100,8 +103,21 @@
   .n-avatar.src {
     color: transparent;
   }
+  .n-avatar.emolen-0 {
+    letter-spacing: -0.05em;
+  }
+  .n-avatar.emolen-2,
+  .n-avatar.emolen-3 {
+    letter-spacing: -0.4em;
+    text-indent: -0.4em;
+  }
 </style>
 
-<div class="n-avatar {size} {classList.join(' ')}" style={`${styles.join('; ')}; ${style}`} on:click|preventDefault={click}>
+<div
+  class="n-avatar {emoji ? `emolen-${emojiCount(emoji)}` : 'no-emoji'}
+  {size}
+  {classList.join(' ')}"
+  style={`${styles.join('; ')}; ${style}`}
+  on:click|preventDefault={click}>
   {#if emoji}{emoji}{:else if label}{initials(label)}{/if}
 </div>

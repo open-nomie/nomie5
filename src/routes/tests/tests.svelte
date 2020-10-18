@@ -41,6 +41,37 @@
   <div class="p-4">
     <Text size="sm" faded>A set of base components for quick testing... I should be using Storybook, but have yet to do so.</Text>
 
+    <Card title="Avatar" pad>
+
+      <Row className="mb-3">
+        <Avatar size={50} emoji="🌮🙆" />
+      </Row>
+
+      <Row className="mb-3">
+        <Avatar label="Brandon Corbin" size={70} />
+        <Avatar label="Brandon Corbin" size={32} />
+        <Avatar label="Brandon Corbin" size={24} />
+        <Avatar label="Brandon Corbin" size={16} />
+      </Row>
+
+      <Row className="mb-3">
+        <Avatar emoji="🥳" size={70} />
+        <Avatar emoji="🥳" size={32} />
+        <Avatar emoji="🥳" size={24} />
+        <Avatar emoji="🥳" size={16} />
+      </Row>
+
+      <Row>
+        <Avatar src="https://placehold.it/60x60" size={70} />
+        <Avatar src="https://placehold.it/60x60" size={32} />
+        <Avatar src="https://placehold.it/60x60" size={24} />
+        <Avatar src="https://placehold.it/60x60" size={16} />
+      </Row>
+
+    </Card>
+
+    <hr class="divider center my-3" />
+
     <hr class="divider center my-2" />
 
     <Card title="Confetti" className="mb-3" pad>
@@ -79,33 +110,6 @@
     </Card>
 
     <hr class="divider center my-2" />
-
-    <Card title="Avatar" pad>
-
-      <Row className="mb-3">
-        <Avatar label="Brandon Corbin" size={70} />
-        <Avatar label="Brandon Corbin" size={32} />
-        <Avatar label="Brandon Corbin" size={24} />
-        <Avatar label="Brandon Corbin" size={16} />
-      </Row>
-
-      <Row className="mb-3">
-        <Avatar emoji="🥳" size={70} />
-        <Avatar emoji="🥳" size={32} />
-        <Avatar emoji="🥳" size={24} />
-        <Avatar emoji="🥳" size={16} />
-      </Row>
-
-      <Row>
-        <Avatar src="https://placehold.it/60x60" size={70} />
-        <Avatar src="https://placehold.it/60x60" size={32} />
-        <Avatar src="https://placehold.it/60x60" size={24} />
-        <Avatar src="https://placehold.it/60x60" size={16} />
-      </Row>
-
-    </Card>
-
-    <hr class="divider center my-3" />
 
     <Text size="lg" leading3 className="mb-2">Positivity</Text>
 

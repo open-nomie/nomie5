@@ -26,6 +26,9 @@
       overflow: hidden;
     }
   }
+  :global(.n-ball .emolen-2, .n-ball .emolen-3) {
+    width: 100% !important;
+  }
 </style>
 
 <div

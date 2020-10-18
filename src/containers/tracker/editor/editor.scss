@@ -26,7 +26,7 @@
       width: var(--emoji-size);
       height: var(--emoji-size);
       border-radius: var(--emoji-size-half);
-      overflow: hidden;
+      // overflow: hidden;
       input {
         height: calc(var(--emoji-size) - 8px);
         width: calc(var(--emoji-size) - 8px);
@@ -44,6 +44,7 @@
         right: 0;
         bottom: 0;
         opacity: 0.5;
+        border-radius: 50%;
       }
       &.no-emoji {
         &:after {
