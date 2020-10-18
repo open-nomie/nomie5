@@ -2,23 +2,28 @@
   import type { keys } from "localforage";
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
+
   import Button from "../../components/button/button.svelte";
   import Card from "../../components/card/card.svelte";
   import Icon from "../../components/icon/icon.svelte";
   import Input from "../../components/input/input.svelte";
   import ListItem from "../../components/list-item/list-item.svelte";
   import Spacer from "../../components/spacer/spacer.svelte";
-
   import Text from "../../components/text/text.svelte";
   import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
+
   import Toolbar from "../../components/toolbar/toolbar.svelte";
   import Layout from "../../containers/layout/layout.svelte";
 
   import BaseLang from "../../lang/base";
+
   import download from "../../modules/download/download";
   import { SideStore } from "../../modules/storage/storage";
+
   import { Device } from "../../store/device-store";
   import { Interact } from "../../store/interact";
+
+  import _ from "lodash";
 
   const sideStore = new SideStore("language-editor");
 
@@ -39,8 +44,13 @@
   }
 
   async function main() {
-    let working = sideStore.get("active-lang") || {};
-    activeLang = { ...baseLang, ...working };
+    let working = sideStore.get("active-lang");
+    if (working) {
+      activeLang.name = working.name || activeLang.name;
+      activeLang.author = working.author || activeLang.author;
+      activeLang.translation = _.defaultsDeep(working.translation || {}, activeLang.translation);
+      console.log(activeLang, working);
+    }
   }
 
   async function send() {
@@ -77,7 +87,12 @@
       </div>
     </ToolbarGrid>
   </div>
-
+  <Toolbar>
+    <Spacer />
+    Finished?
+    <Button size="sm" className="ml-2" on:click={send} text>Send to Brandon</Button>
+    <Spacer />
+  </Toolbar>
   <main>
     <Card pad>
       <Text size="sm" leading2>
@@ -109,13 +124,6 @@
     </ListItem>
   </main>
 
-  <div slot="footer">
-    <Toolbar>
-      <Spacer />
-      All Done?
-      <Button size="sm" className="ml-2" on:click={send}>Send to Brandon</Button>
-      <Spacer />
-    </Toolbar>
-  </div>
+  <div slot="footer" />
 
 </Layout>
