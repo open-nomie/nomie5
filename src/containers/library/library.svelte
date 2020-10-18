@@ -1,7 +1,6 @@
 <script lang="ts">
   import Modal from "../../components/modal/modal.svelte";
 
-  
   import NText from "../../components/text/text.svelte";
   import NIcon from "../../components/icon/icon.svelte";
 
@@ -107,7 +106,7 @@
   type={$TrackerLibrary.first ? 'fullscreen' : 'fullscreen'}
   show={true}
   className="library-modal bg-solid"
-  title={Lang.t('tracker.things-to-track')}>
+  title={Lang.t('tracker.things-to-track', 'Things to Track')}>
 
   {#if $TrackerLibrary.first}
     <div class="px-2 pt-3 intro-message">

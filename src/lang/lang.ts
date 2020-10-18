@@ -2,6 +2,7 @@ import Italian from "./it";
 import SimplifiedChinese from "./zh-cn";
 import Test from "./test";
 import base from "./base";
+import de from "./de";
 export default {
   en: {
     label: "English",
@@ -10,6 +11,10 @@ export default {
   it: {
     label: "Italian",
     lang: Italian,
+  },
+  de: {
+    label: "German",
+    lang: de,
   },
   zhcn: {
     label: "Simplified Chinese",

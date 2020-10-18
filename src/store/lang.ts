@@ -34,6 +34,7 @@ const LangInit = () => {
       en: langs["en"].lang,
       zhcn: langs["zhcn"].lang,
       it: langs["it"].lang,
+      de: langs["de"].lang,
       test: langs["test"].lang,
     },
   });

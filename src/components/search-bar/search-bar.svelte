@@ -11,7 +11,7 @@
 
   export let searchTerm = null;
   export let autocomplete = false;
-  export let placeholder = `${Lang.t("general.search")}...`;
+  export let placeholder = `${Lang.t("general.search", "Search")}...`;
   export let style = "";
   export let className = "";
   export let compact = false;
