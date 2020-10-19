@@ -20,6 +20,9 @@
   import ToggleSwitch from "../toggle-switch/toggle-switch.svelte";
   import Text from "../text/text.svelte";
   import MassEditor from "../../containers/mass-editor/mass-editor.svelte";
+  import BackButton from "../back-button/back-button.svelte";
+  import List from "../list/list.svelte";
+  import Divider from "../divider/divider.svelte";
 
   const state = {
     title: "File Browser",
@@ -300,9 +303,7 @@
   <NLayout className="n-file-browser">
     <div class="n-toolbar-grid container" slot="header">
       <div class="left">
-        <Button icon on:click={back}>
-          <NIcon name="arrowBack" className="fill-primary-bright" />
-        </Button>
+        <BackButton click={back} />
       </div>
       <div class="main">
         <h1 class="truncate">{state.title}</h1>
@@ -311,8 +312,7 @@
     </div>
     <div class="content n-panel vertical scroll-y">
       <div class="container">
-        <div class="n-list mt-2 solo">
-
+        <List className="mt-2" solo>
           {#if state.loading}
             <div class="p-4 n-panel center-all">
               <NSpinner />
@@ -345,7 +345,7 @@
               </NItem>
             {/if}
           {/each}
-        </div>
+        </List>
         <NItem className="bg-transparent mt-2" title={Lang.t('settings.allow-file-editing', 'Allow file editing')}>
           <Text size="sm" faded>
             Edit data files.
@@ -356,7 +356,7 @@
           </div>
         </NItem>
         {#if $UserStore.meta.canEditFiles}
-          <hr class="divider center" />
+          <Divider center />
           <NItem
             className="bg-transparent"
             title="{Lang.t('settings.find-and-replace', 'Find and Replace')}..."
@@ -373,9 +373,7 @@
   <NLayout className="n-file-browser" showTabs={false}>
     <div class="n-toolbar-grid container" slot="header">
       <div class="left">
-        <Button icon on:click={back}>
-          <NIcon name="arrowBack" className="fill-primary-bright" />
-        </Button>
+        <BackButton click={back} />
       </div>
       <div class="main">
         <h1 class="truncate">{state.file}</h1>
@@ -410,19 +408,7 @@
             <NSpinner />
           </div>
         {/if}
-        <!-- {#await readFile()}
-          <div class="n-panel center-all">
-            <NSpinner />
-          </div>
-        {:then content}
-          {#if !state.edit}
-            <pre>{content}</pre>
-          {:else}
-            <textarea id="editor">{content}</textarea>
-          {/if}
-        {:catch error}
-          <div class="text-red">{error.message}</div>
-        {/await} -->
+
       </div>
     </div>
     <div slot="footer">

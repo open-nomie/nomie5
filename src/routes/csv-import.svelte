@@ -32,6 +32,7 @@
   import { UserStore } from "../store/user-store";
   import { Interact } from "../store/interact";
   import { Lang } from "../store/lang";
+  import BackButton from "../components/back-button/back-button.svelte";
 
   let stepId: string = "home";
   let templates: Array<IImportConfig> = [];
@@ -309,9 +310,7 @@
 <Layout className="import" showTabs={false}>
   <div class="n-toolbar-grid container" slot="header">
     <div class="left">
-      <Button shape="circle" color="transparent" on:click={back}>
-        <Icon name="arrowBack" />
-      </Button>
+      <BackButton click={back} />
     </div>
     <div class="title main">Import CSV</div>
     <div class="right">

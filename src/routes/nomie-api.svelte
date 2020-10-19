@@ -251,30 +251,34 @@
         <Spinner />
       </div>
     {:else if state.ready && !state.registered}
-      <NItem
-        className="clickable text-primary solo text-center mb-3"
-        on:click={methods.register}
-        title={Lang.t('nomie-api.generate-api-key', 'Generate API Key...')} />
+      <div class="row align-items-center">
+        <div class="col-12 col-md-6">
 
-      <NItem className="just-content">
-        <p>
-          Generating an API will create a unique public/private key combination. The public key is stored in the Nomie API data store, your
-          private key will be stored in Nomie.
-        </p>
-        <p class="mt-2">
-          When you POST data with the provided API, your content is encrypted with the public key. Meaning, only your private key can
-          decrypt the content.
-        </p>
-        <p class="mt-2">
-          FREE Plans have 10 slots to hold data. Each time you import into Nomie it will clear all the slots. This will help limit run away
-          web service calls.
-        </p>
-      </NItem>
+          <NItem className="text-center" transparent>
+            <Button block on:click={methods.register}>{Lang.t('nomie-api.generate-api-key', 'Generate API Key...')}</Button>
+          </NItem>
 
-      <NItem
-        className="clickable text-primary mt-4 solo text-center mb-3"
-        on:click={installAPI}
-        title={Lang.t('nomie-api.manually-set-keys', 'Manually set API/Private Key...')} />
+          <NItem className="clickable text-primary bg-transparent compact text-center mb-3" on:click={installAPI}>
+            <Text size="sm" center>{Lang.t('nomie-api.manually-set-keys', 'Manually set API/Private Key...')}</Text>
+          </NItem>
+        </div>
+        <div class="col-12 col-md-6">
+          <NItem className="just-content mb-3">
+            <Text>
+              The Nomie API let's you import Note data into Nomie. Generate your own unique ID (api key) to send notes to Nomie with tools
+              like Zapier, Shortcuts and IFTTT.
+            </Text>
+            <Text size="sm" className="mt-2" faded>
+              When you POST data with the provided API, your content is encrypted with the public key. Meaning, only your private key can
+              decrypt the content.
+            </Text>
+            <Text size="sm" className="mt-2" faded>
+              FREE Plans have 10 slots to hold data. Each time you import into Nomie it will clear all the slots. This will help limit run
+              away web service calls.
+            </Text>
+          </NItem>
+        </div>
+      </div>
     {:else if state.view === 'captured'}
       <div class="n-list">
         {#each state.logs as apiLog, index}
@@ -305,10 +309,10 @@
       </div>
       {#if state.logs.length > state.hidden.length}
         <NItem className="bg-transparent mb-3">
-          <button on:click={methods.confirmClear} class="btn btn-outlined btn-danger mr-1 btn-block my-0">
+          <Button on:click={methods.confirmClear} type="outlined" color="danger" block className="mr-1 my-0">
             <NIcon name="closeOutline" className="fill-white mr-2" />
             {Lang.t('nomie-api.clear-remaining', 'Clear Remaining')}
-          </button>
+          </Button>
         </NItem>
       {/if}
       {#if !state.logs.length}

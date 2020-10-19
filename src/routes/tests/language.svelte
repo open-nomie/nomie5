@@ -24,6 +24,7 @@
   import { Interact } from "../../store/interact";
 
   import _ from "lodash";
+  import BackButton from "../../components/back-button/back-button.svelte";
 
   const sideStore = new SideStore("language-editor");
 
@@ -68,15 +69,7 @@
   <div slot="header">
     <ToolbarGrid>
       <div slot="left">
-        <Button
-          icon
-          className="tap-icon"
-          on:click={() => {
-            navigate('/settings');
-          }}>
-          <Icon name="arrowBack" />
-        </Button>
-
+        <BackButton to="/settings" />
       </div>
       <div slot="main">
         <Text bold>Nomie Language</Text>
