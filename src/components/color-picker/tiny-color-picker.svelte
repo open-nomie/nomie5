@@ -25,6 +25,12 @@
       border-style: solid;
       background-color: transparent;
     }
+    &.border-green {
+      border-color: var(--color-green);
+    }
+    &.border-red {
+      border-color: var(--color-red);
+    }
   }
 </style>
 
