@@ -1,7 +1,9 @@
 <script lang="ts">
   import type { fill, tap } from "lodash";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { UserStore } from "../../store/user-store";
+  import is from "../../utils/is/is";
+  import Avatar from "../avatar/avatar.svelte";
 
   import Button from "../button/button.svelte";
   import Icon from "../icon/icon.svelte";
@@ -97,10 +99,10 @@
 
     &.compact {
       --scb-pad: 12px;
-      .emoji {
-        font-size: 30px;
-        line-height: 100%;
-      }
+      // .emoji {
+      //   font-size: 30px;
+      //   line-height: 100%;
+      // }
       @include generateLabelSizes(0.96em);
       height: 124px;
       // .highlight {
@@ -126,15 +128,20 @@
     }
 
     .emoji {
-      font-size: 2em;
-      line-height: 100%;
-      // text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.23);
-      letter-spacing: -6px;
-      color: var(--color-inverse);
-      white-space: nowrap;
-      width: 100%;
-      text-align: left;
+      margin-top: -2px;
+      margin-left: -2px;
     }
+
+    // .emoji {
+    //   font-size: 2em;
+    //   line-height: 100%;
+    //   // text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.23);
+    //   letter-spacing: -6px;
+    //   color: var(--color-inverse);
+    //   white-space: nowrap;
+    //   width: 100%;
+    //   text-align: left;
+    // }
 
     &:before {
       transition: all 0.4s ease-in-out;
@@ -236,9 +243,10 @@
     }
   }
 
-  :global(.shortcut-button.has-value svg) {
-    stroke: #fff !important;
+  :global(.shortcut-button.has-value .emoji) {
+    color: #fff !important;
   }
+
   :global(.shortcut-button.no-value .more svg) {
     stroke: rgba(150, 150, 150, 0.6);
   }
@@ -270,7 +278,7 @@
 <Button
   ariaLabel={title || 'button'}
   color="clear"
-  className="{className} shortcut-button d-flex flex-column {value ? 'has-value' : 'no-value'}
+  className="{className} shortcut-button d-flex flex-column {is.truthy(value) ? 'has-value' : 'no-value'}
   {compact ? 'compact' : ''}"
   style={`background-color:${value ? color || 'var(--color-primary)' : 'var(--color-solid)'};`}
   on:longpress={() => {
@@ -283,8 +291,10 @@
     <TimeBalls color="#FFF" hours={hoursUsed} />
   </div>
   <div class="n-row top">
-    <div class="emoji" style={value ? 'color:#FFF' : `color:${color}`}>
-      {#if emoji}{emoji}{/if}
+    <div class="emoji" style={is.truthy(value) ? 'color:#FFF' : `color:${color}`}>
+      {#if emoji}
+        <Avatar {emoji} size={compact ? 30 : 42} />
+      {/if}
       <slot name="emoji" />
     </div>
     {#if !hideMore}

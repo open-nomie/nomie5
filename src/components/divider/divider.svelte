@@ -3,6 +3,7 @@
   export let center = false;
   export let inset = false;
   export let pad = false;
+  export let style = "";
 </script>
 
 <style>
@@ -22,4 +23,4 @@
   }
 </style>
 
-<hr class="divider {className} {center ? 'center' : ''} {inset ? 'inset' : ''} {pad ? 'my-3' : ''}" />
+<hr {style} class="divider {className} {center ? 'center' : ''} {inset ? 'inset' : ''} {pad ? 'my-3' : ''}" />

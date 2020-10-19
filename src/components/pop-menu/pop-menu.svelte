@@ -5,6 +5,7 @@
   import { Lang } from "../../store/lang";
   import Button from "../button/button.svelte";
   import Text from "../text/text.svelte";
+  import Divider from "../divider/divider.svelte";
   const dispatch = createEventDispatcher();
 
   export let title = undefined;
@@ -184,26 +185,27 @@
       {/if}
       <div class="list bg-solid">
         {#each buttons as button, index}
-          <Button
-            block
-            color="light"
-            size="lg"
-            ariaLabel={button.title}
-            disabled={button.disabled}
-            style="padding-top:8px; padding-bottom:8px;"
-            className="pop-button pop-button-{index}
-            {button.description ? 'nbtn-desc' : ''}"
-            on:click={(evt) => {
-              button.click();
-              close(evt);
-            }}>
-            {button.title}
-            {#if button.description}
-              <Text size="sm" leading2 faded className="mb-1">{button.description}</Text>
-            {/if}
-          </Button>
-          {#if index !== buttons.length - 1}
-            <hr class="divider center" />
+          {#if button.divider}
+            <Divider center />
+          {:else}
+            <Button
+              block
+              color="light"
+              size="lg"
+              ariaLabel={button.title}
+              disabled={button.disabled}
+              style="padding-top:8px; padding-bottom:8px;"
+              className="pop-button pop-button-{index}
+              {button.description ? 'nbtn-desc' : ''}"
+              on:click={(evt) => {
+                button.click();
+                close(evt);
+              }}>
+              {button.title}
+              {#if button.description}
+                <Text size="sm" leading2 faded className="mb-1">{button.description}</Text>
+              {/if}
+            </Button>
           {/if}
         {/each}
 

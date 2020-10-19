@@ -96,7 +96,7 @@
     font-weight: bold;
   }
   .n-avatar.emoji {
-    font-size: calc(var(--avatar-size) * 0.9);
+    font-size: calc(var(--avatar-size) * 0.85);
     box-shadow: none;
     white-space: nowrap;
     overflow: visible;
