@@ -43,6 +43,11 @@ export default class LedgerTools {
     this.storage = storage;
   }
 
+  public getDateOfWeek(w: number, y: number) {
+    let d: number = 1 + (w - 1) * 7;
+    return new Date(y, 0, d);
+  }
+
   public async getBook(dateString: string, allowUndefined: boolean = false): Promise<IBook> {
     let bookRaw = await this.storage.get(NPaths.storage.book(dateString));
     let book = bookRaw instanceof Array ? bookRaw : [];
@@ -153,12 +158,9 @@ export default class LedgerTools {
               let yearMonSplit = book.split("-");
               let year = parseInt(yearMonSplit[0]);
               let week = parseInt(yearMonSplit[1]);
-
               week = isNaN(week) ? 1 : week;
-              let dayOfYear = (week ? week : 1) * 7 - 7;
-              // Typescript hack
-              let anyd: any = dayjs().year(year);
-              return dayjs(anyd.dayOfYear(dayOfYear));
+              let d = this.getDateOfWeek(week, year);
+              return dayjs(d);
             } else {
               return null;
             }
