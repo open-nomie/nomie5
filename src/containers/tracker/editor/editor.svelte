@@ -170,6 +170,11 @@
         Interact.alert("Missing Data", "Please fill out all required fields: title, tag and emoji");
       } else {
         try {
+          // If picker - clean up list
+          if (data.tracker.type == "picker") {
+            data.tracker.picks = data.tracker.picks.filter((d) => `${d}`.length);
+          }
+
           dispatch("save", data.tracker);
           await TrackerStore.saveTracker(data.tracker);
           Interact.toast(`${data.tracker.label} saved`);
