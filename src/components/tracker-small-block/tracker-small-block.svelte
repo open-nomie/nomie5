@@ -13,6 +13,7 @@
   export let truncate = false;
   export let solo = false;
   export let xs = false;
+  export let sm = false;
   export let novalue = false;
   export let className = "";
   export let value = undefined;
@@ -22,6 +23,9 @@
 
   $: if (xs) {
     avatarSize = 20;
+  }
+  $: if (sm) {
+    avatarSize = 30;
   }
 
   function shouldShowValue(trackerElement) {
@@ -46,6 +50,9 @@
   :global(.nbtn.tracker-small-block.size-xs) {
     height: 30px;
     padding: 1px 2px;
+  }
+  :global(.nbtn.tracker-small-block.size-sm) {
+    height: 42px;
   }
 </style>
 
