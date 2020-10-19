@@ -71,15 +71,16 @@ const DeviceStoreInit = () => {
         if (navigator.onLine) {
           document.body.classList.remove("is-offline");
           window.offline = false;
-          state({ offline: false });
+          state({ offline: false, width: window.innerWidth, height: window.innerHeight });
         } else {
           document.body.classList.add("is-offline");
           window.offline = true;
-          state({ offline: true });
+          state({ offline: true, width: window.innerWidth, height: window.innerHeight });
         }
       };
       window.addEventListener("online", fireChange);
       window.addEventListener("offline", fireChange);
+      window.addEventListener("resize", fireChange);
       fireChange();
     },
   };
