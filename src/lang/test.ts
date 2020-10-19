@@ -194,7 +194,8 @@ export default {
     "search": "Nomie",
     "save-list-edits": "Nomie",
     "whats-up": "Nomie",
-    "location": "Nomie"
+    "location": "Nomie",
+    "back": "Nomie"
   },
   "locations": {
     "select-a-location": "Nomie"
@@ -202,6 +203,8 @@ export default {
   "dashboard": {
     "change-widget-size": "Nomie",
     "select-a-widget": "Nomie",
+    "widget-under-value-color": "Nomie",
+    "widget-over-value-color": "Nomie",
     "empty-message": "Nomie",
     "add-a-widget": "Nomie",
     "widget-editor": "Nomie"

@@ -194,7 +194,8 @@ export default {
     "search": "Search",
     "save-list-edits": "Save List Edits",
     "whats-up": "What's up?",
-    "location": "Location"
+    "location": "Location",
+    "back": "Back"
   },
   "locations": {
     "select-a-location": "Select a Location"
@@ -202,6 +203,8 @@ export default {
   "dashboard": {
     "change-widget-size": "Change Widget Size",
     "select-a-widget": "Select a Widget",
+    "widget-under-value-color": "Under value color",
+    "widget-over-value-color": "Over value color",
     "empty-message": "Add different charts, stats, and other widgets to create your own custom views of your life.",
     "add-a-widget": "Add a Widget...",
     "widget-editor": "Widget Editor"

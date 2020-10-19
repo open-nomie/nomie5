@@ -237,6 +237,7 @@
               {#if value.element}
                 <TrackerSmallBlock
                   truncate
+                  xs
                   element={value.element}
                   on:click={selectType}
                   className="px-2"
@@ -312,10 +313,10 @@
                 </Input>
               </div>
             </ListItem>
-            <ListItem bg="transparent" className="p-0">
+            <ListItem bg="transparent" className="px-0 pt-2">
               <div class="under" slot="left">
                 <div class="text-center">
-                  <Text className="mb-2" size="sm">Under value color</Text>
+                  <Text className="mb-2" size="sm">{Lang.t('dashboard.widget-under-value-color', 'Under value color')}</Text>
                   <TinyColorPicker
                     size={16}
                     value={value.compareUnderColor}
@@ -326,7 +327,7 @@
               </div>
               <div class="over" slot="right">
                 <div class="text-center">
-                  <Text className="mb-2" size="sm">Over value color</Text>
+                  <Text className="mb-2" size="sm">{Lang.t('dashboard.widget-over-value-color', 'Over value color')}</Text>
                   <TinyColorPicker
                     size={16}
                     value={value.compareOverColor}
