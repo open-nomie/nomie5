@@ -198,7 +198,9 @@
       // Set Default Mode to "Week"
       let mode = "w";
       // Determine Stat Mode based on number of days provided
-      if (dayDiff < 8) {
+      if (dayDiff < 1) {
+        mode = "d";
+      } else if (dayDiff < 8) {
         mode = "w";
       } else if (dayDiff < 89) {
         mode = "m";
