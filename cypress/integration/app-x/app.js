@@ -162,28 +162,29 @@ context("App", () => {
   };
 
   const testDeleteingTracker = () => {
-    cy.get(".tab-Track").click();
-    longPressTracker("water");
+    appTab('Track');
+    cy.wait(700);
+    cy.get('.tracker-sex > .nbtn').click({force: true});
     cy.wait(700);
     // Click Remove...
-    cy.get('.pop-button-2').click();
+    cy.get('.pop-button-3').click();
     cy.wait(400);
     // Hit Cancel first -- to see if this gets deleted
     cy.get(".visible > .alert-dialog-window > .p-1 > .nbtn-transparent").click();
     cy.wait(500);
     cy.get(".trackers").then((node) => {
-      expect(node.html().search(".tracker-water")).to.be.gt(-1);
+      expect(node.html().search(".tracker-sex")).to.be.gt(-1);
     });
     cy.wait(500);
-    longPressTracker("water");
+    cy.get('.tracker-sex > .nbtn').click({force: true});
     cy.wait(400);
     // Click Remove
-    cy.get('.pop-button-2').click();
+    cy.get('.pop-button-3').click();
     cy.wait(400);
     cy.get(".visible > .alert-dialog-window > .p-1 > .nbtn-primary").click();
     cy.wait(600);
     cy.get(".trackers").then((node) => {
-      expect(node.html().search(".tracker-water")).to.be.eq(-1);
+      expect(node.html().search(".tracker-sex")).to.be.eq(-1);
     });
   };
 
@@ -299,6 +300,7 @@ context("App", () => {
     //   expect(node.text()).to.contain("Drank Water");
     // });
     cy.wait(500);
+    appTab('Track');
     // cy.get(".board-all").click();
   };
 
@@ -445,6 +447,7 @@ context("App", () => {
       it: "should onboard with localstorage",
       run: initBasic,
     },
+    { it: "should delete a tracker", run: testDeleteingTracker },
     {
       it: "should track, and edit a record",
       run: trackAndEditRecord,
@@ -495,7 +498,6 @@ context("App", () => {
     { it: "should enable features", run: enableFeatures },
     { it: "Should properly track using the tracker buttons", run: useTrackers },
     { it: "should test adding a tab", run: testTabs },
-    { it: "should delete a tracker", run: testDeleteingTracker },
     { it: "should test a bad pin PIN", run: ()=>{ testPin(false) } },
     { it: "should test a good pin PIN", run: ()=>{ testPin(true) } },
     { it: "should be able to create a log via a note", run: testCaptureForm },
