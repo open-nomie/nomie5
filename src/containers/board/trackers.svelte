@@ -20,6 +20,8 @@
   import { Lang } from "../../store/lang";
   import Button from "../../components/button/button.svelte";
   import Avatar from "../../components/avatar/avatar.svelte";
+  import is from "../../utils/is/is";
+  import LedgerTools from "../../store/ledger/ledger-tools";
 
   const dispatch = createEventDispatcher();
 
@@ -68,7 +70,13 @@
         value = math.round(math.average($LedgerStore.today[tracker.tag].values));
       }
     }
-    if (format) {
+    // If the value is 0 set it to a string
+    // so that svelte reacts the the changes
+    if (value === 0) {
+      value = `0`;
+    }
+    // Return it processed
+    if (format && is.truthy(value)) {
       return value ? NomieUOM.format(value, tracker.uom) : null;
     } else {
       return value;
@@ -97,7 +105,7 @@
   {#each trackers as tracker}
     <ListItem
       clickable
-      className="tracker-{tracker.tag} py-2 tracker-list-item flex-shrink-off {getTodaysValue(tracker) ? 'has-value' : 'no-value'}"
+      className="tracker-{tracker.tag} py-2 tracker-list-item flex-shrink-off {is.truthy(getTodaysValue(tracker)) ? 'has-value' : 'no-value'}"
       compact={$UserStore.localSettings.compactButtons}
       on:click={(evt) => {
         if (['svg'].indexOf(evt.detail.target.tagName) == -1) {
