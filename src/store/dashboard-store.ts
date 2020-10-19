@@ -11,10 +11,10 @@ import config from "../config/appConfig";
 import { Widget } from "../modules/dashboard/widget";
 import { Interact } from "./interact";
 import { Dashboard } from "../modules/dashboard/dashboard";
-import { Device } from "./device-store";
-import { Lang } from "./lang";
 
 // Stores
+import { Device } from "./device-store";
+import { Lang } from "./lang";
 
 const console = new Logger("📊 $DashboardStore");
 
@@ -23,7 +23,12 @@ interface IDashboardStore {
   activeIndex: number;
 }
 
+/**
+ * Dashboard Store
+ * Used for managing the dashboard View
+ */
 const DashboardStoreInit = (): any => {
+  // Array of Dashboard and the active dashboard index
   const state: IDashboardStore = {
     dashboards: [],
     activeIndex: 0, //Storage.local.get("dashboard/lastIndex")
@@ -32,14 +37,19 @@ const DashboardStoreInit = (): any => {
   const { update, subscribe, set } = writable(state);
 
   const methods = {
+    // Initialize the Dashboard Store
     async init(): Promise<void> {
+      // Get From storage
       let dashboards = await methods.get();
       const lastIndex = Storage.local.get("dashboard/lastIndex");
+      // Update State with what's in storage
       update((state: IDashboardStore) => {
         dashboards = dashboards || [];
-        if (dashboards.length > lastIndex) {
+        // If the last Index doesn't exist
+        if (dashboards.length - 1 > lastIndex) {
           state.activeIndex = lastIndex || 0;
         }
+        // Map the Dashboards to Dashboard Objects
         state.dashboards = dashboards
           .map((dashboard) => {
             return dashboard instanceof Dashboard ? dashboard : new Dashboard(dashboard);
@@ -49,6 +59,11 @@ const DashboardStoreInit = (): any => {
         return state;
       });
     },
+    /**
+     * Move Widget
+     * @param widget
+     * @param dashboard
+     */
     async moveWidget(widget: Widget, dashboard: Dashboard) {
       update((state: IDashboardStore) => {
         // Remove it from the current dashboard
@@ -67,12 +82,23 @@ const DashboardStoreInit = (): any => {
       });
       return await methods.save();
     },
+    /**
+     * Save the Last Used Index
+     * @param index
+     */
     saveIndex(index) {
       Storage.local.put("dashboard/lastIndex", index);
     },
+    /**
+     * Get Last Used Index
+     */
     getIndex() {
       return Storage.local.get("dashboard/lastIndex") || 0;
     },
+    /**
+     * Send user to Tab Index
+     * @param i
+     */
     toIndex(i: number) {
       update((state: IDashboardStore) => {
         if (i <= state.dashboards.length) {
@@ -82,37 +108,74 @@ const DashboardStoreInit = (): any => {
         return state;
       });
     },
-    async pickSize(widget: Widget) {
+    /**
+     * Options for Widget
+     * @param widget
+     * @param select function
+     */
+    async widgetOptions(widget: Widget, select: Function) {
+      select = select || function () {};
+
       async function setWidgetSize(sz) {
         widget.size = sz;
         await methods.save();
       }
 
-      let sizes = [
+      let buttons = [
         {
-          title: Lang.t("general.small", "Small"),
+          title: `${Lang.t("dashboard.edit-widget", "Edit Widget")}...`,
+          click() {
+            select("edit", widget);
+          },
+        },
+        { divider: true },
+        {
+          title: `${widget.size == "sm" ? "•" : ""} ${Lang.t("dashboard.small-widget", "Small Widget")}`,
           click() {
             setWidgetSize("sm");
           },
         },
         {
-          title: Lang.t("general.medium", "Medium"),
+          title: `${widget.size == "md" ? "•" : ""} ${Lang.t("dashboard.medium-widget", "Medium Widget")}`,
           click() {
             setWidgetSize("md");
           },
         },
         {
-          title: Lang.t("general.large", "Large"),
+          title: `${widget.size == "lg" ? "•" : ""} ${Lang.t("dashboard.large-widget", "Large Widget")}`,
           click() {
             setWidgetSize("lg");
           },
         },
+        { divider: true },
+        {
+          title: `${Lang.t("general.duplicate", "Duplicate")}...`,
+          click() {
+            select("duplicate", widget);
+          },
+        },
+        {
+          title: `${Lang.t("dashboard.move-tabs", "Move Tabs")}...`,
+          click() {
+            select("move", widget);
+          },
+        },
+        {
+          title: `${Lang.t("dashboard.delete-widget", "Delete Widget")}...`,
+          click() {
+            select("delete", widget);
+          },
+        },
       ];
+
       Interact.popmenu({
-        title: Lang.t("dashboard.change-widget-size", "Change Widget Size"),
-        buttons: sizes,
+        title: Lang.t("dashboard.widget-options", "Widget Options"),
+        buttons: buttons,
       });
     },
+    /**
+     * Create a New Dashboard
+     */
     async newDashboard() {
       let name = await Interact.prompt("Create new Dashboard", null, {
         placeholder: "Dashboard Label",
@@ -127,6 +190,16 @@ const DashboardStoreInit = (): any => {
         return await methods.save();
       }
     },
+    state(payload: any = {}) {
+      update((state) => {
+        payload = { ...state, ...payload };
+        return payload;
+      });
+      return payload;
+    },
+    /**
+     * Go to Next Tab
+     */
     next() {
       update((state: IDashboardStore) => {
         if (state.activeIndex == state.dashboards.length - 1) {
@@ -138,14 +211,9 @@ const DashboardStoreInit = (): any => {
         return state;
       });
     },
-    state(payload: any) {
-      let _state;
-      update((state) => {
-        payload = { ...state, ...payload };
-        return payload;
-      });
-      return payload;
-    },
+    /**
+     * Previous Tab
+     */
     previous() {
       update((state: IDashboardStore) => {
         if (state.activeIndex == 0) {
@@ -157,15 +225,20 @@ const DashboardStoreInit = (): any => {
         return state;
       });
     },
+    /**
+     * Save the Dashboards to Storage
+     */
     async save(): Promise<any> {
       let dashboards;
       update((state: any) => {
         dashboards = JSON.parse(JSON.stringify(state.dashboards));
         return state;
       });
+      // Filter out any emptys
       dashboards = dashboards
         .filter((d) => d)
         .map((dashboard) => {
+          // Map out any artifcats like logs, stats, positivity
           dashboard.widgets = dashboard.widgets.map((widget: any) => {
             delete widget.stats;
             delete widget.logs;
@@ -183,6 +256,10 @@ const DashboardStoreInit = (): any => {
         return false;
       }
     },
+    /**
+     * Save a Widget
+     * @param widget
+     */
     async saveWidget(widget: Widget) {
       if (widget) {
         let _state: IDashboardStore = methods.data();
@@ -209,6 +286,10 @@ const DashboardStoreInit = (): any => {
         return methods.save();
       }
     },
+    /**
+     * Delete a Dashboard
+     * @param dashboard
+     */
     async delete(dashboard: Dashboard) {
       update((state: IDashboardStore) => {
         state.dashboards = state.dashboards.filter((dash: Dashboard) => {
@@ -219,6 +300,10 @@ const DashboardStoreInit = (): any => {
       });
       return methods.save();
     },
+    /**
+     * This is a duplicate of state
+     * TODO: fix this
+     */
     data(): IDashboardStore {
       let _state;
       update((state: any) => {
@@ -227,6 +312,10 @@ const DashboardStoreInit = (): any => {
       });
       return _state;
     },
+    /**
+     * Delete a Widget
+     * @param widget
+     */
     async deleteWidget(widget: Widget) {
       widget = widget instanceof Widget ? widget : new Widget(widget);
       let _state: IDashboardStore = methods.data();
@@ -242,6 +331,9 @@ const DashboardStoreInit = (): any => {
       });
       return methods.save();
     },
+    /**
+     * Get From Storage
+     */
     async get(): Promise<Array<Dashboard>> {
       let dashboards = await Storage.get(`${config.data_root}/dashboards.json`);
       if (dashboards instanceof Array === false) {

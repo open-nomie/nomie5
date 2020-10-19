@@ -48,6 +48,7 @@
   import { UserStore } from "../../store/user-store";
   import tick from "../../utils/tick/tick";
   import ButtonGroup from "../../components/button-group/button-group.svelte";
+  import nid from "../../modules/nid/nid";
   // import { getDashboardStartEndDates } from "./dashboard-helpers";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
@@ -378,6 +379,45 @@
     }
   }
 
+  async function duplicateWidget(widget: Widget) {
+    let baseWidget: Widget = new Widget(widget);
+    baseWidget.id = nid();
+    await DashboardStore.saveWidget(baseWidget);
+  }
+
+  async function moveWidget(widget: Widget) {
+    const buttons = $DashboardStore.dashboards.map((dashboard: Dashboard) => {
+      return {
+        title: dashboard.label,
+        click() {
+          try {
+            DashboardStore.moveWidget(widget, dashboard);
+          } catch (e) {
+            Interact.alert("Error", e.message);
+          }
+        },
+      };
+    });
+
+    Interact.popmenu({
+      buttons,
+      title: `${Lang.t("dashboard.select-dashboard-to-move-widget", "Move widget to which dashboard?")}`,
+    });
+  }
+
+  async function onWidgetAction({ type, widget }) {
+    await tick(200);
+    if (type == "edit") {
+      editWidget(widget);
+    } else if (type === "move") {
+      moveWidget(widget);
+    } else if (type === "delete") {
+      deleteWidget(widget);
+    } else if (type === "duplicate") {
+      duplicateWidget(widget);
+    }
+  }
+
   onDestroy(() => {
     unsubTrackers();
     unsubPeople();
@@ -459,8 +499,11 @@
 
             {#each activeDashboard.widgets as widget (widget.id)}
               <WidgetEle
+                on:action={(evt) => {
+                  onWidgetAction(evt.detail);
+                }}
                 {widget}
-                on:click={() => {
+                on:edit={() => {
                   editWidget(widget);
                 }} />
             {/each}

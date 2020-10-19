@@ -56,6 +56,10 @@
     classes.push(`widget-size-${widget.size}`);
     return classes.join(" ");
   }
+
+  function widgetOptionSelected(type: string, widget: Widget) {
+    dispatch("action", { type, widget });
+  }
 </script>
 
 <style lang="scss">
@@ -177,17 +181,17 @@
   }
 
   .widget-size-lg {
-    min-width: calc(100% - 16px) !important;
+    width: calc(100% - 16px) !important;
     // max-width: calc(100% - 16px);
   }
 
   .widget-size-md {
-    min-width: calc(50% - 16px) !important;
+    width: calc(50% - 16px) !important;
     // max-width: calc(50% - 16px);
   }
 
   .widget-size-sm {
-    min-width: calc(25% - 16px) !important;
+    width: calc(25% - 16px) !important;
     max-width: calc(50% - 16px);
   }
 
@@ -248,17 +252,9 @@
       <Button
         size="xs"
         color="clear"
-        className="p-1 font-weight-normal"
-        on:click={() => {
-          DashboardStore.pickSize(widget);
-        }}>
-        {widget.size}
-      </Button>
-      <Button
-        size="xs"
-        color="clear"
         className="p-1"
         on:click={() => {
+          DashboardStore.widgetOptions(widget, widgetOptionSelected);
           dispatch('click');
         }}>
         <Icon name="settings" style="fill: var(--color-inverse-2)" size="16" />

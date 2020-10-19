@@ -77,14 +77,14 @@
           changeView("style");
         },
       },
-      {
-        label: `${Lang.t("general.more", "More")}`,
-        active: editorView === "more",
-        hide: !value.id ? false : true,
-        click() {
-          changeView("more");
-        },
-      },
+      // {
+      //   label: `${Lang.t("general.more", "More")}`,
+      //   active: editorView === "more",
+      //   hide: !value.id ? false : true,
+      //   click() {
+      //     changeView("more");
+      //   },
+      // },
     ];
   }
 
@@ -92,43 +92,43 @@
     editorView = view;
   }
 
-  async function moveWidget() {
-    const buttons = $DashboardStore.dashboards.map((dashboard: Dashboard) => {
-      return {
-        title: dashboard.label,
-        click() {
-          try {
-            DashboardStore.moveWidget(value, dashboard);
-          } catch (e) {
-            Interact.alert("Error", e.message);
-          }
-        },
-      };
-    });
-    Interact.popmenu({
-      buttons,
-      title: "Which Dashboard?",
-    });
-  }
+  // async function moveWidget() {
+  //   const buttons = $DashboardStore.dashboards.map((dashboard: Dashboard) => {
+  //     return {
+  //       title: dashboard.label,
+  //       click() {
+  //         try {
+  //           DashboardStore.moveWidget(value, dashboard);
+  //         } catch (e) {
+  //           Interact.alert("Error", e.message);
+  //         }
+  //       },
+  //     };
+  //   });
+  //   Interact.popmenu({
+  //     buttons,
+  //     title: "Which Dashboard?",
+  //   });
+  // }
 
-  async function duplicateWidget() {
-    let baseWidget: Widget = new Widget(value);
-    baseWidget.id = nid();
-    await DashboardStore.saveWidget(baseWidget);
-    dispatch("close");
-  }
+  // async function duplicateWidget() {
+  //   let baseWidget: Widget = new Widget(value);
+  //   baseWidget.id = nid();
+  //   await DashboardStore.saveWidget(baseWidget);
+  //   dispatch("close");
+  // }
 
-  async function deleteWidget() {
-    let confirmed = await Interact.confirm(`Delete this widget?`, "You can always recreate it");
-    if (confirmed) {
-      try {
-        await DashboardStore.deleteWidget(value);
-        dispatch("close");
-      } catch (e) {
-        Interact.alert("Error", e.message);
-      }
-    }
-  }
+  // async function deleteWidget() {
+  //   let confirmed = await Interact.confirm(`Delete this widget?`, "You can always recreate it");
+  //   if (confirmed) {
+  //     try {
+  //       await DashboardStore.deleteWidget(value);
+  //       dispatch("close");
+  //     } catch (e) {
+  //       Interact.alert("Error", e.message);
+  //     }
+  //   }
+  // }
 
   function selectType() {
     const generateElementOption = (title, type) => {
@@ -340,7 +340,7 @@
           {/if}
           <!-- </div> -->
         {/if}
-      {:else if editorView == 'more'}
+        <!-- {:else if editorView == 'more'}
         {#if value._editing}
           <ListItem bg="transparent" clickable on:click={moveWidget}>
             <div slot="left">
@@ -360,7 +360,7 @@
             </div>
             Delete Widget...
           </ListItem>
-        {/if}
+        {/if} -->
       {/if}
 
       <!-- {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('goal') > -1}
