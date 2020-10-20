@@ -20,3 +20,7 @@ export default (a1?: string | number, a2?: string | number): string => {
     }
   }
 };
+
+export function md5(str: string): string {
+  return Md5.hashStr(str).toString();
+}
