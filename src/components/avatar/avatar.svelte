@@ -110,11 +110,12 @@
     font-weight: 500;
   }
   .n-avatar.emolen-2 {
-    letter-spacing: -0.4em;
-    text-indent: -0.4em;
+    letter-spacing: -0.5em;
+    text-indent: -0.3em;
+    font-size: calc(var(--avatar-size) * 0.86);
   }
   .n-avatar.emolen-3 {
-    letter-spacing: -0.4em;
+    letter-spacing: -0.51em;
     text-indent: -0.42em;
     font-size: calc(var(--avatar-size) * 0.6);
   }

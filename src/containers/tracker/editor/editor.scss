@@ -21,16 +21,19 @@
     }
 
     .emoji {
+      --emoji-width: calc(var(--emoji-size) * 2);
+
       transition: all 0.2s ease-in-out;
       position: relative;
-      width: var(--emoji-size);
+      width: var(--emoji-width);
       height: var(--emoji-size);
       border-radius: var(--emoji-size-half);
       // overflow: hidden;
       input {
         height: calc(var(--emoji-size) - 8px);
-        width: calc(var(--emoji-size) - 8px);
+        width: calc(var(--emoji-width) - 8px);
         text-align: center;
+
         font-size: calc(var(--emoji-size) * 0.7) !important;
         &:focus {
           outline: none !important;
@@ -44,7 +47,7 @@
         right: 0;
         bottom: 0;
         opacity: 0.5;
-        border-radius: 50%;
+        border-radius: var(--emoji-size-half);
       }
       &.no-emoji {
         &:after {
