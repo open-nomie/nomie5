@@ -127,7 +127,7 @@ export default class LedgerTools {
   listBooks() {
     return this.storage.list().then((files) => {
       return files.filter((f) => {
-        return f.search(`${appConfig.book_root}/`) > -1;
+        return f.search(`${appConfig.book_root}/`) > -1 && f.search(`_last`) === -1;
       });
     });
   }
@@ -158,11 +158,13 @@ export default class LedgerTools {
               let yearMonSplit = bookPath.split("-");
               let year = parseInt(yearMonSplit[0]);
               let week = parseInt(yearMonSplit[1]);
-              week = isNaN(week) ? 1 : week;
-              let d = this.getDateOfWeek(week, year);
-              console.log({ year, week, d });
-
-              return dayjs(d);
+              if (!isNaN(year)) {
+                week = isNaN(week) ? 1 : week;
+                let d = this.getDateOfWeek(week, year);
+                return dayjs(d);
+              } else {
+                return null;
+              }
             } else {
               return null;
             }
@@ -173,7 +175,6 @@ export default class LedgerTools {
           });
 
         let date = parsedBooks[0];
-        console.log("Date found", { date, book: books[0], parsed: parsedBooks[0] });
         if (date) {
           this.storage.local.put("firstBook", {
             date: date.toDate().getTime(),

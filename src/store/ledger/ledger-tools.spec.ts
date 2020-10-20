@@ -88,7 +88,6 @@ describe("Ledger Tools test sweeeeet", () => {
 
   // it("should get first book date", async () => {
   //   let books = await ledgerTools.listBooks();
-  //   console.log("books", books);
 
   //   let firstDate = await ledgerTools.getFirstDate(true);
 
