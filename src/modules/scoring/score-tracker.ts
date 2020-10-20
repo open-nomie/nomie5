@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
-type IConditionIsUnit = "lt" | "lte" | "gt" | "gte" | "eq";
-type IConditionIfUnit = "hour" | "month" | "value";
+export type IConditionIsUnit = "lt" | "lte" | "gt" | "gte" | "eq";
+export type IConditionIfUnit = "hour" | "month" | "value";
 
 export interface ICondition {
   is: IConditionIsUnit;
