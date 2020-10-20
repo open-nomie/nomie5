@@ -23,7 +23,7 @@
   };
 </script>
 
-<Button style="margin-left:-16px;" shape={$Device.width < 399 ? 'nbtn-icon circle' : 'clear'} icon={$Device.width < 399} on:click={onClick}>
+<Button shape={$Device.width < 399 ? 'nbtn-icon circle' : 'clear'} icon={$Device.width < 399} on:click={onClick}>
   <NIcon name="arrowBack" className="fill-primary-bright" />
   {#if $Device.width > 400}
     <span class="ml-2 text-primary-bright">{Lang.t('general.back', 'Back')}</span>
