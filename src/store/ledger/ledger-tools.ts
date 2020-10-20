@@ -153,9 +153,9 @@ export default class LedgerTools {
             let split = path.split("/");
             if (split.length === 3) {
               // Get book path YYYY-w (fucking lower case w SUCKS! - but stuck with it in Nomie 5)
-              let book = split[split.length - 1];
+              let bookPath = split[split.length - 1];
               // Get year month from book
-              let yearMonSplit = book.split("-");
+              let yearMonSplit = bookPath.split("-");
               let year = parseInt(yearMonSplit[0]);
               let week = parseInt(yearMonSplit[1]);
               week = isNaN(week) ? 1 : week;
