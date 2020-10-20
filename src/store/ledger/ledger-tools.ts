@@ -160,6 +160,8 @@ export default class LedgerTools {
               let week = parseInt(yearMonSplit[1]);
               week = isNaN(week) ? 1 : week;
               let d = this.getDateOfWeek(week, year);
+              console.log({ year, week, d });
+
               return dayjs(d);
             } else {
               return null;
