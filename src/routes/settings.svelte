@@ -524,13 +524,6 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </Text>
               </div>
             </ListItem>
-
-            <ListItem>
-              <Text size="md">Happy Data, LLC</Text>
-              <div slot="right">
-                <Text size="sm" on:click={specialTap}>&copy; Copyright 2014 - {dayjs().format('YYYY')}</Text>
-              </div>
-            </ListItem>
           </List>
 
           <ListItem className="bg-transparent my-4" title="⚠️ {Lang.t('settings.danger-zone', 'Danger Zone')}">
@@ -540,6 +533,10 @@ Note: Your data will not automatically move over. You'll first need to export it
               </Button>
             </div>
           </ListItem>
+
+          <Text size="sm" center className="mt-4 mb-3" on:click={specialTap}>
+            Happy Data, LLC &copy; Copyright 2014 - {dayjs().format('YYYY')}
+          </Text>
 
         </div>
         <!-- end container -->
