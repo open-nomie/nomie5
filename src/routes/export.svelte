@@ -20,6 +20,9 @@
   import { Lang } from "../store/lang";
   import dayjs from "dayjs";
   import Csvr from "../containers/csvr/csvr.svelte";
+  import Text from "../components/text/text.svelte";
+  import Spacer from "../components/spacer/spacer.svelte";
+  import List from "../components/list/list.svelte";
 
   // Setup the Exporter
   // const Export = new Exporter();
@@ -104,12 +107,12 @@
       <Csvr />
 
       <NItem className="mx-2 bg-transparent">
-        <p class="text-sm">
+        <Text class="text-sm">
           {Lang.t('export.csv-description', 'Export individual tracker data to CSV. Only one year at a time is supported.')}
-        </p>
+        </Text>
       </NItem>
 
-      <div class="n-list solo">
+      <List solo>
         <NItem title="Trackers" on:click={methods.selectTrackers}>
           <div slot="right">
             {#if state.trackers.length == Object.keys($TrackerStore.trackers).length}
@@ -125,7 +128,7 @@
         <NItem title={Lang.t('general.end', 'End')}>
           <input type="date" class="form-control" bind:value={state.end} slot="right" />
         </NItem>
-      </div>
+      </List>
 
       <NItem
         title={Lang.t('export.csv-download', 'Download CSV...')}
@@ -134,13 +137,13 @@
     </div>
   {:else}
     <div class="container backup">
-      <div class="gap" />
+      <Spacer gap={4} />
       <NItem className="px-3 bg-transparent">
-        <p class=" text-sm">
+        <Text size="sm">
           {Lang.t('export.backup-description', 'Create an importable backup file. This allows you to transfer your data from one device to another using a single file (JSON) that contains ALL your Nomie data.')}
-        </p>
+        </Text>
       </NItem>
-      <div class="gap" />
+      <Spacer gap={4} />
       <NItem
         title={Lang.t('export.backup-download', 'Download Backup')}
         className="text-primary-bright clickable solo text-center"
