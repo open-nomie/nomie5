@@ -23,7 +23,7 @@
   import NModal from "../../components/modal/modal.svelte";
   import LogoType from "../../components/logo/logo.svelte";
   import NTip from "../../components/tip/tip.svelte";
-  import CaptureLog from "../../components/capture-log.svelte";
+  import CaptureLog from "../../components/capture-log/capture-log.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
   import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
 
