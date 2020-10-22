@@ -6,7 +6,6 @@
   export let grid = false;
   export let colors = base;
   export let className = "";
-  export let size = 30;
 
   $: selectedIndex = colors.indexOf(value) || 0;
 </script>

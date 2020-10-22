@@ -3,7 +3,7 @@
   import Ripple from "./ripple.svelte";
 
   const dispatch = createEventDispatcher();
-
+  export let id = `button-${Math.random()}`;
   export let size = "md";
   export let type = "";
   export let shape = "rounded";
@@ -42,6 +42,7 @@
 </style>
 
 <button
+  {id}
   {style}
   {disabled}
   class={`nbtn ${block ? 'nbtn-block' : ''} ${icon ? 'nbtn-icon' : ''} nbtn-${type} nbtn-${shape} nbtn-${color} nbtn-${size} ${inline ? 'nbtn-inline' : ''} ${text ? 'nbtn-text' : ''} ${className}`}
