@@ -102,6 +102,7 @@ const interactInit = () => {
     streak: {
       show: null,
     },
+    focusedEditor: false,
     shareImage: {
       log: null,
       color: null,
@@ -243,6 +244,13 @@ const interactInit = () => {
     openStreak(term) {
       update((state) => {
         state.streak.show = term;
+        return state;
+      });
+    },
+    toggleFocusedEditor() {
+      update((state) => {
+        state.focusedEditor = !state.focusedEditor;
+        console.log("toggled?", state.focusedEditor);
         return state;
       });
     },
