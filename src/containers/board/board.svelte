@@ -235,13 +235,13 @@
         },
       },
       {
-        title: `${Lang.t("board.edit-sort", "Edit / Sort")} ${board ? `(${truncate(board.label, 30)})` : ""}...`,
+        title: `${Lang.t("board.edit-sort", "Edit / Sort")} ${board ? `${truncate(board.label, 30)}` : ""}...`,
         async click() {
           editBoard();
         },
       },
       {
-        title: `${Lang.t("board.delete-board", "Delete Tab")} ${board ? `(${truncate(board.label, 30)})` : ""}...`,
+        title: `${Lang.t("general.delete", "Delete")} ${board ? `${truncate(board.label, 30)}` : ""}...`,
         disabled: board && board.id === "all",
         async click() {
           deleteBoard();
@@ -644,7 +644,7 @@
           <!-- Include User Tips - shit should be a component -->
 
         </main>
-        <div class="board-actions mt-5 mb-3 n-row" style="min-width:310px;">
+        <div class="board-actions mt-5 mb-3 n-row" style="min-width:210px;">
           {#if $UserStore.meta.hiddenFeatures}
             <ButtonGroup className="mr-2 box-shadow-tight">
               <Button
