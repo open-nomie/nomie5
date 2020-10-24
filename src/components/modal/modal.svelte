@@ -21,6 +21,7 @@
   export let bodyClass: string = "";
   export let closeOnBackgroundTap: boolean = false;
   export let ariaLabel: string = "modal";
+  export let level: number = undefined;
 
   declare var arguments: Array<any>;
 
@@ -174,6 +175,7 @@
 
     .n-modal-body {
       flex-grow: 1;
+      height: 100%;
       @include media-breakpoint-up(md) {
         padding: 20px;
       }
@@ -260,6 +262,10 @@
     }
     overflow-y: scroll;
   }
+
+  .n-modal-frame.level-1 {
+    z-index: 1100;
+  }
 </style>
 
 <div
@@ -267,7 +273,8 @@
   aria-modal
   aria-label={ariaLabel}
   aria-hidden={!domVisible}
-  class="n-modal-frame {className} type-{type}
+  style={level ? `z-index:${level * 1002}` : ''}
+  class="n-modal-frame {className} type-{type} level-{level || 'unknown'}
   {domVisible ? 'visible' : 'hidden'}">
   <div
     on:click|stopPropagation={() => {}}

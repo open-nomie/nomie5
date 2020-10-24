@@ -49,6 +49,7 @@
   import PinLock from "./containers/pin-lock/pin-lock.svelte";
   import tick from "./utils/tick/tick";
   import Confetti from "./components/confetti/confetti.svelte";
+  import Focused from "./components/capture-log/focused.svelte";
 
   // Set a better console
   const console = new Logger("APP");
@@ -216,6 +217,8 @@
 <OnThisDayModal />
 <PinLock />
 <SearchModal />
+
+<Focused />
 
 {#if $Interact.confetti.show}
   <Confetti />

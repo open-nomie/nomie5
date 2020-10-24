@@ -14,8 +14,15 @@
   $: selected = getEmojiFromScore(score);
 
   let x: number;
+  let y: number;
+  let id: string = `pos-${Math.random()}`;
 
   function toggle(evt?) {
+    let triggerEle = document.getElementById(id);
+    if (triggerEle) {
+      y = `${triggerEle.offsetTop - 16}px`;
+    }
+
     if (evt && !showMenu) {
       x = evt.detail.pageX - 240;
     }
@@ -28,7 +35,7 @@
     position: absolute;
     width: 240px;
     bottom: calc(50px + env(safe-area-inset-bottom));
-    z-index: 3000;
+    z-index: 4000;
   }
   :global(.positivity-emoji-btn) {
     margin: 6px;
@@ -36,9 +43,10 @@
   }
 </style>
 
-<div class="positivity-menu-pop animate up" style="left:{x}px; z-index:2020" class:visible={showMenu} class:hidden={!showMenu}>
+<div class="positivity-menu-pop animate up" style="left:{x}px; top:{y}; z-index:4000" class:visible={showMenu} class:hidden={!showMenu}>
   <PositivitySelector
     {size}
+    {id}
     bind:score
     on:change={() => {
       toggle();

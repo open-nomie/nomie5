@@ -341,7 +341,7 @@
     padding-bottom: 10px;
   }
 
-  :global(.mask-textarea .save-button, .mask-textarea .more-button) {
+  :global(.mask-textarea .action-buton) {
     margin-bottom: 7px;
   }
 
@@ -463,14 +463,20 @@
           on:keydown={methods.keyPress}
           on:paste={methods.keyPress} />
 
-        <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} size="lg" className="mr-2" />
+        {#if $UserStore.meta.hiddenFeatures}
+          <Button className="expand-button action-button" icon size="sm" on:click={Interact.toggleFocusedEditor}>
+            <Icon name="expand" className="fill-inverse-2" />
+          </Button>
+        {/if}
+
+        <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} size="lg" className="mr-1 action-button" />
 
         {#if $LedgerStore.saving}
-          <Button className="save-button mr-2" shape="circle" color="success" size="sm">
+          <Button className="save-button action-button mr-2" shape="circle" color="success" size="sm">
             <NSpinner size={20} color="#FFFFFF" />
           </Button>
         {:else}
-          <Button className="save-button mr-2" shape="circle" color="success" size="sm" on:click={methods.logSave}>
+          <Button className="save-button action-button mr-2" shape="circle" color="success" size="sm" on:click={methods.logSave}>
             <NIcon name="arrowUp" style="fill: #FFF;" size="20" />
           </Button>
         {/if}

@@ -25,30 +25,25 @@ import dayjs, { Dayjs } from "dayjs";
 // utils
 import Logger from "../utils/log/log";
 import time from "../utils/time/time";
+import tick from "../utils/tick/tick";
 
 // modules
 import NomieLog from "../modules/nomie-log/nomie-log";
 import clipboard from "../utils/clipboard/clipboard";
-// import Hooky from "../modules/hooks/hooks";
-// const hooks = new Hooky();
+import type Location from "../modules/locate/Location";
+import type { ILocation } from "../modules/locate/Location";
+import type { ITrackerInputResult } from "../modules/tracker/tracker-inputer";
+import TrackableElement from "../modules/trackable-element/trackable-element";
+import TrackerInputer from "../modules/tracker/tracker-inputer";
+import type TrackerConfig from "../modules/tracker/tracker";
+import type { ITrackers } from "../modules/import/import";
 
 // Stores
 import { LedgerStore } from "./ledger";
 import { TrackerStore } from "./tracker-store";
 import { Lang } from "./lang";
-import type { ILocation } from "../modules/locate/Location";
-import type { ITrackerInputResult } from "../modules/tracker/tracker-inputer";
-import TrackableElement from "../modules/trackable-element/trackable-element";
-import TrackerInputer from "../modules/tracker/tracker-inputer";
-import NPaths from "../paths";
 import { SearchStore } from "./search-store";
-import { SearchTerm } from "./search-store";
 import { ActiveLogStore } from "./active-log";
-import { init } from "i18next";
-import type TrackerConfig from "../modules/tracker/tracker";
-import type { ITrackers } from "../modules/import/import";
-import Timer from "../utils/timer/timer";
-import tick from "../utils/tick/tick";
 
 const console = new Logger("✋ Interact");
 
@@ -129,6 +124,7 @@ const interactInit = () => {
       onInteract: null,
       type: "tracker",
     },
+    focusedEditor: false,
     onThisDay: null,
     trackerEditor: {
       show: false,
@@ -243,6 +239,13 @@ const interactInit = () => {
     openStreak(term) {
       update((state) => {
         state.streak.show = term;
+        return state;
+      });
+    },
+    toggleFocusedEditor() {
+      console.log("toggle");
+      update((state) => {
+        state.focusedEditor = !state.focusedEditor;
         return state;
       });
     },
@@ -733,10 +736,11 @@ const interactInit = () => {
         });
       }, 1);
     },
-    pickLocation() {
+    pickLocation(location?: Location | undefined) {
       return new Promise((resolve, reject) => {
         update((s) => {
           s.locationFinder.show = true;
+          s.locationFinder.location = location;
           s.locationFinder.onInteract = (event) => {
             resolve(event);
           };
