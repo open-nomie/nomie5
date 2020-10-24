@@ -24,7 +24,7 @@
   import TagBadge from "../../components/tag-badge/tag-badge.svelte";
   import ImporterItem from "./importer-item.svelte";
   import ProgressBar from "../../components/progress-bar/progress-bar.svelte";
-  import type { t } from "i18next";
+  import ListItem from "../../components/list-item/list-item.svelte";
 
   let fileInput; // holder of dom element self
   let fileData = null; // holder of file content
@@ -305,6 +305,11 @@
             <ProgressBar percentage={importing.logs.progress} className="mt-2" />
           {/if}
         </ImporterItem>
+      {:else}
+        <ListItem title="Logs">
+          <div slot="left">⏰</div>
+          <div slot="right">0</div>
+        </ListItem>
       {/if}
 
       <!-- Importable Items -->
@@ -317,6 +322,11 @@
           on:import={() => {
             methods.importTrackers(true);
           }} />
+      {:else}
+        <ListItem title={Lang.t('general.trackers')}>
+          <div slot="left">🤪</div>
+          <div slot="right">0</div>
+        </ListItem>
       {/if}
 
       <!-- Locations -->
@@ -329,54 +339,79 @@
           on:import={() => {
             methods.importLocations(true);
           }} />
+      {:else}
+        <ListItem title={Lang.t('general.locations', 'Locations')}>
+          <div slot="left">🗺</div>
+          <div slot="right">0</div>
+        </ListItem>
       {/if}
 
       <!-- Board -->
       {#if (importLoader.normalized.boards || []).length > 0}
         <ImporterItem
           emoji="🗂"
-          title="Boards"
+          title={Lang.t('general.boards', 'Tracker Tabs')}
           count={(importLoader.normalized.boards || []).length}
           bind:status={importing.boards}
           on:import={() => {
             methods.importBoards(true);
           }} />
+      {:else}
+        <ListItem title={Lang.t('general.boards', 'Tracker Tabs')}>
+          <div slot="left">🗂</div>
+          <div slot="right">0</div>
+        </ListItem>
       {/if}
 
       <!-- People -->
       {#if (Object.keys(importLoader.normalized.people) || []).length > 0}
         <ImporterItem
           emoji="👩🏽‍💼"
-          title="People"
+          title={Lang.t('general.people', 'People')}
           count={(Object.keys(importLoader.normalized.people) || []).length}
           bind:status={importing.people}
           on:import={() => {
             methods.importPeople(true);
           }} />
+      {:else}
+        <ListItem title={Lang.t('general.people', 'People')}>
+          <div slot="left">👩🏽‍💼</div>
+          <div slot="right">0</div>
+        </ListItem>
       {/if}
 
       <!-- People -->
       {#if (importLoader.normalized.context || []).length > 0}
         <ImporterItem
           emoji="💭"
-          title="Context"
+          title={Lang.t('general.context', 'Context')}
           count={(importLoader.normalized.context || []).length}
           bind:status={importing.context}
           on:import={() => {
             methods.importContext(true);
           }} />
+      {:else}
+        <ListItem title={Lang.t('general.context', 'Context')}>
+          <div slot="left">💭</div>
+          <div slot="right">0</div>
+        </ListItem>
       {/if}
 
       <!-- Dashboards -->
       {#if (importLoader.normalized.dashboards || []).length > 0}
         <ImporterItem
           emoji="📊"
-          title="Dashboards"
+          title={Lang.t('general.dashboards', 'Dashboards')}
           count={(importLoader.normalized.dashboards || []).length}
           bind:status={importing.dashboards}
           on:import={() => {
             methods.importDashboards(true);
           }} />
+      {:else}
+        <ListItem title={Lang.t('general.dashboards', 'Dashboards')}>
+          <div slot="left">📊</div>
+          <div slot="right">0</div>
+        </ListItem>
       {/if}
 
       <!-- logs -->

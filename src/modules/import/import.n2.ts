@@ -20,7 +20,7 @@ function getTrackers(fileData: any): ITrackers {
   // Set a Trackers Holder
   let trackers: ITrackers = {};
   // Loop over the Trackers - will be an array
-  fileData.trackers.forEach((ot: any) => {
+  (fileData.trackers || []).forEach((ot: any) => {
     ot.config = ot.config || {};
     // Search for an emoti by name
     // let emojis = EmojiSearch(ot.label.toLowerCase());
@@ -45,7 +45,7 @@ function getTrackers(fileData: any): ITrackers {
 
 function getBoards(fileData: any): Array<IBoard> {
   let boards = {};
-  fileData.trackers.forEach((tracker) => {
+  (fileData.trackers || []).forEach((tracker) => {
     let tag = dashCase(tracker.label);
     if (tracker.groups) {
       tracker.groups.forEach((group) => {
@@ -76,7 +76,7 @@ function getOldN1Trackers(fileData: any) {
   // If Trackers
   if (fileData.trackers.hasOwnProperty("length")) {
     // Loop over trackers
-    fileData.trackers.forEach((tracker) => {
+    (fileData.trackers || []).forEach((tracker) => {
       // Set a new base tracker with right tag
       let baseTkr = {
         ...{ tag: dashCase(tracker.label) },
@@ -97,7 +97,7 @@ function getLogs(fileData: any): Array<NLog> {
   // Hold Records
   let logs = [];
   // First get the notes
-  fileData.notes.forEach((note: any) => {
+  (fileData.notes || []).forEach((note: any) => {
     let log = new NLog({
       _id: nid(10),
       start: note.time,
@@ -113,7 +113,7 @@ function getLogs(fileData: any): Array<NLog> {
   // Count for missing parents
   let missingParent = 0;
   // Next get the Tracked Events
-  fileData.events.forEach((event) => {
+  (fileData.events || []).forEach((event) => {
     // Get the tracker id (event.parent)
     // let eventTrackerId = event.parent;
     // Check if we have a tracker for it.
