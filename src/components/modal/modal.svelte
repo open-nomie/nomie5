@@ -65,6 +65,10 @@
   :global(.type-normal .full-screen-modal .n-modal-footer, .type-fullscreen .n-modal-footer) {
     padding-bottom: calc(env(safe-area-inset-bottom) + 10px) !important;
   }
+
+  :global(.n-modal-header [slot="header"]) {
+    width: 100%;
+  }
   .n-modal-frame {
     position: fixed;
     top: 0;

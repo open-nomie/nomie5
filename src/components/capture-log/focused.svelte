@@ -13,6 +13,9 @@
   import DatePicker from "../date-picker/date-picker.svelte";
   import PositivityMenu from "../positivity-selector/positivity-menu.svelte";
   import { LedgerStore } from "../../store/ledger";
+  import Row from "../row/row.svelte";
+  import Spacer from "../spacer/spacer.svelte";
+  import dayjs from "dayjs";
 
   async function save() {
     try {
@@ -21,6 +24,22 @@
     } catch (e) {
       Interact.error(e.message);
     }
+  }
+
+  function moveDate(dir: "next" | "prev", amount: number = 1) {
+    let d = dayjs($ActiveLogStore.end || new Date().getTime());
+    if (dir === "next") {
+      $ActiveLogStore.end = d.add(amount, "day").toDate().getTime();
+    } else {
+      $ActiveLogStore.end = d.subtract(amount, "day").toDate().getTime();
+    }
+    console.log("Moved Date", dir, dayjs($ActiveLogStore.end).format("MMM DDD YYYY Do "));
+  }
+  function nextDate() {
+    moveDate("next", 1);
+  }
+  function previousDate() {
+    moveDate("prev", 1);
   }
 </script>
 
@@ -38,7 +57,18 @@
       </div>
     </ToolbarGrid>
     <Toolbar>
-      <DatePicker bind:time={$ActiveLogStore.end} />
+      <Row>
+        <Button size="sm" icon className="tap-icon" on:click={previousDate}>
+          <Icon name="chevronLeft" />
+        </Button>
+        <DatePicker
+          bind:time={$ActiveLogStore.end}
+          style="width:230px; border-radius:2px; padding:4px; background-color:var(--color-grey-9);" />
+        <Button size="sm" icon className="tap-icon" on:click={nextDate}>
+          <Icon name="chevronRight" />
+        </Button>
+      </Row>
+      <Spacer />
       <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} size="md" />
     </Toolbar>
   </div>

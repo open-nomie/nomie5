@@ -75,6 +75,7 @@
     bell: Bell,
     lock: LockClosed,
     annotation: Annotation,
+    expand: ArrowsExpand,
     beaker: Beaker,
     addOutline: PlusCircle,
     arrowBack: ArrowLeft,

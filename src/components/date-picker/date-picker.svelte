@@ -13,6 +13,7 @@
   export let date: Date;
   export let time: number;
   export let className: string = "";
+  export let style: string = "";
 
   //consts
   const dispatch = createEventDispatcher();
@@ -62,6 +63,7 @@
 <div class="n-date-picker {className}">
   {#if Device.is(/(firefox)/gi)}
     <DateTimeBar
+      {style}
       bind:date={time}
       on:change={(event) => {
         let oldtime = event.detail.toDate().getTime();
@@ -69,6 +71,7 @@
       }} />
   {:else}
     <input
+      {style}
       type="datetime-local"
       placeholder={dayjs().format(dateTimeFormat)}
       class="native-datetime m-0"
