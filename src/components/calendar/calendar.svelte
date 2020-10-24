@@ -53,7 +53,7 @@
   export let showCalControl = true;
   export let showDetails = true;
   export let tracker = null;
-  export let color: string = "#319ed7"; // TODO Make this pull from config
+  export const color: string = "#319ed7"; // TODO Make this pull from config
   export let compact: boolean = false;
 
   // Data

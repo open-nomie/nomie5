@@ -85,6 +85,7 @@
     calendar: Calendar,
     chart: ChartBar,
     cake: Cake,
+    expand: ArrowsExpand,
     checkmark: Check,
     checkmarkFilled: CheckCircle,
     checkmarkOutline: CheckCircle,
