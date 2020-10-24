@@ -5,7 +5,7 @@
   export let size = "sm";
   export let labelClass = "";
   export let inverse = false;
-  export let color = undefined;
+  // export let color = undefined;
   export let className = "";
   export let style = "";
 

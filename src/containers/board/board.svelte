@@ -277,7 +277,7 @@
             BoardStore.addTrackersToActiveBoard(trackers);
             setTimeout(() => {
               state = state;
-            }, 100);
+            }, 20);
           },
         });
       }
@@ -442,7 +442,7 @@
       setTimeout(() => {
         boardTrackers = boardTrackers;
         setBoardTrackers();
-      }, 120);
+      }, 20);
     });
 
     // Wait for changes to happen to the boardstore
@@ -462,7 +462,7 @@
       if (boardPayload.boards.map((b) => b.id).indexOf(boardPayload.active) == -1 && boardPayload.active !== "all") {
         setTimeout(() => {
           BoardStore.setActive("all");
-        }, 100);
+        }, 20);
       }
     });
 
@@ -476,7 +476,7 @@
           today = ledgerPayload.today;
           foundTrackers = foundTrackers; // force reaction
           boardTrackers = boardTrackers; // force reaction
-        }, 100);
+        }, 20);
       }
     });
 
