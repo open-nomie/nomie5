@@ -80,7 +80,7 @@
 
   // Watch for Tracker Changed while NOT Forced Advanced
   $: if (tracker && !forcedAdvanced) {
-    if (tracker.default || tracker.math !== "sum" || tracker.uom !== "num") {
+    if (tracker.default || tracker.math !== "sum" || tracker.uom !== "num" || tracker.step) {
       advanced = true;
       advancedCanToggle = false;
     } else {
@@ -437,6 +437,27 @@
       {/if}
 
       {#if advanced}
+        {#if data.tracker.type === 'range'}
+          <NInput
+            listItem
+            className="tracker-default mb-3"
+            pattern="[0-9]*"
+            inputmode="numeric"
+            label={Lang.t('tracker.step', 'Range Step')}
+            placeholder={Lang.t('tracker.step', 'Range Step')}
+            bind:value={data.tracker.step}>
+            <div slot="right" class="pr-1">
+              <Button
+                icon
+                on:click={() => {
+                  getTrackerInput('step');
+                }}>
+                <NIcon name="addOutline" className="fill-inverse-2" />
+              </Button>
+            </div>
+          </NInput>
+        {/if}
+
         <!-- Advanced -->
         {#if data.tracker.type !== 'timer' && data.tracker.type !== 'note' && data.tracker.type !== 'picker'}
           <NInput

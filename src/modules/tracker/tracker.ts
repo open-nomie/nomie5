@@ -30,6 +30,7 @@ export interface ITracker {
   default?: number; // Default value for a tracker
   max?: number; // Max of a Range
   min?: number; // Min of a Range
+  step?: number; // number of steps for a range
   score?: number; // Current Score?
   score_calc?: any; // Positivity Score calc
   goal?: any; // NOT USED
@@ -54,6 +55,7 @@ export default class TrackerConfig {
   public default?: number; // Default value for a tracker
   public max?: number; // Max of a Range
   public min?: number; // Min of a Range
+  public step?: number; // Steps for Range
   public score?: number; // Current Score?
   public score_calc?: any; // Positivity Score calc
   public goal?: any; // NOT USED
@@ -98,7 +100,8 @@ export default class TrackerConfig {
       this.max = starter.max ? starter.max.toString() : "10";
       // min
       this.min = starter.max ? starter.min.toString() : "1";
-      // cards
+      // step
+      this.step = starter.step || "1";
     }
     // score
     this.score = starter.score;

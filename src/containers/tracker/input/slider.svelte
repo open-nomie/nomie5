@@ -1,17 +1,26 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import Text from "../../../components/text/text.svelte";
 
   export let min = "0";
   export let max = "10";
   export let value = "5";
   export let tracker = undefined;
+  export let step = tracker ? tracker.step : "1";
 
   let tempValue;
-
   $: tempValue = value;
 
   const dispatch = createEventDispatcher();
+
+  async function main() {
+    // Trigger the change so the parent catches it.
+    if (tempValue) {
+      dispatch("change", parseInt(tempValue));
+    }
+  }
+
+  onMount(main);
 </script>
 
 <style lang="scss">
@@ -125,6 +134,7 @@
   </div>
   <input
     type="range"
+    {step}
     bind:value={tempValue}
     {min}
     {max}
