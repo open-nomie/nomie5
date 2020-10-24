@@ -97,6 +97,7 @@ const interactInit = () => {
     streak: {
       show: null,
     },
+    focusedEditor: false,
     shareImage: {
       log: null,
       color: null,
@@ -243,9 +244,9 @@ const interactInit = () => {
       });
     },
     toggleFocusedEditor() {
-      console.log("toggle");
       update((state) => {
         state.focusedEditor = !state.focusedEditor;
+        console.log("toggled?", state.focusedEditor);
         return state;
       });
     },

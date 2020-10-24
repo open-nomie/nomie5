@@ -12,16 +12,15 @@
   let selected: any;
   let showMenu: boolean = false;
   $: selected = getEmojiFromScore(score);
+  let triggerButton;
+
+  let id: string = `ps-${Math.random()}`;
 
   let x: number;
-  let y: number;
-  let id: string = `pos-${Math.random()}`;
+  let y: string = `60%`;
 
   function toggle(evt?) {
-    let triggerEle = document.getElementById(id);
-    if (triggerEle) {
-      y = `${triggerEle.offsetTop - 16}px`;
-    }
+    y = `${document.getElementById(id).offsetTop}px`;
 
     if (evt && !showMenu) {
       x = evt.detail.pageX - 240;
@@ -57,6 +56,14 @@
   <div class="full-screen opacity-0" on:click={toggle} />
 {/if}
 
-<Button size="sm" shape="circle" color="transparent" className="positivity-emoji-btn {className}" on:mouseover={toggle} on:click={toggle}>
+<Button
+  {id}
+  bind:this={triggerButton}
+  size="sm"
+  shape="circle"
+  color="transparent"
+  className="positivity-emoji-btn {className}"
+  on:mouseover={toggle}
+  on:click={toggle}>
   {#if selected && selected.emoji}{selected.emoji}{/if}
 </Button>
