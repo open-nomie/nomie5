@@ -152,11 +152,15 @@ const LastUsedStore = () => {
     async record(log: NLog) {
       // Get tracker tags as array
       let trackers = log.getMeta().trackers.map((trackableElement) => trackableElement.id);
+      // Load up the Last Records to keep everything up-to-date.
+      let fromStore = (await NStorage.get(`${config.data_root}/${lastUsedKey}`)) || {};
 
       let data;
       let logDate = new Date(log.end);
       // Get from the store
       update((state) => {
+        // Merge state with results from the Store
+        state = { ...state, ...fromStore };
         // Loop over tracekrs
         trackers.forEach((tag) => {
           // Push updated info to object
