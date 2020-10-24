@@ -325,6 +325,9 @@
   :global(.capture-log .mask-textarea.populated .save-button) {
     display: block;
   }
+  :global(.capture-log .mask-textarea .action-button) {
+    margin-bottom: 7px;
+  }
 
   .capture-log {
     padding: 10px;
@@ -443,7 +446,7 @@
           size="sm"
           shape="circle"
           color={state.advanced ? 'primary' : 'light'}
-          className="ml-1 more-button"
+          className="ml-1 more-button action-button"
           on:click={toggleAdvanced}>
           {#if state.advanced}
             <NIcon name="more" className="fill-white" />

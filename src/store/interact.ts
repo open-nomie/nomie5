@@ -125,7 +125,6 @@ const interactInit = () => {
       onInteract: null,
       type: "tracker",
     },
-    focusedEditor: false,
     onThisDay: null,
     trackerEditor: {
       show: false,
