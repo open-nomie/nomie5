@@ -1,24 +1,46 @@
-<script>
+<script lang="ts">
   // svelte
   import { onDestroy, onMount } from "svelte";
+  import { Device } from "../../store/device-store";
 
   export let activeIndex = undefined;
-  export let activeClass = "active";
-  export let className = null;
+  export let activeClass: string = "active";
+  export let className: string = "";
+  export let centerIfPossible: boolean = false;
 
   // Locals
   let wrapper;
   let scroller;
   let ready = false;
+  let centered = false;
 
   $: if (activeIndex && ready) {
     methods.selectIndex(activeIndex);
+  }
+
+  $: if ($Device.width) {
+    console.log("Check For Center? Now?");
+    methods.checkForCenter();
   }
 
   let scrollUnsub;
 
   // Methods
   const methods = {
+    checkForCenter() {
+      if (centerIfPossible && wrapper) {
+        console.log("Checking for center");
+        let width = wrapper.offsetWidth;
+        let scrollWidth = wrapper.scrollWidth;
+        if (scrollWidth > width) {
+          centered = false;
+        } else {
+          centered = true;
+        }
+      } else {
+        centered = false;
+      }
+    },
     init() {
       // looop over children - apply a click event
       if (wrapper && wrapper.children) {
@@ -40,6 +62,8 @@
 
         ready = true;
       }
+
+      methods.checkForCenter();
     },
     // Clear currently selected index
     clearSelected() {
@@ -67,6 +91,7 @@
             }
             child.classList.add(activeClass);
           }
+          methods.checkForCenter();
         }, 60);
       } catch (e) {}
       ready = true;
@@ -80,9 +105,7 @@
   });
 
   onDestroy(() => {
-    if (scroller) {
-      scroller.removeEventListener("scroll", () => {});
-    }
+    scroller.removeEventListener("scroll", () => {});
   });
 </script>
 
@@ -98,6 +121,7 @@
     overflow-y: hidden;
     scroll-behavior: smooth;
     min-height: 40px;
+    height: 40px;
     max-width: 100%;
   }
   .n-hscroller .wrapper {
@@ -106,13 +130,16 @@
     flex-wrap: none;
     align-items: center;
     min-width: 100%;
+    height: 100%;
+  }
+  .n-hscroller .wrapper.force-center {
+    justify-content: center;
+    align-items: center;
   }
 </style>
 
 <div class="n-hscroller {className}" data-scroll="0" bind:this={scroller}>
-  <div class="wrapper" bind:this={wrapper}>
+  <div class="wrapper {centered ? 'force-center' : 'no-force'}" bind:this={wrapper}>
     <slot />
-    <div class="filler" />
-    <slot name="right" />
   </div>
 </div>
