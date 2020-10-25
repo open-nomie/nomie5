@@ -76,6 +76,7 @@
   import Toolbar from "../../components/toolbar/toolbar.svelte";
 
   import { truncate } from "../../utils/text/text";
+  import Empty from "../empty/empty.svelte";
 
   // Consts
 
@@ -629,6 +630,16 @@
         {/if}
         <main class="n-board h-100" on:swipeleft={BoardStore.next} on:swiperight={BoardStore.previous}>
           <!-- Loop over trackers -->
+          {#if (foundTrackers || boardTrackers || []).length === 0}
+            <Empty
+              title={Lang.t('board.empty-title', 'No trackers found')}
+              emoji="🤔"
+              description={Lang.t('board.empty-description', 'Pick from your existing trackers, or browse the library to discover new things to track.')}>
+              <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={methods.addButtonTap}>
+                {Lang.t('general.add-a-tracker', 'Add a Tracker')}...
+              </Button>
+            </Empty>
+          {/if}
 
           <TrackersList
             view={state.view}
@@ -636,6 +647,7 @@
             on:tap={(evt) => {
               methods.trackerTapped(evt.detail);
             }}
+            hideAdd={(foundTrackers || boardTrackers || []).length === 0}
             on:add={methods.addButtonTap}
             on:more={(evt) => {
               methods.showTrackerOptions(evt.detail);
@@ -644,8 +656,9 @@
           <!-- Include User Tips - shit should be a component -->
 
         </main>
-        <div class="board-actions mt-5 mb-3 n-row" style="min-width:140px;">
-          {#if $UserStore.meta.hiddenFeatures}
+        {#if (foundTrackers || boardTrackers || []).length && $UserStore.meta.hiddenFeatures}
+          <div class="board-actions mt-5 mb-3 n-row" style="min-width:100px;">
+
             <ButtonGroup className="mr-2 box-shadow-tight">
               <Button
                 icon
@@ -672,11 +685,12 @@
                 <Icon size="18" name="detailView" />
               </Button>
             </ButtonGroup>
-          {/if}
-          <!-- <ButtonGroup className="mr-2 box-shadow-tight" style="max-width:150px">
+
+            <!-- <ButtonGroup className="mr-2 box-shadow-tight" style="max-width:150px">
             <Button on:click={boardOptions}>{Lang.t('board.edit-sort', 'Edit / Sort')}...</Button>
           </ButtonGroup> -->
-        </div>
+          </div>
+        {/if}
         <NTip {tips} />
       {/if}
     {/if}
