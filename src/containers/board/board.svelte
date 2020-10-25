@@ -15,17 +15,23 @@
   import { navigate } from "svelte-routing";
   import { onMount, onDestroy } from "svelte";
   import dayjs from "dayjs";
-  import { fade, fly } from "svelte/transition";
 
   // Components
-  import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import Icon from "../../components/icon/icon.svelte";
   import NModal from "../../components/modal/modal.svelte";
-  import LogoType from "../../components/logo/logo.svelte";
   import NTip from "../../components/tip/tip.svelte";
   import CaptureLog from "../../components/capture-log/capture-log.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
   import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
+  import Button from "../../components/button/button.svelte";
+  import Text from "../../components/text/text.svelte";
+  import OfflineQueue from "../../components/offline-queue/offline-queue.svelte";
+  import ListItem from "../../components/list-item/list-item.svelte";
+  import ButtonGroup from "../../components/button-group/button-group.svelte";
+  import Card from "../../components/card/card.svelte";
+  import Toolbar from "../../components/toolbar/toolbar.svelte";
+  import Empty from "../empty/empty.svelte";
+  import TrackersList from "./trackers.svelte";
 
   // Containers
   import NLayout from "../../containers/layout/layout.svelte";
@@ -35,12 +41,10 @@
   import Tracker from "../../modules/tracker/tracker";
   import NomieLog from "../../modules/nomie-log/nomie-log";
   import StarterPacks from "../../modules/packs/starter-packs";
-  import math from "../../utils/math/math";
-  import Logger from "../../utils/log/log";
-  import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import tick from "../../utils/tick/tick";
-  import TrackerInputer from "../../modules/tracker/tracker-inputer";
-  import ScoreTracker from "../../modules/scoring/score-tracker";
+  import time from "../../utils/time/time";
+  import { truncate } from "../../utils/text/text";
+  import exportData from "../../modules/export/export-helper";
 
   // data
   import tips from "../../config/tips";
@@ -55,34 +59,16 @@
   import { Lang } from "../../store/lang";
   import { TrackerLibrary } from "../../store/tracker-library";
   import { LastUsed } from "../../store/last-used";
-  import { FeatureStore } from "../../store/feature-store";
-  import Button from "../../components/button/button.svelte";
-  import Text from "../../components/text/text.svelte";
-  import exportData from "../../modules/export/export-helper";
-
-  import OfflineQueue from "../../components/offline-queue/offline-queue.svelte";
+  import { Device } from "../../store/device-store";
+  import { SearchStore } from "../../store/search-store";
 
   import NPaths from "../../paths";
-  import { Device } from "../../store/device-store";
-  import ShortcutButton from "../../components/shortcut-button/shortcut-button.svelte";
-  import time from "../../utils/time/time";
-  import Counter from "../../components/counter/counter.svelte";
-  import ListItem from "../../components/list-item/list-item.svelte";
-  import TrackersList from "./trackers.svelte";
-  import { SearchStore } from "../../store/search-store";
-  import ButtonGroup from "../../components/button-group/button-group.svelte";
-  import Card from "../../components/card/card.svelte";
-  import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
-  import Toolbar from "../../components/toolbar/toolbar.svelte";
-
-  import { truncate } from "../../utils/text/text";
-  import Empty from "../empty/empty.svelte";
 
   // Consts
 
   // Local Vars
   let user = undefined; // will hold the user when the user is ready - basically a ready var
-  let today = {}; // holds today's activities
+
   let foundTrackers = null; // for search results
   let boardTrackers = []; // Actual array to display to user
   let daysSinceLastBackup = 0;
@@ -383,11 +369,6 @@
       }
     },
     // Settings Shortcut - enable boards - tap on logo
-    async enableBoards() {
-      $UserStore.meta.boardsEnabled = true;
-      await UserStore.saveMeta();
-      methods.newBoard();
-    },
 
     async trackerTapped(tracker) {
       return Interact.trackerTap(tracker, $TrackerStore.trackers);
@@ -442,15 +423,12 @@
   let ledgerUnsub;
   let activeLogUnsub;
   let trackerUnsub;
-  let lastTrackers;
 
   onMount(() => {
     Device.scrollToTop();
     trackerUnsub = TrackerStore.subscribe((trackerStore) => {
-      setTimeout(() => {
-        boardTrackers = boardTrackers;
-        setBoardTrackers();
-      }, 20);
+      boardTrackers = boardTrackers;
+      setBoardTrackers();
     });
 
     // Wait for changes to happen to the boardstore
@@ -481,7 +459,6 @@
         isReady.ledger = true; // say it's true
         checkIfReady("ledgerPayload"); // check for others
         setTimeout(() => {
-          today = ledgerPayload.today;
           foundTrackers = foundTrackers; // force reaction
           boardTrackers = boardTrackers; // force reaction
         }, 20);
@@ -490,6 +467,8 @@
 
     // Active Log Change
     activeLogUnsub = ActiveLogStore.subscribe((log) => {
+      // Used for knowing which trackers are current active
+      // TODO bring this back
       state.addedTrackers = new NomieLog(log).getMeta().trackers.map((t) => t.id);
     });
     LedgerStore.getToday();
