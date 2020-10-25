@@ -81,7 +81,6 @@ export interface TrackerProcessedConfig {
 }
 
 export function processTrackers(trackersUsed, allTrackers = {}): Array<TrackerProcessedConfig> {
-  console.log("Process Trackers", trackersUsed, allTrackers);
   let trackers: Array<TrackerProcessedConfig> = Object.keys(trackersUsed)
     .map((tag) => {
       let base = trackersUsed[tag];

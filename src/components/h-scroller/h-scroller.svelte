@@ -21,7 +21,6 @@
   }
 
   $: if ($Device.width) {
-    console.log("Check For Center? Now?");
     methods.checkForCenter();
   }
 

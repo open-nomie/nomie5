@@ -40,7 +40,6 @@
     } else {
       $ActiveLogStore.end = d.subtract(amount, "day").toDate().getTime();
     }
-    console.log("Moved Date", dir, dayjs($ActiveLogStore.end).format("MMM DDD YYYY Do "));
   }
   function nextDate() {
     moveDate("next", 1);
@@ -65,7 +64,6 @@
       $ActiveLogStore.lat = location.lat;
       $ActiveLogStore.lng = location.lng;
     }
-    console.log("get location", location);
   }
 </script>
 

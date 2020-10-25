@@ -254,7 +254,7 @@ const interactInit = () => {
     toggleFocusedEditor() {
       update((state) => {
         state.focusedEditor = !state.focusedEditor;
-        console.log("toggled?", state.focusedEditor);
+
         return state;
       });
     },

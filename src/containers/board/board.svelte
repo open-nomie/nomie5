@@ -210,7 +210,6 @@
 
   async function boardOptions(board) {
     board = board || $BoardStore.activeBoard;
-    console.log("Board?", board);
     let buttons = [
       {
         title: `${Lang.t("general.add-a-tracker", "Add a Tracker")}`,

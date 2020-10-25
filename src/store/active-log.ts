@@ -19,7 +19,6 @@ const activeLogInit = () => {
 
   const methods = {
     clear() {
-      console.log("Clearing Active Log");
       return update((state) => {
         state = new NomieLog({});
         state.start = null;
