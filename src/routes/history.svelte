@@ -183,6 +183,7 @@
         },
         {
           time: -1,
+          divider: true,
           title: `${Lang.t("general.select-date", "Select Date")}...`,
           unit: "day",
         },
@@ -191,6 +192,7 @@
       if (!isToday) {
         ranges.unshift({
           days: 0,
+          divider: true,
           title: `${Lang.t("history.go-to-today", "Go to Today")}`,
         });
       }
@@ -199,6 +201,7 @@
         buttons: ranges.map((range) => {
           return {
             title: range.title,
+            divider: range.divider ? true : false,
             click: async () => {
               if (range.time == -1) {
                 let date = await Interact.selectDate();
@@ -354,11 +357,9 @@
         <Empty
           emoji="⏳"
           title={state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
-          description={`${Lang.t('history.empty-day', 'No data was found on this day')}`}>
-          <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={composeHere}>
-            {Lang.t('history.add-a-note', 'Add a Note...')}
-          </Button>
-        </Empty>
+          description={`${Lang.t('history.empty-day', 'No data was found on this day')}`}
+          buttonLabel={Lang.t('history.add-a-note', 'Add a Note...')}
+          buttonClick={composeHere} />
       {:else}
         <!-- Loop over logs -->
         {#each logs as log, index}

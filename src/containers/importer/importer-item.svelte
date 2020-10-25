@@ -24,7 +24,9 @@
       <Icon name="checkmark" className="fill-primary-bright" />
     {:else}
       <Button
-        class="btn text-primary btn-clear"
+        color="primary"
+        type="clear"
+        size="md"
         on:click={() => {
           dispatch('import');
         }}>

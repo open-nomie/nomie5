@@ -25,6 +25,8 @@
   import ImporterItem from "./importer-item.svelte";
   import ProgressBar from "../../components/progress-bar/progress-bar.svelte";
   import ListItem from "../../components/list-item/list-item.svelte";
+  import Empty from "../empty/empty.svelte";
+  import Spacer from "../../components/spacer/spacer.svelte";
 
   let fileInput; // holder of dom element self
   let fileData = null; // holder of file content
@@ -257,12 +259,26 @@
   allowClose={true}
   show={true}>
   {#if !fileData}
-    <div class="empty-notice" style="opacity:1; max-height:80%">
+    <Empty
+      className="mt-4"
+      emoji="📦"
+      description={`${Lang.t('settings.import-from-backup', 'Import backups (not CSV)')} from Nomie 1, 2, 3, 4 and 5!`}
+      title={Lang.t('settings.import-backup-file', 'Import a Backup File')}
+      buttonLabel={Lang.t('settings.select-nomie-backup', 'Select Nomie Backup...')}
+      buttonClick={() => {
+        fileInput.click();
+      }}>
+      <input class="d-none" type="file" bind:this={fileInput} on:change={methods.onImportFile} />
+    </Empty>
+
+    <!-- <div class="empty-notice" style="opacity:1; max-height:80%">
+
+      
       <div class="text-center d-flex flex-column justify-content-center">
         <p class="text-sm text-faded-3 mb-4">
           {Lang.t('settings.import-from-backup', 'Import backups (not CSV)')}
           <br />
-          from Nomie 1, 2, 3, 4 and 5!
+          from
         </p>
         <Button
           block
@@ -272,9 +288,9 @@
           }}>
           {Lang.t('settings.select-nomie-backup', 'Select Nomie Backup...')}
         </Button>
-        <input class="d-none" type="file" bind:this={fileInput} on:change={methods.onImportFile} />
+        
       </div>
-    </div>
+    </div> -->
   {/if}
   <div class="n-list">
     {#if fileData && !version}

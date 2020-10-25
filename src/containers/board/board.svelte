@@ -131,9 +131,7 @@
     if (isReady.done == false) {
       if (isReady.boards && $TrackerStore.trackers && isReady.ledger) {
         isReady.done = true;
-        setTimeout(() => {
-          setBoardTrackers();
-        }, 20);
+        setBoardTrackers();
       }
     }
   };
@@ -628,17 +626,16 @@
             </Card>
           </div>
         {/if}
+
         <main class="n-board h-100" on:swipeleft={BoardStore.next} on:swiperight={BoardStore.previous}>
           <!-- Loop over trackers -->
           {#if (foundTrackers || boardTrackers || []).length === 0}
             <Empty
               title={Lang.t('board.empty-title', 'No trackers found')}
               emoji="🤔"
-              description={Lang.t('board.empty-description', 'Pick from your existing trackers, or browse the library to discover new things to track.')}>
-              <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={methods.addButtonTap}>
-                {Lang.t('general.add-a-tracker', 'Add a Tracker')}...
-              </Button>
-            </Empty>
+              description={Lang.t('board.empty-description', 'Pick from your existing trackers, or browse the library to discover new things to track.')}
+              buttonLabel={`${Lang.t('general.add-a-tracker', 'Add a Tracker')}...`}
+              buttonClick={methods.addButtonTap} />
           {/if}
 
           <TrackersList
@@ -656,6 +653,7 @@
           <!-- Include User Tips - shit should be a component -->
 
         </main>
+
         {#if (foundTrackers || boardTrackers || []).length && $UserStore.meta.hiddenFeatures}
           <div class="board-actions mt-5 mb-3 n-row" style="min-width:100px;">
 

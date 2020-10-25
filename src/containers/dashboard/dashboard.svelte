@@ -522,11 +522,9 @@
               <Empty
                 emoji="💹"
                 title={Lang.t('general.dashboard', 'Dashboard')}
-                description={Lang.t('dashboard.empty-message', 'Mix and match charts, stats, and other widgets to create your own custom views of your life.')}>
-                <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={newWidget}>
-                  {Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
-                </Button>
-              </Empty>
+                description={Lang.t('dashboard.empty-message', 'Mix and match charts, stats, and other widgets to create your own custom views of your life.')}
+                buttonLabel={Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
+                buttonClick={newWidget} />
             {/if}
 
             {#each activeDashboard.widgets as widget (widget.id)}

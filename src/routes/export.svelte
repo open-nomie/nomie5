@@ -23,6 +23,7 @@
   import Text from "../components/text/text.svelte";
   import Spacer from "../components/spacer/spacer.svelte";
   import List from "../components/list/list.svelte";
+  import Empty from "../containers/empty/empty.svelte";
 
   // Setup the Exporter
   // const Export = new Exporter();
@@ -138,16 +139,23 @@
   {:else}
     <div class="container backup">
       <Spacer gap={4} />
-      <NItem className="px-3 bg-transparent">
+      <Empty
+        title={Lang.t('export.export-date', 'Generate Nomie Backup')}
+        description={Lang.t('export.backup-description', 'Create an importable backup file. This allows you to transfer your data from one device to another using a single file (JSON) that contains ALL your Nomie data. Make sure to save it to your device.')}
+        emoji="📦"
+        buttonLabel={Lang.t('export.backup-download', 'Download Backup')}
+        buttonClick={methods.export} />
+
+      <!-- <NItem className="px-3 bg-transparent">
         <Text size="sm">
-          {Lang.t('export.backup-description', 'Create an importable backup file. This allows you to transfer your data from one device to another using a single file (JSON) that contains ALL your Nomie data.')}
+          
         </Text>
       </NItem>
       <Spacer gap={4} />
       <NItem
         title={Lang.t('export.backup-download', 'Download Backup')}
         className="text-primary-bright clickable solo text-center"
-        on:click={methods.export} />
+        on:click={methods.export} /> -->
     </div>
   {/if}
 

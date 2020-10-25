@@ -125,11 +125,9 @@
         <Empty
           title={Lang.t('general.people')}
           emoji="👨‍👩‍👦‍👦"
-          description={Lang.t('people.empty-message', 'Track & monitor how you interact with your friends and family')}>
-          <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={addPerson}>
-            {Lang.t('people.add-a-person', 'Add a Person...')}
-          </Button>
-        </Empty>
+          description={Lang.t('people.empty-message', 'Track & monitor how you interact with your friends and family')}
+          buttonLabel={Lang.t('people.add-a-person', 'Add a Person...')}
+          buttonClick={addPerson} />
 
         <!-- <NItem className="mt-5 py-3" bg="transparent">
           <div class="text-md text-center">
