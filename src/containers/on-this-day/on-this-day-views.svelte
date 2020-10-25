@@ -33,7 +33,6 @@
 
   $: if (logs && logs.length && lastLogs !== logs.map((l) => l._id).join(",")) {
     lastLogs = logs.map((l) => l._id).join(",");
-    console.log("On This Day View react", lastLogs, logs.length);
     let trackersUsed = getTrackersAndValuesFromLogs(logs);
     notes = getNotes(logs);
     people = getPeople(logs, $PeopleStore.people);

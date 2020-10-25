@@ -362,7 +362,7 @@
   </header>
   <!-- end header-content header -->
 
-  <main slot="content" class="page page-history flex-column pb-5">
+  <main slot="content" class="page page-history flex-column">
 
     <div class="container p-0 px-1">
       <!-- {#if logs && logs.length}
@@ -397,7 +397,7 @@
 
     </div>
 
-    {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
+    {#if $LedgerStore.memories.length > 0 && !showSearch && isToday && ['all', 'notes'].indexOf(view) > -1}
       <div class="bg-primary-bright mt-3">
         <div class="container p-0 pb-4">
           <!-- Show History if exists -->
