@@ -3,10 +3,6 @@
   export let style = "";
 </script>
 
-<style lang="scss">
-
-</style>
-
 <div class="n-toolbar-grid {className}" {style}>
   <div class="left">
     <slot name="left" />

@@ -23,7 +23,7 @@
   import NModal from "../../components/modal/modal.svelte";
   import LogoType from "../../components/logo/logo.svelte";
   import NTip from "../../components/tip/tip.svelte";
-  import CaptureLog from "../../components/capture-log.svelte";
+  import CaptureLog from "../../components/capture-log/capture-log.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
   import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
 
@@ -72,20 +72,21 @@
   import { SearchStore } from "../../store/search-store";
   import ButtonGroup from "../../components/button-group/button-group.svelte";
   import Card from "../../components/card/card.svelte";
+  import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
+  import Toolbar from "../../components/toolbar/toolbar.svelte";
+
+  import { truncate } from "../../utils/text/text";
 
   // Consts
-  const console = new Logger("board.svelte");
 
   // Local Vars
   let user = undefined; // will hold the user when the user is ready - basically a ready var
   let today = {}; // holds today's activities
-  let searchInput; // binding to dom element
   let foundTrackers = null; // for search results
   let boardTrackers = []; // Actual array to display to user
   let daysSinceLastBackup = 0;
   // Browser Title
   let appTitle = "(Loading)";
-  let _elSearchBar;
 
   // Data Storage
   let state = {
@@ -222,7 +223,9 @@
     }
   }
 
-  async function boardOptions() {
+  async function boardOptions(board) {
+    board = board || $BoardStore.activeBoard;
+    console.log("Board?", board);
     let buttons = [
       {
         title: `${Lang.t("general.add-a-tracker", "Add a Tracker")}`,
@@ -232,22 +235,28 @@
         },
       },
       {
-        title: `${Lang.t("board.edit-sort", "Edit / Sort")} ${$BoardStore.activeBoard ? $BoardStore.activeBoard.label : ""}...`,
+        title: `${Lang.t("board.edit-sort", "Edit / Sort")} ${board ? `${truncate(board.label, 30)}` : ""}...`,
         async click() {
           editBoard();
         },
       },
       {
-        title: `${Lang.t("board.delete-board", "Delete Tab...")}`,
-        disabled: $BoardStore.active === "all",
+        title: `${Lang.t("general.delete", "Delete")} ${board ? `${truncate(board.label, 30)}` : ""}...`,
+        disabled: board && board.id === "all",
         async click() {
           deleteBoard();
+        },
+      },
+      {
+        title: `${Lang.t("board.create-new-board", "Create a new Tab...")}`,
+        async click() {
+          methods.newBoard();
         },
       },
     ];
 
     Interact.popmenu({
-      title: `${$BoardStore.activeBoard ? $BoardStore.activeBoard.label : "All Trackers"}`,
+      title: `${board ? board.label : "All Trackers"}`,
       description: `${Lang.t("board.board-options", "Tab Options")}`,
       buttons: buttons,
     });
@@ -277,7 +286,7 @@
             BoardStore.addTrackersToActiveBoard(trackers);
             setTimeout(() => {
               state = state;
-            }, 100);
+            }, 20);
           },
         });
       }
@@ -442,7 +451,7 @@
       setTimeout(() => {
         boardTrackers = boardTrackers;
         setBoardTrackers();
-      }, 120);
+      }, 20);
     });
 
     // Wait for changes to happen to the boardstore
@@ -462,7 +471,7 @@
       if (boardPayload.boards.map((b) => b.id).indexOf(boardPayload.active) == -1 && boardPayload.active !== "all") {
         setTimeout(() => {
           BoardStore.setActive("all");
-        }, 100);
+        }, 20);
       }
     });
 
@@ -476,7 +485,7 @@
           today = ledgerPayload.today;
           foundTrackers = foundTrackers; // force reaction
           boardTrackers = boardTrackers; // force reaction
-        }, 100);
+        }, 20);
       }
     });
 
@@ -538,71 +547,34 @@
 <!-- Start App Layout -->
 <NLayout pageTitle={appTitle}>
   <header slot="header" class="container">
-    {#if $BoardStore.boards.length || $UserStore.meta.boardsEnabled}
-      <div class="n-toolbar n-row px-3 h-100">
-        {#if $TrackerStore.timers.length}
-          <Button icon on:click={TrackerStore.toggleTimers} className="mr-1">
-            <Icon name="time" size={24} className="fill-red" />
-          </Button>
-        {/if}
-        <Button icon className="tap-icon" on:click={methods.toggleSearch}>
-          <Icon name="search" size={24} />
+    <Toolbar>
+      {#if $TrackerStore.timers.length}
+        <Button icon on:click={TrackerStore.toggleTimers} className="mr-1">
+          <Icon name="time" size={24} className="fill-red" />
         </Button>
-        <NBoardTabs
-          boards={methods.injectAllBoard($BoardStore.boards || [])}
-          active={$BoardStore.active}
-          on:create={methods.newBoard}
-          on:tabTap={(event) => {
-            BoardStore.setActive(event.detail.id, event.detail);
-          }}>
-          <div slot="right" class="n-row ml-2">
-            <div class="filler" />
-            <Button
-              icon
-              className="mx-2 mr-1"
-              on:click={() => {
-                methods.newBoard();
-              }}>
-              <Icon name="newTab" size="24" className="fill-primary-bright" />
-            </Button>
-            {#if $BoardStore.boards.length > 2}
-              <Button
-                icon
-                className="pr-3 tap-icon"
-                on:click={() => {
-                  Interact.toggleBoardSorter();
-                }}>
-                <Icon name="arrowsLeftRight" size="24" className="fill-primary-bright" />
-              </Button>
-            {/if}
-          </div>
-        </NBoardTabs>
+      {/if}
+      <Button icon className="tap-icon" on:click={methods.toggleSearch}>
+        <Icon name="search" size={24} />
+      </Button>
 
-      </div>
-    {:else}
-      <NToolbarGrid>
-        <div slot="left" class="d-flex">
-          {#if $TrackerStore.timers.length}
-            <Button icon className="tool pl-1" on:click={TrackerStore.toggleTimers}>
-              <Icon name="time" size={20} className="fill-red" />
-            </Button>
-          {/if}
-          <div class="pr-1 pl-2 {$TrackerStore.timers.length ? '' : ''}">
-            <Button color="clear" on:click={methods.toggleSearch}>
-              <Icon name="search" size={24} className={state.searching ? 'fill-red' : 'fill-primary-bright'} />
-            </Button>
-          </div>
-        </div>
-        <div slot="main" class="align-items-center">
-          <LogoType color="rgba(155,155,155,0.5)" size={20} on:click={methods.enableBoards} />
-        </div>
-        <div slot="right">
-          <Button icon on:click={methods.enableBoards}>
-            <Icon name="newTab" size="20" className="fill-primary-bright" />
-          </Button>
-        </div>
-      </NToolbarGrid>
-    {/if}
+      <!-- Tabs -->
+
+      <NBoardTabs
+        boards={methods.injectAllBoard($BoardStore.boards || [])}
+        active={$BoardStore.active}
+        on:create={methods.newBoard}
+        on:longPress={(evt) => {
+          boardOptions(evt.detail);
+        }}
+        on:tabTap={(event) => {
+          BoardStore.setActive(event.detail.id, event.detail);
+        }} />
+
+      <Button icon className="tap-icon board-option-action" on:click={() => boardOptions()}>
+        <Icon name="settings" size={24} />
+      </Button>
+
+    </Toolbar>
   </header>
   <!-- end header-->
   <div slot="content" class="container board-container">
@@ -672,7 +644,7 @@
           <!-- Include User Tips - shit should be a component -->
 
         </main>
-        <div class="board-actions mt-5 mb-3 n-row" style="min-width:310px;">
+        <div class="board-actions mt-5 mb-3 n-row" style="min-width:140px;">
           {#if $UserStore.meta.hiddenFeatures}
             <ButtonGroup className="mr-2 box-shadow-tight">
               <Button
@@ -701,9 +673,9 @@
               </Button>
             </ButtonGroup>
           {/if}
-          <ButtonGroup className="mr-2 box-shadow-tight" style="max-width:150px">
+          <!-- <ButtonGroup className="mr-2 box-shadow-tight" style="max-width:150px">
             <Button on:click={boardOptions}>{Lang.t('board.edit-sort', 'Edit / Sort')}...</Button>
-          </ButtonGroup>
+          </ButtonGroup> -->
         </div>
         <NTip {tips} />
       {/if}

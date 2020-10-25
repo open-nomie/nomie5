@@ -12,10 +12,13 @@
   import Divider from "../../components/divider/divider.svelte";
   import Icon from "../../components/icon/icon.svelte";
   import Input from "../../components/input/input.svelte";
+  import ListItem from "../../components/list-item/list-item.svelte";
+  import List from "../../components/list/list.svelte";
   import PositivityBar from "../../components/positivity-bar/positivity-bar.svelte";
   import PositivitySelector from "../../components/positivity-selector/positivity-selector.svelte";
   import Row from "../../components/row/row.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
+  import Sponsors from "../../components/sponsors/sponsors.svelte";
   import Text from "../../components/text/text.svelte";
   import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import Toolbar from "../../components/toolbar/toolbar.svelte";
@@ -43,7 +46,21 @@
       A set of base components for quick testing... I should be using Storybook, but have yet to do so.
     </Text>
 
-    <Card title="Avatar Emoji" pad class="mb-3">
+    <List title="Title Inset" outside>
+      <ListItem clickable>Item 1</ListItem>
+      <ListItem clickable>Item 2</ListItem>
+    </List>
+
+    <List title="Title Not">
+      <ListItem clickable>Item 1</ListItem>
+      <ListItem clickable>Item 2</ListItem>
+    </List>
+
+    <Card title="Sponsors" className="mb-3">
+      <Sponsors />
+    </Card>
+
+    <Card title="Avatar Emoji" pad className="mb-3">
 
       <Row className="px-2">
         <Avatar size={50} emoji="🌮🙆" />

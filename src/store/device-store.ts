@@ -58,7 +58,7 @@ const DeviceStoreInit = () => {
       document.body.classList.remove("scrolled");
     },
     open(url) {
-      window.open(url, "_system");
+      window.open(`${url}`, "_blank");
     },
     is(regex: string | RegExp) {
       if (typeof regex === "string") {

@@ -166,7 +166,6 @@
         emoji={tracker.emoji}
         value={getTodaysValue(tracker)}
         oneTap={tracker.one_tap}
-        taps={getTotalTaps(tracker)}
         color={tracker.color}
         className="tracker-{tracker.tag}"
         {hideMore}

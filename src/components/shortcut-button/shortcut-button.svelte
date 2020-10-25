@@ -16,7 +16,7 @@
   export let color: string | undefined = undefined;
   export let emoji: string | undefined = undefined;
   // export let titleSize: string = "sm";
-  export let taps: number = 0;
+  // export let taps: number = 0;
   export let hideMore: boolean = false;
   export let hideValue: boolean = false;
   export let className: string = "";

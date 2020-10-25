@@ -9,47 +9,47 @@
   // Svelte
   import { onDestroy, onMount } from "svelte";
   // import { slide } from "svelte/transition";
-  import DateTimeBar from "./date-time-bar/date-time-bar.svelte";
+  import DateTimeBar from "../date-time-bar/date-time-bar.svelte";
 
   // Modules
-  import NomieLog from "../modules/nomie-log/nomie-log";
-  import Storage from "../modules/storage/storage";
+  import NomieLog from "../../modules/nomie-log/nomie-log";
+  import Storage from "../../modules/storage/storage";
 
   //Components
-  import NItem from "../components/list-item/list-item.svelte";
-  import NIcon from "../components/icon/icon.svelte";
-  import NPoints from "../components/points/points.svelte";
-  import Button from "../components/button/button.svelte";
+  import NItem from "../list-item/list-item.svelte";
+  import NIcon from "../icon/icon.svelte";
+  import NPoints from "../points/points.svelte";
+  import Button from "../button/button.svelte";
   import dayjs from "dayjs";
   import type { OpUnitType, Dayjs } from "dayjs";
 
   import domtoimage from "dom-to-image-chrome-fix";
-  import Dymoji from "../components/dymoji/dymoji.svelte";
-  import AutoComplete from "../components/auto-complete/auto-complete.svelte";
-  import NPositivitySelector from "../components/positivity-selector/positivity-selector.svelte";
-  import NSpinner from "../components/spinner/spinner.svelte";
+  import Dymoji from "../dymoji/dymoji.svelte";
+  import AutoComplete from "../auto-complete/auto-complete.svelte";
+  import NPositivitySelector from "../positivity-selector/positivity-selector.svelte";
+  import NSpinner from "../spinner/spinner.svelte";
 
   // Utils
-  import Logger from "../utils/log/log";
-  import time from "../utils/time/time";
-  import ScoreNote from "../modules/scoring/score-note";
-  import TrackerInputer from "../modules/tracker/tracker-inputer";
-  import tick from "../utils/tick/tick";
-  import math from "../utils/math/math";
+  import Logger from "../../utils/log/log";
+  import time from "../../utils/time/time";
+  import ScoreNote from "../../modules/scoring/score-note";
+  import TrackerInputer from "../../modules/tracker/tracker-inputer";
+  import tick from "../../utils/tick/tick";
+  import math from "../../utils/math/math";
 
   // Stores
-  import { Interact } from "../store/interact";
-  import { TrackerStore } from "../store/tracker-store";
-  import { LedgerStore } from "../store/ledger";
-  import { ActiveLogStore } from "../store/active-log";
-  import { UserStore } from "../store/user-store";
-  import { Lang } from "../store/lang";
-  import { PeopleStore } from "../store/people-store";
-  import { ContextStore } from "../store/context-store";
-  import Text from "./text/text.svelte";
-  import PositivityMenu from "./positivity-selector/positivity-menu.svelte";
-  import Icon from "../components/icon/icon.svelte";
-  import DatePicker from "./date-picker/date-picker.svelte";
+  import { Interact } from "../../store/interact";
+  import { TrackerStore } from "../../store/tracker-store";
+  import { LedgerStore } from "../../store/ledger";
+  import { ActiveLogStore } from "../../store/active-log";
+  import { UserStore } from "../../store/user-store";
+  import { Lang } from "../../store/lang";
+  import { PeopleStore } from "../../store/people-store";
+  import { ContextStore } from "../../store/context-store";
+  import Text from "../text/text.svelte";
+  import PositivityMenu from "../positivity-selector/positivity-menu.svelte";
+  import Icon from "../icon/icon.svelte";
+  import DatePicker from "../date-picker/date-picker.svelte";
 
   // Consts
   const console = new Logger("capture-log");
@@ -308,7 +308,7 @@
 </script>
 
 <style lang="scss">
-  @import "../scss/utils/__utils.scss";
+  @import "../../scss/utils/__utils.scss";
 
   :global(#note-capture) {
     background-color: var(--footer-background);
@@ -324,6 +324,9 @@
   }
   :global(.capture-log .mask-textarea.populated .save-button) {
     display: block;
+  }
+  :global(.capture-log .mask-textarea .action-button) {
+    margin-bottom: 7px;
   }
 
   .capture-log {
@@ -341,7 +344,7 @@
     padding-bottom: 10px;
   }
 
-  :global(.mask-textarea .save-button, .mask-textarea .more-button) {
+  :global(.mask-textarea .action-buton) {
     margin-bottom: 7px;
   }
 
@@ -443,7 +446,7 @@
           size="sm"
           shape="circle"
           color={state.advanced ? 'primary' : 'light'}
-          className="ml-1 more-button"
+          className="ml-1 more-button action-button"
           on:click={toggleAdvanced}>
           {#if state.advanced}
             <NIcon name="more" className="fill-white" />
@@ -463,14 +466,20 @@
           on:keydown={methods.keyPress}
           on:paste={methods.keyPress} />
 
-        <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} size="lg" className="mr-2" />
+        {#if $UserStore.meta.hiddenFeatures}
+          <Button className="expand-button action-button" icon size="sm" on:click={Interact.toggleFocusedEditor}>
+            <Icon name="expand" className="fill-inverse-2" />
+          </Button>
+        {/if}
+
+        <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} size="lg" className="mr-1 action-button" />
 
         {#if $LedgerStore.saving}
-          <Button className="save-button mr-2" shape="circle" color="success" size="sm">
+          <Button className="save-button action-button mr-2" shape="circle" color="success" size="sm">
             <NSpinner size={20} color="#FFFFFF" />
           </Button>
         {:else}
-          <Button className="save-button mr-2" shape="circle" color="success" size="sm" on:click={methods.logSave}>
+          <Button className="save-button action-button mr-2" shape="circle" color="success" size="sm" on:click={methods.logSave}>
             <NIcon name="arrowUp" style="fill: #FFF;" size="20" />
           </Button>
         {/if}

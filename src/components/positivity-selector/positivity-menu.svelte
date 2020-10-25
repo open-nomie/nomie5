@@ -12,10 +12,16 @@
   let selected: any;
   let showMenu: boolean = false;
   $: selected = getEmojiFromScore(score);
+  let triggerButton;
+
+  let id: string = `ps-${Math.random()}`;
 
   let x: number;
+  let y: string = `60%`;
 
   function toggle(evt?) {
+    y = `${document.getElementById(id).offsetTop}px`;
+
     if (evt && !showMenu) {
       x = evt.detail.pageX - 240;
     }
@@ -28,7 +34,7 @@
     position: absolute;
     width: 240px;
     bottom: calc(50px + env(safe-area-inset-bottom));
-    z-index: 3000;
+    z-index: 4000;
   }
   :global(.positivity-emoji-btn) {
     margin: 6px;
@@ -36,9 +42,10 @@
   }
 </style>
 
-<div class="positivity-menu-pop animate up" style="left:{x}px; z-index:2020" class:visible={showMenu} class:hidden={!showMenu}>
+<div class="positivity-menu-pop animate up" style="left:{x}px; top:{y}; z-index:4000" class:visible={showMenu} class:hidden={!showMenu}>
   <PositivitySelector
     {size}
+    {id}
     bind:score
     on:change={() => {
       toggle();
@@ -49,6 +56,14 @@
   <div class="full-screen opacity-0" on:click={toggle} />
 {/if}
 
-<Button size="sm" shape="circle" color="transparent" className="positivity-emoji-btn {className}" on:mouseover={toggle} on:click={toggle}>
+<Button
+  {id}
+  bind:this={triggerButton}
+  size="sm"
+  shape="circle"
+  color="transparent"
+  className="positivity-emoji-btn {className}"
+  on:mouseover={toggle}
+  on:click={toggle}>
   {#if selected && selected.emoji}{selected.emoji}{/if}
 </Button>

@@ -5375,15 +5375,6 @@ button {
       border-radius: 20px;
       overflow: hidden;
       box-shadow: var(--box-shadow-tight); }
-      .n-board-tabs .tab.selected:after {
-        content: "ddd";
-        position: absolute !important;
-        bottom: 0;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 100;
-        background-color: var(--color-primary) !important; }
     .n-board-tabs .tab:last-child.active {
       border-bottom: none; }
     .n-board-tabs .tab:after {
@@ -6560,7 +6551,8 @@ aside.n-panel {
   justify-content: center;
   flex-direction: row;
   height: 50px;
-  padding: 0 0px; }
+  padding: 0 0px;
+  width: 100%; }
   .n-toolbar .left,
   .n-toolbar .right {
     min-width: 25%;

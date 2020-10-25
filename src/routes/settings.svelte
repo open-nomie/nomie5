@@ -50,6 +50,8 @@
 
   import { LastUsed } from "../store/last-used";
   import { AppStore } from "../store/app-store";
+  import Sponsors from "../components/sponsors/sponsors.svelte";
+  import ToggleSwitch from "../components/toggle-switch/toggle-switch.svelte";
 
   export const location = undefined;
   export const style = undefined;
@@ -336,8 +338,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               DATA VIEW
               *******************************************
             -->
-            <div class="n-list pb-2">
-              <ListItem itemDivider>{Lang.t('settings.storage-location', 'Storage Location')}</ListItem>
+            <List className="mb-3" title={Lang.t('settings.storage-location', 'Storage Location')} outside>
               <ListItem on:click={methods.storageMenu}>
                 <span slot="left">☁️</span>
                 <Text>
@@ -371,10 +372,9 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <span slot="left">📂</span>
               </ListItem>
 
-            </div>
+            </List>
 
-            <div class="n-list pb-2">
-              <ListItem itemDivider>{Lang.t('settings.import-data', 'Import Data')}</ListItem>
+            <List className="mb-3" outside title={Lang.t('settings.import-data', 'Import Data')}>
               <ListItem clickable title={Lang.t('settings.nomie-api', 'Nomie API')} on:click={() => navigate('/api')}>
                 <span slot="left">🚚</span>
                 <span slot="right">
@@ -400,9 +400,10 @@ Note: Your data will not automatically move over. You'll first need to export it
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
               </ListItem>
-            </div>
-            <div class="n-list pb-2">
-              <ListItem itemDivider>{Lang.t('settings.export-data', 'Export Data')}</ListItem>
+            </List>
+
+            <List className="mb-3" outside title={Lang.t('settings.export-data', 'Export Data')}>
+
               <ListItem detail title={Lang.t('settings.generate-backup', 'Generate Backup')} to="/settings/export/backup">
                 <span slot="left">📦</span>
 
@@ -410,15 +411,30 @@ Note: Your data will not automatically move over. You'll first need to export it
               <ListItem detail title={Lang.t('settings.generate-csv', 'Generate CSV')} to="/settings/export/csv">
                 <span slot="left">📃</span>
               </ListItem>
-            </div>
+            </List>
 
-            <div class="n-list pb-2">
-              <ListItem itemDivider>{Lang.t('settings.miscellaneous', 'Miscellaneous')}</ListItem>
-              <ListItem title={Lang.t('settings.update-last-used-date', "Update All Tracker's Last-Used")} on:click={LastUsed.updateAll}>
+            <ListItem title={Lang.t('settings.hide-backup-reminder', 'Hide backup reminder')}>
+              <span slot="left">📕</span>
+              <div slot="right">
+                <ToggleSwitch bind:value={$UserStore.meta.hideBackup} on:change={methods.settingChange} />
+              </div>
+            </ListItem>
+
+            <List className="mb-3" outside title={Lang.t('settings.miscellaneous', 'Miscellaneous')}>
+              <ListItem
+                clickable
+                title={Lang.t('settings.update-last-used-date', "Update All Tracker's Last-Used")}
+                on:click={LastUsed.updateAll}>
                 <span slot="left">🕰</span>
               </ListItem>
+            </List>
 
-            </div>
+            <List className="mb-3" outside title={Lang.t('settings.danger-zone', 'Danger Zone')}>
+              <ListItem detail on:click={methods.deleteEverything} clickable>
+                <div slot="left">⚠️</div>
+                <Text className="text-red">{Lang.t('settings.destroy-all-data', 'Destroy all Data')}</Text>
+              </ListItem>
+            </List>
 
             <!-- <div class="n-list solo my-2">
               <Text bold className="my-3 mx-3">{Lang.t('general.type', 'Finding old data')}</Text>
@@ -435,8 +451,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               ABOUT VIEW 
               *******************************************
             -->
-            <div class="n-list pb-1">
-              <ListItem itemDivider>{Lang.t('settings.join-the-community', 'Join the Community')}</ListItem>
+            <List className=" mb-3" title={Lang.t('settings.join-the-community', 'Join the Community')} outside>
               <ListItem detail title="Learn More" href="https://nomie.app?s=dap">
                 <span slot="right" class="text-inverse-3">Nomie.app</span>
               </ListItem>
@@ -450,10 +465,9 @@ Note: Your data will not automatically move over. You'll first need to export it
               <ListItem title="Open Source" detail href="https://github.com/open-nomie/nomie">
                 <span slot="right" class="n-row text-inverse-3">GitHub</span>
               </ListItem>
-            </div>
+            </List>
 
-            <div class="n-list pb-1">
-              <ListItem itemDivider>App Details</ListItem>
+            <List className="mb-3" outside title="App">
               <ListItem title={Lang.t('general.tracker-count', 'Tracker Count')}>
                 <span slot="right">{TrackerStore.getAsArray().length}</span>
               </ListItem>
@@ -487,59 +501,49 @@ Note: Your data will not automatically move over. You'll first need to export it
               </ListItem>
               <Divider center />
               <ListItem title="UI Test" to="/test" detail />
-            </div>
+            </List>
 
-            <ListItem itemDivider>Version</ListItem>
-            <ListItem title="Version APP_VERSION " description="Built APP_BUILD_DATE " detail on:click={AppStore.reveal}>
-              <span slot="right" class="n-row">
-                <Button size="xs" className="ml-2">New</Button>
-              </span>
-            </ListItem>
-            <ListItem
-              detail
-              title="Onboarded"
-              on:click={() => {
-                navigate('/setup');
-              }}>
-              <span slot="right" class="text-primary">
-                <Text size="sm">{Lang.t('settings.redo-setup', 'Redo Setup')}</Text>
-              </span>
-            </ListItem>
+            <List title="Version" outside className="mb-3">
+              <ListItem title="Version APP_VERSION " description="Built APP_BUILD_DATE " detail on:click={AppStore.reveal}>
+                <span slot="right" class="n-row">
+                  <Button size="xs" className="ml-2">New</Button>
+                </span>
+              </ListItem>
+              <ListItem
+                detail
+                title="Onboarded"
+                on:click={() => {
+                  navigate('/setup');
+                }}>
+                <span slot="right" class="text-primary">
+                  <Text size="sm">{Lang.t('settings.redo-setup', 'Redo Setup')}</Text>
+                </span>
+              </ListItem>
+            </List>
           {/if}
           <!-- END Views -->
 
           <List className="mt-3">
-            <ListItem title={Lang.t('settings.translate-nomie', 'Help Translate Nomie')} to="/lang" detail>
-              <span slot="left">🌍</span>
-              <div slot="right">
-                <div class="nbtn nbtn-xs nbtn-rounded nbtn-danger">Beta</div>
-              </div>
-            </ListItem>
-
-            <ListItem title={Lang.t('general.questions', 'Questions?')} class="mb-2" detail>
+            <ListItem title={Lang.t('general.questions', 'Questions')} class="mb-2" detail>
               <span slot="left">🆘</span>
               <div slot="right">
                 <Text size="sm">
-                  <a href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>{config.support_contact}</a>
+                  <a class="nbtn nbtn-xs nbtn-rounded nbtn-dark" href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>
+                    Email
+                  </a>
                 </Text>
-              </div>
-            </ListItem>
-
-            <ListItem>
-              <Text size="md">Happy Data, LLC</Text>
-              <div slot="right">
-                <Text size="sm" on:click={specialTap}>&copy; Copyright 2014 - {dayjs().format('YYYY')}</Text>
               </div>
             </ListItem>
           </List>
 
-          <ListItem className="bg-transparent my-4" title="⚠️ {Lang.t('settings.danger-zone', 'Danger Zone')}">
-            <div slot="right">
-              <Button color="danger" size="sm" on:click={methods.deleteEverything}>
-                {Lang.t('settings.destroy-all-data', 'Destroy all Data')}
-              </Button>
-            </div>
-          </ListItem>
+          <Spacer gap={1} />
+          <List outside title={Lang.t('general.sponsors', 'Sponsors')} className="px-2 bg-transparent">
+            <Sponsors />
+          </List>
+
+          <Text size="sm" center className="mt-4 mb-3" on:click={specialTap}>
+            Happy Data, LLC &copy; Copyright 2014 - {dayjs().format('YYYY')}
+          </Text>
 
         </div>
         <!-- end container -->

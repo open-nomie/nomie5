@@ -147,7 +147,7 @@
 </script>
 
 <style lang="scss">
-  :global(autocomplete-results .scroller) {
+  :global(.autocomplete-results.scroller) {
     max-height: 48px;
     overflow: scroll;
     .tracker-list {
@@ -158,6 +158,10 @@
       flex-wrap: nowrap !important;
       width: fit-content;
     }
+  }
+  :global(.autocomplete-results.scroller .trackable-element) {
+    flex-shrink: 0;
+    flex-grow: 0;
   }
   .autocomplete-results {
     margin: 0px;
@@ -205,7 +209,7 @@
     {#each state.results || [] as tracker (tracker.tag)}
       <Button
         size="xs"
-        className="m-1"
+        className="m-1 trackable-element"
         color="light"
         shape="rounded"
         on:click={() => {

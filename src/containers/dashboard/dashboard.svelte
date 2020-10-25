@@ -200,7 +200,7 @@
       let mode = "w";
       // Determine Stat Mode based on number of days provided
       if (dayDiff < 1) {
-        mode = "d";
+        mode = "d"; // Use hours as the breakdown
       } else if (dayDiff < 8) {
         mode = "w";
       } else if (dayDiff < 89) {

@@ -24,6 +24,7 @@
   .n-positivity-selector {
     border-radius: 20px;
     padding: 0 6px;
+    z-index: 3000;
   }
 
   :global(.n-positivity-selector .nbtn) {

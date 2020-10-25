@@ -93,6 +93,7 @@ export default {
     "max": "Nomie",
     "note-placeholder": "Nomie",
     "note-description": "Nomie",
+    "step": "Nomie",
     "measure-by": "Nomie",
     "calculate-total": "Nomie",
     "value": "Nomie",
@@ -174,6 +175,8 @@ export default {
     "note": "Nomie",
     "where": "Nomie",
     "when": "Nomie",
+    "boards": "Nomie",
+    "dashboards": "Nomie",
     "finished": "Nomie",
     "setup": "Nomie",
     "style": "Nomie",
@@ -191,6 +194,7 @@ export default {
     "error-connecting": "Nomie",
     "search": "Nomie",
     "save-list-edits": "Nomie",
+    "journal": "Nomie",
     "whats-up": "Nomie",
     "location": "Nomie",
     "back": "Nomie"
@@ -317,6 +321,7 @@ export default {
   "board": {
     "edit-sort": "Nomie",
     "delete-board": "Nomie",
+    "create-new-board": "Nomie",
     "board-options": "Nomie",
     "add-existing-tracker": "Nomie",
     "create-custom-tracker": "Nomie",
