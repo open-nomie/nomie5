@@ -172,7 +172,7 @@
             element={person}
             value={undefined}
             on:click={() => {
-              Interact.openStats(`@${person.id}`);
+              Interact.openStats(`@${person.id}`, displayLog.endDayjs());
               dispatch('personClick', { person: person, log });
             }} />
         {/each}
@@ -187,7 +187,7 @@
             truncate
             element={trackerElement}
             on:click={() => {
-              Interact.openStats(`#${trackerElement.id}`);
+              Interact.openStats(`#${trackerElement.id}`, displayLog.endDayjs());
               dispatch('trackerClick', { tracker: trackerElement.obj, log });
             }} />
         {/each}
@@ -202,7 +202,7 @@
             shape="rounded"
             color="light"
             on:click={() => {
-              Interact.openStats(context.raw);
+              Interact.openStats(context.raw, displayLog.endDayjs());
               dispatch('contextClick', { context: context, log });
             }}>
             +{context.id}
