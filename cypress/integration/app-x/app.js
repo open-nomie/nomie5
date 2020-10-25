@@ -274,8 +274,10 @@ context("App", () => {
     appTab('Track');
     cy.wait(500);
     // Click tab icon
-    cy.get('[slot="right"] > .nbtn > .n-icon > .hero').click();
+    cy.get('.board-option-action').click();
     // cy.get("header > .n-toolbar-grid > .right > .nbtn").click();
+    cy.wait(300);
+    cy.get('.pop-button-3').click();
     cy.wait(300);
     cy.get(".form-control").type("Test Tab");
     cy.wait(100);
