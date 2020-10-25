@@ -15,6 +15,7 @@
   export let value: string | undefined = undefined;
   export let color: string | undefined = undefined;
   export let emoji: string | undefined = undefined;
+  export let style: string = "";
   // export let titleSize: string = "sm";
   // export let taps: number = 0;
   export let hideMore: boolean = false;
@@ -273,6 +274,11 @@
   :global(.shortcut-button.has-value .n-counter) {
     color: #fff !important;
   }
+  :global(.shortcut-button.full-width) {
+    width: calc(100% - 12px) !important;
+    min-width: calc(100% - 12px) !important;
+    max-width: calc(100% - 12px) !important;
+  }
 </style>
 
 <Button
@@ -280,7 +286,7 @@
   color="clear"
   className="{className} shortcut-button d-flex flex-column {is.truthy(value) ? 'has-value' : 'no-value'}
   {compact ? 'compact' : ''}"
-  style={`background-color:${value ? color || 'var(--color-primary)' : 'var(--color-solid)'};`}
+  style={`background-color:${value ? color || 'var(--color-primary)' : 'var(--color-solid)'}; ${style}`}
   on:longpress={() => {
     dispatch('longpress');
   }}
