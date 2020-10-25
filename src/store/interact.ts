@@ -70,12 +70,21 @@ export interface IPopMenuOptions {
   description?: string;
 }
 
+interface StatsInteractConfig {
+  activeTag: string | undefined;
+  date: Dayjs | undefined;
+  terms: Array<string>;
+}
+
+const stateStats: StatsInteractConfig = {
+  activeTag: null,
+  date: null,
+  terms: [],
+};
+
 const interactInit = () => {
   const { update, subscribe, set } = writable({
-    stats: {
-      activeTag: null,
-      terms: [],
-    },
+    stats: stateStats,
     alert: {
       show: false,
       title: null,
@@ -344,11 +353,12 @@ const interactInit = () => {
         return d;
       });
     },
-    openStats(term) {
+    openStats(term, date?: Dayjs) {
       update((d) => {
         d.stats.terms = d.stats.terms || [];
         // if the term isn't the last one - then allow it.
         // otherwise don't - this will allow them to add it later in the stack
+        d.stats.date = date;
         if (d.stats.terms[d.stats.terms.length] !== term) {
           d.stats.terms.push(term);
         }

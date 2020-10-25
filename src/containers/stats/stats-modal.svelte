@@ -511,6 +511,9 @@
     // Get term from Interact Store
     state.currentTerm = $Interact.stats.terms[$Interact.stats.terms.length - 1];
     // Get range and view options
+    if ($Interact.stats.date) {
+      state.date = $Interact.stats.date;
+    }
     state.range = gettimeRangeText();
     state.viewOption = getDataViewButtons();
     // Get trackable element from the latest term
