@@ -1,5 +1,5 @@
 <script lang="ts">
-  import NItem from "../../components/list-item/list-item.svelte";
+  import ListItem from "../../components/list-item/list-item.svelte";
   import { UserStore } from "../../store/user-store";
   import NToggle from "../../components/toggle-switch/toggle-switch.svelte";
   import { BoardStore } from "../../store/boards";
@@ -14,6 +14,9 @@
   import { onMount } from "svelte";
   import TinyColorPicker from "../../components/color-picker/tiny-color-picker.svelte";
   import _ from "lodash";
+  import List from "../../components/list/list.svelte";
+  import type { t } from "i18next";
+  import Divider from "../../components/divider/divider.svelte";
 
   let fontSize = localStorage.getItem("font-size") || "md";
 
@@ -39,9 +42,8 @@
 -->
 <!-- Use Location -->
 
-<div class="n-list pb-1">
-  <NItem itemDivider>Style</NItem>
-  <NItem title={Lang.t('settings.theme', 'Theme')}>
+<List title={Lang.t('general.style', 'Style')} outside className=" pb-1">
+  <ListItem title={Lang.t('settings.theme', 'Theme')}>
     <span slot="left">💡</span>
     <div slot="right">
       <ButtonGroup>
@@ -59,11 +61,11 @@
         {/each}
       </ButtonGroup>
     </div>
-  </NItem>
+  </ListItem>
 
   <hr class="divider center" />
 
-  <NItem title={Lang.t('settings.theme_accent', 'Accent')}>
+  <ListItem title={Lang.t('settings.theme_accent', 'Accent')}>
     <span slot="left">🎨</span>
     <div slot="right">
       <TinyColorPicker
@@ -76,11 +78,11 @@
         }} />
 
     </div>
-  </NItem>
+  </ListItem>
 
   <hr class="divider center my-1" />
 
-  <NItem title={Lang.t('settings.base-font-size', 'Text Size')}>
+  <ListItem title={Lang.t('settings.base-font-size', 'Text Size')}>
     <span slot="left">🅰</span>
     <div slot="right">
       <ButtonGroup>
@@ -96,11 +98,11 @@
 
       </ButtonGroup>
     </div>
-  </NItem>
+  </ListItem>
 
   <hr class="divider center my-1" />
 
-  <NItem title={Lang.t('settings.small-tracker-buttons', 'Compact Trackers')}>
+  <ListItem title={Lang.t('settings.small-tracker-buttons', 'Compact Trackers')}>
     <span slot="left">🐭</span>
     <div slot="right">
       <NToggle
@@ -113,33 +115,23 @@
           });
         }} />
     </div>
-  </NItem>
+  </ListItem>
 
   <hr class="divider center my-1" />
 
-  <NItem title={Lang.t('settings.hide-tab-labels', 'Hide bottom tab labels')}>
+  <ListItem title={Lang.t('settings.hide-tab-labels', 'Hide bottom tab labels')}>
     <span slot="left">🗂</span>
     <div slot="right">
       <NToggle bind:value={$UserStore.meta.hideLabels} on:change={methods.settingChange} />
     </div>
-  </NItem>
+  </ListItem>
+</List>
 
-  <hr class="divider center" />
-
-  <NItem title={Lang.t('settings.hide-backup-reminder', 'Hide backup reminder')}>
-    <span slot="left">📕</span>
-    <div slot="right">
-      <NToggle bind:value={$UserStore.meta.hideBackup} on:change={methods.settingChange} />
-    </div>
-  </NItem>
-</div>
-
-<div class="n-list pb-2">
-  <NItem itemDivider>Locale</NItem>
+<List outside title={Lang.t('settings.locale', 'Locale')} className="pb-2">
   <!-- 24 Hour -->
 
   <!-- firstDayOfWeek -->
-  <NItem title={Lang.t('settings.first-day-of-week', 'Week Starts On')}>
+  <ListItem title={Lang.t('settings.first-day-of-week', 'Week Starts On')}>
     <span slot="left">🗓</span>
     <div slot="right">
       <ButtonGroup>
@@ -169,9 +161,9 @@
         <option value="2">{Lang.t('settings.monday')}</option>
       </select> -->
     </div>
-  </NItem>
+  </ListItem>
   <!-- Language -->
-  <NItem title={Lang.t('settings.language', 'Language')}>
+  <ListItem title={Lang.t('settings.language', 'Language')}>
     <span slot="left">🌎</span>
     <div slot="right">
       <select
@@ -187,13 +179,17 @@
       </select>
 
     </div>
-  </NItem>
+  </ListItem>
 
-  <NItem title={Lang.t('settings.24-hour-clock', '24 hour clock')}>
+  <ListItem title={Lang.t('settings.24-hour-clock', '24 hour clock')}>
     <span slot="left">⌚️</span>
     <div slot="right">
       <NToggle bind:value={$UserStore.meta.is24Hour} on:change={methods.settingChange} />
     </div>
-  </NItem>
+  </ListItem>
+  <Divider center />
+  <ListItem title={Lang.t('settings.translate-nomie', 'Help Translate Nomie')} to="/lang" detail>
+    <span slot="left">🌍</span>
+  </ListItem>
 
-</div>
+</List>
