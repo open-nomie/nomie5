@@ -63,6 +63,7 @@
     Cake,
     LightBulb,
     PencilAlt,
+    BookOpen,
   } from "svelte-hero-icons";
 
   export let name = "add";
@@ -138,6 +139,7 @@
     eye: Eye,
     eyeOff: EyeOff,
     compose: PencilAlt,
+    book: BookOpen,
   };
 </script>
 
