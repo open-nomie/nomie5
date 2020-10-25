@@ -3,7 +3,7 @@
   import Ripple from "./ripple.svelte";
 
   const dispatch = createEventDispatcher();
-  export let id = `button-${Math.random()}`;
+  export let id = `button-${Math.random().toString().split(".")[0]}`;
   export let size = "md";
   export let type = "";
   export let shape = "rounded";

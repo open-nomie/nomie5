@@ -7,12 +7,14 @@
   export let activeClass: string = "active";
   export let className: string = "";
   export let centerIfPossible: boolean = false;
+  export let wrapperClass: string = "";
+  export let style = "";
 
   // Locals
   let wrapper;
   let scroller;
   let ready = false;
-  let centered = false;
+  let centered = true;
 
   $: if (activeIndex && ready) {
     methods.selectIndex(activeIndex);
@@ -29,7 +31,6 @@
   const methods = {
     checkForCenter() {
       if (centerIfPossible && wrapper) {
-        console.log("Checking for center");
         let width = wrapper.offsetWidth;
         let scrollWidth = wrapper.scrollWidth;
         if (scrollWidth > width) {
@@ -138,8 +139,8 @@
   }
 </style>
 
-<div class="n-hscroller {className}" data-scroll="0" bind:this={scroller}>
-  <div class="wrapper {centered ? 'force-center' : 'no-force'}" bind:this={wrapper}>
+<div class="n-hscroller {className}" {style} data-scroll="0" bind:this={scroller}>
+  <div class="wrapper {wrapperClass} {centered ? 'force-center' : 'no-force'}" bind:this={wrapper}>
     <slot />
   </div>
 </div>

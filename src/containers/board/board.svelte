@@ -570,7 +570,7 @@
           BoardStore.setActive(event.detail.id, event.detail);
         }} />
 
-      <Button icon className="tap-icon" on:click={() => boardOptions()}>
+      <Button icon className="tap-icon board-option-action" on:click={() => boardOptions()}>
         <Icon name="settings" size={24} />
       </Button>
 
@@ -644,7 +644,7 @@
           <!-- Include User Tips - shit should be a component -->
 
         </main>
-        <div class="board-actions mt-5 mb-3 n-row" style="min-width:210px;">
+        <div class="board-actions mt-5 mb-3 n-row" style="min-width:140px;">
           {#if $UserStore.meta.hiddenFeatures}
             <ButtonGroup className="mr-2 box-shadow-tight">
               <Button
