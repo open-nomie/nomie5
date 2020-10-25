@@ -39,9 +39,10 @@
   import Button from "../components/button/button.svelte";
   import NextPrevCal from "../components/next-prev-cal/next-prev-cal.svelte";
   import { SearchStore } from "../store/search-store";
-  import type NLog from "../modules/nomie-log/nomie-log";
+  import NLog from "../modules/nomie-log/nomie-log";
   import Location from "../modules/locate/Location";
   import Empty from "../containers/empty/empty.svelte";
+  import { ActiveLogStore } from "../store/active-log";
 
   export const location = undefined;
   export let style = undefined;
@@ -76,6 +77,15 @@
   }
 
   $: appTitle = `History ${state.date.format("YYYY-MM-DD")}`;
+
+  function composeHere() {
+    let logConfig = { end: undefined };
+    if (!isToday) {
+      logConfig.end = state.date.hour(dayjs().hour()).toDate().getTime();
+    }
+    let log = new NLog(logConfig);
+    ActiveLogStore.journal(log);
+  }
 
   // Methods
   const methods = {
@@ -305,8 +315,11 @@
 
   <header slot="header">
     <NToolbar className="container px-2">
-      <Button color="none" shape="circle" className="tap-icon" on:click={methods.search}>
-        <NIcon name="search" size={24} />
+      <Button icon className="tap-icon" on:click={methods.search}>
+        <NIcon name="search" size="24" />
+      </Button>
+      <Button icon className="tap-icon" on:click={composeHere}>
+        <NIcon name="compose" size="24" />
       </Button>
       <div class="filler truncate history-title show-scrolled">
         <Text>
@@ -341,7 +354,11 @@
         <Empty
           emoji="⏳"
           title={state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
-          description={`${Lang.t('history.empty-day', 'No data was found on this day')}`} />
+          description={`${Lang.t('history.empty-day', 'No data was found on this day')}`}>
+          <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={composeHere}>
+            {Lang.t('history.add-a-note', 'Add a Note...')}
+          </Button>
+        </Empty>
       {:else}
         <!-- Loop over logs -->
         {#each logs as log, index}

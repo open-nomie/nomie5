@@ -62,6 +62,7 @@
     ArrowRight,
     Cake,
     LightBulb,
+    PencilAlt,
   } from "svelte-hero-icons";
 
   export let name = "add";
@@ -136,6 +137,7 @@
     detailView: detailView,
     eye: Eye,
     eyeOff: EyeOff,
+    compose: PencilAlt,
   };
 </script>
 

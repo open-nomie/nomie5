@@ -92,7 +92,7 @@
       </Button>
       <DatePicker
         bind:time={$ActiveLogStore.end}
-        style="width:200px; font-size:14px; border-radius:2px; text-align:center padding:4px; background-color:var(--color-grey-9);" />
+        style="width:210px; font-size:14px; border-radius:2px; text-align:center padding:4px; background-color:var(--color-grey-9);" />
       <Button size="sm" icon className="tap-icon" on:click={nextDate}>
         <Icon name="chevronRight" />
       </Button>
