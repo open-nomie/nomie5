@@ -521,7 +521,8 @@
             {#if activeDashboard.widgets.length == 0}
               <Empty
                 emoji="💹"
-                description={Lang.t('dashboard.empty-message', 'Add different charts, stats, and other widgets to create your own custom views of your life.')}>
+                title={Lang.t('general.dashboard', 'Dashboard')}
+                description={Lang.t('dashboard.empty-message', 'Mix and match charts, stats, and other widgets to create your own custom views of your life.')}>
                 <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={newWidget}>
                   {Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
                 </Button>

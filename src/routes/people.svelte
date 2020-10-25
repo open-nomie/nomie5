@@ -109,7 +109,9 @@
         <NIcon name="search" size={24} />
       </Button>
       <div class="filler pl-2 truncate">
-        <Text center bold>{Lang.t('tabs.people', 'People')}</Text>
+        {#if state.people.length}
+          <Text center bold>{Lang.t('tabs.people', 'People')}</Text>
+        {/if}
       </div>
       <Button color="none" shape="circle" className="tap-icon" on:click={addPerson}>
         <NIcon name="userAdd" className="fill-primary-bright" />
@@ -120,7 +122,10 @@
   <div slot="content" class="container">
     <div class="n-list my-2 bg-transparent">
       {#if !state.people.length && !state.searchTerm && state.initialized}
-        <Empty emoji="👨‍👩‍👦‍👦" description={Lang.t('people.empty-message', 'Track & monitor how you interact with your friends and family')}>
+        <Empty
+          title={Lang.t('general.people')}
+          emoji="👨‍👩‍👦‍👦"
+          description={Lang.t('people.empty-message', 'Track & monitor how you interact with your friends and family')}>
           <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={addPerson}>
             {Lang.t('people.add-a-person', 'Add a Person...')}
           </Button>

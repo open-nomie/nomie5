@@ -4505,19 +4505,19 @@ html {
   right: 0; }
 
 body.font-size-xs {
-  --base-font-size: 16px;
+  --base-font-size: 90%;
   font-size: var(--base-font-size); }
 
 body.font-size-sm {
-  --base-font-size: 17px;
+  --base-font-size: 100%;
   font-size: var(--base-font-size); }
 
 body.font-size-md {
-  --base-font-size: 18px;
+  --base-font-size: 110%;
   font-size: var(--base-font-size); }
 
 body.font-size-lg {
-  --base-font-size: 19px;
+  --base-font-size: 120%;
   font-size: var(--base-font-size); }
 
 body.mint {
@@ -4573,8 +4573,8 @@ body {
   --color-mint: #1fb182;
   --color-teal-bright: #10c4b5;
   --color-teal: rgb(25, 156, 115);
-  --color-purple-bright: #ac0add;
-  --color-purple: #9409be;
+  --color-purple-bright: #b900f1;
+  --color-purple: #a705d8;
   --color-orange-bright: #ef8354;
   --color-orange: #ef8354;
   --color-pink-bright: #ff499e;
@@ -5409,7 +5409,7 @@ button {
 
 .nbtn {
   transition: all 0.2s ease-in-out;
-  --button-base-size: var(--base-font-size);
+  --button-base-size: calc(var(--base-font-size) * 1);
   display: inline-flex;
   flex-direction: row;
   align-items: center;
@@ -5438,14 +5438,14 @@ button {
   outline: rgba(155, 155, 155, 0.2) !important; }
 
 .nbtn-sm {
-  font-size: calc(var(--button-base-size) * 0.85);
+  font-size: calc(var(--button-base-size) * 0.8);
   height: 30px;
   padding-left: 12px;
   padding-right: 12px;
   border-radius: 6px; }
 
 .nbtn-xs {
-  font-size: calc(var(--button-base-size) * 0.75);
+  font-size: calc(var(--button-base-size) * 0.7);
   height: 24px;
   padding-left: 8px;
   padding-right: 8px;
