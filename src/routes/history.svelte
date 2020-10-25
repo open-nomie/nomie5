@@ -41,6 +41,7 @@
   import { SearchStore } from "../store/search-store";
   import type NLog from "../modules/nomie-log/nomie-log";
   import Location from "../modules/locate/Location";
+  import Empty from "../containers/empty/empty.svelte";
 
   export const location = undefined;
   export let style = undefined;
@@ -325,9 +326,11 @@
   <main slot="content" class="page page-history flex-column pb-5">
 
     <div class="container p-0 px-1">
-      <Text size="xl" bold className="history-title pl-3 mt-2">
-        {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
-      </Text>
+      {#if logs && logs.length}
+        <Text size="xl" bold className="history-title pl-3 mt-2">
+          {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
+        </Text>
+      {/if}
 
       <OfflineQueue />
       {#if loading}
@@ -335,9 +338,10 @@
           <Spinner />
         </div>
       {:else if !loading && !logs.length}
-        <div class="empty-notice">
-          <Text size="sm">{Lang.t('history.empty-day', 'No records found for this day')}</Text>
-        </div>
+        <Empty
+          emoji="⏳"
+          title={state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
+          description={`${Lang.t('history.empty-day', 'No data was found on this day')}`} />
       {:else}
         <!-- Loop over logs -->
         {#each logs as log, index}

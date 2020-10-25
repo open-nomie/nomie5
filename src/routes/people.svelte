@@ -15,6 +15,7 @@
   import { SearchStore } from "../store/search-store";
 
   import dayjs from "dayjs";
+  import Empty from "../containers/empty/empty.svelte";
   export const location = undefined;
 
   let state = {
@@ -119,7 +120,13 @@
   <div slot="content" class="container">
     <div class="n-list my-2 bg-transparent">
       {#if !state.people.length && !state.searchTerm && state.initialized}
-        <NItem className="mt-5 py-3" bg="transparent">
+        <Empty emoji="👨‍👩‍👦‍👦" description={Lang.t('people.empty-message', 'Track & monitor how you interact with your friends and family')}>
+          <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={addPerson}>
+            {Lang.t('people.add-a-person', 'Add a Person...')}
+          </Button>
+        </Empty>
+
+        <!-- <NItem className="mt-5 py-3" bg="transparent">
           <div class="text-md text-center">
             Track & monitor how you interact
             <br />
@@ -131,7 +138,7 @@
             <span class="fake-link" on:click={PeopleStore.searchForPeople}>Find recent @people</span>
           </div>
 
-        </NItem>
+        </NItem> -->
       {:else if !state.initialized}
         <NItem>Loading...</NItem>
       {:else if !state.people.length && state.searchTerm}

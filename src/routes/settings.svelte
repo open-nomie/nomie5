@@ -537,7 +537,7 @@ Note: Your data will not automatically move over. You'll first need to export it
           </List>
 
           <Spacer gap={1} />
-          <List outside title={Lang.t('general.sponsors', 'Sponsors')} className="px-2 bg-transparent">
+          <List outside title={Lang.t('general.supporters', 'Supporters')} className="px-2 bg-transparent">
             <Sponsors />
           </List>
 

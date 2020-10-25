@@ -22,6 +22,9 @@
     padding: 20px;
     align-self: stretch;
     justify-self: stretch;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
   }
 </style>
 
@@ -35,4 +38,5 @@
   {#if description}
     <Text size="sm" faded center>{description}</Text>
   {/if}
+  <slot />
 </div>
