@@ -11,8 +11,8 @@
   import { onMount, onDestroy } from "svelte";
 
   // components
-  import NIcon from "../components/icon/icon.svelte";
-  import NToolbar from "../components/toolbar/toolbar.svelte";
+  import Icon from "../components/icon/icon.svelte";
+
   import Spinner from "../components/spinner/spinner.svelte";
   import LogItem from "../components/list-item-log/list-item-log.svelte";
 
@@ -43,6 +43,11 @@
   import Location from "../modules/locate/Location";
   import Empty from "../containers/empty/empty.svelte";
   import { ActiveLogStore } from "../store/active-log";
+  import ButtonGroup from "../components/button-group/button-group.svelte";
+  import Toolbar from "../components/toolbar/toolbar.svelte";
+  import type { OTDViewOption } from "../containers/on-this-day/on-this-day-helpers";
+  import { OTDViews } from "../containers/on-this-day/on-this-day-helpers";
+  import OnThisDayViews from "../containers/on-this-day/on-this-day-views.svelte";
 
   export const location = undefined;
   export let style = undefined;
@@ -68,6 +73,7 @@
   // and when we have selected more than one.
 
   let isToday = true;
+  let view: OTDViewOption = "all";
 
   // If the date changes - check to see if it's still today
   let activeDate;
@@ -316,37 +322,54 @@
 
 <NLayout pageTitle={appTitle} {style}>
 
-  <header slot="header">
-    <NToolbar className="container px-2">
+  <header slot="header" class="flex-column">
+    <Toolbar className="container px-2">
       <Button icon className="tap-icon" on:click={methods.search}>
-        <NIcon name="search" size="24" />
+        <Icon name="search" size="24" />
       </Button>
       <Button icon className="tap-icon" on:click={composeHere}>
-        <NIcon name="compose" size="24" />
+        <Icon name="compose" size="24" />
       </Button>
-      <div class="filler truncate history-title show-scrolled">
+      <div class="filler truncate history-title">
         <Text>
           {#if refreshing}
-            <Spinner size="16" />
+            <Spinner size={16} />
           {/if}
           {state.date.format('ddd')} {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
         </Text>
         <!-- end text middle -->
       </div>
       <NextPrevCal on:previous={methods.previous} on:next={methods.next} on:calendar={methods.selectDate} {isToday} />
-    </NToolbar>
-
+    </Toolbar>
+    {#if logs.length}
+      <Toolbar>
+        <ButtonGroup>
+          {#each OTDViews.filter((v) => {
+            return v.view !== 'locations';
+          }) as loopView}
+            <Button
+              className={view === loopView.view ? 'active' : ''}
+              icon
+              on:click={() => {
+                view = loopView.view;
+              }}>
+              <Icon name={loopView.icon} />
+            </Button>
+          {/each}
+        </ButtonGroup>
+      </Toolbar>
+    {/if}
   </header>
   <!-- end header-content header -->
 
   <main slot="content" class="page page-history flex-column pb-5">
 
     <div class="container p-0 px-1">
-      {#if logs && logs.length}
+      <!-- {#if logs && logs.length}
         <Text size="xl" bold className="history-title pl-3 mt-2">
           {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
         </Text>
-      {/if}
+      {/if} -->
 
       <OfflineQueue />
       {#if loading}
@@ -361,14 +384,15 @@
           buttonLabel={Lang.t('history.add-a-note', 'Add a Note...')}
           buttonClick={composeHere} />
       {:else}
+        <OnThisDayViews {view} {logs} />
         <!-- Loop over logs -->
-        {#each logs as log, index}
+        <!-- {#each logs as log, index}
           <LogItem
             {log}
             on:textClick={(event) => {
               methods.textClick(event);
             }} />
-        {/each}
+        {/each} -->
       {/if}
 
     </div>
@@ -387,7 +411,7 @@
                     methods.goto(dayjs(log.end));
                   }}>
                   {dayjs(log.end).fromNow()}
-                  <NIcon name="chevronRight" className="fill-white" size="18" />
+                  <Icon name="chevronRight" className="fill-white" size="18" />
                 </Button>
               </div>
               <LogItem
@@ -427,7 +451,7 @@
             on:click={() => {
               state.showAllLocations = !state.showAllLocations;
             }}>
-            <NIcon name="close" size="32" />
+            <Icon name="close" size="32" />
           </Button>
 
         </div>
