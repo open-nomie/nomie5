@@ -212,27 +212,27 @@
     board = board || $BoardStore.activeBoard;
     let buttons = [
       {
-        title: `${Lang.t("general.add-a-tracker", "Add a Tracker")}`,
+        title: `${Lang.t("general.add-a-tracker", "Add a Tracker")}...`,
         async click() {
           await tick(300);
           methods.addButtonTap();
         },
       },
       {
-        title: `${Lang.t("board.edit-sort", "Edit / Sort")} ${board ? `${truncate(board.label, 30)}` : ""}...`,
+        title: `${Lang.t("general.manage", "Manage")} ${board ? `${truncate(board.label, 30)}` : ""}...`,
         async click() {
           editBoard();
         },
+        divider: true,
       },
       {
-        title: `${Lang.t("general.delete", "Delete")} ${board ? `${truncate(board.label, 30)}` : ""}...`,
-        disabled: board && board.id === "all",
+        title: `${Lang.t("board.organize-tabs", "Organize Tabs")}...`,
         async click() {
-          deleteBoard();
+          Interact.toggleBoardSorter();
         },
       },
       {
-        title: `${Lang.t("board.create-new-board", "Create a new Tab...")}`,
+        title: `${Lang.t("board.create-new-board", "Add New Tab...")}`,
         async click() {
           methods.newBoard();
         },
@@ -662,9 +662,6 @@
               </Button>
             </ButtonGroup>
 
-            <!-- <ButtonGroup className="mr-2 box-shadow-tight" style="max-width:150px">
-            <Button on:click={boardOptions}>{Lang.t('board.edit-sort', 'Edit / Sort')}...</Button>
-          </ButtonGroup> -->
           </div>
         {/if}
         <NTip {tips} />

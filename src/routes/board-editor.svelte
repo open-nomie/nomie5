@@ -31,6 +31,8 @@
   import { Lang } from "../store/lang";
   import Button from "../components/button/button.svelte";
   import Avatar from "../components/avatar/avatar.svelte";
+  import ToolbarGrid from "../components/toolbar/toolbar-grid.svelte";
+  import List from "../components/list/list.svelte";
 
   const console = new Logger("🎲 Board Editor");
   let trackers = [];
@@ -212,22 +214,27 @@
 
 {#if data.board}
   <NPage>
-
-    <div class="n-toolbar-grid container" slot="header">
-      <div class="left">
-        <NBackButton />
-      </div>
-      <div class="main">
-        <h1 class="title">
-          {#if data.board.id == 'all'}All Tab Sorting{:else}Edit {data.board.label}{/if}
-        </h1>
-      </div>
+    <div slot="header">
+      <ToolbarGrid>
+        <div slot="left">
+          <NBackButton />
+        </div>
+        <div slot="main" />
+        <div slot="right">
+          {#if data.board.id != 'all'}
+            <Button icon on:click={methods.deleteBoard}>
+              <NIcon name="delete" className="fill-red" />
+            </Button>
+          {/if}
+        </div>
+      </ToolbarGrid>
     </div>
+
     <!-- /.container -->
 
     <div class="container px-0">
 
-      <div class="n-list pt-2">
+      <List className="pt-2">
         {#if data.board.id !== 'all'}
           <NItem className="py-2">
             <NInput type="text" placeholder="Tab Label" bind:value={data.updatedLabel}>
@@ -263,7 +270,7 @@
             </NItem>
           </NSortableList>
         {/if}
-      </div>
+      </List>
 
     </div>
     {#if data.board.id != 'all'}
