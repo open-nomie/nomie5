@@ -126,6 +126,7 @@
       width: 150px;
       min-width: 150px;
       max-width: 150px;
+      height: 160px;
     }
 
     .emoji {

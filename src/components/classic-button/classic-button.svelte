@@ -144,7 +144,7 @@
         username={tracker.label}
         emoji={tracker.emoji}
         color={tracker.color}
-        size={$UserStore.localSettings.compactButtons ? 80 : 102} />
+        size={$UserStore.localSettings.compactButtons ? 80 : 120} />
     </div>
 
     <Text className="ball-label truncate-2">{tracker.label}</Text>
