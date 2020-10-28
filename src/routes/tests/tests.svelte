@@ -10,6 +10,7 @@
   import DatePicker from "../../components/date-picker/date-picker.svelte";
   import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
   import Divider from "../../components/divider/divider.svelte";
+  import Grid from "../../components/grid/grid.svelte";
   import Icon from "../../components/icon/icon.svelte";
   import Input from "../../components/input/input.svelte";
   import ListItem from "../../components/list-item/list-item.svelte";
@@ -22,9 +23,12 @@
   import Text from "../../components/text/text.svelte";
   import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import Toolbar from "../../components/toolbar/toolbar.svelte";
+  import TrackerSmallBlock from "../../components/tracker-small-block/tracker-small-block.svelte";
   import Empty from "../../containers/empty/empty.svelte";
   import Layout from "../../containers/layout/layout.svelte";
   import Streak from "../../containers/steak/streak.svelte";
+  import Person from "../../modules/person/person";
+  import TrackableElement from "../../modules/trackable-element/trackable-element";
   import { Device } from "../../store/device-store";
   import { Interact } from "../../store/interact";
 
@@ -45,6 +49,27 @@
     <Text size="sm" faded className="mb-4">
       A set of base components for quick testing... I should be using Storybook, but have yet to do so.
     </Text>
+
+    <List title="Tracker Small Block {$Device.size}" outside pad>
+      <Grid columns={['sm', 'xs'].indexOf($Device.size) > -1 ? 2 : 4}>
+        <TrackerSmallBlock className="m-2" element={new TrackableElement({ id: 'bob', type: 'person', raw: 'bob' })} />
+        <TrackerSmallBlock
+          className="m-2"
+          value="44:32:21"
+          element={new TrackableElement({ id: 'chunk', type: 'person', raw: 'chunk' })}
+          solo />
+        <TrackerSmallBlock
+          className="m-2"
+          value="$33.234"
+          element={new TrackableElement({ id: 'solo', type: 'person', raw: 'solo' })}
+          solo />
+        <TrackerSmallBlock
+          className="m-2"
+          value="$33.234"
+          element={new TrackableElement({ id: 'Sanders', type: 'person', raw: 'Sanders' })}
+          solo />
+      </Grid>
+    </List>
 
     <List title="Title Inset" outside>
       <ListItem clickable>Item 1</ListItem>

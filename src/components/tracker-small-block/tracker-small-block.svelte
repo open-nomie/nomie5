@@ -46,6 +46,7 @@
 <style>
   :global(.nbtn.tracker-small-block.size-md) {
     height: 60px;
+    padding: 2px 6px;
   }
   :global(.nbtn.tracker-small-block.size-xs) {
     height: 30px;
@@ -53,13 +54,14 @@
   }
   :global(.nbtn.tracker-small-block.size-sm) {
     height: 42px;
+    padding: 2px 4px;
   }
 </style>
 
 {#if element}
 
   <Button
-    color="clear"
+    color={solo ? 'light' : 'clear'}
     {style}
     className="{className} tracker-small-block {solo ? 'solo' : ''}
     {xs ? 'size-xs' : 'size-md'}

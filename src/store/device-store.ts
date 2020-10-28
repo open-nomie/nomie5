@@ -15,6 +15,16 @@ const console = new Logger("📲 Device Store");
 
 declare let window: any;
 
+export type DeviceSizeType = "xs" | "sm" | "md" | "lg" | "xl";
+
+const sizes = {
+  xs: 0,
+  sm: 350,
+  md: 600,
+  lg: 980,
+  xl: 1280,
+};
+
 // Nomie API Store
 
 const DeviceInfo = {
@@ -25,6 +35,20 @@ const DeviceInfo = {
   product: navigator.product,
 };
 const DeviceInfoString = JSON.stringify(DeviceInfo).toLowerCase();
+
+const getDeviceSize = function (width: number) {
+  if (width > sizes.xs && width < sizes.sm) {
+    return "xs";
+  } else if (width > sizes.sm && width < sizes.md) {
+    return "sm";
+  } else if (width > sizes.md && width < sizes.lg) {
+    return "md";
+  } else if (width > sizes.lg && width < sizes.xl) {
+    return "lg";
+  } else if (width > sizes.xl) {
+    return "xl";
+  }
+};
 
 const DeviceStoreInit = () => {
   let deviceMatches = DeviceInfoString.match(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i);
@@ -38,6 +62,7 @@ const DeviceStoreInit = () => {
     offline: false,
     pwa: window.matchMedia("(display-mode: standalone)").matches,
     info: DeviceInfo,
+    size: getDeviceSize(window.innerWidth),
   });
 
   function state(s: any) {
@@ -60,6 +85,12 @@ const DeviceStoreInit = () => {
     open(url) {
       window.open(`${url}`, "_blank");
     },
+    isSmallerThan(size: DeviceSizeType) {
+      return window.innerWidth < sizes[size];
+    },
+    isLargerThan(size: DeviceSizeType) {
+      return window.innerWidth > sizes[size];
+    },
     is(regex: string | RegExp) {
       if (typeof regex === "string") {
         regex = new RegExp(regex, "gi");
@@ -71,11 +102,11 @@ const DeviceStoreInit = () => {
         if (navigator.onLine) {
           document.body.classList.remove("is-offline");
           window.offline = false;
-          state({ offline: false, width: window.innerWidth, height: window.innerHeight });
+          state({ offline: false, width: window.innerWidth, size: getDeviceSize(window.innerWidth), height: window.innerHeight });
         } else {
           document.body.classList.add("is-offline");
           window.offline = true;
-          state({ offline: true, width: window.innerWidth, height: window.innerHeight });
+          state({ offline: true, width: window.innerWidth, size: getDeviceSize(window.innerWidth), height: window.innerHeight });
         }
       };
       window.addEventListener("online", fireChange);
