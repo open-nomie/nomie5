@@ -38,7 +38,7 @@
 
   @mixin generateLabelSizes($base) {
     .title {
-      font-size: $base * 0.8;
+      font-size: $base * 0.72;
     }
     .value {
       font-size: $base;
@@ -57,7 +57,9 @@
 
     flex-grow: 1;
     flex-shrink: 0;
-    height: 144px;
+
+    height: 146px;
+
     justify-content: stretch;
     border-radius: 22px;
     margin: 6px;

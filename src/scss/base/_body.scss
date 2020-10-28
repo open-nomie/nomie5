@@ -43,12 +43,17 @@ body.font-size-sm {
 }
 
 body.font-size-md {
-  --base-font-size: 110%;
+  --base-font-size: 105%;
   font-size: var(--base-font-size);
 }
 
 body.font-size-lg {
-  --base-font-size: 120%;
+  --base-font-size: 110%;
+  font-size: var(--base-font-size);
+}
+
+body.font-size-xl {
+  --base-font-size: 130%;
   font-size: var(--base-font-size);
 }
 
