@@ -42,31 +42,18 @@
 </script>
 
 {#if view === 'trackers'}
-  <div class="my-2">
-    <Grid gap={9} columns={$Device.width < 400 ? 3 : $Device.width < 700 ? 4 : 6}>
+  <Card className="p-3 my-2 mx-3">
+    <Grid gap={0} columns={$Device.width < 400 ? 2 : $Device.width < 700 ? 4 : 6}>
       {#each trackers as tracker (tracker.tag)}
-        <ShortcutButton
-          compact
-          className="full-width"
-          color={tracker.tracker.color}
-          title={tracker.tracker.label}
-          value={tracker.tracker.displayValue(tracker.value)}
-          emoji={tracker.tracker.emoji}
-          hideMore={true}
-          on:click={() => {
-            Interact.elementOptions(new TrackableElement({ id: tracker.tag, value: tracker.value, type: 'tracker', obj: tracker.tracker }));
-          }} />
-        <!-- <TrackerSmallBlock
+        <TrackerSmallBlock
           className="m-1"
-          style="width:150px;"
           element={{ id: tracker.tag, value: tracker.value, type: 'tracker', obj: tracker.tracker }}
           on:click={() => {
             Interact.elementOptions(new TrackableElement({ id: tracker.tag, value: tracker.value, type: 'tracker', obj: tracker.tracker }));
-          }} /> -->
+          }} />
       {/each}
     </Grid>
-
-  </div>
+  </Card>
 {:else if view === 'all'}
   {#if !logs.length}
     <slot name="empty" />

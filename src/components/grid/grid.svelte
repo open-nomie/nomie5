@@ -19,7 +19,7 @@
   .n-grid {
     display: grid;
     grid-template-columns: var(--columnFr);
-    grid-template-rows: 1fr;
+    grid-template-rows: var(--columnFr);
     gap: var(--gapStr);
     grid-template-areas: var(--columnDots);
   }
