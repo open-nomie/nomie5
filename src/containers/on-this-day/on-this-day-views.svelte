@@ -31,6 +31,16 @@
 
   let lastLogs: string;
 
+  let columns: number = 3;
+
+  $: if ($Device.width < 400) {
+    columns = 2;
+  } else if ($Device.width < 700) {
+    columns = 3;
+  } else if ($Device.width > 900) {
+    columns = 5;
+  }
+
   $: if (logs && logs.length && lastLogs !== logs.map((l) => l._id).join(",")) {
     lastLogs = logs.map((l) => l._id).join(",");
     let trackersUsed = getTrackersAndValuesFromLogs(logs);
@@ -42,10 +52,11 @@
 </script>
 
 {#if view === 'trackers'}
-  <Card className="p-3 my-2 mx-3">
-    <Grid gap={0} columns={$Device.width < 400 ? 2 : $Device.width < 700 ? 4 : 6}>
+  <div class="p-3">
+    <Grid gap={0} {columns}>
       {#each trackers as tracker (tracker.tag)}
         <TrackerSmallBlock
+          solo
           className="m-1"
           element={{ id: tracker.tag, value: tracker.value, type: 'tracker', obj: tracker.tracker }}
           on:click={() => {
@@ -53,7 +64,7 @@
           }} />
       {/each}
     </Grid>
-  </Card>
+  </div>
 {:else if view === 'all'}
   {#if !logs.length}
     <slot name="empty" />

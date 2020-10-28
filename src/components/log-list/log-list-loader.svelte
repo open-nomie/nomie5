@@ -18,6 +18,7 @@
   import global from "../../config/appConfig";
   import Spinner from "../spinner/spinner.svelte";
   import Button from "../button/button.svelte";
+  import { Lang } from "../../store/lang";
 
   export let term = null;
   export let limit = 20;
@@ -124,7 +125,7 @@
     <NItem className="py-2 bg-transparent mb-2">
       <Button block color="light" className="mx-auto" style="max-width:300px;" disabled>
         <Spinner size={18} />
-        Searching...
+        <span class="ml-2">{Lang.t('general.searching', 'Searching...')}</span>
       </Button>
       <Text size="sm" faded center className="mt-2">Looking through history</Text>
     </NItem>

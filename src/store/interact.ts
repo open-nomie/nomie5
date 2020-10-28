@@ -411,10 +411,9 @@ const interactInit = () => {
     elementOptions(element: TrackableElement, callback?: Function) {
       let trackableElement = element instanceof TrackableElement ? element : new TrackableElement(element);
       let tracker = trackableElement.type == "tracker" ? TrackerStore.getByTag(trackableElement.id) : null;
-
       const buttons = [
         {
-          title: `View stats`,
+          title: `${Lang.t("stats.view-stats", "View Stats")}`,
           click: () => {
             Interact.closeOnThisDay();
             if (tracker) {
@@ -428,7 +427,7 @@ const interactInit = () => {
           },
         },
         {
-          title: `Search for ${tracker ? tracker.label : trackableElement.raw}`,
+          title: `${Lang.t("general.search", "Search")}: ${tracker && tracker.label ? tracker.label : trackableElement.id}`,
           click: async () => {
             Interact.closeOnThisDay();
             await tick(200);
@@ -436,9 +435,17 @@ const interactInit = () => {
           },
         },
       ];
+      if (trackableElement.type == "tracker") {
+        buttons.push({
+          title: `${Lang.t("general.edit", "Edit")} ${trackableElement.obj.label}`,
+          click: () => {
+            methods.editTracker(trackableElement.obj);
+          },
+        });
+      }
       if (trackableElement.type == "person") {
         buttons.push({
-          title: `Check-In`,
+          title: `${Lang.t("people.check-in")}`,
           click: () => {
             Interact.closeOnThisDay();
             Interact.person(trackableElement.id);

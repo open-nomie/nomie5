@@ -172,10 +172,11 @@
             element={person}
             value={undefined}
             on:click={() => {
-              Interact.openStats(`@${person.id}`, displayLog.endDayjs());
-              dispatch('personClick', { person: person, log });
+              Interact.elementOptions(person);
             }} />
         {/each}
+        <!-- Interact.openStats(`@${person.id}`, displayLog.endDayjs());
+              dispatch('personClick', { person: person, log });-->
         {#each logMeta.trackers.filter((trk) => {
           if (focus) {
             return trk.id == focus;
@@ -187,10 +188,11 @@
             truncate
             element={trackerElement}
             on:click={() => {
-              Interact.openStats(`#${trackerElement.id}`, displayLog.endDayjs());
-              dispatch('trackerClick', { tracker: trackerElement.obj, log });
+              Interact.elementOptions(trackerElement);
             }} />
         {/each}
+        <!-- Interact.openStats(`#${trackerElement.id}`, displayLog.endDayjs());
+              dispatch('trackerClick', { tracker: trackerElement.obj, log }); -->
       </div>
     {/if}
     {#if logMeta.context.length}

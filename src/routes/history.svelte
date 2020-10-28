@@ -385,14 +385,6 @@
           buttonClick={composeHere} />
       {:else}
         <OnThisDayViews {view} {logs} />
-        <!-- Loop over logs -->
-        <!-- {#each logs as log, index}
-          <LogItem
-            {log}
-            on:textClick={(event) => {
-              methods.textClick(event);
-            }} />
-        {/each} -->
       {/if}
 
     </div>
