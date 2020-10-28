@@ -44,6 +44,7 @@ import { TrackerStore } from "./tracker-store";
 import { Lang } from "./lang";
 import { SearchStore } from "./search-store";
 import { ActiveLogStore } from "./active-log";
+import type NLog from "../modules/nomie-log/nomie-log";
 
 const console = new Logger("✋ Interact");
 
@@ -408,21 +409,26 @@ const interactInit = () => {
       return note;
     },
 
-    elementOptions(element: TrackableElement, callback?: Function) {
+    elementOptions(element: TrackableElement, options?: { callback?: Function; log?: NLog }) {
+      options = options || {};
       let trackableElement = element instanceof TrackableElement ? element : new TrackableElement(element);
       let tracker = trackableElement.type == "tracker" ? TrackerStore.getByTag(trackableElement.id) : null;
+      let date = undefined;
+      if (options.log) {
+        date = dayjs(options.log.end);
+      }
       const buttons = [
         {
           title: `${Lang.t("stats.view-stats", "View Stats")}`,
           click: () => {
             Interact.closeOnThisDay();
             if (tracker) {
-              Interact.openStats(`#${trackableElement.id}`);
+              Interact.openStats(`#${trackableElement.id}`, date);
             } else {
-              Interact.openStats(trackableElement.raw);
+              Interact.openStats(trackableElement.raw, date);
             }
-            if (callback) {
-              callback();
+            if (options.callback) {
+              options.callback();
             }
           },
         },
@@ -449,8 +455,8 @@ const interactInit = () => {
           click: () => {
             Interact.closeOnThisDay();
             Interact.person(trackableElement.id);
-            if (callback) {
-              callback();
+            if (options.callback) {
+              options.callback();
             }
           },
         });
