@@ -138,7 +138,7 @@ export default class TrackerConfig {
   }
 
   getIncluded(value) {
-    let includedStr = (this.include || "").replace(/\*/g, value || "");
+    let includedStr = (this.include || "").replace(/\*/, value || "");
     return includedStr.trim();
   }
 
