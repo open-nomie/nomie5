@@ -45,6 +45,7 @@
     state.people = getPeople().sort((a, b) => {
       return $PeopleStore.people[a].last < $PeopleStore.people[b].last ? 1 : -1;
     });
+    state.initialized = true;
   }
 
   async function addPerson() {
@@ -75,7 +76,6 @@
 
   onMount(() => {
     loadPeople();
-    state.initialized = true;
   });
 </script>
 
@@ -123,7 +123,7 @@
       {/if}
 
       <div class="trackers n-grid">
-        {#each state.people as person, person}
+        {#each state.people as person, index (index)}
           <ShortcutUserButton
             person={$PeopleStore.people[person]}
             on:click={() => {
