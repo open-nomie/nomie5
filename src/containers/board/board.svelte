@@ -526,11 +526,11 @@
   <header slot="header" class="container">
     <Toolbar>
       {#if $TrackerStore.timers.length}
-        <Button icon on:click={TrackerStore.toggleTimers} className="mr-1">
+        <Button icon on:click={TrackerStore.toggleTimers} className="mr-1" ariaLabel={Lang.t('general.timers', 'Timers')}>
           <Icon name="time" size={24} className="fill-red" />
         </Button>
       {/if}
-      <Button icon className="tap-icon" on:click={methods.toggleSearch}>
+      <Button icon className="tap-icon" on:click={methods.toggleSearch} ariaLabel={Lang.t('general.search')}>
         <Icon name="search" size={24} />
       </Button>
 
@@ -547,7 +547,11 @@
           BoardStore.setActive(event.detail.id, event.detail);
         }} />
 
-      <Button icon className="tap-icon board-option-action" on:click={() => boardOptions()}>
+      <Button
+        icon
+        className="tap-icon board-option-action"
+        on:click={() => boardOptions()}
+        ariaLabel={Lang.t('general.settings', 'Settings')}>
         <Icon name="settings" size={24} />
       </Button>
 

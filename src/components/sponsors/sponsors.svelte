@@ -6,6 +6,7 @@
   import Text from "../text/text.svelte";
   import { Device } from "../../store/device-store";
   import _ from "lodash";
+  import Grid from "../grid/grid.svelte";
   export let style = "";
   export let className = "";
 </script>
@@ -30,22 +31,24 @@
 </style>
 
 <HScroller style="height:90px; {style}" {className} wrapperClass="px-1">
-  {#each _.shuffle(sponsors) as sponsor}
-    <Button
-      className="sponsorship"
-      type="clear"
-      on:click={() => {
-        Device.open(sponsor.url);
-      }}>
-      <Avatar size={54} src={sponsor.avatar} label={sponsor.name} emoji={sponsor.emoji} className="mr-1" />
-      <div class="text-left">
-        {#if sponsor.name}
-          <Text size="sm">{sponsor.name}</Text>
-        {/if}
-        {#if sponsor.description}
-          <Text size="xs" faded>{sponsor.description}</Text>
-        {/if}
-      </div>
-    </Button>
-  {/each}
+  <Grid columns={sponsors.length} style="width:auto; flex-shrink:0;">
+    {#each _.shuffle(sponsors) as sponsor}
+      <Button
+        className="sponsorship"
+        type="clear"
+        on:click={() => {
+          Device.open(sponsor.url);
+        }}>
+        <Avatar size={54} src={sponsor.avatar} label={sponsor.name} emoji={sponsor.emoji} className="mr-1" />
+        <div class="text-left">
+          {#if sponsor.name}
+            <Text size="sm">{sponsor.name}</Text>
+          {/if}
+          {#if sponsor.description}
+            <Text size="xs" faded>{sponsor.description}</Text>
+          {/if}
+        </div>
+      </Button>
+    {/each}
+  </Grid>
 </HScroller>

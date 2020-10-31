@@ -87,5 +87,5 @@
     bind:value
     bind:checked={value}
     on:change={methods.onChange} />
-  <label class="onoffswitch-label" for={id} />
+  <label class="onoffswitch-label" for={id} aria-label="Switch is {value ? 'On' : 'Off'}" aria-controls="input" />
 </div>

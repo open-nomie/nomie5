@@ -307,7 +307,10 @@
       <slot name="emoji" />
     </div>
     {#if !hideMore}
-      <button class="more {moreIcon !== 'more' ? 'icon-other' : ''} p-0" on:click|preventDefault|stopPropagation={more}>
+      <button
+        aria-label="Tracker Options"
+        class="more {moreIcon !== 'more' ? 'icon-other' : ''} p-0"
+        on:click|preventDefault|stopPropagation={more}>
         <Icon name={moreIcon} size="16" />
       </button>
     {/if}

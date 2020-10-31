@@ -88,6 +88,7 @@
       <ButtonGroup>
         {#each ['xs', 'sm', 'md', 'lg', 'xl'] as size, index}
           <Button
+            ariaLabel={`${size} font size`}
             className={`${fontSize === size ? 'active' : ''}`}
             on:click={() => {
               methods.changeFontSize(size);

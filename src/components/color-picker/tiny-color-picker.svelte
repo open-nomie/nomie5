@@ -37,6 +37,7 @@
 <div class="tiny-color-picker n-row {className}">
   {#each colors as color}
     <button
+      aria-label={color}
       style={`height:${size}px;width:${size}px;`}
       on:click={() => {
         dispatch('change', color);

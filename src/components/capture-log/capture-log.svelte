@@ -443,6 +443,7 @@
       <!-- Note Input -->
       <div class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 ? 'populated' : 'empty'}">
         <Button
+          ariaLabel="Location and Date settings"
           size="sm"
           shape="circle"
           color={state.advanced ? 'primary' : 'light'}
@@ -456,6 +457,7 @@
         </Button>
 
         <textarea
+          aria-label="Note entry field"
           id="textarea-capture-note"
           style="overflow:hidden"
           disabled={saving || saved}
@@ -467,7 +469,7 @@
           on:paste={methods.keyPress} />
 
         {#if $UserStore.meta.hiddenFeatures}
-          <Button className="expand-button action-button" icon size="sm" on:click={Interact.toggleFocusedEditor}>
+          <Button className="expand-button action-button" ariaLabel="Journal Mode" icon size="sm" on:click={Interact.toggleFocusedEditor}>
             <Icon name="expand" className="fill-inverse-2" />
           </Button>
         {/if}
@@ -479,7 +481,13 @@
             <NSpinner size={20} color="#FFFFFF" />
           </Button>
         {:else}
-          <Button className="save-button action-button mr-2" shape="circle" color="success" size="sm" on:click={methods.logSave}>
+          <Button
+            className="save-button action-button mr-2"
+            ariaLabel="Save Note"
+            shape="circle"
+            color="success"
+            size="sm"
+            on:click={methods.logSave}>
             <NIcon name="arrowUp" style="fill: #FFF;" size="20" />
           </Button>
         {/if}
