@@ -134,7 +134,7 @@ context("App", () => {
     cy.get(".tab-Dash").click();
     cy.wait(400);
     // Click on the Add Widghet
-    cy.get(".center-all > .nbtn").click();
+    cy.get('.empty-box > .nbtn').click();
     cy.wait(100);
     cy.get("select").eq(0).select("barchart");
     cy.wait(100);
@@ -149,7 +149,7 @@ context("App", () => {
     cy.get(".n-modal-body .list .n-item").eq(2).click();
     // click done
     cy.wait(200);
-    cy.get(".n-row > .nbtn-primary").click();
+    cy.get('.n-modal-footer > .n-row > .nbtn-primary').click();
     cy.wait(200);
     // hit save
     cy.get('.n-modal-frame.visible > .n-modal > .n-modal-header > .n-toolbar-grid > .right > .nbtn').click();
@@ -282,10 +282,10 @@ context("App", () => {
     cy.get(".form-control").type("Test Tab");
     cy.wait(100);
     cy.get(".visible > .alert-dialog-window > .p-1 > .nbtn-primary").click();
-    cy.wait(100);
+    cy.wait(400);
 
     // Click Add Button
-    cy.get(".tracker-add").click();
+    cy.get('.empty-box > .nbtn').click();
     cy.wait(300);
     cy.get(".pop-menu button").eq(0).click();
     cy.wait(400);
@@ -454,6 +454,7 @@ context("App", () => {
       it: "should track, and edit a record",
       run: trackAndEditRecord,
     },
+    { it: "should enable features", run: enableFeatures },
     {
       it: "should create a tally tracker",
       run: ()=>{
@@ -497,7 +498,7 @@ context("App", () => {
         })
       }
     },
-    { it: "should enable features", run: enableFeatures },
+    
     { it: "Should properly track using the tracker buttons", run: useTrackers },
     { it: "should test adding a tab", run: testTabs },
     { it: "should test a bad pin PIN", run: ()=>{ testPin(false) } },
