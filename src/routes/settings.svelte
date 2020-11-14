@@ -205,7 +205,7 @@ Note: Your data will not automatically move over. You'll first need to export it
           title: `${$UserStore.storageType === "pouchdb" ? "✓" : ""} ${Lang.t("storage.pouchdb_title", "CouchDB (beta)")}`,
           description: `${Lang.t(
             "storage.pouchdb_description",
-            "Sync your data in real to a remote CouchDB server. ⚠️ Not good for multiple devices."
+            "Sync your data in real time to a remote CouchDB server. ⚠️ Not good for multiple devices."
           )}`,
           click() {
             methods.switchStorage("pouchdb");
