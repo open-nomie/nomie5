@@ -212,29 +212,36 @@
     board = board || $BoardStore.activeBoard;
     let buttons = [
       {
-        title: `${Lang.t("general.add-a-tracker", "Add a Tracker")}...`,
+        title: `${Lang.t("general.add-a-tracker", "Add a Tracker")}`,
         async click() {
           await tick(300);
           methods.addButtonTap();
         },
       },
       {
-        title: `${Lang.t("general.manage", "Manage")} ${board ? `${truncate(board.label, 30)}` : ""}...`,
+        title: `${Lang.t("general.manage", "Manage")} ${board ? `${truncate(board.label, 30)}` : ""}`,
         async click() {
           editBoard();
         },
         divider: true,
       },
       {
-        title: `${Lang.t("board.organize-tabs", "Organize Tabs")}...`,
+        title: `${Lang.t("board.organize-tabs", "Organize Tabs")}`,
         async click() {
           Interact.toggleBoardSorter();
         },
       },
       {
-        title: `${Lang.t("board.create-new-board", "Add New Tab...")}`,
+        title: `${Lang.t("board.create-new-board", "Add New Tab")}`,
         async click() {
           methods.newBoard();
+        },
+        divider: true,
+      },
+      {
+        title: `${Lang.t("general.all-nomie-settings", "More Nomie Settings")}`,
+        async click() {
+          navigate("/settings");
         },
       },
     ];
