@@ -85,6 +85,10 @@
 </script>
 
 <style lang="scss">
+  :global(.tracker-list-item.in-note .tracker-label) {
+    font-weight: bold;
+    color: var(--tracker-color);
+  }
   :global(.tracker-list-item .highlight) {
     position: absolute;
     left: 3px;
@@ -104,8 +108,10 @@
 {#if view == 'list'}
   {#each trackers as tracker}
     <ListItem
+      id="tracker-{tracker.tag}"
       clickable
-      className="tracker-{tracker.tag} py-2 tracker-list-item flex-shrink-off {is.truthy(getTodaysValue(tracker)) ? 'has-value' : 'no-value'}"
+      style="--tracker-color:{tracker.color}"
+      className="tracker-board-button tracker-{tracker.tag} py-2 tracker-list-item flex-shrink-off {is.truthy(getTodaysValue(tracker)) ? 'has-value' : 'no-value'}"
       compact={$UserStore.localSettings.compactButtons}
       on:click={(evt) => {
         if (['svg'].indexOf(evt.detail.target.tagName) == -1) {
@@ -117,7 +123,7 @@
         <Avatar emoji={tracker.emoji} label={tracker.label} size={$UserStore.localSettings.compactButtons ? 30 : 40} />
       </div>
       <div>
-        <Text size="md" leading2>{tracker.label}</Text>
+        <Text size="md" leading2 className="tracker-label">{tracker.label}</Text>
         {#if getLastUsed(tracker)}
           <Text size={$UserStore.localSettings.compactButtons ? 'xs' : 'sm'} faded leading2>{getLastUsed(tracker) || undefined}</Text>
         {/if}
@@ -159,6 +165,7 @@
   <div class="trackers n-grid">
     {#each trackers as tracker}
       <ShortcutButton
+        id="tracker-{tracker.tag}"
         compact={$UserStore.localSettings.compactButtons}
         title={tracker.label}
         hoursUsed={getHoursUsed(tracker)}
@@ -167,7 +174,7 @@
         value={getTodaysValue(tracker)}
         oneTap={tracker.one_tap}
         color={tracker.color}
-        className="tracker-{tracker.tag}"
+        className="tracker-{tracker.tag} tracker-board-button"
         {hideMore}
         on:click={() => {
           dispatch('tap', tracker);
@@ -202,6 +209,8 @@
     {#each trackers as tracker}
       <TrackerButton
         {tracker}
+        className="tracker-board-button"
+        id="tracker-{tracker.tag}"
         value={getTodaysValue(tracker)}
         hoursUsed={getHoursUsed(tracker)}
         positivity={getPositivity(tracker)}

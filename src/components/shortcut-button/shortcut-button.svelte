@@ -16,6 +16,7 @@
   export let color: string | undefined = undefined;
   export let emoji: string | undefined = undefined;
   export let style: string = "";
+  export let id: string | undefined = undefined;
   // export let titleSize: string = "sm";
   // export let taps: number = 0;
   export let hideMore: boolean = false;
@@ -54,7 +55,7 @@
 
   :global(.shortcut-button) {
     --scb-pad: 14px;
-
+    position: relative;
     flex-grow: 1;
     flex-shrink: 0;
 
@@ -65,7 +66,9 @@
     margin: 6px;
     box-shadow: var(--box-shadow-tight) !important;
     overflow: hidden;
-    transition: all 0.2s ease-in-out;
+
+    transition: all 0.4s cubic-bezier(0.19, -0.33, 0.78, 1.32);
+
     position: relative;
     color: var(--color-inverse-2);
     padding: 0;
@@ -241,6 +244,12 @@
       }
     }
   }
+
+  :global(.shortcut-button.in-note) {
+    transform: scale(0.94);
+    box-shadow: 0px 0px 9px var(--tracker-color) !important;
+  }
+
   :global(.shortcut-button.has-value .highlight) {
     &.one-tap {
       background-color: rgba(255, 255, 255, 0.1) !important;
@@ -285,11 +294,12 @@
 </style>
 
 <Button
+  {id}
   ariaLabel={title || 'button'}
   color="clear"
   className="{className} shortcut-button d-flex flex-column {is.truthy(value) ? 'has-value' : 'no-value'}
   {compact ? 'compact' : ''}"
-  style={`background-color:${value ? color || 'var(--color-primary)' : 'var(--color-solid)'}; ${style}`}
+  style={`--tracker-color:${color}; background-color:${value ? color || 'var(--color-primary)' : 'var(--color-solid)'}; ${style}`}
   on:longpress={() => {
     dispatch('longpress');
   }}

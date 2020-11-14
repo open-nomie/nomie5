@@ -72,6 +72,22 @@
   :global(.tracker-button-wrapper.compact .more) {
     top: 8px;
   }
+
+  :global(.tracker-button-wrapper.in-note) {
+    transform: scale(0.9);
+    transition: all 0.2s ease-in-out;
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      content: "";
+      background-color: var(--tracker-color);
+      border-radius: 16px;
+      opacity: 0.2;
+    }
+  }
   :global(.tracker-button-wrapper .more) {
     position: absolute;
     top: 12px;
@@ -103,13 +119,14 @@
     }
   }
   .tracker-button-wrapper {
-    border-radius: 40px;
+    border-radius: 54px;
     position: relative;
   }
   // Moved to /scss/components/_tracker-button.scss
 </style>
 
 <div
+  {id}
   on:click={methods.click}
   on:longtap={methods.longPress}
   on:mousedown={methods.mousedown}
@@ -117,13 +134,14 @@
   on:contextmenu={methods.rightclick}
   on:mouseout={methods.mouseup}
   on:mouseup={methods.mouseup}
+  style="--tracker-color:{tracker.color}"
   class="tracker-button-wrapper tracker-{tracker.tag}
   {$UserStore.localSettings.compactButtons ? 'compact' : ''}
   {data.pressing ? 'pressing' : ''}
   {className}
   {disabled ? 'disabled' : ''}">
 
-  <button {id} class={`item-ball ${className} ${$UserStore.localSettings.compactButtons == true ? 'item-ball-small' : ''}`}>
+  <button class={`item-ball ${className} ${$UserStore.localSettings.compactButtons == true ? 'item-ball-small' : ''}`}>
     <!-- -->
     <div class="avatar-ball">
       {#if tracker.started}
