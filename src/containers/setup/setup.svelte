@@ -108,7 +108,7 @@
   @import "../../scss/utils/_utils";
 </style>
 
-<NLayout pageTitle="Nomie v{APP_VERSION}" className="page-setup" showTabs={false}>
+<NLayout pageTitle="Nomie" className="page-setup" showTabs={false}>
   <div slot="header" class="n-toolbar-grid container">
     <div class="left" />
     <div class="main">

@@ -5,7 +5,7 @@
   export let emoji = null;
   export let username = null;
   export let size = 102;
-  // export let color = "#000";
+  export let color = "#000";
   export let className = "";
   export let style = "";
   export let radius = 0;
@@ -38,8 +38,8 @@
   {#if avatar}
     <Avatar {size} src={avatar} />
   {:else if emoji}
-    <Avatar {emoji} size={size * 0.5} />
+    <Avatar {emoji} textColor={color} size={size * 0.5} />
   {:else if username}
-    <Avatar label={username} size={size * 0.5} />
+    <Avatar label={username} textColor={color} size={size * 0.5} />
   {/if}
 </div>
