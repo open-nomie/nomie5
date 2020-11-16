@@ -26,6 +26,24 @@ export default {
     symbol: "pgs",
     type: "general",
   },
+  tabs: {
+    singular: "Tab",
+    plural: "Tabs",
+    symbol: "tbs",
+    type: "general",
+  },
+  capsules: {
+    singular: "Capsule",
+    plural: "Capsules",
+    symbol: "caps",
+    type: "general",
+  },
+  bpm: {
+    singular: "Beat Per Minute",
+    plural: "Beat Per Minute",
+    symbol: "bpm",
+    type: "general",
+  },
   dollars: {
     singular: "Dollar",
     plural: "Dollars",
@@ -243,6 +261,13 @@ export default {
     plural: "Miles",
     symbol: "mi",
     type: "distance",
+    symbolAffix: "post",
+  },
+  mcg: {
+    singular: "Microgram",
+    plural: "Micrograms",
+    symbol: "mcg",
+    type: "weight",
     symbolAffix: "post",
   },
   mg: {
