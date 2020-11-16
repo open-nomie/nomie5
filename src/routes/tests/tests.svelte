@@ -81,6 +81,13 @@
       <ListItem clickable>Item 2</ListItem>
     </List>
 
+    <Card title="Form Elements" className="p-2">
+      <Input type="select" label="Option Name">
+        <option>Option 1</option>
+        <option>Option 2</option>
+      </Input>
+    </Card>
+
     <Card title="Sponsors" className="mb-3">
       <Sponsors />
     </Card>

@@ -121,6 +121,10 @@
       margin-left: -50px;
     }
 
+    .select-wrap {
+      position: relative;
+    }
+
     &.with-label {
       // background-color: pink !important;
       .n-input-wrapper {
@@ -409,9 +413,16 @@
           on:focus={focus}
           on:blur={blur} />
       {:else if type == 'select'}
-        <select bind:this={_elInput} {disabled} on:change={change} bind:value>
-          <slot />
-        </select>
+        <div class="select-wrap">
+          <select bind:this={_elInput} {disabled} on:change={change} bind:value>
+            <slot />
+          </select>
+          <NIcon
+            name="chevronDown"
+            className="fill-inverse-2 mr-3"
+            size="16"
+            style="position:absolute; right:4px; top:50%; transform: translateY(-50%); pointer-events:none" />
+        </div>
       {:else if type == 'textarea'}
         <textarea
           bind:this={_elInput}
@@ -452,11 +463,7 @@
           on:blur={blur} />
       {/if}
     </div>
-    <slot name="right">
-      {#if type == 'select'}
-        <NIcon name="chevronDown" className="fill-inverse-2 mr-3" size="16" />
-      {/if}
-    </slot>
+    <slot name="right" />
 
   </div>
   {#if help}
