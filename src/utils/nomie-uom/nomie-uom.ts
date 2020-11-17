@@ -22,6 +22,9 @@ let NomieUOM = {
   plural(key) {
     return NomieUOM.uoms.hasOwnProperty(key) ? NomieUOM.uoms[key].plural : key;
   },
+  symbol(key) {
+    return NomieUOM.uoms.hasOwnProperty(key) ? NomieUOM.uoms[key].symbol : key;
+  },
   singular(key) {
     return NomieUOM.uoms.hasOwnProperty(key) ? NomieUOM.uoms[key].singular : key;
   },
