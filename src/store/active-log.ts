@@ -4,6 +4,8 @@ import Logger from "../utils/log/log";
 import Hooky from "../modules/hooks/hooks";
 import dayjs from "dayjs";
 import ScoreNote from "../modules/scoring/score-note";
+import NLog from "../modules/nomie-log/nomie-log";
+import { Interact } from "./interact";
 const console = new Logger("✴️ store/active-log.js");
 
 const activeLogInit = () => {
@@ -17,7 +19,6 @@ const activeLogInit = () => {
 
   const methods = {
     clear() {
-      console.log("Clearing Active Log");
       return update((state) => {
         state = new NomieLog({});
         state.start = null;
@@ -28,6 +29,14 @@ const activeLogInit = () => {
     hook(hookType, func) {
       // pass to hooky
       hooky.hook(hookType, func);
+    },
+    journal(log: NLog) {
+      log = log instanceof NLog ? log : new NLog(log || {});
+      update((state) => {
+        state = log;
+        return state;
+      });
+      Interact.toggleFocusedEditor();
     },
     updateNote(note) {
       update((state) => {
@@ -64,7 +73,7 @@ const activeLogInit = () => {
         let note = (state.note || "").trim().split(" ");
         note.push(element);
         state.note = note.join(" ") + " ";
-        // hooky.run("onAddElement", { element });
+        hooky.run("onAddElement", element);
         return state;
       });
     },

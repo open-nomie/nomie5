@@ -75,9 +75,9 @@
           trackers={savedTrackers.reverse()}
           on:more={(evt) => {
             const tracker = evt.detail;
-            Interact.elementOptions(tracker.getTrackableElement(), () => {
-              SearchStore.close();
-            });
+            Interact.elementOptions(tracker.getTrackableElement(), { callback() {
+                SearchStore.close();
+              } });
             evt.stopPropagation();
             evt.preventDefault();
           }}

@@ -15,6 +15,8 @@
   export let value: string | undefined = undefined;
   export let color: string | undefined = undefined;
   export let emoji: string | undefined = undefined;
+  export let style: string = "";
+  export let id: string | undefined = undefined;
   // export let titleSize: string = "sm";
   // export let taps: number = 0;
   export let hideMore: boolean = false;
@@ -37,7 +39,7 @@
 
   @mixin generateLabelSizes($base) {
     .title {
-      font-size: $base * 0.8;
+      font-size: $base * 0.72;
     }
     .value {
       font-size: $base;
@@ -53,16 +55,20 @@
 
   :global(.shortcut-button) {
     --scb-pad: 14px;
-
+    position: relative;
     flex-grow: 1;
     flex-shrink: 0;
-    height: 144px;
+
+    height: 146px;
+
     justify-content: stretch;
     border-radius: 22px;
     margin: 6px;
     box-shadow: var(--box-shadow-tight) !important;
     overflow: hidden;
-    transition: all 0.2s ease-in-out;
+
+    transition: all 0.4s cubic-bezier(0.19, -0.33, 0.78, 1.32);
+
     position: relative;
     color: var(--color-inverse-2);
     padding: 0;
@@ -125,6 +131,7 @@
       width: 150px;
       min-width: 150px;
       max-width: 150px;
+      height: 160px;
     }
 
     .emoji {
@@ -237,6 +244,12 @@
       }
     }
   }
+
+  :global(.shortcut-button.in-note) {
+    transform: scale(0.94);
+    box-shadow: 0px 0px 9px var(--tracker-color) !important;
+  }
+
   :global(.shortcut-button.has-value .highlight) {
     &.one-tap {
       background-color: rgba(255, 255, 255, 0.1) !important;
@@ -273,14 +286,20 @@
   :global(.shortcut-button.has-value .n-counter) {
     color: #fff !important;
   }
+  :global(.shortcut-button.full-width) {
+    width: calc(100% - 12px) !important;
+    min-width: calc(100% - 12px) !important;
+    max-width: calc(100% - 12px) !important;
+  }
 </style>
 
 <Button
+  {id}
   ariaLabel={title || 'button'}
   color="clear"
   className="{className} shortcut-button d-flex flex-column {is.truthy(value) ? 'has-value' : 'no-value'}
   {compact ? 'compact' : ''}"
-  style={`background-color:${value ? color || 'var(--color-primary)' : 'var(--color-solid)'};`}
+  style={`--tracker-color:${color}; background-color:${value ? color || 'var(--color-primary)' : 'var(--color-solid)'}; ${style}`}
   on:longpress={() => {
     dispatch('longpress');
   }}
@@ -298,7 +317,10 @@
       <slot name="emoji" />
     </div>
     {#if !hideMore}
-      <button class="more {moreIcon !== 'more' ? 'icon-other' : ''} p-0" on:click|preventDefault|stopPropagation={more}>
+      <button
+        aria-label="Tracker Options"
+        class="more {moreIcon !== 'more' ? 'icon-other' : ''} p-0"
+        on:click|preventDefault|stopPropagation={more}>
         <Icon name={moreIcon} size="16" />
       </button>
     {/if}

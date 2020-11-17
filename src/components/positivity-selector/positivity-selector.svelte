@@ -12,6 +12,7 @@
   export let style = "";
   export let size = "md";
   export let transparent = false;
+  export let id = undefined;
 
   async function onChange(sc) {
     score = sc;
@@ -59,7 +60,7 @@
   }
 </style>
 
-<div class="n-positivity-selector {!transparent ? 'box-shadow bg-solid' : 'bg-transparent'} n-row {className} size-{size}" {style}>
+<div {id} class="n-positivity-selector {!transparent ? 'box-shadow bg-solid' : 'bg-transparent'} n-row {className} size-{size}" {style}>
   {#each appConfig.positivity as posEmoji}
     <Button
       on:click={() => {

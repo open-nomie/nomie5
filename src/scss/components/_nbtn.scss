@@ -13,7 +13,8 @@
 
 .nbtn {
   transition: all 0.2s ease-in-out;
-  --button-base-size: var(--base-font-size);
+  --button-base-size: calc(var(--base-font-size) * 1);
+
   @include media-breakpoint-down(xs) {
     --button-base-size: calc(var(--base-font-size) * 0.9);
   }
@@ -38,7 +39,7 @@
 }
 
 .nbtn-sm {
-  font-size: calc(var(--button-base-size) * 0.85);
+  font-size: calc(var(--button-base-size) * 0.8);
   height: 30px;
   padding-left: 12px;
   padding-right: 12px;
@@ -46,7 +47,7 @@
 }
 
 .nbtn-xs {
-  font-size: calc(var(--button-base-size) * 0.75);
+  font-size: calc(var(--button-base-size) * 0.7);
   height: 24px;
   padding-left: 8px;
   padding-right: 8px;

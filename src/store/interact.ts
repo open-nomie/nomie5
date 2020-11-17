@@ -44,6 +44,7 @@ import { TrackerStore } from "./tracker-store";
 import { Lang } from "./lang";
 import { SearchStore } from "./search-store";
 import { ActiveLogStore } from "./active-log";
+import type NLog from "../modules/nomie-log/nomie-log";
 
 const console = new Logger("✋ Interact");
 
@@ -70,12 +71,21 @@ export interface IPopMenuOptions {
   description?: string;
 }
 
+interface StatsInteractConfig {
+  activeTag: string | undefined;
+  date: Dayjs | undefined;
+  terms: Array<string>;
+}
+
+const stateStats: StatsInteractConfig = {
+  activeTag: null,
+  date: null,
+  terms: [],
+};
+
 const interactInit = () => {
   const { update, subscribe, set } = writable({
-    stats: {
-      activeTag: null,
-      terms: [],
-    },
+    stats: stateStats,
     alert: {
       show: false,
       title: null,
@@ -245,7 +255,7 @@ const interactInit = () => {
     toggleFocusedEditor() {
       update((state) => {
         state.focusedEditor = !state.focusedEditor;
-        console.log("toggled?", state.focusedEditor);
+
         return state;
       });
     },
@@ -344,11 +354,12 @@ const interactInit = () => {
         return d;
       });
     },
-    openStats(term) {
+    openStats(term, date?: Dayjs) {
       update((d) => {
         d.stats.terms = d.stats.terms || [];
         // if the term isn't the last one - then allow it.
         // otherwise don't - this will allow them to add it later in the stack
+        d.stats.date = date;
         if (d.stats.terms[d.stats.terms.length] !== term) {
           d.stats.terms.push(term);
         }
@@ -398,27 +409,31 @@ const interactInit = () => {
       return note;
     },
 
-    elementOptions(element: TrackableElement, callback?: Function) {
+    elementOptions(element: TrackableElement, options?: { callback?: Function; log?: NLog }) {
+      options = options || {};
       let trackableElement = element instanceof TrackableElement ? element : new TrackableElement(element);
       let tracker = trackableElement.type == "tracker" ? TrackerStore.getByTag(trackableElement.id) : null;
-
+      let date = undefined;
+      if (options.log) {
+        date = dayjs(options.log.end);
+      }
       const buttons = [
         {
-          title: `View stats`,
+          title: `${Lang.t("stats.view-stats", "View Stats")}`,
           click: () => {
             Interact.closeOnThisDay();
             if (tracker) {
-              Interact.openStats(`#${trackableElement.id}`);
+              Interact.openStats(`#${trackableElement.id}`, date);
             } else {
-              Interact.openStats(trackableElement.raw);
+              Interact.openStats(trackableElement.raw, date);
             }
-            if (callback) {
-              callback();
+            if (options.callback) {
+              options.callback();
             }
           },
         },
         {
-          title: `Search for ${tracker ? tracker.label : trackableElement.raw}`,
+          title: `${Lang.t("general.search", "Search")}: ${tracker && tracker.label ? tracker.label : trackableElement.id}`,
           click: async () => {
             Interact.closeOnThisDay();
             await tick(200);
@@ -426,14 +441,22 @@ const interactInit = () => {
           },
         },
       ];
+      if (trackableElement.type == "tracker") {
+        buttons.push({
+          title: `${Lang.t("general.edit", "Edit")} ${trackableElement.obj.label}`,
+          click: () => {
+            methods.editTracker(trackableElement.obj);
+          },
+        });
+      }
       if (trackableElement.type == "person") {
         buttons.push({
-          title: `Check-In`,
+          title: `${Lang.t("people.check-in")}`,
           click: () => {
             Interact.closeOnThisDay();
             Interact.person(trackableElement.id);
-            if (callback) {
-              callback();
+            if (options.callback) {
+              options.callback();
             }
           },
         });

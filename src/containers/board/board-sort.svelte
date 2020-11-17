@@ -14,6 +14,11 @@
   import { Interact } from "../../store/interact";
 
   import is from "../../utils/is/is";
+  import Button from "../../components/button/button.svelte";
+  import List from "../../components/list/list.svelte";
+  import Icon from "../../components/icon/icon.svelte";
+  import BackButton from "../../components/back-button/back-button.svelte";
+  import Text from "../../components/text/text.svelte";
 
   function boardsSorted(evt) {
     if (evt.detail instanceof Array) {
@@ -39,40 +44,36 @@
   }
 </style>
 
-<Modal title="Edit / Sort your Tabs" type="fullscreen" allowClose={true} on:close={Interact.toggleBoardSorter}>
-  <div slot="modal-header">
+<Modal type="fullscreen" allowClose={true} on:close={Interact.toggleBoardSorter}>
+  <div slot="header">
     <NToolbarGrid>
-      <button slot="left" class="btn btn-icon btn-clear tap-icon" on:click={Interact.toggleBoardSorter}>
-        <NIcon name="close" />
-      </button>
-      <div slot="main">{Lang.t('board.sort-tabs', 'Sort Tabs')}</div>
-      <button class="btn btn-clear" slot="right">{Lang.t('general.save')}</button>
+      <div slot="left">
+        <BackButton back={Interact.toggleBoardSorter} />
+      </div>
+      <div slot="main">{Lang.t('board.organize-tabs', 'Organize Tabs')}</div>
+      <div slot="right" />
     </NToolbarGrid>
   </div>
-  <div class="n-list">
+  <List>
     <NSortableList bind:items={$BoardStore.boards} handle=".menu-handle" key="label" on:update={boardsSorted} let:item>
       {#if item.label !== 'all'}
-        <NItem bottom-line className="bottom-line" title={item.label}>
+        <NItem bottom-line className="bottom-line">
           <div slot="left" class="menu-handle">
             <NIcon name="menu" />
           </div>
+          <Text size="lg">{item.label}</Text>
           <div slot="right" class="flex-shrink-off">
-            <button
-              class="btn btn-icon tap-icon mr-2"
+            <Button
+              icon
+              className="text-red"
               on:click={() => {
                 deleteBoard(item);
               }}>
-              <NIcon name="remove" className="fill-red" />
-            </button>
+              <NIcon name="remove" />
+            </Button>
           </div>
-          <!-- <div class="name-only text-center">{item.label}</div> -->
-          <!-- {#if is.emoji(item.label)}
-          <div class="emoji-only text-center">{item.label}</div>
-        {:else}
-          <div class="name-only text-center">{item.label}</div>
-        {/if} -->
         </NItem>
       {/if}
     </NSortableList>
-  </div>
+  </List>
 </Modal>

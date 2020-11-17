@@ -24,11 +24,11 @@
     settingChange() {
       UserStore.saveMeta();
     },
-    changeFontSize(size: "xs" | "sm" | "md" | "lg") {
-      if (["xs", "sm", "md", "lg"].indexOf(size) > -1) {
+    changeFontSize(size: "xs" | "sm" | "md" | "lg" | "xl") {
+      if (["xs", "sm", "md", "lg", "xl"].indexOf(size) > -1) {
         localStorage.setItem("font-size", size);
         fontSize = size;
-        document.body.classList.remove("font-size-xs", "font-size-lg", "font-size-sm", "font-size-md");
+        document.body.classList.remove("font-size-xs", "font-size-lg", "font-size-sm", "font-size-xl", "font-size-md");
         document.body.classList.add(`font-size-${size}`);
       }
     },
@@ -86,8 +86,9 @@
     <span slot="left">🅰</span>
     <div slot="right">
       <ButtonGroup>
-        {#each ['xs', 'sm', 'md', 'lg'] as size, index}
+        {#each ['xs', 'sm', 'md', 'lg', 'xl'] as size, index}
           <Button
+            ariaLabel={`${size} font size`}
             className={`${fontSize === size ? 'active' : ''}`}
             on:click={() => {
               methods.changeFontSize(size);

@@ -9,6 +9,7 @@
   import { TrackerStore } from "../../store/tracker-store";
   import Spacer from "../spacer/spacer.svelte";
   import Row from "../row/row.svelte";
+  import { Lang } from "../../store/lang";
 
   export let boards = [];
   export let active = undefined;
@@ -62,6 +63,7 @@
   <NHScroller activeIndex={state.activeIndex} centerIfPossible className="n-board-tabs">
     {#each boards as board}
       <button
+        label={Lang.t('general.all-trackers', 'All Trackers')}
         class="tab board-{board.id}
         {board.id == active ? 'selected' : 'inactive'}"
         on:longtap={() => {

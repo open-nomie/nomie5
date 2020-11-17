@@ -11,8 +11,8 @@
   import { onMount, onDestroy } from "svelte";
 
   // components
-  import NIcon from "../components/icon/icon.svelte";
-  import NToolbar from "../components/toolbar/toolbar.svelte";
+  import Icon from "../components/icon/icon.svelte";
+
   import Spinner from "../components/spinner/spinner.svelte";
   import LogItem from "../components/list-item-log/list-item-log.svelte";
 
@@ -39,8 +39,15 @@
   import Button from "../components/button/button.svelte";
   import NextPrevCal from "../components/next-prev-cal/next-prev-cal.svelte";
   import { SearchStore } from "../store/search-store";
-  import type NLog from "../modules/nomie-log/nomie-log";
+  import NLog from "../modules/nomie-log/nomie-log";
   import Location from "../modules/locate/Location";
+  import Empty from "../containers/empty/empty.svelte";
+  import { ActiveLogStore } from "../store/active-log";
+  import ButtonGroup from "../components/button-group/button-group.svelte";
+  import Toolbar from "../components/toolbar/toolbar.svelte";
+  import type { OTDViewOption } from "../containers/on-this-day/on-this-day-helpers";
+  import { OTDViews } from "../containers/on-this-day/on-this-day-helpers";
+  import OnThisDayViews from "../containers/on-this-day/on-this-day-views.svelte";
 
   export const location = undefined;
   export let style = undefined;
@@ -66,6 +73,7 @@
   // and when we have selected more than one.
 
   let isToday = true;
+  let view: OTDViewOption = "all";
 
   // If the date changes - check to see if it's still today
   let activeDate;
@@ -75,6 +83,15 @@
   }
 
   $: appTitle = `History ${state.date.format("YYYY-MM-DD")}`;
+
+  function composeHere() {
+    let logConfig = { end: undefined };
+    if (!isToday) {
+      logConfig.end = state.date.hour(dayjs().hour()).toDate().getTime();
+    }
+    let log = new NLog(logConfig);
+    ActiveLogStore.journal(log);
+  }
 
   // Methods
   const methods = {
@@ -172,6 +189,7 @@
         },
         {
           time: -1,
+          divider: true,
           title: `${Lang.t("general.select-date", "Select Date")}...`,
           unit: "day",
         },
@@ -180,6 +198,7 @@
       if (!isToday) {
         ranges.unshift({
           days: 0,
+          divider: true,
           title: `${Lang.t("history.go-to-today", "Go to Today")}`,
         });
       }
@@ -188,6 +207,7 @@
         buttons: ranges.map((range) => {
           return {
             title: range.title,
+            divider: range.divider ? true : false,
             click: async () => {
               if (range.time == -1) {
                 let date = await Interact.selectDate();
@@ -302,32 +322,54 @@
 
 <NLayout pageTitle={appTitle} {style}>
 
-  <header slot="header">
-    <NToolbar className="container px-2">
-      <Button color="none" shape="circle" className="tap-icon" on:click={methods.search}>
-        <NIcon name="search" size={24} />
+  <header slot="header" class="flex-column">
+    <Toolbar className="container px-2">
+      <Button icon className="tap-icon" on:click={methods.search}>
+        <Icon name="search" size="24" />
       </Button>
-      <div class="filler truncate history-title show-scrolled">
+      <Button icon className="tap-icon" on:click={composeHere}>
+        <Icon name="compose" size="24" />
+      </Button>
+      <div class="filler truncate history-title">
         <Text>
           {#if refreshing}
-            <Spinner size="16" />
+            <Spinner size={16} />
           {/if}
           {state.date.format('ddd')} {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
         </Text>
         <!-- end text middle -->
       </div>
       <NextPrevCal on:previous={methods.previous} on:next={methods.next} on:calendar={methods.selectDate} {isToday} />
-    </NToolbar>
-
+    </Toolbar>
+    {#if logs.length}
+      <Toolbar>
+        <ButtonGroup>
+          {#each OTDViews.filter((v) => {
+            return v.view !== 'locations';
+          }) as loopView}
+            <Button
+              className={view === loopView.view ? 'active' : ''}
+              icon
+              on:click={() => {
+                view = loopView.view;
+              }}>
+              <Icon name={loopView.icon} />
+            </Button>
+          {/each}
+        </ButtonGroup>
+      </Toolbar>
+    {/if}
   </header>
   <!-- end header-content header -->
 
-  <main slot="content" class="page page-history flex-column pb-5">
+  <main slot="content" class="page page-history flex-column">
 
     <div class="container p-0 px-1">
-      <Text size="xl" bold className="history-title pl-3 mt-2">
-        {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
-      </Text>
+      <!-- {#if logs && logs.length}
+        <Text size="xl" bold className="history-title pl-3 mt-2">
+          {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
+        </Text>
+      {/if} -->
 
       <OfflineQueue />
       {#if loading}
@@ -335,23 +377,19 @@
           <Spinner />
         </div>
       {:else if !loading && !logs.length}
-        <div class="empty-notice">
-          <Text size="sm">{Lang.t('history.empty-day', 'No records found for this day')}</Text>
-        </div>
+        <Empty
+          emoji="⏳"
+          title={state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
+          description={`${Lang.t('history.empty-day', 'No data was found on this day')}`}
+          buttonLabel={Lang.t('history.add-a-note', 'Add a Note...')}
+          buttonClick={composeHere} />
       {:else}
-        <!-- Loop over logs -->
-        {#each logs as log, index}
-          <LogItem
-            {log}
-            on:textClick={(event) => {
-              methods.textClick(event);
-            }} />
-        {/each}
+        <OnThisDayViews {view} {logs} />
       {/if}
 
     </div>
 
-    {#if $LedgerStore.memories.length > 0 && !showSearch && isToday}
+    {#if $LedgerStore.memories.length > 0 && !showSearch && isToday && ['all', 'notes'].indexOf(view) > -1}
       <div class="bg-primary-bright mt-3">
         <div class="container p-0 pb-4">
           <!-- Show History if exists -->
@@ -365,7 +403,7 @@
                     methods.goto(dayjs(log.end));
                   }}>
                   {dayjs(log.end).fromNow()}
-                  <NIcon name="chevronRight" className="fill-white" size="18" />
+                  <Icon name="chevronRight" className="fill-white" size="18" />
                 </Button>
               </div>
               <LogItem
@@ -405,7 +443,7 @@
             on:click={() => {
               state.showAllLocations = !state.showAllLocations;
             }}>
-            <NIcon name="close" size="32" />
+            <Icon name="close" size="32" />
           </Button>
 
         </div>

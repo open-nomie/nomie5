@@ -18,7 +18,7 @@
     flex-grow: 0;
   }
   :global(.next-prev-cal .nbtn) {
-    min-width: 40px;
+    /* min-width: 40px; */
   }
 </style>
 
@@ -34,13 +34,15 @@
   </Button>
   {#if !hideCal}
     <Button
-      className="calendar-action"
+      className="calendar-action {isToday ? 'tap-icon' : ''}"
       delay={0}
+      style={isToday ? '' : 'background-color:var(--color-primary); color:#FFF;'}
       icon
+      shape="circle"
       on:click={() => {
         dispatch('calendar');
       }}>
-      <Icon name="calendar" size="24" className={isToday ? 'fill-primary-bright' : 'fill-red'} />
+      <Icon name="calendar" size="22" />
     </Button>
   {/if}
   <Button

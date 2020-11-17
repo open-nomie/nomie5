@@ -8,7 +8,7 @@ export class Dashboard {
   created?: Date;
 
   constructor(starter: any = {}) {
-    this.label = starter.label || "Untitled";
+    this.label = starter.label || "My Stats";
     this.id = starter.id || nid();
     this.created = starter.created ? new Date(starter.created) : new Date();
 

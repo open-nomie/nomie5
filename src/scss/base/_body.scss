@@ -33,27 +33,28 @@ html {
 
 // Font Sizes
 body.font-size-xs {
-  --base-font-size: 16px;
+  --base-font-size: 90%;
   font-size: var(--base-font-size);
 }
 
 body.font-size-sm {
-  --base-font-size: 17px;
+  --base-font-size: 100%;
   font-size: var(--base-font-size);
 }
 
 body.font-size-md {
-  --base-font-size: 18px;
+  --base-font-size: 105%;
   font-size: var(--base-font-size);
 }
 
 body.font-size-lg {
-  --base-font-size: 19px;
+  --base-font-size: 110%;
   font-size: var(--base-font-size);
 }
 
-button {
-  // font-size: calc(var(--base-font-size) * 0.9);
+body.font-size-xl {
+  --base-font-size: 130%;
+  font-size: var(--base-font-size);
 }
 
 // Theme Accents
@@ -120,8 +121,8 @@ body {
   --color-teal-bright: #10c4b5;
   --color-teal: rgb(25, 156, 115);
 
-  --color-purple-bright: #ac0add;
-  --color-purple: #9409be;
+  --color-purple-bright: #b900f1;
+  --color-purple: #a705d8;
 
   --color-orange-bright: #ef8354;
   --color-orange: #ef8354;

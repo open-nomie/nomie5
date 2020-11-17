@@ -185,9 +185,7 @@
       {/if}
       <div class="list bg-solid">
         {#each buttons as button, index}
-          {#if button.divider}
-            <Divider center />
-          {:else}
+          {#if button.title}
             <Button
               block
               color="light"
@@ -206,6 +204,9 @@
                 <Text size="sm" leading2 faded className="mb-1">{button.description}</Text>
               {/if}
             </Button>
+          {/if}
+          {#if button.divider}
+            <Divider center />
           {/if}
         {/each}
 

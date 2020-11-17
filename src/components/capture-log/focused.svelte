@@ -40,7 +40,6 @@
     } else {
       $ActiveLogStore.end = d.subtract(amount, "day").toDate().getTime();
     }
-    console.log("Moved Date", dir, dayjs($ActiveLogStore.end).format("MMM DDD YYYY Do "));
   }
   function nextDate() {
     moveDate("next", 1);
@@ -65,7 +64,6 @@
       $ActiveLogStore.lat = location.lat;
       $ActiveLogStore.lng = location.lng;
     }
-    console.log("get location", location);
   }
 </script>
 
@@ -92,7 +90,7 @@
       </Button>
       <DatePicker
         bind:time={$ActiveLogStore.end}
-        style="width:200px; font-size:14px; border-radius:2px; text-align:center padding:4px; background-color:var(--color-grey-9);" />
+        style="width:210px; font-size:14px; border-radius:2px; text-align:center padding:4px; background-color:var(--color-grey-9);" />
       <Button size="sm" icon className="tap-icon" on:click={nextDate}>
         <Icon name="chevronRight" />
       </Button>

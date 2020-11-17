@@ -35,6 +35,43 @@ export interface ITrackersSummary {
   };
 }
 
+export function getTrackersAndValuesFromLogs(logs: Array<NLog>): ITrackersSummary {
+  if (logs instanceof Array == false) {
+    throw new Error("Logs must be an array");
+  }
+  let trackers: any = {};
+  logs.forEach((log: NLog) => {
+    log = log instanceof NLog ? log : new NLog(log);
+    // Pro tip: Get meta if its not already present
+    !log.trackers ? log.getMeta() : "";
+    // Loop over the Trackers Found
+    log.trackers.forEach((trackableElement: TrackableElement) => {
+      let tag = trackableElement.id;
+      // Add the Values base to the tracker[tag] of not already
+      trackers[tag] = trackers[tag] || {
+        values: [],
+        tag: tag,
+        hours: [],
+        logs: [],
+      };
+      // Push the value to values array - make sure to convert to number
+      let trackableElementValue = parseFloat(trackableElement.value);
+      let v: any = isNaN(trackableElementValue) ? 1 : trackableElementValue;
+      trackers[tag].values.push(v);
+      // Add the Logs for Today - so we can calcuate the score
+      if (trackers[tag].logs.indexOf(log) == -1) {
+        trackers[tag].logs.push(log);
+      }
+      // Get and set hour for the tracker time ball
+      let hour = parseInt(dayjs(log.end).format("H"));
+      if (trackers[tag].hours.indexOf(hour) == -1) {
+        trackers[tag].hours.push(hour);
+      }
+    }); // end looping over the logs trackers
+  });
+  return trackers;
+}
+
 export default class LedgerTools {
   storage: IStorage;
   importer: LedgerImporter;
@@ -85,40 +122,7 @@ export default class LedgerTools {
   }
 
   public getTrackersAndValuesFromLogs(logs: Array<NLog>): ITrackersSummary {
-    if (logs instanceof Array == false) {
-      throw new Error("Logs must be an array");
-    }
-    let trackers: any = {};
-    logs.forEach((log: NLog) => {
-      log = log instanceof NLog ? log : new NLog(log);
-      // Pro tip: Get meta if its not already present
-      !log.trackers ? log.getMeta() : "";
-      // Loop over the Trackers Found
-      log.trackers.forEach((trackableElement: TrackableElement) => {
-        let tag = trackableElement.id;
-        // Add the Values base to the tracker[tag] of not already
-        trackers[tag] = trackers[tag] || {
-          values: [],
-          tag: tag,
-          hours: [],
-          logs: [],
-        };
-        // Push the value to values array - make sure to convert to number
-        let trackableElementValue = parseFloat(trackableElement.value);
-        let v: any = isNaN(trackableElementValue) ? 1 : trackableElementValue;
-        trackers[tag].values.push(v);
-        // Add the Logs for Today - so we can calcuate the score
-        if (trackers[tag].logs.indexOf(log) == -1) {
-          trackers[tag].logs.push(log);
-        }
-        // Get and set hour for the tracker time ball
-        let hour = parseInt(dayjs(log.end).format("H"));
-        if (trackers[tag].hours.indexOf(hour) == -1) {
-          trackers[tag].hours.push(hour);
-        }
-      }); // end looping over the logs trackers
-    });
-    return trackers;
+    return getTrackersAndValuesFromLogs(logs);
   }
 
   /**

@@ -8,32 +8,23 @@
 
   // Svelte
   import { onDestroy, onMount } from "svelte";
+  import _ from "lodash";
   // import { slide } from "svelte/transition";
   import DateTimeBar from "../date-time-bar/date-time-bar.svelte";
-
-  // Modules
-  import NomieLog from "../../modules/nomie-log/nomie-log";
-  import Storage from "../../modules/storage/storage";
 
   //Components
   import NItem from "../list-item/list-item.svelte";
   import NIcon from "../icon/icon.svelte";
-  import NPoints from "../points/points.svelte";
   import Button from "../button/button.svelte";
   import dayjs from "dayjs";
   import type { OpUnitType, Dayjs } from "dayjs";
 
-  import domtoimage from "dom-to-image-chrome-fix";
-  import Dymoji from "../dymoji/dymoji.svelte";
   import AutoComplete from "../auto-complete/auto-complete.svelte";
-  import NPositivitySelector from "../positivity-selector/positivity-selector.svelte";
   import NSpinner from "../spinner/spinner.svelte";
 
   // Utils
   import Logger from "../../utils/log/log";
-  import time from "../../utils/time/time";
   import ScoreNote from "../../modules/scoring/score-note";
-  import TrackerInputer from "../../modules/tracker/tracker-inputer";
   import tick from "../../utils/tick/tick";
   import math from "../../utils/math/math";
 
@@ -50,6 +41,8 @@
   import PositivityMenu from "../positivity-selector/positivity-menu.svelte";
   import Icon from "../icon/icon.svelte";
   import DatePicker from "../date-picker/date-picker.svelte";
+  import TrackableElement, { toElement } from "../../modules/trackable-element/trackable-element";
+  import extract from "../../utils/extract/extract";
 
   // Consts
   const console = new Logger("capture-log");
@@ -59,6 +52,7 @@
   let iOSFileInput;
   let saving = false;
   let saved = false;
+  let debounce;
   // let activeLogDayjs: Dayjs;
 
   $: if ($LedgerStore.saving) {
@@ -126,6 +120,30 @@
           $ActiveLogStore.lat = location.lat;
           $ActiveLogStore.lng = location.lng;
           $ActiveLogStore.location = location.name;
+        }
+      }
+    },
+    input(evt) {
+      methods.checkTextareaSize();
+      clearTimeout(debounce);
+      debounce = setTimeout(() => {
+        const parsed = extract.parse($ActiveLogStore.note);
+        methods.highlightElements(parsed || []);
+      }, 400);
+    },
+    highlightElements(items: Array<TrackableElement>) {
+      const buttons = document.getElementsByClassName("tracker-board-button");
+      const tagsInNote = items.filter((i) => i.type === "tracker").map((i) => i.id);
+      for (let i = 0; i < buttons.length; i++) {
+        try {
+          let buttonTag = buttons[i].id.split("-")[1];
+          if (tagsInNote.indexOf(buttonTag) !== -1) {
+            buttons[i].classList.add("in-note");
+          } else if (buttons[i].classList.contains("in-note")) {
+            buttons[i].classList.remove("in-note");
+          }
+        } catch (e) {
+          console.error(e.message);
         }
       }
     },
@@ -287,15 +305,22 @@
 
   // Clear the settings when saved
   LedgerStore.hook("onLogSaved", (res) => {
+    console.log("Did it save?");
     // methods.clear();
     setTimeout(() => {
       state.advanced = false;
       methods.autoCompleteDone();
-    });
+      methods.input({});
+    }, 10);
+  });
+
+  ActiveLogStore.hook("onAddElement", (element) => {
+    methods.input({});
   });
 
   // When a tag is added by a button or other service
   ActiveLogStore.hook("onAddTag", (res) => {
+    console.log("Tags Added", res);
     // add space to the end.
     setTimeout(() => {
       if (textarea) {
@@ -443,6 +468,7 @@
       <!-- Note Input -->
       <div class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 ? 'populated' : 'empty'}">
         <Button
+          ariaLabel="Location and Date settings"
           size="sm"
           shape="circle"
           color={state.advanced ? 'primary' : 'light'}
@@ -456,18 +482,19 @@
         </Button>
 
         <textarea
+          aria-label="Note entry field"
           id="textarea-capture-note"
           style="overflow:hidden"
           disabled={saving || saved}
           bind:value={$ActiveLogStore.note}
           bind:this={textarea}
-          on:input={methods.checkTextareaSize}
+          on:input={methods.input}
           placeholder={Lang.t('general.whats-up', "What's up?")}
           on:keydown={methods.keyPress}
           on:paste={methods.keyPress} />
 
         {#if $UserStore.meta.hiddenFeatures}
-          <Button className="expand-button action-button" icon size="sm" on:click={Interact.toggleFocusedEditor}>
+          <Button className="expand-button action-button" ariaLabel="Journal Mode" icon size="sm" on:click={Interact.toggleFocusedEditor}>
             <Icon name="expand" className="fill-inverse-2" />
           </Button>
         {/if}
@@ -479,7 +506,13 @@
             <NSpinner size={20} color="#FFFFFF" />
           </Button>
         {:else}
-          <Button className="save-button action-button mr-2" shape="circle" color="success" size="sm" on:click={methods.logSave}>
+          <Button
+            className="save-button action-button mr-2"
+            ariaLabel="Save Note"
+            shape="circle"
+            color="success"
+            size="sm"
+            on:click={methods.logSave}>
             <NIcon name="arrowUp" style="fill: #FFF;" size="20" />
           </Button>
         {/if}

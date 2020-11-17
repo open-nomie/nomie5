@@ -49,6 +49,9 @@
   import tick from "../../utils/tick/tick";
   import ButtonGroup from "../../components/button-group/button-group.svelte";
   import nid from "../../modules/nid/nid";
+  import Toolbar from "../../components/toolbar/toolbar.svelte";
+  import { SearchStore } from "../../store/search-store";
+  import Empty from "../empty/empty.svelte";
   // import { getDashboardStartEndDates } from "./dashboard-helpers";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
@@ -166,6 +169,35 @@
       logs = await LedgerStore.queryAll(widget.element.id, start, end);
     }
     return logs;
+  }
+
+  async function dashboardOptions() {
+    let buttons = [
+      {
+        title: Lang.t("dashboard.add-a-widget", "Add a Widget..."),
+        click: newWidget,
+      },
+      {
+        title: `${Lang.t("general.edit", "Edit")} ${activeDashboard.label}...`,
+        click: toggleEdit,
+      },
+      {
+        title: `${Lang.t("general.delete", "Delete")} ${activeDashboard.label}...`,
+        click: deleteDashboard,
+      },
+      {
+        divider: true,
+      },
+      {
+        title: `${Lang.t("dashboard.add-tab", "Add new Tab...")}`,
+        click: DashboardStore.newDashboard,
+      },
+    ];
+
+    Interact.popmenu({
+      title: `${Lang.t("dashboard.options", "Dashboard Options")}`,
+      buttons,
+    });
   }
 
   async function getWidgetStats(widget: Widget): Promise<Widget> {
@@ -452,8 +484,11 @@
 
 <NLayout className="dasboard" headerClassNames="fill-header" pageTitle="Dashboard" showTabs={true}>
   <header slot="header">
-    <div class="container n-row pl-2 pr-0 h-100" style="padding-top:4px;">
-      <HScroller activeIndex={$DashboardStore.activeIndex} className="n-board-tabs">
+    <Toolbar>
+      <Button color="none" shape="circle" className="tap-icon" on:click={() => SearchStore.view('history')}>
+        <Icon name="search" size="24" />
+      </Button>
+      <HScroller centerIfPossible activeIndex={$DashboardStore.activeIndex} className="n-board-tabs">
         {#each dashboards || [] as board, i (board.id)}
           <button
             class="tab board-{board.id} truncate-1 {i == $DashboardStore.activeIndex ? 'selected' : 'inactive'}"
@@ -463,14 +498,11 @@
             {truncateText(board.label, 12)}
           </button>
         {/each}
-        <div slot="right">
-          <Button color="clear" className="tap-icon py-1" on:click={DashboardStore.newDashboard}>
-            <Icon name="newTab" size="24" />
-          </Button>
-        </div>
       </HScroller>
-
-    </div>
+      <Button icon className="tap-icon" on:click={dashboardOptions}>
+        <Icon name="settings" />
+      </Button>
+    </Toolbar>
   </header>
   {#if activeDashboard && !loading}
     <div class="container h-100">
@@ -487,14 +519,12 @@
         <div class="dashboard-wrapper" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
           {#if people && trackers}
             {#if activeDashboard.widgets.length == 0}
-              <div class="center-all p-5 n-panel vertical">
-                <Text faded size="md" center>
-                  {Lang.t('dashboard.empty-message', 'Add different charts, stats, and other widgets to create your own custom views of your life.')}
-                </Text>
-                <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={newWidget}>
-                  {Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
-                </Button>
-              </div>
+              <Empty
+                emoji="💹"
+                title={Lang.t('general.dashboard', 'Dashboard')}
+                description={Lang.t('dashboard.empty-message', 'Mix and match charts, stats, and other widgets to create your own custom views of your life.')}
+                buttonLabel={Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
+                buttonClick={newWidget} />
             {/if}
 
             {#each activeDashboard.widgets as widget (widget.id)}
@@ -509,13 +539,13 @@
             {/each}
           {/if}
         </div>
-        <div class="board-actions filler mb-2">
-          <ButtonGroup style="max-width:230px;" className="box-shadow-tight">
-            <Button on:click={newWidget} color="clear">{Lang.t('general.add', 'Add')}</Button>
-            <Button on:click={toggleEdit} color="clear">{Lang.t('general.edit', 'Edit')}</Button>
-            <Button on:click={deleteDashboard} color="clear">{Lang.t('general.delete', 'Delete')}</Button>
-          </ButtonGroup>
-        </div>
+        {#if activeDashboard && activeDashboard.widgets && activeDashboard.widgets.length}
+          <div class="board-actions filler mb-2">
+            <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={newWidget}>
+              {Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
+            </Button>
+          </div>
+        {/if}
         <div class="mt-3 p-2" />
       {:else if ready}
         <SortableList

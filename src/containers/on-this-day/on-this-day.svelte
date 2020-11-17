@@ -33,7 +33,10 @@
   import ShortcutUserButton from "../../components/shortcut-button/shortcut-user-button.svelte";
   import Row from "../../components/row/row.svelte";
   import Empty from "../empty/empty.svelte";
-  import type { t } from "i18next";
+  import { getContext, getNotes, getPeople, OTDViews, processTrackers } from "./on-this-day-helpers";
+
+  import type { OTDView, OTDViewOption } from "./on-this-day-helpers";
+  import OnThisDayViews from "./on-this-day-views.svelte";
 
   const state = {
     notes: [],
@@ -50,23 +53,11 @@
   let showWindow = false;
   let loading = false;
 
-  type ViewOption = "notes" | "trackers" | "people" | "locations" | "context";
-  interface View {
-    view: ViewOption;
-    icon: string;
-    label: string;
-  }
+  let views: typeof OTDViews = OTDViews;
 
-  let views: Array<View> = [
-    { view: "notes", icon: "annotation", label: `${Lang.t("general.notes", "Notes")}` },
-    { view: "trackers", icon: "tracker", label: `${Lang.t("general.trackers", "Trackers")}` },
-    { view: "locations", icon: "map", label: `${Lang.t("general.locations", "Locations")}` },
-    { view: "people", icon: "people", label: `${Lang.t("general.people", "People")}` },
-    { view: "context", icon: "bulb", label: `${Lang.t("general.context", "Context")}` },
-  ];
+  let view: OTDViewOption = "notes";
 
-  let view: ViewOption = "notes";
-  let activeView: View = views[0];
+  let activeView: OTDView = views[0];
 
   $: if ($Interact.onThisDay) {
     showDom = true;
@@ -81,7 +72,7 @@
     }, 200);
   }
 
-  function setView(v: ViewOption) {
+  function setView(v: OTDViewOption) {
     view = v;
     activeView = views.find((lview) => lview.view === v);
   }
@@ -90,77 +81,13 @@
     loading = true;
     let day = await LedgerStore.getDay($Interact.onThisDay);
     let trackersUsed = LedgerStore.extractTrackerTagAndValues(day);
-
-    getPeople(day);
-    getContext(day);
-    getNotes(day);
-    processTrackers(trackersUsed);
+    state.people = getPeople(day, $PeopleStore.people);
+    state.context = getContext(day);
+    state.notes = getNotes(day);
+    state.trackers = processTrackers(trackersUsed);
 
     state.records = day;
     loading = false;
-  }
-
-  function getNotes(day) {
-    let notes = day
-      .filter((record) => {
-        return hasNote(record.note);
-      })
-      .sort((a: NLog, b: NLog) => {
-        return a.end > b.end ? 1 : -1;
-      });
-    state.notes = notes;
-  }
-
-  function getContext(day) {
-    let contexts = [];
-    day.forEach((log: NLog) => {
-      log.context.forEach((element: TrackableElement) => {
-        const context = element.id;
-        if (context) {
-          if (contexts.indexOf(context) === -1) {
-            contexts.push(context);
-          }
-        }
-      });
-    });
-    state.context = contexts;
-  }
-
-  function getPeople(day) {
-    let people = [];
-    day.forEach((log: NLog) => {
-      log.people.forEach((element: TrackableElement) => {
-        let person = $PeopleStore.people[element.id];
-        if (person) {
-          if (people.indexOf(person) === -1) {
-            people.push(person);
-          }
-        }
-      });
-    });
-    state.people = people;
-  }
-
-  function processTrackers(trackersUsed) {
-    let trackers = Object.keys(trackersUsed)
-      .map((tag) => {
-        let base = trackersUsed[tag];
-        let tracker = TrackerStore.getByTag(tag);
-
-        let value = tracker.math == "sum" ? math.sum(base.values) : math.average(base.values);
-        return {
-          tag,
-          tracker,
-          values: base.values,
-          count: base.values.length,
-          value: tracker.displayValue(value),
-        };
-      })
-      .sort((a, b) => {
-        return a.tracker.label < b.tracker.label ? 1 : -1;
-      });
-
-    state.trackers = trackers;
   }
 
   function nextDay() {
@@ -171,14 +98,6 @@
   function previousDay() {
     let date = dayjs($Interact.onThisDay).subtract(1, "day").toDate();
     Interact.onThisDay(date);
-  }
-
-  function hasNote(str) {
-    let parsed = extractor.parse(str, { includeGeneric: true });
-    let generic = parsed.filter((tElement) => {
-      return tElement.type == "generic";
-    });
-    return math.percentage(parsed.length, generic.length) > 70;
   }
 
   // let lastDate;
@@ -218,14 +137,16 @@
       <Toolbar>
         <ButtonGroup>
           {#each views as loopView}
-            <Button
-              className={view === loopView.view ? 'active' : ''}
-              icon
-              on:click={() => {
-                setView(loopView.view);
-              }}>
-              <Icon name={loopView.icon} />
-            </Button>
+            {#if loopView.view !== 'all'}
+              <Button
+                className={view === loopView.view ? 'active' : ''}
+                icon
+                on:click={() => {
+                  setView(loopView.view);
+                }}>
+                <Icon name={loopView.icon} />
+              </Button>
+            {/if}
           {/each}
         </ButtonGroup>
       </Toolbar>
@@ -237,74 +158,7 @@
     </header>
 
     {#if !loading}
-      {#if view === 'trackers'}
-        <Card shadow={false} pad>
-          <div class="tracker-grid">
-            {#each state.trackers as tracker (tracker.tag)}
-              <TrackerSmallBlock
-                className="m-1"
-                style="width:150px;"
-                element={{ id: tracker.tag, value: tracker.value, type: 'tracker', obj: tracker.tracker }}
-                on:click={() => {
-                  Interact.elementOptions(new TrackableElement({
-                      id: tracker.tag,
-                      value: tracker.value,
-                      type: 'tracker',
-                      obj: tracker.tracker,
-                    }));
-                }} />
-            {/each}
-          </div>
-        </Card>
-      {:else if view === 'notes'}
-        {#if !state.notes.length}
-          <Empty title={Lang.t('on-this-day.no-notes', 'No Notes on this Day')} emoji="✍🏽" />
-        {:else}
-          <div class="p-1">
-            {#each state.notes as note}
-              <ListItemLog log={note} />
-            {/each}
-          </div>
-        {/if}
-      {:else if view === 'people'}
-        {#if !state.people.length}
-          <Empty title={Lang.t('on-this-day.no-people', 'No People on this Day')} emoji="👨‍👩‍👧" />
-        {:else}
-          <div class="n-grid mt-3">
-            {#each state.people as person}
-              <ShortcutUserButton
-                {person}
-                on:click={() => {
-                  Interact.elementOptions(new TrackableElement({ id: person.username, raw: `@${person.username}`, type: 'person' }));
-                }}
-                on:more={() => {
-                  Interact.elementOptions(new TrackableElement({ id: person.username, raw: `@${person.username}`, type: 'person' }));
-                }} />
-            {/each}
-          </div>
-        {/if}
-      {:else if view === 'context'}
-        {#if !state.context.length}
-          <Empty title={Lang.t('on-this-day.no-context', 'No Context on this Day')} emoji="🤷‍♂️" />
-        {:else}
-          <div class="n-grid mt-3">
-            {#each state.context as context}
-              <Button
-                shape="round"
-                size="lg"
-                color="light"
-                className="m-2"
-                on:click={() => {
-                  Interact.elementOptions(new TrackableElement({ id: context, raw: context, type: 'context' }));
-                }}>
-                {context}
-              </Button>
-            {/each}
-          </div>
-        {/if}
-      {:else if view === 'locations'}
-        <Map records={state.records} style="height:100%;" />
-      {/if}
+      <OnThisDayViews {view} logs={state.records} />
     {/if}
 
   </NModal>

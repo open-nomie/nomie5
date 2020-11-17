@@ -59,7 +59,7 @@
 <div class="n-streak n-streak-{view} {className}">
   {#if calendarLogs && mockTracker}
     {#if view == 'month'}
-      <Calendar showControls={false} showDetails={true} initialDate={selectedDate} tracker={mockTracker} events={calendarLogs} />
+      <Calendar showControls={false} showDetails={showDetail} initialDate={selectedDate} tracker={mockTracker} events={calendarLogs} />
     {:else if view == 'week'}
       <div class="week">
         <StreakDays logs={calendarLogs} date={selectedDate} days={7} />

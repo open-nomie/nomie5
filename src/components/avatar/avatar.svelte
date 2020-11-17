@@ -15,6 +15,7 @@
   export let color: string = "transparent";
   export let circle: boolean = false;
   export let className: string = "";
+  export let textColor: string = undefined;
 
   const dispatch = createEventDispatcher();
 
@@ -111,7 +112,7 @@
   }
   .n-avatar.emolen-2 {
     letter-spacing: -0.5em;
-    text-indent: -0.3em;
+    text-indent: -0.5em;
     font-size: calc(var(--avatar-size) * 0.86);
   }
   .n-avatar.emolen-3 {
@@ -125,7 +126,7 @@
   class="n-avatar {emoji ? `emolen-${emojiCount(emoji)}` : 'no-emoji'}
   {size}
   {classList.join(' ')}"
-  style={`${styles.join('; ')}; ${style}`}
+  style={`${styles.join('; ')}; ${textColor ? `color:${textColor} !important;` : ''} ${style}`}
   on:click|preventDefault={click}>
   {#if emoji}{emoji}{:else if label}{initials(label)}{/if}
 </div>

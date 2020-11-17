@@ -15,17 +15,23 @@
   import { navigate } from "svelte-routing";
   import { onMount, onDestroy } from "svelte";
   import dayjs from "dayjs";
-  import { fade, fly } from "svelte/transition";
 
   // Components
-  import NToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import Icon from "../../components/icon/icon.svelte";
   import NModal from "../../components/modal/modal.svelte";
-  import LogoType from "../../components/logo/logo.svelte";
   import NTip from "../../components/tip/tip.svelte";
   import CaptureLog from "../../components/capture-log/capture-log.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
   import NBoardTabs from "../../components/board-tabs/board-tabs.svelte";
+  import Button from "../../components/button/button.svelte";
+  import Text from "../../components/text/text.svelte";
+  import OfflineQueue from "../../components/offline-queue/offline-queue.svelte";
+  import ListItem from "../../components/list-item/list-item.svelte";
+  import ButtonGroup from "../../components/button-group/button-group.svelte";
+  import Card from "../../components/card/card.svelte";
+  import Toolbar from "../../components/toolbar/toolbar.svelte";
+  import Empty from "../empty/empty.svelte";
+  import TrackersList from "./trackers.svelte";
 
   // Containers
   import NLayout from "../../containers/layout/layout.svelte";
@@ -35,12 +41,10 @@
   import Tracker from "../../modules/tracker/tracker";
   import NomieLog from "../../modules/nomie-log/nomie-log";
   import StarterPacks from "../../modules/packs/starter-packs";
-  import math from "../../utils/math/math";
-  import Logger from "../../utils/log/log";
-  import NomieUOM from "../../utils/nomie-uom/nomie-uom";
   import tick from "../../utils/tick/tick";
-  import TrackerInputer from "../../modules/tracker/tracker-inputer";
-  import ScoreTracker from "../../modules/scoring/score-tracker";
+  import time from "../../utils/time/time";
+  import { truncate } from "../../utils/text/text";
+  import exportData from "../../modules/export/export-helper";
 
   // data
   import tips from "../../config/tips";
@@ -55,33 +59,16 @@
   import { Lang } from "../../store/lang";
   import { TrackerLibrary } from "../../store/tracker-library";
   import { LastUsed } from "../../store/last-used";
-  import { FeatureStore } from "../../store/feature-store";
-  import Button from "../../components/button/button.svelte";
-  import Text from "../../components/text/text.svelte";
-  import exportData from "../../modules/export/export-helper";
-
-  import OfflineQueue from "../../components/offline-queue/offline-queue.svelte";
+  import { Device } from "../../store/device-store";
+  import { SearchStore } from "../../store/search-store";
 
   import NPaths from "../../paths";
-  import { Device } from "../../store/device-store";
-  import ShortcutButton from "../../components/shortcut-button/shortcut-button.svelte";
-  import time from "../../utils/time/time";
-  import Counter from "../../components/counter/counter.svelte";
-  import ListItem from "../../components/list-item/list-item.svelte";
-  import TrackersList from "./trackers.svelte";
-  import { SearchStore } from "../../store/search-store";
-  import ButtonGroup from "../../components/button-group/button-group.svelte";
-  import Card from "../../components/card/card.svelte";
-  import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
-  import Toolbar from "../../components/toolbar/toolbar.svelte";
-
-  import { truncate } from "../../utils/text/text";
 
   // Consts
 
   // Local Vars
   let user = undefined; // will hold the user when the user is ready - basically a ready var
-  let today = {}; // holds today's activities
+
   let foundTrackers = null; // for search results
   let boardTrackers = []; // Actual array to display to user
   let daysSinceLastBackup = 0;
@@ -130,9 +117,7 @@
     if (isReady.done == false) {
       if (isReady.boards && $TrackerStore.trackers && isReady.ledger) {
         isReady.done = true;
-        setTimeout(() => {
-          setBoardTrackers();
-        }, 20);
+        setBoardTrackers();
       }
     }
   };
@@ -225,7 +210,6 @@
 
   async function boardOptions(board) {
     board = board || $BoardStore.activeBoard;
-    console.log("Board?", board);
     let buttons = [
       {
         title: `${Lang.t("general.add-a-tracker", "Add a Tracker")}`,
@@ -235,22 +219,29 @@
         },
       },
       {
-        title: `${Lang.t("board.edit-sort", "Edit / Sort")} ${board ? `${truncate(board.label, 30)}` : ""}...`,
+        title: `${Lang.t("general.manage", "Manage")} ${board ? `${truncate(board.label, 30)}` : ""}`,
         async click() {
           editBoard();
         },
+        divider: true,
       },
       {
-        title: `${Lang.t("general.delete", "Delete")} ${board ? `${truncate(board.label, 30)}` : ""}...`,
-        disabled: board && board.id === "all",
+        title: `${Lang.t("board.organize-tabs", "Organize Tabs")}`,
         async click() {
-          deleteBoard();
+          Interact.toggleBoardSorter();
         },
       },
       {
-        title: `${Lang.t("board.create-new-board", "Create a new Tab...")}`,
+        title: `${Lang.t("board.create-new-board", "Add New Tab")}`,
         async click() {
           methods.newBoard();
+        },
+        divider: true,
+      },
+      {
+        title: `${Lang.t("general.all-nomie-settings", "More Nomie Settings")}`,
+        async click() {
+          navigate("/settings");
         },
       },
     ];
@@ -384,11 +375,6 @@
       }
     },
     // Settings Shortcut - enable boards - tap on logo
-    async enableBoards() {
-      $UserStore.meta.boardsEnabled = true;
-      await UserStore.saveMeta();
-      methods.newBoard();
-    },
 
     async trackerTapped(tracker) {
       return Interact.trackerTap(tracker, $TrackerStore.trackers);
@@ -443,15 +429,12 @@
   let ledgerUnsub;
   let activeLogUnsub;
   let trackerUnsub;
-  let lastTrackers;
 
   onMount(() => {
     Device.scrollToTop();
     trackerUnsub = TrackerStore.subscribe((trackerStore) => {
-      setTimeout(() => {
-        boardTrackers = boardTrackers;
-        setBoardTrackers();
-      }, 20);
+      boardTrackers = boardTrackers;
+      setBoardTrackers();
     });
 
     // Wait for changes to happen to the boardstore
@@ -482,7 +465,6 @@
         isReady.ledger = true; // say it's true
         checkIfReady("ledgerPayload"); // check for others
         setTimeout(() => {
-          today = ledgerPayload.today;
           foundTrackers = foundTrackers; // force reaction
           boardTrackers = boardTrackers; // force reaction
         }, 20);
@@ -491,6 +473,8 @@
 
     // Active Log Change
     activeLogUnsub = ActiveLogStore.subscribe((log) => {
+      // Used for knowing which trackers are current active
+      // TODO bring this back
       state.addedTrackers = new NomieLog(log).getMeta().trackers.map((t) => t.id);
     });
     LedgerStore.getToday();
@@ -549,11 +533,11 @@
   <header slot="header" class="container">
     <Toolbar>
       {#if $TrackerStore.timers.length}
-        <Button icon on:click={TrackerStore.toggleTimers} className="mr-1">
+        <Button icon on:click={TrackerStore.toggleTimers} className="mr-1" ariaLabel={Lang.t('general.timers', 'Timers')}>
           <Icon name="time" size={24} className="fill-red" />
         </Button>
       {/if}
-      <Button icon className="tap-icon" on:click={methods.toggleSearch}>
+      <Button icon className="tap-icon" on:click={methods.toggleSearch} ariaLabel={Lang.t('general.search')}>
         <Icon name="search" size={24} />
       </Button>
 
@@ -570,7 +554,11 @@
           BoardStore.setActive(event.detail.id, event.detail);
         }} />
 
-      <Button icon className="tap-icon board-option-action" on:click={() => boardOptions()}>
+      <Button
+        icon
+        className="tap-icon board-option-action"
+        on:click={() => boardOptions()}
+        ariaLabel={Lang.t('general.settings', 'Settings')}>
         <Icon name="settings" size={24} />
       </Button>
 
@@ -627,8 +615,17 @@
             </Card>
           </div>
         {/if}
+
         <main class="n-board h-100" on:swipeleft={BoardStore.next} on:swiperight={BoardStore.previous}>
           <!-- Loop over trackers -->
+          {#if (foundTrackers || boardTrackers || []).length === 0}
+            <Empty
+              title={Lang.t('board.empty-title', 'No trackers found')}
+              emoji="🤔"
+              description={Lang.t('board.empty-description', 'Pick from your existing trackers, or browse the library to discover new things to track.')}
+              buttonLabel={`${Lang.t('general.add-a-tracker', 'Add a Tracker')}...`}
+              buttonClick={methods.addButtonTap} />
+          {/if}
 
           <TrackersList
             view={state.view}
@@ -636,6 +633,7 @@
             on:tap={(evt) => {
               methods.trackerTapped(evt.detail);
             }}
+            hideAdd={(foundTrackers || boardTrackers || []).length === 0}
             on:add={methods.addButtonTap}
             on:more={(evt) => {
               methods.showTrackerOptions(evt.detail);
@@ -644,8 +642,10 @@
           <!-- Include User Tips - shit should be a component -->
 
         </main>
-        <div class="board-actions mt-5 mb-3 n-row" style="min-width:140px;">
-          {#if $UserStore.meta.hiddenFeatures}
+
+        {#if (foundTrackers || boardTrackers || []).length && $UserStore.meta.hiddenFeatures}
+          <div class="board-actions mt-5 mb-3 n-row" style="min-width:100px;">
+
             <ButtonGroup className="mr-2 box-shadow-tight">
               <Button
                 icon
@@ -672,11 +672,9 @@
                 <Icon size="18" name="detailView" />
               </Button>
             </ButtonGroup>
-          {/if}
-          <!-- <ButtonGroup className="mr-2 box-shadow-tight" style="max-width:150px">
-            <Button on:click={boardOptions}>{Lang.t('board.edit-sort', 'Edit / Sort')}...</Button>
-          </ButtonGroup> -->
-        </div>
+
+          </div>
+        {/if}
         <NTip {tips} />
       {/if}
     {/if}

@@ -62,6 +62,8 @@
     ArrowRight,
     Cake,
     LightBulb,
+    PencilAlt,
+    BookOpen,
   } from "svelte-hero-icons";
 
   export let name = "add";
@@ -136,6 +138,8 @@
     detailView: detailView,
     eye: Eye,
     eyeOff: EyeOff,
+    compose: PencilAlt,
+    book: BookOpen,
   };
 </script>
 

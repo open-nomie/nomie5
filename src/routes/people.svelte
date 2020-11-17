@@ -15,6 +15,7 @@
   import { SearchStore } from "../store/search-store";
 
   import dayjs from "dayjs";
+  import Empty from "../containers/empty/empty.svelte";
   export const location = undefined;
 
   let state = {
@@ -44,18 +45,7 @@
     state.people = getPeople().sort((a, b) => {
       return $PeopleStore.people[a].last < $PeopleStore.people[b].last ? 1 : -1;
     });
-  }
-
-  function searchPeople(evt) {
-    if (evt.detail) {
-      state.searchTerm = evt.detail.toLowerCase();
-    } else {
-      state.searchTerm = null;
-    }
-  }
-
-  function clearSearch() {
-    state.searchTerm = null;
+    state.initialized = true;
   }
 
   async function addPerson() {
@@ -86,7 +76,6 @@
 
   onMount(() => {
     loadPeople();
-    state.initialized = true;
   });
 </script>
 
@@ -108,7 +97,9 @@
         <NIcon name="search" size={24} />
       </Button>
       <div class="filler pl-2 truncate">
-        <Text center bold>{Lang.t('tabs.people', 'People')}</Text>
+        {#if state.people.length}
+          <Text center bold>{Lang.t('tabs.people', 'People')}</Text>
+        {/if}
       </div>
       <Button color="none" shape="circle" className="tap-icon" on:click={addPerson}>
         <NIcon name="userAdd" className="fill-primary-bright" />
@@ -119,28 +110,20 @@
   <div slot="content" class="container">
     <div class="n-list my-2 bg-transparent">
       {#if !state.people.length && !state.searchTerm && state.initialized}
-        <NItem className="mt-5 py-3" bg="transparent">
-          <div class="text-md text-center">
-            Track & monitor how you interact
-            <br />
-            with your friends and family.
-          </div>
-          <div class="text-sm mt-2 text-center">
-            <span class="fake-link" on:click={addPerson}>Add a person</span>
-            or
-            <span class="fake-link" on:click={PeopleStore.searchForPeople}>Find recent @people</span>
-          </div>
-
-        </NItem>
+        <Empty
+          title={Lang.t('general.people')}
+          emoji="👨‍👩‍👦‍👦"
+          description={Lang.t('people.empty-message', 'Track & monitor how you interact with your friends and family')}
+          buttonLabel={Lang.t('people.add-a-person', 'Add a Person...')}
+          buttonClick={addPerson} />
       {:else if !state.initialized}
         <NItem>Loading...</NItem>
       {:else if !state.people.length && state.searchTerm}
         <NItem>Nothing found for @{state.searchTerm}</NItem>
       {/if}
 
-      <!-- value={dayjs($PeopleStore.people[person].last).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD') ? 1 : 0} -->
       <div class="trackers n-grid">
-        {#each state.people as person}
+        {#each state.people as person, index (index)}
           <ShortcutUserButton
             person={$PeopleStore.people[person]}
             on:click={() => {
@@ -151,49 +134,6 @@
             }} />
         {/each}
       </div>
-
-      <!-- {#each state.people as person}
-        <NItem bottomLine truncate clickable={false} className="py-3">
-          <div slot="left">
-            {#if $PeopleStore.people[person] && $PeopleStore.people[person].avatar}
-              <AvatarBall size={48} avatar={$PeopleStore.people[person].avatar} style={`border-radius:32%; overflow:hidden`} />
-            {:else if $PeopleStore.people[person] && $PeopleStore.people[person].displayName}
-              <AvatarBall size={48} username={$PeopleStore.people[person].displayName} style={`border-radius:32%; overflow:hidden`} />
-            {/if}
-          </div>
-
-          <div class="n-row truncate-1">
-            <Button
-              color="clear"
-              size="xs"
-              inline
-              style="max-width:30px; width:24px;"
-              className="p-0 mr-2"
-              on:click={(evt) => {
-                Interact.openStats(`@${person}`);
-              }}>
-              <NIcon name="chart" className="fill-primary-bright" size={18} />
-            </Button>
-            <Text size="md" lineHeightMd truncate className="filler">{($PeopleStore.people[person] || {}).displayName}</Text>
-          </div>
-
-          {#if $PeopleStore.people[person] && $PeopleStore.people[person].last}
-            <Text size="sm" faded>{dayjs($PeopleStore.people[person].last).fromNow()}</Text>
-          {/if}
-          <div slot="right" class="n-row">
-
-            <Button
-              color="clear"
-              className=""
-              on:click={(evt) => {
-                personClicked(person);
-              }}>
-              <Text size="xs" bold className="text-primary-bright text-uppercase">{Lang.t('people.check-in', 'Check-in')}</Text>
-            </Button>
-
-          </div>
-        </NItem>
-      {/each} -->
 
     </div>
   </div>

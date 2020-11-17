@@ -70,6 +70,10 @@
   :global(.n-modal-header [slot="header"]) {
     width: 100%;
   }
+
+  :global(.n-modal .no-flex-body.n-modal-body) {
+    // display: block;
+  }
   .n-modal-frame {
     position: fixed;
     top: 0;

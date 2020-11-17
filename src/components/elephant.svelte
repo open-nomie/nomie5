@@ -1,6 +1,5 @@
 <script>
   export let size = 24;
-  export let color = "#319ed7";
 </script>
 
 <style>

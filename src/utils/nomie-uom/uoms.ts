@@ -26,6 +26,37 @@ export default {
     symbol: "pgs",
     type: "general",
   },
+  tabs: {
+    singular: "Tab",
+    plural: "Tabs",
+    symbol: "tbs",
+    type: "health",
+  },
+  capsules: {
+    singular: "Capsule",
+    plural: "Capsules",
+    symbol: "caps",
+    type: "health",
+  },
+  bpm: {
+    singular: "Beat Per Minute",
+    plural: "Beat Per Minute",
+    symbol: "bpm",
+    type: "health",
+  },
+  pain: {
+    singular: "Pain",
+    plural: "Pain",
+    symbol: "pn",
+    type: "health",
+  },
+  iu: {
+    singular: "International Unit",
+    plural: "International Units",
+    symbolAffix: "post",
+    symbol: "IU",
+    type: "general",
+  },
   dollars: {
     singular: "Dollar",
     plural: "Dollars",
@@ -206,6 +237,14 @@ export default {
     symbolAffix: "post",
     symbolSpace: false,
   },
+  kelvin: {
+    singular: "Kelvin",
+    plural: "Kelvin",
+    symbol: "K",
+    type: "temperature",
+    symbolAffix: "post",
+    symbolSpace: false,
+  },
   celsius: {
     singular: "Celsius",
     plural: "Celsius",
@@ -243,6 +282,13 @@ export default {
     plural: "Miles",
     symbol: "mi",
     type: "distance",
+    symbolAffix: "post",
+  },
+  mcg: {
+    singular: "Microgram",
+    plural: "Micrograms",
+    symbol: "mcg",
+    type: "weight",
     symbolAffix: "post",
   },
   mg: {
