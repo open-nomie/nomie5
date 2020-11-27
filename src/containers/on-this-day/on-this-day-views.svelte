@@ -38,7 +38,7 @@
   } else if ($Device.width < 700) {
     columns = 3;
   } else if ($Device.width > 900) {
-    columns = 5;
+    columns = 3;
   }
 
   $: if (logs && logs.length && lastLogs !== logs.map((l) => l._id).join(",")) {
