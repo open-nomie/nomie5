@@ -17,6 +17,11 @@ let NomieUOM = {
       items[obj.type] = items[obj.type] || [];
       items[obj.type].push(obj);
     });
+    Object.keys(items).forEach((key) => {
+      items[key] = items[key].sort((a, b) => {
+        return a.plural > b.plural ? 1 : -1;
+      });
+    });
     return items;
   },
   plural(key) {

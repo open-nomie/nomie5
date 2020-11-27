@@ -1,3 +1,5 @@
+// This is a stupidly confusing name...
+// Consider renaming to something about software-update or something
 import Logger from "../utils/log/log";
 import { writable } from "svelte/store";
 

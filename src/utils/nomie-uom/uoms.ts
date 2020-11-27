@@ -7,6 +7,12 @@ export default {
     symbol: "count",
     type: "general",
   },
+  steps: {
+    singular: "Step",
+    plural: "Steps",
+    symbol: "steps",
+    type: "general",
+  },
   reps: {
     singular: "Rep",
     plural: "Reps",
@@ -30,6 +36,18 @@ export default {
     singular: "Tab",
     plural: "Tabs",
     symbol: "tbs",
+    type: "health",
+  },
+  calorie: {
+    singular: "Calorie",
+    plural: "Calories",
+    symbol: "cal",
+    type: "health",
+  },
+  kcal: {
+    singular: "Kilocalorie",
+    plural: "Kilocalories",
+    symbol: "kcal",
     type: "health",
   },
   capsules: {
@@ -342,6 +360,12 @@ export default {
     symbolAffix: "post",
     symbolSpace: true,
   },
+  deciliter: {
+    singular: "Deciliter",
+    plural: "Deciliters",
+    symbol: "dL",
+    type: "volume",
+  },
   mdgl: {
     singular: "Blood Sugar",
     plural: "Blood Sugar",
@@ -395,4 +419,16 @@ export default {
     symbolAffix: "post",
     symbolSpace: false,
   },
+  // bees: {
+  //   singular: "Bee",
+  //   plural: "Bees",
+  //   symbol: "bz",
+  //   type: "random",
+  // },
+  // twinkies: {
+  //   singular: "Twinkie",
+  //   plural: "Twinkies",
+  //   symbol: "twnk",
+  //   type: "random",
+  // },
 };

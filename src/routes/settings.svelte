@@ -248,7 +248,7 @@ Note: Your data will not automatically move over. You'll first need to export it
       </div>
     </div>
     <div class="n-toolbar px-2 pb-1 container">
-      <NButtonGroup>
+      <NButtonGroup className="mx-auto" style="max-width:400px;">
         <Button
           className={view == 'features' ? 'active' : ''}
           on:click={() => {
