@@ -45,6 +45,7 @@
   import type { t } from "i18next";
   import List from "../components/list/list.svelte";
   import Divider from "../components/divider/divider.svelte";
+  import Captured from "../containers/api/captured.svelte";
 
   let NAPI = new NomieAPICli({ domain: "nomieapi.com/.netlify/functions" });
 
@@ -196,12 +197,6 @@
     },
   };
 
-  function toLog(apiLog): NLog {
-    let log: NLog = new NLog(apiLog);
-    log.end = dayjs(apiLog.date).valueOf();
-    return log;
-  }
-
   onMount(() => {
     methods.init();
   });
@@ -234,6 +229,8 @@
       <div class="n-row px-3 container">
         {#if state.ready && state.registered}
           <NButtonGroup
+            style="max-width:400px"
+            className="mx-auto"
             buttons={[{ label: 'Settings', active: state.view == 'settings', click() {
                   methods.setView('settings');
                 } }, { label: `Captured (${state.logs.length})`, active: state.view == 'captured', click() {
@@ -280,7 +277,8 @@
         </div>
       </div>
     {:else if state.view === 'captured'}
-      <div class="n-list">
+      <Captured logs="state.logs" />
+      <!-- <div class="n-list">
         {#each state.logs as apiLog, index}
           {#if state.hidden.indexOf(apiLog.id) === -1}
             <NLogItem hideDelete log={toLog(apiLog)} />
@@ -317,7 +315,7 @@
       {/if}
       {#if !state.logs.length}
         <Empty title={Lang.t('nomie-api.no-recent-logs-capture', 'No Recent Logs Captured')} emoji="🧐" />
-      {/if}
+      {/if} -->
     {:else}
       <!-- We're In the Settings Tab
         -->
