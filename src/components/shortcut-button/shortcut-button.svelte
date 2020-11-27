@@ -325,15 +325,15 @@
     {/if}
   </div>
   <slot />
-  <div class="bottom text-left" style="padding-bottom:6px;">
+  <div class="text-left bottom" style="padding-bottom:6px;">
     {#if title}
       <div class="title">{title}</div>
     {/if}
     {#if value && !hideValue}
-      <div class="value truncate">{value}</div>
+      <div class="truncate value">{value}</div>
     {/if}
     {#if subtitle}
-      <div class="subtitle truncate" style="opacity:0.6;">{subtitle}</div>
+      <div class="truncate subtitle" style="opacity:0.6;">{subtitle}</div>
     {/if}
     <slot name="subtitle" />
   </div>

@@ -12,7 +12,7 @@
 
   export let tracker: ITracker;
 
-  let active = [];
+  export let active = [];
   let activeValue;
 
   function toggle(pick) {

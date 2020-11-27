@@ -2,11 +2,6 @@
   import { onMount } from "svelte";
 
   import NItem from "../list-item/list-item.svelte";
-  import NText from "../text/text.svelte";
-  import NInput from "../input/input.svelte";
-  import NIcon from "../icon/icon.svelte";
-  import NSpinner from "../spinner/spinner.svelte";
-  import NSortableList from "../sortable-list/sortable-list.svelte";
 
   import { createEventDispatcher } from "svelte";
   import Input from "../input/input.svelte";
@@ -31,6 +26,8 @@
 
   export let canSelect: boolean = true;
 
+  let selected = [];
+
   let ready = false;
   let textList;
   let hasChanges = false;
@@ -52,6 +49,8 @@
   }
 
   function fireSelectChange(evt) {
+    // console.log("Fire selected", evt.detail);
+    selected = evt.detail.split(" ");
     dispatch("change", evt.detail);
   }
 
@@ -102,7 +101,7 @@
           on:change={textListChanged}
           inputStyle="height:40vh; font-size:0.8em; line-height:150%" />
 
-        <div class="n-row px-2 py-4 filler">
+        <div class="px-2 py-4 n-row filler">
           {#if canSelect && showSaveEditButton !== false}
             <Button
               size="xs"
@@ -122,11 +121,11 @@
     </div>
   {:else if mode === 'select'}
     <div class="n-picker-list select">
-      <PickerSelect {tracker} on:change={fireSelectChange}>
-        <div slot="bottom" class="n-row filler pt-2 pb-2 px-2 mt-2">
-          <Button size="xs" className="text-primary-bright" block color="transparent" on:click={toggleEditMode}>
-            <Icon name="edit" className="mr-2 fill-primary-bright" size={'16'} />
-            Edit Pick List
+      <PickerSelect {tracker} active={selected} on:change={fireSelectChange}>
+        <div slot="bottom" class="items-center justify-center p-2 pb-3 mt-2 filler">
+          <Button size="xs" color="light" on:click={toggleEditMode}>
+            <Icon name="edit" className="mr-2" size={'16'} />
+            {Lang.t('general.edit-pick-list', 'Edit Pick List')}
           </Button>
         </div>
       </PickerSelect>
