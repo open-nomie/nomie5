@@ -102,12 +102,12 @@
           style="min-height:40px;"
           compact
           clickable
-          className="px-3 compact {active.indexOf(pick) > -1 ? 'bg-solid-1' : ''}"
+          className="pl-3 pr-2 compact {active.indexOf(pick) > -1 ? 'bg-solid-1' : ''}"
           on:click={() => {
             toggle(pick);
           }}>
           <LabelMeta str={pick} titleClass={active.indexOf(pick) > -1 ? 'text-primary-bright' : 'text-inverse'} />
-          <div slot="right" class="flex items-center mr-2">
+          <div slot="right" class="flex items-center ml-2">
             {#if active.indexOf(pick) > -1}
               <NIcon name="checkmarkOutline" className="fill-primary-bright" size="24" />
             {/if}
