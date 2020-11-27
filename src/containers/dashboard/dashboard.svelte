@@ -52,6 +52,7 @@
   import Toolbar from "../../components/toolbar/toolbar.svelte";
   import { SearchStore } from "../../store/search-store";
   import Empty from "../empty/empty.svelte";
+  import LedgerTools from "../../store/ledger/ledger-tools";
   // import { getDashboardStartEndDates } from "./dashboard-helpers";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
@@ -389,6 +390,13 @@
         people = pple.people;
       }
     });
+
+    LedgerStore.hook("onLogSaved", () => {
+      if (!editMode) {
+        initDashboard();
+      }
+    });
+
     unsubDashboard = DashboardStore.subscribe((dbStore) => {
       if (dbStore.dashboards && trackers && people) {
         dashboards = dbStore.dashboards;
@@ -507,13 +515,13 @@
   {#if activeDashboard && !loading}
     <div class="container h-100">
       {#if editMode}
-        <div class="n-toolbar n-row px-2 mt-2 mb-2">
+        <div class="px-2 mt-2 mb-2 n-toolbar n-row">
           <Input type="text" placeholder="Dashboard Label" bind:value={activeDashboard.label} />
           <Button color="clear" text className="text-primary-bright" on:click={done}>
             {!editMode ? Lang.t('general.edit', 'Edit') : Lang.t('general.done', 'Done')}
           </Button>
         </div>
-        <hr class="divider center my-3" />
+        <hr class="my-3 divider center" />
       {/if}
       {#if !editMode && activeDashboard && activeDashboard.widgets}
         <div class="dashboard-wrapper" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
@@ -540,13 +548,13 @@
           {/if}
         </div>
         {#if activeDashboard && activeDashboard.widgets && activeDashboard.widgets.length}
-          <div class="board-actions filler mb-2">
+          <div class="mb-2 board-actions filler">
             <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={newWidget}>
               {Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
             </Button>
           </div>
         {/if}
-        <div class="mt-3 p-2" />
+        <div class="p-2 mt-3" />
       {:else if ready}
         <SortableList
           items={activeDashboard.widgets || []}
@@ -572,7 +580,7 @@
             {:else}
               <TrackerSmallBlock xs truncate novalue element={item.element} value={item.type} />
             {/if}
-            <div slot="right" class="text-sm text-faded-2 pr-2">
+            <div slot="right" class="pr-2 text-sm text-faded-2">
               {#if item.timeRange}{item.timeRange.getLabel()}{/if}
             </div>
             <div slot="right" class="menu-handle">
@@ -581,7 +589,7 @@
           </ListItem>
         </SortableList>
       {:else}
-        <div class="p-4 text-center mt-4">
+        <div class="p-4 mt-4 text-center">
           <Text size="sm" faded>{Lang.t('general.loading', 'Loading')}...</Text>
         </div>
       {/if}

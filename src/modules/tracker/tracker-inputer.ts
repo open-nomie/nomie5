@@ -35,11 +35,12 @@ export default class TrackerInputer {
   };
   lastAction: string;
   trackers: ITrackers;
+  allowSave: boolean;
   /**
    * Constructor
    * Pass in tracker and the tracker store $ object
    */
-  constructor(tracker, trackers: ITrackers) {
+  constructor(tracker, trackers: ITrackers, options: any = {}) {
     this.tracker = tracker;
     this.value = 0;
     this.listeners = {
@@ -47,6 +48,7 @@ export default class TrackerInputer {
       value: [],
     };
     this.trackers = trackers;
+    this.allowSave = options.allowSave || false;
   }
   // Listeners
   on(type: string, func: Function): void {
@@ -62,7 +64,7 @@ export default class TrackerInputer {
   }
 
   async getTrackerInputAsString(tracker: TrackerConfig, value?: number, allowSave: boolean = false): Promise<ITrackerInputResult> {
-    const response: ITrackerInputResult = await Interact.trackerInput(tracker, { value, allowSave });
+    const response: ITrackerInputResult = await Interact.trackerInput(tracker, { value, allowSave: allowSave || this.allowSave });
     if (response && response.tracker) {
       return {
         raw: `#${response.tracker.tag}(${response.value}) ${response.suffix || ""}`,
