@@ -155,7 +155,6 @@
         if (textareaEle) {
           // textareaEle.style.height = "42px";
           let height = (textareaEle || {}).scrollHeight || 42;
-          console.log({ height });
           if (textareaEle && $ActiveLogStore.note.length > 0) {
             textareaEle.style.height = (height > 300 ? 300 : height) + "px";
           } else {
@@ -320,13 +319,11 @@
   });
 
   ActiveLogStore.hook("onAddElement", (element) => {
-    console.log("on Add Element capture log");
     methods.input({});
   });
 
   // When a tag is added by a button or other service
   ActiveLogStore.hook("onAddTag", (res) => {
-    console.log("Tags Added", res);
     // add space to the end.
     setTimeout(() => {
       if (textarea) {

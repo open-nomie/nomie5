@@ -31,7 +31,6 @@
   }
 
   function toggle(pick) {
-    console.log("toggling pick", pick, active.indexOf(pick));
     if (active.indexOf(pick) > -1) {
       active = active.filter((p) => {
         return p !== pick;

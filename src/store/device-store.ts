@@ -99,7 +99,6 @@ const DeviceStoreInit = () => {
     },
     init() {
       const fireChange = () => {
-        console.log("Hello navigator", navigator.onLine);
         if (navigator.onLine) {
           document.body.classList.remove("is-offline");
           window.offline = false;
