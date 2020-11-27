@@ -7,6 +7,7 @@
   export let tracker;
 
   function fireChange(evt) {
+    console.log("Firing picker.svelte change", evt.detail);
     dispatch("change", evt.detail);
   }
 </script>

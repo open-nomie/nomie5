@@ -162,7 +162,7 @@
   bodyClass={`${tracker.type == 'picker' ? 'no-scroll' : ''}`}
   className="tracker-input">
   <div class="n-toolbar-grid n-row" slot="header">
-    <div class="left truncate pl-3" />
+    <div class="pl-3 truncate left" />
     <div class="main">
       <span class="animate up text-md {data.ready ? 'visible' : 'hidden'}">
         <span style="color:{tracker.color}" class="mr-1">{tracker.emoji}</span>
@@ -193,7 +193,7 @@
         <PickerInput
           {tracker}
           on:change={(evt) => {
-            data.suffix = evt.detail;
+            data.suffix = evt.detail.join(' ');
           }} />
       {:else if tracker.type === 'value' || tracker.type === 'tick'}
         <div id="keypad-holder">
@@ -246,7 +246,7 @@
       </div>
       <!-- end left toolbar -->
 
-      <div class="main px-2">
+      <div class="px-2 main">
 
         {#if (data.tracker.type == 'timer' && data.value && $Interact.trackerInput.allowSave !== false) || (data.tracker.type != 'timer' && $Interact.trackerInput.allowSave !== false)}
           <Button
