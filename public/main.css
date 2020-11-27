@@ -5122,6 +5122,10 @@ select {
   justify-items: center;
   justify-content: center; }
 
+.flex {
+  display: flex;
+  flex-direction: row; }
+
 .flex-grow {
   flex-grow: 1; }
 
