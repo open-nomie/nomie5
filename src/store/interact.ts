@@ -647,6 +647,7 @@ const interactInit = () => {
           {
             title: `${Lang.t("general.edit", "Edit")}...`,
             click: actions.editLog,
+            divider: true,
           },
           {
             title: `${Lang.t("general.on-this-day", "On this Day")}...`,

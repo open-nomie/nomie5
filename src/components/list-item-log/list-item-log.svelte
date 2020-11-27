@@ -76,15 +76,15 @@
     };
   }
 
-  function shouldShowValue(trackerElement) {
-    if (trackerElement.obj.type == "picker") {
-      return false;
-    } else if (trackerElement.obj.type == "tick") {
-      return trackerElement.value !== 1;
-    } else {
-      return true;
-    }
-  }
+  // function shouldShowValue(trackerElement) {
+  //   if (trackerElement.obj.type == "picker") {
+  //     return false;
+  //   } else if (trackerElement.obj.type == "tick") {
+  //     return trackerElement.value !== 1;
+  //   } else {
+  //     return true;
+  //   }
+  // }
 </script>
 
 <style lang="scss">
