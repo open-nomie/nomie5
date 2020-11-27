@@ -71,7 +71,15 @@
   {:else}
     <div class="p-1">
       {#each logs as note}
-        <ListItemLog log={note} />
+        <!-- Loop over the logs for this day -->
+        <ListItemLog
+          log={note}
+          on:textClick={(evt) => {
+            if (evt.detail.type == 'tracker' && !evt.detail.obj) {
+              evt.detail.obj = TrackerStore.getByTag(evt.detail.id);
+            }
+            Interact.elementOptions(evt.detail);
+          }} />
       {/each}
     </div>
   {/if}
