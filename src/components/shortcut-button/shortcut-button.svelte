@@ -1,7 +1,6 @@
 <script lang="ts">
-  import type { fill, tap } from "lodash";
   import { createEventDispatcher, onMount } from "svelte";
-  import { UserStore } from "../../store/user-store";
+
   import is from "../../utils/is/is";
   import Avatar from "../avatar/avatar.svelte";
 

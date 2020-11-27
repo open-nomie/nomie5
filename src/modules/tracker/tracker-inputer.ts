@@ -136,6 +136,7 @@ export default class TrackerInputer {
       let noteContent = input.raw;
       note.push(noteContent);
     }
+    // If this tracker has an Include - let's do it.
     if (this.tracker.include) {
       if (input && typeof input !== "string") {
         note.push(this.tracker.include.replace("*", `${input?.value || "0"}`));
