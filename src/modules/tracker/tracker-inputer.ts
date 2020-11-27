@@ -2,7 +2,7 @@ import { ActiveLogStore } from "../../store/active-log";
 import { LedgerStore } from "../../store/ledger";
 import { Interact } from "../../store/interact";
 import extractor from "../../utils/extract/extract";
-import Tracker from "./tracker";
+import Tracker, { ITracker } from "./tracker";
 import PromiseStep from "../../utils/promise-step/promise-step";
 import NomieLog from "../nomie-log/nomie-log";
 import { TrackerStore } from "../../store/tracker-store";
@@ -120,6 +120,7 @@ export default class TrackerInputer {
    */
   async getNoteString() {
     let note = [];
+    let input: string | ITrackerInputResult;
     // Ticks - check for default
     if (this.tracker.type === "tick") {
       let content = `#${this.tracker.tag}`;
@@ -128,12 +129,17 @@ export default class TrackerInputer {
       }
       note.push(content);
     } else if (this.tracker.type === "note") {
-      let input: string = await this.getNoteTrackerInputAsString(this.tracker);
+      input = await this.getNoteTrackerInputAsString(this.tracker);
       note.push(input);
     } else {
-      let input: ITrackerInputResult = await this.getTrackerInputAsString(this.tracker);
+      input = await this.getTrackerInputAsString(this.tracker);
       let noteContent = input.raw;
       note.push(noteContent);
+    }
+    if (this.tracker.include) {
+      if (input && typeof input !== "string") {
+        note.push(this.tracker.include.replace("*", `${input?.value || "0"}`));
+      }
     }
     return note.join(" ");
   }
