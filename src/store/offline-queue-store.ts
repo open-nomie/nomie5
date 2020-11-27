@@ -7,6 +7,7 @@ import NLog from "../modules/nomie-log/nomie-log";
 import { LedgerStore } from "./ledger";
 import { Interact } from "./interact";
 import tick from "../utils/tick/tick";
+import { Lang } from "./lang";
 
 /**
  * Offline Queue Store
@@ -34,9 +35,13 @@ const InitOfflineQueueStore = () => {
     async init(): Promise<void> {
       // Get the offline queu from the local engine
       let fromStore = (await NStorage.engines.local.get(`${config.data_root}/offline-queue`)) || { logs: [], lastSync: undefined };
-      fromStore.logs = (fromStore.logs || []).map((log) => {
-        return new NLog(log);
-      });
+      fromStore.logs = (fromStore.logs || [])
+        .map((log) => {
+          return new NLog(log);
+        })
+        .sort((a, b) => {
+          return a.end < b.end ? 1 : -1;
+        });
       methods.state(fromStore);
     },
     // Sync Items in the Offline Queue
@@ -86,6 +91,40 @@ const InitOfflineQueueStore = () => {
     },
   };
 
+  async function removeLog(log: NLog) {
+    try {
+      console.log("Why no work?", log);
+
+      // Interact.confirm(Lang.t("board.delete-log-from-offline-queue", "Delete this log from offline queue?"), `This cannot be undone`);
+      // const confirmed = await Interact.confirm(
+      //   Lang.t("board.delete-log-from-offline-queue", "Delete this log from offline queue?"),
+      //   `This cannot be undone`
+      // );
+      const confirmed = confirm(Lang.t("board.delete-log-from-offline-queue", "Delete this log from offline queue?"));
+      if (confirmed) {
+        const _state = methods.state();
+        _state.logs = _state.logs.filter((loopLog: NLog) => {
+          return loopLog !== log;
+        });
+        await saveState(_state);
+      }
+      return true;
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function clear() {
+    const confirmed = await Interact.confirm(Lang.t("board.empty-offline-title", "Delete logs in offline queue?"), `This cannot be undone`);
+    if (confirmed) {
+      console.log("delete them");
+      await saveState({ status: "idle", logs: [] });
+      Interact.toast("Offline Queue cleared");
+    }
+
+    return true;
+  }
+
   function saveState(state: IOfflineQueueState) {
     update((s: any) => {
       s = { ...s, ...state };
@@ -99,6 +138,8 @@ const InitOfflineQueueStore = () => {
     subscribe,
     set,
     ...methods,
+    clear,
+    removeLog,
   };
 };
 

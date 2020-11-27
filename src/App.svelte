@@ -169,13 +169,16 @@
     // Run any commands if needed
     setTimeout(() => {
       // Pull upp the offline queue
-      OfflineQueue.init();
+
       // If there are any URL caommands, it will run here.
       CommanderStore.run();
       // If they have the API - it will load here
       NomieAPI.load();
     }, 500);
   });
+
+  // Initialize Offline Queue regardless if we're offline
+  OfflineQueue.init();
 
   onMount(() => {
     UserStore.initialize();

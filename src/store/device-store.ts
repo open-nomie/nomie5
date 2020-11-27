@@ -59,7 +59,7 @@ const DeviceStoreInit = () => {
     height: window.innerHeight,
     platform: navigator.platform,
     device: device,
-    offline: false,
+    offline: !navigator.onLine,
     pwa: window.matchMedia("(display-mode: standalone)").matches,
     info: DeviceInfo,
     size: getDeviceSize(window.innerWidth),
@@ -99,6 +99,7 @@ const DeviceStoreInit = () => {
     },
     init() {
       const fireChange = () => {
+        console.log("Hello navigator", navigator.onLine);
         if (navigator.onLine) {
           document.body.classList.remove("is-offline");
           window.offline = false;

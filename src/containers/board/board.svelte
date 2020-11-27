@@ -566,7 +566,7 @@
   </header>
   <!-- end header-->
   <div slot="content" class="container board-container">
-
+    <OfflineQueue />
     {#if user}
       {#if !isReady.done}
         <div class="empty-notice">
@@ -591,7 +591,7 @@
             </div>
           </div>
         {/if}
-        <OfflineQueue />
+
         {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
           <div class="container">
             <Card>

@@ -2,6 +2,16 @@
   justify-content: stretch;
 }
 
+.items-center {
+  display: flex;
+  align-items: center;
+}
+.justify-center {
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+}
+
 .flex-grow {
   flex-grow: 1;
 }

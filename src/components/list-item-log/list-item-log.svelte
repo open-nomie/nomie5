@@ -134,6 +134,8 @@
         <div class="score-mark {displayLog.score > 0 ? 'positive' : 'negative'}">{getEmojiFromScore(displayLog.score, true)}</div>
       {/if}
 
+      <slot name="more" />
+
       {#if hideMore !== true}
         <Button
           shape="circle"
@@ -163,6 +165,8 @@
         {trackers}
         className={logMeta.trackers.length ? '' : 'pb-2'} />
     {/if}
+
+    <slot />
 
     {#if logMeta.trackers.length || logMeta.people.length}
       <div class="tracker-grid n-row">
