@@ -75,12 +75,14 @@ interface StatsInteractConfig {
   activeTag: string | undefined;
   date: Dayjs | undefined;
   terms: Array<string>;
+  focused: Dayjs | undefined;
 }
 
 const stateStats: StatsInteractConfig = {
   activeTag: null,
   date: null,
   terms: [],
+  focused: null,
 };
 
 const interactInit = () => {
@@ -354,12 +356,19 @@ const interactInit = () => {
         return d;
       });
     },
+    focusDate(date: Dayjs | undefined) {
+      update((state) => {
+        state.stats.focused = date;
+        return state;
+      });
+    },
     openStats(term, date?: Dayjs) {
       update((d) => {
         d.stats.terms = d.stats.terms || [];
         // if the term isn't the last one - then allow it.
         // otherwise don't - this will allow them to add it later in the stack
         d.stats.date = date;
+        d.stats.focused = null;
         if (d.stats.terms[d.stats.terms.length] !== term) {
           d.stats.terms.push(term);
         }
