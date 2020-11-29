@@ -1,6 +1,5 @@
 <script>
   import Icon from "../icon/icon.svelte";
-  import { longpress } from "../../actions/longpress";
   // svelte
   import { createEventDispatcher } from "svelte";
 
@@ -127,8 +126,7 @@
 
 <div
   {id}
-  use:longpress={1000}
-  on:longpress={() => {
+  on:longtap={() => {
     dispatch('longpress');
     clickSkip = true;
   }}

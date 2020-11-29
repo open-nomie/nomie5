@@ -137,6 +137,10 @@ export default class TrackerConfig {
     return nid(this.tag);
   }
 
+  /**
+   * Generate a Note Chunk for this Tracker
+   * @param value
+   */
   toNoteString(value: number | undefined = undefined) {
     const parts = [];
     parts.push(`#${this.tag}`);
@@ -148,6 +152,7 @@ export default class TrackerConfig {
     } else if (this.default) {
       parts.push(`(${this.default})`);
       if (this.include && this.include.length) {
+        parts.push(" ");
         parts.push(`${this.getIncluded(this.default)}`);
       }
     }
@@ -170,14 +175,6 @@ export default class TrackerConfig {
       raw: `#${this.tag}`,
       obj: this,
     });
-
-    // this.id = starter.id; // brandon of @brandon, meet of #meet, home of +home
-    // this.type = starter.type; // tracker, person, context
-    // this.raw = starter.raw; // the raw string
-    // this.value = starter.value; // any value passed or 1
-    // this.prefix = starter.prefix; // @ # or +
-    // this.remainder = starter.remainder; // holder of any characters after this
-    // this.obj = starter.obj; // holder of related things
   }
 
   // Make the tag look good if no label is provided
