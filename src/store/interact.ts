@@ -75,7 +75,11 @@ interface StatsInteractConfig {
   activeTag: string | undefined;
   date: Dayjs | undefined;
   terms: Array<string>;
-  focused: Dayjs | undefined;
+  focused:
+    | undefined
+    | {
+        date: Dayjs | undefined;
+      };
 }
 
 const stateStats: StatsInteractConfig = {
@@ -356,9 +360,9 @@ const interactInit = () => {
         return d;
       });
     },
-    focusDate(date: Dayjs | undefined) {
+    focusDate(selectedPoint: undefined | { date: Dayjs | undefined }) {
       update((state) => {
-        state.stats.focused = date;
+        state.stats.focused = selectedPoint;
         return state;
       });
     },

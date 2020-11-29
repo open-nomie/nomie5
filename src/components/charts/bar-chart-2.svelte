@@ -21,13 +21,14 @@
   export let title = "";
   export let color = "#4d84a1";
   export let points;
-  export let activeIndex = undefined;
+  export let activeIndex = 2;
   export let xFormat = (x) => x;
   export let yFormat = (y) => y;
   export let hideYTicks: boolean = false;
   export let hideXTicks: boolean = false;
   export let type: string = "bar";
   export let beginAtZero: boolean = true;
+  export let hideTooltip: boolean = false;
 
   // Generate a random ID for this Component
   const chartId = `chart-${nid()}`;
@@ -42,6 +43,14 @@
   $: if (points && theChart && points.map((p) => p.y).join() !== lastPoints) {
     lastPoints = points.map((p) => p.y).join();
     loadData();
+  }
+
+  $: if ($Interact.stats.focused && points) {
+    selected = points.find((p) => {
+      return p.date.format("YYYY-MM-DD") === $Interact.stats.focused.date.format("YYYY-MM-DD");
+    });
+  } else if (points && points.length) {
+    selected = undefined;
   }
 
   function loadData() {
@@ -76,6 +85,8 @@
         },
 
         tooltips: {
+          enabled: !hideTooltip,
+          mode: "point",
           callbacks: {
             label: function (tooltipItem, data) {
               return yFormat ? yFormat(tooltipItem.value) : tooltipItem.value;
@@ -88,6 +99,12 @@
         defaultFontSize: 10,
         legend: {
           display: false,
+        },
+        elements: {
+          line: {
+            backgroundColor: selectedPointRadius,
+            display: true,
+          },
         },
         maintainAspectRatio: false,
         title: {
@@ -134,6 +151,13 @@
       },
     };
 
+    function selectedPointRadius(context) {
+      console.log({ context, selected });
+      const index = context.dataIndex;
+      const value = context.dataset.data[index];
+      return "#000";
+    }
+
     theChart = new Chart(ctx, chartConfig);
     _canvas.addEventListener("click", (evt) => {
       let passed = theChart.getElementsAtEvent(evt);
@@ -162,7 +186,7 @@
     align-items: center;
     position: absolute;
     right: 16px;
-    background-color: #000;
+    background-color: var(--chart-color);
     color: #fff;
     font-size: 12px;
     line-height: 20px;
@@ -186,12 +210,13 @@
   }
 </style>
 
-<div class={`wrapper active-${activeIndex}`}>
+<div class="wrapper active-{activeIndex}" style="--chart-color:{color}">
   {#if selected && selected.unit == 'day'}
     <div class="selected">
       <button
         on:click={() => {
           selected = undefined;
+          Interact.focusDate(undefined);
         }}>
         <NIcon name="close" className="fill-white" size="12" />
       </button>
@@ -199,7 +224,8 @@
         on:click={() => {
           Interact.onThisDay(selected.date.toDate());
         }}>
-        {selected.x}
+        <span class="mr-1 text-sm date faded">{xFormat(selected.x)}</span>
+        <span class="d-value">{yFormat(selected.y)}</span>
         <NIcon name="chevronRight" className="fill-white" size="12" />
       </button>
     </div>
