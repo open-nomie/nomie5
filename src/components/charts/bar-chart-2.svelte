@@ -100,12 +100,6 @@
         legend: {
           display: false,
         },
-        elements: {
-          line: {
-            backgroundColor: selectedPointRadius,
-            display: true,
-          },
-        },
         maintainAspectRatio: false,
         title: {
           display: title,
@@ -150,13 +144,6 @@
         },
       },
     };
-
-    function selectedPointRadius(context) {
-      console.log({ context, selected });
-      const index = context.dataIndex;
-      const value = context.dataset.data[index];
-      return "#000";
-    }
 
     theChart = new Chart(ctx, chartConfig);
     _canvas.addEventListener("click", (evt) => {
