@@ -93,13 +93,6 @@ const InitOfflineQueueStore = () => {
 
   async function removeLog(log: NLog) {
     try {
-      console.log("Why no work?", log);
-
-      // Interact.confirm(Lang.t("board.delete-log-from-offline-queue", "Delete this log from offline queue?"), `This cannot be undone`);
-      // const confirmed = await Interact.confirm(
-      //   Lang.t("board.delete-log-from-offline-queue", "Delete this log from offline queue?"),
-      //   `This cannot be undone`
-      // );
       const confirmed = confirm(Lang.t("board.delete-log-from-offline-queue", "Delete this log from offline queue?"));
       if (confirmed) {
         const _state = methods.state();
@@ -117,7 +110,6 @@ const InitOfflineQueueStore = () => {
   async function clear() {
     const confirmed = await Interact.confirm(Lang.t("board.empty-offline-title", "Delete logs in offline queue?"), `This cannot be undone`);
     if (confirmed) {
-      console.log("delete them");
       await saveState({ status: "idle", logs: [] });
       Interact.toast("Offline Queue cleared");
     }
