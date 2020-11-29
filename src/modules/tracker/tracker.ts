@@ -137,6 +137,23 @@ export default class TrackerConfig {
     return nid(this.tag);
   }
 
+  toNoteString(value: number | undefined = undefined) {
+    const parts = [];
+    parts.push(`#${this.tag}`);
+    if (value !== undefined) {
+      parts.push(`(${value})`);
+      if (this.include && this.include.length) {
+        parts.push(`${this.getIncluded(value)}`);
+      }
+    } else if (this.default) {
+      parts.push(`(${this.default})`);
+      if (this.include && this.include.length) {
+        parts.push(`${this.getIncluded(this.default)}`);
+      }
+    }
+    return parts.join("").trim();
+  }
+
   getIncluded(value) {
     let includedStr = (this.include || "").replace(/\*/, value || "");
     return includedStr.trim();

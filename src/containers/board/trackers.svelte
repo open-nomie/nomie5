@@ -22,6 +22,8 @@
   import Avatar from "../../components/avatar/avatar.svelte";
   import is from "../../utils/is/is";
   import LedgerTools from "../../store/ledger/ledger-tools";
+  import { ActiveLogStore } from "../../store/active-log";
+  import { TrackerStore } from "../../store/tracker-store";
 
   const dispatch = createEventDispatcher();
 
@@ -82,6 +84,33 @@
       return value;
     }
   }
+
+  /**
+   * Long Press a Tracker
+   * If it's a timer, it will toggle the running state.
+   * otherwise, it will auto save a log using the trackers default value
+   * @param tracker
+   */
+  async function longPress(tracker) {
+    let note: string;
+    if (tracker.type == "timer") {
+      if (tracker.started) {
+        const age = (new Date().getTime() - tracker.started) / 1000;
+        note = tracker.toNoteString(age);
+        TrackerStore.stopTimer(tracker);
+      } else {
+        TrackerStore.startTimer(tracker);
+      }
+    } else {
+      note = tracker.toNoteString();
+    }
+
+    if (note) {
+      ActiveLogStore.addElement(note);
+      await LedgerStore.saveLog(ActiveLogStore.asLog());
+      await ActiveLogStore.clear();
+    }
+  }
 </script>
 
 <style lang="scss">
@@ -113,13 +142,16 @@
       style="--tracker-color:{tracker.color}"
       className="tracker-board-button tracker-{tracker.tag} py-2 tracker-list-item flex-shrink-off {is.truthy(getTodaysValue(tracker)) ? 'has-value' : 'no-value'}"
       compact={$UserStore.localSettings.compactButtons}
+      on:longtap={(evt) => {
+        longPress(tracker);
+      }}
       on:click={(evt) => {
         if (['svg'].indexOf(evt.detail.target.tagName) == -1) {
           dispatch('tap', tracker);
         }
       }}>
       <div class="highlight" style="background-color:{tracker.color}" />
-      <div slot="left" class="n-row justify-content-center pr-0">
+      <div slot="left" class="pr-0 n-row justify-content-center">
         <Avatar emoji={tracker.emoji} label={tracker.label} size={$UserStore.localSettings.compactButtons ? 30 : 40} />
       </div>
       <div>
@@ -162,6 +194,7 @@
     </ListItem>
   {/if}
 {:else if view == 'detail'}
+  <!-- Short Cut Button Style -->
   <div class="trackers n-grid">
     {#each trackers as tracker}
       <ShortcutButton
@@ -174,13 +207,13 @@
         value={getTodaysValue(tracker)}
         oneTap={tracker.one_tap}
         color={tracker.color}
+        on:longpress={() => {
+          longPress(tracker);
+        }}
         className="tracker-{tracker.tag} tracker-board-button"
         {hideMore}
         on:click={() => {
           dispatch('tap', tracker);
-        }}
-        on:longpress={() => {
-          dispatch('more', tracker);
         }}
         on:more={() => {
           dispatch('more', tracker);
@@ -205,6 +238,7 @@
     {/if}
   </div>
 {:else if view == 'button'}
+  <!-- Class Button Style -->
   <div class="trackers n-grid">
     {#each trackers as tracker}
       <TrackerButton
@@ -214,13 +248,13 @@
         value={getTodaysValue(tracker)}
         hoursUsed={getHoursUsed(tracker)}
         positivity={getPositivity(tracker)}
+        on:longpress={(evt) => {
+          longPress(tracker);
+        }}
         on:click={() => {
           dispatch('tap', tracker);
         }}
         on:more={() => {
-          dispatch('more', tracker);
-        }}
-        on:longpress={() => {
           dispatch('more', tracker);
         }} />
     {/each}

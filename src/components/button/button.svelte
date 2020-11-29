@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import Ripple from "./ripple.svelte";
+  import { longpress } from "../../actions/longpress";
 
   const dispatch = createEventDispatcher();
   export let id = undefined;
@@ -47,6 +48,12 @@
   {disabled}
   class={`nbtn ${block ? 'nbtn-block' : ''} ${icon ? 'nbtn-icon' : ''} nbtn-${type} nbtn-${shape} nbtn-${color} nbtn-${size} ${inline ? 'nbtn-inline' : ''} ${text ? 'nbtn-text' : ''} ${className}`}
   {title}
+  use:longpress={1000}
+  on:longpress={(e) => {
+    dispatch('longpress', e);
+    e.preventDefault();
+    e.stopPropagation();
+  }}
   aria-label={ariaLabel || title}
   on:click|preventDefault|stopPropagation={(evt) => {
     hit = [evt.offsetX, evt.offsetY];

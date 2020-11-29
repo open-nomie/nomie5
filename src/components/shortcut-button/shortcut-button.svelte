@@ -26,6 +26,8 @@
   export let oneTap: boolean = false;
   export let hoursUsed = [];
 
+  let clickSkip;
+
   const dispatch = createEventDispatcher();
 
   async function more() {
@@ -137,17 +139,6 @@
       margin-top: -2px;
       margin-left: -2px;
     }
-
-    // .emoji {
-    //   font-size: 2em;
-    //   line-height: 100%;
-    //   // text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.23);
-    //   letter-spacing: -6px;
-    //   color: var(--color-inverse);
-    //   white-space: nowrap;
-    //   width: 100%;
-    //   text-align: left;
-    // }
 
     &:before {
       transition: all 0.4s ease-in-out;
@@ -301,9 +292,13 @@
   style={`--tracker-color:${color}; background-color:${value ? color || 'var(--color-primary)' : 'var(--color-solid)'}; ${style}`}
   on:longpress={() => {
     dispatch('longpress');
+    clickSkip = true;
   }}
   on:click={() => {
-    dispatch('click');
+    if (!clickSkip) {
+      dispatch('click');
+    }
+    clickSkip = undefined;
   }}>
   <div class="highlight {oneTap ? 'one-tap' : ''}">
     <TimeBalls color="#FFF" hours={hoursUsed} />
