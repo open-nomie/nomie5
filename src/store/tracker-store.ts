@@ -436,11 +436,25 @@ const trackerStoreInit = () => {
                 await methods.saveTracker(tracker);
                 Interact.toast(`${tracker.emoji} ${tracker.label} added`);
               }
+            } else if (fileData.type === "bundle" && fileData.trackers) {
+              let trackers = fileData.trackers.map((t) => {
+                return new Tracker(t);
+              });
+
+              let confirmed = await Interact.confirm(
+                Lang.t("general.install-bundle", `Install ${fileData.name || "Bundle"}?`),
+                `${trackers.length} trackers: ${trackers.map((t) => t.label).join(", ")}`
+              );
+              if (confirmed) {
+                await methods.addTrackers(trackers);
+              }
             } else {
               Interact.alert("Error", "This isn't a valid tracker");
             }
           } catch (e) {
-            Interact.alert("Error", e.message);
+            let title = "General Error";
+            let message = e.message;
+            Interact.alert(title, message);
           }
         };
         // Read the file
@@ -456,6 +470,41 @@ const trackerStoreInit = () => {
       };
       downloader.text(`${snakeCase(tracker.label).toLowerCase()}.nomie.tkr`, JSON.stringify(pkg));
     },
+    async addTrackers(trackers: Array<Tracker>) {
+      const board = BoardStore.data();
+      const existing = [];
+      let adding = {};
+      let _state;
+
+      update((state) => {
+        trackers.forEach((tracker: Tracker) => {
+          if (!state.trackers.hasOwnProperty(tracker.tag)) {
+            adding[tracker.tag] = tracker;
+          } else {
+            existing.push(tracker.tag);
+          }
+        });
+        _state = state;
+        return state;
+      });
+
+      try {
+        await methods.save(adding);
+        if (existing.length) {
+          Interact.alert(`${existing.length} tracker(s) not added`, `${existing.map((t) => t.tag).join(", ")} already installed`);
+        }
+        if (board.id !== "all") {
+          BoardStore.addTrackersToActiveBoard(
+            Object.keys(adding).map((tag) => {
+              return adding[tag];
+            })
+          );
+        }
+        Interact.toast(`${Object.keys(adding).join(", ")} saved`);
+      } catch (e) {
+        Interact.error(e.message);
+      }
+    },
     async saveTracker(tracker) {
       let response;
       let board = BoardStore.data();
@@ -466,7 +515,6 @@ const trackerStoreInit = () => {
         return state;
       });
       response = await methods.save(trackers);
-
       if (board.id !== "all") {
         BoardStore.addTrackersToActiveBoard([tracker]);
       }
