@@ -95,7 +95,7 @@ export function processTrackers(trackersUsed, allTrackers = {}): Array<TrackerPr
       };
     })
     .sort((a, b) => {
-      return a.tracker.label < b.tracker.label ? 1 : -1;
+      return a.tracker.label > b.tracker.label ? 1 : -1;
     });
 
   return trackers;

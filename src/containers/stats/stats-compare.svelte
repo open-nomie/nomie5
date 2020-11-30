@@ -18,6 +18,7 @@
   import Spinner from "../../components/spinner/spinner.svelte";
   import Text from "../../components/text/text.svelte";
   import Toast from "../../components/toast/toast.svelte";
+  import type { findIndex } from "lodash";
 
   const dispatch = createEventDispatcher();
 
@@ -352,6 +353,7 @@
             height={120}
             title={`${compare.getSearchTerm()}`}
             color={compare.getTracker().color}
+            activeIndex={state.selected.index}
             labels={compare.stats.chart.values.map((point) => point.x)}
             points={compare.stats.chart.values}
             on:swipeLeft={() => {
@@ -367,9 +369,9 @@
               Interact.openStats(compare.getSearchTerm());
             }}
             on:tap={(event) => {
+              Interact.focusDate(event.detail);
               dispatch('dateSelected', event.detail);
             }}
-            activeIndex={selected.index}
             yFormat={(y) => {
               return compare.getTracker().displayValue(y);
             }} />

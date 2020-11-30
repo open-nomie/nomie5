@@ -8,6 +8,7 @@
   import {
     ArrowCircleUp,
     ArrowLeft,
+    Exclamation,
     ArrowUp,
     ArrowsExpand,
     Calendar,
@@ -74,6 +75,7 @@
 
   const icons = {
     add: Plus,
+    alert: Exclamation,
     bell: Bell,
     lock: LockClosed,
     annotation: Annotation,

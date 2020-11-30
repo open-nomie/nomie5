@@ -1,7 +1,7 @@
 <script>
   import { tokenize } from "nomie-utils";
 
-  export let str;
+  export let str = undefined;
   export let titleClass = "";
 
   let tokenized;
@@ -13,20 +13,20 @@
     lastStr = str;
     tokenized = tokenize(str);
     label = tokenized
-      .filter(t => {
+      .filter((t) => {
         return t.type == "generic";
       })
-      .map(t => {
+      .map((t) => {
         return t.raw;
       })
       .join(" ")
       .trim();
 
     meta = tokenized
-      .filter(t => {
+      .filter((t) => {
         return t.type !== "generic";
       })
-      .map(t => {
+      .map((t) => {
         return t.raw;
       })
       .join(" ")
@@ -34,13 +34,21 @@
   }
 </script>
 
-<div class="n-label-meta">
+<style>
+  .label {
+    font-weight: bold;
+  }
+</style>
+
+<div class="n-label-meta n-row">
   {#if label.length}
-    <div class="title {titleClass}">{label}</div>
+    <div class="label mr-2 {titleClass}">{label}</div>
+    <div class="filler" />
   {/if}
   {#if meta.length && label.length}
-    <div class="note">{meta}</div>
+    <div class="title {titleClass}">{meta}</div>
   {:else if meta.length}
     <div class="title {titleClass}">{meta}</div>
   {/if}
+
 </div>

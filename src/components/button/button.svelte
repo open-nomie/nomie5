@@ -47,6 +47,11 @@
   {disabled}
   class={`nbtn ${block ? 'nbtn-block' : ''} ${icon ? 'nbtn-icon' : ''} nbtn-${type} nbtn-${shape} nbtn-${color} nbtn-${size} ${inline ? 'nbtn-inline' : ''} ${text ? 'nbtn-text' : ''} ${className}`}
   {title}
+  on:longtap={(e) => {
+    dispatch('longpress', e);
+    e.preventDefault();
+    e.stopPropagation();
+  }}
   aria-label={ariaLabel || title}
   on:click|preventDefault|stopPropagation={(evt) => {
     hit = [evt.offsetX, evt.offsetY];

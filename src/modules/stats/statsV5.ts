@@ -40,7 +40,7 @@ export const timeSpans: ITimeSpan = {
   d: { id: "d", format: "YYYY-MM-DD-HH", label: "D", title: "Day", displayUnit: "hour", unit: "day", streakUnit: "day" },
   w: { id: "w", format: "YYYY-MM-DD", label: "W", title: "Week", displayUnit: "day", unit: "week", streakUnit: "week" },
   m: { id: "m", format: "YYYY-MM-DD", label: "M", title: "Month", displayUnit: "day", unit: "month", streakUnit: "month" },
-  q: { id: "q", format: "YYYY-MM-w", label: "3M", title: "Quarter", displayUnit: "week", unit: "month", count: 3, streakUnit: "quarter" },
+  q: { id: "q", format: "YYYY-MM-DD", label: "3M", title: "Quarter", displayUnit: "day", unit: "month", count: 3, streakUnit: "quarter" },
   y: { id: "y", format: "YYYY-MM", label: "Y", title: "Year", displayUnit: "month", unit: "year", streakUnit: "year" },
 };
 
@@ -518,7 +518,12 @@ export default class StatsProcessor implements IStats {
       };
       // if it's a month mode
     } else if (mode == "m") {
-      let { labels, values } = this.getChartDataByType(timespan.displayUnit, timespan.format, "M/D", valueMapTotals);
+      let { labels, values } = this.getChartDataByType(
+        timespan.displayUnit,
+        timespan.format,
+        this.is24Hour ? "D/M" : "M/D",
+        valueMapTotals
+      );
       return {
         mode: mode,
         labels,
@@ -526,7 +531,12 @@ export default class StatsProcessor implements IStats {
       };
       // If it's a year mode
     } else if (mode == "q") {
-      let { labels, values } = this.getChartDataByType(timespan.displayUnit, timespan.format, "Ww", valueMapTotals);
+      let { labels, values } = this.getChartDataByType(
+        timespan.displayUnit,
+        timespan.format,
+        this.is24Hour ? "D/M" : "M/D",
+        valueMapTotals
+      );
       return {
         mode: mode,
         labels,

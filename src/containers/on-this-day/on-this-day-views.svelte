@@ -38,7 +38,7 @@
   } else if ($Device.width < 700) {
     columns = 3;
   } else if ($Device.width > 900) {
-    columns = 5;
+    columns = 3;
   }
 
   $: if (logs && logs.length && lastLogs !== logs.map((l) => l._id).join(",")) {
@@ -71,7 +71,15 @@
   {:else}
     <div class="p-1">
       {#each logs as note}
-        <ListItemLog log={note} />
+        <!-- Loop over the logs for this day -->
+        <ListItemLog
+          log={note}
+          on:textClick={(evt) => {
+            if (evt.detail.type == 'tracker' && !evt.detail.obj) {
+              evt.detail.obj = TrackerStore.getByTag(evt.detail.id);
+            }
+            Interact.elementOptions(evt.detail);
+          }} />
       {/each}
     </div>
   {/if}

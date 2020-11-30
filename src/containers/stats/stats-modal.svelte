@@ -502,7 +502,9 @@
       }
     }
   }
+
   async function _setSelected(selected) {
+    Interact.focusDate(selected);
     state.selected = selected;
   }
 
@@ -593,7 +595,7 @@
   <header slot="raw-header" class="box-shadow-float">
     {#if $Interact.stats.terms.length > 1}
       {#each $Interact.stats.terms as term}
-        <div class="mock-header mock-header">
+        <div class="mock-header">
           <span>{term}</span>
         </div>
       {/each}
@@ -608,14 +610,14 @@
         {:else}
           <Button icon class="pl-1" on:click={back}>
             <NIcon name="arrowBack" size="28" className="fill-primary-bright" />
-            <small class="text-sm text-inverse-2 ml-1 truncate" style="max-width:60px;">
+            <small class="ml-1 text-sm truncate text-inverse-2" style="max-width:60px;">
               {$Interact.stats.terms[$Interact.stats.terms.length - 2]}
             </small>
           </Button>
         {/if}
       </div>
 
-      <h1 class="title truncate" slot="main">{state.currentTerm}</h1>
+      <h1 class="truncate title" slot="main">{state.currentTerm}</h1>
 
       <div slot="right" style="min-width:100px" class="toolbar-buttons align-right">
         <Button icon on:click={onMoreTap}>
@@ -623,11 +625,11 @@
         </Button>
       </div>
     </NToolbarGrid>
-    <div class="n-row pb-2 px-2">
+    <div class="px-2 pb-2 n-row">
       <NButtonGroup size="sm" buttons={timeViewButtons} />
     </div>
 
-    <div class="n-toolbar n-row px-3 pt-2 pb-3">
+    <div class="px-3 pt-2 pb-3 n-toolbar n-row">
       <Text size="sm" bold className="filler" truncate>{state.range}</Text>
       <NextPrevCal on:next={loadNextDate} on:previous={loadPreviousDate} on:calendar={onCalendarTap} />
     </div>
@@ -641,7 +643,7 @@
     {/if}
 
     {#if state.stats && !state.loading}
-      <div class="main-chart px-2 pb-1">
+      <div class="px-2 pb-1 main-chart">
         <NBarChart
           height={140}
           color={state.currentColor}

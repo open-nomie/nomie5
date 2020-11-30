@@ -1,6 +1,6 @@
 export default [
-  "Tap a tracker button to record",
-  "Press and hold a tracker for additional options",
+  "Tap the tracker button to start a log",
+  "Press and hold a tracker to automatically save a log using the trackers default",
   "Want dashboards and people tracking? Enable them in the Settings",
   "Tap the ••• in the 'What's Up' field to change the location, date and score",
   "The History tab shows you everything you've done",

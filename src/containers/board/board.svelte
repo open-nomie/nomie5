@@ -643,7 +643,7 @@
 
         </main>
 
-        {#if (foundTrackers || boardTrackers || []).length && $UserStore.meta.hiddenFeatures}
+        {#if (foundTrackers || boardTrackers || []).length}
           <div class="board-actions mt-5 mb-3 n-row" style="min-width:100px;">
 
             <ButtonGroup className="mr-2 box-shadow-tight">

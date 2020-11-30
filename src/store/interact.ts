@@ -75,12 +75,18 @@ interface StatsInteractConfig {
   activeTag: string | undefined;
   date: Dayjs | undefined;
   terms: Array<string>;
+  focused:
+    | undefined
+    | {
+        date: Dayjs | undefined;
+      };
 }
 
 const stateStats: StatsInteractConfig = {
   activeTag: null,
   date: null,
   terms: [],
+  focused: null,
 };
 
 const interactInit = () => {
@@ -354,12 +360,19 @@ const interactInit = () => {
         return d;
       });
     },
+    focusDate(selectedPoint: undefined | { date: Dayjs | undefined }) {
+      update((state) => {
+        state.stats.focused = selectedPoint;
+        return state;
+      });
+    },
     openStats(term, date?: Dayjs) {
       update((d) => {
         d.stats.terms = d.stats.terms || [];
         // if the term isn't the last one - then allow it.
         // otherwise don't - this will allow them to add it later in the stack
         d.stats.date = date;
+        d.stats.focused = null;
         if (d.stats.terms[d.stats.terms.length] !== term) {
           d.stats.terms.push(term);
         }
@@ -647,6 +660,7 @@ const interactInit = () => {
           {
             title: `${Lang.t("general.edit", "Edit")}...`,
             click: actions.editLog,
+            divider: true,
           },
           {
             title: `${Lang.t("general.on-this-day", "On this Day")}...`,

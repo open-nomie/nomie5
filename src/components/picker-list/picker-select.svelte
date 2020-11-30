@@ -1,19 +1,34 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import NItem from "../list-item/list-item.svelte";
+  import ListItem from "../list-item/list-item.svelte";
   import NInput from "../input/input.svelte";
   import NIcon from "../icon/icon.svelte";
   import LabelMeta from "../label-meta/label-meta.svelte";
 
   import { TrackerStore } from "../../store/tracker-store";
   import type { ITracker } from "../../modules/tracker/tracker";
+  import SearchBar from "../search-bar/search-bar.svelte";
+  import Empty from "../../containers/empty/empty.svelte";
+  import Icon from "../icon/icon.svelte";
+  import { Lang } from "../../store/lang";
 
   const dispatch = createEventDispatcher();
 
   export let tracker: ITracker;
 
-  let active = [];
+  export let active = [];
   let activeValue;
+  let picks = [];
+  let searchFilter: string;
+
+  $: {
+    picks = tracker && tracker.picks ? tracker.picks : [];
+    if (searchFilter) {
+      picks = picks.filter((p) => {
+        return p.toLowerCase().search(`${searchFilter}`.toLowerCase()) > -1;
+      });
+    }
+  }
 
   function toggle(pick) {
     if (active.indexOf(pick) > -1) {
@@ -41,7 +56,7 @@
   }
 
   function fireChange() {
-    dispatch("change", active.join(" "));
+    dispatch("change", active);
   }
 
   function isHeader(pick) {
@@ -57,37 +72,57 @@
 </style>
 
 <div class="tracker-input picker">
+
   <div class="n-list">
-    {#each tracker.picks || [] as pick}
+    {#if tracker.picks.length > 10}
+      <SearchBar
+        autocomplete
+        compact
+        showClose={true}
+        className="p-0 mx-2 my-1"
+        on:clear={() => {
+          searchFilter = undefined;
+        }}
+        on:change={(evt) => {
+          if (evt.detail && evt.detail.length > 0) {
+            searchFilter = evt.detail;
+          } else {
+            searchFilter = undefined;
+          }
+        }} />
+    {/if}
+    {#if picks.length == 0 && searchFilter}
+      <Empty title={Lang.t('general.no-matches-found', 'No matches found')} />
+    {/if}
+    {#each picks || [] as pick, index (index)}
       {#if isHeader(pick)}
-        <NItem className="item-divider compact">{pick.replace(' :', '')}</NItem>
+        <ListItem className="item-divider compact">{pick.replace(' :', '')}</ListItem>
       {:else}
-        <NItem
+        <ListItem
+          style="min-height:40px;"
           compact
           clickable
-          className="px-3 compact {active.indexOf(pick) > -1 ? 'bg-solid-1' : ''}"
+          className="pl-3 pr-2 compact {active.indexOf(pick) > -1 ? 'bg-solid-1' : ''}"
           on:click={() => {
             toggle(pick);
           }}>
           <LabelMeta str={pick} titleClass={active.indexOf(pick) > -1 ? 'text-primary-bright' : 'text-inverse'} />
-          <div slot="right">
+          <div slot="right" class="flex items-center ml-2">
             {#if active.indexOf(pick) > -1}
-              <div class="badge badge-primary">
-                <NIcon name="checkmark" className="fill-white" size="16" />
-              </div>
+              <NIcon name="checkmarkOutline" className="fill-primary-bright" size="24" />
             {/if}
           </div>
-        </NItem>
+        </ListItem>
         <hr class="divider center" />
       {/if}
     {/each}
-    <!-- <NItem>
+    <!-- <ListItem>
       <NInput on:enter={add} compact placeholder="Add an Item" bind:value={activeValue}>
         <button slot="right" class="btn btn-clear" on:click={add}>
           <NIcon name="addOutline" />
         </button>
       </NInput>
-    </NItem> -->
+    </ListItem> -->
     <div class="n-row">
       <slot name="bottom" />
     </div>

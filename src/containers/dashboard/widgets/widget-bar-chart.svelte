@@ -22,6 +22,7 @@
   <div class="chart-value">
     <BarChart
       height={100}
+      showSelected={false}
       type={widget.type == 'linechart' ? 'line' : 'bar'}
       color={getWidgetColor(widget)}
       labels={widget.stats.chart.values.map((point) => point.x)}

@@ -1,6 +1,5 @@
 <script>
   import Icon from "../icon/icon.svelte";
-
   // svelte
   import { createEventDispatcher } from "svelte";
 
@@ -10,8 +9,6 @@
 
   // Components
   import Counter from "../counter/counter.svelte";
-  import { Interact } from "../../store/interact";
-  import { TrackerStore } from "../../store/tracker-store";
   import { UserStore } from "../../store/user-store";
   import ScorePill from "./score-pill.svelte";
   import Ball from "./ball.svelte";
@@ -34,6 +31,8 @@
   // Define Dispatch
   const dispatch = createEventDispatcher();
 
+  let clickSkip;
+
   let data = {
     pressing: false,
   };
@@ -49,7 +48,7 @@
       evt.stopPropagation();
       evt.preventDefault();
 
-      methods.longPress();
+      // methods.longPress();
     },
     rightclick(evt) {
       evt.preventDefault();
@@ -127,13 +126,16 @@
 
 <div
   {id}
-  on:click={methods.click}
-  on:longtap={methods.longPress}
-  on:mousedown={methods.mousedown}
-  on:touchend={methods.mouseup}
-  on:contextmenu={methods.rightclick}
-  on:mouseout={methods.mouseup}
-  on:mouseup={methods.mouseup}
+  on:longtap={() => {
+    dispatch('longpress');
+    clickSkip = true;
+  }}
+  on:click={() => {
+    if (!clickSkip) {
+      dispatch('click');
+    }
+    clickSkip = undefined;
+  }}
   style="--tracker-color:{tracker.color}"
   class="tracker-button-wrapper tracker-{tracker.tag}
   {$UserStore.localSettings.compactButtons ? 'compact' : ''}

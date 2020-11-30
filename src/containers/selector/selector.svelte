@@ -174,13 +174,13 @@
             <span slot="left">
               <NText size="lg">{item.emoji}</NText>
             </span>
-            <span slot="right">
+
+            <div slot="right" class="flex items-center ml-2">
               {#if state.selected.indexOf(item) > -1}
-                <div class="badge badge-primary">
-                  <NIcon name="checkmark" className="fill-white" size="16" />
-                </div>
+                <NIcon name="checkmarkOutline" className="fill-primary-bright" size="24" />
               {/if}
-            </span>
+            </div>
+
           </NItem>
         {/each}
       </div>

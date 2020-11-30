@@ -29,10 +29,53 @@
   import { DashboardStore } from "../../store/dashboard-store";
   import Spinner from "../../components/spinner/spinner.svelte";
   import { Lang } from "../../store/lang";
+  import TrackerInputer from "../../modules/tracker/tracker-inputer";
+  import { TrackerStore } from "../../store/tracker-store";
+  import { ActiveLogStore } from "../../store/active-log";
+  import NLog from "../../modules/nomie-log/nomie-log";
+  import LabelMeta from "../../components/label-meta/label-meta.svelte";
+  import type TrackableElement from "../../modules/trackable-element/trackable-element";
 
   const dispatch = createEventDispatcher();
   const id = nid();
   export let widget: Widget;
+
+  function getLabel(element: TrackableElement) {
+    if (element.type == "person") {
+      return element.obj ? element.obj.username : element.obj.id;
+    } else if (element.type == "tracker") {
+      return element.obj ? element.obj.label : element.id;
+    } else {
+      return element.id;
+    }
+  }
+
+  function widgetActions() {
+    const buttons = [
+      {
+        title: `${Lang.t("general.view-stats", `View Stats`)}`,
+        click: () => {
+          Interact.openStats(widget.element.toSearchTerm());
+        },
+        icon: "chart",
+      },
+      {
+        icon: "tracker",
+        title: ` ${widget.element.type == "person" ? Lang.t("people.check-in", `Check-in`) : Lang.t("general.track-value", `Track Value`)}`,
+        click: async () => {
+          if (widget.element.type == "person") {
+            Interact.person(widget.element.id);
+          } else if (widget.element.type == "tracker") {
+            const input = new TrackerInputer(widget.element.obj, $TrackerStore.trackers);
+            let note = await input.getNoteString();
+            ActiveLogStore.journal(new NLog({ note }));
+          }
+          // Interact.openStats(widget.element.toSearchTerm());
+        },
+      },
+    ];
+    Interact.popmenu({ title: `${getLabel(widget.element)} options`, buttons });
+  }
 
   function getClass(widget: Widget): string {
     let classes = [`type-${widget.type}`];
@@ -246,7 +289,7 @@
         novalue
         element={widget.element}
         on:click={() => {
-          Interact.openStats(widget.element.toSearchTerm());
+          widgetActions();
         }} />
       <div class="filler" />
       <Button

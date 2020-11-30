@@ -116,6 +116,7 @@
           </span>
           <span slot="right">
             {#if state.selected.hasOwnProperty(tracker.tag)}
+              d
               <NIcon name="checkmarkOutline" className="fill-primary-bright" />
             {/if}
           </span>
@@ -123,7 +124,7 @@
       {/each}
     </div>
     <div slot="footer" class="n-row">
-      <button class="btn btn-light btn-lg w-100 mr-2" on:click={methods.close}>{Lang.t('general.close')}</button>
+      <button class="mr-2 btn btn-light btn-lg w-100" on:click={methods.close}>{Lang.t('general.close')}</button>
       {#if state.selectedArray.length > 0}
         <button
           transition:fade

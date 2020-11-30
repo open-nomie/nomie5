@@ -1,7 +1,6 @@
 <script lang="ts">
-  import type { fill, tap } from "lodash";
   import { createEventDispatcher, onMount } from "svelte";
-  import { UserStore } from "../../store/user-store";
+
   import is from "../../utils/is/is";
   import Avatar from "../avatar/avatar.svelte";
 
@@ -26,6 +25,8 @@
   export let moreIcon: string = "more";
   export let oneTap: boolean = false;
   export let hoursUsed = [];
+
+  let clickSkip;
 
   const dispatch = createEventDispatcher();
 
@@ -138,17 +139,6 @@
       margin-top: -2px;
       margin-left: -2px;
     }
-
-    // .emoji {
-    //   font-size: 2em;
-    //   line-height: 100%;
-    //   // text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.23);
-    //   letter-spacing: -6px;
-    //   color: var(--color-inverse);
-    //   white-space: nowrap;
-    //   width: 100%;
-    //   text-align: left;
-    // }
 
     &:before {
       transition: all 0.4s ease-in-out;
@@ -302,9 +292,13 @@
   style={`--tracker-color:${color}; background-color:${value ? color || 'var(--color-primary)' : 'var(--color-solid)'}; ${style}`}
   on:longpress={() => {
     dispatch('longpress');
+    clickSkip = true;
   }}
   on:click={() => {
-    dispatch('click');
+    if (!clickSkip) {
+      dispatch('click');
+    }
+    clickSkip = undefined;
   }}>
   <div class="highlight {oneTap ? 'one-tap' : ''}">
     <TimeBalls color="#FFF" hours={hoursUsed} />
@@ -326,15 +320,15 @@
     {/if}
   </div>
   <slot />
-  <div class="bottom text-left" style="padding-bottom:6px;">
+  <div class="text-left bottom" style="padding-bottom:6px;">
     {#if title}
       <div class="title">{title}</div>
     {/if}
     {#if value && !hideValue}
-      <div class="value truncate">{value}</div>
+      <div class="truncate value">{value}</div>
     {/if}
     {#if subtitle}
-      <div class="subtitle truncate" style="opacity:0.6;">{subtitle}</div>
+      <div class="truncate subtitle" style="opacity:0.6;">{subtitle}</div>
     {/if}
     <slot name="subtitle" />
   </div>

@@ -53,6 +53,7 @@
   let saving = false;
   let saved = false;
   let debounce;
+  let textareaTimeout;
   // let activeLogDayjs: Dayjs;
 
   $: if ($LedgerStore.saving) {
@@ -124,12 +125,12 @@
       }
     },
     input(evt) {
-      methods.checkTextareaSize();
       clearTimeout(debounce);
       debounce = setTimeout(() => {
         const parsed = extract.parse($ActiveLogStore.note);
         methods.highlightElements(parsed || []);
       }, 400);
+      methods.checkTextareaSize();
     },
     highlightElements(items: Array<TrackableElement>) {
       const buttons = document.getElementsByClassName("tracker-board-button");
@@ -147,18 +148,22 @@
         }
       }
     },
-    checkTextareaSize() {
-      if (textarea) {
-        textarea.style.height = "42px";
-        let height = (textarea || {}).scrollHeight || 42;
-        if (textarea && $ActiveLogStore.note.length > 0) {
-          textarea.style.height = (height > 300 ? 300 : height) + "px";
-        } else {
-          textarea.style.height = "42px";
+    async checkTextareaSize() {
+      const textareaEle = document.getElementById("textarea-capture-note");
+      clearTimeout(textareaTimeout);
+      textareaTimeout = setTimeout(() => {
+        if (textareaEle) {
+          // textareaEle.style.height = "42px";
+          let height = (textareaEle || {}).scrollHeight || 42;
+          if (textareaEle && $ActiveLogStore.note.length > 0) {
+            textareaEle.style.height = (height > 300 ? 300 : height) + "px";
+          } else {
+            textareaEle.style.height = "42px";
+          }
+          // Cal
+          // methods.calculateScore();
         }
-        // Cal
-        // methods.calculateScore();
-      }
+      }, 10);
     },
     /**
      * Check for Auto Complete
@@ -305,7 +310,6 @@
 
   // Clear the settings when saved
   LedgerStore.hook("onLogSaved", (res) => {
-    console.log("Did it save?");
     // methods.clear();
     setTimeout(() => {
       state.advanced = false;
@@ -320,7 +324,6 @@
 
   // When a tag is added by a button or other service
   ActiveLogStore.hook("onAddTag", (res) => {
-    console.log("Tags Added", res);
     // add space to the end.
     setTimeout(() => {
       if (textarea) {

@@ -50,6 +50,7 @@
   import tick from "./utils/tick/tick";
   import Confetti from "./components/confetti/confetti.svelte";
   import FocusedEditor from "./components/capture-log/focused.svelte";
+  import { LedgerStore } from "./store/ledger";
 
   // Set a better console
   const console = new Logger("APP");
@@ -78,6 +79,7 @@
       Interact.toast(`It's ${dayjs().format("dddd")}!`);
       // Set today key to check key
       todayKey = checkKey;
+      LedgerStore.getToday();
       // Wait 500 ms
       setTimeout(() => {
         newDay = false;
