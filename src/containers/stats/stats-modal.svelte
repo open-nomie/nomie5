@@ -502,6 +502,7 @@
       }
     }
   }
+
   async function _setSelected(selected) {
     Interact.focusDate(selected);
     state.selected = selected;

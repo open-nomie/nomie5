@@ -105,7 +105,7 @@
       note = tracker.toNoteString();
     }
 
-    if (note) {
+    if (note && note.length) {
       ActiveLogStore.addElement(note);
       await LedgerStore.saveLog(ActiveLogStore.asLog());
       await ActiveLogStore.clear();
