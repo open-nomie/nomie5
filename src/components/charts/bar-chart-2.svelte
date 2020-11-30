@@ -28,7 +28,7 @@
   export let hideXTicks: boolean = false;
   export let type: string = "bar";
   export let beginAtZero: boolean = true;
-  export let hideTooltip: boolean = false;
+  export let showSelected: boolean = true;
 
   // Generate a random ID for this Component
   const chartId = `chart-${nid()}`;
@@ -85,7 +85,6 @@
         },
 
         tooltips: {
-          enabled: !hideTooltip,
           mode: "point",
           callbacks: {
             label: function (tooltipItem, data) {
@@ -198,7 +197,7 @@
 </style>
 
 <div class="wrapper active-{activeIndex}" style="--chart-color:{color}">
-  {#if selected && selected.unit == 'day'}
+  {#if selected && selected.unit == 'day' && showSelected}
     <div class="selected">
       <button
         on:click={() => {
