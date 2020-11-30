@@ -24,6 +24,7 @@
   import LedgerTools from "../../store/ledger/ledger-tools";
   import { ActiveLogStore } from "../../store/active-log";
   import { TrackerStore } from "../../store/tracker-store";
+  import { Interact } from "../../store/interact";
 
   const dispatch = createEventDispatcher();
 
@@ -93,6 +94,7 @@
    */
   async function longPress(tracker) {
     let note: string;
+    // If it's a timer - then toggle running state
     if (tracker.type == "timer") {
       if (tracker.started) {
         const age = (new Date().getTime() - tracker.started) / 1000;
@@ -101,14 +103,22 @@
       } else {
         TrackerStore.startTimer(tracker);
       }
-    } else {
+      // If itx anything other than a note-type get the value
+    } else if (tracker.type !== "note" && tracker.type !== "picker") {
       note = tracker.toNoteString();
     }
 
+    // If we have a note
     if (note && note.length) {
+      // Add element to Capture Log
       ActiveLogStore.addElement(note);
+      // Save it
       await LedgerStore.saveLog(ActiveLogStore.asLog());
+      // Clear active log
       await ActiveLogStore.clear();
+    } else {
+      // If it's a note - just open it like normal
+      Interact.trackerTap(tracker, $TrackerStore.trackers);
     }
   }
 </script>

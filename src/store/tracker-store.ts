@@ -468,7 +468,7 @@ const trackerStoreInit = () => {
         created: new Date(),
         version: `APP_VERSION`,
       };
-      downloader.text(`${snakeCase(tracker.label).toLowerCase()}.nomie.tkr`, JSON.stringify(pkg));
+      downloader.text(`${snakeCase(tracker.label).toLowerCase()}.tracker.json`, JSON.stringify(pkg));
     },
     async addTrackers(trackers: Array<Tracker>) {
       const board = BoardStore.data();
