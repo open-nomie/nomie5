@@ -7155,8 +7155,7 @@ TODO: Organize main into components or containers.
 
 .sticky {
   position: -webkit-sticky;
-  position: sticky;
-  width: 100vw; }
+  position: sticky; }
 
 .bottom-0 {
   bottom: env(safe-area-inset-bottom); }

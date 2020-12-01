@@ -102,7 +102,7 @@
     <Empty title={Lang.t('nomie-api.no-recent-logs-capture', 'No API Notes Captured')} emoji="🧐" />
   </div>
 {:else}
-  <div class="h-full">
+  <div class="mb-4">
     {#each logs as apiLog, index}
       {#if discarded.indexOf(apiLog.id) === -1}
         <ListItemLog
@@ -115,7 +115,7 @@
     {/each}
   </div>
   <div class="sticky bottom-0">
-    <Toolbar className="bg-solid py-3 shadow-sm-top">
+    <Toolbar className="py-3 mx-auto bg-bg" style="max-width:500px;">
       <Button type="clear" color="danger" block className="mr-1 my-0" on:click={confirmEmptySlots}>
         <Icon name="delete" className="fill-red mr-2" />
         {Lang.t('general.empty', 'Empty')}

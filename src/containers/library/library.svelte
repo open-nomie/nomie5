@@ -17,6 +17,10 @@
   import Button from "../../components/button/button.svelte";
 
   import TrackerTypes from "../../modules/tracker-types/tracker-types";
+  import Avatar from "../../components/avatar/avatar.svelte";
+  import List from "../../components/list/list.svelte";
+  import Empty from "../empty/empty.svelte";
+  import type { t } from "i18next";
 
   let installed = {}; // hol der for anything installed during the opening
 
@@ -105,18 +109,25 @@
 <Modal
   type={$TrackerLibrary.first ? 'fullscreen' : 'fullscreen'}
   show={true}
-  className="library-modal bg-solid"
+  className="library-modal"
   title={Lang.t('tracker.things-to-track', 'Things to Track')}>
 
   {#if $TrackerLibrary.first}
     <div class="px-2 pt-3 intro-message">
+
       <NText size="sm" tag="div">{Lang.t('tracker.pick-at-least-one', 'Pick at least 1 to continue')}</NText>
     </div>
   {/if}
 
-  <div class="n-list solo">
+  <List>
     {#if trackers.length == 0}
-      <Text size="lg" center className="p-4">Wow! You've installed all the trackers.</Text>
+      <Empty title={"That's all!"} description="You've installed the library trackers!" emoji="🤗">
+        <Text size="sm" center className="mt-2">
+          Visit
+          <a href="https://nomie.app/trackers" target="_blank">https://nomie.app</a>
+          for more
+        </Text>
+      </Empty>
     {/if}
     {#each trackers as tracker, index (tracker.tag)}
       <ListItem
@@ -128,18 +139,17 @@
           toggleTrackerInstalled(tracker);
         }}>
         <div slot="left">
-          <Text size="xxl">{tracker.emoji}</Text>
+          <Avatar emoji={tracker.emoji} size={45} />
         </div>
         <div slot="right">
           {#if $TrackerStore.trackers.hasOwnProperty(tracker.tag) || installed.hasOwnProperty(tracker.tag)}
-            <div class="badge badge-green">
-              <NIcon name="checkmark" className="fill-white" size="16" />
-            </div>
+            <NIcon name="checkmarkOutline" className="fill-primary" size="24" />
           {/if}
         </div>
       </ListItem>
     {/each}
-  </div>
+  </List>
+
   <div slot="footer">
     <Button block disabled={Object.keys(installed).length === 0 && $TrackerLibrary.first} on:click={TrackerLibrary.toggle}>
       {Lang.t('general.done', 'Done')}

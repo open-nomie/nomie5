@@ -35,7 +35,7 @@
     padding: 20px;
     align-self: center;
     justify-self: center;
-    max-width: 300px;
+    max-width: 310px;
     margin-left: auto;
     margin-right: auto;
     height: auto;
