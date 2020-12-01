@@ -1,1 +1,100 @@
-{"features":[{"version":"5.6.0-1","title":"support for importing tracker bundles (coming to the website soon)"},{"version":"5.6.0-0","title":"testing fidelity increase on comapre charts"},{"version":"5.6.0-0","title":"shared 'selected date' across multiple charts"},{"version":"5.6.0-0","title":"long press to auto save tracker default, start/stop timers"},{"version":"5.5.4","title":"track and check-in from the dashboard"},{"version":"5.5.4","title":"better picker list design / editing"},{"version":"5.5.3","title":"ability to see and delete individual logs from the offline queue"},{"version":"5.5.3","title":"white balls for unknown trackers are annoying"},{"version":"5.5.3","title":"enabling new button views for all users"},{"version":"5.5.2","title":"adding pages, tabs, capsules, bpm, mcg UOMs"},{"version":"5.5.2","title":"adding new uoms"},{"version":"5.5.1","title":"adding highlight on trackers that are current \"in-note\""},{"version":"5.5.0-18","title":"Adding notes, trackers, people, context filtering to History view"},{"version":"5.5.0-17","title":"launch a journal entry from history view"},{"version":"5.5.0-17","title":"Launch stats from event date"},{"version":"5.5.0-16","title":"Sponsorship / Goodwill bar"},{"version":"5.5.0-12","title":"Dashboard widget now has single action menu"},{"version":"5.5.0-6","title":"Adding '•••' to Classic Tracker Button"},{"version":"5.5.0-5","title":"Force Nomie to update the 'Last Used' date on all trackers (in Settings / Data)"},{"version":"5.5.0-5","title":"Wanna help translate Nomie? Check out Settings / Data / Help Translate Nomie"},{"version":"5.5.0-3","title":"Global font-size Control (Settings / Tweaks)"},{"version":"5.5.0-1","title":"Way Better Pin setting (Settings / Features)"},{"version":"5.5.0-1","title":"Improved Tracker editor based on Nomie 3"},{"version":"5.5.0-1","title":"Nomie Patron Unlock (see patreon.com/nomieapp for key)"},{"version":"5.5.0-1","title":"New Tracker Detail / List view (Patrons only)"},{"version":"5.5.0-1","title":"Custom Tracker Positivity sorting"},{"version":"5.4.4","title":"New Unified Search"}],"fixes":[{"version":"5.6.0-1","title":"hiding selected state in widgets"},{"version":"5.5.4","title":"auto complete selection doesn't pull in tracker.include"},{"version":"5.5.4","title":"on-this-day tracker order is backwards"},{"version":"5.5.4","title":"when editing a picker list you lose your previous selection"},{"version":"5.5.4","title":"grow text input when note is long and submitted automatically"},{"version":"5.5.4","title":"picker grouping with comma instead of space"},{"version":"5.5.3","title":"on-this-day tracker grid smooshes on ipad"},{"version":"5.5.3","title":"tapping on text version of tracker, people context does nothing"},{"version":"5.5.2","title":"select input chevron down not clickable u/slorge"},{"version":"5.5.1","title":"adding Nomie settings access from the small upper right gear"},{"version":"5.5.0","title":"colorizing letter emojis"},{"version":"5.5.0-22","title":"people tab not showing people"},{"version":"5.5.0-22","title":"improving accessibility labels"},{"version":"5.5.0-22","title":"text result updates"},{"version":"5.5.0-21","title":"grid is smashing small block buttons on smaller devices"},{"version":"5.5.0-21","title":"history tap on tracker should open option, not stats"},{"version":"5.5.0-20","title":"on-this-day trackers value not showing properly"},{"version":"5.5.0-20","title":"also include doesn't allow multiplication on values"},{"version":"5.5.0-19","title":"adding Organize Tab back, organizing board option menu"},{"version":"5.5.0-17","title":"making empty views more consistent"},{"version":"5.5.0-17","title":"adding dividers to pop menu"},{"version":"5.5.0-17","title":"making \"not today\" calendar less obnoxious"},{"version":"5.5.0-16","title":"make last-update sync with storage before recording"},{"version":"5.5.0-16","title":"unified tab options"},{"version":"5.5.0-15","title":"today/tomorrow widget showing only one time #124"},{"version":"5.5.0-15","title":"catching nulls and _last on getting first book"},{"version":"5.5.0-14","title":"still working on the damn first book lookup"},{"version":"5.5.0-13","title":"make double and tripple emojis fit better on shortcut button"},{"version":"5.5.0-13","title":"working on last date"},{"version":"5.5.0-12","title":"working on first date for ios"},{"version":"5.5.0-12","title":"firefox cannot enter picker list items"},{"version":"5.5.0-12","title":"today bar chart not showing hours for the day"},{"version":"5.5.0-12","title":"tracker with value of 0 not activating button"},{"version":"5.5.0-10","title":"working on getting first known date"},{"version":"5.5.0-9","title":"making sure language and base lang merge properly (thanks Fay)"},{"version":"5.5.0-9","title":"language coverage, adding german"},{"version":"5.5.0-9","title":"text emojis are dark on dark"},{"version":"5.5.0-8","title":"get first book date incorrect"},{"version":"5.5.0-8","title":"unable to close active day in chart"},{"version":"5.5.0-8","title":"month streak not moving when stats change"},{"version":"5.5.0-8","title":"get avatar component to work with multiple emojis"},{"version":"5.5.0-8","title":"adding streak modal back"},{"version":"5.5.0-7","title":"classic button firing click twice"},{"version":"5.5.0-7","title":"shortcut button now uses TimeBalls and shows one-tap"},{"version":"5.5.0-7","title":"catching non number values and converting to one"},{"version":"5.5.0-7","title":"ensuring trackable values are a number"},{"version":"5.5.0-7","title":"adding tracker ball to shortcut button"},{"version":"5.5.0-6","title":"bug when passing non string to to initials"},{"version":"5.5.0-6","title":"input field sizes too small"},{"version":"5.5.0-6","title":"one-tap-trackers including #tracker()"},{"version":"5.5.0-4","title":"updating log to the past bug"},{"version":"5.5.0-3","title":"autocomplete rebutton"},{"version":"5.5.0-3","title":"launching search from popmenu not working"},{"version":"5.5.0-3","title":"removing tracker not waiting for confirmation"},{"version":"5.5.0-2","title":"working on font sizes"},{"version":"5.5.0-1","title":"trying to get the tracker detail buttons to not smoosh"},{"version":"5.5.0-1","title":"keyboard auto focusing when launching the app"},{"version":"5.5.0-1","title":"stats modal is behind search modal"},{"version":"5.5.0-1","title":"still working on the tracker detail buttons"},{"version":"5.5.0-1","title":"saving from input is taking longer than normal"},{"version":"5.5.0-0","title":"detail tracker button alignment issues"},{"version":"5.5.0-0","title":"searching for a tracker in history not auto selecting history tab"},{"version":"5.5.0-0","title":"spelling error (thanks fay)"},{"version":"5.5.0-0","title":"double emoji styling"},{"version":"5.4.4","title":"select first dashboard if non selected before"},{"version":"5.4.3","title":"unable to delete a tracker"},{"version":"5.4.2","title":"time of day, day of week - showing count and not value"},{"version":"5.4.2","title":"spelling error"},{"version":"5.4.1","title":"small tracker buttons not sticking"},{"version":"5.4.1","title":"picker assigning a (0) value for main tag"},{"version":"5.4.0","title":"supporting tracker input values of 0"}],"chores":[{"version":"5.6.0-1","title":"release v5.6.0-1"},{"version":"5.6.0-1","title":"tracker cleanup"},{"version":"5.6.0-0","title":"release v5.6.0-0"},{"version":"5.6.0-0","title":"fixing long press for mobile"},{"version":"5.5.4","title":"release v5.5.4"},{"version":"5.5.4","title":"console cleanup"},{"version":"5.5.3","title":"release v5.5.3"},{"version":"5.5.3","title":"prepping work"},{"version":"5.5.2","title":"release v5.5.2"},{"version":"5.5.2","title":"cleaning up code"},{"version":"5.5.1","title":"release v5.5.1"},{"version":"5.5.0","title":"release v5.5.0"},{"version":"5.5.0","title":"updating text"},{"version":"5.5.0-23","title":"cleanup"},{"version":"5.5.0-23","title":"updating interact to support passing of logs"},{"version":"5.5.0-23","title":"release v5.5.0-22"},{"version":"5.5.0-23","title":"release v5.5.0-23"}],"build_date":"2020-11-30T22:25:46.865Z"}
+{
+  "features": [
+    {
+      "version": "5.6.0-1",
+      "title": "support for importing tracker bundles (coming to the website soon)"
+    },
+    {
+      "version": "5.6.0-0",
+      "title": "testing fidelity increase on comapre charts"
+    },
+    {
+      "version": "5.6.0-0",
+      "title": "shared 'selected date' across multiple charts"
+    },
+    {
+      "version": "5.6.0-0",
+      "title": "long press to auto save tracker default, start/stop timers"
+    },
+    {
+      "version": "5.5.4",
+      "title": "track and check-in from the dashboard"
+    },
+    {
+      "version": "5.5.4",
+      "title": "better picker list design / editing"
+    },
+    {
+      "version": "5.5.3",
+      "title": "ability to see and delete individual logs from the offline queue"
+    },
+    {
+      "version": "5.5.3",
+      "title": "white balls for unknown trackers are annoying"
+    },
+    {
+      "version": "5.5.3",
+      "title": "enabling new button views for all users"
+    },
+    {
+      "version": "5.5.2",
+      "title": "adding pages, tabs, capsules, bpm, mcg UOMs"
+    },
+    {
+      "version": "5.5.2",
+      "title": "adding new uoms"
+    },
+    {
+      "version": "5.5.1",
+      "title": "adding highlight on trackers that are current \"in-note\""
+    },
+  ],
+  "fixes": [
+    {
+      "version": "5.6.0-1",
+      "title": "hiding selected state in widgets"
+    },
+    {
+      "version": "5.5.4",
+      "title": "auto complete selection doesn't pull in tracker.include"
+    },
+    {
+      "version": "5.5.4",
+      "title": "on-this-day tracker order is backwards"
+    },
+    {
+      "version": "5.5.4",
+      "title": "when editing a picker list you lose your previous selection"
+    },
+    {
+      "version": "5.5.4",
+      "title": "grow text input when note is long and submitted automatically"
+    },
+    {
+      "version": "5.5.4",
+      "title": "picker grouping with comma instead of space"
+    },
+    {
+      "version": "5.5.3",
+      "title": "on-this-day tracker grid smooshes on ipad"
+    },
+    {
+      "version": "5.5.3",
+      "title": "tapping on text version of tracker, people context does nothing"
+    },
+    {
+      "version": "5.5.2",
+      "title": "select input chevron down not clickable u/slorge"
+    },
+    {
+      "version": "5.5.1",
+      "title": "adding Nomie settings access from the small upper right gear"
+    },
+    {
+      "version": "5.5.0",
+      "title": "colorizing letter emojis"
+    },
+  ],
+  "chores": [],
+  "build_date": "2020-11-30T22:25:46.865Z"
+}

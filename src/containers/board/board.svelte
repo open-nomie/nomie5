@@ -219,7 +219,7 @@
         },
       },
       {
-        title: `${Lang.t("general.manage", "Manage")} ${board ? `${truncate(board.label, 30)}` : ""}`,
+        title: `${Lang.t("board.manage-this-tab", "Manage this Tab")}`,
         async click() {
           editBoard();
         },
