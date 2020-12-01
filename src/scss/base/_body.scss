@@ -158,6 +158,8 @@ body {
   --color-grey-10: rgb(250, 250, 250);
 
   --box-shadow-tight: 0px 3px 5px -2px rgba(0, 0, 0, 0.2);
+  --box-shadow-tight-top: 0px -2px 6px -1px rgba(0, 0, 0, 0.16);
+
   --box-shadow: 0 7px 10px -4px rgba(0, 0, 0, 0.1), 0 8px 16px -4px rgba(0, 0, 0, 0.1), 0 -1px 2px rgba(0, 0, 0, 0.09);
   --box-shadow-float: 0 4px 8px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.08), 0 0 2px rgba(0, 0, 0, 0.14);
   --box-shadow-neu: 4px 0px 8px rgba(0, 0, 0, 0.2), -4px 0px 8px rgba(255, 255, 255, 0.9);
@@ -230,6 +232,7 @@ body.test {
   --color-background-selected: rgba($primaryBright, 0.82);
   --box-shadow: 0px -2px 2px rgba(255, 255, 255, 0.06), 0px 8px 10px rgba(0, 0, 0, 0.3);
   --box-shadow-tight: 0px -2px 2px rgba(255, 255, 255, 0.06), 0px 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --box-shadow-tight-top: 0px -4px 6px -1px rgba(0, 0, 0, 0.4);
   --box-shadow-float: 0px -2px 2px rgba(255, 255, 255, 0.09), 0px 6px 10px -1px rgba(0, 0, 0, 0.1), 0px 0px 2px rgba(255, 255, 255, 0.1);
 
   --box-shadow-neu: 4px 4px 8px rgba(255, 255, 255, 0.1), -4px -4px 8px rgba(0, 0, 0, 0.3);
@@ -265,6 +268,13 @@ body {
       background-color: transparent;
     }
   }
+}
+
+.shadow-sm-top {
+  box-shadow: var(--box-shadow-tight-top);
+}
+.shadow-sm {
+  box-shadow: var(--box-shadow-tight);
 }
 
 .hider {

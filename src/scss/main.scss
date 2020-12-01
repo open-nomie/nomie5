@@ -83,6 +83,16 @@ TODO: Organize main into components or containers.
   width: 2px;
 }
 
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  width: 100vw;
+}
+
+.bottom-0 {
+  bottom: env(safe-area-inset-bottom);
+}
+
 hr.divider {
   margin: 0;
   padding: 0;
@@ -96,6 +106,13 @@ hr.divider {
   &.indent {
     margin-left: 20px;
   }
+}
+
+.h-full {
+  min-height: 100vh;
+}
+.w-full {
+  min-width: 100vw;
 }
 
 .board-actions {

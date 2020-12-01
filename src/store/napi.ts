@@ -97,7 +97,7 @@ const nomieApiInit = () => {
         }
       }
     },
-    async import(logs) {
+    async import(logs: Array<any>) {
       Interact.blocker(`Importing ${logs.length}  ${logs.length > 1 ? "notes" : "note"} from the API...`);
       // Wait a second
       await tick(500);

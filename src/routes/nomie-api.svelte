@@ -150,10 +150,6 @@
       }
       return state.logs;
     },
-    async clear() {
-      await NAPI.clear();
-      state.logs = [];
-    },
     async unregister() {
       let confirmed: boolean = await Interact.confirm("Destroy this API Key?", "This cannot be undone");
       if (confirmed === true) {
@@ -165,30 +161,34 @@
         }
       }
     },
+    // async clear() {
+    //   await NAPI.clear();
+    //   state.logs = [];
+    // },
 
-    confirmClear() {
-      Interact.confirm("Clear Logs?", "This will delete the remaining items and cannot be undone.").then((res) => {
-        if (res) {
-          methods.clear();
-        }
-      });
-    },
-    async capture(log) {
-      state.capturingId = log.id;
-      await tick(400);
-      try {
-        // Converting APIv1 Log to Nomie
-        let response = await NomieAPI.import([log]);
-        state.hidden.push(log.id);
-        state.hidden = state.hidden;
-        if (state.logs.length == state.hidden.length) {
-          // They've done all of them - clear it.
-          methods.clear();
-        }
-      } catch (e) {
-        console.error(e.message);
-      }
-    },
+    // confirmClear() {
+    //   Interact.confirm("Clear Logs?", "This will delete the remaining items and cannot be undone.").then((res) => {
+    //     if (res) {
+    //       methods.clear();
+    //     }
+    //   });
+    // },
+    // async capture(log) {
+    //   state.capturingId = log.id;
+    //   await tick(400);
+    //   try {
+    //     // Converting APIv1 Log to Nomie
+    //     let response = await NomieAPI.import([log]);
+    //     state.hidden.push(log.id);
+    //     state.hidden = state.hidden;
+    //     if (state.logs.length == state.hidden.length) {
+    //       // They've done all of them - clear it.
+    //       methods.clear();
+    //     }
+    //   } catch (e) {
+    //     console.error(e.message);
+    //   }
+    // },
     setView(view) {
       state.view = view;
       if (view === "captured") {
@@ -242,12 +242,13 @@
   </header>
 
   <div class="container">
-    <div item-divider class="pt-4" />
+
     {#if !state.ready}
       <div class="empty-notice">
         <Spinner />
       </div>
     {:else if state.ready && !state.registered}
+      <div item-divider class="pt-4" />
       <div class="row align-items-center">
         <div class="col-12 col-md-6">
 
@@ -277,7 +278,11 @@
         </div>
       </div>
     {:else if state.view === 'captured'}
-      <Captured logs="state.logs" />
+      <Captured
+        logs={state.logs}
+        on:empty={() => {
+          state.logs = [];
+        }} />
       <!-- <div class="n-list">
         {#each state.logs as apiLog, index}
           {#if state.hidden.indexOf(apiLog.id) === -1}
@@ -321,9 +326,9 @@
         -->
       <List>
         <NItem
-          title={Lang.t('nomie-api.auto-accept', 'Auto Accept')}
+          title={Lang.t('nomie-api.auto-import', 'Auto Import')}
           className="py-2"
-          description={Lang.t('nomie-api.auto-import-description', 'Auto import API logs when Nomie launches')}>
+          description={Lang.t('nomie-api.auto-import-description', 'Automatically import API logs each time Nomie launches')}>
           <div slot="right">
             <NToggle
               bind:value={autoImportAPI}
@@ -403,7 +408,7 @@
         </NItem>
         {#if state.showExample}
           <NItem>
-            <textarea class="form-control" style="height:120px; font-size:0.7em; font-family:monospace" bind:value={state.apiExample} />
+            <textarea class="form-control" style="height:120px; font-size:0.9em; font-family:monospace" bind:value={state.apiExample} />
           </NItem>
           <NItem compact title="URL" className="py-0">
             <div slot="right" class="n-row">
