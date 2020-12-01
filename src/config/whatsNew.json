@@ -47,7 +47,7 @@
     {
       "version": "5.5.1",
       "title": "adding highlight on trackers that are current \"in-note\""
-    },
+    }
   ],
   "fixes": [
     {
@@ -93,7 +93,7 @@
     {
       "version": "5.5.0",
       "title": "colorizing letter emojis"
-    },
+    }
   ],
   "chores": [],
   "build_date": "2020-11-30T22:25:46.865Z"
