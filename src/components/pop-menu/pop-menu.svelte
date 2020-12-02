@@ -167,6 +167,7 @@
   }
   :global(.pop-menu .n-list .nbtn main) {
     text-align: left !important;
+    justify-content: flex-start;
   }
   :global(.pop-menu .n-list .nbtn ~ .nbtn:after) {
     content: "";
