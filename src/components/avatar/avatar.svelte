@@ -12,10 +12,9 @@
   export let emoji: string = undefined;
   export let transparent: boolean = false;
   export let style: string = "";
-  export let color: string = "transparent";
+  export let color: string | undefined = undefined;
   export let circle: boolean = false;
   export let className: string = "";
-  export let textColor: string = undefined;
 
   const dispatch = createEventDispatcher();
 
@@ -36,13 +35,17 @@
       /// If it's an emoji
     } else if (emoji && emoji.length) {
       classList.push("emoji");
-      styles.push(`background-color:${color}`);
+
+      // styles.push(`background-color:${color}`);
+      if (color) {
+        styles.push(`color:${color}`);
+      }
 
       // If a Label is provided
     } else if (label && label.length) {
       classList.push("label");
-      color = strToColor(label);
-      styles.push(`background-color:${color}`);
+      const thisColor = color || strToColor(label);
+      styles.push(`background-color:${thisColor}; color:#FFF !important`);
       styles.push(`font-size: ${size * 0.5}px`);
     }
     // If Transparent
@@ -126,7 +129,7 @@
   class="n-avatar {emoji ? `emolen-${emojiCount(emoji)}` : 'no-emoji'}
   {size}
   {classList.join(' ')}"
-  style={`${styles.join('; ')}; ${textColor ? `color:${textColor} !important;` : ''} ${style}`}
+  style={`${styles.join('; ')}; ${style}`}
   on:click|preventDefault={click}>
   {#if emoji}{emoji}{:else if label}{initials(label)}{/if}
 </div>

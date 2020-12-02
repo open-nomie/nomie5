@@ -38,8 +38,8 @@
   {#if avatar}
     <Avatar {size} src={avatar} />
   {:else if emoji}
-    <Avatar {emoji} textColor={color} size={size * 0.5} />
+    <Avatar {emoji} {color} size={size * 0.5} />
   {:else if username}
-    <Avatar label={username} textColor={color} size={size * 0.5} />
+    <Avatar label={username} {color} size={size * 0.5} />
   {/if}
 </div>
