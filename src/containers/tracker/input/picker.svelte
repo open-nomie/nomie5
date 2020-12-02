@@ -47,7 +47,7 @@
 </style>
 
 <div class="tracker-input picker">
-  <Button shape="circle" type={mode == 'view' ? 'outline' : 'solid'} color="primary" className="picker-toggle" on:click={toggleMode}>
+  <Button shape="circle" color={mode == 'view' ? 'primary' : 'green'} className="picker-toggle" on:click={toggleMode}>
     {#if mode == 'view'}
       <Icon name="edit" size="16" />
     {:else}

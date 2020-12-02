@@ -28,6 +28,7 @@
   import { Lang } from "../../../store/lang";
   import Icon from "../../../components/icon/icon.svelte";
   import Button from "../../../components/button/button.svelte";
+  import dayjs from "dayjs";
 
   // Props
   export let tracker = undefined; // You can provide a tracker
@@ -35,6 +36,7 @@
   export let value = undefined; // If a valid is provided
   export let hideAdd = undefined; // If the Add button should be hidden
   export let saveLabel = Lang.t("general.save", "Save"); // The label of the save Button
+
   // Consts
   const dispatch = createEventDispatcher(); // Setup the dispatcher
 
@@ -44,6 +46,7 @@
     ready: false,
     suffix: "",
     calcUsed: false, // when it's ready
+    editing: false,
   };
 
   // Set up the Methods
@@ -76,7 +79,9 @@
     // When the user starts the time
     startTimer() {
       // Set the date to epoch time (best to avoid timezones);
-      data.tracker.started = new Date().getTime();
+      let startingDate = dayjs().subtract(data.value, "second");
+      console.log({ value: data.value, startingDate: startingDate.format("hh:mm:ss a MMM Do YYYY") });
+      data.tracker.started = startingDate.toDate().getTime();
       // Start the Timer for this tracker
       TrackerStore.startTimer(data.tracker);
       methods.onCancel();
@@ -192,6 +197,12 @@
       {:else if tracker.type === 'picker'}
         <PickerInput
           {tracker}
+          on:enterEdit={(evt) => {
+            data.editing = true;
+          }}
+          on:enterView={() => {
+            data.editing = false;
+          }}
           on:change={(evt) => {
             data.suffix = evt.detail.join(' ');
           }} />
@@ -211,6 +222,7 @@
         <NTimer
           tracker={data.tracker}
           bind:value={data.value}
+          on:forceStart={methods.startTimer}
           on:change={(event) => {
             data.value = event.detail;
           }} />
@@ -247,54 +259,54 @@
       <!-- end left toolbar -->
 
       <div class="px-2 main">
+        {#if !data.editing}
+          {#if (data.tracker.type == 'timer' && data.value && $Interact.trackerInput.allowSave !== false) || (data.tracker.type != 'timer' && $Interact.trackerInput.allowSave !== false)}
+            <Button
+              size="lg"
+              shape="round"
+              block
+              style="max-width:130px"
+              on:click={methods.onSave}
+              className="text-white"
+              title="Save this log">
+              {saveLabel}
+            </Button>
+          {/if}
 
-        {#if (data.tracker.type == 'timer' && data.value && $Interact.trackerInput.allowSave !== false) || (data.tracker.type != 'timer' && $Interact.trackerInput.allowSave !== false)}
-          <Button
-            size="lg"
-            shape="round"
-            block
-            style="max-width:130px"
-            on:click={methods.onSave}
-            className="text-white"
-            title="Save this log">
-            {saveLabel}
-          </Button>
+          {#if data.tracker.type == 'timer' && !data.tracker.started && !data.value && $Interact.trackerInput.allowSave !== false}
+            <Button
+              color="success"
+              shape="round"
+              size="lg"
+              block
+              on:click={methods.startTimer}
+              style="max-width:130px"
+              title="Start Timer"
+              className="text-white">
+              {Lang.t('general.start', 'Start')}
+            </Button>
+          {/if}
+
+          {#if data.tracker.type == 'timer' && data.tracker.started !== null}
+            <Button
+              color="danger"
+              shape="round"
+              size="lg"
+              block
+              on:click={methods.stopTimer}
+              style="max-width:130px"
+              title="Stop Timer"
+              className="text-white {data.tracker.started > 0 ? '' : 'd-none'}">
+              {Lang.t('general.stop', 'Stop')}
+            </Button>
+          {/if}
         {/if}
-
-        {#if data.tracker.type == 'timer' && !data.tracker.started && !data.value && $Interact.trackerInput.allowSave !== false}
-          <Button
-            color="success"
-            shape="round"
-            size="lg"
-            block
-            on:click={methods.startTimer}
-            style="max-width:130px"
-            title="Start Timer"
-            className="text-white">
-            {Lang.t('general.start', 'Start')}
-          </Button>
-        {/if}
-
-        {#if data.tracker.type == 'timer' && data.tracker.started !== null}
-          <Button
-            color="danger"
-            shape="round"
-            size="lg"
-            block
-            on:click={methods.stopTimer}
-            style="max-width:130px"
-            title="Stop Timer"
-            className="text-white {data.tracker.started > 0 ? '' : 'd-none'}">
-            {Lang.t('general.stop', 'Stop')}
-          </Button>
-        {/if}
-
       </div>
       <!-- end main toolbar-grid-->
 
       <div class="right">
 
-        {#if (data.tracker.type !== 'timer' || data.value) && hideAdd !== true}
+        {#if (data.tracker.type !== 'timer' || data.value) && hideAdd !== true && !data.editing}
           <Button
             color="transparent"
             shape="circle"
