@@ -131,9 +131,10 @@
   // }
 
   function selectType() {
-    const generateElementOption = (title, type) => {
+    const generateElementOption = (title, type, icon) => {
       return {
         title,
+        icon,
         async click() {
           let selected: any = await Interact.select(type);
           if (selected.length) {
@@ -157,9 +158,9 @@
     Interact.popmenu({
       title: "What type of item would you like to add?",
       buttons: [
-        generateElementOption("Tracker", "tracker"),
-        generateElementOption("Person", "person"),
-        generateElementOption("Context", "context"),
+        generateElementOption("Tracker", "tracker", "tracker"),
+        generateElementOption("Person", "person", "userCircle"),
+        generateElementOption("Context", "context", "bulb"),
       ],
     });
   }
@@ -211,7 +212,7 @@
 
 <div class="dashwidget-editor">
 
-  <div class="widget-top p-2 bg-solid">
+  <div class="p-2 widget-top bg-solid">
     <Input type="select" placeholder="Widget" bind:value={widgetTypeId}>
       <option>{Lang.t('dashboard.select-a-widget', 'Select a Widget')}</option>
       {#each widgetTypes as widgetType}

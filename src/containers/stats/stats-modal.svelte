@@ -282,13 +282,15 @@
   function onMoreTap() {
     let buttons = [
       {
-        title: "View Streak",
+        title: Lang.t("stats.streak", "Streak"),
+        icon: "calendar",
         click: () => {
           Interact.openStreak(state.currentTerm);
         },
       },
       {
         title: `${Lang.t("general.edit")} ${state.currentTerm}`,
+        icon: "edit",
         click: () => {
           if (state.trackableElement.type == "tracker") {
             Interact.editTracker(TrackerStore.byTag(state.trackableElement.id));
@@ -298,11 +300,12 @@
         },
       },
       {
-        title: `${Lang.t("general.search-for")} ${state.currentTerm}`,
+        title: `${Lang.t("general.search")} ${state.currentTerm}`,
         click() {
           close();
           SearchStore.search(state.trackableElement.prefix + state.trackableElement.id);
         },
+        icon: "search",
       },
     ];
     Interact.popmenu({ title: `${Lang.t("general.options")}`, buttons });

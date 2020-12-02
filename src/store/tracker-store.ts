@@ -238,6 +238,7 @@ const trackerStoreInit = () => {
       let buttons = [
         {
           title: `${Lang.t("tracker.stats", "Stats")} `,
+          icon: "chart2",
           click() {
             Interact.openStats(`#${tracker.tag}`);
             click();
@@ -245,6 +246,7 @@ const trackerStoreInit = () => {
         },
         {
           title: Lang.t("tracker.streak", "Streak"),
+          icon: "calendar",
           click() {
             Interact.openStreak(`#${tracker.tag}`);
             click();
@@ -252,6 +254,8 @@ const trackerStoreInit = () => {
         },
         {
           title: `${Lang.t("tracker.edit-tracker", "Edit Tracker")} `,
+          icon: "edit",
+          divider: true,
           click() {
             Interact.editTracker(tracker);
             click();

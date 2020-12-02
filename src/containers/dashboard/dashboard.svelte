@@ -177,21 +177,23 @@
       {
         title: Lang.t("dashboard.add-a-widget", "Add a Widget..."),
         click: newWidget,
+        icon: "addOutline",
       },
       {
         title: `${Lang.t("general.edit", "Edit")} ${activeDashboard.label}...`,
         click: toggleEdit,
+        icon: "edit",
       },
       {
         title: `${Lang.t("general.delete", "Delete")} ${activeDashboard.label}...`,
         click: deleteDashboard,
-      },
-      {
-        divider: true,
+        icon: "delete",
       },
       {
         title: `${Lang.t("dashboard.add-tab", "Add new Tab...")}`,
         click: DashboardStore.newDashboard,
+        icon: "addTab",
+        divider: true,
       },
     ];
 

@@ -41,8 +41,9 @@
   export let widget: Widget;
 
   function getLabel(element: TrackableElement) {
+    console.log("Elememnt", element);
     if (element.type == "person") {
-      return element.obj ? element.obj.username : element.obj.id;
+      return element.obj ? element.obj.username : element.id;
     } else if (element.type == "tracker") {
       return element.obj ? element.obj.label : element.id;
     } else {
@@ -57,7 +58,7 @@
         click: () => {
           Interact.openStats(widget.element.toSearchTerm());
         },
-        icon: "chart",
+        icon: "chart2",
       },
       {
         icon: "tracker",

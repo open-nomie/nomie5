@@ -124,47 +124,55 @@ const DashboardStoreInit = (): any => {
       let buttons = [
         {
           title: `${Lang.t("dashboard.edit-widget", "Edit Widget")}...`,
+          icon: "edit",
           click() {
             select("edit", widget);
           },
         },
-        { divider: true },
         {
-          title: `${widget.size == "sm" ? "•" : ""} ${Lang.t("dashboard.small-widget", "Small Widget")}`,
+          divider: true,
+          title: `${Lang.t("dashboard.small-widget", "Small Widget")}`,
+          icon: widget.size == "sm" ? "checkmarkOutline" : undefined,
           click() {
             setWidgetSize("sm");
           },
         },
         {
-          title: `${widget.size == "md" ? "•" : ""} ${Lang.t("dashboard.medium-widget", "Medium Widget")}`,
+          title: `${Lang.t("dashboard.medium-widget", "Medium Widget")}`,
+          icon: widget.size == "md" ? "checkmarkOutline" : undefined,
           click() {
             setWidgetSize("md");
           },
         },
         {
-          title: `${widget.size == "lg" ? "•" : ""} ${Lang.t("dashboard.large-widget", "Large Widget")}`,
+          title: `${Lang.t("dashboard.large-widget", "Large Widget")}`,
+          icon: widget.size == "lg" ? "checkmarkOutline" : undefined,
           click() {
             setWidgetSize("lg");
           },
         },
-        { divider: true },
         {
+          divider: true,
           title: `${Lang.t("general.duplicate", "Duplicate")}...`,
           click() {
             select("duplicate", widget);
           },
+          icon: "duplicate",
         },
         {
-          title: `${Lang.t("dashboard.move-tabs", "Move Tabs")}...`,
+          title: `${Lang.t("dashboard.move-to", "Move to")}...`,
           click() {
             select("move", widget);
           },
+          icon: "switch",
         },
         {
+          divider: true,
           title: `${Lang.t("dashboard.delete-widget", "Delete Widget")}...`,
           click() {
             select("delete", widget);
           },
+          icon: "delete",
         },
       ];
 

@@ -174,6 +174,7 @@ const interactInit = () => {
       title: null,
       description: null,
       buttons: [],
+      divider: false,
     },
     locationFinder: {
       show: false,
@@ -433,6 +434,8 @@ const interactInit = () => {
       const buttons = [
         {
           title: `${Lang.t("stats.view-stats", "View Stats")}`,
+          icon: "chart2",
+          divider: false,
           click: () => {
             Interact.closeOnThisDay();
             if (tracker) {
@@ -446,6 +449,7 @@ const interactInit = () => {
           },
         },
         {
+          icon: "search",
           title: `${Lang.t("general.search", "Search")}: ${tracker && tracker.label ? tracker.label : trackableElement.id}`,
           click: async () => {
             Interact.closeOnThisDay();
@@ -456,14 +460,17 @@ const interactInit = () => {
       ];
       if (trackableElement.type == "tracker") {
         buttons.push({
+          icon: "edit",
+          divider: true,
           title: `${Lang.t("general.edit", "Edit")} ${trackableElement.obj.label}`,
           click: () => {
             methods.editTracker(trackableElement.obj);
           },
         });
-      }
-      if (trackableElement.type == "person") {
+      } else if (trackableElement.type == "person") {
         buttons.push({
+          icon: "userCircle",
+          divider: true,
           title: `${Lang.t("people.check-in")}`,
           click: () => {
             Interact.closeOnThisDay();
@@ -474,6 +481,7 @@ const interactInit = () => {
           },
         });
       }
+
       methods.popmenu({
         title: `${tracker ? tracker.label : trackableElement.raw} options`,
         buttons: buttons,
@@ -661,12 +669,14 @@ const interactInit = () => {
             title: `${Lang.t("general.edit", "Edit")}...`,
             click: actions.editLog,
             divider: true,
+            icon: "edit",
           },
           {
             title: `${Lang.t("general.on-this-day", "On this Day")}...`,
             click: () => {
               Interact.onThisDay(new Date(log.end));
             },
+            icon: "calendar",
           },
           {
             title: `${Lang.t("general.copy-to-clipboard", "Copy to Clipboard")}...`,
@@ -674,19 +684,26 @@ const interactInit = () => {
               clipboard(log.note);
               Interact.toast("📋  Note text copied");
             },
+            icon: "copy",
+            divider: true,
           },
           {
             title: `${Lang.t("general.share-as-image", "Share as Image")}...`,
             click: actions.shareLog,
+            icon: "share",
           },
         ];
+
         if (!options.hideDelete) {
           initial.push({
             title: `${Lang.t("general.delete", "Delete")}...`,
             click: actions.delete,
+            icon: "delete",
+            divider: true,
           });
         }
-        methods.popmenu({ title: "Log Options", buttons: initial });
+
+        methods.popmenu({ title: "Note Options", buttons: initial });
       }); // end return promise
     },
     showLocations(locations) {

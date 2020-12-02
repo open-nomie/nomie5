@@ -6,13 +6,41 @@
   import Button from "../button/button.svelte";
   import Text from "../text/text.svelte";
   import Divider from "../divider/divider.svelte";
+  import Icon from "../icon/icon.svelte";
+  import List from "../list/list.svelte";
+  import type { groupBy } from "lodash";
+  import Avatar from "../avatar/avatar.svelte";
   const dispatch = createEventDispatcher();
 
   export let title = undefined;
   export let description = undefined;
-  export let buttons = [];
+  export let buttons: Array<PopMenuButton> = [];
   // export let cancel = undefined;
   export let show = true;
+
+  interface PopMenuButton {
+    title?: string;
+    description?: string;
+    emoji?: string;
+    icon?: string;
+    disabled?: boolean;
+    click?: Function;
+    divider?: boolean;
+  }
+
+  let buttonGroup: Array<Array<PopMenuButton>> = [];
+
+  $: if (buttons) {
+    buttonGroup = [[]];
+    let current: number = buttonGroup.length - 1;
+    buttons.forEach((button: PopMenuButton) => {
+      if (button.divider) {
+        buttonGroup.push([]);
+        current = buttonGroup.length - 1;
+      }
+      buttonGroup[current].push(button);
+    });
+  }
 
   let showDom: boolean = false;
   let showBase: boolean = false;
@@ -56,6 +84,7 @@
 <style lang="scss" type="text/scss">
   $radius: 1em;
   :global(.pop-menu) {
+    --pop-button-radius: 12px;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -130,34 +159,50 @@
       }
     }
   }
-  :global(.pop-menu .list .nbtn) {
-    border-radius: 0;
-    margin-bottom: 0;
-    margin-top: 0;
-    border: none;
-    box-shadow: none !important;
-    background-color: transparent;
-    &:hover {
-      transform: scale(1) !important;
-      color: var(--color-inverse) !important;
-      background-color: var(--color-solid) !important;
-    }
-    &:first-child {
-      border-top-right-radius: $radius;
-      border-top-left-radius: $radius;
-    }
-    &:last-child() {
-      border-bottom-right-radius: $radius;
-      border-bottom-left-radius: $radius;
-    }
-    &:active {
-      // transform: scale(0.98);
-    }
-    &:hover {
-      transform: none;
-      color: inherit;
-      // background-color: var(--color-faded) !important;
-    }
+  :global(.pop-menu .pop-button) {
+    box-shadow: none;
+  }
+  :global(.pop-menu .n-list) {
+    border-radius: 12px !important;
+  }
+  :global(.pop-menu .n-list .nbtn main) {
+    text-align: left !important;
+  }
+  :global(.pop-menu .n-list .nbtn ~ .nbtn:after) {
+    content: "";
+    border-top: solid 1px rgba(155, 155, 155, 0.25) !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    // border-radius: 0;
+    // margin-bottom: 0;
+    // margin-top: 0;
+    // border: none;
+    // box-shadow: none !important;
+    // background-color: transparent;
+    // &:hover {
+    //   transform: scale(1) !important;
+    //   color: var(--color-inverse) !important;
+    //   background-color: var(--color-solid) !important;
+    // }
+    // &:first-child {
+    //   border-top-right-radius: $radius;
+    //   border-top-left-radius: $radius;
+    // }
+    // &:last-child() {
+    //   border-bottom-right-radius: $radius;
+    //   border-bottom-left-radius: $radius;
+    // }
+    // &:active {
+    //   // transform: scale(0.98);
+    // }
+    // &:hover {
+    //   transform: none;
+    //   color: inherit;
+    //   // background-color: var(--color-faded) !important;
+    // }
   }
   :global(.pop-menu .nbtn-danger:hover, .pop-menu.nbtn-danger:active) {
     background-color: var(--color-red) !important;
@@ -174,43 +219,52 @@
     on:click={methods.backgroundClicked}>
     <div class="card">
       {#if title || description}
-        <div class="pb-3 pt-2 text-center">
+        <div class="p-2">
           {#if title}
-            <h5 class="text-center m-0 p-0 text-md text-inverse-2">{title}</h5>
+            <h5 class="p-0 m-0 text-lg text-bold text-inverse {!description ? 'pb-2' : ''}">{title}</h5>
           {/if}
           {#if description}
-            <p class="text-center m-0 p-0">{description}</p>
+            <p class="p-0 m-0 mt-1">{description}</p>
           {/if}
         </div>
       {/if}
-      <div class="list bg-solid">
-        {#each buttons as button, index}
-          {#if button.title}
-            <Button
-              block
-              color="light"
-              size="lg"
-              ariaLabel={button.title}
-              disabled={button.disabled}
-              style="padding-top:8px; padding-bottom:8px;"
-              className="pop-button pop-button-{index}
-              {button.description ? 'nbtn-desc' : ''}"
-              on:click={(evt) => {
-                button.click();
-                close(evt);
-              }}>
-              {button.title}
-              {#if button.description}
-                <Text size="sm" leading2 faded className="mb-1">{button.description}</Text>
-              {/if}
-            </Button>
-          {/if}
-          {#if button.divider}
-            <Divider center />
-          {/if}
-        {/each}
 
-      </div>
+      {#each buttonGroup as group, gIndex}
+        <List className="mb-2 rounded-xl">
+          {#each group as button, index}
+            {#if button.title}
+              <Button
+                block
+                color="light"
+                size="lg"
+                ariaLabel={button.title}
+                disabled={button.disabled}
+                className="pop-button pop-button-{index}
+                {button.description ? 'nbtn-desc' : ''}"
+                on:click={(evt) => {
+                  button.click();
+                  close(evt);
+                }}>
+                {button.title}
+                {#if button.description}
+                  <Text size="sm" leading2 faded className="mt-1">{button.description}</Text>
+                {/if}
+
+                <div slot="right">
+                  {#if button.icon}
+                    <Icon name={button.icon} />
+                  {:else if button.emoji}
+                    <Avatar emoji={button.emoji} size={24} />
+                  {/if}
+                </div>
+
+              </Button>
+            {/if}
+          {/each}
+        </List>
+      {/each}
+
+      <div className="bg-transparent" />
       <Button
         block
         className="mt-2"

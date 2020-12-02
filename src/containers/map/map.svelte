@@ -118,6 +118,7 @@
     let buttons = $Locations.map((loc: Location) => {
       return {
         title: loc.name,
+        icon: "pin",
         click: () => {
           methods.setLocation(loc);
 

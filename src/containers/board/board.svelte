@@ -213,6 +213,7 @@
     let buttons = [
       {
         title: `${Lang.t("general.add-a-tracker", "Add a Tracker")}`,
+        icon: "addOutline",
         async click() {
           await tick(300);
           methods.addButtonTap();
@@ -220,26 +221,31 @@
       },
       {
         title: `${Lang.t("board.manage-this-tab", "Manage this Tab")}`,
+        icon: "edit",
         async click() {
           editBoard();
         },
         divider: true,
       },
+
       {
-        title: `${Lang.t("board.organize-tabs", "Organize Tabs")}`,
+        title: `${Lang.t("board.create-new-board", "Add New Tab")}`,
+        icon: "addFolder",
         async click() {
-          Interact.toggleBoardSorter();
+          methods.newBoard();
         },
       },
       {
-        title: `${Lang.t("board.create-new-board", "Add New Tab")}`,
+        title: `${Lang.t("board.organize-tabs", "Organize Tabs")}`,
+        icon: "switch",
         async click() {
-          methods.newBoard();
+          Interact.toggleBoardSorter();
         },
         divider: true,
       },
       {
         title: `${Lang.t("general.all-nomie-settings", "More Nomie Settings")}`,
+        icon: "settings",
         async click() {
           navigate("/settings");
         },
@@ -266,11 +272,23 @@
     addButtonTap() {
       let buttons = [];
       // Add Library Button
+
+      // Add "Create Tracker" button
+      buttons.push({
+        title: `${Lang.t("board.create-custom-tracker", "Create a Tracker")}`,
+        icon: "addOutline",
+        click() {
+          methods.trackerEditor();
+          // navigate("/tracker/design");
+        },
+      });
+
       // If NOT "all" Board
       if ($BoardStore.active != "all") {
         // Add "Existing Tracker" button
         buttons.push({
           title: `${Lang.t("board.add-existing-tracker", "Pick from My Trackers")}`,
+          icon: "chip",
           click: async () => {
             let trackers = await Interact.selectTrackers();
 
@@ -281,17 +299,10 @@
           },
         });
       }
-      // Add "Create Tracker" button
-      buttons.push({
-        title: `${Lang.t("board.create-custom-tracker", "Create a Tracker")}`,
-        click() {
-          methods.trackerEditor();
-          // navigate("/tracker/design");
-        },
-      });
 
       buttons.push({
         title: `${Lang.t("board.browse-starter-trackers", "Browse Library")}`,
+        icon: "library",
         click() {
           TrackerLibrary.toggle();
         },
@@ -299,6 +310,7 @@
 
       buttons.push({
         title: `${Lang.t("general.import-from-file", "Import from File")}`,
+        icon: "upload",
         click() {
           TrackerStore.importFromFile();
         },
@@ -354,7 +366,7 @@
      */
     async newBoard() {
       let res = await Interact.prompt(
-        `${Lang.t("board.add-a-board", "Add a Tab")}`,
+        `${Lang.t("board.add-a-board")}`,
         `${Lang.t(
           "board.add-a-board-description",
           "Tabs help you organize your trackers. For example: social, food, and fitness can contain trackers specifically for those activies. You can have the same tracker on multiple tabs."
@@ -387,6 +399,7 @@
       // Remove Tracker Button Prompts
       const removeButton = {
         title: `${(Lang.t("general.remove"), "Remove")}...`,
+        icon: "delete",
         async click() {
           // If we're on All - warn the hell out of the user
           if ($BoardStore.active === "all") {
@@ -575,7 +588,7 @@
       {:else}
         {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 10 && $UserStore.storageType == 'local' && $UserStore.meta.hideBackup == false}
           <div class="container-sm">
-            <div class="backup pt-2 pb-1 text-center">
+            <div class="pt-2 pb-1 text-center backup">
               <!--- If it's way back - it's not really set-->
               {#if daysSinceLastBackup > 1000}
                 <Text inline size="sm" faded>
@@ -644,7 +657,7 @@
         </main>
 
         {#if (foundTrackers || boardTrackers || []).length}
-          <div class="board-actions mt-5 mb-3 n-row" style="min-width:100px;">
+          <div class="mt-5 mb-3 board-actions n-row" style="min-width:100px;">
 
             <ButtonGroup className="mr-2 box-shadow-tight">
               <Button

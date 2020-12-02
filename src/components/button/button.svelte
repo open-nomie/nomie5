@@ -28,6 +28,10 @@
   button {
     position: relative;
     overflow: hidden;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
   svg {
     position: absolute;
@@ -36,6 +40,7 @@
     left: 0;
     bottom: 0;
   }
+
   :global(.btn.btn-inline) {
     display: inline-flex;
   }
@@ -68,5 +73,9 @@
     }
   }}>
   <Ripple bind:hit />
-  <slot />
+  <slot name="left" />
+  <main class="text-center filler">
+    <slot />
+  </main>
+  <slot name="right" />
 </button>

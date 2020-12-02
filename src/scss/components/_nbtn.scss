@@ -11,6 +11,11 @@
   transition: background 0.2s ease-in-out;
 }
 
+.nbtn-desc {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
 .nbtn {
   transition: all 0.2s ease-in-out;
   --button-base-size: calc(var(--base-font-size) * 1);

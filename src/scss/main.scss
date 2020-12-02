@@ -88,6 +88,19 @@ TODO: Organize main into components or containers.
   position: sticky;
 }
 
+.rounded {
+  border-radius: 6px;
+}
+.rounded-md {
+  border-radius: 8px;
+}
+.rounded-lg {
+  border-radius: 12px !important;
+}
+.rounded-xl {
+  border-radius: 14px !important;
+}
+
 .bottom-0 {
   bottom: env(safe-area-inset-bottom);
 }
