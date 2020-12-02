@@ -116,10 +116,11 @@
       await LedgerStore.saveLog(ActiveLogStore.asLog());
       // Clear active log
       await ActiveLogStore.clear();
-    } else {
+    } else if (tracker.type !== "timer") {
       // If it's a note - just open it like normal
       Interact.trackerTap(tracker, $TrackerStore.trackers);
     }
+    return false;
   }
 </script>
 
@@ -261,7 +262,7 @@
         on:longpress={(evt) => {
           longPress(tracker);
         }}
-        on:click={() => {
+        on:click={(evt) => {
           dispatch('tap', tracker);
         }}
         on:more={() => {

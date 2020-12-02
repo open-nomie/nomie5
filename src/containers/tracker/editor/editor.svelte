@@ -16,7 +16,7 @@
   import NInput from "../../../components/input/input.svelte";
   import ColorPicker from "../../../components/color-picker/color-picker.svelte";
   import AutoComplete from "../../../components/auto-complete/auto-complete.svelte";
-  import PickerList from "../../../components/picker-list/picker-list.svelte";
+  import PickerListEditor from "../../../components/picker-list/picker-editor.svelte";
 
   // Utils
   import { createEventDispatcher } from "svelte";
@@ -176,11 +176,14 @@
             data.tracker.picks = data.tracker.picks.filter((d) => `${d}`.length);
           }
 
-          dispatch("save", data.tracker);
           await TrackerStore.saveTracker(data.tracker);
+          console.log("Should saved?");
           Interact.toast(`${data.tracker.label} saved`);
+          console.log("Should saved?");
+          dispatch("save", data.tracker);
           methods.cancel();
         } catch (e) {
+          console.error(e);
           Interact.error(e.message);
         }
       }
@@ -205,8 +208,9 @@
       const buttons = Object.keys(trackerTypes).map((typeKey: ITrackerType) => {
         let type = trackerTypes[typeKey];
         return {
-          title: `${type.emoji} ${type.label}`,
-          description: `${typeKey === data.tracker.type ? "**Active**" : ""} ${type.description}`,
+          emoji: type.emoji,
+          title: `${type.label} ${typeKey === data.tracker.type ? " ✓" : ""}`,
+          description: `${type.description}`,
           click() {
             if (data.tracker) {
               data.tracker.type = typeKey;
@@ -327,13 +331,14 @@
       </ListItem>
 
       {#if data.tracker.type == 'picker'}
-        <PickerList
-          mode="edit"
+        <PickerListEditor
           canSelect={false}
-          bind:tracker={data.tracker}
-          className="px-2 tracker-picker"
-          itemClass="px-2"
-          on:change={(evt) => {}} />
+          bind:list={tracker.picks}
+          className="tracker-picker"
+          itemClass=""
+          on:change={(evt) => {
+            data.tracker.picks = (evt.detail || []).filter((d) => d.length);
+          }} />
       {/if}
 
       {#if data.tracker.type == 'tick'}

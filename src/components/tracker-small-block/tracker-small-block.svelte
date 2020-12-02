@@ -30,7 +30,7 @@
 
   function shouldShowValue(trackerElement) {
     if (trackerElement.obj && trackerElement.obj.type == "picker") {
-      return false;
+      return true;
     } else if (trackerElement.type == "person") {
       return false;
     } else if (trackerElement.obj && trackerElement.obj.type == "tick") {
@@ -78,7 +78,12 @@
       {#if hasEmojiSlot}
         <slot name="emoji" />
       {:else if element.type == 'tracker'}
-        <Avatar size={avatarSize} emoji={(element.obj || {}).emoji} label={(element.obj || {}).tag} className="mr-2" />
+        <Avatar
+          size={avatarSize}
+          color={element.obj.color}
+          emoji={(element.obj || {}).emoji}
+          label={(element.obj || {}).label}
+          className="mr-2" />
       {:else if element.type == 'person'}
         {#if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].avatar}
           <Avatar size={avatarSize} src={$PeopleStore.people[element.id].avatar} className="mr-2" />
@@ -86,7 +91,7 @@
           <Avatar size={avatarSize} label={$PeopleStore.people[element.id].displayName} className="mr-2" />
         {/if}
       {/if}
-      <main class="{truncate ? 'truncate' : ''} text-left w-100">
+      <div class="{truncate ? 'truncate' : ''} text-left w-100">
         <Text truncate size="sm">{(element.obj || {}).label || element.id}</Text>
         {#if shouldShowValue(element)}
           {#if element.value === 0}
@@ -95,7 +100,7 @@
             <Text bold style="white-space:pre">{NomieUOM.format(element.value, (element.obj || {}).uom) || ''}</Text>
           {/if}
         {/if}
-      </main>
+      </div>
     </Row>
 
   </Button>

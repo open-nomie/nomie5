@@ -22,6 +22,7 @@
     align-items: center;
     max-width: 200px;
     margin: 4px;
+    text-align: left;
     padding: 8px;
     border-radius: 20px;
     box-shadow: var(--box-shadow-tight);
@@ -39,15 +40,15 @@
         on:click={() => {
           Device.open(sponsor.url);
         }}>
-        <Avatar size={54} src={sponsor.avatar} label={sponsor.name} emoji={sponsor.emoji} className="mr-1" />
-        <div class="text-left">
-          {#if sponsor.name}
-            <Text size="sm">{sponsor.name}</Text>
-          {/if}
-          {#if sponsor.description}
-            <Text size="xs" faded>{sponsor.description}</Text>
-          {/if}
+        <div slot="left">
+          <Avatar size={54} src={sponsor.avatar} label={sponsor.name} emoji={sponsor.emoji} className="mr-1" />
         </div>
+        {#if sponsor.name}
+          <Text size="sm">{sponsor.name}</Text>
+        {/if}
+        {#if sponsor.description}
+          <Text size="xs" faded>{sponsor.description}</Text>
+        {/if}
       </Button>
     {/each}
   </Grid>

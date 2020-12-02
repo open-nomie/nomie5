@@ -113,8 +113,7 @@
   title={Lang.t('tracker.things-to-track', 'Things to Track')}>
 
   {#if $TrackerLibrary.first}
-    <div class="px-2 pt-3 intro-message">
-
+    <div class="p-3 intro-message">
       <NText size="sm" tag="div">{Lang.t('tracker.pick-at-least-one', 'Pick at least 1 to continue')}</NText>
     </div>
   {/if}
