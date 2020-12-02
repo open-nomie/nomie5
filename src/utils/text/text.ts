@@ -17,12 +17,12 @@ export const truncate = truncateText;
 export function initials(str: string): string {
   str = `${str}`;
   const split = str.split(" ");
-  if (split.length > 1) {
-    return `${split[0].substr(0, 1)}${split[split.length - 1].substr(0, 1)}`.toUpperCase();
-  } else if (!str.length) {
-    return "NA";
-  } else {
+  if (split.length == 1) {
     return str.substr(0, 2).toUpperCase();
+  } else if (split.length > 1) {
+    return `${split[0].substr(0, 1)}${split[split.length - 1].substr(0, 1)}`.toUpperCase();
+  } else {
+    return "NA";
   }
 }
 

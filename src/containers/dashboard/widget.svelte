@@ -41,7 +41,6 @@
   export let widget: Widget;
 
   function getLabel(element: TrackableElement) {
-    console.log("Elememnt", element);
     if (element.type == "person") {
       return element.obj ? element.obj.username : element.id;
     } else if (element.type == "tracker") {

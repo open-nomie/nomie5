@@ -30,12 +30,9 @@
     log.end = dayjs(apiLog.date).valueOf();
     return log;
   }
-  onMount(() => {
-    console.log({ logs });
-  });
+  onMount(() => {});
 
   async function discardLog(apiLog: any) {
-    console.log({ apiLog });
     const confirmed = await Interact.confirm(
       Lang.t("nomie-api.discard-log", "Discard this Log?"),
       Lang.t("general.cannot-be-undone", "This cannot be undone")
@@ -43,10 +40,9 @@
     if (confirmed) {
       discarded.push(apiLog.id);
       discarded = discarded;
-      console.log("Should we clear", discarded, logs);
+
       if (discarded.length == logs.length) {
         await emptySlots();
-        console.log("Delete them from the api");
       }
     }
   }
@@ -71,7 +67,7 @@
 
       // Converting APIv1 Log to Nomie
       const response = await NomieAPI.import(filteredLogs);
-      console.log({ filteredLogs, response });
+
       if (response.success.length !== filteredLogs.length) {
         Interact.alert(`Only ${response.success.length} of ${filteredLogs.length} imported.`);
       }
@@ -122,7 +118,7 @@
       </Button>
       <Button color="primary" block on:click={importLogs}>
         {Lang.t('nomie-api.import', 'Import')}
-        <span class="opacity-5 ml-2">({Math.abs(logs.length - discarded.length)})</span>
+        <span class="ml-2 opacity-5">({Math.abs(logs.length - discarded.length)})</span>
       </Button>
     </Toolbar>
   </div>
