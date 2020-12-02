@@ -5462,6 +5462,11 @@ button {
       --button-base-size: calc(var(--base-font-size) * 0.9); } }
   .nbtn:active {
     transform: scale(0.95); }
+  .nbtn main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center; }
 
 .nbtn:focus {
   outline: rgba(155, 155, 155, 0.2) !important; }

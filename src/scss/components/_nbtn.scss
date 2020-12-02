@@ -28,6 +28,13 @@
     transform: scale(0.95);
   }
 
+  main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
   @include nbtn(30px, 8px, 4px);
   overflow: hidden;
   font-size: var(--button-base-size);

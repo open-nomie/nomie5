@@ -74,6 +74,8 @@
     ChartSquareBar,
     UserCircle,
     Duplicate,
+    Play,
+    Stop,
   } from "svelte-hero-icons";
 
   export let name = "add";
@@ -109,6 +111,8 @@
     calendar: Calendar,
     chart: ChartBar,
     chart2: ChartSquareBar,
+    play: Play,
+    stop: Stop,
     cake: Cake,
     expand: ArrowsExpand,
     checkmark: Check,

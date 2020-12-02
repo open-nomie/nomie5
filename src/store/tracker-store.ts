@@ -129,7 +129,7 @@ const trackerStoreInit = () => {
     startTimer(tracker) {
       update((state) => {
         if (state.trackers[tracker.tag]) {
-          state.trackers[tracker.tag].started = new Date().getTime();
+          state.trackers[tracker.tag].started = tracker.started || new Date().getTime();
           if (state.timers.indexOf(tracker) == -1) {
             state.timers.push(tracker);
           }

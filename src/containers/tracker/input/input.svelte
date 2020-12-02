@@ -297,7 +297,7 @@
               style="max-width:130px"
               title="Stop Timer"
               className="text-white {data.tracker.started > 0 ? '' : 'd-none'}">
-              {Lang.t('general.stop', 'Stop')}
+              <Icon name="stop" size="32" className="fill-white" />
             </Button>
           {/if}
         {/if}

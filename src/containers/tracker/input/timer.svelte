@@ -20,6 +20,9 @@
 
   // Stores
   import { TrackerStore } from "../../../store/tracker-store";
+  import Button from "../../../components/button/button.svelte";
+  import { Lang } from "../../../store/lang";
+  import Icon from "../../../components/icon/icon.svelte";
 
   // Consts
   const dispatch = createEventDispatcher();
@@ -33,7 +36,7 @@
   const data = {
     tempValue: (value || "") + "" || "",
     changed: false,
-    started: tracker.started
+    started: tracker.started,
   };
 
   const methods = {
@@ -42,7 +45,7 @@
       tracker.started = new Date().getTime();
       TrackerStore.saveTracker(tracker);
       data = data;
-    }
+    },
   };
 
   onMount(() => {
@@ -58,16 +61,26 @@
 
 <div class="tracker-input n-timer-input w-100 ">
   {#if tracker.started}
-    <Counter
-      started={tracker.started}
-      lg
-      className="py-5 bg-light"
-      on:change={event => {}} />
+    <Counter started={tracker.started} lg className="py-5 bg-light" on:change={(event) => {}} />
   {:else}
-    <ManualTime
-      {value}
-      on:change={event => {
-        dispatch('change', event.detail);
-      }} />
+    <div class="n-panel center-all column">
+      <div class="filler" />
+      <ManualTime
+        {value}
+        on:change={(event) => {
+          dispatch('change', event.detail);
+        }} />
+      <Button
+        on:click={() => {
+          dispatch('forceStart');
+        }}
+        color="light"
+        shape="circle"
+        size="md"
+        className="text-white animate up {value ? 'visible' : 'hidden'}">
+        <Icon name="play" size="32" className="fill-inverse-1" />
+      </Button>
+      <div class="filler" />
+    </div>
   {/if}
 </div>
