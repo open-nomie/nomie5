@@ -74,7 +74,7 @@
   }}>
   <Ripple bind:hit />
   <slot name="left" />
-  <main class="text-center filler">
+  <main>
     <slot />
   </main>
   <slot name="right" />

@@ -5466,7 +5466,8 @@ button {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center; }
+    justify-content: center;
+    flex-grow: 1; }
 
 .nbtn:focus {
   outline: rgba(155, 155, 155, 0.2) !important; }
@@ -5508,6 +5509,10 @@ button {
   text-align: left;
   padding-left: 16px;
   padding-right: 16px; }
+  .nbtn-desc main {
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: left; }
   .nbtn-desc .n-text {
     text-align: left; }
 
