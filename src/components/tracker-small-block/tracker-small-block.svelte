@@ -80,15 +80,17 @@
       {:else if element.type == 'tracker'}
         <Avatar
           size={avatarSize}
-          color={element.obj.color}
+          color={(element.obj || {}).color}
           emoji={(element.obj || {}).emoji}
-          label={(element.obj || {}).label}
+          label={(element.obj || {}).label || element.id}
           className="mr-2" />
       {:else if element.type == 'person'}
         {#if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].avatar}
           <Avatar size={avatarSize} src={$PeopleStore.people[element.id].avatar} className="mr-2" />
         {:else if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].displayName}
           <Avatar size={avatarSize} label={$PeopleStore.people[element.id].displayName} className="mr-2" />
+        {:else}
+          <Avatar size={avatarSize} label={element.id} className="mr-2" />
         {/if}
       {/if}
       <div class="{truncate ? 'truncate' : ''} text-left w-100">

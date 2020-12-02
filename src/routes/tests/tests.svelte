@@ -53,6 +53,7 @@
     <List title="Tracker Small Block {$Device.size}" outside pad>
       <Grid columns={['sm', 'xs'].indexOf($Device.size) > -1 ? 2 : 4}>
         <TrackerSmallBlock className="m-2" element={new TrackableElement({ id: 'bob', type: 'person', raw: 'bob' })} />
+        <TrackerSmallBlock className="m-2" element={new TrackableElement({ id: 'bob', type: 'person', raw: 'bob' })} />
         <TrackerSmallBlock
           className="m-2"
           value="44:32:21"
@@ -61,7 +62,7 @@
         <TrackerSmallBlock
           className="m-2"
           value="$33.234"
-          element={new TrackableElement({ id: 'solo', type: 'person', raw: 'solo' })}
+          element={new TrackableElement({ id: 'solo', type: 'tracker', raw: 'solo' })}
           solo />
         <TrackerSmallBlock
           className="m-2"
@@ -113,9 +114,9 @@
       </Row>
     </Card>
 
-    <hr class="divider center my-3" />
+    <hr class="my-3 divider center" />
 
-    <hr class="divider center my-2" />
+    <hr class="my-2 divider center" />
 
     <Card title="Confetti" className="mb-3" pad>
 
@@ -152,7 +153,7 @@
       <Empty title="Nothing Found" description="You could do something else" emoji="😂" />
     </Card>
 
-    <hr class="divider center my-2" />
+    <hr class="my-2 divider center" />
 
     <Text size="lg" leading3 className="mb-2">Positivity</Text>
 
@@ -166,13 +167,13 @@
       <PositivityBar size="sm" />
     </Card>
 
-    <hr class="divider center my-2" />
+    <hr class="my-2 divider center" />
 
     <Text size="lg" leading3>Date Time Bar</Text>
 
     <DatePicker date={dayjs()} className="mb-2" on:change={(evt) => {}} />
 
-    <hr class="divider center my-2" />
+    <hr class="my-2 divider center" />
 
     <Text size="lg" leading3 className="mb-2">Streaks</Text>
 
@@ -189,7 +190,7 @@
     <!-- <Streak term="#cider" view="quarter" />
     <Streak term="#sleep OR #mood" view="year" /> -->
 
-    <hr class="divider center my-2" />
+    <hr class="my-2 divider center" />
 
     <Text size="lg" leading3 className="mb-2">Calendar</Text>
 
@@ -198,20 +199,20 @@
     </Card>
 
     <Text size="lg" leading3 className="my-2">Buttons</Text>
-    <hr class="divider center my-2" />
+    <hr class="my-2 divider center" />
     <Button size="lg">Large Button</Button>
-    <hr class="divider center my-2" />
+    <hr class="my-2 divider center" />
     <Button size="md" shape="round" color="danger">Medium Button</Button>
-    <hr class="divider center my-2" />
+    <hr class="my-2 divider center" />
     <Button size="sm">Small Button</Button>
-    <hr class="divider center my-2" />
+    <hr class="my-2 divider center" />
     <Button size="xs">XSmall Button</Button>
-    <hr class="divider center my-2" />
+    <hr class="my-2 divider center" />
     <Button block color="light">
       <Spinner size="14" />
       Button Block
     </Button>
-    <hr class="divider center my-2" />
+    <hr class="my-2 divider center" />
     <div class="n-row">
       <Button icon className="mr-2" color="primary">
         <Icon name="chevronUp" />
@@ -236,13 +237,13 @@
       </Button>
     </div>
 
-    <hr class="divider my-2" />
+    <hr class="my-2 divider" />
 
     <Button text>Text</Button>
     <Button text size="sm" color="success">Text Sm</Button>
     <Button text size="xs">Text XS</Button>
 
-    <hr class="divider my-2" />
+    <hr class="my-2 divider" />
     <ButtonGroup>
       <Button>Button 0</Button>
       <Button className="active">Button 1</Button>
