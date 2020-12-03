@@ -5511,7 +5511,7 @@ button {
   padding-right: 16px; }
   .nbtn-desc main {
     flex-direction: column;
-    justify-content: flex-start;
+    align-items: flex-start !important;
     text-align: left; }
   .nbtn-desc .n-text {
     text-align: left; }
@@ -7170,6 +7170,9 @@ TODO: Organize main into components or containers.
 .sticky {
   position: -webkit-sticky;
   position: sticky; }
+
+.overflow-y-auto {
+  overflow-y: auto; }
 
 .rounded {
   border-radius: 6px; }

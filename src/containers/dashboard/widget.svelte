@@ -19,6 +19,7 @@
   import WidgetLastUsed from "./widgets/widget-last-used.svelte";
   import WidgetBarChart from "./widgets/widget-bar-chart.svelte";
   import WidgetValue from "./widgets/widget-value-display.svelte";
+  import WidgetNote from "./widgets/widget-note.svelte";
   import WidgetMinMax from "./widgets/widget-min-max.svelte";
   import WidgetPositivityPie from "./widgets/widget-positivity-pie.svelte";
   import WidgetMap from "./widgets/widget-map.svelte";
@@ -309,6 +310,8 @@
           <WidgetBarChart {widget} />
         {:else if widget.type == 'value' && widget.stats}
           <WidgetValue {widget} />
+        {:else if widget.type == 'note' && widget.stats}
+          <WidgetNote {widget} />
         {:else if widget.type == 'what-time'}
           <WidgetWhatTime {widget} />
         {:else if widget.type == 'last-used'}

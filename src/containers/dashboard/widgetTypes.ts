@@ -15,6 +15,12 @@ export const widgetTypes: Array<IWidgetType> = [
     optional: ["cond-style"],
   },
   {
+    label: "Latest Note",
+    id: "note",
+    requires: ["timeframe", "element"],
+    optional: [],
+  },
+  {
     label: "Bar Chart",
     id: "barchart",
     requires: ["timeframe", "element"],
