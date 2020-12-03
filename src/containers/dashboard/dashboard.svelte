@@ -53,6 +53,7 @@
   import { SearchStore } from "../../store/search-store";
   import Empty from "../empty/empty.svelte";
   import LedgerTools from "../../store/ledger/ledger-tools";
+  import Swipable from "../../components/swipable/swipable.svelte";
   // import { getDashboardStartEndDates } from "./dashboard-helpers";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
@@ -526,29 +527,33 @@
         <hr class="my-3 divider center" />
       {/if}
       {#if !editMode && activeDashboard && activeDashboard.widgets}
-        <div class="dashboard-wrapper" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
-          {#if people && trackers}
-            {#if activeDashboard.widgets.length == 0}
-              <Empty
-                emoji="💹"
-                title={Lang.t('general.dashboard', 'Dashboard')}
-                description={Lang.t('dashboard.empty-message', 'Mix and match charts, stats, and other widgets to create your own custom views of your life.')}
-                buttonLabel={Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
-                buttonClick={newWidget} />
+        <Swipable on:left={DashboardStore.next} on:right={DashboardStore.previous}>
+          <div class="dashboard-wrapper" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
+
+            {#if people && trackers}
+              {#if activeDashboard.widgets.length == 0}
+                <Empty
+                  emoji="💹"
+                  title={Lang.t('general.dashboard', 'Dashboard')}
+                  description={Lang.t('dashboard.empty-message', 'Mix and match charts, stats, and other widgets to create your own custom views of your life.')}
+                  buttonLabel={Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
+                  buttonClick={newWidget} />
+              {/if}
+
+              {#each activeDashboard.widgets as widget (widget.id)}
+                <WidgetEle
+                  on:action={(evt) => {
+                    onWidgetAction(evt.detail);
+                  }}
+                  {widget}
+                  on:edit={() => {
+                    editWidget(widget);
+                  }} />
+              {/each}
             {/if}
 
-            {#each activeDashboard.widgets as widget (widget.id)}
-              <WidgetEle
-                on:action={(evt) => {
-                  onWidgetAction(evt.detail);
-                }}
-                {widget}
-                on:edit={() => {
-                  editWidget(widget);
-                }} />
-            {/each}
-          {/if}
-        </div>
+          </div>
+        </Swipable>
         {#if activeDashboard && activeDashboard.widgets && activeDashboard.widgets.length}
           <div class="mb-2 board-actions filler">
             <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={newWidget}>

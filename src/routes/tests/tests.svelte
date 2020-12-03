@@ -1,5 +1,6 @@
 <script>
   import dayjs from "dayjs";
+  import { swipe } from "../../actions/swipe";
   import Avatar from "../../components/avatar/avatar.svelte";
 
   import ButtonGroup from "../../components/button-group/button-group.svelte";
@@ -20,6 +21,7 @@
   import Row from "../../components/row/row.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
   import Sponsors from "../../components/sponsors/sponsors.svelte";
+  import Swipable from "../../components/swipable/swipable.svelte";
   import Text from "../../components/text/text.svelte";
   import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import Toolbar from "../../components/toolbar/toolbar.svelte";
@@ -49,6 +51,12 @@
     <Text size="sm" faded className="mb-4">
       A set of base components for quick testing... I should be using Storybook, but have yet to do so.
     </Text>
+
+    <List title="Swiper Test">
+      <Swipable>
+        <div class="p-3 bg-primary">Swipe me</div>
+      </Swipable>
+    </List>
 
     <List title="Tracker Small Block {$Device.size}" outside pad>
       <Grid columns={['sm', 'xs'].indexOf($Device.size) > -1 ? 2 : 4}>

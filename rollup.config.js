@@ -87,7 +87,7 @@ export default [
       typescript({ sourceMap: !production }),
       json(),
       resolve(),
-      commonjs({ sourceMap: false }),
+      commonjs({ sourceMap: false, namedExports: { "svelte-hammer": ["Hammer", "pan", "pinch", "press", "rotate", "swipe", "tap"] } }),
 
       // generateSW({
       //   swDest: "./public/sw.js",

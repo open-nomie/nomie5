@@ -7174,6 +7174,9 @@ TODO: Organize main into components or containers.
 .overflow-y-auto {
   overflow-y: auto; }
 
+overflow-x-hidden {
+  overflow-x: hidden; }
+
 .rounded {
   border-radius: 6px; }
 

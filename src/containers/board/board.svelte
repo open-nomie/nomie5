@@ -63,6 +63,7 @@
   import { SearchStore } from "../../store/search-store";
 
   import NPaths from "../../paths";
+  import Swipable from "../../components/swipable/swipable.svelte";
 
   // Consts
 
@@ -629,31 +630,32 @@
           </div>
         {/if}
 
-        <main class="n-board h-100" on:swipeleft={BoardStore.next} on:swiperight={BoardStore.previous}>
+        <main class="overflow-x-hidden n-board h-100">
           <!-- Loop over trackers -->
-          {#if (foundTrackers || boardTrackers || []).length === 0}
-            <Empty
-              title={Lang.t('board.empty-title', 'No trackers found')}
-              emoji="🤔"
-              description={Lang.t('board.empty-description', 'Pick from your existing trackers, or browse the library to discover new things to track.')}
-              buttonLabel={`${Lang.t('general.add-a-tracker', 'Add a Tracker')}...`}
-              buttonClick={methods.addButtonTap} />
-          {/if}
+          <Swipable on:left={BoardStore.next} on:right={BoardStore.previous}>
+            {#if (foundTrackers || boardTrackers || []).length === 0}
+              <Empty
+                title={Lang.t('board.empty-title', 'No trackers found')}
+                emoji="🤔"
+                description={Lang.t('board.empty-description', 'Pick from your existing trackers, or browse the library to discover new things to track.')}
+                buttonLabel={`${Lang.t('general.add-a-tracker', 'Add a Tracker')}...`}
+                buttonClick={methods.addButtonTap} />
+            {/if}
 
-          <TrackersList
-            view={state.view}
-            trackers={foundTrackers || boardTrackers}
-            on:tap={(evt) => {
-              methods.trackerTapped(evt.detail);
-            }}
-            hideAdd={(foundTrackers || boardTrackers || []).length === 0}
-            on:add={methods.addButtonTap}
-            on:more={(evt) => {
-              methods.showTrackerOptions(evt.detail);
-            }} />
+            <TrackersList
+              view={state.view}
+              trackers={foundTrackers || boardTrackers}
+              on:tap={(evt) => {
+                methods.trackerTapped(evt.detail);
+              }}
+              hideAdd={(foundTrackers || boardTrackers || []).length === 0}
+              on:add={methods.addButtonTap}
+              on:more={(evt) => {
+                methods.showTrackerOptions(evt.detail);
+              }} />
 
-          <!-- Include User Tips - shit should be a component -->
-
+            <!-- Include User Tips - shit should be a component -->
+          </Swipable>
         </main>
 
         {#if (foundTrackers || boardTrackers || []).length}
