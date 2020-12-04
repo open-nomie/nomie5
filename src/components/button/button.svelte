@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import Ripple from "./ripple.svelte";
+  import { press } from "svelte-hammer";
 
   const dispatch = createEventDispatcher();
   export let id = undefined;
@@ -52,7 +53,8 @@
   {disabled}
   class={`nbtn ${block ? 'nbtn-block' : ''} ${icon ? 'nbtn-icon' : ''} nbtn-${type} nbtn-${shape} nbtn-${color} nbtn-${size} ${inline ? 'nbtn-inline' : ''} ${text ? 'nbtn-text' : ''} ${className}`}
   {title}
-  on:longtap={(e) => {
+  use:press
+  on:press={(e) => {
     dispatch('longpress', e);
     e.preventDefault();
     e.stopPropagation();
