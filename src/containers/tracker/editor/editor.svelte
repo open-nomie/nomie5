@@ -341,17 +341,6 @@
           }} />
       {/if}
 
-      {#if data.tracker.type == 'tick'}
-        <ListItem
-          title={Lang.t('tracker.save-on-tap', 'Save on Tap')}
-          className="tracker-one-tap mb-3"
-          description={Lang.t('tracker.save-on-tap-description', 'Save note immediately after tapping the button.')}>
-          <div slot="right">
-            <NToggle bind:value={data.tracker.one_tap} />
-          </div>
-        </ListItem>
-      {/if}
-
       {#if data.tracker.type == 'range'}
         <ListItem className="py-0 mb-3">
           <div class="n-row">
@@ -426,6 +415,25 @@
           description={Lang.t('tracker.note-description', 'Combine multiple trackers together using their #hashtags. For example, #mood #sleep_quality. Nomie will then ask for values one by one.')} />
       {/if}
 
+      {#if data.tracker.type !== 'timer' && data.tracker.type !== 'note' && data.tracker.type !== 'picker'}
+        <NInput
+          listItem
+          placeholder={Lang.t('tracker.measure-by', 'Measure By')}
+          type="select"
+          className="tracker-uom mb-3"
+          bind:value={data.tracker.uom}>
+          {#each Object.keys(data.groupedUOMs) as groupKey (groupKey)}
+            <option disabled>-- {groupKey}</option>
+            {#each data.groupedUOMs[groupKey] as uom (`${groupKey}-${uom.key}`)}
+              <option value={uom.key} disabled={uom.key == 'time' && data.tracker.type != 'timer'}>
+                {NomieUOM.plural(uom.key)}
+                {#if NomieUOM.plural(uom.key).toLowerCase() !== NomieUOM.symbol(uom.key).toLowerCase()}({NomieUOM.symbol(uom.key)}){/if}
+              </option>
+            {/each}
+          {/each}
+        </NInput>
+      {/if}
+
       <!-- ADVANCED OPTIONS -->
 
       {#if advancedCanToggle}
@@ -443,6 +451,17 @@
       {/if}
 
       {#if advanced}
+        {#if data.tracker.type == 'tick'}
+          <ListItem
+            title={Lang.t('tracker.save-on-tap', 'Save on Tap')}
+            className="tracker-one-tap mb-3 leading1"
+            description={Lang.t('tracker.save-on-tap-description', 'Save note immediately after tapping the button.')}>
+            <div slot="right">
+              <NToggle bind:value={data.tracker.one_tap} />
+            </div>
+          </ListItem>
+        {/if}
+
         {#if data.tracker.type === 'range'}
           <NInput
             listItem
@@ -465,24 +484,7 @@
         {/if}
 
         <!-- Advanced -->
-        {#if data.tracker.type !== 'timer' && data.tracker.type !== 'note' && data.tracker.type !== 'picker'}
-          <NInput
-            listItem
-            placeholder={Lang.t('tracker.measure-by', 'Measure By')}
-            type="select"
-            className="tracker-uom mb-3"
-            bind:value={data.tracker.uom}>
-            {#each Object.keys(data.groupedUOMs) as groupKey (groupKey)}
-              <option disabled>-- {groupKey}</option>
-              {#each data.groupedUOMs[groupKey] as uom (`${groupKey}-${uom.key}`)}
-                <option value={uom.key} disabled={uom.key == 'time' && data.tracker.type != 'timer'}>
-                  {NomieUOM.plural(uom.key)}
-                  {#if NomieUOM.plural(uom.key).toLowerCase() !== NomieUOM.symbol(uom.key).toLowerCase()}({NomieUOM.symbol(uom.key)}){/if}
-                </option>
-              {/each}
-            {/each}
-          </NInput>
-        {/if}
+
         <!-- End Advanced -->
       {/if}
 
