@@ -24,12 +24,16 @@
   import Spacer from "../components/spacer/spacer.svelte";
   import List from "../components/list/list.svelte";
   import Empty from "../containers/empty/empty.svelte";
+  import Icon from "../components/icon/icon.svelte";
+  import tick from "../utils/tick/tick";
 
   // Setup the Exporter
   // const Export = new Exporter();
 
   // Default to Backup - passed in by :type in route
   export let type = "backup";
+
+  let generating = false;
 
   // Set state
   let state = {
@@ -52,17 +56,24 @@
   }
 
   const methods = {
-    exportCSV() {
+    async exportCSV() {
+      generating = true;
+      Interact.blocker("Generating...");
+
+      await tick(120);
       let csv = new CSV();
       let start = startDate.toDate();
       let end = endDate.toDate();
       let trackers = state.trackers;
 
-      csv.generate({
+      await csv.generate({
         trackers,
         start,
         end,
       });
+
+      await tick(120);
+      Interact.stopBlocker();
     },
     selectTrackers() {
       Interact.selectTrackers().then((trackers) => {
@@ -113,7 +124,7 @@
         </Text>
       </NItem>
 
-      <List solo>
+      <List solo className="pt-2">
         <NItem title="Trackers" on:click={methods.selectTrackers}>
           <div slot="right">
             {#if state.trackers.length == Object.keys($TrackerStore.trackers).length}
@@ -133,8 +144,13 @@
 
       <NItem
         title={Lang.t('export.csv-download', 'Download CSV...')}
-        className="text-primary-bright clickable solo text-center"
-        on:click={methods.exportCSV} />
+        className="text-primary-bright clickable solo mt-3"
+        disabled={generating}
+        on:click={methods.exportCSV}>
+        <div slot="right" class="fcenter">
+          <Icon name="download" />
+        </div>
+      </NItem>
     </div>
   {:else}
     <div class="container backup">

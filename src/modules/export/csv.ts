@@ -34,10 +34,10 @@ export default class CSV {
             log.offset,
             trackerTag,
             trackerElement.value,
-            log.note.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
+            (log.note || "").replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
             log.lat,
             log.lng,
-            log.location.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
+            `${log.location || ""}`.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
             log.score,
           ]);
         }
@@ -54,7 +54,7 @@ export default class CSV {
           log.note.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
           log.lat,
           log.lng,
-          log.location.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
+          `${log.location || ""}`.replace(/(\"|\,|\n|\r)/g, " "), // Remove csv breaking chars
           log.score,
         ]);
       }
