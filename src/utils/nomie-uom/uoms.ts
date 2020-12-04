@@ -370,7 +370,7 @@ export default {
     singular: "Blood Sugar",
     plural: "Blood Sugar",
     symbol: "mg/dl",
-    type: "general",
+    type: "health",
     symbolAffix: "post",
     symbolSpace: true,
   },

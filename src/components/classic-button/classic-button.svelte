@@ -146,11 +146,6 @@
   <button class={`item-ball ${className} ${$UserStore.localSettings.compactButtons == true ? 'item-ball-small' : ''}`}>
     <!-- -->
     <div class="avatar-ball">
-      {#if tracker.started}
-        <div class="center countdown">
-          <Counter started={tracker.started} filled />
-        </div>
-      {/if}
       {#if hoursUsed.length}
         <div class="balls">
           <TimeBalls hours={hoursUsed} />
@@ -168,6 +163,11 @@
     </div>
 
     <Text className="ball-label truncate-2">{tracker.label}</Text>
+    {#if tracker.started}
+      <div class="center">
+        <Counter started={tracker.started} />
+      </div>
+    {/if}
   </button>
   {#if !hideMore}
     <Button icon size="sm" className="more" on:click={() => dispatch('more', tracker)}>
