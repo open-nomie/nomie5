@@ -6,6 +6,7 @@ import { writable } from "svelte/store";
 // Vendors
 import Storage from "../modules/storage/storage";
 import whatsNew from "../config/whatsNew";
+import { Interact } from "./interact";
 
 // Stores
 
@@ -31,6 +32,7 @@ const AppStoreInit = () => {
     }
     // If they're not a brand new user - meaning they have a last Version already stored.
     if (lastVersion && lastVersion !== whatsNew.version) {
+      Interact.confetti({ timeout: 3200 });
       update((state) => {
         state.whatsNew = whatsNew;
         return state;
