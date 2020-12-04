@@ -53,7 +53,7 @@
   import { SearchStore } from "../../store/search-store";
   import Empty from "../empty/empty.svelte";
   import LedgerTools from "../../store/ledger/ledger-tools";
-  import Swipable from "../../components/swipable/swipable.svelte";
+  import Swipeable from "../../components/swipeable/swipeable.svelte";
   // import { getDashboardStartEndDates } from "./dashboard-helpers";
 
   let trackers: any; // holder of user Trackers - loaded from subscribe
@@ -527,7 +527,7 @@
         <hr class="my-3 divider center" />
       {/if}
       {#if !editMode && activeDashboard && activeDashboard.widgets}
-        <Swipable on:left={DashboardStore.next} on:right={DashboardStore.previous}>
+        <Swipeable on:left={DashboardStore.next} on:right={DashboardStore.previous}>
           <div class="dashboard-wrapper" on:swipeleft={DashboardStore.next} on:swiperight={DashboardStore.previous}>
 
             {#if people && trackers}
@@ -553,7 +553,7 @@
             {/if}
 
           </div>
-        </Swipable>
+        </Swipeable>
         {#if activeDashboard && activeDashboard.widgets && activeDashboard.widgets.length}
           <div class="mb-2 board-actions filler">
             <Button size="sm" color="transparent" className="mt-4 text-primary-bright" on:click={newWidget}>

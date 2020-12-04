@@ -21,7 +21,7 @@
   import Row from "../../components/row/row.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
   import Sponsors from "../../components/sponsors/sponsors.svelte";
-  import Swipable from "../../components/swipable/swipable.svelte";
+  import Swipeable from "../../components/swipeable/swipeable.svelte";
   import Text from "../../components/text/text.svelte";
   import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
   import Toolbar from "../../components/toolbar/toolbar.svelte";
@@ -53,9 +53,9 @@
     </Text>
 
     <List title="Swiper Test">
-      <Swipable>
+      <Swipeable>
         <div class="p-3 bg-primary">Swipe me</div>
-      </Swipable>
+      </Swipeable>
     </List>
 
     <List title="Tracker Small Block {$Device.size}" outside pad>

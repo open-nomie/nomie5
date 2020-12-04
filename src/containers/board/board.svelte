@@ -63,7 +63,7 @@
   import { SearchStore } from "../../store/search-store";
 
   import NPaths from "../../paths";
-  import Swipable from "../../components/swipable/swipable.svelte";
+  import Swipeable from "../../components/swipeable/swipeable.svelte";
 
   // Consts
 
@@ -551,8 +551,8 @@
           <Icon name="time" size={24} className="fill-red" />
         </Button>
       {/if}
-      <Button icon className="tap-icon" on:click={methods.toggleSearch} ariaLabel={Lang.t('general.search')}>
-        <Icon name="search" size={24} />
+      <Button icon on:click={methods.toggleSearch} ariaLabel={Lang.t('general.search')}>
+        <Icon name="search" className="fill-inverse" size={24} />
       </Button>
 
       <!-- Tabs -->
@@ -568,12 +568,8 @@
           BoardStore.setActive(event.detail.id, event.detail);
         }} />
 
-      <Button
-        icon
-        className="tap-icon board-option-action"
-        on:click={() => boardOptions()}
-        ariaLabel={Lang.t('general.settings', 'Settings')}>
-        <Icon name="settings" size={24} />
+      <Button icon className="board-option-action" on:click={() => boardOptions()} ariaLabel={Lang.t('general.settings', 'Settings')}>
+        <Icon name="more" className="fill-inverse" size={24} />
       </Button>
 
     </Toolbar>
@@ -632,7 +628,7 @@
 
         <main class="overflow-x-hidden n-board h-100">
           <!-- Loop over trackers -->
-          <Swipable on:left={BoardStore.next} on:right={BoardStore.previous}>
+          <Swipeable on:left={BoardStore.next} on:right={BoardStore.previous}>
             {#if (foundTrackers || boardTrackers || []).length === 0}
               <Empty
                 title={Lang.t('board.empty-title', 'No trackers found')}
@@ -655,7 +651,7 @@
               }} />
 
             <!-- Include User Tips - shit should be a component -->
-          </Swipable>
+          </Swipeable>
         </main>
 
         {#if (foundTrackers || boardTrackers || []).length}
