@@ -48,6 +48,7 @@
   import type { OTDViewOption } from "../containers/on-this-day/on-this-day-helpers";
   import { OTDViews } from "../containers/on-this-day/on-this-day-helpers";
   import OnThisDayViews from "../containers/on-this-day/on-this-day-views.svelte";
+  import Swipeable from "../components/swipeable/swipeable.svelte";
 
   export const location = undefined;
   export let style = undefined;
@@ -372,20 +373,23 @@
       {/if} -->
 
       <OfflineQueue />
-      {#if loading}
-        <div class="empty-notice">
-          <Spinner />
-        </div>
-      {:else if !loading && !logs.length}
-        <Empty
-          emoji="⏳"
-          title={state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
-          description={`${Lang.t('history.empty-day', 'No data was found on this day')}`}
-          buttonLabel={Lang.t('history.add-a-note', 'Add a Note...')}
-          buttonClick={composeHere} />
-      {:else}
-        <OnThisDayViews {view} {logs} />
-      {/if}
+
+      <Swipeable on:left={methods.next} on:right={methods.previous}>
+        {#if loading}
+          <div class="empty-notice">
+            <Spinner />
+          </div>
+        {:else if !loading && !logs.length}
+          <Empty
+            emoji="⏳"
+            title={state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
+            description={`${Lang.t('history.empty-day', 'No data was found on this day')}`}
+            buttonLabel={Lang.t('history.add-a-note', 'Add a Note...')}
+            buttonClick={composeHere} />
+        {:else}
+          <OnThisDayViews {view} {logs} />
+        {/if}
+      </Swipeable>
 
     </div>
 

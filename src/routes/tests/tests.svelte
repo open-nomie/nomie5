@@ -53,8 +53,16 @@
     </Text>
 
     <List title="Swiper Test">
-      <Swipeable>
-        <div class="p-3 bg-primary">Swipe me</div>
+      <Swipeable
+        on:right={() => {
+          Interact.alert('Right!', 'You swiped right');
+        }}
+        on:left={() => {
+          Interact.alert('Left!', 'You swiped left');
+        }}>
+        <div class="p-3 bg-solid text-inverse">Swipe me</div>
+        <div slot="left">I'm left</div>
+        <div slot="right">I'm right</div>
       </Swipeable>
     </List>
 
