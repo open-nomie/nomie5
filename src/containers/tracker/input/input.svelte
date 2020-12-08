@@ -8,7 +8,7 @@
   // svelte
   import { createEventDispatcher, onMount } from "svelte";
   import { slide } from "svelte/transition";
-
+  import _ from "lodash";
   // Components
   import NModal from "../../../components/modal/modal.svelte";
   import NIcon from "../../../components/icon/icon.svelte";
@@ -47,18 +47,22 @@
     suffix: "",
     calcUsed: false, // when it's ready
     editing: false,
+    saving: false,
   };
 
-  // Set up the Methods
+  // Set up the Methodsx
   const methods = {
     // When the Save is hit
     onSave() {
       // Dispatch value and tracker
-      dispatch("save", {
-        value: data.value,
-        tracker: tracker,
-        suffix: data.suffix,
-      });
+      if (!data.saving) {
+        data.saving = true;
+        dispatch("save", {
+          value: data.value,
+          tracker: tracker,
+          suffix: data.suffix,
+        });
+      }
     },
     // When Add is hit
     onAdd() {
@@ -80,7 +84,6 @@
     startTimer() {
       // Set the date to epoch time (best to avoid timezones);
       let startingDate = dayjs().subtract(data.value, "second");
-      console.log({ value: data.value, startingDate: startingDate.format("hh:mm:ss a MMM Do YYYY") });
       data.tracker.started = startingDate.toDate().getTime();
       // Start the Timer for this tracker
       TrackerStore.startTimer(data.tracker);
@@ -89,11 +92,13 @@
     // Stop the Timer
     stopTimer() {
       // Get the Seconds between now and when the tracker started
-      data.value = (new Date().getTime() - tracker.started) / 1000;
-      // Clear local
-      data.tracker.started = null;
-      // tell store to stop timer
-      TrackerStore.stopTimer(data.tracker);
+      if (data.tracker.started) {
+        data.value = (new Date().getTime() - tracker.started) / 1000;
+        // Clear local
+        data.tracker.started = null;
+        // tell store to stop timer
+        TrackerStore.stopTimer(data.tracker);
+      }
     },
   };
 
@@ -259,7 +264,7 @@
       <!-- end left toolbar -->
 
       <div class="px-2 main">
-        {#if !data.editing}
+        {#if !data.editing && !data.saving}
           {#if (data.tracker.type == 'timer' && data.value && $Interact.trackerInput.allowSave !== false) || (data.tracker.type != 'timer' && $Interact.trackerInput.allowSave !== false)}
             <Button
               size="lg"
