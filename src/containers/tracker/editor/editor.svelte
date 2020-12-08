@@ -423,13 +423,15 @@
           className="tracker-uom mb-3"
           bind:value={data.tracker.uom}>
           {#each Object.keys(data.groupedUOMs) as groupKey (groupKey)}
-            <option disabled>-- {groupKey}</option>
-            {#each data.groupedUOMs[groupKey] as uom (`${groupKey}-${uom.key}`)}
-              <option value={uom.key} disabled={uom.key == 'time' && data.tracker.type != 'timer'}>
-                {NomieUOM.plural(uom.key)}
-                {#if NomieUOM.plural(uom.key).toLowerCase() !== NomieUOM.symbol(uom.key).toLowerCase()}({NomieUOM.symbol(uom.key)}){/if}
-              </option>
-            {/each}
+            {#if data.tracker.type !== 'timer' && groupKey !== 'Timer'}
+              <option disabled>-- {groupKey}</option>
+              {#each data.groupedUOMs[groupKey] as uom (`${groupKey}-${uom.key}`)}
+                <option value={uom.key} disabled={uom.key == 'time' && data.tracker.type != 'timer'}>
+                  {NomieUOM.plural(uom.key)}
+                  {#if NomieUOM.plural(uom.key).toLowerCase() !== NomieUOM.symbol(uom.key).toLowerCase()}({NomieUOM.symbol(uom.key)}){/if}
+                </option>
+              {/each}
+            {/if}
           {/each}
         </NInput>
       {/if}
