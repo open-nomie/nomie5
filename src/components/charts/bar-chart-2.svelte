@@ -14,6 +14,7 @@
 
   import { UserStore } from "../../store/user-store";
   import { Interact } from "../../store/interact";
+  import ignoreArrayZeros from "../../modules/stats/ignore-zeros";
 
   export let labels = [];
   export let height = 200;
@@ -27,8 +28,9 @@
   export let hideYTicks: boolean = false;
   export let hideXTicks: boolean = false;
   export let type: string = "bar";
-  export let beginAtZero: boolean = true;
+  export let beginAtZero: boolean = false;
   export let showSelected: boolean = true;
+  export let ignoreZero: boolean = false;
 
   // Generate a random ID for this Component
   const chartId = `chart-${nid()}`;
@@ -41,13 +43,16 @@
   export let selected = undefined;
 
   $: if (points && theChart && points.map((p) => p.y).join() !== lastPoints) {
-    lastPoints = points.map((p) => p.y).join();
+    let lastPoints = points.map((p) => p.y).join();
     loadData();
   }
 
   $: if ($Interact.stats.focused && points) {
     selected = points.find((p) => {
-      return p.date.format("YYYY-MM-DD") === $Interact.stats.focused.date.format("YYYY-MM-DD");
+      return (
+        p.date.format("YYYY-MM-DD") ===
+        $Interact.stats.focused.date.format("YYYY-MM-DD")
+      );
     });
   } else if (points && points.length) {
     selected = undefined;
@@ -71,6 +76,13 @@
         minBarLength: 2,
       },
     ];
+    let dataset = theChart.data.datasets[0].data;
+
+    if (ignoreZero) {
+      dataset = ignoreArrayZeros(dataset);
+    }
+
+    theChart.data.datasets[0].data = dataset;
     theChart.update();
   }
 

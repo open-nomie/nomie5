@@ -1,6 +1,10 @@
 <script lang="ts">
   import type { ITracker } from "../../modules/tracker/tracker";
-  import type { IStats, ITimeSpanKey, ITimeSpanUnit } from "../../modules/stats/statsV5";
+  import type {
+    IStats,
+    ITimeSpanKey,
+    ITimeSpanUnit,
+  } from "../../modules/stats/statsV5";
   import ListItem from "../../components/list-item/list-item.svelte";
   import BarChart from "../../components/charts/bar-chart-2.svelte";
   import { Interact } from "../../store/interact";
@@ -215,16 +219,21 @@
     let compareItems = {};
     let trackerTags = Object.keys($TrackerStore.trackers);
     let activeTrackerValues = stats.chart.values.map((point) => point.y);
-    Interact.blocker(`Comparing against ${trackerTags.length} trackers...`, { perm: true });
+    Interact.blocker(`Comparing against ${trackerTags.length} trackers...`);
     await tick(20);
     const _getStats = async (tag, index, total) => {
       let tracker = $TrackerStore.trackers[tag];
-      Interact.blocker(`Comparing ${math.round(math.percentage(total, index))}%`, { perm: true });
+      Interact.blocker(
+        `Comparing ${math.round(math.percentage(total, index))}%`
+      );
       await tick(1);
       let results = await getTrackerStats(tracker);
       if (results.stats.rows.length > 0) {
         let compareValues = results.stats.chart.values.map((point) => point.y); // get y values
-        let distance = await dataDistance.score(activeTrackerValues, compareValues); // calculate distance
+        let distance = await dataDistance.score(
+          activeTrackerValues,
+          compareValues
+        ); // calculate distance
         results.distance = distance;
         compareItems[tag] = {
           stats: results,
@@ -353,6 +362,7 @@
             height={120}
             title={`${compare.getSearchTerm()}`}
             color={compare.getTracker().color}
+            ignoreZero={compare.getTracker().ignore_zeros}
             activeIndex={state.selected.index}
             labels={compare.stats.chart.values.map((point) => point.x)}
             points={compare.stats.chart.values}
@@ -398,7 +408,9 @@
 
   {#if state.compare.length == 0}
     <div class="p-3">
-      <Text bold center leading3>{Lang.t('stats.compare-trackers', 'Compare Trackers')}</Text>
+      <Text bold center leading3>
+        {Lang.t('stats.compare-trackers', 'Compare Trackers')}
+      </Text>
       <Text size="sm" faded center>
         {Lang.t('stats.compare-description', 'Find potentially related trackers either automatically, or by selecting manually.')}
       </Text>
@@ -406,7 +418,11 @@
   {/if}
 
   <div class="p-2 pt-2 n-row">
-    <Button className="mr-1" block color="light" on:click={findRelatedTrackers}>{Lang.t('stats.analyze', 'Auto')}</Button>
-    <Button className="ml-1" block color="light" on:click={compareType}>{Lang.t('general.select', 'Select')}...</Button>
+    <Button className="mr-1" block color="light" on:click={findRelatedTrackers}>
+      {Lang.t('stats.analyze', 'Auto')}
+    </Button>
+    <Button className="ml-1" block color="light" on:click={compareType}>
+      {Lang.t('general.select', 'Select')}...
+    </Button>
   </div>
 {/if}

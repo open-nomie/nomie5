@@ -60,12 +60,29 @@
    * Available view, labels, and whatnot
    * **/
   const dataViews = {
-    overview: { id: "overview", icon: "home", label: Lang.t("general.home", "Home") },
-    compare: { id: "compare", icon: "beaker", label: Lang.t("stats.compare", "Relate") },
+    overview: {
+      id: "overview",
+      icon: "home",
+      label: Lang.t("general.home", "Home"),
+    },
+    compare: {
+      id: "compare",
+      icon: "beaker",
+      label: Lang.t("stats.compare", "Relate"),
+    },
     map: { id: "map", icon: "map", label: Lang.t("general.map", "Map") },
     time: { id: "time", icon: "time", label: Lang.t("stats.time", "Time") },
-    streak: { id: "streak", icon: "calendar", label: Lang.t("stats.streak", "Streak") },
-    logs: { id: "logs", icon: "annotation", label: Lang.t("general.logs", "Logs"), focused: true },
+    streak: {
+      id: "streak",
+      icon: "calendar",
+      label: Lang.t("stats.streak", "Streak"),
+    },
+    logs: {
+      id: "logs",
+      icon: "annotation",
+      label: Lang.t("general.logs", "Logs"),
+      focused: true,
+    },
   };
 
   /**
@@ -254,7 +271,8 @@
       .subtract(timespan.count || 1, timespan.unit)
       .startOf("day");
     // If its week or month, add a day to the start - #bug maybe?
-    fromDate = ["week"].indexOf(timespan.unit) > -1 ? fromDate.add(1, "day") : fromDate;
+    fromDate =
+      ["week"].indexOf(timespan.unit) > -1 ? fromDate.add(1, "day") : fromDate;
     return fromDate;
   }
 
@@ -303,7 +321,9 @@
         title: `${Lang.t("general.search")} ${state.currentTerm}`,
         click() {
           close();
-          SearchStore.search(state.trackableElement.prefix + state.trackableElement.id);
+          SearchStore.search(
+            state.trackableElement.prefix + state.trackableElement.id
+          );
         },
         icon: "search",
       },
@@ -336,7 +356,9 @@
       title: Lang.t("time.start-of-week", "Start of week"),
       click: () => {
         // TODO: Bug getting the wrong start of the week
-        let date: Dayjs = NDate.setFirstDayOfWeek($UserStore.meta.firstDayOfWeek).getFirstDayOfWeek();
+        let date: Dayjs = NDate.setFirstDayOfWeek(
+          $UserStore.meta.firstDayOfWeek
+        ).getFirstDayOfWeek();
         changeDate(date);
       },
     };
@@ -418,7 +440,9 @@
     if (to.format("MMM") !== from.format("MMM")) {
       return `${from.format(dateFormatShort)} - ${to.format(dateFormat)}`;
     } else {
-      return `${from.format(dateFormatShort)} - ${to.format(`${dateFormatShort} YYYY`)}`;
+      return `${from.format(dateFormatShort)} - ${to.format(
+        `${dateFormatShort} YYYY`
+      )}`;
     }
   }
 
@@ -456,13 +480,17 @@
   function getMonthRange() {
     const from = getFromDate();
     const to = getToDate();
-    return `${from.add(1, "day").format(dateFormatShort)} - ${to.format(dateFormat)}`;
+    return `${from.add(1, "day").format(dateFormatShort)} - ${to.format(
+      dateFormat
+    )}`;
   }
 
   function getYearRange() {
     const from = getFromDate();
     const to = getToDate();
-    return `${from.add(1, "month").format(dateFormat)} - ${to.format(dateFormat)}`;
+    return `${from.add(1, "month").format(dateFormat)} - ${to.format(
+      dateFormat
+    )}`;
   }
 
   function gettimeRangeText(): string {
@@ -594,7 +622,13 @@
   }
 </style>
 
-<NModal className="stats-modal" bodyClass="bg-solid-1 " fullscreen closeOnBackgroundTap on:close={close} on:swipeDown={onSwipeDown}>
+<NModal
+  className="stats-modal"
+  bodyClass="bg-solid-1 "
+  fullscreen
+  closeOnBackgroundTap
+  on:close={close}
+  on:swipeDown={onSwipeDown}>
   <header slot="raw-header" class="box-shadow-float">
     {#if $Interact.stats.terms.length > 1}
       {#each $Interact.stats.terms as term}
@@ -603,7 +637,8 @@
         </div>
       {/each}
     {/if}
-    <div class="mock-card-animation animate up {state.showAnimation ? 'visible' : 'hidden'}" />
+    <div
+      class="mock-card-animation animate up {state.showAnimation ? 'visible' : 'hidden'}" />
     <NToolbarGrid>
       <div slot="left" className="truncate" style="min-width:100px;">
         {#if $Interact.stats.terms.length == 1}
@@ -613,7 +648,9 @@
         {:else}
           <Button icon class="pl-1" on:click={back}>
             <NIcon name="arrowBack" size="28" className="fill-primary-bright" />
-            <small class="ml-1 text-sm truncate text-inverse-2" style="max-width:60px;">
+            <small
+              class="ml-1 text-sm truncate text-inverse-2"
+              style="max-width:60px;">
               {$Interact.stats.terms[$Interact.stats.terms.length - 2]}
             </small>
           </Button>
@@ -622,7 +659,10 @@
 
       <h1 class="truncate title" slot="main">{state.currentTerm}</h1>
 
-      <div slot="right" style="min-width:100px" class="toolbar-buttons align-right">
+      <div
+        slot="right"
+        style="min-width:100px"
+        class="toolbar-buttons align-right">
         <Button icon on:click={onMoreTap}>
           <NIcon name="more" className="fill-primary-bright" />
         </Button>
@@ -634,7 +674,10 @@
 
     <div class="px-3 pt-2 pb-3 n-toolbar n-row">
       <Text size="sm" bold className="filler" truncate>{state.range}</Text>
-      <NextPrevCal on:next={loadNextDate} on:previous={loadPreviousDate} on:calendar={onCalendarTap} />
+      <NextPrevCal
+        on:next={loadNextDate}
+        on:previous={loadPreviousDate}
+        on:calendar={onCalendarTap} />
     </div>
 
     {#if state.loading}
@@ -649,6 +692,7 @@
       <div class="px-2 pb-1 main-chart">
         <NBarChart
           height={140}
+          ignoreZero={state.tracker.ignore_zeros}
           color={state.currentColor}
           labels={state.stats.chart.values.map((point) => point.x)}
           points={state.stats.chart.values}
@@ -673,7 +717,10 @@
   </header>
 
   <div slot="footer" class="w-100">
-    <NButtonGroup inverse color={state.currentColor} buttons={state.viewOption} />
+    <NButtonGroup
+      inverse
+      color={state.currentColor}
+      buttons={state.viewOption} />
   </div>
 
   {#if !state.loading}
@@ -699,23 +746,33 @@
               selectedDate={state.date}
               view={timeSpans[state.timeSpan].streakUnit} />
           {:else}
-            <Text faded>Streak view currently unavailable at the day level</Text>
+            <Text faded>
+              Streak view currently unavailable at the day level
+            </Text>
           {/if}
         </Card>
       {/if}
     {/if}
     {#if state.dataView === 'map'}
-      <NMap small locations={getLocations()} className="flex-grow flex-shrink" />
+      <NMap
+        small
+        locations={getLocations()}
+        className="flex-grow flex-shrink" />
     {/if}
     {#if state.stats}
       {#if state.dataView === 'overview'}
         <StatsOverview stats={state.stats} tracker={state.tracker} />
         <!-- end over view -->
       {:else if state.dataView === 'time'}
-        <StatsTime color={state.currentColor} term={state.currentTerm} stats={state.stats} />
+        <StatsTime
+          color={state.currentColor}
+          term={state.currentTerm}
+          stats={state.stats} />
       {:else if state.dataView === 'logs'}
         {#if state.timeSpan == 'y'}
-          <div class="p-4 text-sm text-center text-inverse-2">Logs not yet available for a full year</div>
+          <div class="p-4 text-sm text-center text-inverse-2">
+            Logs not yet available for a full year
+          </div>
         {:else}
           <NLogList
             fullDate

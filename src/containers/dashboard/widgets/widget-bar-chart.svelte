@@ -29,6 +29,7 @@
       points={widget.stats.chart.values}
       hideXTicks={widget.size == 'sm'}
       hideYTicks={widget.size == 'sm'}
+      ignoreZero={widget.element.type ? widget.element.obj.ignore_zeros : false}
       yFormat={(y) => {
         if (widget.element.type == 'tracker') {
           return widget.element.obj.displayValue(y);
