@@ -15,6 +15,7 @@
   import { UserStore } from "../../store/user-store";
   import { Interact } from "../../store/interact";
   import ignoreArrayZeros from "../../modules/stats/ignore-zeros";
+  import _ from "lodash";
 
   export let labels = [];
   export let height = 200;
@@ -28,7 +29,7 @@
   export let hideYTicks: boolean = false;
   export let hideXTicks: boolean = false;
   export let type: string = "bar";
-  export let beginAtZero: boolean = false;
+  export let beginAtZero: boolean = true;
   export let showSelected: boolean = true;
   export let ignoreZero: boolean = false;
 
@@ -88,7 +89,13 @@
 
   async function initChart() {
     var ctx = document.getElementById(chartId);
-
+    /**
+     * Get Min Point so we can
+     * adjust the Y scale min to be just below the min point (if it's greater than 0)
+     * if its not greater than zero - then  zero will be the min
+     */
+    const minPoint: number = _.min(points.map((p) => p.y));
+    // Create chart config
     const chartConfig = {
       type,
       options: {
@@ -120,6 +127,7 @@
           yAxes: [
             {
               ticks: {
+                min: minPoint > 0 ? minPoint - 1 : 0,
                 maxTicksLimit: 6,
                 callback(value, index, values) {
                   if (yFormat) {
@@ -129,7 +137,7 @@
                   }
                 },
                 fontSize: 9,
-                beginAtZero: beginAtZero,
+                beginAtZero: false,
                 display: hideYTicks == false,
               },
             },
