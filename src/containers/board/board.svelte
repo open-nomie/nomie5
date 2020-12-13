@@ -124,7 +124,10 @@
   };
 
   $: if ($UserStore.meta) {
-    daysSinceLastBackup = dayjs().diff(dayjs(new Date(user.meta.lastBackup || null)), "day");
+    daysSinceLastBackup = dayjs().diff(
+      dayjs(new Date(user.meta.lastBackup || null)),
+      "day"
+    );
   }
 
   /**
@@ -188,8 +191,8 @@
         .map((tag) => {
           return $TrackerStore.trackers[tag];
         })
-        // Remove any nulls
-        .filter((tracker) => tracker);
+        // Remove any nulls -- or trackers that are marked as hidden
+        .filter((tracker) => tracker && !tracker.hidden);
     } else {
       /**
        * Else we have a real board and need to render it.
@@ -288,7 +291,10 @@
       if ($BoardStore.active != "all") {
         // Add "Existing Tracker" button
         buttons.push({
-          title: `${Lang.t("board.add-existing-tracker", "Pick from My Trackers")}`,
+          title: `${Lang.t(
+            "board.add-existing-tracker",
+            "Pick from My Trackers"
+          )}`,
           icon: "chip",
           click: async () => {
             let trackers = await Interact.selectTrackers();
@@ -373,7 +379,10 @@
           "Tabs help you organize your trackers. For example: social, food, and fitness can contain trackers specifically for those activies. You can have the same tracker on multiple tabs."
         )}`,
         {
-          placeholder: `${Lang.t("board.board-input-placeholder", "Tab name or Emoji 👍")}`,
+          placeholder: `${Lang.t(
+            "board.board-input-placeholder",
+            "Tab name or Emoji 👍"
+          )}`,
         }
       );
       if (res) {
@@ -405,17 +414,29 @@
           // If we're on All - warn the hell out of the user
           if ($BoardStore.active === "all") {
             const confirmed = await Interact.confirm(
-              `${tracker.label} - ${Lang.t("general.delete-from-nomie", "Delete from Nomie?")}`,
-              `${Lang.t("tracker.delete-description", "No tracked data will be deleted. You can always recreate this tracker")}`
+              `${tracker.label} - ${Lang.t(
+                "general.delete-from-nomie",
+                "Delete from Nomie?"
+              )}`,
+              `${Lang.t(
+                "tracker.delete-description",
+                "No tracked data will be deleted. You can always recreate this tracker"
+              )}`
             );
             if (confirmed) {
               await TrackerStore.deleteTracker(tracker).then((done) => {});
             }
           } else {
             // We're on another board - allow them to just remove the tracker
-            const confirmed = await Interact.confirm(`Remove ${tracker.label} from this board?`, "You can always re-add it later");
+            const confirmed = await Interact.confirm(
+              `Remove ${tracker.label} from this board?`,
+              "You can always re-add it later"
+            );
             if (confirmed) {
-              await BoardStore.removeTrackerFromBoard(tracker, $BoardStore.active);
+              await BoardStore.removeTrackerFromBoard(
+                tracker,
+                $BoardStore.active
+              );
             }
           }
         },
@@ -426,7 +447,9 @@
       if ($LastUsed.hasOwnProperty(tracker.tag)) {
         let last = $LastUsed[tracker.tag];
         if (last.log) {
-          subtitle = `${Lang.t("board.last-used", "Last used")} ${dayjs(last.date).fromNow()}`;
+          subtitle = `${Lang.t("board.last-used", "Last used")} ${dayjs(
+            last.date
+          ).fromNow()}`;
         }
       }
       // Add Remove button to array
@@ -465,7 +488,11 @@
        * If this board doesn't exist (user clears localstorage, switching data store, imports etc)
        * then we should set it to the ALL board
        **/
-      if (boardPayload.boards.map((b) => b.id).indexOf(boardPayload.active) == -1 && boardPayload.active !== "all") {
+      if (
+        boardPayload.boards.map((b) => b.id).indexOf(boardPayload.active) ==
+          -1 &&
+        boardPayload.active !== "all"
+      ) {
         setTimeout(() => {
           BoardStore.setActive("all");
         }, 20);
@@ -489,7 +516,9 @@
     activeLogUnsub = ActiveLogStore.subscribe((log) => {
       // Used for knowing which trackers are current active
       // TODO bring this back
-      state.addedTrackers = new NomieLog(log).getMeta().trackers.map((t) => t.id);
+      state.addedTrackers = new NomieLog(log)
+        .getMeta()
+        .trackers.map((t) => t.id);
     });
     LedgerStore.getToday();
   }); // end onMount
@@ -547,11 +576,18 @@
   <header slot="header" class="container">
     <Toolbar>
       {#if $TrackerStore.timers.length}
-        <Button icon on:click={TrackerStore.toggleTimers} className="mr-1" ariaLabel={Lang.t('general.timers', 'Timers')}>
+        <Button
+          icon
+          on:click={TrackerStore.toggleTimers}
+          className="mr-1"
+          ariaLabel={Lang.t('general.timers', 'Timers')}>
           <Icon name="time" size={24} className="fill-red" />
         </Button>
       {/if}
-      <Button icon on:click={methods.toggleSearch} ariaLabel={Lang.t('general.search')}>
+      <Button
+        icon
+        on:click={methods.toggleSearch}
+        ariaLabel={Lang.t('general.search')}>
         <Icon name="search" className="fill-inverse" size={24} />
       </Button>
 
@@ -568,7 +604,11 @@
           BoardStore.setActive(event.detail.id, event.detail);
         }} />
 
-      <Button icon className="board-option-action" on:click={() => boardOptions()} ariaLabel={Lang.t('general.settings', 'Settings')}>
+      <Button
+        icon
+        className="board-option-action"
+        on:click={() => boardOptions()}
+        ariaLabel={Lang.t('general.settings', 'Settings')}>
         <Icon name="more" className="fill-inverse" size={24} />
       </Button>
 
@@ -593,9 +633,17 @@
                   {Lang.t('general.no-known-backups', 'No known backups')}
                 </Text>
               {:else}
-                <Text inline size="sm" faded>{daysSinceLastBackup} days since last backup</Text>
+                <Text inline size="sm" faded>
+                  {daysSinceLastBackup} days since last backup
+                </Text>
               {/if}
-              <Text inline underline color="primary-bright" className="ml-2" size="sm" on:click={exportData}>
+              <Text
+                inline
+                underline
+                color="primary-bright"
+                className="ml-2"
+                size="sm"
+                on:click={exportData}>
                 {Lang.t('general.backup-now', 'Backup Now')}
               </Text>
             </div>
@@ -608,7 +656,9 @@
               <ListItem compact>
                 <Text size="sm">Running Timers</Text>
                 <div slot="right">
-                  <Button text size="xs" on:click={TrackerStore.toggleTimers}>Close</Button>
+                  <Button text size="xs" on:click={TrackerStore.toggleTimers}>
+                    Close
+                  </Button>
                 </div>
               </ListItem>
               <TrackersList

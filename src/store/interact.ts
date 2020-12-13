@@ -449,8 +449,15 @@ const interactInit = () => {
           },
         },
         {
+          title: Lang.t("stats.streak", "Streak"),
+          icon: "calendar",
+          click: () => {
+            Interact.openStreak(trackableElement.prefix + trackableElement.id);
+          },
+        },
+        {
           icon: "search",
-          title: `${Lang.t("general.search", "Search")}: ${tracker && tracker.label ? tracker.label : trackableElement.id}`,
+          title: `${Lang.t("general.search", "Search")} "${tracker && tracker.label ? tracker.label : trackableElement.id}"`,
           click: async () => {
             Interact.closeOnThisDay();
             await tick(200);
