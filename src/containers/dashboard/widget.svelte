@@ -3,7 +3,7 @@
   import BarChart from "../../components/charts/bar-chart-2.svelte";
   import TrackerSmallBlock from "../../components/tracker-small-block/tracker-small-block.svelte";
   import Text from "../../components/text/text.svelte";
-  import { Widget } from "../../modules/dashboard/widget";
+  import type { Widget } from "../../modules/dashboard/widget";
   import { createEventDispatcher } from "svelte";
   import Pie from "../../components/charts/pie.svelte";
   import Icon from "../../components/icon/icon.svelte";
@@ -52,29 +52,30 @@
   }
 
   function widgetActions() {
-    const buttons = [
-      {
-        title: `${Lang.t("general.view-stats", `View Stats`)}`,
-        click: () => {
-          Interact.openStats(widget.element.toSearchTerm());
-        },
-        icon: "chart2",
+    const addOn = {
+      icon: "tracker",
+      title: ` ${
+        widget.element.type == "person"
+          ? Lang.t("people.check-in", `Check-in`)
+          : Lang.t("general.track-value", `Track Value`)
+      }`,
+      click: async () => {
+        if (widget.element.type == "person") {
+          Interact.person(widget.element.id);
+        } else if (widget.element.type == "tracker") {
+          const input = new TrackerInputer(
+            widget.element.obj,
+            $TrackerStore.trackers
+          );
+          let note = await input.getNoteString();
+          ActiveLogStore.journal(new NLog({ note }));
+        }
+        // Interact.openStats(widget.element.toSearchTerm());
       },
-      {
-        icon: "tracker",
-        title: ` ${widget.element.type == "person" ? Lang.t("people.check-in", `Check-in`) : Lang.t("general.track-value", `Track Value`)}`,
-        click: async () => {
-          if (widget.element.type == "person") {
-            Interact.person(widget.element.id);
-          } else if (widget.element.type == "tracker") {
-            const input = new TrackerInputer(widget.element.obj, $TrackerStore.trackers);
-            let note = await input.getNoteString();
-            ActiveLogStore.journal(new NLog({ note }));
-          }
-          // Interact.openStats(widget.element.toSearchTerm());
-        },
-      },
-    ];
+    };
+    const buttons: Array<any> = Interact.getElementOptionButons(widget.element);
+    buttons[0].divider = "true";
+    buttons.unshift(addOn);
     Interact.popmenu({ title: `${getLabel(widget.element)} options`, buttons });
   }
 
@@ -155,7 +156,9 @@
     }
   }
 
-  :global(.dashboard-widget.over .widget-footer .n-text, .dashboard-widget.under .widget-footer .n-text) {
+  :global(.dashboard-widget.over .widget-footer .n-text, .dashboard-widget.under
+      .widget-footer
+      .n-text) {
     color: #fff !important;
   }
   :global(.dashboard-widget.widget-red .widget-footer .n-text) {
@@ -335,7 +338,11 @@
     </div>
     <div class="widget-footer n-row">
       {#if widget.timeRange}
-        <Text size="xs" className="text-center flex-grow text-uppercase font-weight-bold">{widget.getLabel()}</Text>
+        <Text
+          size="xs"
+          className="text-center flex-grow text-uppercase font-weight-bold">
+          {widget.getLabel()}
+        </Text>
       {/if}
     </div>
   </div>

@@ -431,6 +431,21 @@ const interactInit = () => {
       if (options.log) {
         date = dayjs(options.log.end);
       }
+      const buttons = methods.getElementOptionButons(element, options);
+      methods.popmenu({
+        title: `${tracker ? tracker.label : trackableElement.raw} options`,
+        buttons: buttons,
+      });
+    },
+
+    getElementOptionButons(element: TrackableElement, options?: { callback?: Function; log?: NLog }) {
+      options = options || {};
+      let trackableElement = element instanceof TrackableElement ? element : new TrackableElement(element);
+      let tracker = trackableElement.type == "tracker" ? TrackerStore.getByTag(trackableElement.id) : null;
+      let date = undefined;
+      if (options.log) {
+        date = dayjs(options.log.end);
+      }
       const buttons = [
         {
           title: `${Lang.t("stats.view-stats", "View Stats")}`,
@@ -489,11 +504,9 @@ const interactInit = () => {
         });
       }
 
-      methods.popmenu({
-        title: `${tracker ? tracker.label : trackableElement.raw} options`,
-        buttons: buttons,
-      });
+      return buttons;
     },
+
     select(type = "tracker", multiple = false, options: any = {}) {
       return new Promise((resolve, reject) => {
         update((state) => {
