@@ -20,16 +20,19 @@
   import AutoComplete from "../auto-complete/auto-complete.svelte";
   import Location from "../../modules/locate/Location";
   import Text from "../text/text.svelte";
-
+  import tick from "../../utils/tick/tick";
   let textarea: HTMLTextAreaElement;
 
   async function save() {
     try {
       await LedgerStore.saveLog($ActiveLogStore);
-      ActiveLogStore.clear();
       Interact.toggleFocusedEditor();
+      await tick(300);
+      ActiveLogStore.clear();
+      return true;
     } catch (e) {
       Interact.error(e.message);
+      ActiveLogStore.clear();
     }
   }
 
@@ -56,7 +59,11 @@
   async function editLocation() {
     let activeLoc: Location;
     if ($ActiveLogStore.lat) {
-      activeLoc = new Location({ name: $ActiveLogStore.location, lat: $ActiveLogStore.lat, lng: $ActiveLogStore.lng });
+      activeLoc = new Location({
+        name: $ActiveLogStore.location,
+        lat: $ActiveLogStore.lat,
+        lng: $ActiveLogStore.lng,
+      });
     }
     let location: any = await Interact.pickLocation(activeLoc);
     if (location) {
@@ -81,7 +88,10 @@
       </div>
     </ToolbarGrid>
     <Toolbar>
-      <Button icon className={$ActiveLogStore.lat ? 'tap-icon' : 'text-inverse-2'} on:click={editLocation}>
+      <Button
+        icon
+        className={$ActiveLogStore.lat ? 'tap-icon' : 'text-inverse-2'}
+        on:click={editLocation}>
         <Icon name="map" size="20" />
       </Button>
       <Spacer />
@@ -90,12 +100,16 @@
       </Button>
       <DatePicker
         bind:time={$ActiveLogStore.end}
-        style="width:210px; font-size:14px; border-radius:2px; text-align:center padding:4px; background-color:var(--color-grey-9);" />
+        style="width:210px; font-size:14px; border-radius:2px; text-align:center
+        padding:4px; background-color:var(--color-grey-9);" />
       <Button size="sm" icon className="tap-icon" on:click={nextDate}>
         <Icon name="chevronRight" />
       </Button>
       <Spacer />
-      <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} size="lg" />
+      <PositivityMenu
+        bind:score={$ActiveLogStore.score}
+        closeBackgroundTap={true}
+        size="lg" />
     </Toolbar>
   </div>
 
@@ -105,7 +119,9 @@
       {#if $ActiveLogStore.location}
         <Text size="xs" faded center>{$ActiveLogStore.location}</Text>
       {:else if $ActiveLogStore.lat}
-        <Text size="xs" faded center>{$ActiveLogStore.lat},{$ActiveLogStore.lng}</Text>
+        <Text size="xs" faded center>
+          {$ActiveLogStore.lat},{$ActiveLogStore.lng}
+        </Text>
       {/if}
       <Button size="sm" icon className="text-danger" on:click={clearLocation}>
         <Icon name="close" />
@@ -127,7 +143,8 @@
     use:autofocus
     placeholder={Lang.t('general.whats-up', "What's up?")}
     bind:value={$ActiveLogStore.note}
-    style="outline:none; background-color:var(--color-solid); color:var(--color-inverse); padding:16px; border:none; width:100%;
+    style="outline:none; background-color:var(--color-solid);
+    color:var(--color-inverse); padding:16px; border:none; width:100%;
     height:calc(90% - 20px) !important; line-height:130%;" />
 
 </Modal>
