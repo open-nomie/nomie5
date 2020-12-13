@@ -48,7 +48,10 @@
   }
 
   async function confirmEmptySlots() {
-    const confirmed = await Interact.confirm(`Delete remaining notes?`, Lang.t("general.cannot-be-undone"));
+    const confirmed = await Interact.confirm(
+      `Delete remaining notes?`,
+      Lang.t("general.cannot-be-undone")
+    );
     if (confirmed) {
       await emptySlots();
     }
@@ -67,11 +70,14 @@
 
       // Converting APIv1 Log to Nomie
       const response = await NomieAPI.import(filteredLogs);
-
       if (response.success.length !== filteredLogs.length) {
-        Interact.alert(`Only ${response.success.length} of ${filteredLogs.length} imported.`);
+        Interact.alert(
+          `Only ${response.success.length} of ${filteredLogs.length} imported, not clearing logs.`,
+          `Visit settings / nomie api / captured to manually clear the logs`
+        );
+      } else {
+        await emptySlots();
       }
-      await emptySlots();
     } catch (e) {
       Interact.error(e.message);
     }
@@ -95,7 +101,9 @@
 
 {#if !logs.length || discarded.length == logs.length}
   <div class="h-full">
-    <Empty title={Lang.t('nomie-api.no-recent-logs-capture', 'No API Notes Captured')} emoji="🧐" />
+    <Empty
+      title={Lang.t('nomie-api.no-recent-logs-capture', 'No API Notes Captured')}
+      emoji="🧐" />
   </div>
 {:else}
   <div class="mb-4">
@@ -112,13 +120,20 @@
   </div>
   <div class="sticky bottom-0">
     <Toolbar className="py-3 mx-auto bg-bg" style="max-width:500px;">
-      <Button type="clear" color="danger" block className="mr-1 my-0" on:click={confirmEmptySlots}>
+      <Button
+        type="clear"
+        color="danger"
+        block
+        className="mr-1 my-0"
+        on:click={confirmEmptySlots}>
         <Icon name="delete" className="fill-red mr-2" />
         {Lang.t('general.empty', 'Empty')}
       </Button>
       <Button color="primary" block on:click={importLogs}>
         {Lang.t('nomie-api.import', 'Import')}
-        <span class="ml-2 opacity-5">({Math.abs(logs.length - discarded.length)})</span>
+        <span class="ml-2 opacity-5">
+          ({Math.abs(logs.length - discarded.length)})
+        </span>
       </Button>
     </Toolbar>
   </div>

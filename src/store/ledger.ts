@@ -349,6 +349,7 @@ const ledgerInit = () => {
       log = await methods.prepareLog(log);
       try {
         let saved = await this._saveLog(log);
+        return saved;
       } catch (e) {
         console.error("error Saving log", e);
         /**
