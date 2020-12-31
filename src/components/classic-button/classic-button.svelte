@@ -67,12 +67,12 @@
   };
 </script>
 
-<style lang="scss" type="text/scss">
-  :global(.tracker-button-wrapper.compact .more) {
+<style lang="scss" global type="text/scss">
+  .tracker-button-wrapper.compact .more {
     top: 8px;
   }
 
-  :global(.tracker-button-wrapper.in-note) {
+  .tracker-button-wrapper.in-note {
     transform: scale(0.9);
     transition: all 0.2s ease-in-out;
     &::before {
@@ -87,7 +87,7 @@
       opacity: 0.2;
     }
   }
-  :global(.tracker-button-wrapper .more) {
+  .tracker-button-wrapper .more {
     position: absolute;
     top: 12px;
     right: 15px;
@@ -108,7 +108,7 @@
     }
   }
 
-  .tracker-ball {
+  .tracker-button-wrapper .tracker-ball {
     svg {
       display: none;
     }
@@ -143,7 +143,8 @@
   {className}
   {disabled ? 'disabled' : ''}">
 
-  <button class={`item-ball ${className} ${$UserStore.localSettings.compactButtons == true ? 'item-ball-small' : ''}`}>
+  <button
+    class={`item-ball ${className} ${$UserStore.localSettings.compactButtons == true ? 'item-ball-small' : ''}`}>
     <!-- -->
     <div class="avatar-ball">
       {#if hoursUsed.length}
@@ -170,7 +171,11 @@
     {/if}
   </button>
   {#if !hideMore}
-    <Button icon size="sm" className="more" on:click={() => dispatch('more', tracker)}>
+    <Button
+      icon
+      size="sm"
+      className="more"
+      on:click={() => dispatch('more', tracker)}>
       <Icon name="more" size={22} className="fill-solid-2" />
     </Button>
   {/if}

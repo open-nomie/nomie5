@@ -16,10 +16,10 @@
 </script>
 
 <style>
-  .title {
+  /* .title {
     color: var(--color-inverse);
     font-size: 1em;
-  }
+  } */
 </style>
 
 <NLayout pageTitle={title} {className}>

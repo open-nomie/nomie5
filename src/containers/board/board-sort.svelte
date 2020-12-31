@@ -27,7 +27,10 @@
     }
   }
   async function deleteBoard(board) {
-    let confirmed = await Interact.confirm("Delete " + board.label + " tab?", "You can recreate it later, but it's not super easy.");
+    let confirmed = await Interact.confirm(
+      "Delete " + board.label + " tab?",
+      "You can recreate it later, but it's not super easy."
+    );
     if (confirmed === true) {
       await BoardStore.deleteBoard(board.id);
       Interact.toast("Deleted");
@@ -35,16 +38,19 @@
   }
 </script>
 
-<style>
-  .btn-group .btn {
+<style global>
+  .board-sort .btn-group .btn {
     width: 36px;
   }
-  .emoji-only {
+  .board-sort .emoji-only {
     font-size: 2.4em;
   }
 </style>
 
-<Modal type="fullscreen" allowClose={true} on:close={Interact.toggleBoardSorter}>
+<Modal
+  type="fullscreen"
+  allowClose={true}
+  on:close={Interact.toggleBoardSorter}>
   <div slot="header">
     <NToolbarGrid>
       <div slot="left">
@@ -54,8 +60,13 @@
       <div slot="right" />
     </NToolbarGrid>
   </div>
-  <List>
-    <NSortableList bind:items={$BoardStore.boards} handle=".menu-handle" key="label" on:update={boardsSorted} let:item>
+  <List className="board-sort">
+    <NSortableList
+      bind:items={$BoardStore.boards}
+      handle=".menu-handle"
+      key="label"
+      on:update={boardsSorted}
+      let:item>
       {#if item.label !== 'all'}
         <NItem bottom-line className="bottom-line">
           <div slot="left" class="menu-handle">

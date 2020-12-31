@@ -12,10 +12,10 @@
   let svg = null;
   let img = null;
 
-  const getSVG = term => {
+  const getSVG = (term) => {
     return new Dymoji(term, {
       size,
-      radius
+      radius,
     }).svg();
   };
 
@@ -35,9 +35,6 @@
 </script>
 
 <style lang="scss">
-  bc-dymoji {
-    display: flex;
-  }
   .dymoji-wrap {
     display: inline-flex;
     vertical-align: middle;

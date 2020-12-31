@@ -16,7 +16,7 @@
   export let sm = false;
   export let novalue = false;
   export let className = "";
-  export let value = undefined;
+  // export let value = undefined;
 
   let hasEmojiSlot = arguments[1].$$slots || {}.emoji;
   let avatarSize = 40;
@@ -86,20 +86,30 @@
           className="mr-2" />
       {:else if element.type == 'person'}
         {#if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].avatar}
-          <Avatar size={avatarSize} src={$PeopleStore.people[element.id].avatar} className="mr-2" />
+          <Avatar
+            size={avatarSize}
+            src={$PeopleStore.people[element.id].avatar}
+            className="mr-2" />
         {:else if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].displayName}
-          <Avatar size={avatarSize} label={$PeopleStore.people[element.id].displayName} className="mr-2" />
+          <Avatar
+            size={avatarSize}
+            label={$PeopleStore.people[element.id].displayName}
+            className="mr-2" />
         {:else}
           <Avatar size={avatarSize} label={element.id} className="mr-2" />
         {/if}
       {/if}
       <div class="{truncate ? 'truncate' : ''} text-left w-100">
-        <Text truncate size="sm">{(element.obj || {}).label || element.id}</Text>
+        <Text truncate size="sm">
+          {(element.obj || {}).label || element.id}
+        </Text>
         {#if shouldShowValue(element)}
           {#if element.value === 0}
             <Text bold style="white-space:pre">0</Text>
           {:else}
-            <Text bold style="white-space:pre">{NomieUOM.format(element.value, (element.obj || {}).uom) || ''}</Text>
+            <Text bold style="white-space:pre">
+              {NomieUOM.format(element.value, (element.obj || {}).uom) || ''}
+            </Text>
           {/if}
         {/if}
       </div>

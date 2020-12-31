@@ -21,9 +21,9 @@
 </script>
 
 <style>
-  .current {
+  /* .current {
     font-size: 1.5em;
-  }
+  } */
   .value {
     max-height: 100px;
     overflow-y: auto;
@@ -36,8 +36,12 @@
 {#if log}
   <div class="overflow-y-auto widget-note value">
     <Text size="md" className="px-2">{log.note}</Text>
-    <Text size="sm" className="mt-1 px-2" faded>{dayjs(log.end).fromNow()}</Text>
+    <Text size="sm" className="mt-1 px-2" faded>
+      {dayjs(log.end).fromNow()}
+    </Text>
   </div>
 {:else}
-  <div class="empty value">{Lang.t('general.no-note-found', 'No note found')}</div>
+  <div class="empty value">
+    {Lang.t('general.no-note-found', 'No note found')}
+  </div>
 {/if}

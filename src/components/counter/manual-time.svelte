@@ -77,7 +77,11 @@
       // Set new unit
       dateChunks[unit] = time.padTime(selected);
       // New Set of the value to Seconds
-      value = time.unitsToSeconds(dateChunks.hours, dateChunks.minutes, dateChunks.seconds);
+      value = time.unitsToSeconds(
+        dateChunks.hours,
+        dateChunks.minutes,
+        dateChunks.seconds
+      );
       // Fire off change
       dispatch("change", value);
     },
@@ -115,10 +119,10 @@
   // On Mount
 </script>
 
-<style lang="scss">
+<style lang="scss" global>
   @import "../../scss/utils/_utils";
 
-  :global(.n-counter-manual .unit svg) {
+  .n-counter-manual .unit svg {
     position: absolute;
     top: 20px;
     right: 2px;

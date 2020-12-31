@@ -21,8 +21,6 @@
   import Button from "../../components/button/button.svelte";
   import Spinner from "../../components/spinner/spinner.svelte";
   import Text from "../../components/text/text.svelte";
-  import Toast from "../../components/toast/toast.svelte";
-  import type { findIndex } from "lodash";
 
   const dispatch = createEventDispatcher();
 
@@ -31,7 +29,6 @@
   export let toDate: any;
   export let timeSpan: ITimeSpanKey;
   export let remember: Function;
-  export let selected: any;
 
   interface StatComareState {
     compare: Array<StatsRef>;
@@ -305,34 +302,35 @@
   }
 </script>
 
-<style lang="scss">
-  :global(.chart-item.solo.n-item) {
-    margin: 8pt 0;
-    width: calc(100% - 0px);
-    border-radius: 0px;
-    padding: 8px 0;
-    padding-right: 8px;
-  }
+<style global lang="scss">
+  // .stats-compare {
+  //   // .chart-item.solo.n-item {
+  //   //   margin: 8pt 0;
+  //   //   width: calc(100% - 0px);
+  //   //   border-radius: 0px;
+  //   //   padding: 8px 0;
+  //   //   padding-right: 8px;
+  //   // }
 
-  :global(.chart-item) {
-    position: relative;
-    .btn-close {
-      position: absolute;
-      top: 5px;
-      left: 6px;
-      padding: 0;
-      height: 20px;
-      width: 20px;
-      border: solid 1px var(--color-solid-2);
-      background-color: var(--color-solid);
-      svg {
-        height: 18px;
-        width: 18px;
-      }
-    }
-  }
+  //   // .chart-item {
+  //   //   position: relative;
+  //   //   .btn-close {
+  //   //     position: absolute;
+  //   //     top: 5px;
+  //   //     left: 6px;
+  //   //     padding: 0;
+  //   //     height: 20px;
+  //   //     width: 20px;
+  //   //     border: solid 1px var(--color-solid-2);
+  //   //     background-color: var(--color-solid);
+  //   //     svg {
+  //   //       height: 18px;
+  //   //       width: 18px;
+  //   //     }
+  //   //   }
+  //   // }
 
-  .distance {
+  .stats-compare .distance {
     font-size: 12px;
     color: var(--color-solid-3);
     position: absolute;
@@ -340,13 +338,14 @@
     right: 16px;
     text-align: center;
   }
-  :global(.chart-item .btn-close svg) {
-    fill: var(--color-inverse) !important;
-  }
+  // .chart-item .btn-close svg {
+  //   fill: var(--color-inverse) !important;
+  // }
+  // }
 </style>
 
 {#if stats}
-  <div class="charts">
+  <div class="charts stats-compare">
 
     {#each state.compare as compare (compare.id)}
       {#if compare.stats}

@@ -41,12 +41,15 @@
   import PositivityMenu from "../positivity-selector/positivity-menu.svelte";
   import Icon from "../icon/icon.svelte";
   import DatePicker from "../date-picker/date-picker.svelte";
-  import TrackableElement, { toElement } from "../../modules/trackable-element/trackable-element";
+  import TrackableElement, {
+    toElement,
+  } from "../../modules/trackable-element/trackable-element";
   import extract from "../../utils/extract/extract";
 
   // Consts
   const console = new Logger("capture-log");
-  const isIOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+  const isIOS =
+    !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
   let textarea;
   let iOSFileInput;
@@ -81,7 +84,9 @@
   $: if ($ActiveLogStore.end) {
     let timeFormat = $UserStore.meta.is24Hour ? "HH:mm" : "h:mm a";
     let dateFormat = $UserStore.meta.is24Hour ? "MM/DD/YYYY" : "MMM D YYYY";
-    state.dateFormated = dayjs($ActiveLogStore.end).format(`${dateFormat} ${timeFormat}`);
+    state.dateFormated = dayjs($ActiveLogStore.end).format(
+      `${dateFormat} ${timeFormat}`
+    );
     // activeLogDayjs = dayjs($ActiveLogStore.end);
   }
 
@@ -134,7 +139,9 @@
     },
     highlightElements(items: Array<TrackableElement>) {
       const buttons = document.getElementsByClassName("tracker-board-button");
-      const tagsInNote = items.filter((i) => i.type === "tracker").map((i) => i.id);
+      const tagsInNote = items
+        .filter((i) => i.type === "tracker")
+        .map((i) => i.id);
       for (let i = 0; i < buttons.length; i++) {
         try {
           let buttonTag = buttons[i].id.split("-")[1];
@@ -185,7 +192,8 @@
         } else if (type === "person") {
           try {
             let people = Object.keys($PeopleStore.people || []).filter(
-              (person) => person.toLowerCase().search(searchTag.replace("@", "")) > -1
+              (person) =>
+                person.toLowerCase().search(searchTag.replace("@", "")) > -1
             );
             return people.length
               ? people.map((username) => {
@@ -214,7 +222,9 @@
       } catch (e) {}
     },
     calculateScore() {
-      $ActiveLogStore.score = $ActiveLogStore.score || ScoreNote($ActiveLogStore.note, new Date().getTime());
+      $ActiveLogStore.score =
+        $ActiveLogStore.score ||
+        ScoreNote($ActiveLogStore.note, new Date().getTime());
     },
     async logSave() {
       saving = true;
@@ -257,7 +267,10 @@
       if (event.key === "Enter" && event.getModifierState("Shift")) {
         event.preventDefault();
         // If enter + modify er
-      } else if (event.key === "Enter" && (event.getModifierState("Control") || event.getModifierState("Meta"))) {
+      } else if (
+        event.key === "Enter" &&
+        (event.getModifierState("Control") || event.getModifierState("Meta"))
+      ) {
         methods.logSave();
         // All other keyboard events
       } else {
@@ -273,15 +286,24 @@
           // If its a tag
           if (tag.charAt(0) === "#" && tag.length > 1) {
             state.partialTag = tag;
-            state.autocompleteResults = methods.autoCompleteSearch(tag, "tracker");
+            state.autocompleteResults = methods.autoCompleteSearch(
+              tag,
+              "tracker"
+            );
             // If its a person
           } else if (tag.charAt(0) === "@" && tag.length > 1) {
             state.partialTag = tag;
-            state.autocompleteResults = methods.autoCompleteSearch(tag, "person");
+            state.autocompleteResults = methods.autoCompleteSearch(
+              tag,
+              "person"
+            );
             // If it's context
           } else if (tag.charAt(0) === "+" && tag.length > 1) {
             state.partialTag = tag;
-            state.autocompleteResults = methods.autoCompleteSearch(tag, "context");
+            state.autocompleteResults = methods.autoCompleteSearch(
+              tag,
+              "context"
+            );
           } else {
             state.partialTag = null;
             state.autocompleteResults = null;
@@ -335,25 +357,25 @@
   });
 </script>
 
-<style lang="scss">
+<style lang="scss" global>
   @import "../../scss/utils/__utils.scss";
 
-  :global(#note-capture) {
+  #note-capture {
     background-color: var(--footer-background);
     padding-bottom: 4px;
   }
 
-  :global(.capture-log .tracker-list) {
+  .capture-log .tracker-list {
     margin-top: -10px !important;
   }
 
-  :global(.capture-log .mask-textarea .save-button) {
+  .capture-log .mask-textarea .save-button {
     display: none;
   }
-  :global(.capture-log .mask-textarea.populated .save-button) {
+  .capture-log .mask-textarea.populated .save-button {
     display: block;
   }
-  :global(.capture-log .mask-textarea .action-button) {
+  .capture-log .mask-textarea .action-button {
     margin-bottom: 7px;
   }
 
@@ -364,7 +386,7 @@
     z-index: 1;
   }
 
-  .advanced {
+  .capture-wrapper .advanced {
     position: relative;
     z-index: 1200;
     margin-top: 10px;
@@ -372,11 +394,11 @@
     padding-bottom: 10px;
   }
 
-  :global(.mask-textarea .action-buton) {
+  .capture-wrapper .mask-textarea .action-buton {
     margin-bottom: 7px;
   }
 
-  .save-progress {
+  .capture-wrapper .save-progress {
     position: absolute;
     top: -4px;
     left: 0;
@@ -402,7 +424,7 @@
     }
   }
 
-  .mask-textarea {
+  .capture-wrapper .mask-textarea {
     display: flex;
     align-items: flex-end;
     min-height: 40px;
@@ -446,14 +468,20 @@
   }
 </style>
 
-<div class="capture-wrapper" on:swipeup={methods.swipeUp} on:swipedown={methods.swipeDown}>
+<div
+  class="capture-wrapper"
+  on:swipeup={methods.swipeUp}
+  on:swipedown={methods.swipeDown}>
 
   <!-- 
     AUTO COMPLETE RESULTS
   -->
 
   <div class="capture-log">
-    <div class="save-progress {saved ? 'saved' : ''} {saving ? 'saving' : ''} {$LedgerStore.saving ? 'saving' : ''}" />
+    <div
+      class="save-progress {saved ? 'saved' : ''}
+      {saving ? 'saving' : ''}
+      {$LedgerStore.saving ? 'saving' : ''}" />
     <div class="container p-0">
 
       <!-- Auto Complet e-->
@@ -469,7 +497,8 @@
           });
         }} />
       <!-- Note Input -->
-      <div class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 ? 'populated' : 'empty'}">
+      <div
+        class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 ? 'populated' : 'empty'}">
         <Button
           ariaLabel="Location and Date settings"
           size="sm"
@@ -497,15 +526,28 @@
           on:paste={methods.keyPress} />
 
         {#if $UserStore.meta.hiddenFeatures}
-          <Button className="expand-button action-button" ariaLabel="Journal Mode" icon size="sm" on:click={Interact.toggleFocusedEditor}>
+          <Button
+            className="expand-button action-button"
+            ariaLabel="Journal Mode"
+            icon
+            size="sm"
+            on:click={Interact.toggleFocusedEditor}>
             <Icon name="expand" className="fill-inverse-2" />
           </Button>
         {/if}
 
-        <PositivityMenu bind:score={$ActiveLogStore.score} closeBackgroundTap={true} size="lg" className="mr-1 action-button" />
+        <PositivityMenu
+          bind:score={$ActiveLogStore.score}
+          closeBackgroundTap={true}
+          size="lg"
+          className="mr-1 action-button" />
 
         {#if $LedgerStore.saving}
-          <Button className="save-button action-button mr-2" shape="circle" color="success" size="sm">
+          <Button
+            className="save-button action-button mr-2"
+            shape="circle"
+            color="success"
+            size="sm">
             <NSpinner size={20} color="#FFFFFF" />
           </Button>
         {:else}
@@ -525,19 +567,28 @@
   {#if state.advanced}
     <div class="advanced">
       <div class="container">
-        <NItem truncate clickable className="mr-2 solo text-sm" on:click={methods.toggleCustomLocation}>
+        <NItem
+          truncate
+          clickable
+          className="mr-2 solo text-sm"
+          on:click={methods.toggleCustomLocation}>
           <div slot="left" class="text-sm text-bold">
             <NIcon name="pin" className="mr-2 fill-inverse-2" size="16" />
           </div>
           {#if !$ActiveLogStore.lat}
             <Text>{Lang.t('general.location', 'Location')}</Text>
           {:else}
-            <Text>{$ActiveLogStore.location || `${math.round($ActiveLogStore.lat, 100)},${math.round($ActiveLogStore.lng, 100)}`}</Text>
+            <Text>
+              {$ActiveLogStore.location || `${math.round($ActiveLogStore.lat, 100)},${math.round($ActiveLogStore.lng, 100)}`}
+            </Text>
           {/if}
           <div slot="right" class="n-row">
             {#if $ActiveLogStore.lat}
               <Button icon size="sm">
-                <Icon name="close" className="fill-inverse" on:click={methods.clearLocation} />
+                <Icon
+                  name="close"
+                  className="fill-inverse"
+                  on:click={methods.clearLocation} />
               </Button>
             {:else if $UserStore.alwaysLocate}
               <Text faded className="pr-1">Current</Text>
@@ -576,7 +627,11 @@
           </div>
           <div slot="right">
             {#if $ActiveLogStore.end}
-              <Button className="mr-2" icon on:click={methods.clearDate} ariaLabel="Close Advanced">
+              <Button
+                className="mr-2"
+                icon
+                on:click={methods.clearDate}
+                ariaLabel="Close Advanced">
                 <NIcon name="close" className="fill-inverse" size="22" />
               </Button>
             {/if}

@@ -258,20 +258,6 @@
 </script>
 
 <style lang="scss">
-  .n-list.animate {
-    transition: all 0.2s ease-in-out;
-    transform: translateX(0);
-    opacity: 1;
-    &.animate-forward {
-      transform: translateX(-100px);
-      opacity: 0;
-    }
-    &.animate-back {
-      transform: translateX(100px);
-      opacity: 0;
-    }
-  }
-
   textarea#file-editor {
     font-family: "Courier New", Courier, monospace;
     min-height: calc(100% - 0px);
@@ -346,13 +332,17 @@
             {/if}
           {/each}
         </List>
-        <NItem className="bg-transparent mt-2" title={Lang.t('settings.allow-file-editing', 'Allow file editing')}>
+        <NItem
+          className="bg-transparent mt-2"
+          title={Lang.t('settings.allow-file-editing', 'Allow file editing')}>
           <Text size="sm" faded>
             Edit data files.
             <span class="text-red">Use with caution.</span>
           </Text>
           <div slot="right">
-            <ToggleSwitch bind:value={$UserStore.meta.canEditFiles} on:change={UserStore.saveMeta} />
+            <ToggleSwitch
+              bind:value={$UserStore.meta.canEditFiles}
+              on:change={UserStore.saveMeta} />
           </div>
         </NItem>
         {#if $UserStore.meta.canEditFiles}
@@ -401,7 +391,9 @@
           {#if !state.edit}
             <pre>{fileContent}</pre>
           {:else}
-            <textarea id="file-editor" autocapitalize="off" autocorrect="off">{fileContent}</textarea>
+            <textarea id="file-editor" autocapitalize="off" autocorrect="off">
+              {fileContent}
+            </textarea>
           {/if}
         {:else}
           <div class="n-panel center-all">
@@ -415,10 +407,16 @@
       {#if $UserStore.meta.canEditFiles}
         <div class="container n-row px-2 pt-1 pb-2">
           {#if state.edit}
-            <Button size="md" color="clear" block on:click={cancelEdits}>Cancel</Button>
-            <Button size="md" color="primary" block on:click={saveChanges}>Save Changes</Button>
+            <Button size="md" color="clear" block on:click={cancelEdits}>
+              Cancel
+            </Button>
+            <Button size="md" color="primary" block on:click={saveChanges}>
+              Save Changes
+            </Button>
           {:else}
-            <Button size="md" color="clear" block on:click={editFile}>Edit</Button>
+            <Button size="md" color="clear" block on:click={editFile}>
+              Edit
+            </Button>
           {/if}
         </div>
       {/if}

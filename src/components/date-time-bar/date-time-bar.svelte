@@ -71,8 +71,8 @@
   const hasLeftSlot = (arguments[1].$$slots || {}).hasOwnProperty("left");
 </script>
 
-<style lang="scss">
-  :global(.alert-dialog-window .date-time-bar-wrapper) {
+<style global lang="scss">
+  .alert-dialog-window .date-time-bar-wrapper {
     margin-left: -16px;
     margin-right: -16px;
     width: calc(100% + 32px) !important;
@@ -115,11 +115,11 @@
       padding-left: 10px;
     }
   }
-  .view.visible {
+  .date-time-bar-wrapper .view.visible {
     border-top: solid 1px var(--color-solid-2);
     margin-bottom: 8px;
   }
-  :global(.date-time-bar-wrapper .no-left-slot > .left) {
+  .date-time-bar-wrapper .no-left-slot > .left {
     display: none;
   }
 </style>

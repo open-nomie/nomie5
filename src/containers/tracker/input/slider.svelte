@@ -25,9 +25,7 @@
 
 <style lang="scss">
   @import "../../../scss/vendor/bootstrap/base";
-  input[type="range"] {
-    background-color: var(--color-solid);
-  }
+
   .tracker-input {
     position: relative;
     display: flex;
@@ -40,6 +38,11 @@
     max-height: 100%;
     min-height: 200px;
 
+    &.slider {
+      input[type="range"] {
+        background-color: var(--color-solid);
+      }
+    }
     .value {
       text-align: center;
       margin: 0 0 20px 0;
@@ -108,7 +111,8 @@
     }
     input[type="range"]::-moz-range-thumb {
       $trackSize: $size * 0.9;
-      box-shadow: 5.4px 5.4px 6.5px rgba(0, 0, 0, 0.18), 0px 0px 5.4px rgba(13, 13, 13, 0.18);
+      box-shadow: 5.4px 5.4px 6.5px rgba(0, 0, 0, 0.18),
+        0px 0px 5.4px rgba(13, 13, 13, 0.18);
       border: 1px solid var(--color-inverse);
       height: $size * 0.9;
       width: $size * 0.9;
@@ -126,7 +130,9 @@
 <div class="tracker-input slider">
   <div class="value">
     {#if tracker && tracker.uom !== 'num'}
-      <Text size="lg" bold className="text-primary-bright">{tracker.displayValue(tempValue)}</Text>
+      <Text size="lg" bold className="text-primary-bright">
+        {tracker.displayValue(tempValue)}
+      </Text>
       <Text size="sm" faded>{tempValue}</Text>
     {:else if tracker}
       <Text size="xxl" bold>{tempValue}</Text>

@@ -3,16 +3,8 @@
   const dispatch = createEventDispatcher();
 
   import Chart from "chart.js";
-
   import NIcon from "../icon/icon.svelte";
-  import Button from "../button/button.svelte";
-
-  import math from "../../utils/math/math";
-  import tick from "../../utils/tick/tick";
-
   import nid from "../../modules/nid/nid";
-
-  import { UserStore } from "../../store/user-store";
   import { Interact } from "../../store/interact";
   import ignoreArrayZeros from "../../modules/stats/ignore-zeros";
   import _ from "lodash";
@@ -22,14 +14,14 @@
 
   export let title = "";
   export let color = "#4d84a1";
-  export let points;
+  export let points: any;
   export let activeIndex = 2;
-  export let xFormat = (x) => x;
-  export let yFormat = (y) => y;
+  export let xFormat: Function = (x) => x;
+  export let yFormat: Function = (y) => y;
   export let hideYTicks: boolean = false;
   export let hideXTicks: boolean = false;
   export let type: string = "bar";
-  export let beginAtZero: boolean = true;
+  // export let beginAtZero: boolean = true;
   export let showSelected: boolean = true;
   export let ignoreZero: boolean = false;
 

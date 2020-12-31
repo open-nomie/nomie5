@@ -87,18 +87,20 @@
   // }
 </script>
 
-<style lang="scss">
-  .divider {
-    font-size: 0.9em;
-    font-weight: 500;
-  }
+<style global lang="scss">
+  .n-item-log {
+    .divider {
+      font-size: 0.9em;
+      font-weight: 500;
+    }
 
-  .n-row.context {
-    justify-content: flex-start;
-    flex-wrap: wrap;
-  }
-  .more-button {
-    margin-right: -8pt;
+    .n-row.context {
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+    .more-button {
+      margin-right: -8pt;
+    }
   }
 </style>
 
@@ -117,12 +119,16 @@
                 event.stopPropagation();
               }} />
           {/if}
-          <Text inline size="sm" className="" faded>{time.fromNow(logMeta.endDate)}</Text>
+          <Text inline size="sm" className="" faded>
+            {time.fromNow(logMeta.endDate)}
+          </Text>
         </div>
         <Text size="sm" medium className="filler">
           {logMeta.endDate.format(`${dtFormat.time}`)}
           {#if fullDate}
-            <Text inline size="sm" faded>{logMeta.endDate.format(`${dtFormat.date}`)}</Text>
+            <Text inline size="sm" faded>
+              {logMeta.endDate.format(`${dtFormat.date}`)}
+            </Text>
           {/if}
         </Text>
       </div>
@@ -131,7 +137,10 @@
 
       <!-- SCORE display -->
       {#if displayLog.score}
-        <div class="score-mark {displayLog.score > 0 ? 'positive' : 'negative'}">{getEmojiFromScore(displayLog.score, true)}</div>
+        <div
+          class="score-mark {displayLog.score > 0 ? 'positive' : 'negative'}">
+          {getEmojiFromScore(displayLog.score, true)}
+        </div>
       {/if}
 
       <slot name="more" />

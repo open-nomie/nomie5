@@ -141,7 +141,7 @@
   });
 </script>
 
-<style lang="scss">
+<style global lang="scss">
   .tracker-input {
     display: flex;
     flex-direction: column;
@@ -155,14 +155,14 @@
         margin-right: 10px;
       }
     }
+    .footer .btn {
+      border-radius: 50px;
+    }
   }
-  :global(.tracker-input .edit-toggle) {
+  .tracker-input .edit-toggle {
     position: fixed;
     top: 20px;
     z-index: 1000;
-  }
-  .footer .btn {
-    border-radius: 50px;
   }
 </style>
 

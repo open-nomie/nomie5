@@ -550,15 +550,15 @@
       padding-top: 20px;
     }
   }
-  .no-trackers {
-    min-height: 300px;
-    height: 50vh;
-    display: flex;
-    color: var(--color-solid-3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  // .no-trackers {
+  //   min-height: 300px;
+  //   height: 50vh;
+  //   display: flex;
+  //   color: var(--color-solid-3);
+  //   display: flex;
+  //   justify-content: center;
+  //   align-items: center;
+  // }
 
   :global(.board-actions) {
     display: flex;

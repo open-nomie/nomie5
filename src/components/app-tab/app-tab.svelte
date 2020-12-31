@@ -14,14 +14,14 @@
   let hit: any;
 </script>
 
-<style lang="scss">
+<style global lang="scss">
   .tab-wrap {
     display: flex;
     flex-grow: 1;
     height: 100%;
     align-items: center;
   }
-  :global(.tab-wrap a) {
+  .tab-wrap a {
     position: relative;
     color: var(--color-inverse-2);
     display: inline-flex;

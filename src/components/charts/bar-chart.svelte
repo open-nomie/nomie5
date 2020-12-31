@@ -107,10 +107,6 @@
 </script>
 
 <style lang="scss">
-  h2 {
-    text-align: center;
-  }
-
   .n-chart {
     width: 100%;
     max-width: 500px;
@@ -217,7 +213,9 @@
         <g class="axis y-axis" transform="translate(0,{padding.top})">
           {#each yTicks as tick, index}
             {#if showValue(tick, index)}
-              <g class="tick tick-{tick}" transform="translate(0, {yScale(tick) - padding.bottom})">
+              <g
+                class="tick tick-{tick}"
+                transform="translate(0, {yScale(tick) - padding.bottom})">
                 <line x2="100%" />
                 <text y="-4">{yFormat(tick)} {tick === 20 ? '' : ''}</text>
               </g>
@@ -265,9 +263,13 @@
             {points[activeIndex].date.format(hourFormat)}
           {:else if points[activeIndex].unit == 'day'}
             {points[activeIndex].date.format('ddd MMM Do')}
-          {:else if points[activeIndex].unit == 'month'}{points[activeIndex].date.format('MMM YYYY')}{:else}{points[activeIndex].x}{/if}
+          {:else if points[activeIndex].unit == 'month'}
+            {points[activeIndex].date.format('MMM YYYY')}
+          {:else}{points[activeIndex].x}{/if}
         </label>
-        <div class="value" style="background-color:{color}">{yFormat(points[activeIndex].y)}</div>
+        <div class="value" style="background-color:{color}">
+          {yFormat(points[activeIndex].y)}
+        </div>
       </div>
     {/if}
   </div>
