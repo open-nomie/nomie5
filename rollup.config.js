@@ -8,6 +8,7 @@ import { scss } from "@kazzkiq/svelte-preprocess-scss";
 import builtins from "rollup-plugin-node-builtins";
 import replace from "rollup-plugin-replace";
 import packagejson from "./package.json";
+import postcss from "rollup-plugin-postcss";
 
 import fs from "fs";
 
@@ -71,6 +72,9 @@ export default [
           writeFileSync("./public/main.css", styles);
         },
       }),
+      postcss({
+        plugins: [],
+      }),
       svelte({
         // enable run-time checks when not in production
         dev: !production,
@@ -80,6 +84,7 @@ export default [
         // },
         // we'll extract any component CSS out into
         // a separate file — better for performance
+        emitCss: true,
         css: (css) => {
           css.write("public/bundle.css");
         },

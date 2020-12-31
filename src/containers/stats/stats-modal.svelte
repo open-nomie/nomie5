@@ -602,21 +602,16 @@
     z-index: 1301 !important;
   }
 
-  .n-list {
-    max-width: 100vw;
-    overflow: hidden;
-  }
-
   :global(.chart-item) {
     position: relative;
   }
 
-  .time-range {
-    font-size: 0.9em;
-    font-weight: 500;
-    text-align: center;
-    line-height: 1em;
-  }
+  // .time-range {
+  //   font-size: 0.9em;
+  //   font-weight: 500;
+  //   text-align: center;
+  //   line-height: 1em;
+  // }
   :global(.stats-modal .n-modal) {
     max-width: 500px !important;
   }

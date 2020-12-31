@@ -176,13 +176,6 @@
   });
 </script>
 
-<style>
-  .n-list {
-    max-width: 100vw;
-    overflow: hidden;
-  }
-</style>
-
 <NLayout className="stats" showTabs={false}>
 
   <header slot="header">

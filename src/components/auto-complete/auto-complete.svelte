@@ -146,8 +146,8 @@
   }
 </script>
 
-<style lang="scss">
-  :global(.autocomplete-results.scroller) {
+<style global lang="scss">
+  .autocomplete-results.scroller {
     max-height: 48px;
     overflow: scroll;
     .tracker-list {
@@ -159,7 +159,7 @@
       width: fit-content;
     }
   }
-  :global(.autocomplete-results.scroller .trackable-element) {
+  .autocomplete-results.scroller .trackable-element {
     flex-shrink: 0;
     flex-grow: 0;
   }
@@ -201,7 +201,8 @@
 </style>
 
 <!--  -->
-<div class="{scroller ? 'scroller' : 'no-scroller'} autocomplete-results animate {(state.results || []).length ? 'visible' : 'hidden'}">
+<div
+  class="{scroller ? 'scroller' : 'no-scroller'} autocomplete-results animate {(state.results || []).length ? 'visible' : 'hidden'}">
   <div class="container p-0 tracker-list">
     <Button size="xs" icon on:click={close}>
       <NIcon name="close" className="fill-inverse-2" />
@@ -228,7 +229,9 @@
         <div style="max-width:120px;" class="ml-1 truncate">
           {#if tracker.type == 'person'}
             {$PeopleStore.people[tracker.tag].displayName}
-          {:else if tracker.type == 'context'}{tracker.tag}{:else}{tracker.label}{/if}
+          {:else if tracker.type == 'context'}
+            {tracker.tag}
+          {:else}{tracker.label}{/if}
         </div>
       </Button>
     {/each}

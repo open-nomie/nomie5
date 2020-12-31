@@ -79,13 +79,17 @@
     data.board.trackers = Object.keys($TrackerStore.trackers).sort((a, b) => {
       if (data.board.trackers.indexOf(a) > data.board.trackers.indexOf(b)) {
         return 1;
-      } else if (data.board.trackers.indexOf(a) < data.board.trackers.indexOf(b)) {
+      } else if (
+        data.board.trackers.indexOf(a) < data.board.trackers.indexOf(b)
+      ) {
         return -1;
       } else {
         return a > b ? 1 : -1;
       }
     });
-    trackers = data.board.trackers.map((tag) => $TrackerStore.trackers[tag]).filter((t) => t);
+    trackers = data.board.trackers
+      .map((tag) => $TrackerStore.trackers[tag])
+      .filter((t) => t);
   }
 
   let titleChange = false;
@@ -128,7 +132,10 @@
       }
     },
     async deleteBoard() {
-      let confirmed = await Interact.confirm("Delete " + data.board.label + " tab?", "You can recreate it later, but it's not super easy.");
+      let confirmed = await Interact.confirm(
+        "Delete " + data.board.label + " tab?",
+        "You can recreate it later, but it's not super easy."
+      );
       if (confirmed === true) {
         data.refreshing = true;
         await BoardStore.deleteBoard(data.board.id);
@@ -139,7 +146,10 @@
     removeTracker(event, tracker) {
       event.preventDefault();
       event.stopPropagation();
-      Interact.confirm(`Remove ${tracker.label} from ${data.board.label}?`, "You can always add it later.").then((res) => {
+      Interact.confirm(
+        `Remove ${tracker.label} from ${data.board.label}?`,
+        "You can always add it later."
+      ).then((res) => {
         if (res === true) {
           event.preventDefault();
           BoardStore.removeTrackerFromBoard(tracker, data.board.id).then(() => {
@@ -195,22 +205,22 @@
   };
 </script>
 
-<style lang="scss">
-  .grid-container {
-    display: flex;
-    flex-direction: column;
-    align-items: space-around;
-    min-height: 50vh;
-  }
+<!-- <style lang="scss">
+  // .grid-container {
+  //   display: flex;
+  //   flex-direction: column;
+  //   align-items: space-around;
+  //   min-height: 50vh;
+  // }
 
-  .btn-group {
-    .btn {
-      width: 36px;
-    }
-  }
+  // .btn-group {
+  //   .btn {
+  //     width: 36px;
+  //   }
+  // }
 
   // Animation from https://www.kirupa.com/html5/creating_the_ios_icon_jiggle_wobble_effect_in_css.htm
-</style>
+</style> -->
 
 {#if data.board}
   <NPage>
@@ -237,10 +247,18 @@
       <List className="pt-2">
         {#if data.board.id !== 'all'}
           <NItem className="py-2">
-            <NInput type="text" placeholder="Tab Label" bind:value={data.updatedLabel}>
+            <NInput
+              type="text"
+              placeholder="Tab Label"
+              bind:value={data.updatedLabel}>
               <div slot="right">
                 {#if data.updatedLabel != data.board.label}
-                  <Button type="clear" color="primary-bright" on:click={methods.save}>{Lang.t('general.save')}</Button>
+                  <Button
+                    type="clear"
+                    color="primary-bright"
+                    on:click={methods.save}>
+                    {Lang.t('general.save')}
+                  </Button>
                 {/if}
               </div>
 
@@ -248,7 +266,12 @@
           </NItem>
         {/if}
         {#if trackers}
-          <NSortableList bind:items={trackers} handle=".menu-handle" key="tag" on:update={trackersSorted} let:item>
+          <NSortableList
+            bind:items={trackers}
+            handle=".menu-handle"
+            key="tag"
+            on:update={trackersSorted}
+            let:item>
             <NItem className="py-2 bottom-line">
               <div slot="left" class="menu-handle">
                 <NIcon className="fill-inverse mr-2" name="menu" />

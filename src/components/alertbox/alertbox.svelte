@@ -1,6 +1,4 @@
 <script>
-  import NToolbar from "../toolbar/toolbar.svelte";
-  import NText from "../text/text.svelte";
   import { createEventDispatcher } from "svelte";
   import Button from "../button/button.svelte";
   import Text from "../text/text.svelte";
@@ -56,8 +54,8 @@
   };
 </script>
 
-<style lang="scss" type="text/scss">
-  :global(.alert-dialog) {
+<style global lang="scss" type="text/scss">
+  .alert-dialog {
     min-height: 200px;
     position: fixed;
     top: 0;
@@ -136,7 +134,10 @@
     aria-label="Alert Dialog">
     <div class="alert-dialog-window card">
       {#if title}
-        <div class="card-title {!hasSlot && !message ? 'message-less' : 'message'}">{title}</div>
+        <div
+          class="card-title {!hasSlot && !message ? 'message-less' : 'message'}">
+          {title}
+        </div>
       {/if}
 
       {#if message && !hasSlot}
@@ -152,15 +153,26 @@
         </div>
       {/if}
 
-      <!-- -->
-
       <div class="p-1 d-flex flex-row footer">
         {#if cancel}
-          <Button color="transparent" ariaLabel={cancel} size="lg" block className="mr-1 flex-grow" on:click={methods.onCancel}>
+          <Button
+            color="transparent"
+            ariaLabel={cancel}
+            size="lg"
+            block
+            className="mr-1 flex-grow"
+            on:click={methods.onCancel}>
             {cancel}
           </Button>
         {/if}
-        <Button ariaLabel={ok} block size="lg" className="ml-1 flex-grow" on:click={methods.onOk}>{ok}</Button>
+        <Button
+          ariaLabel={ok}
+          block
+          size="lg"
+          className="ml-1 flex-grow"
+          on:click={methods.onOk}>
+          {ok}
+        </Button>
       </div>
     </div>
   </div>

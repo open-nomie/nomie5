@@ -81,9 +81,9 @@
   }
 </script>
 
-<style lang="scss" type="text/scss">
+<style global lang="scss" type="text/scss">
   $radius: 1em;
-  :global(.pop-menu) {
+  .pop-menu {
     --pop-button-radius: 12px;
     position: fixed;
     top: 0;
@@ -159,53 +159,26 @@
       }
     }
   }
-  :global(.pop-menu .pop-button) {
+  .pop-menu .pop-button {
     box-shadow: none;
   }
-  :global(.pop-menu .n-list) {
+  .pop-menu .n-list {
     border-radius: 12px !important;
   }
-  :global(.pop-menu .n-list .nbtn main) {
+  .pop-menu .n-list .nbtn main {
     text-align: left !important;
     justify-content: flex-start;
   }
-  :global(.pop-menu .n-list .nbtn ~ .nbtn:after) {
+  .pop-menu .n-list .nbtn ~ .nbtn:after {
     content: "";
     border-top: solid 1px rgba(155, 155, 155, 0.25) !important;
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-
-    // border-radius: 0;
-    // margin-bottom: 0;
-    // margin-top: 0;
-    // border: none;
-    // box-shadow: none !important;
-    // background-color: transparent;
-    // &:hover {
-    //   transform: scale(1) !important;
-    //   color: var(--color-inverse) !important;
-    //   background-color: var(--color-solid) !important;
-    // }
-    // &:first-child {
-    //   border-top-right-radius: $radius;
-    //   border-top-left-radius: $radius;
-    // }
-    // &:last-child() {
-    //   border-bottom-right-radius: $radius;
-    //   border-bottom-left-radius: $radius;
-    // }
-    // &:active {
-    //   // transform: scale(0.98);
-    // }
-    // &:hover {
-    //   transform: none;
-    //   color: inherit;
-    //   // background-color: var(--color-faded) !important;
-    // }
   }
-  :global(.pop-menu .nbtn-danger:hover, .pop-menu.nbtn-danger:active) {
+  .pop-menu .nbtn-danger:hover,
+  .pop-menu.nbtn-danger:active {
     background-color: var(--color-red) !important;
     color: rgba(128, 2, 2, 0.9) !important;
   }
@@ -222,7 +195,10 @@
       {#if title || description}
         <div class="p-2">
           {#if title}
-            <h5 class="p-0 m-0 text-lg text-bold text-inverse {!description ? 'pb-2' : ''}">{title}</h5>
+            <h5
+              class="p-0 m-0 text-lg text-bold text-inverse {!description ? 'pb-2' : ''}">
+              {title}
+            </h5>
           {/if}
           {#if description}
             <p class="p-0 m-0 mt-1">{description}</p>
@@ -248,7 +224,9 @@
                 }}>
                 {button.title}
                 {#if button.description}
-                  <Text size="sm" leading2 faded className="mt-1">{button.description}</Text>
+                  <Text size="sm" leading2 faded className="mt-1">
+                    {button.description}
+                  </Text>
                 {/if}
 
                 <div slot="right">

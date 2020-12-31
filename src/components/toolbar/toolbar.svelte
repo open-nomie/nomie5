@@ -4,7 +4,7 @@
   export let style = "";
 </script>
 
-<style lang="scss">
+<style global lang="scss">
   .n-toolbar {
     transition: all 0.2s ease-in-out;
     min-height: 50px;
@@ -45,9 +45,7 @@
         top: 49px !important;
       }
     }
-    .container {
-      // padding: 0px 10px;
-    }
+
     [slot="sub-header"] {
       width: 100%;
     }
@@ -55,7 +53,8 @@
   .n-toolbar.stretch {
     justify-content: stretch;
   }
-  :global(.n-toolbar .btn-clear, .n-toolbar-grid .btn-clear) {
+  .n-toolbar .btn-clear,
+  .n-toolbar-grid .btn-clear {
     border-radius: 0 !important;
     outline: none !important;
     padding: 0 10px;

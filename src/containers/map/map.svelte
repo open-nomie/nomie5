@@ -154,7 +154,8 @@
               arcgisOnline,
               L.esri.Geocoding.mapServiceProvider({
                 label: "States and Counties",
-                url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer",
+                url:
+                  "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer",
                 layers: [2, 3],
                 searchFields: ["NAME", "STATE_NAME"],
               }),
@@ -229,17 +230,21 @@
       });
     },
     deleteLocation(location) {
-      Interact.confirm(`${Lang.t("general.delete")} ${location.name}?`).then((res) => {
-        if (res) {
-          Locations.deleteByID(location.id);
+      Interact.confirm(`${Lang.t("general.delete")} ${location.name}?`).then(
+        (res) => {
+          if (res) {
+            Locations.deleteByID(location.id);
+          }
         }
-      });
+      );
     },
     editName(location) {
-      Interact.prompt("Location Name", null, { value: location.name }).then((res) => {
-        location.name = res;
-        Locations.save(location);
-      });
+      Interact.prompt("Location Name", null, { value: location.name }).then(
+        (res) => {
+          location.name = res;
+          Locations.save(location);
+        }
+      );
     },
     setLocation(location) {
       data.locationName = location.name;
@@ -340,12 +345,16 @@
         } else {
           // Max Distance is not enough to justify rendering a bunch of pins
           if (locations.length) {
-            addMarker([locations[0].lat, locations[0].lng], locations[0].name, () => {
-              data.activeLocation = locations[0];
-              if (data.activeLocation.log) {
-                Interact.shareLog(data.activeLocation.log);
+            addMarker(
+              [locations[0].lat, locations[0].lng],
+              locations[0].name,
+              () => {
+                data.activeLocation = locations[0];
+                if (data.activeLocation.log) {
+                  Interact.shareLog(data.activeLocation.log);
+                }
               }
-            });
+            );
           }
         }
 
@@ -412,81 +421,81 @@
     }
   }
 
-  .n-map-container .location-name {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    font-weight: bold;
-    font-size: 0.9em;
-    height: $locationHeight;
-    display: flex;
-    flex-direction: column;
-    justify-content: stretch;
-    align-items: stretch;
+  // .n-map-container .location-name {
+  //   position: absolute;
+  //   bottom: 0px;
+  //   left: 0px;
+  //   right: 0px;
+  //   font-weight: bold;
+  //   font-size: 0.9em;
+  //   height: $locationHeight;
+  //   display: flex;
+  //   flex-direction: column;
+  //   justify-content: stretch;
+  //   align-items: stretch;
 
-    transition: height 0.2s ease-in-out;
+  //   transition: height 0.2s ease-in-out;
 
-    .row {
-      margin: 0;
-      flex-wrap: nowrap;
-    }
+  //   // .row {
+  //   //   margin: 0;
+  //   //   flex-wrap: nowrap;
+  //   // }
 
-    .locations {
-      width: 100%;
-    }
+  //   // .locations {
+  //   //   width: 100%;
+  //   // }
 
-    &.expanded {
-      .row {
-        min-height: 50px;
-      }
-      z-index: 2001;
-      max-height: 300px;
-      flex-grow: 1;
-      height: auto;
-      max-height: 300px;
-      overflow: scroll;
-      padding: 0;
-      .locations.list {
-        border-top: solid 1px var(--color-faded);
-        overflow-y: scroll;
+  //   // &.expanded {
+  //   //   .row {
+  //   //     min-height: 50px;
+  //   //   }
+  //   //   z-index: 2001;
+  //   //   max-height: 300px;
+  //   //   flex-grow: 1;
+  //   //   height: auto;
+  //   //   max-height: 300px;
+  //   //   overflow: scroll;
+  //   //   padding: 0;
+  //   //   .locations.list {
+  //   //     border-top: solid 1px var(--color-faded);
+  //   //     overflow-y: scroll;
 
-        display: flex;
-        flex-direction: column;
-        align-content: stretch;
+  //   //     display: flex;
+  //   //     flex-direction: column;
+  //   //     align-content: stretch;
 
-        .right {
-          margin-left: 0px;
-        }
-      }
-    }
+  //   //     .right {
+  //   //       margin-left: 0px;
+  //   //     }
+  //   //   }
+  //   // }
 
-    z-index: 1000;
-    padding: 0px 5px;
-    background-color: var(--color-solid);
-    border-top: solid 1px var(--color-faded);
-    color: var(--color-inverse);
-    text-align: center;
-    z-index: 2;
-    box-shadow: 0px -6px 10px rgba(0, 0, 0, 0.1);
-    .row {
-      flex-grow: 1;
-      flex-shrink: 1;
-      align-items: center;
-      justify-content: stretch;
-      .name {
-        text-align: left;
-        width: calc(100% - 90px);
-        margin: 0 auto;
-        font-size: 0.7em;
-        line-height: 0.8em;
-        align-self: center;
-        flex-grow: 1;
-        flex-shrink: 1;
-        padding: 0 4px;
-      }
-    }
-  }
+  //   z-index: 1000;
+  //   padding: 0px 5px;
+  //   background-color: var(--color-solid);
+  //   border-top: solid 1px var(--color-faded);
+  //   color: var(--color-inverse);
+  //   text-align: center;
+  //   z-index: 2;
+  //   box-shadow: 0px -6px 10px rgba(0, 0, 0, 0.1);
+  // .row {
+  //   flex-grow: 1;
+  //   flex-shrink: 1;
+  //   align-items: center;
+  //   justify-content: stretch;
+  //   .name {
+  //     text-align: left;
+  //     width: calc(100% - 90px);
+  //     margin: 0 auto;
+  //     font-size: 0.7em;
+  //     line-height: 0.8em;
+  //     align-self: center;
+  //     flex-grow: 1;
+  //     flex-shrink: 1;
+  //     padding: 0 4px;
+  //   }
+  // }
+  // }
 
   .picker-cover {
     pointer-events: none;
@@ -558,7 +567,8 @@
             <path
               d="M42,29h-5.08c-0.441-3.059-2.861-5.479-5.92-5.92V18c0-0.553-0.447-1-1-1s-1,0.447-1,1v5.08
               c-3.059,0.441-5.479,2.862-5.92,5.92H18c-0.553,0-1,0.447-1,1s0.447,1,1,1h5.08c0.441,3.059,2.861,5.479,5.92,5.92V42
-              c0,0.553,0.447,1,1,1s1-0.447,1-1v-5.08c3.059-0.441,5.479-2.862,5.92-5.92H42c0.553,0,1-0.447,1-1S42.553,29,42,29z M30,35
+              c0,0.553,0.447,1,1,1s1-0.447,1-1v-5.08c3.059-0.441,5.479-2.862,5.92-5.92H42c0.553,0,1-0.447,1-1S42.553,29,42,29z
+              M30,35
               c-2.757,0-5-2.243-5-5s2.243-5,5-5s5,2.243,5,5S32.757,35,30,35z" />
           </g>
         </svg>
@@ -568,7 +578,11 @@
   <div class="n-map-wrapper" style="bottom:{picker ? '1px' : '0'}">
     <div {id} class="n-map" />
     {#if picker && $Locations.length && !hideFavorite}
-      <Button className="favorites-button tap-icon" shape="rounded" icon on:click={selectSavedLocation}>
+      <Button
+        className="favorites-button tap-icon"
+        shape="rounded"
+        icon
+        on:click={selectSavedLocation}>
         <Icon name="star" size="18" />
       </Button>
     {/if}

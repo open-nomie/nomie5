@@ -38,7 +38,9 @@
     note_to_array(str) {
       let parsed = extractor.parse(str, { includeGeneric: true });
       let matches = parsed.filter((trackableElement) => {
-        return ("person", "context", "generic").indexOf(trackableElement.type) > -1;
+        return (
+          ("person", "context", "generic").indexOf(trackableElement.type) > -1
+        );
       });
       actual = matches.length;
       return parsed;
@@ -56,20 +58,20 @@
       letter-spacing: inherit;
     }
 
-    .value {
-      max-height: 15px;
-      flex-shrink: 0;
-      font-size: 10px;
-      font-weight: bold;
-      height: 14px;
-      min-width: 14px;
-      padding: 0 4px;
-      color: #fff;
-      border-radius: 6px;
-      text-align: center;
-      display: inline-block;
-    }
-    .string,
+    // .value {
+    //   max-height: 15px;
+    //   flex-shrink: 0;
+    //   font-size: 10px;
+    //   font-weight: bold;
+    //   height: 14px;
+    //   min-width: 14px;
+    //   padding: 0 4px;
+    //   color: #fff;
+    //   border-radius: 6px;
+    //   text-align: center;
+    //   display: inline-block;
+    // }
+    // .string,
     .tracker,
     .person,
     .context {
@@ -88,7 +90,9 @@
 </style>
 
 {#if actual}
-  <div class="n-note-textualized {className} {state.words.length > 20 ? 'long-note' : 'short-note'}">
+  <div
+    class="n-note-textualized {className}
+    {state.words.length > 20 ? 'long-note' : 'short-note'}">
     {#each state.words as word}
       {#if word.type === 'tracker'}
         <span

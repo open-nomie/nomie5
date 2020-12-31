@@ -57,6 +57,8 @@
 
 <div class="confetti" transition:fade>
   {#each confetti as c}
-    <span style="left: {c.x}%; top: {c.y}%; transform: scale({c.r})">{c.character}</span>
+    <span style="left: {c.x}%; top: {c.y}%; transform: scale({c.r})">
+      {c.character}
+    </span>
   {/each}
 </div>

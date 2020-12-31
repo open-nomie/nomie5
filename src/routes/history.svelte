@@ -167,7 +167,7 @@
       Interact.logOptions(log);
     },
     selectDate() {
-      let ranges = [
+      let ranges: Array<any> = [
         {
           time: 90,
           title: "90 Days Back",
@@ -218,7 +218,9 @@
               } else if (range.time === undefined || range.time === 0) {
                 methods.goto(dayjs(new Date()));
               } else {
-                methods.goto(state.date.subtract(range.time || 0, range.unit || "day"));
+                methods.goto(
+                  state.date.subtract(range.time || 0, range.unit || "day")
+                );
               }
             },
           };
@@ -271,11 +273,7 @@
 
 <style lang="scss" type="text/scss">
   // TODO: This is really sloppy - clean it up.
-  hr {
-    margin: 0;
-    padding: 0;
-    border-top: solid 1px rgba(0, 0, 0, 0.2);
-  }
+
   // :global(.trackers-list .border-bottom:last-child) {
   //   border-bottom: none !important;
   // }
@@ -303,18 +301,18 @@
     margin-right: -16px;
   }
 
-  .page-history {
-    .show-map {
-      height: 200px;
-      min-height: 200px;
-      max-height: 400px;
-    }
-  }
-  .header-date-control {
-    line-height: 100%;
-    flex-grow: 1;
-    flex-shrink: 1;
-  }
+  // .page-history {
+  //   .show-map {
+  //     height: 200px;
+  //     min-height: 200px;
+  //     max-height: 400px;
+  //   }
+  // }
+  // .header-date-control {
+  //   line-height: 100%;
+  //   flex-grow: 1;
+  //   flex-shrink: 1;
+  // }
 
   :global(.page-history .n-item .n-item:last-child) {
     border-bottom: none !important;
@@ -336,11 +334,16 @@
           {#if refreshing}
             <Spinner size={16} />
           {/if}
-          {state.date.format('ddd')} {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
+          {state.date.format('ddd')}
+          {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
         </Text>
         <!-- end text middle -->
       </div>
-      <NextPrevCal on:previous={methods.previous} on:next={methods.next} on:calendar={methods.selectDate} {isToday} />
+      <NextPrevCal
+        on:previous={methods.previous}
+        on:next={methods.next}
+        on:calendar={methods.selectDate}
+        {isToday} />
     </Toolbar>
     {#if logs.length}
       <Toolbar>

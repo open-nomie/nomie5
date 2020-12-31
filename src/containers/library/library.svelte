@@ -46,7 +46,10 @@
   }
 
   function isInstalled(tracker) {
-    return $TrackerStore.trackers.hasOwnProperty(tracker.tag) || installed.hasOwnProperty(tracker.tag);
+    return (
+      $TrackerStore.trackers.hasOwnProperty(tracker.tag) ||
+      installed.hasOwnProperty(tracker.tag)
+    );
   }
 
   function getTypeLabel(id: string) {
@@ -63,7 +66,10 @@
       installed[tracker.tag] = true;
       Interact.toast(`${tracker.label} added`);
     } else {
-      let confirmed = await Interact.confirm(`Remove ${tracker.label}?`, `Data will be untouched`);
+      let confirmed = await Interact.confirm(
+        `Remove ${tracker.label}?`,
+        `Data will be untouched`
+      );
       if (confirmed) {
         await TrackerStore.deleteTracker(tracker);
         delete installed[tracker.tag];
@@ -75,34 +81,9 @@
 </script>
 
 <style lang="scss" type="text/scss">
-  .grid {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 16px 0;
-    flex-grow: 1;
-    .tracker-option {
-      margin: 4px;
-    }
-  }
-
   .intro-message {
     text-align: center;
     margin: 0 16px;
-  }
-  .tracker-option {
-    position: relative;
-    // margin: 4px;
-    .badge {
-      position: absolute;
-      right: 8px;
-      top: 10px;
-      z-index: 400;
-      width: 22px;
-      padding: 0;
-      text-align: center;
-    }
   }
 </style>
 
@@ -114,16 +95,23 @@
 
   {#if $TrackerLibrary.first}
     <div class="p-3 intro-message">
-      <NText size="sm" tag="div">{Lang.t('tracker.pick-at-least-one', 'Pick at least 1 to continue')}</NText>
+      <NText size="sm" tag="div">
+        {Lang.t('tracker.pick-at-least-one', 'Pick at least 1 to continue')}
+      </NText>
     </div>
   {/if}
 
   <List>
     {#if trackers.length == 0}
-      <Empty title={"That's all!"} description="You've installed the library trackers!" emoji="🤗">
+      <Empty
+        title={"That's all!"}
+        description="You've installed the library trackers!"
+        emoji="🤗">
         <Text size="sm" center className="mt-2">
           Visit
-          <a href="https://nomie.app/trackers" target="_blank">https://nomie.app</a>
+          <a href="https://nomie.app/trackers" target="_blank">
+            https://nomie.app
+          </a>
           for more
         </Text>
       </Empty>
@@ -150,7 +138,10 @@
   </List>
 
   <div slot="footer">
-    <Button block disabled={Object.keys(installed).length === 0 && $TrackerLibrary.first} on:click={TrackerLibrary.toggle}>
+    <Button
+      block
+      disabled={Object.keys(installed).length === 0 && $TrackerLibrary.first}
+      on:click={TrackerLibrary.toggle}>
       {Lang.t('general.done', 'Done')}
     </Button>
   </div>

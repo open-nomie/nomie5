@@ -125,7 +125,8 @@
 </style>
 
 {#if _date}
-  <div class="date-time-bar-wrapper {calendarPosition == 'top' ? 'calendar-top' : 'calendar-bottom'}">
+  <div
+    class="date-time-bar-wrapper {calendarPosition == 'top' ? 'calendar-top' : 'calendar-bottom'}">
 
     <div class="date-time-bar" {style}>
       <div class="n-row">
@@ -136,7 +137,11 @@
           on:click={() => {
             toggleOpen();
           }}>
-          <Text size="sm" className="text-align-left" color={_opened ? 'primary-bright' : ''} truncate>
+          <Text
+            size="sm"
+            className="text-align-left"
+            color={_opened ? 'primary-bright' : ''}
+            truncate>
             {$UserStore.meta.is24Hour ? _date.format('ddd D MMM YYYY') : _date.format('ddd MMM D YYYY')}
           </Text>
         </Button>
@@ -149,7 +154,10 @@
           setDate(evt.detail);
         }} />
     </div>
-    <div class="animate up view date " class:visible={_opened && !hide} class:hidden={!_opened || hide}>
+    <div
+      class="animate up view date "
+      class:visible={_opened && !hide}
+      class:hidden={!_opened || hide}>
       {#if _opened}
         <Calendar
           showCalControl={false}
