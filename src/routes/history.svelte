@@ -169,6 +169,11 @@
     selectDate() {
       let ranges: Array<any> = [
         {
+          time: 30,
+          title: "1 Month Back",
+          unit: "day",
+        },
+        {
           time: 90,
           title: "90 Days Back",
           unit: "day",

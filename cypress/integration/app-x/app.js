@@ -115,7 +115,7 @@ context("App", () => {
   };
 
   const enableFeatures = () => {
-    cy.get(".tab-Settings").click();
+    cy.get(".tab-Settings").eq(0).click();
     cy.wait(200);
     // Enable People
     cy.get("[name=onoffswitch]").eq(0).type("true", { force: true });
@@ -141,9 +141,9 @@ context("App", () => {
     cy.get("select").eq(1).select("this-week");
     cy.wait(300);
     cy.get('[slot="right"] > .n-text').click();
-    // Select Trackers
     cy.wait(200);
-    cy.get(".list > :nth-child(1)").click();
+    // Select Trackers
+    cy.get('.pop-button-0').click();
     cy.wait(1000);
     // Select mood
     cy.get(".n-modal-body .list .n-item").eq(2).click();
@@ -167,7 +167,8 @@ context("App", () => {
     cy.get('.tracker-sex > .nbtn').click({force: true});
     cy.wait(700);
     // Click Remove...
-    cy.get('.pop-button-3').click();
+    // cy.get('.pop-button-3').click();
+    cy.get(':nth-child(3) > .pop-button-1').click();
     cy.wait(400);
     // Hit Cancel first -- to see if this gets deleted
     cy.get(".visible > .alert-dialog-window > .p-1 > .nbtn-transparent").click();
@@ -179,7 +180,7 @@ context("App", () => {
     cy.get('.tracker-sex > .nbtn').click({force: true});
     cy.wait(400);
     // Click Remove
-    cy.get('.pop-button-3').click();
+    cy.get(':nth-child(3) > .pop-button-1').click();
     cy.wait(400);
     cy.get(".visible > .alert-dialog-window > .p-1 > .nbtn-primary").click();
     cy.wait(600);
@@ -277,7 +278,8 @@ context("App", () => {
     cy.get('.board-option-action').click();
     // cy.get("header > .n-toolbar-grid > .right > .nbtn").click();
     cy.wait(300);
-    cy.get('.pop-button-3').click();
+    //  click add a tab
+    cy.get(':nth-child(3) > .pop-button-1').click();
     cy.wait(300);
     cy.get(".form-control").type("Test Tab");
     cy.wait(100);
@@ -322,7 +324,7 @@ context("App", () => {
     cy.get('.tracker-add > .item-ball').click();
     cy.wait(200);
     // click create a tracker in pop menu
-    cy.get('.list > :nth-child(1)').click();
+    cy.get('.pop-button-0').click();
     cy.wait(200);
     cy.get('.n-tracker-editor .emoji-editor input').type(options.emoji || '🎭');
     const label = options.label || `Test ${options.type || 'Tracker'}`;
@@ -414,7 +416,7 @@ context("App", () => {
     cy.get('.time-row > .nbtn').click();
     cy.wait(100);
     // Select Edit
-    cy.get('.pop-button-0').click();
+    cy.get(':nth-child(3) > .pop-button-0').click();
     cy.wait(100);
     cy.get('.form-control').then(node=>{
       let html = `${node.text()} - ${textToAdd}`;
@@ -500,7 +502,7 @@ context("App", () => {
     },
     
     { it: "Should properly track using the tracker buttons", run: useTrackers },
-    { it: "should test adding a tab", run: testTabs },
+    // { it: "should test adding a tab", run: testTabs },
     { it: "should test a bad pin PIN", run: ()=>{ testPin(false) } },
     { it: "should test a good pin PIN", run: ()=>{ testPin(true) } },
     { it: "should be able to create a log via a note", run: testCaptureForm },

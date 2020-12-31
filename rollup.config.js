@@ -77,7 +77,7 @@ export default [
       }),
       svelte({
         // enable run-time checks when not in production
-        dev: !production,
+        // dev: !production,
         preprocess: autoPreprocess(),
         // preprocess: {
         //   style: scss({ all: true }),
@@ -85,9 +85,9 @@ export default [
         // we'll extract any component CSS out into
         // a separate file — better for performance
         emitCss: true,
-        css: (css) => {
-          css.write("public/bundle.css");
-        },
+        // css: (css) => {
+        //   css.write("public/bundle.css");
+        // },
       }),
       typescript({ sourceMap: !production }),
       json(),

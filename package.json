@@ -66,12 +66,12 @@
     "@types/lodash": "^4.14.161",
     "@types/papaparse": "^5.2.2",
     "babel-jest": "^26.3.0",
+    "blockstack": "^21.1.1",
     "boolean-parser": "0.0.2",
     "commitizen": "^4.1.2",
     "commitlint": "^9.1.2",
     "concurrently": "^5.2.0",
     "copy": "^0.3.2",
-    "cypress": "^4.11.0",
     "d3-scale": "^3.2.1",
     "dayjs": "^1.8.30",
     "dom-to-image-chrome-fix": "^2.6.0",
@@ -142,11 +142,13 @@
     "webpack-cli": "^3.3.11",
     "yargs-parser": "^18.1.3"
   },
+  "supporting": {
+    "cypress": "^4.11.0"
+  },
   "dependencies": {
     "@blockstack/connect": "^2.12.1",
     "@composi/gestures": "^1.0.9",
     "@egjs/hammerjs": "^2.0.17",
-    "blockstack": "^19.3.0",
     "bootstrap": "^4.3.1",
     "carbon-icons-svelte": "^10.9.3",
     "chart.js": "^2.9.3",
