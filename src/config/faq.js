@@ -7,7 +7,7 @@ export default [
   },
   {
     question: "Can I order my trackers?",
-    answer: `Yes! Scroll to the bottom of the board and tap the ••• icon`,
+    answer: `On the Track view, tap the ••• icon in the upper right, then select "Manage this tab"`,
   },
   {
     question: "Can I delete a tracker off the main screen?",

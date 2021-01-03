@@ -257,7 +257,7 @@
     ];
 
     Interact.popmenu({
-      title: `${board ? board.label : "All Trackers"}`,
+      title: `${board && board.label ? board.label : "All Trackers"}`,
       description: `${Lang.t("board.board-options", "Tab Options")}`,
       buttons: buttons,
     });
