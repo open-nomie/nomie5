@@ -12,7 +12,8 @@
   import { FeatureStore } from "../../store/feature-store";
   import NPaths from "../../paths";
   import { UserStore } from "../../store/user-store";
-  import Features from "../settings/features.svelte";
+import { NomieAPI } from "../../store/napi";
+  
   const state = {
     mounted: false,
   };
@@ -71,7 +72,7 @@
 
 {#if state.mounted}
   <nav id="app-tabs" class={hideLabels ? 'compact' : ''}>
-    <div class="n-row mw-500px mx-auto">
+    <div class="mx-auto n-row mw-500px">
 
       <AppTab link={NPaths.routes.history()} icon="calendar" label={Lang.t('tabs.history', 'History')} />
       {#if $FeatureStore.dashboard}
@@ -85,7 +86,7 @@
       {#if $FeatureStore.people}
         <AppTab link={NPaths.routes.people()} icon="user" label={Lang.t('tabs.people', 'People')} />
       {/if}
-      <AppTab link={NPaths.routes.settings()} icon="settings" label={Lang.t('tabs.settings', 'Settings')} />
+      <AppTab link={NPaths.routes.settings()} notify={$NomieAPI.items.length ? true : false} icon="settings" label={Lang.t('tabs.settings', 'Settings')} />
 
     </div>
   </nav>
