@@ -51,6 +51,9 @@
           {:else if button.label}
             <div class={labelClass}>{button.label}</div>
           {/if}
+          {#if button.notify}
+            <div class="notify"></div>
+          {/if}
         </Button>
       {/if}
     {/each}

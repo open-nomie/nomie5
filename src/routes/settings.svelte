@@ -1,4 +1,5 @@
 <script>
+	
   //Vendors
   import { navigate, Link } from "svelte-routing";
   import { onMount } from "svelte";
@@ -34,6 +35,7 @@
   import { TrackerStore } from "../store/tracker-store";
   import { Lang } from "../store/lang";
   import { Device } from "../store/device-store";
+  import { NomieAPI } from "../store/napi";
 
   // Config
   import config from "../config/appConfig";
@@ -238,7 +240,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 <NLayout pageTitle="Settings">
 
   <div slot="header">
-    <div class="n-toolbar-grid container">
+    <div class="container n-toolbar-grid">
       <div class="left" />
       <div class="main">
         <Text bold>{Lang.t('settings.settings', 'Settings')}</Text>
@@ -247,7 +249,7 @@ Note: Your data will not automatically move over. You'll first need to export it
         <Button type="clear" color="primary" on:click={methods.faq}>{Lang.t('general.faq', 'FAQ')}</Button>
       </div>
     </div>
-    <div class="n-toolbar px-2 pb-1 container">
+    <div class="container px-2 pb-1 n-toolbar">
       <NButtonGroup className="mx-auto" style="max-width:400px;">
         <Button
           className={view == 'features' ? 'active' : ''}
@@ -269,6 +271,9 @@ Note: Your data will not automatically move over. You'll first need to export it
             changeView('data');
           }}>
           {Lang.t('settings.tab-data', 'Data')}
+          {#if $NomieAPI.items.length}
+            <div class="notify"></div>
+          {/if}
         </Button>
         <Button
           className={view == 'about' ? 'active' : ''}
@@ -378,6 +383,9 @@ Note: Your data will not automatically move over. You'll first need to export it
               <ListItem clickable title={Lang.t('settings.nomie-api', 'Nomie API')} on:click={() => navigate('/api')}>
                 <span slot="left">🚚</span>
                 <span slot="right">
+                  {#if $NomieAPI.items.length}
+                    <div class="nbtn nbtn-xs nbtn-rounded nbtn-danger">{$NomieAPI.items.length}</div>
+                  {/if}
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
               </ListItem>
@@ -396,7 +404,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               <ListItem clickable title={`${Lang.t('settings.import-from-csv', 'Import from CSV ')}`} to="/settings/import/csv">
                 <span slot="left">📄</span>
                 <span slot="right" class="n-row">
-                  <div class="nbtn nbtn-xs nbtn-rounded nbtn-danger">Beta</div>
+                  <div class="nbtn nbtn-xs nbtn-rounded nbtn-light">Beta</div>
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
               </ListItem>
@@ -436,7 +444,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               </ListItem>
             </List>
 
-            <!-- <div class="n-list solo my-2">
+            <!-- <div class="my-2 n-list solo">
               <Text bold className="my-3 mx-3">{Lang.t('general.type', 'Finding old data')}</Text>
               <ListItem bottomLine title="Find Context" on:click={ContextStore.searchForContext}>
                 <span slot="left">💬</span>

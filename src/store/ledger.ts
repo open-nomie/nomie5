@@ -345,7 +345,7 @@ const ledgerInit = () => {
      * It should not be used for updating
      * @param {NLog} log
      */
-    async saveLog(log): Promise<void> {
+    async saveLog(log):Promise<{ log: NLog, date: string }> {
       log = await methods.prepareLog(log);
       try {
         let saved = await this._saveLog(log);
@@ -369,6 +369,7 @@ const ledgerInit = () => {
               return state;
             });
             methods.hooks.run("onLogSaved", log);
+            return
           } else {
             throw new Error("save failed to queue");
           }
@@ -382,7 +383,8 @@ const ledgerInit = () => {
      * @param log
      * TODO make this dry enough to put in its own ledgerTools function
      */
-    async _saveLog(log: NLog) {
+    async _saveLog(log: NLog):Promise<{log:NLog, date:string}> {
+      console.log("Saving log", log);
       // Set up a holder for current state
       let currentState = state({
         saving: true,
@@ -442,12 +444,14 @@ const ledgerInit = () => {
         // Fire off the onLogSaved
         methods.hooks.run("onLogSaved", log);
         tick(100, methods.getToday);
+        console.log("Hopefully it saved", { log, date});
         // methods.getToday(); // Get Today
         return { log, date };
       } catch (e) {
         console.error("_saveLog error", e.message);
         throw new Error(e.message);
       }
+      
     },
 
     /**

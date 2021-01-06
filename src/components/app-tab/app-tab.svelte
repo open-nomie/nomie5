@@ -1,8 +1,6 @@
 <script lang="ts">
   import { Link } from "svelte-routing";
-  import NPaths from "../../paths";
   import { UserStore } from "../../store/user-store";
-  import Ripple from "../button/ripple.svelte";
   import Icon from "../icon/icon.svelte";
 
   $: hideLabels = $UserStore.meta.hideLabels;
@@ -10,17 +8,18 @@
   export let label: string;
   export let icon: string;
   export let link: string;
-
-  let hit: any;
+  export let notify: boolean = false;
 </script>
 
 <style global lang="scss">
   .tab-wrap {
+    position:relative;
     display: flex;
     flex-grow: 1;
     height: 100%;
     align-items: center;
   }
+
   .tab-wrap a {
     position: relative;
     color: var(--color-inverse-2);
@@ -63,6 +62,7 @@
 </style>
 
 <div class="tab-wrap tab-{label}" aria-label={label}>
+  {#if notify}<div class="notify"></div>{/if}
   <Link to={link}>
     <slot />
     <Icon name={icon} />

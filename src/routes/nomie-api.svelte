@@ -1,4 +1,5 @@
 <script lang="ts">
+	
   //Vendors
   import { onMount } from "svelte";
   import { navigate, Router, Route } from "svelte-routing";
@@ -35,6 +36,10 @@
   import List from "../components/list/list.svelte";
   import Divider from "../components/divider/divider.svelte";
   import Captured from "../containers/api/captured.svelte";
+  import Archives from "../containers/api/api-archives.svelte";
+  import ProgressBar from "../components/progress-bar/progress-bar.svelte";
+  import math from "../utils/math/math";
+  import Icon from "../components/icon/icon.svelte";
 
   let NAPI = new NomieAPICli({ domain: "nomieapi.com" });
 
@@ -46,7 +51,7 @@
     hidden: [],
     apiKey: null,
     privateKey: null,
-    view: "settings",
+    view: localStorage.getItem('api-view') || 'settings',
     capturingId: null,
     apiExample: null,
     showPrivateKey: false,
@@ -63,7 +68,7 @@
     );
   }
 
-  function copy(key, message?: string) {
+  function copy(key:string, message?: string) {
     clipboard(key);
     Interact.toast(message || "Copied");
   }
@@ -100,7 +105,8 @@
       // Let's look for NomieAPICli
       NAPI.onReady(() => {
         if (NAPI.isRegistered()) {
-          methods.getLogs();
+          // methods.getLogs();
+          
           state.registered = true;
           state.ready = true;
           state.apiKey = NAPI.apiKey;
@@ -135,20 +141,7 @@
       await tick(500);
       window.location.reload();
     },
-    async getLogs() {
-      state.ready = false;
-      try {
-        let logs: Array<any> = await NAPI.logs();
-        state.ready = true;
-        state.logs = logs.sort((a, b) => {
-          return a.date > b.date ? -1 : 1;
-        });
-      } catch (e) {
-        console.error(e);
-        state.ready = true;
-      }
-      return state.logs;
-    },
+  
     async unregister() {
       let confirmed: boolean = await Interact.confirm(
         "Destroy this API Key?",
@@ -165,9 +158,7 @@
     },
     setView(view) {
       state.view = view;
-      if (view === "captured") {
-        methods.getLogs();
-      }
+      localStorage.setItem('api-view', view);
     },
   };
 
@@ -189,20 +180,24 @@
         </div>
         <div class="right">
           {#if state.registered}
-            <Button type="clear" on:click={methods.getLogs}>Check</Button>
+            <Button type="clear" on:click={NomieAPI.getLogsSafe}>Check</Button>
           {/if}
         </div>
       </div>
-      <div class="n-row px-3 container">
+      <div class="container px-3 n-row">
         {#if state.ready && state.registered}
           <NButtonGroup
             style="max-width:400px"
             className="mx-auto"
             buttons={[{ label: 'Settings', active: state.view == 'settings', click() {
                   methods.setView('settings');
-                } }, { label: `Captured (${state.logs.length})`, active: state.view == 'captured', click() {
+                } }, { label: `${$NomieAPI.items.length} New`, notify: $NomieAPI.items.length ? true : false, active: state.view == 'captured', click() {
                   methods.setView('captured');
-                } }]} />
+                } }, 
+                { label: `Archive`, active: state.view == 'archives', click() {
+                  methods.setView('archives');
+                } }
+                ]} />
         {/if}
       </div>
     </div>
@@ -255,11 +250,9 @@
         </div>
       </div>
     {:else if state.view === 'captured'}
-      <Captured
-        logs={state.logs}
-        on:empty={() => {
-          state.logs = [];
-        }} />
+      <Captured />
+    {:else if state.view == 'archives'}
+      <Archives />
     {:else}
       <!-- We're In the Settings Tab
         -->
@@ -271,7 +264,7 @@
           <div slot="right">
             <NToggle
               bind:value={autoImportAPI}
-              on:change={(event) => {
+              on:change={() => {
                 if (autoImportAPI === true) {
                   NomieAPI.disableAutoImport();
                 } else {
@@ -280,7 +273,21 @@
               }} />
           </div>
         </NItem>
+        <NItem>
+          <div slot="left">
+            <Text>{$NomieAPI.inAPI.length}/10</Text>
+          </div>
+          <div>
+            <ProgressBar percentage={math.percentage(10,$NomieAPI.inAPI.length)} />
+            <Text size="xs" faded className="pt-1 text-center">Stored on nomieapi.com</Text>
+          </div>
+          <div slot="right">
+            <Button icon><Icon name="delete"></Icon></Button>
+          </div>
+        </NItem>
       </List>
+
+      
 
       <List className="mb-3">
         <NItem className="">
@@ -300,7 +307,7 @@
             </div>
           </NInput>
           <!-- <div>
-          <input type="text" class="form-control mt-1" value={state.apiKey} />
+          <input type="text" class="mt-1 form-control" value={state.apiKey} />
         </div> -->
         </NItem>
         <Divider inset />
