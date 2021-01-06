@@ -384,7 +384,6 @@ const ledgerInit = () => {
      * TODO make this dry enough to put in its own ledgerTools function
      */
     async _saveLog(log: NLog):Promise<{log:NLog, date:string}> {
-      console.log("Saving log", log);
       // Set up a holder for current state
       let currentState = state({
         saving: true,
@@ -444,7 +443,7 @@ const ledgerInit = () => {
         // Fire off the onLogSaved
         methods.hooks.run("onLogSaved", log);
         tick(100, methods.getToday);
-        console.log("Hopefully it saved", { log, date});
+        
         // methods.getToday(); // Get Today
         return { log, date };
       } catch (e) {
@@ -588,7 +587,6 @@ const ledgerInit = () => {
     async query(options: IQueryOptions) {
       let state = methods.getState();
       let ledgerResults = await ledgerTools.query(options, state.books);
-
       /**
        * If this is a fresh call (default)
        * then let's take the book results and

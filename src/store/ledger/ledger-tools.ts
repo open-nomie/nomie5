@@ -290,11 +290,12 @@ export default class LedgerTools {
       diff = diff + 2; // add two book for good measure
       for (let i = 0; i < diff; i++) {
         // Push each of the formated dates YYYY-w to an array
-        let thisBookDateStr = dayjs(startTime).add(i, bookFormat);
+        let thisBookDateStr = dayjs(startTime).add(i + 1, bookFormat);
         booksToGet.push(thisBookDateStr.format(appConfig.book_time_format));
       }
     }
 
+    console.log("Books to get", booksToGet);
     // Batch the Book Lookups
     // This wil make blockstack looksup much faster.
     const batch_all = async (): Promise<ILedgerBook> => {
@@ -322,7 +323,7 @@ export default class LedgerTools {
     const get_batch = async (booksChunk): Promise<Array<ILedgerBook>> => {
       let gets = [];
       // Loop over each book
-      booksChunk.forEach((bookPath) => {
+      booksChunk.forEach((bookPath:string) => {
         // Get the book if it current exists, or create it if not
         stateBooks[bookPath] = stateBooks[bookPath] || [];
 
