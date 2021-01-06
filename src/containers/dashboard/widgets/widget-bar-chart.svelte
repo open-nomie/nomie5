@@ -2,7 +2,7 @@
   import BarChart from "../../../components/charts/bar-chart-2.svelte";
   import { getWidgetColor } from "../dashboard-helpers";
   import type { Widget } from "../../../modules/dashboard/widget";
-  import { element } from "svelte/internal";
+
   export let widget: Widget;
 </script>
 

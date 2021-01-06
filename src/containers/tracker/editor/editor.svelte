@@ -195,9 +195,7 @@
           }
 
           await TrackerStore.saveTracker(data.tracker);
-          console.log("Should saved?");
           Interact.toast(`${data.tracker.label} saved`);
-          console.log("Should saved?");
           dispatch("save", data.tracker);
           methods.cancel();
         } catch (e) {

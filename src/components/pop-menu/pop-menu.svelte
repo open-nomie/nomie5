@@ -243,7 +243,7 @@
         </List>
       {/each}
 
-      <div className="bg-transparent" />
+      <div class="bg-transparent" />
       <Button
         block
         className="mt-2"
