@@ -221,7 +221,8 @@
     const _getStats = async (tag, index, total) => {
       let tracker = $TrackerStore.trackers[tag];
       Interact.blocker(
-        `Comparing ${math.round(math.percentage(total, index))}%`
+        `Comparing`, 
+        math.round(math.percentage(total, index))
       );
       await tick(1);
       let results = await getTrackerStats(tracker);
@@ -338,6 +339,11 @@
     right: 16px;
     text-align: center;
   }
+  .stats-compare .close-compare {
+    position:absolute;
+    top:6px;
+    left:6px;
+  }
   // .chart-item .btn-close svg {
   //   fill: var(--color-inverse) !important;
   // }
@@ -385,14 +391,7 @@
               return compare.getTracker().displayValue(y);
             }} />
           <!--  -->
-
-          <button
-            class="btn btn-clear btn-close"
-            on:click={() => {
-              removeCompare(compare);
-            }}>
-            <Icon name="close" size="16" />
-          </button>
+          <Button size="xs" className="close-compare" on:click={()=>removeCompare(compare)} icon><Icon name="close" size="16" /></Button>
         </ListItem>
       {:else}
         <ListItem className="solo chart-item">
