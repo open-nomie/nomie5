@@ -36,7 +36,7 @@
   export let selected = undefined;
 
   $: if (points && theChart && points.map((p) => p.y).join() !== lastPoints) {
-    let lastPoints = points.map((p) => p.y).join();
+    lastPoints = points.map((p) => p.y).join();
     loadData();
   }
 

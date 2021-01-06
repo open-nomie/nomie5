@@ -15,9 +15,7 @@
   $: if (widget.logs) {
     log = widget.logs[0];
   }
-  onMount(() => {
-    console.log("Note Widget");
-  });
+  
 </script>
 
 <style>
