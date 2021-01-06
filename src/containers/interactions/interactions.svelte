@@ -3,23 +3,23 @@
    * Jun 12 2020 - Good god this file has turned into a nightmare.
    */
 
-  import { onMount } from "svelte";
+  
   // vendors
 
   //modules
   import Tracker from "../../modules/tracker/tracker";
   import NomieLog from "../../modules/nomie-log/nomie-log";
   // utils
-  import NomieUOM from "../../utils/nomie-uom/nomie-uom";
-  import Storage from "../../modules/storage/storage";
+  
+  
   // Components
   import Toast from "../../components/toast/toast.svelte";
-  import NModal from "../../components/modal/modal.svelte";
-  import NItem from "../../components/list-item/list-item.svelte";
+  
+  
   import NAlertBox from "../../components/alertbox/alertbox.svelte";
   import NPopMenu from "../../components/pop-menu/pop-menu.svelte";
-  import PinLock from "../pin-lock/pin-lock.svelte";
-  import NTextualize from "../../components/note-textualizer/note-textualizer.svelte";
+  
+  
 
   import NShareImage from "../../components/share-image/share-image.svelte";
 
@@ -35,13 +35,9 @@
   import LogEditor from "../log-editor/log-editor.svelte";
   // Store
   import { Interact } from "../../store/interact";
-  import { UserStore } from "../../store/user-store";
-  import { ActiveLogStore } from "../../store/active-log";
   import { LedgerStore } from "../../store/ledger";
-  import { BoardStore } from "../../store/boards";
   import { TrackerStore } from "../../store/tracker-store";
   import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
-  import LocationModal from "../../containers/map/location-modal.svelte";
   import LocationViewerModal from "../map/location-viewer-modal.svelte";
 
   let promptInput;
@@ -140,7 +136,7 @@
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
-      class="form-control mt-2"
+      class="mt-2 form-control"
       style="min-height:200px;" />
   {:else if $Interact.prompt.valueType == 'number'}
     <input
@@ -153,7 +149,7 @@
       bind:value={$Interact.prompt.value}
       on:focus={this.select}
       type="number"
-      class="form-control mt-2" />
+      class="mt-2 form-control" />
   {:else if $Interact.prompt.valueType == 'datetime'}
     <DateTimeBar
       opened
@@ -173,7 +169,7 @@
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
       type="datetime-local"
-      class="form-control mt-2" /> -->
+      class="mt-2 form-control" /> -->
   {:else}
     <input
       title="input value"
@@ -181,7 +177,7 @@
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
-      class="form-control mt-2" />
+      class="mt-2 form-control" />
   {/if}
 </NAlertBox>
 

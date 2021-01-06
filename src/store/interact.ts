@@ -102,7 +102,8 @@ const interactInit = () => {
     },
     blocker: {
       show: false,
-      message: null,
+      message: undefined,
+      percent: undefined
     },
     pin: {
       title: "Enter Pin",
@@ -239,17 +240,19 @@ const interactInit = () => {
         return state;
       });
     },
-    blocker(message) {
+    blocker(message, percent?:number) {
       update((state) => {
         state.blocker.show = true;
         state.blocker.message = message;
+        state.blocker.percent = percent;
         return state;
       });
     },
     stopBlocker() {
       update((state) => {
         state.blocker.show = false;
-        state.blocker.message = null;
+        state.blocker.message = undefined;
+        state.blocker.percent = undefined;
         return state;
       });
     },

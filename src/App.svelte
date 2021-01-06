@@ -51,6 +51,7 @@
   import Confetti from "./components/confetti/confetti.svelte";
   import FocusedEditor from "./components/capture-log/focused.svelte";
   import { LedgerStore } from "./store/ledger";
+import ProgressBar from "./components/progress-bar/progress-bar.svelte";
 
   // Set a better console
   const console = new Logger("APP");
@@ -213,8 +214,17 @@
 {/if}
 {#if $Interact.blocker.show}
   <div id="ui-blocker" class="full-screen bg-translucent n-panel center-all">
-    <Spinner size="16" />
-    <span class="text-white ml-2">{$Interact.blocker.message}</span>
+    <div style="min-width:200px;">
+      <div class="my-3 ml-2 text-center text-white">
+        {#if !$Interact.blocker.percent}
+          <Spinner size="16" />
+        {/if}
+        {$Interact.blocker.message}
+      </div>
+      {#if $Interact.blocker.percent}
+      <ProgressBar percentage={$Interact.blocker.percent} />
+      {/if}
+    </div>
   </div>
 {/if}
 <Interactions />
@@ -232,7 +242,7 @@
 {/if}
 
 {#if $UserStore.storageType == 'blockstack' && $Device.offline}
-  <div class="offline-notice text-center">No connection to Blockstack.</div>
+  <div class="text-center offline-notice">No connection to Blockstack.</div>
 {/if}
 <div id="photo-holder">
   <img id="photo-holder-image" alt="avatar-holder" />
