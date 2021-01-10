@@ -3,11 +3,11 @@
   import Icon from "../../components/icon/icon.svelte";
   import ListItem from "../../components/list-item/list-item.svelte";
   import Text from "../../components/text/text.svelte";
-  import type { NapiLog } from "./api-cli";
   import { ApiStore } from "./api-store";
 
+  import type { NapiLog } from "./api-cli";
+
   export let log: NapiLog;
-  // const dispatch = createEventDispatcher();
 </script>
 
 <ListItem>

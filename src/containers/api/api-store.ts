@@ -426,6 +426,7 @@ const createApiStore = () => {
       }
       // Stop the blocker
       Interact.stopBlocker();
+      methods.getLogs();
       // return the error, success arrays
       return results;
     },

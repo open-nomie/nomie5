@@ -1,12 +1,9 @@
 <script lang="ts">
 import Avatar from '../../components/avatar/avatar.svelte';
 import Button from '../../components/button/button.svelte';
-
 import Card from '../../components/card/card.svelte';
-import Icon from '../../components/icon/icon.svelte';
 import Spinner from '../../components/spinner/spinner.svelte';
 import Text from '../../components/text/text.svelte';
-
 
 import { ApiStore } from './api-store';
 
@@ -27,12 +24,12 @@ import { ApiStore } from './api-store';
     className="p-6 mx-auto api-register--card">
     <Avatar size={80} emoji="🚀" className="mt-3" />
     <Text center bold size="xl" className="my-4 max-w-sm leading-4">
-      Let's get you a Nomie API key!
+      No API Key Setup
     </Text>
     {#if !$ApiStore.generating}
-      <Text size="sm" faded className="mb-4 max-w-sm mx-auto">
-        Once you have an API key, you can use services like IFTTT or Zapier to
-        save Nomie Data Notes into this device.
+      <Text size="sm" center faded className="mb-4 max-w-sm mx-auto">
+       Get an API Key and use services like IFTTT or Zapier to
+        push data to Nomie.
       </Text>
       <div class="flex items-center">
         <Button type="clear" on:click={ApiStore.restoreKeys}>Restore</Button>

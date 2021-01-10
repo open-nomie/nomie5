@@ -10,13 +10,13 @@
 <div class="app-contain-md">
   {#if $ApiStore.inAPI.length === 0}
     <Empty
-      title={Lang.t('api.no-new-entries','No new API entries')}
+      title={Lang.t('api.no-new-entries', 'No new API entries')}
       description={Lang.t('api.usage-description', 'Use services like IFTTT and Zapier to post Nomie data notes directly to this device.')}
       emoji="📭" />
   {/if}
 
   {#if $ApiStore.inAPI.length}
-    <Divider pad>Unsaved Api Logs</Divider>
+    <Divider pad>{Lang.t('api.unsaved-api-logs', 'Unsaved Api Logs')}</Divider>
     <Card className="pb-2">
       {#each $ApiStore.inAPI as log (log.id)}
         <ApiLogItem {log} />
@@ -24,4 +24,4 @@
       {/each}
     </Card>
   {/if}
-  </div>
+</div>

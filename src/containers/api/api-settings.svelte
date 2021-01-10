@@ -1,41 +1,43 @@
 <script lang="ts">
   import Button from "../../components/button/button.svelte";
-  import Card from "../../components/card/card.svelte";
   import Divider from "../../components/divider/divider.svelte";
   import Icon from "../../components/icon/icon.svelte";
   import Input from "../../components/input/input.svelte";
   import ListItem from "../../components/list-item/list-item.svelte";
   import List from "../../components/list/list.svelte";
-import ProgressBar from "../../components/progress-bar/progress-bar.svelte";
+  import ProgressBar from "../../components/progress-bar/progress-bar.svelte";
   import Text from "../../components/text/text.svelte";
-import ToggleSwitch from "../../components/toggle-switch/toggle-switch.svelte";
+  import ToggleSwitch from "../../components/toggle-switch/toggle-switch.svelte";
   import appConfig from "../../config/appConfig";
   import { Device } from "../../store/device-store";
-  import { Interact } from "../../store/interact";
-  import { Lang } from "../../store/lang";
-import math from "../../utils/math/math";
   import ApiRegsiter from "./api-regsiter.svelte";
+  
+  import math from "../../utils/math/math";
+  
   import { ApiStore } from "./api-store";
+  import { Lang } from "../../store/lang";
 
-  let advanced: boolean = false;
+
 
   let state = {
     apiExample: null,
     showPrivateKey: false,
     showExample: false,
   };
-
+  // Generate an Example API Call
   $: if ($ApiStore.apiKey) {
     state.apiExample = JSON.stringify(
-      { note: "#mood(4)", api_key: $ApiStore.apiKey },
+      { note: "#mood(4) #sleep(07:43:32)", api_key: $ApiStore.apiKey },
       null,
       2
     );
   }
 </script>
 
-{#if $ApiStore.registered === undefined} 
-  Loading...
+{#if $ApiStore.registered === undefined}
+  <div class="p-4 text-center">
+    <Text faded>Connecting...</Text>
+  </div>
 {:else if $ApiStore.registered === false}
   <ApiRegsiter />
 {:else}
@@ -93,6 +95,7 @@ import math from "../../utils/math/math";
               </Button>
             </div>
           </Input>
+          <a href="https://nomie.app/tutorials" target="_blank" rel="nofollow" class="text-xs text-center d-block text-underline">See more examples</a>
         </ListItem>
         <ListItem compact title="URL" className="py-0">
           <div slot="right" class="n-row">
@@ -178,14 +181,20 @@ import math from "../../utils/math/math";
       {/if}
     </List>
 
-    <Divider hideLine pad className="text-red-500 text-opacity-50">Online Storage</Divider>
+    <Divider hideLine pad className="text-red-500 text-opacity-50">
+      Online Storage
+    </Divider>
     <ListItem>
       <div slot="left">
         <Text>{$ApiStore.inAPI.length}/10</Text>
       </div>
       <div>
-        <ProgressBar percentage={math.percentage(10,$ApiStore.inAPI.length)} color={$ApiStore.inAPI.length >= 9 ? 'red' : 'primary'} />
-        <Text size="xs" faded className="pt-1 text-center">Stored on nomieapi.com</Text>
+        <ProgressBar
+          percentage={math.percentage(10, $ApiStore.inAPI.length)}
+          color={$ApiStore.inAPI.length >= 9 ? 'red' : 'primary'} />
+        <Text size="xs" faded className="pt-1 text-center">
+          Stored on nomieapi.com
+        </Text>
       </div>
     </ListItem>
     <Divider inset />
@@ -200,7 +209,9 @@ import math from "../../utils/math/math";
       </div>
     </ListItem>
 
-    <Divider pad className="text-red-500 text-opacity-50 mt-4">Danger Zone</Divider>
+    <Divider pad className="text-red-500 text-opacity-50 mt-4">
+      Danger Zone
+    </Divider>
     <List className="app-contain-sm mb-4">
       <ListItem
         clickable
