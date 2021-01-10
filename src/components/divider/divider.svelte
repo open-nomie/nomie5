@@ -1,26 +1,59 @@
-<script>
+<script lang="ts">
+  import { onMount } from "svelte";
+
   export let className = "";
   export let center = false;
   export let inset = false;
   export let pad = false;
   export let style = "";
+  export let hideLine: boolean = false;
+
+  let hasContent: boolean = false;
+
+  onMount(() => {
+    if (arguments[1].$$slots) {
+      hasContent = true;
+    }
+  });
 </script>
 
-<style>
-  hr.divider {
-    margin: 0;
-    padding: 0;
-    border: none;
-    border-top: solid 1px var(--color-grey-7);
-    border-bottom: none;
+<style global>
+  .divider {
+    position:relative;
+    padding:0;
+    margin:0;
+    width: 100%;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
   }
-  hr.divider.center {
-    margin-left: 24px !important;
-    margin-right: 24px !important;
+  .divider.show-line {
+    border-top: solid 1px var(--color-solid-2);
   }
-  hr.divider.inset {
-    margin-left: 16px;
+  .divider.center {
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+  .divider.inset {
+    margin-left:16px;
+    max-width:calc(100% - 16px);
+  }
+  .divider.hasContent {
+    font-size:0.9rem;
+    color: var(--color-inverse-2);
+  }
+  .divider.pad {
+    padding:0.6rem 1rem;
   }
 </style>
 
-<hr {style} class="divider {className} {center ? 'center' : ''} {inset ? 'inset' : ''} {pad ? 'my-3' : ''}" />
+<div
+  {style}
+  class:inset
+  class:show-line={!hideLine}
+  class:pad={pad}
+  class:center
+  class:hasContent
+  class="divider {className}">
+  <slot />
+</div>

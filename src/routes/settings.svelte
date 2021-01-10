@@ -35,7 +35,6 @@
   import { TrackerStore } from "../store/tracker-store";
   import { Lang } from "../store/lang";
   import { Device } from "../store/device-store";
-  import { NomieAPI } from "../store/napi";
 
   // Config
   import config from "../config/appConfig";
@@ -54,6 +53,7 @@
   import { AppStore } from "../store/app-store";
   import Sponsors from "../components/sponsors/sponsors.svelte";
   import ToggleSwitch from "../components/toggle-switch/toggle-switch.svelte";
+import { ApiStore } from "../containers/api/api-store";
 
   export const location = undefined;
   export const style = undefined;
@@ -271,7 +271,7 @@ Note: Your data will not automatically move over. You'll first need to export it
             changeView('data');
           }}>
           {Lang.t('settings.tab-data', 'Data')}
-          {#if $NomieAPI.items.length}
+          {#if $ApiStore.items.length}
             <div class="notify"></div>
           {/if}
         </Button>
@@ -383,8 +383,8 @@ Note: Your data will not automatically move over. You'll first need to export it
               <ListItem clickable title={Lang.t('settings.nomie-api', 'Nomie API')} on:click={() => navigate('/api')}>
                 <span slot="left">🚚</span>
                 <span slot="right">
-                  {#if $NomieAPI.items.length}
-                    <div class="nbtn nbtn-xs nbtn-rounded nbtn-danger">{$NomieAPI.items.length}</div>
+                  {#if $ApiStore.items.length}
+                    <div class="nbtn nbtn-xs nbtn-rounded nbtn-danger">{$ApiStore.items.length}</div>
                   {/if}
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>

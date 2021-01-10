@@ -20,13 +20,33 @@
   export let prevent = false;
   export let inline = false;
   export let text = false;
+  export let confirm = false;
 
   let hit;
-  let ripple;
+  let confirming = false;
+  let confirmTimeout;
+
+  function onClick(evt) {
+    if(confirm) {
+      clearTimeout(confirmTimeout);
+      if(confirming) {
+        dispatch('click',evt);
+        confirming = false;
+      } else {
+        confirming = true;
+        confirmTimeout = setTimeout(()=>{
+          confirming = false;
+        },3000);
+      }
+    } else {
+      dispatch('click',evt);
+    }
+  }
+
 </script>
 
 <style>
-  button {
+  .nbtn {
     position: relative;
     overflow: hidden;
     text-align: left;
@@ -34,23 +54,30 @@
     flex-direction: row;
     align-items: center;
   }
-  svg {
+  /* .nbtn svg {
     position: absolute;
     top: 0;
     right: 0;
     left: 0;
     bottom: 0;
+  } */
+
+  :global(.nbtn.confirming) {
+    background-color: var(--color-red);
+    color: #FFF;
   }
 
   :global(.btn.btn-inline) {
     display: inline-flex;
   }
+  
 </style>
 
 <button
   {id}
   {style}
   {disabled}
+  class:confirming
   class={`nbtn ${block ? 'nbtn-block' : ''} ${icon ? 'nbtn-icon' : ''} nbtn-${type} nbtn-${shape} nbtn-${color} nbtn-${size} ${inline ? 'nbtn-inline' : ''} ${text ? 'nbtn-text' : ''} ${className}`}
   {title}
   use:press
@@ -68,10 +95,12 @@
     }
     if (delay) {
       setTimeout(() => {
-        dispatch('click', evt);
+        // dispatch('click', evt);
+        onClick(evt);
       }, delay);
     } else {
-      dispatch('click', evt);
+      // dispatch('click', evt);
+      onClick(evt);
     }
   }}>
   <Ripple bind:hit />

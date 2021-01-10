@@ -12,7 +12,8 @@
   import { FeatureStore } from "../../store/feature-store";
   import NPaths from "../../paths";
   import { UserStore } from "../../store/user-store";
-import { NomieAPI } from "../../store/napi";
+import { ApiStore } from "../api/api-store";
+// import { NomieAPI } from "../../store/napi";
   
   const state = {
     mounted: false,
@@ -78,15 +79,12 @@ import { NomieAPI } from "../../store/napi";
       {#if $FeatureStore.dashboard}
         <AppTab link={NPaths.routes.dashboard()} icon="report" label={Lang.t('tabs.dashboard', 'Dash')} />
       {/if}
-      <AppTab link="/" icon="grid" label={Lang.t('tabs.track', 'Track')}>
-        {#if $TrackerStore.timers.length}
-          <div class="notification" />
-        {/if}
+      <AppTab link="/" icon="grid"  notify={$TrackerStore.timers.length ? true : false} label={Lang.t('tabs.track', 'Track')}>
       </AppTab>
       {#if $FeatureStore.people}
         <AppTab link={NPaths.routes.people()} icon="user" label={Lang.t('tabs.people', 'People')} />
       {/if}
-      <AppTab link={NPaths.routes.settings()} notify={$NomieAPI.items.length ? true : false} icon="settings" label={Lang.t('tabs.settings', 'Settings')} />
+      <AppTab link={NPaths.routes.settings()} notify={$ApiStore.items.length ? true : false} icon="settings" label={Lang.t('tabs.settings', 'Settings')} />
 
     </div>
   </nav>

@@ -295,7 +295,7 @@ export default class LedgerTools {
       }
     }
 
-    console.log("Books to get", booksToGet);
+    // console.log("Books to get", booksToGet);
     // Batch the Book Lookups
     // This wil make blockstack looksup much faster.
     const batch_all = async (): Promise<ILedgerBook> => {

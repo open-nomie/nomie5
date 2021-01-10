@@ -1,6 +1,6 @@
 <script>
   // Svelte
-  import { Router, Route, navigate } from "svelte-routing";
+  // import { Router, Route, navigate } from "svelte-routing";
   import { onMount } from "svelte";
   import dayjs from "dayjs";
 
@@ -28,22 +28,22 @@
   // Stores
   import { UserStore } from "./store/user-store"; //  user auth and state
   import { Interact } from "./store/interact"; //  global alerts, popmenus, confirms, etc
-  import { BoardStore } from "./store/boards"; // board state  and methods
+  // import { BoardStore } from "./store/boards"; // board state  and methods
   import { Device } from "./store/device-store"; // board state  and methods
   import { TrackerStore } from "./store/tracker-store"; // tracker state and methods
   import { TrackerLibrary } from "./store/tracker-library";
   import { CommanderStore } from "./store/commander"; // commander - /?note=hi&lat=35&lng=-81.32
-  import { NomieAPI } from "./store/napi"; // Store for interacting with the Nomie API
+
   import { PeopleStore } from "./store/people-store"; // Store for holding People
   import { ContextStore } from "./store/context-store"; // Store for holding Post Context (categories)
   import { DashboardStore } from "./store/dashboard-store"; // Store for holding Post Context (categories)
-  import { AppStore } from "./store/app-store";
+  // import { AppStore } from "./store/app-store";
   import { Locations } from "./store/locations";
   import config from "./config/appConfig";
   import { OfflineQueue } from "./store/offline-queue-store";
   import SearchModal from "./containers/search/search.svelte";
   // import Storage from "./containers/storage/storage.svelte";
-  import Storage from "./modules/storage/storage";
+  // import Storage from "./modules/storage/storage";
   import { LastUsed } from "./store/last-used";
   import { SearchStore } from "./store/search-store";
   import PinLock from "./containers/pin-lock/pin-lock.svelte";
@@ -51,7 +51,8 @@
   import Confetti from "./components/confetti/confetti.svelte";
   import FocusedEditor from "./components/capture-log/focused.svelte";
   import { LedgerStore } from "./store/ledger";
-import ProgressBar from "./components/progress-bar/progress-bar.svelte";
+  import ProgressBar from "./components/progress-bar/progress-bar.svelte";
+  import { ApiStore } from "./containers/api/api-store";
 
   // Set a better console
   const console = new Logger("APP");
@@ -109,10 +110,12 @@ import ProgressBar from "./components/progress-bar/progress-bar.svelte";
       });
     },
     setDocParams(options) {
-      let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)")
+        .matches;
       // let isDarkMode = false;
       let theme = localStorage.getItem(config.theme_key) || "auto";
-      let theme_accent = localStorage.getItem(`${config.theme_key}-accent`) || "default";
+      let theme_accent =
+        localStorage.getItem(`${config.theme_key}-accent`) || "default";
       let font_size = localStorage.getItem("font-size") || "md";
       document.body.className = "";
       if (theme === "auto" && isDarkMode) {
@@ -176,7 +179,8 @@ import ProgressBar from "./components/progress-bar/progress-bar.svelte";
       // If there are any URL caommands, it will run here.
       CommanderStore.run();
       // If they have the API - it will load here
-      NomieAPI.load();
+      // NomieAPI.load();
+      ApiStore.init();
     }, 500);
   });
 
@@ -222,7 +226,7 @@ import ProgressBar from "./components/progress-bar/progress-bar.svelte";
         {$Interact.blocker.message}
       </div>
       {#if $Interact.blocker.percent}
-      <ProgressBar percentage={$Interact.blocker.percent} />
+        <ProgressBar percentage={$Interact.blocker.percent} />
       {/if}
     </div>
   </div>
@@ -248,13 +252,3 @@ import ProgressBar from "./components/progress-bar/progress-bar.svelte";
   <img id="photo-holder-image" alt="avatar-holder" />
 </div>
 <!-- {/if} -->
-
-<!--
-  {Lang.t("tracker.stats", "Stats")}
-  {Lang.t("tracker.edit-tracker", "Edit Tracker")}
-  {Lang.t("theme.light", "Light")}
-  {Lang.t("theme.dark", "Dark")}
-  {Lang.t("theme.auto", "Auto")}
-  {Lang.t("general.search-for", "Search For")}
-  {Lang.t("general.options", "Options")}
--->

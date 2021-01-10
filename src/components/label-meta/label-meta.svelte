@@ -41,14 +41,15 @@
 </style>
 
 <div class="n-label-meta n-row">
-  {#if label.length}
-    <div class="label mr-2 {titleClass}">{label}</div>
-    <div class="filler" />
-  {/if}
+
   {#if meta.length && label.length}
     <div class="title {titleClass}">{meta}</div>
   {:else if meta.length}
     <div class="title {titleClass}">{meta}</div>
+  {/if}
+  {#if label.length}
+    <div class="filler" />
+    <div class="label mr-2 {titleClass}">{label}</div>
   {/if}
 
 </div>

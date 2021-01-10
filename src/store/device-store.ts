@@ -9,7 +9,8 @@ import { writable } from "svelte/store";
 
 // utils
 import Logger from "../utils/log/log";
-
+import { Interact } from "./interact";
+import clipboard from "../utils/clipboard/clipboard";
 // Vendors
 const console = new Logger("📲 Device Store");
 
@@ -75,6 +76,10 @@ const DeviceStoreInit = () => {
   }
 
   const methods = {
+    copy(key:string, message?: string) {
+      clipboard(key);
+      Interact.toast(message || "Copied");
+    },
     iOS() {
       return (navigator.platform || "").toLowerCase().match(/iphone|ipad|ipod/gi) ? true : false;
     },

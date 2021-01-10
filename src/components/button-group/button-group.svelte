@@ -21,19 +21,6 @@
   }
 </script>
 
-<style lang="scss">
-  // .btn-group {
-  //   &.inverse {
-  //     button {
-  //       color: var(--color-inverse-2);
-  //       opacity: 0.8;
-  //       &.active {
-  //         // border: solid 1px var(--color-primary-faded);
-  //       }
-  //     }
-  //   }
-  // }
-</style>
 
 <div class="nbtn-group {inverse ? 'inverse' : ''} {className}" {style}>
   {#if buttons.length}
