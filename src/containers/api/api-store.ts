@@ -59,9 +59,11 @@ interface ApiStateConfig {
   inArchive?: Array<NapiLog>;
   inAPI?: Array<NapiLog>;
   generating?: boolean;
+  deviceDisabled?: boolean;
 }
 
 const API_PING_TIME = 1000 * 60; // check every 4 minutes
+const API_DEVICE_DISABLED = 'napi-device-disabled';
 
 // Nomie API Store
 const createApiStore = () => {
@@ -72,6 +74,7 @@ const createApiStore = () => {
   let monitorInterval: any;
   // Create the State
   const _state: ApiStateConfig = {
+    deviceDisabled: !canApiRunOnDevice(),
     registered: undefined,
     apiKey: null,
     privateKey: null,
@@ -84,6 +87,10 @@ const createApiStore = () => {
   };
   // Get Store Items
   const { update, subscribe, set } = writable(_state);
+
+  function canApiRunOnDevice():boolean {
+    return localStorage.getItem(API_DEVICE_DISABLED) ? false : true;
+  }
 
   /**
    * Get Store Logs from the Archives
@@ -106,7 +113,7 @@ const createApiStore = () => {
     return true;
   }
 
-
+ 
   /**
    * Fuse State
    * Getter and Updater for the Svelte Store State
@@ -124,9 +131,14 @@ const createApiStore = () => {
   const methods = {
     // Load the Napi - and fire things when ready
     async init() {
-      
+      // Auto clear sicne we can toggle now 
+      methods.stopMonitoring();
+      // Can it run on this device? 
+      const canRun:boolean = canApiRunOnDevice();
       // Initialize the Client
-      await NAPI.init();
+      if(canRun === true) {
+        await NAPI.init();
+      }
       // When Ready
       NAPI.onReady(async () => {
         console.log("✅ Nomie API Client Ready");
@@ -149,7 +161,7 @@ const createApiStore = () => {
               }
         );
         // Get the Logs if we're registered
-        if (isRegistered) {
+        if (isRegistered && canRun) {
           await tick(200);
           methods.startMonitoringAPI(state.autoImport);
         }
@@ -159,6 +171,19 @@ const createApiStore = () => {
     clearArchives() {
       console.log("Clear?");
       ApiLogStore.put("napi/saved.json", []);
+      methods.init();
+    },
+    toggleDeviceDisabled() {
+      console.log("Toggling device disabled");
+      if(canApiRunOnDevice()) {
+        console.log("Currently Enabled switching to disabled");
+        localStorage.setItem(API_DEVICE_DISABLED, '1');
+        fuse({ deviceDisabled: true})
+      } else {
+        console.log("Currently DIsabled switching to ENABLED");
+        localStorage.removeItem(API_DEVICE_DISABLED);
+        fuse({ deviceDisabled: false})
+      }
       methods.init();
     },
     async toggleAutoImport() {

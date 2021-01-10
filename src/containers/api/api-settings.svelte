@@ -34,7 +34,22 @@
   }
 </script>
 
-{#if $ApiStore.registered === undefined}
+{#if $ApiStore.deviceDisabled}
+<div class="contain-sm">
+  <List className="my-4">
+    <ListItem>
+      {Lang.t('general.enabled', 'Enabled')}
+      <div slot="right">
+        <ToggleSwitch
+          value={false}
+          on:change={() => {
+            ApiStore.toggleDeviceDisabled();
+          }} />
+      </div>
+    </ListItem>
+  </List>
+</div>
+{:else if $ApiStore.registered === undefined}
   <div class="p-4 text-center">
     <Text faded>Connecting...</Text>
   </div>
@@ -209,6 +224,23 @@
       </div>
     </ListItem>
 
+    <Divider inset />
+    
+    <List className="my-4">
+      <ListItem>
+        {Lang.t('general.enabled', 'Enabled')}
+        <div slot="right">
+          <ToggleSwitch
+            value={true}
+            on:change={() => {
+              ApiStore.toggleDeviceDisabled();
+            }} />
+        </div>
+      </ListItem>
+    </List>
+
+    
+
     <Divider pad className="text-red-500 text-opacity-50 mt-4">
       Danger Zone
     </Divider>
@@ -217,7 +249,7 @@
         clickable
         on:click={ApiStore.forget}
         className="text-primary-500">
-        Forget API on this Device
+        Forget API on ALL Devices
       </ListItem>
       <Divider inset />
       <ListItem clickable on:click={ApiStore.destroy} className="text-red-500">

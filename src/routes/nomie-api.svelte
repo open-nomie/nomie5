@@ -13,7 +13,7 @@
   import Layout from "../containers/layout/layout.svelte";
   import { Lang } from "../store/lang";
   import Icon from "../components/icon/icon.svelte";
-import Api from "../containers/api/api.svelte";
+  import Api from "../containers/api/api.svelte";
 
   export const location: any = undefined;
 
@@ -53,30 +53,32 @@ import Api from "../containers/api/api.svelte";
     <ToolbarGrid>
       <Text>{title}</Text>
       <div slot="right">
-        {#if $ApiStore.registered}
+        {#if $ApiStore.registered && !$ApiStore.deviceDisabled}
           <Button icon on:click={ApiStore.getLogs}>
             <Icon name="checkmark" />
           </Button>
         {/if}
       </div>
     </ToolbarGrid>
-    <Toolbar>
-      <ButtonGroup
-        size="sm"
-        className="max-w-screen-sm mx-auto"
-        buttons={[{ active: view == 'settings', label: Lang.t('general.settings', 'Settings'), click() {
-              setView('settings');
-            } }, { active: view == 'items', label: Lang.t('general.new', `New (${$ApiStore.items.length})`), click() {
-              setView('items');
-            } }, { active: view == 'archives', label: Lang.t('general.archives', 'Archives'), click() {
-              setView('archives');
-            } }]} />
-    </Toolbar>
+    {#if !$ApiStore.deviceDisabled}
+      <Toolbar>
+        <ButtonGroup
+          size="sm"
+          className="max-w-screen-sm mx-auto"
+          buttons={[{ active: view == 'settings', label: Lang.t('general.settings', 'Settings'), click() {
+                setView('settings');
+              } }, { active: view == 'items', label: Lang.t('general.new', `New (${$ApiStore.items.length})`), click() {
+                setView('items');
+              } }, { active: view == 'archives', label: Lang.t('general.archives', 'Archives'), click() {
+                setView('archives');
+              } }]} />
+      </Toolbar>
+    {/if}
   </div>
 
   <div class="container">
     {#if view == 'settings'}
-    <ApiSettings />
+      <ApiSettings />
     {:else if view == 'items'}
       <ApiItems />
     {:else if view == 'archives'}
