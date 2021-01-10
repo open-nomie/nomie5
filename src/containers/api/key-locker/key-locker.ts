@@ -87,8 +87,8 @@ class KeyLocker {
   }
   get asObject():any {
     return {
-      api_key: this._apiKey,
-      private_key: this._privateKey,
+      apiKey: this._apiKey,
+      privateKey: this._privateKey,
     };
   }
 }

@@ -50,8 +50,8 @@ export default class NomieAPICli {
       let config = await Storage.get(NAPI_STORE_PATH);
       if(config) {
         // Set Keylocker API Private Keys
-        this.keyLocker.apiKey = config.api_key;
-        this.keyLocker.privateKey = config.private_key;
+        this.keyLocker.apiKey = config.apiKey || config.api_key;
+        this.keyLocker.privateKey = config.privateKey || config.private_key;
         // we're ready!
         this.ready = true;
         this.fireReady(); // !fire off ready to listeners
