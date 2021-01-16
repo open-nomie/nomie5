@@ -103,10 +103,11 @@
             <div slot="right">
               <Button
                 icon
+                
                 on:click={() => {
                   Device.copy(state.apiExample);
                 }}>
-                <Icon name="copy" size="20" className="fill-primary-bright" />
+                <Icon name="copy" size="20" className="text-inverse" />
               </Button>
             </div>
           </Input>
@@ -120,7 +121,7 @@
               on:click={() => {
                 Device.copy(`${appConfig.api}/log`);
               }}>
-              <Icon name="copy" size="20" className="fill-primary-bright" />
+              <Icon name="copy" size="20" className="text-inverse"  />
             </Button>
             <Text size="sm">{appConfig.api}/log</Text>
           </div>
@@ -189,7 +190,7 @@
               size="sm"
               icon
               on:click={() => Device.copy($ApiStore.privateKey)}>
-              <Icon name="copy" size="20" />
+              <Icon name="copy" size="20" className="text-inverse" />
             </Button>
           </div>
         </Input>

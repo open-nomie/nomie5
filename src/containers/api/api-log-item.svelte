@@ -11,9 +11,9 @@
 </script>
 
 <ListItem>
-  <div slot="left">
+  <div slot="left" style="margin-right:-12px;">
     <Button icon on:click={() => ApiStore.discard(log)}>
-      <Icon name="delete" size="20" />
+      <Icon name="delete" size="20" className="text-inverse" />
     </Button>
   </div>
   <Text size="sm" className="mb-1">{log.note}</Text>

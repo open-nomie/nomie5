@@ -55,7 +55,7 @@
       <div slot="right">
         {#if $ApiStore.registered && !$ApiStore.deviceDisabled}
           <Button icon on:click={ApiStore.getLogs}>
-            <Icon name="checkmark" />
+            <Icon name="checkmark" className="text-primary" />
           </Button>
         {/if}
       </div>
