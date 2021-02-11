@@ -770,8 +770,8 @@ const interactInit = () => {
       if (!perm) {
         setTimeout(() => {
           update((s) => {
-            s.toast.message = null;
             s.toast.show = false;
+            s.toast.message = null;
             s.toast.buttonLabel = undefined;
             s.toast.description = undefined;
             s.toast.click = undefined;
