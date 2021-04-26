@@ -189,8 +189,6 @@ export default class TrackerConfig {
   }
 
   toTag(str) {
-    // completed todo : make this replace special characters too
-    // removes special characters in str using regex
     return (str || "")
     .replace(/('|"|\?|-|\)|\(|\*|\&|\||\$|\@|\+|\#)/gi, "")
     .trim()
