@@ -46,6 +46,12 @@ const types: TrackerTypesConfig = {
     label: Lang.t("tracker.type.note", "Combine Trackers"),
     description: Lang.t("tracker.type.note_description", "Track multiple trackers in a series"),
   },
+  // ADDED
+  numberedRange: {
+    emoji: "↔️",
+    label: Lang.t("tracker.type.numberedRange", "Numbered Range"),
+    description: Lang.t("tracker.type.numberedRange_description", "Select from a range like 1-10 with numbers visualized. Good for Mood, Anxiety, Stress"),
+  },
 };
 
 export function getTypeDetails(type: string): TrackerTypeConfig | undefined {
