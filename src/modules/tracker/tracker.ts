@@ -96,7 +96,8 @@ export default class TrackerConfig {
     // set Default value
     this.default = starter.default;
     // max
-    if (this.type === "range") {
+    // ADDED
+    if (this.type === "range" || this.type === "numberedRange") {
       this.max = starter.max ? starter.max.toString() : "10";
       // min
       this.min = starter.max ? starter.min.toString() : "1";
