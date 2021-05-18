@@ -26,9 +26,7 @@
   // modules
   import Tracker, { toTag } from "../../../modules/tracker/tracker";
   import type { ITrackerType } from "../../../modules/tracker/tracker";
-  import TrackerTypes, {
-    getTypeDetails,
-  } from "../../../modules/tracker-types/tracker-types";
+  import TrackerTypes, { getTypeDetails } from "../../../modules/tracker-types/tracker-types";
 
   // containers
   import PositivityEditor from "../points-editor.svelte";
@@ -83,12 +81,7 @@
 
   // Watch for Tracker Changed while NOT Forced Advanced
   $: if (tracker && !forcedAdvanced) {
-    if (
-      tracker.default ||
-      tracker.math !== "sum" ||
-      tracker.uom !== "num" ||
-      tracker.step
-    ) {
+    if (tracker.default || tracker.math !== "sum" || tracker.uom !== "num" || tracker.step) {
       advanced = true;
       advancedCanToggle = false;
     } else {
@@ -163,14 +156,8 @@
 
   async function remove() {
     let confirmed = await Interact.confirm(
-      `${tracker.label} - ${Lang.t(
-        "tracker.delete-from-nomie",
-        "Delete from Nomie?"
-      )}`,
-      `${Lang.t(
-        "tracker.delete-description",
-        "You can always recreate it later. No log data will be deleted."
-      )} `
+      `${tracker.label} - ${Lang.t("tracker.delete-from-nomie", "Delete from Nomie?")}`,
+      `${Lang.t("tracker.delete-description", "You can always recreate it later. No log data will be deleted.")} `
     );
     if (confirmed) {
       await TrackerStore.deleteTracker(tracker);
@@ -181,17 +168,12 @@
   const methods = {
     async saveTracker() {
       if (!data.tracker.tag || !data.tracker.label) {
-        Interact.alert(
-          "Missing Data",
-          "Please fill out all required fields: title, tag and emoji"
-        );
+        Interact.alert("Missing Data", "Please fill out all required fields: title, tag and emoji");
       } else {
         try {
           // If picker - clean up list
           if (data.tracker.type == "picker") {
-            data.tracker.picks = data.tracker.picks.filter(
-              (d) => `${d}`.length
-            );
+            data.tracker.picks = data.tracker.picks.filter((d) => `${d}`.length);
           }
 
           await TrackerStore.saveTracker(data.tracker);
@@ -253,8 +235,7 @@
             return `#${tkr.tag}`;
           })
           .join(" ");
-        data.tracker.note =
-          `${data.tracker.note || ""} ${trkString}`.trim() + " ";
+        data.tracker.note = `${data.tracker.note || ""} ${trkString}`.trim() + " ";
       }
     },
     labelChanged(event) {
@@ -274,58 +255,34 @@
   };
 </script>
 
-<style lang="scss">
-  @import "./editor.scss";
-  :global(.n-tracker-editor .n-modal) {
-    background-color: var(--color-bg) !important;
-  }
-</style>
-
 {#if $Interact.trackerEditor.show}
 
   <div class="n-tracker-editor">
-    <NModal
-      type="fullscreen"
-      allowClose
-      on:close={methods.cancel}
-      style="z-index:2002">
+    <NModal type="fullscreen" allowClose on:close={methods.cancel} style="z-index:2002">
 
       <header slot="header" class="n-toolbar-grid">
         <div class="left">
-          <Button type="clear" color="primary" on:click={methods.cancel}>
-            Cancel
-          </Button>
+          <Button type="clear" color="primary" on:click={methods.cancel}>Cancel</Button>
         </div>
-        <div class="main">
-          {data.tracker._dirty ? 'Create' : 'Edit'}
-          {data.tracker.label.length ? data.tracker.label : ''}
-        </div>
+        <div class="main">{data.tracker._dirty ? 'Create' : 'Edit'} {data.tracker.label.length ? data.tracker.label : ''}</div>
         <div class="right">
-          <Button
-            className="save-action"
-            disabled={!canSave}
-            color="primary"
-            type="clear"
-            on:click={methods.saveTracker}>
+          <Button className="save-action" disabled={!canSave} color="primary" type="clear" on:click={methods.saveTracker}>
             {Lang.t('general.save')}
           </Button>
         </div>
       </header>
 
       <div class="emoji-editor">
-        <div
-          class="emoji {data.tracker.emoji ? 'has-emoji' : 'no-emoji'}"
-          style="border:solid 4px {data.tracker.color}">
-          <div
-            style="background-color:{data.tracker.color}"
-            class="background" />
+        <div class="emoji {data.tracker.emoji ? 'has-emoji' : 'no-emoji'}" style="border:solid 4px {data.tracker.color}">
+          <div style="background-color:{data.tracker.color}" class="background" />
           <input
             class="p-0 m-0 emoji"
             type="text"
             on:focus={(evt) => {
               evt.target.select();
             }}
-            bind:value={data.tracker.emoji} />
+            bind:value={data.tracker.emoji}
+          />
         </div>
         {#if data.tracker.label}
           <Text size="md" center className="mt-2">{data.tracker.label}</Text>
@@ -334,12 +291,7 @@
           <Text size="sm" center faded className="mt-1">
             #{data.tracker.tag}
             {#if data.tracker._dirty}
-              <Button
-                icon
-                inline
-                size="xs"
-                color="clear"
-                on:click={methods.editTag}>
+              <Button icon inline size="xs" color="clear" on:click={methods.editTag}>
                 <Icon name="edit" size="12" />
               </Button>
             {/if}
@@ -348,9 +300,7 @@
       </div>
 
       <!-- Colort Selector -->
-      <ColorPicker
-        bind:value={data.tracker.color}
-        className="mb-1 tracker-color" />
+      <ColorPicker bind:value={data.tracker.color} className="mb-1 tracker-color" />
 
       <!-- Tracker Label input -->
       <NInput
@@ -360,20 +310,16 @@
         name="label"
         placeholder={Lang.t('tracker.label', 'Tracker Label')}
         bind:value={data.tracker.label}
-        on:keyup={methods.labelChanged} />
+        on:keyup={methods.labelChanged}
+      />
 
       <!-- Tracker Type Selector -->
 
-      <ListItem
-        on:click={methods.selectType}
-        className="tracker-type py-3 mb-3">
+      <ListItem on:click={methods.selectType} className="tracker-type py-3 mb-3">
         {Lang.t('tracker.tracker-type', 'Tracker Type')}
         <div slot="right" class="n-row">
           <Text bold>{(getTypeDetails(data.tracker.type) || {}).label}</Text>
-          <Icon
-            name="chevronDown"
-            className="fill-inverse-2 mr-3 ml-2"
-            size="16" />
+          <Icon name="chevronDown" className="fill-inverse-2 mr-3 ml-2" size="16" />
         </div>
       </ListItem>
 
@@ -385,7 +331,8 @@
           itemClass=""
           on:change={(evt) => {
             data.tracker.picks = (evt.detail || []).filter((d) => d.length);
-          }} />
+          }}
+        />
       {/if}
 
       {#if data.tracker.type == 'range'}
@@ -402,13 +349,15 @@
               on:focus={(e) => {
                 e.detail.target.select();
               }}
-              bind:value={data.tracker.min}>
+              bind:value={data.tracker.min}
+            >
               <div slot="right" class="pr-1">
                 <Button
                   icon
                   on:click={() => {
                     getTrackerInput('min');
-                  }}>
+                  }}
+                >
                   <NIcon name="addOutline" className="fill-inverse-2" />
                 </Button>
               </div>
@@ -423,13 +372,15 @@
               label={Lang.t('tracker.max', 'Max Value')}
               placeholder={Lang.t('tracker.max', 'Max Value')}
               on:focus={(e) => e.detail.target.select()}
-              bind:value={data.tracker.max}>
+              bind:value={data.tracker.max}
+            >
               <div slot="right" class="pr-1">
                 <Button
                   icon
                   on:click={() => {
                     getTrackerInput('max');
-                  }}>
+                  }}
+                >
                   <NIcon name="addOutline" className="fill-inverse-2" />
                 </Button>
               </div>
@@ -444,13 +395,10 @@
           type="textarea"
           className="tracker-note mb-0"
           bind:value={data.tracker.note}
-          placeholder={Lang.t('tracker.note-placeholder', 'Any content including #tracker @people +context')}>
+          placeholder={Lang.t('tracker.note-placeholder', 'Any content including #tracker @people +context')}
+        >
           <span slot="right">
-            <Button
-              icon
-              shape="circle"
-              color="transparent"
-              on:click={methods.addTrackerToNote}>
+            <Button icon shape="circle" color="transparent" on:click={methods.addTrackerToNote}>
               <Icon name="addOutline" />
             </Button>
           </span>
@@ -460,10 +408,12 @@
           scroller
           on:select={async (evt) => {
             data.tracker.note = evt.detail.note + '';
-          }} />
+          }}
+        />
         <ListItem
           transparent
-          description={Lang.t('tracker.note-description', 'Combine multiple trackers together using their #hashtags. For example, #mood #sleep_quality. Nomie will then ask for values one by one.')} />
+          description={Lang.t('tracker.note-description', 'Combine multiple trackers together using their #hashtags. For example, #mood #sleep_quality. Nomie will then ask for values one by one.')}
+        />
       {/if}
 
       {#if data.tracker.type !== 'timer' && data.tracker.type !== 'note' && data.tracker.type !== 'picker'}
@@ -472,18 +422,15 @@
           placeholder={Lang.t('tracker.measure-by', 'Measure By')}
           type="select"
           className="tracker-uom mb-3"
-          bind:value={data.tracker.uom}>
+          bind:value={data.tracker.uom}
+        >
           {#each Object.keys(data.groupedUOMs) as groupKey (groupKey)}
             {#if data.tracker.type !== 'timer' && groupKey !== 'Timer'}
               <option disabled>-- {groupKey}</option>
               {#each data.groupedUOMs[groupKey] as uom (`${groupKey}-${uom.key}`)}
-                <option
-                  value={uom.key}
-                  disabled={uom.key == 'time' && data.tracker.type != 'timer'}>
+                <option value={uom.key} disabled={uom.key == 'time' && data.tracker.type != 'timer'}>
                   {NomieUOM.plural(uom.key)}
-                  {#if NomieUOM.plural(uom.key).toLowerCase() !== NomieUOM.symbol(uom.key).toLowerCase()}
-                    ({NomieUOM.symbol(uom.key)})
-                  {/if}
+                  {#if NomieUOM.plural(uom.key).toLowerCase() !== NomieUOM.symbol(uom.key).toLowerCase()}({NomieUOM.symbol(uom.key)}){/if}
                 </option>
               {/each}
             {/if}
@@ -500,12 +447,10 @@
           color="clear"
           size="sm"
           className="mt-2 mb-1 advanced-toggler"
-          on:click={() => (forcedAdvanced = !forcedAdvanced)}>
+          on:click={() => (forcedAdvanced = !forcedAdvanced)}
+        >
           {#if advanced}Hide Advanced Options{:else}Show Advanced Options{/if}
-          <Icon
-            name={advanced ? 'chevronUp' : 'chevronDown'}
-            size="12"
-            className="ml-2" />
+          <Icon name={advanced ? 'chevronUp' : 'chevronDown'} size="12" className="ml-2" />
 
         </Button>
       {/if}
@@ -515,7 +460,8 @@
           <ListItem
             title={Lang.t('tracker.save-on-tap', 'Save on Tap')}
             className="tracker-one-tap mb-3 leading1"
-            description={Lang.t('tracker.save-on-tap-description', 'Save note immediately after tapping the button.')}>
+            description={Lang.t('tracker.save-on-tap-description', 'Save note immediately after tapping the button.')}
+          >
             <div slot="right">
               <NToggle bind:value={data.tracker.one_tap} />
             </div>
@@ -530,13 +476,15 @@
             inputmode="numeric"
             label={Lang.t('tracker.step', 'Range Step')}
             placeholder={Lang.t('tracker.step', 'Range Step')}
-            bind:value={data.tracker.step}>
+            bind:value={data.tracker.step}
+          >
             <div slot="right" class="pr-1">
               <Button
                 icon
                 on:click={() => {
                   getTrackerInput('step');
-                }}>
+                }}
+              >
                 <NIcon name="addOutline" className="fill-inverse-2" />
               </Button>
             </div>
@@ -555,16 +503,14 @@
           className="tracker-math mb-3"
           name="math"
           placeholder={Lang.t('tracker.calculate-total', 'Calculate Totals')}
-          bind:value={data.tracker.math}>
+          bind:value={data.tracker.math}
+        >
           {#each [{ value: 'sum', label: Lang.t('general.sum', 'Sum') }, { value: 'mean', label: Lang.t('general.avg', 'Average') }] as math_key}
             <option value={math_key.value}>{math_key.label}</option>
           {/each}
         </NInput>
 
-        <ListItem
-          className="px-3 py-1 mb-3 tracker-ignore-zeros"
-          title="Ignore Zeros"
-          description="Ignore zero values when averaging">
+        <ListItem className="px-3 py-1 mb-3 tracker-ignore-zeros" title="Ignore Zeros" description="Ignore zero values when averaging">
           <div slot="right">
             <NToggle bind:value={data.tracker.ignore_zeros} />
           </div>
@@ -579,20 +525,20 @@
           inputmode="numeric"
           label={Lang.t('tracker.value', 'Default Value')}
           placeholder={Lang.t('tracker.default-value', 'Default Value')}
-          bind:value={data.tracker.default}>
-          <span slot="right">
+          bind:value={data.tracker.default}
+        >
+
+          <div slot="right">
             {#if data.tracker.default}
-              <Text size="xs" className="text-right text-primary-bright">
-                {data.tracker.displayValue(data.tracker.default)}
-              </Text>
+              <Text size="xs" className="text-right text-primary-bright">{data.tracker.displayValue(data.tracker.default)}</Text>
             {/if}
-          </span>
-          <div slot="right" class="pr-1">
             <Button
+              className="pr-1"
               icon
               on:click={() => {
                 getTrackerInput('default');
-              }}>
+              }}
+            >
               <NIcon name="addOutline" className="fill-inverse-2" />
             </Button>
           </div>
@@ -611,21 +557,20 @@
             rows={2}
             label={Lang.t('tracker.include', 'Also Include')}
             placeholder={Lang.t('tracker.include-placeholder', 'Insert additional #trackers, @people, and +context when using this tracker')}
-            bind:value={data.tracker.include} />
+            bind:value={data.tracker.include}
+          />
           <AutoComplete
             input={data.tracker.include}
             scroller
             on:select={async (evt) => {
               data.tracker.include = evt.detail.note + '';
-            }} />
+            }}
+          />
         </ListItem>
       {/if}
 
       {#if advanced}
-        <ListItem
-          bg="transparent"
-          id="hide-all-board"
-          title={Lang.t('tracker.hide-on-all-board', 'Hide on All Board')}>
+        <ListItem bg="transparent" id="hide-all-board" title={Lang.t('tracker.hide-on-all-board', 'Hide on All Board')}>
           <div slot="right">
             <NToggle bind:value={data.tracker.hidden} />
           </div>
@@ -639,22 +584,17 @@
           on:click={() => {
             TrackerStore.download(data.tracker);
           }}
-          className="bottom-line">
-          <div class="text-primary-bright">
-            {Lang.t('general.download', 'Download')} .tkr
-          </div>
+          className="bottom-line"
+        >
+          <div class="text-primary-bright">{Lang.t('general.download', 'Download')} .tkr</div>
           <div slot="right" class="text-faded-2">For Sharing</div>
         </ListItem>
         <ListItem on:click={duplicate} className="bottom-line">
-          <div class="text-primary-bright">
-            {Lang.t('tracker.duplicate-tracker', 'Duplicate Tracker')}
-          </div>
+          <div class="text-primary-bright">{Lang.t('tracker.duplicate-tracker', 'Duplicate Tracker')}</div>
         </ListItem>
 
         <ListItem on:click={remove} className="bottom-line">
-          <div class="text-red">
-            {Lang.t('tracker.remove-tracker', 'Delete Tracker')}
-          </div>
+          <div class="text-red">{Lang.t('tracker.remove-tracker', 'Delete Tracker')}</div>
         </ListItem>
       {/if}
 
@@ -663,3 +603,10 @@
 
   </div>
 {/if}
+
+<style lang="scss">
+  @import "./editor.scss";
+  :global(.n-tracker-editor .n-modal) {
+    background-color: var(--color-bg) !important;
+  }
+</style>
