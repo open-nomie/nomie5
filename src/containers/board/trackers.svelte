@@ -124,27 +124,6 @@
   }
 </script>
 
-<style lang="scss">
-  :global(.tracker-list-item.in-note .tracker-label) {
-    font-weight: bold;
-    color: var(--tracker-color);
-  }
-  :global(.tracker-list-item .highlight) {
-    position: absolute;
-    left: 3px;
-    top: 6px;
-    bottom: 6px;
-    width: 3px;
-    border-radius: 2px;
-  }
-  :global(.tracker-list-item.no-value) {
-    background-color: transparent;
-    .highlight {
-      display: none;
-    }
-  }
-</style>
-
 {#if view == 'list'}
   {#each trackers as tracker}
     <ListItem
@@ -160,7 +139,8 @@
         if (['svg'].indexOf(evt.detail.target.tagName) == -1) {
           dispatch('tap', tracker);
         }
-      }}>
+      }}
+    >
       <div class="highlight" style="background-color:{tracker.color}" />
       <div slot="left" class="pr-0 n-row justify-content-center">
         <Avatar emoji={tracker.emoji} label={tracker.label} size={$UserStore.localSettings.compactButtons ? 30 : 40} />
@@ -176,8 +156,6 @@
         {#if tracker.started}
           <Counter started={tracker.started} color={tracker.color} />
         {/if}
-      </span>
-      <span slot="right">
         {#if !hideMore}
           <Button
             shape="circle"
@@ -185,7 +163,8 @@
             style="z-index:1000"
             on:click={(evt) => {
               dispatch('more', tracker);
-            }}>
+            }}
+          >
             <Icon name="more" size="18" className="prevent fill-inverse-1" />
           </Button>
         {/if}
@@ -198,7 +177,8 @@
       clickable
       title={Lang.t('tracker.add-tracker', 'Add Tracker')}
       on:click={() => dispatch('add')}
-      className="tracker-add py-3 tracker-list-item flex-shrink-off no-value">
+      className="tracker-add py-3 tracker-list-item flex-shrink-off no-value"
+    >
       <div slot="left">
         <Text style="width:40px;" center size={$UserStore.localSettings.compactButtons ? 'xl' : 'xxl'}>➕</Text>
       </div>
@@ -228,7 +208,8 @@
         }}
         on:more={() => {
           dispatch('more', tracker);
-        }}>
+        }}
+      >
         <div slot="subtitle">
           {#if tracker.started}
             <Counter started={tracker.started} color={tracker.color} />
@@ -245,7 +226,8 @@
         hideMore={true}
         on:click={() => {
           dispatch('add');
-        }} />
+        }}
+      />
     {/if}
   </div>
 {:else if view == 'button'}
@@ -267,7 +249,8 @@
         }}
         on:more={() => {
           dispatch('more', tracker);
-        }} />
+        }}
+      />
     {/each}
     {#if !hideAdd}
       <TrackerButton
@@ -275,9 +258,31 @@
         tracker={{ tag: 'add', label: `${Lang.t('tracker.add-tracker', 'Add Tracker')}`, emoji: '➕' }}
         on:click={(evt) => {
           dispatch('add', evt);
-        }} />
+        }}
+      />
     {/if}
   </div>
 {/if}
 
 <!--    className={`${state.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${state.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`} -->
+
+<style lang="scss">
+  :global(.tracker-list-item.in-note .tracker-label) {
+    font-weight: bold;
+    color: var(--tracker-color);
+  }
+  :global(.tracker-list-item .highlight) {
+    position: absolute;
+    left: 3px;
+    top: 6px;
+    bottom: 6px;
+    width: 3px;
+    border-radius: 2px;
+  }
+  :global(.tracker-list-item.no-value) {
+    background-color: transparent;
+    .highlight {
+      display: none;
+    }
+  }
+</style>
