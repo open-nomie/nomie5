@@ -287,7 +287,7 @@
 
 {#if !state.file}
   <NLayout className="n-file-browser">
-    <div class="n-toolbar-grid container" slot="header">
+    <div class="container n-toolbar-grid" slot="header">
       <div class="left">
         <BackButton click={back} />
       </div>
@@ -361,7 +361,7 @@
   </NLayout>
 {:else}
   <NLayout className="n-file-browser" showTabs={false}>
-    <div class="n-toolbar-grid container" slot="header">
+    <div class="container n-toolbar-grid" slot="header">
       <div class="left">
         <BackButton click={back} />
       </div>
@@ -405,7 +405,7 @@
     </div>
     <div slot="footer">
       {#if $UserStore.meta.canEditFiles}
-        <div class="container n-row px-2 pt-1 pb-2">
+        <div class="container px-2 pt-1 pb-2 n-row">
           {#if state.edit}
             <Button size="md" color="clear" block on:click={cancelEdits}>
               Cancel

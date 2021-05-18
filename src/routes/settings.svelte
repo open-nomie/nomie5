@@ -1,5 +1,4 @@
 <script>
-	
   //Vendors
   import { navigate, Link } from "svelte-routing";
   import { onMount } from "svelte";
@@ -53,7 +52,7 @@
   import { AppStore } from "../store/app-store";
   import Sponsors from "../components/sponsors/sponsors.svelte";
   import ToggleSwitch from "../components/toggle-switch/toggle-switch.svelte";
-import { ApiStore } from "../containers/api/api-store";
+  import { ApiStore } from "../containers/api/api-store";
 
   export const location = undefined;
   export const style = undefined;
@@ -255,31 +254,35 @@ Note: Your data will not automatically move over. You'll first need to export it
           className={view == 'features' ? 'active' : ''}
           on:click={() => {
             changeView('features');
-          }}>
+          }}
+        >
           {Lang.t('settings.tab-features', 'Features')}
         </Button>
         <Button
           className={view == 'tweaks' ? 'active' : ''}
           on:click={() => {
             changeView('tweaks');
-          }}>
+          }}
+        >
           {Lang.t('settings.tab-tweaks', 'Tweaks')}
         </Button>
         <Button
           className={view == 'data' ? 'active' : ''}
           on:click={() => {
             changeView('data');
-          }}>
+          }}
+        >
           {Lang.t('settings.tab-data', 'Data')}
           {#if $ApiStore.items.length}
-            <div class="notify"></div>
+            <div class="notify" />
           {/if}
         </Button>
         <Button
           className={view == 'about' ? 'active' : ''}
           on:click={() => {
             changeView('about');
-          }}>
+          }}
+        >
           {Lang.t('settings.tab-about', 'About')}
         </Button>
       </NButtonGroup>
@@ -315,7 +318,8 @@ Note: Your data will not automatically move over. You'll first need to export it
                   size="sm"
                   on:click={() => {
                     methods.tryPatronPin(true);
-                  }}>
+                  }}
+                >
                   {Lang.t('settings.patron-unlock', 'Unlock')}
                 </Button>
                 <Button
@@ -324,7 +328,8 @@ Note: Your data will not automatically move over. You'll first need to export it
                   size="sm"
                   click={() => {
                     Device.open(appConfig.patreon);
-                  }}>
+                  }}
+                >
                   {Lang.t('settings.patron-join-now', 'Join Now')}
                 </Button>
                 <Spacer />
@@ -373,7 +378,8 @@ Note: Your data will not automatically move over. You'll first need to export it
                 title={Lang.t('general.browse-files', 'Browse Files...')}
                 on:click={() => {
                   navigate('/files');
-                }}>
+                }}
+              >
                 <span slot="left">📂</span>
               </ListItem>
 
@@ -394,7 +400,8 @@ Note: Your data will not automatically move over. You'll first need to export it
                 title={`${Lang.t('settings.import-from-backup', 'Import from Backup')}`}
                 on:click={() => {
                   showImporter = true;
-                }}>
+                }}
+              >
                 <span slot="left">📦</span>
                 <span slot="right">
                   <NIcon name="chevronRight" className="fill-faded-2" />
@@ -432,7 +439,8 @@ Note: Your data will not automatically move over. You'll first need to export it
               <ListItem
                 clickable
                 title={Lang.t('settings.update-last-used-date', "Update All Tracker's Last-Used")}
-                on:click={LastUsed.updateAll}>
+                on:click={LastUsed.updateAll}
+              >
                 <span slot="left">🕰</span>
               </ListItem>
             </List>
@@ -522,7 +530,8 @@ Note: Your data will not automatically move over. You'll first need to export it
                 title="Onboarded"
                 on:click={() => {
                   navigate('/setup');
-                }}>
+                }}
+              >
                 <span slot="right" class="text-primary">
                   <Text size="sm">{Lang.t('settings.redo-setup', 'Redo Setup')}</Text>
                 </span>
@@ -545,9 +554,6 @@ Note: Your data will not automatically move over. You'll first need to export it
           </List>
 
           <Spacer gap={1} />
-          <List outside title={Lang.t('general.supporters', 'Supporters')} className="px-2 bg-transparent">
-            <Sponsors />
-          </List>
 
           <Text size="sm" center className="mt-4 mb-3" on:click={specialTap}>
             Happy Data, LLC &copy; Copyright 2014 - {dayjs().format('YYYY')}

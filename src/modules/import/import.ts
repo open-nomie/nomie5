@@ -45,6 +45,7 @@ export default class Importer {
   constructor(importPayload: any) {
     this.original = importPayload;
     this.version = parseInt(importPayload?.nomie?.number?.split(".")[0]);
+    console.log("THE ORIGINAL", this.version);
     if (!this.version) {
       throw new Error("Invalid Nomie Backup file");
     } else if (this.version >= 4) {
