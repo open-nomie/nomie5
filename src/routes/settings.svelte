@@ -305,7 +305,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               </div>
             </ListItem>
           {:else}
-            <ListItem compact className="mb-3">
+            <!-- <ListItem compact className="mb-3">
               <div slot="left" style="font-size:28px">🎁</div>
               <Text bold>{Lang.t('settings.become-a-patron', 'Become a Patron')}</Text>
               <Text size="sm" leading2 faded>
@@ -335,7 +335,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <Spacer />
               </Row>
               <div slot="right" />
-            </ListItem>
+            </ListItem> -->
           {/if}
 
           {#if view == 'features'}
@@ -403,10 +403,10 @@ Note: Your data will not automatically move over. You'll first need to export it
                 }}
               >
                 <span slot="left">📦</span>
-                <span slot="right">
+                <div slot="right">
+                  <input class="d-none" type="file" bind:this={fileInput} on:change={methods.onImportFile} />
                   <NIcon name="chevronRight" className="fill-faded-2" />
-                </span>
-                <input slot="right" class="d-none" type="file" bind:this={fileInput} on:change={methods.onImportFile} />
+                </div>
               </ListItem>
               <ListItem clickable title={`${Lang.t('settings.import-from-csv', 'Import from CSV ')}`} to="/settings/import/csv">
                 <span slot="left">📄</span>
