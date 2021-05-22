@@ -193,16 +193,6 @@ Note: Your data will not automatically move over. You'll first need to export it
           },
         },
         {
-          title: `${$UserStore.storageType === "blockstack" ? "✓" : ""} ${Lang.t("storage.blockstack_title", "Blockstack")}`,
-          description: `${Lang.t(
-            "storage.blockstack_description",
-            "Sync across multiple devices using Blockstack's free and encrypted storage."
-          )}`,
-          click() {
-            methods.switchStorage("blockstack");
-          },
-        },
-        {
           title: `${$UserStore.storageType === "pouchdb" ? "✓" : ""} ${Lang.t("storage.pouchdb_title", "CouchDB (beta)")}`,
           description: `${Lang.t(
             "storage.pouchdb_description",
@@ -210,6 +200,13 @@ Note: Your data will not automatically move over. You'll first need to export it
           )}`,
           click() {
             methods.switchStorage("pouchdb");
+          },
+        },
+        {
+          title: `${$UserStore.storageType === "blockstack" ? "✓" : ""} ⚠️⚠️⚠️ Blockstack`,
+          description: `⚠️ NO LONGER SUPPORTED / SHUTTING DOWN, please use Device Only or CouchDB instead.`,
+          click() {
+            methods.switchStorage("blockstack");
           },
         },
       ];

@@ -115,16 +115,6 @@
   };
 </script>
 
-<style lang="scss">
-  .pos-label {
-    font-size: 1.2em;
-    display: none;
-    min-width: 70px;
-    text-transform: uppercase;
-    text-align: center;
-  }
-</style>
-
 {#if tracker}
   <div class={className}>
     <NInput listItem type="select" bind:value={tracker.score} on:change={methods.change} label={Lang.t('tracker.positivity', 'Positivity')}>
@@ -148,17 +138,19 @@
                   size="sm"
                   type="clear"
                   icon
-                  className="mr-2">
+                  className="mr-2"
+                >
                   <NIcon name="remove" className="fill-red" />
                 </Button>
               </div>
 
-              <span slot="right">
+              <div slot="right">
                 <NPoints points={item.sc} />
-              </span>
-              <div slot="right" class="menu-handle px-1 ml-2">
-                <Icon name="menu" size="20" />
+                <div class="menu-handle px-1 ml-2">
+                  <Icon name="menu" size="20" />
+                </div>
               </div>
+
             </NItem>
           </SortableList>
           {#if state.showConditionForm}
@@ -225,7 +217,8 @@
                   color="transparent"
                   on:click={() => {
                     state.showConditionForm = false;
-                  }}>
+                  }}
+                >
                   {Lang.t('general.cancel', 'Cancel')}
                 </Button>
                 <Spacer />
@@ -234,7 +227,8 @@
                   size="sm"
                   className="right"
                   disabled={!is.truthy(state.genesisCalc.sc)}
-                  on:click={methods.saveCondition}>
+                  on:click={methods.saveCondition}
+                >
                   {Lang.t('tracker.add-condition', 'Add Rule')}
                 </Button>
 
@@ -261,3 +255,13 @@
     {/if}
   </div>
 {/if}
+
+<style lang="scss">
+  .pos-label {
+    font-size: 1.2em;
+    display: none;
+    min-width: 70px;
+    text-transform: uppercase;
+    text-align: center;
+  }
+</style>

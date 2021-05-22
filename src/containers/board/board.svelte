@@ -124,10 +124,7 @@
   };
 
   $: if ($UserStore.meta) {
-    daysSinceLastBackup = dayjs().diff(
-      dayjs(new Date(user.meta.lastBackup || null)),
-      "day"
-    );
+    daysSinceLastBackup = dayjs().diff(dayjs(new Date(user.meta.lastBackup || null)), "day");
   }
 
   /**
@@ -291,10 +288,7 @@
       if ($BoardStore.active != "all") {
         // Add "Existing Tracker" button
         buttons.push({
-          title: `${Lang.t(
-            "board.add-existing-tracker",
-            "Pick from My Trackers"
-          )}`,
+          title: `${Lang.t("board.add-existing-tracker", "Pick from My Trackers")}`,
           icon: "chip",
           click: async () => {
             let trackers = await Interact.selectTrackers();
@@ -379,10 +373,7 @@
           "Tabs help you organize your trackers. For example: social, food, and fitness can contain trackers specifically for those activies. You can have the same tracker on multiple tabs."
         )}`,
         {
-          placeholder: `${Lang.t(
-            "board.board-input-placeholder",
-            "Tab name or Emoji 👍"
-          )}`,
+          placeholder: `${Lang.t("board.board-input-placeholder", "Tab name or Emoji 👍")}`,
         }
       );
       if (res) {
@@ -414,29 +405,17 @@
           // If we're on All - warn the hell out of the user
           if ($BoardStore.active === "all") {
             const confirmed = await Interact.confirm(
-              `${tracker.label} - ${Lang.t(
-                "general.delete-from-nomie",
-                "Delete from Nomie?"
-              )}`,
-              `${Lang.t(
-                "tracker.delete-description",
-                "No tracked data will be deleted. You can always recreate this tracker"
-              )}`
+              `${tracker.label} - ${Lang.t("general.delete-from-nomie", "Delete from Nomie?")}`,
+              `${Lang.t("tracker.delete-description", "No tracked data will be deleted. You can always recreate this tracker")}`
             );
             if (confirmed) {
               await TrackerStore.deleteTracker(tracker).then((done) => {});
             }
           } else {
             // We're on another board - allow them to just remove the tracker
-            const confirmed = await Interact.confirm(
-              `Remove ${tracker.label} from this board?`,
-              "You can always re-add it later"
-            );
+            const confirmed = await Interact.confirm(`Remove ${tracker.label} from this board?`, "You can always re-add it later");
             if (confirmed) {
-              await BoardStore.removeTrackerFromBoard(
-                tracker,
-                $BoardStore.active
-              );
+              await BoardStore.removeTrackerFromBoard(tracker, $BoardStore.active);
             }
           }
         },
@@ -447,9 +426,7 @@
       if ($LastUsed.hasOwnProperty(tracker.tag)) {
         let last = $LastUsed[tracker.tag];
         if (last.log) {
-          subtitle = `${Lang.t("board.last-used", "Last used")} ${dayjs(
-            last.date
-          ).fromNow()}`;
+          subtitle = `${Lang.t("board.last-used", "Last used")} ${dayjs(last.date).fromNow()}`;
         }
       }
       // Add Remove button to array
@@ -488,11 +465,7 @@
        * If this board doesn't exist (user clears localstorage, switching data store, imports etc)
        * then we should set it to the ALL board
        **/
-      if (
-        boardPayload.boards.map((b) => b.id).indexOf(boardPayload.active) ==
-          -1 &&
-        boardPayload.active !== "all"
-      ) {
+      if (boardPayload.boards.map((b) => b.id).indexOf(boardPayload.active) == -1 && boardPayload.active !== "all") {
         setTimeout(() => {
           BoardStore.setActive("all");
         }, 20);
@@ -516,9 +489,7 @@
     activeLogUnsub = ActiveLogStore.subscribe((log) => {
       // Used for knowing which trackers are current active
       // TODO bring this back
-      state.addedTrackers = new NomieLog(log)
-        .getMeta()
-        .trackers.map((t) => t.id);
+      state.addedTrackers = new NomieLog(log).getMeta().trackers.map((t) => t.id);
     });
     LedgerStore.getToday();
   }); // end onMount
@@ -531,6 +502,188 @@
   });
 </script>
 
+<!-- Start App Layout -->
+<NLayout pageTitle={appTitle}>
+  <header slot="header" class="container">
+    <Toolbar>
+      {#if $TrackerStore.timers.length}
+        <Button icon on:click={TrackerStore.toggleTimers} className="mr-1" ariaLabel={Lang.t('general.timers', 'Timers')}>
+          <Icon name="time" size={24} className="fill-red" />
+        </Button>
+      {/if}
+      <Button icon on:click={methods.toggleSearch} ariaLabel={Lang.t('general.search')}>
+        <Icon name="search" className="fill-inverse" size={24} />
+      </Button>
+
+      <!-- Tabs -->
+
+      <NBoardTabs
+        boards={methods.injectAllBoard($BoardStore.boards || [])}
+        active={$BoardStore.active}
+        on:create={methods.newBoard}
+        on:longPress={(evt) => {
+          boardOptions(evt.detail);
+        }}
+        on:tabTap={(event) => {
+          BoardStore.setActive(event.detail.id, event.detail);
+        }}
+      />
+
+      <Button icon className="board-option-action" on:click={() => boardOptions()} ariaLabel={Lang.t('general.settings', 'Settings')}>
+        <Icon name="more" className="fill-inverse" size={24} />
+      </Button>
+
+    </Toolbar>
+  </header>
+  <!-- end header-->
+  <div slot="content" class="container board-container">
+    {#if $UserStore.storageType == 'blockstack'}
+      <div class="blockstack-warning my-1">
+        ⚠️ Blockstack Storage is deprecated.
+        <a href="https://nomie.app/tutorials/blockstack-storage">Learn More</a>
+      </div>
+    {/if}
+    <OfflineQueue />
+    {#if user}
+      {#if !isReady.done}
+        <div class="empty-notice">
+          <Spinner />
+        </div>
+      {:else}
+        {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 10 && $UserStore.storageType == 'local' && $UserStore.meta.hideBackup == false}
+          <div class="container-sm">
+            <div class="pt-2 pb-1 text-center backup">
+              <!--- If it's way back - it's not really set-->
+              {#if daysSinceLastBackup > 1000}
+                <Text inline size="sm" faded>
+                  <Icon name="bell" size={12} className="mt-1" />
+                  {Lang.t('general.no-known-backups', 'No known backups')}
+                </Text>
+              {:else}
+                <Text inline size="sm" faded>{daysSinceLastBackup} days since last backup</Text>
+              {/if}
+              <Text inline underline color="primary-bright" className="ml-2" size="sm" on:click={exportData}>
+                {Lang.t('general.backup-now', 'Backup Now')}
+              </Text>
+            </div>
+          </div>
+        {/if}
+
+        {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
+          <div class="container">
+            <Card>
+              <ListItem compact>
+                <Text size="sm">Running Timers</Text>
+                <div slot="right">
+                  <Button text size="xs" on:click={TrackerStore.toggleTimers}>Close</Button>
+                </div>
+              </ListItem>
+              <TrackersList
+                view="list"
+                trackers={timers}
+                on:tap={(evt) => {
+                  methods.trackerTapped(evt.detail);
+                }}
+                hideAdd
+                on:more={(evt) => {
+                  methods.showTrackerOptions(evt.detail);
+                }}
+              />
+
+            </Card>
+          </div>
+        {/if}
+
+        <main class="overflow-x-hidden n-board h-100">
+          <!-- Loop over trackers -->
+          <Swipeable on:left={BoardStore.next} on:right={BoardStore.previous}>
+            {#if (foundTrackers || boardTrackers || []).length === 0}
+              <Empty
+                title={Lang.t('board.empty-title', 'No trackers found')}
+                emoji="🤔"
+                description={Lang.t('board.empty-description', 'Pick from your existing trackers, or browse the library to discover new things to track.')}
+                buttonLabel={`${Lang.t('general.add-a-tracker', 'Add a Tracker')}...`}
+                buttonClick={methods.addButtonTap}
+              />
+            {/if}
+
+            <TrackersList
+              view={state.view}
+              trackers={foundTrackers || boardTrackers}
+              on:tap={(evt) => {
+                methods.trackerTapped(evt.detail);
+              }}
+              hideAdd={(foundTrackers || boardTrackers || []).length === 0}
+              on:add={methods.addButtonTap}
+              on:more={(evt) => {
+                methods.showTrackerOptions(evt.detail);
+              }}
+            />
+
+            <!-- Include User Tips - shit should be a component -->
+          </Swipeable>
+        </main>
+
+        {#if (foundTrackers || boardTrackers || []).length}
+          <div class="mt-5 mb-3 board-actions n-row" style="min-width:100px;">
+
+            <ButtonGroup className="mr-2 box-shadow-tight">
+              <Button
+                icon
+                className={`${state.view == 'button' ? 'active' : ''}`}
+                on:click={() => {
+                  setView('button');
+                }}
+              >
+                <Icon size="18" name="buttonView" />
+              </Button>
+              <Button
+                icon
+                className={`${state.view == 'list' ? 'active' : ''}`}
+                on:click={() => {
+                  setView('list');
+                }}
+              >
+                <Icon size="18" name="list" />
+              </Button>
+              <Button
+                icon
+                className={`${state.view == 'detail' ? 'active' : ''}`}
+                on:click={() => {
+                  setView('detail');
+                }}
+              >
+                <Icon size="18" name="detailView" />
+              </Button>
+            </ButtonGroup>
+
+          </div>
+        {/if}
+        <NTip {tips} />
+      {/if}
+    {/if}
+  </div>
+  <!-- End -->
+  <div slot="footer">
+    <div id="note-capture">
+      <CaptureLog />
+    </div>
+  </div>
+  <!-- end content-->
+</NLayout>
+
+{#if $Interact.boardSorter.show}
+  <BoardSortModal />
+{/if}
+
+{#if state.showStartPacks}
+  <NModal title="Starter Packs">
+    <div slot="header">
+      <NBoardTabs boards={StarterPacks.methods.asArray()} />
+    </div>
+  </NModal>
+{/if}
+
 <style type="text/scss" name="scss">
   @import "../../scss/utils/_utils";
   @import "../../scss/vendor/bootstrap/base";
@@ -539,6 +692,13 @@
     @include media-breakpoint-up(md) {
       margin: 8pt;
     }
+  }
+
+  .blockstack-warning {
+    padding: 8px;
+    text-align: center;
+    color: var(--color-inverse-2);
+    font-size: small;
   }
 
   .n-board {
@@ -570,193 +730,3 @@
     max-width: 250px;
   }
 </style>
-
-<!-- Start App Layout -->
-<NLayout pageTitle={appTitle}>
-  <header slot="header" class="container">
-    <Toolbar>
-      {#if $TrackerStore.timers.length}
-        <Button
-          icon
-          on:click={TrackerStore.toggleTimers}
-          className="mr-1"
-          ariaLabel={Lang.t('general.timers', 'Timers')}>
-          <Icon name="time" size={24} className="fill-red" />
-        </Button>
-      {/if}
-      <Button
-        icon
-        on:click={methods.toggleSearch}
-        ariaLabel={Lang.t('general.search')}>
-        <Icon name="search" className="fill-inverse" size={24} />
-      </Button>
-
-      <!-- Tabs -->
-
-      <NBoardTabs
-        boards={methods.injectAllBoard($BoardStore.boards || [])}
-        active={$BoardStore.active}
-        on:create={methods.newBoard}
-        on:longPress={(evt) => {
-          boardOptions(evt.detail);
-        }}
-        on:tabTap={(event) => {
-          BoardStore.setActive(event.detail.id, event.detail);
-        }} />
-
-      <Button
-        icon
-        className="board-option-action"
-        on:click={() => boardOptions()}
-        ariaLabel={Lang.t('general.settings', 'Settings')}>
-        <Icon name="more" className="fill-inverse" size={24} />
-      </Button>
-
-    </Toolbar>
-  </header>
-  <!-- end header-->
-  <div slot="content" class="container board-container">
-    <OfflineQueue />
-    {#if user}
-      {#if !isReady.done}
-        <div class="empty-notice">
-          <Spinner />
-        </div>
-      {:else}
-        {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 10 && $UserStore.storageType == 'local' && $UserStore.meta.hideBackup == false}
-          <div class="container-sm">
-            <div class="pt-2 pb-1 text-center backup">
-              <!--- If it's way back - it's not really set-->
-              {#if daysSinceLastBackup > 1000}
-                <Text inline size="sm" faded>
-                  <Icon name="bell" size={12} className="mt-1" />
-                  {Lang.t('general.no-known-backups', 'No known backups')}
-                </Text>
-              {:else}
-                <Text inline size="sm" faded>
-                  {daysSinceLastBackup} days since last backup
-                </Text>
-              {/if}
-              <Text
-                inline
-                underline
-                color="primary-bright"
-                className="ml-2"
-                size="sm"
-                on:click={exportData}>
-                {Lang.t('general.backup-now', 'Backup Now')}
-              </Text>
-            </div>
-          </div>
-        {/if}
-
-        {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
-          <div class="container">
-            <Card>
-              <ListItem compact>
-                <Text size="sm">Running Timers</Text>
-                <div slot="right">
-                  <Button text size="xs" on:click={TrackerStore.toggleTimers}>
-                    Close
-                  </Button>
-                </div>
-              </ListItem>
-              <TrackersList
-                view="list"
-                trackers={timers}
-                on:tap={(evt) => {
-                  methods.trackerTapped(evt.detail);
-                }}
-                hideAdd
-                on:more={(evt) => {
-                  methods.showTrackerOptions(evt.detail);
-                }} />
-
-            </Card>
-          </div>
-        {/if}
-
-        <main class="overflow-x-hidden n-board h-100">
-          <!-- Loop over trackers -->
-          <Swipeable on:left={BoardStore.next} on:right={BoardStore.previous}>
-            {#if (foundTrackers || boardTrackers || []).length === 0}
-              <Empty
-                title={Lang.t('board.empty-title', 'No trackers found')}
-                emoji="🤔"
-                description={Lang.t('board.empty-description', 'Pick from your existing trackers, or browse the library to discover new things to track.')}
-                buttonLabel={`${Lang.t('general.add-a-tracker', 'Add a Tracker')}...`}
-                buttonClick={methods.addButtonTap} />
-            {/if}
-
-            <TrackersList
-              view={state.view}
-              trackers={foundTrackers || boardTrackers}
-              on:tap={(evt) => {
-                methods.trackerTapped(evt.detail);
-              }}
-              hideAdd={(foundTrackers || boardTrackers || []).length === 0}
-              on:add={methods.addButtonTap}
-              on:more={(evt) => {
-                methods.showTrackerOptions(evt.detail);
-              }} />
-
-            <!-- Include User Tips - shit should be a component -->
-          </Swipeable>
-        </main>
-
-        {#if (foundTrackers || boardTrackers || []).length}
-          <div class="mt-5 mb-3 board-actions n-row" style="min-width:100px;">
-
-            <ButtonGroup className="mr-2 box-shadow-tight">
-              <Button
-                icon
-                className={`${state.view == 'button' ? 'active' : ''}`}
-                on:click={() => {
-                  setView('button');
-                }}>
-                <Icon size="18" name="buttonView" />
-              </Button>
-              <Button
-                icon
-                className={`${state.view == 'list' ? 'active' : ''}`}
-                on:click={() => {
-                  setView('list');
-                }}>
-                <Icon size="18" name="list" />
-              </Button>
-              <Button
-                icon
-                className={`${state.view == 'detail' ? 'active' : ''}`}
-                on:click={() => {
-                  setView('detail');
-                }}>
-                <Icon size="18" name="detailView" />
-              </Button>
-            </ButtonGroup>
-
-          </div>
-        {/if}
-        <NTip {tips} />
-      {/if}
-    {/if}
-  </div>
-  <!-- End -->
-  <div slot="footer">
-    <div id="note-capture">
-      <CaptureLog />
-    </div>
-  </div>
-  <!-- end content-->
-</NLayout>
-
-{#if $Interact.boardSorter.show}
-  <BoardSortModal />
-{/if}
-
-{#if state.showStartPacks}
-  <NModal title="Starter Packs">
-    <div slot="header">
-      <NBoardTabs boards={StarterPacks.methods.asArray()} />
-    </div>
-  </NModal>
-{/if}

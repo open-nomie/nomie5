@@ -65,12 +65,6 @@
   }
 </script>
 
-<style lang="scss">
-  .tracker-input.picker {
-    width: 100%;
-  }
-</style>
-
 <div class="tracker-input picker">
 
   <div class="n-list">
@@ -89,7 +83,8 @@
           } else {
             searchFilter = undefined;
           }
-        }} />
+        }}
+      />
     {/if}
     {#if picks.length == 0 && searchFilter}
       <Empty title={Lang.t('general.no-matches-found', 'No matches found')} />
@@ -105,7 +100,8 @@
           className="pl-3 pr-2 compact {active.indexOf(pick) > -1 ? 'bg-solid-1' : ''}"
           on:click={() => {
             toggle(pick);
-          }}>
+          }}
+        >
           <LabelMeta str={pick} titleClass={active.indexOf(pick) > -1 ? 'text-primary-bright' : 'text-inverse'} />
           <div slot="right" class="flex items-center ml-2">
             {#if active.indexOf(pick) > -1}
@@ -116,13 +112,7 @@
         <hr class="divider center" />
       {/if}
     {/each}
-    <!-- <ListItem>
-      <NInput on:enter={add} compact placeholder="Add an Item" bind:value={activeValue}>
-        <button slot="right" class="btn btn-clear" on:click={add}>
-          <NIcon name="addOutline" />
-        </button>
-      </NInput>
-    </ListItem> -->
+
     <div class="n-row">
       <slot name="bottom" />
     </div>
@@ -138,3 +128,9 @@
     }} /> -->
 
 </div>
+
+<style lang="scss">
+  .tracker-input.picker {
+    width: 100%;
+  }
+</style>
