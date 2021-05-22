@@ -468,31 +468,6 @@
   });
 </script>
 
-<style lang="scss">
-  .dashboard-wrapper {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 10px 4px 16px;
-    justify-content: stretch;
-    align-content: flex-start;
-    min-height: 70vh;
-  }
-  .new-widget {
-    background-color: var(--color-solid);
-    box-shadow: var(--box-shadow-tight);
-  }
-  :global(.dashboard-widget.type-map) {
-    height: 260px;
-  }
-  :global(.dashboard-widget.type-text) {
-    text-align: center;
-  }
-  :global(.dashboard .tab) {
-    max-width: 100px;
-  }
-</style>
-
 <NLayout className="dasboard" headerClassNames="fill-header" pageTitle="Dashboard" showTabs={true}>
   <header slot="header">
     <Toolbar>
@@ -505,7 +480,8 @@
             class="tab board-{board.id} truncate-1 {i == $DashboardStore.activeIndex ? 'selected' : 'inactive'}"
             on:click={() => {
               DashboardStore.toIndex(i);
-            }}>
+            }}
+          >
             {truncateText(board.label, 12)}
           </button>
         {/each}
@@ -537,7 +513,8 @@
                   title={Lang.t('general.dashboard', 'Dashboard')}
                   description={Lang.t('dashboard.empty-message', 'Mix and match charts, stats, and other widgets to create your own custom views of your life.')}
                   buttonLabel={Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
-                  buttonClick={newWidget} />
+                  buttonClick={newWidget}
+                />
               {/if}
 
               {#each activeDashboard.widgets as widget (widget.id)}
@@ -548,7 +525,8 @@
                   {widget}
                   on:edit={() => {
                     editWidget(widget);
-                  }} />
+                  }}
+                />
               {/each}
             {/if}
 
@@ -575,7 +553,8 @@
             });
             DashboardStore.save();
           }}
-          let:item>
+          let:item
+        >
           <ListItem solo className="pb-2">
             <div slot="left">
               <Button icon color="clear" on:click={() => deleteWidget(item)}>
@@ -589,10 +568,11 @@
             {/if}
             <div slot="right" class="pr-2 text-sm text-faded-2">
               {#if item.timeRange}{item.timeRange.getLabel()}{/if}
+              <div class="menu-handle">
+                <Icon name="menu" />
+              </div>
             </div>
-            <div slot="right" class="menu-handle">
-              <Icon name="menu" />
-            </div>
+
           </ListItem>
         </SortableList>
       {:else}
@@ -628,3 +608,28 @@
   {/if}
   <div slot="footer" />
 </Modal>
+
+<style lang="scss">
+  .dashboard-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px 4px 16px;
+    justify-content: stretch;
+    align-content: flex-start;
+    min-height: 70vh;
+  }
+  .new-widget {
+    background-color: var(--color-solid);
+    box-shadow: var(--box-shadow-tight);
+  }
+  :global(.dashboard-widget.type-map) {
+    height: 260px;
+  }
+  :global(.dashboard-widget.type-text) {
+    text-align: center;
+  }
+  :global(.dashboard .tab) {
+    max-width: 100px;
+  }
+</style>
