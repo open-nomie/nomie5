@@ -161,6 +161,49 @@
   }
 </script>
 
+<svelte:window on:keydown={handleKeydown} />
+<div class="n-calculator">
+  <div class="calc-screen">
+    {#if displayFormat}
+      <div class="preview">{displayFormat(globalAnswer)}</div>
+    {/if}
+    <div class="buffer">
+      {#if buffer.length > 1}
+        {#each buffer as bit}
+          <span>{bit}</span>
+        {/each}
+      {/if}
+    </div>
+    <div class="value" style="font-size:{fontSize}px">
+      {#each globalAnswer.toString().split('') as bit}
+        <span class="numberUp">{bit}</span>
+      {/each}
+    </div>
+  </div>
+  <div class="buttons">
+    {#each buttons as buttonRow, rIndex}
+      {#each buttonRow as button, bIndex}
+        {#if button !== null}
+          <Button
+            shape="circle"
+            color="light"
+            size="lg"
+            delay={0}
+            className="r-{rIndex} b-{bIndex}"
+            on:click={() => {
+              click(button);
+            }}
+          >
+            {button}
+          </Button>
+        {:else}
+          <span class="empty" />
+        {/if}
+      {/each}
+    {/each}
+  </div>
+</div>
+
 <style lang="scss">
   @import "../../scss/utils/_utils";
   .buttons {
@@ -260,7 +303,12 @@
     background-color: var(--color-red);
   }
 
-  :global(.n-calculator .nbtn.r-0.b-1, .n-calculator .nbtn.r-0.b-2) {
+  :global(.n-calculator .nbtn.r-0.b-1) {
+    color: #fff;
+    background-color: #444;
+  }
+
+  :global(.n-calculator .nbtn.r-0.b-2) {
     color: #fff;
     background-color: #444;
   }
@@ -274,45 +322,3 @@
     box-shadow: none;
   }
 </style>
-
-<svelte:window on:keydown={handleKeydown} />
-<div class="n-calculator">
-  <div class="calc-screen">
-    {#if displayFormat}
-      <div class="preview">{displayFormat(globalAnswer)}</div>
-    {/if}
-    <div class="buffer">
-      {#if buffer.length > 1}
-        {#each buffer as bit}
-          <span>{bit}</span>
-        {/each}
-      {/if}
-    </div>
-    <div class="value" style="font-size:{fontSize}px">
-      {#each globalAnswer.toString().split('') as bit}
-        <span class="numberUp">{bit}</span>
-      {/each}
-    </div>
-  </div>
-  <div class="buttons">
-    {#each buttons as buttonRow, rIndex}
-      {#each buttonRow as button, bIndex}
-        {#if button !== null}
-          <Button
-            shape="circle"
-            color="light"
-            size="lg"
-            delay={0}
-            className="r-{rIndex} b-{bIndex}"
-            on:click={() => {
-              click(button);
-            }}>
-            {button}
-          </Button>
-        {:else}
-          <span class="empty" />
-        {/if}
-      {/each}
-    {/each}
-  </div>
-</div>

@@ -60,13 +60,72 @@
   });
 </script>
 
+<div
+  on:click={backgroundTap}
+  aria-modal
+  aria-label={ariaLabel}
+  aria-hidden={!domVisible}
+  style={level ? `z-index:${level * 1002}` : ''}
+  class="n-modal-frame {className} type-{type} level-{level || 'unknown'}
+  {domVisible ? 'visible' : 'hidden'}"
+>
+  <div
+    on:click|stopPropagation={() => {}}
+    class="n-modal animate up {fullscreen ? 'full-screen-modal' : ''}
+    {domVisible ? 'visible' : 'hidden'}"
+  >
+    {#if has_raw_header}
+      <div class="n-modal-raw-header">
+        <slot name="raw-header" />
+      </div>
+    {:else if has_header || title}
+      <div class="n-modal-header">
+        {#if has_header}
+          <slot name="header" />
+        {:else}
+          <NToolbarGrid>
+            <div slot="left">
+              {#if allowClose}
+                <Button
+                  icon
+                  className="tap-icon"
+                  on:click={() => {
+                    dispatch('close');
+                  }}
+                >
+                  <NIcon name="close" />
+                </Button>
+              {/if}
+            </div>
+            <h1 slot="main">{title}</h1>
+            <div slot="right">
+              <slot name="headerRight" />
+            </div>
+          </NToolbarGrid>
+        {/if}
+      </div>
+    {/if}
+    <div class="{bodyClass} n-modal-body {padding ? 'padding' : 'no-padding'} {flexBody ? 'flex-body' : 'no-flex-body'} ">
+      <slot />
+    </div>
+    {#if has_footer}
+      <div class="n-modal-footer">
+        <slot name="footer" />
+      </div>
+    {/if}
+  </div>
+</div>
+
 <style lang="scss">
   @import "../../scss/vendor/bootstrap/base";
 
-  :global(.type-normal .full-screen-modal .n-modal-footer, .type-fullscreen .n-modal-footer) {
+  :global(.type-normal .full-screen-modal .n-modal-footer) {
     padding-bottom: calc(env(safe-area-inset-bottom) + 10px) !important;
   }
 
+  :global(.type-fullscreen .n-modal-footer) {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 10px) !important;
+  }
   :global(.n-modal-header [slot="header"]) {
     width: 100%;
   }
@@ -275,56 +334,3 @@
     z-index: 1100;
   }
 </style>
-
-<div
-  on:click={backgroundTap}
-  aria-modal
-  aria-label={ariaLabel}
-  aria-hidden={!domVisible}
-  style={level ? `z-index:${level * 1002}` : ''}
-  class="n-modal-frame {className} type-{type} level-{level || 'unknown'}
-  {domVisible ? 'visible' : 'hidden'}">
-  <div
-    on:click|stopPropagation={() => {}}
-    class="n-modal animate up {fullscreen ? 'full-screen-modal' : ''}
-    {domVisible ? 'visible' : 'hidden'}">
-    {#if has_raw_header}
-      <div class="n-modal-raw-header">
-        <slot name="raw-header" />
-      </div>
-    {:else if has_header || title}
-      <div class="n-modal-header">
-        {#if has_header}
-          <slot name="header" />
-        {:else}
-          <NToolbarGrid>
-            <div slot="left">
-              {#if allowClose}
-                <Button
-                  icon
-                  className="tap-icon"
-                  on:click={() => {
-                    dispatch('close');
-                  }}>
-                  <NIcon name="close" />
-                </Button>
-              {/if}
-            </div>
-            <h1 slot="main">{title}</h1>
-            <div slot="right">
-              <slot name="headerRight" />
-            </div>
-          </NToolbarGrid>
-        {/if}
-      </div>
-    {/if}
-    <div class="{bodyClass} n-modal-body {padding ? 'padding' : 'no-padding'} {flexBody ? 'flex-body' : 'no-flex-body'} ">
-      <slot />
-    </div>
-    {#if has_footer}
-      <div class="n-modal-footer">
-        <slot name="footer" />
-      </div>
-    {/if}
-  </div>
-</div>

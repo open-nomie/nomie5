@@ -10,31 +10,6 @@
   $: dateFormat = $UserStore.meta.is24Hour ? "ddd D MMM YYYY" : "ddd MMM D YYYY";
 </script>
 
-<style>
-  .min-max {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .max {
-    padding-bottom: 6px;
-  }
-
-  :global(.widget-size-lg .min-max, .widget-size-sm .n-text.xl) {
-    font-size: 1.4em;
-  }
-  :global(.widget-size-lg .min-max, .widget-size-md .min-max) {
-    flex-direction: row;
-  }
-  :global(.widget-size-lg .min-max .min, .widget-size-md .min-max .min) {
-    padding-bottom: 6px;
-    padding-left: 12px;
-    border-left: solid 1px var(--color-solid-2);
-    margin-left: 12px;
-  }
-</style>
-
 <div class="value min-max">
   <div class="max text-center">
     <Text size={formatValue(widget.stats.max.value, widget).toString().length > 5 ? 'lg' : 'xl'} bold>
@@ -56,3 +31,41 @@
     </Text>
   </div>
 </div>
+
+<style>
+  .min-max {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .max {
+    padding-bottom: 6px;
+  }
+
+  :global(.widget-size-lg .min-max) {
+    font-size: 1.4em;
+  }
+  :global(.widget-size-lg .min-max) {
+    flex-direction: row;
+  }
+  :global(.widget-size-lg .min-max .min) {
+    padding-bottom: 6px;
+    padding-left: 12px;
+    border-left: solid 1px var(--color-solid-2);
+    margin-left: 12px;
+  }
+
+  :global(.widget-size-sm .n-text.xl) {
+    font-size: 1.4em;
+  }
+  :global(.widget-size-md .min-max) {
+    flex-direction: row;
+  }
+  :global(.widget-size-md .min-max .min) {
+    padding-bottom: 6px;
+    padding-left: 12px;
+    border-left: solid 1px var(--color-solid-2);
+    margin-left: 12px;
+  }
+</style>

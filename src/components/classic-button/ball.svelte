@@ -11,6 +11,20 @@
   export let radius = 0;
 </script>
 
+<div
+  class="n-ball {className}"
+  style="width:{size}px; height:{size}px; {radius ? `border-radius:${size * radius}px; overflow:hidden;` : ''}
+  {style}"
+>
+  {#if avatar}
+    <Avatar {size} src={avatar} />
+  {:else if emoji}
+    <Avatar {emoji} {color} size={size * 0.5} />
+  {:else if username}
+    <Avatar label={username} {color} size={size * 0.5} />
+  {/if}
+</div>
+
 <style lang="scss">
   @import "../../scss/utils/__utils.scss";
 
@@ -26,20 +40,10 @@
       overflow: hidden;
     }
   }
-  :global(.n-ball .emolen-2, .n-ball .emolen-3) {
+  :global(.n-ball .emolen-3) {
+    width: 100% !important;
+  }
+  :global(.n-ball .emolen-2) {
     width: 100% !important;
   }
 </style>
-
-<div
-  class="n-ball {className}"
-  style="width:{size}px; height:{size}px; {radius ? `border-radius:${size * radius}px; overflow:hidden;` : ''}
-  {style}">
-  {#if avatar}
-    <Avatar {size} src={avatar} />
-  {:else if emoji}
-    <Avatar {emoji} {color} size={size * 0.5} />
-  {:else if username}
-    <Avatar label={username} {color} size={size * 0.5} />
-  {/if}
-</div>
