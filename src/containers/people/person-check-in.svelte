@@ -28,7 +28,7 @@
   import Spacer from "../../components/spacer/spacer.svelte";
 
   const state = {
-    note: ` @${$Interact.people.active} `,
+    note: `@${$Interact.people.active} `,
     checkingIn: false,
     checkedIn: false,
     score: 0,
