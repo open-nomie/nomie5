@@ -189,8 +189,11 @@ export default class TrackerConfig {
   }
 
   toTag(str) {
-    // TODO : make this replace special characters too
-    return toTag(str);
+    return (str || "")
+    .replace(/('|"|\?|-|\)|\(|\*|\&|\||\$|\@|\+|\#)/gi, "")
+    .trim()
+    .replace(/( )/g, "_")
+    .toLowerCase();
   }
 
   displayValue(value, unit = true) {
