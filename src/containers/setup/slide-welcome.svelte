@@ -72,7 +72,7 @@
     <Text size="xs" lineHeightMd center faded className="mt-2 mb-2">
       <Icon name="warning" size="14" />
       <strong>Terms</strong>
-      Nomie is offered "as is", without warranty. Happy Data, LLC disclaims any liability for damanges resulting from using Nomie. Nomie is
+      Nomie is offered "as is", without warranty. Happy Data, LLC disclaims any liability for damages resulting from using Nomie. Nomie is
       not a medical device, nor should it be used as such. MIT License
     </Text>
     <!-- <Text size="sm">
