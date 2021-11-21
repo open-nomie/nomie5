@@ -16,7 +16,7 @@
 </script>
 
 <div class="n-time-machine bg-inverse-1">
-  <div class="flex container">
+  <div class="flex">
     <Text size="md" className="filler">{localDate.format(dtFormat.date)}</Text>
     <NextPrevCal hideCal={true} />
   </div>

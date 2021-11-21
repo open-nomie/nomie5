@@ -7,7 +7,7 @@
   import { tick, createEventDispatcher, onMount, onDestroy } from "svelte";
   import Button from "../button/button.svelte";
   import is from "../../utils/is/is";
-import { wait } from "utils/tick/tick";
+  import { wait } from "../../utils/tick/tick";
 
   const dispatch = createEventDispatcher();
 

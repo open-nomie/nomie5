@@ -492,7 +492,7 @@
     </Toolbar>
   </header>
   {#if activeDashboard && !loading}
-    <div class="container h-100">
+    <div class=" h-100">
       {#if editMode}
         <div class="px-2 mt-2 mb-2 n-toolbar flex">
           <Input type="text" placeholder="Dashboard Label" bind:value={activeDashboard.label} />

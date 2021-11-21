@@ -3,16 +3,16 @@
 </script>
 
 <style lang="postcss">
-  .container-sm {
+  .nui-container-sm {
     @apply max-w-screen-sm;
   }
-  .container-xs {
+  .nui-container-xs {
      @apply max-w-lg;
   }
-  .container {
+  .nui-container {
     @apply max-w-screen-md;
     @apply mx-auto;
   }
 </style>
 
-<div class={`container container-${size}`}><slot /></div>
+<div class={`nui-container nui-container-${size}`}><slot /></div>

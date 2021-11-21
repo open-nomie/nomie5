@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ITracker } from './../../modules/tracker/tracker';
   import Icon from "../icon/icon.svelte";
+  import "./classic-button.css";
   // svelte
   import { createEventDispatcher } from "svelte";
 
@@ -68,59 +69,6 @@
   };
 </script>
 
-<style lang="postcss" global >
-  .tracker-button-wrapper.compact .more {
-	 top: 8px;
-}
- .tracker-button-wrapper.in-note {
-	 transform: scale(0.9);
-	 transition: all 0.2s ease-in-out;
-}
- .tracker-button-wrapper.in-note::before {
-	 position: absolute;
-	 top: 0;
-	 left: 0;
-	 right: 0;
-	 bottom: 0;
-	 content: "";
-	 background-color: var(--tracker-color);
-	 border-radius: 16px;
-	 opacity: 0.2;
-}
- .tracker-button-wrapper .more {
-	 position: absolute;
-	 top: 12px;
-	 right: 15px;
-	 z-index: 1400;
-	 padding: 0px;
-	 border-radius: 12px;
-	 color: var(--color-inverse-2) !important;
-	 overflow: visible;
-}
- .tracker-button-wrapper .more:before {
-	 content: "";
-	 position: absolute;
-	 top: -10px;
-	 left: -10px;
-	 right: -10px;
-	 bottom: -10px;
-	 border-radius: 50%;
-	 z-index: 1500;
-}
- .tracker-button-wrapper .tracker-ball svg {
-	 display: none;
-}
- .tracker-button-wrapper .tracker-ball .countdown {
-	 z-index: 202;
-	 font-size: 1em;
-}
- .tracker-button-wrapper {
-	 border-radius: 54px;
-	 position: relative;
-}
- 
-
-</style>
 
 <div
   {id}
@@ -144,7 +92,7 @@
   <button
     class={`item-ball ${className} ${$UserStore.localSettings.compactButtons == true ? 'item-ball-small' : ''}`}>
     <!-- -->
-    <div class="avatar-ball">
+    <div class="avatar-ball ">
       {#if hoursUsed.length}
         <div class="balls">
           <TimeBalls hours={hoursUsed} />

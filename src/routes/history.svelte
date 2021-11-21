@@ -309,7 +309,7 @@ import { ChevronRight, X } from "svelte-hero-icons";
 <NLayout pageTitle={appTitle} {style}>
 
   <header slot="header" class="flex-column items-center">
-    <Toolbar className="container px-2 items-center">
+    <Toolbar className=" px-2 items-center">
       <Button icon  on:click={methods.search}>
         <Icon className="text-blue-500" name="search" size={24} />
       </Button>
@@ -353,7 +353,7 @@ import { ChevronRight, X } from "svelte-hero-icons";
 
   <main slot="content" class="page page-history flex-column">
 
-    <div class="container p-0 px-1">
+    <div class=" p-0 px-1">
       <!-- {#if logs && logs.length}
         <Text size="xl" bold className="history-title pl-3 mt-2">
           {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
@@ -383,7 +383,7 @@ import { ChevronRight, X } from "svelte-hero-icons";
 
     {#if $LedgerStore.memories.length > 0 && !showSearch && isToday && ['all', 'notes'].indexOf(view) > -1}
       <div class="bg-primary-bright mt-3">
-        <div class="container p-0 pb-4">
+        <div class=" p-0 pb-4">
           <!-- Show History if exists -->
 
           <div class="memories">

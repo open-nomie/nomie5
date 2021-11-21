@@ -23,6 +23,7 @@
   import Page from "../layout/page.svelte";
   import Button from "../../components/button/button.svelte";
   import Icon from "../../components/icon/icon.svelte";
+import { Star } from "svelte-hero-icons";
 
   // props
   export let locations = [];
@@ -506,7 +507,7 @@
         shape="rounded"
         icon
         on:click={selectSavedLocation}>
-        <Icon name="star" size={18} />
+        <Icon icon={Star} size={18} />
       </Button>
     {/if}
   </div>

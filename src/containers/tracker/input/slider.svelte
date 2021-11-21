@@ -128,5 +128,5 @@
     on:change={() => {
       dispatch('change', parseInt(tempValue));
     }} />
-  <div class="container board-container" />
+  <div class="board-container" />
 </div>

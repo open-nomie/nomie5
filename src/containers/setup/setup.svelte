@@ -114,18 +114,12 @@
     </div>
     </ToolbarGrid>
   </div>
-  <!-- <div slot="header" class="n-toolbar-grid container">
-    <div class="left" />
-    <div class="main">
-      <Logo size={16} color="#CCC" />
-    </div>
-    <div class="right" />
-  </div> -->
+
   <main slot="content" class="setup-main">
     <svelte:component this={slides[state.activeSlide]} />
   </main>
   <div slot="footer">
-    <div class="n-toolbar flex container">
+    <div class="n-toolbar flex">
       <div class="left">
         {#if state.activeSlide > 0}
           <Button color="clear" className="btn btn-clear filler left text-inverse-2 px-2" on:click={methods.back}>Back</Button>

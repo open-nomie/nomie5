@@ -56,7 +56,5 @@
 </style>
 
 <div class="n-toolbar {pinTop ? 'pin-top' : ''} {className}" {style}>
-  <div class="container flex px-0">
-    <slot />
-  </div>
+  <slot />
 </div>

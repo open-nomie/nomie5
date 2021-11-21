@@ -287,7 +287,7 @@
 
 {#if !state.file}
   <NLayout className="n-file-browser">
-    <div class="container n-toolbar-grid" slot="header">
+    <div class=" n-toolbar-grid" slot="header">
       <div class="left">
         <BackButton on:click={()=>back()} />
       </div>
@@ -297,7 +297,7 @@
       <div class="right" />
     </div>
     <div class="content n-panel vertical scroll-y">
-      <div class="container">
+      <div class="">
         <List className="mt-2" solo>
           {#if state.loading}
             <div class="p-4 n-panel center-all">
@@ -361,7 +361,7 @@
   </NLayout>
 {:else}
   <NLayout className="n-file-browser" showTabs={false}>
-    <div class="container n-toolbar-grid" slot="header">
+    <div class=" n-toolbar-grid" slot="header">
       <div class="left">
         <BackButton on:click={back} />
       </div>
@@ -386,7 +386,7 @@
       </div>
     </div>
     <div class="content code-view h-100">
-      <div class="container h-100">
+      <div class=" h-100">
         {#if fileContent}
           {#if !state.edit}
             <pre>{fileContent}</pre>
@@ -405,7 +405,7 @@
     </div>
     <div slot="footer">
       {#if $UserStore.meta.canEditFiles}
-        <div class="container px-2 pt-1 pb-2 flex">
+        <div class=" px-2 pt-1 pb-2 flex">
           {#if state.edit}
             <Button size="md" color="clear" block on:click={cancelEdits}>
               Cancel

@@ -372,7 +372,7 @@
       class="save-progress {saved ? 'saved' : ''}
       {saving ? 'saving' : ''}
       {$LedgerStore.saving ? 'saving' : ''}" />
-    <div class="container p-0">
+    <div class="p-0">
 
       <!-- Auto Complet e-->
       <AutoComplete
@@ -456,7 +456,7 @@
   </div>
   {#if state.advanced}
     <div class="advanced">
-      <div class="container">
+      <div class="">
         <NItem
           truncate
           clickable

@@ -1,5 +1,7 @@
 .n-toolbar {
-  @apply flex-shrink-0;
+  @apply flex-shrink;
+  @apply flex-grow;
+
   @apply h-14;
   @apply w-full;
   @apply flex;

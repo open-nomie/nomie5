@@ -201,7 +201,7 @@
 <!--  -->
 <div
   class="{scroller ? 'scroller' : 'no-scroller'} autocomplete-results animate {(state.results || []).length ? 'visible' : 'hidden'}">
-  <div class="container p-0 tracker-list">
+  <div class="p-0 tracker-list">
     <Button size="xs" icon on:click={close}>
       <NIcon name="close" className="fill-inverse-2" />
     </Button>

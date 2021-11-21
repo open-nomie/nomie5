@@ -192,7 +192,7 @@ export default {
       "add-a-tracker": "Add a Tracker",
       "import-from-file": "Import from File",
       "delete-from-nomie": "Delete from Nomie?",
-      "no-known-backups": "No known backups",
+      "no-known-backups": "No recent backups",
       "backup-now": "Backup Now",
       "error-connecting": "Error Connecting",
       search: "Search",

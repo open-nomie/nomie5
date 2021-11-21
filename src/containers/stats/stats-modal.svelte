@@ -665,7 +665,7 @@
     </div>
 
     {#if state.loading}
-      <div class="container n-panel center-all" style="height:140px;">
+      <div class=" n-panel center-all" style="height:140px;">
         <div>
           <NSpinner size={46} />
         </div>

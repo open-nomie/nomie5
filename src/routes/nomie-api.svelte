@@ -76,7 +76,7 @@
     {/if}
   </div>
 
-  <div class="container">
+  <div class="">
     {#if view == 'settings'}
       <ApiSettings />
     {:else if view == 'items'}

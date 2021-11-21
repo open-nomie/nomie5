@@ -225,7 +225,7 @@
 
     <!-- /.container -->
 
-    <div class="container px-0">
+    <div class=" px-0">
 
       <List className="pt-2">
         {#if data.board.id !== 'all'}

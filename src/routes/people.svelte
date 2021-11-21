@@ -83,7 +83,7 @@
 <NLayout pageTitle="People">
 
   <div slot="header" class="flex">
-    <NToolbar className="container px-2">
+    <NToolbar className=" px-2">
       <Button
         color="none"
         shape="circle"
@@ -104,7 +104,7 @@
     </NToolbar>
   </div>
 
-  <div slot="content" class="container">
+  <div slot="content">
     <div class="n-list my-2 bg-transparent">
       {#if !state.people.length && !state.searchTerm && state.initialized}
         <Empty

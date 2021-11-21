@@ -186,13 +186,8 @@
   {/if}
 {:else if view === 'detail'}
   <!-- Short Cut Button Style -->
-  hi there
-  <div class="hidden xs:visible">XS</div>
-  <div class="hidden sm:visible">SM</div>
-  <div class="hidden md:visible">MD</div>
-  <div class="hidden lg:visible">LG</div>
-  <div class="hidden xl:visible">LXKG</div>
-  <div class="xs:p-2 p-4 grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-col-4 lg:grid-col-5 gap-2">
+ 
+  <div class="xs:p-2 p-4 grid xs:grid-col-2 lg:grid-cols-5 grid-cols-3 xl:grid-cols-6 gap-2">
     {#each trackers as tracker}
       <ShortcutButton
         id="tracker-{tracker.tag}"

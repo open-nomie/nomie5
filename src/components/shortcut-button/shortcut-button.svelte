@@ -44,7 +44,7 @@
 	 @apply flex-grow;
 	 @apply flex-shrink-0;
 	 @apply justify-items-stretch;
-	 @apply rounded-lg;
+	 @apply rounded-2xl;
 	 --scb-pad: 14px;
 	 height: 146px;
 	 
@@ -140,24 +140,17 @@
 	 left: var(--scb-pad);
 	 right: var(--scb-pad);
 }
- .shortcut-button .top {
-	 position: absolute;
-	 top: var(--scb-pad);
-	 left: var(--scb-pad);
-	 flex-grow: 0;
-	 flex-shrink: 0;
-}
- .shortcut-button button.more {
-	 position: absolute;
-	 top: 0;
-	 right: 26px;
+
+ .shortcut-button .more {
+	 @apply relative;
+	 @apply flex;
+	 @apply items-center;
+	 @apply justify-center;
+	 @apply bg-transparent;
+	 @apply rounded-full;
 	 width: 20px;
 	 height: 20px;
-	 display: flex;
-	 align-items: center;
-	 justify-content: center;
-	 border-radius: 50%;
-	 background-color: transparent;
+	 
 	 font-size: 12px;
 	 border: solid 1px var(--color-inverse-3);
 	 color: rgba(255, 255, 255, 0.4);
@@ -217,6 +210,20 @@
 	 right: 0;
 	 left: 0;
 	 background-color: rgba(0, 0, 0, 0.12);
+}
+.shortcut-button .top {
+	@apply flex;
+	@apply justify-between;
+	@apply items-start;
+	@apply w-auto;
+	@apply absolute;
+	@apply top-4;
+	@apply right-2;
+	@apply left-2;
+	flex-grow: 0;
+	flex-shrink: 0;
+	@apply px-2;
+	
 }
  .shortcut-button.has-value .n-text {
 	 color: #fff !important;

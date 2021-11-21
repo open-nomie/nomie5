@@ -20,7 +20,7 @@
 </style>
 
 {#if $OfflineQueue.logs && $OfflineQueue.logs.length}
-  <div class="container-sm mx-auto">
+  <div class="mx-auto">
     <div class="items-center flex justify-center">
       <div class="filler" />
       <Button

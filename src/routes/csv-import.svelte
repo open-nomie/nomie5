@@ -308,9 +308,9 @@
 </script>
 
 <Layout className="import" showTabs={false}>
-  <div class="n-toolbar-grid container" slot="header">
+  <div class="n-toolbar-grid " slot="header">
     <div class="left">
-      <BackButton click={back} />
+      <BackButton on:click={back} />
     </div>
     <div class="title main">Import CSV</div>
     <div class="right">
@@ -329,7 +329,7 @@
       </ListItem>
     {/if}
     {#if view && view.id == 'home'}
-      <div class="container p-0 import-csv-home">
+      <div class=" p-0 import-csv-home">
 
         <ListItem>
           <Text size="md" leading3 bold>
@@ -420,7 +420,7 @@
       Template Editor
 
     -->
-      <div class="container p-0 import-csv-note">
+      <div class=" p-0 import-csv-note">
         <ListItem bottomLine>
           <Input type="text" bind:value={activeImporter.config.name} placeholder="Importer Name" />
         </ListItem>
@@ -464,7 +464,7 @@
                   {#if is.truthy(activeImporter.config.fieldMap[logField.id])}
                     f{activeImporter.config.fieldMap[logField.id]}
                   {:else}Select{/if}
-                  <Icon name="chevronDown" size="14" className="fill-primary-bright" />
+                  <Icon name="chevronDown" size={14} className="fill-primary-bright" />
                 </Button>
               </div>
             </ListItem>
@@ -504,7 +504,7 @@
                           mapField(index);
                         }}>
                         Assign
-                        <Icon name="chevronDown" className="fill-primary-bright" size="14" />
+                        <Icon name="chevronDown" className="fill-primary-bright" size={14} />
                       </Button>
                     {/if}
                   {/if}
@@ -516,7 +516,7 @@
 
       </div>
     {:else if view && view.id == 'template' && activeImporter}
-      <div class="container">
+      <div class="">
         <ListItem className="pb-0">{activeImporter.config.name} Importer</ListItem>
         <ListItem>
           <Input type="textarea" placeholder={Lang.t('csv-import.compose-note')} rows={3} bind:value={activeImporter.config.template} />

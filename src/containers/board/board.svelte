@@ -509,7 +509,7 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
 
 <!-- Start App Layout -->
 <NLayout pageTitle={appTitle}>
-  <header slot="header" class="container">
+  <header slot="header">
     <Toolbar>
       {#if $TrackerStore.timers.length}
         <Button icon on:click={TrackerStore.toggleTimers} className="mr-1" ariaLabel={Lang.t('general.timers', 'Timers')}>
@@ -557,12 +557,12 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
       {:else}
         {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 10 && $UserStore.storageType == 'local' && $UserStore.meta.hideBackup == false}
           <div class="container-sm flex items-center justify-center">
-            <button aria-label="Backup your data" on:click={exportData} class="py-2 px-3 flex items-center text-center backup bg-gray-400 dark:bg-gray-800 dark:text-white bg-opacity-20 rounded-full">
+            <button aria-label="Backup your data" on:click={exportData} class="py-2 mb-2 px-3 flex items-center text-center backup bg-gray-400 dark:bg-gray-800 dark:text-white bg-opacity-20 rounded-full">
               <!--- If it's way back - it's not really set-->
               {#if daysSinceLastBackup > 1000} 
                 <Text inline size="sm" faded className="">
                   <Icon name="bell" size={12} />
-                  {Lang.t('general.no-known-backups', 'No known backups')}
+                  {Lang.t('general.no-known-backups', 'No recent backups')}
                 </Text>
               {:else}
                 <Text inline size="sm" faded>{daysSinceLastBackup} days since last backup</Text>

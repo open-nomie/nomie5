@@ -89,7 +89,7 @@
 </script>
 
 <NLayout pageTitle="Export your Data" className="Export">
-  <div class="n-toolbar-grid container" slot="header">
+  <div class="n-toolbar-grid " slot="header">
     <div class="left">
       <NBackButton />
     </div>
@@ -114,7 +114,7 @@
   </div>
 
   {#if type == 'csv'}
-    <div class="container csv">
+    <div class=" csv">
 
       <Csvr />
 
@@ -153,7 +153,7 @@
       </NItem>
     </div>
   {:else}
-    <div class="container backup">
+    <div class=" backup">
       <Spacer gap={4} />
       <Empty
         title={Lang.t('export.export-date', 'Generate Nomie Backup')}

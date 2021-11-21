@@ -19,7 +19,7 @@
 
 <NLayout className="faq" pageTitle="Common Questions about Nomie" showTabs={false}>
 
-  <div slot="header" class="n-toolbar-grid container">
+  <div slot="header" class="n-toolbar-grid">
     <div class="left">
       <NBackButton />
     </div>
@@ -27,7 +27,7 @@
     <div class="right" />
   </div>
 
-  <div class="container">
+  <div class="">
     <div class="n-list">
       {#each faq as q, index}
         <div class="my-3">

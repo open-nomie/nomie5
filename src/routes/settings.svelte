@@ -236,7 +236,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 <NLayout pageTitle="Settings">
 
   <div slot="header">
-    <div class="container n-toolbar-grid">
+    <div class=" n-toolbar-grid">
       <div class="left" />
       <div class="main">
         <Text bold>{Lang.t('settings.settings', 'Settings')}</Text>
@@ -245,7 +245,7 @@ Note: Your data will not automatically move over. You'll first need to export it
         <Button type="clear" color="primary" on:click={methods.faq}>{Lang.t('general.faq', 'FAQ')}</Button>
       </div>
     </div>
-    <div class="container px-2 pb-1 n-toolbar">
+    <div class=" px-2 pb-1 n-toolbar">
       <NButtonGroup className="mx-auto" style="max-width:400px;">
         <Button
           className={view == 'features' ? 'active' : ''}
@@ -289,12 +289,12 @@ Note: Your data will not automatically move over. You'll first need to export it
   <div slot="content" class="pt-2">
     {#if $UserStore.meta}
       <div class="page page-settings">
-        <div class="container p-0">
+        <div class=" p-0">
 
           {#if $UserStore.meta.hiddenFeatures}
             <ListItem className="mb-3" href={appConfig.patreonHome} detail compact>
               <div slot="left">
-                <Icon name="cake" className="fill-primary-bright" size="28" />
+                <Icon name="cake" className="fill-primary-bright" size={28} />
               </div>
               <Text bold>{Lang.t('settings.patron-official', 'Official Nomie Patron')}</Text>
               <div slot="right">
