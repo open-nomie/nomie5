@@ -635,13 +635,13 @@
     <div
       class="mock-card-animation animate up {state.showAnimation ? 'visible' : 'hidden'}" />
     <NToolbarGrid>
-      <div slot="left" className="truncate" style="min-width:100px;">
+      <div slot="left" class="truncate" style="min-width:100px;">
         {#if $Interact.stats.terms.length == 1}
           <Button icon color="transparent" on:click={close}>
             <NIcon name="close" className="fill-primary-bright" />
           </Button>
         {:else}
-          <Button icon class="pl-1" on:click={back}>
+          <Button icon className="pl-1" on:click={back}>
             <NIcon name="arrowBack" size="28" className="fill-primary-bright" />
             <small
               class="ml-1 text-sm truncate text-inverse-2"

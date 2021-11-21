@@ -321,7 +321,7 @@
     <slot name="left" />
     <div class="n-input">
       {#if label || placeholder}
-        <label>{label || placeholder}</label>
+        <label for={name}>{label || placeholder}</label>
       {/if}
       {#if type == 'email'}
         <input

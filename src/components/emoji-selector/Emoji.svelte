@@ -36,4 +36,4 @@
   }
 </style>
 
-<button on:mouseover={onMouseOver} on:mouseout={onMouseOut} on:click={onClick}>{emoji.emoji}</button>
+<button on:mouseover={onMouseOver} on:mouseout={onMouseOut} on:blur={onMouseOut} on:click={onClick}>{emoji.emoji}</button>

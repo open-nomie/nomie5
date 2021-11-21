@@ -8,7 +8,6 @@
   import type NLog from "../../modules/nomie-log/nomie-log";
   import { Interact } from "../../store/interact";
   import { Locations } from "../../store/locations";
-  import WhatsNewModal from "../whats-new/whats-new-modal.svelte";
   import Map from "./map.svelte";
 
   const dispatch = createEventDispatcher();

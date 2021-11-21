@@ -44,8 +44,8 @@
   // consts
   const dispatch = createEventDispatcher();
 
-  let displayLog: NLog;
-  let logMeta: any;
+  let displayLog = undefined;
+  let logMeta = undefined;
 
   let trackers = $TrackerStore.trackers;
 
@@ -87,21 +87,19 @@
   // }
 </script>
 
-<style global lang="scss">
-  .n-item-log {
-    .divider {
-      font-size: 0.9em;
-      font-weight: 500;
-    }
-
-    .n-row.context {
-      justify-content: flex-start;
-      flex-wrap: wrap;
-    }
-    .more-button {
-      margin-right: -8pt;
-    }
+<style global>
+  .n-item-log .divider {
+    font-size: 0.9em;
+    font-weight: 500;
   }
+  .n-item-log .n-row.context {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  .n-item-log .more-button {
+    margin-right: -8pt;
+  }
+ 
 </style>
 
 <!--glow glow-{time.dateToDesc(displayLog.end)}-->
