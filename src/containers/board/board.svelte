@@ -555,14 +555,14 @@
             <div class="pt-2 pb-1 text-center backup">
               <!--- If it's way back - it's not really set-->
               {#if daysSinceLastBackup > 1000}
-                <Text inline size="sm" faded>
+                <Text inline size="sm" faded className="bg-red-600 bg-opacity-20 rounded-full">
                   <Icon name="bell" size={12} className="mt-1" />
                   {Lang.t('general.no-known-backups', 'No known backups')}
                 </Text>
               {:else}
                 <Text inline size="sm" faded>{daysSinceLastBackup} days since last backup</Text>
               {/if}
-              <Text inline underline color="primary-bright" className="ml-2" size="sm" on:click={exportData}>
+              <Text inline underline color="text-inverse font-bold" className="ml-2" size="sm" on:click={exportData}>
                 {Lang.t('general.backup-now', 'Backup Now')}
               </Text>
             </div>
