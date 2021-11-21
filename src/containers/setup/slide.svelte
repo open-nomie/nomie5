@@ -5,16 +5,22 @@
   export let message = [];
 </script>
 
-<style lang="postcss">
+<style global lang="postcss">
   .slide {
+		@apply flex;
+		@apply flex-col;
+		@apply w-full;
 	 padding: 20px 20px;
-	 display: flex;
-	 flex-direction: column;
 	 justify-content: center;
 	 align-content: center;
 	 max-width: 400px;
 	 height: calc(100vh - 100px);
 	 max-height: 700px;
+}
+.slide .top {
+	@apply flex;
+	@apply items-center;
+	@apply justify-center;
 }
  .slide img {
 	 max-width: 100%;

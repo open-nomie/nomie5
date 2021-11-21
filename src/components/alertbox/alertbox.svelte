@@ -134,7 +134,7 @@
     overflow-y: auto;
   }
 
-  .alert-dialog .footer {
+  .alert-dialog .footer { 
     border-top: solid 1px var(--color-faded-1);
       @apply flex;
       @apply items-center;

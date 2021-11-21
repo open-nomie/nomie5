@@ -11,8 +11,8 @@
   };
 </script>
 
-<section class="slide slide-4 slide-welcome {state.activeSlide === 5 ? 'active' : 'hidden'} {state.transitioning ? 'move' : ''}">
-  <div class="top center-grow pt-3 mx-auto" style="width:300px;">
+<section class="slide slide-4 slide-welcome  {state.transitioning ? 'move' : ''}">
+  <div class="top center-grow pt-3 mx-auto text-center" style="width:300px;">
     <Text size="xxl" className="mb-4 text-3xl" bold>{Lang.t('setup.data-location', `Data Storage`)}</Text>
 
     <Text size="sm" className="leading-6 mb-4" center>

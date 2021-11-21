@@ -59,16 +59,11 @@
   }
 </script>
 
-<section class="slide slide-1 slide-welcome">
-  <div class="top center-grow mx-auto" style="max-width:320px; padding:16px;">
+<section class="dark:bg-black slide slide-1 slide-welcome">
+  <div class="flex flex-col items-center justify-center" style="max-width:320px; padding:16px;">
     <img src="/images/nomie-head-on.png" style="width:60%; max-width:300px;" alt="nomie-head-on" />
-    <Text bold center lineHeightMd className="mt-4">
-      👋 I'm Nomie
-      <br />
-      Completely private,
-      <br />
-      free & open life tracker.
-    </Text>
+    <h1 class="text-4xl font-extrabold text-center pt-2">👋 I'm Nomie</h1>
+    <p class="dark:text-gray-600 text-center text-2xl leading-tight my-2">The private, free and<br/>  open life tracker.</p>
     <Text size="xs" lineHeightMd center faded className="mt-2 mb-2">
       <Icon name="warning" size="14" />
       <strong>Terms:</strong>

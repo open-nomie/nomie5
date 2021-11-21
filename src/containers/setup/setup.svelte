@@ -115,7 +115,7 @@
     </ToolbarGrid>
   </div>
 
-  <main slot="content" class="setup-main">
+  <main slot="content" class="setup-main flex h-full items-center justify-center">
     <svelte:component this={slides[state.activeSlide]} />
   </main>
   <div slot="footer">
