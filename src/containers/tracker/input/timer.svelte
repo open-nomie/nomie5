@@ -33,7 +33,7 @@
   export let tracker;
 
   // Data
-  const data = {
+  let data = {
     tempValue: (value || "") + "" || "",
     changed: false,
     started: tracker.started,

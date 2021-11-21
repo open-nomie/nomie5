@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="typescript">
   // Svelte
   import { createEventDispatcher, onMount } from "svelte";
 
@@ -38,8 +38,8 @@
   export let focus = false;
   export let fullDate = false;
   export let hideMore = undefined;
-  export let moreOveride: boolean = false;
-  export let hideDelete: boolean = false;
+  export let moreOveride = false;
+  export let hideDelete = false;
 
   // consts
   const dispatch = createEventDispatcher();

@@ -1,9 +1,10 @@
 <script lang="ts">
   import buttonView from "./n-icons/button-view.svelte";
   import detailView from "./n-icons/detail-view.svelte";
-  import RadioButtonChecked24 from "carbon-icons-svelte/lib/RadioButtonChecked24";
-  import Shuffle24 from "carbon-icons-svelte/lib/Shuffle24";
-  import RadioButton24 from "carbon-icons-svelte/lib/RadioButton24";
+  // import RadioButtonChecked24 from "carbon-icons-svelte/lib/RadioButtonChecked24";
+  // import Shuffle24 from "carbon-icons-svelte/lib/Shuffle24";
+  // import RadioButton24 from "carbon-icons-svelte/lib/RadioButton24";
+
   // Hero Icons
   import {
     ArrowCircleUp,
@@ -114,7 +115,6 @@
     play: Play,
     stop: Stop,
     cake: Cake,
-    expand: ArrowsExpand,
     checkmark: Check,
     checkmarkFilled: CheckCircle,
     checkmarkOutline: CheckCircle,
@@ -144,9 +144,9 @@
     newTab: FolderAdd,
     people: UserGroup,
     pin: LocationMarker,
-    radio: RadioButton24,
+    radio: PlusCircle,
     userCircle: UserCircle,
-    radioFilled: RadioButtonChecked24,
+    radioFilled: CheckCircle,
     refresh: Refresh,
     remove: MinusCircle,
     report: PresentationChartLine,
@@ -155,7 +155,7 @@
     airplane: PaperAirplane,
     settings: Cog,
     share: Share,
-    shuffle: Shuffle24,
+    shuffle: Refresh,
     sort: SortAscending,
     star: Star,
     time: Clock,

@@ -4,8 +4,8 @@
   import Button from "../button/button.svelte";
   import Icon from "../icon/icon.svelte";
 
-  export let isToday: boolean = true;
-  export let hideCal: boolean = false;
+  export let isToday = true;
+  export let hideCal = false;
   export let style: string = "";
 
   const dispatch = createEventDispatcher();

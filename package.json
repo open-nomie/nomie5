@@ -16,6 +16,9 @@
     "url": "https://nomie.app"
   },
   "scripts": {
+    "vdev": "vite",
+    "vbuild": "vite build",
+    "vserve": "vite preview",
     "generate-whatsnew": "node build-tools/generate-whats-new.js && git add . && git commit -m 'build: whats new'",
     "release": "npm run generate-whatsnew &&  release-it --no-npm.publish",
     "commit": "git cz",
@@ -61,6 +64,7 @@
     "@release-it/conventional-changelog": "^1.1.4",
     "@rollup/plugin-typescript": "^5.0.1",
     "@sveltejs/gestures": "0.0.1",
+    "@svitejs/vite-plugin-svelte": "^0.11.1",
     "@tsconfig/svelte": "^1.0.2",
     "@types/jest": "^26.0.8",
     "@types/lodash": "^4.14.161",
@@ -122,7 +126,7 @@
     "semver": "^6.2.0",
     "sirv-cli": "^0.4.4",
     "style-loader": "^0.23.1",
-    "svelte": "^3.20.1",
+    "svelte": "^3.44.2",
     "svelte-awesome": "^1.4.1",
     "svelte-check": "^0.1.55",
     "svelte-hammer": "^0.1.6",
@@ -141,6 +145,7 @@
     "ts-md5": "^1.2.7",
     "typescript": "^3.9.7",
     "ua-parser": "^0.3.5",
+    "vite": "^2.6.14",
     "webpack": "^5.11.1",
     "webpack-cli": "^3.3.11",
     "yargs-parser": "^18.1.3"

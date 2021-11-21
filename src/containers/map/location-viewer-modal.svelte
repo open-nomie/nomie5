@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="typescript">
   import { createEventDispatcher, onMount } from "svelte";
   import Button from "../../components/button/button.svelte";
 

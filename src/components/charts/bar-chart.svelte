@@ -106,83 +106,72 @@
   onMount(() => {});
 </script>
 
-<style lang="scss">
+<style lang="postcss">
   .n-chart {
-    width: 100%;
-    max-width: 500px;
-    position: relative;
-    margin: 0 auto;
-  }
-
-  svg {
-    position: relative;
-    width: 100%;
-  }
-
-  .tick {
-    font-size: 0.625em;
-  }
-
-  .tick line {
-    stroke: var(--color-solid-2);
-    stroke-dasharray: 2;
-  }
-
-  .tick text {
-    fill: var(--color-inverse-3);
-    text-anchor: start;
-  }
-
-  .tick.tick-0 line {
-    stroke-dasharray: 0;
-  }
-
-  .x-axis .tick text {
-    text-anchor: middle;
-  }
-  .title {
-    position: absolute;
-    top: -2px;
-    left: 20px;
-
-    font-size: 0.7em;
-    color: var(--color-inverse);
-  }
-  .active-item {
-    position: absolute;
-    top: 2px;
-    right: 0px;
-    // background-color: var(--color-solid);
-    color: var(--color-inverse);
-    // border-radius: 4px;
-    // box-shadow: var(--box-shadow-tight);
-    z-index: 120;
-    padding: 4px 10px;
-    font-size: 0.7em;
-    display: flex;
-
-    .value {
-      color: #fff;
-      text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
-      border-radius: 10px;
-      padding: 0 6px;
-    }
-    label {
-      margin: 0;
-      margin-right: 6px;
-    }
-  }
-
-  .bars rect {
-    stroke: none;
-    opacity: 0.65;
-    transition: all 0.2s, width 0;
-    &.active {
-      stroke: rgba(0, 0, 0, 0.2);
-      stroke-width: 4px;
-      opacity: 1;
-    }
-  }
+	 width: 100%;
+	 max-width: 500px;
+	 position: relative;
+	 margin: 0 auto;
+}
+ svg {
+	 position: relative;
+	 width: 100%;
+}
+ .tick {
+	 font-size: 0.625em;
+}
+ .tick line {
+	 stroke: var(--color-solid-2);
+	 stroke-dasharray: 2;
+}
+ .tick text {
+	 fill: var(--color-inverse-3);
+	 text-anchor: start;
+}
+ .tick.tick-0 line {
+	 stroke-dasharray: 0;
+}
+ .x-axis .tick text {
+	 text-anchor: middle;
+}
+ .title {
+	 position: absolute;
+	 top: -2px;
+	 left: 20px;
+	 font-size: 0.7em;
+	 color: var(--color-inverse);
+}
+ .active-item {
+	 position: absolute;
+	 top: 2px;
+	 right: 0px;
+	 color: var(--color-inverse);
+	 z-index: 120;
+	 padding: 4px 10px;
+	 font-size: 0.7em;
+	 display: flex;
+}
+ .active-item .value {
+	 color: #fff;
+	 text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
+	 border-radius: 10px;
+	 padding: 0 6px;
+}
+ .active-item label {
+	 margin: 0;
+	 margin-right: 6px;
+}
+ .bars rect {
+	 stroke: none;
+	 opacity: 0.65;
+	 transition: all 0.2s, width 0;
+}
+ .bars rect.active {
+	 stroke: rgba(0, 0, 0, 0.2);
+	 stroke-width: 4px;
+	 opacity: 1;
+}
+ 
 </style>
 
 {#if points}

@@ -1,83 +1,79 @@
-<script lang="ts">
+<script lang="typescript">
   import { createEventDispatcher } from "svelte";
-  import { get } from "svelte/store";
 
   export let size = "md";
-  // export let color = undefined;
-  export let bold: boolean = false;
-  export let center: boolean = false;
-  export let className: string = "";
+  export let bold = false;
+  export let center = false;
+  export let className = "";
   export let color = "";
-  export let faded: boolean = false;
-  export let inline: boolean = false;
-  export let lineHeightMd: boolean = false;
-  export let medium: boolean = false;
+  export let faded = false;
+  export let inline = false;
+  export let lineHeightMd = false;
+  export let medium = false;
   export let style = "";
   export let tag = "div";
-  export let truncate: boolean = false;
-  export let truncate2: boolean = false;
-  export let truncate3: boolean = false;
-  export let underline: boolean = false;
-  export let leading1: boolean = false;
-  export let leading2: boolean = false;
-  export let leading3: boolean = false;
+  export let truncate = false;
+  export let truncate2 = false;
+  export let truncate3 = false;
+  export let underline = false;
+  export let leading1 = false;
+  export let leading2 = false;
+  export let leading3 = false;
 
   const dispatch = createEventDispatcher();
 </script>
 
-<style type="text/scss">
+<style lang="postcss">
   .n-text {
-    color: var(--color-inverse);
-    line-height: 116%;
-    white-space: normal;
-    line-height: 125%;
-    vertical-align: middle;
-    &.line-height-md {
-      line-height: 140%;
-    }
-
-    &.leading1 {
-      line-height: 125%;
-    }
-    &.leading2 {
-      line-height: 150%;
-    }
-    &.leading3 {
-      line-height: 180%;
-    }
-
-    &.xxs {
-      font-size: 60%;
-    }
-    &.xs {
-      font-size: 70%;
-    }
-    &.sm {
-      font-size: 85%;
-    }
-    &.md {
-      font-size: 100%;
-    }
-    &.lg {
-      font-size: 115%;
-    }
-
-    &.faded {
-      opacity: 0.6;
-    }
-    &.xl {
-      font-size: 130%;
-    }
-    &.xxl {
-      font-size: 160%;
-    }
-    &.font-weight-bold {
-      font-weight: bold;
-    }
-    &.font-weight-medium {
-      font-weight: 500;
-    }
-  }
+	 color: var(--color-inverse);
+	 line-height: 116%;
+	 white-space: normal;
+	 line-height: 125%;
+	 vertical-align: middle;
+}
+ .n-text.line-height-md {
+	 line-height: 140%;
+}
+ .n-text.leading1 {
+	 line-height: 125%;
+}
+ .n-text.leading2 {
+	 line-height: 150%;
+}
+ .n-text.leading3 {
+	 line-height: 180%;
+}
+ .n-text.xxs {
+	 font-size: 60%;
+}
+ .n-text.xs {
+	 font-size: 70%;
+}
+ .n-text.sm {
+	 font-size: 85%;
+}
+ .n-text.md {
+	 font-size: 100%;
+}
+ .n-text.lg {
+	 font-size: 115%;
+}
+ .n-text.faded {
+	 opacity: 0.6;
+}
+ .n-text.xl {
+	 font-size: 130%;
+}
+ .n-text.xxl {
+	 font-size: 160%;
+}
+ .n-text.font-weight-bold {
+	 font-weight: bold;
+}
+ .n-text.font-weight-medium {
+	 font-weight: 500;
+}
+ 
 </style>
 
 {#if tag === 'span' || inline}
