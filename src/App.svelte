@@ -44,8 +44,6 @@
   import config from "./config/appConfig";
   import { OfflineQueue } from "./store/offline-queue-store";
   import SearchModal from "./containers/search/search.svelte";
-  // import Storage from "./containers/storage/storage.svelte";
-  // import Storage from "./modules/storage/storage";
   import { LastUsed } from "./store/last-used";
   import { SearchStore } from "./store/search-store";
   import PinLock from "./containers/pin-lock/pin-lock.svelte";

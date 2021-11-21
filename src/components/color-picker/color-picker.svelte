@@ -10,8 +10,8 @@
   $: selectedIndex = colors.indexOf(value) || 0;
 </script>
 
-<style lang="scss">
-  :global(.n-color-picker) {
+<style lang="postcss">
+  .n-color-picker {
     overflow: scroll;
     max-width: 100%;
     width: 90vw;
@@ -23,7 +23,7 @@
     @apply py-2;
     @apply px-4;
   }
-  :global(.n-color-picker button.color-btn) {
+  .n-color-picker button.color-btn {
     flex-grow: 0;
     flex-shrink: 0;
     border: solid 2px var(--color-solid);
@@ -36,7 +36,7 @@
     transform: scale(0.85);
   
   }
-  :global(.n-color-picker button.color-btn.selected) {
+  .n-color-picker button.color-btn.selected {
       transform: scale(1) !important;
       box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
       border: solid 1px var(--color-inverse);

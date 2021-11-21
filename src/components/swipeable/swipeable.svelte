@@ -297,7 +297,7 @@
   // }
 </script>
 
-<style>
+<style global>
   .swipeable {
     position: relative;
     flex-grow: 1;
@@ -308,14 +308,14 @@
     z-index: 120;
     position: relative;
   }
-  :global(.swipeable > div[slot="right"]) {
+  .swipeable > div[slot="right"] {
     position: absolute;
     right: 0;
     top: 0;
     bottom: 0;
     z-index: 100;
   }
-  :global(.swipeable > div[slot="left"]) {
+  .swipeable > div[slot="left"] {
     position: absolute;
     left: 0;
     top: 0;

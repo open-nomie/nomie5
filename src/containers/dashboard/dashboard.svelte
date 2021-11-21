@@ -609,7 +609,7 @@
   <div slot="footer" />
 </Modal>
 
-<style lang="scss">
+<style lang="postcss" global>
   .dashboard-wrapper {
     display: flex;
     flex-direction: row;
@@ -623,13 +623,13 @@
     background-color: var(--color-solid);
     box-shadow: var(--box-shadow-tight);
   }
-  :global(.dashboard-widget.type-map) {
+  .dashboard-widget.type-map {
     height: 260px;
   }
-  :global(.dashboard-widget.type-text) {
+  .dashboard-widget.type-text {
     text-align: center;
   }
-  :global(.dashboard .tab) {
+  .dashboard .tab {
     max-width: 100px;
   }
 </style>

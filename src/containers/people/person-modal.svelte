@@ -129,12 +129,12 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="postcss" global>
   .file-input-wraper {
     height: 1px;
     overflow: hidden;
   }
-  :global(.person-checkin .btn-group .active div) {
+  .person-checkin .btn-group .active div {
     font-size: 2em !important;
   }
 </style>

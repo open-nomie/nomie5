@@ -21,20 +21,20 @@
   };
 </script>
 
-<style lang="scss">
+<style lang="postcss" global>
   .keypad {
-    display: grid;
-    grid-template-columns: repeat(3, 5em);
-    grid-template-rows: repeat(4, 3em);
-    grid-gap: 0.5em;
-  }
-
-  :global(.keypad button) {
-    color: #fff;
-    &:hover {
-      color: #fff;
-    }
-  }
+	 display: grid;
+	 grid-template-columns: repeat(3, 5em);
+	 grid-template-rows: repeat(4, 3em);
+	 grid-gap: 0.5em;
+}
+ .keypad button {
+	 color: #fff;
+}
+ .keypad button:hover {
+	 color: #fff;
+}
+ 
 </style>
 
 <div class="keypad">

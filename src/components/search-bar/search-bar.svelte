@@ -55,9 +55,9 @@
   }
 </script>
 
-<style lang="scss">
-  @import "../../scss/utils/_utils";
-  :global(.search-bar) {
+<style lang="postcss" global>
+
+  .search-bar {
     padding: 0 16pt;
     position: relative;
     display: flex;
@@ -67,22 +67,17 @@
     flex-grow: 1;
     width: calc(100% - 16pt);
     margin: 0 8pt;
-    @include media-breakpoint-up(sm) {
-      margin: 0 auto;
-    }
+  
   }
 
-  :global(.search-bar .btn-action-clear) {
+  .search-bar .btn-action-clear {
     font-size: 14px;
   }
-  :global(.search-bar input) {
-    width: calc(100% - 30px); // account for icon pushing it out.
+  .search-bar input {
+    width: calc(100% - 30px);
     font-size: 100%;
   }
-  :global(.search-bar .n-input-wrapper) {
-    // min-height: 40px !important;
-  }
-  :global(.search-bar .n-input-container) {
+  .search-bar .n-input-container {
     margin-bottom: 0 !important;
   }
 </style>

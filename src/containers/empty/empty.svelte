@@ -21,7 +21,7 @@
   });
 </script>
 
-<style>
+<style global lang="postcss">
   .empty-box {
     flex-direction: column;
     display: flex;
@@ -40,12 +40,12 @@
     margin-right: auto;
     height: auto;
   }
-  :global(.empty-box.start) {
+  .empty-box.start {
     transition: all 0.2s ease-in-out;
     transform: translateY(100px);
     opacity: 0;
   }
-  :global(.empty-box.finish) {
+  .empty-box.finish {
     transition: all 0.2s ease-in-out;
     transform: translateY(0);
     opacity: 1;

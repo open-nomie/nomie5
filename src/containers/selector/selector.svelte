@@ -141,18 +141,15 @@
   };
 </script>
 
-<style lang="scss">
-  :global(.tracker-selector-modal .sticky-top) {
-    position: sticky;
-    top: 0px;
-  }
+<style lang="postcss" global>
+
 </style>
 
 {#if show}
   <NModal title={state.title} type="fullscreen" className="tracker-selector-modal" allowClose={true} on:close={methods.close}>
 
     {#if state.items.length == 0}
-      <NItem class="text-inverse-2">Nothing found</NItem>
+      <NItem className="text-inverse-2">Nothing found</NItem>
     {/if}
 
     {#if type == 'tracker'}
@@ -177,7 +174,7 @@
 
             <div slot="right" class="flex items-center ml-2">
               {#if state.selected.indexOf(item) > -1}
-                <NIcon name="checkmarkOutline" className="fill-primary-bright" size="24" />
+                <NIcon name="checkmarkOutline" className="fill-primary-bright" size={24} />
               {/if}
             </div>
 
@@ -199,12 +196,12 @@
               methods.toggle(person);
             }}>
             <span slot="left">
-              <Dymoji username={person.username} size="24" />
+              <Dymoji username={person.username} size={24} />
             </span>
             <span slot="right">
               {#if state.selected.indexOf(person) > -1}
                 <div class="badge badge-primary">
-                  <NIcon name="checkmark" className="fill-white" size="16" />
+                  <NIcon name="checkmark" className="fill-white" size={16} />
                 </div>
               {/if}
             </span>
@@ -227,7 +224,7 @@
             <span slot="right">
               {#if state.selected.indexOf(context) > -1}
                 <div class="badge badge-primary">
-                  <NIcon name="checkmark" className="fill-white" size="16" />
+                  <NIcon name="checkmark" className="fill-white" size={16} />
                 </div>
               {/if}
             </span>

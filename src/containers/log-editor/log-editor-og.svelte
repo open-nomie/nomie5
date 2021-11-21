@@ -98,47 +98,44 @@
   });
 </script>
 
-<style lang="scss">
-  :global(.log-editor) {
-    z-index: 1301 !important;
-  }
-  :global(.log-editor .view-port .n-map-container) {
-    height: 300px;
-  }
-
-  :global(.log-editor .view-port .date-time) {
-    height: 350px;
-    width: 100vw;
-    max-width: 320px;
-  }
-
-  :global(.log-editor .n-modal) {
-    max-width: 300px;
-    width: 300px;
-  }
-
-  .view-port {
-    min-height: 200px;
-    textarea {
-      font-size: 1em;
-      height: 275px;
-    }
-
-    .center-content {
-      display: flex;
-      width: 100%;
-      flex-grow: 1;
-      flex-shrink: 1;
-      height: 100%;
-      align-items: center;
-      padding: 16px;
-      height: 200px;
-    }
-    .date-time {
-      min-height: 350px;
-      padding: 0px;
-    }
-  }
+<style lang="postcss" global>
+ .log-editor {
+	 z-index: 1301 !important;
+}
+ .log-editor .view-port .n-map-container {
+	 height: 300px;
+}
+ .log-editor .view-port .date-time {
+	 height: 350px;
+	 width: 100vw;
+	 max-width: 320px;
+}
+ .log-editor .n-modal {
+	 max-width: 300px;
+	 width: 300px;
+}
+ .view-port {
+	 min-height: 200px;
+}
+ .view-port textarea {
+	 font-size: 1em;
+	 height: 275px;
+}
+ .view-port .center-content {
+	 display: flex;
+	 width: 100%;
+	 flex-grow: 1;
+	 flex-shrink: 1;
+	 height: 100%;
+	 align-items: center;
+	 padding: 16px;
+	 height: 200px;
+}
+ .view-port .date-time {
+	 min-height: 350px;
+	 padding: 0px;
+}
+ 
 </style>
 
 {#if state.log}

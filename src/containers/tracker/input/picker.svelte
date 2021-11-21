@@ -5,7 +5,6 @@
   import PickerListEditor from "../../../components/picker-list/picker-editor.svelte";
   import PickerSelect from "../../../components/picker-list/picker-select.svelte";
   import type TrackerConfig from "../../../modules/tracker/tracker";
-  import { Lang } from "../../../store/lang";
   import { TrackerStore } from "../../../store/tracker-store";
 
   const dispatch = createEventDispatcher();
@@ -31,14 +30,14 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="postcss" global>
   .tracker-input.picker {
     width: 100%;
     justify-content: center;
     align-items: flex-start;
     position: relative;
   }
-  :global(.picker-toggle) {
+  .picker-toggle {
     position: absolute !important;
     top: 10px;
     right: 10px;
@@ -49,9 +48,9 @@
 <div class="tracker-input picker">
   <Button shape="circle" color={mode == 'view' ? 'primary' : 'green'} className="picker-toggle" on:click={toggleMode}>
     {#if mode == 'view'}
-      <Icon name="edit" size="16" />
+      <Icon name="edit" size={16} />
     {:else}
-      <Icon name="checkmark" size="16" />
+      <Icon name="checkmark" size={16} />
     {/if}
   </Button>
   {#if mode == 'edit'}

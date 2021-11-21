@@ -186,7 +186,13 @@
   {/if}
 {:else if view === 'detail'}
   <!-- Short Cut Button Style -->
-  <div class="xs:p-2 p-4 grid grid-cols-3 xs:grid-cols-2 md:grid-col-4 lg:grid-col-5 gap-2">
+  hi there
+  <div class="hidden xs:visible">XS</div>
+  <div class="hidden sm:visible">SM</div>
+  <div class="hidden md:visible">MD</div>
+  <div class="hidden lg:visible">LG</div>
+  <div class="hidden xl:visible">LXKG</div>
+  <div class="xs:p-2 p-4 grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-col-4 lg:grid-col-5 gap-2">
     {#each trackers as tracker}
       <ShortcutButton
         id="tracker-{tracker.tag}"
@@ -266,23 +272,24 @@
 
 <!--    className={`${state.addedTrackers.indexOf(tracker.tag) > -1 ? 'added pulse' : ''} ${state.savingTrackers.indexOf(tracker.tag) > -1 ? 'wiggle saving' : ''}`} -->
 
-<style lang="scss">
-  :global(.tracker-list-item.in-note .tracker-label) {
-    font-weight: bold;
-    color: var(--tracker-color);
-  }
-  :global(.tracker-list-item .highlight) {
-    position: absolute;
-    left: 3px;
-    top: 6px;
-    bottom: 6px;
-    width: 3px;
-    border-radius: 2px;
-  }
-  :global(.tracker-list-item.no-value) {
-    background-color: transparent;
-    .highlight {
-      display: none;
-    }
-  }
+<style lang="postcss" global>
+  .tracker-list-item.in-note .tracker-label {
+	 font-weight: bold;
+	 color: var(--tracker-color);
+}
+ .tracker-list-item .highlight {
+	 position: absolute;
+	 left: 3px;
+	 top: 6px;
+	 bottom: 6px;
+	 width: 3px;
+	 border-radius: 2px;
+}
+ .tracker-list-item.no-value {
+	 background-color: transparent;
+}
+ .tracker-list-item.no-value .highlight {
+	 display: none;
+}
+ 
 </style>

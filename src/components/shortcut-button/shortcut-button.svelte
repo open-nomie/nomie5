@@ -11,7 +11,7 @@
 
   export let title: string | undefined = undefined;
   export let subtitle: string | undefined = undefined;
-  export let value: string | undefined = undefined;
+  export let value: number | undefined = undefined;
   export let color: string | undefined = undefined;
   export let emoji: string | undefined = undefined;
   export let style: string = "";
@@ -40,18 +40,17 @@
 	 border: none !important;
 }
  .shortcut-button {
+	 @apply relative;
+	 @apply flex-grow;
+	 @apply flex-shrink-0;
+	 @apply justify-items-stretch;
+	 @apply rounded-lg;
 	 --scb-pad: 14px;
-	 position: relative;
-	 flex-grow: 1;
-	 flex-shrink: 0;
 	 height: 146px;
-	 justify-content: stretch;
-	 border-radius: 22px;
 	 
 	 box-shadow: var(--box-shadow-tight) !important;
 	 overflow: hidden;
 	 transition: all 0.4s cubic-bezier(0.19, -0.33, 0.78, 1.32);
-	 position: relative;
 	 color: var(--color-inverse-2);
 	 padding: 0;
 }
@@ -265,7 +264,7 @@
         aria-label="Tracker Options"
         class="more {moreIcon !== 'more' ? 'icon-other' : ''} p-0"
         on:click|preventDefault|stopPropagation={more}>
-        <Icon name={moreIcon} size="16" />
+        <Icon name={moreIcon} size={16} />
       </button>
     {/if}
   </div>

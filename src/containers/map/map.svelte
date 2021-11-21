@@ -403,142 +403,61 @@
   });
 </script>
 
-<style lang="scss">
-  $locationHeight: 40px;
-
+<style lang="postcss" global>
   .n-map-container {
-    background-color: var(--color-solid);
-    position: relative;
-    min-height: 100%;
-    flex-grow: 1;
-    flex-shrink: 1;
-    .n-map-wrapper {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1;
-    }
-  }
-
-  // .n-map-container .location-name {
-  //   position: absolute;
-  //   bottom: 0px;
-  //   left: 0px;
-  //   right: 0px;
-  //   font-weight: bold;
-  //   font-size: 0.9em;
-  //   height: $locationHeight;
-  //   display: flex;
-  //   flex-direction: column;
-  //   justify-content: stretch;
-  //   align-items: stretch;
-
-  //   transition: height 0.2s ease-in-out;
-
-  //   // .row {
-  //   //   margin: 0;
-  //   //   flex-wrap: nowrap;
-  //   // }
-
-  //   // .locations {
-  //   //   width: 100%;
-  //   // }
-
-  //   // &.expanded {
-  //   //   .row {
-  //   //     min-height: 50px;
-  //   //   }
-  //   //   z-index: 2001;
-  //   //   max-height: 300px;
-  //   //   flex-grow: 1;
-  //   //   height: auto;
-  //   //   max-height: 300px;
-  //   //   overflow: scroll;
-  //   //   padding: 0;
-  //   //   .locations.list {
-  //   //     border-top: solid 1px var(--color-faded);
-  //   //     overflow-y: scroll;
-
-  //   //     display: flex;
-  //   //     flex-direction: column;
-  //   //     align-content: stretch;
-
-  //   //     .right {
-  //   //       margin-left: 0px;
-  //   //     }
-  //   //   }
-  //   // }
-
-  //   z-index: 1000;
-  //   padding: 0px 5px;
-  //   background-color: var(--color-solid);
-  //   border-top: solid 1px var(--color-faded);
-  //   color: var(--color-inverse);
-  //   text-align: center;
-  //   z-index: 2;
-  //   box-shadow: 0px -6px 10px rgba(0, 0, 0, 0.1);
-  // .row {
-  //   flex-grow: 1;
-  //   flex-shrink: 1;
-  //   align-items: center;
-  //   justify-content: stretch;
-  //   .name {
-  //     text-align: left;
-  //     width: calc(100% - 90px);
-  //     margin: 0 auto;
-  //     font-size: 0.7em;
-  //     line-height: 0.8em;
-  //     align-self: center;
-  //     flex-grow: 1;
-  //     flex-shrink: 1;
-  //     padding: 0 4px;
-  //   }
-  // }
-  // }
-
-  .picker-cover {
-    pointer-events: none;
-    position: absolute;
-    top: -27px;
-    bottom: 0;
-    left: 12px;
-    right: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    svg {
-      fill: red;
-      opacity: 0.5;
-    }
-  }
-
-  .map-lock-cover {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0);
-    z-index: 2000;
-  }
-
-  .n-map-container .n-map {
-    width: 100%;
-    height: 100%;
-    // min-height: 260px;
-    flex-grow: 1;
-    flex-shrink: 1;
-    z-index: 100;
-  }
-  :global(.n-map-wrapper .favorites-button) {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 200;
-    background-color: rgba(255, 255, 255, 0.7);
-  }
+	 background-color: var(--color-solid);
+	 position: relative;
+	 min-height: 100%;
+	 flex-grow: 1;
+	 flex-shrink: 1;
+}
+ .n-map-container .n-map-wrapper {
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+	 z-index: 1;
+}
+ .picker-cover {
+	 pointer-events: none;
+	 position: absolute;
+	 top: -27px;
+	 bottom: 0;
+	 left: 12px;
+	 right: 0;
+	 display: flex;
+	 align-items: center;
+	 justify-content: center;
+	 z-index: 2000;
+}
+ .picker-cover svg {
+	 fill: red;
+	 opacity: 0.5;
+}
+ .map-lock-cover {
+	 position: absolute;
+	 top: 0;
+	 bottom: 0;
+	 left: 0;
+	 right: 0;
+	 background-color: rgba(0, 0, 0, 0);
+	 z-index: 2000;
+}
+ .n-map-container .n-map {
+	 width: 100%;
+	 height: 100%;
+	 flex-grow: 1;
+	 flex-shrink: 1;
+	 z-index: 100;
+}
+ .n-map-wrapper .favorites-button {
+	 position: absolute;
+	 top: 10px;
+	 right: 10px;
+	 z-index: 200;
+	 background-color: rgba(255, 255, 255, 0.7);
+}
+ 
 </style>
 
 <div

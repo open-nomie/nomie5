@@ -34,84 +34,71 @@
   });
 </script>
 
-<style lang="scss">
+<style lang="postcss" global>
   .content-slot {
-    background-color: var(--color-bg);
-    -webkit-overflow-scrolling: touch;
-    z-index: 0;
-    // color: var(--color-bg);
-    flex-grow: 1;
-  }
-
-  :global(.header-slot .n-toolbar) {
-    z-index: 10;
-    position: relative;
-  }
-  :global(.header-slot .n-toolbar-grid) {
-    z-index: 10;
-    position: relative;
-    min-height: 50px;
-  }
-  :global(.header-slot .btn) {
-    // text-transform: uppercase;
-    font-weight: bold;
-    font-size: 0.9em;
-  }
-  .header-slot {
-    padding-top: env(safe-area-inset-top);
-    // background-color: var(--color-bg);
-    // background: transparent;
-    background: transparent;
-
-    flex-grow: 0;
-    flex-shrink: 0;
-    // box-shadow: var(--box-shadow-float);
-    z-index: 1200;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    h1,
-    h2,
-    h3 {
-      font-size: 1em;
-    }
-    .header-fade {
-      position: absolute;
-      pointer-events: none;
-      z-index: 0;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: -30px;
-      background: var(--header-fade);
-    }
-  }
-
-  .footer-fade {
-    position: absolute;
-    pointer-events: none;
-    z-index: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0px;
-    border-top: solid 1px var(--color-faded-1);
-    // background: var(--footer-fade);
-    background-color: var(--footer-background);
-    // background-color: red;
-  }
-
-  .footer-slot {
-    // box-shadow: 0px -6px 15px rgba(0, 0, 0, 0.09);
-    z-index: 1200;
-    flex-grow: 0;
-    flex-shrink: 0;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
+	 background-color: var(--color-bg);
+	 -webkit-overflow-scrolling: touch;
+	 z-index: 0;
+	 flex-grow: 1;
+}
+ .header-slot .n-toolbar {
+	 z-index: 10;
+	 position: relative;
+}
+ .header-slot .n-toolbar-grid {
+	 z-index: 10;
+	 position: relative;
+	 min-height: 50px;
+}
+ .header-slot .btn {
+	 font-weight: bold;
+	 font-size: 0.9em;
+}
+ .header-slot {
+	 padding-top: env(safe-area-inset-top);
+	 background: transparent;
+	 flex-grow: 0;
+	 flex-shrink: 0;
+	 z-index: 1200;
+	 position: fixed;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+}
+ .header-slot h1, .header-slot h2, .header-slot h3 {
+	 font-size: 1em;
+}
+ .header-slot .header-fade {
+	 position: absolute;
+	 pointer-events: none;
+	 z-index: 0;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+	 bottom: -30px;
+	 background: var(--header-fade);
+}
+ .footer-fade {
+	 position: absolute;
+	 pointer-events: none;
+	 z-index: 0;
+	 bottom: 0;
+	 left: 0;
+	 right: 0;
+	 top: 0px;
+	 border-top: solid 1px var(--color-faded-1);
+	 background-color: var(--footer-background);
+}
+ .footer-slot {
+	 z-index: 1200;
+	 flex-grow: 0;
+	 flex-shrink: 0;
+	 position: fixed;
+	 bottom: 0;
+	 left: 0;
+	 right: 0;
+}
+ 
 </style>
 
 <div class="header-slot" bind:this={headerDom}>

@@ -13,8 +13,8 @@
   let showLogs: boolean = false;
 </script>
 
-<style>
-  :global(.offline-queue-button.active) {
+<style global>
+  .offline-queue-button.active {
     border: solid 1px var(--color-primary-bright) !important;
   }
 </style>

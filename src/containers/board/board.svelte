@@ -538,7 +538,7 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
     </Toolbar>
   </header>
   <!-- end header-->
-  <div slot="content" class="container board-container bg-gray-100 dark:bg-gray-800 pt-4">
+  <div slot="content" class="board-container bg-gray-100 dark:bg-gray-800 pt-4">
     {#if $UserStore.storageType == 'blockstack'}
       <div class="blockstack-warning my-1">
         ⚠️ Blockstack Storage is deprecated.
@@ -686,15 +686,8 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
   </NModal>
 {/if}
 
-<style type="text/scss">
-  @import "../../scss/utils/_utils";
-  @import "../../scss/vendor/bootstrap/base";
+<style type="postcss" global >
 
-  :global(.n-board .tracker-button-wrapper) {
-    @include media-breakpoint-up(md) {
-      margin: 8pt;
-    }
-  }
 
   .blockstack-warning {
     padding: 8px;
@@ -708,21 +701,12 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
     min-height: 50vh;
     display: flex;
     flex-direction: column;
-    @include media-breakpoint-up(md) {
+    /* @include media-breakpoint-up(md) {
       padding-top: 20px;
-    }
+    } */
   }
-  // .no-trackers {
-  //   min-height: 300px;
-  //   height: 50vh;
-  //   display: flex;
-  //   color: var(--color-solid-3);
-  //   display: flex;
-  //   justify-content: center;
-  //   align-items: center;
-  // }
 
-  :global(.board-actions) {
+  .board-actions {
     display: flex;
     align-items: center;
     justify-content: center;

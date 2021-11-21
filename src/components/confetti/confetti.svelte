@@ -37,8 +37,8 @@
   });
 </script>
 
-<style>
-  :global(.confetti) {
+<style global>
+  .confetti {
     pointer-events: none;
     z-index: 5000;
     overflow: hidden;

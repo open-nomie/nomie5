@@ -1,14 +1,14 @@
-<script lang="typescript">
+<script lang="ts">
   //Vendors
-  import dayjs from "dayjs";
-  import  type { Dayjs } from "dayjs";
+  import dayjs, { Dayjs } from "dayjs";
+  
 
   // Modules
   import type TrackerConfig from "../../modules/tracker/tracker";
-  import StatsV5, { timeSpans } from "../../modules/stats/statsV5";
-  import type { ITimeSpanUnit } from "../../modules/stats/statsV5";
-
   import type TrackableElement from "../../modules/trackable-element/trackable-element";
+  import type { ITimeSpanUnit } from "../../modules/stats/statsV5";
+  import StatsV5, { timeSpans } from "../../modules/stats/statsV5";
+
 
   // import { strToColor } from "../../components/dymoji/dymoji";
 

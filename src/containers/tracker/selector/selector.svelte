@@ -86,8 +86,8 @@
   };
 </script>
 
-<style lang="scss">
-  :global(.tracker-selector-modal .sticky-top) {
+<style lang="postcss" global>
+  .tracker-selector-modal .sticky-top {
     position: sticky;
     top: 0px;
   }

@@ -51,28 +51,28 @@
   }
 </script>
 
-<style>
-  ul {
+<style global>
+  ul.sortable-list {
     list-style: none;
     padding: 0;
     margin: 0;
     max-width: 100%;
     overflow: hidden;
   }
-  li {
+  .sortable-list li {
     margin: 0;
     padding: 0;
   }
-  :global(.sortable-chosen) {
+  .sortable-list .sortable-chosen {
     box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
   }
-  :global(.sortable-ghost) {
+  .sortable-list .sortable-ghost {
     opacity: 0.7;
   }
 </style>
 
 {#if items && items.length}
-  <ul bind:this={sortableList}>
+  <ul class="sortable-list" bind:this={sortableList}>
     {#each items as item, index (getKey(item, index))}
       <li>
         <slot {item} {index} />

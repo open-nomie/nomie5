@@ -29,14 +29,14 @@
   }
 </script>
 
-<style>
+<style global>
   .positivity-menu-pop {
     position: absolute;
     width: 240px;
     bottom: calc(50px + env(safe-area-inset-bottom));
     z-index: 4000;
   }
-  :global(.positivity-emoji-btn) {
+  .positivity-emoji-btn {
     margin: 6px;
     text-align: center;
   }

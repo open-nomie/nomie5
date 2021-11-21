@@ -1,4 +1,4 @@
-{
+export default {
   "name": "Nomie 5",
   "short_name": "Nomie 5",
   "start_url": ".",

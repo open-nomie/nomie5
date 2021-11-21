@@ -9,14 +9,14 @@
   export let shadow = true;
 </script>
 
-<style>
+<style global>
   .n-card {
     background-color: var(--color-solid);
     box-shadow: var(--box-shadow-tight);
     border-radius: 6px;
     overflow: hidden;
   }
-  :global(.n-card.compact .title) {
+  .n-card.compact .title {
     font-size: 0.7em;
   }
 </style>

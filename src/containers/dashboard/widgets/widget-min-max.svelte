@@ -43,26 +43,26 @@
     padding-bottom: 6px;
   }
 
-  :global(.widget-size-lg .min-max) {
+  .widget-size-lg .min-max {
     font-size: 1.4em;
   }
-  :global(.widget-size-lg .min-max) {
+  .widget-size-lg .min-max {
     flex-direction: row;
   }
-  :global(.widget-size-lg .min-max .min) {
+  .widget-size-lg .min-max .min {
     padding-bottom: 6px;
     padding-left: 12px;
     border-left: solid 1px var(--color-solid-2);
     margin-left: 12px;
   }
 
-  :global(.widget-size-sm .n-text.xl) {
+  .widget-size-sm .n-text.xl {
     font-size: 1.4em;
   }
-  :global(.widget-size-md .min-max) {
+  .widget-size-md .min-max {
     flex-direction: row;
   }
-  :global(.widget-size-md .min-max .min) {
+  .widget-size-md .min-max .min {
     padding-bottom: 6px;
     padding-left: 12px;
     border-left: solid 1px var(--color-solid-2);

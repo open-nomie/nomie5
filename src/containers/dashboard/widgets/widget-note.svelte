@@ -18,15 +18,12 @@
   
 </script>
 
-<style>
-  /* .current {
-    font-size: 1.5em;
-  } */
-  .value {
+<style global>
+  .widget-note.value {
     max-height: 100px;
     overflow-y: auto;
   }
-  :global(.widget-size-sm .widget-note.value .n-text) {
+  .widget-size-sm .widget-note.value .n-text {
     font-size: 70%;
   }
 </style>

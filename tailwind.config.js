@@ -4,12 +4,15 @@ module.exports = {
     "./**/*.svelte",  // Look for .svelte files
     "./**/*.html" // Look for .html files
   ],
-  darkMode: 'class', // or 'media' or 'class'
+  darkMode: 'media', // or 'media' or 'class'
   theme: {
     extend: {
       screens: {
         'xs': '320px',
-        ...defaultTheme.screens,
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
       }
     },
   },

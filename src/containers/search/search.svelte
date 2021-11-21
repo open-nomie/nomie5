@@ -33,8 +33,8 @@
   }
 </script>
 
-<style lang="scss" type="text/scss">
-  :global(.search-modal) {
+<style lang="postcss" global>
+  .search-modal {
     z-index: 1300 !important;
   }
 </style>

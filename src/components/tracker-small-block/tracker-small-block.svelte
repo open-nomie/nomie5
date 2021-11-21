@@ -43,16 +43,16 @@
   }
 </script>
 
-<style>
-  :global(.nbtn.tracker-small-block.size-md) {
+<style global>
+  .nbtn.tracker-small-block.size-md {
     height: 60px;
     padding: 2px 6px;
   }
-  :global(.nbtn.tracker-small-block.size-xs) {
+  .nbtn.tracker-small-block.size-xs {
     height: 30px;
     padding: 1px 2px;
   }
-  :global(.nbtn.tracker-small-block.size-sm) {
+  .nbtn.tracker-small-block.size-sm {
     height: 42px;
     padding: 2px 4px;
   }

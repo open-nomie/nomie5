@@ -2,7 +2,6 @@
 // import { Reminder } from '../services/reminders/reminders.module'
 // import CardModel from './card.class'
 import NomieUOM from "../../utils/nomie-uom/nomie-uom";
-import extract from "../../utils/extract/extract";
 import nid from "../nid/nid";
 import TrackableElement from "../trackable-element/trackable-element";
 

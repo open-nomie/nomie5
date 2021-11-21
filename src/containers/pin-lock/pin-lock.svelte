@@ -33,8 +33,8 @@
   };
 </script>
 
-<style>
-  h1 {
+<style global>
+  .lock-screen h1 {
     color: #fff;
     margin-bottom: 20px;
     border-bottom: solid 1px rgba(255, 255, 255, 0.2);
@@ -42,7 +42,7 @@
     width: 100%;
     text-align: center;
   }
-  :global(.pin-holder) {
+  .lock-screen .pin-holder {
     background-color: rgba(255, 255, 255, 0.12);
     max-width: 280px;
     width: 280px;
@@ -51,7 +51,7 @@
     margin-bottom: 12px;
     justify-content: center;
   }
-  :global(.pin-close-btn) {
+  .lock-screen .pin-close-btn {
     position: fixed !important;
     top: 20px;
     left: 20px;
@@ -74,7 +74,7 @@
     <Keypad bind:value={_pin} on:submit={methods.submit} />
     {#if $Interact.pin.canClose}
       <Button icon color="clear" className="pin-close-btn" ariaLabel="Cancel" on:click={methods.cancelInput}>
-        <Icon name="close" className="fill-white" size="32" />
+        <Icon name="close" className="fill-white" size={32} />
       </Button>
     {/if}
   {/if}

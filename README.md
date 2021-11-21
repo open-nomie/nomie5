@@ -7,6 +7,10 @@
 - [] Remove Bootstrap - replace with Tailwind
 - [] Refactor to domain driven structure (components, domains);
 - [] Refactor icons to call individual icons as needed - for tree shaking
+- [x] update svelte to latest
+- [x] update pouchdb to latest
+- [x] remove blockstack stuff
+- [] bring leaflet stuff in with npm and not build-tools
 
 ## Nomie 5.7
 

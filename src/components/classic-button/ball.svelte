@@ -25,25 +25,24 @@
   {/if}
 </div>
 
-<style lang="scss">
-  @import "../../scss/utils/__utils.scss";
+<style global lang="postcss">
 
-  $size: $trackerBallSize;
   .n-ball {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    &.frame {
-      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
-      border-radius: 32%;
-      overflow: hidden;
-    }
   }
-  :global(.n-ball .emolen-3) {
+  .n-ball.frame {
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
+    border-radius: 32%;
+    overflow: hidden;
+  }
+  
+  .n-ball .emolen-3 {
     width: 100% !important;
   }
-  :global(.n-ball .emolen-2) {
+  .n-ball .emolen-2 {
     width: 100% !important;
   }
 </style>

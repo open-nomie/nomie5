@@ -113,15 +113,15 @@
   });
 </script>
 
-<style lang="scss">
-  :global(.log-editor) {
+<style lang="postcss" global>
+  .log-editor {
     z-index: 1301 !important;
   }
-  :global(.log-editor .n-map-container) {
+  .log-editor .n-map-container {
     height: 300px;
   }
 
-  :global(.log-editor .view-port .date-time) {
+  .log-editor .view-port .date-time {
     height: 350px;
     width: 100vw;
     max-width: 320px;
