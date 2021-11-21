@@ -6,14 +6,16 @@
  * Not idea, but I can get svelte to compile with them.
  */
 // import pouchdb from "pouchdb";
-import Storage from "../storage/storage";
-import Remote from "../../modules/remote/remote";
+import Storage from "./storage";
+import Remote from "../remote/remote";
 import Logger from "../../utils/log/log";
 import { Interact } from "../../store/interact";
 
 import { Lang } from "../../store/lang";
 
 const console = new Logger("👨‍💻 engine.pouchdb");
+
+declare var PouchDB: any;
 
 let listeners = [];
 let changeListeners = {};
@@ -79,7 +81,7 @@ export default {
   },
   onError(error) {
     Interact.alert(Lang.t("sync.error", "Sync Error"), error.message);
-    console.error("Sync Error", error);
+    console.error(error);
     this.syncing = false;
   },
   stopSync() {
@@ -110,7 +112,7 @@ export default {
 
       this.syncer
         .catch((e) => {
-          console.error("Catch error in syncer", e.message);
+          console.error(`Catch error in syncer ${e.message}`);
           this.syncing = false;
         })
         .then((res) => {
@@ -178,7 +180,7 @@ export default {
     let doc = null;
     try {
       doc = await this.db.get(path);
-    } catch (e) {}
+    } catch (e) { }
     return doc;
   },
   async get(path, onChange) {
@@ -190,7 +192,7 @@ export default {
     try {
       let fullDoc = await this.getFullDoc(path);
       doc = fullDoc ? fullDoc.data : null;
-    } catch (e) {}
+    } catch (e) { }
     return doc;
   },
   async list() {

@@ -1,7 +1,7 @@
 function download(filename, content, type) {
-  if (navigator.msSaveBlob) {
+  if (navigator['msSaveBlob']) {
     // IE 10+
-    navigator.msSaveBlob(new Blob([content], { type: `${type};charset=utf-8;` }), filename);
+    navigator['msSaveBlob'](new Blob([content], { type: `${type};charset=utf-8;` }), filename);
   } else {
     const encodedUri = `data:${type};charset=UTF-8,${encodeURIComponent(content)}`;
     const link = document.createElement("a");

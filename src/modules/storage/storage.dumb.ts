@@ -4,7 +4,8 @@
  * both of which cause problems with Cypress
  */
 
-import { tick } from "svelte";
+
+import { wait } from "src/utils/tick/tick";
 import Config from "../../config/appConfig";
 
 // Vendors
@@ -12,6 +13,8 @@ import Config from "../../config/appConfig";
 const fakeLocal = {};
 
 class SideStore {
+  dbPath: string;
+  data: any;
   constructor(path) {
     this.dbPath = `${Config.data_root}/localDB/${path}`;
     this.data = fakeLocal;
@@ -26,22 +29,23 @@ class SideStore {
 
 const FakeEngine = {
   data: {},
-  async get(key) {
-    await tick(100);
+  async get(key, callback: any) {
+    await wait(100);
+    console.log("get", { callback });
     return this.data.hasOwnProperty(key) ? this.data[key] : null;
   },
   async put(key, value) {
-    await tick(100);
+    await wait(100);
     this.data[key] = value;
     return this.data;
   },
   async delete(key) {
-    await tick(100);
+    await wait(100);
     delete this.data[key];
     return this.data;
   },
   async list() {
-    await tick(100);
+    await wait(100);
     return Object.keys(this.data);
   },
 };
@@ -65,11 +69,11 @@ export const DumbStorage = {
   async init() {
     // let engineProfile = this.getEngine().init();
     // return engineProfile;
-    await tick(100);
+    await wait(100);
     return FakeEngine;
   },
   // Get a file
-  async get(path, onChange = null) {
+  async get(path, onChange?: Function) {
     return await FakeEngine.get(path, onChange);
   },
   // Put a file

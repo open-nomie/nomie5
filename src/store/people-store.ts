@@ -34,14 +34,7 @@ const toUsername = (username) => {
   return username.toLowerCase();
 };
 
-function getState() {
-  let returnState;
-  update((state) => {
-    returnState = state;
-    return state;
-  });
-  return returnState;
-}
+
 
 const searchForPeople = async () => {
   let loadingFinished = Interact.loading("Finding @usernames...");

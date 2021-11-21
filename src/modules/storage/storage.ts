@@ -7,7 +7,7 @@
 // Vendors
 
 import LocalForageEngine from "./engine.localforage";
-import BlockStackEngine from "./engine.blockstack";
+// import BlockStackEngine from "./engine.blockstack";
 import PouchDBEngine from "./engine.pouchdb";
 import Config from "../../config/appConfig";
 
@@ -36,7 +36,7 @@ export function getStorageType() {
   }
 }
 
-export type StorageTypes = "local" | "blockstack" | "pouchdb";
+export type StorageTypes = "local" | "pouchdb"; // blockstack
 
 export function setStorage(type: StorageTypes) {
   localStorage.setItem("n4/storage/root/storage_type", type);
@@ -44,9 +44,9 @@ export function setStorage(type: StorageTypes) {
 
 export interface IStorage {
   engines: {
-    blockstack: BlockStackEngine;
-    local: LocalForageEngine;
-    pouchdb: PouchDBEngine;
+    // blockstack: BlockStackEngine;
+    local: typeof LocalForageEngine;
+    pouchdb: typeof PouchDBEngine;
   };
   engine: any;
   storageType(): string;
@@ -63,7 +63,7 @@ export interface IStorage {
 
 const Storage = {
   engines: {
-    blockstack: BlockStackEngine,
+    // blockstack: BlockStackEngine,
     local: LocalForageEngine,
     pouchdb: PouchDBEngine,
   },

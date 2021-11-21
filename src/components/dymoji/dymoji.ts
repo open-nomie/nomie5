@@ -5,6 +5,8 @@ import { base as colors } from "../../modules/colors/colors";
 // modified for nomie...
 
 class Hash {
+  hash: number;
+  assets: any;
   constructor(id) {
     this.hash = this.fh5(id);
     this.assets = {};
@@ -29,7 +31,10 @@ class Hash {
 }
 
 export class Config {
-  constructor(starter = {}) {
+  colors: Array<any> = [];
+  size: number = 42;
+  radius: number = 0.12;
+  constructor(starter: any = {}) {
     this.colors = (starter.colors || []).length ? starter.colors : colors;
     this.size = starter.size || 42;
     this.radius = starter.radius || 0.12;
@@ -42,7 +47,13 @@ export function strToColor(str) {
 }
 
 export default class Face {
-  constructor(id, config = {}) {
+  id: any;
+  config: any;
+  hash: any;
+  color: any;
+  base: any;
+  assets: any;
+  constructor(id, config: any = {}) {
     this.id = id;
     this.config = new Config(config);
     this.hash = new Hash(id);

@@ -1,10 +1,13 @@
-export default (time: number, callback?: Function) => {
+const tick = (time: number, callback?: Function) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       if (callback) {
         callback();
       }
-      resolve();
+      resolve(true);
     }, time);
   });
 };
+
+export default tick;
+export const wait = tick;

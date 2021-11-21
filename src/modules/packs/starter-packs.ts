@@ -1,6 +1,6 @@
 import defaultPack from "./default-trackers";
 
-const StarterPack = {};
+const StarterPack: any = {};
 StarterPack.packs = {
   default: defaultPack
 };

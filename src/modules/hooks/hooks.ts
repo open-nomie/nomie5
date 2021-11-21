@@ -10,6 +10,7 @@ const console = new Logger("modules/hooks");
  */
 
 export default class Hooky {
+  hooks: any;
   constructor() {
     this.hooks = {};
   }

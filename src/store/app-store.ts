@@ -13,19 +13,16 @@ import { Interact } from "./interact";
 const console = new Logger("🗺 $AppStore");
 // Nomie API Store
 
-class AppStoreState {
-  constructor() {
-    this.whatsNew = null;
-  }
+const AppStoreState: any = {
+  whatsNew: null
 }
 
 const AppStoreInit = () => {
-  const { update, subscribe, set } = writable(new AppStoreState());
+  const { update, subscribe, set } = writable(AppStoreState);
 
   const checkForUpdate = () => {
-    // TODO remove this eventually
-    let _oldLastVersion = localStorage.getItem("nomie/last-version");
-    let lastVersion = Storage.local.get("last-version") || _oldLastVersion;
+
+    let lastVersion = Storage.local.get("last-version");
 
     if (lastVersion !== whatsNew.version) {
       Storage.local.put("last-version", whatsNew.version);

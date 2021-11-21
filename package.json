@@ -155,7 +155,6 @@
     "cypress": "^4.11.0"
   },
   "dependencies": {
-    "@blockstack/connect": "^2.12.1",
     "@composi/gestures": "^1.0.9",
     "@egjs/hammerjs": "^2.0.17",
     "bootstrap": "^4.3.1",

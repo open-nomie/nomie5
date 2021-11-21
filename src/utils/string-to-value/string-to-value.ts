@@ -1,5 +1,5 @@
 import time from "../time/time";
-export default function (valueStr) {
+const StringToValue = (valueStr: any) => {
   if (typeof valueStr == "string") {
     if (valueStr.split(".").length == 2) {
       // For 1.345
@@ -14,3 +14,5 @@ export default function (valueStr) {
     return valueStr;
   }
 }
+
+export default StringToValue

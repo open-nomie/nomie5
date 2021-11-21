@@ -1,5 +1,7 @@
 import moment from "dayjs";
 export default class Log {
+  label: any;
+  render: boolean;
   constructor(label, render = true) {
     this.label = label;
     this.render = render;

@@ -1,4 +1,11 @@
 class Remote {
+  url: any;
+  syncEnabled: boolean;
+  username: any;
+  password: any;
+  dbPrefix: any;
+  database: any;
+  _dirty: boolean;
   constructor(starter) {
     starter = starter || {};
     this.url = starter.url ? new URL(starter.url) : null;

@@ -30,7 +30,7 @@ export default {
     return localforage.setItem(path, JSON.stringify(content));
   },
   get(path) {
-    return localforage.getItem(path).then(content => {
+    return localforage.getItem(path).then((content: any) => {
       return content ? JSON.parse(content) : null;
     });
   },
