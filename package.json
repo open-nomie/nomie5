@@ -141,6 +141,7 @@
     "svelte-spinner": "^2.0.1",
     "svg-inline-loader": "^0.8.2",
     "tailwindcss": "^2.2.19",
+    "tailwindcss-dark-mode": "^1.1.7",
     "ts-jest": "^26.1.4",
     "ts-md5": "^1.2.7",
     "typescript": "^3.9.7",

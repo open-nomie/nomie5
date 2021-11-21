@@ -24,27 +24,26 @@
   @apply dark:text-gray-200;
   @apply text-gray-900;
   @apply px-4 py-2;
-
-  @apply w-full;
   @apply relative;
+  @apply text-gray-800 dark:text-gray-200;
+  @apply bg-white dark:bg-gray-900;
 
+  min-height: 46px;
   transition: all 0.2s ease-in-out;
   text-decoration: none;
-  color: var(--color-inverse);
-  background-color: var(--color-solid);
 }
 
 .n-item:focus {
   @apply ring-2;
-  @apply ring-blue-500;
+  @apply ring-primary-500;
   @apply ring-inset;
 }
 
 .n-item.bg-light {
-  background-color: var(--color-bg) !important;
+  @apply bg-white dark:bg-black;
 }
 .n-item.bg-light.text-faded {
-  color: var(--color-inverse-3) !important;
+  @apply text-gray-500;
 }
 .n-item.solo,
 .n-item[solo] {
@@ -75,17 +74,16 @@
 .n-item.item-divider {
   font-weight: 600;
   padding-top: 14px;
-  color: var(--color-inverse-3) !important;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  font-size: 14px !important;
+  @apply text-gray-100 dark:text-gray-300;
 }
 .n-item.disabled {
   opacity: 0.5;
 }
 .n-item.just-content {
   background-color: transparent;
-  color: var(--color-inverse-2);
+  @apply text-gray-100 dark:text-gray-300;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -109,7 +107,7 @@
   content: '';
   position: absolute;
   top: 0px;
-  border-top: solid 1px var(--color-solid-1) !important;
+  @apply border-t border-gray-200 dark:border-gray-600;
   left: 16px;
   right: 0;
 }
@@ -122,7 +120,7 @@
   content: '';
   position: absolute;
   bottom: 0px;
-  border-bottom: solid 1px var(--color-solid-1) !important;
+  @apply border-b border-gray-200 dark:border-gray-600;
   left: 16px;
   right: 0;
 }
@@ -218,14 +216,14 @@
   background-color: var(--color-bg) !important;
 }
 .n-item-divider.border-bottom {
-  border-bottom-color: var(--color-faded) !important;
+  @apply border-b border-gray-200 dark:border-gray-600;
 }
 .n-item-divider.compact {
   min-height: 20px !important;
   padding-bottom: 0;
 }
 .n-list {
-  background-color: var(--color-solid);
+  @apply bg-white dark:bg-transparent;
   margin-bottom: 16px;
   overflow: hidden;
 }
@@ -244,11 +242,11 @@
   padding: 0px 0;
 }
 .n-list.framed {
-  border: solid 1px var(--color-solid-2) !important;
+  /* border: solid 1px var(--color-solid-2) !important; */
 }
 .bg-selected {
   background-color: var(--color-background-selected) !important;
 }
 .bg-light {
-  background-color: var(--color-solid) !important;
+  @apply bg-gray-100 dark:bg-gray-700;
 }

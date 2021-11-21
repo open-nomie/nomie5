@@ -311,10 +311,10 @@ import { ChevronRight, X } from "svelte-hero-icons";
   <header slot="header" class="flex-column items-center">
     <Toolbar className=" px-2 items-center">
       <Button icon  on:click={methods.search}>
-        <Icon className="text-blue-500" name="search" size={24} />
+        <Icon className="text-primary-500" name="search" size={24} />
       </Button>
       <!-- <Button icon  on:click={composeHere}>
-        <Icon className="text-blue-500" name="compose" size={24} />
+        <Icon className="text-primary-500" name="compose" size={24} />
       </Button> -->
       <Text className="line-clamp-1 space-x-4 flex items-center w-full font-bold">
         {#if refreshing}

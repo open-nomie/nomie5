@@ -1,5 +1,6 @@
 #note-capture {
-  background-color: var(--footer-background);
+  @apply bg-white dark:bg-black bg-opacity-80;
+  @apply backdrop-filter backdrop-saturate-150 backdrop-blur-md;
   padding-bottom: 4px;
 }
 .capture-log .tracker-list {
@@ -60,11 +61,13 @@
   align-items: flex-end;
   min-height: 40px;
   max-height: 200px;
-  border-radius: 20px;
-  background-color: var(--color-solid-1);
-  overflow: hidden;
+  @apply rounded-3xl;
+  @apply bg-gray-100 dark:bg-gray-700;
+  @apply overflow-hidden;
+  @apply border;
+  @apply border-gray-200 dark:border-gray-600;
+  @apply border-opacity-60;
   transition: all 0.2s ease-in-out;
-  border: solid 1px var(--color-faded-1);
 }
 .capture-wrapper .mask-textarea .save-button {
   display: none;
@@ -81,7 +84,7 @@
   width: 100%;
   height: 40px;
   padding: 8px 0;
-  color: var(--color-inverse-1);
+  @apply text-black dark:text-white;
   margin-left: 8px;
   font-size: 1em;
 }

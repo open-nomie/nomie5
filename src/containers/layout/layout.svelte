@@ -52,7 +52,7 @@
 </svelte:head>
 
 <div
-  class="n-layout {className}
+  class="n-layout bg-gray-100 dark:bg-gray-800 {className}
   {hasFooter ? 'has-footer' : ''}
   {hasHeader ? 'has-header' : ''}
   {showTabs ? 'has-tabs' : 'no-tabs'}"
@@ -70,7 +70,7 @@
     {/if}
   </main>
   {#if hasBottom}
-    <main id="nomie-main-bottom glass">
+    <main id="nomie-main-bottom" class="glass">
       <slot name="bottom" />
     </main>
   {/if}

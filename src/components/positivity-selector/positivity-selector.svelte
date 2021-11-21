@@ -40,7 +40,7 @@
     @apply dark:bg-black;
     @apply opacity-100;
     @apply ring-2;
-    @apply ring-blue-500;
+    @apply ring-primary-500;
     @apply ring-opacity-40;
   }
   .n-positivity-selector .nbtn-sm {

@@ -121,14 +121,14 @@
       let font_size = localStorage.getItem("font-size") || "md";
       document.body.className = "";
       if (theme === "auto" && isDarkMode) {
-        document.body.classList.add("theme-dark");
+        document.children[0].classList.add("dark");
       } else if (theme === "auto") {
-        document.body.classList.add("theme-light");
+        document.children[0].classList.add("light");
       } else {
-        document.body.classList.add(`theme-${theme}`);
+        document.children[0].classList.add(`${theme}`);
       }
-      document.body.classList.add(`font-size-${font_size}`);
-      document.body.classList.add(theme_accent);
+      document.children[0].classList.add(`font-size-${font_size}`);
+      document.children[0].classList.add(theme_accent);
       tick(100, methods.hideSplashScreen);
     },
   };

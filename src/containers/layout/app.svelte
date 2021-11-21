@@ -86,8 +86,8 @@
 	 left: 0;
 	 right: 0;
 	 top: 0px;
-	 border-top: solid 1px var(--color-faded-1);
-	 background-color: var(--footer-background);
+	 
+	 
 }
  .footer-slot {
 	 z-index: 1200;

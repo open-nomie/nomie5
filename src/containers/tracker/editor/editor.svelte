@@ -394,7 +394,7 @@
             {#if data.tracker.tag}
               <button
                 on:click={methods.editTag}
-                class="space-x-3 bg-opacity-50 rounded-full bg-blue-500
+                class="space-x-3 bg-opacity-50 rounded-full bg-primary-500
                 text-white text-sm py-1 px-3 flex items-center justify-between">
                 <span>#{data.tracker.tag}</span>
                 {#if data.tracker._dirty}

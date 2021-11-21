@@ -57,7 +57,7 @@
 .shortcut-button:focus {
 	@apply ring;
 	@apply ring-2;
-	@apply ring-blue-500;
+	@apply ring-primary-500;
 }
  .shortcut-button .title {
 	 font-weight: 600;
@@ -243,9 +243,9 @@
   {id}
   ariaLabel={title || 'button'}
   color="clear"
-  className="{className} shortcut-button d-flex flex-column {is.truthy(value) ? 'has-value' : 'no-value'}
+  className="{className} shortcut-button bg-white dark:bg-black d-flex flex-column {is.truthy(value) ? 'has-value' : 'no-value'}
   {compact ? 'compact' : ''}"
-  style={`--tracker-color:${color}; background-color:${value ? color || 'var(--color-primary)' : 'var(--color-solid)'}; ${style}`}
+  style={`--tracker-color:${color}; ${value ? `background-color:${value ? color : 'var(--color-primary)'` : ``} ${style}`}
   on:longpress={() => {
     dispatch('longpress');
     clickSkip = true;

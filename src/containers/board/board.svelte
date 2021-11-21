@@ -517,7 +517,7 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
         </Button>
       {/if}
       <Button icon on:click={methods.toggleSearch} ariaLabel={Lang.t('general.search')}>
-        <Icon name="search" className="text-blue-500" size={24} />
+        <Icon name="search" className="text-primary-500" size={24} />
       </Button>
 
       <!-- Tabs -->
@@ -534,8 +534,8 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
         }}
       />
 
-      <Button icon className="board-option-action text-blue-500" on:click={() => boardOptions()} ariaLabel={Lang.t('general.settings', 'Settings')}>
-        <Icon icon={DotsCircleHorizontal} className="text-blue-500" size={24} />
+      <Button icon className="board-option-action text-primary-500" on:click={() => boardOptions()} ariaLabel={Lang.t('general.settings', 'Settings')}>
+        <Icon icon={DotsCircleHorizontal} className="text-primary-500" size={24} />
       </Button>
 
     </Toolbar>
@@ -557,19 +557,21 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
       {:else}
         {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 10 && $UserStore.storageType == 'local' && $UserStore.meta.hideBackup == false}
           <div class="container-sm flex items-center justify-center">
-            <button aria-label="Backup your data" on:click={exportData} class="py-2 mb-2 px-3 flex items-center text-center backup bg-gray-400 dark:bg-gray-800 dark:text-white bg-opacity-20 rounded-full">
+            <button aria-label="Backup your data" 
+                on:click={exportData} 
+                class="py-2 mb-2 px-3 text-sm flex items-center text-center backup bg-gray-400 dark:bg-black dark:text-white bg-opacity-20 rounded-full">
               <!--- If it's way back - it's not really set-->
               {#if daysSinceLastBackup > 1000} 
-                <Text inline size="sm" faded className="">
+                <div class="opacity-60">
                   <Icon name="bell" size={12} />
                   {Lang.t('general.no-known-backups', 'No recent backups')}
-                </Text>
+                </div>
               {:else}
-                <Text inline size="sm" faded>{daysSinceLastBackup} days since last backup</Text>
+                <div>{daysSinceLastBackup} days since last backup</div>
               {/if}
-              <Text inline  className="ml-2 text-inverse font-bold" size="sm" >
+              <div class="ml-2 text-black dark:text-white font-bold" >
                 {Lang.t('general.backup-now', 'Backup Now')}
-              </Text>
+              </div>
             </button>
           </div>
         {/if}

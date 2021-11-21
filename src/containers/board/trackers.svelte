@@ -186,8 +186,8 @@
   {/if}
 {:else if view === 'detail'}
   <!-- Short Cut Button Style -->
- 
-  <div class="xs:p-2 p-4 grid xs:grid-col-2 lg:grid-cols-5 grid-cols-3 xl:grid-cols-6 gap-2">
+
+  <div class="xs:p-2 p-4 grid grid-cols-2 lg:grid-cols-5 sm:grid-cols-3 xl:grid-cols-6 gap-2">
     {#each trackers as tracker}
       <ShortcutButton
         id="tracker-{tracker.tag}"
@@ -223,7 +223,7 @@
         compact={$UserStore.localSettings.compactButtons}
         title={Lang.t('tracker.add-tracker', 'Add Tracker')}
         emoji="➕"
-        className="tracker-add"
+        className="tracker-add dark:bg-black"
         hideMore={true}
         on:click={() => {
           dispatch('add');

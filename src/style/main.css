@@ -115,3 +115,17 @@ body {
   transform: scale(1.3);
   pointer-events: none;
 }
+
+hr.divider {
+  margin: 0;
+  padding: 0;
+  @apply border-t border-gray-200 dark:border-gray-600;
+  @apply bg-transparent;
+}
+hr.divider.center {
+  margin-left: 24px !important;
+  margin-right: 24px !important;
+}
+hr.divider.indent {
+  margin-left: 20px;
+}

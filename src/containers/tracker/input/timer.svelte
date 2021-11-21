@@ -75,7 +75,7 @@ import { Play } from "svelte-hero-icons";
         shape="circle"
         size="md"
         className="text-white animate up {value ? 'visible' : 'hidden'}">
-        <Icon icon={Play} size={32} className="text-blue-500" />
+        <Icon icon={Play} size={32} className="text-primary-500" />
       </Button>
       <div class="filler" />
     </div>

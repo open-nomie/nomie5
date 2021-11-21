@@ -25,7 +25,7 @@
 
 <style lang="postcss">
   .n-text {
-	 color: var(--color-inverse);
+	 
 	 line-height: 116%;
 	 white-space: normal;
 	 line-height: 125%;

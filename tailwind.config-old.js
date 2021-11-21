@@ -1,4 +1,4 @@
-
+const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
   purge: [
     "./**/*.svelte",  // Look for .svelte files
@@ -7,6 +7,9 @@ module.exports = {
   darkMode: 'media', // or 'media' or 'class'
   theme: {
     extend: {
+      screen: {
+        'xs': { min: "0px", max: "350px" }
+      },
       colors: {
         primary: {
           50: "#DBF2FD",
@@ -27,7 +30,6 @@ module.exports = {
   //   extend: {},
   // },
   plugins: [
-    require('@tailwindcss/line-clamp'),
-    require('tailwindcss-dark-mode')()
+    require('@tailwindcss/line-clamp')
   ],
 }

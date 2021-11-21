@@ -28,7 +28,7 @@
     align-items:center;
   }
   .divider.show-line {
-    border-top: solid 1px var(--color-solid-2);
+    @apply border-t border-gray-200 dark:border-gray-600;
   }
   .divider.center {
     margin-left: 2rem;

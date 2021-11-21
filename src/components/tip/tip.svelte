@@ -85,7 +85,7 @@
 </style>
 
 {#if show}
-  <section class="n-tip-wrapper bg-blue-500 text-white px-4 {className} relative">
+  <section class="n-tip-wrapper bg-primary-500 dark:bg-gray-900 text-white px-4 {className} relative">
     <Button className="px-2 opacity-60" title="PrviousTip Tip" color="clear" icon on:click={previousTip}>
       <NIcon icon={ChevronLeft} size={42} className="text-white" />
     </Button>

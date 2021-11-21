@@ -265,7 +265,6 @@
   box-shadow: none;
 }
 .nbtn-group {
-  --group-bg: var(--color-grey-7);
   overflow: hidden;
   height: 40px;
   width: 100%;
@@ -273,7 +272,7 @@
   display: flex;
   flex-direction: row;
   border-radius: 4px;
-  background-color: var(--group-bg);
+  @apply bg-gray-200 dark:bg-gray-900;
   align-items: center;
   padding: 2px;
   border-radius: 10px;
@@ -288,16 +287,15 @@
   padding-left: 12px;
   padding-right: 12px;
   box-shadow: none;
-  background-color: var(--group-bg);
+  @apply bg-gray-200 dark:bg-gray-900;
   color: var(--color-inverse-1);
 }
 .nbtn-group .nbtn.active {
   border-radius: 8px !important;
   z-index: 10;
-  box-shadow: var(--box-shadow-tight);
-  background-color: var(--color-solid);
-  color: var(--color-inverse);
-  border: solid 1px var(--color-grey-8);
+  @apply shadow-md;
+  @apply bg-white dark:bg-black;
+  @apply text-primary-500;
 }
 .nbtn-group .nbtn:first-child {
   border-top-right-radius: 0px;

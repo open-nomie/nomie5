@@ -39,9 +39,10 @@
 	 height: 30px;
 	 padding: 0;
 	 line-height: 30px;
-	 border: 2px solid var(--color-grey-6);
+	 /* border: 2px solid var(--color-grey-6); */
+	 @apply border-2 border-gray-100 dark:border-gray-500;
 	 border-radius: 30px;
-	 background-color: var(--color-solid-1);
+	 @apply bg-gray-300 dark:bg-gray-600;
 	 transition: background-color 0.2s ease-in-out;
 	 margin: 0;
 }
@@ -50,12 +51,13 @@
 	 display: block;
 	 width: 30px;
 	 margin: 0px;
-	 background: var(--color-solid);
+	 @apply bg-white dark:bg-gray-900;
+	 @apply border-2 border-gray-300 dark:border-gray-500;
 	 position: absolute;
 	 top: 0;
 	 bottom: 0;
 	 right: 22px;
-	 border: 2px solid var(--color-grey-6);
+	 
 	 border-radius: 30px;
 	 transition: all 0.2s ease-in-out 0s;
 }

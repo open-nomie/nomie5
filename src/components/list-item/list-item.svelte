@@ -108,10 +108,10 @@
     {/if}
     <div class="main {truncate ? 'truncate' : ''}">
       {#if title}
-        <NText size="md" tag="div" leading1 className="title" medium>{title}</NText>
+        <div class="title">{title}</div>
       {/if}
       {#if description}
-        <NText size="sm" leading2 faded className="description">{description}</NText>
+        <div class="description">{description}</div>
       {/if}
       <slot />
     </div>
@@ -157,10 +157,10 @@
     {/if}
     <div class="main {truncate ? 'truncate' : ''}">
       {#if title}
-        <NText size="md" tag="div" leading1 className="title" medium>{title}</NText>
+        <div class="title">{title}</div>
       {/if}
       {#if description}
-        <NText size="sm" leading2 className="description" faded>{description}</NText>
+        <div class="description">{description}</div>
       {/if}
       <slot />
     </div>

@@ -27,7 +27,7 @@
     on:click={() => {
       dispatch('previous');
     }}>
-    <Icon name="chevronLeft" size={24} className="text-blue-500" />
+    <Icon name="chevronLeft" size={24} className="text-primary-500" />
   </Button>
   {#if !hideCal}
     <Button
@@ -39,7 +39,7 @@
       on:click={() => {
         dispatch('calendar');
       }}>
-      <Icon name="calendar" className="text-blue-500" size={22} />
+      <Icon name="calendar" className="text-primary-500" size={22} />
     </Button>
   {/if}
   <Button
@@ -49,6 +49,6 @@
     on:click={() => {
       dispatch('next');
     }}>
-    <Icon name="chevronRight" size={24} className="text-blue-500" />
+    <Icon name="chevronRight" size={24} className="text-primary-500" />
   </Button>
 </div>
