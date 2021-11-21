@@ -44,7 +44,7 @@
 </style>
 
 {#if grid}
-  <div class="n-grid n-color-picker {className}" activeIndex={selectedIndex}>
+  <div class="n-grid n-color-picker {className}">
     {#each colors as color, index}
       <button
         class="color-btn {color == value ? 'selected' : ''}"

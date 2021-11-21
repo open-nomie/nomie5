@@ -122,7 +122,7 @@
           dispatch('click');
         }}
       >
-        <Icon name="settings" style="fill: var(--color-inverse-2)" size="16" />
+        <Icon name="settings" style="fill: var(--color-inverse-2)" size={16} />
       </Button>
     </div>
     <div class="widget-main">

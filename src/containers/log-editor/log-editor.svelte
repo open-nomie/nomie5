@@ -40,6 +40,7 @@
   import math from "../../utils/math/math";
   import { Interact } from "../../store/interact";
   import type Location from "../../modules/locate/Location";
+import { ChevronDown } from "svelte-hero-icons";
 
   // Props
   export let log = undefined;
@@ -159,7 +160,7 @@
           {:else}
             <Text size="sm">{Lang.t('general.select', 'Select')}</Text>
           {/if}
-          <Icon name="chevronDown" size="16" className="ml-2" />
+          <Icon  icon={ChevronDown} size={16} className="ml-2" />
         </div>
       </ListItem>
       {#if toggleMap}

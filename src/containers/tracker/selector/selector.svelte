@@ -57,7 +57,7 @@
     toggle(tracker) {
       if (state.selected.hasOwnProperty(tracker.tag)) {
         delete state.selected[tracker.tag];
-        data = data;
+        // data = data;
       } else {
         state.selected[tracker.tag] = tracker;
       }

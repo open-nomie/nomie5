@@ -1,4 +1,8 @@
+
 <script lang="ts">
+
+  
+
   //svelte
   import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
@@ -33,8 +37,8 @@
   export let lock: boolean = false;
   export let hideFavorite: boolean = false;
 
-  declare var L: any;
-
+  
+  const L:any = window['L'];
   // consts
   const dispatch = createEventDispatcher();
   const id = `map-${Math.random().toString().replace(".", "")}`;
@@ -502,7 +506,7 @@
         shape="rounded"
         icon
         on:click={selectSavedLocation}>
-        <Icon name="star" size="18" />
+        <Icon name="star" size={18} />
       </Button>
     {/if}
   </div>

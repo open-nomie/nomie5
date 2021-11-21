@@ -11,7 +11,7 @@
 
   export let title: string | undefined = undefined;
   export let subtitle: string | undefined = undefined;
-  export let value: number | undefined = undefined;
+  export let value: any = undefined;
   export let color: string | undefined = undefined;
   export let emoji: string | undefined = undefined;
   export let style: string = "";

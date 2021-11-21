@@ -165,7 +165,7 @@
               dispatch('more', tracker);
             }}
           >
-            <Icon name="more" size="18" className="prevent fill-inverse-1" />
+            <Icon name="more" size={18} className="prevent fill-inverse-1" />
           </Button>
         {/if}
       </span>

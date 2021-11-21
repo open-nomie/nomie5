@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   // Components
   import Modal from "../../components/modal/modal.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
@@ -68,14 +68,16 @@
     }
   }
 
-  async function getAvatarImage(imageBase64) {
-    let image = document.getElementById("photo-holder-image");
-    image.src = imageBase64;
+  async function getAvatarImage(imageBase64:any) {
+    const wrapper:any = document.getElementById("photo-holder");
+    const _image:any = document.getElementById("photo-holder-image");
+    let img:HTMLImageElement = _image;
+    img.src = imageBase64;
     await tick(200);
-    let wrapper = document.getElementById("photo-holder");
-    if (image.naturalHeight > image.naturalWidth) {
+  
+    if (img.naturalHeight > img.naturalWidth) {
       wrapper.setAttribute("data-orientation", "vertical");
-    } else if (image.naturalHeight < image.naturalWidth) {
+    } else if (img.naturalHeight < img.naturalWidth) {
       wrapper.setAttribute("data-orientation", "horizontal");
     } else {
       wrapper.setAttribute("data-orientation", "square");
@@ -160,7 +162,7 @@
             close();
             Interact.openStats(`@${activePerson.getUsername()}`);
           }}>
-          <NIcon name="chart" size="22" className="fill-primary-bright" />
+          <NIcon name="chart" size={22} className="fill-primary-bright" />
         </Button>
       </div>
     </NToolbarGrid>

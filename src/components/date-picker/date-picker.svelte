@@ -11,7 +11,7 @@
 
   // data
   export let date: Date;
-  export let time: number;
+  export let time: any;
   export let className: string = "";
   export let style: string = "";
 
@@ -42,7 +42,7 @@
   }
 </script>
 
-<style type="text/scss" lang="scss">
+<style global lang="postcss">
   .native-datetime {
     font-size: 85%;
     background-color: var(--color-solid);
@@ -53,10 +53,6 @@
     width: 100%;
     flex-grow: 1;
     flex-shrink: 1;
-    &:active,
-    &:focus {
-      outline: none !important;
-    }
   }
 </style>
 

@@ -472,7 +472,7 @@
   <header slot="header">
     <Toolbar>
       <Button color="none" shape="circle" className="tap-icon" on:click={() => SearchStore.view('history')}>
-        <Icon name="search" size="24" />
+        <Icon name="search" size={24} />
       </Button>
       <HScroller centerIfPossible activeIndex={$DashboardStore.activeIndex} className="n-board-tabs">
         {#each dashboards || [] as board, i (board.id)}
@@ -564,7 +564,7 @@
             {#if item.type == 'text'}
               <Text size="md" truncate>{item.description}</Text>
             {:else}
-              <TrackerSmallBlock xs truncate novalue element={item.element} value={item.type} />
+              <TrackerSmallBlock xs truncate novalue element={item.element}  />
             {/if}
             <div slot="right" class="pr-2 text-sm text-faded-2">
               {#if item.timeRange}{item.timeRange.getLabel()}{/if}

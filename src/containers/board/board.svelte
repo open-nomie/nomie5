@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   /**
    * Brace yourself - this is a massive file
    *
@@ -211,7 +211,7 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
     }
   }
 
-  async function boardOptions(board) {
+  async function boardOptions(board?:any) {
     board = board || $BoardStore.activeBoard;
     let buttons = [
       {
@@ -348,10 +348,13 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
     /**
      * Control Tracker Editor
      */
-    trackerEditor() {
-      Interact.editTracker().then((tracker) => {
+    async trackerEditor() {
+      try {
+        const tracker = await Interact.editTracker(undefined).catch(e=>{throw e});
         BoardStore.addTracker(tracker);
-      });
+      } catch(e) {
+        alert(e.message);
+      }
     },
 
     getLastUsed(tracker) {
@@ -368,7 +371,7 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
      * then create the new board
      */
     async newBoard() {
-      let res = await Interact.prompt(
+      let res:any = await Interact.prompt(
         `${Lang.t("board.add-a-board")}`,
         `${Lang.t(
           "board.add-a-board-description",
@@ -381,7 +384,7 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
       if (res) {
         let label = res.trim();
         if (label.toLowerCase() !== "all") {
-          BoardStore.addBoard(label).then((board) => {
+          BoardStore.addBoard(label).then((board:any) => {
             BoardStore.setActive(board.id);
           });
         } else {
@@ -527,7 +530,7 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
           boardOptions(evt.detail);
         }}
         on:tabTap={(event) => {
-          BoardStore.setActive(event.detail.id, event.detail);
+          BoardStore.setActive(event.detail.id);
         }}
       />
 
@@ -558,7 +561,7 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
               <!--- If it's way back - it's not really set-->
               {#if daysSinceLastBackup > 1000} 
                 <Text inline size="sm" faded className="">
-                  <Icon name="bell" size='12' />
+                  <Icon name="bell" size={12} />
                   {Lang.t('general.no-known-backups', 'No known backups')}
                 </Text>
               {:else}

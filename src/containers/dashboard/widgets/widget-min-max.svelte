@@ -16,7 +16,7 @@
       {formatValue(widget.stats.max.value, widget)}
     </Text>
     <Text size="xs" faded style="margin-left:-12px;">
-      <Icon name="chevronUp" size="12" />
+      <Icon name="chevronUp" size={12} />
       {dayjs(widget.stats.max.date).format(dateFormat)}
     </Text>
   </div>
@@ -27,12 +27,12 @@
     </Text>
     <Text size="xs" faded style="margin-right:-12px;">
       {dayjs(widget.stats.min.date).format(dateFormat)}
-      <Icon name="chevronDown" size="12" />
+      <Icon name="chevronDown" size={12} />
     </Text>
   </div>
 </div>
 
-<style>
+<style global lang="postcss">
   .min-max {
     display: flex;
     flex-direction: column;
@@ -42,7 +42,6 @@
   .max {
     padding-bottom: 6px;
   }
-
   .widget-size-lg .min-max {
     font-size: 1.4em;
   }

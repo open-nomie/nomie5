@@ -264,7 +264,7 @@ const boardsInit = () => {
         return bs;
       });
     },
-    addBoard(label, trackers) {
+    addBoard(label: string, trackers?: Array<any>) {
       trackers = trackers || [];
       return new Promise((resolve, reject) => {
         let id = nid(new Date().getTime() + label).substr(0, 10);

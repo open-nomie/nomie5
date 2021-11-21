@@ -45,6 +45,7 @@ import { Lang } from "./lang";
 import { SearchStore } from "./search-store";
 import { ActiveLogStore } from "./active-log";
 import type NLog from "../modules/nomie-log/nomie-log";
+import type { ITracker } from "../modules/tracker/tracker";
 
 const console = new Logger("✋ Interact");
 
@@ -297,7 +298,7 @@ const interactInit = () => {
       //   navigator.vibrate(ms);
       // }
     },
-    editTracker(tracker) {
+    editTracker(tracker: ITracker | undefined) {
       return new Promise((resolve, reject) => {
         update((s) => {
           s.trackerEditor.show = true;
