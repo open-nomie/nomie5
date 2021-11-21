@@ -3,9 +3,9 @@
   import Map from "./../map/map.svelte";
   import NoteTextualizer from "./../../components/note-textualizer/note-textualizer.svelte";
   import TrackerSmallBlock from "../../components/tracker-small-block/tracker-small-block.svelte";
-  import { UserStore } from "./../../store/user-store.js";
+  import { UserStore } from "./../../store/user-store";
   import { TrackerStore } from "../../store/tracker-store";
-  import { LedgerStore } from "../../store/ledger.js";
+  import { LedgerStore } from "../../store/ledger";
   import Card from "./../../components/card/card.svelte";
   import Text from "./../../components/text/text.svelte";
   import HScroller from "./../../components/h-scroller/h-scroller.svelte";

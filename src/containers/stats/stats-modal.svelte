@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="typescript">
   //Vendors
   import dayjs from "dayjs";
   import  { Dayjs, OpUnitType } from "dayjs";
@@ -101,49 +101,46 @@
     }
   }
 
-  /**
-   * States Modal Main State
-   * Its a class because it's getting bit and complicated
-   * **/
-  class StatsModalState {
-    public currentTerm: any = null; // what's the search term @person #tracker +context
-    public currentColor: string = "#444"; // Default color
-    public date: Dayjs; // Setup the date
-    public timeSpan: string;
-    public dataView: string;
-    public timeOption: Array<any>;
-    public viewOption: Array<any>;
-    public loading: boolean;
-    public stats: any;
-    public compare: Array<any>;
-    public selected: { index: any; rows: any; date: any };
-    public lookupStack: Array<any>;
-    public related: Array<any>;
-    public trackableElement: TrackableElement;
-    public tracker: TrackerConfig;
-    public showAnimation: boolean = false;
-    public range: any = undefined;
-
-    constructor() {
-      this.currentColor = "#444";
-      this.date = dayjs();
-      this.timeSpan = remember("timeSpan") || "w";
-      this.dataView = remember("dataView") || "overview";
-      this.timeOption = [];
-      this.viewOption = [];
-      this.loading = true;
-      this.range = undefined;
-      this.stats = null;
-      this.compare = [];
-      this.selected = { index: undefined, rows: null, date: null };
-      this.lookupStack = [];
-      this.related = [];
-      this.trackableElement = undefined;
-      this.tracker = undefined;
-    }
+  type StatusModalProps = {
+    currentTerm?: string; // what's the search term @person #tracker +context
+    currentColor: string; // Default color
+    date: Dayjs; // Setup the date
+    timeSpan: string;
+    dataView: string;
+    timeOption: Array<any>;
+    viewOption: Array<any>;
+    loading: boolean;
+    stats: any;
+    compare: Array<any>;
+    selected: { index: any; rows: any; date: any };
+    lookupStack: Array<any>;
+    related: Array<any>;
+    trackableElement: TrackableElement;
+    tracker: TrackerConfig;
+    showAnimation: boolean;
+    range?: any;
   }
 
-  const state = new StatsModalState();
+  const state:StatusModalProps = {
+    currentColor: "#444",
+    date: dayjs(),
+    timeSpan: remember("timeSpan") || "w",
+    dataView: remember("dataView") || "overview",
+    timeOption: [],
+    viewOption: [],
+    loading: true,
+    range: undefined,
+    stats: null,
+    compare: [],
+    selected: { index: undefined, rows: null, date: null },
+    lookupStack: [],
+    related: [],
+    showAnimation: false,
+    trackableElement: undefined,
+    tracker: undefined,
+  }
+
+
 
   function setTimeView(option) {
     remember("timeSpan", option.id);

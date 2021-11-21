@@ -13,7 +13,7 @@
 // Modules
 
 // Nomie log is the base Log item that is saved in a ledger
-import logFilter from "../modules/log-filter/log-filter.js";
+import logFilter from "../modules/log-filter/log-filter";
 // Storage for generic access to local,blockstack,pouch
 import Storage from "../modules/storage/storage";
 // Hooks for firing off hooks
@@ -47,9 +47,7 @@ import { logAppendLocationIfNeeded } from "./ledger/ledger-add-location";
 
 import type { IQueryOptions } from "./ledger/ledger-tools";
 import type { ITrackersSummary } from "./ledger/ledger-tools";
-import type { ITracker, ITrackerMath } from "../modules/tracker/tracker.js";
-import math from "../utils/math/math.js";
-import NomieUOM from "../utils/nomie-uom/nomie-uom.js";
+
 
 const console = new Logger("🧺 store/ledger.js", true);
 // Hooky is for firing off generic events
@@ -345,7 +343,7 @@ const ledgerInit = () => {
      * It should not be used for updating
      * @param {NLog} log
      */
-    async saveLog(log):Promise<{ log: NLog, date: string }> {
+    async saveLog(log): Promise<{ log: NLog, date: string }> {
       log = await methods.prepareLog(log);
       try {
         let saved = await this._saveLog(log);
@@ -383,7 +381,7 @@ const ledgerInit = () => {
      * @param log
      * TODO make this dry enough to put in its own ledgerTools function
      */
-    async _saveLog(log: NLog):Promise<{log:NLog, date:string}> {
+    async _saveLog(log: NLog): Promise<{ log: NLog, date: string }> {
       // Set up a holder for current state
       let currentState = state({
         saving: true,
@@ -443,14 +441,14 @@ const ledgerInit = () => {
         // Fire off the onLogSaved
         methods.hooks.run("onLogSaved", log);
         tick(100, methods.getToday);
-        
+
         // methods.getToday(); // Get Today
         return { log, date };
       } catch (e) {
         console.error("_saveLog error", e.message);
         throw new Error(e.message);
       }
-      
+
     },
 
     /**

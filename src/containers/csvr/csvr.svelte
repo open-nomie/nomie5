@@ -2,13 +2,13 @@
   import { onMount } from "svelte";
   import { UserStore } from "../../store/user-store";
 
-  class CSVExporter {
-    search: string;
-  }
+  // class CSVExporter {
+  //   search: string;
+  // }
 
-  const state = {
-    saved: [],
-  };
+  // const state = {
+  //   saved: [],
+  // };
 
   async function main() {
     let savedExports = await UserStore.mstore("csv_exports");
