@@ -1,7 +1,6 @@
 import type NLog from "../nomie-log/nomie-log";
 import type { Dashboard } from "../dashboard/dashboard";
 import type TrackerConfig from "../tracker/tracker";
-import type { ITracker } from "../tracker/tracker";
 import { N1ImportNormalizer } from "./import.n1";
 import { N2ImportNormalizer } from "./import.n2";
 import { N3ImportNormalizer } from "./import.n3";
@@ -9,15 +8,15 @@ import { N5ImportNormalizer } from "./import.n5";
 import type { IPerson } from "../person/person";
 // import type { ILocation } from "../locate/Location";
 
-export interface ITrackers {
+export type ITrackers = {
   [key: string]: TrackerConfig;
 }
 
-export interface IPeople {
+export type IPeople = {
   [key: string]: IPerson;
 }
 
-export interface INormalizedImport {
+export type INormalizedImport = {
   trackers?: ITrackers;
   boards?: Array<any>;
   context?: Array<string>;

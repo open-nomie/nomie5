@@ -1,7 +1,7 @@
 import Geohash from "latlon-geohash";
 import nid from "../nid/nid";
 
-export interface ILocation {
+export type ILocation = {
   lat: number;
   lng: number;
   name: string;

@@ -1,38 +1,17 @@
 <script lang="ts">
   import { Interact } from "../../store/interact";
-  import Map from "./../map/map.svelte";
-  import NoteTextualizer from "./../../components/note-textualizer/note-textualizer.svelte";
-  import TrackerSmallBlock from "../../components/tracker-small-block/tracker-small-block.svelte";
-  import { UserStore } from "./../../store/user-store";
-  import { TrackerStore } from "../../store/tracker-store";
+ 
   import { LedgerStore } from "../../store/ledger";
-  import Card from "./../../components/card/card.svelte";
   import Text from "./../../components/text/text.svelte";
-  import HScroller from "./../../components/h-scroller/h-scroller.svelte";
-  import NToolbarGrid from "./../../components/toolbar/toolbar-grid.svelte";
-  import NToolbar from "./../../components/toolbar/toolbar.svelte";
-  import NListItem from "./../../components/list-item/list-item.svelte";
   import NIcon from "./../../components/icon/icon.svelte";
   import NModal from "./../../components/modal/modal.svelte";
-  import extractor from "../../utils/extract/extract";
-  import math from "../../utils/math/math";
-  import arrayUtils from "../../utils/array/array_utils";
   import dayjs from "dayjs";
-  import TrackerConfig from "../../modules/tracker/tracker";
   import Button from "../../components/button/button.svelte";
-  import ListItemLog from "../../components/list-item-log/list-item-log.svelte";
-  import type NLog from "../../modules/nomie-log/nomie-log";
   import ButtonGroup from "../../components/button-group/button-group.svelte";
   import Icon from "./../../components/icon/icon.svelte";
   import Toolbar from "./../../components/toolbar/toolbar.svelte";
-  import type { loop } from "svelte/internal";
-  import { Lang } from "../../store/lang";
-  import type Person from "../../modules/person/person";
-  import TrackableElement from "../../modules/trackable-element/trackable-element";
   import { PeopleStore } from "../../store/people-store";
-  import ShortcutUserButton from "../../components/shortcut-button/shortcut-user-button.svelte";
   import Row from "../../components/row/row.svelte";
-  import Empty from "../empty/empty.svelte";
   import { getContext, getNotes, getPeople, OTDViews, processTrackers } from "./on-this-day-helpers";
 
   import type { OTDView, OTDViewOption } from "./on-this-day-helpers";

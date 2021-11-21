@@ -29,6 +29,8 @@
   export let toDate: any;
   export let timeSpan: ITimeSpanKey;
   export let remember: Function;
+  // TODO: Look to see if this is correct - we're not using selected within this component
+  export const selected: boolean = false;
 
   interface StatComareState {
     compare: Array<StatsRef>;
@@ -303,34 +305,8 @@
   }
 </script>
 
-<style global lang="scss">
-  // .stats-compare {
-  //   // .chart-item.solo.n-item {
-  //   //   margin: 8pt 0;
-  //   //   width: calc(100% - 0px);
-  //   //   border-radius: 0px;
-  //   //   padding: 8px 0;
-  //   //   padding-right: 8px;
-  //   // }
-
-  //   // .chart-item {
-  //   //   position: relative;
-  //   //   .btn-close {
-  //   //     position: absolute;
-  //   //     top: 5px;
-  //   //     left: 6px;
-  //   //     padding: 0;
-  //   //     height: 20px;
-  //   //     width: 20px;
-  //   //     border: solid 1px var(--color-solid-2);
-  //   //     background-color: var(--color-solid);
-  //   //     svg {
-  //   //       height: 18px;
-  //   //       width: 18px;
-  //   //     }
-  //   //   }
-  //   // }
-
+<style global lang="postcss">
+ 
   .stats-compare .distance {
     font-size: 12px;
     color: var(--color-solid-3);
@@ -344,10 +320,7 @@
     top:6px;
     left:6px;
   }
-  // .chart-item .btn-close svg {
-  //   fill: var(--color-inverse) !important;
-  // }
-  // }
+
 </style>
 
 {#if stats}

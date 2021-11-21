@@ -17,7 +17,7 @@ export function toTag(str: string) {
     .toLowerCase();
 }
 
-export interface ITracker {
+export type ITracker = {
   id?: string; // Id of Tracker
   tag?: string; // Tag of Tracker
   label?: string; // Label of the Tracker

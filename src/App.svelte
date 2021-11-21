@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { wait } from './utils/tick/tick';
   // Svelte
   // import { Router, Route, navigate } from "svelte-routing";
   import Tailwindcss from './scss/Tailwind.svelte';
@@ -7,7 +8,7 @@
 
   // Vendors
   import Spinner from "./components/spinner/spinner.svelte";
-  import * as ComposiGestures from "@composi/gestures";
+  // import * as ComposiGestures from "@composi/gestures";
 
   // Containers
   import Interactions from "./containers/interactions/interactions.svelte";
@@ -58,7 +59,7 @@
   // Set a better console
   const console = new Logger("APP");
 
-  ComposiGestures.default.gestures();
+  // ComposiGestures.default.gestures();
 
   /**
    * Day / Time Change Monitoring
@@ -162,7 +163,7 @@
 
   // Used to make sure that boards and trackers are loaded
   UserStore.onReady(async () => {
-    console.log("🌳🌳🌳🌳🌳 Welcome to NOMIE APP_VERSION 🌳🌳🌳🌳🌳");
+    console.log("🌳🌳🌳🌳🌳 Welcome to NOMIE APP_VERSION 🌳🌳🌳🌳🌳", "👋");
     // Set the user if they're logged in
     ready = true;
     PeopleStore.init(); // Initialize the People Store
@@ -173,16 +174,10 @@
     LastUsed.init();
     SearchStore.init();
 
-    // Run any commands if needed
-    setTimeout(() => {
-      // Pull upp the offline queue
+    await wait(500);
+    CommanderStore.run();
+    ApiStore.init();
 
-      // If there are any URL caommands, it will run here.
-      CommanderStore.run();
-      // If they have the API - it will load here
-      // NomieAPI.load();
-      ApiStore.init();
-    }, 500);
   });
 
   // Initialize Offline Queue regardless if we're offline

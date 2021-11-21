@@ -349,7 +349,7 @@ const ledgerInit = () => {
         let saved = await this._saveLog(log);
         return saved;
       } catch (e) {
-        console.error("error Saving log", e);
+        console.error(`Error Saving log: ${e}`);
         /**
          * Check if Offline or GaiaHub Error
          */
@@ -445,7 +445,7 @@ const ledgerInit = () => {
         // methods.getToday(); // Get Today
         return { log, date };
       } catch (e) {
-        console.error("_saveLog error", e.message);
+        console.error(`_saveLog error: ${e.message}`);
         throw new Error(e.message);
       }
 

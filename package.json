@@ -162,7 +162,7 @@
     "chart.js": "^2.9.4",
     "nomie-utils": "^0.1.10",
     "postcss": "^8.2.15",
-    "pouchdb": "^7.1.1",
+    "pouchdb": "^7.2.2",
     "rollup-plugin-postcss": "^4.0.1",
     "sortablejs": "^1.10.2"
   },

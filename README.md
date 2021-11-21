@@ -1,10 +1,19 @@
-# Nomie 5
+# 5.7 TODO
+
+- [] Replace rollup with something faster (vite maybe)
+- [x] Convert all JS to TS
+- [] Remove ALL SCSS
+- [x] Install tailwind
+- [] Remove Bootstrap - replace with Tailwind
+- [] Refactor to domain driven structure (components, domains);
+
+## Nomie 5.7
+
+Welcome to a new mini chapter in Nomie.
 
 ## Open Source Life Tracker / Mood Tracker / Data Journal
 
-![](https://shareking.s3.amazonaws.com/pb-l3LHnDdC5H-1586728691.png)
-
-## Want to help? [Become a Nomie Patron](https://www.patreon.com/nomieapp)
+![Nomie 5 Github](https://shareking.s3.amazonaws.com/pb-l3LHnDdC5H-1586728691.png)
 
 ## Try it out
 
@@ -14,9 +23,13 @@ If you like to live dangerously you can run the dev branch
 
 - [https://v5-dev.nomie.app](https://v5-dev.nomie.app) **Development** (v5-develop)
 
+If you like to live REALLLY dangerously you can run the alpha branch
+
+- [https://v5-alpha.nomie.app](https://v5-alpha.nomie.app) **Alpha** (v5-alpha)
+
 ---
 
-Version 4 will main accessible at https://open.nomie.app
+Version 4 will main accessible at [https://open.nomie.app](https://open.nomie.app)
 And on the /v4 branch
 
 ---
@@ -47,9 +60,9 @@ Currently Nomie 5.\* is going through a Typescript migration, thus expect both .
 
 ## [Svelte](https://svelte.dev)
 
-This rewrite/port uses SvelteJS https://svelte.dev - a great tool for building fast / reactive single page apps (like Vue, React) without the framework.
+This rewrite/port uses [SvelteJS](https://svelte.dev) - a great tool for building fast / reactive single page apps (like Vue, React) without the framework.
 
-## [Blockstack](https://blockstack.org)
+## [Blockstack](https://blockstack.org) (DEPRECATED)
 
 Since this version runs in the browser, it's using Blockstack for auth and storage. Blockstack is all about decentralized apps, and giving users full control over their data and keeps everything (trackers, boards, every single log) encrypted, only to be decrypted with your blockstack profile.
 
@@ -57,7 +70,7 @@ Since this version runs in the browser, it's using Blockstack for auth and stora
 
 You'll need Node >= 6 and NPM. I have not tested running this on Windows.
 
-```
+```bash
 git clone git@github.com:nomie-app/nomie.git
 cd nomie
 git checkout v5-develop
@@ -67,7 +80,7 @@ npm run dev
 
 ## Running tests
 
-```
+```bash
 npm run cypress
 ```
 
@@ -85,11 +98,11 @@ A more complicated example would be:
 
 which would be converted into something like:
 
-```
+```javascript
 {
-	people:['em','maddy'],
- 	trackers: { walked: 4},
-	context:['memory']
+    people:['em','maddy'],
+    trackers: { walked: 4},
+    context:['memory']
 }
 ```
 
@@ -160,31 +173,32 @@ Tap to start, tap to stop. The timer is great for tracking durations.
 
 Combine multiple trackers into a single flow, for collecting a sequence of tracker data
 
-# Coding Rules
+## Coding Rules
 
-- **Keep it readable** - focus on writing code that new people can easily understand and follow. If the code can't do it, then do it with comments. There's no such thing as too much commenting.
+- **Keep it readable** - focus on writing code that new people can easily understand and follow. If the code can't do it, then do it with comments. There's no such thing as too much commenting. (yes, I should follow my own rules)
 - **Keep it under 300 lines** - the goal is to keep files under 300 lines of code. Note: Sometimes that's not feasible, and I break it often
 - **Keep it flexible** - think in components. If you're doing something more than once, it most likely should be a component.
-- **Keep it save** - if you're deleting something of the users, consider using `await Interact.confirm("Are you sure")` to confirm they're action
+- **Keep it safe** - if you're deleting something of the users, consider using `await Interact.confirm("Are you sure")` to confirm they're action
 - **Keep cleaning, organizing and testing** - this project didn't start very clean, or ready for unit testing, this should be an on going objective.
-- **Use what's there** - Twitter bootstrap ([and all its classes](https://getbootstrap.com/)) are available, reuse what already exists before writing new - especially css.
+- **Use what's there**
+  - Tailwind CSS - is the new world
+  - Twitter bootstrap is being Deprecated ([and all its classes](https://getbootstrap.com/)) are available, reuse what already exists before writing new - especially css.
 
 ## Nomie Jingle
 
-The Nomie Jingle was written and produced by soldilil - see more work at https://soldilil.bandcamp.com
-
-## [Become a Nomie Patron](https://www.patreon.com/nomieapp)
+The Nomie Jingle was written and produced by soldilil - [see more work](https://soldilil.bandcamp.com)
 
 ## Open Source Props
 
-- SvelteJS https://svelte.dev/
-- Leaflet https://leafletjs.com
-- OpenStreetMap https://openstreetmap.org
-- Blockstack https://blockstack.org
-- Cypress https://cypress.io
-- PouchDB https://pouchdb.com
-- LocalForage https://localforage.github.io/localForage/
-- Carbon Design System https://www.carbondesignsystem.com
+- [SvelteJS](https://svelte.dev/)
+- [Leaflet](https://leafletjs.com)
+- [OpenStreetMap](https://openstreetmap.org)
+- [Blockstack](https://blockstack.org)
+- [Cypress](https://cypress.io)
+- [PouchDB](https://pouchdb.com)
+- [LocalForage](https://localforage.github.io/localForage/)
+- [Carbon Design System](https://www.carbondesignsystem.com)
+- [svelte-emoji-picker](https://github.com/joeattardi/svelte-emoji-selector)
 
 ## Trademark License
 

@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import EmojiList from "./EmojiList.svelte";
-  import emojiData from "./data/emoji.js";
+  import emojiData from "./data/emoji";
 
   export let searchText = "";
 
@@ -53,7 +53,7 @@
       on:emojihover
       on:emojiclick />
   {:else}
-    <div class="svelte-emoji-picker__no-results" on:mouseover={onMouseOver}>
+    <div class="svelte-emoji-picker__no-results" on:focus={()=>{}} on:mouseover={onMouseOver}>
       <div class="icon">😭</div>
       <h3>No emojis found.</h3>
     </div>

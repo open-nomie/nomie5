@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "types": ["jest", "svelte"],
     "esModuleInterop": true,
-    "importsNotUsedAsValues": "remove",
+    "importsNotUsedAsValues": "error",
     "allowJs": true,
     "checkJs": true
   },

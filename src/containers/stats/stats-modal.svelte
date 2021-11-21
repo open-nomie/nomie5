@@ -1,14 +1,14 @@
 <script lang="typescript">
   //Vendors
   import dayjs from "dayjs";
-  import  { Dayjs, OpUnitType } from "dayjs";
+  import  type { Dayjs } from "dayjs";
 
   // Modules
-  import  TrackerConfig from "../../modules/tracker/tracker";
+  import type TrackerConfig from "../../modules/tracker/tracker";
   import StatsV5, { timeSpans } from "../../modules/stats/statsV5";
-  import  { ITimeSpanUnit, ITimeSpan } from "../../modules/stats/statsV5";
+  import type { ITimeSpanUnit } from "../../modules/stats/statsV5";
 
-  import  TrackableElement from "../../modules/trackable-element/trackable-element";
+  import type TrackableElement from "../../modules/trackable-element/trackable-element";
 
   // import { strToColor } from "../../components/dymoji/dymoji";
 
@@ -286,13 +286,13 @@
    * Get a Trackable Element
    * from a String.
    * **/
-  function getTrackableElement(str): TrackableElement {
-    let type = extractor.toElement(str);
-    if (type.type == "tracker") {
-      type.obj = $TrackerStore.trackers[type.id];
-    }
-    return type;
-  }
+  // function getTrackableElement(str): TrackableElement {
+  //   let type = extractor.toElement(str);
+  //   if (type.type == "tracker") {
+  //     type.obj = $TrackerStore.trackers[type.id];
+  //   }
+  //   return type;
+  // }
 
   function onMoreTap() {
     let buttons = [
@@ -594,22 +594,14 @@
   }
 </script>
 
-<style lang="scss">
-  :global(.stats-modal) {
+<style global lang="postcss">
+  .stats-modal {
     z-index: 1301 !important;
   }
-
-  :global(.chart-item) {
+  .chart-item {
     position: relative;
   }
-
-  // .time-range {
-  //   font-size: 0.9em;
-  //   font-weight: 500;
-  //   text-align: center;
-  //   line-height: 1em;
-  // }
-  :global(.stats-modal .n-modal) {
+  .stats-modal .n-modal {
     max-width: 500px !important;
   }
 </style>
@@ -711,7 +703,7 @@
   <div slot="footer" class="w-100">
     <NButtonGroup
       inverse
-      color={state.currentColor}
+
       buttons={state.viewOption} />
   </div>
 
@@ -723,10 +715,11 @@
         toDate={getToDate()}
         timeSpan={state.timeSpan}
         stats={state.stats}
-        selected={state.selected}
         on:dateSelected={(evt) => {
           setSelected(evt.detail);
         }} />
+        <!-- selected={state.selected} -->
+
     {/if}
     {#if state.dataView === 'streak'}
       {#if state.trackableElement}
@@ -734,6 +727,7 @@
           {#if state.timeSpan !== 'd'}
             <Streak
               showDetail={true}
+              term={undefined}
               element={state.trackableElement}
               selectedDate={state.date}
               view={timeSpans[state.timeSpan].streakUnit} />
@@ -769,7 +763,6 @@
           <NLogList
             fullDate
             compact
-            limit={30}
             logs={state.selected.rows || state.stats.rows}
             style="min-height:100%"
             className="bg-bg flex-grow flex-shrink" />

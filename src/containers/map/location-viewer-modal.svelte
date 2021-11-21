@@ -3,9 +3,9 @@
   import Button from "../../components/button/button.svelte";
 
   import Modal from "../../components/modal/modal.svelte";
-  import { ILocation } from "../../modules/locate/Location";
+  import type { ILocation } from "../../modules/locate/Location";
   import Location from "../../modules/locate/Location";
-  import NLog from "../../modules/nomie-log/nomie-log";
+  import type NLog from "../../modules/nomie-log/nomie-log";
   import { Interact } from "../../store/interact";
   import { Locations } from "../../store/locations";
   import Map from "./map.svelte";

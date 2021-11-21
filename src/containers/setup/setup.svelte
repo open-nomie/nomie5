@@ -2,8 +2,7 @@
   import { onMount } from "svelte";
 
   // modules
-  import Storage from "../../modules/storage/storage";
-  import Tracker from "../../modules/tracker/tracker";
+
 
   // components
 
@@ -37,7 +36,7 @@
   import Button from "../../components/button/button.svelte";
 
   // TODO: UserSession shouldn't be in here - login should be fired by Storage.
-  const UserSession = new blockstack.UserSession();
+  // const UserSession = new blockstack.UserSession();
 
   let isMobile = typeof window.orientation !== "undefined" || navigator.userAgent.indexOf("IEMobile") !== -1;
 
@@ -64,10 +63,10 @@
   slides.push(StorageSlide);
 
   const methods = {
-    blockstackLogin() {
-      state.redirecting = true;
-      UserSession.redirectToSignIn();
-    },
+    // blockstackLogin() {
+    //   state.redirecting = true;
+    //   UserSession.redirectToSignIn();
+    // },
 
     async next() {
       if (slides[state.activeSlide] == StorageSlide && $UserStore.storageType) {
@@ -104,9 +103,7 @@
   });
 </script>
 
-<style lang="scss">
-  @import "../../scss/utils/_utils";
-</style>
+
 
 <NLayout pageTitle="Nomie" className="page-setup" showTabs={false}>
   <div slot="header" class="n-toolbar-grid container">
@@ -138,7 +135,7 @@
               {#if state.activeSlide == 0}I&nbsp;agree{:else}Next{/if}
             </Button>
           {:else}
-            <button class="btn btn-clear disabled right" disabled="true">
+            <button class="btn btn-clear disabled right" disabled={true}>
               <strong>Redirecting...</strong>
             </button>
           {/if}

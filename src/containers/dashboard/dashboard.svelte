@@ -34,8 +34,8 @@
   // Stores
   import { Interact } from "../../store/interact";
   import { DashboardStore } from "../../store/dashboard-store";
-  import { LedgerStore } from "./../../store/ledger.js";
-  import { PeopleStore } from "./../../store/people-store.js";
+  import { LedgerStore } from "./../../store/ledger";
+  import { PeopleStore } from "./../../store/people-store";
   import { TrackerStore } from "../../store/tracker-store";
   import { LastUsed } from "../../store/last-used";
   import type Person from "../../modules/person/person";

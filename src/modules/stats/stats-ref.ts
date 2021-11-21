@@ -2,7 +2,8 @@
 import { strToColor } from "../../components/dymoji/dymoji";
 import Tracker from "../tracker/tracker";
 import type { ITrackerMath } from "../tracker/tracker";
-import StatsV5, { ITimeSpan, ITimeSpanUnit, ITimeSpanKey } from "./statsV5";
+import StatsV5 from "./statsV5";
+import type { ITimeSpanKey } from "./statsV5";
 import type { IStats } from "./statsV5";
 import extractor from "../../utils/extract/extract";
 

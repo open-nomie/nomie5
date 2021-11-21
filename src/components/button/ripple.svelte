@@ -24,7 +24,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="postcss">
   .ripple {
     pointer-events: none;
     position: absolute;

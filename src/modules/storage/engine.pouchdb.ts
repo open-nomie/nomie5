@@ -11,11 +11,13 @@ import Remote from "../remote/remote";
 import Logger from "../../utils/log/log";
 import { Interact } from "../../store/interact";
 
+import PouchDB from "pouchdb";
+
 import { Lang } from "../../store/lang";
 
 const console = new Logger("👨‍💻 engine.pouchdb");
 
-declare var PouchDB: any;
+// declare var PouchDB: any;
 
 let listeners = [];
 let changeListeners = {};

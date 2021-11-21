@@ -19,10 +19,10 @@ import type { ITrackerMath } from "../tracker/tracker";
 import type { StreakViewTypes } from "../../containers/steak/streak-helper";
 
 export type IStatsChartUnit = "day" | "week" | "month" | "quarter" | "year";
-export type IStatsChartMode = "d" | "w" | "m" | "q" | "y";
+export type IStatsChartMode = "d" | "w" | "m" | "q" | "y" | string;
 export type ITimeSpanKey = IStatsChartMode;
 
-export interface ITimeSpanUnit {
+export type ITimeSpanUnit = {
   id: string;
   label: string;
   title: string;
@@ -32,7 +32,7 @@ export interface ITimeSpanUnit {
   count?: number;
   streakUnit: StreakViewTypes;
 }
-export interface ITimeSpan {
+export type ITimeSpan = {
   [key: string]: ITimeSpanUnit;
 }
 
@@ -44,33 +44,33 @@ export const timeSpans: ITimeSpan = {
   y: { id: "y", format: "YYYY-MM", label: "Y", title: "Year", displayUnit: "month", unit: "year", streakUnit: "year" },
 };
 
-export interface IStatDow {
+export type IStatDow = {
   count: number;
   percent: number;
   values: Array<number>;
 }
-export interface IStatsChartLabel {
+export type IStatsChartLabel = {
   x: string;
 }
-export interface IStatsChartValue {
+export type IStatsChartValue = {
   x: string;
   y: number;
   date: Dayjs;
   unit: IStatsChartUnit;
 }
 
-export interface IStatsValueMap {
+export type IStatsValueMap = {
   [key: string]: Array<number>;
 }
 
-export interface IStatsTodUnit {
+export type IStatsTodUnit = {
   count: number;
   values: Array<number>;
   start: number;
   end: number;
   percent: number;
 }
-export interface IStatsTod {
+export type IStatsTod = {
   afternoon: IStatsTodUnit;
   early_morning: IStatsTodUnit;
   evening: IStatsTodUnit;
@@ -78,13 +78,13 @@ export interface IStatsTod {
   night: IStatsTodUnit;
 }
 
-export interface IStatsMaxMin {
+export type IStatsMaxMin = {
   date: Date;
   dateKey: string;
   value: number;
 }
 
-export interface IStats {
+export type IStats = {
   trackableElement: TrackableElement;
   rows: Array<NLog>;
   type: ITrackableElementType;
@@ -109,7 +109,7 @@ export interface IStats {
 
 const console = new Logger("📊 V5 Stats");
 
-export interface IStatsConfig {
+export type IStatsConfig = {
   fromDate?: Dayjs;
   toDate?: Dayjs;
   mode?: IStatsChartMode;

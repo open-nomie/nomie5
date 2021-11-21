@@ -7,7 +7,7 @@
   import { createEventDispatcher } from "svelte";
 
   // Local
-  import DateTime from "./date-time.js";
+  import DateTime from "./date-time";
   import math from "../../utils/math/math";
 
   // vendors

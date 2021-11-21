@@ -64,7 +64,7 @@ export interface ConfettiOptions {
   timeout?: number;
 }
 
-export interface IPopMenuOptions {
+export type IPopMenuOptions = {
   show?: boolean;
   buttons: Array<any>;
   title?: string;
@@ -76,10 +76,10 @@ interface StatsInteractConfig {
   date: Dayjs | undefined;
   terms: Array<string>;
   focused:
-    | undefined
-    | {
-        date: Dayjs | undefined;
-      };
+  | undefined
+  | {
+    date: Dayjs | undefined;
+  };
 }
 
 const stateStats: StatsInteractConfig = {
@@ -109,7 +109,7 @@ const interactInit = () => {
       title: "Enter Pin",
       canClose: false,
       show: false,
-      onPin: (v: string) => {},
+      onPin: (v: string) => { },
     },
     streak: {
       show: null,
@@ -240,7 +240,7 @@ const interactInit = () => {
         return state;
       });
     },
-    blocker(message, percent?:number) {
+    blocker(message, percent?: number) {
       update((state) => {
         state.blocker.show = true;
         state.blocker.message = message;
@@ -558,7 +558,7 @@ const interactInit = () => {
       setTimeout(() => {
         update((state) => {
           state.pin.show = false;
-          state.pin.onPin = (v: string) => {};
+          state.pin.onPin = (v: string) => { };
           state.pin.canClose = false;
           state.pin.title = "Enter Pin";
           return state;
@@ -800,7 +800,7 @@ const interactInit = () => {
       });
     },
     reload() {
-      document.location.reload(true);
+      document.location.reload();
     },
     popmenu(options: IPopMenuOptions) {
       setTimeout(() => {

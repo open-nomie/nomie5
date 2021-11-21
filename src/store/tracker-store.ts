@@ -13,7 +13,8 @@ import tick from "../utils/tick/tick";
 import downloader from "../modules/download/download";
 
 // Stores
-import { Interact, IPopMenuOptions } from "./interact";
+import { Interact } from "./interact";
+import type { IPopMenuOptions } from "./interact";
 import { BoardStore } from "./boards";
 import { TrackerLibrary } from "./tracker-library";
 import { Lang } from "./lang";

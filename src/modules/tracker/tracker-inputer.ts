@@ -1,20 +1,15 @@
-import { ActiveLogStore } from "../../store/active-log";
-import { LedgerStore } from "../../store/ledger";
 import { Interact } from "../../store/interact";
 import extractor from "../../utils/extract/extract";
-import Tracker, { ITracker } from "./tracker";
-import PromiseStep from "../../utils/promise-step/promise-step";
-import NomieLog from "../nomie-log/nomie-log";
-import { TrackerStore } from "../../store/tracker-store";
+import Tracker from "./tracker";
 import type TrackerConfig from "./tracker";
 import type { ITrackers } from "../import/import";
 import is from "../../utils/is/is";
 
-export interface ITrackerInputerGetOptions {
+export type ITrackerInputerGetOptions = {
   value?: number;
   allowSave?: boolean;
 }
-export interface ITrackerInputResult {
+export type ITrackerInputResult = {
   suffix?: string;
   tracker?: TrackerConfig;
   value?: number;

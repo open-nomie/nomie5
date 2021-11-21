@@ -1,9 +1,10 @@
-import { INormalizedImport, dashCase, ITrackers } from "./import";
+import { dashCase } from "./import";
 import TrackerConfig from "../tracker/tracker";
-import type { ITracker } from "../tracker/tracker";
-import type { IBoard } from "../board/board";
 import NLog from "../nomie-log/nomie-log";
 import nid from "../nid/nid";
+
+import type { INormalizedImport, ITrackers } from "./import";
+import type { IBoard } from "../board/board";
 
 function getEmoji(label: string) {
   return label.substr(0, 1);

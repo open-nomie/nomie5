@@ -30,8 +30,8 @@ import tick from "../utils/tick/tick";
 const console = new Logger("🤠 userStore");
 const timer = new Timer("UserStore", false);
 
-declare let blockstack: any;
-const UserSession = new blockstack.UserSession();
+// declare let blockstack: any;
+// const UserSession = new blockstack.UserSession();
 
 /**
  * Define User Store Interfaces
@@ -230,9 +230,9 @@ const userInit = () => {
     signout() {
       localStorage.clear();
       // Storage.clear(); // no we shouldn't clear all storage.
-      try {
-        blockstack.signUserOut(window.location.origin);
-      } catch (e) { }
+      // try {
+      //   blockstack.signUserOut(window.location.origin);
+      // } catch (e) { }
       window.location.href = window.location.href;
     },
     /**
@@ -259,7 +259,7 @@ const userInit = () => {
       update((u) => state);
     },
     redirectToSignIn() {
-      UserSession.redirectToSignIn();
+      // UserSession.redirectToSignIn();
     },
     setAlwaysLocate(bool) {
       localStorage.setItem(config.always_locate_key, JSON.stringify(bool));
@@ -401,7 +401,7 @@ const userInit = () => {
 
     // Pass the Session
     session() {
-      return UserSession;
+      return null;
     },
     // On Ready Event
     onReady(func) {
