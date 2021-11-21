@@ -20,7 +20,8 @@
     flex-shrink: 1;
     display: flex;
     background-color: transparent;
-    padding: 8px;
+    @apply py-2;
+    @apply px-4;
   }
   :global(.n-color-picker button.color-btn) {
     flex-grow: 0;
@@ -28,14 +29,17 @@
     border: solid 2px var(--color-solid);
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.06);
     transition: all 0.2s ease-in-out;
-    max-width: 20px;
-    height: 40px;
-    border-radius: 10px;
-    &.selected {
-      transform: scale(1.2);
+    max-width: 30px;
+    min-width:30px;
+    height: 38px;
+    border-radius: 14px;
+    transform: scale(0.85);
+  
+  }
+  :global(.n-color-picker button.color-btn.selected) {
+      transform: scale(1) !important;
       box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
       border: solid 1px var(--color-inverse);
-    }
   }
 </style>
 
@@ -58,7 +62,7 @@
         on:click={() => {
           value = color;
         }}
-        style="padding:0px; width:20px; background-color:{color}" />
+        style="background-color:{color}" />
     {/each}
   </NHScroller>
 {/if}

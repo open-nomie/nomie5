@@ -1,4 +1,6 @@
 <script lang="ts">
+	import EmojiSelector from './../../../components/emoji-selector/EmojiSelector.svelte';
+	import EmojiEditor from './../../../components/emoji-editor/emoji-editor.svelte';
   // components
 
   /**
@@ -39,13 +41,19 @@
   import Icon from "../../../components/icon/icon.svelte";
   import Button from "../../../components/button/button.svelte";
 
+  
+
   import is from "../../../utils/is/is";
   import trackerTypes from "../../../modules/tracker-types/tracker-types";
   import type { toLower } from "lodash";
+import Emoji from '../../../components/emoji-selector/Emoji.svelte';
+import Avatar from '../../../components/avatar/avatar.svelte';
 
   const dispatch = createEventDispatcher();
 
   export let tracker = new Tracker({});
+
+  let showEmojiSelector = false;
   // export let show = false;
 
   interface DataConfig {
@@ -272,46 +280,59 @@
         </div>
       </header>
 
-      <div class="emoji-editor">
-        <div class="emoji {data.tracker.emoji ? 'has-emoji' : 'no-emoji'}" style="border:solid 4px {data.tracker.color}">
-          <div style="background-color:{data.tracker.color}" class="background" />
-          <input
-            class="p-0 m-0 emoji"
-            type="text"
-            on:focus={(evt) => {
-              evt.target.select();
-            }}
-            bind:value={data.tracker.emoji}
-          />
-        </div>
-        {#if data.tracker.label}
-          <Text size="md" center className="mt-2">{data.tracker.label}</Text>
-        {/if}
-        {#if data.tracker.tag}
-          <Text size="sm" center faded className="mt-1">
-            #{data.tracker.tag}
-            {#if data.tracker._dirty}
-              <Button icon inline size="xs" color="clear" on:click={methods.editTag}>
-                <Icon name="edit" size="12" />
-              </Button>
-            {/if}
-          </Text>
-        {/if}
-      </div>
 
       <!-- Colort Selector -->
       <ColorPicker bind:value={data.tracker.color} className="mb-1 tracker-color" />
 
       <!-- Tracker Label input -->
-      <NInput
-        listItem
-        className="mb-3 tracker-label"
-        type="text"
-        name="label"
-        placeholder={Lang.t('tracker.label', 'Tracker Label')}
-        bind:value={data.tracker.label}
-        on:keyup={methods.labelChanged}
-      />
+      <div class="mb-3">
+        <NInput
+          listItem
+          className="mt-2 tracker-label"
+          type="text"
+          name="label"
+          placeholder={Lang.t('tracker.label', 'Tracker Label')}
+          bind:value={data.tracker.label}
+          on:keyup={methods.labelChanged}
+        >
+          <div slot="right">
+             {#if data.tracker.tag}
+              <button on:click={methods.editTag} class="space-x-3 bg-opacity-50 rounded-full bg-blue-500 text-white text-sm py-1 px-3 flex items-center justify-between">
+                <span>#{data.tracker.tag}</span>
+                {#if data.tracker._dirty}
+                  <Icon name="edit" size="12" />
+                {/if}
+              </button>
+            {/if}
+          </div>
+        </NInput>
+
+       
+
+      </div>
+
+      <div class="mb-3">
+        <ListItem  title="Emoji" on:click={()=>showEmojiSelector=true}>
+          <div slot="right">
+            {#if data.tracker.emoji}
+              <Avatar size={42} emoji={data.tracker.emoji} />
+            {:else}
+              No Emoji
+            {/if}
+          </div>
+        </ListItem>
+        {#if showEmojiSelector}
+        <div class="bg-solid-1">
+            <EmojiSelector on:emoji={(evt)=>{
+              showEmojiSelector = false;
+              data.tracker.emoji = evt.detail;
+              console.log(evt, data.tracker);
+            }} />
+        </div>
+        {/if}
+      </div>
+
+      
 
       <!-- Tracker Type Selector -->
 

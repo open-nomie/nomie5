@@ -13,13 +13,8 @@
   export let className = "";
   export let itemClass = "";
   export let list: Array<any> = [];
-  // export let editWithText = true;
-  // export let mode = "select";
-  // export let tracker: ITracker;
   export let showHeaderContent: boolean = true;
-  // export let showSaveEditButton: boolean = true;
-
-  // export let canSelect: boolean = true;
+  
 
   let ready = false;
   let textList;
@@ -59,6 +54,7 @@
     <Input
       solo
       listItem
+      placeholder={'Friends:\n@toby\n@patrick\n@maddy\nFeeling:\n#mood\n+joyful\n+anxious'}
       type="textarea"
       value={picks.join('\n')}
       bind:this={textList}

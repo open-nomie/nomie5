@@ -82,7 +82,7 @@
       }
     }
     .card {
-      border-radius: 1.2em;
+      @apply rounded-2xl;
       transition: all 0.2s ease-in-out;
       max-width: 400px;
       max-height: 80vh;
@@ -114,8 +114,8 @@
     .footer {
       border-top: solid 1px var(--color-faded-1);
       button {
+        @apply rounded-2xl;
         min-width: 120px;
-        border-radius: 0.9em;
       }
     }
     .btn-toolbar {
