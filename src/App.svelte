@@ -1,6 +1,7 @@
 <script>
   // Svelte
   // import { Router, Route, navigate } from "svelte-routing";
+  import Tailwindcss from './scss/Tailwind.svelte';
   import { onMount } from "svelte";
   import dayjs from "dayjs";
 
@@ -191,6 +192,8 @@
     UserStore.initialize();
   });
 </script>
+
+<Tailwindcss />
 
 {#if !ready && $UserStore.signedIn === false}
   <SetupRoute />
