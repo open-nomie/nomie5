@@ -45,7 +45,7 @@
 
 </script>
 
-<style>
+<style global>
   .nbtn {
     position: relative;
     overflow: hidden;
@@ -62,12 +62,12 @@
     bottom: 0;
   } */
 
-  :global(.nbtn.confirming) {
+  .nbtn.confirming {
     background-color: var(--color-red);
     color: #FFF;
   }
 
-  :global(.btn.btn-inline) {
+  .btn.btn-inline {
     display: inline-flex;
   }
   

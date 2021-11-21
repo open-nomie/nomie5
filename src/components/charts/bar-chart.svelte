@@ -258,7 +258,7 @@
         on:click={() => {
           Interact.onThisDay(points[activeIndex].date.toDate());
         }}>
-        <label>
+        <div arial-label="Group by">
           {#if points[activeIndex].unit == 'hour'}
             {points[activeIndex].date.format(hourFormat)}
           {:else if points[activeIndex].unit == 'day'}
@@ -266,7 +266,7 @@
           {:else if points[activeIndex].unit == 'month'}
             {points[activeIndex].date.format('MMM YYYY')}
           {:else}{points[activeIndex].x}{/if}
-        </label>
+        </div>
         <div class="value" style="background-color:{color}">
           {yFormat(points[activeIndex].y)}
         </div>

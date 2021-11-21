@@ -40,7 +40,7 @@
   import EmojiSearchResults from "./EmojiSearchResults.svelte";
   import VariantPopup from "./VariantPopup.svelte";
 
-  import emojiData from "./data/emoji";
+  import emojiData from "./data/emoji.ts";
   import ButtonGroup from "../button-group/button-group.svelte";
 
 

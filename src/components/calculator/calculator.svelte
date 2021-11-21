@@ -204,7 +204,7 @@
   </div>
 </div>
 
-<style lang="scss">
+<style lang="scss" global>
   @import "../../scss/utils/_utils";
   .buttons {
     display: grid;
@@ -272,12 +272,12 @@
       }
     }
   }
-  :global(.numberUp) {
+  .numberUp {
     display: inline-block;
     animation: numberUp 0.4s ease-in-out;
     -webkit-animation: numberUp 0.4s ease-in-out;
   }
-  :global(.n-calculator .nbtn) {
+  .n-calculator .nbtn {
     touch-action: manipulation;
     border: none;
     color: var(--color-inverse);
@@ -293,31 +293,31 @@
       font-size: 20px;
     }
   }
-  :global(.n-calculator .nbtn.r-0) {
+  .n-calculator .nbtn.r-0 {
     color: #fff;
     background-color: var(--color-solid-1);
   }
 
-  :global(.n-calculator .nbtn.r-0.b-0) {
+  .n-calculator .nbtn.r-0.b-0 {
     color: #fff;
     background-color: var(--color-red);
   }
 
-  :global(.n-calculator .nbtn.r-0.b-1) {
+  .n-calculator .nbtn.r-0.b-1 {
     color: #fff;
     background-color: #444;
   }
 
-  :global(.n-calculator .nbtn.r-0.b-2) {
+  .n-calculator .nbtn.r-0.b-2 {
     color: #fff;
     background-color: #444;
   }
 
-  :global(.n-calculator .nbtn.b-3) {
+  .n-calculator .nbtn.b-3 {
     color: #fff;
     background-color: var(--color-orange);
   }
-  :global(.n-calculator .nbtn.b-0.r-4) {
+  .n-calculator .nbtn.b-0.r-4 {
     background-color: transparent;
     box-shadow: none;
   }
