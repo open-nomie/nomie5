@@ -223,7 +223,7 @@
         compact={$UserStore.localSettings.compactButtons}
         title={Lang.t('tracker.add-tracker', 'Add Tracker')}
         emoji="➕"
-        className="tracker-add dark:bg-black"
+        className="tracker-add"
         hideMore={true}
         on:click={() => {
           dispatch('add');

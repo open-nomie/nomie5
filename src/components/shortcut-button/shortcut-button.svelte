@@ -245,7 +245,7 @@
   color="clear"
   className="{className} shortcut-button bg-white dark:bg-black d-flex flex-column {is.truthy(value) ? 'has-value' : 'no-value'}
   {compact ? 'compact' : ''}"
-  style={`--tracker-color:${color}; ${value ? `background-color:${value ? color : 'var(--color-primary)'` : ``} ${style}`}
+  style={`--tracker-color:${color}; ${value ? `background-color:${value ? color : 'var(--color-primary)'`} ${style}`}
   on:longpress={() => {
     dispatch('longpress');
     clickSkip = true;
