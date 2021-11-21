@@ -183,7 +183,7 @@
         {:else}{Lang.t('location.pick-a-location', 'Pick a Location')}{/if}
       </div>
     </main>
-    <div class="right n-row">
+    <div class="right flex">
       <Button type="clear" color="primary-bright" on:click={favorite}>{Lang.t('general.save', 'Save')}</Button>
     </div>
   </header>
@@ -259,7 +259,7 @@
                 {/if}
               </Text>
 
-              <div slot="right" class="n-row">
+              <div slot="right" class="flex">
                 {#if state.mode == 'edit'}
                   <Button
                     icon

@@ -87,8 +87,8 @@
   }
 </style>
 
-<div class="n-toolbar n-row search-bar {className}" {style}>
-  <div class="n-row py-1">
+<div class="n-toolbar flex search-bar {className}" {style}>
+  <div class="flex py-1">
     <NInput
       solo
       {compact}

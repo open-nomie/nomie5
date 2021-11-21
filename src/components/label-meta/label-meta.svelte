@@ -40,7 +40,7 @@
   }
 </style>
 
-<div class="n-label-meta n-row">
+<div class="n-label-meta flex">
 
   {#if meta.length && label.length}
     <div class="title {titleClass}">{meta}</div>

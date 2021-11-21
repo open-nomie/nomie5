@@ -64,24 +64,25 @@
       return $TrackerStore.trackers[tag] || new Tracker({ tag: tag });
     },
     editLogDataOnSave(event) {
-      let tracker = event.detail.tracker;
-      let value = event.detail.value;
-      let valueSet = false;
-      let newNote = $Interact.logDataEditor.log.note.split(" ").map((word) => {
-        if (word.search(`#${$Interact.logDataEditor.tag}`) === -1) {
-          return word;
-        } else if (!valueSet) {
-          valueSet = true;
-          return `#${tracker.tag}(${value})`;
-        } else {
-          return "";
-        }
-      });
-      newNote.push();
-      $Interact.logDataEditor.log.note = newNote.join(" ");
-      $Interact.logDataEditor.log = new NomieLog($Interact.logDataEditor.log);
-      $Interact.logDataEditor.log.expanded();
-      $Interact.logDataEditor.tag = null;
+      // let tracker = event.detail.tracker;
+      // let value = event.detail.value;
+      // let valueSet = false;
+      alert("TODO:// Fix whats going on here");
+      // let newNote = $Interact.logDataEditor.log.note.split(" ").map((word) => {
+      //   if (word.search(`#${$Interact.logDataEditor.tag}`) === -1) {
+      //     return word;
+      //   } else if (!valueSet) {
+      //     valueSet = true;
+      //     return `#${tracker.tag}(${value})`;
+      //   } else {
+      //     return "";
+      //   }
+      // });
+      // newNote.push();
+      // $Interact.logDataEditor.log.note = newNote.join(" ");
+      // $Interact.logDataEditor.log = new NomieLog($Interact.logDataEditor.log);
+      // $Interact.logDataEditor.log.expanded();
+      // $Interact.logDataEditor.tag = null;
     },
   };
   ready = true;

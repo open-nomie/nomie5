@@ -405,7 +405,7 @@
     </div>
     <div slot="footer">
       {#if $UserStore.meta.canEditFiles}
-        <div class="container px-2 pt-1 pb-2 n-row">
+        <div class="container px-2 pt-1 pb-2 flex">
           {#if state.edit}
             <Button size="md" color="clear" block on:click={cancelEdits}>
               Cancel

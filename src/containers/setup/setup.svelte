@@ -34,6 +34,7 @@
   import { Device } from "../../store/device-store";
   import { Interact } from "../../store/interact";
   import Button from "../../components/button/button.svelte";
+  import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
 
   // TODO: UserSession shouldn't be in here - login should be fired by Storage.
   // const UserSession = new blockstack.UserSession();
@@ -106,18 +107,25 @@
 
 
 <NLayout pageTitle="Nomie" className="page-setup" showTabs={false}>
-  <div slot="header" class="n-toolbar-grid container">
+  <div slot="header">
+    <ToolbarGrid>
+      <div slot="main">
+      <Logo size={16} color="#CCC" />
+    </div>
+    </ToolbarGrid>
+  </div>
+  <!-- <div slot="header" class="n-toolbar-grid container">
     <div class="left" />
     <div class="main">
       <Logo size={16} color="#CCC" />
     </div>
     <div class="right" />
-  </div>
+  </div> -->
   <main slot="content" class="setup-main">
     <svelte:component this={slides[state.activeSlide]} />
   </main>
   <div slot="footer">
-    <div class="n-toolbar n-row container">
+    <div class="n-toolbar flex container">
       <div class="left">
         {#if state.activeSlide > 0}
           <Button color="clear" className="btn btn-clear filler left text-inverse-2 px-2" on:click={methods.back}>Back</Button>

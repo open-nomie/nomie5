@@ -102,7 +102,7 @@
 
 {#if widget && widget.type !== 'text'}
   <div class="dashboard-widget {getClass(widget)}" {id}>
-    <div class="widget-header n-row">
+    <div class="widget-header flex">
       <TrackerSmallBlock
         xs
         truncate
@@ -149,12 +149,12 @@
           <div class="value">Unknown {widget.type}</div>
         {/if}
       {:else}
-        <div class="value n-row">
+        <div class="value flex">
           <Spinner size={24} />
         </div>
       {/if}
     </div>
-    <div class="widget-footer n-row">
+    <div class="widget-footer flex">
       {#if widget.timeRange}
         <Text size="xs" className="text-center flex-grow text-uppercase font-weight-bold">{widget.getLabel()}</Text>
       {/if}

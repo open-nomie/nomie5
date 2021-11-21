@@ -106,9 +106,9 @@
 {#if displayLog}
   <NItem className="{className} n-item-log">
     <!-- Show the Trackers within this Log Item -->
-    <div class="n-row time-row">
+    <div class="flex time-row">
       <div class="time truncate">
-        <div class="filler n-row justify-content-start">
+        <div class="filler flex justify-content-start">
           {#if displayLog.lat}
             <LocationBadge
               location={displayLog}
@@ -176,7 +176,7 @@
     <slot />
 
     {#if logMeta.trackers.length || logMeta.people.length}
-      <div class="tracker-grid n-row">
+      <div class="tracker-grid flex">
         {#each displayLog.people as person}
           <NTrackerSmallBlock
             truncate={true}
@@ -207,7 +207,7 @@
       </div>
     {/if}
     {#if logMeta.context.length}
-      <div class="context n-row">
+      <div class="context flex">
         {#each logMeta.context as context}
           <Button
             size="xs"

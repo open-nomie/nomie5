@@ -14,6 +14,6 @@
   }
 </style>
 
-<div class="n-row {className} {insetRight ? 'inset-right' : ''} {insetLeft ? 'inset-left' : ''}" {style}>
+<div class="flex {className} {insetRight ? 'inset-right' : ''} {insetLeft ? 'inset-left' : ''}" {style}>
   <slot />
 </div>

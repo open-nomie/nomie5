@@ -11,54 +11,51 @@
   export let notify: boolean = false;
 </script>
 
-<style global lang="scss">
+<style global lang="postcss">
   .tab-wrap {
-    position:relative;
-    display: flex;
-    flex-grow: 1;
-    height: 100%;
-    align-items: center;
-  }
-
-  .tab-wrap a {
-    position: relative;
-    color: var(--color-inverse-2);
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    padding: 6px 10px;
-    font-size: 0.7em;
-    height: 100%;
-    text-decoration: none;
-    flex-grow: 1;
-    flex-shrink: 1;
-    // opacity: 0.6;
-    transition: all 0.2s ease-in-out;
-    min-width: 30px;
-    width: 100%;
-    i {
-      pointer-events: none;
-      font-size: 1.2em;
-      transition: all 0.2s ease-in-out;
-    }
-    label {
-      pointer-events: none;
-      margin-bottom: 0;
-    }
-
-    // When Active
-    &[aria-current="page"] {
-      color: var(--color-primary-bright);
-      svg {
-        transition: all 0.2s ease-in-out;
-      }
-      &:after {
-        content: "";
-      }
-    }
-  }
+	 position: relative;
+	 display: flex;
+	 flex-grow: 1;
+	 height: 100%;
+	 align-items: center;
+}
+ .tab-wrap a {
+	 position: relative;
+	 color: var(--color-inverse-2);
+	 display: inline-flex;
+	 flex-direction: column;
+	 align-items: center;
+	 justify-content: center;
+	 position: relative;
+	 padding: 6px 10px;
+	 font-size: 0.7em;
+	 height: 100%;
+	 text-decoration: none;
+	 flex-grow: 1;
+	 flex-shrink: 1;
+	 transition: all 0.2s ease-in-out;
+	 min-width: 30px;
+	 width: 100%;
+}
+ .tab-wrap a i {
+	 pointer-events: none;
+	 font-size: 1.2em;
+	 transition: all 0.2s ease-in-out;
+}
+ .tab-wrap a .label {
+	 pointer-events: none;
+	 margin-bottom: 0;
+}
+ .tab-wrap a[aria-current="page"] {
+	 color: var(--color-primary-bright);
+}
+ .tab-wrap a[aria-current="page"] svg {
+	 transition: all 0.2s ease-in-out;
+}
+ .tab-wrap a[aria-current="page"]:after {
+	 content: "";
+}
+ 
 </style>
 
 <div class="tab-wrap tab-{label}" aria-label={label}>
@@ -67,7 +64,7 @@
     <slot />
     <Icon name={icon} />
     {#if !hideLabels}
-      <label>{label}</label>
+      <div class="label">{label}</div>
     {/if}
   </Link>
 </div>

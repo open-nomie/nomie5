@@ -85,7 +85,7 @@
 
 <NLayout pageTitle="People">
 
-  <div slot="header" class="n-row">
+  <div slot="header" class="flex">
     <NToolbar className="container px-2">
       <Button
         color="none"

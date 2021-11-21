@@ -225,7 +225,7 @@
             autocapitalize="off" />
 
           <!-- {#if state.urlDetails}
-            <div class="n-row text-xs" style="flex-wrap:wrap">
+            <div class="flex text-xs" style="flex-wrap:wrap">
               <div class="mr-1">
                 <strong>
                   {state.urlDetails.url.protocol == 'https:' ? 'Secure' : 'Not Secure'}:
@@ -261,7 +261,7 @@
         </NItem>
 
         <NItem className="py-0">
-          <div class="n-row">
+          <div class="flex">
             <NInput
               compact
               className="mr-1 w-50"

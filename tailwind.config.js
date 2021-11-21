@@ -1,14 +1,22 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
   purge: [
     "./**/*.svelte",  // Look for .svelte files
     "./**/*.html" // Look for .html files
   ],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: 'class', // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        'xs': '320px',
+        ...defaultTheme.screens,
+      }
+    },
   },
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/line-clamp')
+  ],
 }

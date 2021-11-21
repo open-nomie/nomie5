@@ -235,7 +235,7 @@
         {/each}
       </div>
     {/if}
-    <div slot="footer" class="n-row">
+    <div slot="footer" class="flex">
       <Button color="light" size="lg" className="w-100 mr-2" on:click={methods.close}>{Lang.t('general.close')}</Button>
       {#if state.selected.length > 0}
         <Button

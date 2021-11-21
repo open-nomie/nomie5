@@ -41,7 +41,7 @@
 
 <Modal show={$SearchStore.show} fullscreen bodyClass="bg-bg" className="search-modal" ariaLabel="Search">
   <div slot="raw-header">
-    <nav class="n-row px-2 py-1">
+    <nav class="flex px-2 py-1">
       <div class="left" style="width:40px;">
         <Button color="transparent" shape="circle" icon className="tap-icon mr-2" on:click={back}>
           <Icon name="close" />

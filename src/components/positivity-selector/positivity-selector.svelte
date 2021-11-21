@@ -21,46 +21,53 @@
   }
 </script>
 
-<style>
+<style global lang="postcss">
   .n-positivity-selector {
-    border-radius: 20px;
-    padding: 0 6px;
-    z-index: 3000;
+    @apply rounded-2xl;
+    @apply shadow-2xl;
+    @apply z-50;
+    @apply bg-white;
+    @apply dark:bg-black;
+    @apply p-0;
   }
 
-  :global(.n-positivity-selector .nbtn) {
+  .n-positivity-selector .nbtn {
     opacity: 0.8;
   }
-  :global(.n-positivity-selector .nbtn.active) {
-    box-shadow: var(--box-shadow-float);
-    background-color: var(--color-solid);
-    opacity: 1;
+  .n-positivity-selector .nbtn.active {
+    @apply shadow-lg;
+    @apply bg-white;
+    @apply dark:bg-black;
+    @apply opacity-100;
+    @apply ring-2;
+    @apply ring-blue-500;
+    @apply ring-opacity-40;
   }
-  :global(.n-positivity-selector .nbtn-sm) {
+  .n-positivity-selector .nbtn-sm {
     font-size: 20px;
     width: 30px !important;
     height: 30px !important;
-    flex-grow: 0;
-    flex-shrink: 0;
   }
-  :global(.n-positivity-selector .nbtn-md) {
+  .n-positivity-selector .nbtn-md {
     font-size: 24px;
     width: 36px !important;
     height: 36px !important;
-    flex-grow: 0;
-    flex-shrink: 0;
   }
 
-  :global(.n-positivity-selector .nbtn-lg) {
+  .n-positivity-selector .nbtn {
+    @apply flex-grow-0;
+    @apply flex-shrink-0;
+  }
+
+  .n-positivity-selector .nbtn-lg {
     font-size: 30px;
     width: 42px !important;
     height: 42px !important;
-    flex-grow: 0;
-    flex-shrink: 0;
+
   }
 </style>
 
-<div {id} class="n-positivity-selector {!transparent ? 'box-shadow bg-solid' : 'bg-transparent'} n-row {className} size-{size}" {style}>
+<div {id} class="n-positivity-selector {!transparent ? 'box-shadow bg-solid' : 'bg-transparent'} flex items-center {className} size-{size}" {style}>
   {#each appConfig.positivity as posEmoji}
     <Button
       on:click={() => {

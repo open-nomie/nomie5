@@ -19,7 +19,7 @@
   }
 </style>
 
-<div class="next-prev-cal n-row w-auto" {style}>
+<div class="next-prev-cal flex items-center flex-grow-0 flex-shrink-0" {style}>
   <Button
     className="previous-action"
     icon
@@ -27,7 +27,7 @@
     on:click={() => {
       dispatch('previous');
     }}>
-    <Icon name="chevronLeft" size="24" className="fill-primary-bright" />
+    <Icon name="chevronLeft" size={24} className="text-blue-500" />
   </Button>
   {#if !hideCal}
     <Button
@@ -39,7 +39,7 @@
       on:click={() => {
         dispatch('calendar');
       }}>
-      <Icon name="calendar" size="22" />
+      <Icon name="calendar" className="text-blue-500" size={22} />
     </Button>
   {/if}
   <Button
@@ -49,6 +49,6 @@
     on:click={() => {
       dispatch('next');
     }}>
-    <Icon name="chevronRight" size="24" className="fill-primary-bright" />
+    <Icon name="chevronRight" size={24} className="text-blue-500" />
   </Button>
 </div>

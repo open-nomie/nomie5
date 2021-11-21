@@ -123,7 +123,7 @@
         </NItem>
       {/each}
     </div>
-    <div slot="footer" class="n-row">
+    <div slot="footer" class="flex">
       <button class="mr-2 btn btn-light btn-lg w-100" on:click={methods.close}>{Lang.t('general.close')}</button>
       {#if state.selectedArray.length > 0}
         <button

@@ -278,7 +278,7 @@
                 <Avatar emoji={item.emoji} size={40} />
               </div>
               {item.label}
-              <div slot="right" class="n-row">
+              <div slot="right" class="flex">
                 <Button
                   icon
                   className="mr-2"
@@ -297,7 +297,7 @@
 
     </div>
     {#if data.board.id != 'all'}
-      <div class="n-row p-2">
+      <div class="flex p-2">
         <div class="filler" />
         <Button type="clear" on:click={methods.deleteBoard}>
           <NIcon name="delete" className="fill-red mr-2" />
@@ -309,7 +309,7 @@
   </NPage>
 {:else}
   <NPage>
-    <div slot="header" class="n-row">
+    <div slot="header" class="flex">
       <div class="filler" />
       <h1>Loading...</h1>
       <div class="filler" />

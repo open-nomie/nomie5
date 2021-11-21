@@ -407,7 +407,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               </ListItem>
               <ListItem clickable title={`${Lang.t('settings.import-from-csv', 'Import from CSV ')}`} to="/settings/import/csv">
                 <span slot="left">📄</span>
-                <span slot="right" class="n-row">
+                <span slot="right" class="flex">
                   <div class="nbtn nbtn-xs nbtn-rounded nbtn-light">Beta</div>
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
@@ -472,11 +472,11 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <span slot="right" class="text-inverse-3">Patreon</span>
               </ListItem>
               <ListItem title="Reddit r/nomie" detail href="https://reddit.com/r/nomie">
-                <span slot="right" class="n-row text-inverse-3">/r/nomie</span>
+                <span slot="right" class="flex text-inverse-3">/r/nomie</span>
               </ListItem>
 
               <ListItem title="Open Source" detail href="https://github.com/open-nomie/nomie">
-                <span slot="right" class="n-row text-inverse-3">GitHub</span>
+                <span slot="right" class="flex text-inverse-3">GitHub</span>
               </ListItem>
             </List>
 
@@ -496,7 +496,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                 </div>
               </ListItem>
               <ListItem title={Lang.t('general.launch-count', 'Launch Count')}>
-                <div class="n-row" slot="right">
+                <div class="flex" slot="right">
                   <Button icon size="sm" on:click={UserStore.resetLaunchCount}>
                     <NIcon name="delete" className="fill-red" size="18" />
                   </Button>
@@ -518,7 +518,7 @@ Note: Your data will not automatically move over. You'll first need to export it
 
             <List title="Version" outside className="mb-3">
               <ListItem title="Version APP_VERSION " description="Built APP_BUILD_DATE " detail on:click={AppStore.reveal}>
-                <span slot="right" class="n-row">
+                <span slot="right" class="flex">
                   <Button size="xs" className="ml-2">New</Button>
                 </span>
               </ListItem>

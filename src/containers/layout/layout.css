@@ -1,0 +1,49 @@
+.n-layout {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.n-layout .layout-header header,
+.n-layout .layout-header [slot='header'],
+.n-layout .layout-header .n-toolbar-grid,
+.n-layout .layout-header .n-toolbar,
+.n-layout .layout-header header .container,
+.n-layout .layout-header .n-toolbar {
+  min-height: var(--header-height);
+}
+.n-layout .layout-header header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.n-layout .glass {
+  @apply bg-white;
+  @apply dark:bg-black;
+  @apply bg-opacity-60;
+  @apply backdrop-filter;
+  @apply backdrop-saturate-150;
+  @apply backdrop-blur-md;
+}
+
+.n-layout main.layout-main {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+  flex-grow: 1;
+  flex-shrink: 1;
+  height: 100%;
+  margin-top: calc(var(--header-height) * -1);
+  padding-top: var(--header-height);
+  z-index: 1;
+  border-bottom: solid 1px var(--color-grey-7);
+}
+.n-layout.no-tabs footer.layout-footer {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.n-layout #nav-tabs {
+  height: 70px;
+}

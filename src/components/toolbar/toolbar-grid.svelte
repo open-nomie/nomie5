@@ -1,6 +1,7 @@
 <script>
   export let className = "";
   export let style = "";
+  import "./toolbar.css";
 </script>
 
 <div class="n-toolbar-grid {className}" {style}>

@@ -8,7 +8,7 @@
 
   // Vendors
   import Spinner from "./components/spinner/spinner.svelte";
-  // import * as ComposiGestures from "@composi/gestures";
+  import { gestures } from '@composi/gestures'
 
   // Containers
   import Interactions from "./containers/interactions/interactions.svelte";
@@ -56,10 +56,13 @@
   import ProgressBar from "./components/progress-bar/progress-bar.svelte";
   import { ApiStore } from "./containers/api/api-store";
 
+  // import "./scss/main.scss";
+  import "./style/main.css";
+
   // Set a better console
   const console = new Logger("APP");
 
-  // ComposiGestures.default.gestures();
+  gestures()
 
   /**
    * Day / Time Change Monitoring

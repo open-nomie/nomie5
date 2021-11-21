@@ -49,6 +49,7 @@
   import { OTDViews } from "../containers/on-this-day/on-this-day-helpers";
   import OnThisDayViews from "../containers/on-this-day/on-this-day-views.svelte";
   import Swipeable from "../components/swipeable/swipeable.svelte";
+import { ChevronRight, X } from "svelte-hero-icons";
 
   export const location = undefined;
   export let style = undefined;
@@ -276,74 +277,53 @@
   });
 </script>
 
-<style lang="scss" type="text/scss">
-  // TODO: This is really sloppy - clean it up.
-
-  // :global(.trackers-list .border-bottom:last-child) {
-  //   border-bottom: none !important;
-  // }
+<style global lang="postcss">
 
   .history-title {
     transition: all 0.2s ease-in-out;
     padding-left: 16px;
   }
 
-  :global(.scrolled .history-title.hide-scrolled) {
+  .scrolled .history-title.hide-scrolled {
     opacity: 0;
   }
-  :global(body .history-title.show-scrolled) {
+  body .history-title.show-scrolled {
     opacity: 0;
   }
-  :global(.scrolled .history-title.show-scrolled) {
+  .scrolled .history-title.show-scrolled {
     opacity: 1;
   }
 
-  :global(.close-btn) {
+  .close-btn {
     bottom: 20px !important;
     z-index: 10;
     position: absolute !important;
     right: 50%;
     margin-right: -16px;
   }
-
-  // .page-history {
-  //   .show-map {
-  //     height: 200px;
-  //     min-height: 200px;
-  //     max-height: 400px;
-  //   }
-  // }
-  // .header-date-control {
-  //   line-height: 100%;
-  //   flex-grow: 1;
-  //   flex-shrink: 1;
-  // }
-
-  :global(.page-history .n-item .n-item:last-child) {
+  .page-history .n-item .n-item:last-child {
     border-bottom: none !important;
   }
 </style>
 
 <NLayout pageTitle={appTitle} {style}>
 
-  <header slot="header" class="flex-column">
-    <Toolbar className="container px-2">
-      <Button icon className="tap-icon" on:click={methods.search}>
-        <Icon name="search" size="24" />
+  <header slot="header" class="flex-column items-center">
+    <Toolbar className="container px-2 items-center">
+      <Button icon  on:click={methods.search}>
+        <Icon className="text-blue-500" name="search" size={24} />
       </Button>
-      <Button icon className="tap-icon" on:click={composeHere}>
-        <Icon name="compose" size="24" />
-      </Button>
-      <div class="filler truncate history-title">
-        <Text>
-          {#if refreshing}
-            <Spinner size={16} />
-          {/if}
-          {state.date.format('ddd')}
-          {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
-        </Text>
-        <!-- end text middle -->
-      </div>
+      <!-- <Button icon  on:click={composeHere}>
+        <Icon className="text-blue-500" name="compose" size={24} />
+      </Button> -->
+      <Text className="line-clamp-1 space-x-4 flex items-center w-full font-bold">
+        {#if refreshing}
+          <Spinner size={16}  />
+        {/if}
+        <span aria-label="Current Active Date" class="ml-2">{state.date.format('ddd')}
+        {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
+      </span>
+      </Text>
       <NextPrevCal
         on:previous={methods.previous}
         on:next={methods.next}
@@ -415,7 +395,7 @@
                     methods.goto(dayjs(log.end));
                   }}>
                   {dayjs(log.end).fromNow()}
-                  <Icon name="chevronRight" className="fill-white" size="18" />
+                  <Icon icon={ChevronRight} className="fill-white" size={18} />
                 </Button>
               </div>
               <LogItem
@@ -455,7 +435,7 @@
             on:click={() => {
               state.showAllLocations = !state.showAllLocations;
             }}>
-            <Icon name="close" size="32" />
+            <Icon icon={X} size={32} />
           </Button>
 
         </div>

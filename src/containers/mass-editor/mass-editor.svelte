@@ -275,7 +275,7 @@
 
     </div>
 
-    <div slot="footer" class="n-row">
+    <div slot="footer" class="flex">
 
       {#if state.finding && state.finishedFinding}
         <Button color="clear" on:click={methods.back}>Back</Button>

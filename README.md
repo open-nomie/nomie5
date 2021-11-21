@@ -6,6 +6,7 @@
 - [x] Install tailwind
 - [] Remove Bootstrap - replace with Tailwind
 - [] Refactor to domain driven structure (components, domains);
+- [] Refactor icons to call individual icons as needed - for tree shaking
 
 ## Nomie 5.7
 

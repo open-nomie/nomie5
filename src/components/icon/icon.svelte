@@ -80,10 +80,12 @@
   } from "svelte-hero-icons";
 
   export let name = "add";
-  export let style = undefined;
+  export let style:string | undefined = undefined;
   export let className = "";
   export let title = "";
-  export let size = "";
+  export let size:number = 24
+
+  export let icon:any = undefined;
 
   const icons = {
     add: Plus,
@@ -177,8 +179,8 @@
   }
 </style>
 
-{#if icons[name]}
+{#if icons[name] || icon}
   <span class="n-icon n-icon-{name} {className}" {style} aria-label={title}>
-    <svelte:component this={icons[name]} size={`${size || 24}`} />
+    <svelte:component this={icon || icons[name]} size={`${size || 24}`} />
   </span>
 {/if}

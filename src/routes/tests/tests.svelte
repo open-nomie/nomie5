@@ -229,7 +229,7 @@
       Button Block
     </Button>
     <hr class="my-2 divider center" />
-    <div class="n-row">
+    <div class="flex">
       <Button icon className="mr-2" color="primary">
         <Icon name="chevronUp" />
       </Button>

@@ -81,7 +81,7 @@
     {/if}
   {/if}
   <footer slot="footer">
-    <div class="n-row">
+    <div class="flex">
       <Button block color="light" on:click={closeThisUpdate}>Close</Button>
     </div>
   </footer>

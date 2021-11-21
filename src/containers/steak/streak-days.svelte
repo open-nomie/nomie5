@@ -46,7 +46,7 @@
 </style>
 
 <div class="streak-days">
-  <div class="n-row">
+  <div class="flex">
     {#each loopOver as loopDate}
       <div class="date {loopDate.used ? 'used' : 'not-used'}">
         <div

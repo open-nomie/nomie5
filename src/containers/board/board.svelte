@@ -64,6 +64,8 @@
 
   import NPaths from "../../paths";
   import Swipeable from "../../components/swipeable/swipeable.svelte";
+import Container from "../../components/container/container.svelte";
+import { DotsCircleHorizontal } from "svelte-hero-icons";
 
   // Consts
 
@@ -512,7 +514,7 @@
         </Button>
       {/if}
       <Button icon on:click={methods.toggleSearch} ariaLabel={Lang.t('general.search')}>
-        <Icon name="search" className="fill-inverse" size={24} />
+        <Icon name="search" className="text-blue-500" size={24} />
       </Button>
 
       <!-- Tabs -->
@@ -529,14 +531,14 @@
         }}
       />
 
-      <Button icon className="board-option-action" on:click={() => boardOptions()} ariaLabel={Lang.t('general.settings', 'Settings')}>
-        <Icon name="more" className="fill-inverse" size={24} />
+      <Button icon className="board-option-action text-blue-500" on:click={() => boardOptions()} ariaLabel={Lang.t('general.settings', 'Settings')}>
+        <Icon icon={DotsCircleHorizontal} className="text-blue-500" size={24} />
       </Button>
 
     </Toolbar>
   </header>
   <!-- end header-->
-  <div slot="content" class="container board-container">
+  <div slot="content" class="container board-container bg-gray-100 dark:bg-gray-800 pt-4">
     {#if $UserStore.storageType == 'blockstack'}
       <div class="blockstack-warning my-1">
         ⚠️ Blockstack Storage is deprecated.
@@ -552,11 +554,11 @@
       {:else}
         {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 10 && $UserStore.storageType == 'local' && $UserStore.meta.hideBackup == false}
           <div class="container-sm flex items-center justify-center">
-            <button aria-label="Backup your data" on:click={exportData} class="py-2 px-3 flex items-center text-center backup bg-red-600 bg-opacity-20 rounded-full">
+            <button aria-label="Backup your data" on:click={exportData} class="py-2 px-3 flex items-center text-center backup bg-gray-400 dark:bg-gray-800 dark:text-white bg-opacity-20 rounded-full">
               <!--- If it's way back - it's not really set-->
               {#if daysSinceLastBackup > 1000} 
                 <Text inline size="sm" faded className="">
-                  <Icon name="bell" size={12} />
+                  <Icon name="bell" size='12' />
                   {Lang.t('general.no-known-backups', 'No known backups')}
                 </Text>
               {:else}
@@ -570,7 +572,7 @@
         {/if}
 
         {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
-          <div class="container">
+          <Container>
             <Card>
               <ListItem compact>
                 <Text size="sm">Running Timers</Text>
@@ -591,7 +593,7 @@
               />
 
             </Card>
-          </div>
+          </Container>
         {/if}
 
         <main class="overflow-x-hidden n-board h-100">
@@ -625,7 +627,7 @@
         </main>
 
         {#if (foundTrackers || boardTrackers || []).length}
-          <div class="mt-5 mb-3 board-actions n-row" style="min-width:100px;">
+          <div class="mt-5 mb-3 board-actions flex" style="min-width:100px;">
             
             <ButtonGroup className="mr-2 box-shadow-tight bg-transparent">
               <Button
@@ -635,7 +637,7 @@
                   setView('button');
                 }}
               >
-                <Icon size="18" name="buttonView" />
+                <Icon size={18} name="buttonView" />
               </Button>
               <Button
                 icon
@@ -644,7 +646,7 @@
                   setView('list');
                 }}
               >
-                <Icon size="18" name="list" />
+                <Icon size={18} name="list" />
               </Button>
               <Button
                 icon
@@ -653,7 +655,7 @@
                   setView('detail');
                 }}
               >
-                <Icon size="18" name="detailView" />
+                <Icon size={18} name="detailView" />
               </Button>
             </ButtonGroup>
 

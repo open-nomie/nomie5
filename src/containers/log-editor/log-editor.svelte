@@ -153,7 +153,7 @@
 
     <List transparent>
       <ListItem title="Location" className={toggleMap ? 'mt-3' : 'my-3'} on:click={selectLocation}>
-        <div slot="right" class="n-row">
+        <div slot="right" class="flex">
           {#if state.log.lat}
             <Text size="sm">{state.log.location || `${math.round(state.log.lat, 100)},${math.round(state.log.lng, 100)}`}</Text>
           {:else}
@@ -255,7 +255,7 @@
       {/if}
     </div> -->
 
-    <div class="buttons n-row" slot="footer" />
+    <div class="buttons flex" slot="footer" />
 
   </NModal>
 {/if}

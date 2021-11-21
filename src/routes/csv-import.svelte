@@ -438,7 +438,7 @@
               await addToImporter(evt);
             }} />
         {:else}
-          <div class="n-toolbar n-row px-3">
+          <div class="n-toolbar flex px-3">
             <div class="main">{Lang.t('csv-import.map-fields', 'Map Fields')}</div>
             <div class="filler" />
             <NextPrevCal hideCal={true} on:next={nextPreview} on:previous={previousPreview} />
@@ -536,7 +536,7 @@
     {/if}
     {#if previewLog && is.truthy(previewIndex) && activeImporter.parsed}
       <div class="examples bg-inverse-2 p-2">
-        <div class="n-toolbar n-row pl-2">
+        <div class="n-toolbar flex pl-2">
           <div class="main">Preview {previewIndex} of {activeImporter.length()}</div>
           <div class="filler" />
           <NextPrevCal hideCal={true} on:next={nextPreview} on:previous={previousPreview} />

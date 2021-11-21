@@ -129,7 +129,7 @@
     class="date-time-bar-wrapper {calendarPosition == 'top' ? 'calendar-top' : 'calendar-bottom'}">
 
     <div class="date-time-bar" {style}>
-      <div class="n-row">
+      <div class="flex">
         <slot name="left" />
         <Button
           className="date justify-content-start flex-grow "

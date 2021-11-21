@@ -1,0 +1,313 @@
+.nbtn-desc {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.nbtn {
+  @apply relative;
+  transition: all 0.2s ease-in-out;
+  --button-base-size: calc(var(--base-font-size) * 1);
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  border: none;
+  border-radius: 4px;
+  position: relative;
+  transition: background 0.2s ease-in-out;
+  overflow: hidden;
+  font-size: var(--button-base-size);
+  color: var(--color-inverse);
+  height: 40px;
+  line-height: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+  box-shadow: var(--box-shadow-tight);
+}
+.nbtn:active {
+  transform: scale(0.95);
+}
+.nbtn main {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+.nbtn:focus {
+  outline: rgba(155, 155, 155, 0.2) !important;
+}
+.nbtn-sm {
+  font-size: calc(var(--button-base-size) * 0.8);
+  height: 30px;
+  padding-left: 12px;
+  padding-right: 12px;
+  border-radius: 6px;
+}
+.nbtn-xs {
+  font-size: calc(var(--button-base-size) * 0.7);
+  height: 24px;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 4px;
+}
+.nbtn:disabled,
+.nbtn.disabled {
+  opacity: 0.5;
+}
+.nbtn-md {
+  font-size: var(--button-base-size);
+}
+.nbtn-lg {
+  font-size: calc(var(--button-base-size) * 1.2);
+  min-height: 50px;
+}
+.nbtn-lg.nbtn-rounded {
+  border-radius: 10px;
+}
+.nbtn-desc {
+  min-height: 40px;
+  height: auto;
+  flex-grow: 1;
+  font-size: 1em;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.nbtn-desc main {
+  flex-direction: column;
+  align-items: flex-start !important;
+  text-align: left;
+}
+.nbtn-desc .n-text {
+  text-align: left;
+}
+.nbtn-text {
+  background-color: transparent;
+}
+.nbtn-circle {
+  border-radius: 50%;
+  text-align: center;
+}
+.nbtn-rounded {
+  border-radius: 8px;
+  text-align: center;
+}
+.nbtn-round {
+  border-radius: 40px;
+  text-align: center;
+}
+.nbtn-inline {
+  display: inline-flex;
+}
+.nbtn-block {
+  display: flex;
+  width: 100%;
+  flex-grow: 1;
+}
+.nbtn-primary,
+.nbtn-primary-bright {
+  background-color: var(--color-primary-bright);
+  color: #fff;
+}
+.nbtn-danger {
+  background-color: var(--color-red);
+  color: #fff;
+}
+.nbtn-success,
+.nbtn-green {
+  background-color: var(--color-green);
+  color: #fff;
+}
+.nbtn-orange {
+  background-color: var(--color-orange);
+  color: #fff;
+}
+.nbtn-dark {
+  background-color: var(--color-inverse);
+  color: var(--color-solid);
+}
+.nbtn-light {
+  background-color: var(--color-solid);
+  color: var(--color-inverse);
+}
+.nbtn-clear,
+.nbtn-transparent,
+.nbtn-text {
+  box-shadow: none;
+  background-color: transparent;
+}
+.nbtn-clear.nbtn-primary,
+.nbtn-transparent.nbtn-primary,
+.nbtn-text.nbtn-primary,
+.nbtn-clear.nbtn-primary-bright,
+.nbtn-transparent.nbtn-primary-bright,
+.nbtn-text.nbtn-primary-bright {
+  background-color: transparent;
+  color: var(--color-primary-bright);
+}
+.nbtn-clear.nbtn-red,
+.nbtn-transparent.nbtn-red,
+.nbtn-text.nbtn-red,
+.nbtn-clear.nbtn-danger,
+.nbtn-transparent.nbtn-danger,
+.nbtn-text.nbtn-danger {
+  background-color: transparent;
+  color: var(--color-red);
+}
+.nbtn-clear.nbtn-light,
+.nbtn-transparent.nbtn-light,
+.nbtn-text.nbtn-light {
+  background-color: transparent;
+  color: var(--color-inverse);
+}
+.nbtn-clear.nbtn-dark,
+.nbtn-transparent.nbtn-dark,
+.nbtn-text.nbtn-dark {
+  background-color: transparent;
+  color: var(--color-solid);
+}
+.nbtn-clear.nbtn-orange,
+.nbtn-transparent.nbtn-orange,
+.nbtn-text.nbtn-orange {
+  background-color: transparent;
+  color: var(--color-orange);
+}
+.nbtn-clear.nbtn-success,
+.nbtn-transparent.nbtn-success,
+.nbtn-text.nbtn-success,
+.nbtn-clear.nbtn-green,
+.nbtn-transparent.nbtn-green,
+.nbtn-text.nbtn-green {
+  background-color: transparent;
+  color: var(--color-green);
+}
+.nbtn-text {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.95em;
+}
+.nbtn-text.nbtn-sm {
+  font-size: 0.8em;
+}
+.nbtn-text.nbtn-xs {
+  font-size: 0.65em;
+}
+.nbtn-round {
+  border-radius: 40px;
+}
+.nbtn-icon,
+.nbtn.tap-icon,
+.nbtn-circle {
+  padding-left: 0;
+  padding-right: 0;
+  padding: 4px;
+  border-radius: 50%;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+}
+.nbtn-icon.nbtn-lg,
+.nbtn.tap-icon.nbtn-lg,
+.nbtn-circle.nbtn-lg {
+  height: 46px;
+  width: 46px;
+}
+.nbtn-icon.nbtn-lg svg,
+.nbtn.tap-icon.nbtn-lg svg,
+.nbtn-circle.nbtn-lg svg {
+  width: 28px;
+  height: 28px;
+}
+.nbtn-icon.nbtn-xl,
+.nbtn.tap-icon.nbtn-xl,
+.nbtn-circle.nbtn-xl {
+  height: 50px;
+  width: 50px;
+}
+.nbtn-icon.nbtn-xl svg,
+.nbtn.tap-icon.nbtn-xl svg,
+.nbtn-circle.nbtn-xl svg {
+  width: 42px;
+  height: 42px;
+}
+.nbtn-icon.nbtn-sm,
+.nbtn.tap-icon.nbtn-sm,
+.nbtn-circle.nbtn-sm {
+  height: 28px;
+  width: 28px;
+}
+.nbtn-icon.nbtn-sm svg,
+.nbtn.tap-icon.nbtn-sm svg,
+.nbtn-circle.nbtn-sm svg {
+  width: 16px;
+  height: 16px;
+}
+.nbtn-icon.nbtn-xs,
+.nbtn.tap-icon.nbtn-xs,
+.nbtn-circle.nbtn-xs {
+  height: 24px;
+  width: 24px;
+}
+.nbtn-icon.nbtn-xs svg,
+.nbtn.tap-icon.nbtn-xs svg,
+.nbtn-circle.nbtn-xs svg {
+  width: 16px;
+  height: 16px;
+}
+.nbtn-icon,
+.nbtn.tap-icon {
+  background-color: transparent;
+  box-shadow: none;
+}
+.nbtn-group {
+  --group-bg: var(--color-grey-7);
+  overflow: hidden;
+  height: 40px;
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  border-radius: 4px;
+  background-color: var(--group-bg);
+  align-items: center;
+  padding: 2px;
+  border-radius: 10px;
+}
+.nbtn-group .nbtn {
+  border: solid 1px transparent;
+  font-size: 0.8em;
+  height: 36px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  border-radius: 0;
+  padding-left: 12px;
+  padding-right: 12px;
+  box-shadow: none;
+  background-color: var(--group-bg);
+  color: var(--color-inverse-1);
+}
+.nbtn-group .nbtn.active {
+  border-radius: 8px !important;
+  z-index: 10;
+  box-shadow: var(--box-shadow-tight);
+  background-color: var(--color-solid);
+  color: var(--color-inverse);
+  border: solid 1px var(--color-grey-8);
+}
+.nbtn-group .nbtn:first-child {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+.nbtn-group .nbtn:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}

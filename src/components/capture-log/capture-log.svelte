@@ -582,7 +582,7 @@
               {$ActiveLogStore.location || `${math.round($ActiveLogStore.lat, 100)},${math.round($ActiveLogStore.lng, 100)}`}
             </Text>
           {/if}
-          <div slot="right" class="n-row">
+          <div slot="right" class="flex">
             {#if $ActiveLogStore.lat}
               <Button icon size="sm">
                 <Icon

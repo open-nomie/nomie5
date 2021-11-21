@@ -3,10 +3,11 @@
   import NText from "../text/text.svelte";
   import { createEventDispatcher } from "svelte";
   import Ripple from "../button/ripple.svelte";
-  import Hit from "../button/ripple-hit";
   import tick from "../../utils/tick/tick";
   import Icon from "../icon/icon.svelte";
-
+  
+  import "./list-item.css";
+  
   export let title = undefined;
   export let description = undefined;
   // export let borderBottom = false;
@@ -28,6 +29,7 @@
   export let delay: number = undefined;
   export let detail = false;
   export let transparent = false;
+  
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty("left");
   const has_right = (arguments[1].$$slots || {}).hasOwnProperty("right");

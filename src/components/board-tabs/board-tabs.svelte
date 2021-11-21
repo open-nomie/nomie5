@@ -41,11 +41,10 @@
   };
 </script>
 
-<style lang="scss">
-  .add-board {
-    &:before {
+<style lang="postcss">
+  .add-board:before {
       display: none;
-    }
+    
   }
   button.inactive {
     opacity: 0.8;
@@ -54,9 +53,9 @@
 </style>
 
 {#if boards.length === 1}
-  <div class="n-row n-board-tabs flex-grow flex-shrink" data-scroll="0">
+  <div class="flex items-center n-board-tabs flex-grow flex-shrink" data-scroll="0">
     <Spacer />
-    <Elephant size={16} />
+    <Elephant size={24} />
     <Spacer />
   </div>
 {:else}

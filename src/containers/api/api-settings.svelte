@@ -114,7 +114,7 @@
           <a href="https://nomie.app/tutorials" target="_blank" rel="nofollow" class="text-xs text-center d-block text-underline">See more examples</a>
         </ListItem>
         <ListItem compact title="URL" className="py-0">
-          <div slot="right" class="n-row">
+          <div slot="right" class="flex">
 
             <Button
               icon

@@ -213,7 +213,7 @@
       {/if}
     </div>
 
-    <div class="buttons n-row" slot="footer">
+    <div class="buttons flex" slot="footer">
       {#if !state.saving}
         <Button
           size="lg"

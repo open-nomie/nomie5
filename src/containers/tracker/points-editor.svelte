@@ -164,7 +164,7 @@
               </NInput>
 
               <!-- Greater / Less -->
-              <div class="n-row mt-1">
+              <div class="flex mt-1">
                 <NInput type="select" label="Comparison" style="width:60%" className="mr-2" bind:value={state.genesisCalc.is}>
                   <option value="gt">is Greater</option>
                   <option value="gte">is Greater or Equal</option>

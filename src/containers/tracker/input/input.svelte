@@ -171,7 +171,7 @@
   type="fullscreen"
   bodyClass={`${tracker.type == 'picker' ? 'no-scroll' : ''}`}
   className="tracker-input">
-  <div class="n-toolbar-grid n-row" slot="header">
+  <div class="n-toolbar-grid flex" slot="header">
     <div class="pl-3 truncate left" />
     <div class="main">
       <span class="animate up text-md {data.ready ? 'visible' : 'hidden'}">

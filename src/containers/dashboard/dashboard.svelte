@@ -494,7 +494,7 @@
   {#if activeDashboard && !loading}
     <div class="container h-100">
       {#if editMode}
-        <div class="px-2 mt-2 mb-2 n-toolbar n-row">
+        <div class="px-2 mt-2 mb-2 n-toolbar flex">
           <Input type="text" placeholder="Dashboard Label" bind:value={activeDashboard.label} />
           <Button color="clear" text className="text-primary-bright" on:click={done}>
             {!editMode ? Lang.t('general.edit', 'Edit') : Lang.t('general.done', 'Done')}

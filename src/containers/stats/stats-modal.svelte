@@ -652,11 +652,11 @@
         </Button>
       </div>
     </NToolbarGrid>
-    <div class="px-2 pb-2 n-row">
+    <div class="px-2 pb-2 flex">
       <NButtonGroup size="sm" buttons={timeViewButtons} />
     </div>
 
-    <div class="px-3 pt-2 pb-3 n-toolbar n-row">
+    <div class="px-3 pt-2 pb-3 n-toolbar flex">
       <Text size="sm" bold className="filler" truncate>{state.range}</Text>
       <NextPrevCal
         on:next={loadNextDate}

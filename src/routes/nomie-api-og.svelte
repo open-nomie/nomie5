@@ -184,7 +184,7 @@
           {/if}
         </div>
       </div>
-      <div class="container px-3 n-row">
+      <div class="container px-3 flex">
         {#if state.ready && state.registered}
           <NButtonGroup
             style="max-width:400px"
@@ -369,7 +369,7 @@
               bind:value={state.apiExample} />
           </NItem>
           <NItem compact title="URL" className="py-0">
-            <div slot="right" class="n-row">
+            <div slot="right" class="flex">
 
               <Button
                 icon

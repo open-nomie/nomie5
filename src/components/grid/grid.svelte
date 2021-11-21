@@ -1,4 +1,7 @@
 <script lang="ts">
+
+  import "./grid.css";
+
   export let columns: number = 3;
   export let gap: number = 2;
   export let className: string = "";

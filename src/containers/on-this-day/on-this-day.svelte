@@ -103,7 +103,7 @@
           </Row>
         </div>
         <div class="right">
-          <div class="n-row">
+          <div class="flex">
             <Button className="tap-icon px-1" on:click={previousDay}>
               <NIcon name="chevronLeft" />
             </Button>

@@ -35,7 +35,7 @@
   }
 </script>
 
-<style global lang="scss">
+<style global lang="postcss">
   .shortcut-button .more.icon-other {
 	 border: none !important;
 }
@@ -47,13 +47,18 @@
 	 height: 146px;
 	 justify-content: stretch;
 	 border-radius: 22px;
-	 margin: 6px;
+	 
 	 box-shadow: var(--box-shadow-tight) !important;
 	 overflow: hidden;
 	 transition: all 0.4s cubic-bezier(0.19, -0.33, 0.78, 1.32);
 	 position: relative;
 	 color: var(--color-inverse-2);
 	 padding: 0;
+}
+.shortcut-button:focus {
+	@apply ring;
+	@apply ring-2;
+	@apply ring-blue-500;
 }
  .shortcut-button .title {
 	 font-weight: 600;
@@ -248,7 +253,7 @@
   <div class="highlight {oneTap ? 'one-tap' : ''}">
     <TimeBalls color="#FFF" hours={hoursUsed} />
   </div>
-  <div class="n-row top">
+  <div class="flex top">
     <div class="emoji" style={is.truthy(value) ? 'color:#FFF' : `color:${color}`}>
       {#if emoji}
         <Avatar {emoji} size={compact ? 30 : 42} />

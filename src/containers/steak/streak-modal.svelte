@@ -135,7 +135,7 @@
         </div>
         <main slot="main">{$Interact.streak.show}</main>
       </NToolbarGrid>
-      <div class="n-toolbar n-row px-3">
+      <div class="n-toolbar flex px-3">
         <Text bold className="filler">{state.date.format('MMM YYYY')}</Text>
         <NextPrevCal on:next={next} on:previous={prev} hideCal={true} style="max-width:80px;" />
       </div>

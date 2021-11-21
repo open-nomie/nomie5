@@ -26,55 +26,49 @@ import { ApiStore } from "../api/api-store";
   });
 </script>
 
-<style lang="scss">
-  @import "../../scss/utils/__utils.scss";
-
-  #app-tabs {
-    --tab-height: 65px;
-
-    height: calc(#{var(--tab-height)} + env(safe-area-inset-bottom));
-    padding-bottom: calc(env(safe-area-inset-bottom));
-    background-color: var(--footer-background);
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    z-index: 1200;
-    flex-shrink: 0;
-    // padding-top: 10px;
-
-    &.compact {
-      --tab-height: 55px;
-      height: calc(#{var(--tab-height)} + env(safe-area-inset-bottom));
-      .n-row {
-        max-height: var(--tab-height);
-        min-height: var(--tab-height);
-        height: var(--tab-height);
-      }
-    }
-
-    .n-row {
-      z-index: 10;
-      max-height: var(--tab-height);
-      min-height: var(--tab-height);
-      height: var(--tab-height);
-      flex-shrink: 0;
-    }
-  }
-  :global(#app-tabs .notification) {
-    position: absolute;
-    top: 8px;
-    right: calc(50% - 15px);
-    width: 6px;
-    height: 6px;
-    background-color: var(--color-red);
-    border-radius: 3px;
-  }
+<style global lang="postcss">
+#app-tabs {
+	 --tab-height: 65px;
+	 height: calc(var(--tab-height) + env(safe-area-inset-bottom));
+	 padding-bottom: calc(env(safe-area-inset-bottom));
+	 background-color: var(--footer-background);
+	 display: flex;
+	 justify-content: space-between;
+	 align-items: stretch;
+	 z-index: 1200;
+	 flex-shrink: 0;
+}
+ #app-tabs.compact {
+	 --tab-height: 55px;
+	 height: calc(var(--tab-height) + env(safe-area-inset-bottom));
+}
+ #app-tabs.compact .n-row {
+	 max-height: var(--tab-height);
+	 min-height: var(--tab-height);
+	 height: var(--tab-height);
+}
+ #app-tabs .n-row {
+	 z-index: 10;
+	 max-height: var(--tab-height);
+	 min-height: var(--tab-height);
+	 height: var(--tab-height);
+	 flex-shrink: 0;
+}
+ #app-tabs .notification {
+	 position: absolute;
+	 top: 8px;
+	 right: calc(50% - 15px);
+	 width: 6px;
+	 height: 6px;
+	 background-color: var(--color-red);
+	 border-radius: 3px;
+}
+ 
 </style>
 
 {#if state.mounted}
-  <nav id="app-tabs" class={hideLabels ? 'compact' : ''}>
-    <div class="mx-auto n-row mw-500px">
-
+  <nav id="app-tabs" class={`${hideLabels ? 'compact' : ''} glass`}>
+    <div class="flex items-center justify-items-stretch w-full">
       <AppTab link={NPaths.routes.history()} icon="calendar" label={Lang.t('tabs.history', 'History')} />
       {#if $FeatureStore.dashboard}
         <AppTab link={NPaths.routes.dashboard()} icon="report" label={Lang.t('tabs.dashboard', 'Dash')} />

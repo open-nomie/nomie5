@@ -142,7 +142,7 @@
       }}
     >
       <div class="highlight" style="background-color:{tracker.color}" />
-      <div slot="left" class="pr-0 n-row justify-content-center">
+      <div slot="left" class="pr-0 flex justify-content-center">
         <Avatar emoji={tracker.emoji} label={tracker.label} size={$UserStore.localSettings.compactButtons ? 30 : 40} />
       </div>
       <div>
@@ -186,7 +186,7 @@
   {/if}
 {:else if view === 'detail'}
   <!-- Short Cut Button Style -->
-  <div class="trackers n-grid">
+  <div class="xs:p-2 p-4 grid grid-cols-3 xs:grid-cols-2 md:grid-col-4 lg:grid-col-5 gap-2">
     {#each trackers as tracker}
       <ShortcutButton
         id="tracker-{tracker.tag}"

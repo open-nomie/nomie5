@@ -148,7 +148,7 @@
         </Button>
       </div>
       <div class="main">
-        <div class="n-row">
+        <div class="flex">
           <Dymoji person={activePerson} size={26} radius={0.3} />
           &nbsp; {activePerson.getDisplayName()}
         </div>

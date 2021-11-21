@@ -163,7 +163,7 @@
       </div>
       <Logo size="16" style="opacity:0.4" />
     </div>
-    <div class="actions n-row">
+    <div class="actions flex">
       <Button shape="circle" color="transparent" on:click={Interact.closeShareImage}>
         <NIcon name="close" className="fill-white" />
       </Button>

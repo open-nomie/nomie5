@@ -3,6 +3,8 @@
   import Ripple from "./ripple.svelte";
   import { press } from "svelte-hammer";
 
+  import "./button.css";
+
   const dispatch = createEventDispatcher();
   export let id = undefined;
   export let size = "md";
@@ -46,6 +48,7 @@
 </script>
 
 <style global>
+
   .nbtn {
     position: relative;
     overflow: hidden;

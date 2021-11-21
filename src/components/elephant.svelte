@@ -5,6 +5,7 @@
 <style>
   svg {
     fill: var(--color-primary-bright);
+    @apply flex-shrink-0;
   }
 </style>
 

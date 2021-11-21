@@ -113,7 +113,7 @@
       {/if}
     {/each}
 
-    <div class="n-row">
+    <div class="flex">
       <slot name="bottom" />
     </div>
   </div>

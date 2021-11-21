@@ -34,7 +34,7 @@
   }
 </style>
 
-<div class="tiny-color-picker n-row {className}">
+<div class="tiny-color-picker flex {className}">
   {#each colors as color}
     <button
       aria-label={color}

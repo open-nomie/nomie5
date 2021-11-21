@@ -26,48 +26,52 @@
   }
 </script>
 
-<style lang="scss" type="text/scss">
-  @import "../../scss/utils/_utils";
+<style lang="postcss" >
   .n-toast {
-    z-index: 10003;
-    position: fixed;
-    bottom: 0px;
-    height: 140px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    padding-bottom: env(safe-area-inset-bottom);
-    transition: all 0.2s ease-in-out;
-    padding-left: 16px;
-    padding-right: 16px;
-    &.hidden {
-      transform: translateY(200px) scale(0.8);
-      opacity: 0;
-      pointer-events: none;
-    }
-    &.visible {
-      transform: none;
-      opacity: 1;
-    }
-    .n-toast-panel {
-      min-height: 36px;
-      max-width: 600px;
-      min-width: 300px;
-      padding: 4px 0;
-      border-radius: 6px;
-      background-color: var(--color-primary-bright);
-      color: #fff;
-      flex-grow: 0;
-      border: solid 1px rgba(0, 0, 0, 0.1);
-      box-shadow: 0px 26px 18px rgba(0, 0, 0, 0.2);
-      flex-shrink: 1;
-      display: flex;
-      align-items: center;
-      margin-bottom: 15%;
-    }
-  }
+	 z-index: 10003;
+	 position: fixed;
+	 bottom: 0px;
+	 height: 140px;
+	 left: 0;
+	 right: 0;
+	 display: flex;
+	 justify-content: center;
+	 align-items: flex-end;
+	 padding-bottom: env(safe-area-inset-bottom);
+	 transition: all 0.2s ease-in-out;
+	 padding-left: 16px;
+	 padding-right: 16px;
+}
+ .n-toast.hidden {
+	 transform: translateY(200px) scale(0.8);
+	 opacity: 0;
+	 pointer-events: none;
+}
+ .n-toast.visible {
+	 transform: none;
+	 opacity: 1;
+}
+ .n-toast .n-toast-panel {
+  @apply bg-black;
+  @apply bg-opacity-80;
+  @apply backdrop-filter;
+  @apply backdrop-blur-sm;
+  @apply backdrop-saturate-150;
+  @apply rounded-md;
+
+  min-height: 36px;
+  max-width: 600px;
+  min-width: 300px;
+  padding: 4px 0;
+  flex-grow: 0;
+  border: solid 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 26px 18px rgba(0, 0, 0, 0.2);
+  flex-shrink: 1;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15%;
+}
+ 
 </style>
 
 <div

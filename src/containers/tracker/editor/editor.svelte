@@ -433,7 +433,7 @@
         on:click={methods.selectType}
         className="tracker-type py-3 mb-3">
         {Lang.t('tracker.tracker-type', 'Tracker Type')}
-        <div slot="right" class="n-row">
+        <div slot="right" class="flex">
           <Text bold>{(getTypeDetails(data.tracker.type) || {}).label}</Text>
           <Icon
             name="chevronDown"
@@ -455,7 +455,7 @@
 
       {#if data.tracker.type == 'range'}
         <ListItem className="py-0 mb-3">
-          <div class="n-row">
+          <div class="flex">
             <NInput
               pattern="[0-9]*"
               inputmode="numeric"

@@ -182,9 +182,9 @@
     aria-modal
     aria-hidden={!showDom}
     aria-label={title || 'Pop Menu'}
-    class="full-screen dark-glass pop-menu {showDom === true ? 'visible' : 'hidden'}"
+    class="screen-block justify-end  pop-menu {showDom === true ? 'visible' : 'hidden'}"
     on:click={methods.backgroundClicked}>
-    <div class="card">
+    <div class="card bg-white z-50 flex flex-col">
       {#if title || description}
         <div class="p-2">
           {#if title}

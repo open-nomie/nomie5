@@ -67,7 +67,7 @@
   <h1>{$Interact.pin.title}</h1>
   {#if $Interact.pin.show}
     <!-- Pin Display -->
-    <Text center size="xl" className="text-white pin-holder n-row">
+    <Text center size="xl" className="text-white pin-holder flex">
       {#each _pin.split('') as d}•{/each}
     </Text>
     <!-- Keypad Input -->

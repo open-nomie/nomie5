@@ -388,7 +388,7 @@
     </div>
   {/if}
 
-  <div class="p-2 pt-2 n-row">
+  <div class="p-2 pt-2 flex">
     <Button className="mr-1" block color="light" on:click={findRelatedTrackers}>
       {Lang.t('stats.analyze', 'Auto')}
     </Button>

@@ -459,7 +459,7 @@
     style="{`${width ? `width:${width};` : ''} ${height ? `height:${height};` : ''} outline:none;  ${style}`};">
     <div class="n-calendar-container calendar">
       {#if showHeader}
-        <div class="header n-row">
+        <div class="header flex">
           <div class="month filler pr-3">
             <Text size={compact ? 'xs' : 'sm'} bold>{selectedMonthName} {selectedYear}</Text>
           </div>

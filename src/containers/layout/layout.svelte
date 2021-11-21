@@ -1,6 +1,7 @@
 <script lang="ts">
   import AppTabs from "../../containers/layout/tabs.svelte";
   import { onMount } from "svelte";
+  import "./layout.css";
 
   export let style: string = "";
   export let className: string = "";
@@ -8,7 +9,8 @@
   export let showTabs: boolean = true;
   export let headerClassNames = "";
 
-  declare var window: any;
+
+
   let scrollArea: HTMLElement;
   let scrolling: boolean = false;
   let scrolled: boolean = false;
@@ -46,7 +48,7 @@
 </script>
 
 <svelte:head>
-  <title>{pageTitle ? `${pageTitle} - N5` : `Nomie v5`}</title>
+  <title>{pageTitle ? `${pageTitle} - N5` : `Nomie v5.7`}</title>
 </svelte:head>
 
 <div
@@ -56,7 +58,7 @@
   {showTabs ? 'has-tabs' : 'no-tabs'}"
   {style}>
   {#if hasHeader}
-    <header class="layout-header {headerClassNames} {scrolled ? 'scrolled' : ''} {scrolling ? 'scrolling' : ''}">
+    <header class="z-50 sticky top-0 glass {headerClassNames}">
       <slot name="header" />
     </header>
   {/if}
@@ -68,12 +70,12 @@
     {/if}
   </main>
   {#if hasBottom}
-    <main id="nomie-main-bottom">
+    <main id="nomie-main-bottom glass">
       <slot name="bottom" />
     </main>
   {/if}
   {#if hasFooter}
-    <footer class="layout-footer">
+    <footer class="layout-footer glass">
       <slot name="footer" />
     </footer>
   {/if}
