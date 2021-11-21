@@ -115,7 +115,7 @@
 </div>
 
 <style lang="postcss" global>
-  /* @import "../../scss/vendor/bootstrap/base"; */
+  
 .type-normal .full-screen-modal .n-modal-footer {
 	 padding-bottom: calc(env(safe-area-inset-bottom) + 10px) !important;
 }

@@ -2,7 +2,7 @@
 	import { wait } from './utils/tick/tick';
   // Svelte
   // import { Router, Route, navigate } from "svelte-routing";
-  import Tailwindcss from './scss/Tailwind.svelte';
+  import Tailwindcss from './style/Tailwind.svelte';
   import { onMount } from "svelte";
   import dayjs from "dayjs";
 
@@ -54,9 +54,8 @@
   import ProgressBar from "./components/progress-bar/progress-bar.svelte";
   import { ApiStore } from "./containers/api/api-store";
 
-  // import "./scss/main.scss";
+  
   import "./style/main.css";
-
   // Set a better console
   const console = new Logger("APP");
 

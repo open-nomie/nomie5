@@ -146,58 +146,56 @@
   }
 </script>
 
-<style global lang="scss">
+<style global lang="postcss">
   .autocomplete-results.scroller {
-    max-height: 48px;
-    overflow: scroll;
-    .tracker-list {
-      margin-top: 0px;
-      margin-bottom: 2px;
-      max-height: 40px;
-      display: flex;
-      flex-wrap: nowrap !important;
-      width: fit-content;
-    }
-  }
-  .autocomplete-results.scroller .trackable-element {
-    flex-shrink: 0;
-    flex-grow: 0;
-  }
-  .autocomplete-results {
-    margin: 0px;
-    border-radius: 2px;
-    padding: 2px;
-    transition: all 0.2s ease-in-out;
-    z-index: 100;
-    &.animate {
-      &.visible {
-        transition: all 0.2s ease-in-out;
-        opacity: 1;
-      }
-      &.hidden {
-        max-height: 0px !important;
-        padding: 0;
-        overflow: hidden;
-        margin: 0;
-        transition: all 0.2s ease-in-out;
-        opacity: 0;
-        pointer-events: none;
-        transform: translateY(60px);
-      }
-    }
-
-    .tracker-list {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-    }
-    .btn {
-      flex-grow: 0;
-      flex-shrink: 0;
-      max-width: 120px;
-      white-space: pre;
-    }
-  }
+	 max-height: 48px;
+	 overflow: scroll;
+}
+ .autocomplete-results.scroller .tracker-list {
+	 margin-top: 0px;
+	 margin-bottom: 2px;
+	 max-height: 40px;
+	 display: flex;
+	 flex-wrap: nowrap !important;
+	 width: fit-content;
+}
+ .autocomplete-results.scroller .trackable-element {
+	 flex-shrink: 0;
+	 flex-grow: 0;
+}
+ .autocomplete-results {
+	 margin: 0px;
+	 border-radius: 2px;
+	 padding: 2px;
+	 transition: all 0.2s ease-in-out;
+	 z-index: 100;
+}
+ .autocomplete-results.animate.visible {
+	 transition: all 0.2s ease-in-out;
+	 opacity: 1;
+}
+ .autocomplete-results.animate.hidden {
+	 max-height: 0px !important;
+	 padding: 0;
+	 overflow: hidden;
+	 margin: 0;
+	 transition: all 0.2s ease-in-out;
+	 opacity: 0;
+	 pointer-events: none;
+	 transform: translateY(60px);
+}
+ .autocomplete-results .tracker-list {
+	 display: flex;
+	 flex-direction: row;
+	 flex-wrap: wrap;
+}
+ .autocomplete-results .btn {
+	 flex-grow: 0;
+	 flex-shrink: 0;
+	 max-width: 120px;
+	 white-space: pre;
+}
+ 
 </style>
 
 <!--  -->

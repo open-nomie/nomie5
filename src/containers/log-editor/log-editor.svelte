@@ -160,7 +160,7 @@ import { ChevronDown } from "svelte-hero-icons";
           {:else}
             <Text size="sm">{Lang.t('general.select', 'Select')}</Text>
           {/if}
-          <Icon  icon={ChevronDown} size={16} className="ml-2" />
+          <Icon icon={ChevronDown} size={16} className="ml-2" />
         </div>
       </ListItem>
       {#if toggleMap}

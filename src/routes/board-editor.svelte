@@ -205,23 +205,6 @@
   };
 </script>
 
-<!-- <style lang="scss">
-  // .grid-container {
-  //   display: flex;
-  //   flex-direction: column;
-  //   align-items: space-around;
-  //   min-height: 50vh;
-  // }
-
-  // .btn-group {
-  //   .btn {
-  //     width: 36px;
-  //   }
-  // }
-
-  // Animation from https://www.kirupa.com/html5/creating_the_ios_icon_jiggle_wobble_effect_in_css.htm
-</style> -->
-
 {#if data.board}
   <NPage>
     <div slot="header">

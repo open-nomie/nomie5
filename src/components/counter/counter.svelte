@@ -58,31 +58,30 @@
   };
 </script>
 
-<style lang="scss">
-  @import "../../scss/utils/_utils";
+<style lang="postcss">
   .n-counter {
-    font-size: 0.7em;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-
-    &.large {
-      display: flex;
-      padding: 12px;
-      font-size: 40px;
-      flex-grow: 1;
-      text-align: center;
-      justify-content: center;
-      align-content: center;
-      min-height: 50px;
-      height: 50px;
-      color: var(--color-inverse-2);
-    }
-    &.filled {
-      border-radius: 4px;
-      padding: 1px 6px;
-    }
-  }
+	 font-size: 0.7em;
+	 font-weight: bold;
+	 display: flex;
+	 align-items: center;
+}
+ .n-counter.large {
+	 display: flex;
+	 padding: 12px;
+	 font-size: 40px;
+	 flex-grow: 1;
+	 text-align: center;
+	 justify-content: center;
+	 align-content: center;
+	 min-height: 50px;
+	 height: 50px;
+	 color: var(--color-inverse-2);
+}
+ .n-counter.filled {
+	 border-radius: 4px;
+	 padding: 1px 6px;
+}
+ 
 </style>
 
 <div
@@ -91,7 +90,7 @@
   {filled ? 'filled' : ''}"
   style={`color:${filled ? '#FFF' : color}; background-color:${filled ? color : 'transparent'}`}>
   {#if !lg}
-    <Icon name="time" size="12" className="mr-1" />
+    <Icon name="time" size={12} className="mr-1" />
   {/if}
   {value}
 </div>

@@ -121,7 +121,8 @@
     await tick(20);
     let smallAvatar64 = await getAvatarImage(avatarBase64);
     await tick(20);
-    document.getElementById("photo-holder-image").src = null;
+    const holder:any = document.getElementById("photo-holder-image");
+    holder.src = null;
     await tick(10);
     activePerson.avatar = smallAvatar64;
   }

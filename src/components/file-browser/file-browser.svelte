@@ -225,10 +225,10 @@
         end = this.selectionEnd;
 
       // set textarea value to: text before caret + tab + text after caret
-      this.value = val.substring(0, start) + "\t" + val.substring(end);
+      this.value = (val || "").substring(0, start) + "\t" + (val || "").substring(end);
 
       // put caret at right position again
-      this.selectionStart = this.selectionEnd = start + 1;
+      this.selectionStart = this.selectionEnd = (start || 0) + 1;
 
       // prevent the focus lose
       return false;
@@ -257,7 +257,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="postcss">
   textarea#file-editor {
     font-family: "Courier New", Courier, monospace;
     min-height: calc(100% - 0px);
@@ -289,7 +289,7 @@
   <NLayout className="n-file-browser">
     <div class="container n-toolbar-grid" slot="header">
       <div class="left">
-        <BackButton click={back} />
+        <BackButton on:click={()=>back()} />
       </div>
       <div class="main">
         <h1 class="truncate">{state.title}</h1>
@@ -363,7 +363,7 @@
   <NLayout className="n-file-browser" showTabs={false}>
     <div class="container n-toolbar-grid" slot="header">
       <div class="left">
-        <BackButton click={back} />
+        <BackButton on:click={back} />
       </div>
       <div class="main">
         <h1 class="truncate">{state.file}</h1>

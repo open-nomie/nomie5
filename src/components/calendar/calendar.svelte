@@ -267,188 +267,148 @@
   };
 </script>
 
-<style lang="scss">
-  // Partially based on https://www.npmjs.com/package/vue-n-calendar
-  @import "../../scss/utils/_utils";
-
+<style lang="postcss">
   .n-calendar.sm {
-    --cal-font-size: 0.5em;
-    --cal-day-size: 16px;
-  }
-  .n-calendar.md {
-    --cal-font-size: 0.8em;
-    --cal-day-size: 20px;
-  }
-  .n-calendar.lg {
-    --cal-font-size: 0.8em;
-    --cal-day-size: 24px;
-  }
+	 --cal-font-size: 0.5em;
+	 --cal-day-size: 16px;
+}
+ .n-calendar.md {
+	 --cal-font-size: 0.8em;
+	 --cal-day-size: 20px;
+}
+ .n-calendar.lg {
+	 --cal-font-size: 0.8em;
+	 --cal-day-size: 24px;
+}
+ .n-calendar .active {
+	 position: relative;
+}
+ .n-calendar .active:before {
+	 content: "";
+	 border: solid 1px var(--color-green);
+	 top: -1px;
+	 right: -1px;
+	 bottom: -1px;
+	 left: -1px;
+	 border-radius: 32%;
+	 position: absolute;
+}
+ .n-calendar .today {
+	 position: relative;
+}
+ .n-calendar .today:after {
+	 content: "";
+	 height: 4px;
+	 width: 4px;
+	 border-radius: 2px;
+	 background-color: var(--color-primary-bright);
+	 top: -3px;
+	 position: absolute;
+}
+ .n-calendar .n-calendar-container .header {
+	 padding: 6px 12px;
+}
+ .n-calendar .n-calendar-container .body {
+	 align-items: center;
+	 display: grid;
+	 grid-row-gap: 4px;
+	 grid-template-columns: repeat(7, 1fr);
+	 grid-template-rows: repeat(7, 1fr);
+	 justify-items: center;
+}
+ .n-calendar .n-calendar-container .body .day-name {
+	 color: var(--color-inverse);
+	 font-weight: bold;
+	 font-size: 0.6em;
+	 height: 18px;
+}
+ .n-calendar .n-calendar-container .body .day-container {
+	 display: flex;
+	 justify-content: center;
+	 align-items: center;
+	 height: 28px;
+	 position: relative;
+	 width: 100%;
+}
+ .n-calendar .n-calendar-container .body .day-container .day {
+	 align-content: center;
+	 border-radius: 32%;
+	 box-sizing: content-box;
+	 color: var(--color-inverse-2);
+	 display: flex;
+	 height: var(--cal-day-size);
+	 justify-content: center;
+	 min-width: var(--cal-day-size);
+}
+ .n-calendar .n-calendar-container .body .day-container .day.selected {
+	 border: 3px solid var(--color-solid-2);
+}
+ .n-calendar .n-calendar-container .body .day-container .day.off-day {
+	 background-color: #e5e5e5;
+	 font-weight: bold;
+}
+ .n-calendar .n-calendar-container .body .day-container .day:active {
+	 font-weight: bold;
+	 background-color: var(--color-grey-8);
+}
+ .n-calendar .n-calendar-container .body .day-container .day span {
+	 font-size: var(--cal-font-size);
+	 margin: 0;
+	 padding: 0;
+	 align-self: center;
+}
+ .n-calendar.compact {
+	 --cal-font-size: 0.4em;
+	 --cal-day-size: 6px;
+	 min-width: 90px;
+	 margin: 2px;
+	 line-height: var(--cal-font-size);
+	 flex-grow: 0;
+}
+ .n-calendar.compact .n-calendar-container .header {
+	 padding: 0px 0px 2px 0px !important;
+	 display: block;
+	 font-size: 0.9rem;
+	 margin: 0 !important;
+}
+ .n-calendar.compact .n-calendar-container .body {
+	 grid-row-gap: 0px;
+	 grid-template-columns: repeat(7, 1fr);
+	 grid-template-rows: repeat(7, 1fr);
+}
+ .n-calendar.compact .n-calendar-container .body .day-name {
+	 font-size: 0.5em;
+	 height: auto;
+	 padding-top: 1px;
+	 padding-bottom: 1px;
+}
+ .n-calendar.compact .n-calendar-container .body .day-container {
+	 height: auto;
+	 padding: 1px 0px !important;
+}
+ .n-calendar .calendar {
+	 background-color: inherit;
+}
+ .n-calendar .calendar .body .day-container .before, .n-calendar .calendar .body .day-container .after {
+	 height: 28px;
+}
+ .n-calendar .date-picker {
+	 background-color: inherit;
+}
+ .n-calendar .date-picker .body .day-container .day:hover {
+	 background-color: rgba(153, 66, 66, 0.5);
+	 border: 2px solid #994242;
+	 cursor: pointer;
+}
+ .n-calendar .date-picker .body .day-container .day.selected {
+	 border: 2px solid #994242;
+	 color: #994242;
+}
+ .n-calendar .day.unfilled {
+	 background-color: transparent;
+}
+ 
 
-  .n-calendar {
-    $off-day-background-color: #e5e5e5;
-    $selected-color: #994242;
-    $selection-hover-color: rgba($selected-color, 0.5);
-    $today-color: #008290;
-    $day-color: #232323;
-    $week-day-name-color: rgba($day-color, 0.7);
-
-    .active {
-      position: relative;
-      &:before {
-        content: "";
-        // font-size: 10px;
-        border: solid 1px var(--color-green);
-        top: -1px;
-        right: -1px;
-        bottom: -1px;
-        left: -1px;
-        border-radius: 32%;
-        position: absolute;
-      }
-    }
-    .today {
-      position: relative;
-      &:after {
-        content: "";
-        height: 4px;
-        width: 4px;
-        border-radius: 2px;
-        background-color: var(--color-primary-bright);
-        top: -3px;
-        position: absolute;
-      }
-    }
-    .n-calendar-container {
-      //   display: grid;
-      //   grid-template-rows: 40px 1fr;
-      .header {
-        padding: 6px 12px;
-      }
-
-      .body {
-        align-items: center;
-        display: grid;
-        grid-row-gap: 4px;
-        grid-template-columns: repeat(7, 1fr);
-        grid-template-rows: repeat(7, 1fr);
-        justify-items: center;
-        .day-name {
-          color: var(--color-inverse);
-          font-weight: bold;
-          font-size: 0.6em;
-          height: 18px;
-        }
-        .day-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 28px;
-          position: relative;
-          width: 100%;
-          .day {
-            align-content: center;
-            border-radius: 32%;
-            box-sizing: content-box;
-            color: var(--color-inverse-2);
-            display: flex;
-            height: var(--cal-day-size);
-            justify-content: center;
-            min-width: var(--cal-day-size);
-            &.selected {
-              border: 3px solid var(--color-solid-2);
-            }
-            &.off-day {
-              background-color: #e5e5e5;
-              font-weight: bold;
-            }
-
-            &:active {
-              font-weight: bold;
-              background-color: var(--color-grey-8);
-            }
-
-            span {
-              font-size: var(--cal-font-size);
-              margin: 0;
-              padding: 0;
-              align-self: center;
-            }
-          }
-        }
-      }
-    } //.n-calendar-container
-
-    // .n-calendar.compact
-    &.compact {
-      --cal-font-size: 0.4em;
-      --cal-day-size: 6px;
-
-      min-width: 90px;
-      margin: 2px;
-
-      @include media-breakpoint-down(xs) {
-        --cal-font-size: 0.32em;
-        --cal-day-size: 3px;
-      }
-
-      line-height: var(--cal-font-size);
-      flex-grow: 0;
-      .n-calendar-container {
-        .header {
-          padding: 0px 0px 2px 0px !important;
-          display: block;
-          font-size: 0.9rem;
-          margin: 0 !important;
-        }
-        .body {
-          grid-row-gap: 0px;
-          grid-template-columns: repeat(7, 1fr);
-          grid-template-rows: repeat(7, 1fr);
-
-          .day-name {
-            font-size: 0.5em;
-            height: auto;
-            padding-top: 1px;
-            padding-bottom: 1px;
-          }
-          .day-container {
-            height: auto;
-            padding: 1px 0px !important;
-          }
-        }
-      }
-    }
-
-    .calendar {
-      background-color: inherit;
-      .body .day-container {
-        .before,
-        .after {
-          height: 28px;
-        }
-      }
-    }
-    .date-picker {
-      background-color: inherit;
-      .body .day-container .day {
-        &:hover {
-          background-color: rgba(153, 66, 66, 0.5);
-          border: 2px solid #994242;
-          cursor: pointer;
-        }
-        &.selected {
-          border: 2px solid #994242;
-          color: #994242;
-        }
-      }
-    }
-
-    .day.filled {
-    }
-    .day.unfilled {
-      background-color: transparent;
-    }
-  }
 </style>
 
 {#if state.date && mounted}

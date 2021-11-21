@@ -41,7 +41,8 @@
     active = active;
     setTimeout(() => {
       try {
-        document.activeElement.blur();
+        const active:any = document.activeElement;
+        active.blur();
       } catch (e) {}
     }, 120);
     fireChange();
@@ -105,7 +106,7 @@
           <LabelMeta str={pick} titleClass={active.indexOf(pick) > -1 ? 'text-primary-bright' : 'text-inverse'} />
           <div slot="right" class="flex items-center ml-2">
             {#if active.indexOf(pick) > -1}
-              <NIcon name="checkmarkOutline" className="fill-primary-bright" size="24" />
+              <NIcon name="checkmarkOutline" className="fill-primary-bright" size={24} />
             {/if}
           </div>
         </ListItem>
@@ -129,7 +130,7 @@
 
 </div>
 
-<style lang="scss">
+<style lang="postcss">
   .tracker-input.picker {
     width: 100%;
   }

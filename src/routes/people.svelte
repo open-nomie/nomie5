@@ -40,8 +40,7 @@
   }
 
   function loadPeople() {
-    const longTimeAgo = dayjs().subtract(100, "years").toDate();
-
+    
     state.people = getPeople().sort((a, b) => {
       return $PeopleStore.people[a].last < $PeopleStore.people[b].last ? 1 : -1;
     });
@@ -79,9 +78,7 @@
   });
 </script>
 
-<style lang="scss">
 
-</style>
 
 <NLayout pageTitle="People">
 

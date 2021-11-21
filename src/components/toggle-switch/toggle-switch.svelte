@@ -21,61 +21,54 @@
   };
 </script>
 
-<style lang="scss" type="text/scss">
-  @import "../../scss/utils/_utils";
-  $height: 30px;
+<style lang="postcss">
   .onoffswitch {
-    position: relative;
-    width: 50px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-
-    .onoffswitch-checkbox {
-      display: none;
-    }
-
-    .onoffswitch-label {
-      display: block;
-      overflow: hidden;
-      cursor: pointer;
-      height: $height;
-      padding: 0;
-      line-height: $height;
-      border: 2px solid var(--color-grey-6);
-      border-radius: $height;
-      background-color: var(--color-solid-1);
-      transition: background-color 0.2s ease-in-out;
-      margin: 0;
-    }
-
-    .onoffswitch-label:before {
-      content: "";
-      display: block;
-      width: $height;
-      margin: 0px;
-      background: var(--color-solid);
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      right: 22px;
-      border: 2px solid var(--color-grey-6);
-      border-radius: $height;
-      transition: all 0.2s ease-in-out 0s;
-    }
-
-    .onoffswitch-checkbox:checked + .onoffswitch-label {
-      background-color: var(--color-primary-bright);
-    }
-
-    .onoffswitch-checkbox:checked + .onoffswitch-label,
-    .onoffswitch-checkbox:checked + .onoffswitch-label:before {
-      border-color: var(--color-primary-bright);
-    }
-    .onoffswitch-checkbox:checked + .onoffswitch-label:before {
-      right: 0px;
-    }
-  }
+	 position: relative;
+	 width: 50px;
+	 -webkit-user-select: none;
+	 -moz-user-select: none;
+	 -ms-user-select: none;
+}
+ .onoffswitch .onoffswitch-checkbox {
+	 display: none;
+}
+ .onoffswitch .onoffswitch-label {
+	 display: block;
+	 overflow: hidden;
+	 cursor: pointer;
+	 height: 30px;
+	 padding: 0;
+	 line-height: 30px;
+	 border: 2px solid var(--color-grey-6);
+	 border-radius: 30px;
+	 background-color: var(--color-solid-1);
+	 transition: background-color 0.2s ease-in-out;
+	 margin: 0;
+}
+ .onoffswitch .onoffswitch-label:before {
+	 content: "";
+	 display: block;
+	 width: 30px;
+	 margin: 0px;
+	 background: var(--color-solid);
+	 position: absolute;
+	 top: 0;
+	 bottom: 0;
+	 right: 22px;
+	 border: 2px solid var(--color-grey-6);
+	 border-radius: 30px;
+	 transition: all 0.2s ease-in-out 0s;
+}
+ .onoffswitch .onoffswitch-checkbox:checked + .onoffswitch-label {
+	 background-color: var(--color-primary-bright);
+}
+ .onoffswitch .onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+	 border-color: var(--color-primary-bright);
+}
+ .onoffswitch .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+	 right: 0px;
+}
+ 
 </style>
 
 <div class="onoffswitch">

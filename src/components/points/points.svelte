@@ -5,48 +5,46 @@
   $: positiveClass = points > 0 ? "positive" : points < 0 ? "negative" : "neutral";
 </script>
 
-<style lang="scss">
+<style lang="postcss">
   .n-points {
-    position: relative;
-    border-radius: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1em;
-    font-weight: bolder;
-    overflow: visible;
-    max-height: 22px;
-
-    &.positive {
-      color: var(--color-green);
-      .dir {
-        color: var(--color-green);
-      }
-    }
-
-    svg {
-      margin-left: 2px;
-      position: absolute;
-      display: block;
-      width: 12px;
-      height: 12px;
-      right: -7px;
-      top: -4px;
-    }
-
-    &.negative {
-      color: var(--color-red);
-      .dir {
-        color: var(--color-red);
-      }
-    }
-    &.neutral {
-      color: var(--color-primary-bright);
-      .dir {
-        color: var(--color-primary-bright);
-      }
-    }
-  }
+	 position: relative;
+	 border-radius: 13px;
+	 display: flex;
+	 align-items: center;
+	 justify-content: center;
+	 font-size: 1em;
+	 font-weight: bolder;
+	 overflow: visible;
+	 max-height: 22px;
+}
+ .n-points.positive {
+	 color: var(--color-green);
+}
+ .n-points.positive .dir {
+	 color: var(--color-green);
+}
+ .n-points svg {
+	 margin-left: 2px;
+	 position: absolute;
+	 display: block;
+	 width: 12px;
+	 height: 12px;
+	 right: -7px;
+	 top: -4px;
+}
+ .n-points.negative {
+	 color: var(--color-red);
+}
+ .n-points.negative .dir {
+	 color: var(--color-red);
+}
+ .n-points.neutral {
+	 color: var(--color-primary-bright);
+}
+ .n-points.neutral .dir {
+	 color: var(--color-primary-bright);
+}
+ 
 </style>
 
 {#if points !== 0}

@@ -5,15 +5,15 @@
   export let emoji = undefined;
 </script>
 
-<style lang="scss" type="text/scss">
-  @import "../../scss/utils/__utils.scss";
+<style lang="postcss" >
+  
   .n-tag-badge {
     display: inline-flex;
     align-items: center;
     background-color: #fff;
     box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.1);
-    border: solid 1px rgba($primaryBright, 0.2);
-    color: $primaryBright;
+    /* border: solid 1px rgba($primaryBright, 0.2); */
+    @apply text-blue-500;
     padding-left: 6px;
     padding-right: 2px;
     border-radius: 20px;

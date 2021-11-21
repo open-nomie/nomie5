@@ -109,7 +109,7 @@
   });
 </script>
 
-<style lang="scss">
+<style lang="postcss">
   ::-webkit-scrollbar {
     width: 0px;
     background: transparent;

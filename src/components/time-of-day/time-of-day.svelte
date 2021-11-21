@@ -23,9 +23,7 @@
   }
 </script>
 
-<style lang="scss">
 
-</style>
 
 {#if statsTod}
   <BarChart height={90} {points} hideYTicks={true} beginAtZero={false} type="line" labels={points.map((p) => p.x)} {color} />

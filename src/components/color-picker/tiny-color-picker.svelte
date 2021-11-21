@@ -12,26 +12,25 @@
   }
 </script>
 
-<style lang="scss">
-  .tiny-color-picker {
-  }
-  button {
-    border: none;
-    padding: 0;
-    margin: 4px;
-    border-radius: 50%;
-    &.not-selected {
-      border-width: 2px;
-      border-style: solid;
-      background-color: transparent;
-    }
-    &.border-green {
-      border-color: var(--color-green);
-    }
-    &.border-red {
-      border-color: var(--color-red);
-    }
-  }
+<style lang="postcss">
+  .tiny-color-picker button {
+	 border: none;
+	 padding: 0;
+	 margin: 4px;
+	 border-radius: 50%;
+}
+ .tiny-color-picker button.not-selected {
+	 border-width: 2px;
+	 border-style: solid;
+	 background-color: transparent;
+}
+ .tiny-color-picker button.border-green {
+	 border-color: var(--color-green);
+}
+ .tiny-color-picker button.border-red {
+	 border-color: var(--color-red);
+}
+ 
 </style>
 
 <div class="tiny-color-picker flex {className}">

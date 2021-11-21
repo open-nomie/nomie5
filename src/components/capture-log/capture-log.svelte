@@ -11,7 +11,7 @@
   import _ from "lodash";
   // import { slide } from "svelte/transition";
   import DateTimeBar from "../date-time-bar/date-time-bar.svelte";
-
+  import "./capture-log.css";
   //Components
   import NItem from "../list-item/list-item.svelte";
   import NIcon from "../icon/icon.svelte";
@@ -41,9 +41,7 @@
   import PositivityMenu from "../positivity-selector/positivity-menu.svelte";
   import Icon from "../icon/icon.svelte";
   import DatePicker from "../date-picker/date-picker.svelte";
-  import TrackableElement, {
-    toElement,
-  } from "../../modules/trackable-element/trackable-element";
+  import type TrackableElement from "../../modules/trackable-element/trackable-element";
   import extract from "../../utils/extract/extract";
 
   // Consts
@@ -201,23 +199,25 @@
                 })
               : null;
           } catch (e) {
-            console.error("Error Caught", e.message);
+            console.error(`Error Caught ${e.message}` );
           }
 
           return null;
 
           // Search for Context
         } else if (type === "context") {
-          let context = $ContextStore.filter((term) => {
-            let text = searchTag.replace("+", "").toLowerCase();
-            term = term.toLowerCase();
-            return term.search(text.toLowerCase()) > -1;
-          });
-          return context.length
-            ? context.map((c) => {
-                return { tag: c, emoji: "💡", type: "context" };
-              })
-            : null;
+          console.error("### LOOK INTO THIS!!!! todo:// context here is not right")
+          return []
+          // let context = $ContextStore.filter((term) => {
+          //   let text = searchTag.replace("+", "").toLowerCase();
+          //   term = term.toLowerCase();
+          //   return term.search(text.toLowerCase()) > -1;
+          // });
+          // return context.length
+          //   ? context.map((c) => {
+          //       return { tag: c, emoji: "💡", type: "context" };
+          //     })
+          //   : null;
         }
       } catch (e) {}
     },
@@ -235,7 +235,7 @@
         await LedgerStore.saveLog($ActiveLogStore);
         saving = false;
       } catch (e) {
-        console.error("Error in capture-log logSave", e.message);
+        console.error(`Error in capture-log logSave ${e.message}`);
         saving = false;
       }
       methods.clear();
@@ -357,116 +357,6 @@
   });
 </script>
 
-<style lang="scss" global>
-  @import "../../scss/utils/__utils.scss";
-
-  #note-capture {
-    background-color: var(--footer-background);
-    padding-bottom: 4px;
-  }
-
-  .capture-log .tracker-list {
-    margin-top: -10px !important;
-  }
-
-  .capture-log .mask-textarea .save-button {
-    display: none;
-  }
-  .capture-log .mask-textarea.populated .save-button {
-    display: block;
-  }
-  .capture-log .mask-textarea .action-button {
-    margin-bottom: 7px;
-  }
-
-  .capture-log {
-    padding: 10px;
-    padding-bottom: 0;
-    position: relative;
-    z-index: 1;
-  }
-
-  .capture-wrapper .advanced {
-    position: relative;
-    z-index: 1200;
-    margin-top: 10px;
-    padding-top: 1px;
-    padding-bottom: 10px;
-  }
-
-  .capture-wrapper .mask-textarea .action-buton {
-    margin-bottom: 7px;
-  }
-
-  .capture-wrapper .save-progress {
-    position: absolute;
-    top: -4px;
-    left: 0;
-    height: 4px;
-    background-color: $green;
-    opacity: 0;
-    width: 0px;
-    transition: all 700ms ease-out;
-    &.saving {
-      background-color: $green;
-      opacity: 1;
-      width: 100%;
-    }
-    &.saved {
-      transition: none;
-      background-color: $green;
-      opacity: 0;
-      width: 0%;
-    }
-    &.clear {
-      transition: none;
-      width: 0;
-    }
-  }
-
-  .capture-wrapper .mask-textarea {
-    display: flex;
-    align-items: flex-end;
-    min-height: 40px;
-    max-height: 200px;
-    border-radius: 20px;
-    background-color: var(--color-solid-1);
-    // box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    transition: all 0.2s ease-in-out;
-    border: solid 1px var(--color-faded-1);
-
-    .save-button {
-      display: none;
-    }
-
-    &.populated {
-      background-color: rgba($green, 0.2);
-      box-sizing: border-box;
-      .save-button {
-        display: inline-flex;
-      }
-    }
-
-    textarea {
-      // transition: all 0.2s ease-in-out;
-      border: none;
-      background-color: transparent;
-      width: 100%;
-      height: 40px;
-      padding: 8px 0;
-      color: var(--color-inverse-1);
-      // margin: 0 16px;
-      // margin-right: 0px;
-      margin-left: 8px;
-      font-size: 1em;
-      &:focus,
-      &:active {
-        outline: none;
-      }
-    }
-  }
-</style>
 
 <div
   class="capture-wrapper"
@@ -558,7 +448,7 @@
             color="success"
             size="sm"
             on:click={methods.logSave}>
-            <NIcon name="arrowUp" style="fill: #FFF;" size="20" />
+            <NIcon name="arrowUp" style="fill: #FFF;" size={20} />
           </Button>
         {/if}
       </div>
@@ -573,7 +463,7 @@
           className="mr-2 solo text-sm"
           on:click={methods.toggleCustomLocation}>
           <div slot="left" class="text-sm text-bold">
-            <NIcon name="pin" className="mr-2 fill-inverse-2" size="16" />
+            <NIcon name="pin" className="mr-2 fill-inverse-2" size={16} />
           </div>
           {#if !$ActiveLogStore.lat}
             <Text>{Lang.t('general.location', 'Location')}</Text>
@@ -611,7 +501,7 @@
               on:click={() => {
                 methods.dateAdd(-1, 'day');
               }}>
-              <Icon name="chevronLeft" size="14" />
+              <Icon name="chevronLeft" size={14} />
             </Button>
             <Button
               ariaLabel="Next Day"
@@ -622,7 +512,7 @@
               on:click={() => {
                 methods.dateAdd(1, 'day');
               }}>
-              <Icon name="chevronRight" size="14" />
+              <Icon name="chevronRight" size={14} />
             </Button>
           </div>
           <div slot="right">
@@ -632,7 +522,7 @@
                 icon
                 on:click={methods.clearDate}
                 ariaLabel="Close Advanced">
-                <NIcon name="close" className="fill-inverse" size="22" />
+                <NIcon name="close" className="fill-inverse" size={22} />
               </Button>
             {/if}
           </div>

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   /** Timer.svelte
    *
    * Used to show either the Active Counter (if tracker.started is set)
@@ -23,6 +23,7 @@
   import Button from "../../../components/button/button.svelte";
   import { Lang } from "../../../store/lang";
   import Icon from "../../../components/icon/icon.svelte";
+import { Play } from "svelte-hero-icons";
 
   // Consts
   const dispatch = createEventDispatcher();
@@ -30,7 +31,7 @@
 
   // Props
   export let value;
-  export let tracker;
+  export let tracker:any;
 
   // Data
   let data = {
@@ -53,11 +54,7 @@
   });
 </script>
 
-<style lang="scss">
-  @import "../../../scss/utils/__utils.scss";
-  .n-timer-input {
-  }
-</style>
+
 
 <div class="tracker-input n-timer-input w-100 ">
   {#if tracker.started}
@@ -78,7 +75,7 @@
         shape="circle"
         size="md"
         className="text-white animate up {value ? 'visible' : 'hidden'}">
-        <Icon name="play" size="32" className="fill-inverse-1" />
+        <Icon icon={Play} size={32} className="text-blue-500" />
       </Button>
       <div class="filler" />
     </div>

@@ -80,7 +80,7 @@
   }
 </script>
 
-<style lang="scss" type="text/scss">
+<style lang="postcss">
   .intro-message {
     text-align: center;
     margin: 0 16px;
@@ -130,7 +130,7 @@
         </div>
         <div slot="right">
           {#if $TrackerStore.trackers.hasOwnProperty(tracker.tag) || installed.hasOwnProperty(tracker.tag)}
-            <NIcon name="checkmarkOutline" className="fill-primary" size="24" />
+            <NIcon name="checkmarkOutline" className="fill-primary" size={24} />
           {/if}
         </div>
       </ListItem>

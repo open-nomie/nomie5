@@ -216,7 +216,7 @@
           selected = undefined;
           Interact.focusDate(undefined);
         }}>
-        <NIcon name="close" className="fill-white" size="12" />
+        <NIcon name="close" className="fill-white" size={12} />
       </button>
       <button
         on:click={() => {
@@ -224,7 +224,7 @@
         }}>
         <span class="mr-1 text-sm date faded">{xFormat(selected.x)}</span>
         <span class="d-value">{yFormat(selected.y)}</span>
-        <NIcon name="chevronRight" className="fill-white" size="12" />
+        <NIcon name="chevronRight" className="fill-white" size={12} />
       </button>
     </div>
   {/if}

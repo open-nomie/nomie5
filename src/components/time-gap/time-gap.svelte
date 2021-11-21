@@ -25,7 +25,7 @@
   onMount(main);
 </script>
 
-<style lang="scss">
+<style lang="postcss">
   .time-gap {
     font-size: small;
     display: flex;

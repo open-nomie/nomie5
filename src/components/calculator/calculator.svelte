@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   // Inspirated by https://codepen.io/ethanryan/details/MryqXv
 
   // Math will do the calculatng
@@ -7,10 +7,11 @@
   import { tick, createEventDispatcher, onMount, onDestroy } from "svelte";
   import Button from "../button/button.svelte";
   import is from "../../utils/is/is";
+import { wait } from "utils/tick/tick";
 
   const dispatch = createEventDispatcher();
 
-  let globalAnswer = "0"; //declaring global variable here... this is bad practice
+  let globalAnswer:any = "0"; //declaring global variable here... this is bad practice
   let buffer = [];
   let fontSize = 40;
 
@@ -149,7 +150,7 @@
   }
 
   async function getFontSize() {
-    await tick(10);
+    await wait(10);
     let len = globalAnswer.toString().length;
     if (len < 10) {
       fontSize = 40;
@@ -204,121 +205,109 @@
   </div>
 </div>
 
-<style lang="scss" global>
-  @import "../../scss/utils/_utils";
-  .buttons {
-    display: grid;
-    justify-content: center;
-    grid-template-areas:
-      "main main main main"
-      "main main main main"
-      "main main main main"
-      "main main main main"
-      "main main main main";
-    grid-template-columns: 70px 70px 70px 70px;
-    grid-template-rows: 70px 70px;
-  }
-  @include media-breakpoint-down(xs) {
-    .buttons {
-      grid-template-columns: 25% 25% 25% 25%;
-      grid-template-rows: 60px 60px;
-    }
-  }
-
-  @keyframes numberUp {
-    from {
-      transform: translateY(8px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  .calc-screen {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    background-color: black;
-    border: solid 1px rgba(255, 255, 255, 0.1);
-    color: white;
-    text-align: right;
-    border-radius: 4pt;
-    padding: 4pt 8pt;
-    padding-bottom: 4pt;
-    width: 100%;
-    margin: 0 auto 8pt;
-    .value {
-      line-height: 100%;
-      height: 50px;
-      text-align: right;
-    }
-    .preview {
-      position: absolute;
-      top: 4pt;
-      left: 8pt;
-      opacity: 0.8;
-      color: #999;
-      font-size: 0.8em;
-    }
-    .buffer {
-      height: 20px;
-      min-height: 22px;
-      font-size: 0.8em;
-      color: #999;
-
-      span {
-      }
-    }
-  }
-  .numberUp {
-    display: inline-block;
-    animation: numberUp 0.4s ease-in-out;
-    -webkit-animation: numberUp 0.4s ease-in-out;
-  }
-  .n-calculator .nbtn {
-    touch-action: manipulation;
-    border: none;
-    color: var(--color-inverse);
-    margin: 4px;
-    border-radius: 50%;
-    line-height: 100%;
-    width: 62px;
-    height: 62px;
-    font-size: 26px;
-    @include media-breakpoint-down(xs) {
-      height: 50px;
-      width: 50px;
-      font-size: 20px;
-    }
-  }
-  .n-calculator .nbtn.r-0 {
-    color: #fff;
-    background-color: var(--color-solid-1);
-  }
-
-  .n-calculator .nbtn.r-0.b-0 {
-    color: #fff;
-    background-color: var(--color-red);
-  }
-
-  .n-calculator .nbtn.r-0.b-1 {
-    color: #fff;
-    background-color: #444;
-  }
-
-  .n-calculator .nbtn.r-0.b-2 {
-    color: #fff;
-    background-color: #444;
-  }
-
-  .n-calculator .nbtn.b-3 {
-    color: #fff;
-    background-color: var(--color-orange);
-  }
-  .n-calculator .nbtn.b-0.r-4 {
-    background-color: transparent;
-    box-shadow: none;
-  }
+<style lang="postcss" global>
+  .n-calculator .buttons {
+	 display: grid;
+	 justify-content: center;
+	 grid-template-areas: "main main main main" "main main main main" "main main main main" "main main main main" "main main main main";
+	 grid-template-columns: 70px 70px 70px 70px;
+	 grid-template-rows: 70px 70px;
+}
+/* @include media-breakpoint-down(xs) {
+	 .buttons {
+		 grid-template-columns: 25% 25% 25% 25%;
+		 grid-template-rows: 60px 60px;
+	}
+}
+ */
+ @keyframes numberUp {
+	 from {
+		 transform: translateY(8px);
+		 opacity: 0;
+	}
+	 to {
+		 transform: translateY(0);
+		 opacity: 1;
+	}
+}
+ .calc-screen {
+	 position: relative;
+	 display: flex;
+	 flex-direction: column;
+	 background-color: black;
+	 border: solid 1px rgba(255, 255, 255, 0.1);
+	 color: white;
+	 text-align: right;
+	 border-radius: 4pt;
+	 padding: 4pt 8pt;
+	 padding-bottom: 4pt;
+	 width: 100%;
+	 margin: 0 auto 8pt;
+}
+ .calc-screen .value {
+	 line-height: 100%;
+	 height: 50px;
+	 text-align: right;
+}
+ .calc-screen .preview {
+	 position: absolute;
+	 top: 4pt;
+	 left: 8pt;
+	 opacity: 0.8;
+	 color: #999;
+	 font-size: 0.8em;
+}
+ .calc-screen .buffer {
+	 height: 20px;
+	 min-height: 22px;
+	 font-size: 0.8em;
+	 color: #999;
+}
+ .numberUp {
+	 display: inline-block;
+	 animation: numberUp 0.4s ease-in-out;
+	 -webkit-animation: numberUp 0.4s ease-in-out;
+}
+ .n-calculator .nbtn {
+	 touch-action: manipulation;
+	 border: none;
+	 color: var(--color-inverse);
+	 margin: 4px;
+	 border-radius: 50%;
+	 line-height: 100%;
+	 width: 62px;
+	 height: 62px;
+	 font-size: 26px;
+	/* @include media-breakpoint-down(xs) {
+		 height: 50px;
+		 width: 50px;
+		 font-size: 20px;
+	}
+	 */
+}
+ .n-calculator .nbtn.r-0 {
+	 color: #fff;
+	 background-color: var(--color-solid-1);
+}
+ .n-calculator .nbtn.r-0.b-0 {
+	 color: #fff;
+	 background-color: var(--color-red);
+}
+ .n-calculator .nbtn.r-0.b-1 {
+	 color: #fff;
+	 background-color: #444;
+}
+ .n-calculator .nbtn.r-0.b-2 {
+	 color: #fff;
+	 background-color: #444;
+}
+ .n-calculator .nbtn.b-3 {
+	 color: #fff;
+	 background-color: var(--color-orange);
+}
+ .n-calculator .nbtn.b-0.r-4 {
+	 background-color: transparent;
+	 box-shadow: none;
+}
+ 
 </style>

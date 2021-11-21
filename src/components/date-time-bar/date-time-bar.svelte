@@ -71,57 +71,56 @@
   const hasLeftSlot = (arguments[1].$$slots || {}).hasOwnProperty("left");
 </script>
 
-<style global lang="scss">
+<style global lang="postcss">
   .alert-dialog-window .date-time-bar-wrapper {
-    margin-left: -16px;
-    margin-right: -16px;
-    width: calc(100% + 32px) !important;
-    margin-top: 6px;
-  }
-
-  .date-time-bar-wrapper {
-    flex-grow: 1;
-    flex-shrink: 1;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    &.calendar-top {
-      flex-direction: column-reverse;
-    }
-  }
-  .date-time-bar {
-    background-color: var(--color-solid);
-    display: grid;
-    flex-shrink: 1;
-    flex-grow: 1;
-    grid-template-columns: 1fr 0.7fr;
-    align-items: center;
-    width: 100%;
-    padding-left: 10px;
-
-    button {
-      height: 40px;
-      flex-grow: 1;
-      flex-shrink: 1;
-      border: none;
-      background-color: var(--color-solid);
-      color: var(--color-primary-bright);
-      margin: 0px;
-      font-size: 0.7em;
-    }
-    button.date {
-      border-right: solid 1px var(--color-solid-2);
-      text-align: left;
-      padding-left: 10px;
-    }
-  }
-  .date-time-bar-wrapper .view.visible {
-    border-top: solid 1px var(--color-solid-2);
-    margin-bottom: 8px;
-  }
-  .date-time-bar-wrapper .no-left-slot > .left {
-    display: none;
-  }
+	 margin-left: -16px;
+	 margin-right: -16px;
+	 width: calc(100% + 32px) !important;
+	 margin-top: 6px;
+}
+ .date-time-bar-wrapper {
+	 flex-grow: 1;
+	 flex-shrink: 1;
+	 width: 100%;
+	 display: flex;
+	 flex-direction: column;
+}
+ .date-time-bar-wrapper.calendar-top {
+	 flex-direction: column-reverse;
+}
+ .date-time-bar {
+	 background-color: var(--color-solid);
+	 display: grid;
+	 flex-shrink: 1;
+	 flex-grow: 1;
+	 grid-template-columns: 1fr 0.7fr;
+	 align-items: center;
+	 width: 100%;
+	 padding-left: 10px;
+}
+ .date-time-bar button {
+	 height: 40px;
+	 flex-grow: 1;
+	 flex-shrink: 1;
+	 border: none;
+	 background-color: var(--color-solid);
+	 color: var(--color-primary-bright);
+	 margin: 0px;
+	 font-size: 0.7em;
+}
+ .date-time-bar button.date {
+	 border-right: solid 1px var(--color-solid-2);
+	 text-align: left;
+	 padding-left: 10px;
+}
+ .date-time-bar-wrapper .view.visible {
+	 border-top: solid 1px var(--color-solid-2);
+	 margin-bottom: 8px;
+}
+ .date-time-bar-wrapper .no-left-slot > .left {
+	 display: none;
+}
+ 
 </style>
 
 {#if _date}

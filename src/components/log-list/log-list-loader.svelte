@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
   import config from "../../config/appConfig";
   import LogList from "./log-list.svelte";
@@ -14,8 +14,7 @@
   import dayjs from "dayjs";
   import Text from "../text/text.svelte";
   import { UserStore } from "../../store/user-store";
-  import Storage from "../../modules/storage/storage";
-  import global from "../../config/appConfig";
+
   import Spinner from "../spinner/spinner.svelte";
   import Button from "../button/button.svelte";
   import { Lang } from "../../store/lang";
@@ -59,8 +58,9 @@
 
     // Set from and to date
     loading = true;
-    let from = !lastFrom ? dayjs().subtract(limit, config.book_time_unit) : dayjs(lastFrom).subtract(limit, config.book_time_unit);
-    let to = !lastTo ? dayjs() : dayjs(lastTo).subtract(limit, config.book_time_unit);
+    const unit:any = config.book_time_unit;
+    const from:any = !lastFrom ? dayjs().subtract(limit, unit) : dayjs(lastFrom).subtract(limit, unit);
+    const to:any = !lastTo ? dayjs() : dayjs(lastTo).subtract(limit, unit);
 
     // Query the ledger
     let book = await LedgerStore.query({
@@ -88,7 +88,7 @@
   });
 </script>
 
-<style lang="scss">
+<style lang="postcss">
   .log-list-loader {
     position: relative;
   }

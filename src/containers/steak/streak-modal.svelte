@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import NModal from "../../components/modal/modal.svelte";
   import NIcon from "../../components/icon/icon.svelte";
   import NCalendar from "../../components/calendar/calendar.svelte";
@@ -83,12 +83,12 @@
     let type = extractor.toElement($Interact.streak.show);
 
     let logs = await LedgerStore.query({
-      search: type.toSearchTerm($Interact.streak.show),
+      search: type.toSearchTerm(),
       start: payload.start,
       end: payload.end,
     });
 
-    logs = logs.map((row) => {
+    logs = logs.map((row:any) => {
       row.start = new Date(row.start);
       row.end = new Date(row.end);
       row.repeat = "never";
@@ -110,7 +110,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="postcss">
   .spinner-container {
     width: 100px;
     height: 100px;
@@ -166,7 +166,7 @@
         </div>
         <div class="n-panel w-50 center-all py-2">
           <div class="spinner-container">
-            <NSpinner size="120" speed="0" gap={100 - state.percentage} />
+            <NSpinner size={120} speed={0} gap={100 - state.percentage} />
           </div>
         </div>
       </div>

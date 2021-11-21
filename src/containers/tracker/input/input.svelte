@@ -141,29 +141,30 @@
   });
 </script>
 
-<style global lang="scss">
+<style global lang="postcss">
   .tracker-input {
-    display: flex;
-    flex-direction: column;
-    justify-content: stretch;
-    align-items: stretch;
-    flex-grow: 1;
-    height: 100%;
-    .btn.w-25 {
-      width: 30% !important;
-      &:first-child {
-        margin-right: 10px;
-      }
-    }
-    .footer .btn {
-      border-radius: 50px;
-    }
-  }
-  .tracker-input .edit-toggle {
-    position: fixed;
-    top: 20px;
-    z-index: 1000;
-  }
+	 display: flex;
+	 flex-direction: column;
+	 justify-content: stretch;
+	 align-items: stretch;
+	 flex-grow: 1;
+	 height: 100%;
+}
+ .tracker-input .btn.w-25 {
+	 width: 30% !important;
+}
+ .tracker-input .btn.w-25:first-child {
+	 margin-right: 10px;
+}
+ .tracker-input .footer .btn {
+	 border-radius: 50px;
+}
+ .tracker-input .edit-toggle {
+	 position: fixed;
+	 top: 20px;
+	 z-index: 1000;
+}
+ 
 </style>
 
 <NModal
@@ -181,7 +182,7 @@
     </div>
     <div class="right">
       <Button icon on:click={editTracker}>
-        <NIcon name="more" size="26" className="fill-primary-bright" />
+        <NIcon name="more" size={26} className="fill-primary-bright" />
       </Button>
     </div>
   </div>
@@ -258,7 +259,7 @@
           on:click={() => {
             methods.onCancel();
           }}>
-          <Icon name="close" size="40" className="fill-inverse" />
+          <Icon name="close" size={40} className="fill-inverse" />
         </Button>
       </div>
       <!-- end left toolbar -->
@@ -302,7 +303,7 @@
               style="max-width:130px"
               title="Stop Timer"
               className="text-white {data.tracker.started > 0 ? '' : 'd-none'}">
-              <Icon name="stop" size="32" className="fill-white" />
+              <Icon name="stop" size={32} className="fill-white" />
             </Button>
           {/if}
         {/if}

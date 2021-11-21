@@ -5,44 +5,44 @@
   export let message = [];
 </script>
 
-<style lang="scss">
+<style lang="postcss">
   .slide {
-    padding: 20px 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-content: center;
-    max-width: 400px;
-    height: calc(100vh - 100px);
-    max-height: 700px;
-    img {
-      max-width: 100%;
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 0px 10px 15px -8px rgba(0, 0, 0, 0.32);
-      flex-shrink: 0;
-      flex-grow: 0;
-    }
-
-    h1 {
-      font-size: 1.2em;
-      font-weight: bolder;
-      text-align: center;
-      max-width: 240px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .content {
-      padding: 0 0 20px;
-      font-size: 1em;
-    }
-    p {
-      font-size: 0.8em;
-      font-weight: 200;
-      opacity: 0.77;
-      text-align: center;
-    }
-  }
+	 padding: 20px 20px;
+	 display: flex;
+	 flex-direction: column;
+	 justify-content: center;
+	 align-content: center;
+	 max-width: 400px;
+	 height: calc(100vh - 100px);
+	 max-height: 700px;
+}
+ .slide img {
+	 max-width: 100%;
+	 border-radius: 6px;
+	 overflow: hidden;
+	 box-shadow: 0px 10px 15px -8px rgba(0, 0, 0, 0.32);
+	 flex-shrink: 0;
+	 flex-grow: 0;
+}
+ .slide h1 {
+	 font-size: 1.2em;
+	 font-weight: bolder;
+	 text-align: center;
+	 max-width: 240px;
+	 margin-left: auto;
+	 margin-right: auto;
+}
+ .slide .content {
+	 padding: 0 0 20px;
+	 font-size: 1em;
+}
+ .slide p {
+	 font-size: 0.8em;
+	 font-weight: 200;
+	 opacity: 0.77;
+	 text-align: center;
+}
+ 
 </style>
 
 <div class="slide" transition:slide>

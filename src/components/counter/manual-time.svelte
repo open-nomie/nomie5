@@ -11,6 +11,7 @@
 
   // Vendors
   import dayjs from "dayjs";
+import { ChevronDown } from "svelte-hero-icons";
 
   // Props
   // export let started = undefined;
@@ -119,67 +120,65 @@
   // On Mount
 </script>
 
-<style lang="scss" global>
-  @import "../../scss/utils/_utils";
-
-  .n-counter-manual .unit svg {
-    position: absolute;
-    top: 20px;
-    right: 2px;
-    height: 16px;
-    pointer-events: none;
-  }
-  .n-counter-manual {
-    // padding: 40px 20px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 1;
-    span {
-      line-height: 40px;
-      font-size: 40px;
-    }
-    .unit {
-      position: relative;
-      text-align: center;
-      background-color: var(--color-solid-1);
-      border-radius: 16px;
-      margin: 4pt;
-      width: 95px;
-      select {
-        -webkit-appearance: none;
-        border: solid 1px rgba(0, 0, 0, 0.1);
-        height: 50px;
-        line-height: 50px;
-        font-size: 40px;
-        font-weight: bold;
-        padding-left: 10px;
-        min-width: 86px;
-        flex-grow: 1;
-        text-align: center;
-        margin: 2px;
-        border-radius: 4pt;
-        background-color: var(--color-solid);
-
-        option {
-          text-align: center;
-        }
-      }
-      display: flex;
-      flex-direction: column;
-      label {
-        font-size: 0.9em;
-        color: var(--color-inverse-3);
-        margin-top: 10px;
-      }
-    }
-  }
+<style lang="postcss" global>
+.n-counter-manual .unit svg {
+	 position: absolute;
+	 top: 20px;
+	 right: 2px;
+	 height: 16px;
+	 pointer-events: none;
+}
+ .n-counter-manual {
+	 display: flex;
+	 flex-direction: row;
+	 align-items: center;
+	 justify-content: center;
+	 flex-grow: 1;
+}
+ .n-counter-manual span {
+	 line-height: 40px;
+	 font-size: 40px;
+}
+ .n-counter-manual .unit {
+	 position: relative;
+	 text-align: center;
+	 background-color: var(--color-solid-1);
+	 border-radius: 16px;
+	 margin: 4pt;
+	 width: 95px;
+	 display: flex;
+	 flex-direction: column;
+}
+ .n-counter-manual .unit select {
+	 -webkit-appearance: none;
+	 border: solid 1px rgba(0, 0, 0, 0.1);
+	 height: 50px;
+	 line-height: 50px;
+	 font-size: 40px;
+	 font-weight: bold;
+	 padding-left: 10px;
+	 min-width: 86px;
+	 flex-grow: 1;
+	 text-align: center;
+	 margin: 2px;
+	 border-radius: 4pt;
+	 background-color: var(--color-solid);
+}
+ .n-counter-manual .unit select option {
+	 text-align: center;
+}
+ .n-counter-manual .unit label {
+	 font-size: 0.9em;
+	 color: var(--color-inverse-3);
+	 margin-top: 10px;
+}
+ 
+  
 </style>
 
 <div class="n-counter-manual {className}">
   <div class="unit hours">
-    <select
+    <select name="hours"
       value={methods.getUnitValue('hours')}
       on:change={(event) => {
         methods.setUnitValue(event, 'hours');
@@ -188,13 +187,13 @@
         <option value={unit}>{unit}</option>
       {/each}
     </select>
-    <NIcon name="chevronDown" className="fill-solid" />
-    <label>Hour</label>
+    <NIcon icon={ChevronDown} className="fill-solid" />
+    <label for="hours">Hour</label>
   </div>
   <!-- Minutes -->
   <div class="unit hours">
 
-    <select
+    <select name="minutes"
       value={methods.getUnitValue('minutes')}
       on:change={(event) => {
         methods.setUnitValue(event, 'minutes');
@@ -203,13 +202,13 @@
         <option value={unit}>{unit}</option>
       {/each}
     </select>
-    <NIcon name="chevronDown" className="fill-solid" />
-    <label>Min</label>
+    <NIcon icon={ChevronDown} className="fill-solid" />
+    <label for="minutes">Min</label>
   </div>
   <!-- SEconds -->
   <div class="unit seconds">
 
-    <select
+    <select name="seconds"
       value={methods.getUnitValue('seconds')}
       on:change={(event) => {
         methods.setUnitValue(event, 'seconds');
@@ -218,7 +217,7 @@
         <option value={unit}>{unit}</option>
       {/each}
     </select>
-    <NIcon name="chevronDown" className="fill-solid" />
-    <label>Sec</label>
+    <NIcon icon={ChevronDown} className="fill-solid" />
+    <label for="seconds">Sec</label>
   </div>
 </div>

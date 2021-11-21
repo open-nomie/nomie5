@@ -38,9 +38,7 @@
     note_to_array(str) {
       let parsed = extractor.parse(str, { includeGeneric: true });
       let matches = parsed.filter((trackableElement) => {
-        return (
-          ("person", "context", "generic").indexOf(trackableElement.type) > -1
-        );
+        return ["person", "context", "generic"].indexOf(trackableElement.type) > -1;
       });
       actual = matches.length;
       return parsed;
@@ -50,43 +48,24 @@
   $: state.words = methods.note_to_array(note);
 </script>
 
-<style lang="scss">
-  .n-note-textualized {
-    &.inherit {
-      font-size: inherit;
-      line-height: inherit;
-      letter-spacing: inherit;
-    }
-
-    // .value {
-    //   max-height: 15px;
-    //   flex-shrink: 0;
-    //   font-size: 10px;
-    //   font-weight: bold;
-    //   height: 14px;
-    //   min-width: 14px;
-    //   padding: 0 4px;
-    //   color: #fff;
-    //   border-radius: 6px;
-    //   text-align: center;
-    //   display: inline-block;
-    // }
-    // .string,
-    .tracker,
-    .person,
-    .context {
-      padding-right: 3px;
-      flex-shrink: 0;
-    }
-    .remainder {
-      padding-right: 5px;
-      margin-left: -6px;
-    }
-
-    span {
-      display: inline;
-    }
-  }
+<style lang="postcss">
+  .n-note-textualized.inherit {
+	 font-size: inherit;
+	 line-height: inherit;
+	 letter-spacing: inherit;
+}
+ .n-note-textualized .tracker, .n-note-textualized .person, .n-note-textualized .context {
+	 padding-right: 3px;
+	 flex-shrink: 0;
+}
+ .n-note-textualized .remainder {
+	 padding-right: 5px;
+	 margin-left: -6px;
+}
+ .n-note-textualized span {
+	 display: inline;
+}
+ 
 </style>
 
 {#if actual}

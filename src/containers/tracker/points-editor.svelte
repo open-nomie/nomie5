@@ -89,7 +89,7 @@
         let date = dayjs().startOf("day").add(i, "hour");
 
         hours.push({
-          value: $UserStore.meta.is24hour ? date.format("HH:mm") : date.format("h:mm a"),
+          value: $UserStore.meta.is24Hour ? date.format("HH:mm") : date.format("h:mm a"),
           index: i + 1,
         });
       }
@@ -147,7 +147,7 @@
               <div slot="right">
                 <NPoints points={item.sc} />
                 <div class="menu-handle px-1 ml-2">
-                  <Icon name="menu" size="20" />
+                  <Icon name="menu" size={20} />
                 </div>
               </div>
 
@@ -256,7 +256,7 @@
   </div>
 {/if}
 
-<style lang="scss">
+<style lang="postcss">
   .pos-label {
     font-size: 1.2em;
     display: none;

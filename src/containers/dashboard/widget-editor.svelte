@@ -193,7 +193,7 @@
   });
 </script>
 
-<style lang="scss">
+<style lang="postcss">
   .widget-top {
     box-shadow: var(--box-shadow-float);
   }

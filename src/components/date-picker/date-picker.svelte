@@ -10,7 +10,7 @@
   import { UserStore } from "../../store/user-store";
 
   // data
-  export let date: Date;
+  export let date: Date | undefined;
   export let time: any;
   export let className: string = "";
   export let style: string = "";

@@ -1,0 +1,91 @@
+#note-capture {
+  background-color: var(--footer-background);
+  padding-bottom: 4px;
+}
+.capture-log .tracker-list {
+  margin-top: -10px !important;
+}
+.capture-log .mask-textarea .save-button {
+  display: none;
+}
+.capture-log .mask-textarea.populated .save-button {
+  display: block;
+}
+.capture-log .mask-textarea .action-button {
+  margin-bottom: 7px;
+}
+.capture-log {
+  padding: 10px;
+  padding-bottom: 0;
+  position: relative;
+  z-index: 1;
+}
+.capture-wrapper .advanced {
+  position: relative;
+  z-index: 1200;
+  margin-top: 10px;
+  padding-top: 1px;
+  padding-bottom: 10px;
+}
+.capture-wrapper .mask-textarea .action-buton {
+  margin-bottom: 7px;
+}
+.capture-wrapper .save-progress {
+  position: absolute;
+  top: -4px;
+  left: 0;
+  height: 4px;
+  background-color: var(--color-green);
+  opacity: 0;
+  width: 0px;
+  transition: all 700ms ease-out;
+}
+.capture-wrapper .save-progress.saving {
+  background-color: var(--color-green);
+  opacity: 1;
+  width: 100%;
+}
+.capture-wrapper .save-progress.saved {
+  transition: none;
+  background-color: var(--color-green);
+  opacity: 0;
+  width: 0%;
+}
+.capture-wrapper .save-progress.clear {
+  transition: none;
+  width: 0;
+}
+.capture-wrapper .mask-textarea {
+  display: flex;
+  align-items: flex-end;
+  min-height: 40px;
+  max-height: 200px;
+  border-radius: 20px;
+  background-color: var(--color-solid-1);
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+  border: solid 1px var(--color-faded-1);
+}
+.capture-wrapper .mask-textarea .save-button {
+  display: none;
+}
+.capture-wrapper .mask-textarea.populated {
+  box-sizing: border-box;
+}
+.capture-wrapper .mask-textarea.populated .save-button {
+  display: inline-flex;
+}
+.capture-wrapper .mask-textarea textarea {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+  height: 40px;
+  padding: 8px 0;
+  color: var(--color-inverse-1);
+  margin-left: 8px;
+  font-size: 1em;
+}
+.capture-wrapper .mask-textarea textarea:focus,
+.capture-wrapper .mask-textarea textarea:active {
+  outline: none;
+}
