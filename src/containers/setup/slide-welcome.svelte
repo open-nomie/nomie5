@@ -63,23 +63,17 @@
   <div class="top center-grow mx-auto" style="max-width:320px; padding:16px;">
     <img src="/images/nomie-head-on.png" style="width:60%; max-width:300px;" alt="nomie-head-on" />
     <Text bold center lineHeightMd className="mt-4">
-      Hi! I'm Nomie.
+      👋 I'm Nomie
       <br />
-      The completely private,
+      Completely private,
       <br />
       free & open life tracker.
     </Text>
     <Text size="xs" lineHeightMd center faded className="mt-2 mb-2">
       <Icon name="warning" size="14" />
-      <strong>Terms</strong>
+      <strong>Terms:</strong>
       Nomie is offered "as is", without warranty. Happy Data, LLC disclaims any liability for damages resulting from using Nomie. Nomie is
       not a medical device, nor should it be used as such. MIT License
     </Text>
-    <!-- <Text size="sm">
-      By
-      <a href="https://twitter.com/brandoncorbin">Brandon</a>
-      See the
-      <a href="https://github.com/open-nomie/nomie">Code</a>
-    </Text> -->
   </div>
 </section>

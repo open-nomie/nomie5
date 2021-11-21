@@ -96,7 +96,7 @@
   {#if $TrackerLibrary.first}
     <div class="p-3 intro-message">
       <NText size="sm" tag="div">
-        {Lang.t('tracker.pick-at-least-one', 'Pick at least 1 to continue')}
+        {Lang.t('tracker.pick-at-least-one', 'Pick 1 to continue')}
       </NText>
     </div>
   {/if}
@@ -142,7 +142,7 @@
       block
       disabled={Object.keys(installed).length === 0 && $TrackerLibrary.first}
       on:click={TrackerLibrary.toggle}>
-      {Lang.t('general.done', 'Done')}
+      {Lang.t('general.start-tracking', 'Start Tracking')}
     </Button>
   </div>
 </Modal>

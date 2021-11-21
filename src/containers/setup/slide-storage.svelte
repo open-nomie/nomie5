@@ -16,7 +16,7 @@
     <Text size="xxl" className="mb-4 text-3xl" bold>{Lang.t('setup.data-location', `Data Storage`)}</Text>
 
     <Text size="sm" className="leading-6 mb-4" center>
-      <strong>⚠️ Data is stored only on this device.</strong>
+      <strong>⚠️ WARNING: Data is stored only on this device.</strong>
       It is critical that you back up your data (Nomie will try and remind you). If you don't, data on your phone may be lost if Apple or
       Google needs to free up space.
     </Text>

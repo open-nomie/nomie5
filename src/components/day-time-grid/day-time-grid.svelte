@@ -23,7 +23,7 @@
 
   // Consts
   const console = new Logger("⏰ Grid");
-  const getEmptyDay = () => new Array(24).fill(0);
+  
   const emptyGrid = () => {
     let grid = [[], [], [], [], [], [], []];
     grid.forEach((day, index) => {
@@ -124,60 +124,55 @@
   });
 </script>
 
-<style type="scss">
-  @import "../../scss/utils/_utils";
+<style lang="postcss">
 
   .time-grid {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    flex-grow: 1;
-    min-height: 100%;
-    flex-shrink: 1;
-
-    .hour-header {
-      padding-left: 25px;
-      padding-top: 4px;
-      padding-bottom: 2px;
-      display: flex;
-      flex-direction: row;
-      .hour {
-        width: calc(100% / 24);
-        font-size: 0.4em;
-        display: relative;
-      }
-    }
-
-    label {
-      margin: 0;
-      font-size: 9px;
-      text-align: right;
-      color: var(--color-inverse);
-      padding-right: 4px;
-      width: 36px;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-    .hour {
-      color: var(--color-inverse);
-    }
-    .day {
-      display: flex;
-      flex-direction: row;
-      height: calc(100% / 7);
-      align-items: center;
-      .hour {
-        width: calc(100% / 24);
-        text-align: center;
-        margin: 0px;
-        background-color: $primary;
-        /* margin-right: 4px; */
-        /* margin-bottom: 2px; */
-        /* border-radius: 4px; */
-        height: 100%;
-      }
-    }
-  }
+	 display: flex;
+	 flex-direction: column;
+	 position: relative;
+	 flex-grow: 1;
+	 min-height: 100%;
+	 flex-shrink: 1;
+}
+ .time-grid .hour-header {
+	 padding-left: 25px;
+	 padding-top: 4px;
+	 padding-bottom: 2px;
+	 display: flex;
+	 flex-direction: row;
+}
+ .time-grid .hour-header .hour {
+	 width: calc(100% / 24);
+	 font-size: 0.4em;
+	 display: relative;
+}
+ .time-grid label {
+	 margin: 0;
+	 font-size: 9px;
+	 text-align: right;
+	 color: var(--color-inverse);
+	 padding-right: 4px;
+	 width: 36px;
+	 font-weight: bold;
+	 text-transform: uppercase;
+}
+ .time-grid .hour {
+	 color: var(--color-inverse);
+}
+ .time-grid .day {
+	 display: flex;
+	 flex-direction: row;
+	 height: calc(100% / 7);
+	 align-items: center;
+}
+ .time-grid .day .hour {
+	 width: calc(100% / 24);
+	 text-align: center;
+	 margin: 0px;
+	 background-color: var(--color-primary);
+	 height: 100%;
+}
+ 
 </style>
 
 <div class="time-grid {className}" style="height:{height}px; {style}" bind:this={_el}>
