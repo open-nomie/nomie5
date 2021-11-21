@@ -57,6 +57,7 @@
         syncEnabled: true,
       });
       state.canSync = true;
+      state.remote = remote;
       pouchEngine.saveRemote(remote);
     },
     startSync() {
