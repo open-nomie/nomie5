@@ -54,7 +54,7 @@
   };
 </script>
 
-<style global lang="scss" type="text/scss">
+<style global lang="postcss">
   .alert-dialog {
     min-height: 200px;
     position: fixed;
@@ -68,20 +68,19 @@
     justify-content: center;
     align-items: center;
     transition: all 0.5s ease-in-out;
-    &.visible {
-      opacity: 1;
-      .card {
-      }
-    }
-    &.hidden {
+  }
+  .alert-dialog.visible {
+    opacity: 1;
+  }
+  .alert-dialog.hidden {
       pointer-events: none;
       opacity: 0;
-      .card {
-        opacity: 0;
-        // transform: scale(0.) translateY(30);
-      }
+      
     }
-    .card {
+  .alert-dialog.hidden .card {
+      opacity: 0;
+    }
+  .alert-dialog  .card {
       @apply rounded-2xl;
       transition: all 0.2s ease-in-out;
       max-width: 400px;
@@ -98,31 +97,31 @@
       justify-content: stretch;
       align-content: stretch;
       color: var(--color-inverse-2);
-      .card-title {
-        line-height: 115%;
-        color: var(--color-inverse);
-        &.message {
-          padding-bottom: 6px;
-        }
-      }
-      .card-body {
-        flex-grow: 1;
-        flex-shrink: 1;
-        overflow-y: auto;
-      }
-    }
-    .footer {
-      border-top: solid 1px var(--color-faded-1);
-      button {
-        @apply rounded-2xl;
-        min-width: 120px;
-      }
-    }
-    .btn-toolbar {
-      .btn {
-        min-width: 100px;
-      }
-    }
+  }
+  .alert-dialog .card   .card-title {
+    line-height: 115%;
+    color: var(--color-inverse);
+  }
+  .alert-dialog .card .message {
+    padding-bottom: 6px;
+  }
+
+  .alert-dialog .card   .card-body {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow-y: auto;
+  }
+
+    .alert-dialog .footer {
+    border-top: solid 1px var(--color-faded-1);
+  
+  }
+  .alert-dialog .footer   button {
+    @apply rounded-2xl;
+    min-width: 120px;
+  }
+  .alert-dialog .btn-toolbar .btn {
+    min-width: 100px;
   }
 </style>
 

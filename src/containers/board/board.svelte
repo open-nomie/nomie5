@@ -551,21 +551,21 @@
         </div>
       {:else}
         {#if daysSinceLastBackup > 6 && $UserStore.launchCount > 10 && $UserStore.storageType == 'local' && $UserStore.meta.hideBackup == false}
-          <div class="container-sm">
-            <div class="pt-2 pb-1 text-center backup">
+          <div class="container-sm flex items-center justify-center">
+            <button aria-label="Backup your data" on:click={exportData} class="py-2 px-3 flex items-center text-center backup bg-red-600 bg-opacity-20 rounded-full">
               <!--- If it's way back - it's not really set-->
-              {#if daysSinceLastBackup > 1000}
-                <Text inline size="sm" faded className="bg-red-600 bg-opacity-20 rounded-full">
-                  <Icon name="bell" size={12} className="mt-1" />
+              {#if daysSinceLastBackup > 1000} 
+                <Text inline size="sm" faded className="">
+                  <Icon name="bell" size={12} />
                   {Lang.t('general.no-known-backups', 'No known backups')}
                 </Text>
               {:else}
                 <Text inline size="sm" faded>{daysSinceLastBackup} days since last backup</Text>
               {/if}
-              <Text inline underline color="text-inverse font-bold" className="ml-2" size="sm" on:click={exportData}>
+              <Text inline  className="ml-2 text-inverse font-bold" size="sm" >
                 {Lang.t('general.backup-now', 'Backup Now')}
               </Text>
-            </div>
+            </button>
           </div>
         {/if}
 

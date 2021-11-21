@@ -81,107 +81,100 @@
   }
 </script>
 
-<style global lang="scss" type="text/scss">
-  $radius: 1em;
+<style global lang="postcss">
   .pop-menu {
-    --pop-button-radius: 12px;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 2002;
-    padding-bottom: env(safe-area-inset-bottom);
-
-    .list {
-      border-radius: $radius;
-      background-color: var(--color-solid);
-      max-height: 60vh;
-      overflow-y: scroll;
-    }
-
-    &:before {
-      content: "";
-      background-color: var(--color-full-screen);
-      opacity: 0.8;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    transition: all 0.5s ease-in-out;
-    &.visible {
-      opacity: 1;
-      .card {
-      }
-    }
-    &.hidden {
-      pointer-events: none;
-      opacity: 0;
-
-      .card {
-        opacity: 0;
-        transform: translateY(400px) scaleY(0.1) scaleX(0.1);
-      }
-    }
-    .card {
-      transition: all 0.2s ease-in-out;
-      max-width: 400px;
-      max-height: 80vh;
-      min-height: 100px;
-      width: 200px;
-      min-width: 300px !important;
-      flex-grow: 1;
-      background-color: var(--color-darkest-translucent);
-      color: var(--color-inverse-1);
-      border-radius: 1.2em;
-      border: var(--modal-border);
-      box-shadow: var(--box-shadow-float);
-      padding: 10px;
-      margin: 10px;
-      display: flex;
-      justify-content: stretch;
-      align-content: stretch;
-
-      .card-body {
-        flex-grow: 1;
-        flex-shrink: 1;
-        overflow-x: hidden;
-      }
-    }
-    .btn-toolbar {
-      .nbtn {
-        min-width: 100px;
-      }
-    }
-  }
-  .pop-menu .pop-button {
-    box-shadow: none;
-  }
-  .pop-menu .n-list {
-    border-radius: 12px !important;
-  }
-  .pop-menu .n-list .nbtn main {
-    text-align: left !important;
-    justify-content: flex-start;
-  }
-  .pop-menu .n-list .nbtn ~ .nbtn:after {
-    content: "";
-    border-top: solid 1px rgba(155, 155, 155, 0.25) !important;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-  }
-  .pop-menu .nbtn-danger:hover,
-  .pop-menu.nbtn-danger:active {
-    background-color: var(--color-red) !important;
-    color: rgba(128, 2, 2, 0.9) !important;
-  }
+	 --pop-button-radius: 12px;
+	 position: fixed;
+	 top: 0;
+	 bottom: 0;
+	 left: 0;
+	 right: 0;
+	 z-index: 2002;
+	 padding-bottom: env(safe-area-inset-bottom);
+	 display: flex;
+	 justify-content: center;
+	 align-items: flex-end;
+	 transition: all 0.5s ease-in-out;
+}
+ .pop-menu .list {
+	 border-radius: 1em;
+	 background-color: var(--color-solid);
+	 max-height: 60vh;
+	 overflow-y: scroll;
+}
+ .pop-menu:before {
+	 content: "";
+	 background-color: var(--color-full-screen);
+	 opacity: 0.8;
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+	 bottom: 0;
+}
+ .pop-menu.visible {
+	 opacity: 1;
+}
+ .pop-menu.hidden {
+	 pointer-events: none;
+	 opacity: 0;
+}
+ .pop-menu.hidden .card {
+	 opacity: 0;
+	 transform: translateY(400px) scaleY(0.1) scaleX(0.1);
+}
+ .pop-menu .card {
+	 transition: all 0.2s ease-in-out;
+	 max-width: 400px;
+	 max-height: 80vh;
+	 min-height: 100px;
+	 width: 200px;
+	 min-width: 300px !important;
+	 flex-grow: 1;
+	 background-color: var(--color-darkest-translucent);
+	 color: var(--color-inverse-1);
+	 border-radius: 1.2em;
+	 border: var(--modal-border);
+	 box-shadow: var(--box-shadow-float);
+	 padding: 10px;
+	 margin: 10px;
+	 display: flex;
+	 justify-content: stretch;
+	 align-content: stretch;
+}
+ .pop-menu .card .card-body {
+   @apply flex-grow;
+   @apply flex-shrink;
+   @apply overflow-y-auto;
+   @apply overflow-x-hidden;
+}
+ .pop-menu .btn-toolbar .nbtn {
+	 @apply min-w-full;
+}
+ .pop-menu .pop-button {
+	 box-shadow: none;
+}
+ .pop-menu .n-list {
+	 @apply rounded-2xl;
+   @apply overflow-y-auto;
+}
+ .pop-menu .n-list .nbtn main {
+	 text-align: left !important;
+	 justify-content: flex-start;
+}
+ .pop-menu .n-list .nbtn ~ .nbtn:after {
+	 content: "";
+	 border-top: solid 1px rgba(155, 155, 155, 0.25) !important;
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+}
+ .pop-menu .nbtn-danger:hover, .pop-menu.nbtn-danger:active {
+	 background-color: var(--color-red) !important;
+	 color: rgba(128, 2, 2, 0.9) !important;
+}
+ 
 </style>
 
 {#if showBase}
@@ -201,7 +194,7 @@
             </h5>
           {/if}
           {#if description}
-            <p class="p-0 m-0 mt-1">{description}</p>
+            <p class="p-0 m-0 mt-1 leading-tight">{description}</p>
           {/if}
         </div>
       {/if}
@@ -224,7 +217,7 @@
                 }}>
                 {button.title}
                 {#if button.description}
-                  <Text size="sm" leading2 faded className="mt-1">
+                  <Text size="sm" leading2 faded className="mt-1 leading-tight">
                     {button.description}
                   </Text>
                 {/if}
@@ -233,7 +226,7 @@
                   {#if button.icon}
                     <Icon name={button.icon} />
                   {:else if button.emoji}
-                    <Avatar emoji={button.emoji} size={24} />
+                    <Avatar emoji={button.emoji} size={42} />
                   {/if}
                 </div>
 
