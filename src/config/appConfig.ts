@@ -20,9 +20,9 @@ export default {
   api: "https://nomieapi.com",
   positivity: [
     { emoji: "😡", score: -2 },
-    { emoji: "👎", score: -1 },
+    { emoji: "😔", score: -1 },
     { emoji: "😐", score: 0 },
-    { emoji: "👍", score: 1 },
-    { emoji: "🤗", score: 2 },
+    { emoji: "😌", score: 1 },
+    { emoji: "🥳", score: 2 },
   ],
 };

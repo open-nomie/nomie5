@@ -31,7 +31,7 @@
   export let trackers: Array<ITracker>;
   export let hideMore: boolean = false;
   export let hideAdd: boolean = false;
-  export let view: "list" | "detail" | "button" | string = localStorage.getItem("board-view") || "button";
+  export let view: "list" | "detail" | "button" | string = localStorage.getItem("board-view") || "detail";
 
   function getLastUsed(tracker) {
     if ($LastUsed[tracker.tag]) {
@@ -184,7 +184,7 @@
       </div>
     </ListItem>
   {/if}
-{:else if view == 'detail'}
+{:else if view === 'detail'}
   <!-- Short Cut Button Style -->
   <div class="trackers n-grid">
     {#each trackers as tracker}

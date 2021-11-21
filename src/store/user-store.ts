@@ -16,11 +16,14 @@ import { TrackerStore } from "./tracker-store";
 import { BoardStore } from "./boards";
 
 import config from "../config/appConfig";
+
 import { Interact } from "./interact";
-import is from "../utils/is/is";
 import { LedgerStore } from "./ledger";
-import Timer from "../utils/timer/timer";
+
 import { Lang } from "./lang";
+
+import is from "../utils/is/is";
+import Timer from "../utils/timer/timer";
 import tick from "../utils/tick/tick";
 
 // Consts
@@ -233,13 +236,13 @@ const userInit = () => {
       // Storage.clear(); // no we shouldn't clear all storage.
       try {
         blockstack.signUserOut(window.location.origin);
-      } catch (e) {}
+      } catch (e) { }
       window.location.href = window.location.href;
     },
     /**
      * Set Profile and Signin
      */
-    setProfile(profile) {},
+    setProfile(profile) { },
     async bootstrap() {
       // First lets get the TrackerStore loaded
       state.launchCount++;
@@ -315,7 +318,7 @@ const userInit = () => {
       let value;
       try {
         value = await Storage.get(config.user_meta_path);
-      } catch (e) {}
+      } catch (e) { }
       update((usr) => {
         if (value) {
           usr.meta = value;

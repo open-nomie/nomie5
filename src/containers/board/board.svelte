@@ -84,7 +84,7 @@
     addedTrackers: [], // Visually showing what trackers are in the notes field
     activeTip: 0, // index of the current tip to show
     hideTips: false, // temp hide - it will stop showing after 12 launches.
-    view: localStorage.getItem("board-view") || "button",
+    view: localStorage.getItem("board-view") || "detail", // button "list" | "detail" | "button" 
   };
 
   /**
@@ -626,11 +626,11 @@
 
         {#if (foundTrackers || boardTrackers || []).length}
           <div class="mt-5 mb-3 board-actions n-row" style="min-width:100px;">
-
-            <ButtonGroup className="mr-2 box-shadow-tight">
+            
+            <ButtonGroup className="mr-2 box-shadow-tight bg-transparent">
               <Button
                 icon
-                className={`${state.view == 'button' ? 'active' : ''}`}
+                className={`${state.view == 'button' ? 'active' : 'bg-transparent'}`}
                 on:click={() => {
                   setView('button');
                 }}
@@ -639,7 +639,7 @@
               </Button>
               <Button
                 icon
-                className={`${state.view == 'list' ? 'active' : ''}`}
+                className={`${state.view == 'list' ? 'active' : 'bg-transparent'}`}
                 on:click={() => {
                   setView('list');
                 }}
@@ -648,7 +648,7 @@
               </Button>
               <Button
                 icon
-                className={`${state.view == 'detail' ? 'active' : ''}`}
+                className={`${state.view == 'detail' ? 'active' : 'bg-transparent'}`}
                 on:click={() => {
                   setView('detail');
                 }}
@@ -684,7 +684,7 @@
   </NModal>
 {/if}
 
-<style type="text/scss" name="scss">
+<style type="text/scss">
   @import "../../scss/utils/_utils";
   @import "../../scss/vendor/bootstrap/base";
 
