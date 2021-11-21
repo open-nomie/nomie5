@@ -1,7 +1,7 @@
-<script>
+<script> 
   import NIcon from "../icon/icon.svelte";
   import { createEventDispatcher, onMount } from "svelte";
-  import is from "../../utils/is/is";
+  
   const dispatch = createEventDispatcher();
 
   export let label = null;
@@ -78,235 +78,169 @@
   });
 </script>
 
-<style lang="scss">
-  @import "../../scss/utils/_utils";
-  $height: 48px;
-
-  :global(.n-input-container.list-item div.n-input label) {
-    left: 20px !important;
-    top: 10px !important;
-  }
-  :global(.n-input-container.list-item .n-input-wrapper) {
-    border-radius: 0px !important;
-  }
-
-  .n-input-container {
-    position: relative;
-    width: auto;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    flex-shrink: 1;
-    margin-bottom: 4pt;
-    margin-top: 4pt;
-    background-color: var(--color-solid);
-    border-radius: 6px;
-    border: solid 1px var(--color-faded-1);
-
-    .helper {
-      font-size: 0.65em;
-      color: var(--color-grey-5);
-      padding: 3px 6px;
-      background-color: var(--color-grey-9);
-    }
-
-    &.list-item {
-      background-color: var(--color-solid);
-      padding: 4px 12px;
-      border-radius: 0;
-      border: none;
-    }
-
-    .select-arrow {
-      margin-left: -50px;
-    }
-
-    .select-wrap {
-      position: relative;
-    }
-
-    &.with-label {
-      // background-color: pink !important;
-      .n-input-wrapper {
-        input,
-        select {
-          min-height: $height - 1;
-        }
-
-        &.has-input {
-          .n-input {
-            label {
-              transition: all 0.2s ease-in-out;
-              opacity: 0.7;
-              transform: translateY(0);
-            }
-            input,
-            select {
-              padding-top: 14px;
-              padding-bottom: 0px;
-              font-size: 1.05em;
-            }
-            textarea {
-              padding-top: 22px;
-              padding-bottom: 0px;
-              font-size: 1.05em;
-            }
-          }
-        }
-      }
-    } // end with-label
-
-    &.solo {
-      // background-color: blue !important;
-      .n-input-wrapper {
-        min-height: $height;
-        .n-input {
-          min-height: $height;
-          input,
-          select,
-          textarea {
-            min-height: $height - 1;
-          }
-        }
-      }
-      &.compact {
-        .n-input-wrapper {
-          min-height: auto;
-          .n-input {
-            min-height: auto;
-          }
-        }
-      }
-    }
-
-    //   .n-input-container.with-label.compact .n-input-wrapper.has-input .n-input label {
-    //   transform: translateY(-6px) !important;
-    // }
-
-    &.compact {
-      .has-input {
-        label {
-          transform: translateY(-3px) !important;
-          font-size: 0.7em;
-        }
-      }
-      // background-color: blue !important;
-      .n-input-wrapper {
-        min-height: 40px;
-        // height: 40px;
-        .n-input {
-          // height: 40px;
-          input,
-          select,
-          textarea {
-            min-height: 40px;
-            // height: 40px;
-            font-size: 0.8em !important;
-            background-color: var(--color-solid) !important;
-          }
-        }
-      }
-    }
-
-    .n-input-wrapper {
-      transition: all 0.2s ease-in-out;
-      // position: relative;
-      min-height: $height;
-      display: flex;
-      width: 100%;
-      min-width: 50px;
-      max-width: 100%;
-      flex-direction: row;
-      align-items: center;
-      flex-grow: 1;
-      flex-shrink: 1;
-      transition: all 0.2s ease-in-out;
-      border-radius: 12px;
-      &:before {
-        transition: all 0.2s ease-in-out;
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      &.has-focus {
-        &:before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          box-shadow: 0px 0px 1px 2px var(--color-primary);
-          opacity: 0.3;
-          border-radius: 6px;
-        }
-      }
-
-      textarea,
-      input {
-        border: none;
-      }
-
-      &.list-item {
-      }
-
-      .n-input {
-        // width: 100%;
-        // min-width: 50px;
-        // max-width: 100%;
-        transition: all 0.2s ease-in-out;
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        flex-shrink: 1;
-
-        color: var(--color-inverse);
-
-        label {
-          transition: all 0.2s ease-in-out;
-          line-height: 105%;
-          @include truncate(1);
-          opacity: 0;
-          transform: translateY(20px);
-          pointer-events: none;
-          font-size: 0.7em;
-          position: absolute;
-          top: 5px;
-          left: 10px;
-          margin: 0;
-          padding: 0;
-        }
-        input,
-        select,
-        textarea {
-          width: 100%;
-          transition: all 0.2s ease-in-out;
-          margin: 0;
-          padding-left: 8px;
-          padding-right: 8px;
-          background-color: transparent !important;
-          outline: none;
-          &:disabled {
-            background-color: transparent !important;
-            // color: var(--color-inverse-2);
-            opacity: 0.7;
-          }
-          // border: none;
-        }
-        textarea {
-          min-height: 90px;
-          padding-top: 8px;
-          color: var(--color-inverse);
-        }
-      }
-    }
-  }
+<style global lang="postcss">
+  .n-input-container.list-item div.n-input label {
+	 left: 20px !important;
+	 top: 10px !important;
+}
+ .n-input-container.list-item .n-input-wrapper {
+	 border-radius: 0px !important;
+}
+ .n-input-container {
+	 position: relative;
+	 width: auto;
+	 display: flex;
+	 flex-direction: column;
+	 flex-grow: 1;
+	 flex-shrink: 1;
+	 margin-bottom: 4pt;
+	 margin-top: 4pt;
+	 background-color: var(--color-solid);
+	 border-radius: 6px;
+	 border: solid 1px var(--color-faded-1);
+}
+ .n-input-container .helper {
+	 font-size: 0.65em;
+	 color: var(--color-grey-5);
+	 padding: 3px 6px;
+	 background-color: var(--color-grey-9);
+}
+ .n-input-container.list-item {
+	 background-color: var(--color-solid);
+	 padding: 4px 12px;
+	 border-radius: 0;
+	 border: none;
+}
+ .n-input-container .select-arrow {
+	 margin-left: -50px;
+}
+ .n-input-container .select-wrap {
+	 position: relative;
+}
+ .n-input-container.with-label .n-input-wrapper input, .n-input-container.with-label .n-input-wrapper select {
+	 min-height: 47px;
+}
+ .n-input-container.with-label .n-input-wrapper.has-input .n-input label {
+	 transition: all 0.2s ease-in-out;
+	 opacity: 0.7;
+	 transform: translateY(0);
+}
+ .n-input-container.with-label .n-input-wrapper.has-input .n-input input, .n-input-container.with-label .n-input-wrapper.has-input .n-input select {
+	 padding-top: 14px;
+	 padding-bottom: 0px;
+	 font-size: 1.05em;
+}
+ .n-input-container.with-label .n-input-wrapper.has-input .n-input textarea {
+	 padding-top: 22px;
+	 padding-bottom: 0px;
+	 font-size: 1.05em;
+}
+ .n-input-container.solo .n-input-wrapper {
+	 min-height: 48px;
+}
+ .n-input-container.solo .n-input-wrapper .n-input {
+	 min-height: 48px;
+}
+ .n-input-container.solo .n-input-wrapper .n-input input, .n-input-container.solo .n-input-wrapper .n-input select, .n-input-container.solo .n-input-wrapper .n-input textarea {
+	 min-height: 47px;
+}
+ .n-input-container.solo.compact .n-input-wrapper {
+	 min-height: auto;
+}
+ .n-input-container.solo.compact .n-input-wrapper .n-input {
+	 min-height: auto;
+}
+ .n-input-container.compact .has-input label {
+	 transform: translateY(-3px) !important;
+	 font-size: 0.7em;
+}
+ .n-input-container.compact .n-input-wrapper {
+	 min-height: 40px;
+}
+ .n-input-container.compact .n-input-wrapper .n-input input, .n-input-container.compact .n-input-wrapper .n-input select, .n-input-container.compact .n-input-wrapper .n-input textarea {
+	 min-height: 40px;
+	 font-size: 0.8em !important;
+	 background-color: var(--color-solid) !important;
+}
+ .n-input-container .n-input-wrapper {
+	 transition: all 0.2s ease-in-out;
+	 min-height: 48px;
+	 display: flex;
+	 width: 100%;
+	 min-width: 50px;
+	 max-width: 100%;
+	 flex-direction: row;
+	 align-items: center;
+	 flex-grow: 1;
+	 flex-shrink: 1;
+	 transition: all 0.2s ease-in-out;
+	 border-radius: 12px;
+}
+ .n-input-container .n-input-wrapper:before {
+	 transition: all 0.2s ease-in-out;
+	 content: "";
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+	 bottom: 0;
+	 opacity: 0;
+	 pointer-events: none;
+}
+ .n-input-container .n-input-wrapper.has-focus:before {
+	 content: "";
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+	 bottom: 0;
+	 box-shadow: 0px 0px 1px 2px var(--color-primary);
+	 opacity: 0.3;
+	 border-radius: 6px;
+}
+ .n-input-container .n-input-wrapper textarea, .n-input-container .n-input-wrapper input {
+	 border: none;
+}
+ .n-input-container .n-input-wrapper .n-input {
+	 transition: all 0.2s ease-in-out;
+	 display: flex;
+	 flex-direction: column;
+	 flex-grow: 1;
+	 flex-shrink: 1;
+	 color: var(--color-inverse);
+}
+ .n-input-container .n-input-wrapper .n-input label {
+	 transition: all 0.2s ease-in-out;
+	 line-height: 105%;
+	 opacity: 0;
+	 transform: translateY(20px);
+	 pointer-events: none;
+	 font-size: 0.7em;
+	 position: absolute;
+	 top: 5px;
+	 left: 10px;
+	 margin: 0;
+	 padding: 0;
+}
+ .n-input-container .n-input-wrapper .n-input input, .n-input-container .n-input-wrapper .n-input select, .n-input-container .n-input-wrapper .n-input textarea {
+	 width: 100%;
+	 transition: all 0.2s ease-in-out;
+	 margin: 0;
+	 padding-left: 8px;
+	 padding-right: 8px;
+	 background-color: transparent !important;
+	 outline: none;
+}
+ .n-input-container .n-input-wrapper .n-input input:disabled, .n-input-container .n-input-wrapper .n-input select:disabled, .n-input-container .n-input-wrapper .n-input textarea:disabled {
+	 background-color: transparent !important;
+	 opacity: 0.7;
+}
+ .n-input-container .n-input-wrapper .n-input textarea {
+	 min-height: 90px;
+	 padding-top: 8px;
+	 color: var(--color-inverse);
+}
+ 
 </style>
 
 <div

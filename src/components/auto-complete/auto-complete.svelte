@@ -2,7 +2,7 @@
   import { TrackerStore } from "../../store/tracker-store";
   import { PeopleStore } from "../../store/people-store";
   import { ContextStore } from "../../store/context-store";
-  import Dymoji from "../../components/dymoji/dymoji.svelte";
+  
   import tick from "../../utils/tick/tick";
   import NIcon from "../../components/icon/icon.svelte";
   import TrackerInputer from "../../modules/tracker/tracker-inputer";

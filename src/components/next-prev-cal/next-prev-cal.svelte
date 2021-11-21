@@ -6,7 +6,7 @@
 
   export let isToday = true;
   export let hideCal = false;
-  export let style: string = "";
+  export let style = "";
 
   const dispatch = createEventDispatcher();
 </script>
@@ -16,9 +16,6 @@
     max-width: 120px;
     flex-shrink: 1;
     flex-grow: 0;
-  }
-  :global(.next-prev-cal .nbtn) {
-    /* min-width: 40px; */
   }
 </style>
 

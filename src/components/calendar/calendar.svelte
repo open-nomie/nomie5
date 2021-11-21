@@ -12,7 +12,7 @@
 
   // vendors
   import dayjs from "dayjs";
-  import type { Dayjs } from "dayjs";
+
 
   // Utils & modules
   import Logger from "../../utils/log/log";

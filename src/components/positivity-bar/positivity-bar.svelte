@@ -26,30 +26,28 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="postcss">
   .positivity-bar {
-    padding: 8pt 16px;
-    .bar {
-      display: flex;
-      border-radius: 4pt;
-      overflow: hidden;
-      flex-direction: row;
-    }
-    .negative {
-      background-color: var(--color-red);
-      margin-right: 2px;
-    }
-    .positive {
-      background-color: var(--color-green);
-      margin-left: 2px;
-    }
-    .neutral {
-      background-color: var(--color-primary-bright);
-    }
-    .unit {
-      // border-radius: 4pt;
-    }
+	 padding: 8pt 16px;
   }
+ .positivity-bar .bar {
+	 display: flex;
+	 border-radius: 4pt;
+	 overflow: hidden;
+	 flex-direction: row;
+  }
+ .positivity-bar .negative {
+	 background-color: var(--color-red);
+	 margin-right: 2px;
+  }
+ .positivity-bar .positive {
+	 background-color: var(--color-green);
+	 margin-left: 2px;
+  }
+ .positivity-bar .neutral {
+	 background-color: var(--color-primary-bright);
+  }
+ 
 </style>
 
 {#if negative || neutral || positive}

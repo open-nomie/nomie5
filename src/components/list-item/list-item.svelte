@@ -17,17 +17,17 @@
   export let bg = undefined;
   export let className = "";
   export let itemDivider = undefined;
-  export let compact: boolean = false;
-  export let truncate: boolean = false;
+  export let compact = false;
+  export let truncate = false;
   export let style = "";
-  export let clickable: boolean = false;
+  export let clickable = false;
   export let ariaLabel = "";
-  export let solo: boolean = false;
-  export let bottomLine: boolean = false;
-  export let topLine: boolean = false;
+  export let solo = false;
+  export let bottomLine = false;
+  export let topLine = false;
   export let delay: number = undefined;
-  export let detail: boolean = false;
-  export let transparent: boolean = false;
+  export let detail = false;
+  export let transparent = false;
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty("left");
   const has_right = (arguments[1].$$slots || {}).hasOwnProperty("right");

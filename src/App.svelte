@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   // Svelte
   // import { Router, Route, navigate } from "svelte-routing";
   import Tailwindcss from './scss/Tailwind.svelte';
@@ -89,14 +89,14 @@
       }, 500);
     }
     // Check if the theme has Changed
-    methods.setDocParams();
+    methods.setDocParams({});
   }, todayCheckPeriod);
 
   const appVersion = "APP_VERSION";
 
   // This should be reworked
-  $: if (window && $TrackerStore && !window.$TrackerStore) {
-    window.$TrackerStore = $TrackerStore;
+  $: if (window && $TrackerStore && !window['$TrackerStore']) {
+    window['$TrackerStore'] = $TrackerStore;
   }
 
   // Offline monitor
@@ -110,7 +110,7 @@
         }, 500);
       });
     },
-    setDocParams(options) {
+    setDocParams(options={}) {
       let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)")
         .matches;
       // let isDarkMode = false;
@@ -146,10 +146,10 @@
   if (typeof document.hidden !== "undefined") {
     hidden = "hidden";
     visibilityChange = "visibilitychange";
-  } else if (typeof document.msHidden !== "undefined") {
+  } else if (typeof document['msHidden'] !== "undefined") {
     hidden = "msHidden";
     visibilityChange = "msvisibilitychange";
-  } else if (typeof document.webkitHidden !== "undefined") {
+  } else if (typeof document['webkitHidden'] !== "undefined") {
     hidden = "webkitHidden";
     visibilityChange = "webkitvisibilitychange";
   }
@@ -224,7 +224,7 @@
     <div style="min-width:200px;">
       <div class="my-3 ml-2 text-center text-white">
         {#if !$Interact.blocker.percent}
-          <Spinner size="16" />
+          <Spinner size={16} />
         {/if}
         {$Interact.blocker.message}
       </div>

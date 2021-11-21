@@ -1,18 +1,18 @@
-<script lang="typescript">
+<script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
   import Button from "../../components/button/button.svelte";
 
   import Modal from "../../components/modal/modal.svelte";
-  import type { ILocation } from "../../modules/locate/Location";
+  import { ILocation } from "../../modules/locate/Location";
   import Location from "../../modules/locate/Location";
-  import type NLog from "../../modules/nomie-log/nomie-log";
+  import NLog from "../../modules/nomie-log/nomie-log";
   import { Interact } from "../../store/interact";
   import { Locations } from "../../store/locations";
   import Map from "./map.svelte";
 
   const dispatch = createEventDispatcher();
 
-  export let show: boolean = false;
+  export let show = false;
   export let locations: Array<ILocation>;
   export let logs: Array<NLog> = undefined;
 

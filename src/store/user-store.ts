@@ -208,10 +208,6 @@ const userInit = () => {
         timer.check("Storage Init Fired");
         Storage.init();
       }
-
-      // set highlevel initialize marker
-
-      // TODO: Add 10 minute interval to check for day change - if change, fire a new user.ready
     },
     setStorage(type) {
       type = ["blockstack", "local", "pouchdb"].indexOf(type) > -1 ? type : "local";

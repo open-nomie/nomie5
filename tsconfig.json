@@ -1,13 +1,25 @@
 {
   "compilerOptions": {
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "module": "esnext",
+    "resolveJsonModule": true,
+    "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "types": ["jest"],
+    "types": ["jest", "svelte"],
     "esModuleInterop": true,
-    "importsNotUsedAsValues": "error"
+    "importsNotUsedAsValues": "remove",
+    "allowJs": true,
+    "checkJs": true
   },
 
   "extends": "@tsconfig/svelte/tsconfig.json",
-  "include": ["src/**/*", "src/node_modules"],
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.ts",
+    "src/node_modules",
+    "src/**/*.svelte"
+  ],
   "exclude": ["node_modules/*", "__sapper__/*", "public/*"]
 }

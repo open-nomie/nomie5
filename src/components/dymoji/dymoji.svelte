@@ -34,7 +34,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="postcss">
   .dymoji-wrap {
     display: inline-flex;
     vertical-align: middle;

@@ -16,7 +16,7 @@ if ("serviceWorker" in navigator && window.location.origin.search(/(localhost)/)
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register("/service-worker.js", { scope: "./" })
-      .then((registration) => {})
+      .then((registration) => { })
       .catch((e) => {
         console.error("Service worker registration failed", e.message);
       });
