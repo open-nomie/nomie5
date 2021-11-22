@@ -243,9 +243,9 @@
   {id}
   ariaLabel={title || 'button'}
   color="clear"
-  className="{className} shortcut-button bg-white dark:bg-black d-flex flex-column {is.truthy(value) ? 'has-value' : 'no-value'}
+  className="{className} shortcut-button d-flex flex-column {is.truthy(value) ? 'has-value' : 'no-value bg-white dark:bg-black'}
   {compact ? 'compact' : ''}"
-  style={`--tracker-color:${color}; ${value ? `background-color:${value ? color : 'var(--color-primary)'`} ${style}`}
+	style={[`--tracker-color:${color};`, value ? `background-color:${color};` : ``].join("")}
   on:longpress={() => {
     dispatch('longpress');
     clickSkip = true;
