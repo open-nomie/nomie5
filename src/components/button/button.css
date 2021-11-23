@@ -4,6 +4,7 @@
 }
 .nbtn {
   @apply relative;
+  @apply focus:ring-2 ring-primary-500;
   transition: all 0.2s ease-in-out;
   --button-base-size: calc(var(--base-font-size) * 1);
   display: inline-flex;
@@ -18,7 +19,7 @@
   transition: background 0.2s ease-in-out;
   overflow: hidden;
   font-size: var(--button-base-size);
-  color: var(--color-inverse);
+
   height: 40px;
   line-height: 100%;
   padding-left: 16px;
@@ -35,9 +36,7 @@
   justify-content: center;
   flex-grow: 1;
 }
-.nbtn:focus {
-  outline: rgba(155, 155, 155, 0.2) !important;
-}
+
 .nbtn-sm {
   font-size: calc(var(--button-base-size) * 0.8);
   height: 30px;
@@ -57,11 +56,11 @@
   opacity: 0.5;
 }
 .nbtn-md {
-  font-size: var(--button-base-size);
+  @apply text-lg;
 }
 .nbtn-lg {
-  font-size: calc(var(--button-base-size) * 1.2);
-  min-height: 50px;
+  @apply text-lg;
+  @apply leading-none;
 }
 .nbtn-lg.nbtn-rounded {
   border-radius: 10px;
@@ -131,8 +130,8 @@
   color: var(--color-solid);
 }
 .nbtn-light {
-  background-color: var(--color-solid);
-  color: var(--color-inverse);
+  @apply text-primary-500;
+  @apply bg-gray-50 dark:bg-gray-900;
 }
 .nbtn-clear,
 .nbtn-transparent,
@@ -162,13 +161,11 @@
 .nbtn-transparent.nbtn-light,
 .nbtn-text.nbtn-light {
   background-color: transparent;
-  color: var(--color-inverse);
 }
 .nbtn-clear.nbtn-dark,
 .nbtn-transparent.nbtn-dark,
 .nbtn-text.nbtn-dark {
   background-color: transparent;
-  color: var(--color-solid);
 }
 .nbtn-clear.nbtn-orange,
 .nbtn-transparent.nbtn-orange,
@@ -288,7 +285,7 @@
   padding-right: 12px;
   box-shadow: none;
   @apply bg-gray-200 dark:bg-gray-900;
-  color: var(--color-inverse-1);
+  @apply text-gray-900 dark:text-gray-100;
 }
 .nbtn-group .nbtn.active {
   border-radius: 8px !important;

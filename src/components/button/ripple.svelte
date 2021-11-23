@@ -1,26 +1,23 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { tweened } from "svelte/motion";
-  import { backOut } from "svelte/easing";
-  import Hit from "./ripple-hit";
+  import Hit from './ripple-hit'
 
-  export let hit: Array<number> = undefined;
+  export let hit: Array<number> = undefined
 
-  let lastHit: Hit;
-  let hideTimeout;
-  let show = false;
+  let lastHit: Hit
+  let hideTimeout
+  let show = false
 
-  let x;
-  let y;
+  let x
+  let y
 
-  let hits: Array<Hit> = [];
+  let hits: Array<Hit> = []
 
   $: if (hit && hit.length == 2) {
-    hits.unshift(new Hit(hit));
+    hits.unshift(new Hit(hit))
     if (hits.length > 3) {
-      hits = hits.slice(0, 2);
+      hits = hits.slice(0, 2)
     }
-    hits = hits;
+    hits = hits
   }
 </script>
 
