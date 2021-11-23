@@ -1,13 +1,14 @@
 // From https://raw.githubusercontent.com/maryayi/vue-sweet-calendar/master/src/DateTime.js
 
 export default class DateTime {
-  constructor(...args) {
+  _date: any;
+  constructor(...args: any) {
     let date;
     if (args.length > 1) {
       let [year, month, ...rest] = args;
       date = new Date(year, month - 1, ...rest);
-    } else {
-      date = new Date(...args);
+    } else if (args.length === 1) {
+      date = new Date(args);
     }
     date.setHours(0, 0, 0, 0);
     this._date = date;
