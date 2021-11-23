@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ButtonGroup from './../../../components/button-group/button-group.svelte'
   import EmojiSelector from './../../../components/emoji-selector/EmojiSelector.svelte'
   import EmojiEditor from './../../../components/emoji-editor/emoji-editor.svelte'
   // components
@@ -10,20 +11,20 @@
    *
    * God speed.
    */
-
+  import math from '../../../utils/math/math'
   import ListItem from '../../../components/list-item/list-item.svelte'
-  import NModal from '../../../components/modal/modal.svelte'
+
   import NIcon from '../../../components/icon/icon.svelte'
   import NToggle from '../../../components/toggle-switch/toggle-switch.svelte'
   import NInput from '../../../components/input/input.svelte'
-  import ColorPicker from '../../../components/color-picker/color-picker.svelte'
   import AutoComplete from '../../../components/auto-complete/auto-complete.svelte'
   import PickerListEditor from '../../../components/picker-list/picker-editor.svelte'
 
   // Utils
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher, onMount } from 'svelte'
   import NomieUOM from '../../../utils/nomie-uom/nomie-uom'
-  import tick from '../../../utils/tick/tick'
+
+  import './editor.css'
 
   // modules
   import Tracker, { toTag } from '../../../modules/tracker/tracker'
@@ -43,18 +44,42 @@
   import Icon from '../../../components/icon/icon.svelte'
   import Button from '../../../components/button/button.svelte'
 
-  import is from '../../../utils/is/is'
   import trackerTypes from '../../../modules/tracker-types/tracker-types'
-  import type { toLower } from 'lodash'
-  import Emoji from '../../../components/emoji-selector/Emoji.svelte'
-  import Avatar from '../../../components/avatar/avatar.svelte'
+
+  import Panel from '../../../components/panel/panel.svelte'
+  import Modal2 from '../../../components/modal/modal2.svelte'
+  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte'
+  import FormGroup from '../../../components/form-group/form-group.svelte'
+  import ColorEmojiTitleInput from './color-emoji-title-input.svelte'
+  import ColorPicker from '../../../components/color-picker/color-picker.svelte'
+  import ClassicButton from '../../../components/classic-button/classic-button.svelte'
 
   const dispatch = createEventDispatcher()
 
-  export let tracker = new Tracker({})
-
   let showEmojiSelector = false
+  let emojiOrColor = 'emoji'
   // export let show = false;
+
+  const randomEmojis = [
+    '😂',
+    '❤️',
+    '🥳',
+    '🍦',
+    '🌞',
+    '🍹',
+    '🎱',
+    '😎',
+    '🥫',
+    '🍲',
+    '🍩',
+    '🐕',
+    '🌵',
+    '📗',
+    '🏈',
+    '🌸',
+  ]
+
+  export let tracker = new Tracker({})
 
   type DataConfig = {
     groupedUOMs: any
@@ -81,9 +106,20 @@
   let tagHardcoded = false
   let canSave = true
 
+  onMount(() => {
+    console.log('FIRE FIRE FIRE ON MOUNT!')
+  })
+
   // Watch for Tracker Change
-  $: if (tracker && lastTracker != tracker.tag) {
+  $: if (tracker && !data.tracker) {
+    const randomEmoji =
+      randomEmojis[math.random_range(0, randomEmojis.length - 1)]
     lastTracker = tracker.tag
+    if (!tracker.emoji || tracker.emoji.length === 0)
+      tracker.emoji = randomEmoji
+
+    // Load up to a local state
+    console.log('FIRE FIRE FRE !!!!!!!!!!', tracker.emoji)
     data.tracker = new Tracker(tracker)
   }
 
@@ -133,11 +169,11 @@
     }
   }
 
-  $: if (data.tracker._dirty && data.tracker.label && !data.tracker.emoji) {
-    data.tracker.emoji = data.tracker.label.substr(0, 1)
-  } else if (data.tracker._dirty && data.tracker.emoji == '⚪') {
-    data.tracker.emoji = undefined
-  }
+  // $: if (data.tracker._dirty && data.tracker.label && !data.tracker.emoji) {
+  //   data.tracker.emoji = data.tracker.label.substr(0, 1)
+  // } else if (data.tracker._dirty && data.tracker.emoji == '⚪') {
+  //   data.tracker.emoji = undefined
+  // }
 
   /**
    * Get the Input for a tracker
@@ -231,7 +267,7 @@
           emoji: type.emoji,
           title: `${type.label} ${typeKey === data.tracker.type ? ' ✓' : ''}`,
           description: `${type.description}`,
-          click() {
+          click: () => {
             if (data.tracker) {
               data.tracker.type = typeKey
             }
@@ -239,7 +275,7 @@
         }
       })
       Interact.popmenu({
-        title: Lang.t('tracker.type', 'Tracker Type'),
+        title: Lang.t('tracker.type', 'Type'),
         buttons,
       })
     },
@@ -278,92 +314,64 @@
   }
 </script>
 
-<style global lang="postcss">
-  .n-tracker-editor .n-modal {
-    background-color: var(--color-bg) !important;
-  }
-  .n-tracker-editor .emoji-editor {
-    min-height: 150px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    justify-items: center;
-    margin: 24px 0;
-    --emoji-size: 100px;
-    --emoji-size-half: 50px;
-  }
-  .n-tracker-editor .emoji-editor input {
-    display: block;
-    position: absolute !important;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-  .n-tracker-editor .emoji-editor .emoji {
-    --emoji-width: calc(var(--emoji-size) * 2);
-    transition: all 0.2s ease-in-out;
-    position: relative;
-    width: var(--emoji-width);
-    height: var(--emoji-size);
-    border-radius: var(--emoji-size-half);
-  }
-  .n-tracker-editor .emoji-editor .emoji input {
-    height: calc(var(--emoji-size) - 8px);
-    width: calc(var(--emoji-width) - 8px);
-    text-align: center;
-    font-size: calc(var(--emoji-size) * 0.7) !important;
-  }
-  .n-tracker-editor .emoji-editor .emoji input:focus {
-    outline: none !important;
-    box-shadow: var(--box-shadow-float);
-  }
-  .n-tracker-editor .emoji-editor .emoji .background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    opacity: 0.5;
-    border-radius: var(--emoji-size-half);
-  }
-  .n-tracker-editor .emoji-editor .emoji.no-emoji:after {
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9em;
-    color: var(--color-solid-1);
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    content: 'Emoji';
-  }
-</style>
+<Modal2 id="emoji-color" visible={showEmojiSelector}>
+  <Panel>
+    <header slot="header">
+      <ToolbarGrid>
+        <div slot="left">
+          <Button
+            type="clear"
+            color="primary"
+            on:click={() => (showEmojiSelector = false)}>
+            Done
+          </Button>
+        </div>
+        <ButtonGroup
+          buttons={[{ label: 'Emoji', active: emojiOrColor === 'emoji', click() {
+                emojiOrColor = 'emoji'
+              } }, { label: 'Color', active: emojiOrColor === 'color', click() {
+                emojiOrColor = 'color'
+              } }]} />
+        <div slot="right" />
+      </ToolbarGrid>
+      <section aria-label="Preview" class="px-4 py-2">
+        <div
+          class="p-4 text-center rounded-lg"
+          style="background-color:{data.tracker.color}">
+          <ClassicButton labelClass="text-black" tracker={data.tracker} />
+        </div>
+      </section>
+    </header>
+    {#if emojiOrColor === 'emoji'}
+      <EmojiSelector
+        on:emoji={(evt) => {
+          data.tracker.emoji = evt.detail
+        }} />
+    {:else}
+      <ColorPicker grid={true} bind:value={data.tracker.color} />
+    {/if}
+  </Panel>
+</Modal2>
 
-{#if $Interact.trackerEditor.show}
+<Modal2
+  id="tracker-editor"
+  className="n-tracker-editor"
+  visible={$Interact.trackerEditor.show}>
+  <Panel
+    className={`bg-gray-50 dark:bg-gray-800 max-w-screen-sm `}
+    on:close={methods.cancel}>
 
-  <div class="n-tracker-editor">
-    <NModal
-      type="fullscreen"
-      allowClose
-      on:close={methods.cancel}
-      style="z-index:2002">
-
-      <header slot="header" class="n-toolbar-grid">
-        <div class="left">
+    <header slot="header" class="n-toolbar-grid">
+      <ToolbarGrid>
+        <div slot="left">
           <Button type="clear" color="primary" on:click={methods.cancel}>
             Cancel
           </Button>
         </div>
-        <div class="main">
-          {data.tracker._dirty ? 'Create' : 'Edit'}
-          {data.tracker.label.length ? data.tracker.label : ''}
+        <div class=" dark:text-white">
+          {data.tracker._dirty ? 'Make a Tracker' : 'Edit'}
         </div>
-        <div class="right">
+        <div slot="right">
           <Button
             className="save-action"
             disabled={!canSave}
@@ -373,137 +381,120 @@
             {Lang.t('general.save')}
           </Button>
         </div>
-      </header>
+      </ToolbarGrid>
 
-      <!-- Colort Selector -->
-      <ColorPicker
-        bind:value={data.tracker.color}
-        className="mb-1 tracker-color" />
+    </header>
 
-      <!-- Tracker Label input -->
-      <div class="mb-3">
-        <NInput
-          listItem
-          className="mt-2 tracker-label"
-          type="text"
-          name="label"
-          placeholder={Lang.t('tracker.label', 'Tracker Label')}
-          bind:value={data.tracker.label}
-          on:keyup={methods.labelChanged}>
-          <div slot="right">
-            {#if data.tracker.tag}
-              <button
-                on:click={methods.editTag}
-                class="space-x-3 bg-opacity-50 rounded-full bg-primary-500
-                text-white text-sm py-1 px-3 flex items-center justify-between">
-                <span>#{data.tracker.tag}</span>
-                {#if data.tracker._dirty}
-                  <Icon name="edit" size="12" />
-                {/if}
-              </button>
-            {/if}
-          </div>
-        </NInput>
+    <!-- Colort Selector -->
+    <!-- <ColorPicker
+      bind:value={data.tracker.color}
+      className="mb-1 tracker-color" /> -->
 
-      </div>
+    <!-- Tracker Label input -->
+    <FormGroup pad>
+      <ColorEmojiTitleInput
+        on:label={(evt) => {
+          data.tracker.label = evt.detail
+        }}
+        on:selectEmoji={() => {
+          showEmojiSelector = true
+        }}
+        bind:tracker={data.tracker} />
+    </FormGroup>
 
-      <div class="mb-3">
-        <ListItem title="Emoji" on:click={() => (showEmojiSelector = true)}>
-          <div slot="right">
-            {#if data.tracker.emoji}
-              <Avatar size={42} emoji={data.tracker.emoji} />
-            {:else}No Emoji{/if}
-          </div>
-        </ListItem>
-        {#if showEmojiSelector}
-          <div class="bg-solid-1">
-            <EmojiSelector
-              on:emoji={(evt) => {
-                showEmojiSelector = false
-                data.tracker.emoji = evt.detail
-                console.log(evt, data.tracker)
-              }} />
-          </div>
-        {/if}
-      </div>
-
-      <!-- Tracker Type Selector -->
-
+    <!-- <FormGroup pad>
       <ListItem
-        on:click={methods.selectType}
-        className="tracker-type py-3 mb-3">
+        title="Emoji"
+        on:click={() => (showEmojiSelector = !showEmojiSelector)}>
+        <div slot="right">
+          {#if data.tracker.emoji}
+            <Avatar size={42} emoji={data.tracker.emoji} />
+          {:else}No Emoji{/if}
+        </div>
+      </ListItem>
+
+    </FormGroup> -->
+
+    <!-- Tracker Type Selector -->
+
+    <FormGroup pad>
+      <ListItem on:click={methods.selectType} className="tracker-type">
         {Lang.t('tracker.tracker-type', 'Tracker Type')}
         <div slot="right" class="flex">
           <Text bold>{(getTypeDetails(data.tracker.type) || {}).label}</Text>
           <Icon
             name="chevronDown"
             className="fill-inverse-2 mr-3 ml-2"
-            size="16" />
+            size={16} />
         </div>
       </ListItem>
+    </FormGroup>
 
-      {#if data.tracker.type == 'picker'}
+    {#if data.tracker.type == 'picker'}
+      <FormGroup pad>
+        <!-- canSelect={false} -->
         <PickerListEditor
-          canSelect={false}
           bind:list={tracker.picks}
           className="tracker-picker"
           itemClass=""
           on:change={(evt) => {
             data.tracker.picks = (evt.detail || []).filter((d) => d.length)
           }} />
-      {/if}
+      </FormGroup>
+    {/if}
 
-      {#if data.tracker.type == 'range'}
-        <ListItem className="py-0 mb-3">
-          <div class="flex">
-            <NInput
-              pattern="[0-9]*"
-              inputmode="numeric"
-              className="mr-2 tracker-min"
-              style="width:45%;"
-              name="min"
-              placeholder={Lang.t('tracker.min', 'Min Value')}
-              label={Lang.t('tracker.min', 'Min Value')}
-              on:focus={(e) => {
-                e.detail.target.select()
-              }}
-              bind:value={data.tracker.min}>
-              <div slot="right" class="pr-1">
-                <Button
-                  icon
-                  on:click={() => {
-                    getTrackerInput('min')
-                  }}>
-                  <NIcon name="addOutline" className="fill-inverse-2" />
-                </Button>
-              </div>
+    {#if data.tracker.type == 'range'}
+      <FormGroup pad>
+        <div class="flex px-1">
+          <NInput
+            pattern="[0-9]*"
+            inputmode="numeric"
+            className="mr-2 tracker-min bg-transparent"
+            style="width:45%;"
+            name="min"
+            placeholder={Lang.t('tracker.min', 'Min Value')}
+            label={Lang.t('tracker.min', 'Min Value')}
+            on:focus={(e) => {
+              e.detail.target.select()
+            }}
+            bind:value={data.tracker.min}>
+            <div slot="right" class="pr-1">
+              <Button
+                icon
+                on:click={() => {
+                  getTrackerInput('min')
+                }}>
+                <NIcon name="addOutline" className="fill-inverse-2" />
+              </Button>
+            </div>
 
-            </NInput>
-            <NInput
-              pattern="[0-9]*"
-              inputmode="numeric"
-              className="tracker-max"
-              style="width:45%;"
-              name="max"
-              label={Lang.t('tracker.max', 'Max Value')}
-              placeholder={Lang.t('tracker.max', 'Max Value')}
-              on:focus={(e) => e.detail.target.select()}
-              bind:value={data.tracker.max}>
-              <div slot="right" class="pr-1">
-                <Button
-                  icon
-                  on:click={() => {
-                    getTrackerInput('max')
-                  }}>
-                  <NIcon name="addOutline" className="fill-inverse-2" />
-                </Button>
-              </div>
-            </NInput>
-          </div>
-        </ListItem>
-      {/if}
+          </NInput>
+          <NInput
+            pattern="[0-9]*"
+            inputmode="numeric"
+            className="tracker-max"
+            style="width:45%;"
+            name="max"
+            label={Lang.t('tracker.max', 'Max Value')}
+            placeholder={Lang.t('tracker.max', 'Max Value')}
+            on:focus={(e) => e.detail.target.select()}
+            bind:value={data.tracker.max}>
+            <div slot="right" class="pr-1">
+              <Button
+                icon
+                on:click={() => {
+                  getTrackerInput('max')
+                }}>
+                <NIcon name="addOutline" className="fill-inverse-2" />
+              </Button>
+            </div>
+          </NInput>
+        </div>
+      </FormGroup>
+    {/if}
 
-      {#if data.tracker.type == 'note'}
+    {#if data.tracker.type == 'note'}
+      <FormGroup pad>
         <NInput
           listItem
           type="textarea"
@@ -529,9 +520,11 @@
         <ListItem
           transparent
           description={Lang.t('tracker.note-description', 'Combine multiple trackers together using their #hashtags. For example, #mood #sleep_quality. Nomie will then ask for values one by one.')} />
-      {/if}
+      </FormGroup>
+    {/if}
 
-      {#if data.tracker.type !== 'timer' && data.tracker.type !== 'note' && data.tracker.type !== 'picker'}
+    {#if data.tracker.type !== 'timer' && data.tracker.type !== 'note' && data.tracker.type !== 'picker'}
+      <FormGroup pad>
         <NInput
           listItem
           placeholder={Lang.t('tracker.measure-by', 'Measure By')}
@@ -554,29 +547,33 @@
             {/if}
           {/each}
         </NInput>
-      {/if}
+      </FormGroup>
+    {/if}
 
-      <!-- ADVANCED OPTIONS -->
+    <!-- ADVANCED OPTIONS -->
 
-      {#if advancedCanToggle}
+    {#if advancedCanToggle}
+      <div class="px-4">
         <Button
           block
           text
           color="clear"
           size="sm"
-          className="mt-2 mb-1 advanced-toggler"
+          className="mt-2 mb-3 advanced-toggler text-gray-600 dark:text-gray-200"
           on:click={() => (forcedAdvanced = !forcedAdvanced)}>
           {#if advanced}Hide Advanced Options{:else}Show Advanced Options{/if}
           <Icon
             name={advanced ? 'chevronUp' : 'chevronDown'}
-            size="12"
-            className="ml-2" />
+            size={12}
+            className="ml-2 text-gray-500" />
 
         </Button>
-      {/if}
+      </div>
+    {/if}
 
-      {#if advanced}
-        {#if data.tracker.type == 'tick'}
+    {#if advanced}
+      {#if data.tracker.type == 'tick'}
+        <FormGroup pad>
           <ListItem
             title={Lang.t('tracker.save-on-tap', 'Save on Tap')}
             className="tracker-one-tap mb-3 leading1"
@@ -585,35 +582,37 @@
               <NToggle bind:value={data.tracker.one_tap} />
             </div>
           </ListItem>
-        {/if}
-
-        {#if data.tracker.type === 'range'}
-          <NInput
-            listItem
-            className="tracker-default mb-3"
-            pattern="[0-9]*"
-            inputmode="numeric"
-            label={Lang.t('tracker.step', 'Range Step')}
-            placeholder={Lang.t('tracker.step', 'Range Step')}
-            bind:value={data.tracker.step}>
-            <div slot="right" class="pr-1">
-              <Button
-                icon
-                on:click={() => {
-                  getTrackerInput('step')
-                }}>
-                <NIcon name="addOutline" className="fill-inverse-2" />
-              </Button>
-            </div>
-          </NInput>
-        {/if}
-
-        <!-- Advanced -->
-
-        <!-- End Advanced -->
+        </FormGroup>
       {/if}
 
-      {#if data.tracker.type !== 'note' && data.tracker.type !== 'picker' && advanced}
+      {#if data.tracker.type === 'range'}
+        <NInput
+          listItem
+          className="tracker-default mb-3"
+          pattern="[0-9]*"
+          inputmode="numeric"
+          label={Lang.t('tracker.step', 'Range Step')}
+          placeholder={Lang.t('tracker.step', 'Range Step')}
+          bind:value={data.tracker.step}>
+          <div slot="right" class="pr-1">
+            <Button
+              icon
+              on:click={() => {
+                getTrackerInput('step')
+              }}>
+              <NIcon name="addOutline" className="fill-inverse-2" />
+            </Button>
+          </div>
+        </NInput>
+      {/if}
+
+      <!-- Advanced -->
+
+      <!-- End Advanced -->
+    {/if}
+
+    {#if data.tracker.type !== 'note' && data.tracker.type !== 'picker' && advanced}
+      <FormGroup pad>
         <NInput
           listItem
           type="select"
@@ -634,9 +633,11 @@
             <NToggle bind:value={data.tracker.ignore_zeros} />
           </div>
         </ListItem>
-      {/if}
+      </FormGroup>
+    {/if}
 
-      {#if advanced && ['note', 'picker'].indexOf(data.tracker.type) === -1}
+    {#if advanced && ['note', 'picker'].indexOf(data.tracker.type) === -1}
+      <FormGroup pad>
         <NInput
           listItem
           className="tracker-default mb-3"
@@ -662,13 +663,17 @@
             </Button>
           </div>
         </NInput>
-      {/if}
+      </FormGroup>
+    {/if}
 
-      {#if advanced}
-        <PositivityEditor tracker={data.tracker} className="mb-3" />
-      {/if}
+    {#if advanced}
+      <FormGroup pad>
+        <PositivityEditor tracker={data.tracker} />
+      </FormGroup>
+    {/if}
 
-      {#if data.tracker.type !== 'note' && data.tracker.type !== 'picker' && advanced}
+    {#if data.tracker.type !== 'note' && data.tracker.type !== 'picker' && advanced}
+      <FormGroup pad>
         <ListItem>
           <NInput
             className="tracker-include"
@@ -684,9 +689,11 @@
               data.tracker.include = evt.detail.note + ''
             }} />
         </ListItem>
-      {/if}
+      </FormGroup>
+    {/if}
 
-      {#if advanced}
+    {#if advanced}
+      <FormGroup pad>
         <ListItem
           bg="transparent"
           id="hide-all-board"
@@ -695,36 +702,36 @@
             <NToggle bind:value={data.tracker.hidden} />
           </div>
         </ListItem>
-      {/if}
+      </FormGroup>
+    {/if}
 
-      {#if !data.tracker._dirty}
-        <div class="p-4 mt-4" />
+    {#if !data.tracker._dirty}
+      <div class="p-4 mt-4" />
 
-        <ListItem
-          on:click={() => {
-            TrackerStore.download(data.tracker)
-          }}
-          className="bottom-line">
-          <div class="text-primary-bright">
-            {Lang.t('general.download', 'Download')} .tkr
-          </div>
-          <div slot="right" class="text-faded-2">For Sharing</div>
-        </ListItem>
-        <ListItem on:click={duplicate} className="bottom-line">
-          <div class="text-primary-bright">
-            {Lang.t('tracker.duplicate-tracker', 'Duplicate Tracker')}
-          </div>
-        </ListItem>
+      <ListItem
+        on:click={() => {
+          TrackerStore.download(data.tracker)
+        }}
+        className="bottom-line">
+        <div class="text-primary-bright">
+          {Lang.t('general.download', 'Download')} .tkr
+        </div>
+        <div slot="right" class="text-faded-2">For Sharing</div>
+      </ListItem>
+      <ListItem on:click={duplicate} className="bottom-line">
+        <div class="text-primary-bright">
+          {Lang.t('tracker.duplicate-tracker', 'Duplicate Tracker')}
+        </div>
+      </ListItem>
 
-        <ListItem on:click={remove} className="bottom-line">
-          <div class="text-red">
-            {Lang.t('tracker.remove-tracker', 'Delete Tracker')}
-          </div>
-        </ListItem>
-      {/if}
+      <ListItem on:click={remove} className="bottom-line">
+        <div class="text-red">
+          {Lang.t('tracker.remove-tracker', 'Delete Tracker')}
+        </div>
+      </ListItem>
+    {/if}
 
-      <div slot="footer" />
-    </NModal>
+    <div slot="footer" />
+  </Panel>
 
-  </div>
-{/if}
+</Modal2>

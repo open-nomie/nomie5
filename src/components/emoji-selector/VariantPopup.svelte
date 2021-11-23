@@ -1,18 +1,18 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-  import Icon from "../icon/icon.svelte";
-  import Emoji from "./Emoji.svelte";
+  import { createEventDispatcher } from 'svelte'
+  import Icon from '../icon/icon.svelte'
+  import Emoji from './Emoji.svelte'
 
-  export let variants: any;
+  export let variants: any
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
 
   function onClickClose() {
-    dispatch("close");
+    dispatch('close')
   }
 
   function onClickContainer(event?: any) {
-    dispatch("close", event);
+    dispatch('close', event)
   }
 </script>
 
@@ -33,9 +33,10 @@
     @apply mx-4;
     @apply p-2;
     @apply text-center;
-    @apply rounded-full;
-    background: var(--color-solid-0);
+    @apply rounded-lg;
+    @apply bg-white dark:bg-black;
     @apply shadow-xl;
+    @apply z-50;
   }
 
   .svelte-emoji-picker__variants button {
