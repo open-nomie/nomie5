@@ -1,0 +1,112 @@
+.page-setup {
+  background-color: var(--color-bg) !important;
+  .setup-main {
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .center-grow {
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    a {
+      color: var(--color-inverse);
+      border-bottom: dotted 1px #ccc;
+    }
+  }
+  .slide {
+    z-index: 10;
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease-in-out;
+    background-color: var(--bg-solid);
+    color: var(--color-inverse);
+    margin: 0 16px;
+
+    .btn-content {
+      color: var(--color-inverse);
+      box-shadow: var(--box-shadow-float);
+      background-color: var(--color-solid);
+      border: none;
+      max-width: 320px;
+      &.active {
+        background-color: var(--color-primary-bright);
+        color: #fff;
+      }
+    }
+
+    a {
+      color: var(--color-primary-bright) !important;
+      text-decoration: underline;
+      border-bottom: none !important;
+    }
+
+    p {
+      max-width: 400px;
+    }
+
+    .top {
+      flex-direction: column;
+      // padding: 20px 25px 0;
+      // padding-top: env(safe-area-inset-top) !important;
+      flex-grow: 0;
+      flex-shrink: 0;
+      justify-content: center;
+      align-items: center;
+      // background-color: var(--color-primary);
+      h1 {
+        text-align: center;
+        padding-top: env(safe-area-inset-top);
+      }
+      p {
+        font-size: 0.8em;
+        line-height: 1em;
+        opacity: 0.7;
+        text-align: center;
+      }
+    }
+    @include media-breakpoint-up(md) {
+      .mobile-message {
+        display: none;
+      }
+    }
+    .bottom {
+      z-index: 0;
+      flex-grow: 0;
+      flex-shrink: 0;
+      height: calc(50vh - 20px);
+      // background-color: var(--color-solid);
+
+      flex-direction: column;
+      padding: 0 16px;
+
+      h1 {
+        font-size: 1.5em;
+        font-weight: bolder;
+        text-align: center;
+        @include media-breakpoint-down(xs) {
+          font-size: 1.2em;
+        }
+      }
+
+      p {
+        font-size: 0.8em;
+        line-height: 120%;
+        text-align: center;
+        color: var(--color-inverse-3);
+        @include media-breakpoint-down(xs) {
+          font-size: 0.7em;
+        }
+      }
+    }
+  }
+} // end of .page-setup

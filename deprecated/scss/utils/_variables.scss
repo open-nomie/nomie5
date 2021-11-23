@@ -1,0 +1,54 @@
+// Colors
+
+$gap: 8pt;
+
+$primary: #20699d;
+$primaryMuted: #4d84a1;
+$primaryDark: #1a212a;
+$primaryFaded: rgba(50, 159, 215, 0.45);
+$primaryDarker: #070c12;
+$primaryDarkish: #18212f;
+$primaryDarkest: #03080b;
+$primaryBright: #319ed7;
+$orange: #ed9614;
+$dark: #142432;
+$inverse: #ffffff;
+$grey: #666666;
+$faded: #f8f8f8;
+$faded2: #cccccc;
+$textFaded: #cccccc;
+$textFaded2: #dddddd;
+$green: #38a83f;
+$red: #e94151;
+
+$morning-alt: #fe8300;
+$morning: rgb(255, 204, 0);
+
+$afternoon-alt: rgb(0, 255, 21);
+$afternoon: rgb(0, 166, 255);
+
+$evening-alt: rgb(62, 9, 252);
+$evening: rgb(145, 25, 220);
+
+$night-alt: #c3727c;
+$night: #311f62;
+
+$progress-height: 10px;
+$progress-font-size: 0.8em;
+$progress-bg: var(--color-faded);
+$progress-border-radius: 10px;
+$progress-box-shadow: none;
+$progress-bar-color: var(--color-solid) !default;
+$progress-bar-bg: $primary !default;
+$progress-bar-animation-timing: 1s linear infinite !default;
+$progress-bar-transition: width 0.6s ease !default;
+
+$trackerBallSize: 102px;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 350px,
+  md: 600px,
+  lg: 980px,
+  xl: 1280px,
+);

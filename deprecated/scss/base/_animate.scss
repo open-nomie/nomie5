@@ -1,0 +1,169 @@
+@keyframes fadeUp {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate {
+  transition: all 0.2s ease-in-out;
+  &.hidden {
+    transition: all 0.2s ease-in-out;
+    pointer-events: none;
+    opacity: 0;
+  }
+  &.visible {
+    transition: all 0.2s ease-in-out;
+    opacity: 1;
+  }
+  &.notice-text {
+    &.hidden {
+      color: var(--color-primary-bright) !important;
+      transform: scale(1.1);
+    }
+  }
+
+  &.in {
+    &.hidden {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  &.up {
+    &.hidden {
+      opacity: 0;
+      transform: translateY(200px);
+    }
+  }
+
+  &.down {
+    &.hidden {
+      opacity: 0;
+      transform: translateY(-200px);
+    }
+  }
+}
+
+@keyframes redPulse {
+  0% {
+    background-color: var(--color-red);
+  }
+  50% {
+    background-color: rgb(137, 0, 0);
+  }
+  100% {
+    background-color: var(--color-red);
+  }
+}
+
+.fill-red-pulse {
+  animation: redPulseFill 3s infinite;
+}
+
+@keyframes redPulseFill {
+  0% {
+    fill: var(--color-red);
+  }
+  50% {
+    fill: var(--color-inverse);
+  }
+  100% {
+    fill: var(--color-red);
+  }
+}
+
+@keyframes keyframes1 {
+  0% {
+    transform: rotate(-1.2deg);
+    animation-timing-function: ease-in-out;
+  }
+  50% {
+    transform: rotate(1.7deg);
+    animation-timing-function: ease-in-out;
+  }
+}
+
+@keyframes keyframes2 {
+  0% {
+    transform: rotate(1.2deg);
+    animation-timing-function: ease-in-out;
+  }
+  50% {
+    transform: rotate(-1.7deg);
+    animation-timing-function: ease-in-out;
+  }
+}
+
+@keyframes shadow-pulse {
+  0% {
+    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 35px rgba(0, 0, 0, 0);
+  }
+}
+
+.wiggle {
+  animation: keyframes2 infinite 0.6s ease-out;
+  transform-origin: 50% 10%;
+}
+.wiggle-other {
+  animation: keyframes2 infinite 0.6s ease-in;
+  transform-origin: 50% 10%;
+}
+
+.pulse {
+  transform: scale(1);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    // transform: scale3d(0.95);
+    box-shadow: 0 0 0 0 rgba($green, 0.3);
+  }
+
+  70% {
+    // transform: scale3d(1);
+    box-shadow: 0 0 0 10px rgba($green, 0);
+  }
+
+  100% {
+    // transform: scale3d(0.95);
+    box-shadow: 0 0 0 0 rgba($green, 0);
+  }
+}
+
+.mock-card-animation {
+  z-index: 3000;
+  background-color: var(--color-solid);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 1.2em;
+  box-shadow: var(--box-shadow-float);
+}
+
+.mock-header {
+  height: 20px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  background-color: var(--color-solid);
+  box-shadow: 0px -10px 10px rgba(0, 0, 0, 0.3);
+  margin-top: 8pt;
+  margin-bottom: -16pt;
+  pointer-events: none;
+  &:first-child {
+    display: none;
+  }
+  span {
+    display: none;
+  }
+}

@@ -1,0 +1,35 @@
+.card {
+  $padding: 16px;
+  $footerPadding: 8px;
+  border-radius: 0.5em;
+  display: flex;
+  flex-direction: column;
+  z-index: 120;
+  .card-body {
+    padding: $padding;
+    min-height: 0;
+  }
+  .footer {
+    padding: $footerPadding !important;
+    button {
+      margin-right: $footerPadding * 0.5 !important;
+      margin-left: $footerPadding * 0.5 !important;
+      &:first-child {
+        margin-left: 0px !important;
+      }
+      &:last-child {
+        margin-right: 0px !important;
+      }
+    }
+  }
+  p,
+  .card-body {
+    font-size: 0.9em;
+  }
+  .card-title {
+    $paddingTop: $padding * 0.7;
+    padding: $padding;
+    font-weight: bold;
+    font-size: 1em;
+  }
+}

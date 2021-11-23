@@ -1,0 +1,58 @@
+.justify-content-stretch {
+  justify-content: stretch;
+}
+
+.items-center {
+  display: flex;
+  align-items: center;
+}
+.justify-center {
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+}
+
+.flex {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+.flex-shrink {
+  flex-shrink: 1;
+}
+.flex-grow-off {
+  flex-grow: 0;
+}
+.flex-shrink-off {
+  flex-shrink: 0;
+}
+
+.toolbar-buttons {
+  display: flex;
+  flex-direction: row !important;
+  align-items: center !important;
+  .btn {
+    padding: 0 4px;
+  }
+  &.align-right {
+    justify-content: flex-end;
+  }
+}
+
+.align-top {
+  align-items: flex-start;
+}
+
+.filler {
+  flex-grow: 1;
+  flex-shrink: 1;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}

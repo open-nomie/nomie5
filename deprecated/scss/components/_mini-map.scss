@@ -1,0 +1,198 @@
+body.scrolling {
+  .mini-map {
+    opacity: 0.3;
+  }
+}
+
+.geocoder-control {
+  color: var(--color-inverse-1) !important;
+  background-color: var(--color-solid) !important;
+  input {
+    border: none;
+  }
+  &:after {
+    content: "Search";
+    background-color: var(--color-solid);
+    padding: 8px;
+    display: block;
+    width: 60px;
+    border-radius: 2px;
+    z-index: 100;
+  }
+
+  .geocoder-control-suggestions,
+  .geocoder-control-header,
+  .geocoder-control-list,
+  .geocoder-control-suggestion {
+    color: var(--color-inverse-1) !important;
+    background-color: var(--color-solid) !important;
+  }
+  .geocoder-control-header {
+    border-bottom: solid 1px var(--color-solid-3) !important;
+  }
+  .geocoder-control-suggestion {
+    border-top: solid 1px var(--color-solid-3) !important;
+  }
+
+  .geocoder-control-input {
+    background: transparent;
+    border: none !important;
+  }
+  &.geocoder-control-expanded {
+    .geocoder-control-input {
+      background-color: var(--color-solid) !important;
+      color: var(--color-inverse-1) !important;
+      border: solid 1px var(--color-solid-2) !important;
+    }
+  }
+
+  .geocoder-control-suggestions {
+    background-color: var(--color-solid) !important;
+    color: var(--color-inverse-1) !important;
+  }
+} // end geo-coder-control
+
+.leaflet-control-zoom {
+  // display: none !important;
+  $size: 44px;
+  float: none !important;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  margin: 0 !important;
+  border: solid 1px var(--color-faded-2) !important;
+  border-radius: 22px !important;
+  box-shadow: var(--box-shadow-float) !important;
+  height: $size;
+  overflow: hidden;
+  border: none;
+  a {
+    float: none !important;
+    height: $size !important;
+    width: $size * 1.2 !important;
+    line-height: $size - 5px !important;
+    padding: 0px !important;
+    display: block !important;
+    border: none !important;
+    background-color: rgba(255, 255, 255, 0.7);
+    &:first-child {
+      border-right: solid 1px var(--color-faded-2) !important;
+    }
+  }
+  display: none;
+}
+.leaflet-container {
+  background-color: var(--color-solid) !important;
+}
+.leaflet-control-attribution {
+  background: transparent !important;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  color: var(--color-solid) !important;
+  a {
+    color: var(--color-inverse) !important;
+    opacity: 0.5;
+  }
+}
+
+.leaflet-bar a {
+  background-color: var(--color-solid) !important;
+  color: var(--color-inverse) !important;
+  border: solid 1px var(--color-faded-2) !important;
+  border-bottom: solid 1px var(--color-faded-2) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center;
+  padding: 0;
+}
+
+.content-map {
+  height: 40vh;
+  width: 100vw;
+  position: relative;
+
+  .btn {
+    position: absolute;
+    z-index: 2000;
+    bottom: 16px;
+    right: 50%;
+    margin-right: -25px;
+  }
+}
+
+.mini-map {
+  position: fixed;
+  z-index: 1000;
+  bottom: 90px;
+  right: 26px;
+  height: 80px;
+  width: 80px;
+  transition: all 0.2s ease-in-out;
+
+  .location-name {
+    display: none !important;
+  }
+
+  @media (max-width: 400px) {
+    height: 60px;
+    width: 60px;
+  }
+
+  border-radius: 20px;
+  box-shadow: var(--box-shadow-float);
+
+  background-color: var(--color-solid);
+  overflow: hidden;
+
+  .leaflet-top,
+  .location-name,
+  .leaflet-bottom {
+    display: none;
+  }
+  .n-map-container {
+    background-color: var(--color-solid);
+    z-index: 10;
+    .n-map-wrapper {
+      bottom: 0px !important;
+    }
+  }
+  &.closed {
+    &::after {
+      content: "";
+      z-index: 20;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+
+  &.opened {
+    position: relative;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-inverse);
+    height: 45vh;
+    min-height: 250;
+    max-height: 700px;
+    border-radius: 0;
+    z-index: 2000;
+
+    width: 100vw;
+
+    border: solid 1px var(--color-faded-2);
+
+    .zmdi {
+      font-size: 1.4em;
+    }
+    .btn {
+      position: absolute;
+      z-index: 2000;
+      bottom: 16px;
+    }
+  }
+}

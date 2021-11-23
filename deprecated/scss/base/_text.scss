@@ -1,0 +1,278 @@
+.truncate {
+  @include truncate(1);
+  max-width: 100%;
+}
+.truncate-2 {
+  @include truncate(2);
+}
+.truncate-3 {
+  @include truncate(3);
+}
+
+.text-bold {
+  font-weight: 600;
+}
+.font-weight-medium {
+  font-weight: 500 !important;
+}
+.font-weight-bold {
+  font-weight: 600 !important;
+}
+.font-weight-bolder {
+  font-weight: 700 !important;
+}
+
+.text-bolder {
+  font-weight: 800;
+}
+.text-underline {
+  text-decoration: underline !important;
+}
+// Colors
+.text-primary-bright {
+  color: var(--color-primary-bright) !important;
+}
+.text-red {
+  color: $red !important;
+  .n-text {
+    color: $red !important;
+  }
+}
+.text-green {
+  color: $green !important;
+}
+.text-solid {
+  color: var(--color-solid);
+}
+.bg-solid {
+  background-color: var(--color-solid) !important;
+}
+
+.bg-red {
+  background-color: var(--color-red) !important;
+}
+.bg-green {
+  background-color: var(--color-green) !important;
+}
+.bg-blue {
+  background-color: var(--color-blue) !important;
+}
+.bg-orange {
+  background-color: var(--color-orange) !important;
+}
+
+.bg-solid-1 {
+  background-color: var(--color-solid-1);
+}
+.bg-solid-2 {
+  background-color: var(--color-solid-2);
+}
+
+.bg-primary-bright {
+  background-color: var(--color-primary-bright) !important;
+}
+.bg-blue {
+  background-color: var(--color-blue) !important;
+}
+
+.bg-mint {
+  background-color: var(--color-mint-bright) !important;
+}
+
+.bg-bg {
+  background-color: var(--color-bg);
+}
+
+.bg-teal {
+  background-color: var(--color-teal-bright) !important;
+}
+
+.bg-purple {
+  background-color: var(--color-purple-bright) !important;
+}
+
+.bg-orange {
+  background-color: var(--color-orange-bright) !important;
+}
+
+.bg-pink {
+  background-color: var(--color-pink-bright) !important;
+}
+.bg-primary {
+  background-color: var(--color-primary) !important;
+}
+
+.bg-inverse {
+  background-color: var(--color-inverse);
+}
+.bg-transparent {
+  background-color: transparent;
+}
+.text-inverse {
+  color: var(--color-inverse) !important;
+}
+.text-inverse-1 {
+  color: var(--color-inverse-1) !important;
+}
+.text-inverse-2 {
+  color: var(--color-inverse-2) !important;
+}
+.text-dark {
+  color: var(--color-dark) !important;
+}
+.text-inverse-3 {
+  color: var(--color-inverse-3) !important;
+}
+.text-white {
+  color: #fff !important;
+}
+.font-bold {
+  font-weight: bold;
+}
+.font-120 {
+  font-size: 1.2em;
+}
+.font-140 {
+  font-size: 1.4em;
+}
+
+.text-faded {
+  color: var(--color-faded) !important;
+}
+.text-faded-1 {
+  color: var(--color-faded-1) !important;
+}
+.text-faded-2 {
+  color: var(--color-faded-2) !important;
+}
+.text-faded-3 {
+  color: var(--color-faded-3) !important;
+}
+
+.text-xs {
+  font-size: 0.6em !important;
+  line-height: 0.8em;
+}
+.text-sm {
+  font-size: 0.85em !important;
+  line-height: 1.2em;
+}
+.text-md {
+  font-size: 1em !important;
+  line-height: 1.3em;
+}
+.text-lg {
+  font-size: 1.3em !important;
+}
+
+.text-xl {
+  font-size: 1.6em !important;
+}
+
+.text-xxl {
+  font-size: 2.3em !important;
+}
+
+/// Icon Fills
+
+.fill-faded {
+  svg {
+    stroke: var(--color-faded) !important;
+  }
+  stroke: var(--color-faded) !important;
+}
+.fill-faded-1 {
+  svg {
+    stroke: var(--color-faded-1) !important;
+  }
+  stroke: var(--color-faded-1) !important;
+}
+.fill-white {
+  svg {
+    stroke: #fff !important;
+  }
+  stroke: #fff !important;
+}
+.fill-faded-2 {
+  svg {
+    stroke: var(--color-faded-2) !important;
+  }
+  stroke: var(--color-faded-2) !important;
+}
+.fill-faded-3 {
+  svg {
+    stroke: var(--color-faded-3) !important;
+  }
+  stroke: var(--color-faded-3) !important;
+}
+.fill-primary-bright {
+  svg {
+    stroke: var(--color-primary-bright) !important;
+  }
+  stroke: var(--color-primary-bright) !important;
+}
+.fill-green {
+  svg {
+    stroke: var(--color-green) !important;
+  }
+  stroke: var(--color-green) !important;
+}
+.fill-red {
+  svg {
+    stroke: var(--color-red) !important;
+  }
+  stroke: var(--color-red) !important;
+}
+.fill-inverse {
+  svg {
+    stroke: var(--color-inverse) !important;
+  }
+  stroke: var(--color-inverse) !important;
+}
+.fill-inverse-1 {
+  svg {
+    stroke: var(--color-inverse-1) !important;
+  }
+  stroke: var(--color-inverse-1) !important;
+}
+.fill-inverse-2 {
+  svg {
+    stroke: var(--color-inverse-2) !important;
+  }
+  stroke: var(--color-inverse-2) !important;
+}
+.fill-primary {
+  svg {
+    stroke: var(--color-primary) !important;
+  }
+  stroke: var(--color-primary) !important;
+}
+
+// Borders
+
+.border-blue {
+  border-color: var(--color-blue) !important;
+}
+
+.border-mint {
+  border-color: var(--color-mint-bright) !important;
+}
+
+.border-teal {
+  border-color: var(--color-teal-bright) !important;
+}
+
+.border-purple {
+  border-color: var(--color-purple-bright) !important;
+}
+
+.border-orange {
+  border-color: var(--color-orange-bright) !important;
+}
+
+.border-pink {
+  border-color: var(--color-pink-bright) !important;
+}
+.border-primary {
+  border-color: var(--color-primary) !important;
+}

@@ -1,0 +1,256 @@
+// Variables and mixins
+@import "./utils/_utils";
+
+/**
+Why have a SCSS file when you can do it directly in the components?
+It's not easy to style children components within a component, 
+so i've opted to have the scss file be the override, and to fill in 
+where a component doesn't exist, or isn't needed.
+**/
+
+// Vendors
+@import "./vendor/bootstrap/bootstrap";
+
+// Base
+@import "./base/reset";
+@import "./base/body";
+@import "./base/text";
+@import "./base/forms";
+@import "./base/flex";
+@import "./base/animate";
+@import "./base/opacity";
+@import "./base/clickable";
+@import "./base/container";
+@import "./base/touch";
+@import "./base/position";
+@import "./base/size";
+
+// Components
+@import "./components/board-tabs";
+@import "./components/full-screen";
+@import "./components/nbtn";
+@import "./components/mini-map";
+@import "./components/row";
+@import "./components/empty-notice";
+@import "./components/n-pop";
+@import "./components/list-item";
+@import "./components/tracker-input-modal";
+@import "./components/tracker-button";
+@import "./components/share-image";
+@import "./components/grid";
+@import "./components/app-panel";
+@import "./components/item-ball";
+@import "./components/toolbar";
+@import "./components/n-log-item";
+@import "./components/badge";
+@import "./components/memories";
+@import "./components/time-bar";
+@import "./components/photo-holder";
+@import "./components/main-content";
+@import "./components/card";
+@import "./components/tap-icon-text";
+@import "./components/offline-notice";
+@import "./components/n-layout";
+@import "./components/capture-log";
+
+@import "./components/loading-screen";
+
+@import "./pages/setup";
+
+/**
+THIS STUFF BELOW SHOULD NOT BE HERE - IT SHOULD BE ORGANIZED 
+TODO: Organize main into components or containers. 
+**/
+
+.location-badge {
+  cursor: pointer;
+  padding: 2px 0px !important;
+  max-width: 100px;
+  text-transform: capitalize !important;
+  border: none;
+  margin-right: 4px;
+  color: var(--color-primary-bright);
+  @include media-breakpoint-up(md) {
+    max-width: 120px;
+  }
+}
+
+.gap {
+  height: 16px;
+}
+.gap.xs {
+  height: 2px;
+  width: 2px;
+}
+
+.notify {
+  position:absolute;
+  left: 60%;
+  top:6%;
+  height:10px;
+  width:10px;
+  flex-shrink:0;
+  flex-grow:0;
+  border-radius:50%;
+  background-color:var(--color-red);
+}
+
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.fcenter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rounded {
+  border-radius: 6px;
+}
+.rounded-md {
+  border-radius: 8px;
+}
+.rounded-lg {
+  border-radius: 12px !important;
+}
+.rounded-xl {
+  border-radius: 14px !important;
+}
+
+.bottom-0 {
+  bottom: env(safe-area-inset-bottom);
+}
+
+hr.divider {
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-top: solid 1px var(--color-grey-7);
+  border-bottom: none;
+  &.center {
+    margin-left: 24px !important;
+    margin-right: 24px !important;
+  }
+  &.indent {
+    margin-left: 20px;
+  }
+}
+
+.h-full {
+  min-height: 100vh;
+}
+.w-full {
+  min-width: 100vw;
+}
+
+.board-actions {
+  .btn-group {
+    flex-grow: 0;
+    flex-shrink: 1;
+    display: flex;
+    background-color: var(--color-solid);
+    box-shadow: var(--box-shadow-tight);
+    .btn .n-text {
+      color: var(--color-inverse-2) !important;
+    }
+
+    // .btn {
+    //   padding-left: 14px !important;
+    //   padding-right: 14px !important;
+
+    //   &:last-child {
+    //     border-right: none;
+    //   }
+    // }
+  }
+}
+
+// HACK! This isn't working in the component
+.library-modal .n-modal-body {
+  background-color: var(--color-bg) !important;
+}
+
+.fake-link {
+  border-bottom: dotted 1px var(--color-primary-bright);
+  color: var(--color-primary-bright);
+}
+
+.page {
+  display: flex;
+  // min-height: calc(100vh - 120px);
+  min-height: fit-content;
+  flex-grow: 1;
+  background-color: var(--color-bg);
+}
+
+.tod {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: space-evenly;
+  flex-grow: 1;
+  flex-shrink: 1;
+  .bar {
+    background-color: #fff;
+    width: 16px;
+    border-radius: 8px;
+  }
+
+  .day {
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: calc(100% / 7);
+    height: calc(100% - 16px);
+    padding: 8px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .early_morning {
+    background-color: rgb(0, 14, 91);
+    color: rgb(255, 191, 0);
+  }
+  .morning {
+    background-color: rgb(30, 10, 255);
+    color: rgb(255, 204, 0);
+  }
+  .afternoon {
+    background-color: rgb(80, 159, 255);
+    color: rgb(0, 229, 255);
+  }
+  .evening {
+    background-color: rgb(153, 18, 211);
+    color: yellow;
+  }
+  .night {
+    background-color: rgb(12, 15, 33);
+    color: yellow;
+  }
+}
+
+.dow {
+  flex-grow: 1;
+  flex-shrink: 1;
+  .day {
+    .bar {
+      display: flex;
+      flex-grow: 1;
+      flex-shrink: 1;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6em;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+  }
+}

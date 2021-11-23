@@ -1,0 +1,11 @@
+.offline-notice {
+  background-color: $red;
+  color: #fff;
+  font-size: 0.6em;
+  padding: 2px 10px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5000;
+}
