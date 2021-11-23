@@ -1,61 +1,62 @@
 <script>
+  import ToolbarGrid from './../components/toolbar/toolbar-grid.svelte'
   //Vendors
-  import { navigate, Link } from "svelte-routing";
-  import { onMount } from "svelte";
+  import { navigate } from 'svelte-routing'
+  import { onMount } from 'svelte'
 
-  import SocialShare from "../modules/share/share";
-  import Storage from "../modules/storage/storage";
+  import SocialShare from '../modules/share/share'
+  import Storage from '../modules/storage/storage'
 
   // Components
-  import ListItem from "../components/list-item/list-item.svelte";
-  import NIcon from "../components/icon/icon.svelte";
-  import NButtonGroup from "../components/button-group/button-group.svelte";
-  import BlockstackOptions from "../components/storage/blockstack.svelte";
-  import LocalstorageOptions from "../components/storage/localstorage.svelte";
-  import PouchDBOptions from "../components/storage/pouchdb.svelte";
-  import Spacer from "../components/spacer/spacer.svelte";
-  import List from "../components/list/list.svelte";
-  import Row from "../components/row/row.svelte";
-  import Divider from "../components/divider/divider.svelte";
+  import ListItem from '../components/list-item/list-item.svelte'
+  import NIcon from '../components/icon/icon.svelte'
+  import NButtonGroup from '../components/button-group/button-group.svelte'
+  import BlockstackOptions from '../components/storage/blockstack.svelte'
+  import LocalstorageOptions from '../components/storage/localstorage.svelte'
+  import PouchDBOptions from '../components/storage/pouchdb.svelte'
+  import Spacer from '../components/spacer/spacer.svelte'
+  import List from '../components/list/list.svelte'
+  import Row from '../components/row/row.svelte'
+  import Divider from '../components/divider/divider.svelte'
 
   // Containers
-  import ImporterModal from "../containers/importer/importer.svelte";
+  import ImporterModal from '../containers/importer/importer.svelte'
 
-  import NLayout from "../containers/layout/layout.svelte";
+  import NLayout from '../containers/layout/layout.svelte'
 
   // Vendors
-  import dayjs from "dayjs";
-  import localforage from "localforage";
+  import dayjs from 'dayjs'
+  import localforage from 'localforage'
 
   // Stores
-  import { UserStore } from "../store/user-store";
-  import { LedgerStore } from "../store/ledger";
-  import { Interact } from "../store/interact";
-  import { TrackerStore } from "../store/tracker-store";
-  import { Lang } from "../store/lang";
-  import { Device } from "../store/device-store";
+  import { UserStore } from '../store/user-store'
+  import { LedgerStore } from '../store/ledger'
+  import { Interact } from '../store/interact'
+  import { TrackerStore } from '../store/tracker-store'
+  import { Lang } from '../store/lang'
+  import { Device } from '../store/device-store'
 
   // Config
-  import config from "../config/appConfig";
+  import config from '../config/appConfig'
   // Comtainers
-  import Features from "../containers/settings/features.svelte";
-  import Tweaks from "../containers/settings/tweaks.svelte";
+  import Features from '../containers/settings/features.svelte'
+  import Tweaks from '../containers/settings/tweaks.svelte'
   // Components
-  import Text from "../components/text/text.svelte";
-  import Button from "../components/button/button.svelte";
-  import Icon from "../components/icon/icon.svelte";
-  import appConfig from "../config/appConfig";
+  import Text from '../components/text/text.svelte'
+  import Button from '../components/button/button.svelte'
+  import Icon from '../components/icon/icon.svelte'
+  import appConfig from '../config/appConfig'
 
-  import tick from "../utils/tick/tick";
+  import tick from '../utils/tick/tick'
 
-  import { LastUsed } from "../store/last-used";
-  import { AppStore } from "../store/app-store";
-  import Sponsors from "../components/sponsors/sponsors.svelte";
-  import ToggleSwitch from "../components/toggle-switch/toggle-switch.svelte";
-  import { ApiStore } from "../containers/api/api-store";
+  import { LastUsed } from '../store/last-used'
+  import { AppStore } from '../store/app-store'
+  import Sponsors from '../components/sponsors/sponsors.svelte'
+  import ToggleSwitch from '../components/toggle-switch/toggle-switch.svelte'
+  import { ApiStore } from '../containers/api/api-store'
 
-  export const location = undefined;
-  export const style = undefined;
+  export const location = undefined
+  export const style = undefined
 
   // consts
   // const Export = new Exporter();
@@ -64,211 +65,240 @@
     signedIn: false,
     files: [],
     showMassEditor: false,
-  };
+  }
 
-  $: alwaysLocate = $UserStore.alwaysLocate;
+  $: alwaysLocate = $UserStore.alwaysLocate
 
-  let ledger = null;
-  let trackers = null;
+  let ledger = null
+  let trackers = null
   // let user = null;
-  let fileInput;
-  let showImporter = false;
+  let fileInput
+  let showImporter = false
 
-  let st = 0;
+  let st = 0
   async function specialTap() {
-    st = st + 1;
+    st = st + 1
     if (st > 9) {
-      methods.unlockFeatures();
+      methods.unlockFeatures()
     }
   }
 
   let methods = {
     sign_out() {
-      UserStore.signout();
+      UserStore.signout()
     },
     share() {
-      SocialShare(`I track my life with Nomie! It's free, private, and you get to design what you track. @nomieapp`, "https://nomie.app");
+      SocialShare(
+        `I track my life with Nomie! It's free, private, and you get to design what you track. @nomieapp`,
+        'https://nomie.app',
+      )
     },
     async unlockFeatures() {
-      UserStore.unlockHiddenFeatures();
+      UserStore.unlockHiddenFeatures()
       Interact.confetti({
         show: true,
-        title: "🎁  Patron Only Features Unlocked",
-        message: "Hey you! Thank you for your continued support. 💘",
+        title: '🎁  Patron Only Features Unlocked',
+        message: 'Hey you! Thank you for your continued support. 💘',
         timeout: 5000,
-      });
+      })
     },
     async tryPatronPin() {
-      let pin = await Interact.inputPin("Patron Key", true);
+      let pin = await Interact.inputPin('Patron Key', true)
 
       if (pin === appConfig.patron_pin) {
-        methods.unlockFeatures();
+        methods.unlockFeatures()
       } else {
-        Interact.alert(`Invalid Patron Pin`, `Please check the code and try again`);
+        Interact.alert(
+          `Invalid Patron Pin`,
+          `Please check the code and try again`,
+        )
       }
     },
     locations() {
-      Interact.pickLocation();
+      Interact.pickLocation()
     },
     sign_in() {
-      UserStore.redirectToSignIn();
+      UserStore.redirectToSignIn()
     },
 
     bookAge(date) {
-      return dayjs(`${date}-01`).fromNow();
+      return dayjs(`${date}-01`).fromNow()
     },
     faq() {
-      navigate("/faq");
+      navigate('/faq')
     },
     shop() {
-      navigate("/shop");
+      navigate('/shop')
     },
 
     settingChange() {
-      UserStore.saveMeta();
+      UserStore.saveMeta()
     },
     async deleteEverything() {
       try {
         let res = await Interact.confirm(
-          `${Lang.t("settings.danger-zone")}`,
-          `${Lang.t("settings.delete-warning", "This will destroy ALL data in Nomie. Are you absolutely sure?")}`,
-          `${Lang.t("settings.destroy", "Destroy")}`
-        );
+          `${Lang.t('settings.danger-zone')}`,
+          `${Lang.t(
+            'settings.delete-warning',
+            'This will destroy ALL data in Nomie. Are you absolutely sure?',
+          )}`,
+          `${Lang.t('settings.destroy', 'Destroy')}`,
+        )
         if (res) {
-          await tick(200);
+          await tick(200)
           res = await Interact.confirm(
-            `${Lang.t("settings.danger-zone")}`,
-            `${Lang.t("settings.delete-warning-again", "So you REALLY want all ALL data in Nomie destroyed?")}`,
-            `${Lang.t("settings.destroy", "Destroy")}`
-          );
+            `${Lang.t('settings.danger-zone')}`,
+            `${Lang.t(
+              'settings.delete-warning-again',
+              'So you REALLY want all ALL data in Nomie destroyed?',
+            )}`,
+            `${Lang.t('settings.destroy', 'Destroy')}`,
+          )
 
           if (res === true) {
-            Interact.blocker(`${Lang.t("settings.deleting-data", "Deleting data...")}`);
-            let files = await Storage.list();
+            Interact.blocker(
+              `${Lang.t('settings.deleting-data', 'Deleting data...')}`,
+            )
+            let files = await Storage.list()
 
-            let promises = [];
+            let promises = []
             files.forEach((file) => {
-              promises.push(Storage.delete(file));
-            });
-            await Promise.all(promises);
-            await localforage.clear();
-            localStorage.clear();
-            Interact.stopBlocker();
-            await Interact.alert("Done", "Your data has been destroyed.");
+              promises.push(Storage.delete(file))
+            })
+            await Promise.all(promises)
+            await localforage.clear()
+            localStorage.clear()
+            Interact.stopBlocker()
+            await Interact.alert('Done', 'Your data has been destroyed.')
 
-            window.location.href = "/";
+            window.location.href = '/'
           }
         } // end if confirmed
       } catch (e) {
-        Interact.alert(Lang.t("general.error"), e.message);
+        Interact.alert(Lang.t('general.error'), e.message)
       }
     },
     switchStorage(type) {
-      let from = $UserStore.storageType;
-      let to = type;
+      let from = $UserStore.storageType
+      let to = type
       let conf = confirm(
         `${Lang.t(
-          "storage.switch",
+          'storage.switch',
           `Switch from ${from} to ${to}? You can always switch back. 
 
-Note: Your data will not automatically move over. You'll first need to export it, then you can import into this new storage.`
-        )}`
-      );
+Note: Your data will not automatically move over. You'll first need to export it, then you can import into this new storage.`,
+        )}`,
+      )
       if (conf === true) {
-        if (["local", "pouchdb", "blockstack"].indexOf(to) > -1) {
-          UserStore.setStorage(to);
-          Interact.reload();
+        if (['local', 'pouchdb', 'blockstack'].indexOf(to) > -1) {
+          UserStore.setStorage(to)
+          Interact.reload()
         } else {
-          alert(`Error: ${to} is not valid`);
+          alert(`Error: ${to} is not valid`)
         }
       }
     },
     storageMenu() {
       let buttons = [
         {
-          title: `${$UserStore.storageType === "local" ? "✓" : ""} ${Lang.t("storage.local_title", "This Device Only")}`,
-          description: Lang.t("storage.local_description", "Good for getting started, but make sure you backup your data."),
+          title: `${$UserStore.storageType === 'local' ? '✓' : ''} ${Lang.t(
+            'storage.local_title',
+            'This Device Only',
+          )}`,
+          description: Lang.t(
+            'storage.local_description',
+            'Good for getting started, but make sure you backup your data.',
+          ),
           click() {
-            methods.switchStorage("local");
+            methods.switchStorage('local')
           },
         },
         {
-          title: `${$UserStore.storageType === "pouchdb" ? "✓" : ""} ${Lang.t("storage.pouchdb_title", "CouchDB (beta)")}`,
+          title: `${$UserStore.storageType === 'pouchdb' ? '✓' : ''} ${Lang.t(
+            'storage.pouchdb_title',
+            'CouchDB (beta)',
+          )}`,
           description: `${Lang.t(
-            "storage.pouchdb_description",
-            "Sync your data in real time to a remote CouchDB server. ⚠️ Not good for multiple devices."
+            'storage.pouchdb_description',
+            'Sync your data in real time to a remote CouchDB server. ⚠️ Not good for multiple devices.',
           )}`,
           click() {
-            methods.switchStorage("pouchdb");
+            methods.switchStorage('pouchdb')
           },
         },
         {
-          title: `${$UserStore.storageType === "blockstack" ? "✓" : ""} ⚠️⚠️⚠️ Blockstack`,
+          title: `${
+            $UserStore.storageType === 'blockstack' ? '✓' : ''
+          } ⚠️⚠️⚠️ Blockstack`,
           description: `⚠️ NO LONGER SUPPORTED / SHUTTING DOWN, please use Device Only or CouchDB instead.`,
           click() {
-            methods.switchStorage("blockstack");
+            methods.switchStorage('blockstack')
           },
         },
-      ];
+      ]
       Interact.popmenu({
-        title: `${Lang.t("storage.type_selector_title", "Storage Options")}`,
-        description: `${Lang.t("storage.type_selector_title", "How would you like your data stored?")}`,
+        title: `${Lang.t('storage.type_selector_title', 'Storage Options')}`,
+        description: `${Lang.t(
+          'storage.type_selector_title',
+          'How would you like your data stored?',
+        )}`,
         buttons: buttons,
-      });
+      })
     },
     // boardsToggle() {
     //   $UserStore.meta.boardsEnabled = !$UserStore.meta.boardsEnabled;
     //   UserStore.saveMeta();
     // },
-  };
-  let view = Storage.local.get("settings/view") || "features";
+  }
+  let view = Storage.local.get('settings/view') || 'features'
   function changeView(v) {
-    view = v;
-    Storage.local.put("settings/view", v);
-    Device.scrollToTop();
+    view = v
+    Storage.local.put('settings/view', v)
+    Device.scrollToTop()
   }
   // const setTimeout = setTimeout;
   onMount(() => {
-    Device.scrollToTop();
-  });
+    Device.scrollToTop()
+  })
 </script>
 
 <NLayout pageTitle="Settings">
 
   <div slot="header">
-    <div class=" n-toolbar-grid">
-      <div class="left" />
-      <div class="main">
-        <Text bold>{Lang.t('settings.settings', 'Settings')}</Text>
-      </div>
-      <div class="right">
-        <Button type="clear" color="primary" on:click={methods.faq}>{Lang.t('general.faq', 'FAQ')}</Button>
-      </div>
-    </div>
-    <div class=" px-2 pb-1 n-toolbar">
+    <ToolbarGrid>
+      <h1 class="font-bold text-black dark:text-white">
+        {Lang.t('settings.settings', 'Settings')}
+      </h1>
+      <button
+        slot="right"
+        title="Frequently asked Questions"
+        class="text-primary-600"
+        on:click={methods.faq}>
+        {Lang.t('general.faq', 'FAQ')}
+      </button>
+    </ToolbarGrid>
+
+    <div class="px-2 pb-1 n-toolbar">
       <NButtonGroup className="mx-auto" style="max-width:400px;">
         <Button
           className={view == 'features' ? 'active' : ''}
           on:click={() => {
-            changeView('features');
-          }}
-        >
+            changeView('features')
+          }}>
           {Lang.t('settings.tab-features', 'Features')}
         </Button>
         <Button
           className={view == 'tweaks' ? 'active' : ''}
           on:click={() => {
-            changeView('tweaks');
-          }}
-        >
+            changeView('tweaks')
+          }}>
           {Lang.t('settings.tab-tweaks', 'Tweaks')}
         </Button>
         <Button
           className={view == 'data' ? 'active' : ''}
           on:click={() => {
-            changeView('data');
-          }}
-        >
+            changeView('data')
+          }}>
           {Lang.t('settings.tab-data', 'Data')}
           {#if $ApiStore.items.length}
             <div class="notify" />
@@ -277,9 +307,8 @@ Note: Your data will not automatically move over. You'll first need to export it
         <Button
           className={view == 'about' ? 'active' : ''}
           on:click={() => {
-            changeView('about');
-          }}
-        >
+            changeView('about')
+          }}>
           {Lang.t('settings.tab-about', 'About')}
         </Button>
       </NButtonGroup>
@@ -289,14 +318,20 @@ Note: Your data will not automatically move over. You'll first need to export it
   <div slot="content" class="pt-2">
     {#if $UserStore.meta}
       <div class="page page-settings">
-        <div class=" p-0">
+        <div class="p-0 ">
 
           {#if $UserStore.meta.hiddenFeatures}
-            <ListItem className="mb-3" href={appConfig.patreonHome} detail compact>
+            <ListItem
+              className="mb-3"
+              href={appConfig.patreonHome}
+              detail
+              compact>
               <div slot="left">
                 <Icon name="cake" className="fill-primary-bright" size={28} />
               </div>
-              <Text bold>{Lang.t('settings.patron-official', 'Official Nomie Patron')}</Text>
+              <Text bold>
+                {Lang.t('settings.patron-official', 'Official Nomie Patron')}
+              </Text>
               <div slot="right">
                 <Text size="sm">{Lang.t('general.latest', 'Latest')}</Text>
               </div>
@@ -345,7 +380,10 @@ Note: Your data will not automatically move over. You'll first need to export it
               DATA VIEW
               *******************************************
             -->
-            <List className="mb-3" title={Lang.t('settings.storage-location', 'Storage Location')} outside>
+            <List
+              className="mb-3"
+              title={Lang.t('settings.storage-location', 'Storage Location')}
+              outside>
               <ListItem on:click={methods.storageMenu}>
                 <span slot="left">☁️</span>
                 <Text>
@@ -353,10 +391,14 @@ Note: Your data will not automatically move over. You'll first need to export it
                     This device only
                   {:else if $UserStore.storageType === 'pouchdb'}
                     {Lang.t('storage.pouchdb', 'Local + CouchDB')}
-                  {:else if $UserStore.storageType === 'blockstack'}{Lang.t('storage.blockstack', 'Blockstack')}{/if}
+                  {:else if $UserStore.storageType === 'blockstack'}
+                    {Lang.t('storage.blockstack', 'Blockstack')}
+                  {/if}
                 </Text>
                 <div slot="right">
-                  <Text size="sm" className="text-primary-bright">{Lang.t('general.change', 'Change')}</Text>
+                  <Text size="sm" className="text-primary-bright">
+                    {Lang.t('general.change', 'Change')}
+                  </Text>
                 </div>
               </ListItem>
 
@@ -374,20 +416,27 @@ Note: Your data will not automatically move over. You'll first need to export it
                 detail
                 title={Lang.t('general.browse-files', 'Browse Files...')}
                 on:click={() => {
-                  navigate('/files');
-                }}
-              >
+                  navigate('/files')
+                }}>
                 <span slot="left">📂</span>
               </ListItem>
 
             </List>
 
-            <List className="mb-3" outside title={Lang.t('settings.import-data', 'Import Data')}>
-              <ListItem clickable title={Lang.t('settings.nomie-api', 'Nomie API')} on:click={() => navigate('/api')}>
+            <List
+              className="mb-3"
+              outside
+              title={Lang.t('settings.import-data', 'Import Data')}>
+              <ListItem
+                clickable
+                title={Lang.t('settings.nomie-api', 'Nomie API')}
+                on:click={() => navigate('/api')}>
                 <span slot="left">🚚</span>
                 <span slot="right">
                   {#if $ApiStore.items.length}
-                    <div class="nbtn nbtn-xs nbtn-rounded nbtn-danger">{$ApiStore.items.length}</div>
+                    <div class="nbtn nbtn-xs nbtn-rounded nbtn-danger">
+                      {$ApiStore.items.length}
+                    </div>
                   {/if}
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </span>
@@ -396,16 +445,22 @@ Note: Your data will not automatically move over. You'll first need to export it
                 clickable
                 title={`${Lang.t('settings.import-from-backup', 'Import from Backup')}`}
                 on:click={() => {
-                  showImporter = true;
-                }}
-              >
+                  showImporter = true
+                }}>
                 <span slot="left">📦</span>
                 <div slot="right">
-                  <input class="d-none" type="file" bind:this={fileInput} on:change={methods.onImportFile} />
+                  <input
+                    class="d-none"
+                    type="file"
+                    bind:this={fileInput}
+                    on:change={methods.onImportFile} />
                   <NIcon name="chevronRight" className="fill-faded-2" />
                 </div>
               </ListItem>
-              <ListItem clickable title={`${Lang.t('settings.import-from-csv', 'Import from CSV ')}`} to="/settings/import/csv">
+              <ListItem
+                clickable
+                title={`${Lang.t('settings.import-from-csv', 'Import from CSV ')}`}
+                to="/settings/import/csv">
                 <span slot="left">📄</span>
                 <span slot="right" class="flex">
                   <div class="nbtn nbtn-xs nbtn-rounded nbtn-light">Beta</div>
@@ -414,38 +469,57 @@ Note: Your data will not automatically move over. You'll first need to export it
               </ListItem>
             </List>
 
-            <List className="mb-3" outside title={Lang.t('settings.export-data', 'Export Data')}>
+            <List
+              className="mb-3"
+              outside
+              title={Lang.t('settings.export-data', 'Export Data')}>
 
-              <ListItem detail title={Lang.t('settings.generate-backup', 'Generate Backup')} to="/settings/export/backup">
+              <ListItem
+                detail
+                title={Lang.t('settings.generate-backup', 'Generate Backup')}
+                to="/settings/export/backup">
                 <span slot="left">📦</span>
 
               </ListItem>
-              <ListItem detail title={Lang.t('settings.generate-csv', 'Generate CSV')} to="/settings/export/csv">
+              <ListItem
+                detail
+                title={Lang.t('settings.generate-csv', 'Generate CSV')}
+                to="/settings/export/csv">
                 <span slot="left">📃</span>
               </ListItem>
             </List>
 
-            <ListItem title={Lang.t('settings.hide-backup-reminder', 'Hide backup reminder')}>
+            <ListItem
+              title={Lang.t('settings.hide-backup-reminder', 'Hide backup reminder')}>
               <span slot="left">📕</span>
               <div slot="right">
-                <ToggleSwitch bind:value={$UserStore.meta.hideBackup} on:change={methods.settingChange} />
+                <ToggleSwitch
+                  bind:value={$UserStore.meta.hideBackup}
+                  on:change={methods.settingChange} />
               </div>
             </ListItem>
 
-            <List className="mb-3" outside title={Lang.t('settings.miscellaneous', 'Miscellaneous')}>
+            <List
+              className="mb-3"
+              outside
+              title={Lang.t('settings.miscellaneous', 'Miscellaneous')}>
               <ListItem
                 clickable
                 title={Lang.t('settings.update-last-used-date', "Update All Tracker's Last-Used")}
-                on:click={LastUsed.updateAll}
-              >
+                on:click={LastUsed.updateAll}>
                 <span slot="left">🕰</span>
               </ListItem>
             </List>
 
-            <List className="mb-3" outside title={Lang.t('settings.danger-zone', 'Danger Zone')}>
+            <List
+              className="mb-3"
+              outside
+              title={Lang.t('settings.danger-zone', 'Danger Zone')}>
               <ListItem detail on:click={methods.deleteEverything} clickable>
                 <div slot="left">⚠️</div>
-                <Text className="text-red">{Lang.t('settings.destroy-all-data', 'Destroy all Data')}</Text>
+                <Text className="text-red">
+                  {Lang.t('settings.destroy-all-data', 'Destroy all Data')}
+                </Text>
               </ListItem>
             </List>
 
@@ -464,24 +538,40 @@ Note: Your data will not automatically move over. You'll first need to export it
               ABOUT VIEW 
               *******************************************
             -->
-            <List className=" mb-3" title={Lang.t('settings.join-the-community', 'Join the Community')} outside>
-              <ListItem detail title="Learn More" href="https://nomie.app?s=dap">
+            <List
+              className=" mb-3"
+              title={Lang.t('settings.join-the-community', 'Join the Community')}
+              outside>
+              <ListItem
+                detail
+                title="Learn More"
+                href="https://nomie.app?s=dap">
                 <span slot="right" class="text-inverse-3">Nomie.app</span>
               </ListItem>
-              <ListItem title="Become a Patron" detail href="https://www.patreon.com/nomieapp">
+              <ListItem
+                title="Become a Patron"
+                detail
+                href="https://www.patreon.com/nomieapp">
                 <span slot="right" class="text-inverse-3">Patreon</span>
               </ListItem>
-              <ListItem title="Reddit r/nomie" detail href="https://reddit.com/r/nomie">
+              <ListItem
+                title="Reddit r/nomie"
+                detail
+                href="https://reddit.com/r/nomie">
                 <span slot="right" class="flex text-inverse-3">/r/nomie</span>
               </ListItem>
 
-              <ListItem title="Open Source" detail href="https://github.com/open-nomie/nomie">
+              <ListItem
+                title="Open Source"
+                detail
+                href="https://github.com/open-nomie/nomie">
                 <span slot="right" class="flex text-inverse-3">GitHub</span>
               </ListItem>
             </List>
 
             <List className="mb-3" outside title="App">
-              <ListItem title={Lang.t('general.tracker-count', 'Tracker Count')}>
+              <ListItem
+                title={Lang.t('general.tracker-count', 'Tracker Count')}>
                 <span slot="right">{TrackerStore.getAsArray().length}</span>
               </ListItem>
 
@@ -517,7 +607,11 @@ Note: Your data will not automatically move over. You'll first need to export it
             </List>
 
             <List title="Version" outside className="mb-3">
-              <ListItem title="Version APP_VERSION " description="Built APP_BUILD_DATE " detail on:click={AppStore.reveal}>
+              <ListItem
+                title="Version APP_VERSION "
+                description="Built APP_BUILD_DATE "
+                detail
+                on:click={AppStore.reveal}>
                 <span slot="right" class="flex">
                   <Button size="xs" className="ml-2">New</Button>
                 </span>
@@ -526,11 +620,12 @@ Note: Your data will not automatically move over. You'll first need to export it
                 detail
                 title="Onboarded"
                 on:click={() => {
-                  navigate('/setup');
-                }}
-              >
+                  navigate('/setup')
+                }}>
                 <span slot="right" class="text-primary">
-                  <Text size="sm">{Lang.t('settings.redo-setup', 'Redo Setup')}</Text>
+                  <Text size="sm">
+                    {Lang.t('settings.redo-setup', 'Redo Setup')}
+                  </Text>
                 </span>
               </ListItem>
             </List>
@@ -538,11 +633,16 @@ Note: Your data will not automatically move over. You'll first need to export it
           <!-- END Views -->
 
           <List className="mt-3">
-            <ListItem title={Lang.t('general.questions', 'Questions')} class="mb-2" detail>
+            <ListItem
+              title={Lang.t('general.questions', 'Questions')}
+              class="mb-2"
+              detail>
               <span slot="left">🆘</span>
               <div slot="right">
                 <Text size="sm">
-                  <a class="nbtn nbtn-xs nbtn-rounded nbtn-dark" href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>
+                  <a
+                    class="nbtn nbtn-xs nbtn-rounded nbtn-dark"
+                    href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>
                     Email
                   </a>
                 </Text>

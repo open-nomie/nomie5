@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Container from './../components/container/container.svelte'
+
   /**
    * History Tab
    * A big collection of all things history
@@ -7,55 +9,55 @@
    */
 
   // svelte
-  import { navigate } from "svelte-routing";
-  import { onMount, onDestroy } from "svelte";
+  import { navigate } from 'svelte-routing'
+  import { onMount, onDestroy } from 'svelte'
 
   // components
-  import Icon from "../components/icon/icon.svelte";
+  import Icon from '../components/icon/icon.svelte'
 
-  import Spinner from "../components/spinner/spinner.svelte";
-  import LogItem from "../components/list-item-log/list-item-log.svelte";
+  import Spinner from '../components/spinner/spinner.svelte'
+  import LogItem from '../components/list-item-log/list-item-log.svelte'
 
-  import OfflineQueue from "../components/offline-queue/offline-queue.svelte";
+  import OfflineQueue from '../components/offline-queue/offline-queue.svelte'
 
-  import config from "../config/appConfig";
+  import config from '../config/appConfig'
 
   // Containers
-  import NMap from "../containers/map/map.svelte";
-  import NLayout from "../containers/layout/layout.svelte";
+  import NMap from '../containers/map/map.svelte'
+  import NLayout from '../containers/layout/layout.svelte'
   // Utils
-  import dayjs from "dayjs";
-  import tick from "../utils/tick/tick";
+  import dayjs from 'dayjs'
+  import tick from '../utils/tick/tick'
 
   // Stores
-  import { UserStore } from "../store/user-store";
-  import { Interact } from "../store/interact";
-  import { LedgerStore } from "../store/ledger";
-  import { Lang } from "../store/lang";
+  import { UserStore } from '../store/user-store'
+  import { Interact } from '../store/interact'
+  import { LedgerStore } from '../store/ledger'
+  import { Lang } from '../store/lang'
 
-  import { Device } from "../store/device-store";
-  import Storage from "../modules/storage/storage";
-  import Text from "../components/text/text.svelte";
-  import Button from "../components/button/button.svelte";
-  import NextPrevCal from "../components/next-prev-cal/next-prev-cal.svelte";
-  import { SearchStore } from "../store/search-store";
-  import NLog from "../modules/nomie-log/nomie-log";
-  import Location from "../modules/locate/Location";
-  import Empty from "../containers/empty/empty.svelte";
-  import { ActiveLogStore } from "../store/active-log";
-  import ButtonGroup from "../components/button-group/button-group.svelte";
-  import Toolbar from "../components/toolbar/toolbar.svelte";
-  import type { OTDViewOption } from "../containers/on-this-day/on-this-day-helpers";
-  import { OTDViews } from "../containers/on-this-day/on-this-day-helpers";
-  import OnThisDayViews from "../containers/on-this-day/on-this-day-views.svelte";
-  import Swipeable from "../components/swipeable/swipeable.svelte";
-import { ChevronRight, X } from "svelte-hero-icons";
+  import { Device } from '../store/device-store'
+  import Storage from '../modules/storage/storage'
+  import Text from '../components/text/text.svelte'
+  import Button from '../components/button/button.svelte'
+  import NextPrevCal from '../components/next-prev-cal/next-prev-cal.svelte'
+  import { SearchStore } from '../store/search-store'
+  import NLog from '../modules/nomie-log/nomie-log'
+  import Location from '../modules/locate/Location'
+  import Empty from '../containers/empty/empty.svelte'
+  import { ActiveLogStore } from '../store/active-log'
+  import ButtonGroup from '../components/button-group/button-group.svelte'
+  import Toolbar from '../components/toolbar/toolbar.svelte'
+  import type { OTDViewOption } from '../containers/on-this-day/on-this-day-helpers'
+  import { OTDViews } from '../containers/on-this-day/on-this-day-helpers'
+  import OnThisDayViews from '../containers/on-this-day/on-this-day-views.svelte'
+  import Swipeable from '../components/swipeable/swipeable.svelte'
+  import { ChevronRight, X } from 'svelte-hero-icons'
 
-  export const location = undefined;
-  export let style = undefined;
+  export const location = undefined
+  export let style = undefined
 
-  let appTitle = null;
-  let showSearch = false;
+  let appTitle = null
+  let showSearch = false
 
   const state = {
     date: dayjs(new Date()),
@@ -64,62 +66,62 @@ import { ChevronRight, X } from "svelte-hero-icons";
     ledger: null,
     locations: [],
     showAllLocations: false,
-  }; // Assign State to compiled history page
+  } // Assign State to compiled history page
 
-  let refreshing = false;
-  let logs = []; // holder of the logs
-  let loading = true;
-  let locations = [];
+  let refreshing = false
+  let logs = [] // holder of the logs
+  let loading = true
+  let locations = []
 
   /// Watchers for when we're in edit mode
   // and when we have selected more than one.
 
-  let isToday = true;
-  let view: OTDViewOption = "all";
+  let isToday = true
+  let view: OTDViewOption = 'all'
 
   // If the date changes - check to see if it's still today
-  let activeDate;
+  let activeDate
   $: if (state.date && state.date !== activeDate) {
-    activeDate = state.date;
-    isToday = new Date().toDateString() == state.date.toDate().toDateString();
+    activeDate = state.date
+    isToday = new Date().toDateString() == state.date.toDate().toDateString()
   }
 
-  $: appTitle = `History ${state.date.format("YYYY-MM-DD")}`;
+  $: appTitle = `History ${state.date.format('YYYY-MM-DD')}`
 
   function composeHere() {
-    let logConfig = { end: undefined };
+    let logConfig = { end: undefined }
     if (!isToday) {
-      logConfig.end = state.date.hour(dayjs().hour()).toDate().getTime();
+      logConfig.end = state.date.hour(dayjs().hour()).toDate().getTime()
     }
-    let log = new NLog(logConfig);
-    ActiveLogStore.journal(log);
+    let log = new NLog(logConfig)
+    ActiveLogStore.journal(log)
   }
 
   // Methods
   const methods = {
     async textClick(event) {
-      let trackableElement = event.detail;
-      Interact.elementOptions(trackableElement);
+      let trackableElement = event.detail
+      Interact.elementOptions(trackableElement)
     },
     async getLogs(fresh?: boolean) {
-      fresh = fresh === false ? false : true;
-      loading = true;
+      fresh = fresh === false ? false : true
+      loading = true
       // Query the Ledger for Posts on this day.
-      let canLookup = true;
-      if (Storage.getEngine().name == "Blockstack" && $Device.offline == true) {
-        canLookup = false;
+      let canLookup = true
+      if (Storage.getEngine().name == 'Blockstack' && $Device.offline == true) {
+        canLookup = false
       }
       if (canLookup) {
         logs = await LedgerStore.query({
-          start: state.date.startOf("day"),
-          end: state.date.endOf("day"),
+          start: state.date.startOf('day'),
+          end: state.date.endOf('day'),
           fresh: fresh,
-        });
+        })
       }
-      logs = logs || [];
+      logs = logs || []
       locations = logs
         .filter((log: NLog) => {
-          return log.lat;
+          return log.lat
         })
         .map((log: NLog) => {
           return new Location({
@@ -127,87 +129,87 @@ import { ChevronRight, X } from "svelte-hero-icons";
             lng: log.lng,
             name: log.location,
             log: log,
-          });
-        });
-      loading = false;
-      return logs || [];
+          })
+        })
+      loading = false
+      return logs || []
     },
 
     previous() {
-      methods.getDate(state.date.subtract(1, "day"));
+      methods.getDate(state.date.subtract(1, 'day'))
     },
     getDate(date) {
-      state.date = date;
-      methods.getLogs();
-      methods.scrollTop();
+      state.date = date
+      methods.getLogs()
+      methods.scrollTop()
     },
     next() {
-      methods.getDate(state.date.add(1, "day"));
+      methods.getDate(state.date.add(1, 'day'))
     },
     scrollTop() {
-      document.getElementById("nomie-main").scrollTo(0, 0);
+      document.getElementById('nomie-main').scrollTo(0, 0)
     },
     goto(date) {
-      state.date = date;
-      methods.getLogs();
-      methods.scrollTop();
+      state.date = date
+      methods.getLogs()
+      methods.scrollTop()
     },
     search() {
-      SearchStore.view("history");
+      SearchStore.view('history')
     },
     trackerTapped(tracker, log) {
-      Interact.openStats(`#${tracker.tag}`);
+      Interact.openStats(`#${tracker.tag}`)
     },
     personTapped(person, log) {
-      Interact.openStats(`@${person.id}`);
+      Interact.openStats(`@${person.id}`)
     },
     contextTapped(context, log) {
-      Interact.openStats(`+${context.id}`);
+      Interact.openStats(`+${context.id}`)
     },
     showLogOptions(log) {
-      Interact.logOptions(log);
+      Interact.logOptions(log)
     },
     selectDate() {
       let ranges: Array<any> = [
         {
           time: 30,
-          title: "1 Month Back",
-          unit: "day",
+          title: '1 Month Back',
+          unit: 'day',
         },
         {
           time: 90,
-          title: "90 Days Back",
-          unit: "day",
+          title: '90 Days Back',
+          unit: 'day',
         },
         {
           time: 180,
-          title: "6 Months Back",
-          unit: "day",
+          title: '6 Months Back',
+          unit: 'day',
         },
         {
           time: 1,
-          title: "1 Year Back",
-          unit: "year",
+          title: '1 Year Back',
+          unit: 'year',
         },
         {
           time: 2,
-          title: "2 Years Back",
-          unit: "year",
+          title: '2 Years Back',
+          unit: 'year',
         },
         {
           time: -1,
           divider: true,
-          title: `${Lang.t("general.select-date", "Select Date")}...`,
-          unit: "day",
+          title: `${Lang.t('general.select-date', 'Select Date')}...`,
+          unit: 'day',
         },
-      ];
+      ]
 
       if (!isToday) {
         ranges.unshift({
           days: 0,
           divider: true,
-          title: `${Lang.t("history.go-to-today", "Go to Today")}`,
-        });
+          title: `${Lang.t('history.go-to-today', 'Go to Today')}`,
+        })
       }
 
       Interact.popmenu({
@@ -217,68 +219,67 @@ import { ChevronRight, X } from "svelte-hero-icons";
             divider: range.divider ? true : false,
             click: async () => {
               if (range.time == -1) {
-                let date = await Interact.selectDate();
+                let date = await Interact.selectDate()
                 if (date) {
-                  methods.goto(dayjs(date));
+                  methods.goto(dayjs(date))
                 }
               } else if (range.time === undefined || range.time === 0) {
-                methods.goto(dayjs(new Date()));
+                methods.goto(dayjs(new Date()))
               } else {
                 methods.goto(
-                  state.date.subtract(range.time || 0, range.unit || "day")
-                );
+                  state.date.subtract(range.time || 0, range.unit || 'day'),
+                )
               }
             },
-          };
+          }
         }),
-      });
+      })
     },
-  };
+  }
 
   async function refresh() {
-    refreshing = true;
-    await tick(500);
-    await methods.getLogs(true);
-    await LedgerStore.getMemories();
-    refreshing = false;
+    refreshing = true
+    await tick(500)
+    await methods.getLogs(true)
+    await LedgerStore.getMemories()
+    refreshing = false
   }
 
   // If a new Log is added, or changed update the list.
-  let onLogUpdate;
-  let onLogSaved;
-  let onLogsDeleted;
+  let onLogUpdate
+  let onLogSaved
+  let onLogsDeleted
 
   // WHen mounted.
   onMount(() => {
-    window.scrollTo(0, 0);
-    document.body.classList.remove("scrolled");
-    refresh();
+    window.scrollTo(0, 0)
+    document.body.classList.remove('scrolled')
+    refresh()
 
-    onLogUpdate = LedgerStore.hook("onLogUpdate", async (log) => {
-      await tick(600);
-      refresh();
-    });
+    onLogUpdate = LedgerStore.hook('onLogUpdate', async (log) => {
+      await tick(600)
+      refresh()
+    })
 
-    onLogSaved = LedgerStore.hook("onLogSaved", async (log) => {
-      await tick(600);
-      refresh();
-    });
+    onLogSaved = LedgerStore.hook('onLogSaved', async (log) => {
+      await tick(600)
+      refresh()
+    })
 
-    onLogsDeleted = LedgerStore.hook("onLogsDeleted", async () => {
-      await tick(600);
-      refresh();
-    });
-  });
+    onLogsDeleted = LedgerStore.hook('onLogsDeleted', async () => {
+      await tick(600)
+      refresh()
+    })
+  })
   onDestroy(() => {
     // Unsubscribe
-    onLogSaved();
-    onLogUpdate();
-    onLogsDeleted();
-  });
+    onLogSaved()
+    onLogUpdate()
+    onLogsDeleted()
+  })
 </script>
 
 <style global lang="postcss">
-
   .history-title {
     transition: all 0.2s ease-in-out;
     padding-left: 16px;
@@ -308,21 +309,25 @@ import { ChevronRight, X } from "svelte-hero-icons";
 
 <NLayout pageTitle={appTitle} {style}>
 
-  <header slot="header" class="flex-column items-center">
+  <header slot="header" class="items-center flex-column">
     <Toolbar className=" px-2 items-center">
-      <Button icon  on:click={methods.search}>
+      <Button icon on:click={methods.search}>
         <Icon className="text-primary-500" name="search" size={24} />
       </Button>
       <!-- <Button icon  on:click={composeHere}>
         <Icon className="text-primary-500" name="compose" size={24} />
       </Button> -->
-      <Text className="line-clamp-1 space-x-4 flex items-center w-full font-bold">
-        {#if refreshing}
-          <Spinner size={16}  />
-        {/if}
-        <span aria-label="Current Active Date" class="ml-2">{state.date.format('ddd')}
-        {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
-      </span>
+      {#if refreshing}
+        <Spinner size={16} />
+      {/if}
+      <Text
+        className="line-clamp-1 space-x-4 flex items-center w-full font-bold">
+        <span
+          aria-label="Current Active Date"
+          class="ml-2 text-gray-900 dark:text-gray-50">
+          {state.date.format('ddd')}
+          {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
+        </span>
       </Text>
       <NextPrevCal
         on:previous={methods.previous}
@@ -334,13 +339,13 @@ import { ChevronRight, X } from "svelte-hero-icons";
       <Toolbar>
         <ButtonGroup>
           {#each OTDViews.filter((v) => {
-            return v.view !== 'locations';
+            return v.view !== 'locations'
           }) as loopView}
             <Button
               className={view === loopView.view ? 'active' : ''}
               icon
               on:click={() => {
-                view = loopView.view;
+                view = loopView.view
               }}>
               <Icon name={loopView.icon} />
             </Button>
@@ -353,7 +358,7 @@ import { ChevronRight, X } from "svelte-hero-icons";
 
   <main slot="content" class="page page-history flex-column">
 
-    <div class=" p-0 px-1">
+    <div class="p-0 px-1 ">
       <!-- {#if logs && logs.length}
         <Text size="xl" bold className="history-title pl-3 mt-2">
           {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
@@ -364,7 +369,7 @@ import { ChevronRight, X } from "svelte-hero-icons";
 
       <Swipeable on:left={methods.next} on:right={methods.previous}>
         {#if loading}
-          <div class="empty-notice">
+          <div class="flex items-center justify-center w-full h-80">
             <Spinner />
           </div>
         {:else if !loading && !logs.length}
@@ -375,24 +380,26 @@ import { ChevronRight, X } from "svelte-hero-icons";
             buttonLabel={Lang.t('history.add-a-note', 'Add a Note...')}
             buttonClick={composeHere} />
         {:else}
-          <OnThisDayViews {view} {logs} />
+          <Container>
+            <OnThisDayViews {view} {logs} />
+          </Container>
         {/if}
       </Swipeable>
 
     </div>
 
     {#if $LedgerStore.memories.length > 0 && !showSearch && isToday && ['all', 'notes'].indexOf(view) > -1}
-      <div class="bg-primary-bright mt-3">
-        <div class=" p-0 pb-4">
+      <div class="mt-3 bg-primary-bright">
+        <div class="p-0 pb-4 ">
           <!-- Show History if exists -->
 
           <div class="memories">
             {#each $LedgerStore.memories as log}
-              <div class="memories-log-header text-center">
+              <div class="text-center memories-log-header">
                 <Button
                   className="mx-auto"
                   on:click={() => {
-                    methods.goto(dayjs(log.end));
+                    methods.goto(dayjs(log.end))
                   }}>
                   {dayjs(log.end).fromNow()}
                   <Icon icon={ChevronRight} className="fill-white" size={18} />
@@ -403,7 +410,7 @@ import { ChevronRight, X } from "svelte-hero-icons";
                 className="aged"
                 {log}
                 on:textClick={(event) => {
-                  methods.textClick(event);
+                  methods.textClick(event)
                 }} />
             {/each}
           </div>
@@ -421,7 +428,7 @@ import { ChevronRight, X } from "svelte-hero-icons";
         <div
           class="mini-map closed"
           on:click={() => {
-            state.showAllLocations = !state.showAllLocations;
+            state.showAllLocations = !state.showAllLocations
           }}>
           <NMap {locations} />
         </div>
@@ -433,7 +440,7 @@ import { ChevronRight, X } from "svelte-hero-icons";
             color="dark"
             shape="circle"
             on:click={() => {
-              state.showAllLocations = !state.showAllLocations;
+              state.showAllLocations = !state.showAllLocations
             }}>
             <Icon icon={X} size={32} />
           </Button>

@@ -225,7 +225,7 @@
     <Button size="xs">XSmall Button</Button>
     <hr class="my-2 divider center" />
     <Button block color="light">
-      <Spinner size="14" />
+      <Spinner size={14} />
       Button Block
     </Button>
     <hr class="my-2 divider center" />
