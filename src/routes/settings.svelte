@@ -652,9 +652,10 @@ Note: Your data will not automatically move over. You'll first need to export it
 
           <Spacer gap={1} />
 
-          <Text size="sm" center className="mt-4 mb-3" on:click={specialTap}>
-            Happy Data, LLC &copy; Copyright 2014 - {dayjs().format('YYYY')}
-          </Text>
+          <button class="w-full px-4 mt-4 mb-3 text-sm text-center " on:click={specialTap}>
+            <div class="text-sm text-black dark:text-white">Version v{import.meta.env.PACKAGE_VERSION}</div>
+            <div class="text-xs text-gray-800 dark:text-gray-500"><strong>Happy Data</strong>, LLC &copy; Copyright 2014 - {dayjs().format('YYYY')}</div>
+          </button>
 
         </div>
         <!-- end container -->

@@ -147,6 +147,7 @@
     "typescript": "^3.9.7",
     "ua-parser": "^0.3.5",
     "vite": "^2.6.14",
+    "vite-plugin-package-version": "^1.0.2",
     "vite-plugin-pwa": "^0.11.6",
     "vite-svelte-jsx": "^1.1.0",
     "webpack": "^5.11.1",

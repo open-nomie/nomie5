@@ -1,6 +1,8 @@
 <script>
+	import ToolbarGrid from './../../components/toolbar/toolbar-grid.svelte';
+	import Panel from './../../components/panel/panel.svelte';
   import { onMount } from "svelte";
-  import NModal from "../../components/modal/modal.svelte";
+  import NModal from "../../components/modal/modal2.svelte";
   import NItem from "../../components/list-item/list-item.svelte";
   import NIcon from "../../components/icon/icon.svelte";
   import NText from "../../components/text/text.svelte";
@@ -20,34 +22,33 @@
   });
 </script>
 
-<NModal type="bottom" show={$AppStore.whatsNew !== null}>
-  <header slot="header" class="n-toolbar-grid">
-    <div class="left">
-      <Button className="tap-icon" icon on:click={closeThisUpdate}>
-        <NIcon name="close" />
-      </Button>
-    </div>
-    <div class="main p-2">
-      <NText size="lg" center bold>Welcome to Nomie APP_VERSION 🥳</NText>
-    </div>
-  </header>
+<NModal position="bottom" id="whats-new" visible={$AppStore.whatsNew !== null}>
+  <Panel>
+    <header slot="header">
+      <ToolbarGrid>
+        <div slot="left">
+          <Button className="tap-icon" icon on:click={closeThisUpdate}>
+            <NIcon name="close" />
+          </Button>
+        </div>
+        <h2 class="ntitle">Welcome to Nomie {import.meta.env.PACKAGE_VERSION} 🥳</h2>
+      </ToolbarGrid>
+    </header>
   {#if $AppStore.whatsNew && !showUpdates}
-    <NItem className="p-3">
-      Nomie APP_VERSION adds {$AppStore.whatsNew.features.length} features, and {$AppStore.whatsNew.fixes.length} bug fixes.
-      <NText
-        tag="span"
-        color="red"
-        underline
+    <div class="p-6 text-gray-800 dark:text-gray-200">
+      Nomie {import.meta.env.PACKAGE_VERSION} adds {$AppStore.whatsNew.features.length} features, and {$AppStore.whatsNew.fixes.length} bug fixes.
+      <button
+        class="px-4 py-1 text-xs text-black text-white rounded-full bg-primary-500 dark:text-white bg-opacity-40"
         on:click={() => {
           showUpdates = true;
         }}>
         View Updates
-      </NText>
-    </NItem>
+      </button>
+    </div>
   {/if}
   {#if $AppStore.whatsNew && showUpdates}
     {#if $AppStore.whatsNew.features.length}
-      <NItem className="divider text-xs py-1 text-primary compact font-weight-bold">FEATURES</NItem>
+      <div class="px-4 py-2 text-sm text-gray-800 dark:text-gray-200">FEATURES</div>
       <div class="n-list compact">
         {#each $AppStore.whatsNew.features as feature}
           <NItem className="text-sm py-1" compact>
@@ -58,10 +59,9 @@
       </div>
     {/if}
     {#if $AppStore.whatsNew.fixes.length}
-      <NItem className="divider text-xs py-1 text-primary compact font-weight-bold">
-        FIXES
-        <div slot="right">
-          <Button
+      <div class="flex items-center justify-between px-4 py-2 text-xs text-gray-800 dark:text-gray-100 text-primary font-weight-bold">
+        <span>Bug Fixes</span>
+        <Button
             size="xs"
             color="light"
             on:click={() => {
@@ -69,8 +69,7 @@
             }}>
             {showFixes ? 'HIDE' : 'VIEW'}
           </Button>
-        </div>
-      </NItem>
+      </div>
       {#if showFixes}
         <div class="n-list compact">
           {#each $AppStore.whatsNew.fixes as fix}
@@ -80,9 +79,8 @@
       {/if}
     {/if}
   {/if}
-  <footer slot="footer">
-    <div class="flex">
-      <Button block color="light" on:click={closeThisUpdate}>Close</Button>
-    </div>
+  <footer slot="footer" class="flex-shrink-0 p-4">
+    <Button block color="primary" on:click={closeThisUpdate}>Done</Button>
   </footer>
+  </Panel>
 </NModal>

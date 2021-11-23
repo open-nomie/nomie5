@@ -92,7 +92,7 @@
     methods.setDocParams({})
   }, todayCheckPeriod)
 
-  const appVersion = 'APP_VERSION'
+  const appVersion = import.meta.env.PACKAGE_VERSION
 
   // This should be reworked
   $: if (window && $TrackerStore && !window['$TrackerStore']) {
@@ -161,7 +161,12 @@
 
   // Used to make sure that boards and trackers are loaded
   UserStore.onReady(async () => {
-    console.log('🌳🌳🌳🌳🌳 Welcome to NOMIE APP_VERSION 🌳🌳🌳🌳🌳', '👋')
+    console.log(
+      `🌳🌳🌳🌳🌳 Welcome to NOMIE ${
+        import.meta.env.PACKAGE_VERSION
+      } 🌳🌳🌳🌳🌳`,
+      '👋',
+    )
     // Set the user if they're logged in
     ready = true
     PeopleStore.init() // Initialize the People Store

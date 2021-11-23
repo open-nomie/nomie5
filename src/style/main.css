@@ -101,6 +101,13 @@ body {
   --footer-background: rgba(254, 254, 254, 1);
 }
 
+.ntitle {
+  @apply text-base;
+  @apply font-bold;
+  @apply text-black dark:text-white;
+  @apply leading-tight;
+}
+
 .screen-block {
   @apply fixed;
   @apply top-0;
