@@ -63,7 +63,7 @@
   aria-modal
   aria-label={ariaLabel}
   aria-hidden={!domVisible}
-  style={level ? `z-index:${level * 1002}` : ''}
+  style={level ? `z-index:${level * 600}` : ''}
   class="n-modal-frame {className} type-{type} level-{level || 'unknown'}
   {domVisible ? 'visible' : 'hidden'}"
 >
@@ -126,12 +126,13 @@
 	 width: 100%;
 }
  .n-modal-frame {
+	 @apply bg-gray-700 bg-opacity-50;
+	 @apply backdrop-filter backdrop-blur-md backdrop-saturate-150;
 	 position: fixed;
 	 top: 0;
 	 left: 0;
 	 right: 0;
 	 bottom: 0;
-	 background-color: var(--color-full-screen);
 	 z-index: 2000;
 	 display: flex;
 	 flex-direction: column;
@@ -171,13 +172,16 @@
 	 border: solid 1px var(--color-faded-1);
 }
  .n-modal-frame.type-fullscreen .n-modal {
-	 height: 100vh;
-	 width: 100vw;
-	 max-height: 100vh;
-	 max-width: 100vw;
-	 border-radius: 0px;
+	 @apply h-screen;
+	 @apply w-screen;
+	 @apply rounded-none;
+	 @apply md:max-w-md;
+	 @apply md:max-h-full;
+	 @apply md:rounded-lg;
+	 
+	 max-height:90vh;
 	 margin: 0;
-}
+	}
  .n-modal-frame.type-cover .n-modal {
 	 padding-top: env(safe-area-inset-top) !important;
 	 position: fixed;
@@ -200,9 +204,9 @@
 	 width: 100%;
 }
  .n-modal {
-	 border: var(--modal-border);
+	 @apply bg-white dark:bg-black;
+	 @apply shadow-2xl;
 	 min-width: 320px;
-	 background-color: var(--color-solid);
 	 min-height: 200px;
 	 max-height: 90vh;
 	 max-width: 400px;
@@ -244,6 +248,7 @@
 	 z-index: 2;
 }
  .n-modal-header {
+	 @apply text-black dark:text-white;
 	 min-height: 40px;
 	 border-bottom: solid 1px rgba(0, 0, 0, 0.1);
 	 display: flex;
@@ -251,7 +256,6 @@
 	 justify-content: space-between;
 	 flex-grow: 0;
 	 flex-shrink: 0;
-	 color: var(--color-inverse);
 	 box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.09);
 	 z-index: 2;
 }
