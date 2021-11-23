@@ -11,10 +11,11 @@
 
 <style global>
   .n-card {
-    background-color: var(--color-solid);
-    box-shadow: var(--box-shadow-tight);
-    border-radius: 6px;
-    overflow: hidden;
+    @apply bg-white dark:bg-gray-900;
+    @apply shadow-md;
+    @apply rounded-lg;
+    @apply overflow-auto;
+    @apply text-gray-900 dark:text-white;
   }
   .n-card.compact .title {
     font-size: 0.7em;

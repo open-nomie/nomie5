@@ -41,6 +41,7 @@
 	 transition: all 0.2s ease-in-out;
 	 padding-left: 16px;
 	 padding-right: 16px;
+   
 }
  .n-toast.hidden {
 	 transform: translateY(200px) scale(0.8);
@@ -57,15 +58,19 @@
   @apply backdrop-filter;
   @apply backdrop-blur-sm;
   @apply backdrop-saturate-150;
-  @apply rounded-md;
+  @apply rounded-lg;
+  @apply ring-1;
+  @apply ring-primary-500;
+  @apply ring-opacity-20;
+  @apply shadow-lg;
+  
 
   min-height: 36px;
   max-width: 600px;
   min-width: 300px;
   padding: 4px 0;
   flex-grow: 0;
-  border: solid 1px rgba(0, 0, 0, 0.1);
-  box-shadow: 0px 26px 18px rgba(0, 0, 0, 0.2);
+  
   flex-shrink: 1;
   display: flex;
   align-items: center;

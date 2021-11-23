@@ -1,8 +1,8 @@
 <script lang="ts">
-  export let className = "";
-  export let style = "";
-  export let insetLeft: boolean = false;
-  export let insetRight: boolean = false;
+  export let className = ''
+  export let style = ''
+  export let insetLeft: boolean = false
+  export let insetRight: boolean = false
 </script>
 
 <style>
@@ -14,6 +14,10 @@
   }
 </style>
 
-<div class="flex {className} {insetRight ? 'inset-right' : ''} {insetLeft ? 'inset-left' : ''}" {style}>
+<div
+  class="flex w-full {className}
+  {insetRight ? 'inset-right' : ''}
+  {insetLeft ? 'inset-left' : ''}"
+  {style}>
   <slot />
 </div>
