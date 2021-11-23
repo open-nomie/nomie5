@@ -4,8 +4,24 @@ module.exports = {
     "./**/*.svelte",  // Look for .svelte files
     "./**/*.html" // Look for .html files
   ],
-  darkMode: 'media', // or 'media' or 'class'
+  darkMode: 'class', // or 'media' or 'class'
   theme: {
+    screens: {
+      'sm': '0px',
+      // => @media (min-width: 640px) { ... }
+
+      'md': '350px',
+      // => @media (min-width: 768px) { ... }
+
+      'lg': '800px',
+      // => @media (min-width: 1024px) { ... }
+
+      'xl': '1280px',
+      // => @media (min-width: 1280px) { ... }
+
+      '2xl': '1536px',
+      // => @media (min-width: 1536px) { ... }
+    },
     extend: {
       colors: {
         primary: {
@@ -23,11 +39,10 @@ module.exports = {
       }
     }
   },
-  // variants: {
-  //   extend: {},
-  // },
-  plugins: [
-    require('@tailwindcss/line-clamp'),
-    require('tailwindcss-dark-mode')()
-  ],
+  variants: {
+    backgroundColor: ['hover', 'responsive', 'focus', 'dark', 'dark-hover'],
+    textColor: ['hover', 'responsive', 'focus', 'dark', 'dark-hover'],
+  },
+  plugins: [require('tailwindcss-dark-mode')(), require('@tailwindcss/line-clamp')]
+
 }

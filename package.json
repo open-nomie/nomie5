@@ -16,7 +16,7 @@
     "url": "https://nomie.app"
   },
   "scripts": {
-    "vdev": "vite",
+    "dev": "vite",
     "vbuild": "vite build",
     "vserve": "vite preview",
     "generate-whatsnew": "node build-tools/generate-whats-new.js && git add . && git commit -m 'build: whats new'",
@@ -26,7 +26,7 @@
     "build": "npm run pre:run && rollup -c",
     "autobuild": "rollup -c -w",
     "scss": "node-sass ./src/scss/main.scss --output=./public --watch=./src/scss/**/*.scss --include-path",
-    "dev": "npm run pre:run && concurrently \"run-p start:dev autobuild\" \"npm run scss\"",
+    "dev-old": "npm run pre:run && concurrently \"run-p start:dev autobuild\" \"npm run scss\"",
     "dev:ip": "node build-tools/move-resources.js && concurrently \"run-p start:ip autobuild\" \"npm run scss\"",
     "start": "sirv public --single",
     "start:og": "sirv public --cors --single --dev ",
@@ -135,7 +135,7 @@
     "svelte-loader": "^2.13.6",
     "svelte-preprocess": "^4.0.8",
     "svelte-preprocess-css-global": "0.0.1",
-    "svelte-routing": "^1.4.2",
+    "svelte-routing": "^1.6.0",
     "svelte-sortable-list": "^1.1.0",
     "svelte-spa-router": "^2.1.0",
     "svelte-spinner": "^2.0.1",

@@ -10,6 +10,7 @@
 - [x] update svelte to latest
 - [x] update pouchdb to latest
 - [x] remove blockstack stuff
+- [] update routing for tree shaking
 - [] bring leaflet stuff in with npm and not build-tools
 
 ## Nomie 5.7

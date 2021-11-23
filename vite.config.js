@@ -5,6 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import manifest from './manifest';
 
 export default defineConfig({
+  optimizeDeps: { exclude: ["svelte-routing"] },
   plugins: [
     svelte({
       preprocess: sveltePreprocess({
