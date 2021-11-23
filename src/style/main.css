@@ -116,6 +116,11 @@ body {
   pointer-events: none;
 }
 
+.tap-icon {
+  @apply text-primary-500;
+}
+
+/* // Dividers  */
 hr.divider {
   margin: 0;
   padding: 0;

@@ -57,13 +57,13 @@
     <Avatar {emoji} size={80} className="mb-4" />
   {/if}
   {#if title}
-    <Text size="lg" bold center className="my-1">{title}</Text>
+    <div class="text-lg my-1 text-gray-800 dark:text-gray-50 font-extrabold">{title}</div>
   {/if}
   {#if description}
-    <Text size="sm" faded center className="">{description}</Text>
+    <div class="text-sm text-gray-600 dark:text-gray-400 text-center">{description}</div>
   {/if}
   <slot />
   {#if buttonLabel}
-    <Button size="sm" color="transparent" className=" mt-4 text-primary-bright" on:click={buttonClick}>{buttonLabel}</Button>
+    <Button size="sm" color="transparent" className=" mt-4 text-primary-500" on:click={buttonClick}>{buttonLabel}</Button>
   {/if}
 </div>

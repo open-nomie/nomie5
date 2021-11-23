@@ -606,9 +606,9 @@ import { DotsCircleHorizontal } from "svelte-hero-icons";
           <Swipeable on:left={BoardStore.next} on:right={BoardStore.previous}>
             {#if (foundTrackers || boardTrackers || []).length === 0}
               <Empty
-                title={Lang.t('board.empty-title', 'No trackers found')}
+                title={Lang.t('board.empty-title', 'This tab is empty')}
                 emoji="🤔"
-                description={Lang.t('board.empty-description', 'Pick from your existing trackers, or browse the library to discover new things to track.')}
+                description={Lang.t('board.empty-description', 'Add from your existing trackers, or browse the library to discover new things to track.')}
                 buttonLabel={`${Lang.t('general.add-a-tracker', 'Add a Tracker')}...`}
                 buttonClick={methods.addButtonTap}
               />

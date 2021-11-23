@@ -1,63 +1,62 @@
 <script lang="ts">
-	import { wait } from './utils/tick/tick';
+  import { wait } from './utils/tick/tick'
   // Svelte
   // import { Router, Route, navigate } from "svelte-routing";
-  import Tailwindcss from './style/Tailwind.svelte';
-  import { onMount } from "svelte";
-  import dayjs from "dayjs";
+  import Tailwindcss from './style/Tailwind.svelte'
+  import { onMount } from 'svelte'
+  import dayjs from 'dayjs'
 
   // Vendors
-  import Spinner from "./components/spinner/spinner.svelte";
+  import Spinner from './components/spinner/spinner.svelte'
   import { gestures } from '@composi/gestures'
 
   // Containers
-  import Interactions from "./containers/interactions/interactions.svelte";
-  import LibraryModal from "./containers/library/library.svelte";
-  import PersonModal from "./containers/people/person-modal.svelte";
+  import Interactions from './containers/interactions/interactions.svelte'
+  import LibraryModal from './containers/library/library.svelte'
+  import PersonModal from './containers/people/person-modal.svelte'
   // import Modal from "./components/modal/modal.svelte";
-  import StatsModal from "./containers/stats/stats-modal.svelte";
-  import StreakModal from "./containers/steak/streak-modal.svelte";
-  import WhatsNewModal from "./containers/whats-new/whats-new-modal.svelte";
-  import OnThisDayModal from "./containers/on-this-day/on-this-day.svelte";
+  import StatsModal from './containers/stats/stats-modal.svelte'
+  import StreakModal from './containers/steak/streak-modal.svelte'
+  import WhatsNewModal from './containers/whats-new/whats-new-modal.svelte'
+  import OnThisDayModal from './containers/on-this-day/on-this-day.svelte'
 
-  import SetupRoute from "./routes/setup.svelte";
+  import SetupRoute from './routes/setup.svelte'
 
   // Utils
-  import Logger from "./utils/log/log";
+  import Logger from './utils/log/log'
 
-  import RouterView from "./routes/routes.svelte";
+  import RouterView from './routes/routes.svelte'
 
   // Stores
-  import { UserStore } from "./store/user-store"; //  user auth and state
-  import { Interact } from "./store/interact"; //  global alerts, popmenus, confirms, etc
+  import { UserStore } from './store/user-store' //  user auth and state
+  import { Interact } from './store/interact' //  global alerts, popmenus, confirms, etc
   // import { BoardStore } from "./store/boards"; // board state  and methods
-  import { Device } from "./store/device-store"; // board state  and methods
-  import { TrackerStore } from "./store/tracker-store"; // tracker state and methods
-  import { TrackerLibrary } from "./store/tracker-library";
-  import { CommanderStore } from "./store/commander"; // commander - /?note=hi&lat=35&lng=-81.32
+  import { Device } from './store/device-store' // board state  and methods
+  import { TrackerStore } from './store/tracker-store' // tracker state and methods
+  import { TrackerLibrary } from './store/tracker-library'
+  import { CommanderStore } from './store/commander' // commander - /?note=hi&lat=35&lng=-81.32
 
-  import { PeopleStore } from "./store/people-store"; // Store for holding People
-  import { ContextStore } from "./store/context-store"; // Store for holding Post Context (categories)
-  import { DashboardStore } from "./store/dashboard-store"; // Store for holding Post Context (categories)
+  import { PeopleStore } from './store/people-store' // Store for holding People
+  import { ContextStore } from './store/context-store' // Store for holding Post Context (categories)
+  import { DashboardStore } from './store/dashboard-store' // Store for holding Post Context (categories)
   // import { AppStore } from "./store/app-store";
-  import { Locations } from "./store/locations";
-  import config from "./config/appConfig";
-  import { OfflineQueue } from "./store/offline-queue-store";
-  import SearchModal from "./containers/search/search.svelte";
-  import { LastUsed } from "./store/last-used";
-  import { SearchStore } from "./store/search-store";
-  import PinLock from "./containers/pin-lock/pin-lock.svelte";
-  import tick from "./utils/tick/tick";
-  import Confetti from "./components/confetti/confetti.svelte";
-  import FocusedEditor from "./components/capture-log/focused.svelte";
-  import { LedgerStore } from "./store/ledger";
-  import ProgressBar from "./components/progress-bar/progress-bar.svelte";
-  import { ApiStore } from "./containers/api/api-store";
+  import { Locations } from './store/locations'
+  import config from './config/appConfig'
+  import { OfflineQueue } from './store/offline-queue-store'
+  import SearchModal from './containers/search/search.svelte'
+  import { LastUsed } from './store/last-used'
+  import { SearchStore } from './store/search-store'
+  import PinLock from './containers/pin-lock/pin-lock.svelte'
+  import tick from './utils/tick/tick'
+  import Confetti from './components/confetti/confetti.svelte'
+  import FocusedEditor from './components/capture-log/focused.svelte'
+  import { LedgerStore } from './store/ledger'
+  import ProgressBar from './components/progress-bar/progress-bar.svelte'
+  import { ApiStore } from './containers/api/api-store'
 
-  
-  import "./style/main.css";
+  import './style/main.css'
   // Set a better console
-  const console = new Logger("APP");
+  const console = new Logger('APP')
 
   gestures()
 
@@ -66,72 +65,71 @@
    * Fire off the MinuteChecker30 every 30 minutes
    * This will check if the day changed
    */
-  let todayCheckPeriod = 1000 * 60 * 10;
-  let todayCheckFormat = "YYYY-MM-DD";
-  let todayKey = dayjs().format(todayCheckFormat);
-  let newDay = false; // View reacts to this value
+  let todayCheckPeriod = 1000 * 60 * 10
+  let todayCheckFormat = 'YYYY-MM-DD'
+  let todayKey = dayjs().format(todayCheckFormat)
+  let newDay = false // View reacts to this value
 
   // Check every X minutes
   const todayCheckInteval = setInterval(() => {
     // Get now key
-    let checkKey = dayjs().format(todayCheckFormat);
+    let checkKey = dayjs().format(todayCheckFormat)
     // Compare now key to today key
     if (todayKey !== checkKey) {
       // It's new - trigger some reactions
-      newDay = true;
+      newDay = true
       // Show toast notification
-      Interact.toast(`It's ${dayjs().format("dddd")}!`);
+      Interact.toast(`It's ${dayjs().format('dddd')}!`)
       // Set today key to check key
-      todayKey = checkKey;
-      LedgerStore.getToday();
+      todayKey = checkKey
+      LedgerStore.getToday()
       // Wait 500 ms
       setTimeout(() => {
-        newDay = false;
-      }, 500);
+        newDay = false
+      }, 500)
     }
     // Check if the theme has Changed
-    methods.setDocParams({});
-  }, todayCheckPeriod);
+    methods.setDocParams({})
+  }, todayCheckPeriod)
 
-  const appVersion = "APP_VERSION";
+  const appVersion = 'APP_VERSION'
 
   // This should be reworked
   $: if (window && $TrackerStore && !window['$TrackerStore']) {
-    window['$TrackerStore'] = $TrackerStore;
+    window['$TrackerStore'] = $TrackerStore
   }
 
   // Offline monitor
 
   const methods = {
     hideSplashScreen() {
-      document.querySelectorAll(".delete-on-app").forEach((d) => {
-        d.classList.add("deleted");
+      document.querySelectorAll('.delete-on-app').forEach((d) => {
+        d.classList.add('deleted')
         setTimeout(() => {
-          d.remove();
-        }, 500);
-      });
+          d.remove()
+        }, 500)
+      })
     },
-    setDocParams(options={}) {
-      let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches;
+    setDocParams(options = {}) {
+      let isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
       // let isDarkMode = false;
-      let theme = localStorage.getItem(config.theme_key) || "auto";
+      let theme = localStorage.getItem(config.theme_key) || 'auto'
       let theme_accent =
-        localStorage.getItem(`${config.theme_key}-accent`) || "default";
-      let font_size = localStorage.getItem("font-size") || "md";
-      document.body.className = "";
-      if (theme === "auto" && isDarkMode) {
-        document.children[0].classList.add("dark");
-      } else if (theme === "auto") {
-        document.children[0].classList.add("light");
+        localStorage.getItem(`${config.theme_key}-accent`) || 'default'
+      let font_size = localStorage.getItem('font-size') || 'md'
+      document.documentElement.className = ''
+      if (theme === 'auto' && isDarkMode) {
+        document.documentElement.classList.add('mode-dark')
+      } else if (theme === 'auto') {
+        document.documentElement.classList.add('mode-light')
       } else {
-        document.children[0].classList.add(`${theme}`);
+        document.documentElement.classList.add(`mode-${theme}`)
       }
-      document.children[0].classList.add(`font-size-${font_size}`);
-      document.children[0].classList.add(theme_accent);
-      tick(100, methods.hideSplashScreen);
+      document.documentElement.classList.add(`font-size-${font_size}`)
+      document.documentElement.classList.add(theme_accent)
+      tick(100, methods.hideSplashScreen)
     },
-  };
+  }
 
   /**
    * App to Forground
@@ -143,49 +141,48 @@
    *
    * it kinda works.
    */
-  let hidden, visibilityChange, router;
-  if (typeof document.hidden !== "undefined") {
-    hidden = "hidden";
-    visibilityChange = "visibilitychange";
-  } else if (typeof document['msHidden'] !== "undefined") {
-    hidden = "msHidden";
-    visibilityChange = "msvisibilitychange";
-  } else if (typeof document['webkitHidden'] !== "undefined") {
-    hidden = "webkitHidden";
-    visibilityChange = "webkitvisibilitychange";
+  let hidden, visibilityChange, router
+  if (typeof document.hidden !== 'undefined') {
+    hidden = 'hidden'
+    visibilityChange = 'visibilitychange'
+  } else if (typeof document['msHidden'] !== 'undefined') {
+    hidden = 'msHidden'
+    visibilityChange = 'msvisibilitychange'
+  } else if (typeof document['webkitHidden'] !== 'undefined') {
+    hidden = 'webkitHidden'
+    visibilityChange = 'webkitvisibilitychange'
   }
 
-  window.addEventListener("load", () => {
-    methods.setDocParams();
-  });
+  window.addEventListener('load', () => {
+    methods.setDocParams()
+  })
 
-  let ready = false;
+  let ready = false
 
   // Used to make sure that boards and trackers are loaded
   UserStore.onReady(async () => {
-    console.log("🌳🌳🌳🌳🌳 Welcome to NOMIE APP_VERSION 🌳🌳🌳🌳🌳", "👋");
+    console.log('🌳🌳🌳🌳🌳 Welcome to NOMIE APP_VERSION 🌳🌳🌳🌳🌳', '👋')
     // Set the user if they're logged in
-    ready = true;
-    PeopleStore.init(); // Initialize the People Store
-    Locations.init(); // Initialize Location Store
-    ContextStore.init(); // check if this is a new version
-    DashboardStore.init(); // Initilize Dashboards
-    Device.init(); // Initialize Device
-    LastUsed.init();
-    SearchStore.init();
+    ready = true
+    PeopleStore.init() // Initialize the People Store
+    Locations.init() // Initialize Location Store
+    ContextStore.init() // check if this is a new version
+    DashboardStore.init() // Initilize Dashboards
+    Device.init() // Initialize Device
+    LastUsed.init()
+    SearchStore.init()
 
-    await wait(500);
-    CommanderStore.run();
-    ApiStore.init();
-
-  });
+    await wait(500)
+    CommanderStore.run()
+    ApiStore.init()
+  })
 
   // Initialize Offline Queue regardless if we're offline
-  OfflineQueue.init();
+  OfflineQueue.init()
 
   onMount(() => {
-    UserStore.initialize();
-  });
+    UserStore.initialize()
+  })
 </script>
 
 <Tailwindcss />
@@ -205,7 +202,7 @@
 {/if}
 
 <!-- Global Modals, alerts, menus, etc-->
-{#if ready && $Interact.stats.terms.length}
+{#if ready}
   <StatsModal />
 {/if}
 {#if ready && $TrackerLibrary.show}

@@ -386,12 +386,12 @@ const userInit = () => {
     // Set Dark Mode for User
     setTheme(theme, accent: string = "default") {
       theme = ["auto", "light", "dark"].indexOf(theme) > -1 ? theme : "auto";
-      document.body.className = "";
+      document.documentElement.className = "";
       localStorage.setItem(config.theme_key, theme);
       localStorage.setItem(`${config.theme_key}-accent`, accent);
-      document.body.classList.add(`${theme}`);
-      document.body.classList.add(`${accent}`);
-      document.body.classList.add(`font-size-${localStorage.getItem("font-size") || "md"}`);
+      document.documentElement.classList.add(`mode-${theme}`);
+      document.documentElement.classList.add(`${accent}`);
+      document.documentElement.classList.add(`font-size-${localStorage.getItem("font-size") || "md"}`);
       update((u) => {
         u.theme = theme;
         u.theme_accent = accent;
