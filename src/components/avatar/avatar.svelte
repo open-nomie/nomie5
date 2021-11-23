@@ -1,69 +1,69 @@
 <script lang="ts">
-  import type { join } from "lodash";
-  import { createEventDispatcher } from "svelte";
-  import { initials } from "../../utils/text/text";
-  import { strToColor } from "../dymoji/dymoji";
-  import emojiCount from "../../modules/emoji-count/emoji-count";
+  import type { join } from 'lodash'
+  import { createEventDispatcher } from 'svelte'
+  import { initials } from '../../utils/text/text'
+  import { strToColor } from '../dymoji/dymoji'
+  import emojiCount from '../../modules/emoji-count/emoji-count'
 
   // export let size: "xs" | "sm" | "md" | "lg" | "xl" = "md";
-  export let size: number = 32;
-  export let label: string = undefined;
-  export let src: string = undefined;
-  export let emoji: string = undefined;
-  export let transparent: boolean = false;
-  export let style: string = "";
-  export let color: string | undefined = undefined;
-  export let circle: boolean = false;
-  export let className: string = "";
+  export let size: number = 32
+  export let label: string = undefined
+  export let src: string = undefined
+  export let emoji: string = undefined
+  export let transparent: boolean = false
+  export let style: string = ''
+  export let color: string | undefined = undefined
+  export let circle: boolean = false
+  export let className: string = ''
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
 
-  let styles: Array<string> = [];
-  let classList: Array<string> = [];
+  let styles: Array<string> = []
+  let classList: Array<string> = []
   $: {
-    classList = [className];
-    styles.push(`--avatar-size:${size}px`);
-    styles.push(`height:${size}px`);
+    classList = [className]
+    styles.push(`--avatar-size:${size}px`)
+    styles.push(`height:${size}px`)
     if (!emoji) {
-      styles.push(`width:${size}px`);
+      styles.push(`width:${size}px`)
     }
     // If it's a source
     if (src && src.length) {
-      classList.push("src");
-      styles.push(`background-image:url(${src})`);
+      classList.push('src')
+      styles.push(`background-image:url(${src})`)
 
       /// If it's an emoji
     } else if (emoji && emoji.length) {
-      classList.push("emoji");
+      classList.push('emoji')
 
       // styles.push(`background-color:${color}`);
       if (color) {
-        styles.push(`color:${color}`);
+        styles.push(`color:${color}`)
       }
 
       // If a Label is provided
     } else if (label && label.length) {
-      classList.push("label");
-      const thisColor = color || strToColor(label);
-      styles.push(`background-color:${thisColor}; color:#FFF !important`);
-      styles.push(`font-size: ${size * 0.5}px`);
+      classList.push('label')
+      const thisColor = color || strToColor(label)
+      styles.push(`background-color:${thisColor}; color:#FFF !important`)
+      styles.push(`font-size: ${size * 0.5}px`)
     }
     // If Transparent
     if (transparent) {
-      classList.push("transparent");
+      classList.push('transparent')
     }
 
     // If is Circle
     if (circle) {
-      classList.push("circle");
+      classList.push('circle')
     } else {
-      classList.push("rounded");
+      classList.push('rounded')
     }
     // Merge with props styl
   }
 
   function click() {
-    dispatch("click");
+    dispatch('click')
   }
 </script>
 
@@ -79,7 +79,7 @@
     background-position: center;
     overflow: hidden;
     letter-spacing: normal;
-    color: var(--color-inverse);
+    @apply text-gray-900 dark:text-gray-100;
   }
 
   .n-avatar.rounded {
