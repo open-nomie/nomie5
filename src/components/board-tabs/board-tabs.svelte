@@ -11,6 +11,8 @@
   import Row from "../row/row.svelte";
   import { Lang } from "../../store/lang";
 
+  import "./board-tabs.css";
+
   export let boards = [];
   export let active = undefined;
 
@@ -59,7 +61,7 @@
     <Spacer />
   </div>
 {:else}
-  <NHScroller activeIndex={state.activeIndex} centerIfPossible className="n-board-tabs">
+  <NHScroller activeIndex={state.activeIndex} centerIfPossible wrapperClass="space-x-4" className="n-board-tabs">
     {#each boards as board}
       <button
         label={Lang.t('general.all-trackers', 'All Trackers')}

@@ -1,0 +1,13 @@
+.n-board-tabs button {
+  @apply rounded-full;
+  @apply py-1;
+  @apply text-gray-800 dark:text-gray-300;
+}
+.n-board-tabs {
+  @apply px-2;
+}
+.n-board-tabs button.selected {
+  @apply bg-gray-200 dark:bg-gray-800;
+  @apply text-black dark:text-white;
+  @apply px-4;
+}
