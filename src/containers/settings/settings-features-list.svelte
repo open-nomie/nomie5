@@ -85,7 +85,7 @@
   }
 </script>
 
-<div class="py-2 my-2 n-list features">
+<div class="py-2 my-2 n-list features lg:rounded-lg">
   <ListItem
     className="py-2"
     title={Lang.t('settings.feature-people-tracking', 'People Tracking')}
