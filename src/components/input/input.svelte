@@ -363,12 +363,12 @@
           <select bind:this={_elInput} {disabled} on:change={change} bind:value>
             <slot />
           </select>
-          <NIcon
+          <!-- <NIcon
             name="chevronDown"
-            className="fill-inverse-2 mr-3"
-            size="16"
+            className="text-gray-500 mr-3"
+            size={16}
             style="position:absolute; right:4px; top:50%; transform:
-            translateY(-50%); pointer-events:none" />
+            translateY(-50%); pointer-events:none" /> -->
         </div>
       {:else if type == 'textarea'}
         <textarea

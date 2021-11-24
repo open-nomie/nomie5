@@ -3,17 +3,17 @@
   import { useRegisterSW } from 'virtual:pwa-register/svelte'
 
   const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
-    onRegistered(swr) {
-      console.log(`SW registered: ${swr}`)
+    onRegistered(swr: ServiceWorkerRegistration) {
+      console.log(`SW registered`, {
+        installing: swr.installing,
+        active: swr.active,
+        scope: swr.scope,
+      })
     },
     onRegisterError(error) {
-      console.log('SW registration error', error)
+      console.error('SW registration error', error)
     },
   })
-
-  const reload = () => {
-    window.location.reload()
-  }
 
   function close() {
     offlineReady.set(false)
@@ -47,7 +47,7 @@
       class="px-2 pb-2 mb-2 text-lg font-medium leading-snug text-black message">
       {#if $offlineReady}
         <span>App ready to work offline</span>
-      {:else}
+      {:else if $needRefresh}
         <h1 class="mb-2 text-2xl font-bold text-black">🎉 Update Available</h1>
         <p>Look at that! A new version of Nomie is ready to use.</p>
       {/if}

@@ -6,6 +6,6 @@
   to = "/"
   status = 200
 [[headers]]
-  for = "/service-worker.js"
+  for = "/manifest.webmanifest"
   [headers.values]
-    Cache-Control = "max-age=0"
+    Content-Type = "application/manifest+json"
