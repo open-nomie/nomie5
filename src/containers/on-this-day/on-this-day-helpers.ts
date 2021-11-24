@@ -17,10 +17,10 @@ export interface OTDView {
 export let OTDViews: Array<OTDView> = [
   { view: "all", icon: "book", label: `${Lang.t("general.all", "All")}` },
   { view: "notes", icon: "annotation", label: `${Lang.t("general.notes", "Notes")}` },
-  { view: "trackers", icon: "tracker", label: `${Lang.t("general.trackers", "Trackers")}` },
-  { view: "locations", icon: "map", label: `${Lang.t("general.locations", "Locations")}` },
+  // { view: "trackers", icon: "tracker", label: `${Lang.t("general.trackers", "Trackers")}` },
   { view: "people", icon: "people", label: `${Lang.t("general.people", "People")}` },
-  { view: "context", icon: "bulb", label: `${Lang.t("general.context", "Context")}` },
+  { view: "locations", icon: "map", label: `${Lang.t("general.locations", "Locations")}` },
+  // { view: "context", icon: "bulb", label: `${Lang.t("general.context", "Context")}` },
 ];
 
 export function hasNote(str): Boolean {

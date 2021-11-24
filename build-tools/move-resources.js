@@ -1,13 +1,13 @@
 let copy = require("copy");
 let move = [
-  { src: "node_modules/leaflet/dist/**/*", dest: "public/vendors/leaflet" },
+  { src: "node_modules/leaflet/dist/**/*", dest: "vendors/leaflet" },
   {
     src: "node_modules/esri-leaflet/dist/**/*",
-    dest: "public/vendors/leaflet/esri"
+    dest: "vendors/leaflet/esri"
   },
   {
     src: "node_modules/esri-leaflet-geocoder/dist/**/*",
-    dest: "public/vendors/leaflet/geocoder"
+    dest: "vendors/leaflet/geocoder"
   }
 ];
 

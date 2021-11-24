@@ -338,9 +338,7 @@
     {#if logs.length}
       <Toolbar>
         <ButtonGroup>
-          {#each OTDViews.filter((v) => {
-            return v.view !== 'locations'
-          }) as loopView}
+          {#each OTDViews as loopView}
             <Button
               className={view === loopView.view ? 'active' : ''}
               icon

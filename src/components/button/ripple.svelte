@@ -21,7 +21,7 @@
   }
 </script>
 
-<style lang="postcss">
+<style global lang="postcss">
   .ripple {
     pointer-events: none;
     position: absolute;
@@ -33,7 +33,7 @@
     z-index: 1000;
     border-radius: inherit;
   }
-  .ball {
+  .ripple-ball {
     transition: all 0.5s ease-in-out;
     position: absolute;
     width: 2px;
@@ -43,7 +43,7 @@
     left: 20px;
     opacity: 0;
   }
-  .ball.grow {
+  .ripple-ball.grow {
     animation: ripple 1.5s;
     background-color: var(--color-translucent-inverse);
   }
@@ -70,6 +70,6 @@
 
 <div class="ripple">
   {#each hits as _hit (`${_hit.id}`)}
-    <div class="ball grow" style="top:{_hit.y}px;left:{_hit.x}px;" />
+    <div class="ripple-ball grow" style="top:{_hit.y}px;left:{_hit.x}px;" />
   {/each}
 </div>

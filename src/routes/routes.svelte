@@ -1,38 +1,56 @@
 <script>
-  import { Router, Route } from "svelte-routing";
-  import BoardEditorRoute from "./board-editor.svelte";
-  import CsvImport from "./csv-import.svelte";
-  import Dashboard from "./dashboard.svelte";
-  import ExportRoute from "./export.svelte";
-  import FAQRoute from "./faq.svelte";
-  import FileBrowser from "./file-browser.svelte";
-  import HistoryRoute from "./history.svelte";
-  import NomieAPIRoute from "./nomie-api.svelte";
-  import PeopleRoute from "./people.svelte";
-  import SettingsRoute from "./settings.svelte";
-  import Setup from "./setup.svelte";
-  import TrackRoute from "./track.svelte";
-  import TestRoute from "./tests/tests.svelte";
-  import LangRoute from "./tests/language.svelte";
+  import { Router, Route } from 'svelte-routing'
+  import FileBrowser from './file-browser.svelte'
+  import DynamicPage from '../DynamicPage.svelte'
 </script>
 
 <Router>
-  <Route path="/" component={TrackRoute} />
-  <Route path="/api" component={NomieAPIRoute} />
-  <Route path="/test" component={TestRoute} />
-  <Route path="/lang" component={LangRoute} />
-  <Route path="/board/:id" component={BoardEditorRoute} />
-  <Route path="/dashboard" component={Dashboard} />
-  <Route path="/faq" component={FAQRoute} />
-  <Route path="/history" component={HistoryRoute} />
-  <Route path="/history/:date" component={HistoryRoute} />
-  <Route path="/people" component={PeopleRoute} />
-  <Route path="/settings" component={SettingsRoute} />
-  <Route path="/settings/export" component={ExportRoute} />
-  <Route path="/settings/export/:type" component={ExportRoute} />
-  <Route path="/settings/import/csv" component={CsvImport} />
+  <Route path="/">
+    <DynamicPage route="track" />
+  </Route>
+  <Route path="/api">
+    <DynamicPage route="nomie-api" />
+  </Route>
+  <Route path="/test">
+    <DynamicPage route="tests/tests" />
+  </Route>
+  <Route path="/lang">
+    <DynamicPage route="tests/language" />
+  </Route>
+  <Route path="/board/:id">
+    <DynamicPage route="board-editor" />
+  </Route>
+  <Route path="/dashboard">
+    <DynamicPage route="dashboard" />
+  </Route>
+  <Route path="/faq">
+    <DynamicPage route="faq" />
+  </Route>
+  <Route path="/history">
+    <DynamicPage route="history" />
+  </Route>
+  <Route path="/history/:date">
+    <DynamicPage route="history" />
+  </Route>
+  <Route path="/people">
+    <DynamicPage route="people" />
+  </Route>
+  <Route path="/settings">
+    <DynamicPage route="settings" />
+  </Route>
+  <Route path="/settings/export">
+    <DynamicPage route="export" />
+  </Route>
+  <Route path="/settings/export/:type">
+    <DynamicPage route="export" />
+  </Route>
+  <Route path="/settings/import/csv">
+    <DynamicPage route="csv-import" />
+  </Route>
   <Route path="/files/*path" let:params>
     <FileBrowser path={params.path} />
   </Route>
-  <Route path="/setup" component={Setup} />
+  <Route path="/setup">
+    <DynamicPage route="setup" />
+  </Route>
 </Router>
