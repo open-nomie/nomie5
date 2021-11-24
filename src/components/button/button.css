@@ -63,7 +63,7 @@
   @apply leading-none;
 }
 .nbtn-lg.nbtn-rounded {
-  border-radius: 10px;
+  @apply rounded-lg;
 }
 .nbtn-desc {
   min-height: 40px;
@@ -262,7 +262,6 @@
   box-shadow: none;
 }
 .nbtn-group {
-  overflow: hidden;
   height: 40px;
   width: 100%;
   flex-grow: 1;
@@ -276,7 +275,7 @@
 }
 .nbtn-group .nbtn {
   border: solid 1px transparent;
-  font-size: 0.8em;
+  @apply text-sm;
   height: 36px;
   flex-grow: 1;
   flex-shrink: 1;
@@ -285,14 +284,17 @@
   padding-right: 12px;
   box-shadow: none;
   @apply bg-gray-200 dark:bg-gray-900;
-  @apply text-gray-900 dark:text-gray-100;
+  @apply text-gray-600 dark:text-gray-400;
 }
 .nbtn-group .nbtn.active {
   border-radius: 8px !important;
   z-index: 10;
   @apply shadow-md;
   @apply bg-white dark:bg-black;
+  @apply font-bold;
+  @apply text-black dark:text-white;
   @apply text-primary-500;
+  @apply ring-2 ring-primary-500 ring-opacity-20;
 }
 .nbtn-group .nbtn:first-child {
   border-top-right-radius: 0px;

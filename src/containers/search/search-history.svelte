@@ -1,34 +1,34 @@
 <script lang="ts">
-  import LogListLoader from "../../components/log-list/log-list-loader.svelte";
-  import SearchBar from "../../components/search-bar/search-bar.svelte";
-  import Text from "../../components/text/text.svelte";
-  import type NLog from "../../modules/nomie-log/nomie-log";
-  import { Interact } from "../../store/interact";
-  import { Lang } from "../../store/lang";
-  import { SearchStore, SearchTerm } from "../../store/search-store";
+  import LogListLoader from '../../components/log-list/log-list-loader.svelte'
+  import SearchBar from '../../components/search-bar/search-bar.svelte'
+  import Text from '../../components/text/text.svelte'
+  import type NLog from '../../modules/nomie-log/nomie-log'
+  import { Interact } from '../../store/interact'
+  import { Lang } from '../../store/lang'
+  import { SearchStore, SearchTerm } from '../../store/search-store'
 
-  export let term: string;
+  export let term: string
 
-  let results: Array<NLog> = [];
+  let results: Array<NLog> = []
 
   $: if ($SearchStore.active) {
-    term = $SearchStore.active.term;
+    term = $SearchStore.active.term
   }
 
   function clear() {
-    SearchStore.clear();
-    term = undefined;
+    SearchStore.clear()
+    term = undefined
   }
 
   function search(evt: CustomEvent) {
-    term = evt.detail;
+    term = evt.detail
     if (term) {
-      SearchStore.setActiveTerm(new SearchTerm({ term, type: "history" }));
+      SearchStore.setActiveTerm(new SearchTerm({ term, type: 'history' }))
     }
   }
 </script>
 
-<section class="n-panel stiff pt-2">
+<section class="pb-2 n-panel stiff">
   <SearchBar
     compact
     className="filler"
@@ -40,7 +40,7 @@
 </section>
 
 {#if term}
-  <section class="search-results history n-panel scroll-y column">
+  <section class="px-4 search-results">
     <LogListLoader
       fullDate={true}
       showTimeDiff={true}
@@ -49,10 +49,10 @@
       limit={20}
       className="bg-transparent"
       on:textClick={(event) => {
-        Interact.elementOptions(event.detail);
+        Interact.elementOptions(event.detail)
       }}
       on:moreClick={(event) => {
-        Interact.logOptions(event.detail).then(() => {});
+        Interact.logOptions(event.detail).then(() => {})
       }} />
   </section>
 {/if}

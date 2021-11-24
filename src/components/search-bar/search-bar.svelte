@@ -1,73 +1,65 @@
-<script>
-  import NToolbar from "../toolbar/toolbar.svelte";
-  import NInput from "../input/input.svelte";
+<script lang="ts">
+  import Input from '../input/input.svelte'
 
-  import { Lang } from "../../store/lang";
-  import { createEventDispatcher } from "svelte";
-  import NIcon from "../icon/icon.svelte";
-  import Button from "../button/button.svelte";
-  import Icon from "../icon/icon.svelte";
-  const dispatch = createEventDispatcher();
+  import { createEventDispatcher } from 'svelte'
+  import Button from '../button/button.svelte'
+  import Icon from '../icon/icon.svelte'
+  import Toolbar from '../toolbar/toolbar.svelte'
+  const dispatch = createEventDispatcher()
 
-  export let searchTerm = null;
-  export let autocomplete = false;
-  export let placeholder = `${Lang.t("general.search", "Search")}...`;
-  export let style = "";
-  export let className = "";
-  export let compact = false;
-  export let showClose = true;
-  export let autofocus = false;
+  export let searchTerm: string | undefined = undefined
+  export let placeholder = `Search...`
+  export let style: string = ''
+  export let className: string = ''
+  export let inputClass: string = ''
+  export let compact: boolean = false
+  export let tint: boolean = false
+  export let showClose: boolean = true
+  export let autofocus: boolean = false
+  export const autocomplete: boolean = false
+  export let searchButton: boolean = false
 
-  let _elInput;
+  let _elInput: any
   // export let hasResults = false;
 
   // FIre off changes when input changes
-  let timeout;
+  let timeout: any
   function fireChange() {
-    clearTimeout(timeout);
+    clearTimeout(timeout)
     timeout = setTimeout(() => {
-      dispatch("change", searchTerm);
-    }, 400);
+      dispatch('change', searchTerm)
+    }, 400)
   }
 
   export function focus() {
     if (_elInput.doFocus) {
-      _elInput.doFocus();
+      _elInput.doFocus()
     }
   }
   // Fire off when search is hit
   function fireSearch() {
-    dispatch("search", searchTerm);
+    dispatch('search', searchTerm)
   }
   // Fire off clearing
   function fireClear() {
-    dispatch("clear");
-    searchTerm = null;
+    dispatch('clear')
+    searchTerm = undefined
   }
   // Watch for enter keys
-  function searchKeypress(event) {
-    if (event.key === "Enter" || event.key === "Return") {
-      fireSearch();
-      return false;
-    } else {
-      fireChange();
-    }
-  }
+  // function searchKeypress(event:any) {
+  //   if (event.key === "Enter" || event.key === "Return") {
+  //     fireSearch();
+  //     return false;
+  //   } else {
+  //     fireChange();
+  //   }
+  // }
 </script>
 
-<style lang="postcss" global>
-
+<style global lang="postcss">
   .search-bar {
-    padding: 0 16pt;
     position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-shrink: 0;
-    flex-grow: 1;
-    width: calc(100% - 16pt);
-    margin: 0 8pt;
-  
+    height: 50px;
   }
 
   .search-bar .btn-action-clear {
@@ -75,42 +67,47 @@
   }
   .search-bar input {
     width: calc(100% - 30px);
-    font-size: 100%;
+  }
+  .search-bar .search-input {
   }
   .search-bar .n-input-container {
     margin-bottom: 0 !important;
+    @apply bg-gray-500;
+    @apply bg-opacity-10;
   }
 </style>
 
-<div class="n-toolbar flex search-bar {className}" {style}>
-  <div class="flex py-1">
-    <NInput
-      solo
-      {compact}
-      {autofocus}
-      className="mt-0"
-      bind:this={_elInput}
-      bind:value={searchTerm}
-      on:change={fireChange}
-      on:enter={fireSearch}
-      {placeholder}>
-      <div slot="left" class="pl-2 d-flex">
-        <NIcon name="search" style="height:20px; width: 20px" />
-      </div>
-      <div slot="right">
-        <slot name="right-inside" />
-        {#if searchTerm && showClose}
-          <Button icon className=" btn-action-clear mr-2" on:click={fireClear} style="margin-left:-10px;">
-            <NIcon name="close" className="fill-inverse-2" />
-          </Button>
-        {/if}
-      </div>
-    </NInput>
-    <slot name="right" />
-    {#if searchTerm && !autocomplete}
-      <Button shape="circle" color="clear" icon on:click={fireSearch}>
-        <Icon name="search" className="fill-primary-bright" />
-      </Button>
-    {/if}
-  </div>
-</div>
+<Toolbar className="search-bar {className}" {style}>
+  <Input
+    solo
+    {compact}
+    {autofocus}
+    className="search-input mt-0 text-lg {inputClass}"
+    bind:this={_elInput}
+    bind:value={searchTerm}
+    on:change={fireChange}
+    on:enter={fireSearch}
+    {placeholder}>
+    <div slot="left" class="flex items-center pl-2">
+      <Icon name="search" size={compact ? 16 : 20} className="text-solid-500" />
+    </div>
+    <div slot="right">
+      <slot name="right-inside" />
+      {#if searchTerm && showClose}
+        <Button
+          icon
+          className=" btn-action-clear mr-2"
+          on:click={fireClear}
+          style="margin-left:-10px;">
+          <Icon name="close" className="text-solid-500" />
+        </Button>
+      {/if}
+    </div>
+  </Input>
+  <slot name="right" />
+  {#if searchButton}
+    <Button color="clear" icon on:click={fireSearch}>
+      <Icon name="search" />
+    </Button>
+  {/if}
+</Toolbar>

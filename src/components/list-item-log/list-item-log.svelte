@@ -111,7 +111,6 @@
           <span class="">
             {logMeta.endDate.format(`${dtFormat.time}`)}
             {#if fullDate}{logMeta.endDate.format(`${dtFormat.date}`)}{/if}
-            another long thing
           </span>
         </section>
       </div>
@@ -148,15 +147,14 @@
     <!-- Process the Note Content wi th the Textualizer 
     This really isn't special right now -->
     {#if displayLog.note.length}
-      <div class="px-2 my-1">
+      <div class="px-2 mb-1">
         <NNoteTextualizer
           on:textClick={(evt) => {
             dispatch('textClick', evt.detail)
           }}
           bind:note={displayLog.note}
           {trackers}
-          className="px-3 py-3 bg-gray-100 dark:bg-gray-900 dark:bg-opacity-20
-          rounded-lg {logMeta.trackers.length ? '' : ''}" />
+          className="px-3 py-3 rounded-lg {logMeta.trackers.length ? '' : ''}" />
       </div>
     {/if}
 
@@ -164,9 +162,10 @@
 
     <!-- Loop over Trackers used -->
     {#if logMeta.trackers.length || logMeta.people.length}
-      <div class="grid w-full grid-cols-2 gap-0 px-1 pb-2 lg:grid-cols-4">
+      <div class="grid w-full grid-cols-2 gap-2 px-4 pb-4 lg:grid-cols-4">
         {#each displayLog.people as person}
           <NTrackerSmallBlock
+            className="bg-gray-200 dark:bg-gray-900"
             truncate={true}
             element={person}
             on:click={() => {
@@ -181,6 +180,7 @@
           }
         }) as trackerElement}
           <NTrackerSmallBlock
+            className="bg-gray-100 dark:bg-gray-900"
             truncate
             element={trackerElement}
             on:click={() => {
@@ -190,7 +190,7 @@
       </div>
     {/if}
     {#if logMeta.context.length}
-      <div class="flex px-2 pb-2 context">
+      <div class="flex px-4 pb-4 space-x-2 context">
         {#each logMeta.context as context}
           <Button
             size="xs"

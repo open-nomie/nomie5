@@ -1,6 +1,6 @@
 .n-board-tabs button {
   @apply rounded-full;
-  @apply py-1;
+  @apply py-1 px-1;
   @apply text-gray-800 dark:text-gray-300;
 }
 .n-board-tabs {

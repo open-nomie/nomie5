@@ -389,21 +389,22 @@
     </div>
 
     {#if $LedgerStore.memories.length > 0 && !showSearch && isToday && ['all', 'notes'].indexOf(view) > -1}
-      <div class="mt-3 bg-primary-bright">
-        <div class="p-0 pb-4 ">
+      <div class="mt-3 bg-primary-500">
+        <div class="px-4 pb-4">
           <!-- Show History if exists -->
 
           <div class="memories">
             {#each $LedgerStore.memories as log}
               <div class="text-center memories-log-header">
-                <Button
-                  className="mx-auto"
+                <button
+                  aria-label="View logs from {dayjs(log.end).format('ddd MM YYYY')}"
+                  class="flex items-center justify-center w-full py-2 font-medium text-black bg-primary-500"
                   on:click={() => {
                     methods.goto(dayjs(log.end))
                   }}>
-                  {dayjs(log.end).fromNow()}
-                  <Icon icon={ChevronRight} className="fill-white" size={18} />
-                </Button>
+                  <span class="text-sm">{dayjs(log.end).fromNow()}</span>
+                  <Icon icon={ChevronRight} className="fill-white" size={16} />
+                </button>
               </div>
               <LogItem
                 fullDate

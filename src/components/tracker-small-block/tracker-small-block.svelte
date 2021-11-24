@@ -46,6 +46,7 @@
 <style global>
   .tracker-small-block {
     @apply flex;
+    @apply bg-gray-100 dark:bg-gray-900;
   }
   .nbtn.tracker-small-block.size-md {
     height: 60px;

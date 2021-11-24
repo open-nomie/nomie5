@@ -73,12 +73,12 @@
 
 {#if actual}
   <div
-    class="n-note-textualized leading-tight {className}
+    class="n-note-textualized leading-1 {className}
     {state.words.length > 20 ? 'text-sm' : 'text-xl'}">
     {#each state.words as word}
       {#if word.type === 'tracker'}
         <span
-          class="tracker font-weight-bold clickable text-primary-bright"
+          class="rounded-md tracker font-weight-bold clickable text-primary-500 "
           on:click={() => {
             methods.textElementClick(word)
           }}>
@@ -86,7 +86,7 @@
         </span>
       {:else if word.type == 'person'}
         <span
-          class="person font-weight-bold clickable text-primary-bright"
+          class="person font-weight-bold clickable text-primary-500 "
           on:click={() => {
             methods.textElementClick(word)
           }}>
@@ -94,7 +94,7 @@
         </span>
       {:else if word.type == 'context'}
         <span
-          class="context font-weight-bold clickable text-primary-bright"
+          class="context font-weight-bold clickable text-primary-500 "
           on:click={() => {
             methods.textElementClick(word)
           }}>
@@ -102,7 +102,7 @@
         </span>
       {:else if word.type == 'link'}
         <span
-          class="context font-weight-bold clickable text-primary-bright"
+          class="context font-weight-bold clickable text-primary-500 "
           on:click={() => {
             methods.linkClick(word.raw)
           }}>

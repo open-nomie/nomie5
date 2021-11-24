@@ -225,7 +225,7 @@
   <!-- Short Cut Button Style -->
 
   <div
-    class="grid grid-cols-3 gap-2 p-2 md:gap-3 md:px-4 lg:grid-cols-4 xl:grid-cols-5">
+    class="grid grid-cols-3 gap-2 p-2 md:gap-3 md:px-2 lg:grid-cols-4 xl:grid-cols-5">
     {#each trackers as tracker}
       <ShortcutButton
         id="tracker-{tracker.tag}"

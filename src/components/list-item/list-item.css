@@ -67,16 +67,15 @@
   padding-left: 16px !important;
   padding-right: 16px !important;
 }
-.n-item.item-divider {
-  background-color: var(--color-bg);
+[item-divider] {
+  @apply bg-gray-200 dark:bg-gray-800;
 }
 .n-item[item-divider],
 .n-item.item-divider {
-  font-weight: 600;
   padding-top: 14px;
-  text-transform: uppercase;
+  @apply text-sm;
   letter-spacing: 0.04em;
-  @apply text-gray-100 dark:text-gray-300;
+  @apply text-gray-500;
 }
 .n-item.disabled {
   opacity: 0.5;
@@ -120,6 +119,7 @@
   content: '';
   position: absolute;
   bottom: 0px;
+  @apply opacity-40;
   @apply border-b border-gray-200 dark:border-gray-600;
   left: 16px;
   right: 0;

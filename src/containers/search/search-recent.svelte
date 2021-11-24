@@ -1,41 +1,41 @@
 <script lang="ts">
-  import Button from "../../components/button/button.svelte";
+  import Button from '../../components/button/button.svelte'
 
-  import ListItem from "../../components/list-item/list-item.svelte";
-  import Text from "../../components/text/text.svelte";
-  import { Lang } from "../../store/lang";
-  import { SearchStore } from "../../store/search-store";
-  import type { SearchTerm } from "../../store/search-store";
-  import { TrackerStore } from "../../store/tracker-store";
-  import TrackerConfig from "../../modules/tracker/tracker";
-  import TrackerList from "../board/trackers.svelte";
-  import { Interact } from "../../store/interact";
+  import ListItem from '../../components/list-item/list-item.svelte'
+  import Text from '../../components/text/text.svelte'
+  import { Lang } from '../../store/lang'
+  import { SearchStore } from '../../store/search-store'
+  import type { SearchTerm } from '../../store/search-store'
+  import { TrackerStore } from '../../store/tracker-store'
+  import TrackerConfig from '../../modules/tracker/tracker'
+  import TrackerList from '../board/trackers.svelte'
+  import { Interact } from '../../store/interact'
 
-  let mode = "view";
-  let savedTerms: Array<SearchTerm>;
-  let savedTrackers: Array<TrackerConfig>;
+  let mode = 'view'
+  let savedTerms: Array<SearchTerm>
+  let savedTrackers: Array<TrackerConfig>
 
   $: if ($SearchStore.saved.length || $SearchStore.view) {
     // Get SavedTerms array
     savedTerms = $SearchStore.saved
       .filter((st: SearchTerm) => {
-        return st.type === $SearchStore.view;
+        return st.type === $SearchStore.view
       })
-      .reverse();
+      .reverse()
 
-    if ($SearchStore.view === "trackers") {
+    if ($SearchStore.view === 'trackers') {
       savedTrackers = savedTerms.map((searchTerm: SearchTerm) => {
-        let tag: string = searchTerm.term.replace("#", "");
-        return $TrackerStore.trackers[tag] || new TrackerConfig({ tag });
-      });
-    } else if ($SearchStore.view === "people") {
+        let tag: string = searchTerm.term.replace('#', '')
+        return $TrackerStore.trackers[tag] || new TrackerConfig({ tag })
+      })
+    } else if ($SearchStore.view === 'people') {
     }
 
-    savedTerms = savedTerms;
+    savedTerms = savedTerms
   }
 
   function toggleEditMode() {
-    mode = mode === "view" ? "edit" : "view";
+    mode = mode === 'view' ? 'edit' : 'view'
   }
 </script>
 
@@ -48,7 +48,7 @@
           color="transparent"
           size="sm"
           on:click={() => {
-            toggleEditMode();
+            toggleEditMode()
           }}>
           {Lang.t('general.edit', 'Edit')}
         </Button>
@@ -58,7 +58,7 @@
           color="transparent"
           className="text-red"
           on:click={() => {
-            toggleEditMode();
+            toggleEditMode()
           }}>
           {Lang.t('general.done', 'Done')}
         </Button>
@@ -74,28 +74,30 @@
           hideAdd
           trackers={savedTrackers.reverse()}
           on:more={(evt) => {
-            const tracker = evt.detail;
-            Interact.elementOptions(tracker.getTrackableElement(), { callback() {
-                SearchStore.close();
-              } });
-            evt.stopPropagation();
-            evt.preventDefault();
+            const tracker = evt.detail
+            Interact.elementOptions(tracker.getTrackableElement(), {
+              callback() {
+                SearchStore.close()
+              },
+            })
+            evt.stopPropagation()
+            evt.preventDefault()
           }}
           on:tap={(evt) => {
-            Interact.trackerTap(evt.detail, $TrackerStore.trackers);
-            SearchStore.close();
+            Interact.trackerTap(evt.detail, $TrackerStore.trackers)
+            SearchStore.close()
           }} />
       </div>
     {:else}
       {#each savedTerms.reverse() as searchTerm (searchTerm.term)}
-        <ListItem title={searchTerm.term}>
+        <ListItem bottomLine={false} title={searchTerm.term}>
           <div slot="right">
             <Button
               text
               size="sm"
               style="color:var(--color-red)"
               on:click={() => {
-                SearchStore.remove(searchTerm);
+                SearchStore.remove(searchTerm)
               }}>
               Delete
             </Button>
@@ -111,10 +113,10 @@
         on:click={(evt) => {
           if (mode == 'view') {
             SearchStore.update((state) => {
-              state.active = searchTerm;
-              state.view = searchTerm.type;
-              return state;
-            });
+              state.active = searchTerm
+              state.view = searchTerm.type
+              return state
+            })
           }
         }}>
         <Text>{searchTerm.term}</Text>
@@ -124,7 +126,7 @@
               size="sm"
               color="danger"
               on:click={() => {
-                SearchStore.remove(searchTerm);
+                SearchStore.remove(searchTerm)
               }}>
               Delete
             </Button>

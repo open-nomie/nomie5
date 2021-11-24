@@ -1,11 +1,11 @@
 <script lang="ts">
-  export let style = "";
-  export let rounded: boolean = true;
-  export let relative: boolean = true;
-  export let absolute: boolean = false;
-  export let className: string = "";
-  export let mainClass: string = "";
-  export let clear: boolean = false;
+  export let style = ''
+  export let rounded: boolean = true
+  export let relative: boolean = true
+  export let absolute: boolean = false
+  export let className: string = ''
+  export let mainClass: string = ''
+  export let clear: boolean = false
 </script>
 
 <style global lang="postcss">
@@ -17,14 +17,14 @@
     @apply w-full;
     @apply flex-grow;
   }
-  
+
   .nui-panel.nui-rounded {
     @apply rounded-xl;
     @apply shadow-lg;
   }
   .nui-panel.clear {
     @apply bg-transparent;
-    box-shadow:none !important;
+    box-shadow: none !important;
   }
   .nui-panel--main {
     @apply overflow-x-hidden;
@@ -46,7 +46,6 @@
   }
   .nui-panel--footer [slot],
   .nui-panel--header [slot] {
-    @apply flex-grow;
     @apply flex;
     @apply flex-col;
   }
@@ -56,7 +55,8 @@
   class:relative
   class:absolute
   class:clear
-  class="nui nui-panel {rounded ? 'nui-rounded' : ''} {className}"
+  class="nui nui-panel {rounded ? 'nui-rounded' : ''}
+  {className}"
   {style}>
   <div class="nui-panel--header">
     <slot name="header" />

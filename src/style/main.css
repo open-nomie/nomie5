@@ -108,6 +108,15 @@ body {
   @apply leading-tight;
 }
 
+html {
+  @apply bg-primary-500;
+}
+
+.stiff {
+  @apply flex-grow-0;
+  @apply flex-shrink-0;
+}
+
 .screen-block {
   @apply fixed;
   @apply top-0;

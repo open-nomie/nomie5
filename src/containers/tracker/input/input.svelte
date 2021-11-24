@@ -89,7 +89,7 @@
       let startingDate = dayjs().subtract(data.value, 'second')
       data.tracker.started = startingDate.toDate().getTime()
       // Start the Timer for this tracker
-      TrackerStore.startfTimer(data.tracker)
+      TrackerStore.startTimer(data.tracker)
       methods.onCancel()
     },
     // Stop the Timer

@@ -181,7 +181,7 @@
     @apply bg-gray-200 dark:bg-gray-900;
   }
   .shortcut-button.in-note {
-    transform: scale(0.94);
+    transform: scale(0.98);
     box-shadow: 0px 0px 9px var(--tracker-color) !important;
   }
   .shortcut-button.has-value .highlight.one-tap {
@@ -201,6 +201,7 @@
   }
   .shortcut-button.has-value .more {
     border: solid 1px rgba(255, 255, 255, 0.6);
+    @apply bg-white bg-opacity-10;
   }
   .shortcut-button.has-value:before {
     position: absolute;
@@ -240,7 +241,7 @@
   {id}
   ariaLabel={title || 'button'}
   color="clear"
-  className="{className} shortcut-button d-flex flex-column {is.truthy(value) ? 'has-value' : 'no-value bg-white dark:bg-black'}
+  className="{className} shortcut-button {is.truthy(value) ? 'has-value' : 'no-value bg-white dark:bg-black'}
   {compact ? 'compact' : ''}"
   style={[style, `--tracker-color:${color};`, value ? `background-color:${color};` : ``].join('')}
   on:longpress={() => {
