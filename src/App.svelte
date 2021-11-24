@@ -245,10 +245,7 @@
   <Confetti />
 {/if}
 
-{#if $UserStore.storageType == 'blockstack' && $Device.offline}
-  <div class="text-center offline-notice">No connection to Blockstack.</div>
-{/if}
-<div id="photo-holder">
-  <img id="photo-holder-image" alt="avatar-holder" />
+<div id="photo-holder hidden">
+  <img id="photo-holder-image " alt="avatar-holder" />
 </div>
 <!-- {/if} -->
