@@ -1,49 +1,51 @@
 <script lang="ts">
-  import Input from "../../components/input/input.svelte";
-  import ListItem from "../../components/list-item/list-item.svelte";
-  import { Widget, WidgetTimeFrame } from "../../modules/dashboard/widget";
-  import TrackerSmallBlock from "../../components/tracker-small-block/tracker-small-block.svelte";
-  import Button from "../../components/button/button.svelte";
-  import Text from "../../components/text/text.svelte";
+  import Input from '../../components/input/input.svelte'
+  import ListItem from '../../components/list-item/list-item.svelte'
+  import { Widget, WidgetTimeFrame } from '../../modules/dashboard/widget'
+  import TrackerSmallBlock from '../../components/tracker-small-block/tracker-small-block.svelte'
+  import Button from '../../components/button/button.svelte'
+  import Text from '../../components/text/text.svelte'
 
-  import { createEventDispatcher, onMount } from "svelte";
-  import ToggleSwitch from "../../components/toggle-switch/toggle-switch.svelte";
-  import Icon from "../../components/icon/icon.svelte";
-  import TinyColorPicker from "../../components/color-picker/tiny-color-picker.svelte";
-  import { TrackerStore } from "../../store/tracker-store";
-  import TrackerConfig from "../../modules/tracker/tracker";
-  import TrackableElement from "../../modules/trackable-element/trackable-element";
-  import ButtonGroup from "../../components/button-group/button-group.svelte";
-  import nid from "../../modules/nid/nid";
+  import { createEventDispatcher, onMount } from 'svelte'
+  import ToggleSwitch from '../../components/toggle-switch/toggle-switch.svelte'
+  import Icon from '../../components/icon/icon.svelte'
+  import TinyColorPicker from '../../components/color-picker/tiny-color-picker.svelte'
+  import { TrackerStore } from '../../store/tracker-store'
+  import TrackerConfig from '../../modules/tracker/tracker'
+  import TrackableElement from '../../modules/trackable-element/trackable-element'
+  import ButtonGroup from '../../components/button-group/button-group.svelte'
+  import nid from '../../modules/nid/nid'
 
-  import { timeFrames } from "./timeFrames";
-  import { widgetTypes } from "./widgetTypes";
-  import type { IWidgetType } from "./widgetTypes";
+  import { timeFrames } from './timeFrames'
+  import { widgetTypes } from './widgetTypes'
+  import type { IWidgetType } from './widgetTypes'
 
-  import { Interact } from "../../store/interact";
-  import { DashboardStore } from "../../store/dashboard-store";
-  import { Lang } from "../../store/lang";
-  import { Dashboard } from "../../modules/dashboard/dashboard";
-  import type { t } from "i18next";
+  import { Interact } from '../../store/interact'
+  import { Lang } from '../../store/lang'
+  import { Dashboard } from '../../modules/dashboard/dashboard'
 
-  export let value: Widget = null;
-  const dispatch = createEventDispatcher();
+  export let value: Widget = null
+  const dispatch = createEventDispatcher()
 
-  let dateType;
-  let widget;
-  let goalValue;
-  let widgetTypeId;
-  let widgetType: IWidgetType;
-  let conditionalStyling: boolean = false;
-  let editorView = "options";
+  let dateType
+  let widget
+  let goalValue
+  let widgetTypeId
+  let widgetType: IWidgetType
+  let conditionalStyling: boolean = false
+  let editorView = 'options'
 
   $: if (widgetTypeId) {
-    widgetType = widgetTypes.find((widgetType) => widgetType.id == widgetTypeId);
+    widgetType = widgetTypes.find((widgetType) => widgetType.id == widgetTypeId)
     if (widgetType) {
-      value.type = widgetTypeId;
-      if ([...widgetType.optional, ...widgetType.requires].indexOf("cond-style") == -1) {
+      value.type = widgetTypeId
+      if (
+        [...widgetType.optional, ...widgetType.requires].indexOf(
+          'cond-style',
+        ) == -1
+      ) {
         // Doesn't support conditional styling.. remove that setting
-        value.compareValue = undefined;
+        value.compareValue = undefined
       }
     }
   }
@@ -52,29 +54,29 @@
    * On Date Type Change
    **/
   $: if (dateType) {
-    let timeFrame = timeFrames.find((t) => t.id == dateType);
-    value.timeRange = new WidgetTimeFrame(timeFrame);
-    if (value.timeRange.id == "today" || value.timeRange.id == "yesterday") {
-      value.includeAvg = false;
+    let timeFrame = timeFrames.find((t) => t.id == dateType)
+    value.timeRange = new WidgetTimeFrame(timeFrame)
+    if (value.timeRange.id == 'today' || value.timeRange.id == 'yesterday') {
+      value.includeAvg = false
     }
   }
 
-  let editorButtons = [];
+  let editorButtons = []
 
   $: if (value) {
     editorButtons = [
       {
-        label: `${Lang.t("general.setup", "Setup")}`,
-        active: editorView === "options",
+        label: `${Lang.t('general.setup', 'Setup')}`,
+        active: editorView === 'options',
         click() {
-          changeView("options");
+          changeView('options')
         },
       },
       {
-        label: `${Lang.t("general.style", "Style")}`,
-        active: editorView === "style",
+        label: `${Lang.t('general.style', 'Style')}`,
+        active: editorView === 'style',
         click() {
-          changeView("style");
+          changeView('style')
         },
       },
       // {
@@ -85,11 +87,11 @@
       //     changeView("more");
       //   },
       // },
-    ];
+    ]
   }
 
   function changeView(view) {
-    editorView = view;
+    editorView = view
   }
 
   // async function moveWidget() {
@@ -136,61 +138,71 @@
         title,
         icon,
         async click() {
-          let selected: any = await Interact.select(type);
+          console.log('Should be selecting')
+          let selected: any = await Interact.select(type)
           if (selected.length) {
-            value.element = value.element || { id: null, type: null, obj: null };
-            value.element.obj = selected[0];
-            value.element.type = type;
-            if (type == "tracker") {
-              value.element.id = value.element.obj.tag;
-            } else if (type == "person") {
-              value.element.id = value.element.obj.username;
-            } else if (type == "context") {
-              value.element.id = selected[0];
+            value.element = value.element || { id: null, type: null, obj: null }
+            value.element.obj = selected[0]
+            value.element.type = type
+            if (type == 'tracker') {
+              value.element.id = value.element.obj.tag
+            } else if (type == 'person') {
+              value.element.id = value.element.obj.username
+            } else if (type == 'context') {
+              value.element.id = selected[0]
             } else {
-              console.error("Fit for other types", selected[0]);
+              console.error('Fit for other types', selected[0])
             }
-            value.element = value.element instanceof TrackableElement ? value.element : new TrackableElement(value.element);
+            value.element =
+              value.element instanceof TrackableElement
+                ? value.element
+                : new TrackableElement(value.element)
           }
         },
-      };
-    };
+      }
+    }
     Interact.popmenu({
-      title: "What type of item would you like to add?",
+      title: 'What type of item would you like to add?',
       buttons: [
-        generateElementOption("Tracker", "tracker", "tracker"),
-        generateElementOption("Person", "person", "userCircle"),
-        generateElementOption("Context", "context", "bulb"),
+        generateElementOption('Tracker', 'tracker', 'tracker'),
+        generateElementOption('Person', 'person', 'userCircle'),
+        generateElementOption('Context', 'context', 'bulb'),
       ],
-    });
+    })
   }
 
   async function getConditionalValue() {
-    let inputTracker;
-    if (value.element.type == "tracker") {
-      inputTracker = value.element.obj;
+    let inputTracker
+    if (value.element.type == 'tracker') {
+      inputTracker = value.element.obj
     } else {
-      inputTracker = new TrackerConfig({ tag: value.element.obj.id, type: "numeric" });
+      inputTracker = new TrackerConfig({
+        tag: value.element.obj.id,
+        type: 'numeric',
+      })
     }
     // const tracker = TrackerStore.getByTag();
     // was value.element.obj -- wth is this?
-    const response = await Interact.trackerInput(inputTracker, { value: value.compareValue, allowSave: false });
+    const response = await Interact.trackerInput(inputTracker, {
+      value: value.compareValue,
+      allowSave: false,
+    })
     if (response && response.value) {
-      value.compareValue = response.value;
+      value.compareValue = response.value
     }
   }
 
   onMount(() => {
     if (value) {
       if (value.timeRange) {
-        dateType = value.timeRange.id;
+        dateType = value.timeRange.id
       }
       if (value.compareValue) {
-        conditionalStyling = true;
+        conditionalStyling = true
       }
-      widgetTypeId = value.type;
+      widgetTypeId = value.type
     }
-  });
+  })
 </script>
 
 <style lang="postcss">
@@ -220,7 +232,10 @@
       {/each}
     </Input>
     {#if widgetTypeId}
-      <ButtonGroup className="mt-3 widget-view-options" size="sm" buttons={editorButtons} />
+      <ButtonGroup
+        className="mt-3 widget-view-options"
+        size="sm"
+        buttons={editorButtons} />
     {/if}
   </div>
   {#if widgetTypeId}
@@ -242,9 +257,12 @@
                   element={value.element}
                   on:click={selectType}
                   className="px-2"
-                  style="background-color:var(--color-solid); min-height:40px; min-width:100px; max-width:150px;" />
+                  style="background-color:var(--color-solid); min-height:40px;
+                  min-width:100px; max-width:150px;" />
               {:else}
-                <Text className="text-primary-bright">{Lang.t('general.select')}...</Text>
+                <Text className="text-primary-bright">
+                  {Lang.t('general.select')}...
+                </Text>
               {/if}
             </div>
           </ListItem>
@@ -252,7 +270,11 @@
 
         {#if widgetTypeId == 'text'}
           <ListItem className="p-0" bg="transparent">
-            <Input placeholder="Message" type="textarea" rows={2} bind:value={value.description} />
+            <Input
+              placeholder="Message"
+              type="textarea"
+              rows={2}
+              bind:value={value.description} />
           </ListItem>
         {/if}
         {#if widgetType && [...widgetType.requires, ...widgetType.optional].indexOf('timeframe') > -1}
@@ -302,7 +324,7 @@
                       icon
                       className="mr-2"
                       on:click={async () => {
-                        getConditionalValue();
+                        getConditionalValue()
                       }}>
                       {#if value.element.type == 'tracker'}
                         <Icon name="addOutline" className="fill-inverse-2" />
@@ -317,23 +339,27 @@
             <ListItem bg="transparent" className="px-0 pt-2">
               <div class="under" slot="left">
                 <div class="text-center">
-                  <Text className="mb-2" size="sm">{Lang.t('dashboard.widget-under-value-color', 'Under value color')}</Text>
+                  <Text className="mb-2" size="sm">
+                    {Lang.t('dashboard.widget-under-value-color', 'Under value color')}
+                  </Text>
                   <TinyColorPicker
                     size={16}
                     value={value.compareUnderColor}
                     on:change={(evt) => {
-                      value.compareUnderColor = evt.detail;
+                      value.compareUnderColor = evt.detail
                     }} />
                 </div>
               </div>
               <div class="over" slot="right">
                 <div class="text-center">
-                  <Text className="mb-2" size="sm">{Lang.t('dashboard.widget-over-value-color', 'Over value color')}</Text>
+                  <Text className="mb-2" size="sm">
+                    {Lang.t('dashboard.widget-over-value-color', 'Over value color')}
+                  </Text>
                   <TinyColorPicker
                     size={16}
                     value={value.compareOverColor}
                     on:change={(evt) => {
-                      value.compareOverColor = evt.detail;
+                      value.compareOverColor = evt.detail
                     }} />
                 </div>
               </div>

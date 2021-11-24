@@ -3,52 +3,47 @@
    * Jun 12 2020 - Good god this file has turned into a nightmare.
    */
 
-  
   // vendors
 
   //modules
-  import Tracker from "../../modules/tracker/tracker";
-  import NomieLog from "../../modules/nomie-log/nomie-log";
+  import Tracker from '../../modules/tracker/tracker'
+  import NomieLog from '../../modules/nomie-log/nomie-log'
   // utils
-  
-  
+
   // Components
-  import Toast from "../../components/toast/toast.svelte";
-  
-  
-  import NAlertBox from "../../components/alertbox/alertbox.svelte";
-  import NPopMenu from "../../components/pop-menu/pop-menu.svelte";
-  
-  
+  import Toast from '../../components/toast/toast.svelte'
 
-  import NShareImage from "../../components/share-image/share-image.svelte";
+  import NAlertBox from '../../components/alertbox/alertbox.svelte'
+  import NPopMenu from '../../components/pop-menu/pop-menu.svelte'
 
-  import NLocationModal from "../../containers/map/location-modal.svelte";
+  import NShareImage from '../../components/share-image/share-image.svelte'
+
+  import NLocationModal from '../../containers/map/location-modal.svelte'
 
   // import NCamera from "../../components/camera/camera.svelte";
   // Containers
-  import NMap from "../map/map.svelte";
-  import TrackerSelector from "../tracker/selector/selector.svelte";
-  import NSelector from "../selector/selector.svelte";
-  import NTrackerEditor from "../tracker/editor/editor.svelte";
-  import TrackerInput from "../tracker/input/input.svelte";
-  import LogEditor from "../log-editor/log-editor.svelte";
+  import NMap from '../map/map.svelte'
+  import TrackerSelector from '../tracker/selector/selector.svelte'
+  import NSelector from '../selector/selector.svelte'
+  import NTrackerEditor from '../tracker/editor/editor.svelte'
+  import TrackerInput from '../tracker/input/input.svelte'
+  import LogEditor from '../log-editor/log-editor.svelte'
   // Store
-  import { Interact } from "../../store/interact";
-  import { LedgerStore } from "../../store/ledger";
-  import { TrackerStore } from "../../store/tracker-store";
-  import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
-  import LocationViewerModal from "../map/location-viewer-modal.svelte";
+  import { Interact } from '../../store/interact'
+  import { LedgerStore } from '../../store/ledger'
+  import { TrackerStore } from '../../store/tracker-store'
+  import DateTimeBar from '../../components/date-time-bar/date-time-bar.svelte'
+  import LocationViewerModal from '../map/location-viewer-modal.svelte'
 
-  let promptInput;
-  let logEditorTracker;
-  let lastId;
+  let promptInput
+  let logEditorTracker
+  let lastId
 
   $: if ($Interact.prompt.show && promptInput) {
-    promptInput.focus();
+    promptInput.focus()
   }
 
-  let ready = false;
+  let ready = false
 
   const methods = {
     getLogTrackers(log) {
@@ -57,17 +52,17 @@
           value: log.trackers[tag].value || 0,
           tag: tag,
           tracker: $TrackerStore.trackers[tag] || new Tracker({ tag: tag }),
-        };
-      });
+        }
+      })
     },
     getTracker(tag) {
-      return $TrackerStore.trackers[tag] || new Tracker({ tag: tag });
+      return $TrackerStore.trackers[tag] || new Tracker({ tag: tag })
     },
     editLogDataOnSave(event) {
       // let tracker = event.detail.tracker;
       // let value = event.detail.value;
       // let valueSet = false;
-      alert("TODO:// Fix whats going on here");
+      alert('TODO:// Fix whats going on here')
       // let newNote = $Interact.logDataEditor.log.note.split(" ").map((word) => {
       //   if (word.search(`#${$Interact.logDataEditor.tag}`) === -1) {
       //     return word;
@@ -84,8 +79,8 @@
       // $Interact.logDataEditor.log.expanded();
       // $Interact.logDataEditor.tag = null;
     },
-  };
-  ready = true;
+  }
+  ready = true
 </script>
 
 <NPopMenu
@@ -94,7 +89,7 @@
   show={$Interact.popmenu.show}
   buttons={$Interact.popmenu.buttons}
   on:close={() => {
-    Interact.dismiss();
+    Interact.dismiss()
   }} />
 
 <NAlertBox
@@ -104,8 +99,8 @@
   ok={$Interact.alert.ok}
   cancel={$Interact.alert.cancel}
   onInteract={(answer) => {
-    $Interact.alert.onInteract(answer);
-    Interact.dismiss();
+    $Interact.alert.onInteract(answer)
+    Interact.dismiss()
   }} />
 
 <!-- <NCamera
@@ -123,12 +118,12 @@
   onInteract={(answer) => {
     if (answer) {
       if ($Interact.prompt.onInteract) {
-        $Interact.prompt.onInteract($Interact.prompt.value);
+        $Interact.prompt.onInteract($Interact.prompt.value)
       }
     } else {
-      $Interact.prompt.onInteract(undefined);
+      $Interact.prompt.onInteract(undefined)
     }
-    Interact.dismiss();
+    Interact.dismiss()
   }}>
   {#if $Interact.prompt.valueType == 'textarea'}
     <textarea
@@ -158,9 +153,9 @@
       bind:date={$Interact.prompt.value}
       on:change={(evt) => {
         Interact.update((state) => {
-          state.prompt.value = evt.detail.toDate();
-          return state;
-        });
+          state.prompt.value = evt.detail.toDate()
+          return state
+        })
       }} />
     <!-- <input
       name="value"
@@ -190,14 +185,14 @@
 <NTrackerEditor
   tracker={new Tracker($Interact.trackerEditor.tracker)}
   on:save={(tracker) => {
-    $Interact.trackerEditor.show = false;
-    $Interact.trackerEditor.tracker = null;
+    $Interact.trackerEditor.show = false
+    $Interact.trackerEditor.tracker = null
     if ($Interact.trackerEditor.onInteract) {
-      $Interact.trackerEditor.onInteract(tracker);
+      $Interact.trackerEditor.onInteract(tracker)
     }
   }}
   on:close={() => {
-    Interact.dismissEditTracker();
+    Interact.dismissEditTracker()
   }} />
 
 <!-- Tracker Selector -->
@@ -206,33 +201,35 @@
   show={$Interact.trackerSelector.show}
   multiple={$Interact.trackerSelector.multiple}
   on:cancel={() => {
-    Interact.dismissTrackerSelector();
+    Interact.dismissTrackerSelector()
   }}
   on:select={(event) => {
-    let trackers = event.detail;
+    let trackers = event.detail
     if ($Interact.trackerSelector.onInteract) {
-      $Interact.trackerSelector.onInteract(trackers);
-      Interact.dismissTrackerSelector();
+      $Interact.trackerSelector.onInteract(trackers)
+      Interact.dismissTrackerSelector()
     } else {
-      Interact.dismissTrackerSelector();
+      Interact.dismissTrackerSelector()
     }
   }} />
 
-<NSelector
-  show={$Interact.selector.show}
-  multiple={$Interact.selector.multiple}
-  on:cancel={() => {
-    Interact.dismissSelector();
-  }}
-  on:select={(event) => {
-    let trackers = event.detail;
-    if ($Interact.selector.onInteract) {
-      $Interact.selector.onInteract(trackers);
-      Interact.dismissSelector();
-    } else {
-      Interact.dismissSelector();
-    }
-  }} />
+{#if $Interact.selector.show}
+  <NSelector
+    show={$Interact.selector.show}
+    multiple={$Interact.selector.multiple}
+    on:cancel={() => {
+      Interact.dismissSelector()
+    }}
+    on:select={(event) => {
+      let trackers = event.detail
+      if ($Interact.selector.onInteract) {
+        $Interact.selector.onInteract(trackers)
+        Interact.dismissSelector()
+      } else {
+        Interact.dismissSelector()
+      }
+    }} />
+{/if}
 
 <!-- Share Image -->
 {#if $Interact.shareImage.log}
@@ -243,24 +240,24 @@
   <TrackerInput
     on:save={(event) => {
       if ($Interact.trackerInput.onInteract) {
-        $Interact.trackerInput.onInteract(event.detail, 'save');
+        $Interact.trackerInput.onInteract(event.detail, 'save')
       }
-      Interact.dismissTrackerInput();
+      Interact.dismissTrackerInput()
     }}
     on:add={(event) => {
       if ($Interact.trackerInput.onInteract) {
-        $Interact.trackerInput.onInteract(event.detail, 'add');
+        $Interact.trackerInput.onInteract(event.detail, 'add')
       }
-      Interact.dismissTrackerInput();
+      Interact.dismissTrackerInput()
     }}
     on:cancel={() => {
       if ($Interact.trackerInput.onInteract) {
-        $Interact.trackerInput.onInteract(null, 'cancelled');
+        $Interact.trackerInput.onInteract(null, 'cancelled')
       }
-      Interact.dismissTrackerInput();
+      Interact.dismissTrackerInput()
     }}
     on:cancelAll={() => {
-      Interact.dismissTrackerInput();
+      Interact.dismissTrackerInput()
     }}
     show={$Interact.trackerInput.show}
     tracker={new Tracker($Interact.trackerInput.tracker)}
@@ -268,24 +265,27 @@
 {/if}
 
 {#if $Interact.locationViewer.show}
-  <LocationViewerModal show={true} locations={$Interact.locationViewer.locations} on:close={Interact.dismissLocations} />
+  <LocationViewerModal
+    show={true}
+    locations={$Interact.locationViewer.locations}
+    on:close={Interact.dismissLocations} />
 {/if}
 {#if $Interact.logEditor.show}
   <LogEditor
     log={$Interact.logEditor.log}
     on:close={() => {
-      Interact.dismissEditLog();
+      Interact.dismissEditLog()
     }}
     on:save={async (evt) => {
       try {
-        let log = evt.detail;
-        let updatedLog = await LedgerStore.updateLog(log, $Interact.logEditor.log.end);
+        let log = evt.detail
+        let updatedLog = await LedgerStore.updateLog(log, $Interact.logEditor.log.end)
         if ($Interact.logEditor.onInteract) {
-          $Interact.logEditor.onInteract(log);
+          $Interact.logEditor.onInteract(log)
         }
-        Interact.dismissEditLog();
+        Interact.dismissEditLog()
       } catch (e) {
-        Interact.alert(e.message);
+        Interact.alert(e.message)
       }
     }} />
 {/if}

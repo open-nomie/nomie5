@@ -1,4 +1,7 @@
 <script lang="ts">
+  import ToolbarGrid from './../../components/toolbar/toolbar-grid.svelte'
+  import Panel from './../../components/panel/panel.svelte'
+  import Container from './../../components/container/container.svelte'
   import Modal2 from './../../components/modal/modal2.svelte'
   import { navigate, Router, Route } from 'svelte-routing'
   import { onMount, onDestroy } from 'svelte'
@@ -527,36 +530,38 @@
   pageTitle="Dashboard"
   showTabs={true}>
   <header slot="header">
-    <Toolbar>
-      <Button
-        color="none"
-        shape="circle"
-        className="tap-icon"
-        on:click={() => SearchStore.view('history')}>
-        <Icon name="search" size={24} />
-      </Button>
-      <HScroller
-        centerIfPossible
-        activeIndex={$DashboardStore.activeIndex}
-        className="n-board-tabs"
-        wrapperClass="space-x-4">
-        {#each dashboards || [] as board, i (board.id)}
-          <button
-            class="tab board-{board.id} truncate-1 {i == $DashboardStore.activeIndex ? 'selected' : 'inactive opacity-80'}"
-            on:click={() => {
-              DashboardStore.toIndex(i)
-            }}>
-            {truncateText(board.label, 12)}
-          </button>
-        {/each}
-      </HScroller>
-      <Button icon className="tap-icon" on:click={dashboardOptions}>
-        <Icon name="settings" />
-      </Button>
-    </Toolbar>
+    <Container>
+      <Toolbar>
+        <Button
+          color="none"
+          shape="circle"
+          className="tap-icon"
+          on:click={() => SearchStore.view('history')}>
+          <Icon name="search" size={24} />
+        </Button>
+        <HScroller
+          centerIfPossible
+          activeIndex={$DashboardStore.activeIndex}
+          className="n-board-tabs"
+          wrapperClass="space-x-4">
+          {#each dashboards || [] as board, i (board.id)}
+            <button
+              class="tab board-{board.id} truncate-1 {i == $DashboardStore.activeIndex ? 'selected' : 'inactive opacity-80'}"
+              on:click={() => {
+                DashboardStore.toIndex(i)
+              }}>
+              {truncateText(board.label, 12)}
+            </button>
+          {/each}
+        </HScroller>
+        <Button icon className="tap-icon" on:click={dashboardOptions}>
+          <Icon name="settings" />
+        </Button>
+      </Toolbar>
+    </Container>
   </header>
   {#if activeDashboard && !loading}
-    <div class=" h-100">
+    <Container size="lg" className=" h-100">
       {#if editMode}
         <div class="flex px-2 mt-2 mb-2 n-toolbar">
           <Input
@@ -578,7 +583,7 @@
           on:left={DashboardStore.next}
           on:right={DashboardStore.previous}>
           <div
-            class="grid grid-flow-row grid-cols-4 gap-2 p-4 lg:grid-cols-8"
+            class="grid grid-flow-row grid-cols-4 gap-2 p-4 md:gap-4 md:p-4 lg:p-6 lg:gap-6 lg:grid-cols-8"
             on:swipeleft={DashboardStore.next}
             on:swiperight={DashboardStore.previous}>
 
@@ -657,7 +662,7 @@
           <Text size="sm" faded>{Lang.t('general.loading', 'Loading')}...</Text>
         </div>
       {/if}
-    </div>
+    </Container>
   {:else}
     <div class="n-panel center-all">
       <Spinner size={18} />
@@ -667,23 +672,28 @@
 </NLayout>
 
 <Modal2 id="widget-editor" visible={editingWidget !== undefined}>
-  <div class="n-toolbar-grid" slot="header">
-    <div class="left">
-      <Button color="primary" type="clear" on:click={clearEditing}>
-        Close
-      </Button>
-    </div>
-    <div class="main">{Lang.t('dashboard.widget-editor', 'Widget Editor')}</div>
-    <div class="right">
-      <Button color="primary" type="clear" on:click={saveEditingWidget}>
-        {#if editingWidget && editingWidget._editing}
-          {`${Lang.t('general.update', 'Update')}`}
-        {:else}{`${Lang.t('general.save', 'Save')}`}{/if}
-      </Button>
-    </div>
-  </div>
-  {#if editingWidget}
-    <WidgetEditor bind:value={editingWidget} on:close={clearEditing} />
-  {/if}
-  <div slot="footer" />
+  <Panel>
+    <header slot="header">
+      <ToolbarGrid>
+        <div slot="left">
+          <Button color="primary" type="clear" on:click={clearEditing}>
+            Close
+          </Button>
+        </div>
+        <div class="ntitle">
+          {Lang.t('dashboard.widget-editor', 'Widget Editor')}
+        </div>
+        <div slot="right">
+          <Button color="primary" type="clear" on:click={saveEditingWidget}>
+            {#if editingWidget && editingWidget._editing}
+              {`${Lang.t('general.update', 'Update')}`}
+            {:else}{`${Lang.t('general.save', 'Save')}`}{/if}
+          </Button>
+        </div>
+      </ToolbarGrid>
+    </header>
+    {#if editingWidget}
+      <WidgetEditor bind:value={editingWidget} on:close={clearEditing} />
+    {/if}
+  </Panel>
 </Modal2>

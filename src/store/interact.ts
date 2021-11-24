@@ -25,7 +25,7 @@ import dayjs, { Dayjs } from "dayjs";
 // utils
 import Logger from "../utils/log/log";
 import time from "../utils/time/time";
-import tick from "../utils/tick/tick";
+import tick, { wait } from "../utils/tick/tick";
 
 // modules
 import NomieLog from "../modules/nomie-log/nomie-log";
@@ -511,7 +511,8 @@ const interactInit = () => {
       return buttons;
     },
 
-    select(type = "tracker", multiple = false, options: any = {}) {
+    async select(type = "tracker", multiple = false, options: any = {}) {
+      await wait(400);
       return new Promise((resolve, reject) => {
         update((state) => {
           state.selector.multiple = multiple;

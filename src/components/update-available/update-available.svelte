@@ -52,21 +52,18 @@
         <p>Look at that! A new version of Nomie is ready to use.</p>
       {/if}
     </div>
-    {#if $needRefresh}
-      <button on:click={() => updateServiceWorker(true)}>Reload</button>
-    {/if}
+
     <div class="flex items-center justify-end space-x-4">
-      {#if $offlineReady}
-        <button
-          class="px-4 py-2 font-bold bg-white shadow-sm rounded-xl text-primary-600"
-          on:click={close}>
-          Close
-        </button>
-      {:else}
-        <button on:click={close}>Later</button>
+      <button
+        class="px-4 py-2 font-bold bg-white shadow-sm rounded-xl text-primary-600"
+        on:click={close}>
+        Later
+      </button>
+
+      {#if $needRefresh}
         <button
           aria-label="Update the App"
-          on:click={reload}
+          on:click={() => updateServiceWorker(true)}
           class="px-4 py-2 font-bold bg-white shadow-sm rounded-xl text-primary-600">
           Update Now
         </button>

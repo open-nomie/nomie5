@@ -1,4 +1,5 @@
 <script>
+  import Container from './../components/container/container.svelte'
   import { onMount } from 'svelte'
   import NItem from '../components/list-item/list-item.svelte'
   import NToolbar from '../components/toolbar/toolbar.svelte'
@@ -82,33 +83,35 @@
 <NLayout pageTitle="People">
 
   <div slot="header" class="flex">
-    <NToolbar className=" px-2">
-      <Button
-        color="none"
-        shape="circle"
-        className="tap-icon"
-        on:click={() => {
-          SearchStore.view('people')
-        }}>
-        <NIcon name="search" size={24} />
-      </Button>
-      <div class="ntitle">
-        {#if state.people.length}
-          {Lang.t('tabs.people', 'People')}
-        {:else}{Lang.t('people.no-people-found', 'No People Found')}{/if}
-      </div>
-      <Button
-        color="none"
-        shape="circle"
-        className="tap-icon"
-        on:click={addPerson}>
-        <NIcon name="userAdd" className="fill-primary-bright" />
-      </Button>
-    </NToolbar>
+    <Container>
+      <NToolbar className=" px-2">
+        <Button
+          color="none"
+          shape="circle"
+          className="tap-icon"
+          on:click={() => {
+            SearchStore.view('people')
+          }}>
+          <NIcon name="search" size={24} />
+        </Button>
+        <div class="ntitle">
+          {#if state.people.length}
+            {Lang.t('tabs.people', 'People')}
+          {:else}{Lang.t('people.no-people-found', 'No People Found')}{/if}
+        </div>
+        <Button
+          color="none"
+          shape="circle"
+          className="tap-icon"
+          on:click={addPerson}>
+          <NIcon name="userAdd" className="fill-primary-bright" />
+        </Button>
+      </NToolbar>
+    </Container>
   </div>
 
   <div slot="content">
-    <div class="my-2 bg-transparent n-list">
+    <Container className="my-2">
       {#if !state.people.length && !state.searchTerm && state.initialized}
         <Empty
           title={Lang.t('general.people')}
@@ -122,7 +125,8 @@
         <NItem>Nothing found for @{state.searchTerm}</NItem>
       {/if}
 
-      <div class="grid grid-cols-2 gap-2 p-2 md:grid-cols-3 lg:grid-cols-4">
+      <div
+        class="grid grid-cols-2 gap-2 p-2 md:grid-cols-3 md:gap-4 lg:gap-6 lg:grid-cols-4">
         {#each state.people as person, index (index)}
           <ShortcutUserButton
             person={$PeopleStore.people[person]}
@@ -135,6 +139,6 @@
         {/each}
       </div>
 
-    </div>
+    </Container>
   </div>
 </NLayout>

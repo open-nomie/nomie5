@@ -119,6 +119,7 @@
 
   .nui-backdrop--children.in-background {
     transform: scale(var(--layer-scale)) translateY(calc(var(--layer-y) * 1px));
+    @apply opacity-50;
   }
   .nui-backdrop--children .swipe-bar .swipe-bar--visual {
     background-color: var(--color-solid-100);

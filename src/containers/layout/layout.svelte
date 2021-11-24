@@ -50,7 +50,7 @@
 </svelte:head>
 
 <div
-  class="n-layout {className ? className : 'bg-gray-100 dark:bg-gray-800'}
+  class="n-layout z-50 {className ? className : 'bg-gray-100 dark:bg-gray-800'}
   {hasFooter ? 'has-footer' : ''}
   {hasHeader ? 'has-header' : ''}
   {showTabs ? 'has-tabs' : 'no-tabs'}"
@@ -77,7 +77,7 @@
     </main>
   {/if}
   {#if hasFooter}
-    <footer class="layout-footer glass">
+    <footer class="layout-footer glass" style="box-shadow:-10px 0px 10px rgba(0,0,0,0.2)">
       <slot name="footer" />
     </footer>
   {/if}

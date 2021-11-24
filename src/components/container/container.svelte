@@ -1,18 +1,27 @@
 <script lang="ts">
-  export let size: "xs" | "sm" | "md" = "md";
+  export let size: 'xs' | 'sm' | 'md' | 'lg' = 'md'
+  export let className: string = ''
 </script>
 
-<style lang="postcss">
+<style global lang="postcss">
   .nui-container-sm {
-    @apply max-w-screen-sm;
+    @apply max-w-screen-md;
   }
   .nui-container-xs {
-     @apply max-w-lg;
+    @apply max-w-screen-sm;
+  }
+  .nui-container-md {
+    @apply max-w-screen-lg;
+  }
+  .nui-container-lg {
+    @apply max-w-screen-xl;
   }
   .nui-container {
-    @apply max-w-screen-md;
+    @apply w-full;
     @apply mx-auto;
   }
 </style>
 
-<div class={`nui-container nui-container-${size}`}><slot /></div>
+<div class={`nui-container nui-container-${size} ${className}`}>
+  <slot />
+</div>

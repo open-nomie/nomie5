@@ -310,85 +310,87 @@
 <NLayout pageTitle={appTitle} {style}>
 
   <header slot="header" class="items-center flex-column">
-    <Toolbar className=" px-2 items-center">
-      <Button icon on:click={methods.search}>
-        <Icon className="text-primary-500" name="search" size={24} />
-      </Button>
-      <Button icon on:click={composeHere}>
-        <Icon className="text-primary-500" name="compose" size={24} />
-      </Button>
-      {#if refreshing}
-        <Spinner size={16} />
-      {/if}
-      <Text
-        className="line-clamp-1 space-x-4 flex items-center w-full font-bold">
-        <span
-          aria-label="Current Active Date"
-          class="ml-2 text-gray-900 dark:text-gray-50">
-          {state.date.format('ddd')}
-          {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
-        </span>
-      </Text>
-      <NextPrevCal
-        on:previous={methods.previous}
-        on:next={methods.next}
-        on:calendar={methods.selectDate}
-        {isToday} />
-    </Toolbar>
-    {#if logs.length}
-      <Toolbar>
-        <ButtonGroup>
-          {#each OTDViews as loopView}
-            <Button
-              className={view === loopView.view ? 'active' : ''}
-              icon
-              on:click={() => {
-                view = loopView.view
-              }}>
-              <Icon name={loopView.icon} />
-            </Button>
-          {/each}
-        </ButtonGroup>
+    <Container>
+      <Toolbar className=" px-2 items-center">
+        <Button icon on:click={methods.search}>
+          <Icon className="text-primary-500" name="search" size={24} />
+        </Button>
+        <Button icon on:click={composeHere}>
+          <Icon className="text-primary-500" name="compose" size={24} />
+        </Button>
+        {#if refreshing}
+          <Spinner size={16} />
+        {/if}
+        <Text
+          className="line-clamp-1 space-x-4 flex items-center w-full font-bold">
+          <span
+            aria-label="Current Active Date"
+            class="ml-2 text-gray-900 dark:text-gray-50">
+            {state.date.format('ddd')}
+            {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
+          </span>
+        </Text>
+        <NextPrevCal
+          on:previous={methods.previous}
+          on:next={methods.next}
+          on:calendar={methods.selectDate}
+          {isToday} />
       </Toolbar>
-    {/if}
+      {#if logs.length}
+        <Toolbar>
+          <ButtonGroup>
+            {#each OTDViews as loopView}
+              <Button
+                className={view === loopView.view ? 'active' : ''}
+                icon
+                on:click={() => {
+                  view = loopView.view
+                }}>
+                <Icon name={loopView.icon} />
+              </Button>
+            {/each}
+          </ButtonGroup>
+        </Toolbar>
+      {/if}
+    </Container>
   </header>
   <!-- end header-content header -->
 
   <main slot="content" class="page page-history flex-column">
-
-    <div class="p-0 px-1 ">
-      <!-- {#if logs && logs.length}
+    <Container>
+      <div class="p-0 px-1 ">
+        <!-- {#if logs && logs.length}
         <Text size="xl" bold className="history-title pl-3 mt-2">
           {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
         </Text>
       {/if} -->
 
-      <OfflineQueue />
+        <OfflineQueue />
 
-      <Swipeable on:left={methods.next} on:right={methods.previous}>
-        {#if loading}
-          <div class="flex items-center justify-center w-full h-80">
-            <Spinner />
-          </div>
-        {:else if !loading && !logs.length}
-          <Empty
-            emoji="⏳"
-            title={state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
-            description={`${Lang.t('history.empty-day', 'No data was found on this day')}`}
-            buttonLabel={Lang.t('history.add-a-note', 'Add a Note...')}
-            buttonClick={composeHere} />
-        {:else}
-          <Container>
-            <OnThisDayViews {view} {logs} />
-          </Container>
-        {/if}
-      </Swipeable>
+        <Swipeable on:left={methods.next} on:right={methods.previous}>
+          {#if loading}
+            <div class="flex items-center justify-center w-full h-80">
+              <Spinner />
+            </div>
+          {:else if !loading && !logs.length}
+            <Empty
+              emoji="⏳"
+              title={state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
+              description={`${Lang.t('history.empty-day', 'No data was found on this day')}`}
+              buttonLabel={Lang.t('history.add-a-note', 'Add a Note...')}
+              buttonClick={composeHere} />
+          {:else}
+            <Container>
+              <OnThisDayViews {view} {logs} />
+            </Container>
+          {/if}
+        </Swipeable>
 
-    </div>
-
+      </div>
+    </Container>
     {#if $LedgerStore.memories.length > 0 && !showSearch && isToday && ['all', 'notes'].indexOf(view) > -1}
-      <div class="mt-3 bg-primary-500">
-        <div class="px-4 pb-4">
+      <section class="mt-3 bg-primary-500">
+        <Container className="px-4 pb-4">
           <!-- Show History if exists -->
 
           <div class="memories">
@@ -415,8 +417,8 @@
           </div>
 
           <!-- end history -->
-        </div>
-      </div>
+        </Container>
+      </section>
     {/if}
 
   </main>
