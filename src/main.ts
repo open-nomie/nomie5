@@ -1,4 +1,15 @@
 import App from "./App.svelte";
+import { useRegisterSW } from 'virtual:pwa-register/svelte';
+
+const intervalMS = 60 * 60 * 1000
+
+useRegisterSW({
+  onRegistered(r) {
+    r && setInterval(() => {
+      r.update()
+    }, intervalMS)
+  }
+})
 // Vendors
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import UpdateAvailable from './components/update-available/update-available.svelte'
   import { wait } from './utils/tick/tick'
   // Svelte
   // import { Router, Route, navigate } from "svelte-routing";
@@ -19,8 +20,6 @@
   import StreakModal from './containers/steak/streak-modal.svelte'
   import WhatsNewModal from './containers/whats-new/whats-new-modal.svelte'
   import OnThisDayModal from './containers/on-this-day/on-this-day.svelte'
-
-  import SetupRoute from './routes/setup.svelte'
 
   // Utils
   import Logger from './utils/log/log'
@@ -55,6 +54,7 @@
   import { ApiStore } from './containers/api/api-store'
 
   import './style/main.css'
+  import DynamicPage from './DynamicPage.svelte'
   // Set a better console
   const console = new Logger('APP')
 
@@ -193,7 +193,7 @@
 <Tailwindcss />
 
 {#if !ready && $UserStore.signedIn === false}
-  <SetupRoute />
+  <DynamicPage route="setup" />
 {/if}
 
 <!-- {#if ready} -->
@@ -236,6 +236,8 @@
 <OnThisDayModal />
 <PinLock />
 <SearchModal />
+
+<UpdateAvailable />
 
 {#if $Interact.focusedEditor}
   <FocusedEditor />

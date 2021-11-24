@@ -1,50 +1,48 @@
 <script lang="ts">
-  import AppTabs from "../../containers/layout/tabs.svelte";
-  import { onMount } from "svelte";
-  import "./layout.css";
+  import AppTabs from '../../containers/layout/tabs.svelte'
+  import { onMount } from 'svelte'
+  import './layout.css'
 
-  export let style: string = "";
-  export let className: string = "";
-  export let pageTitle = undefined;
-  export let showTabs: boolean = true;
-  export let headerClassNames = "";
+  export let style: string = ''
+  export let className: string = ''
+  export let pageTitle = undefined
+  export let showTabs: boolean = true
+  export let headerClassNames = ''
 
-
-
-  let scrollArea: HTMLElement;
-  let scrolling: boolean = false;
-  let scrolled: boolean = false;
+  let scrollArea: HTMLElement
+  let scrolling: boolean = false
+  let scrolled: boolean = false
 
   function generateContent() {
-    return new Array(300).fill("hello").join(" ");
+    return new Array(300).fill('hello').join(' ')
   }
 
   // Controll Scrolling
-  let scollingTimeout;
-  let startTimeout;
+  let scollingTimeout
+  let startTimeout
   function _onScroll(evt: any) {
-    clearTimeout(startTimeout);
-    clearTimeout(scollingTimeout);
+    clearTimeout(startTimeout)
+    clearTimeout(scollingTimeout)
     if (!scrolling) {
-      scrolling = true;
-      scrolled = true;
+      scrolling = true
+      scrolled = true
     }
     scollingTimeout = setTimeout(() => {
       if (evt.target.scrollTop > 50) {
-        scrolled = true;
+        scrolled = true
       } else {
-        scrolled = false;
+        scrolled = false
       }
-      scrolling = false;
-    }, 200);
+      scrolling = false
+    }, 200)
   }
 
-  $: hasHeader = (arguments[1].$$slots || {}).hasOwnProperty("header");
-  $: hasFooter = (arguments[1].$$slots || {}).hasOwnProperty("footer");
-  $: hasContent = (arguments[1].$$slots || {}).hasOwnProperty("content");
-  $: hasBottom = (arguments[1].$$slots || {}).hasOwnProperty("bottom");
+  $: hasHeader = (arguments[1].$$slots || {}).hasOwnProperty('header')
+  $: hasFooter = (arguments[1].$$slots || {}).hasOwnProperty('footer')
+  $: hasContent = (arguments[1].$$slots || {}).hasOwnProperty('content')
+  $: hasBottom = (arguments[1].$$slots || {}).hasOwnProperty('bottom')
 
-  onMount(() => {});
+  onMount(() => {})
 </script>
 
 <svelte:head>
@@ -52,7 +50,7 @@
 </svelte:head>
 
 <div
-  class="n-layout bg-gray-100 dark:bg-gray-800 {className}
+  class="n-layout {className ? className : 'bg-gray-100 dark:bg-gray-800'}
   {hasFooter ? 'has-footer' : ''}
   {hasHeader ? 'has-header' : ''}
   {showTabs ? 'has-tabs' : 'no-tabs'}"
@@ -62,7 +60,11 @@
       <slot name="header" />
     </header>
   {/if}
-  <main id="nomie-main" bind:this={scrollArea} class="layout-main" on:scroll={_onScroll}>
+  <main
+    id="nomie-main"
+    bind:this={scrollArea}
+    class="layout-main"
+    on:scroll={_onScroll}>
     {#if hasContent}
       <slot name="content" />
     {:else}
