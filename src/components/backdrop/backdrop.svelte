@@ -36,7 +36,6 @@
   }
 
   $: if (!visible && activeId) {
-    console.log(`Backdrop Removing ${activeId}`)
     remove()
   }
 
@@ -70,8 +69,8 @@
     @apply flex;
     @apply flex-col;
     @apply justify-center;
-    @apply bg-gray-600;
-    @apply bg-opacity-75;
+    @apply bg-gray-900;
+    @apply bg-opacity-50;
     @apply flex-shrink-0;
     @apply flex-grow-0;
     @apply backdrop-filter backdrop-saturate-150 backdrop-blur-sm;

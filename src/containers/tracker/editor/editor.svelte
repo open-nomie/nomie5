@@ -368,7 +368,7 @@
             Cancel
           </Button>
         </div>
-        <div class=" dark:text-white">
+        <div class="ntitle">
           {data.tracker._dirty ? 'Make a Tracker' : 'Edit'}
         </div>
         <div slot="right">

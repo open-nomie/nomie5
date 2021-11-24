@@ -179,7 +179,8 @@
   <Panel>
     <header slot="header">
       <ToolbarGrid>
-        <span class="animate up text-md {data.ready ? 'visible' : 'hidden'}">
+        <span
+          class="animate up text-md ntitle {data.ready ? 'visible' : 'hidden'}">
           <span style="color:{tracker.color}" class="mr-1">
             {tracker.emoji}
           </span>
@@ -193,7 +194,7 @@
       </ToolbarGrid>
     </header>
 
-    <main class="flex flex-col h-full border border-green-600">
+    <main class="flex flex-col h-full">
 
       <!-- Is the data ready -->
       {#if data.ready === true}
@@ -222,17 +223,15 @@
                 data.suffix = evt.detail.join(' ')
               }} />
           {:else if tracker.type === 'value' || tracker.type === 'tick'}
-            <div id="keypad-holder">
-              <NCalculator
-                {value}
-                displayFormat={(input) => {
-                  return tracker.displayValue(input || '')
-                }}
-                on:change={(changedValue) => {
-                  data.value = changedValue.detail
-                  data = data
-                }} />
-            </div>
+            <NCalculator
+              {value}
+              displayFormat={(input) => {
+                return tracker.displayValue(input || '')
+              }}
+              on:change={(changedValue) => {
+                data.value = changedValue.detail
+                data = data
+              }} />
           {:else if tracker.type === 'timer'}
             <NTimer
               tracker={data.tracker}

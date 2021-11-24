@@ -46,7 +46,7 @@
     @apply h-auto;
     max-height: 98vh;
   }
-  .nui-modal::before {
+  /* .nui-modal::before {
     pointer-events: none;
     content: '';
     opacity: 0;
@@ -58,7 +58,7 @@
     @apply bg-black;
     @apply z-10;
     transition: all 0.2s ease-in-out;
-  }
+  } */
   .in-background .nui-modal::before {
     @apply rounded-2xl;
     transition: all 0.2s ease-in-out;
