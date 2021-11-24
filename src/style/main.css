@@ -109,7 +109,15 @@ body {
 }
 
 html {
-  @apply bg-primary-500;
+  @apply bg-gray-200 dark:bg-gray-800;
+}
+html.mode-dark {
+  @apply bg-gray-800;
+}
+
+.full-screen {
+  @apply top-0 right-0 left-0 bottom-0 static;
+  @apply z-50;
 }
 
 .stiff {

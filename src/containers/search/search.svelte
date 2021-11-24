@@ -40,7 +40,7 @@
   }
 </style>
 
-<Modal2 visible={$SearchStore.show} id="search-modal">
+<Modal2 visible={true} id="search-modal">
   <Panel className="h-full">
     <header slot="header">
       <nav class="flex px-2 py-1">

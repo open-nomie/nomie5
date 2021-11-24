@@ -46,7 +46,7 @@
 </script>
 
 <svelte:head>
-  <title>{pageTitle ? `${pageTitle} - N5` : `Nomie v5.7`}</title>
+  <title>{pageTitle ? `${pageTitle} - v${import.meta.env.PACKAGE_VERSION}` : `Nomie v${import.meta.env.PACKAGE_VERSION}`}</title>
 </svelte:head>
 
 <div

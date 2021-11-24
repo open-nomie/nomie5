@@ -1,36 +1,37 @@
 <script lang="ts">
-  import Text from "../../components/text/text.svelte";
+  import Text from '@/components/text/text.svelte'
   // Components
-  import Keypad from "./keypad.svelte";
+  import Keypad from './keypad.svelte'
   // Stores
-  import nid from "../../modules/nid/nid";
-  import { Interact } from "../../store/interact";
-  import Interactions from "../interactions/interactions.svelte";
-  import { Lang } from "../../store/lang";
-  import Button from "../../components/button/button.svelte";
-  import Icon from "../../components/icon/icon.svelte";
+  import nid from '../../modules/nid/nid'
+  import { Interact } from '../../store/interact'
+  import Interactions from '../interactions/interactions.svelte'
+  import { Lang } from '../../store/lang'
+  import Button from '@/components/button/button.svelte'
+  import Icon from '@/components/icon/icon.svelte'
+  import Backdrop from '@/components/backdrop/backdrop.svelte'
 
-  let _pin;
+  let _pin = ''
 
   $: if ($Interact.pin.show === false) {
-    _pin = "";
+    _pin = ''
   }
 
   const methods = {
     submit() {
       // encode the pin and send it up
-      let final = _pin || "";
+      let final = _pin || ''
 
       if (final.length < 7 && final.length > 0) {
-        $Interact.pin.onPin(nid(_pin));
+        $Interact.pin.onPin(nid(_pin))
       } else {
-        Interact.error("Pin must be between 1 and 6 characters");
+        Interact.error('Pin must be between 1 and 6 characters')
       }
     },
     cancelInput() {
-      Interact.cancelPin();
+      Interact.cancelPin()
     },
-  };
+  }
 </script>
 
 <style global>
@@ -58,25 +59,36 @@
   }
 </style>
 
-<div
-  aria-modal
-  aria-label="Lock Screen"
-  aria-hidden={!$Interact.pin.show}
-  class="lock-screen full-screen flex-column bg-primary-bright {$Interact.pin.show ? 'visible' : 'hidden'}">
-  <Text center size="sm" faded className="text-white mb-2">{Lang.t('settings.pin-requirements', '1 to 6 digits')}</Text>
-  <h1>{$Interact.pin.title}</h1>
-  {#if $Interact.pin.show}
-    <!-- Pin Display -->
-    <Text center size="xl" className="text-white pin-holder flex">
-      {#each _pin.split('') as d}•{/each}
+<Backdrop id="lock-screen" visible={$Interact.pin.show}>
+  <div
+    aria-modal
+    aria-label="Lock Screen"
+    aria-hidden={!$Interact.pin.show}
+    style="zIndex: 10000"
+    class="lock-screen p-4 rounded-xl shadow-xl flex-col full-screen
+    bg-primary-500 {$Interact.pin.show ? 'visible' : 'hidden'}">
+    <Text center size="sm" faded className="text-white mb-2">
+      {Lang.t('settings.pin-requirements', '1 to 6 digits')}
     </Text>
-    <!-- Keypad Input -->
-    <Keypad bind:value={_pin} on:submit={methods.submit} />
-    {#if $Interact.pin.canClose}
-      <Button icon color="clear" className="pin-close-btn" ariaLabel="Cancel" on:click={methods.cancelInput}>
-        <Icon name="close" className="fill-white" size={32} />
-      </Button>
+    <h1>{$Interact.pin.title}</h1>
+    {#if $Interact.pin.show}
+      <!-- Pin Display -->
+      <Text center size="xl" className="text-white pin-holder flex">
+        {#each _pin.split('') as d}•{/each}
+      </Text>
+      <!-- Keypad Input -->
+      <Keypad bind:value={_pin} on:submit={methods.submit} />
+      {#if $Interact.pin.canClose}
+        <Button
+          icon
+          color="clear"
+          className="pin-close-btn"
+          ariaLabel="Cancel"
+          on:click={methods.cancelInput}>
+          <Icon name="close" className="fill-white" size={32} />
+        </Button>
+      {/if}
     {/if}
-  {/if}
 
-</div>
+  </div>
+</Backdrop>

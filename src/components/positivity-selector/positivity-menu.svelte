@@ -1,38 +1,39 @@
 <script lang="ts">
-  import { getEmojiFromScore } from "../../utils/positivity/positivity";
-  import type { IPositivityEmoji } from "../../utils/positivity/positivity";
+  import { getEmojiFromScore } from '../../utils/positivity/positivity'
+  import type { IPositivityEmoji } from '../../utils/positivity/positivity'
 
-  import Button from "../button/button.svelte";
-  import PositivitySelector from "./positivity-selector.svelte";
-  export let score = 0;
-  export let closeBackgroundTap: boolean = false;
-  export let className = "";
-  export let size = "lg";
+  import Button from '../button/button.svelte'
+  import PositivitySelector from './positivity-selector.svelte'
+  import Icon from '@/components/icon/icon.svelte'
+  export let score = 0
+  export let closeBackgroundTap: boolean = false
+  export let className = ''
+  export let size = 'lg'
 
-  let selected: any;
-  let showMenu: boolean = false;
-  $: selected = getEmojiFromScore(score);
-  let triggerButton;
+  let selected: any
+  let showMenu: boolean = false
+  $: selected = getEmojiFromScore(score)
+  let triggerButton
 
-  let id: string = `ps-${Math.random()}`;
+  let id: string = `ps-${Math.random()}`
 
-  let x: number;
-  let y: string = `60%`;
+  let x: number
+  let y: string = `60%`
 
   function toggle(evt?) {
-    y = `${document.getElementById(id).offsetTop}px`;
+    y = `${document.getElementById(id).offsetTop}px`
 
     if (evt && !showMenu) {
-      x = evt.detail.pageX - 240;
+      x = evt.detail.pageX - 240
     }
-    showMenu = !showMenu;
+    showMenu = !showMenu
   }
 </script>
 
 <style global>
   .positivity-menu-pop {
     position: absolute;
-    width: 240px;
+    width: 260px;
     bottom: calc(50px + env(safe-area-inset-bottom));
     z-index: 4000;
   }
@@ -42,18 +43,29 @@
   }
 </style>
 
-<div class="positivity-menu-pop animate up" style="left:{x}px; top:{y}; z-index:4000" class:visible={showMenu} class:hidden={!showMenu}>
-  <PositivitySelector
-    {size}
-    {id}
-    bind:score
-    on:change={() => {
-      toggle();
-    }} />
+<div
+  class="positivity-menu-pop animate up"
+  style="left:{x}px; top:{y}; z-index:4000"
+  class:visible={showMenu}
+  class:hidden={!showMenu}>
+  <div class="flex items-center pr-4 rounded-full bg-primary-600">
+    <PositivitySelector
+      {size}
+      {id}
+      bind:score
+      on:change={() => {
+        toggle()
+      }} />
+    <button
+      class="flex items-center flex-shrink-0 w-8 px-2 text-white"
+      on:click={toggle}>
+      <Icon name="close" />
+    </button>
+  </div>
 </div>
 
 {#if showMenu && closeBackgroundTap}
-  <div class="full-screen opacity-0" on:click={toggle} />
+  <div class="opacity-0 full-screen" on:click={toggle} />
 {/if}
 
 <Button

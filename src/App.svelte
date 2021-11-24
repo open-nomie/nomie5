@@ -13,13 +13,7 @@
 
   // Containers
   import Interactions from './containers/interactions/interactions.svelte'
-  import LibraryModal from './containers/library/library.svelte'
-  import PersonModal from './containers/people/person-modal.svelte'
-  // import Modal from "./components/modal/modal.svelte";
-  import StatsModal from './containers/stats/stats-modal.svelte'
-  import StreakModal from './containers/steak/streak-modal.svelte'
   import WhatsNewModal from './containers/whats-new/whats-new-modal.svelte'
-  import OnThisDayModal from './containers/on-this-day/on-this-day.svelte'
 
   // Utils
   import Logger from './utils/log/log'
@@ -38,17 +32,13 @@
   import { PeopleStore } from './store/people-store' // Store for holding People
   import { ContextStore } from './store/context-store' // Store for holding Post Context (categories)
   import { DashboardStore } from './store/dashboard-store' // Store for holding Post Context (categories)
-  // import { AppStore } from "./store/app-store";
+
   import { Locations } from './store/locations'
   import config from './config/appConfig'
   import { OfflineQueue } from './store/offline-queue-store'
-  import SearchModal from './containers/search/search.svelte'
   import { LastUsed } from './store/last-used'
   import { SearchStore } from './store/search-store'
-  import PinLock from './containers/pin-lock/pin-lock.svelte'
   import tick from './utils/tick/tick'
-  import Confetti from './components/confetti/confetti.svelte'
-  import FocusedEditor from './components/capture-log/focused.svelte'
   import { LedgerStore } from './store/ledger'
   import ProgressBar from './components/progress-bar/progress-bar.svelte'
   import { ApiStore } from './containers/api/api-store'
@@ -207,15 +197,18 @@
 {/if}
 
 <!-- Global Modals, alerts, menus, etc-->
-{#if ready}
-  <StatsModal />
+{#if ready && $Interact.stats.terms.length > 0}
+  <DynamicPage container="stats/stats-modal" />
 {/if}
+
 {#if ready && $TrackerLibrary.show}
-  <LibraryModal />
+  <DynamicPage container="library/library" />
 {/if}
+
 {#if ready && $Interact.people.active}
-  <PersonModal />
+  <DynamicPage container="people/person-modal" />
 {/if}
+
 {#if $Interact.blocker.show}
   <div id="ui-blocker" class="full-screen bg-translucent n-panel center-all">
     <div style="min-width:200px;">
@@ -231,23 +224,35 @@
     </div>
   </div>
 {/if}
+
 <Interactions />
-<StreakModal />
-<OnThisDayModal />
-<PinLock />
-<SearchModal />
+
+{#if $Interact.streak.show}
+  <DynamicPage container="steak/streak-modal" />
+{/if}
+
+{#if $Interact.onThisDay}
+  <DynamicPage container="on-this-day/on-this-day" />
+{/if}
+
+{#if $Interact.pin.show}
+  <DynamicPage container="pin-lock/pin-lock" />
+{/if}
+
+{#if $SearchStore.show}
+  <DynamicPage container="search/search" />
+{/if}
 
 <UpdateAvailable />
 
 {#if $Interact.focusedEditor}
-  <FocusedEditor />
+  <DynamicPage component="capture-log/focused" />
 {/if}
 
 {#if $Interact.confetti.show}
-  <Confetti />
+  <DynamicPage component="confetti/confetti" />
 {/if}
 
-<div id="photo-holder hidden">
+<div id="photo-holder" class="hidden" style="display:none">
   <img id="photo-holder-image " alt="avatar-holder" />
 </div>
-<!-- {/if} -->

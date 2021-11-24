@@ -314,9 +314,9 @@
       <Button icon on:click={methods.search}>
         <Icon className="text-primary-500" name="search" size={24} />
       </Button>
-      <!-- <Button icon  on:click={composeHere}>
+      <Button icon on:click={composeHere}>
         <Icon className="text-primary-500" name="compose" size={24} />
-      </Button> -->
+      </Button>
       {#if refreshing}
         <Spinner size={16} />
       {/if}

@@ -1,82 +1,91 @@
 <script lang="ts">
-  import ListItem from "../../components/list-item/list-item.svelte";
-  import ToggleSwitch from "../../components/toggle-switch/toggle-switch.svelte";
-  import { FeatureStore } from "../../store/feature-store";
+  import { wait } from './../../utils/tick/tick.ts'
+  import ListItem from '../../components/list-item/list-item.svelte'
+  import ToggleSwitch from '../../components/toggle-switch/toggle-switch.svelte'
+  import { FeatureStore } from '../../store/feature-store'
 
-  import { Lang } from "../../store/lang";
-  import { UserStore } from "../../store/user-store";
-  import { Interact } from "../../store/interact";
-  import nid from "../../modules/nid/nid";
-  import tick from "../../utils/tick/tick";
-  import { onMount } from "svelte";
-  import Button from "../../components/button/button.svelte";
+  import { Lang } from '../../store/lang'
+  import { UserStore } from '../../store/user-store'
+  import { Interact } from '../../store/interact'
+  import nid from '../../modules/nid/nid'
+  import tick from '../../utils/tick/tick'
+  import { onMount } from 'svelte'
+  import Button from '../../components/button/button.svelte'
 
-  let hasPin: boolean = false;
+  let hasPin: boolean = false
 
-  $: if (($UserStore.meta.access_pin || "").length) {
-    hasPin = true;
+  $: if (($UserStore.meta.access_pin || '').length) {
+    hasPin = true
   }
 
   onMount(() => {
     if ($UserStore.meta.access_pin) {
-      hasPin = true;
+      hasPin = true
     }
-  });
+  })
 
   let methods = {
     settingChange() {
-      UserStore.saveMeta();
+      UserStore.saveMeta()
     },
 
     async getNewPin(): Promise<string | undefined> {
-      let pin: any = await Interact.inputPin(Lang.t("settings.pin-details", "Set your Pin"), true);
+      let pin: any = await Interact.inputPin(
+        Lang.t('settings.pin-details', 'Set your Pin'),
+        true,
+      )
       if (pin) {
-        await tick(300);
-        let confirmPin: any = await Interact.inputPin(Lang.t("settings.confirm-pin", "Confirm Pin"), true);
+        await wait(1000)
+        let confirmPin: any = await Interact.inputPin(
+          Lang.t('settings.confirm-pin', 'Confirm Pin'),
+          true,
+        )
         if (!confirmPin) {
-          return undefined;
+          return undefined
         } else if (pin == confirmPin) {
-          return pin;
+          return pin
         } else {
-          Interact.error(Lang.t("settings.pins-do-not-match", "Pins do not match"));
-          return undefined;
+          Interact.error(
+            Lang.t('settings.pins-do-not-match', 'Pins do not match'),
+          )
+          return undefined
         }
       }
     },
 
     async lockToggle(change) {
-      await tick(100);
-      let shouldLock = change;
+      await tick(100)
+      let shouldLock = change
       if (shouldLock === true) {
-        hasPin = false;
-        let pin: any = await methods.getNewPin();
+        hasPin = false
+        let pin: any = await methods.getNewPin()
 
         if (!pin) {
           UserStore.saveMeta({
             lock: false,
             access_pin: null,
-          });
+          })
         } else {
           UserStore.saveMeta({
             lock: true,
             access_pin: pin,
-          });
+          })
         }
       } else {
-        let confirmDisable = await Interact.confirm("Disable Pin?");
+        let confirmDisable = await Interact.confirm('Disable Pin?')
         if (confirmDisable) {
           UserStore.saveMeta({
             lock: false,
             access_pin: null,
-          });
-          hasPin = false;
+          })
+          hasPin = false
         }
       }
     },
-  };
+  }
 </script>
 
-<div class="n-list my-2 py-2 features">
+<div class="py-2 my-2 n-list features">
   <ListItem
     className="py-2"
     title={Lang.t('settings.feature-people-tracking', 'People Tracking')}
@@ -85,7 +94,7 @@
       <ToggleSwitch
         value={$FeatureStore.people}
         on:change={(change) => {
-          FeatureStore.toggle('people', change.detail);
+          FeatureStore.toggle('people', change.detail)
         }} />
     </div>
   </ListItem>
@@ -98,7 +107,7 @@
       <ToggleSwitch
         value={$FeatureStore.dashboard}
         on:change={(change) => {
-          FeatureStore.toggle('dashboard', change.detail);
+          FeatureStore.toggle('dashboard', change.detail)
         }} />
     </div>
   </ListItem>
@@ -110,7 +119,7 @@
       <ToggleSwitch
         bind:value={$UserStore.alwaysLocate}
         on:change={(event) => {
-          UserStore.setAlwaysLocate(event.detail);
+          UserStore.setAlwaysLocate(event.detail)
         }} />
     </div>
   </ListItem>
@@ -126,7 +135,7 @@
           size="sm"
           color="danger"
           on:click={() => {
-            methods.lockToggle(false);
+            methods.lockToggle(false)
           }}>
           {Lang.t('general.disable', 'Disable')}
         </Button>
@@ -135,7 +144,7 @@
           className="toggle-pin-button"
           size="sm"
           on:click={() => {
-            methods.lockToggle(true);
+            methods.lockToggle(true)
           }}>
           {Lang.t('settings.set-pin', 'Set Pin')}
         </Button>

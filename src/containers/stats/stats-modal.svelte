@@ -606,7 +606,7 @@
 </style>
 
 <Modal2
-  visible={$Interact.stats.terms.length > 0}
+  visible={true}
   id="stats-modal"
   tappable
   on:close={close}
