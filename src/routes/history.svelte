@@ -309,12 +309,12 @@
     @apply w-4;
     @apply h-4;
     @apply rounded-full;
-    @apply bg-gray-100 dark:bg-black;
+    @apply bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-50;
     @apply text-gray-700 dark:text-gray-300;
     @apply shadow-sm;
     @apply absolute;
     @apply top-0;
-    @apply right-2;
+    @apply -right-3;
     @apply flex;
     @apply items-center;
     @apply justify-center;
@@ -369,10 +369,12 @@
                 on:click={() => {
                   view = loopView.view
                 }}>
-                <Icon name={loopView.icon} />
-                <div
-                  data-count={loopView.reduce(logs)}
-                  class="notification-badge" />
+                <div class="relative pt-1">
+                  <Icon name={loopView.icon} size={28} />
+                  <div
+                    data-count={loopView.reduce(logs)}
+                    class="notification-badge" />
+                </div>
               </Button>
             {/each}
           </ButtonGroup>
@@ -384,7 +386,7 @@
 
   <main slot="content" class="page page-history flex-column">
     <Container>
-      <div class="p-0 px-1 ">
+      <div class="p-0 px-1 h-75vh">
         <!-- {#if logs && logs.length}
         <Text size="xl" bold className="history-title pl-3 mt-2">
           {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
@@ -395,16 +397,18 @@
 
         <Swipeable on:left={methods.next} on:right={methods.previous}>
           {#if loading}
-            <div class="flex items-center justify-center w-full h-80">
+            <div class="flex items-center justify-center w-full h-75vh">
               <Spinner />
             </div>
           {:else if !loading && !logs.length}
-            <Empty
-              emoji="⏳"
-              title={state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
-              description={`${Lang.t('history.empty-day', 'No data was found on this day')}`}
-              buttonLabel={Lang.t('history.add-a-note', 'Add a Note...')}
-              buttonClick={composeHere} />
+            <Container className="flex items-center justify-center h-75vh">
+              <Empty
+                emoji="⏳"
+                title={state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
+                description={`${Lang.t('history.empty-day', 'No data was found on this day')}`}
+                buttonLabel={Lang.t('history.add-a-note', 'Add a Note...')}
+                buttonClick={composeHere} />
+            </Container>
           {:else}
             <Container>
               <OnThisDayViews {view} {logs} />

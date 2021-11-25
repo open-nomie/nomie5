@@ -67,6 +67,7 @@
   }
   .search-bar input {
     width: calc(100% - 30px);
+    font-size: 20px;
   }
   .search-bar .search-input {
   }
@@ -82,14 +83,14 @@
     solo
     {compact}
     {autofocus}
-    className="search-input mt-0 text-lg {inputClass}"
+    className="search-input mt-0 text-2xl {inputClass}"
     bind:this={_elInput}
     bind:value={searchTerm}
     on:change={fireChange}
     on:enter={fireSearch}
     {placeholder}>
     <div slot="left" class="flex items-center pl-2">
-      <Icon name="search" size={compact ? 16 : 20} className="text-solid-500" />
+      <Icon name="search" size={20} className="text-solid-500" />
     </div>
     <div slot="right">
       <slot name="right-inside" />
@@ -99,7 +100,7 @@
           className=" btn-action-clear mr-2"
           on:click={fireClear}
           style="margin-left:-10px;">
-          <Icon name="close" className="text-solid-500" />
+          <Icon name="close" className="text-gray-500" />
         </Button>
       {/if}
     </div>

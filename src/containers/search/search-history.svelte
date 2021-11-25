@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Panel from './../../components/panel/panel.svelte'
   import LogListLoader from '../../components/log-list/log-list-loader.svelte'
   import SearchBar from '../../components/search-bar/search-bar.svelte'
   import Text from '../../components/text/text.svelte'
@@ -28,31 +29,35 @@
   }
 </script>
 
-<section class="pb-2 n-panel stiff">
-  <SearchBar
-    compact
-    className="filler"
-    autofocus
-    searchTerm={term || ''}
-    placeholder={Lang.t('search.search-history', 'Search History...')}
-    on:search={search}
-    on:clear={clear} />
-</section>
-
-{#if term}
-  <section class="px-4 search-results">
-    <LogListLoader
-      fullDate={true}
-      showTimeDiff={true}
-      bind:results
-      {term}
-      limit={20}
-      className="bg-transparent"
-      on:textClick={(event) => {
-        Interact.elementOptions(event.detail)
-      }}
-      on:moreClick={(event) => {
-        Interact.logOptions(event.detail).then(() => {})
-      }} />
+<Panel className="h-full">
+  <section slot="header" class="pb-2">
+    <SearchBar
+      compact
+      className="filler"
+      autofocus
+      searchTerm={term || ''}
+      placeholder={Lang.t('search.search-history', 'Search History...')}
+      on:search={search}
+      on:clear={clear} />
   </section>
-{/if}
+
+  <main class="h-full mb-4 bg-gray-200 filler dark:bg-gray-800">
+    {#if term}
+      <section class="h-full p-4 search-results">
+        <LogListLoader
+          fullDate={true}
+          showTimeDiff={true}
+          bind:results
+          {term}
+          limit={20}
+          className="bg-transparent"
+          on:textClick={(event) => {
+            Interact.elementOptions(event.detail)
+          }}
+          on:moreClick={(event) => {
+            Interact.logOptions(event.detail).then(() => {})
+          }} />
+      </section>
+    {/if}
+  </main>
+</Panel>
