@@ -341,21 +341,18 @@
         <Button icon on:click={methods.search}>
           <Icon className="text-primary-500" name="search" size={24} />
         </Button>
-        <Button icon on:click={composeHere}>
+        <!-- <Button icon on:click={composeHere}>
           <Icon className="text-primary-500" name="compose" size={24} />
-        </Button>
+        </Button> -->
         {#if refreshing}
           <Spinner size={16} />
         {/if}
-        <Text
-          className="line-clamp-1 space-x-4 flex items-center w-full font-bold">
-          <span
-            aria-label="Current Active Date"
-            class="ml-2 text-gray-900 dark:text-gray-50">
-            {state.date.format('ddd')}
-            {state.date.format($UserStore.meta.is24Hour ? 'Do MMM YYYY' : 'MMM Do YYYY')}
-          </span>
-        </Text>
+        <h1
+          class="leading-none ntitle line-clamp-1"
+          aria-label="Current Active Date">
+          {state.date.format('ddd')}
+          {state.date.format($UserStore.meta.is24Hour ? 'D MMM YYYY' : 'MMM D YYYY')}
+        </h1>
         <NextPrevCal
           on:previous={methods.previous}
           on:next={methods.next}

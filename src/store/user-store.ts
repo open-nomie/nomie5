@@ -158,8 +158,8 @@ const userInit = () => {
       });
       return format;
     },
-    getDateTimeFormat() {
-      let format;
+    getDateTimeFormat(): { time: string, date: string } {
+      let format: { time: string, date: string } = { time: "HH:mm", date: "Do MMM YYYY" };
       update((state) => {
         if (state.meta.is24Hour) {
           format = { time: "HH:mm", date: "Do MMM YYYY" };

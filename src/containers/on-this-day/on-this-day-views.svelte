@@ -103,7 +103,7 @@
       title={Lang.t('on-this-day.no-notes', 'No Notes on this Day')}
       emoji="✍🏽" />
   {:else}
-    <div class="p-1">
+    <div class="p-2 py-4 space-y-4">
       {#each notes as note}
         <ListItemLog log={note} />
       {/each}
@@ -115,7 +115,7 @@
       title={Lang.t('on-this-day.no-people', 'No People on this Day')}
       emoji="👨‍👩‍👧" />
   {:else}
-    <div class="mt-3 n-grid">
+    <div class="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
       {#each people as person}
         <ShortcutUserButton
           {person}
