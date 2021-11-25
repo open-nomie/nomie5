@@ -337,6 +337,7 @@
         if (textarea) {
           textarea.style.height = '40px'
         }
+        textarea.blur()
       }, 120)
     },
   }
@@ -433,7 +434,7 @@
                   methods.clear()
                 }
               }}>
-              <Icon icon={X} size={16} className="opacity-50" />
+              <Icon icon={X} size={16} className="opacity-50 dark:text-white" />
             </button>
           </div>
           <div
