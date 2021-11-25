@@ -1,9 +1,11 @@
-<script>
+<script lang="ts">
   import LetterTicker from './../letter-ticker/letter-ticker.svelte'
   export let total
   import Ripple from '../ripple/ripple.svelte'
   export let totalArr
+
   export let buttons
+  export let displayFormat: Function
 </script>
 
 <style global lang="postcss">
@@ -20,6 +22,7 @@
     @apply h-full;
     @apply w-full;
     @apply grid;
+    @apply justify-center;
     grid-template-columns: 22% 22% 22% 22%;
     grid-template-rows: 16% 14% 14% 14% 14% 14%;
     grid-gap: 9px;
@@ -38,20 +41,11 @@
     @apply bg-white dark:bg-black;
     cursor: initial;
     @apply h-full;
-    @apply p-2;
-    @apply pb-3;
+    @apply px-4;
     @apply rounded-lg;
   }
 
   #calculator__display > div {
-    /* text-align: right;
-    box-sizing: border-box;
-    height: 50%;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    overflow: hidden;
-    white-space: nowrap; */
     @apply text-right;
   }
 
@@ -78,13 +72,14 @@
     @apply flex;
     @apply items-center;
     @apply justify-center;
-    @apply text-xl;
+    @apply text-xl md:text-2xl;
+    @apply font-medium;
     @apply uppercase;
   }
-  #calculator__display button::after {
+  /* #calculator__display button::after {
     content: '';
     padding-bottom: 50%;
-  }
+  } */
 
   #calculator #ac,
   #calculator #clear,
@@ -103,7 +98,8 @@
 
   #calculator #zero {
     grid-column: 1 / span 2;
-    @apply justify-start;
+    @apply justify-center;
+    @apply text-center;
     @apply pl-4;
   }
 </style>
@@ -112,8 +108,17 @@
   <div id="calculator" class="calculator">
     <div id="calculator__display">
       {#if total !== 'err'}
-        <div class="top">{totalArr.join(' ')}</div>
-        <div class="bottom">
+        {#if totalArr.length > 1}
+          <div class="top">{totalArr.join(' ')}</div>
+        {/if}
+        <div class="flex flex-wrap items-end justify-end bottom">
+          {#if displayFormat}
+            <LetterTicker
+              text={`${displayFormat(total)}`}
+              className="text-left filler font-normal text-gray-400 text-sm" />
+          {:else}
+            <div class="fill" />
+          {/if}
           <LetterTicker text={`${total}`} className="text-right" />
         </div>
       {:else}

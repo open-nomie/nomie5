@@ -25,7 +25,7 @@
 </script>
 
 <style lang="postcss">
-  .tracker-input {
+  .tracker-input-slider {
     position: relative;
     display: flex;
     flex: 1;
@@ -33,14 +33,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 10px;
-    max-height: 100%;
-    min-height: 200px;
+    @apply h-full;
   }
-  .tracker-input.slider input[type='range'] {
+  .tracker-input-slider input[type='range'] {
     @apply bg-transparent;
   }
-  .tracker-input .value {
+  .tracker-input-slider .value {
     text-align: center;
     margin: 0 0 20px 0;
     color: var(--color-inverse);
@@ -48,29 +46,29 @@
     bottom: 10px;
     z-index: 10;
   }
-  .tracker-input input[type='range'] {
+  .tracker-input-slider input[type='range'] {
     padding: 0 5px;
     margin: 0 auto;
     -webkit-appearance: none;
     width: 46vh;
     margin: -5.5px 0;
   }
-  .tracker-input input[type='range']:focus {
+  .tracker-input-slider input[type='range']:focus {
     outline: none;
   }
-  .tracker-input input[type='range']::-webkit-slider-runnable-track {
+  .tracker-input-slider input[type='range']::-webkit-slider-runnable-track {
     width: 46vh;
     height: 100px;
     cursor: pointer;
 
-    @apply bg-gray-200 dark:bg-black;
+    @apply bg-gray-500 dark:bg-black;
     border-radius: 50px;
     padding: 0 6px;
     @apply border border-gray-500;
     position: relative;
     margin-left: 20px;
   }
-  .tracker-input input[type='range']::-webkit-slider-thumb {
+  .tracker-input-slider input[type='range']::-webkit-slider-thumb {
     height: 90px;
     width: 90px;
     border: solid 1px var(--color-faded-2);
@@ -82,10 +80,11 @@
     -webkit-appearance: none;
     margin-top: 4px;
   }
-  .tracker-input input[type='range']:focus::-webkit-slider-runnable-track {
+  .tracker-input-slider
+    input[type='range']:focus::-webkit-slider-runnable-track {
     @apply bg-gray-200 dark:bg-gray-700;
   }
-  .tracker-input input[type='range']::-moz-range-track {
+  .tracker-input-slider input[type='range']::-moz-range-track {
     width: 46vh;
     height: 100px;
     cursor: pointer;
@@ -94,7 +93,7 @@
     border-radius: 50px;
     border: 0px solid var(--color-solid-2);
   }
-  .tracker-input input[type='range']::-moz-range-thumb {
+  .tracker-input-slider input[type='range']::-moz-range-thumb {
     box-shadow: 5.4px 5.4px 6.5px rgba(0, 0, 0, 0.18),
       0px 0px 5.4px rgba(13, 13, 13, 0.18);
     border: 1px solid var(--color-inverse);
@@ -104,12 +103,12 @@
     @apply bg-white dark:bg-black;
     cursor: pointer;
   }
-  .tracker-input input[type='range'] {
+  .tracker-input-slider input[type='range'] {
     transform: rotate(-90deg);
   }
 </style>
 
-<div class="tracker-input slider">
+<div class="h-full tracker-input-slider">
   <div class="value">
     {#if tracker && tracker.uom !== 'num'}
       <LetterTicker

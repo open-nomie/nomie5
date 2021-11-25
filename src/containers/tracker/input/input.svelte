@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+  import { wait } from './../../../utils/tick/tick.ts'
   /**
    * Tracker Input Mege Component
    * This is a beast... Brace yourself.
@@ -42,6 +43,8 @@
 
   // Consts
   const dispatch = createEventDispatcher() // Setup the dispatcher
+  let isVisible: boolean = false
+  let closing: boolean = false
 
   let data = {
     value: null, // holds current value
@@ -51,6 +54,20 @@
     calcUsed: false, // when it's ready
     editing: false,
     saving: false,
+  }
+
+  /**
+   * Show and hide modal
+   * give it a delay so the animation can happen
+   */
+  $: if ($Interact.trackerInput.show === true && !isVisible && !closing) {
+    setTimeout(() => {
+      isVisible = true
+    }, 200)
+  } else if ($Interact.trackerInput.show === false && isVisible) {
+    setTimeout(() => {
+      isVisible = false
+    }, 500)
   }
 
   // Set up the Methodsx
@@ -76,12 +93,17 @@
         suffix: data.suffix,
       })
     },
-    onCancel() {
+    async onCancel() {
+      isVisible = false
+      closing = true
+      await wait(500)
+      $Interact.trackerInput.show = false
       if (!$Interact.trackerInput.allowSave) {
         dispatch('cancelAll')
       } else {
         dispatch('cancel')
       }
+      closing = false
     },
     // When the user starts the time
     startTimer() {
@@ -172,11 +194,8 @@
   }
 </style>
 
-<Modal2
-  id="tracker-input"
-  visible={show || $Interact.trackerInput.show}
-  className="tracker-input">
-  <Panel>
+<Modal2 id="tracker-input" visible={isVisible}>
+  <Panel className="bg-gray-200 h-full dark:bg-gray-800">
     <header slot="header">
       <ToolbarGrid>
         <span
@@ -199,7 +218,7 @@
       <!-- Is the data ready -->
       {#if data.ready === true}
         <!-- Slide in the input -->
-        <div class="input-model type-{tracker.type}">
+        <div class="input-model h-full type-{tracker.type}">
 
           {#if tracker.type === 'range'}
             <SliderInput
@@ -265,7 +284,7 @@
             <Button
               type="clear"
               size="lg"
-              className=" text-lg md:text-xl text-primary-500"
+              className=" text-lg md:text-xl text-gray-900 dark:text-white"
               on:click={() => {
                 methods.onCancel()
               }}>
@@ -283,7 +302,8 @@
                   block
                   style="max-width:230px; height:48px"
                   on:click={methods.onSave}
-                  className="text-white flex-grow flex-shrink w-full"
+                  className="text-white bg-primary-500 flex-grow flex-shrink
+                  w-full"
                   title="Save this log">
                   {saveLabel}
                 </Button>
@@ -327,11 +347,11 @@
                 type="clear"
                 size="lg"
                 title="Add this to the note without immediately saving."
-                className="text-lg md:text-xl text-primary-500 {tracker.started ? 'hidden' : ''}"
+                className="text-lg md:text-xl text-gray-900 dark:text-white {tracker.started ? 'hidden' : ''}"
                 on:click={methods.onAdd}>
                 {#if !$Interact.trackerInput.allowSave}
                   {Lang.t('general.next', 'Next')}
-                {:else}{Lang.t('general.add', 'Add')}{/if}
+                {:else}{Lang.t('general.Insert', 'Insert')}{/if}
               </Button>
             {/if}
           </div>

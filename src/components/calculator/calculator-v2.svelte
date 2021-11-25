@@ -9,6 +9,7 @@
   import Display from './display.svelte'
 
   export let value: number = 0
+  export let displayFormat: Function
   const dispatch = createEventDispatcher()
 
   let totalArr: Array<any> = [value]
@@ -24,7 +25,6 @@
   }
 
   $: if (totalArr.length && total !== 'err' && total !== value) {
-    console.log('Change?', total)
     dispatch('change', total)
   }
 
@@ -67,18 +67,16 @@
     hasChanged = true
     clearSet = false
     const targetText = value
-    if (lastIsNumber) {
-      if (
-        totalArr[totalArr.length - 1].indexOf('.') === -1 &&
-        totalArr[totalArr.length - 1] === '0'
-      ) {
+    const lastElement = totalArr[totalArr.length - 1]
+    if (lastIsNumber && lastElement) {
+      if (lastElement.indexOf('.') === -1 && lastElement === '0') {
         totalArr[totalArr.length - 1] = targetText
       } else {
         totalArr[totalArr.length - 1] =
           totalArr[totalArr.length - 1] + targetText
       }
     } else {
-      if (totalArr[totalArr.length - 1] === '=') {
+      if (lastElement && lastElement === '=') {
         handleAC()
       }
       totalArr.push(targetText)
@@ -316,4 +314,4 @@
 
 <svelte:body on:keydown={handleKeypress} />
 
-<Display {total} {buttons} {totalArr} />
+<Display {displayFormat} {total} {buttons} {totalArr} />
