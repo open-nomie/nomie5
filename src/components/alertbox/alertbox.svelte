@@ -194,7 +194,7 @@
         ariaLabel={ok}
         block
         size="lg"
-        className="ml-1 flex-grow"
+        className="ml-1 flex-grow bg-primary-500 text-white"
         on:click={methods.onOk}>
         {ok}
       </Button>

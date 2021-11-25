@@ -119,7 +119,7 @@
 }
 .nbtn-success,
 .nbtn-green {
-  @apply bg-green-600;
+  @apply bg-green-500;
   @apply text-white;
 }
 .nbtn-orange {

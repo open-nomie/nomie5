@@ -60,6 +60,8 @@
   .search-bar {
     position: relative;
     height: 50px;
+    @apply w-full;
+    @apply flex-grow flex-shrink;
   }
 
   .search-bar .btn-action-clear {

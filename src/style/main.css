@@ -152,6 +152,10 @@ html.mode-dark {
 }
 .tap-icon {
   @apply text-primary-500;
+  @apply bg-transparent;
+  @apply focus:outline-none;
+  @apply rounded-full;
+  @apply focus:ring-1 ring-primary-500 ring-opacity-25;
 }
 
 /* // Dividers  */

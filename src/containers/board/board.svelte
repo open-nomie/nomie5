@@ -575,8 +575,9 @@
         {#if $TrackerStore.timers.length}
           <Button
             icon
+            size="xs"
             on:click={TrackerStore.toggleTimers}
-            className="mr-1"
+            className="mr-1 bg-red-500 text-white animate-pulse"
             ariaLabel={Lang.t('general.timers', 'Timers')}>
             <Icon name="time" size={24} className="fill-red" />
           </Button>
@@ -653,14 +654,16 @@
         {/if}
 
         {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
-          <Container>
+          <Container className="px-2 lg:px-4">
             <Card>
               <ListItem compact>
-                <Text size="sm">Running Timers</Text>
+                <div class="ntitle">Running Timers</div>
                 <div slot="right">
-                  <Button text size="xs" on:click={TrackerStore.toggleTimers}>
-                    Close
-                  </Button>
+                  <button
+                    class="text-sm font-bold text-primary-500"
+                    on:click={TrackerStore.toggleTimers}>
+                    <Icon name="close" />
+                  </button>
                 </div>
               </ListItem>
               <TrackersList

@@ -43,10 +43,12 @@
   }
 </script>
 
-<style global>
+<style global lang="postcss">
   .tracker-small-block {
     @apply flex;
+    @apply items-center;
     @apply bg-gray-100 dark:bg-gray-900;
+    @apply flex-shrink-0;
   }
   .nbtn.tracker-small-block.size-md {
     height: 60px;
@@ -54,7 +56,7 @@
   }
   .nbtn.tracker-small-block.size-xs {
     height: 30px;
-    padding: 1px 2px;
+    @apply p-1 pr-2;
   }
   .nbtn.tracker-small-block.size-sm {
     height: 42px;
@@ -105,8 +107,8 @@
       {/if}
       <div
         class="{truncate ? 'line-clamp-1' : ''} text-left flex flex-col
-        justify-center w-full">
-        <h3 class="flex-grow flex-shrink w-full text-xs line-clamp-1">
+        justify-center w-full items-center">
+        <h3 class="flex-grow flex-shrink w-full text-sm line-clamp-1">
           {(element.obj || {}).label || element.id}
         </h3>
         {#if shouldShowValue(element)}
