@@ -1,40 +1,41 @@
 <script>
-  import dayjs from "dayjs";
-  import { swipe } from "../../actions/swipe";
-  import Avatar from "../../components/avatar/avatar.svelte";
+  import ProgressBar from '../../components/progress-bar/progress-bar.svelte'
+  import dayjs from 'dayjs'
+  import { swipe } from '../../actions/swipe'
+  import Avatar from '../../components/avatar/avatar.svelte'
 
-  import ButtonGroup from "../../components/button-group/button-group.svelte";
-  import Button from "../../components/button/button.svelte";
-  import Calendar from "../../components/calendar/calendar.svelte";
-  import DateTime from "../../components/calendar/date-time";
-  import Card from "../../components/card/card.svelte";
-  import DatePicker from "../../components/date-picker/date-picker.svelte";
-  import DateTimeBar from "../../components/date-time-bar/date-time-bar.svelte";
-  import Divider from "../../components/divider/divider.svelte";
-  import Grid from "../../components/grid/grid.svelte";
-  import Icon from "../../components/icon/icon.svelte";
-  import Input from "../../components/input/input.svelte";
-  import ListItem from "../../components/list-item/list-item.svelte";
-  import List from "../../components/list/list.svelte";
-  import PositivityBar from "../../components/positivity-bar/positivity-bar.svelte";
-  import PositivitySelector from "../../components/positivity-selector/positivity-selector.svelte";
-  import Row from "../../components/row/row.svelte";
-  import Spinner from "../../components/spinner/spinner.svelte";
-  import Sponsors from "../../components/sponsors/sponsors.svelte";
-  import Swipeable from "../../components/swipeable/swipeable.svelte";
-  import Text from "../../components/text/text.svelte";
-  import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
-  import Toolbar from "../../components/toolbar/toolbar.svelte";
-  import TrackerSmallBlock from "../../components/tracker-small-block/tracker-small-block.svelte";
-  import Empty from "../../containers/empty/empty.svelte";
-  import Layout from "../../containers/layout/layout.svelte";
-  import Streak from "../../containers/steak/streak.svelte";
-  import Person from "../../modules/person/person";
-  import TrackableElement from "../../modules/trackable-element/trackable-element";
-  import { Device } from "../../store/device-store";
-  import { Interact } from "../../store/interact";
+  import ButtonGroup from '../../components/button-group/button-group.svelte'
+  import Button from '../../components/button/button.svelte'
+  import Calendar from '../../components/calendar/calendar.svelte'
+  import DateTime from '../../components/calendar/date-time'
+  import Card from '../../components/card/card.svelte'
+  import DatePicker from '../../components/date-picker/date-picker.svelte'
+  import DateTimeBar from '../../components/date-time-bar/date-time-bar.svelte'
+  import Divider from '../../components/divider/divider.svelte'
+  import Grid from '../../components/grid/grid.svelte'
+  import Icon from '../../components/icon/icon.svelte'
+  import Input from '../../components/input/input.svelte'
+  import ListItem from '../../components/list-item/list-item.svelte'
+  import List from '../../components/list/list.svelte'
+  import PositivityBar from '../../components/positivity-bar/positivity-bar.svelte'
+  import PositivitySelector from '../../components/positivity-selector/positivity-selector.svelte'
+  import Row from '../../components/row/row.svelte'
+  import Spinner from '../../components/spinner/spinner.svelte'
+  import Sponsors from '../../components/sponsors/sponsors.svelte'
+  import Swipeable from '../../components/swipeable/swipeable.svelte'
+  import Text from '../../components/text/text.svelte'
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
+  import Toolbar from '../../components/toolbar/toolbar.svelte'
+  import TrackerSmallBlock from '../../components/tracker-small-block/tracker-small-block.svelte'
+  import Empty from '../../containers/empty/empty.svelte'
+  import Layout from '../../containers/layout/layout.svelte'
+  import Streak from '../../containers/steak/streak.svelte'
+  import Person from '../../modules/person/person'
+  import TrackableElement from '../../modules/trackable-element/trackable-element'
+  import { Device } from '../../store/device-store'
+  import { Interact } from '../../store/interact'
 
-  let date = dayjs();
+  let date = dayjs()
 </script>
 
 <Layout>
@@ -49,16 +50,23 @@
 
   <div class="p-4">
     <Text size="sm" faded className="mb-4">
-      A set of base components for quick testing... I should be using Storybook, but have yet to do so.
+      A set of base components for quick testing... I should be using Storybook,
+      but have yet to do so.
     </Text>
+
+    <List className="p-4 ">
+
+      <ProgressBar percentage={50} />
+
+    </List>
 
     <List title="Swiper Test">
       <Swipeable
         on:right={() => {
-          Interact.alert('Right!', 'You swiped right');
+          Interact.alert('Right!', 'You swiped right')
         }}
         on:left={() => {
-          Interact.alert('Left!', 'You swiped left');
+          Interact.alert('Left!', 'You swiped left')
         }}>
         <div class="p-3 bg-solid text-inverse">Swipe me</div>
         <div slot="left">I'm left</div>
@@ -68,22 +76,46 @@
 
     <List title="Tracker Small Block {$Device.size}" outside pad>
       <Grid columns={['sm', 'xs'].indexOf($Device.size) > -1 ? 2 : 4}>
-        <TrackerSmallBlock className="m-2" element={new TrackableElement({ id: 'bob', type: 'person', raw: 'bob' })} />
-        <TrackerSmallBlock className="m-2" element={new TrackableElement({ id: 'bob', type: 'person', raw: 'bob' })} />
+        <TrackerSmallBlock
+          className="m-2"
+          element={new TrackableElement({
+            id: 'bob',
+            type: 'person',
+            raw: 'bob',
+          })} />
+        <TrackerSmallBlock
+          className="m-2"
+          element={new TrackableElement({
+            id: 'bob',
+            type: 'person',
+            raw: 'bob',
+          })} />
         <TrackerSmallBlock
           className="m-2"
           value="44:32:21"
-          element={new TrackableElement({ id: 'chunk', type: 'person', raw: 'chunk' })}
+          element={new TrackableElement({
+            id: 'chunk',
+            type: 'person',
+            raw: 'chunk',
+          })}
           solo />
         <TrackerSmallBlock
           className="m-2"
           value="$33.234"
-          element={new TrackableElement({ id: 'solo', type: 'tracker', raw: 'solo' })}
+          element={new TrackableElement({
+            id: 'solo',
+            type: 'tracker',
+            raw: 'solo',
+          })}
           solo />
         <TrackerSmallBlock
           className="m-2"
           value="$33.234"
-          element={new TrackableElement({ id: 'Sanders', type: 'person', raw: 'Sanders' })}
+          element={new TrackableElement({
+            id: 'Sanders',
+            type: 'person',
+            raw: 'Sanders',
+          })}
           solo />
       </Grid>
     </List>
@@ -139,7 +171,11 @@
       <Button
         block
         on:click={() => {
-          Interact.confetti({ title: '🚚 Oh yea!', message: 'Nice job my friend!', timeout: 5000 });
+          Interact.confetti({
+            title: '🚚 Oh yea!',
+            message: 'Nice job my friend!',
+            timeout: 5000,
+          })
         }}>
         Test
       </Button>
@@ -155,18 +191,31 @@
         solo
         placeholder="My Label"
         label="Textarea"
-        value="A set of base components for quick testing... I should be using Storybook, but have yet to do so." />
+        value="A set of base components for quick testing... I should be using
+        Storybook, but have yet to do so." />
     </Card>
     <Card title="List Item Inputs" className="mb-3">
       <Input type="text" listItem placeholder="My Label" value="List Item" />
       <Divider inset />
-      <Input type="text" listItem placeholder="Phone Number" value="444-444-4444" />
+      <Input
+        type="text"
+        listItem
+        placeholder="Phone Number"
+        value="444-444-4444" />
       <Divider inset />
-      <Input type="textarea" rows={4} listItem placeholder="My Label" value="List Item" />
+      <Input
+        type="textarea"
+        rows={4}
+        listItem
+        placeholder="My Label"
+        value="List Item" />
     </Card>
 
     <Card title="Empty" pad>
-      <Empty title="Nothing Found" description="You could do something else" emoji="😂" />
+      <Empty
+        title="Nothing Found"
+        description="You could do something else"
+        emoji="😂" />
     </Card>
 
     <hr class="my-2 divider center" />

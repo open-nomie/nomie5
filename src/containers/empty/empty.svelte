@@ -1,24 +1,24 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount } from 'svelte'
 
-  import Avatar from "../../components/avatar/avatar.svelte";
-  import Button from "../../components/button/button.svelte";
-  import Text from "../../components/text/text.svelte";
-  export let emoji: string = undefined;
-  export let title: string = undefined;
-  export let description: string = undefined;
-  export let className: string = "";
-  export let style: string = "";
-  export let buttonLabel: string = undefined;
-  export let buttonClick: any = undefined;
+  import Avatar from '../../components/avatar/avatar.svelte'
+  import Button from '../../components/button/button.svelte'
+  import Text from '../../components/text/text.svelte'
+  export let emoji: string = undefined
+  export let title: string = undefined
+  export let description: string = undefined
+  export let className: string = ''
+  export let style: string = ''
+  export let buttonLabel: string = undefined
+  export let buttonClick: any = undefined
 
-  let loaded: boolean = false;
+  let loaded: boolean = false
 
   onMount(() => {
     setTimeout(() => {
-      loaded = true;
-    }, 200);
-  });
+      loaded = true
+    }, 200)
+  })
 </script>
 
 <style global lang="postcss">
@@ -57,13 +57,24 @@
     <Avatar {emoji} size={80} className="mb-4" />
   {/if}
   {#if title}
-    <div class="text-lg my-1 text-gray-800 dark:text-gray-50 font-extrabold">{title}</div>
+    <div
+      class="my-1 text-lg font-extrabold leading-tight text-gray-800 dark:text-gray-50">
+      {title}
+    </div>
   {/if}
   {#if description}
-    <div class="text-sm text-gray-600 dark:text-gray-400 text-center">{description}</div>
+    <div class="text-sm text-center text-gray-600 dark:text-gray-400">
+      {description}
+    </div>
   {/if}
   <slot />
   {#if buttonLabel}
-    <Button size="sm" color="transparent" className=" mt-4 text-primary-500" on:click={buttonClick}>{buttonLabel}</Button>
+    <Button
+      size="sm"
+      color="transparent"
+      className=" mt-4 text-primary-500"
+      on:click={buttonClick}>
+      {buttonLabel}
+    </Button>
   {/if}
 </div>

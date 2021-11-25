@@ -302,8 +302,7 @@
                   block
                   style="max-width:230px; height:48px"
                   on:click={methods.onSave}
-                  className="text-white bg-primary-500 flex-grow flex-shrink
-                  w-full"
+                  className={`text-white bg-primary-500 flex-grow flex-shrink w-full`}
                   title="Save this log">
                   {saveLabel}
                 </Button>

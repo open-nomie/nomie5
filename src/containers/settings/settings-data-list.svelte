@@ -3,7 +3,7 @@
   import { useStorageSelectMenu } from './settings-functions'
   import { LastUsed } from '../../store/last-used'
   import ToggleSwitch from './../../components/toggle-switch/toggle-switch.svelte'
-
+  import ImporterModal from '../../containers/importer/importer.svelte'
   import { UserStore } from '../../store/user-store'
   import Text from '@/components/text/text.svelte'
   import ListItem from '@/components/list-item/list-item.svelte'
@@ -17,8 +17,12 @@
   import { navigate } from 'svelte-routing'
   import { ChevronRight } from 'svelte-hero-icons'
   import { deleteEverything } from './settings-functions'
+  import { createEventDispatcher } from 'svelte'
 
   let fileInput
+  let showImporter = false
+
+  const dispatch = createEventDispatcher()
 
   const showStorageOptions = () => {
     useStorageSelectMenu({
@@ -96,17 +100,15 @@
     clickable
     title={`${Lang.t('settings.import-from-backup', 'Import from Backup')}`}
     on:click={() => {
-      alert('Show the importer here!')
+      dispatch('showImporter')
     }}>
     <span slot="left">📦</span>
     <div slot="right">
       <input
-        class="d-none"
+        class="hidden"
         type="file"
         bind:this={fileInput}
-        on:change={() => {
-          alert('Make this work')
-        }} />
+        on:change={() => {}} />
       <NIcon name="chevronRight" className="fill-faded-2" />
     </div>
   </ListItem>

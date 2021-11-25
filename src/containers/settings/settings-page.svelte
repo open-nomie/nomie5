@@ -173,6 +173,13 @@ Note: Your data will not automatically move over. You'll first need to export it
   })
 </script>
 
+{#if showImporter}
+  <ImporterModal
+    visible={showImporter}
+    on:dismiss={() => (showImporter = false)} />
+{/if}
+
+
 <NLayout pageTitle="Settings">
 
   <div slot="header">
@@ -291,7 +298,9 @@ Note: Your data will not automatically move over. You'll first need to export it
           {:else if view == 'tweaks'}
             <SettingsTweakList />
           {:else if view == 'data'}
-            <SettingsDataList />
+            <SettingsDataList on:showImporter={()=>{
+              showImporter = true;
+            }} />
             <!--
               *******************************************
               DATA VIEW
@@ -355,6 +364,3 @@ Note: Your data will not automatically move over. You'll first need to export it
 
 </NLayout>
 
-{#if showImporter}
-  <ImporterModal on:dismiss={() => (showImporter = false)} />
-{/if}
