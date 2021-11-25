@@ -1,4 +1,5 @@
 <script lang="ts">
+	import SettingsTweakList from './settings-tweak-list.svelte';
 	import Container from './../../components/container/container.svelte';
   import ToolbarGrid from './../../components/toolbar/toolbar-grid.svelte'
   //Vendors
