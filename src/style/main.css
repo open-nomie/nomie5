@@ -130,7 +130,6 @@ html.mode-dark {
   @apply max-w-full;
   @apply min-w-0;
 }
-
 .screen-block {
   @apply fixed;
   @apply top-0;

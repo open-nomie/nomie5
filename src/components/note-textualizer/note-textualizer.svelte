@@ -74,7 +74,7 @@
 {#if actual}
   <div
     class="n-note-textualized leading-1 {className}
-    {state.words.length > 20 ? 'text-sm' : 'text-xl'}">
+    {state.words.length > 20 ? 'text-base' : 'text-xl'}">
     {#each state.words as word}
       {#if word.type === 'tracker'}
         <span

@@ -48,6 +48,7 @@
   import extract from '../../utils/extract/extract'
   import { getEmojiFromScore } from '../../utils/positivity/positivity'
   import Log from '../../utils/log/log'
+  import { X, XCircle } from 'svelte-hero-icons'
 
   // Consts
   const console = new Logger('capture-log')
@@ -326,6 +327,7 @@
     clear() {
       ActiveLogStore.clear()
       methods.autoCompleteDone()
+      isFocused = false
       setTimeout(() => {
         state.date = null
         state.autocompleteResults = null
@@ -401,7 +403,7 @@
           on:click={() => {
             isFocused = true
           }}>
-          <div class="top-section">
+          <div class="relative top-section">
             <textarea
               aria-label="Note entry field"
               id="textarea-capture-note"
@@ -419,10 +421,24 @@
                 isFocused = false
               }}
               on:paste={methods.keyPress} />
+            <button
+              class="absolute top-3 right-4 clear-button"
+              on:click={async () => {
+                if ($ActiveLogStore.note.length > 0) {
+                  const confirmed = await Interact.confirm('Discard this note?')
+                  if (confirmed) {
+                    methods.clear()
+                  }
+                } else {
+                  methods.clear()
+                }
+              }}>
+              <Icon icon={X} size={16} className="opacity-50" />
+            </button>
           </div>
           <div
-            class="flex px-2 py-1 border-t border-gray-500 border-opacity-25 bottom-section">
-            <Button
+            class="flex px-2 py-1 space-x-2 border-t border-gray-500 border-opacity-25 bottom-section">
+            <!-- <Button
               ariaLabel="Location and Date settings"
               size="sm"
               shape="circle"
@@ -434,18 +450,7 @@
               {:else}
                 <NIcon name="more" className="fill-grey-5" />
               {/if}
-            </Button>
-
-            {#if $UserStore.meta.hiddenFeatures}
-              <Button
-                className="expand-button action-button"
-                ariaLabel="Journal Mode"
-                icon
-                size="sm"
-                on:click={Interact.toggleFocusedEditor}>
-                <Icon name="expand" className="fill-inverse-2" />
-              </Button>
-            {/if}
+            </Button> -->
 
             <Button
               type="clear"
@@ -457,6 +462,18 @@
             </Button>
 
             <div class="filler" />
+            <Button
+              ariaLabel="Location and Date settings"
+              size="xs"
+              type="clear"
+              shape="circle"
+              className="px-2"
+              on:click={Interact.toggleFocusedEditor}>
+              <NIcon
+                name="expand"
+                className="text-black dark:text-white text-opacity-50
+                dark:text-opacity-50" />
+            </Button>
             {#if $LedgerStore.saving}
               <Button
                 className="save-button action-button mr-2"
@@ -471,20 +488,23 @@
                 color="success"
                 size="sm"
                 on:click={methods.logSave}>
-
                 <NIcon
                   name="airplane"
                   className="mr-1"
                   style="fill: #FFF;"
                   size={20} />
-                Save
+                <span class="md:text-lg">Save</span>
               </Button>
             {/if}
           </div>
         </div>
       </div>
     </div>
-    {#if state.advanced}
+
+    <!-- #######################
+    Advanced 
+    ######################## -->
+    <!-- {#if state.advanced}
       <div class="advanced">
         <div class="">
           <NItem
@@ -517,7 +537,6 @@
               {/if}
             </div>
           </NItem>
-          <!-- Date / Time -->
 
           <NItem solo className="p-0 pr-1" style="overflow:hidden">
             <DatePicker bind:time={$ActiveLogStore.end} />
@@ -561,13 +580,14 @@
 
         </div>
       </div>
-    {/if}
+    {/if} -->
 
   </Container>
 </div>
 
 <Backdrop id="positivty-selector" visible={showPositivitySelector}>
   <PositivitySelector
+    size="lg"
     id="score"
     showClose={true}
     on:close={() => {
