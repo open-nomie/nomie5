@@ -35,7 +35,8 @@
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-    z-index: 1200;
+    @apply z-50;
+    @apply pt-1;
     flex-shrink: 0;
   }
   #app-tabs.compact {

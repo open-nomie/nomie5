@@ -30,7 +30,6 @@ export default defineConfig({
     }),
     VitePWA({
       manifest: manifest,
-    }),
-    ,
+    })
   ]
 })

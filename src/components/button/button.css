@@ -61,6 +61,7 @@
 .nbtn-lg {
   @apply text-lg;
   @apply leading-none;
+  @apply md:text-xl;
 }
 .nbtn-lg.nbtn-rounded {
   @apply rounded-lg;
