@@ -5,6 +5,7 @@ const intervalMS = 60 * 60 * 1000
 
 useRegisterSW({
   onRegistered(r) {
+    r.update()
     r && setInterval(() => {
       r.update()
     }, intervalMS)
