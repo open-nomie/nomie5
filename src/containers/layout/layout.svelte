@@ -76,12 +76,13 @@
       <slot name="bottom" />
     </main>
   {/if}
-  {#if hasFooter}
-    <footer class="z-50 layout-footer glass" style="box-shadow:-10px 0px 10px rgba(0,0,0,0.2)">
-      <slot name="footer" />
-    </footer>
-  {/if}
-  {#if showTabs}
-    <AppTabs />
-  {/if}
+  
+  <footer class="sticky bottom-0 z-50 border-t layout-footer glass dark:border-gray-400 dark:border-opacity-20" style="box-shadow:-10px 0px 10px rgba(0,0,0,0.2)">
+    <slot name="footer" />
+      {#if showTabs}
+        <AppTabs />
+      {/if}
+  </footer>
+
+
 </div>

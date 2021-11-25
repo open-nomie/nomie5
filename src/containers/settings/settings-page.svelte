@@ -237,7 +237,7 @@ Note: Your data will not automatically move over. You'll first need to export it
         <div class="p-0 ">
 
           {#if $UserStore.meta.hiddenFeatures}
-            <ListItem
+            <!-- <ListItem
               className="mb-3"
               href={appConfig.patreonHome}
               detail
@@ -251,7 +251,7 @@ Note: Your data will not automatically move over. You'll first need to export it
               <div slot="right">
                 <Text size="sm">{Lang.t('general.latest', 'Latest')}</Text>
               </div>
-            </ListItem>
+            </ListItem> -->
           {:else}
             <!-- <ListItem compact className="mb-3">
               <div slot="left" style="font-size:28px">🎁</div>

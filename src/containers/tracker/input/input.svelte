@@ -257,29 +257,31 @@
 
     </main>
 
-    <footer class="px-4 py-2" slot="footer">
+    <footer class="px-4 py-3 stiff" slot="footer">
 
       {#if data.tracker}
         <ToolbarGrid>
           <div slot="left" class="pr-2">
-            <button
-              class="text-lg text-primary-500"
+            <Button
+              type="clear"
+              size="lg"
+              className=" text-lg md:text-xl text-primary-500"
               on:click={() => {
                 methods.onCancel()
               }}>
               {Lang.t('general.close', 'Close')}
-            </button>
+            </Button>
           </div>
           <!-- end left toolbar -->
 
-          <div class="w-full px-2">
+          <div class="w-full px-2 ">
             {#if !data.editing && !data.saving}
               {#if (data.tracker.type == 'timer' && data.value && $Interact.trackerInput.allowSave !== false) || (data.tracker.type != 'timer' && $Interact.trackerInput.allowSave !== false)}
                 <Button
                   size="lg"
                   shape="round"
                   block
-                  style="max-width:230px"
+                  style="max-width:230px; height:48px"
                   on:click={methods.onSave}
                   className="text-white flex-grow flex-shrink w-full"
                   title="Save this log">
@@ -294,7 +296,7 @@
                   size="lg"
                   block
                   on:click={methods.startTimer}
-                  style="max-width:130px"
+                  style="max-width:130px; height:50px"
                   title="Start Timer"
                   className="text-white">
                   {Lang.t('general.start', 'Start')}
@@ -308,7 +310,7 @@
                   size="lg"
                   block
                   on:click={methods.stopTimer}
-                  style="max-width:130px"
+                  style="max-width:130px; padding:8px"
                   title="Stop Timer"
                   className="text-white {data.tracker.started > 0 ? '' : 'd-none'}">
                   <Icon name="stop" size={32} className="fill-white" />
@@ -321,14 +323,16 @@
           <div slot="right">
 
             {#if (data.tracker.type !== 'timer' || data.value) && hideAdd !== true && !data.editing}
-              <button
+              <Button
+                type="clear"
+                size="lg"
                 title="Add this to the note without immediately saving."
-                class="text-lg text-primary-500 {tracker.started ? 'hidden' : ''}"
+                className="text-lg md:text-xl text-primary-500 {tracker.started ? 'hidden' : ''}"
                 on:click={methods.onAdd}>
                 {#if !$Interact.trackerInput.allowSave}
                   {Lang.t('general.next', 'Next')}
                 {:else}{Lang.t('general.add', 'Add')}{/if}
-              </button>
+              </Button>
             {/if}
           </div>
         </ToolbarGrid>

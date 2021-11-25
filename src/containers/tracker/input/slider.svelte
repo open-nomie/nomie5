@@ -62,8 +62,8 @@
     width: 46vh;
     height: 100px;
     cursor: pointer;
-    @apply shadow-lg;
-    @apply bg-white dark:bg-black;
+
+    @apply bg-gray-200 dark:bg-black;
     border-radius: 50px;
     padding: 0 6px;
     @apply border border-gray-500;
@@ -112,10 +112,10 @@
 <div class="tracker-input slider">
   <div class="value">
     {#if tracker && tracker.uom !== 'num'}
-      <h2 size="lg" bold className="text-primary-bright">
-        {tracker.displayValue(tempValue)}
-      </h2>
-      <h3 class="text-base text-gray-800 dark:text-white">{tempValue}</h3>
+      <LetterTicker
+        text={`${tracker.displayValue(tempValue)}`}
+        className="text-5xl font-bold text-gray-800 dark:text-white" />
+      <!-- <h3 class="text-base text-gray-800 dark:text-white">{tempValue}</h3> -->
     {:else if tracker}
       <LetterTicker
         text={`${tempValue}`}
