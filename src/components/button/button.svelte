@@ -10,7 +10,7 @@
   export let size = 'md'
   export let type = ''
   export let shape = 'rounded'
-  export let color = 'primary'
+  export let color = ''
   export let className = ''
   export let block = false
   export let style = ''
@@ -65,7 +65,7 @@
   } */
 
   .nbtn.confirming {
-    background-color: var(--color-red);
+    @apply bg-red-500;
     color: #fff;
   }
 

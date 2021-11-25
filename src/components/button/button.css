@@ -110,44 +110,43 @@
 }
 .nbtn-primary,
 .nbtn-primary-bright {
-  background-color: var(--color-primary-bright);
-  color: #fff;
+  @apply bg-primary-500;
+  @apply text-white;
 }
 .nbtn-danger {
-  background-color: var(--color-red);
-  color: #fff;
+  @apply bg-red-500;
+  @apply text-white;
 }
 .nbtn-success,
 .nbtn-green {
-  background-color: var(--color-green);
-  color: #fff;
+  @apply bg-green-600;
+  @apply text-white;
 }
 .nbtn-orange {
-  background-color: var(--color-orange);
-  color: #fff;
+  @apply bg-yellow-500;
+  @apply text-white;
 }
 .nbtn-dark {
-  background-color: var(--color-inverse);
-  color: var(--color-solid);
+  @apply bg-gray-700 dark:bg-gray-300;
+  @apply text-white dark:text-black;
 }
 .nbtn-light {
   @apply text-primary-500;
-  @apply bg-gray-50 dark:bg-gray-900;
+  @apply bg-gray-50;
 }
 .nbtn-clear,
 .nbtn-transparent,
 .nbtn-text {
   box-shadow: none;
-  background-color: transparent;
 }
-.nbtn-clear.nbtn-primary,
+/* .nbtn-clear.nbtn-primary,
 .nbtn-transparent.nbtn-primary,
 .nbtn-text.nbtn-primary,
 .nbtn-clear.nbtn-primary-bright,
 .nbtn-transparent.nbtn-primary-bright,
 .nbtn-text.nbtn-primary-bright {
   background-color: transparent;
-  color: var(--color-primary-bright);
+  @apply bg-primary-500;
 }
 .nbtn-clear.nbtn-red,
 .nbtn-transparent.nbtn-red,
@@ -182,7 +181,7 @@
 .nbtn-text.nbtn-green {
   background-color: transparent;
   color: var(--color-green);
-}
+} */
 .nbtn-text {
   text-transform: uppercase;
   font-weight: 600;
@@ -259,7 +258,6 @@
 }
 .nbtn-icon,
 .nbtn.tap-icon {
-  background-color: transparent;
   box-shadow: none;
 }
 .nbtn-group {

@@ -100,7 +100,7 @@
 <div class="log-list-loader">
   <LogList
     {fullDate}
-    className="bg-transparent {className}"
+    className="bg-transparent mb-4 {className}"
     {compact}
     {logs}
     {showTimeDiff}
