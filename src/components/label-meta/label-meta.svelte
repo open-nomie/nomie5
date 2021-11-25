@@ -1,36 +1,37 @@
-<script>
-  import { tokenize } from "nomie-utils";
+<script lang="ts">
+  import { tokenize } from 'nomie-utils'
 
-  export let str = undefined;
-  export let titleClass = "";
+  export let str = undefined
+  export let titleClass = ''
+  export let className = ''
 
-  let tokenized;
-  let label = "";
-  let meta = "";
+  let tokenized
+  let label = ''
+  let meta = ''
 
-  let lastStr;
+  let lastStr
   $: if (str !== lastStr) {
-    lastStr = str;
-    tokenized = tokenize(str);
+    lastStr = str
+    tokenized = tokenize(str)
     label = tokenized
       .filter((t) => {
-        return t.type == "generic";
+        return t.type == 'generic'
       })
       .map((t) => {
-        return t.raw;
+        return t.raw
       })
-      .join(" ")
-      .trim();
+      .join(' ')
+      .trim()
 
     meta = tokenized
       .filter((t) => {
-        return t.type !== "generic";
+        return t.type !== 'generic'
       })
       .map((t) => {
-        return t.raw;
+        return t.raw
       })
-      .join(" ")
-      .trim();
+      .join(' ')
+      .trim()
   }
 </script>
 
@@ -40,7 +41,7 @@
   }
 </style>
 
-<div class="n-label-meta flex">
+<div class="n-label-meta flex {className}">
 
   {#if meta.length && label.length}
     <div class="title {titleClass}">{meta}</div>

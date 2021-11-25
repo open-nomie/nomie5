@@ -4,11 +4,11 @@
   import _ from 'lodash'
   import ListItem from '../../components/list-item/list-item.svelte'
   import Text from '../../components/text/text.svelte'
-  import type TrackerConfig from '../../modules/tracker/tracker'
+
   import type { ITracker } from '../../modules/tracker/tracker'
   import { LastUsed } from '../../store/last-used'
   import { LedgerStore } from '../../store/ledger'
-  import type { IToday } from '../../store/ledger'
+
   import ShortcutButton from '../../components/shortcut-button/shortcut-button.svelte'
   import Counter from '../../components/counter/counter.svelte'
   import NomieUOM from '../../utils/nomie-uom/nomie-uom'
@@ -21,7 +21,7 @@
   import Button from '../../components/button/button.svelte'
   import Avatar from '../../components/avatar/avatar.svelte'
   import is from '../../utils/is/is'
-  import LedgerTools from '../../store/ledger/ledger-tools'
+
   import { ActiveLogStore } from '../../store/active-log'
   import { TrackerStore } from '../../store/tracker-store'
   import { Interact } from '../../store/interact'
@@ -172,20 +172,15 @@
           label={tracker.label}
           size={$UserStore.localSettings.compactButtons ? 30 : 40} />
       </div>
-      <div>
-        <Text size="md" leading2 className="tracker-label">
-          {tracker.label}
-        </Text>
+      <main>
+        <h3 class="font-bold text-black dark:text-white">{tracker.label}</h3>
         {#if getLastUsed(tracker)}
-          <Text
-            size={$UserStore.localSettings.compactButtons ? 'xs' : 'sm'}
-            faded
-            leading2>
+          <p class="text-xs text-gray-500">
             {getLastUsed(tracker) || undefined}
-          </Text>
+          </p>
         {/if}
-      </div>
-      <span slot="right" class="mr-2">
+      </main>
+      <span slot="right" class="flex items-center mr-2 space-x-4">
         <Text>{getTodaysValue(tracker) || ''}</Text>
         {#if tracker.started}
           <Counter started={tracker.started} color={tracker.color} />
@@ -193,7 +188,8 @@
         {#if !hideMore}
           <Button
             shape="circle"
-            color="light"
+            className="bg-gray-100 dark:bg-black text-primary-500"
+            size="sm"
             style="z-index:1000"
             on:click={(evt) => {
               dispatch('more', tracker)

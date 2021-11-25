@@ -87,7 +87,12 @@
   }
 </script>
 
-<Backdrop id="popmenu" visible={showBase} position="bottom">
+<Backdrop
+  id="popmenu"
+  tappable
+  on:closed={() => close}
+  visible={showBase}
+  position="bottom">
   <div class="flex flex-col pop-menu">
     {#if title || description}
       <header class="py-2 text-center">
