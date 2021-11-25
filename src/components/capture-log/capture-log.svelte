@@ -56,6 +56,7 @@
   let saved = false
   let debounce
   let textareaTimeout
+  let isFocused = false
   // let activeLogDayjs: Dayjs;
 
   $: if ($LedgerStore.saving) {
@@ -390,7 +391,8 @@
           }} />
         <!-- Note Input -->
         <div
-          class="mask-textarea {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 ? 'populated' : 'empty'}">
+          class="mask-textarea {isFocused ? 'focused' : 'blurred'}
+          {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 ? 'populated' : 'empty'}">
           <Button
             ariaLabel="Location and Date settings"
             size="sm"
@@ -415,6 +417,12 @@
             on:input={methods.input}
             placeholder={Lang.t('general.whats-up', "What's up?")}
             on:keydown={methods.keyPress}
+            on:focus={() => {
+              isFocused = true
+            }}
+            on:blur={() => {
+              isFocused = false
+            }}
             on:paste={methods.keyPress} />
 
           {#if $UserStore.meta.hiddenFeatures}

@@ -12,6 +12,14 @@
 .capture-log .mask-textarea.populated .save-button {
   display: block;
 }
+.capture-log .mask-textarea.populated {
+  @apply bg-green-100 dark:bg-green-900 bg-opacity-75;
+}
+
+.capture-log .mask-textarea.focused {
+  @apply ring-2 ring-opacity-100 ring-primary-500;
+}
+
 .capture-log .mask-textarea .action-button {
   margin-bottom: 7px;
 }
@@ -62,7 +70,7 @@
   min-height: 40px;
   max-height: 200px;
   @apply rounded-3xl;
-  @apply bg-gray-100 dark:bg-gray-700;
+  @apply bg-gray-200 dark:bg-gray-900;
   @apply overflow-hidden;
   @apply border;
   @apply border-gray-200 dark:border-gray-600;
