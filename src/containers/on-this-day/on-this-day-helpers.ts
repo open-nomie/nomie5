@@ -12,14 +12,38 @@ export interface OTDView {
   view: OTDViewOption;
   icon: string;
   label: string;
+  reduce: Function
 }
 
 export let OTDViews: Array<OTDView> = [
-  { view: "all", icon: "book", label: `${Lang.t("general.all", "All")}` },
-  { view: "notes", icon: "annotation", label: `${Lang.t("general.notes", "Notes")}` },
+  {
+    view: "all", icon: "book", label: `${Lang.t("general.all", "All")}`, reduce: (items: Array<NLog>) => {
+      return items.length
+    }
+  },
+  {
+    view: "notes", icon: "annotation", label: `${Lang.t("general.notes", "Notes")}`, reduce: (items: Array<NLog>) => {
+      return items.filter((log: NLog) => {
+        return log.noteTextLength() > 5
+      }).length;
+    }
+  },
+  {
+    view: "people", icon: "people", label: `${Lang.t("general.people", "People")}`, reduce: (items: Array<NLog>) => {
+      return items.filter((log: NLog) => {
+        log.getMeta();
+        return log.people && log.people.length > 0
+      }).length;
+    }
+  },
+  {
+    view: "locations", icon: "map", label: `${Lang.t("general.locations", "Locations")}`, reduce: (items: Array<NLog>) => {
+      return items.filter((log: NLog) => {
+        return log.lat
+      }).length;
+    }
+  },
   // { view: "trackers", icon: "tracker", label: `${Lang.t("general.trackers", "Trackers")}` },
-  { view: "people", icon: "people", label: `${Lang.t("general.people", "People")}` },
-  { view: "locations", icon: "map", label: `${Lang.t("general.locations", "Locations")}` },
   // { view: "context", icon: "bulb", label: `${Lang.t("general.context", "Context")}` },
 ];
 

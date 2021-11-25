@@ -305,6 +305,32 @@
   .page-history .n-item .n-item:last-child {
     border-bottom: none !important;
   }
+  .notification-badge {
+    @apply w-4;
+    @apply h-4;
+    @apply rounded-full;
+    @apply bg-gray-100 dark:bg-black;
+    @apply text-gray-700 dark:text-gray-300;
+    @apply shadow-sm;
+    @apply absolute;
+    @apply top-0;
+    @apply right-2;
+    @apply flex;
+    @apply items-center;
+    @apply justify-center;
+    font-size: 9px;
+    @apply font-bold;
+  }
+  .active .notification-badge {
+    @apply bg-primary-500;
+    @apply text-white;
+  }
+  .notification-badge[data-count='0'] {
+    @apply hidden;
+  }
+  .notification-badge::after {
+    content: attr(data-count);
+  }
 </style>
 
 <NLayout pageTitle={appTitle} {style}>
@@ -347,6 +373,9 @@
                   view = loopView.view
                 }}>
                 <Icon name={loopView.icon} />
+                <div
+                  data-count={loopView.reduce(logs)}
+                  class="notification-badge" />
               </Button>
             {/each}
           </ButtonGroup>
@@ -395,7 +424,7 @@
 
           <div class="memories">
             {#each $LedgerStore.memories as log}
-              <div class="text-center memories-log-header">
+              <div class="py-3 text-center memories-log-header">
                 <button
                   aria-label="View logs from {dayjs(log.end).format('ddd MM YYYY')}"
                   class="flex items-center justify-center w-full py-2 font-medium text-black bg-primary-500"
