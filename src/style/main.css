@@ -145,10 +145,10 @@ html.mode-dark {
   pointer-events: none;
 }
 .h-75vh {
-  height: 75vh;
+  min-height: 75vh;
 }
 .h-50vh {
-  height: 50vh;
+  min-height: 50vh;
 }
 .tap-icon {
   @apply text-primary-500;

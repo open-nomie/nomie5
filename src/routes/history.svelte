@@ -397,7 +397,8 @@
 
         <Swipeable on:left={methods.next} on:right={methods.previous}>
           {#if loading}
-            <div class="flex items-center justify-center w-full h-75vh">
+            <div
+              class="flex items-center justify-center w-full max-h-full h-75vh">
               <Spinner />
             </div>
           {:else if !loading && !logs.length}

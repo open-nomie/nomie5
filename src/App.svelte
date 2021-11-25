@@ -45,6 +45,7 @@
 
   import './style/main.css'
   import DynamicPage from './DynamicPage.svelte'
+  import Backdrop from './components/backdrop/backdrop.svelte'
   // Set a better console
   const console = new Logger('APP')
 
@@ -209,12 +210,12 @@
   <DynamicPage container="people/person-modal" />
 {/if}
 
-{#if $Interact.blocker.show}
-  <div id="ui-blocker" class="full-screen bg-translucent n-panel center-all">
+<Backdrop id="blocker" visible={$Interact.blocker.show}>
+  {#if $Interact.blocker.show}
     <div style="min-width:200px;">
       <div class="my-3 ml-2 text-center text-white">
         {#if !$Interact.blocker.percent}
-          <Spinner size={16} />
+          <Spinner size={32} />
         {/if}
         {$Interact.blocker.message}
       </div>
@@ -222,8 +223,8 @@
         <ProgressBar percentage={$Interact.blocker.percent} />
       {/if}
     </div>
-  </div>
-{/if}
+  {/if}
+</Backdrop>
 
 <Interactions />
 
