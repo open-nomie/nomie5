@@ -124,6 +124,12 @@ html.mode-dark {
   @apply flex-grow-0;
   @apply flex-shrink-0;
 }
+.filler {
+  @apply flex-grow;
+  @apply flex-shrink;
+  @apply max-w-full;
+  @apply min-w-0;
+}
 
 .screen-block {
   @apply fixed;

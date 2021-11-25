@@ -77,7 +77,7 @@
     </main>
   {/if}
   {#if hasFooter}
-    <footer class="layout-footer glass" style="box-shadow:-10px 0px 10px rgba(0,0,0,0.2)">
+    <footer class="z-50 layout-footer glass" style="box-shadow:-10px 0px 10px rgba(0,0,0,0.2)">
       <slot name="footer" />
     </footer>
   {/if}

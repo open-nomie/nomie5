@@ -9,6 +9,8 @@
   export let closeBackgroundTap: boolean = false
   export let className = ''
   export let size = 'lg'
+  export let y = '60%'
+  export let direction: 'horizontal' | 'vertical' = 'horizontal'
 
   let selected: any
   let showMenu: boolean = false
@@ -18,7 +20,7 @@
   let id: string = `ps-${Math.random()}`
 
   let x: number
-  let y: string = `60%`
+  // let y: string = `60%`
 
   function toggle(evt?) {
     y = `${document.getElementById(id).offsetTop}px`
@@ -44,7 +46,7 @@
 </style>
 
 <div
-  class="positivity-menu-pop animate up"
+  class="positivity-menu-pop animate up dir-{direction}"
   style="left:{x}px; top:{y}; z-index:4000"
   class:visible={showMenu}
   class:hidden={!showMenu}>

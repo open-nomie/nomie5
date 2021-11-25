@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Backdrop from '../../components/backdrop/backdrop.svelte'
+  import PositivitySelector from './../positivity-selector/positivity-selector.svelte'
   import Container from './../container/container.svelte'
   /**
    * Capture Log
@@ -44,6 +46,8 @@
   import DatePicker from '../date-picker/date-picker.svelte'
   import type TrackableElement from '../../modules/trackable-element/trackable-element'
   import extract from '../../utils/extract/extract'
+  import { getEmojiFromScore } from '../../utils/positivity/positivity'
+  import Log from '../../utils/log/log'
 
   // Consts
   const console = new Logger('capture-log')
@@ -57,6 +61,7 @@
   let debounce
   let textareaTimeout
   let isFocused = false
+  let showPositivitySelector = false
   // let activeLogDayjs: Dayjs;
 
   $: if ($LedgerStore.saving) {
@@ -165,7 +170,7 @@
           if (textareaEle && $ActiveLogStore.note.length > 0) {
             textareaEle.style.height = (height > 300 ? 300 : height) + 'px'
           } else {
-            textareaEle.style.height = '42px'
+            textareaEle.style.height = '36px'
           }
           // Cal
           // methods.calculateScore();
@@ -392,75 +397,90 @@
         <!-- Note Input -->
         <div
           class="mask-textarea {isFocused ? 'focused' : 'blurred'}
-          {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 ? 'populated' : 'empty'}">
-          <Button
-            ariaLabel="Location and Date settings"
-            size="sm"
-            shape="circle"
-            color={state.advanced ? 'primary' : 'light'}
-            className="ml-1 more-button action-button"
-            on:click={toggleAdvanced}>
-            {#if state.advanced}
-              <NIcon name="more" className="fill-white" />
-            {:else}
-              <NIcon name="more" className="fill-grey-5" />
+          {$ActiveLogStore.lat || $ActiveLogStore.note.trim().length > 0 ? 'populated' : 'empty'}"
+          on:click={() => {
+            isFocused = true
+          }}>
+          <div class="top-section">
+            <textarea
+              aria-label="Note entry field"
+              id="textarea-capture-note"
+              style="overflow:hidden"
+              disabled={saving || saved}
+              bind:value={$ActiveLogStore.note}
+              bind:this={textarea}
+              on:input={methods.input}
+              placeholder={Lang.t('general.whats-up', "What's up?")}
+              on:keydown={methods.keyPress}
+              on:focus={() => {
+                isFocused = true
+              }}
+              on:blur={() => {
+                isFocused = false
+              }}
+              on:paste={methods.keyPress} />
+          </div>
+          <div
+            class="flex px-2 py-1 border-t border-gray-500 border-opacity-25 bottom-section">
+            <Button
+              ariaLabel="Location and Date settings"
+              size="sm"
+              shape="circle"
+              color={state.advanced ? 'primary' : 'light'}
+              className="ml-1 more-button action-button"
+              on:click={toggleAdvanced}>
+              {#if state.advanced}
+                <NIcon name="more" className="fill-white" />
+              {:else}
+                <NIcon name="more" className="fill-grey-5" />
+              {/if}
+            </Button>
+
+            {#if $UserStore.meta.hiddenFeatures}
+              <Button
+                className="expand-button action-button"
+                ariaLabel="Journal Mode"
+                icon
+                size="sm"
+                on:click={Interact.toggleFocusedEditor}>
+                <Icon name="expand" className="fill-inverse-2" />
+              </Button>
             {/if}
-          </Button>
 
-          <textarea
-            aria-label="Note entry field"
-            id="textarea-capture-note"
-            style="overflow:hidden"
-            disabled={saving || saved}
-            bind:value={$ActiveLogStore.note}
-            bind:this={textarea}
-            on:input={methods.input}
-            placeholder={Lang.t('general.whats-up', "What's up?")}
-            on:keydown={methods.keyPress}
-            on:focus={() => {
-              isFocused = true
-            }}
-            on:blur={() => {
-              isFocused = false
-            }}
-            on:paste={methods.keyPress} />
-
-          {#if $UserStore.meta.hiddenFeatures}
             <Button
-              className="expand-button action-button"
-              ariaLabel="Journal Mode"
-              icon
-              size="sm"
-              on:click={Interact.toggleFocusedEditor}>
-              <Icon name="expand" className="fill-inverse-2" />
-            </Button>
-          {/if}
-
-          <PositivityMenu
-            bind:score={$ActiveLogStore.score}
-            closeBackgroundTap={true}
-            size="lg"
-            className="mr-1 action-button" />
-
-          {#if $LedgerStore.saving}
-            <Button
-              className="save-button action-button mr-2"
+              type="clear"
               shape="circle"
-              color="success"
-              size="sm">
-              <NSpinner size={20} color="#FFFFFF" />
+              on:click={() => {
+                showPositivitySelector = !showPositivitySelector
+              }}>
+              {getEmojiFromScore($ActiveLogStore.score, true)}
             </Button>
-          {:else}
-            <Button
-              className="save-button action-button mr-2"
-              ariaLabel="Save Note"
-              shape="circle"
-              color="success"
-              size="sm"
-              on:click={methods.logSave}>
-              <NIcon name="arrowUp" style="fill: #FFF;" size={20} />
-            </Button>
-          {/if}
+
+            <div class="filler" />
+            {#if $LedgerStore.saving}
+              <Button
+                className="save-button action-button mr-2"
+                shape="circle"
+                color="success"
+                size="sm">
+                <NSpinner size={20} />
+              </Button>
+            {:else}
+              <Button
+                ariaLabel="Save Note"
+                color="success"
+                size="sm"
+                on:click={methods.logSave}>
+
+                <NIcon
+                  name="airplane"
+                  className="mr-1"
+                  style="fill: #FFF;"
+                  size={20} />
+                Save
+              </Button>
+            {/if}
+          </div>
         </div>
       </div>
     </div>
@@ -537,14 +557,6 @@
               {/if}
             </div>
 
-            <!-- <DateTimeBar
-            date={$ActiveLogStore.end}
-            calendarClass="px-2 mb-1"
-            on:change={(evt) => {
-              $ActiveLogStore.end = dayjs(evt.detail).toDate().getTime();
-            }}>
-            
-          </DateTimeBar> -->
           </NItem>
 
         </div>
@@ -553,3 +565,17 @@
 
   </Container>
 </div>
+
+<Backdrop id="positivty-selector" visible={showPositivitySelector}>
+  <PositivitySelector
+    id="score"
+    showClose={true}
+    on:close={() => {
+      showPositivitySelector = false
+    }}
+    bind:score={$ActiveLogStore.score}
+    on:change={(evt) => {
+      $ActiveLogStore.score = evt.detail
+      showPositivitySelector = false
+    }} />
+</Backdrop>

@@ -6,6 +6,50 @@
 .capture-log .tracker-list {
   margin-top: -10px !important;
 }
+
+.capture-wrapper .mask-textarea .bottom-section {
+  @apply hidden;
+  @apply h-10;
+  @apply pt-1;
+}
+
+.capture-wrapper .mask-textarea.focused,
+.capture-wrapper .mask-textarea.populated {
+  @apply rounded-2xl;
+}
+
+.capture-wrapper .mask-textarea .top-section {
+  @apply overflow-y-auto;
+}
+
+.capture-wrapper .mask-textarea.focused .bottom-section,
+.capture-wrapper .mask-textarea.populated .bottom-section {
+  @apply flex;
+  @apply items-center;
+  @apply rounded-2xl;
+  @apply flex-grow-0;
+  @apply flex-shrink-0;
+}
+
+.capture-wrapper .mask-textarea {
+  @apply flex;
+  @apply flex-col;
+  @apply w-full;
+  @apply justify-center;
+  min-height: 40px;
+  max-height: 200px;
+  @apply rounded-3xl;
+  @apply bg-gray-200 dark:bg-gray-900;
+  @apply overflow-hidden;
+  @apply border;
+  @apply border-gray-200 dark:border-gray-600;
+  @apply border-opacity-60;
+  transition: all 0.2s ease-in-out;
+}
+.capture-wrapper .mask-textarea.focused {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
 .capture-log .mask-textarea .save-button {
   display: none;
 }
@@ -13,7 +57,8 @@
   display: block;
 }
 .capture-log .mask-textarea.populated {
-  @apply bg-green-100 dark:bg-green-900 bg-opacity-75;
+  @apply bg-green-50 dark:bg-green-900 bg-opacity-75;
+  @apply border border-green-800 border-opacity-50;
 }
 
 .capture-log .mask-textarea.focused {
@@ -64,37 +109,24 @@
   transition: none;
   width: 0;
 }
-.capture-wrapper .mask-textarea {
-  display: flex;
-  align-items: flex-end;
-  min-height: 40px;
-  max-height: 200px;
-  @apply rounded-3xl;
-  @apply bg-gray-200 dark:bg-gray-900;
-  @apply overflow-hidden;
-  @apply border;
-  @apply border-gray-200 dark:border-gray-600;
-  @apply border-opacity-60;
-  transition: all 0.2s ease-in-out;
-}
+
 .capture-wrapper .mask-textarea .save-button {
   display: none;
 }
 .capture-wrapper .mask-textarea.populated {
   box-sizing: border-box;
 }
-.capture-wrapper .mask-textarea.populated .save-button {
+/* .capture-wrapper .mask-textarea.populated .save-button {
   display: inline-flex;
-}
+} */
 .capture-wrapper .mask-textarea textarea {
   border: none;
   background-color: transparent;
   width: 100%;
-  height: 40px;
-  padding: 8px 0;
+  height: 36px;
+  @apply px-4 py-2;
   @apply text-black dark:text-white;
-  margin-left: 8px;
-  font-size: 1em;
+  @apply text-lg;
 }
 .capture-wrapper .mask-textarea textarea:focus,
 .capture-wrapper .mask-textarea textarea:active {

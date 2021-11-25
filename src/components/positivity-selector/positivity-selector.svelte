@@ -1,5 +1,7 @@
 <script lang="ts">
+  import Icon from '@/components/icon/icon.svelte'
   import { createEventDispatcher } from 'svelte'
+  import { X } from 'svelte-hero-icons'
   import appConfig from '../../config/appConfig'
   import tick from '../../utils/tick/tick'
   import NButtonGroup from '../button-group/button-group.svelte'
@@ -13,6 +15,7 @@
   export let size = 'md'
   export let transparent = false
   export let id = undefined
+  export let showClose: boolean = false
 
   async function onChange(sc) {
     score = sc
@@ -80,4 +83,14 @@
       {posEmoji.emoji}
     </Button>
   {/each}
+  {#if showClose}
+    <Button
+      color="transparent"
+      shape="rounded"
+      on:click={() => {
+        dispatch('close')
+      }}>
+      <Icon icon={X} />
+    </Button>
+  {/if}
 </div>
