@@ -183,7 +183,10 @@
       <span slot="right" class="flex items-center mr-2 space-x-4">
         <Text>{getTodaysValue(tracker) || ''}</Text>
         {#if tracker.started}
-          <Counter started={tracker.started} color={tracker.color} />
+          <Counter
+            started={tracker.started}
+            className="text-lg"
+            color={tracker.color} />
         {/if}
         {#if !hideMore}
           <Button

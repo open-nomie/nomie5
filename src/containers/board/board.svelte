@@ -654,7 +654,7 @@
         {/if}
 
         {#if $TrackerStore.showTimers && $TrackerStore.timers.length}
-          <Container className="px-2 lg:px-4">
+          <Container className="px-2 lg:px-4 mb-5">
             <Card>
               <ListItem compact>
                 <div class="ntitle">Running Timers</div>

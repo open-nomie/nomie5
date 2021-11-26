@@ -1,52 +1,51 @@
 <script>
-  import { createEventDispatcher, onMount } from "svelte";
+  import { createEventDispatcher, onMount } from 'svelte'
 
   // components
-  import NHScroller from "../h-scroller/h-scroller.svelte";
-  import NIcon from "../icon/icon.svelte";
-  import Elephant from "../elephant.svelte";
+  import NHScroller from '../h-scroller/h-scroller.svelte'
+  import NIcon from '../icon/icon.svelte'
+  import Elephant from '../elephant.svelte'
 
-  import { TrackerStore } from "../../store/tracker-store";
-  import Spacer from "../spacer/spacer.svelte";
-  import Row from "../row/row.svelte";
-  import { Lang } from "../../store/lang";
+  import { TrackerStore } from '../../store/tracker-store'
+  import Spacer from '../spacer/spacer.svelte'
+  import Row from '../row/row.svelte'
+  import { Lang } from '../../store/lang'
 
-  import "./board-tabs.css";
+  import './board-tabs.css'
 
-  export let boards = [];
-  export let active = undefined;
+  export let boards = []
+  export let active = undefined
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
 
   const state = {
     active: null,
     activeIndex: 0,
     hasTimers: false,
-  };
+  }
 
   // When board size changes
   $: if (boards.length && active) {
     boards.forEach((b, index) => {
-      if (b.id == active && b.id !== "all" && b.id !== "_timers") {
-        state.activeIndex = index; // all
+      if (b.id == active && b.id !== 'all' && b.id !== '_timers') {
+        state.activeIndex = index // all
       }
-    });
+    })
   }
 
-  onMount(() => {});
+  onMount(() => {})
 
   const methods = {
     asArray() {
-      return;
+      return
     },
     setActive(id) {},
-  };
+  }
 </script>
 
 <style lang="postcss">
   .add-board:before {
-      display: none;
-    
+    display: none;
   }
   button.inactive {
     opacity: 0.8;
@@ -55,23 +54,29 @@
 </style>
 
 {#if boards.length === 1}
-  <div class="flex items-center n-board-tabs flex-grow flex-shrink" data-scroll="0">
+  <div
+    class="flex items-center flex-grow flex-shrink n-board-tabs"
+    data-scroll="0">
     <Spacer />
     <Elephant size={24} />
     <Spacer />
   </div>
 {:else}
-  <NHScroller activeIndex={state.activeIndex} centerIfPossible wrapperClass="space-x-4" className="n-board-tabs">
+  <NHScroller
+    activeIndex={state.activeIndex}
+    centerIfPossible
+    wrapperClass="space-x-2"
+    className="n-board-tabs">
     {#each boards as board}
       <button
         label={Lang.t('general.all-trackers', 'All Trackers')}
         class="tab board-{board.id}
         {board.id == active ? 'selected' : 'inactive'}"
         on:longtap={() => {
-          dispatch('longPress', board);
+          dispatch('longPress', board)
         }}
         on:click={() => {
-          dispatch('tabTap', board);
+          dispatch('tabTap', board)
         }}>
         {#if board.id == 'all'}
           <Elephant size={16} />
