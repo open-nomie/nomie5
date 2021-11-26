@@ -1,7 +1,10 @@
 <script lang="ts">
+  import IonIcon from './../icon/ion-icon.svelte'
   import Backdrop from '../../components/backdrop/backdrop.svelte'
   import PositivitySelector from './../positivity-selector/positivity-selector.svelte'
   import Container from './../container/container.svelte'
+
+  import PaperPlane from 'ionicons/dist/svg/paper-plane.svg?component'
   /**
    * Capture Log
    *
@@ -44,6 +47,7 @@
   import PositivityMenu from '../positivity-selector/positivity-menu.svelte'
   import Icon from '../icon/icon.svelte'
   import DatePicker from '../date-picker/date-picker.svelte'
+  import DateStepper from '../date-picker/day-stepper.svelte'
   import type TrackableElement from '../../modules/trackable-element/trackable-element'
   import extract from '../../utils/extract/extract'
   import { getEmojiFromScore } from '../../utils/positivity/positivity'
@@ -462,6 +466,8 @@
               {getEmojiFromScore($ActiveLogStore.score, true)}
             </Button>
 
+            <DateStepper bind:date={$ActiveLogStore.end} />
+
             <div class="filler" />
             <Button
               ariaLabel="Location and Date settings"
@@ -489,12 +495,12 @@
                 color="success"
                 size="sm"
                 on:click={methods.logSave}>
-                <NIcon
-                  name="airplane"
-                  className="mr-1"
-                  style="fill: #FFF;"
-                  size={20} />
+
                 <span class="md:text-lg">Save</span>
+                <IonIcon
+                  icon={PaperPlane}
+                  size={20}
+                  className="ml-1 text-white" />
               </Button>
             {/if}
           </div>
@@ -588,6 +594,7 @@
 
 <Backdrop id="positivty-selector" visible={showPositivitySelector}>
   <PositivitySelector
+    className="bg-primary-500 shadow-2xl"
     size="lg"
     id="score"
     showClose={true}

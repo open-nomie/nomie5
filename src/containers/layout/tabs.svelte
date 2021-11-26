@@ -1,5 +1,16 @@
 <script>
+  import IonIcon from './../../components/icon/ion-icon.svelte'
   import Container from './../../components/container/container.svelte'
+  import AppsOutline from 'ionicons/dist/svg/apps-outline.svg?component'
+  import AppsSolid from 'ionicons/dist/svg/apps.svg?component'
+  import PeopleOutline from 'ionicons/dist/svg/people-outline.svg?component'
+  import PeopleSolid from 'ionicons/dist/svg/people.svg?component'
+  import EaselOutline from 'ionicons/dist/svg/easel-outline.svg?component'
+  import EaselSolid from 'ionicons/dist/svg/easel.svg?component'
+  import CalendarOutline from 'ionicons/dist/svg/calendar-outline.svg?component'
+  import CalendarSolid from 'ionicons/dist/svg/calendar.svg?component'
+  import SettingsOutline from 'ionicons/dist/svg/settings-outline.svg?component'
+  import SettingsSolid from 'ionicons/dist/svg/settings.svg?component'
   // Vendors
   import { onMount } from 'svelte'
   import { Link } from 'svelte-routing'
@@ -39,6 +50,16 @@
     @apply pt-1;
     flex-shrink: 0;
   }
+
+  .tab-wrap a .active {
+    @apply hidden;
+  }
+  .tab-wrap a[aria-current='page'] .active {
+    @apply inline-flex;
+  }
+  .tab-wrap a[aria-current='page'] .inactive {
+    display: none !important;
+  }
   #app-tabs.compact {
     --tab-height: 55px;
     height: calc(var(--tab-height) + env(safe-area-inset-bottom));
@@ -73,29 +94,45 @@
         <AppTab
           link={NPaths.routes.history()}
           icon="calendar"
-          label={Lang.t('tabs.history', 'History')} />
+          label={Lang.t('tabs.history', 'History')}>
+          <IonIcon className="inactive" icon={CalendarOutline} />
+          <IonIcon className="active" icon={CalendarSolid} />
+        </AppTab>
+
         {#if $FeatureStore.dashboard}
           <AppTab
             link={NPaths.routes.dashboard()}
             icon="report"
-            label={Lang.t('tabs.dashboard', 'Dash')} />
+            label={Lang.t('tabs.dashboard', 'Dash')}>
+            <IonIcon className="inactive" icon={EaselOutline} />
+            <IonIcon className="active" icon={EaselSolid} />
+          </AppTab>
         {/if}
         <AppTab
           link="/"
           icon="grid"
           notify={$TrackerStore.timers.length ? true : false}
-          label={Lang.t('tabs.track', 'Track')} />
+          label={Lang.t('tabs.track', 'Track')}>
+          <IonIcon className="inactive" icon={AppsOutline} />
+          <IonIcon className="active" icon={AppsSolid} />
+        </AppTab>
         {#if $FeatureStore.people}
           <AppTab
             link={NPaths.routes.people()}
             icon="user"
-            label={Lang.t('tabs.people', 'People')} />
+            label={Lang.t('tabs.people', 'People')}>
+            <IonIcon className="inactive" icon={PeopleOutline} />
+            <IonIcon className="active" icon={PeopleSolid} />
+          </AppTab>
         {/if}
         <AppTab
           link={NPaths.routes.settings()}
           notify={$ApiStore.items.length ? true : false}
           icon="settings"
-          label={Lang.t('tabs.settings', 'Settings')} />
+          label={Lang.t('tabs.settings', 'Settings')}>
+          <IonIcon className="inactive" icon={SettingsOutline} />
+          <IonIcon className="active" icon={SettingsSolid} />
+        </AppTab>
 
       </div>
     </Container>

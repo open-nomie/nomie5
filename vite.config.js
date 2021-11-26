@@ -6,6 +6,7 @@ import loadVersion from 'vite-plugin-package-version';
 import manifest from './manifest';
 import path from 'path';
 import analyze from 'rollup-plugin-analyzer'
+import svelteSVG from "vite-plugin-svelte-svg";
 
 export default defineConfig({
   optimizeDeps: { exclude: ["svelte-routing"] },
@@ -22,7 +23,9 @@ export default defineConfig({
   },
   plugins: [
     loadVersion(),
-
+    svelteSVG({
+      svgoConfig: {}, // See https://github.com/svg/svgo#configuration
+    }),
     svelte({
       preprocess: sveltePreprocess({
         postcss: true
