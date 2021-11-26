@@ -384,41 +384,33 @@
   </header>
   <!-- end header-content header -->
 
-  <main slot="content" class="page page-history flex-column">
-    <Container>
-      <div class="p-0 px-1 h-75vh">
-        <!-- {#if logs && logs.length}
+  <main slot="content" class="flex flex-col h-full page page-history">
+    <div class="relative flex-grow min-h-full">
+      <!-- {#if logs && logs.length}
         <Text size="xl" bold className="history-title pl-3 mt-2">
           {state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
         </Text>
       {/if} -->
 
-        <OfflineQueue />
+      <OfflineQueue />
 
-        <Swipeable on:left={methods.next} on:right={methods.previous}>
-          {#if loading}
-            <div
-              class="flex items-center justify-center w-full max-h-full h-75vh">
-              <Spinner />
-            </div>
-          {:else if !loading && !logs.length}
-            <Container className="flex items-center justify-center h-75vh">
-              <Empty
-                emoji="⏳"
-                title={state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
-                description={`${Lang.t('history.empty-day', 'No data was found on this day')}`}
-                buttonLabel={Lang.t('history.add-a-note', 'Add a Note...')}
-                buttonClick={composeHere} />
-            </Container>
-          {:else}
-            <Container>
-              <OnThisDayViews {view} {logs} />
-            </Container>
-          {/if}
-        </Swipeable>
-
-      </div>
-    </Container>
+      {#if loading}
+        <div class="flex items-center justify-center w-full max-h-full h-75vh">
+          <Spinner />
+        </div>
+      {:else if !loading && !logs.length}
+        <Container className="flex items-center justify-center h-75vh">
+          <Empty
+            emoji="⏳"
+            title={state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}
+            description={`${Lang.t('history.empty-day', 'No data was found on this day')}`}
+            buttonLabel={Lang.t('history.add-a-note', 'Add a Note...')}
+            buttonClick={composeHere} />
+        </Container>
+      {:else}
+        <OnThisDayViews {view} {logs} />
+      {/if}
+    </div>
     {#if $LedgerStore.memories.length > 0 && !showSearch && isToday && ['all', 'notes'].indexOf(view) > -1}
       <section class="mt-3 bg-primary-500">
         <Container className="px-4 pb-4">
@@ -454,7 +446,12 @@
 
   </main>
 
-  <div slot="bottom" class="map-base">
+  <!-- end header-content content -->
+
+</NLayout>
+
+<!-- 
+ <div slot="bottom" class="map-base">
     {#if locations.length && !loading}
       {#if !state.showAllLocations}
         <div
@@ -481,7 +478,4 @@
       {/if}
     {/if}
 
-  </div>
-  <!-- end header-content content -->
-
-</NLayout>
+  </div> -->

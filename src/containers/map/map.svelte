@@ -1,56 +1,51 @@
-
 <script lang="ts">
-
-  
-
   //svelte
-  import { onMount } from "svelte";
-  import { createEventDispatcher } from "svelte";
+  import { onMount } from 'svelte'
+  import { createEventDispatcher } from 'svelte'
 
   // components
-  import Item from "../../components/list-item/list-item.svelte";
-  import NIcon from "../../components/icon/icon.svelte";
+  import Item from '../../components/list-item/list-item.svelte'
+  import NIcon from '../../components/icon/icon.svelte'
   // modules
-  import locate from "../../modules/locate/locate";
-  import distance from "../../modules/locate/distance";
-  import Location from "../../modules/locate/Location";
+  import locate from '../../modules/locate/locate'
+  import distance from '../../modules/locate/distance'
+  import Location from '../../modules/locate/Location'
   // stores
-  import { Locations } from "../../store/locations";
-  import { Interact } from "../../store/interact";
-  import { Lang } from "../../store/lang";
+  import { Locations } from '../../store/locations'
+  import { Interact } from '../../store/interact'
+  import { Lang } from '../../store/lang'
 
-  import tick from "../../utils/tick/tick";
-  import Page from "../layout/page.svelte";
-  import Button from "../../components/button/button.svelte";
-  import Icon from "../../components/icon/icon.svelte";
-import { Star } from "svelte-hero-icons";
+  import tick from '../../utils/tick/tick'
+  import Page from '../layout/page.svelte'
+  import Button from '../../components/button/button.svelte'
+  import Icon from '../../components/icon/icon.svelte'
+  import { Star } from 'svelte-hero-icons'
 
   // props
-  export let locations = [];
+  export let locations = []
 
-  export let records = [];
+  export let records = []
 
-  export let small = undefined;
-  export let picker = undefined;
-  export let height = undefined;
-  export let className = "";
-  export let style = "";
-  export let lock: boolean = false;
-  export let hideFavorite: boolean = false;
+  export let small = undefined
+  export let picker = undefined
+  export let height = undefined
+  export let className = ''
+  export let style = ''
+  export let lock: boolean = false
+  export let hideFavorite: boolean = false
 
-  
-  const L:any = window['L'];
+  const L: any = window['L']
   // consts
-  const dispatch = createEventDispatcher();
-  const id = `map-${Math.random().toString().replace(".", "")}`;
+  const dispatch = createEventDispatcher()
+  const id = `map-${Math.random().toString().replace('.', '')}`
 
   // Setup GeoCode SErvice
-  const geocodeService = L.esri.Geocoding.geocodeService();
+  const geocodeService = L.esri.Geocoding.geocodeService()
 
   // Leaflet Map Holder
-  let MAP = undefined;
-  let _el;
-  let mapReady: boolean = false;
+  let MAP = undefined
+  let _el
+  let mapReady: boolean = false
 
   // Local State
   let data = {
@@ -61,27 +56,27 @@ import { Star } from "svelte-hero-icons";
     lng: null,
     showLocations: false,
     height: `100px`,
-  };
+  }
 
-  let lastLocations;
+  let lastLocations
 
   $: if (locations && JSON.stringify(locations) !== lastLocations) {
     try {
-      lastLocations = JSON.stringify(locations);
-      initAndRender();
+      lastLocations = JSON.stringify(locations)
+      initAndRender()
     } catch (e) {
-      console.error(`Location change error`, e.message);
+      console.error(`Location change error`, e.message)
     }
   }
 
   async function initAndRender() {
     try {
-      await methods.init();
-      methods.renderMap();
-      mapReady = true;
+      await methods.init()
+      methods.renderMap()
+      mapReady = true
     } catch (e) {
-      mapReady = false;
-      console.error(`init and render error`, e.message);
+      mapReady = false
+      console.error(`init and render error`, e.message)
     }
   }
 
@@ -95,11 +90,11 @@ import { Star } from "svelte-hero-icons";
             lng: record.lng,
             name: record.location,
             log: record,
-          };
-        });
-      locations = locs;
+          }
+        })
+      locations = locs
     } catch (e) {
-      console.error(`Location || record length reaction error`, e.mesasge);
+      console.error(`Location || record length reaction error`, e.mesasge)
     }
   }
 
@@ -110,12 +105,12 @@ import { Star } from "svelte-hero-icons";
           locations.push({
             lat: location.latitude,
             lng: location.longitude,
-          });
-          MAP.setView(L.latLng(location.latitude, location.longitude), 12);
+          })
+          MAP.setView(L.latLng(location.latitude, location.longitude), 12)
         })
-        .catch((e) => {});
+        .catch((e) => {})
     } catch (e) {
-      console.error("Picker reaction error", e.message);
+      console.error('Picker reaction error', e.message)
     }
   }
 
@@ -123,68 +118,68 @@ import { Star } from "svelte-hero-icons";
     let buttons = $Locations.map((loc: Location) => {
       return {
         title: loc.name,
-        icon: "pin",
+        icon: 'pin',
         click: () => {
-          methods.setLocation(loc);
+          methods.setLocation(loc)
 
-          dispatch("change", loc);
+          dispatch('change', loc)
         },
-      };
-    });
+      }
+    })
 
     Interact.popmenu({
-      title: `${Lang.t("location.saved-locations", "Saved Locations")}`,
+      title: `${Lang.t('location.saved-locations', 'Saved Locations')}`,
       buttons,
-    });
+    })
   }
 
   // methods
   export let methods = {
     init() {
       if (_el) {
-        data.height = _el.parentElement.clientHeight;
+        data.height = _el.parentElement.clientHeight
       }
 
       /** Initialize map **/
       return new Promise((resolve, reject) => {
         if (document.getElementById(id)) {
-          MAP = new L.Map(id).fitWorld();
-          var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
+          MAP = new L.Map(id).fitWorld()
+          var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider()
 
           let searchController = L.esri.Geocoding.geosearch({
             zoomToResult: true,
-            placeholder: "Search",
+            placeholder: 'Search',
             useMapBounds: 25,
             providers: [
               arcgisOnline,
               L.esri.Geocoding.mapServiceProvider({
-                label: "States and Counties",
+                label: 'States and Counties',
                 url:
-                  "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer",
+                  'https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer',
                 layers: [2, 3],
-                searchFields: ["NAME", "STATE_NAME"],
+                searchFields: ['NAME', 'STATE_NAME'],
               }),
             ],
-          });
+          })
 
-          searchController.on("results", (data) => {
+          searchController.on('results', (data) => {
             if (data.latlng) {
               let location = new Location({
                 lat: data.latlng.lat,
                 lng: data.latlng.lng,
                 name: data.text,
-              });
-              methods.setLocation(location);
+              })
+              methods.setLocation(location)
             }
-          });
+          })
 
-          let moveTimeout;
+          let moveTimeout
           const onMove = () => {
-            let center = MAP.getCenter();
-            let lat = center.lat;
-            let lng = center.lng;
-            data.lat = lat;
-            data.lng = lng;
+            let center = MAP.getCenter()
+            let lat = center.lat
+            let lng = center.lng
+            data.lat = lat
+            data.lng = lng
             // Stop this from being called multiple times.
 
             /**
@@ -195,70 +190,70 @@ import { Star } from "svelte-hero-icons";
               // let loc = await methods.getLocation(lat, lng);
               // data.locationName = loc.Match_addr;
               dispatch(
-                "change",
+                'change',
                 new Location({
                   ...MAP.getCenter(),
                   ...{ location: data.locationName },
                   ...{ name: data.locationName },
-                })
-              );
-            };
+                }),
+              )
+            }
             // Clear Timeout
-            clearTimeout(moveTimeout);
+            clearTimeout(moveTimeout)
             // Set 1s timeout
             moveTimeout = setTimeout(() => {
               // Fire Move
-              fireMove();
-            }, 1000);
-          };
+              fireMove()
+            }, 1000)
+          }
 
           // Clear any moveend listeners
-          MAP.off("moveend", onMove);
+          MAP.off('moveend', onMove)
           // If we're picking an address do the following
           if (picker) {
             // Add the Search Controller
-            searchController.addTo(MAP);
-            MAP.on("moveend", onMove);
+            searchController.addTo(MAP)
+            MAP.on('moveend', onMove)
           }
 
           // Clean up the layers
           MAP.eachLayer(function (layer) {
-            MAP.removeLayer(layer);
-          });
+            MAP.removeLayer(layer)
+          })
 
           // return map
-          mapReady = true;
-          resolve(MAP);
+          mapReady = true
+          resolve(MAP)
         } else {
-          mapReady = false;
+          mapReady = false
         } // end no map
-      });
+      })
     },
     deleteLocation(location) {
-      Interact.confirm(`${Lang.t("general.delete")} ${location.name}?`).then(
+      Interact.confirm(`${Lang.t('general.delete')} ${location.name}?`).then(
         (res) => {
           if (res) {
-            Locations.deleteByID(location.id);
+            Locations.deleteByID(location.id)
           }
-        }
-      );
+        },
+      )
     },
     editName(location) {
-      Interact.prompt("Location Name", null, { value: location.name }).then(
+      Interact.prompt('Location Name', null, { value: location.name }).then(
         (res) => {
-          location.name = res;
-          Locations.save(location);
-        }
-      );
+          location.name = res
+          Locations.save(location)
+        },
+      )
     },
     setLocation(location) {
-      data.locationName = location.name;
-      data.lat = location.lat;
-      data.lng = location.lng;
-      locations = [location];
-      data.showLocations = false;
-      MAP.setView(L.latLng(location.lat, location.lng), 12);
-      dispatch("location", location);
+      data.locationName = location.name
+      data.lat = location.lat
+      data.lng = location.lng
+      locations = [location]
+      data.showLocations = false
+      MAP.setView(L.latLng(location.lat, location.lng), 12)
+      dispatch('location', location)
     },
     /**
      * Save the current Location
@@ -269,10 +264,10 @@ import { Star } from "svelte-hero-icons";
           name: data.locationName,
           lat: data.lat,
           lng: data.lng,
-        })
+        }),
       ).then((loc) => {
-        Interact.toast(`${Lang.t("general.saved", "Saved")}`);
-      });
+        Interact.toast(`${Lang.t('general.saved', 'Saved')}`)
+      })
       // Locations.save({
       //   name: data.locationName,
       //   lat:
@@ -281,72 +276,74 @@ import { Star } from "svelte-hero-icons";
 
     renderMap() {
       if (_el) {
-        let mapTheme = `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`;
-        if (document.body.classList.contains("theme-dark")) {
-          mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png`;
+        let copy =
+          '&copy; <a href="https://www.openstreetmap.org/">OSM</a> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+        let mapTheme = `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`
+        if (document.documentElement.classList.contains('mode-dark')) {
+          mapTheme = `https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png`
+          copy = `&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors`
         }
         // Add Attribution
         L.tileLayer(mapTheme, {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/">OSM</a> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+          attribution: copy,
           maxZoom: 18,
-        }).addTo(MAP);
+        }).addTo(MAP)
 
         var myIcon = L.icon({
-          iconUrl: "/images/map/map-marker.svg",
-          iconRetinaUrl: "/images/map/map-marker.svg",
+          iconUrl: '/images/map/map-marker.svg',
+          iconRetinaUrl: '/images/map/map-marker.svg',
           iconSize: [32, 32],
           iconAnchor: [9, 21],
           popupAnchor: [0, -14],
-        });
+        })
 
         let latLngArray = locations.map((loc) => {
-          return [loc.lat, loc.lng];
-        });
+          return [loc.lat, loc.lng]
+        })
 
         // Quick Add Marker Function
         let addMarker = (latLng, name, click) => {
           let mkr = new L.marker(latLng, {
             icon: myIcon,
-          });
+          })
           // If location name is present (TODO) show it in a popup
           if (name) {
-            mkr.bindPopup(name);
+            mkr.bindPopup(name)
           }
-          mkr.on("click", click);
-          mkr.addTo(MAP);
-        };
+          mkr.on('click', click)
+          mkr.addTo(MAP)
+        }
 
         /**
          * PIN RENDERING
          * If maxDistance between them is greater than 0.1 km
          */
-        let maxDistance = distance.furthest(latLngArray);
+        let maxDistance = distance.furthest(latLngArray)
         if (maxDistance > 0.4) {
           // Loop over locaitons provided in props
           locations.forEach((loc) => {
             addMarker([loc.lat, loc.lng], loc.name, () => {
               // On Marker Click
-              data.activeLocation = loc;
+              data.activeLocation = loc
               // If a log exists - show the Share Log popup
               if (loc.log) {
-                Interact.shareLog(loc.log);
+                Interact.shareLog(loc.log)
               }
-            });
-          });
+            })
+          })
 
           let connectTheDots = (data) => {
             // TODO: Look at making this curved dotted lines - and not just straight ones
-            var c = [];
+            var c = []
             data.forEach((location) => {
-              c.push([location.lat, location.lng]);
-            });
-            return c;
-          };
+              c.push([location.lat, location.lng])
+            })
+            return c
+          }
           //let pathLine =
           L.polyline(connectTheDots(locations), {
-            color: "rgba(2.7%, 52.5%, 100%, 0.378)",
-          }).addTo(MAP);
+            color: 'rgba(2.7%, 52.5%, 100%, 0.378)',
+          }).addTo(MAP)
         } else {
           // Max Distance is not enough to justify rendering a bunch of pins
           if (locations.length) {
@@ -354,21 +351,21 @@ import { Star } from "svelte-hero-icons";
               [locations[0].lat, locations[0].lng],
               locations[0].name,
               () => {
-                data.activeLocation = locations[0];
+                data.activeLocation = locations[0]
                 if (data.activeLocation.log) {
-                  Interact.shareLog(data.activeLocation.log);
+                  Interact.shareLog(data.activeLocation.log)
                 }
-              }
-            );
+              },
+            )
           }
         }
 
         // Make the map fit the bounds of all locations provided
         if (latLngArray.length) {
-          MAP.fitBounds(latLngArray);
+          MAP.fitBounds(latLngArray)
         }
 
-        MAP.invalidateSize();
+        MAP.invalidateSize()
       }
     },
     getLocation(lat, lng) {
@@ -377,11 +374,11 @@ import { Star } from "svelte-hero-icons";
           .reverse()
           .latlng([lat, lng])
           .run((error, result) => {
-            resolve((result || {}).address || "Unknown");
-          });
-      });
+            resolve((result || {}).address || 'Unknown')
+          })
+      })
     },
-  };
+  }
 
   // Reactive Location Lookup
   // $: getLocation = () => {
@@ -400,69 +397,83 @@ import { Star } from "svelte-hero-icons";
   //   });
   // };
 
-  let check = 1;
+  let check = 1
 
   // On Mount
   onMount(async () => {
-    initAndRender();
-  });
+    initAndRender()
+  })
 </script>
 
 <style lang="postcss" global>
   .n-map-container {
-	 background-color: var(--color-solid);
-	 position: relative;
-	 min-height: 100%;
-	 flex-grow: 1;
-	 flex-shrink: 1;
-}
- .n-map-container .n-map-wrapper {
-	 position: absolute;
-	 top: 0;
-	 left: 0;
-	 right: 0;
-	 z-index: 1;
-}
- .picker-cover {
-	 pointer-events: none;
-	 position: absolute;
-	 top: -27px;
-	 bottom: 0;
-	 left: 12px;
-	 right: 0;
-	 display: flex;
-	 align-items: center;
-	 justify-content: center;
-	 z-index: 2000;
-}
- .picker-cover svg {
-	 fill: red;
-	 opacity: 0.5;
-}
- .map-lock-cover {
-	 position: absolute;
-	 top: 0;
-	 bottom: 0;
-	 left: 0;
-	 right: 0;
-	 background-color: rgba(0, 0, 0, 0);
-	 z-index: 2000;
-}
- .n-map-container .n-map {
-	 width: 100%;
-	 height: 100%;
-	 flex-grow: 1;
-	 flex-shrink: 1;
-	 z-index: 100;
-}
- .n-map-wrapper .favorites-button {
-	 position: absolute;
-	 top: 10px;
-	 right: 10px;
-	 z-index: 200;
-	 background-color: rgba(255, 255, 255, 0.7);
-}
- 
+  }
+  .n-map-container .n-map-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+  }
+  .picker-cover {
+    pointer-events: none;
+    position: absolute;
+    top: -27px;
+    bottom: 0;
+    left: 12px;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+  }
+  .picker-cover svg {
+    fill: red;
+    opacity: 0.5;
+  }
+  .map-lock-cover {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 2000;
+  }
+  .leaflet-control-attribution {
+    @apply dark:bg-black dark:text-gray-600;
+  }
+  .leaflet-control-attribution a {
+    @apply dark:text-primary-500 dark:text-opacity-50;
+  }
+  .leaflet-control-zoom {
+    @apply dark:bg-black;
+    @apply rounded-lg;
+    @apply overflow-hidden;
+  }
+  .leaflet-control-zoom a {
+    border: none !important;
+    @apply dark:bg-black dark:text-white;
+    @apply border-none;
+  }
+  .leaflet-control-zoom a.leaflet-disabled {
+    @apply dark:text-gray-700;
+    @apply border-none;
+  }
+  .n-map-container .n-map {
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    z-index: 100;
+  }
+  .n-map-wrapper .favorites-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 200;
+    background-color: rgba(255, 255, 255, 0.7);
+  }
 </style>
 
 <div

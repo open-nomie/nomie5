@@ -1,4 +1,4 @@
-<script lang="typescript">
+<script lang="ts">
   // Svelte
   import { createEventDispatcher } from 'svelte'
 
@@ -39,7 +39,7 @@
   // consts
   const dispatch = createEventDispatcher()
 
-  let displayLog = undefined
+  let displayLog: NLog
   let logMeta = undefined
 
   let trackers = $TrackerStore.trackers
@@ -146,7 +146,7 @@
     </header>
     <!-- Process the Note Content wi th the Textualizer 
     This really isn't special right now -->
-    {#if displayLog.note.length}
+    {#if displayLog.hasNote}
       <div class="px-2 mb-1">
         <NNoteTextualizer
           on:textClick={(evt) => {

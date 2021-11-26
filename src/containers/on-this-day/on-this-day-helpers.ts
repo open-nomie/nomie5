@@ -24,7 +24,7 @@ export let OTDViews: Array<OTDView> = [
   {
     view: "notes", icon: "annotation", label: `${Lang.t("general.notes", "Notes")}`, reduce: (items: Array<NLog>) => {
       return items.filter((log: NLog) => {
-        return log.noteTextLength() > 5
+        return log.hasNote
       }).length;
     }
   },
@@ -38,8 +38,18 @@ export let OTDViews: Array<OTDView> = [
   },
   {
     view: "locations", icon: "map", label: `${Lang.t("general.locations", "Locations")}`, reduce: (items: Array<NLog>) => {
+      const locations: any = {};
       return items.filter((log: NLog) => {
-        return log.lat
+        if (log.lat) {
+          const key = `${math.round(log.lat, 100)},${math.round(log.lng, 100)}`
+          if (!locations[key]) {
+            locations[key] = true;
+            return true;
+          }
+          return false;
+        } else {
+          return false;
+        }
       }).length;
     }
   },
@@ -47,12 +57,17 @@ export let OTDViews: Array<OTDView> = [
   // { view: "context", icon: "bulb", label: `${Lang.t("general.context", "Context")}` },
 ];
 
-export function hasNote(str): Boolean {
+export function hasNote(str): boolean {
   let parsed = extractor.parse(str, { includeGeneric: true });
   let generic = parsed.filter((tElement) => {
     return tElement.type == "generic";
   });
-  return math.percentage(parsed.length, generic.length) > 70;
+  console.log({ generic })
+  if (generic.length === 0) {
+    return false;
+  } else {
+    return math.percentage(parsed.length, generic.length) > 70;
+  }
 }
 
 export function getNotes(day): Array<NLog> {

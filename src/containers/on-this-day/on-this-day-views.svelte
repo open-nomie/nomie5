@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Container from './../../components/container/container.svelte'
   import type NLog from '../../modules/nomie-log/nomie-log'
   import TrackableElement from '../../modules/trackable-element/trackable-element'
   import type Person from '../../modules/person/person'
@@ -61,7 +62,7 @@
 </script>
 
 {#if view === 'trackers'}
-  <div class="p-3">
+  <Container className="p-3">
     <Grid gap={0} {columns}>
       {#each trackers as tracker (tracker.tag)}
         <TrackerSmallBlock
@@ -78,12 +79,12 @@
           }} />
       {/each}
     </Grid>
-  </div>
+  </Container>
 {:else if view === 'all'}
   {#if !logs.length}
     <slot name="empty" />
   {:else}
-    <div class="p-2 py-4 space-y-4">
+    <Container className="p-2 py-4 space-y-4">
       {#each logs as note}
         <!-- Loop over the logs for this day -->
         <ListItemLog
@@ -95,7 +96,7 @@
             Interact.elementOptions(evt.detail)
           }} />
       {/each}
-    </div>
+    </Container>
   {/if}
 {:else if view === 'notes'}
   {#if !notes.length}
@@ -103,11 +104,11 @@
       title={Lang.t('on-this-day.no-notes', 'No Notes on this Day')}
       emoji="✍🏽" />
   {:else}
-    <div class="p-2 py-4 space-y-4">
+    <Container className="p-2 py-4 space-y-4">
       {#each notes as note}
         <ListItemLog log={note} />
       {/each}
-    </div>
+    </Container>
   {/if}
 {:else if view === 'people'}
   {#if !people.length}
@@ -115,26 +116,28 @@
       title={Lang.t('on-this-day.no-people', 'No People on this Day')}
       emoji="👨‍👩‍👧" />
   {:else}
-    <div class="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
-      {#each people as person}
-        <ShortcutUserButton
-          {person}
-          on:click={() => {
-            Interact.elementOptions(new TrackableElement({
-                id: person.username,
-                raw: `@${person.username}`,
-                type: 'person',
-              }))
-          }}
-          on:more={() => {
-            Interact.elementOptions(new TrackableElement({
-                id: person.username,
-                raw: `@${person.username}`,
-                type: 'person',
-              }))
-          }} />
-      {/each}
-    </div>
+    <Container>
+      <div class="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
+        {#each people as person}
+          <ShortcutUserButton
+            {person}
+            on:click={() => {
+              Interact.elementOptions(new TrackableElement({
+                  id: person.username,
+                  raw: `@${person.username}`,
+                  type: 'person',
+                }))
+            }}
+            on:more={() => {
+              Interact.elementOptions(new TrackableElement({
+                  id: person.username,
+                  raw: `@${person.username}`,
+                  type: 'person',
+                }))
+            }} />
+        {/each}
+      </div>
+    </Container>
   {/if}
 {:else if view === 'context'}
   {#if !context.length}
@@ -142,25 +145,29 @@
       title={Lang.t('on-this-day.no-context', 'No Context on this Day')}
       emoji="🤷‍♂️" />
   {:else}
-    <div class="mt-3 n-grid">
-      {#each context as context}
-        <Button
-          shape="round"
-          size="lg"
-          color="light"
-          className="m-2"
-          on:click={() => {
-            Interact.elementOptions(new TrackableElement({
-                id: context,
-                raw: context,
-                type: 'context',
-              }))
-          }}>
-          {context}
-        </Button>
-      {/each}
-    </div>
+    <Container>
+      <div class="mt-3 n-grid">
+        {#each context as context}
+          <Button
+            shape="round"
+            size="lg"
+            color="light"
+            className="m-2"
+            on:click={() => {
+              Interact.elementOptions(new TrackableElement({
+                  id: context,
+                  raw: context,
+                  type: 'context',
+                }))
+            }}>
+            {context}
+          </Button>
+        {/each}
+      </div>
+    </Container>
   {/if}
 {:else if view === 'locations'}
-  <Map records={logs} style="height:100%;" />
+  <div class="flex flex-shrink-0 w-full h-full">
+    <Map records={logs} style="height:100%;" />
+  </div>
 {/if}
