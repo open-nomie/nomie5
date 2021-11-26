@@ -31,8 +31,8 @@
 
 <style global>
   .stepper-button {
-    @apply bg-white dark:bg-black;
-    @apply text-black dark:text-white;
+    @apply bg-white dark:bg-gray-500;
+    @apply text-black;
     @apply shadow-sm;
     @apply rounded-md;
     @apply h-5;
@@ -50,7 +50,9 @@
   <div
     class="w-12 font-semibold leading-none text-center"
     aria-label={dayjs(theDate).format(`${dayMonth} YYYY`)}>
-    <div class="font-semibold">{dayjs(theDate).format(dayMonth)}</div>
+    <div class="font-semibold dark:text-white">
+      {dayjs(theDate).format(dayMonth)}
+    </div>
     <div class="text-gray-500">{dayjs(theDate).format('YYYY')}</div>
   </div>
   <button on:click={addDate} class="stepper-button">

@@ -85,22 +85,31 @@
 </style>
 
 {#if show}
-  <section class="n-tip-wrapper bg-primary-500 dark:bg-gray-900 text-white px-4 {className} relative">
-    <Button className="px-2 opacity-60" title="PrviousTip Tip" color="clear" icon on:click={previousTip}>
+  <section
+    class="n-tip-wrapper bg-gray-400 dark:bg-gray-900 text-white px-4 {className}
+    relative">
+    <Button
+      className="px-2 opacity-60"
+      title="PrviousTip Tip"
+      color="clear"
+      icon
+      on:click={previousTip}>
       <NIcon icon={ChevronLeft} size={42} className="text-white" />
     </Button>
     <div
-      class="n-tips mx-auto bg-solid rounded-md p-2"
+      class="p-2 mx-auto rounded-md n-tips bg-solid"
       style="max-width:280px;">
 
-      <div class="flex mb-2 px-4">
-        <div class="tip filler text-base leading-tight">
+      <div class="flex px-4 mb-2">
+        <div class="text-base leading-tight tip filler">
           <strong>Tip #{state.activeTip + 1}</strong>
           {tips[state.activeTip]}
         </div>
       </div>
 
-      <nav class="flex px-2 items-center justify-center" aria-label="Navigate the Nomie tips">
+      <nav
+        class="flex items-center justify-center px-2"
+        aria-label="Navigate the Nomie tips">
 
         <NStepper steps={tips.length} current={state.activeTip} />
         <Button title="Hide Tips" color="clear" icon on:click={hideTips}>
@@ -110,7 +119,12 @@
       </nav>
 
     </div>
-    <Button className="px-2 opacity-60" title="Next Tip" color="clear" icon on:click={nextTip}>
+    <Button
+      className="px-2 opacity-60"
+      title="Next Tip"
+      color="clear"
+      icon
+      on:click={nextTip}>
       <NIcon icon={ChevronRight} size={42} className="text-white" />
     </Button>
   </section>

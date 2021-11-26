@@ -45,7 +45,9 @@
     } else if (label && label.length) {
       classList.push('label')
       const thisColor = color || strToColor(label)
-      styles.push(`background-color:${thisColor}; color:#FFF !important`)
+      styles.push(
+        `background-color:${thisColor}; text-shadow:0px 2px 2px rgba(0,0,0,0.2); color:#FFF !important`,
+      )
       styles.push(`font-size: ${size * 0.5}px`)
     }
     // If Transparent

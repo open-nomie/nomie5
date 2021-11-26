@@ -1,4 +1,6 @@
-<script>
+<script lang="ts">
+  import { wait } from './../../utils/tick/tick.ts'
+  import CheckmarkCircleSolid from 'ionicons/dist/svg/checkmark-circle.svg?component'
   import Modal2 from '@/components/modal/modal2.svelte'
   // components
   import NText from '@/components/text/text.svelte'
@@ -19,6 +21,7 @@
   import Button from '@/components/button/button.svelte'
   import Panel from '@/components/panel/panel.svelte'
   import ToolbarGrid from '@/components/toolbar/toolbar-grid.svelte'
+  import IonIcon from '@/components/icon/ion-icon.svelte'
 
   // Props
   export let show = false
@@ -49,7 +52,9 @@
   let isShown = false
 
   $: if ($Interact.selector.show && !isShown) {
-    isShown = true
+    setTimeout(() => {
+      isShown = true
+    }, 200)
 
     switch ($Interact.selector.type) {
       case 'tracker':
@@ -120,7 +125,9 @@
       }
       state.selected = state.selected
     },
-    close() {
+    async close() {
+      isShown = false
+      await wait(200)
       dispatch('cancel')
     },
     // Check if a letter has been shown
@@ -159,7 +166,10 @@
     <header slot="header">
       <ToolbarGrid>
         <div slot="left">
-          <Button color="primary" type="clear" on:click={() => methods.close()}>
+          <Button
+            className="text-primary-500"
+            type="clear"
+            on:click={() => methods.close()}>
             Close
           </Button>
         </div>
@@ -170,8 +180,7 @@
           {#if state.selected.length > 0}
             <Button
               type="clear"
-              className="flex-grow "
-              color="primary"
+              className="flex-grow text-primary-500"
               on:click={() => {
                 dispatch('select', state.selected)
               }}>
@@ -190,16 +199,18 @@
     {/if}
 
     {#if type == 'tracker'}
-      <div class="list trackers">
+      <div class="sticky list trackers">
         {#each state.items as item}
           {#if !methods.alphaGroupExists(item.label)}
-            <NItem
-              className="bg-light text-faded sticky-top"
-              title={item.label.substr(0, 1).toUpperCase()} />
+            <header class="sticky top-0 z-40">
+              <NItem
+                className="bg-light text-faded "
+                title={item.label.substr(0, 1).toUpperCase()} />
+            </header>
           {/if}
           <NItem
             clickable
-            className="bottom-line select-item"
+            className="bottom-line select-item z-20"
             title={item.label}
             on:dbltap={() => {
               onDoubleTap(item)
@@ -213,10 +224,9 @@
 
             <div slot="right" class="flex items-center ml-2">
               {#if state.selected.indexOf(item) > -1}
-                <NIcon
-                  name="checkmarkOutline"
-                  className="fill-primary-bright"
-                  size={24} />
+                <IonIcon
+                  icon={CheckmarkCircleSolid}
+                  className="text-green-400" />
               {/if}
             </div>
 

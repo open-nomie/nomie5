@@ -1,17 +1,21 @@
 # 5.7 TODO
 
-- [] Replace rollup with something faster (vite maybe)
+- [x] Replace rollup with something faster (vite maybe)
+- [x] use dynamic imports for better chunking and initial loading speeds
 - [x] Convert all JS to TS
-- [] Remove ALL SCSS
+- [x] Remove ALL SCSS
 - [x] Install tailwind
-- [] Remove Bootstrap - replace with Tailwind
+- [x] Remove Bootstrap - replace with Tailwind
 - [] Refactor to domain driven structure (components, domains);
 - [] Refactor icons to call individual icons as needed - for tree shaking
 - [x] update svelte to latest
 - [x] update pouchdb to latest
 - [x] remove blockstack stuff
-- [] update routing for tree shaking
+- [x] update routing for tree shaking
 - [] bring leaflet stuff in with npm and not build-tools
+- [x] See why Device Store isn't seeing iphone pwa as a pwa
+- [] hide backup reminders
+- [] settings cleanup
 
 ## Nomie 5.7
 

@@ -681,8 +681,8 @@
           </Container>
         {/if}
 
-        <Container>
-          <main class="overflow-x-hidden n-board h-100">
+        <Container size="xl">
+          <main class="overflow-x-hidden n-board h-100 h-75vh">
             <!-- Loop over trackers -->
             <Swipeable on:left={BoardStore.next} on:right={BoardStore.previous}>
               {#if (foundTrackers || boardTrackers || []).length === 0}

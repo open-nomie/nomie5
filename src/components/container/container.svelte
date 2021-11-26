@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let size: 'xs' | 'sm' | 'md' | 'lg' = 'md'
+  export let size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' = 'md'
   export let className: string = ''
 </script>
 
@@ -15,6 +15,9 @@
   }
   .nui-container-lg {
     @apply max-w-screen-xl;
+  }
+  .nui-container-xl {
+    max-width: 1200px;
   }
   .nui-container {
     @apply w-full;

@@ -106,10 +106,6 @@
   let tagHardcoded = false
   let canSave = true
 
-  onMount(() => {
-    console.log('FIRE FIRE FIRE ON MOUNT!')
-  })
-
   // Watch for Tracker Change
   $: if (tracker && !data.tracker) {
     const randomEmoji =
@@ -119,7 +115,6 @@
       tracker.emoji = randomEmoji
 
     // Load up to a local state
-    console.log('FIRE FIRE FRE !!!!!!!!!!', tracker.emoji)
     data.tracker = new Tracker(tracker)
   }
 
