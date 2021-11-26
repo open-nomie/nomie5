@@ -158,13 +158,11 @@ const userInit = () => {
       });
       return format;
     },
-    getDateTimeFormat(): { time: string, date: string } {
-      let format: { time: string, date: string } = { time: "HH:mm", date: "Do MMM YYYY" };
+    getDateTimeFormat(): { time: string, date: string, shortDate: string } {
+      let format: { time: string, date: string, shortDate: string } = { time: "h:mm A", date: "MMM Do YYYY", shortDate: "M/D/YYYY" };
       update((state) => {
         if (state.meta.is24Hour) {
-          format = { time: "HH:mm", date: "Do MMM YYYY" };
-        } else {
-          format = { time: "h:mm A", date: "MMM Do YYYY" };
+          format = { time: "HH:mm", date: "Do MMM YYYY", shortDate: "D MM YYYY" };;
         }
         return state;
       });

@@ -81,8 +81,9 @@
             dispatch('forceStart')
           }}
           title="Resume Counting"
-          size="md"
-          className="text-white animate up {value ? 'visible' : 'hidden'}
+          size="sm"
+          shape="round"
+          className="bg-white rounded-full text-sm dark:bg-black animate up {value ? 'visible' : 'hidden'}
           text-primary-500">
           Resume Timer...
         </Button>

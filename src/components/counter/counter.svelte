@@ -1,7 +1,7 @@
 <script>
   import LetterTicker from '../letter-ticker/letter-ticker.svelte'
   import { onMount } from 'svelte'
-  import Icon from '../icon/icon.svelte'
+  // import Icon from '../icon/icon.svelte'
   export let started = undefined
   export let lg = undefined
   export let className = ''
@@ -49,11 +49,6 @@
 
       if (hours !== '') {
         hours = parseInt(hours)
-        // if (hours > 24) {
-        //   let days = Math.floor(hours / 24);
-        //   hours = hours - days * 24;
-        //   return `${days}d ${hours}h ${minutes}m ${seconds}s`;
-        // }
         return `${hours}:${minutes}:${seconds}`
       }
       return `00:${minutes}:${seconds}`
@@ -67,10 +62,9 @@
 
 <style lang="postcss">
   .n-counter {
-    font-size: 0.7em;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
+    @apply font-bold;
+    @apply flex;
+    @apply items-center;
   }
   .n-counter.large {
     display: flex;
@@ -95,8 +89,5 @@
   {lg ? 'large' : 'small'}
   {filled ? 'filled' : ''}"
   style={`color:${filled ? '#FFF' : color}; background-color:${filled ? color : 'transparent'}`}>
-  {#if !lg}
-    <Icon name="time" size={12} className="mr-1" />
-  {/if}
   <LetterTicker text={value} />
 </div>

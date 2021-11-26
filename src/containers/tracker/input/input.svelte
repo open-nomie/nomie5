@@ -1,5 +1,8 @@
 <script lang="ts">
+  import IonIcon from './../../../components/icon/ion-icon.svelte'
   import { wait } from './../../../utils/tick/tick.ts'
+
+  import StopSolid from 'ionicons/dist/svg/stop.svg?component'
   /**
    * Tracker Input Mege Component
    * This is a beast... Brace yourself.
@@ -332,7 +335,8 @@
                   style="max-width:130px; padding:8px"
                   title="Stop Timer"
                   className="text-white {data.tracker.started > 0 ? '' : 'd-none'}">
-                  <Icon name="stop" size={32} className="fill-white" />
+                  <IonIcon icon={StopSolid} size={32} className="text-white" />
+
                 </Button>
               {/if}
             {/if}

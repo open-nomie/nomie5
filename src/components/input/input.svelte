@@ -165,8 +165,10 @@
   .n-input-container.compact .n-input-wrapper .n-input select,
   .n-input-container.compact .n-input-wrapper .n-input textarea {
     min-height: 40px;
-    font-size: 0.8em !important;
+    @apply text-base;
+    @apply leading-5;
     @apply bg-white dark:bg-gray-800;
+    @apply text-black dark:text-white;
   }
   .n-input-container .n-input-wrapper {
     transition: all 0.2s ease-in-out;

@@ -1,26 +1,14 @@
 <script>
   // Svelte
   import { createEventDispatcher } from 'svelte'
-  import { onMount } from 'svelte'
-
   // Utils
   import time from '../../utils/time/time'
-  import Logger from '../../utils/log/log'
-
-  import NIcon from '../../components/icon/icon.svelte'
-
-  // Vendors
-  import dayjs from 'dayjs'
-  import { ChevronDown } from 'svelte-hero-icons'
-
-  // Props
   // export let started = undefined;
   export let className = ''
   export let value = 0
 
   // Consts
   const dispatch = createEventDispatcher()
-  const console = new Logger('⏰ manual-time.svelte')
 
   // methods
   const methods = {
@@ -142,9 +130,6 @@
     font-size: 40px;
   }
   .n-counter-manual .unit {
-    @apply bg-gray-300 dark:bg-gray-900;
-    @apply text-gray-600 dark:text-gray-400;
-    @apply border border-gray-500 dark:border-gray-700;
     @apply rounded-lg;
     @apply overflow-hidden;
     @apply text-center;
@@ -155,27 +140,15 @@
   }
   .n-counter-manual .unit select {
     @apply appearance-none;
+    @apply rounded-lg;
     @apply bg-white dark:bg-black;
+    @apply border border-gray-300 dark:border-gray-700;
     @apply h-14;
     @apply text-4xl;
     @apply font-bold;
     @apply text-center;
     @apply items-center;
     @apply justify-center;
-
-    /* -webkit-appearance: none;
-	 border: solid 1px rgba(0, 0, 0, 0.1);
-	 height: 50px;
-	 line-height: 50px;
-	 font-size: 40px;
-	 font-weight: bold;
-	 padding-left: 10px;
-	 min-width: 86px;
-	 flex-grow: 1;
-	 text-align: center;
-	 margin: 2px;
-	 border-radius: 4pt;
-	 background-color: var(--color-solid); */
   }
   .n-counter-manual .unit select option {
     text-align: center;
@@ -205,7 +178,6 @@
   </div>
   <!-- Minutes -->
   <div class="unit hours">
-
     <select
       name="minutes"
       value={methods.getUnitValue('minutes')}
