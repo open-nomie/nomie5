@@ -89,15 +89,15 @@
   background-color: transparent;
 }
 .nbtn-circle {
-  border-radius: 50%;
+  @apply rounded-full;
   text-align: center;
 }
 .nbtn-rounded {
-  border-radius: 8px;
+  @apply rounded-lg;
   text-align: center;
 }
 .nbtn-round {
-  border-radius: 40px;
+  @apply rounded-full;
   text-align: center;
 }
 .nbtn-inline {

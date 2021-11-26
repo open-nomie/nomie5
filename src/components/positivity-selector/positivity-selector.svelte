@@ -27,19 +27,22 @@
 <style global lang="postcss">
   .n-positivity-selector {
     @apply rounded-full;
-    @apply shadow-2xl;
     @apply z-50;
-    @apply bg-primary-600;
+    @apply flex items-center justify-evenly;
     @apply p-1;
   }
 
   .n-positivity-selector .nbtn {
     opacity: 0.8;
     @apply rounded-full;
+    @apply transform scale-75;
+    @apply transition-all;
+    @apply duration-200;
   }
   .n-positivity-selector .nbtn.active {
     @apply shadow-lg;
-    @apply bg-blue-900;
+    @apply ring-gray-500 ring-opacity-20 dark:ring-gray-200 ring;
+    @apply scale-100;
     @apply opacity-100;
   }
   .n-positivity-selector .nbtn-sm {

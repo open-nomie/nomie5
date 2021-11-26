@@ -9,7 +9,7 @@
   export let id = undefined
   export let size = 'md'
   export let type = ''
-  export let shape = 'rounded'
+  export let shape: 'round' | 'rounded' = 'rounded'
   export let color = ''
   export let className = ''
   export let block = false
