@@ -82,7 +82,7 @@
   }
   .tracker-input-slider
     input[type='range']:focus::-webkit-slider-runnable-track {
-    @apply bg-gray-200 dark:bg-gray-700;
+    @apply ring-2 ring-primary-500;
   }
   .tracker-input-slider input[type='range']::-moz-range-track {
     width: 46vh;

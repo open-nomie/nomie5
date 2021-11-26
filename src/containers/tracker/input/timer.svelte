@@ -1,4 +1,6 @@
 <script lang="ts">
+  import IonIcon from './../../../components/icon/ion-icon.svelte'
+  import PlayCircleSolid from 'ionicons/dist/svg/play-circle.svg?component'
   /** Timer.svelte
    *
    * Used to show either the Active Counter (if tracker.started is set)
@@ -82,10 +84,10 @@
           }}
           title="Resume Counting"
           size="sm"
-          shape="round"
-          className="bg-white rounded-full text-sm dark:bg-black animate up {value ? 'visible' : 'hidden'}
-          text-primary-500">
-          Resume Timer...
+          type="clear"
+          className="shadow-none {value ? 'visible' : 'hidden'} text-primary-500">
+          Resume Timer
+          <IonIcon icon={PlayCircleSolid} className="text-primary-500 ml-1" />
         </Button>
       {/if}
       <div class="filler" />

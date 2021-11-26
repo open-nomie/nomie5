@@ -21,7 +21,8 @@
   import SliderInput from './slider.svelte'
   import PickerInput from './picker.svelte'
   import NTimer from './timer.svelte'
-  import NCalculator from '../../../components/calculator/calculator-v2.svelte'
+  // import NCalculator from '../../../components/calculator/calculator-v2.svelte'
+  import NCalculator from '../../../components/calculator/calculator.svelte'
 
   // Utils
   import NomieUOM from '../../../utils/nomie-uom/nomie-uom'
@@ -296,7 +297,7 @@
           </div>
           <!-- end left toolbar -->
 
-          <div class="w-full px-2 ">
+          <div class="flex items-center justify-center w-full px-2">
             {#if !data.editing && !data.saving}
               {#if (data.tracker.type == 'timer' && data.value && $Interact.trackerInput.allowSave !== false) || (data.tracker.type != 'timer' && $Interact.trackerInput.allowSave !== false)}
                 <Button

@@ -142,6 +142,7 @@
     @apply appearance-none;
     @apply rounded-lg;
     @apply bg-white dark:bg-black;
+    @apply text-black dark:text-white;
     @apply border border-gray-300 dark:border-gray-700;
     @apply h-14;
     @apply text-4xl;
