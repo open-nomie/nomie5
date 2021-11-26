@@ -89,10 +89,10 @@
 <!--glow glow-{time.dateToDesc(displayLog.end)}-->
 {#if displayLog}
   <article
-    class="{className} shadow-md rounded-xl p-0 bg-white dark:bg-black
-    text-gray-900 dark:text-gray-100 grid grid-flow-row gap-0">
+    class="{className} shadow-md rounded-xl py-2 bg-white dark:bg-black
+    text-gray-900 dark:text-gray-100 grid grid-flow-row gap-2">
     <!-- Show the Trackers within this Log Item -->
-    <header class="flex flex-shrink-0 w-full px-4 pt-2 time-row">
+    <header class="flex flex-shrink-0 w-full px-4 time-row">
       <div class="flex items-center flex-grow flex-shrink space-x-2">
         {#if displayLog.lat}
           <LocationBadge
@@ -128,7 +128,7 @@
 
       {#if hideMore !== true}
         <Button
-          shape="circle"
+          shape="round"
           color="transparent"
           on:click={(event) => {
             if (moreOveride) {
@@ -147,14 +147,14 @@
     <!-- Process the Note Content wi th the Textualizer 
     This really isn't special right now -->
     {#if displayLog.hasNote}
-      <div class="px-2 mb-1">
+      <div class="px-2">
         <NNoteTextualizer
           on:textClick={(evt) => {
             dispatch('textClick', evt.detail)
           }}
           bind:note={displayLog.note}
           {trackers}
-          className="px-3 py-3 rounded-lg {logMeta.trackers.length ? '' : ''}" />
+          className="px-3 pb-3 rounded-lg {logMeta.trackers.length ? '' : ''}" />
       </div>
     {/if}
 

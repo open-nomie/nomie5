@@ -384,7 +384,7 @@
   </header>
   <!-- end header-content header -->
 
-  <main slot="content" class="flex flex-col h-full page page-history">
+  <main slot="content" class="flex flex-col min-h-full page page-history">
     <div class="relative flex-grow min-h-full">
       <!-- {#if logs && logs.length}
         <Text size="xl" bold className="history-title pl-3 mt-2">
@@ -399,7 +399,8 @@
           <Spinner />
         </div>
       {:else if !loading && !logs.length}
-        <Container className="flex items-center justify-center h-75vh">
+        <Container
+          className="flex items-center justify-center max-h-full h-75vh">
           <Empty
             emoji="⏳"
             title={state.date.format($UserStore.meta.is24Hour ? 'ddd Do MMM YYYY' : 'ddd MMM Do YYYY')}

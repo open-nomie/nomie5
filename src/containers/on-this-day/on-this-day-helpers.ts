@@ -62,7 +62,6 @@ export function hasNote(str): boolean {
   let generic = parsed.filter((tElement) => {
     return tElement.type == "generic";
   });
-  console.log({ generic })
   if (generic.length === 0) {
     return false;
   } else {
