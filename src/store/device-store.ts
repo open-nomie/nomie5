@@ -61,7 +61,7 @@ const DeviceStoreInit = () => {
     platform: navigator.platform,
     device: device,
     offline: !navigator.onLine,
-    pwa: window.matchMedia("(display-mode: standalone)").matches,
+    pwa: window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches,
     info: DeviceInfo,
     size: getDeviceSize(window.innerWidth),
   });
@@ -76,7 +76,7 @@ const DeviceStoreInit = () => {
   }
 
   const methods = {
-    copy(key:string, message?: string) {
+    copy(key: string, message?: string) {
       clipboard(key);
       Interact.toast(message || "Copied");
     },
