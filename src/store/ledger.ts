@@ -344,9 +344,12 @@ const ledgerInit = () => {
      * @param {NLog} log
      */
     async saveLog(log): Promise<{ log: NLog, date: string }> {
-      log = await methods.prepareLog(log);
+      const _log: NLog = await methods.prepareLog(log);
       try {
-        let saved = await this._saveLog(log);
+        let saved = await this._saveLog(_log);
+        if (_log.score >= 2) {
+          Interact.confetti({ show: true, timeout: 2500 });
+        }
         return saved;
       } catch (e) {
         console.error(`Error Saving log: ${e}`);
