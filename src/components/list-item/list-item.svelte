@@ -107,7 +107,7 @@
     {/if}
     <div class="main {truncate ? 'truncate' : ''}">
       {#if title}
-        <div class="title">{title}</div>
+        <div class="font-semibold title">{title}</div>
       {/if}
       {#if description}
         <div class="description">{description}</div>
@@ -159,7 +159,7 @@
     {/if}
     <div class="main {truncate ? 'truncate' : ''}">
       {#if title}
-        <div class="title">{title}</div>
+        <div class="font-semibold title">{title}</div>
       {/if}
       {#if description}
         <div class="description">{description}</div>

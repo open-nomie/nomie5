@@ -88,6 +88,8 @@
     @apply m-2;
     @apply flex-grow-0;
     @apply flex-shrink-0;
+    @apply space-y-2;
+    @apply pt-2;
 
     transition: all 0.2s ease-in-out;
     max-width: 400px;
@@ -109,18 +111,18 @@
     @apply text-gray-900 dark:text-gray-50;
     @apply font-bold;
     @apply text-xl;
-    @apply p-3;
-    @apply pb-0;
+    @apply px-3;
+    @apply leading-tight;
   }
 
   .alert-dialog-window-title.message-less {
-    @apply pb-3;
+    /* @apply pb-3; */
   }
 
   .alert-dialog-window input {
     @apply w-full;
     @apply bg-gray-200;
-    @apply p-2;
+    @apply px-2;
     @apply mt-4;
     @apply rounded-lg;
     @apply focus:ring-2 ring-primary-500;
@@ -132,9 +134,8 @@
   }
 
   .alert-dialog-window .card-body {
-    @apply p-3;
-    @apply pb-4;
-    @apply text-base;
+    @apply px-3;
+    @apply text-sm;
 
     flex-grow: 1;
     flex-shrink: 1;
@@ -147,6 +148,7 @@
     @apply items-center;
     @apply p-2;
   }
+
   .alert-dialog-window .footer button {
     @apply rounded-xl;
     min-width: 120px;

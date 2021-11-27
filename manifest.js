@@ -1,7 +1,7 @@
 export default {
   "name": "Nomie 5.7",
   "short_name": "Nomie 5.7",
-  "start_url": "/?pwa=true",
+  "start_url": ".",
   "description": "Private Mood & Life Tracker",
   "orientation": "portrait",
   "display": "standalone",
@@ -9,7 +9,6 @@ export default {
   "background_color": "#000000",
   "prompt_message": "Add a Home screen icon for easy access to Nomie",
   "lang": "en-us",
-  "scope": "/",
   "icons": [
     {
       "src": "/images/icons/nomie-48.png",

@@ -148,6 +148,7 @@
 
     <div slot="footer" class="flex-shrink-0 p-3">
       <Button
+        color="primary"
         block
         disabled={Object.keys(installed).length === 0 && $TrackerLibrary.first}
         on:click={TrackerLibrary.toggle}>

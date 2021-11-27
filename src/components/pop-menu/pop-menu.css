@@ -2,7 +2,7 @@
   @apply px-3 pt-3 pb-4;
   @apply backdrop-filter backdrop-saturate-150 backdrop-blur-sm;
   @apply text-gray-900 dark:text-gray-50;
-  @apply bg-white dark:bg-gray-700 bg-opacity-50 dark:bg-opacity-50 backdrop-filter backdrop-saturate-150 backdrop-blur-sm;
+  @apply bg-white dark:bg-gray-700 bg-opacity-80 dark:bg-opacity-50 backdrop-filter backdrop-saturate-150 backdrop-blur-sm;
   @apply rounded-t-2xl;
   max-height: 90vh;
   width: 97vw;

@@ -267,7 +267,7 @@
   display: flex;
   flex-direction: row;
   border-radius: 4px;
-  @apply bg-gray-200 dark:bg-gray-900;
+  @apply bg-gray-200 dark:bg-black dark:bg-opacity-60;
   align-items: center;
   padding: 2px;
   border-radius: 10px;
@@ -283,17 +283,16 @@
   padding-right: 12px;
   box-shadow: none;
   @apply bg-gray-200 dark:bg-gray-900;
-  @apply text-gray-600 dark:text-gray-400;
+  @apply text-black dark:text-gray-400;
 }
 .nbtn-group .nbtn.active {
   border-radius: 8px !important;
   z-index: 10;
   @apply shadow-md;
-  @apply bg-white dark:bg-black;
+  @apply bg-white dark:bg-gray-600;
   @apply font-bold;
   @apply text-black dark:text-white;
   @apply text-primary-500;
-  @apply ring-2 ring-primary-500 ring-opacity-20;
 }
 .nbtn-group .nbtn:first-child {
   border-top-right-radius: 0px;

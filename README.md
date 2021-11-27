@@ -14,8 +14,9 @@
 - [x] update routing for tree shaking
 - [] bring leaflet stuff in with npm and not build-tools
 - [x] See why Device Store isn't seeing iphone pwa as a pwa
-- [] hide backup reminders
+- [] hide backup reminders - not working
 - [] settings cleanup
+- [] tapping pin in map showing share image that's totally jacked
 
 ## Nomie 5.7
 

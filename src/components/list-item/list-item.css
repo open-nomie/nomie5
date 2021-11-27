@@ -178,8 +178,9 @@
 .n-item .main .note,
 .n-item .main .description {
   margin: 2px 0;
-  color: var(--color-inverse-2);
-  line-height: 132%;
+  @apply text-gray-400;
+  @apply text-sm;
+  @apply leading-tight;
 }
 .n-item .left .btn-icon,
 .n-item .right .btn-icon {

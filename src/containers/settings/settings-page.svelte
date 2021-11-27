@@ -160,7 +160,7 @@ Note: Your data will not automatically move over. You'll first need to export it
       }
     }
   }
-  let view = Storage.local.get('settings/view') || 'features'
+  let view = Storage.local.get('settings/view') || 'settings'
   
   const changeView = (v:any) => {
     view = v
@@ -202,19 +202,13 @@ Note: Your data will not automatically move over. You'll first need to export it
     <nav class="px-2 pb-1 n-toolbar">
       <NButtonGroup className="mx-auto" style="max-width:400px;">
         <Button
-          className={view == 'features' ? 'active' : ''}
+          className={view == 'settings' ? 'active' : ''}
           on:click={() => {
-            changeView('features')
+            changeView('settings')
           }}>
-          {Lang.t('settings.tab-features', 'Features')}
+          {Lang.t('general.settings', 'Settings')}
         </Button>
-        <Button
-          className={view == 'tweaks' ? 'active' : ''}
-          on:click={() => {
-            changeView('tweaks')
-          }}>
-          {Lang.t('settings.tab-tweaks', 'Tweaks')}
-        </Button>
+        
         <Button
           className={view == 'data' ? 'active' : ''}
           on:click={() => {
@@ -293,9 +287,8 @@ Note: Your data will not automatically move over. You'll first need to export it
             </ListItem> -->
           {/if}
 
-          {#if view == 'features'}
+          {#if view == 'settings'}
             <SettingsFeaturesList />
-          {:else if view == 'tweaks'}
             <SettingsTweakList />
           {:else if view == 'data'}
             <SettingsDataList on:showImporter={()=>{

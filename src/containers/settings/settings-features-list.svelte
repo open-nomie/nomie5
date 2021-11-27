@@ -85,7 +85,7 @@
   }
 </script>
 
-<div class="py-2 my-2 n-list features lg:rounded-lg">
+<div class="my-2 rounded-2xl overflow:hidden">
   <ListItem
     className="py-2"
     title={Lang.t('settings.feature-people-tracking', 'People Tracking')}
@@ -98,7 +98,7 @@
         }} />
     </div>
   </ListItem>
-  <hr class="divider center" />
+
   <ListItem
     className="py-2"
     title={Lang.t('settings.feature-dashboard', 'Personal Dashboard')}
@@ -111,7 +111,7 @@
         }} />
     </div>
   </ListItem>
-  <hr class="divider center" />
+
   <ListItem
     title={Lang.t('settings.use-location', 'Track Location')}
     description={Lang.t('settings.use-location-description', 'Lookup location each time you save a log')}>
@@ -123,7 +123,7 @@
         }} />
     </div>
   </ListItem>
-  <hr class="divider center" />
+
   <!-- Pin Code -->
   <ListItem
     title={Lang.t('settings.require-pin', 'Require Access Pin')}
@@ -131,22 +131,23 @@
     <div slot="right" class="ml-2">
       {#if hasPin}
         <Button
-          className="toggle-pin-button"
+          className="toggle-pin-button text-red-500"
           size="sm"
-          color="danger"
+          type="clear"
           on:click={() => {
             methods.lockToggle(false)
           }}>
-          {Lang.t('general.disable', 'Disable')}
+          {Lang.t('settings.disable', 'Disable Pin')}
         </Button>
       {:else}
         <Button
-          className="toggle-pin-button"
+          className="toggle-pin-button text-primary-500"
           size="sm"
+          type="clear"
           on:click={() => {
             methods.lockToggle(true)
           }}>
-          {Lang.t('settings.set-pin', 'Set Pin')}
+          {Lang.t('settings.set-pin', 'Set Lock Pin')}
         </Button>
       {/if}
       <!-- <ToggleSwitch value={hasPin} on:change={methods.lockToggle} />
