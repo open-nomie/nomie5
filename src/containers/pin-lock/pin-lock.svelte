@@ -17,6 +17,10 @@
     _pin = ''
   }
 
+  $: if (_pin.length > 6) {
+    _pin = _pin.substr(0, 6)
+  }
+
   const methods = {
     submit() {
       // encode the pin and send it up
@@ -65,17 +69,18 @@
     aria-label="Lock Screen"
     aria-hidden={!$Interact.pin.show}
     style="zIndex: 10000"
-    class="lock-screen p-4 rounded-xl shadow-xl flex-col full-screen
-    bg-primary-500 {$Interact.pin.show ? 'visible' : 'hidden'}">
+    class="lock-screen p-4 rounded-xl shadow-xl items-center justify-center
+    flex-col full-screen bg-primary-500 {$Interact.pin.show ? 'visible' : 'hidden'}">
     <Text center size="sm" faded className="text-white mb-2">
       {Lang.t('settings.pin-requirements', '1 to 6 digits')}
     </Text>
     <h1>{$Interact.pin.title}</h1>
     {#if $Interact.pin.show}
       <!-- Pin Display -->
-      <Text center size="xl" className="text-white pin-holder flex">
+      <div
+        class="flex items-center justify-center h-10 text-2xl text-white pin-holder">
         {#each _pin.split('') as d}•{/each}
-      </Text>
+      </div>
       <!-- Keypad Input -->
       <Keypad bind:value={_pin} on:submit={methods.submit} />
       {#if $Interact.pin.canClose}

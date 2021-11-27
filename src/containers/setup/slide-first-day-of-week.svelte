@@ -13,8 +13,9 @@
     </h1>
 
     <Button
-      className="mb-3 {$UserStore.meta.firstDayOfWeek === '1' ? '' : 'bg-black text-white'}"
+      className="mb-3"
       block
+      type="clear"
       size="lg"
       delay={20}
       color={$UserStore.meta.firstDayOfWeek === '1' ? 'primary' : ''}
@@ -25,8 +26,9 @@
       {`${Lang.t('settings.sunday', 'Sunday')}`}
     </Button>
     <Button
-      className="mb-3 {$UserStore.meta.firstDayOfWeek === '2' ? '' : 'bg-black text-white'}"
+      className="mb-3"
       block
+      type="clear"
       size="lg"
       delay={20}
       color={$UserStore.meta.firstDayOfWeek === '2' ? 'primary' : ''}

@@ -20,8 +20,9 @@
       className="mb-3"
       block
       size="lg"
+      type="clear"
       delay={20}
-      color={!$UserStore.meta.is24Hour ? 'primary' : 'light'}
+      color={!$UserStore.meta.is24Hour ? 'primary' : ''}
       on:click={() => {
         $UserStore.meta.is24Hour = false
         UserStore.saveMeta()
@@ -29,7 +30,8 @@
       {dayjs().format('h:mm a')}
     </Button>
     <Button
-      className="mb-3 dark:bg-black dark:text-white"
+      className="mb-3 "
+      type="clear"
       block
       size="lg"
       delay={20}

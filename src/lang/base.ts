@@ -62,7 +62,7 @@ export default {
       "use-location-description": "Lookup location each time you save a log",
       "require-pin": "Require Access Pin",
       "require-pin-description": "Require a pin to launch Nomie. Don't forget it!",
-      "set-pin": "Set Pin",
+      "set-pin": "Set Lock Pin",
       "enable-advanced-buttons": "Advanced Tracker Buttons",
       "pin-requirements": "1 to 6 digits",
       "select-nomie-backup": "Select Nomie Backup...",

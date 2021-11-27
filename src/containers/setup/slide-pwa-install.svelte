@@ -2,14 +2,17 @@
   import Text from '../../components/text/text.svelte'
 </script>
 
-<section class="slide slide-1 slide-welcome">
+<section class="text-center slide slide-1 slide-welcome">
   <div class="top center-grow">
-    <h1 class="mb-4 text-2xl font-bold text-center dark:text-white">
-      Install iOS Web App
+    <p class="px-10 mb-3 text-xl leading-tight text-gray-500">
+      Nomie runs way better when installed to your homescreen.
+    </p>
+    <h1 class="px-10 mb-4 text-3xl font-bold text-center dark:text-white">
+      🖐 Install Nomie iOS Web App
     </h1>
-    <p>Nomie runs best from the homescreen.</p>
-    <p class="mb-0">
-      1. Hit the share icon
+
+    <p class="flex items-center justify-center mb-0 dark:text-white">
+      <span class="mr-2">1. Tap the Share Icon</span>
       <svg
         width="16"
         height="16"
@@ -29,6 +32,9 @@
           fill="#43AAE1" />
       </svg>
     </p>
-    <p>2. scroll down select "Add to Homescreen"</p>
+    <p>
+      2. Scroll to and select
+      <strong>Add to Homescreen</strong>
+    </p>
   </div>
 </section>
