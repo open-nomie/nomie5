@@ -49,7 +49,6 @@
   }
   button.inactive {
     opacity: 0.8;
-    color: var(--color-grey-4);
   }
 </style>
 
@@ -58,7 +57,7 @@
     class="flex items-center flex-grow flex-shrink n-board-tabs"
     data-scroll="0">
     <Spacer />
-    <Elephant size={24} />
+    <Elephant size={22} />
     <Spacer />
   </div>
 {:else}

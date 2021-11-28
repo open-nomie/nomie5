@@ -2,7 +2,11 @@
   @apply flex items-center justify-center;
   @apply rounded-full;
   @apply py-1 px-1;
-  @apply text-gray-800 dark:text-gray-300;
+  @apply text-sm;
+  @apply text-gray-800 dark:text-gray-200;
+
+  @apply transform;
+  @apply transition-all;
 }
 .n-board-tabs {
   @apply px-2;
@@ -10,5 +14,7 @@
 .n-board-tabs button.selected {
   @apply bg-gray-200 dark:bg-gray-900;
   @apply text-black dark:text-white;
-  @apply px-4;
+  @apply px-3;
+  @apply text-center;
+  @apply scale-110;
 }

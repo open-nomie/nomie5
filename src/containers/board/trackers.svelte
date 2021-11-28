@@ -173,7 +173,9 @@
           size={$UserStore.localSettings.compactButtons ? 30 : 40} />
       </div>
       <main>
-        <h3 class="font-bold text-black dark:text-white">{tracker.label}</h3>
+        <h3 class="font-bold text-black dark:text-white line-clamp-1">
+          {tracker.label}
+        </h3>
         {#if getLastUsed(tracker)}
           <p class="text-xs text-gray-500">
             {getLastUsed(tracker) || undefined}
