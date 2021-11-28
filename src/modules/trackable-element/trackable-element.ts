@@ -27,6 +27,7 @@ export default class TrackableElement {
   prefix?: any;
   remainder?: any;
   obj?: any;
+
   constructor(starter: ITrackableElement) {
     if (typeof starter == "object") {
       this.id = starter.id; // brandon of @brandon, meet of #meet, home of +home

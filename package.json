@@ -58,6 +58,7 @@
     "@rollup/plugin-typescript": "^5.0.1",
     "@sveltejs/gestures": "0.0.1",
     "@svitejs/vite-plugin-svelte": "^0.11.1",
+    "@tailwindcss/typography": "^0.4.1",
     "@tsconfig/svelte": "^1.0.2",
     "@types/jest": "^26.0.8",
     "@types/lodash": "^4.14.161",
@@ -166,6 +167,7 @@
     "postcss": "^8.2.15",
     "pouchdb": "^7.2.2",
     "rollup-plugin-postcss": "^4.0.1",
+    "snarkdown": "^2.0.0",
     "sortablejs": "^1.10.2"
   },
   "license": "MIT"

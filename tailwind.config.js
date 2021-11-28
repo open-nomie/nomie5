@@ -43,6 +43,7 @@ module.exports = {
     backgroundColor: ['hover', 'responsive', 'focus', 'dark', 'dark-hover'],
     textColor: ['hover', 'responsive', 'focus', 'dark', 'dark-hover'],
   },
-  plugins: [require('tailwindcss-dark-mode')(), require('@tailwindcss/line-clamp')]
-
+  plugins: [require('tailwindcss-dark-mode')(),
+  require('@tailwindcss/line-clamp'),
+  require('@tailwindcss/typography')]
 }

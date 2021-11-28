@@ -15,6 +15,7 @@ export default {
   user_meta_path: "v5-data/meta.json",
   support_email: "support@happydata.org",
   support_contact: "Email Brandon",
+  messages_url: "https://s3.amazonaws.com/cdn.nomie.app/messages/messages.json",
   patreon: "https://www.patreon.com/bePatron?u=40136531",
   patreonHome: "https://www.patreon.com/nomieapp",
   api: "https://nomieapi.com",

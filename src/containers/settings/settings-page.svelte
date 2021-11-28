@@ -1,13 +1,19 @@
 <script lang="ts">
+	import { navigate } from 'svelte-routing';
+	import IonIcon from './../../components/icon/ion-icon.svelte';
 	import SettingsTweakList from './settings-tweak-list.svelte';
 	import Container from './../../components/container/container.svelte';
   import ToolbarGrid from './../../components/toolbar/toolbar-grid.svelte'
+
+  import NotificationSolid from "ionicons/dist/svg/notifications.svg?component";
+  
   //Vendors
-  import { navigate } from 'svelte-routing'
+  
   import { onMount } from 'svelte'
 
   import SocialShare from '../../modules/share/share'
   import Storage from '../../modules/storage/storage'
+  import { MessageStore } from "../messages/MessageStore";
 
   // Components
   import ListItem from '../../components/list-item/list-item.svelte'
@@ -170,6 +176,7 @@ Note: Your data will not automatically move over. You'll first need to export it
   // const setTimeout = setTimeout;
   onMount(() => {
     Device.scrollToTop()
+    MessageStore.loadMessages();
   })
 </script>
 
@@ -185,17 +192,27 @@ Note: Your data will not automatically move over. You'll first need to export it
   <div slot="header">
     <Container>
       <ToolbarGrid>
+        <Button slot="left"
+        
+            type="clear"
+            title={Lang.t('general.messages', 'Messages')}
+            className="relative pl-2 text-primary-600"
+            on:click={()=>{
+              navigate('/messages');
+            }}>
+            <IonIcon icon={NotificationSolid} className="{$MessageStore.unseen ? 'text-red-500 animate-pulse' : 'text-gray-500'}"></IonIcon>
+        </Button>
         <h1 class="ntitle">
           {Lang.t('settings.settings', 'Settings')}
         </h1>
-        <div slot="right" class="pr-4">
-          <button
+        
+          <button slot="right"
             title="Frequently asked Questions"
-            class="text-primary-600"
+            class="pr-4 text-primary-600"
             on:click={methods.faq}>
             {Lang.t('general.faq', 'FAQ')}
           </button>
-        </div>
+        
       </ToolbarGrid>
     </Container>
 

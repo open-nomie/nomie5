@@ -5,6 +5,8 @@ declare module "*.svelte" {
   export const value;
 }
 
+declare let snarkdown: any
+
 declare module 'virtual:pwa-register/svelte' {
 
 

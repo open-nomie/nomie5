@@ -1,4 +1,5 @@
 <script>
+  import Dot from './../../components/dot/dot.svelte'
   import IonIcon from './../../components/icon/ion-icon.svelte'
   import Container from './../../components/container/container.svelte'
   import AppsOutline from 'ionicons/dist/svg/apps-outline.svg?component'
@@ -115,6 +116,9 @@
           label={Lang.t('tabs.track', 'Track')}>
           <IonIcon className="inactive" icon={AppsOutline} />
           <IonIcon className="active" icon={AppsSolid} />
+          {#if $TrackerStore.timers.length}
+            <Dot size={8} className="absolute top-1 bg-red-500 -mr-8" />
+          {/if}
         </AppTab>
         {#if $FeatureStore.people}
           <AppTab
@@ -132,6 +136,7 @@
           label={Lang.t('tabs.settings', 'Settings')}>
           <IonIcon className="inactive" icon={SettingsOutline} />
           <IonIcon className="active" icon={SettingsSolid} />
+          <Dot size={8} className="absolute top-1 bg-red-500 -mr-8" />
         </AppTab>
 
       </div>

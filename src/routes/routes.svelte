@@ -14,6 +14,9 @@
   <Route path="/test">
     <DynamicPage route="tests/tests" />
   </Route>
+  <Route path="/messages">
+    <DynamicPage route="messages" />
+  </Route>
   <Route path="/lang">
     <DynamicPage route="tests/language" />
   </Route>

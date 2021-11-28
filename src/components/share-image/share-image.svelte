@@ -1,4 +1,5 @@
 <script>
+  import TrackerSmallBlock from './../tracker-small-block/tracker-small-block.svelte'
   import { onMount, onDestroy } from 'svelte'
   import { Interact } from '../../store/interact'
   import { Lang } from '../../store/lang'
@@ -13,6 +14,9 @@
   import extractor from '../../utils/extract/extract'
   import Button from '../button/button.svelte'
   import Backdrop from '../backdrop/backdrop.svelte'
+  import TrackableElement, {
+    toElement,
+  } from '../../modules/trackable-element/trackable-element'
 
   let boxDom
   let noteDom
@@ -173,7 +177,7 @@
               {dayjs($Interact.shareImage.log.end).format(`${$UserStore.is24Hour ? 'DD MMM YYYY' : 'MMM Do YYYY'}`)}
             </div>
           </div>
-          <div class="note" bind:this={noteDom}>
+          <div class="py-2 note" bind:this={noteDom}>
             {#if methods.noteLength()}
               <NNoteTextualizer
                 note={$Interact.shareImage.log.note}
@@ -181,16 +185,20 @@
                 className={'inherit mt-0 font-bold leading-tight'} />
             {/if}
           </div>
-          <div class="grid grid-flow-col gap-4 trackers">
+          <div class="grid grid-cols-2 gap-4 trackers">
             {#each methods.getIcons() as payload}
               {#if payload.tracker}
-                <div class="emoji-value">
+                <TrackerSmallBlock
+                  className="py-2"
+                  sm
+                  element={toElement(payload.tracker.toNoteString(payload.value))} />
+                <!-- <div class="emoji-value">
                   <span class="emoji">{payload.tracker.emoji}</span>
                   <span class="label">{payload.tracker.label}</span>
                   <span class="value">
                     {payload.tracker.displayValue(payload.value)}
                   </span>
-                </div>
+                </div> -->
               {/if}
             {/each}
           </div>
@@ -205,25 +213,24 @@
     <div
       class="flex items-center justify-between px-4 py-2 bg-gray-200 dark:bg-gray-800">
       <Button
-        shape="circle"
-        color="transparent"
+        type="clear"
+        className="text-primary-500"
         on:click={Interact.closeShareImage}>
-        <NIcon name="close" className="text-primary-500" />
+        Done
       </Button>
       <Button
         type="clear"
         className=" text-primary-500"
-        size="lg"
         on:click={methods.capture}>
-        Save
+        Save as Photo
       </Button>
-      <Button
+      <!-- <Button
         type="clear"
         size="lg"
         className="text-primary-500"
         on:click={methods.copy}>
         Copy
-      </Button>
+      </Button> -->
 
     </div>
   </div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { MessageStore } from './containers/messages/MessageStore.ts'
   import UpdateAvailable from './components/update-available/update-available.svelte'
   import { wait } from './utils/tick/tick'
   // Svelte
@@ -169,6 +170,7 @@
     SearchStore.init()
 
     await wait(500)
+    MessageStore.loadMessages()
     CommanderStore.run()
     ApiStore.init()
   })

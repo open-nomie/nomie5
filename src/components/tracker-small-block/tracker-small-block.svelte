@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from 'svelte'
   import NomieUOM from '../../utils/nomie-uom/nomie-uom'
   import { PeopleStore } from '../../store/people-store'
@@ -16,6 +16,7 @@
   export let sm = false
   export let novalue = false
   export let className = ''
+  export let value: string | number | undefined = undefined
   // export let value = undefined;
 
   let hasEmojiSlot = arguments[1].$$slots || {}.emoji
@@ -37,6 +38,7 @@
       return true
     } else if (trackerElement.value !== undefined) {
       return true
+    } else if (value) {
     } else {
       return false
     }
@@ -47,20 +49,11 @@
   .tracker-small-block {
     @apply flex;
     @apply items-center;
+    @apply justify-center;
     @apply bg-gray-100 dark:bg-gray-900;
     @apply flex-shrink-0;
-  }
-  .nbtn.tracker-small-block.size-md {
-    height: 60px;
-    padding: 2px 6px;
-  }
-  .nbtn.tracker-small-block.size-xs {
-    height: 30px;
-    @apply p-1 pr-2;
-  }
-  .nbtn.tracker-small-block.size-sm {
-    height: 42px;
-    padding: 2px 4px;
+    @apply p-1;
+    @apply h-auto;
   }
 </style>
 
@@ -80,50 +73,52 @@
       return false
     }}>
 
-    <Row>
-      {#if hasEmojiSlot}
-        <slot name="emoji" />
-      {:else if element.type == 'tracker'}
+    {#if hasEmojiSlot}
+      <slot name="emoji" />
+    {:else if element.type == 'tracker'}
+      <Avatar
+        size={avatarSize}
+        color={(element.obj || {}).color}
+        emoji={(element.obj || {}).emoji}
+        label={(element.obj || {}).label || element.id}
+        className="mr-2" />
+    {:else if element.type == 'person'}
+      {#if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].avatar}
         <Avatar
           size={avatarSize}
-          color={(element.obj || {}).color}
-          emoji={(element.obj || {}).emoji}
-          label={(element.obj || {}).label || element.id}
+          src={$PeopleStore.people[element.id].avatar}
           className="mr-2" />
-      {:else if element.type == 'person'}
-        {#if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].avatar}
-          <Avatar
-            size={avatarSize}
-            src={$PeopleStore.people[element.id].avatar}
-            className="mr-2" />
-        {:else if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].displayName}
-          <Avatar
-            size={avatarSize}
-            label={$PeopleStore.people[element.id].displayName}
-            className="mr-2" />
+      {:else if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].displayName}
+        <Avatar
+          size={avatarSize}
+          label={$PeopleStore.people[element.id].displayName}
+          className="mr-2" />
+      {:else}
+        <Avatar size={avatarSize} label={element.id} className="mr-2" />
+      {/if}
+    {/if}
+    <div
+      class="{truncate ? 'line-clamp-1' : ''} text-left flex flex-col
+      justify-center w-full items-start">
+      <h3 class="flex-grow flex-shrink w-full text-sm line-clamp-1">
+        {(element.obj || {}).label || element.id}
+      </h3>
+      {#if shouldShowValue(element)}
+        {#if element.value === 0}
+          <div
+            class="{xs ? 'text-xs' : 'text-lg'} font-bold leading-none"
+            style="white-space:pre">
+            0
+          </div>
         {:else}
-          <Avatar size={avatarSize} label={element.id} className="mr-2" />
+          <div
+            class="{xs ? 'text-xs' : 'text-lg'} font-bold leading-none"
+            style="white-space:pre">
+            {NomieUOM.format(element.value || value, (element.obj || {}).uom) || ''}
+          </div>
         {/if}
       {/if}
-      <div
-        class="{truncate ? 'line-clamp-1' : ''} text-left flex flex-col
-        justify-center w-full items-center">
-        <h3 class="flex-grow flex-shrink w-full text-sm line-clamp-1">
-          {(element.obj || {}).label || element.id}
-        </h3>
-        {#if shouldShowValue(element)}
-          {#if element.value === 0}
-            <div class="text-lg font-bold leading-none" style="white-space:pre">
-              0
-            </div>
-          {:else}
-            <div class="text-lg font-bold leading-none" style="white-space:pre">
-              {NomieUOM.format(element.value, (element.obj || {}).uom) || ''}
-            </div>
-          {/if}
-        {/if}
-      </div>
-    </Row>
+    </div>
 
   </Button>
 {/if}
