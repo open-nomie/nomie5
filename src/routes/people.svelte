@@ -1,4 +1,5 @@
 <script>
+  import { openStats } from './../containers/stats/StatsStore'
   import Container from './../components/container/container.svelte'
   import { onMount } from 'svelte'
   import NItem from '../components/list-item/list-item.svelte'
@@ -134,7 +135,7 @@
               personClicked(person)
             }}
             on:more={() => {
-              Interact.openStats(`@${person}`)
+              openStats(`@${person}`)
             }} />
         {/each}
       </div>

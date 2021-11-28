@@ -49,6 +49,8 @@
   import Card from '../../components/card/card.svelte'
   import Panel from '../../components/panel/panel.svelte'
 
+  import { StatsStore, closeStats } from './StatsStore'
+
   /**
    * Time Spans available for stats - holding of various
    * units and formats
@@ -83,6 +85,8 @@
       focused: true,
     },
   }
+
+  let showModal = false
 
   /**
    * Remember View Settings
@@ -251,9 +255,9 @@
     return response
   }
 
-  function getTitle(): string {
-    return getLastTerm()
-  }
+  // function getTitle(): string {
+  //   return getLastTerm()
+  // }
 
   /**
    * Get the proper From Date to display
@@ -440,19 +444,19 @@
     }
   }
 
-  function getCalendarData() {
-    let rows = state.stats.rows
-      .filter((row) => {
-        return new Date(row.end).getMonth() == state.date.toDate().getMonth()
-      })
-      .map((row) => {
-        row.start = new Date(row.start)
-        row.end = new Date(row.end)
-        row.repeat = 'never'
-        return row
-      })
-    return rows
-  }
+  // function getCalendarData() {
+  //   let rows = state.stats.rows
+  //     .filter((row) => {
+  //       return new Date(row.end).getMonth() == state.date.toDate().getMonth()
+  //     })
+  //     .map((row) => {
+  //       row.start = new Date(row.start)
+  //       row.end = new Date(row.end)
+  //       row.repeat = 'never'
+  //       return row
+  //     })
+  //   return rows
+  // }
 
   function getLocations() {
     return state.stats.rows
@@ -509,9 +513,9 @@
     return range
   }
 
-  function clearSelected() {
-    state.selected = { index: undefined, rows: null, date: null }
-  }
+  // function clearSelected() {
+  //   state.selected = { index: undefined, rows: null, date: null }
+  // }
 
   /**
    * Set Selected ({point})
@@ -536,11 +540,14 @@
   async function main() {
     await tick(10)
     // Get term from Interact Store
-    state.currentTerm = $Interact.stats.terms[$Interact.stats.terms.length - 1]
+    // Why hard coded to the first item? Previous nomie supported multiple
+    // trackables to stack on top of eachother, I've since
+    // pulled it since it wasn't really useful
+    state.currentTerm = $StatsStore.trackables[0].raw
     // Get range and view options
     if (state.currentTerm) {
-      if ($Interact.stats.date) {
-        state.date = $Interact.stats.date
+      if ($StatsStore.date) {
+        state.date = dayjs($StatsStore.date)
       }
       state.range = gettimeRangeText()
       state.viewOption = getDataViewButtons()
@@ -571,11 +578,20 @@
     main()
     state.showAnimation = true
     setTimeout(() => {
+      showModal = true
+    }, 200)
+    setTimeout(() => {
       state.showAnimation = false
     }, 200)
     setTimeout(() => {
       state.showAnimation = false
     }, 1000)
+  }
+
+  $: if ($Interact.stats.terms.length === 0 && lastTerms) {
+    setTimeout(() => {
+      showModal = false
+    }, 200)
   }
 
   let lastDataView = state.dataView
@@ -606,7 +622,7 @@
 </style>
 
 <Modal2
-  visible={true}
+  visible={$StatsStore.showModal}
   id="stats-modal"
   tappable
   on:close={close}
@@ -623,23 +639,9 @@
 
       <NToolbarGrid>
         <div slot="left" class="truncate" style="min-width:100px;">
-          {#if $Interact.stats.terms.length == 1}
-            <Button icon color="transparent" on:click={close}>
-              <NIcon name="close" className="fill-primary-bright" />
-            </Button>
-          {:else}
-            <Button icon className="pl-1" on:click={back}>
-              <NIcon
-                name="arrowBack"
-                size={28}
-                className="fill-primary-bright" />
-              <small
-                class="ml-1 text-sm truncate text-inverse-2"
-                style="max-width:60px;">
-                {$Interact.stats.terms[$Interact.stats.terms.length - 2]}
-              </small>
-            </Button>
-          {/if}
+          <Button icon color="transparent" on:click={closeStats}>
+            <NIcon name="close" className="fill-primary-bright" />
+          </Button>
         </div>
 
         <h1 class="truncate title" slot="main">{state.currentTerm}</h1>
@@ -701,71 +703,75 @@
 
     </header>
 
-    <div slot="footer" class="w-100">
+    <div slot="footer" class="p-2 bg-gray-200 w-100 dark:bg-gray-800">
       <NButtonGroup inverse buttons={state.viewOption} />
     </div>
 
-    {#if !state.loading}
-      {#if state.dataView === 'compare'}
-        <StatsCompare
-          {remember}
-          fromDate={getFromDate()}
-          toDate={getToDate()}
-          timeSpan={state.timeSpan}
-          stats={state.stats}
-          on:dateSelected={(evt) => {
-            setSelected(evt.detail)
-          }} />
-        <!-- selected={state.selected} -->
-      {/if}
-      {#if state.dataView === 'streak'}
-        {#if state.trackableElement}
-          <Card className="p-3 m-2">
-            {#if state.timeSpan !== 'd'}
-              <Streak
-                showDetail={true}
-                term={undefined}
-                element={state.trackableElement}
-                selectedDate={state.date}
-                view={timeSpans[state.timeSpan].streakUnit} />
-            {:else}
-              <Text faded>
-                Streak view currently unavailable at the day level
-              </Text>
-            {/if}
-          </Card>
+    <main class="relative h-full bg-gray-200 dark:bg-gray-800">
+      {#if !state.loading}
+        {#if state.dataView === 'compare'}
+          <StatsCompare
+            {remember}
+            fromDate={getFromDate()}
+            toDate={getToDate()}
+            timeSpan={state.timeSpan}
+            stats={state.stats}
+            on:dateSelected={(evt) => {
+              setSelected(evt.detail)
+            }} />
+          <!-- selected={state.selected} -->
         {/if}
-      {/if}
-      {#if state.dataView === 'map'}
-        <NMap
-          small
-          locations={getLocations()}
-          className="flex-grow flex-shrink" />
-      {/if}
-      {#if state.stats}
-        {#if state.dataView === 'overview'}
-          <StatsOverview stats={state.stats} tracker={state.tracker} />
-          <!-- end over view -->
-        {:else if state.dataView === 'time'}
-          <StatsTime
-            color={state.currentColor}
-            term={state.currentTerm}
-            stats={state.stats} />
-        {:else if state.dataView === 'logs'}
-          {#if state.timeSpan == 'y'}
-            <div class="p-4 text-sm text-center text-inverse-2">
-              Logs not yet available for a full year
-            </div>
-          {:else}
-            <NLogList
-              fullDate
-              compact
-              logs={state.selected.rows || state.stats.rows}
-              style="min-height:100%"
-              className="bg-bg flex-grow flex-shrink" />
+        {#if state.dataView === 'streak'}
+          {#if state.trackableElement}
+            <Card className="p-3 m-2">
+              {#if state.timeSpan !== 'd'}
+                <Streak
+                  showDetail={true}
+                  term={undefined}
+                  element={state.trackableElement}
+                  selectedDate={state.date}
+                  view={timeSpans[state.timeSpan].streakUnit} />
+              {:else}
+                <Text faded>
+                  Streak view currently unavailable at the day level
+                </Text>
+              {/if}
+            </Card>
+          {/if}
+        {/if}
+        {#if state.dataView === 'map'}
+          <NMap
+            small
+            locations={getLocations()}
+            className="z-0 flex-grow flex-shrink" />
+        {/if}
+        {#if state.stats}
+          {#if state.dataView === 'overview'}
+            <StatsOverview stats={state.stats} tracker={state.tracker} />
+            <!-- end over view -->
+          {:else if state.dataView === 'time'}
+            <StatsTime
+              color={state.currentColor}
+              term={state.currentTerm}
+              stats={state.stats} />
+          {:else if state.dataView === 'logs'}
+            {#if state.timeSpan == 'y'}
+              <div class="p-4 text-sm text-center text-inverse-2">
+                Logs not yet available for a full year
+              </div>
+            {:else}
+              <div class="p-4">
+                <NLogList
+                  fullDate
+                  compact
+                  logs={state.selected.rows || state.stats.rows}
+                  style="min-height:100%"
+                  className="bg-bg flex-grow flex-shrink" />
+              </div>
+            {/if}
           {/if}
         {/if}
       {/if}
-    {/if}
+    </main>
   </Panel>
 </Modal2>
