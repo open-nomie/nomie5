@@ -45,22 +45,22 @@
         generating = false
       }, 10)
     },
-    async copy() {
-      try {
-        // Get Image as Base64
-        const base64Image = await methods.toImage()
-        // Fetch the base64 - as a blob
-        const res = await fetch(base64Image)
-        const blob = await res.blob()
-        const item = new ClipboardItem({ 'image/png': blob })
-        // Copy to clipboard
-        navigator.clipboard.write([item])
-        // Fire toast
-        Interact.toast('Copied')
-      } catch (e) {
-        Interact.alert(Lang.t('general.error', 'Error'), e.message)
-      }
-    },
+    // async copy() {
+    //   try {
+    //     // Get Image as Base64
+    //     const base64Image = await methods.toImage()
+    //     // Fetch the base64 - as a blob
+    //     const res = await fetch(base64Image)
+    //     const blob: any = await res.blob()
+    //     // const item = new ClipboardItem({ 'image/png': blob })
+    //     // Copy to clipboard
+    //     navigator.clipboard.write([item])
+    //     // Fire toast
+    //     Interact.toast('Copied')
+    //   } catch (e) {
+    //     Interact.alert(Lang.t('general.error', 'Error'), e.message)
+    //   }
+    // },
     async toImage() {
       downloading = true
       await tick(120)
@@ -96,23 +96,6 @@
         })
         .filter((pl) => pl.tracker)
     },
-    fontSize(str) {
-      if (str.length < 40) {
-        return 1.8
-      } else if (str.length >= 40 && str.length <= 70) {
-        return 1.4
-      } else if (str.length >= 70 && str.length <= 140) {
-        return 1.2
-      } else if (str.length > 140 && str.length <= 190) {
-        return 1.1
-      } else if (str.length > 190 && str.length < 290) {
-        return 1.0
-      } else if (str.length > 290 && str.length < 400) {
-        return 0.8
-      } else {
-        return 0.7
-      }
-    },
     noteLength() {
       let parsed = extractor
         .parse($Interact.shareImage.log.note, { includeGeneric: true })
@@ -121,7 +104,7 @@
     },
     resize() {
       if (boxDom.style) {
-        boxDom.style.height = `${boxDom.offsetWidth}px`
+        // boxDom.style.height = `${boxDom.offsetWidth}px`
         noteDom.style.fontSize = `${methods.fontSize(
           $Interact.shareImage.log.note,
         )}em`
@@ -154,30 +137,50 @@
     @apply rounded-lg;
     @apply shadow-lg;
     @apply overflow-hidden;
+    @apply flex-grow-0;
+    @apply flex-shrink-0;
+    @apply h-auto;
+  }
+  .share-image-component section {
+    @apply w-80;
+    @apply h-auto;
+  }
+  .share-image-component .note {
+    @apply font-normal;
+    @apply leading-snug;
+    @apply mb-2;
   }
 </style>
 
-<Backdrop id="share-image" className="px-4" visible={ready}>
+<Backdrop
+  id="share-image"
+  tappable
+  on:close={() => {
+    Interact.closeShareImage()
+  }}
+  className="px-4"
+  visible={ready}>
   <div
     class="share-image-component {downloading ? 'downloading' : ''} theme-{theme}
     trackers-{methods.getIcons().length}
     {methods.noteLength() ? 'has-note' : 'no-note'}">
-    <section class="p-4 bg-gray-200 dark:bg-gray-800">
+    <section class="p-2 bg-gray-200 dark:bg-gray-800">
       <div
-        class="relative p-4 bg-white dark:bg-black share-image-wrapper"
+        class="relative flex flex-col p-4 bg-white dark:bg-black share-image-wrapper"
         bind:this={boxDom}
         on:click={methods.randomTheme}>
 
         {#if $Interact.shareImage.log}
-          <div class="flex items-center justify-between date">
-            <div class="text-xl font-bold day-time">
+          <div class="flex items-center justify-between date stiff">
+            <div class="text-lg font-bold day-time dark:text-gray-200">
               {dayjs($Interact.shareImage.log.end).fromNow()}
             </div>
             <div class="text-sm text-gray-400 day-date">
-              {dayjs($Interact.shareImage.log.end).format(`${$UserStore.is24Hour ? 'DD MMM YYYY' : 'MMM Do YYYY'}`)}
+              {dayjs($Interact.shareImage.log.end).format(`${$UserStore.meta.is24Hour ? 'DD MMM YYYY' : 'MMM Do YYYY'}`)}
             </div>
           </div>
-          <div class="py-2 note" bind:this={noteDom}>
+
+          <div class="flex items-center py-2 note filler" bind:this={noteDom}>
             {#if methods.noteLength()}
               <NNoteTextualizer
                 note={$Interact.shareImage.log.note}
@@ -185,20 +188,13 @@
                 className={'inherit mt-0 font-bold leading-tight'} />
             {/if}
           </div>
-          <div class="grid grid-cols-2 gap-4 trackers">
+
+          <div class="grid grid-cols-2 gap-4">
             {#each methods.getIcons() as payload}
               {#if payload.tracker}
                 <TrackerSmallBlock
-                  className="py-2"
-                  sm
+                  compact
                   element={toElement(payload.tracker.toNoteString(payload.value))} />
-                <!-- <div class="emoji-value">
-                  <span class="emoji">{payload.tracker.emoji}</span>
-                  <span class="label">{payload.tracker.label}</span>
-                  <span class="value">
-                    {payload.tracker.displayValue(payload.value)}
-                  </span>
-                </div> -->
               {/if}
             {/each}
           </div>
@@ -211,18 +207,18 @@
     </section>
 
     <div
-      class="flex items-center justify-between px-4 py-2 bg-gray-200 dark:bg-gray-800">
+      class="flex items-center justify-between px-4 pb-2 bg-gray-200 dark:bg-gray-800">
       <Button
         type="clear"
         className="text-primary-500"
         on:click={Interact.closeShareImage}>
-        Done
+        Close
       </Button>
       <Button
         type="clear"
         className=" text-primary-500"
         on:click={methods.capture}>
-        Save as Photo
+        Share
       </Button>
       <!-- <Button
         type="clear"

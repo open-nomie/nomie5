@@ -30,6 +30,7 @@
   import { Interact } from '../../store/interact'
   import { PeopleStore } from '../../store/people-store'
   import Button from '../../components/button/button.svelte'
+  import ImageCapture from '../../components/image-capture.svelte'
 
   let domVisible = false
   let avatarBase64 = null
@@ -76,31 +77,31 @@
     }
   }
 
-  async function getAvatarImage(imageBase64: any) {
-    const wrapper: any = document.getElementById('photo-holder')
-    const _image: any = document.getElementById('photo-holder-image')
-    let img: HTMLImageElement = _image
-    img.src = imageBase64
-    await tick(200)
+  // async function getAvatarImage(imageBase64: any) {
+  //   const wrapper: any = document.getElementById('photo-holder')
+  //   const _image: any = document.getElementById('photo-holder-image')
+  //   let img: HTMLImageElement = _image
+  //   img.src = imageBase64
+  //   await tick(200)
 
-    if (img.naturalHeight > img.naturalWidth) {
-      wrapper.setAttribute('data-orientation', 'vertical')
-    } else if (img.naturalHeight < img.naturalWidth) {
-      wrapper.setAttribute('data-orientation', 'horizontal')
-    } else {
-      wrapper.setAttribute('data-orientation', 'square')
-    }
+  //   if (img.naturalHeight > img.naturalWidth) {
+  //     wrapper.setAttribute('data-orientation', 'vertical')
+  //   } else if (img.naturalHeight < img.naturalWidth) {
+  //     wrapper.setAttribute('data-orientation', 'horizontal')
+  //   } else {
+  //     wrapper.setAttribute('data-orientation', 'square')
+  //   }
 
-    try {
-      await tick(400)
-      let canvas = await html2canvas(wrapper, { width: 90, height: 90 })
-      let avatar64 = canvas.toDataURL('image/jpeg', 0.2)
-      return avatar64
-    } catch (e) {
-      alert(e.message)
-      return null
-    }
-  }
+  //   try {
+  //     await tick(400)
+  //     let canvas = await html2canvas(wrapper, { width: 90, height: 90 })
+  //     let avatar64 = canvas.toDataURL('image/jpeg', 0.2)
+  //     return avatar64
+  //   } catch (e) {
+  //     alert(e.message)
+  //     return null
+  //   }
+  // }
 
   async function close() {
     domVisible = false
@@ -118,26 +119,26 @@
     )
   }
 
-  async function selectPhoto(evt) {
-    const toBase64 = (file) =>
-      new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.readAsDataURL(file)
-        reader.onload = () => resolve(reader.result)
-        reader.onerror = (error) => reject(error)
-      })
+  // async function selectPhoto(evt) {
+  //   const toBase64 = (file) =>
+  //     new Promise((resolve, reject) => {
+  //       const reader = new FileReader()
+  //       reader.readAsDataURL(file)
+  //       reader.onload = () => resolve(reader.result)
+  //       reader.onerror = (error) => reject(error)
+  //     })
 
-    let input = evt.target
-    let files = evt.target.files
-    let avatarBase64 = await toBase64(files[0])
-    await tick(20)
-    let smallAvatar64 = await getAvatarImage(avatarBase64)
-    await tick(20)
-    const holder: any = document.getElementById('photo-holder-image')
-    holder.src = null
-    await tick(10)
-    activePerson.avatar = smallAvatar64
-  }
+  //   let input = evt.target
+  //   let files = evt.target.files
+  //   let avatarBase64 = await toBase64(files[0])
+  //   await tick(20)
+  //   let smallAvatar64 = await getAvatarImage(avatarBase64)
+  //   await tick(20)
+  //   const holder: any = document.getElementById('photo-holder-image')
+  //   holder.src = null
+  //   await tick(10)
+  //   activePerson.avatar = smallAvatar64
+  // }
 
   async function changeView(view) {
     state.view = view
@@ -211,28 +212,29 @@
             type="text"
             className="mb-2"
             placeholder="Display Name"
-            bind:value={activePerson.displayName} />
+            bind:value={activePerson.displayName}>
+            <div slot="right" class="pr-2">
+              <ImageCapture
+                size={40}
+                renderSize={90}
+                original={activePerson.avatar}
+                on:image={(evt) => {
+                  activePerson.avatar = evt.detail
+                }} />
+            </div>
+          </NInput>
           <NInput
             type="textarea"
             placeholder="Notes"
             className="mb-2"
             bind:value={activePerson.notes} />
 
-          <NItem className="bg-transparent p-0">
+          <!-- <NItem className="bg-transparent p-0">
             <div
               slot="left"
               on:click={() => {
                 document.getElementById('avatarFileInput').click()
-              }}>
-              {#if activePerson.avatar}
-                <Dymoji avatar={activePerson.avatar} size={50} radius={0.3} />
-              {:else}
-                <Dymoji
-                  username={activePerson.displayName}
-                  size={50}
-                  radius={0.3} />
-              {/if}
-            </div>
+              }} />
 
             <Button
               block
@@ -252,9 +254,13 @@
                 on:change={selectPhoto} />
             </div>
 
-          </NItem>
+          </NItem> -->
 
-          <Button block className="mt-5 mb-2" on:click={saveActivePerson}>
+          <Button
+            block
+            color="primary"
+            className="mt-5 mb-2"
+            on:click={saveActivePerson}>
             Save @{activePerson.username}
           </Button>
 

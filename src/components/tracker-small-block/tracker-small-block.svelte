@@ -17,6 +17,7 @@
   export let novalue = false
   export let className = ''
   export let value: string | number | undefined = undefined
+  export let compact: boolean = false
   // export let value = undefined;
 
   let hasEmojiSlot: any = (arguments[1].$$slots || { emoji: undefined }).emoji
@@ -25,7 +26,7 @@
   $: if (xs) {
     avatarSize = 20
   }
-  $: if (sm) {
+  $: if (compact) {
     avatarSize = 30
   }
 
@@ -47,22 +48,88 @@
 
 <style global lang="postcss">
   .tracker-small-block {
-    @apply flex;
-    @apply items-center;
-    @apply justify-center;
-    @apply bg-gray-100 dark:bg-gray-900;
-    @apply flex-shrink-0;
+    @apply text-left;
+    @apply bg-gray-200 dark:bg-gray-900;
+    @apply flex flex-row items-center justify-start;
+    @apply text-black dark:text-white;
     @apply p-1;
-    @apply h-auto;
+    @apply rounded-xl;
+  }
+  .tracker-small-block .title {
+    @apply leading-tight;
+    @apply text-sm;
+    @apply line-clamp-1;
+  }
+  .tracker-small-block .value {
+    @apply font-bold;
+  }
+
+  .tracker-small-block.compact {
+    @apply p-0;
+    @apply bg-transparent;
+    @apply text-xs;
+  }
+  .tracker-small-block.compact .title,
+  .tracker-small-block.compact .value {
+    @apply text-xs;
   }
 </style>
 
 {#if element}
+  <button
+    on:click={(event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      dispatch('click', element)
+    }}
+    class="tracker-small-block {compact ? 'compact' : ''}">
+    <!-- avatar -->
+    <div class="avatar-holder stiff">
+      {#if hasEmojiSlot}
+        <slot name="emoji" />
+      {:else if element.type == 'tracker'}
+        <Avatar
+          size={avatarSize}
+          color={(element.obj || {}).color}
+          emoji={(element.obj || {}).emoji}
+          label={(element.obj || {}).label || element.id}
+          className="stiff mr-2" />
+      {:else if element.type == 'person'}
+        {#if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].avatar}
+          <Avatar
+            size={avatarSize}
+            src={$PeopleStore.people[element.id].avatar}
+            className="stiff mr-2" />
+        {:else if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].displayName}
+          <Avatar
+            size={avatarSize}
+            label={$PeopleStore.people[element.id].displayName}
+            className="stiff mr-2" />
+        {:else}
+          <Avatar size={avatarSize} label={element.id} className="stiff mr-2" />
+        {/if}
+      {/if}
+    </div>
+    <!-- Label -->
+    <div class="filler">
+      <p class="title">{(element.obj || {}).label || element.id}</p>
+      {#if shouldShowValue(element)}
+        <p class="value">
+          {#if element.value || value}
+            {NomieUOM.format(element.value || value, (element.obj || {}).uom) || ''}
+          {:else}0{/if}
+        </p>
+      {/if}
+    </div>
+  </button>
+{/if}
 
-  <Button
-    color={solo ? 'light' : 'clear'}
-    {style}
-    className="{className} flex tracker-small-block {solo ? 'solo' : ''}
+<!-- 
+{#if element}
+
+  <button
+    style="padding:inherit;"
+    class="{className} tracker-small-block {solo ? 'solo' : ''}
     {xs ? 'size-xs' : 'size-md'}
     {novalue ? 'novalue' : ''}
     "
@@ -81,28 +148,26 @@
         color={(element.obj || {}).color}
         emoji={(element.obj || {}).emoji}
         label={(element.obj || {}).label || element.id}
-        className="mr-2" />
+        className="stiff mr-2" />
     {:else if element.type == 'person'}
       {#if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].avatar}
         <Avatar
           size={avatarSize}
           src={$PeopleStore.people[element.id].avatar}
-          className="mr-2" />
+          className="stiff mr-2" />
       {:else if $PeopleStore.people[element.id] && $PeopleStore.people[element.id].displayName}
         <Avatar
           size={avatarSize}
           label={$PeopleStore.people[element.id].displayName}
-          className="mr-2" />
+          className="stiff mr-2" />
       {:else}
-        <Avatar size={avatarSize} label={element.id} className="mr-2" />
+        <Avatar size={avatarSize} label={element.id} className="stiff mr-2" />
       {/if}
     {/if}
-    <div
-      class="{truncate ? 'line-clamp-1' : ''} text-left flex flex-col
-      justify-center w-full items-start">
-      <h3 class="flex-grow flex-shrink w-full text-sm line-clamp-1">
+    <div class="flex flex-col w-full">
+      <div class="border-r border-red-500 line-clamp-1">
         {(element.obj || {}).label || element.id}
-      </h3>
+      </div>
       {#if shouldShowValue(element)}
         {#if element.value === 0}
           <div
@@ -120,5 +185,5 @@
       {/if}
     </div>
 
-  </Button>
-{/if}
+  </button>
+{/if} -->

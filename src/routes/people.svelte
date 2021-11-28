@@ -128,7 +128,7 @@
 
       <div
         class="grid grid-cols-2 gap-2 p-2 md:grid-cols-3 md:gap-4 lg:gap-6 lg:grid-cols-4">
-        {#each state.people as person, index (index)}
+        {#each state.people as person, index (person)}
           <ShortcutUserButton
             person={$PeopleStore.people[person]}
             on:click={() => {

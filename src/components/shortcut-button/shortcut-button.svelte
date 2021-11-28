@@ -74,12 +74,19 @@
       <slot name="emoji" />
     </div>
     {#if !hideMore}
-      <button
+      <Button
         aria-label="Tracker Options"
-        class="p-0 more"
-        on:click|preventDefault|stopPropagation={more}>
+        className="p-0 more"
+        shape="round"
+        size="sm"
+        type="clear"
+        on:click={(evt) => {
+          evt.preventDefault()
+          evt.stopPropagation()
+          more()
+        }}>
         <IonIcon icon={moreIcon} size={24} />
-      </button>
+      </Button>
     {/if}
   </div>
   <slot />

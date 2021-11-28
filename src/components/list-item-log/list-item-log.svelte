@@ -165,8 +165,7 @@
       <div class="grid w-full grid-cols-2 gap-2 px-4 pb-4 lg:grid-cols-4">
         {#each displayLog.people as person}
           <NTrackerSmallBlock
-            className="bg-gray-200 dark:bg-gray-900"
-            truncate={true}
+            compact
             element={person}
             on:click={() => {
               Interact.elementOptions(person)
@@ -181,7 +180,6 @@
         }) as trackerElement}
           <NTrackerSmallBlock
             className="bg-gray-100 dark:bg-gray-900"
-            truncate
             element={trackerElement}
             on:click={() => {
               Interact.elementOptions(trackerElement)

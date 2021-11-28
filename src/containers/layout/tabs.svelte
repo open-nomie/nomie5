@@ -1,8 +1,8 @@
 <script>
-  import { MessageStore } from './../messages/MessageStore.ts'
   import Dot from './../../components/dot/dot.svelte'
   import IonIcon from './../../components/icon/ion-icon.svelte'
   import Container from './../../components/container/container.svelte'
+
   import AppsOutline from 'ionicons/dist/svg/apps-outline.svg?component'
   import AppsSolid from 'ionicons/dist/svg/apps.svg?component'
   import PeopleOutline from 'ionicons/dist/svg/people-outline.svg?component'
@@ -14,11 +14,10 @@
   import SettingsOutline from 'ionicons/dist/svg/settings-outline.svg?component'
   import SettingsSolid from 'ionicons/dist/svg/settings.svg?component'
   // Vendors
+  import { MessageStore } from './../messages/MessageStore'
   import { onMount } from 'svelte'
-  import { Link } from 'svelte-routing'
 
   // Components
-  import Icon from '../../components/icon/icon.svelte'
   import AppTab from '../../components/app-tab/app-tab.svelte'
 
   import { Lang } from '../../store/lang'

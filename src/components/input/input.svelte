@@ -167,7 +167,7 @@
     min-height: 40px;
     @apply text-base;
     @apply leading-5;
-    @apply bg-white dark:bg-gray-800;
+    @apply bg-white dark:bg-gray-900;
     @apply text-black dark:text-white;
   }
   .n-input-container .n-input-wrapper {
@@ -231,6 +231,16 @@
     margin: 0;
     padding: 0;
   }
+
+  .n-input-type-textarea {
+    @apply dark:bg-gray-900;
+  }
+  .n-input-type-textarea textarea {
+    @apply placeholder-gray-300;
+    @apply dark:text-white;
+    min-height: 90px;
+    padding-top: 8px;
+  }
   .n-input-container .n-input-wrapper .n-input input,
   .n-input-container .n-input-wrapper .n-input select,
   .n-input-container .n-input-wrapper .n-input textarea {
@@ -247,11 +257,6 @@
   .n-input-container .n-input-wrapper .n-input textarea:disabled {
     background-color: transparent !important;
     opacity: 0.7;
-  }
-  .n-input-container .n-input-wrapper .n-input textarea {
-    min-height: 90px;
-    padding-top: 8px;
-    color: var(--color-inverse);
   }
 </style>
 

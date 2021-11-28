@@ -261,3 +261,5 @@
 <div id="photo-holder" class="hidden" style="display:none">
   <img id="photo-holder-image " alt="avatar-holder" />
 </div>
+
+<canvas id="confetti" />
