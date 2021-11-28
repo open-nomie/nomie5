@@ -9,7 +9,7 @@
    */
 
   // svelte
-  import { navigate } from 'svelte-routing'
+
   import { onMount, onDestroy } from 'svelte'
 
   // components
@@ -23,7 +23,7 @@
   import config from '../config/appConfig'
 
   // Containers
-  import NMap from '../containers/map/map.svelte'
+
   import NLayout from '../containers/layout/layout.svelte'
   // Utils
   import dayjs from 'dayjs'
@@ -37,7 +37,7 @@
 
   import { Device } from '../store/device-store'
   import Storage from '../modules/storage/storage'
-  import Text from '../components/text/text.svelte'
+
   import Button from '../components/button/button.svelte'
   import NextPrevCal from '../components/next-prev-cal/next-prev-cal.svelte'
   import { SearchStore } from '../store/search-store'
@@ -50,8 +50,8 @@
   import type { OTDViewOption } from '../containers/on-this-day/on-this-day-helpers'
   import { OTDViews } from '../containers/on-this-day/on-this-day-helpers'
   import OnThisDayViews from '../containers/on-this-day/on-this-day-views.svelte'
-  import Swipeable from '../components/swipeable/swipeable.svelte'
-  import { ChevronRight, X } from 'svelte-hero-icons'
+
+  import { ChevronRight } from 'svelte-hero-icons'
 
   export const location = undefined
   export let style = undefined

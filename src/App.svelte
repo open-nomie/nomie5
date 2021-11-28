@@ -1,4 +1,5 @@
 <script lang="ts">
+  import StatsModal from './containers/stats/stats-modal.svelte'
   import { MessageStore } from './containers/messages/MessageStore'
   import { StatsStore } from './containers/stats/StatsStore'
   import UpdateAvailable from './components/update-available/update-available.svelte'
@@ -48,6 +49,7 @@
   import './style/main.css'
   import DynamicPage from './DynamicPage.svelte'
   import Backdrop from './components/backdrop/backdrop.svelte'
+  import PersonModal from './containers/people/person-modal.svelte'
 
   // Set a better console
   const console = new Logger('APP')
@@ -203,7 +205,8 @@
 
 <!-- Global Modals, alerts, menus, etc-->
 {#if ready && $StatsStore.trackables.length > 0}
-  <DynamicPage container="stats/stats-modal" />
+  <!-- <DynamicPage container="stats/stats-modal" /> -->
+  <StatsModal />
 {/if}
 
 {#if ready && $TrackerLibrary.show}
@@ -211,7 +214,8 @@
 {/if}
 
 {#if ready && $Interact.people.active}
-  <DynamicPage container="people/person-modal" />
+  <!-- <DynamicPage container="people/person-modal" /> -->
+  <PersonModal />
 {/if}
 
 <Backdrop id="blocker" visible={$Interact.blocker.show}>

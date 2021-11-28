@@ -16,7 +16,7 @@
     "url": "https://nomie.app"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "vbuild": "vite build",
     "vserve": "vite preview",
     "generate-whatsnew": "node build-tools/generate-whats-new.js && git add . && git commit -m 'build: whats new'",
