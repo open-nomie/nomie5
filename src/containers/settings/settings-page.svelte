@@ -175,8 +175,7 @@ Note: Your data will not automatically move over. You'll first need to export it
   }
   // const setTimeout = setTimeout;
   onMount(() => {
-    Device.scrollToTop()
-    MessageStore.loadMessages();
+    Device.scrollToTop();
   })
 </script>
 

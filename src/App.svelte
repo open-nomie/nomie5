@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { MessageStore } from './containers/messages/MessageStore.ts'
+  import { MessageStore } from './containers/messages/MessageStore'
+  import { StatsStore } from './containers/stats/StatsStore'
   import UpdateAvailable from './components/update-available/update-available.svelte'
   import { wait } from './utils/tick/tick'
   // Svelte
@@ -47,6 +48,7 @@
   import './style/main.css'
   import DynamicPage from './DynamicPage.svelte'
   import Backdrop from './components/backdrop/backdrop.svelte'
+
   // Set a better console
   const console = new Logger('APP')
 
@@ -200,7 +202,7 @@
 {/if}
 
 <!-- Global Modals, alerts, menus, etc-->
-{#if ready && $Interact.stats.terms.length > 0}
+{#if ready && $StatsStore.trackables.length > 0}
   <DynamicPage container="stats/stats-modal" />
 {/if}
 

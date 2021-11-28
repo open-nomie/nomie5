@@ -37,6 +37,15 @@ function createMessageStore() {
     })
   }
 
+  const readMessage = (message: MessageType) => {
+    update(s => {
+      message.unseen = false;
+      s.activeMessage = message;
+      s.unseen = s.messages.filter((m) => m.unseen).length
+      return s;
+    })
+  }
+
   /**
    * Load Messages 
    * This pulls messages from the CDN
@@ -77,7 +86,8 @@ function createMessageStore() {
     closeModal,
     loadMessages,
     subscribe,
-    set
+    set,
+    readMessage
   };
 }
 

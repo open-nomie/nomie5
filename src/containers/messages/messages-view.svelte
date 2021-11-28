@@ -56,7 +56,7 @@
         {#each $MessageStore.messages as message, index}
           <ListItem
             clickable
-            on:click={() => ($MessageStore.activeMessage = message)}
+            on:click={() => MessageStore.readMessage(message)}
             className={message.unseen ? 'bg-primary-100 dark:bg-primary-900' : ''}>
             <h2
               class="{message.unseen ? 'font-bold ' : 'font-medium'}
@@ -99,8 +99,10 @@
       </ToolbarGrid>
     </header>
     <main class="flex-grow h-full p-4 pb-20 mb-20 prose flex-shink">
-      <h1 class="pb-4 font-bold">{$MessageStore.activeMessage.subject}</h1>
-      {@html snarkdown($MessageStore.activeMessage.body)}
+      <h1 class="pb-2 font-bold">{$MessageStore.activeMessage.subject}</h1>
+      <div class="prose">
+        {@html snarkdown($MessageStore.activeMessage.body)}
+      </div>
     </main>
   </Panel>
 </Modal2>
