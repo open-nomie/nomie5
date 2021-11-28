@@ -23,7 +23,8 @@
 
 .n-layout .glass {
   @apply bg-white;
-  @apply dark:bg-black;
+  @apply dark:bg-gray-800;
+  @apply dark:bg-opacity-80;
   @apply bg-opacity-60;
   @apply backdrop-filter;
   @apply backdrop-saturate-150;

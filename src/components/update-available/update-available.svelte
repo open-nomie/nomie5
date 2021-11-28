@@ -20,7 +20,7 @@
     needRefresh.set(false)
   }
 
-  $: toast = $offlineReady || $needRefresh
+  $: toast = $needRefresh
 </script>
 
 <style>

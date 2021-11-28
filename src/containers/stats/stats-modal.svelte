@@ -639,29 +639,24 @@
       {/if}
 
       <NToolbarGrid>
-        <div slot="left" class="truncate" style="min-width:100px;">
+        <div slot="left" class="truncate">
           <Button icon color="transparent" on:click={closeStats}>
-            <NIcon name="close" className="fill-primary-bright" />
+            <NIcon name="close" className="text-primary-500" />
           </Button>
         </div>
 
-        <h1 class="truncate title" slot="main">{state.currentTerm}</h1>
+        <h1 class="line-clamp-1 ntitle">{state.currentTerm}</h1>
 
-        <div
-          slot="right"
-          style="min-width:100px"
-          class="toolbar-buttons align-right">
-          <Button icon on:click={onMoreTap}>
-            <NIcon name="more" className="fill-primary-bright" />
-          </Button>
-        </div>
+        <Button icon on:click={onMoreTap} slot="right" className="mr-2">
+          <NIcon name="more" className="text-primary-500" />
+        </Button>
       </NToolbarGrid>
       <div class="flex px-2 pb-2">
         <NButtonGroup size="sm" buttons={timeViewButtons} />
       </div>
 
       <div class="flex px-3 pt-2 pb-3 n-toolbar">
-        <Text size="sm" bold className="filler" truncate>{state.range}</Text>
+        <div class="text-sm dark:text-gray-300 line-clamp-1">{state.range}</div>
         <NextPrevCal
           on:next={loadNextDate}
           on:previous={loadPreviousDate}

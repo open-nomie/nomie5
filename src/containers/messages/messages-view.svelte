@@ -33,6 +33,9 @@
   .prose img {
     @apply rounded-lg;
   }
+  .prose a {
+    @apply text-primary-500;
+  }
 </style>
 
 <Layout>
@@ -48,7 +51,7 @@
     </ToolbarGrid>
   </header>
   <main class="h-full bg-gray-200 dark:bg-gray-800">
-    <Container className="p-4 lg:py-4">
+    <Container className="p-4 lg:py-4 ">
       {#if $MessageStore.messages.length === 0}
         <Empty title="No recent messages" emoji="🦙" />
       {/if}
@@ -98,9 +101,11 @@
         </div>
       </ToolbarGrid>
     </header>
-    <main class="flex-grow h-full p-4 pb-20 mb-20 prose flex-shink">
-      <h1 class="pb-2 font-bold">{$MessageStore.activeMessage.subject}</h1>
-      <div class="prose">
+    <main class="flex-grow h-full p-4 pb-20 mb-20 prose flex-shink ">
+      <h1 class="pb-2 font-bold dark:text-white">
+        {$MessageStore.activeMessage.subject}
+      </h1>
+      <div class="dark:text-gray-200">
         {@html snarkdown($MessageStore.activeMessage.body)}
       </div>
     </main>

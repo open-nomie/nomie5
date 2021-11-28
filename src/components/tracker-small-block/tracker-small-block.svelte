@@ -49,7 +49,7 @@
 <style global lang="postcss">
   .tracker-small-block {
     @apply text-left;
-    @apply bg-gray-200 dark:bg-gray-900;
+    @apply bg-gray-100 dark:bg-gray-900;
     @apply flex flex-row items-center justify-start;
     @apply text-black dark:text-white;
     @apply p-1;

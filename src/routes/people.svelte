@@ -112,7 +112,7 @@
   </div>
 
   <div slot="content">
-    <Container className="my-2">
+    <Container size="xl" className="my-2">
       {#if !state.people.length && !state.searchTerm && state.initialized}
         <Empty
           title={Lang.t('general.people')}
@@ -126,8 +126,7 @@
         <NItem>Nothing found for @{state.searchTerm}</NItem>
       {/if}
 
-      <div
-        class="grid grid-cols-2 gap-2 p-2 md:grid-cols-3 md:gap-4 lg:gap-6 lg:grid-cols-4">
+      <div class="item-grid">
         {#each state.people as person, index (person)}
           <ShortcutUserButton
             person={$PeopleStore.people[person]}

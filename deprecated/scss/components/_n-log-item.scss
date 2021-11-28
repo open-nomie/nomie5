@@ -4,7 +4,7 @@
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   gap: 2px 2px;
-  grid-template-areas: ". . .";
+  grid-template-areas: '. . .';
 
   .nbtn {
     padding-left: 8px;
@@ -13,17 +13,17 @@
 
   @include media-breakpoint-up(md) {
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-areas: ". . .";
+    grid-template-areas: '. . .';
   }
 
   @include media-breakpoint-up(lg) {
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-areas: ". . . .";
+    grid-template-areas: '. . . .';
   }
 
   @include media-breakpoint-down(sm) {
     grid-template-columns: 1fr 1fr;
-    grid-template-areas: ". .";
+    grid-template-areas: '. .';
   }
 
   // display: flex;
@@ -112,9 +112,6 @@
 }
 
 .n-item-log {
-  * {
-    // border: solid 1px rgba(blue, 0.2) !important;
-  }
   width: calc(100% - 16px);
   margin: 16px 8px;
 

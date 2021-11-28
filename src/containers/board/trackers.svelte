@@ -223,8 +223,7 @@
 {:else if view === 'detail'}
   <!-- Short Cut Button Style -->
 
-  <div
-    class="grid grid-cols-3 gap-2 p-2 md:gap-3 md:px-2 lg:grid-cols-4 xl:grid-cols-5">
+  <div class="item-grid">
     {#each trackers as tracker}
       <ShortcutButton
         id="tracker-{tracker.tag}"

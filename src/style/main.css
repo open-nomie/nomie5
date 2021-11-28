@@ -120,6 +120,10 @@ html.mode-dark {
   @apply z-50;
 }
 
+.item-grid {
+  @apply grid grid-cols-2 md:grid-cols-3 gap-2 p-2 md:gap-3 md:px-2 lg:grid-cols-4 xl:grid-cols-5;
+}
+
 .stiff {
   @apply flex-grow-0;
   @apply flex-shrink-0;
@@ -146,6 +150,9 @@ html.mode-dark {
 }
 .h-75vh {
   min-height: 75vh;
+}
+.h-90vh {
+  min-height: 90vh;
 }
 .h-50vh {
   min-height: 50vh;

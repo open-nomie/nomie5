@@ -15,11 +15,11 @@ import Storage from "../../modules/storage/storage";
 // import { ToastStore } from "../../components/toast/toast.store";
 // import { AlertStore } from "../../components/alert/alert.store";
 // import { NoteStore } from "../notes/note.store";
-import _ from "lodash";
+// import _ from "lodash";
 import NLog from "../../modules/nomie-log/nomie-log";
 import { Interact } from "../../store/interact";
 import tick from "../../utils/tick/tick";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import { LedgerStore } from "../../store/ledger";
 import { Lang } from "../../store/lang";
 
@@ -88,14 +88,14 @@ const createApiStore = () => {
   // Get Store Items
   const { update, subscribe, set } = writable(_state);
 
-  function canApiRunOnDevice():boolean {
+  function canApiRunOnDevice(): boolean {
     return localStorage.getItem(API_DEVICE_DISABLED) ? false : true;
   }
 
   /**
    * Get Store Logs from the Archives
    */
-  function getArchives():Array<NapiLog> {
+  function getArchives(): Array<NapiLog> {
     return ApiLogStore.get("napi/saved.json") || [];
   }
   /**
@@ -109,11 +109,11 @@ const createApiStore = () => {
 
   async function setArchives(stored: Array<NapiLog> = []) {
     ApiLogStore.put("napi/saved.json", stored);
-    fuse({inArchive: stored.sort((a,b)=>{ return a.date < b.date ? 1 : -1})});
+    fuse({ inArchive: stored.sort((a, b) => { return a.date < b.date ? 1 : -1 }) });
     return true;
   }
 
- 
+
   /**
    * Fuse State
    * Getter and Updater for the Svelte Store State
@@ -134,9 +134,9 @@ const createApiStore = () => {
       // Auto clear sicne we can toggle now 
       methods.stopMonitoring();
       // Can it run on this device? 
-      const canRun:boolean = canApiRunOnDevice();
+      const canRun: boolean = canApiRunOnDevice();
       // Initialize the Client
-      if(canRun === true) {
+      if (canRun === true) {
         await NAPI.init();
       }
       // When Ready
@@ -148,17 +148,17 @@ const createApiStore = () => {
         const state = fuse(
           isRegistered
             ? {
-                registered: true,
-                apiKey: NAPI.keyLocker.apiKey,
-                privateKey: NAPI.keyLocker.privateKey,
-                autoImport: ApiLogStore.get("auto-import") ? true : false,
-              }
+              registered: true,
+              apiKey: NAPI.keyLocker.apiKey,
+              privateKey: NAPI.keyLocker.privateKey,
+              autoImport: ApiLogStore.get("auto-import") ? true : false,
+            }
             : {
-                registered: false,
-                apiKey: undefined,
-                privateKey: undefined,
-                autoImport: false,
-              }
+              registered: false,
+              apiKey: undefined,
+              privateKey: undefined,
+              autoImport: false,
+            }
         );
         // Get the Logs if we're registered
         if (isRegistered && canRun) {
@@ -175,14 +175,14 @@ const createApiStore = () => {
     },
     toggleDeviceDisabled() {
       console.log("Toggling device disabled");
-      if(canApiRunOnDevice()) {
+      if (canApiRunOnDevice()) {
         console.log("Currently Enabled switching to disabled");
         localStorage.setItem(API_DEVICE_DISABLED, '1');
-        fuse({ deviceDisabled: true})
+        fuse({ deviceDisabled: true })
       } else {
         console.log("Currently DIsabled switching to ENABLED");
         localStorage.removeItem(API_DEVICE_DISABLED);
-        fuse({ deviceDisabled: false})
+        fuse({ deviceDisabled: false })
       }
       methods.init();
     },
@@ -192,7 +192,7 @@ const createApiStore = () => {
         state.autoImport = !state.autoImport;
         console.log("After Toggle Toggle state", state.autoImport);
         ApiLogStore.put("auto-import", state.autoImport);
-        
+
         return state;
       });
       await tick(200);
@@ -216,7 +216,7 @@ const createApiStore = () => {
         })
       );
       update((state) => {
-        state.items = stored.filter((l) => !l.discarded && !l.saved).sort((a,b)=>a.date > b.date ? 1 : -1);
+        state.items = stored.filter((l) => !l.discarded && !l.saved).sort((a, b) => a.date > b.date ? 1 : -1);
         return state;
       });
     },
@@ -307,18 +307,18 @@ const createApiStore = () => {
       setArchives(stored);
       // Update State so UI can react
       const state = fuse({
-        items : stored.filter((l) => !l.saved && !l.discarded),
-        inArchive : stored,
-        inAPI : stored.filter(l=>!l.saved && !l.discarded),
+        items: stored.filter((l) => !l.saved && !l.discarded),
+        inArchive: stored,
+        inAPI: stored.filter(l => !l.saved && !l.discarded),
       })
-      if(state.inAPI.length == 0 && logs.length > 0) {
+      if (state.inAPI.length == 0 && logs.length > 0) {
         console.log("🔥 we have a pointless logs in the API. DELETE THEM!");
         await NAPI.clear();
       }
       // Return Array of Items stored;
       return stored;
     },
-    toLog(apiLog:NapiLog): NLog {
+    toLog(apiLog: NapiLog): NLog {
       let log: NLog = new NLog(apiLog);
       log.end = apiLog.date ? new Date(apiLog.date).getTime() : new Date().getTime();
       return log;
@@ -343,7 +343,7 @@ const createApiStore = () => {
             const test = await NAPI.testAndSave(apiKey, privateKey);
             if (test === true) {
               methods.init();
-              Interact.alert(Lang.t('general.success','Success!'), `👍  API Successfully Restored`);
+              Interact.alert(Lang.t('general.success', 'Success!'), `👍  API Successfully Restored`);
             } else {
               Interact.error("Unable to verify that API Key and Private Key combination");
             }
@@ -357,15 +357,15 @@ const createApiStore = () => {
      * Restore a Discarded Log
      * @param log 
      */
-    restoreLog(log:NapiLog) {
+    restoreLog(log: NapiLog) {
       // Remove saved and discarded
       log.saved = false;
       log.discarded = false;
       // Get the latest archives
       const archives = getArchives();
       // SEt the archives with an updated log
-      setArchives(archives.map((loopLog:NapiLog)=>{
-        if(loopLog.id == log.id) {
+      setArchives(archives.map((loopLog: NapiLog) => {
+        if (loopLog.id == log.id) {
           return log;
         } else {
           return loopLog
@@ -377,7 +377,7 @@ const createApiStore = () => {
       // Filter out Saved and Discarded
       let allLogs: Array<NapiLog> = (await methods.getLogs()) || [];
       let logs: Array<NapiLog> = allLogs.filter((l) => !l.saved && !l.discarded);
-      
+
       // If we have logs lets import them
       if (logs.length) {
         // Save the Logs
@@ -389,14 +389,14 @@ const createApiStore = () => {
           // Clear the Nomie API
           await NAPI.clear();
         } else {
-          await Interact.alert( "Import incomplete",`Imported ${results.success.length} of ${logs.length}. Please go to settings / data / nomie api / captured to see all notes current available.`);
+          await Interact.alert("Import incomplete", `Imported ${results.success.length} of ${logs.length}. Please go to settings / data / nomie api / captured to see all notes current available.`);
         }
         // Refresh
         methods.getLogs();
       }
     },
     async import(logs: Array<NapiLog>): Promise<MassNapiLogImport> {
-      let archives:Array<NapiLog> = getArchives();
+      let archives: Array<NapiLog> = getArchives();
       // Block the UI
       Interact.blocker(`Importing ${logs.length}  ${logs.length > 1 ? "notes" : "note"} from the API...`);
       await tick(500);
@@ -420,17 +420,17 @@ const createApiStore = () => {
           const saved = await LedgerStore.saveLog(nlog);
           log.saved = saved ? true : false;
           // Update the Archives for this Note / Log
-          let foundInArchive:boolean = false;
+          let foundInArchive: boolean = false;
           // Map map saved log in archive.
-          archives = archives.map((loopLog:NapiLog)=>{
-            if(loopLog.id == log.id) {
+          archives = archives.map((loopLog: NapiLog) => {
+            if (loopLog.id == log.id) {
               foundInArchive = true;
               loopLog.saved = true;
             }
             return loopLog;
           });
 
-          if(!foundInArchive) {
+          if (!foundInArchive) {
             log.saved = true;
             archives.push(log);
           }

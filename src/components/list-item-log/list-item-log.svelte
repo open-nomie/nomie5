@@ -90,7 +90,7 @@
 {#if displayLog}
   <article
     class="{className} shadow-md rounded-xl py-2 bg-white dark:bg-black
-    text-gray-900 dark:text-gray-100 grid grid-flow-row gap-2">
+    dark:bg-opacity-50 text-gray-900 dark:text-gray-100 grid grid-flow-row gap-2">
     <!-- Show the Trackers within this Log Item -->
     <header class="flex flex-shrink-0 w-full px-4 time-row">
       <div class="flex items-center flex-grow flex-shrink space-x-2">

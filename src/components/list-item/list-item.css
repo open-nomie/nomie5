@@ -26,7 +26,7 @@
   @apply px-4 py-2;
   @apply relative;
   @apply text-gray-800 dark:text-gray-200;
-  @apply bg-white dark:bg-gray-900;
+  @apply bg-white dark:bg-black dark:bg-opacity-50;
 
   min-height: 46px;
   transition: all 0.2s ease-in-out;

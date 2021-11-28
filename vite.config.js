@@ -5,15 +5,14 @@ import { VitePWA } from 'vite-plugin-pwa'
 import loadVersion from 'vite-plugin-package-version';
 import manifest from './manifest';
 import path from 'path';
-import analyze from 'rollup-plugin-analyzer'
 import svelteSVG from "vite-plugin-svelte-svg";
 
 export default defineConfig({
-  optimizeDeps: { exclude: ["svelte-routing"] },
+  optimizeDeps: { exclude: ["svelte-routing", "snarkdown", 'canvas-confetti'] },
   build: {
+    target: "es2015",
     rollupOptions: {
       // https://rollupjs.org/guide/en/#big-list-of-options
-      plugins: [analyze()]
     }
   },
   resolve: {
@@ -29,7 +28,7 @@ export default defineConfig({
     svelte({
       preprocess: sveltePreprocess({
         postcss: true
-      })
+      }),
     }),
     VitePWA({
       manifest: manifest,

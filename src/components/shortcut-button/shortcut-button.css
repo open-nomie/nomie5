@@ -5,7 +5,7 @@
   @apply justify-items-stretch;
   @apply rounded-2xl;
   @apply shadow-md;
-  @apply bg-white dark:bg-black;
+  @apply bg-white dark:bg-black dark:bg-opacity-50;
   --scb-pad: 14px;
   height: 146px;
 
@@ -152,6 +152,7 @@
 }
 .shortcut-button.has-value .more {
   @apply bg-white bg-opacity-10 text-white text-opacity-80;
+  color: #fff !important;
 }
 .shortcut-button.has-value:before {
   position: absolute;

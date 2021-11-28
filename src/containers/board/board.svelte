@@ -237,26 +237,32 @@
       {
         title: `${Lang.t('board.create-new-board', 'Add New Tab')}`,
         icon: 'addFolder',
+        divider: true,
         async click() {
           methods.newBoard()
         },
       },
-      {
+    ]
+
+    if ($BoardStore.boards.length) {
+      buttons.push({
         title: `${Lang.t('board.organize-tabs', 'Organize Tabs')}`,
         icon: 'switch',
+        divider: true,
         async click() {
           Interact.toggleBoardSorter()
         },
-        divider: true,
+      })
+    }
+
+    buttons.push({
+      title: `${Lang.t('general.all-nomie-settings', 'More Nomie Settings')}`,
+      icon: 'settings',
+      divider: true,
+      async click() {
+        navigate('/settings')
       },
-      {
-        title: `${Lang.t('general.all-nomie-settings', 'More Nomie Settings')}`,
-        icon: 'settings',
-        async click() {
-          navigate('/settings')
-        },
-      },
-    ]
+    })
 
     Interact.popmenu({
       title: `${board && board.label ? board.label : 'All Trackers'}`,
@@ -662,7 +668,7 @@
                   <button
                     class="text-sm font-bold text-primary-500"
                     on:click={TrackerStore.toggleTimers}>
-                    <Icon name="close" />
+                    {Lang.t('general.hide', 'Hide')}
                   </button>
                 </div>
               </ListItem>
@@ -681,8 +687,8 @@
           </Container>
         {/if}
 
-        <Container size="xl">
-          <main class="overflow-x-hidden n-board h-100 h-75vh">
+        <Container size="xl" className="">
+          <main style="min-height:65vh">
             <!-- Loop over trackers -->
             <Swipeable on:left={BoardStore.next} on:right={BoardStore.previous}>
               {#if (foundTrackers || boardTrackers || []).length === 0}
