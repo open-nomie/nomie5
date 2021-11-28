@@ -76,7 +76,7 @@
     {#if !hideMore}
       <button
         aria-label="Tracker Options"
-        class="more text-gray-600 dark:text-gray-400} p-0"
+        class="p-0 more"
         on:click|preventDefault|stopPropagation={more}>
         <IonIcon icon={moreIcon} size={24} />
       </button>

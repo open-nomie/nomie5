@@ -19,8 +19,8 @@
   export let value: string | number | undefined = undefined
   // export let value = undefined;
 
-  let hasEmojiSlot = arguments[1].$$slots || {}.emoji
-  let avatarSize = 40
+  let hasEmojiSlot: any = (arguments[1].$$slots || { emoji: undefined }).emoji
+  let avatarSize: number = 40
 
   $: if (xs) {
     avatarSize = 20

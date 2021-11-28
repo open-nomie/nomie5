@@ -7,7 +7,7 @@
   import { createEventDispatcher } from 'svelte'
   import { Interact } from '../../store/interact'
 
-  import StatsChart from 'ionicons/dist/svg/stats-chart.svg?component'
+  import StatsChart from 'ionicons/dist/svg/stats-chart-outline.svg?component'
 
   import Avatar from '../avatar/avatar.svelte'
   import type Person from 'modules/person/person'

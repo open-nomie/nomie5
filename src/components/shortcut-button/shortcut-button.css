@@ -1,6 +1,3 @@
-.shortcut-button .more.icon-other {
-  border: none !important;
-}
 .shortcut-button {
   @apply relative;
   @apply flex-grow;
@@ -102,13 +99,14 @@
   right: var(--scb-pad);
 }
 
-.shortcut-button .more {
+.shortcut-button button.more {
   @apply relative;
   @apply flex;
   @apply items-center;
   @apply justify-center;
   @apply bg-transparent;
   @apply border-none;
+  @apply text-gray-300 dark:text-gray-700;
 }
 .shortcut-button button.more:focus {
   outline: none;
@@ -145,9 +143,7 @@
 .shortcut-button.has-value .emoji {
   color: #fff !important;
 }
-.shortcut-button.no-value .more svg {
-  stroke: rgba(150, 150, 150, 0.6);
-}
+
 .shortcut-button.no-value .more {
   /* border: solid 1px rgba(150, 150, 150, 0.6); */
 }
