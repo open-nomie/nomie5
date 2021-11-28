@@ -407,7 +407,7 @@
     // See if we have any saved compares
 
     state.related = statsV5.getRelated()
-    await tick(100)
+    await tick(500)
     // state.compare = state.compare;
 
     state.loading = false
@@ -420,6 +420,7 @@
   function loadPreviousDate(): void {
     state.date = dayjs(state.date).subtract(1, getTimeSpan().unit)
     lastTimeSpan = null
+    console.log({ state })
   }
 
   function loadNextDate(): void {
@@ -668,10 +669,8 @@
       </div>
 
       {#if state.loading}
-        <div class=" n-panel center-all" style="height:140px;">
-          <div>
-            <NSpinner size={46} />
-          </div>
+        <div class="flex items-center justify-center h-50vh">
+          <NSpinner size={46} />
         </div>
       {/if}
 
@@ -707,23 +706,25 @@
       <NButtonGroup inverse buttons={state.viewOption} />
     </div>
 
-    <main class="relative h-full bg-gray-200 dark:bg-gray-800">
+    <main class="relative min-h-full bg-gray-200 dark:bg-gray-800">
       {#if !state.loading}
         {#if state.dataView === 'compare'}
-          <StatsCompare
-            {remember}
-            fromDate={getFromDate()}
-            toDate={getToDate()}
-            timeSpan={state.timeSpan}
-            stats={state.stats}
-            on:dateSelected={(evt) => {
-              setSelected(evt.detail)
-            }} />
+          <div class="p-2 lg:p-4">
+            <StatsCompare
+              {remember}
+              fromDate={getFromDate()}
+              toDate={getToDate()}
+              timeSpan={state.timeSpan}
+              stats={state.stats}
+              on:dateSelected={(evt) => {
+                setSelected(evt.detail)
+              }} />
+          </div>
           <!-- selected={state.selected} -->
         {/if}
         {#if state.dataView === 'streak'}
           {#if state.trackableElement}
-            <Card className="p-3 m-2">
+            <Card className="p-3">
               {#if state.timeSpan !== 'd'}
                 <Streak
                   showDetail={true}
@@ -750,10 +751,12 @@
             <StatsOverview stats={state.stats} tracker={state.tracker} />
             <!-- end over view -->
           {:else if state.dataView === 'time'}
-            <StatsTime
-              color={state.currentColor}
-              term={state.currentTerm}
-              stats={state.stats} />
+            <div class="p-2 lg:p-40">
+              <StatsTime
+                color={state.currentColor}
+                term={state.currentTerm}
+                stats={state.stats} />
+            </div>
           {:else if state.dataView === 'logs'}
             {#if state.timeSpan == 'y'}
               <div class="p-4 text-sm text-center text-inverse-2">

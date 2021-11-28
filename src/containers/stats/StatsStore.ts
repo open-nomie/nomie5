@@ -1,18 +1,19 @@
 import TrackableElement, { toElement } from '../../modules/trackable-element/trackable-element';
 import { writable } from 'svelte/store';
 import { wait } from '../../utils/tick/tick';
+import dayjs, { Dayjs } from 'dayjs';
 
 type StatsStoreState = {
   trackables: Array<TrackableElement>;
   showModal: boolean;
-  date: Date
+  date: Dayjs
 }
 
 function createStatsStore() {
   const stateBase: StatsStoreState = {
     trackables: [],
     showModal: false,
-    date: new Date()
+    date: dayjs()
   }
   const { subscribe, set, update } = writable(stateBase);
 
@@ -22,15 +23,26 @@ function createStatsStore() {
   };
 }
 
+/**
+ * Main Export 
+ */
 export const StatsStore = createStatsStore();
 
-export const openStats = async (ele: TrackableElement | string) => {
+/**
+ * Open the Stats Modal
+ * @param ele 
+ * @param date 
+ */
+export const openStats = async (ele: TrackableElement | string, date?: Dayjs) => {
   // Convert either string or trackable to trackable
   const element: TrackableElement = ele instanceof TrackableElement ? ele : toElement(ele);
   // Update the state 
   StatsStore.update((s: StatsStoreState) => {
     if (!s.trackables.find((t: TrackableElement) => t.id == element.id)) {
       s.trackables.push(element);
+    }
+    if (date) {
+      s.date = date
     }
     return s;
   })
@@ -58,7 +70,7 @@ export const closeStats = async () => {
   });
 }
 
-export const setStatsDate = (date: Date) => {
+export const setStatsDate = (date: Dayjs) => {
   StatsStore.update(s => {
     s.date = date;
     return s;

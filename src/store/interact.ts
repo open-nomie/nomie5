@@ -46,6 +46,7 @@ import { SearchStore } from "./search-store";
 import { ActiveLogStore } from "./active-log";
 import type NLog from "../modules/nomie-log/nomie-log";
 import type { ITracker } from "../modules/tracker/tracker";
+import { openStats } from "../containers/stats/StatsStore";
 
 const console = new Logger("✋ Interact");
 
@@ -372,17 +373,20 @@ const interactInit = () => {
       });
     },
     openStats(term, date?: Dayjs) {
-      update((d) => {
-        d.stats.terms = d.stats.terms || [];
-        // if the term isn't the last one - then allow it.
-        // otherwise don't - this will allow them to add it later in the stack
-        d.stats.date = date;
-        d.stats.focused = null;
-        if (d.stats.terms[d.stats.terms.length] !== term) {
-          d.stats.terms.push(term);
-        }
-        return d;
-      });
+      // TODO: update references to Interact.openStats
+      openStats(term, date)
+      // Old Way 
+      // update((d) => {
+      //   d.stats.terms = d.stats.terms || [];
+      //   // if the term isn't the last one - then allow it.
+      //   // otherwise don't - this will allow them to add it later in the stack
+      //   d.stats.date = date;
+      //   d.stats.focused = null;
+      //   if (d.stats.terms[d.stats.terms.length] !== term) {
+      //     d.stats.terms.push(term);
+      //   }
+      //   return d;
+      // });
     },
     person(username) {
       update((d) => {

@@ -34,6 +34,8 @@
   import TrackableElement from '../../modules/trackable-element/trackable-element'
   import { Device } from '../../store/device-store'
   import { Interact } from '../../store/interact'
+  import ImageCapture from '../../components/image-capture.svelte'
+  import FileUploader from '../../components/file-uploader/file-uploader.svelte'
 
   let date = dayjs()
 </script>
@@ -53,6 +55,14 @@
       A set of base components for quick testing... I should be using Storybook,
       but have yet to do so.
     </Text>
+
+    <List className="p-4 ">
+
+      <FileUploader />
+
+      <ImageCapture />
+
+    </List>
 
     <List className="p-4 ">
 

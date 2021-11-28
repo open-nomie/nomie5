@@ -30,8 +30,8 @@
 </script>
 
 {#if location}
-  <span
-    class="flex items-center text-xs location-badge"
+  <button
+    class="flex items-center text-xs text-left location-badge"
     on:click={(evt) => {
       dispatch('click', evt)
     }}>
@@ -39,5 +39,5 @@
     {#if name}
       <span class="font-medium line-clamp-1">{name}</span>
     {/if}
-  </span>
+  </button>
 {/if}
