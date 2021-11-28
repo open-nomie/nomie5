@@ -110,9 +110,10 @@
     <div>
       <NInput
         listItem
-        className="z-10 tracker-label"
+        className="z-10 h-10"
         type="text"
         name="label"
+        solo
         placeholder={Lang.t('tracker.label', 'Tracker Label')}
         value={localTracker.label}
         on:keyup={(evt) => {

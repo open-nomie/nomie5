@@ -52,8 +52,14 @@
     flex-shrink: 0;
   }
 
+  .tab-wrap a {
+    @apply opacity-80;
+  }
   .tab-wrap a .active {
     @apply hidden;
+  }
+  .tab-wrap a[aria-current='page'] {
+    @apply opacity-100;
   }
   .tab-wrap a[aria-current='page'] .active {
     @apply inline-flex;

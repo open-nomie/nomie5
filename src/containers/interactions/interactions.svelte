@@ -145,7 +145,7 @@
       bind:value={$Interact.prompt.value}
       on:focus={this.select}
       type="number"
-      class="mt-2 form-control stiff" />
+      class="h-10 mt-2 form-control stiff" />
   {:else if $Interact.prompt.valueType == 'datetime'}
     <DateTimeBar
       opened
@@ -173,7 +173,7 @@
       bind:this={promptInput}
       placeholder={$Interact.prompt.placeholder}
       bind:value={$Interact.prompt.value}
-      class="mt-2 form-control" />
+      class="h-10 mt-2 form-control" />
   {/if}
 </NAlertBox>
 

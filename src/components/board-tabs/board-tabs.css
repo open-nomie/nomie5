@@ -4,7 +4,6 @@
   @apply py-1 px-1;
   @apply text-sm;
   @apply text-gray-800 dark:text-gray-200;
-
   @apply transform;
   @apply transition-all;
 }

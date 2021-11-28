@@ -1,14 +1,14 @@
 import { Lang } from "../../store/lang";
 import type { ITrackerType } from "../tracker/tracker";
 
-export interface TrackerTypeConfig {
+export type TrackerTypeConfig = {
   emoji: string;
   label: string;
   description: string;
   id?: ITrackerType;
 }
 
-export interface TrackerTypesConfig {
+export type TrackerTypesConfig = {
   [type: string]: TrackerTypeConfig;
 }
 

@@ -75,7 +75,7 @@
     </div>
     {#if !hideMore}
       <Button
-        aria-label="Tracker Options"
+        ariaLabel="Tracker Options"
         className="p-0 more"
         shape="round"
         size="sm"

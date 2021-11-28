@@ -313,14 +313,15 @@
   <Panel>
     <header slot="header">
       <ToolbarGrid>
-        <div slot="left">
-          <Button
-            type="clear"
-            color="primary"
-            on:click={() => (showEmojiSelector = false)}>
-            Done
-          </Button>
-        </div>
+
+        <Button
+          slot="left"
+          type="clear"
+          className="text-primary-500"
+          on:click={() => (showEmojiSelector = false)}>
+          Done
+        </Button>
+
         <ButtonGroup
           buttons={[{ label: 'Emoji', active: emojiOrColor === 'emoji', click() {
                 emojiOrColor = 'emoji'
@@ -352,30 +353,32 @@
   id="tracker-editor"
   className="n-tracker-editor"
   visible={$Interact.trackerEditor.show}>
-  <Panel
-    className={`bg-gray-50 dark:bg-gray-800 max-w-screen-sm `}
-    on:close={methods.cancel}>
+  <Panel className="h-full" on:close={methods.cancel}>
 
     <header slot="header" class="n-toolbar-grid">
       <ToolbarGrid>
-        <div slot="left">
-          <Button type="clear" color="primary" on:click={methods.cancel}>
-            Cancel
-          </Button>
-        </div>
-        <div class="ntitle">
+
+        <Button
+          slot="left"
+          type="clear"
+          className="text-primary-500"
+          on:click={methods.cancel}>
+          Cancel
+        </Button>
+
+        <h1 class="ntitle">
           {data.tracker._dirty ? 'Make a Tracker' : 'Edit'}
-        </div>
-        <div slot="right">
-          <Button
-            className="save-action"
-            disabled={!canSave}
-            color="primary"
-            type="clear"
-            on:click={methods.saveTracker}>
-            {Lang.t('general.save')}
-          </Button>
-        </div>
+        </h1>
+
+        <Button
+          slot="right"
+          className="save-action text-primary-500"
+          disabled={!canSave}
+          type="clear"
+          on:click={methods.saveTracker}>
+          {Lang.t('general.save')}
+        </Button>
+
       </ToolbarGrid>
 
     </header>
