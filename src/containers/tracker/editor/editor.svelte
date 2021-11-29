@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { wait } from '../../../utils/tick/tick'
+  import { TrackerEditorStore, closeTrackerEditor } from './TrackerEditorStore'
   import ButtonGroup from './../../../components/button-group/button-group.svelte'
   import EmojiSelector from './../../../components/emoji-selector/EmojiSelector.svelte'
-  import EmojiEditor from './../../../components/emoji-editor/emoji-editor.svelte'
-  // components
+
 
   /**
    * Welcome to the Editor - this is a mess... but I'm trying to simplify the whole process
@@ -11,7 +12,6 @@
    *
    * God speed.
    */
-  import math from '../../../utils/math/math'
   import ListItem from '../../../components/list-item/list-item.svelte'
 
   import NIcon from '../../../components/icon/icon.svelte'
@@ -54,85 +54,74 @@
   import ColorPicker from '../../../components/color-picker/color-picker.svelte'
   import ClassicButton from '../../../components/classic-button/classic-button.svelte'
 
+  import { randomEmojis, groupedUOM } from './TrackerEditorStore'
+
   const dispatch = createEventDispatcher()
 
   let showEmojiSelector = false
   let emojiOrColor = 'emoji'
   // export let show = false;
 
-  const randomEmojis = [
-    '😂',
-    '❤️',
-    '🥳',
-    '🍦',
-    '🌞',
-    '🍹',
-    '🎱',
-    '😎',
-    '🥫',
-    '🍲',
-    '🍩',
-    '🐕',
-    '🌵',
-    '📗',
-    '🏈',
-    '🌸',
-  ]
-
   export let tracker = new Tracker({})
 
+  let showModal: boolean = false
+
+  $: if ($TrackerEditorStore.showEditor && !showModal) {
+    data.tracker = new Tracker($TrackerEditorStore.tracker)
+    setTimeout(() => {
+      showModal = true
+    }, 200)
+  } else if (!$TrackerEditorStore.showEditor) {
+    setTimeout(() => {
+      showModal = false
+      console.log('Closing modal')
+    }, 200)
+  }
+
   type DataConfig = {
-    groupedUOMs: any
-    types: Array<any>
     editTag: boolean
     tracker?: Tracker
   }
 
   let data: DataConfig = {
-    groupedUOMs: NomieUOM.toGroupedArray(),
-    types: Object.keys(TrackerTypes).map((id: any) => {
-      let type = TrackerTypes[id]
-      type.id = id
-      return type
-    }),
     editTag: false,
-    tracker: null,
+    tracker: new Tracker({}),
   }
 
-  let lastTracker: string // tag of the last tracker
   let advanced = false
-  let forcedAdvanced = false
+  let forceAdvancedView = false
   let advancedCanToggle = true
   let tagHardcoded = false
   let canSave = true
 
   // Watch for Tracker Change
-  $: if (tracker && !data.tracker) {
-    const randomEmoji =
-      randomEmojis[math.random_range(0, randomEmojis.length - 1)]
-    lastTracker = tracker.tag
-    if (!tracker.emoji || tracker.emoji.length === 0)
-      tracker.emoji = randomEmoji
+  // $: if (tracker && !data.tracker) {
+  //   const randomEmoji =
+  //     randomEmojis[math.random_range(0, randomEmojis.length - 1)]
+  //   lastTracker = tracker.tag
+  //   if (!tracker.emoji || tracker.emoji.length === 0)
+  //     tracker.emoji = randomEmoji
 
-    // Load up to a local state
-    data.tracker = new Tracker(tracker)
-  }
+  //   // Load up to a local state
+  //   data.tracker = new Tracker(tracker)
+  // }
 
   // Watch for Tracker Changed while NOT Forced Advanced
-  $: if (tracker && !forcedAdvanced) {
+  $: if (data.tracker && !forceAdvancedView) {
     if (
-      tracker.default ||
-      tracker.math !== 'sum' ||
-      tracker.uom !== 'num' ||
-      tracker.step
+      data.tracker.default ||
+      data.tracker.math !== 'sum' ||
+      data.tracker.uom !== 'num' ||
+      data.tracker.step ||
+      data.tracker.one_tap
     ) {
       advanced = true
-      advancedCanToggle = false
+      advancedCanToggle = true
     } else {
       advancedCanToggle = true
       advanced = false
     }
-  } else if (forcedAdvanced) {
+  } else if (forceAdvancedView) {
     advanced = true
   }
 
@@ -198,6 +187,11 @@
     let duplicated = await TrackerStore.duplicateTracker(data.tracker)
   }
 
+  async function setType(type: ITrackerType) {
+    await wait(200)
+    data.tracker.type = type
+  }
+
   async function remove() {
     let confirmed = await Interact.confirm(
       `${tracker.label} - ${Lang.t(
@@ -216,7 +210,11 @@
   }
 
   const methods = {
+    /**
+     * Save The Tracker
+     */
     async saveTracker() {
+      // If missing tag or label - alert error
       if (!data.tracker.tag || !data.tracker.label) {
         Interact.alert(
           'Missing Data',
@@ -225,11 +223,12 @@
       } else {
         try {
           // If picker - clean up list
-          if (data.tracker.type == 'picker') {
+          if (data.tracker.type === 'picker') {
             data.tracker.picks = data.tracker.picks.filter((d) => `${d}`.length)
           }
-
+          // Tell Tracker Store to save
           await TrackerStore.saveTracker(data.tracker)
+          // Toast the Place!
           Interact.toast(`${data.tracker.label} saved`)
           dispatch('save', data.tracker)
           methods.cancel()
@@ -255,18 +254,20 @@
         data.tracker.tag = tag
       }
     },
+
+    /**
+     * Select Tracker Type
+     * Opens Popmenu for selection
+     */
     selectType() {
       const buttons = Object.keys(trackerTypes).map((typeKey: ITrackerType) => {
         let type = trackerTypes[typeKey]
+
         return {
           emoji: type.emoji,
           title: `${type.label} ${typeKey === data.tracker.type ? ' ✓' : ''}`,
           description: `${type.description}`,
-          click: () => {
-            if (data.tracker) {
-              data.tracker.type = typeKey
-            }
-          },
+          click: () => setType(typeKey),
         }
       })
       Interact.popmenu({
@@ -303,8 +304,8 @@
     },
     cancel() {
       data.tracker = new Tracker({})
-      forcedAdvanced = false
-      dispatch('close')
+      forceAdvancedView = false
+      closeTrackerEditor()
     },
   }
 </script>
@@ -334,7 +335,15 @@
         <div
           class="p-4 text-center rounded-lg"
           style="background-color:{data.tracker.color}">
-          <ClassicButton labelClass="text-black" tracker={data.tracker} />
+          <ClassicButton
+            on:click={() => {
+              const multiEmoji = prompt('Want multiple emojis? Do it here:', data.tracker.emoji)
+              if (multiEmoji) {
+                data.tracker.emoji = multiEmoji
+              }
+            }}
+            labelClass="text-black"
+            tracker={data.tracker} />
         </div>
       </section>
     </header>
@@ -349,10 +358,7 @@
   </Panel>
 </Modal2>
 
-<Modal2
-  id="tracker-editor"
-  className="n-tracker-editor"
-  visible={$Interact.trackerEditor.show}>
+<Modal2 id="tracker-editor" className="n-tracker-editor" visible={showModal}>
   <Panel className="h-full" on:close={methods.cancel}>
 
     <header slot="header" class="n-toolbar-grid">
@@ -400,26 +406,18 @@
         bind:tracker={data.tracker} />
     </FormGroup>
 
-    <!-- <FormGroup pad>
-      <ListItem
-        title="Emoji"
-        on:click={() => (showEmojiSelector = !showEmojiSelector)}>
-        <div slot="right">
-          {#if data.tracker.emoji}
-            <Avatar size={42} emoji={data.tracker.emoji} />
-          {:else}No Emoji{/if}
-        </div>
-      </ListItem>
-
-    </FormGroup> -->
-
     <!-- Tracker Type Selector -->
 
     <FormGroup pad>
-      <ListItem on:click={methods.selectType} className="tracker-type">
+      <ListItem
+        on:click={() => {
+          methods.selectType()
+        }}
+        className="tracker-type">
         {Lang.t('tracker.tracker-type', 'Tracker Type')}
         <div slot="right" class="flex">
-          <Text bold>{(getTypeDetails(data.tracker.type) || {}).label}</Text>
+          <Text bold>{(getTypeDetails(data.tracker?.type) || {}).label}</Text>
+
           <Icon
             name="chevronDown"
             className="fill-inverse-2 mr-3 ml-2"
@@ -529,10 +527,10 @@
           type="select"
           className="tracker-uom mb-3"
           bind:value={data.tracker.uom}>
-          {#each Object.keys(data.groupedUOMs) as groupKey (groupKey)}
+          {#each Object.keys(groupedUOM) as groupKey (groupKey)}
             {#if data.tracker.type !== 'timer' && groupKey !== 'Timer'}
               <option disabled>-- {groupKey}</option>
-              {#each data.groupedUOMs[groupKey] as uom (`${groupKey}-${uom.key}`)}
+              {#each groupedUOM[groupKey] as uom (`${groupKey}-${uom.key}`)}
                 <option
                   value={uom.key}
                   disabled={uom.key == 'time' && data.tracker.type != 'timer'}>
@@ -558,7 +556,7 @@
           color="clear"
           size="sm"
           className="mt-2 mb-3 advanced-toggler text-gray-600 dark:text-gray-200"
-          on:click={() => (forcedAdvanced = !forcedAdvanced)}>
+          on:click={() => (forceAdvancedView = !forceAdvancedView)}>
           {#if advanced}Hide Advanced Options{:else}Show Advanced Options{/if}
           <Icon
             name={advanced ? 'chevronUp' : 'chevronDown'}

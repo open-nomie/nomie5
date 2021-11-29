@@ -81,11 +81,12 @@
     background-position: center;
     overflow: hidden;
     letter-spacing: normal;
+    @apply rounded-xl;
     @apply text-gray-900 dark:text-gray-100;
   }
 
   .n-avatar.rounded {
-    border-radius: 32% !important;
+    @apply rounded-2xl;
     width: var(--avatar-size);
     height: var(--avatar-size);
   }

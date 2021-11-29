@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { editTracker } from '../tracker/editor/TrackerEditorStore'
   /**
    * Brace yourself - this is a massive file
    *
@@ -362,7 +363,8 @@
      */
     async trackerEditor() {
       try {
-        const tracker = await Interact.editTracker(undefined).catch((e) => {
+        console.log('Going to Edit this!')
+        const tracker = await editTracker().catch((e) => {
           throw e
         })
         BoardStore.addTracker(tracker)

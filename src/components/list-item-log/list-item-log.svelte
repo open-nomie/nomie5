@@ -179,6 +179,7 @@
           }
         }) as trackerElement}
           <NTrackerSmallBlock
+            compact
             className="bg-gray-100 dark:bg-gray-900"
             element={trackerElement}
             on:click={() => {

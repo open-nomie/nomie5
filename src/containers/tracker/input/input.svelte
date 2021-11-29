@@ -1,6 +1,6 @@
 <script lang="ts">
-  import IonIcon from './../../../components/icon/ion-icon.svelte'
-  import { wait } from './../../../utils/tick/tick.ts'
+  import IonIcon from '../../../components/icon/ion-icon.svelte'
+  import { wait } from '../../../utils/tick/tick'
 
   import StopSolid from 'ionicons/dist/svg/stop.svg?component'
   /**
@@ -11,8 +11,7 @@
 
   // svelte
   import { createEventDispatcher, onMount } from 'svelte'
-  import { slide } from 'svelte/transition'
-  import _ from 'lodash'
+
   // Components
   import NModal from '../../../components/modal/modal.svelte'
   import NIcon from '../../../components/icon/icon.svelte'
@@ -40,7 +39,6 @@
 
   // Props
   export let tracker = undefined // You can provide a tracker
-  export let show = undefined // If it should show or not
   export let value = undefined // If a valid is provided
   export let hideAdd = undefined // If the Add button should be hidden
   export let saveLabel = Lang.t('general.save', 'Save') // The label of the save Button
@@ -288,7 +286,7 @@
             <Button
               type="clear"
               size="lg"
-              className=" text-lg md:text-xl text-gray-900 dark:text-white"
+              className="px-1 text-lg md:text-xl text-gray-900 dark:text-white"
               on:click={() => {
                 methods.onCancel()
               }}>
@@ -351,7 +349,8 @@
                 type="clear"
                 size="lg"
                 title="Add this to the note without immediately saving."
-                className="text-lg md:text-xl text-gray-900 dark:text-white {tracker.started ? 'hidden' : ''}"
+                className="px-1 text-lg md:text-xl text-gray-900 dark:text-white
+                {tracker.started ? 'hidden' : ''}"
                 on:click={methods.onAdd}>
                 {#if !$Interact.trackerInput.allowSave}
                   {Lang.t('general.next', 'Next')}

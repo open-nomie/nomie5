@@ -95,7 +95,7 @@
     flex-shrink: 1;
     margin-bottom: 4pt;
     margin-top: 4pt;
-    @apply bg-white dark:bg-gray-800;
+    @apply bg-white dark:bg-black;
     border-radius: 6px;
     border: solid 1px var(--color-faded-1);
   }
@@ -106,7 +106,8 @@
     background-color: var(--color-grey-9);
   }
   .n-input-container.list-item {
-    @apply bg-white dark:bg-gray-900;
+    @apply bg-transparent;
+
     padding: 4px 12px;
     border-radius: 0;
     border: none;
@@ -367,7 +368,12 @@
           on:blur={blur} />
       {:else if type == 'select'}
         <div class="select-wrap">
-          <select bind:this={_elInput} {disabled} on:change={change} bind:value>
+          <select
+            {placeholder}
+            bind:this={_elInput}
+            {disabled}
+            on:change={change}
+            bind:value>
             <slot />
           </select>
           <!-- <NIcon

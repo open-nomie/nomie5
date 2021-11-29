@@ -24,6 +24,8 @@ import Logger from "../utils/log/log";
 import type { ITrackers } from "../modules/import/import";
 import NPaths from "../paths";
 import { Device } from "./device-store";
+import { editTracker } from "../containers/tracker/editor/TrackerEditorStore";
+import TrackerConfig from "../modules/tracker/tracker";
 
 const console = new Logger("🌟 TrackerStore 🌟");
 
@@ -258,7 +260,7 @@ const trackerStoreInit = () => {
           icon: "edit",
           divider: true,
           click() {
-            Interact.editTracker(tracker);
+            editTracker(tracker instanceof TrackerConfig ? tracker : new TrackerConfig(tracker));
             click();
           },
         },
@@ -388,7 +390,7 @@ const trackerStoreInit = () => {
             if (editConfirm) {
               Interact.dismissEditTracker();
               await tick(300);
-              Interact.editTracker(newTracker);
+              editTracker(newTracker);
             }
           } else {
             Interact.alert(Lang.t("general.error"), "Sorry, duplication failed");

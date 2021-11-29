@@ -101,16 +101,19 @@
   <div class="flex items-center px-2 py-1">
     <button
       style="background-color:{localTracker.color};"
-      class="p-1 rounded-md"
+      class="p-1 rounded-lg"
       on:click={() => {
         dispatch('selectEmoji')
       }}>
-      <Avatar size={50} className="" emoji={localTracker.emoji || '?'} />
+      <Avatar
+        size={50}
+        className="rounded-2xl"
+        emoji={localTracker.emoji || '?'} />
     </button>
-    <div>
+    <div class="relative">
       <NInput
         listItem
-        className="z-10 h-10"
+        className="z-10"
         type="text"
         name="label"
         solo
@@ -123,7 +126,7 @@
       {#if localTracker.tag}
         <button
           on:click={editTag}
-          class="relative z-20 flex items-center justify-start w-full pb-2 pl-5 -mt-3 space-x-2 text-xs text-primary-500">
+          class="absolute top-0 right-0 z-20 flex items-center justify-start w-auto h-6 px-2 py-1 space-x-2 text-xs font-semibold text-black bg-gray-100 bg-opacity-50 rounded-lg dark:bg-black top-1 dark:text-white dark:bg-opacity-50">
           <span>#{localTracker.tag}</span>
           {#if isDirty}
             <Icon name="edit" size={12} />
