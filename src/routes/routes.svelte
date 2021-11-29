@@ -2,6 +2,7 @@
   import { Router, Route } from 'svelte-routing'
   import FileBrowser from './file-browser.svelte'
   import DynamicPage from '../DynamicPage.svelte'
+  import Messages from './Messages.svelte'
 </script>
 
 <Router>
@@ -15,7 +16,8 @@
     <DynamicPage route="tests/tests" />
   </Route>
   <Route path="/messages">
-    <DynamicPage route="messages" />
+    <!-- <DynamicPage route="messages" /> -->
+    <Messages />
   </Route>
   <Route path="/lang">
     <DynamicPage route="tests/language" />

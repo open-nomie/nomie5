@@ -13,12 +13,11 @@
     </h1>
 
     <Button
-      className="mb-3"
+      className="mb-3 {$UserStore.meta.firstDayOfWeek === '1' ? 'bg-primary-500' : 'text-gray-500'}"
       block
       type="clear"
       size="lg"
       delay={20}
-      color={$UserStore.meta.firstDayOfWeek === '1' ? 'primary' : ''}
       on:click={() => {
         $UserStore.meta.firstDayOfWeek = '1'
         UserStore.saveMeta()
@@ -26,12 +25,11 @@
       {`${Lang.t('settings.sunday', 'Sunday')}`}
     </Button>
     <Button
-      className="mb-3"
+      className="mb-3 {$UserStore.meta.firstDayOfWeek === '2' ? 'bg-primary-500' : 'text-gray-500'}"
       block
       type="clear"
       size="lg"
       delay={20}
-      color={$UserStore.meta.firstDayOfWeek === '2' ? 'primary' : ''}
       on:click={() => {
         $UserStore.meta.firstDayOfWeek = '2'
         UserStore.saveMeta()

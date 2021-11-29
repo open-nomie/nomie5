@@ -43,8 +43,8 @@ const types: TrackerTypesConfig = {
   },
   note: {
     emoji: "🎳",
-    label: Lang.t("tracker.type.note", "Combine Trackers"),
-    description: Lang.t("tracker.type.note_description", "Track multiple trackers in a series"),
+    label: Lang.t("tracker.type.note", "Combo"),
+    description: Lang.t("tracker.type.note_description", "Track multiple trackers at a time"),
   },
 };
 

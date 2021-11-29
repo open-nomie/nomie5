@@ -26,11 +26,10 @@
       free up space.
     </p>
     <Button
-      className="mb-2"
+      className="mb-2 bg-primary-500 text-white"
       block
       size="lg"
       delay={20}
-      color={$UserStore.storageType == 'local' ? 'primary' : 'light'}
       on:click={() => {
         UserStore.setStorage('local')
         window.location.href = '/'

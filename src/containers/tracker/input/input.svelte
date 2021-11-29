@@ -1,4 +1,5 @@
 <script lang="ts">
+  import NoteCombo from './note-combo.svelte'
   import IonIcon from '../../../components/icon/ion-icon.svelte'
   import { wait } from '../../../utils/tick/tick'
 
@@ -231,6 +232,8 @@
               on:change={(value) => {
                 data.value = value.detail
               }} />
+          {:else if tracker.type === 'note'}
+            <NoteCombo {tracker} />
           {:else if tracker.type === 'picker'}
             <PickerInput
               {tracker}

@@ -47,6 +47,7 @@
   @apply md:text-base;
   @apply leading-tight;
   @apply line-clamp-2;
+  @apply text-black dark:text-white;
 }
 .shortcut-button .value {
   @apply font-bold;
@@ -56,6 +57,7 @@
 .shortcut-button .subtitle {
   @apply text-xs md:text-sm;
   @apply leading-none;
+  @apply opacity-70;
 }
 
 .shortcut-button .emoji {

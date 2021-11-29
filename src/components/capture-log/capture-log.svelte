@@ -484,7 +484,7 @@
             {#if $LedgerStore.saving}
               <Button
                 className="save-button action-button mr-2"
-                shape="circle"
+                shape="round"
                 color="success"
                 size="sm">
                 <NSpinner size={20} />
@@ -496,11 +496,11 @@
                 size="sm"
                 on:click={methods.logSave}>
 
-                <span class="md:text-lg">Save</span>
+                <span class="md:text-lg dark:text-black">Save</span>
                 <IonIcon
                   icon={PaperPlane}
                   size={20}
-                  className="ml-1 text-white" />
+                  className="ml-1 text-white dark:text-black" />
               </Button>
             {/if}
           </div>

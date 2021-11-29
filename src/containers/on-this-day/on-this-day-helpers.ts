@@ -64,9 +64,8 @@ export function hasNote(str): boolean {
   });
   if (generic.length === 0) {
     return false;
-  } else {
-    return math.percentage(parsed.length, generic.length) > 70;
   }
+  return true;
 }
 
 export function getNotes(day): Array<NLog> {

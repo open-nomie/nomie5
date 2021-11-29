@@ -17,12 +17,11 @@
     </h1>
 
     <Button
-      className="mb-3"
+      className="mb-3 {!$UserStore.meta.is24Hour ? 'bg-primary-500' : 'text-gray-500'}"
       block
       size="lg"
       type="clear"
       delay={20}
-      color={!$UserStore.meta.is24Hour ? 'primary' : ''}
       on:click={() => {
         $UserStore.meta.is24Hour = false
         UserStore.saveMeta()
@@ -30,12 +29,11 @@
       {dayjs().format('h:mm a')}
     </Button>
     <Button
-      className="mb-3 "
+      className="mb-3 {$UserStore.meta.is24Hour ? 'bg-primary-500' : 'text-gray-500'}"
       type="clear"
       block
       size="lg"
       delay={20}
-      color={$UserStore.meta.is24Hour ? 'primary' : ''}
       on:click={() => {
         $UserStore.meta.is24Hour = true
         UserStore.saveMeta()

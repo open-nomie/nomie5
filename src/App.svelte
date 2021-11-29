@@ -50,6 +50,7 @@
   import DynamicPage from './DynamicPage.svelte'
   import Backdrop from './components/backdrop/backdrop.svelte'
   import PersonModal from './containers/people/person-modal.svelte'
+  import Confetti from './components/confetti/confetti.svelte'
 
   // Set a better console
   const console = new Logger('APP')
@@ -259,7 +260,7 @@
 {/if}
 
 {#if $Interact.confetti.show}
-  <DynamicPage component="confetti/confetti" />
+  <Confetti />
 {/if}
 
 <div id="photo-holder" class="hidden" style="display:none">

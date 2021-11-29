@@ -165,7 +165,6 @@
       <div class="grid w-full grid-cols-2 gap-2 px-4 pb-4 lg:grid-cols-4">
         {#each displayLog.people as person}
           <NTrackerSmallBlock
-            compact
             element={person}
             on:click={() => {
               Interact.elementOptions(person)
@@ -179,7 +178,6 @@
           }
         }) as trackerElement}
           <NTrackerSmallBlock
-            compact
             className="bg-gray-100 dark:bg-gray-900"
             element={trackerElement}
             on:click={() => {

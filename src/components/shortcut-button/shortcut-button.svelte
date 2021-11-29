@@ -99,7 +99,7 @@
       <div class="title">{title}</div>
     {/if}
     {#if subtitle}
-      <div class="truncate subtitle" style="opacity:0.6;">{subtitle}</div>
+      <div class="truncate subtitle">{subtitle}</div>
     {/if}
     <slot name="subtitle" />
   </div>

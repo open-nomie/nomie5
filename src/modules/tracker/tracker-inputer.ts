@@ -125,9 +125,9 @@ export default class TrackerInputer {
         content = `${content}(${this.tracker.default})`;
       }
       note.push(content);
-    } else if (this.tracker.type === "note") {
-      input = await this.getNoteTrackerInputAsString(this.tracker);
-      note.push(input);
+      // } else if (this.tracker.type === "note") {
+      //   input = await this.getNoteTrackerInputAsString(this.tracker);
+      //   note.push(input);
     } else {
       input = await this.getTrackerInputAsString(this.tracker);
       let noteContent = input.raw;

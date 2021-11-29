@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { wait } from './../../utils/tick/tick.ts'
   import { AppStore } from './../../store/app-store'
   import Icon from './../../components/icon/icon.svelte'
   import Panel from '@/components/panel/panel.svelte'
@@ -111,6 +112,7 @@
             `Import ${type}?`,
             'This action cannot be undone',
           )
+          await wait(200)
           if (proceed !== true) {
             importing[type].running = false
             importing[type].done = false
@@ -213,6 +215,7 @@
         'Are you sure? Importing cannot be undone.',
       )
       if (confirmed === true) {
+        await wait(300)
         importingAll = true
         importing.all.running = true
         let statusMonitor = []

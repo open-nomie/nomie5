@@ -1,6 +1,6 @@
 export default {
-  "name": "Nomie 5.7",
-  "short_name": "Nomie 5.7",
+  "name": "Nomie 6 dev",
+  "short_name": "Nomie 6",
   "start_url": ".",
   "description": "Private Mood & Life Tracker",
   "orientation": "portrait",
