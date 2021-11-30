@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte'
   import AppTabs from './tabs.svelte'
   import tick from '../../utils/tick/tick'
@@ -8,7 +8,7 @@
 
   let padBottomDom
   let padTopDom
-  let contentDom
+  // let contentDom
   let headerDom
   let footerDom
 
@@ -106,7 +106,7 @@
   {/if}
   <slot name="header" />
 </div>
-<div class="content-slot" bind:this={contentDom}>
+<div class="content-slot">
   <!-- Dynamically add padding to account for headers and footers -->
   <div bind:this={padTopDom} class="pad-top">&nbsp;</div>
   <!-- Insert Slotted Content -->

@@ -3,13 +3,6 @@
 
   export let hit: Array<number> = undefined
 
-  let lastHit: Hit
-  let hideTimeout
-  let show = false
-
-  let x
-  let y
-
   let hits: Array<Hit> = []
 
   $: if (hit && hit.length == 2) {

@@ -11,8 +11,14 @@
     "types": ["jest", "svelte", "vite/client"],
     "esModuleInterop": true,
     "importsNotUsedAsValues": "error",
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "allowUnreachableCode": false,
     "allowJs": true,
-    "checkJs": true
+    "checkJs": true,
+    "paths": {
+      "@": ["src"]
+    }
   },
 
   "extends": "@tsconfig/svelte/tsconfig.json",

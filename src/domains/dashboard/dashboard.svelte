@@ -1,26 +1,25 @@
 <script lang="ts">
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import Panel from '../../components/panel/panel.svelte'
-  import Container from '../../components/container/container.svelte'
-  import Modal2 from '../../components/modal/modal2.svelte'
+  import ToolbarGrid from '@/components/toolbar/toolbar-grid.svelte'
+  import Panel from '@/components/panel/panel.svelte'
+  import Container from '@/components/container/container.svelte'
+  import Modal2 from '@/components/modal/modal2.svelte'
 
   import { onMount, onDestroy } from 'svelte'
 
   import dayjs from 'dayjs'
-  import type { Dayjs } from 'dayjs'
 
   import WidgetEle from './widget.svelte'
   import WidgetEditor from './widget-editor.svelte'
   // Components
-  import Button from '../../components/button/button.svelte'
-  import Icon from '../../components/icon/icon.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
+  import Button from '@/components/button/button.svelte'
+  import Icon from '@/components/icon/icon.svelte'
+  import ListItem from '@/components/list-item/list-item.svelte'
 
-  import NText from '../../components/text/text.svelte'
-  import SortableList from '../../components/sortable-list/sortable-list.svelte'
+  import NText from '@/components/text/text.svelte'
+  import SortableList from '@/components/sortable-list/sortable-list.svelte'
 
-  import Text from '../../components/text/text.svelte'
-  import TrackerSmallBlock from '../../components/tracker-small-block/tracker-small-block.svelte'
+  import Text from '@/components/text/text.svelte'
+  import TrackerSmallBlock from '@/components/tracker-small-block/tracker-small-block.svelte'
   // modules
   import StatsProcessor from '../../domains/stats/statsV5'
   import { Widget } from '../../modules/dashboard/widget'
@@ -42,21 +41,21 @@
   import { TrackerStore } from '../../store/tracker-store'
   import { LastUsed } from '../../store/last-used'
   import type Person from '../../modules/person/person'
-  import HScroller from '../../components/h-scroller/h-scroller.svelte'
-  import Input from '../../components/input/input.svelte'
+  import HScroller from '@/components/h-scroller/h-scroller.svelte'
+  import Input from '@/components/input/input.svelte'
   import { Lang } from '../../store/lang'
-  import Spinner from '../../components/spinner/spinner.svelte'
+  import Spinner from '@/components/spinner/spinner.svelte'
   import { widgetTypes } from './widgetTypes'
   import { truncateText } from '../../utils/text/text'
   import { UserStore } from '../../store/user-store'
   import tick from '../../utils/tick/tick'
-  import ButtonGroup from '../../components/button-group/button-group.svelte'
+  // import ButtonGroup from '@/components/button-group/button-group.svelte'
   import nid from '../../modules/nid/nid'
-  import Toolbar from '../../components/toolbar/toolbar.svelte'
+  import Toolbar from '@/components/toolbar/toolbar.svelte'
   import { SearchStore } from '../../store/search-store'
-  import Empty from '../../components/empty/empty.svelte'
-  import LedgerTools from '../ledger/ledger-tools'
-  import Swipeable from '../../components/swipeable/swipeable.svelte'
+  import Empty from '@/components/empty/empty.svelte'
+  // import LedgerTools from '../ledger/ledger-tools'
+  import Swipeable from '@/components/swipeable/swipeable.svelte'
   // import { getDashboardStartEndDates } from "./dashboard-helpers";
 
   let trackers: any // holder of user Trackers - loaded from subscribe
@@ -68,14 +67,14 @@
   let ready = false // Is the component Ready
   let editingWidget: Widget // Editing block - if defined
   let editMode = false // Toggle Edit mode
-  let activePage = 0 // activePage - which page we're on in the array of dasboards
+  // let activePage = 0 // activePage - which page we're on in the array of dasboards
   // let lastActivePage; // last Active for managing reactiveness
   let activeDashboard: Dashboard = {
     id: 'fake',
     label: 'Loading...',
     widgets: [],
   } // Set a default dasboard
-  let stopRefresh
+  // let stopRefresh
   let loading = false
   let firstDayOfWeek: '1' | '2' = '1'
   let dtFormat
@@ -298,8 +297,8 @@
           dboard.widgets[i] instanceof Widget
             ? dboard.widgets[i]
             : new Widget(dboard.widgets[i])
-        let start = widget.getStartDate(firstDayOfWeek)
-        let end = widget.getEndDate(firstDayOfWeek)
+        // let start = widget.getStartDate(firstDayOfWeek)
+        // let end = widget.getEndDate(firstDayOfWeek)
 
         widget.dateFormat = (dtFormat || { date: 'MMM Do YYYY' }).date
         widget.timeFormat = (dtFormat || { time: 'h:mma' }).time
@@ -391,15 +390,15 @@
   /**
    * Rename a Dashboard
    */
-  async function rename() {
-    let newName = await Interact.prompt('Rename Dashboard', null, {
-      value: activeDashboard.label,
-    })
-    if (newName) {
-      $DashboardStore.dashboards[$DashboardStore.activeIndex].label = newName
-      DashboardStore.save()
-    }
-  }
+  // async function rename() {
+  //   let newName = await Interact.prompt('Rename Dashboard', null, {
+  //     value: activeDashboard.label,
+  //   })
+  //   if (newName) {
+  //     $DashboardStore.dashboards[$DashboardStore.activeIndex].label = newName
+  //     DashboardStore.save()
+  //   }
+  // }
 
   /**
    * On Mount / On Destroy
