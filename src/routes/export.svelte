@@ -13,13 +13,13 @@
   import NBackButton from '../components/back-button/back-button.svelte'
   import NIcon from '../components/icon/icon.svelte'
   // containers
-  import NLayout from '../containers/layout/layout.svelte'
+  import NLayout from '../domains/layout/layout.svelte'
   // config
   import { TrackerStore } from '../store/tracker-store'
   import { Interact } from '../store/interact'
   import { Lang } from '../store/lang'
   import dayjs from 'dayjs'
-  import Csvr from '../containers/csvr/csvr.svelte'
+  import Csvr from '../domains/csvr/csvr.svelte'
   import Text from '../components/text/text.svelte'
   import Spacer from '../components/spacer/spacer.svelte'
   import List from '../components/list/list.svelte'

@@ -39,14 +39,14 @@ import type TrackerConfig from "../modules/tracker/tracker";
 import type { ITrackers } from "../modules/import/import";
 
 // Stores
-import { LedgerStore } from "../containers/ledger/LedgerStore";
+import { LedgerStore } from "../domains/ledger/LedgerStore";
 import { TrackerStore } from "./tracker-store";
 import { Lang } from "./lang";
 import { SearchStore } from "./search-store";
 import { ActiveLogStore } from "./active-log";
 import type NLog from "../modules/nomie-log/nomie-log";
 import type { ITracker } from "../modules/tracker/tracker";
-import { openStats } from "../containers/stats/StatsStore";
+import { openStats } from "../domains/stats/StatsStore";
 
 const console = new Logger("✋ Interact");
 

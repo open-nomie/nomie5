@@ -36,7 +36,7 @@
   // Stores
   import { Interact } from '../../store/interact'
   import { TrackerStore } from '../../store/tracker-store'
-  import { LedgerStore } from '../../containers/ledger/LedgerStore'
+  import { LedgerStore } from '../../domains/ledger/LedgerStore'
   import { ActiveLogStore } from '../../store/active-log'
   import { UserStore } from '../../store/user-store'
   import { Lang } from '../../store/lang'
@@ -437,7 +437,8 @@
             </button>
           </div>
           <div
-            class="flex px-2 py-1 space-x-2 border-t border-gray-500 border-opacity-25 bottom-section">
+            class="flex px-2 py-1 space-x-2 border-t border-gray-500
+            border-opacity-25 bottom-section">
             <!-- <Button
               ariaLabel="Location and Date settings"
               size="sm"

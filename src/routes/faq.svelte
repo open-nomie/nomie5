@@ -9,9 +9,9 @@
   import NItem from '../components/list-item/list-item.svelte'
   import NBackButton from '../components/back-button/back-button.svelte'
   // containers
-  import NPage from '../containers/layout/page.svelte'
+  import NPage from '../domains/layout/page.svelte'
 
-  import NLayout from '../containers/layout/layout.svelte'
+  import NLayout from '../domains/layout/layout.svelte'
 
   // config
   import faq from '../config/faq'

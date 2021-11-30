@@ -6,7 +6,7 @@
   import NIcon from '../icon/icon.svelte'
   import nid from '../../modules/nid/nid'
   import { Interact } from '../../store/interact'
-  import ignoreArrayZeros from '../../modules/stats/ignore-zeros'
+  import ignoreArrayZeros from '../../domains/stats/ignore-zeros'
 
   export let labels = []
   export let height = 200

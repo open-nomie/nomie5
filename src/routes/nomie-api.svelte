@@ -1,51 +1,51 @@
 <script lang="ts">
-  import ApiArchives from "./../containers/api/api-archive.svelte";
-  import ApiItems from "./../containers/api/api-items.svelte";
-  import ApiSettings from "./../containers/api/api-settings.svelte";
+  import ApiArchives from './../domains/api/api-archive.svelte'
+  import ApiItems from './../domains/api/api-items.svelte'
+  import ApiSettings from './../domains/api/api-settings.svelte'
 
-  import { onMount } from "svelte";
-  import ButtonGroup from "../components/button-group/button-group.svelte";
-  import Button from "../components/button/button.svelte";
-  import Text from "../components/text/text.svelte";
-  import ToolbarGrid from "../components/toolbar/toolbar-grid.svelte";
-  import Toolbar from "../components/toolbar/toolbar.svelte";
-  import { ApiStore } from "../containers/api/api-store";
-  import Layout from "../containers/layout/layout.svelte";
-  import { Lang } from "../store/lang";
-  import Icon from "../components/icon/icon.svelte";
-  import Api from "../containers/api/api.svelte";
+  import { onMount } from 'svelte'
+  import ButtonGroup from '../components/button-group/button-group.svelte'
+  import Button from '../components/button/button.svelte'
+  import Text from '../components/text/text.svelte'
+  import ToolbarGrid from '../components/toolbar/toolbar-grid.svelte'
+  import Toolbar from '../components/toolbar/toolbar.svelte'
+  import { ApiStore } from '../domains/api/api-store'
+  import Layout from '../domains/layout/layout.svelte'
+  import { Lang } from '../store/lang'
+  import Icon from '../components/icon/icon.svelte'
+  import Api from '../domains/api/api.svelte'
 
-  export const location: any = undefined;
+  export const location: any = undefined
 
-  type ViewType = "settings" | "items" | "archives";
-  let view: string | ViewType = "settings";
-  let title: string = "";
+  type ViewType = 'settings' | 'items' | 'archives'
+  let view: string | ViewType = 'settings'
+  let title: string = ''
 
   $: if (view) {
     switch (view) {
-      case "settings":
-        title = "API Settings";
-        break;
-      case "items":
-        title = "Item Queue";
-        break;
-      case "archives":
-        title = "API Archives";
-        break;
+      case 'settings':
+        title = 'API Settings'
+        break
+      case 'items':
+        title = 'Item Queue'
+        break
+      case 'archives':
+        title = 'API Archives'
+        break
     }
   }
 
   function setView(_view: ViewType) {
-    view = _view;
-    localStorage.setItem("api-view", view);
+    view = _view
+    localStorage.setItem('api-view', view)
     // UserStore.hyperStorage.setItem('api-view', view);
   }
 
   async function main() {
-    view = localStorage.getItem("api-view") || "settings";
+    view = localStorage.getItem('api-view') || 'settings'
   }
 
-  onMount(main);
+  onMount(main)
 </script>
 
 <Layout pageTitle={title}>
@@ -66,11 +66,11 @@
           size="sm"
           className="max-w-screen-sm mx-auto"
           buttons={[{ active: view == 'settings', label: Lang.t('general.settings', 'Settings'), click() {
-                setView('settings');
+                setView('settings')
               } }, { active: view == 'items', label: Lang.t('general.new', `New (${$ApiStore.items.length})`), click() {
-                setView('items');
+                setView('items')
               } }, { active: view == 'archives', label: Lang.t('general.archives', 'Archives'), click() {
-                setView('archives');
+                setView('archives')
               } }]} />
       </Toolbar>
     {/if}

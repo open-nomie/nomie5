@@ -3,9 +3,9 @@ import type { IBackupItems } from "../export/export";
 
 import { ContextStore } from "../../store/context-store";
 import { PeopleStore } from "../../store/people-store";
-import { LedgerStore } from "../../containers/ledger/LedgerStore";
+import { LedgerStore } from "../../domains/ledger/LedgerStore";
 import { TrackerStore } from "../../store/tracker-store";
-import { BoardStore } from "../../store/boards";
+import { BoardStore } from "../../store/BoardStore";
 
 import { Locations } from "../../store/locations";
 

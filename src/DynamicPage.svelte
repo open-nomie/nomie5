@@ -17,7 +17,7 @@
       } else if (component) {
         dynamicPage = (await import(`./components/${component}.svelte`)).default
       } else if (container) {
-        dynamicPage = (await import(`./containers/${container}.svelte`)).default
+        dynamicPage = (await import(`./domains/${container}.svelte`)).default
       } else {
         throw new Error('unknown path')
       }

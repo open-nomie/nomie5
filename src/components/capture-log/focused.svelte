@@ -10,7 +10,7 @@
   import { Lang } from '../../store/lang'
   import DatePicker from '../date-picker/date-picker.svelte'
   import PositivityMenu from '../positivity-selector/positivity-menu.svelte'
-  import { LedgerStore } from '../../containers/ledger/LedgerStore'
+  import { LedgerStore } from '../../domains/ledger/LedgerStore'
   import Row from '../row/row.svelte'
   import Spacer from '../spacer/spacer.svelte'
   import dayjs from 'dayjs'
@@ -149,7 +149,8 @@
       use:autofocus
       placeholder={Lang.t('general.whats-up', "What's up?")}
       bind:value={$ActiveLogStore.note}
-      class="w-full h-full p-4 leading-7 text-gray-800 bg-gray-200 dark:text-white dark:bg-gray-700"
+      class="w-full h-full p-4 leading-7 text-gray-800 bg-gray-200
+      dark:text-white dark:bg-gray-700"
       style="outline:none; " />
   </Panel>
 

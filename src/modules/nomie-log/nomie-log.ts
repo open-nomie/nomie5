@@ -5,7 +5,7 @@ import extractor from "../../utils/extract/extract";
 import ScoreNote from "../scoring/score-note";
 import dayjs, { Dayjs } from "dayjs";
 import math from "../../utils/math/math";
-import { hasNote } from "../../containers/on-this-day/on-this-day-helpers";
+import { hasNote } from "../../domains/on-this-day/on-this-day-helpers";
 
 // import timespace from "@mapbox/timespace";
 

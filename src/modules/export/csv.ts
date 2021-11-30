@@ -1,4 +1,4 @@
-import { LedgerStore } from "../../containers/ledger/LedgerStore";
+import { LedgerStore } from "../../domains/ledger/LedgerStore";
 import Tracker from "../tracker/tracker";
 import dayjs from "dayjs";
 

@@ -18,7 +18,7 @@ import Storage from "../modules/storage/storage";
 // Get Config
 import config from "../config/appConfig";
 
-import { LedgerStore } from "../containers/ledger/LedgerStore";
+import { LedgerStore } from "../domains/ledger/LedgerStore";
 import { Interact } from "./interact";
 import { Lang } from "./lang";
 

@@ -1,5 +1,5 @@
 <script>
-  import { openStats } from './../containers/stats/StatsStore'
+  import { openStats } from './../domains/stats/StatsStore'
   import Container from './../components/container/container.svelte'
   import { onMount } from 'svelte'
   import NItem from '../components/list-item/list-item.svelte'
@@ -7,13 +7,13 @@
   import Text from '../components/text/text.svelte'
   import NIcon from '../components/icon/icon.svelte'
   import Button from '../components/button/button.svelte'
-  import NLayout from '../containers/layout/layout.svelte'
+  import NLayout from '../domains/layout/layout.svelte'
   import ShortcutUserButton from '../components/shortcut-button/shortcut-user-button.svelte'
 
   import { Lang } from '../store/lang'
   import { PeopleStore } from '../store/people-store'
   import { Interact } from '../store/interact'
-  import { LedgerStore } from '../containers/ledger/LedgerStore'
+  import { LedgerStore } from '../domains/ledger/LedgerStore'
   import { SearchStore } from '../store/search-store'
 
   import dayjs from 'dayjs'

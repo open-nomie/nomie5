@@ -24,7 +24,7 @@
 
   // Containers
 
-  import NLayout from '../containers/layout/layout.svelte'
+  import NLayout from '../domains/layout/layout.svelte'
   // Utils
   import dayjs from 'dayjs'
   import tick from '../utils/tick/tick'
@@ -32,7 +32,7 @@
   // Stores
   import { UserStore } from '../store/user-store'
   import { Interact } from '../store/interact'
-  import { LedgerStore } from '../containers/ledger/LedgerStore'
+  import { LedgerStore } from '../domains/ledger/LedgerStore'
   import { Lang } from '../store/lang'
 
   import { Device } from '../store/device-store'
@@ -47,9 +47,9 @@
   import { ActiveLogStore } from '../store/active-log'
   import ButtonGroup from '../components/button-group/button-group.svelte'
   import Toolbar from '../components/toolbar/toolbar.svelte'
-  import type { OTDViewOption } from '../containers/on-this-day/on-this-day-helpers'
-  import { OTDViews } from '../containers/on-this-day/on-this-day-helpers'
-  import OnThisDayViews from '../containers/on-this-day/on-this-day-views.svelte'
+  import type { OTDViewOption } from '../domains/on-this-day/on-this-day-helpers'
+  import { OTDViews } from '../domains/on-this-day/on-this-day-helpers'
+  import OnThisDayViews from '../domains/on-this-day/on-this-day-views.svelte'
 
   import { ChevronRight } from 'svelte-hero-icons'
 
@@ -422,7 +422,8 @@
               <div class="py-3 text-center memories-log-header">
                 <button
                   aria-label="View logs from {dayjs(log.end).format('ddd MM YYYY')}"
-                  class="flex items-center justify-center w-full py-2 font-medium text-black bg-primary-500"
+                  class="flex items-center justify-center w-full py-2
+                  font-medium text-black bg-primary-500"
                   on:click={() => {
                     methods.goto(dayjs(log.end))
                   }}>

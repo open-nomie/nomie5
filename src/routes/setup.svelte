@@ -1,5 +1,5 @@
 <script>
-  import SetupContainer from "../containers/setup/setup.svelte";
+  import SetupContainer from '../domains/setup/setup.svelte'
 </script>
 
 <SetupContainer />

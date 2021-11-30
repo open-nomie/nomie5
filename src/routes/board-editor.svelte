@@ -1,41 +1,41 @@
 <script>
   //Vendors
-  import { navigate, Router, Route } from "svelte-routing";
-  import { tap } from "@sveltejs/gestures";
+  import { navigate, Router, Route } from 'svelte-routing'
+  import { tap } from '@sveltejs/gestures'
 
-  import { onMount, onDestroy } from "svelte";
+  import { onMount, onDestroy } from 'svelte'
 
   // Utils
-  import Logger from "../utils/log/log";
-  import arrayUtils from "../utils/array/array_utils";
-  import tick from "../utils/tick/tick";
+  import Logger from '../utils/log/log'
+  import arrayUtils from '../utils/array/array_utils'
+  import tick from '../utils/tick/tick'
   // Modules
-  import Tracker from "../modules/tracker/tracker";
+  import Tracker from '../modules/tracker/tracker'
   // Components
-  import NIcon from "../components/icon/icon.svelte";
-  import NText from "../components/text/text.svelte";
-  import NInput from "../components/input/input.svelte";
-  import NItem from "../components/list-item/list-item.svelte";
-  import NBackButton from "../components/back-button/back-button.svelte";
+  import NIcon from '../components/icon/icon.svelte'
+  import NText from '../components/text/text.svelte'
+  import NInput from '../components/input/input.svelte'
+  import NItem from '../components/list-item/list-item.svelte'
+  import NBackButton from '../components/back-button/back-button.svelte'
 
-  import NSortableList from "../components/sortable-list/sortable-list.svelte";
+  import NSortableList from '../components/sortable-list/sortable-list.svelte'
 
   // containers
-  import NPage from "../containers/layout/page.svelte";
+  import NPage from '../domains/layout/page.svelte'
 
   //store
-  import { BoardStore } from "../store/boards";
-  import { UserStore } from "../store/user-store";
-  import { TrackerStore } from "../store/tracker-store";
-  import { Interact } from "../store/interact";
-  import { Lang } from "../store/lang";
-  import Button from "../components/button/button.svelte";
-  import Avatar from "../components/avatar/avatar.svelte";
-  import ToolbarGrid from "../components/toolbar/toolbar-grid.svelte";
-  import List from "../components/list/list.svelte";
+  import { BoardStore } from '../store/BoardStore'
+  import { UserStore } from '../store/user-store'
+  import { TrackerStore } from '../store/tracker-store'
+  import { Interact } from '../store/interact'
+  import { Lang } from '../store/lang'
+  import Button from '../components/button/button.svelte'
+  import Avatar from '../components/avatar/avatar.svelte'
+  import ToolbarGrid from '../components/toolbar/toolbar-grid.svelte'
+  import List from '../components/list/list.svelte'
 
-  const console = new Logger("🎲 Board Editor");
-  let trackers = [];
+  const console = new Logger('🎲 Board Editor')
+  let trackers = []
 
   const data = {
     board: null,
@@ -45,164 +45,164 @@
     droppedTag: null,
     hoverTag: null,
     refreshing: false,
-    notice: "Notice",
+    notice: 'Notice',
     lastDraggingTag: null,
     draggingTracker: null,
-  };
+  }
 
-  let ready = false;
-  let path = window.location.href.split("/");
-  let id = path[path.length - 1];
+  let ready = false
+  let path = window.location.href.split('/')
+  let id = path[path.length - 1]
 
-  let showDeletes = true;
+  let showDeletes = true
 
   // Reactive Moments!
   $: if (
     // If board is active and not ready, and not ALL Board
     $BoardStore.activeBoard &&
     ready == false &&
-    $BoardStore.activeBoard.id != "all"
+    $BoardStore.activeBoard.id != 'all'
   ) {
-    ready = true;
-    data.updatedLabel = $BoardStore.activeBoard.label;
-    data.board = $BoardStore.activeBoard;
-  } else if (id == "all" && ready == false) {
+    ready = true
+    data.updatedLabel = $BoardStore.activeBoard.label
+    data.board = $BoardStore.activeBoard
+  } else if (id == 'all' && ready == false) {
     // If ALL board and not ready...
-    ready = true;
+    ready = true
     // Set up the all board
-    data.board = BoardStore.boardById("all") || {
-      id: "all",
+    data.board = BoardStore.boardById('all') || {
+      id: 'all',
       trackers: [],
-      label: "All",
-    };
+      label: 'All',
+    }
     // Set trackers to ALL trackers, sorted by the ALL board tracker list.
     data.board.trackers = Object.keys($TrackerStore.trackers).sort((a, b) => {
       if (data.board.trackers.indexOf(a) > data.board.trackers.indexOf(b)) {
-        return 1;
+        return 1
       } else if (
         data.board.trackers.indexOf(a) < data.board.trackers.indexOf(b)
       ) {
-        return -1;
+        return -1
       } else {
-        return a > b ? 1 : -1;
+        return a > b ? 1 : -1
       }
-    });
+    })
     trackers = data.board.trackers
       .map((tag) => $TrackerStore.trackers[tag])
-      .filter((t) => t);
+      .filter((t) => t)
   }
 
-  let titleChange = false;
+  let titleChange = false
   $: if (data.updatedLabel !== (data.board || {}).label) {
-    titleChange = true;
+    titleChange = true
   } else {
-    titleChange = false;
+    titleChange = false
   }
 
   const methods = {
     refresh() {
-      data.refreshing = true;
+      data.refreshing = true
       setInterval(() => {
-        data.refreshing = false;
-      }, 100);
+        data.refreshing = false
+      }, 100)
     },
     /**
      * Save the Current Active Board
      */
     async save(options = {}) {
-      options.silent = options.silent == false ? false : true;
+      options.silent = options.silent == false ? false : true
       try {
         // If the Active Board is set...
         if ($BoardStore.activeBoard) {
           BoardStore.update((state) => {
-            state.activeBoard.label = data.updatedLabel;
-            state.activeBoard.trackers = trackers.map((tracker) => tracker.tag);
-            return state;
-          });
+            state.activeBoard.label = data.updatedLabel
+            state.activeBoard.trackers = trackers.map((tracker) => tracker.tag)
+            return state
+          })
         }
         // Wait 10ms then Save
-        await tick(10);
-        let saved = await BoardStore.saveBoard(data.board);
+        await tick(10)
+        let saved = await BoardStore.saveBoard(data.board)
         // If not silent show toast
         if (!options.silent) {
-          Interact.toast(Lang.t("general.saved", "Saved"));
+          Interact.toast(Lang.t('general.saved', 'Saved'))
         }
       } catch (e) {
-        Interact.alert(Lang.t("general.error", "Error"), e.message);
+        Interact.alert(Lang.t('general.error', 'Error'), e.message)
       }
     },
     async deleteBoard() {
       let confirmed = await Interact.confirm(
-        "Delete " + data.board.label + " tab?",
-        "You can recreate it later, but it's not super easy."
-      );
+        'Delete ' + data.board.label + ' tab?',
+        "You can recreate it later, but it's not super easy.",
+      )
       if (confirmed === true) {
-        data.refreshing = true;
-        await BoardStore.deleteBoard(data.board.id);
-        navigate("/");
-        Interact.toast("Deleted");
+        data.refreshing = true
+        await BoardStore.deleteBoard(data.board.id)
+        navigate('/')
+        Interact.toast('Deleted')
       }
     },
     removeTracker(event, tracker) {
-      event.preventDefault();
-      event.stopPropagation();
+      event.preventDefault()
+      event.stopPropagation()
       Interact.confirm(
         `Remove ${tracker.label} from ${data.board.label}?`,
-        "You can always add it later."
+        'You can always add it later.',
       ).then((res) => {
         if (res === true) {
-          event.preventDefault();
+          event.preventDefault()
           BoardStore.removeTrackerFromBoard(tracker, data.board.id).then(() => {
-            data.refreshing = true;
+            data.refreshing = true
             setTimeout(() => {
-              data.refreshing = false;
-            }, 100);
-          });
+              data.refreshing = false
+            }, 100)
+          })
         } // accepted
-      });
+      })
     },
     trackerIndex(tracker) {
-      return trackers.indexOf(tracker);
+      return trackers.indexOf(tracker)
     },
-  };
-
-  async function trackersSorted(evt) {
-    trackers = evt.detail;
-    data.board.trackers = trackers.map((tracker) => tracker.tag);
-    await tick(100);
-    methods.save({ silent: true });
   }
 
-  let boardUnsub;
+  async function trackersSorted(evt) {
+    trackers = evt.detail
+    data.board.trackers = trackers.map((tracker) => tracker.tag)
+    await tick(100)
+    methods.save({ silent: true })
+  }
+
+  let boardUnsub
 
   onMount(() => {
     boardUnsub = BoardStore.subscribe((b) => {
       if (b.activeBoard) {
         trackers = b.activeBoard.trackers.map((tag) => {
-          return $TrackerStore.trackers[tag] || new Tracker({ tag: tag });
-        });
+          return $TrackerStore.trackers[tag] || new Tracker({ tag: tag })
+        })
       } else {
         // navigate("/");
       }
-    });
-  });
+    })
+  })
 
   onDestroy(() => {
-    boardUnsub();
-  });
+    boardUnsub()
+  })
 
   UserStore.onReady(() => {
     // methods.initialize();
-  });
+  })
 
   let list = [
-    { id: 1, name: "First Item" },
-    { id: 2, name: "Second Item" },
-    { id: 3, name: "Third Item" },
-  ];
+    { id: 1, name: 'First Item' },
+    { id: 2, name: 'Second Item' },
+    { id: 3, name: 'Third Item' },
+  ]
   const sortList = (ev) => {
-    trackers = ev.detail;
-  };
+    trackers = ev.detail
+  }
 </script>
 
 {#if data.board}
@@ -225,7 +225,7 @@
 
     <!-- /.container -->
 
-    <div class=" px-0">
+    <div class="px-0 ">
 
       <List className="pt-2">
         {#if data.board.id !== 'all'}
@@ -266,7 +266,7 @@
                   icon
                   className="mr-2"
                   on:click={(evt) => {
-                    methods.removeTracker(evt, item);
+                    methods.removeTracker(evt, item)
                   }}>
                   <NIcon name="remove" className="fill-red" />
                 </Button>

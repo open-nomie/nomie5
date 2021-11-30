@@ -1,16 +1,16 @@
 <script>
   import ProgressBar from '../../components/progress-bar/progress-bar.svelte'
   import dayjs from 'dayjs'
-  import { swipe } from '../../actions/swipe'
+
   import Avatar from '../../components/avatar/avatar.svelte'
 
   import ButtonGroup from '../../components/button-group/button-group.svelte'
   import Button from '../../components/button/button.svelte'
   import Calendar from '../../components/calendar/calendar.svelte'
-  import DateTime from '../../components/calendar/date-time'
+
   import Card from '../../components/card/card.svelte'
   import DatePicker from '../../components/date-picker/date-picker.svelte'
-  import DateTimeBar from '../../components/date-time-bar/date-time-bar.svelte'
+
   import Divider from '../../components/divider/divider.svelte'
   import Grid from '../../components/grid/grid.svelte'
   import Icon from '../../components/icon/icon.svelte'
@@ -25,12 +25,12 @@
   import Swipeable from '../../components/swipeable/swipeable.svelte'
   import Text from '../../components/text/text.svelte'
   import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import Toolbar from '../../components/toolbar/toolbar.svelte'
+
   import TrackerSmallBlock from '../../components/tracker-small-block/tracker-small-block.svelte'
   import Empty from '../../components/empty/empty.svelte'
-  import Layout from '../../containers/layout/layout.svelte'
-  import Streak from '../../containers/steak/streak.svelte'
-  import Person from '../../modules/person/person'
+  import Layout from '../../domains/layout/layout.svelte'
+  import Streak from '../../domains/stats/steak/streak.svelte'
+
   import TrackableElement from '../../modules/trackable-element/trackable-element'
   import { Device } from '../../store/device-store'
   import { Interact } from '../../store/interact'

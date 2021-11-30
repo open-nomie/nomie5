@@ -4,7 +4,7 @@
   import LogList from './log-list.svelte'
   import NItem from '../list-item/list-item.svelte'
 
-  import { LedgerStore } from '../../containers/ledger/LedgerStore'
+  import { LedgerStore } from '../../domains/ledger/LedgerStore'
   import tick from '../../utils/tick/tick'
   import { createEventDispatcher } from 'svelte'
 

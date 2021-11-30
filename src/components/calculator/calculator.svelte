@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dropRight } from './../../modules/nodash/nodash'
+  import { dropRight } from 'lodash'
   // Inspirated by https://codepen.io/ethanryan/details/MryqXv
 
   // Math will do the calculatng

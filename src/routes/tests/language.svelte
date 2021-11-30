@@ -13,7 +13,7 @@
   import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
 
   import Toolbar from '../../components/toolbar/toolbar.svelte'
-  import Layout from '../../containers/layout/layout.svelte'
+  import Layout from '../../domains/layout/layout.svelte'
 
   import BaseLang from '../../lang/base'
 

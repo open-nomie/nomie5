@@ -14,7 +14,7 @@ import Storage from "../modules/storage/storage";
 import NomieLog from "../modules/nomie-log/nomie-log";
 
 // Stores
-import { LedgerStore } from "../containers/ledger/LedgerStore";
+import { LedgerStore } from "../domains/ledger/LedgerStore";
 import { Interact } from "./interact";
 import { TrackerStore } from "./tracker-store";
 import { ActiveLogStore } from "./active-log";

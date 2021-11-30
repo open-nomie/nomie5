@@ -4,7 +4,7 @@ import config from "../config/appConfig";
 import NStorage from "../modules/storage/storage";
 import NLog from "../modules/nomie-log/nomie-log";
 
-import { LedgerStore } from "../containers/ledger/LedgerStore";
+import { LedgerStore } from "../domains/ledger/LedgerStore";
 import { Interact } from "./interact";
 import tick from "../utils/tick/tick";
 import { Lang } from "./lang";

@@ -5,7 +5,7 @@
   import Button from '../button/button.svelte'
   import ListItem from '../list-item/list-item.svelte'
   import Text from '../text/text.svelte'
-  import Interactions from '../../containers/interactions/interactions.svelte'
+  import Interactions from '../../domains/interactions/interactions.svelte'
   import { tap } from '@sveltejs/gestures'
 
   // Props

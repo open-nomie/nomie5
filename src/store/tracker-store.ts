@@ -15,7 +15,7 @@ import downloader from "../modules/download/download";
 // Stores
 import { Interact } from "./interact";
 import type { IPopMenuOptions } from "./interact";
-import { BoardStore } from "./boards";
+import { BoardStore } from "./BoardStore";
 import { TrackerLibrary } from "./tracker-library";
 import { Lang } from "./lang";
 
@@ -24,7 +24,7 @@ import Logger from "../utils/log/log";
 import type { ITrackers } from "../modules/import/import";
 import NPaths from "../paths";
 import { Device } from "./device-store";
-import { editTracker } from "../containers/tracker/editor/TrackerEditorStore";
+import { editTracker } from "../domains/tracker/editor/TrackerEditorStore";
 import TrackerConfig from "../modules/tracker/tracker";
 
 const console = new Logger("🌟 TrackerStore 🌟");

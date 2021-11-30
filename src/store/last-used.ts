@@ -7,7 +7,7 @@ import type NLog from "../modules/nomie-log/nomie-log";
 import dayjs from "dayjs";
 const lastUsedKey = "last-usage";
 
-import { LedgerStore } from "../containers/ledger/LedgerStore";
+import { LedgerStore } from "../domains/ledger/LedgerStore";
 import type { ITrackableElement } from "../modules/trackable-element/trackable-element";
 import { TrackerStore } from "./tracker-store";
 import { Interact } from "./interact";

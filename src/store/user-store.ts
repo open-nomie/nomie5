@@ -13,12 +13,12 @@ import Storage, { getStorageType, setStorage } from "../modules/storage/storage"
 
 // Stores
 import { TrackerStore } from "./tracker-store";
-import { BoardStore } from "./boards";
+import { BoardStore } from "./BoardStore";
 
 import config from "../config/appConfig";
 
 import { Interact } from "./interact";
-import { LedgerStore } from "../containers/ledger/LedgerStore";
+import { LedgerStore } from "../domains/ledger/LedgerStore";
 
 import { Lang } from "./lang";
 

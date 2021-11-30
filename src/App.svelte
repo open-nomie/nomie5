@@ -1,7 +1,7 @@
 <script lang="ts">
-  import StatsModal from './containers/stats/stats-modal.svelte'
-  import { MessageStore } from './containers/messages/MessageStore'
-  import { StatsStore } from './containers/stats/StatsStore'
+  import StatsModal from './domains/stats/stats-modal.svelte'
+  import { MessageStore } from './domains/messages/MessageStore'
+  import { StatsStore } from './domains/stats/StatsStore'
   import UpdateAvailable from './components/update-available/update-available.svelte'
   import { wait } from './utils/tick/tick'
   // Svelte
@@ -15,8 +15,8 @@
   import { gestures } from '@composi/gestures'
 
   // Containers
-  import Interactions from './containers/interactions/interactions.svelte'
-  import WhatsNewModal from './containers/whats-new/whats-new-modal.svelte'
+  import Interactions from './domains/interactions/interactions.svelte'
+  import WhatsNewModal from './domains/whats-new/whats-new-modal.svelte'
 
   // Utils
   import Logger from './utils/log/log'
@@ -42,15 +42,16 @@
   import { LastUsed } from './store/last-used'
   import { SearchStore } from './store/search-store'
   import tick from './utils/tick/tick'
-  import { LedgerStore } from './containers/ledger/LedgerStore'
+  import { LedgerStore } from './domains/ledger/LedgerStore'
   import ProgressBar from './components/progress-bar/progress-bar.svelte'
-  import { ApiStore } from './containers/api/api-store'
+  import { ApiStore } from './domains/api/api-store'
 
   import './style/main.css'
   import DynamicPage from './DynamicPage.svelte'
   import Backdrop from './components/backdrop/backdrop.svelte'
-  import PersonModal from './containers/people/person-modal.svelte'
+  import PersonModal from './domains/people/person-modal.svelte'
   import Confetti from './components/confetti/confetti.svelte'
+  import StreakModal from './domains/stats/steak/streak-modal.svelte'
 
   // Set a better console
   const console = new Logger('APP')
@@ -238,7 +239,7 @@
 <Interactions />
 
 {#if $Interact.streak.show}
-  <DynamicPage container="steak/streak-modal" />
+  <StreakModal />
 {/if}
 
 {#if $Interact.onThisDay}
