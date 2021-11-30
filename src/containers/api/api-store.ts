@@ -15,12 +15,12 @@ import Storage from "../../modules/storage/storage";
 // import { ToastStore } from "../../components/toast/toast.store";
 // import { AlertStore } from "../../components/alert/alert.store";
 // import { NoteStore } from "../notes/note.store";
-// import _ from "lodash";
+
 import NLog from "../../modules/nomie-log/nomie-log";
 import { Interact } from "../../store/interact";
 import tick from "../../utils/tick/tick";
 // import dayjs from "dayjs";
-import { LedgerStore } from "../../store/ledger";
+import { LedgerStore } from "../ledger/LedgerStore";
 import { Lang } from "../../store/lang";
 
 // import wait from "../../modules/utils/wait";

@@ -10,7 +10,7 @@
   import { Lang } from '../../store/lang'
   import DatePicker from '../date-picker/date-picker.svelte'
   import PositivityMenu from '../positivity-selector/positivity-menu.svelte'
-  import { LedgerStore } from '../../store/ledger'
+  import { LedgerStore } from '../../containers/ledger/LedgerStore'
   import Row from '../row/row.svelte'
   import Spacer from '../spacer/spacer.svelte'
   import dayjs from 'dayjs'
@@ -98,7 +98,7 @@
           icon
           className={$ActiveLogStore.lat ? 'tap-icon' : 'text-inverse-2'}
           on:click={editLocation}>
-          <Icon name="map" size="20" />
+          <Icon name="map" size={20} />
         </Button>
         <Spacer />
         <Button size="sm" icon className="tap-icon" on:click={previousDate}>

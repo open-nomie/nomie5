@@ -13,11 +13,11 @@
   import { Lang } from '../store/lang'
   import { PeopleStore } from '../store/people-store'
   import { Interact } from '../store/interact'
-  import { LedgerStore } from '../store/ledger'
+  import { LedgerStore } from '../containers/ledger/LedgerStore'
   import { SearchStore } from '../store/search-store'
 
   import dayjs from 'dayjs'
-  import Empty from '../containers/empty/empty.svelte'
+  import Empty from '../components/empty/empty.svelte'
   export const location = undefined
 
   let state = {
@@ -88,7 +88,7 @@
       <NToolbar className=" px-2">
         <Button
           color="none"
-          shape="circle"
+          shape="round"
           className="tap-icon"
           on:click={() => {
             SearchStore.view('people')
@@ -102,7 +102,7 @@
         </div>
         <Button
           color="none"
-          shape="circle"
+          shape="round"
           className="tap-icon"
           on:click={addPerson}>
           <NIcon name="userAdd" className="fill-primary-bright" />

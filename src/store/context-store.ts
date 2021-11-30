@@ -19,7 +19,7 @@ import dayjs from "dayjs";
 
 // Stores
 import { Interact } from "./interact";
-import { LedgerStore } from "./ledger";
+import { LedgerStore } from "../containers/ledger/LedgerStore";
 import array_utils from "../utils/array/array_utils";
 import type TrackableElement from "../modules/trackable-element/trackable-element";
 

@@ -8,7 +8,7 @@
   import { TrackerStore } from '../../store/tracker-store'
   import type { ITracker } from '../../modules/tracker/tracker'
   import SearchBar from '../search-bar/search-bar.svelte'
-  import Empty from '../../containers/empty/empty.svelte'
+  import Empty from '../empty/empty.svelte'
   import Icon from '../icon/icon.svelte'
   import { Lang } from '../../store/lang'
 

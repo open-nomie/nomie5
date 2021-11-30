@@ -2,7 +2,7 @@
 import Storage from "../storage/storage";
 // stores
 import config from "../../config/appConfig";
-import { LedgerStore } from "../../store/ledger";
+import { LedgerStore } from "../../containers/ledger/LedgerStore";
 import { Interact } from "../../store/interact";
 import { PeopleStore } from "../../store/people-store";
 import { Locations } from "../../store/locations";

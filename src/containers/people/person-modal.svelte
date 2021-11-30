@@ -21,12 +21,9 @@
   import tick from '../../utils/tick/tick'
   import Person from '../../modules/person/person'
 
-  // Vendors
-  import html2canvas from 'html2canvas'
-  import domtoimage from 'dom-to-image-chrome-fix'
   import dayjs from 'dayjs'
 
-  import { LedgerStore } from '../../store/ledger'
+  import { LedgerStore } from '../ledger/LedgerStore'
   import { Interact } from '../../store/interact'
   import { PeopleStore } from '../../store/people-store'
   import Button from '../../components/button/button.svelte'

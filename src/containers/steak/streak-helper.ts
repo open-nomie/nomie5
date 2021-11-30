@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import type NLog from "../../modules/nomie-log/nomie-log";
 import type TrackableElement from "../../modules/trackable-element/trackable-element";
 import type TrackerConfig from "../../modules/tracker/tracker";
-import { LedgerStore } from "../../store/ledger";
+import { LedgerStore } from "../ledger/LedgerStore";
 import extract from "../../utils/extract/extract";
 import NDate from "../../utils/ndate/ndate";
 

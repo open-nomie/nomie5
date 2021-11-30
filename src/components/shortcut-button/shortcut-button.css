@@ -49,6 +49,9 @@
   @apply line-clamp-2;
   @apply text-black dark:text-white;
 }
+.shortcut-button.has-value .title {
+  color: #fff !important;
+}
 .shortcut-button .value {
   @apply font-bold;
   @apply text-base md:text-lg;
@@ -82,6 +85,9 @@
 .shortcut-button.has-value:before {
   transform: translateY(0px);
   opacity: 1;
+}
+shortcut-button.has-value .title {
+  color: #fff !important;
 }
 .shortcut-button .top,
 .shortcut-button .bottom {

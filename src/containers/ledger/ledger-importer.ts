@@ -22,7 +22,7 @@ export class LedgerImporter {
 
   public async import() {
     // Set the callback / status function
-    let statusFunc = this.status || function () {};
+    let statusFunc = this.status || function () { };
     let importBooks = {};
 
     this.rows.forEach((rawLog) => {

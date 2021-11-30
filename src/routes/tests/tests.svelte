@@ -27,7 +27,7 @@
   import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
   import Toolbar from '../../components/toolbar/toolbar.svelte'
   import TrackerSmallBlock from '../../components/tracker-small-block/tracker-small-block.svelte'
-  import Empty from '../../containers/empty/empty.svelte'
+  import Empty from '../../components/empty/empty.svelte'
   import Layout from '../../containers/layout/layout.svelte'
   import Streak from '../../containers/steak/streak.svelte'
   import Person from '../../modules/person/person'

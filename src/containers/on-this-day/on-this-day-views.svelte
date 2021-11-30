@@ -16,7 +16,7 @@
   } from './on-this-day-helpers'
 
   import Map from '../map/map.svelte'
-  import Empty from '../empty/empty.svelte'
+  import Empty from '../../components/empty/empty.svelte'
 
   import Button from '../../components/button/button.svelte'
   import ListItemLog from '../../components/list-item-log/list-item-log.svelte'
@@ -24,7 +24,7 @@
   import TrackerSmallBlock from '../../components/tracker-small-block/tracker-small-block.svelte'
   import Grid from '../../components/grid/grid.svelte'
 
-  import { getTrackersAndValuesFromLogs } from '../../store/ledger/ledger-tools'
+  import { getTrackersAndValuesFromLogs } from '../ledger/ledger-tools'
   import { Interact } from '../../store/interact'
   import { Lang } from '../../store/lang'
   import { PeopleStore } from '../../store/people-store'

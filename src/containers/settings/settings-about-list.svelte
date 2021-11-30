@@ -7,7 +7,7 @@
   import NIcon from '@/components/icon/icon.svelte'
   import Button from './../../components/button/button.svelte'
   import { TrackerStore } from './../../store/tracker-store'
-  import { LedgerStore } from './../../store/ledger'
+  import { LedgerStore } from '../ledger/LedgerStore'
   import { Lang } from './../../store/lang'
   import ListItem from './../../components/list-item/list-item.svelte'
   import List from './../../components/list/list.svelte'

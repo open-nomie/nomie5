@@ -1,10 +1,10 @@
 import calculate from "../calculate/calculate";
-import _ from "lodash";
+import { max, mean, min, random, round, sample, sum } from "lodash";
 
 export default {
   // Sum an array
   sum: (arr: Array<number>) => {
-    return (arr || []).length ? _.sum(arr) : 0;
+    return (arr || []).length ? sum(arr) : 0;
   },
   // Round a number
   round: (num: number, amount?: number): number => {
@@ -13,13 +13,13 @@ export default {
   },
   // Get max from array
   max: (arr: Array<number>): number => {
-    return (arr || []).length ? _.max([...arr]) : 0;
+    return (arr || []).length ? max([...arr]) : 0;
   },
   // Get the min from array
   min: (arr, includeZero = false) => {
     if (arr.length) {
       arr = includeZero == true ? arr : arr.filter((a) => a);
-      return _.min(arr);
+      return min(arr);
     } else {
       return 0;
     }
@@ -31,7 +31,7 @@ export default {
     if (ignoreZeros) {
       arr = ignoreZeros ? arr.filter((row) => row) : arr;
     }
-    return _.round(_.mean(arr), 2) || 0;
+    return round(mean(arr), 2) || 0;
   },
   // Get the percentage of 2 numbers
   percentage: (n1, n2, flip?: boolean): number => {
@@ -43,11 +43,11 @@ export default {
   },
   // Random Range from to numbers
   random_range: (min: number, max: number): number => {
-    return _.random(min, max);
+    return random(min, max);
   },
   // Random from Array
   random: (arr: Array<number>): any => {
-    return _.sample(arr);
+    return sample(arr);
   },
   //https://gist.github.com/IceCreamYou/6ffa1b18c4c8f6aeaad2
   percentile(arr) {

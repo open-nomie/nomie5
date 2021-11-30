@@ -1,11 +1,10 @@
 <script lang="ts">
-  import LetterTicker from './../letter-ticker/letter-ticker.svelte'
   import { onMount } from 'svelte'
   import config from '../../config/appConfig'
   import LogList from './log-list.svelte'
   import NItem from '../list-item/list-item.svelte'
-  import NSpinner from '../spinner/spinner.svelte'
-  import { LedgerStore } from '../../store/ledger'
+
+  import { LedgerStore } from '../../containers/ledger/LedgerStore'
   import tick from '../../utils/tick/tick'
   import { createEventDispatcher } from 'svelte'
 

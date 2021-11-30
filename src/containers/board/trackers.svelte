@@ -1,13 +1,13 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
   import Icon from '../../components/icon/icon.svelte'
-  import _ from 'lodash'
+
   import ListItem from '../../components/list-item/list-item.svelte'
   import Text from '../../components/text/text.svelte'
 
   import type { ITracker } from '../../modules/tracker/tracker'
   import { LastUsed } from '../../store/last-used'
-  import { LedgerStore } from '../../store/ledger'
+  import { LedgerStore } from '../ledger/LedgerStore'
 
   import ShortcutButton from '../../components/shortcut-button/shortcut-button.svelte'
   import Counter from '../../components/counter/counter.svelte'
@@ -192,7 +192,7 @@
         {/if}
         {#if !hideMore}
           <Button
-            shape="circle"
+            shape="round"
             className="bg-gray-100 dark:bg-black text-primary-500"
             size="sm"
             style="z-index:1000"

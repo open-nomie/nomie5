@@ -1,5 +1,5 @@
 import math from "./math";
-import * as _ from "lodash";
+import { findIndex } from "lodash";
 
 describe("utils/math/calc", () => {
   it("should add a calculator buffer", () => {
@@ -99,7 +99,7 @@ describe("utils/math", function () {
   it("math.random", () => {
     let randomList = [10, 20, 30];
     let random = math.random(randomList);
-    let found = _.findIndex(randomList, (r) => r == random);
+    let found = findIndex(randomList, (r) => r == random);
     expect(found).toBeGreaterThan(-1);
   });
   // .join(",")

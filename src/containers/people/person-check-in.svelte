@@ -20,7 +20,7 @@
   // Stores
   import { Interact } from '../../store/interact'
   import { Lang } from '../../store/lang'
-  import { LedgerStore } from '../../store/ledger'
+  import { LedgerStore } from '../ledger/LedgerStore'
   import Button from '../../components/button/button.svelte'
   import Row from '../../components/row/row.svelte'
   import DatePicker from '../../components/date-picker/date-picker.svelte'
@@ -109,8 +109,4 @@
     </Button>
   {/if}
 
-  <div
-    class="text-center mt-4 animate up {state.checkedIn ? 'visible' : 'hidden'}">
-    <NIcon name="checkmarkOutline" size="60" className="fill-green" />
-  </div>
 </div>

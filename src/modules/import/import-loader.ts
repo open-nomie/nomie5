@@ -3,7 +3,7 @@ import type { IBackupItems } from "../export/export";
 
 import { ContextStore } from "../../store/context-store";
 import { PeopleStore } from "../../store/people-store";
-import { LedgerStore } from "../../store/ledger";
+import { LedgerStore } from "../../containers/ledger/LedgerStore";
 import { TrackerStore } from "../../store/tracker-store";
 import { BoardStore } from "../../store/boards";
 
@@ -52,7 +52,7 @@ export default class ImportLoader {
   }
 
   public async importAll(func?: Function) {
-    func = func || function (status: IImportStatus) {};
+    func = func || function (status: IImportStatus) { };
     try {
       func({ importing: "boards" });
       await this.importBoards();

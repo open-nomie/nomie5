@@ -32,7 +32,7 @@
   // Stores
   import { UserStore } from '../store/user-store'
   import { Interact } from '../store/interact'
-  import { LedgerStore } from '../store/ledger'
+  import { LedgerStore } from '../containers/ledger/LedgerStore'
   import { Lang } from '../store/lang'
 
   import { Device } from '../store/device-store'
@@ -43,7 +43,7 @@
   import { SearchStore } from '../store/search-store'
   import NLog from '../modules/nomie-log/nomie-log'
   import Location from '../modules/locate/Location'
-  import Empty from '../containers/empty/empty.svelte'
+  import Empty from '../components/empty/empty.svelte'
   import { ActiveLogStore } from '../store/active-log'
   import ButtonGroup from '../components/button-group/button-group.svelte'
   import Toolbar from '../components/toolbar/toolbar.svelte'

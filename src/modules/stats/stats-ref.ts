@@ -8,7 +8,7 @@ import type { IStats } from "./statsV5";
 import extractor from "../../utils/extract/extract";
 
 // Stores
-import { LedgerStore } from "../../store/ledger";
+import { LedgerStore } from "../../containers/ledger/LedgerStore";
 import nid from "../nid/nid";
 import type { Dayjs } from "dayjs";
 

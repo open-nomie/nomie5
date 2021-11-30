@@ -3,7 +3,7 @@
   import Panel from './../../components/panel/panel.svelte'
   import Container from './../../components/container/container.svelte'
   import Modal2 from './../../components/modal/modal2.svelte'
-  import { navigate, Router, Route } from 'svelte-routing'
+
   import { onMount, onDestroy } from 'svelte'
 
   import dayjs from 'dayjs'
@@ -38,7 +38,7 @@
   // Stores
   import { Interact } from '../../store/interact'
   import { DashboardStore } from '../../store/dashboard-store'
-  import { LedgerStore } from './../../store/ledger'
+  import { LedgerStore } from '../ledger/LedgerStore'
   import { PeopleStore } from './../../store/people-store'
   import { TrackerStore } from '../../store/tracker-store'
   import { LastUsed } from '../../store/last-used'
@@ -55,8 +55,8 @@
   import nid from '../../modules/nid/nid'
   import Toolbar from '../../components/toolbar/toolbar.svelte'
   import { SearchStore } from '../../store/search-store'
-  import Empty from '../empty/empty.svelte'
-  import LedgerTools from '../../store/ledger/ledger-tools'
+  import Empty from '../../components/empty/empty.svelte'
+  import LedgerTools from '../ledger/ledger-tools'
   import Swipeable from '../../components/swipeable/swipeable.svelte'
   // import { getDashboardStartEndDates } from "./dashboard-helpers";
 
@@ -534,7 +534,7 @@
       <Toolbar>
         <Button
           color="none"
-          shape="circle"
+          shape="round"
           className="tap-icon"
           on:click={() => SearchStore.view('history')}>
           <Icon name="search" size={24} />

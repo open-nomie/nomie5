@@ -1,28 +1,28 @@
 <script lang="ts">
-  import Button from "../../components/button/button.svelte";
-  import Card from "../../components/card/card.svelte";
-  import Divider from "../../components/divider/divider.svelte";
-  import Empty from "../empty/empty.svelte";
-  import ApiLogItem from "./api-log-item.svelte";
+  import Button from '../../components/button/button.svelte'
+  import Card from '../../components/card/card.svelte'
+  import Divider from '../../components/divider/divider.svelte'
+  import Empty from '../../components/empty/empty.svelte'
+  import ApiLogItem from './api-log-item.svelte'
 
-  import { Lang } from "../../store/lang";
-  import { ApiStore } from "./api-store";
+  import { Lang } from '../../store/lang'
+  import { ApiStore } from './api-store'
 
-  import type { NapiLog } from "./api-cli";
+  import type { NapiLog } from './api-cli'
 
-  let saved: Array<NapiLog> = []; // Holder of saved
-  let discarded: Array<NapiLog> = []; // holder of disacrded
-  let notsaved: Array<NapiLog> = []; // hodler of posts from the API itself
+  let saved: Array<NapiLog> = [] // Holder of saved
+  let discarded: Array<NapiLog> = [] // holder of disacrded
+  let notsaved: Array<NapiLog> = [] // hodler of posts from the API itself
 
   $: {
-    saved = $ApiStore.inArchive.filter((l) => l.saved);
-    discarded = $ApiStore.inArchive.filter((l) => l.discarded);
-    notsaved = $ApiStore.inArchive.filter((l) => !l.saved && !l.discarded);
+    saved = $ApiStore.inArchive.filter((l) => l.saved)
+    discarded = $ApiStore.inArchive.filter((l) => l.discarded)
+    notsaved = $ApiStore.inArchive.filter((l) => !l.saved && !l.discarded)
   }
 </script>
 
 <div class="app-contain-md">
-  
+
   {#if notsaved.length > 0}
     <Divider pad hideLine>
       <div class="filler">{Lang.t('general.not-saved', 'Not Saved')}</div>

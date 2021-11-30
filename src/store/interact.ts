@@ -39,7 +39,7 @@ import type TrackerConfig from "../modules/tracker/tracker";
 import type { ITrackers } from "../modules/import/import";
 
 // Stores
-import { LedgerStore } from "./ledger";
+import { LedgerStore } from "../containers/ledger/LedgerStore";
 import { TrackerStore } from "./tracker-store";
 import { Lang } from "./lang";
 import { SearchStore } from "./search-store";

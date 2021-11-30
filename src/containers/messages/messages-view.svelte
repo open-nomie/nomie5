@@ -1,6 +1,6 @@
 <script lang="ts">
   import Dot from './../../components/dot/dot.svelte'
-  import Empty from './../empty/empty.svelte'
+  import Empty from '../../components/empty/empty.svelte'
   import { MessageStore } from './MessageStore'
   import Button from '../../components/button/button.svelte'
   import { Lang } from '../../store/lang'

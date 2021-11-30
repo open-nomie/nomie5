@@ -1,10 +1,10 @@
 <script lang="ts">
-  import Card from "../../components/card/card.svelte";
-  import Divider from "../../components/divider/divider.svelte";
-  import { Lang } from "../../store/lang";
-  import Empty from "../empty/empty.svelte";
-  import ApiLogItem from "./api-log-item.svelte";
-  import { ApiStore } from "./api-store";
+  import Card from '../../components/card/card.svelte'
+  import Divider from '../../components/divider/divider.svelte'
+  import { Lang } from '../../store/lang'
+  import Empty from '../../components/empty/empty.svelte'
+  import ApiLogItem from './api-log-item.svelte'
+  import { ApiStore } from './api-store'
 </script>
 
 <div class="app-contain-md">

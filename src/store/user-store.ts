@@ -18,7 +18,7 @@ import { BoardStore } from "./boards";
 import config from "../config/appConfig";
 
 import { Interact } from "./interact";
-import { LedgerStore } from "./ledger";
+import { LedgerStore } from "../containers/ledger/LedgerStore";
 
 import { Lang } from "./lang";
 

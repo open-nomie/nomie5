@@ -1,68 +1,79 @@
 <script lang="ts">
-  import type { keys } from "localforage";
-  import { onMount } from "svelte";
-  import { navigate } from "svelte-routing";
+  import type { keys } from 'localforage'
+  import { onMount } from 'svelte'
+  import { navigate } from 'svelte-routing'
 
-  import Button from "../../components/button/button.svelte";
-  import Card from "../../components/card/card.svelte";
-  import Icon from "../../components/icon/icon.svelte";
-  import Input from "../../components/input/input.svelte";
-  import ListItem from "../../components/list-item/list-item.svelte";
-  import Spacer from "../../components/spacer/spacer.svelte";
-  import Text from "../../components/text/text.svelte";
-  import ToolbarGrid from "../../components/toolbar/toolbar-grid.svelte";
+  import Button from '../../components/button/button.svelte'
+  import Card from '../../components/card/card.svelte'
+  import Icon from '../../components/icon/icon.svelte'
+  import Input from '../../components/input/input.svelte'
+  import ListItem from '../../components/list-item/list-item.svelte'
+  import Spacer from '../../components/spacer/spacer.svelte'
+  import Text from '../../components/text/text.svelte'
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
 
-  import Toolbar from "../../components/toolbar/toolbar.svelte";
-  import Layout from "../../containers/layout/layout.svelte";
+  import Toolbar from '../../components/toolbar/toolbar.svelte'
+  import Layout from '../../containers/layout/layout.svelte'
 
-  import BaseLang from "../../lang/base";
+  import BaseLang from '../../lang/base'
 
-  import download from "../../modules/download/download";
-  import { SideStore } from "../../modules/storage/storage";
+  import download from '../../modules/download/download'
+  import { SideStore } from '../../modules/storage/storage'
 
-  import { Device } from "../../store/device-store";
-  import { Interact } from "../../store/interact";
+  import { Device } from '../../store/device-store'
+  import { Interact } from '../../store/interact'
 
-  import _ from "lodash";
-  import BackButton from "../../components/back-button/back-button.svelte";
+  import { defaultsDeep } from 'lodash'
+  import BackButton from '../../components/back-button/back-button.svelte'
 
-  const sideStore = new SideStore("language-editor");
+  const sideStore = new SideStore('language-editor')
 
-  let baseLang = BaseLang;
-  let activeLang = { ...BaseLang };
+  let baseLang = BaseLang
+  let activeLang = { ...BaseLang }
 
   async function save() {
-    sideStore.put("active-lang", activeLang);
-    Interact.toast("Saved Locally");
+    sideStore.put('active-lang', activeLang)
+    Interact.toast('Saved Locally')
   }
 
   async function reset() {
-    const confirmed = await Interact.confirm(`Clear ${activeLang.name} and start over?`);
+    const confirmed = await Interact.confirm(
+      `Clear ${activeLang.name} and start over?`,
+    )
     if (confirmed) {
-      activeLang = { ...BaseLang };
-      Device.scrollToTop();
+      activeLang = { ...BaseLang }
+      Device.scrollToTop()
     }
   }
 
   async function main() {
-    let working = sideStore.get("active-lang");
+    let working = sideStore.get('active-lang')
     if (working) {
-      activeLang.name = working.name || activeLang.name;
-      activeLang.author = working.author || activeLang.author;
-      activeLang.translation = _.defaultsDeep(working.translation || {}, activeLang.translation);
+      activeLang.name = working.name || activeLang.name
+      activeLang.author = working.author || activeLang.author
+      activeLang.translation = defaultsDeep(
+        working.translation || {},
+        activeLang.translation,
+      )
     }
   }
 
   async function send() {
-    Interact.toast("Downloading...");
-    await download.json(`${activeLang.name}.lang.json`, activeLang);
-    let confirmed = await Interact.confirm("Compose Email to Brandon", `Shall I open an email to Brandon so you can send the file?`);
+    Interact.toast('Downloading...')
+    await download.json(`${activeLang.name}.lang.json`, activeLang)
+    let confirmed = await Interact.confirm(
+      'Compose Email to Brandon',
+      `Shall I open an email to Brandon so you can send the file?`,
+    )
     if (confirmed) {
-      window.open(`mailto:support@happydata.org?subject=New Language File&body=Attach downloaded file`, "_system");
+      window.open(
+        `mailto:support@happydata.org?subject=New Language File&body=Attach downloaded file`,
+        '_system',
+      )
     }
   }
 
-  onMount(main);
+  onMount(main)
 </script>
 
 <Layout showTabs={false}>
@@ -82,19 +93,25 @@
   <Toolbar>
     <Spacer />
     Finished?
-    <Button size="sm" className="ml-2" on:click={send} text>Send to Brandon</Button>
+    <Button size="sm" className="ml-2" on:click={send} text>
+      Send to Brandon
+    </Button>
     <Spacer />
   </Toolbar>
   <main>
     <Card pad>
       <Text size="sm" leading2>
-        Want to help translate Nomie? Translate the following items. Once finished hit Send to Brandon. You can hit "save" to save your
-        progress locally.
+        Want to help translate Nomie? Translate the following items. Once
+        finished hit Send to Brandon. You can hit "save" to save your progress
+        locally.
       </Text>
     </Card>
     {#if activeLang}
       <Card pad title="Language Details">
-        <Input compact placeholder="Language Name" bind:value={activeLang.name} />
+        <Input
+          compact
+          placeholder="Language Name"
+          bind:value={activeLang.name} />
         <Input compact placeholder="Author" bind:value={activeLang.author} />
       </Card>
       {#each Object.keys(baseLang.translation) as parentId}

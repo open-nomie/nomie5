@@ -1,21 +1,16 @@
 <script lang="ts">
   // svelte
-  import { navigate, Router, Route } from 'svelte-routing'
-  import { onMount, onDestroy } from 'svelte'
   // components
   import Icon from '../../components/icon/icon.svelte'
 
-  import _ from 'lodash'
-
   // Utils
-  import dayjs from 'dayjs'
 
   // Stores
   import { Lang } from '../../store/lang'
 
   import Button from '../../components/button/button.svelte'
   import { SearchStore, SearchTerm } from '../../store/search-store'
-  import type { SearchModes } from '../../store/search-store'
+
   import SearchHistory from './search-history.svelte'
   import SearchTrackers from './search-trackers.svelte'
   import SearchPeople from './search-people.svelte'

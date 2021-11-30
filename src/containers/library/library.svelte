@@ -21,7 +21,7 @@
   import TrackerTypes from '../../modules/tracker-types/tracker-types'
   import Avatar from '../../components/avatar/avatar.svelte'
   import List from '../../components/list/list.svelte'
-  import Empty from '../empty/empty.svelte'
+  import Empty from '../../components/empty/empty.svelte'
   import type { t } from 'i18next'
 
   let installed = {} // hol der for anything installed during the opening

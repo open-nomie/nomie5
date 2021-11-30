@@ -1,7 +1,7 @@
 import type NLog from "../../modules/nomie-log/nomie-log";
 import locate from "../../modules/locate/locate";
 import Location from "../../modules/locate/Location";
-import { Locations } from "../locations";
+import { Locations } from "../../store/locations";
 import appConfig from "../../config/appConfig";
 
 export async function logAppendLocationIfNeeded(log: NLog): Promise<NLog> {

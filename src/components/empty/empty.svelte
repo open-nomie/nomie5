@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte'
 
-  import Avatar from '../../components/avatar/avatar.svelte'
-  import Button from '../../components/button/button.svelte'
-  import Text from '../../components/text/text.svelte'
+  import Avatar from '../avatar/avatar.svelte'
+  import Button from '../button/button.svelte'
+  import Text from '../text/text.svelte'
   export let emoji: string = undefined
   export let title: string = undefined
   export let description: string = undefined

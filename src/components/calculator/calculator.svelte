@@ -1,10 +1,11 @@
 <script lang="ts">
+  import { dropRight } from './../../modules/nodash/nodash'
   // Inspirated by https://codepen.io/ethanryan/details/MryqXv
 
   // Math will do the calculatng
   import math from '../../utils/math/math'
-  import _ from 'lodash'
-  import { tick, createEventDispatcher, onMount, onDestroy } from 'svelte'
+
+  import { createEventDispatcher, onMount, onDestroy } from 'svelte'
   import Button from '../button/button.svelte'
   import is from '../../utils/is/is'
   import { wait } from '../../utils/tick/tick'
@@ -91,7 +92,7 @@
     // buffer = _.dropRight(buffer);
     if (buffer.length) {
       let value = `${buffer[buffer.length - 1]}`
-      buffer[buffer.length - 1] = _.dropRight(value.split('')).join('')
+      buffer[buffer.length - 1] = dropRight(value.split('')).join('')
       change()
     }
   }

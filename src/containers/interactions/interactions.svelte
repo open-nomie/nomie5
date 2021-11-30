@@ -30,7 +30,7 @@
   import LogEditor from '../log-editor/log-editor.svelte'
   // Store
   import { Interact } from '../../store/interact'
-  import { LedgerStore } from '../../store/ledger'
+  import { LedgerStore } from '../ledger/LedgerStore'
   import { TrackerStore } from '../../store/tracker-store'
   import DateTimeBar from '../../components/date-time-bar/date-time-bar.svelte'
   import LocationViewerModal from '../map/location-viewer-modal.svelte'

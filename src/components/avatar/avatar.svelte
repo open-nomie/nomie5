@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { join } from 'lodash'
   import { createEventDispatcher } from 'svelte'
   import { initials } from '../../utils/text/text'
   import { strToColor } from '../dymoji/dymoji'

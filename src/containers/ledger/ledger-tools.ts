@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import type TrackableElement from "../../modules/trackable-element/trackable-element";
 import type { Dayjs } from "dayjs";
 import type { IStorage } from "../../modules/storage/storage";
-import type { ILedgerBook, IBooks } from "../ledger";
+import type { ILedgerBook, IBooks } from "./LedgerStore";
 
 import type { LedgerImporter } from "./ledger-importer";
 
@@ -323,7 +323,7 @@ export default class LedgerTools {
     const get_batch = async (booksChunk): Promise<Array<ILedgerBook>> => {
       let gets = [];
       // Loop over each book
-      booksChunk.forEach((bookPath:string) => {
+      booksChunk.forEach((bookPath: string) => {
         // Get the book if it current exists, or create it if not
         stateBooks[bookPath] = stateBooks[bookPath] || [];
 

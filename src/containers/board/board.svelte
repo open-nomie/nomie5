@@ -31,7 +31,7 @@
   import ButtonGroup from '../../components/button-group/button-group.svelte'
   import Card from '../../components/card/card.svelte'
   import Toolbar from '../../components/toolbar/toolbar.svelte'
-  import Empty from '../empty/empty.svelte'
+  import Empty from '../../components/empty/empty.svelte'
   import TrackersList from './trackers.svelte'
 
   // Containers
@@ -52,7 +52,7 @@
 
   //Stores
   import { ActiveLogStore } from '../../store/active-log'
-  import { LedgerStore } from '../../store/ledger'
+  import { LedgerStore } from '../ledger/LedgerStore'
   import { UserStore } from '../../store/user-store'
   import { BoardStore } from '../../store/boards'
   import { TrackerStore } from '../../store/tracker-store'

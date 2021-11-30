@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { wait } from './../../utils/tick/tick.ts'
+  import { wait } from './../../utils/tick/tick'
   import { AppStore } from './../../store/app-store'
   import Icon from './../../components/icon/icon.svelte'
   import Panel from '@/components/panel/panel.svelte'
@@ -22,14 +22,14 @@
 
   // Stores
   import { Interact } from '../../store/interact'
-  import { LedgerStore } from '../../store/ledger'
+  import { LedgerStore } from '../ledger/LedgerStore'
   import { Lang } from '../../store/lang'
   import Button from '../../components/button/button.svelte'
   import TagBadge from '../../components/tag-badge/tag-badge.svelte'
   import ImporterItem from './importer-item.svelte'
   import ProgressBar from '../../components/progress-bar/progress-bar.svelte'
   import ListItem from '../../components/list-item/list-item.svelte'
-  import Empty from '../empty/empty.svelte'
+  import Empty from '../../components/empty/empty.svelte'
 
   import Modal2 from '@/components/modal/modal2.svelte'
   import ToolbarGrid from '@/components/toolbar/toolbar-grid.svelte'

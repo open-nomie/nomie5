@@ -13,17 +13,16 @@
    */
 
   // Svelte
-  import { onDestroy, onMount } from 'svelte'
-  import _ from 'lodash'
+
   // import { slide } from "svelte/transition";
-  import DateTimeBar from '../date-time-bar/date-time-bar.svelte'
+
   import './capture-log.css'
   //Components
-  import NItem from '../list-item/list-item.svelte'
+
   import NIcon from '../icon/icon.svelte'
   import Button from '../button/button.svelte'
   import dayjs from 'dayjs'
-  import type { OpUnitType, Dayjs } from 'dayjs'
+  import type { OpUnitType } from 'dayjs'
 
   import AutoComplete from '../auto-complete/auto-complete.svelte'
   import NSpinner from '../spinner/spinner.svelte'
@@ -37,22 +36,18 @@
   // Stores
   import { Interact } from '../../store/interact'
   import { TrackerStore } from '../../store/tracker-store'
-  import { LedgerStore } from '../../store/ledger'
+  import { LedgerStore } from '../../containers/ledger/LedgerStore'
   import { ActiveLogStore } from '../../store/active-log'
   import { UserStore } from '../../store/user-store'
   import { Lang } from '../../store/lang'
   import { PeopleStore } from '../../store/people-store'
-  import { ContextStore } from '../../store/context-store'
-  import Text from '../text/text.svelte'
-  import PositivityMenu from '../positivity-selector/positivity-menu.svelte'
+
   import Icon from '../icon/icon.svelte'
-  import DatePicker from '../date-picker/date-picker.svelte'
   import DateStepper from '../date-picker/day-stepper.svelte'
   import type TrackableElement from '../../modules/trackable-element/trackable-element'
   import extract from '../../utils/extract/extract'
   import { getEmojiFromScore } from '../../utils/positivity/positivity'
-  import Log from '../../utils/log/log'
-  import { X, XCircle } from 'svelte-hero-icons'
+  import { X } from 'svelte-hero-icons'
 
   // Consts
   const console = new Logger('capture-log')
@@ -459,7 +454,7 @@
 
             <Button
               type="clear"
-              shape="circle"
+              shape="round"
               on:click={() => {
                 showPositivitySelector = !showPositivitySelector
               }}>
@@ -473,7 +468,7 @@
               ariaLabel="Location and Date settings"
               size="xs"
               type="clear"
-              shape="circle"
+              shape="round"
               className="px-2"
               on:click={Interact.toggleFocusedEditor}>
               <NIcon

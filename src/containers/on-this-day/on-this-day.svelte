@@ -1,21 +1,27 @@
 <script lang="ts">
-  import { Interact } from "../../store/interact";
- 
-  import { LedgerStore } from "../../store/ledger";
-  import Text from "./../../components/text/text.svelte";
-  import NIcon from "./../../components/icon/icon.svelte";
-  import NModal from "./../../components/modal/modal.svelte";
-  import dayjs from "dayjs";
-  import Button from "../../components/button/button.svelte";
-  import ButtonGroup from "../../components/button-group/button-group.svelte";
-  import Icon from "./../../components/icon/icon.svelte";
-  import Toolbar from "./../../components/toolbar/toolbar.svelte";
-  import { PeopleStore } from "../../store/people-store";
-  import Row from "../../components/row/row.svelte";
-  import { getContext, getNotes, getPeople, OTDViews, processTrackers } from "./on-this-day-helpers";
+  import { Interact } from '../../store/interact'
 
-  import type { OTDView, OTDViewOption } from "./on-this-day-helpers";
-  import OnThisDayViews from "./on-this-day-views.svelte";
+  import { LedgerStore } from '../ledger/LedgerStore'
+  import Text from './../../components/text/text.svelte'
+  import NIcon from './../../components/icon/icon.svelte'
+  import NModal from './../../components/modal/modal.svelte'
+  import dayjs from 'dayjs'
+  import Button from '../../components/button/button.svelte'
+  import ButtonGroup from '../../components/button-group/button-group.svelte'
+  import Icon from './../../components/icon/icon.svelte'
+  import Toolbar from './../../components/toolbar/toolbar.svelte'
+  import { PeopleStore } from '../../store/people-store'
+  import Row from '../../components/row/row.svelte'
+  import {
+    getContext,
+    getNotes,
+    getPeople,
+    OTDViews,
+    processTrackers,
+  } from './on-this-day-helpers'
+
+  import type { OTDView, OTDViewOption } from './on-this-day-helpers'
+  import OnThisDayViews from './on-this-day-views.svelte'
 
   const state = {
     notes: [],
@@ -26,57 +32,57 @@
     people: [],
     context: [],
     locations: [],
-  };
+  }
 
-  let showDom = false;
-  let showWindow = false;
-  let loading = false;
+  let showDom = false
+  let showWindow = false
+  let loading = false
 
-  let views: typeof OTDViews = OTDViews;
+  let views: typeof OTDViews = OTDViews
 
-  let view: OTDViewOption = "notes";
+  let view: OTDViewOption = 'notes'
 
-  let activeView: OTDView = views[0];
+  let activeView: OTDView = views[0]
 
   $: if ($Interact.onThisDay) {
-    showDom = true;
+    showDom = true
     setTimeout(() => {
-      showWindow = true;
-    }, 20);
-    loadDay();
+      showWindow = true
+    }, 20)
+    loadDay()
   } else {
-    showWindow = false;
+    showWindow = false
     setTimeout(() => {
-      showDom = false;
-    }, 200);
+      showDom = false
+    }, 200)
   }
 
   function setView(v: OTDViewOption) {
-    view = v;
-    activeView = views.find((lview) => lview.view === v);
+    view = v
+    activeView = views.find((lview) => lview.view === v)
   }
 
   async function loadDay() {
-    loading = true;
-    let day = await LedgerStore.getDay($Interact.onThisDay);
-    let trackersUsed = LedgerStore.extractTrackerTagAndValues(day);
-    state.people = getPeople(day, $PeopleStore.people);
-    state.context = getContext(day);
-    state.notes = getNotes(day);
-    state.trackers = processTrackers(trackersUsed);
+    loading = true
+    let day = await LedgerStore.getDay($Interact.onThisDay)
+    let trackersUsed = LedgerStore.extractTrackerTagAndValues(day)
+    state.people = getPeople(day, $PeopleStore.people)
+    state.context = getContext(day)
+    state.notes = getNotes(day)
+    state.trackers = processTrackers(trackersUsed)
 
-    state.records = day;
-    loading = false;
+    state.records = day
+    loading = false
   }
 
   function nextDay() {
-    let date = dayjs($Interact.onThisDay).add(1, "day").toDate();
-    Interact.onThisDay(date);
+    let date = dayjs($Interact.onThisDay).add(1, 'day').toDate()
+    Interact.onThisDay(date)
   }
 
   function previousDay() {
-    let date = dayjs($Interact.onThisDay).subtract(1, "day").toDate();
-    Interact.onThisDay(date);
+    let date = dayjs($Interact.onThisDay).subtract(1, 'day').toDate()
+    Interact.onThisDay(date)
   }
 
   // let lastDate;
@@ -87,7 +93,11 @@
 </script>
 
 {#if showDom}
-  <NModal show={showWindow} type="bottom-slideup" bodyClass="bg-solid-1" ariaLabel="On this day">
+  <NModal
+    show={showWindow}
+    type="bottom-slideup"
+    bodyClass="bg-solid-1"
+    ariaLabel="On this day">
     <header slot="header" class="w-100">
       <div class="n-toolbar-grid">
         <div class="left">
@@ -95,11 +105,15 @@
             <NIcon name="close" />
           </Button>
         </div>
-        <div class="main py-1">
-          <Text className="mt-1">{dayjs($Interact.onThisDay).format('ddd MMM D, YYYY')}</Text>
+        <div class="py-1 main">
+          <Text className="mt-1">
+            {dayjs($Interact.onThisDay).format('ddd MMM D, YYYY')}
+          </Text>
           <Row className="justify-content-center">
             <Text size="sm" className="mr-2">{activeView.label}</Text>
-            <Text className="text-faded-3" size="sm">{dayjs($Interact.onThisDay).fromNow()}</Text>
+            <Text className="text-faded-3" size="sm">
+              {dayjs($Interact.onThisDay).fromNow()}
+            </Text>
           </Row>
         </div>
         <div class="right">
@@ -121,7 +135,7 @@
                 className={view === loopView.view ? 'active' : ''}
                 icon
                 on:click={() => {
-                  setView(loopView.view);
+                  setView(loopView.view)
                 }}>
                 <Icon name={loopView.icon} />
               </Button>

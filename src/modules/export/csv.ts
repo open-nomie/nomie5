@@ -1,4 +1,4 @@
-import { LedgerStore } from "../../store/ledger";
+import { LedgerStore } from "../../containers/ledger/LedgerStore";
 import Tracker from "../tracker/tracker";
 import dayjs from "dayjs";
 
@@ -6,7 +6,7 @@ import download from "../download/download";
 import nid from "../nid/nid";
 
 export default class CSV {
-  constructor() {}
+  constructor() { }
 
   logsToCSV(logs, trackersToInclude) {
     let header = ["epoch", "start", "end", "offset", "tracker", "value", "note", "lat", "lng", "location", "score"];

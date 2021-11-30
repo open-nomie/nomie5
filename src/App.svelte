@@ -42,7 +42,7 @@
   import { LastUsed } from './store/last-used'
   import { SearchStore } from './store/search-store'
   import tick from './utils/tick/tick'
-  import { LedgerStore } from './store/ledger'
+  import { LedgerStore } from './containers/ledger/LedgerStore'
   import ProgressBar from './components/progress-bar/progress-bar.svelte'
   import { ApiStore } from './containers/api/api-store'
 

@@ -30,7 +30,7 @@
   import NMap from '../../containers/map/map.svelte'
 
   // Stores
-  import { LedgerStore } from '../../store/ledger'
+  import { LedgerStore } from '../ledger/LedgerStore'
   import { Interact } from '../../store/interact'
   import { UserStore } from '../../store/user-store'
   import { Lang } from '../../store/lang'
