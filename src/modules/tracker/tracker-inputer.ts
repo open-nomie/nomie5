@@ -160,7 +160,7 @@ export default class TrackerInputer {
 
     let defaultValue: number = is.truthy(options.value) ? options.value : this.tracker.default;
 
-    if (this.tracker.type == "tick") {
+    if (this.tracker.type === "tick") {
       // Make sure
       note.push(`#${this.tracker.tag}${`${defaultValue || ""}`.length ? `(${defaultValue})` : ``}`);
       // Check for include

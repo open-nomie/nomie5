@@ -8,7 +8,10 @@ import path from 'path';
 import svelteSVG from "vite-plugin-svelte-svg";
 
 export default defineConfig({
-  optimizeDeps: { exclude: ["svelte-routing", "snarkdown", 'canvas-confetti'] },
+  optimizeDeps: { 
+    allowNodeBuiltins: ['pouchdb-browser','pouchdb-utils'],
+    exclude: ["svelte-routing", "snarkdown", 'canvas-confetti'] 
+  },
   build: {
     target: "es2015",
     rollupOptions: {

@@ -1,14 +1,21 @@
 let copy = require("copy");
 let move = [
-  { src: "node_modules/leaflet/dist/**/*", dest: "vendors/leaflet" },
+  { 
+    src: "node_modules/leaflet/dist/**/*", 
+    dest: "vendors/leaflet" 
+  },
+  {
+    src: "node_modules/pouchdb/dist/**/*",
+    dest: "vendors/pouchdb",
+  },
   {
     src: "node_modules/esri-leaflet/dist/**/*",
-    dest: "vendors/leaflet/esri"
+    dest: "vendors/leaflet/esri",
   },
   {
     src: "node_modules/esri-leaflet-geocoder/dist/**/*",
-    dest: "vendors/leaflet/geocoder"
-  }
+    dest: "vendors/leaflet/geocoder",
+  },
 ];
 
 console.log("Moving Vendor Resources....");
@@ -25,6 +32,6 @@ let copyp = (to, from) => {
   });
 };
 
-move.forEach(async transport => {
+move.forEach(async (transport) => {
   await copyp(transport.src, transport.dest);
 });

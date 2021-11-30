@@ -5,7 +5,7 @@
  */
 
 
-import { wait } from "src/utils/tick/tick";
+import { wait } from "../../utils/tick/tick";
 import Config from "../../config/appConfig";
 
 // Vendors

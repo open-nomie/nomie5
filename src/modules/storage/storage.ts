@@ -8,8 +8,10 @@
 
 import LocalForageEngine from "./engine.localforage";
 // import BlockStackEngine from "./engine.blockstack";
-import PouchDBEngine from "./engine.pouchdb";
+// import PouchDBEngine from "./engine.pouchdb";
 import Config from "../../config/appConfig";
+
+const STORAGE_TYPE_PATH = "n6/storage-type";
 
 export class SideStore {
   dbPath: string;
@@ -28,7 +30,7 @@ export class SideStore {
 }
 
 export function getStorageType() {
-  let type: string = localStorage.getItem("n4/storage/root/storage_type");
+  let type: string = localStorage.getItem(STORAGE_TYPE_PATH);
   if (type) {
     return type.replace(/\"/g, "");
   } else {
@@ -36,17 +38,17 @@ export function getStorageType() {
   }
 }
 
-export type StorageTypes = "local" | "pouchdb"; // blockstack
+export type StorageTypes = "local" | "pouchdb" | "firebase"; // blockstack
 
 export function setStorage(type: StorageTypes) {
-  localStorage.setItem("n4/storage/root/storage_type", type);
+  localStorage.setItem(STORAGE_TYPE_PATH, type);
 }
 
 export interface IStorage {
   engines: {
     // blockstack: BlockStackEngine;
     local: typeof LocalForageEngine;
-    pouchdb: typeof PouchDBEngine;
+    // pouchdb: typeof PouchDBEngine;
   };
   engine: any;
   storageType(): string;
@@ -65,7 +67,7 @@ const Storage = {
   engines: {
     // blockstack: BlockStackEngine,
     local: LocalForageEngine,
-    pouchdb: PouchDBEngine,
+    // pouchdb: PouchDBEngine,
   },
   engine: getStorageType(),
   // Get user storage type
@@ -128,13 +130,13 @@ const Storage = {
   // Aug 24th Also adding some migration
   local: {
     get(path) {
-      return JSON.parse(localStorage.getItem(`n4/storage/${path}`) || "null");
+      return JSON.parse(localStorage.getItem(`storage/${path}`) || "null");
     },
     put(path, value) {
-      return localStorage.setItem(`n4/storage/${path}`, JSON.stringify(value));
+      return localStorage.setItem(`storage/${path}`, JSON.stringify(value));
     },
     remove(path) {
-      return localStorage.removeItem(`n4/storage/${path}`);
+      return localStorage.removeItem(`storage/${path}`);
     },
   },
   SideStore,

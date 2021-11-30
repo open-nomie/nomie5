@@ -1,6 +1,7 @@
 const fs = require("fs");
 const vendors = {
   js: [
+    "./vendors/pouchdb/pouchdb.min.js",
     "./vendors/leaflet/leaflet.js",
     "./vendors/leaflet/esri/esri-leaflet.js",
     "./vendors/leaflet/geocoder/esri-leaflet-geocoder.js",
