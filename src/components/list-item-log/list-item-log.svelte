@@ -6,7 +6,6 @@
   import NLog from '../../modules/nomie-log/nomie-log'
 
   // components
-  import NItem from '../list-item/list-item.svelte'
   import LocationBadge from '../location-badge/location-badge.svelte'
   import NIcon from '../icon/icon.svelte'
   import NNoteTextualizer from '../note-textualizer/note-textualizer.svelte'
@@ -21,8 +20,6 @@
   import { Interact } from '../../store/interact'
 
   // vendors
-  import dayjs from 'dayjs'
-  import Text from '../text/text.svelte'
   import { getEmojiFromScore } from '../../utils/positivity/positivity'
   import Button from '../button/button.svelte'
 
@@ -44,9 +41,6 @@
 
   let trackers = $TrackerStore.trackers
 
-  let state = {
-    showPhoto: false,
-  }
 
   $: if (log && log !== displayLog) {
     displayLog = new NLog(log)
@@ -89,8 +83,8 @@
 <!--glow glow-{time.dateToDesc(displayLog.end)}-->
 {#if displayLog}
   <article
-    class="{className} shadow-md rounded-xl py-2 bg-white dark:bg-black
-    dark:bg-opacity-50 text-gray-900 dark:text-gray-100 grid grid-flow-row gap-2">
+    class="{className} shadow-md rounded-xl py-2 bg-white dark:bg-gray-900
+    dark:bg-opacity-80 text-gray-900 dark:text-gray-100 grid grid-flow-row gap-2">
     <!-- Show the Trackers within this Log Item -->
     <header class="flex flex-shrink-0 w-full px-4 time-row">
       <div class="flex items-center flex-grow flex-shrink space-x-2">
@@ -162,7 +156,7 @@
 
     <!-- Loop over Trackers used -->
     {#if logMeta.trackers.length || logMeta.people.length}
-      <div class="grid w-full grid-cols-2 gap-2 px-4 pb-4 lg:grid-cols-4">
+      <div class="grid w-full grid-cols-2 md:grid-cols-3 gap-2 px-4 pb-4 lg:grid-cols-4">
         {#each displayLog.people as person}
           <NTrackerSmallBlock
             element={person}

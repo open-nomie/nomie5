@@ -24,7 +24,7 @@
 </script>
 
 <Button
-  shape={$Device.width < 399 ? 'nbtn-icon circle' : 'clear'}
+  className="{$Device.width < 399 ? 'nbtn-icon circle' : 'clear'} text-primary-500"
   icon={$Device.width < 399}
   on:click={onClick}>
   <NIcon name="arrowBack" className="fill-primary-bright" />

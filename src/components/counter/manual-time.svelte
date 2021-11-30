@@ -150,6 +150,7 @@
     @apply text-center;
     @apply items-center;
     @apply justify-center;
+    @apply px-2;
   }
   .n-counter-manual .unit select option {
     text-align: center;

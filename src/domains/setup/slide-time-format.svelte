@@ -2,12 +2,8 @@
   import { Lang } from '../../store/lang'
   import { UserStore } from '../../store/user-store'
   import dayjs from 'dayjs'
-  import Text from '../../components/text/text.svelte'
   import Button from '../../components/button/button.svelte'
 
-  const state = {
-    theme: 'auto',
-  }
 </script>
 
 <section class="slide slide-time-format">
@@ -17,7 +13,7 @@
     </h1>
 
     <Button
-      className="mb-3 {!$UserStore.meta.is24Hour ? 'bg-primary-500' : 'text-gray-500'}"
+      className="mb-3 {!$UserStore.meta.is24Hour ? 'bg-primary-500 text-white font-bold' : 'bg-white dark:bg-black text-primary-600'}"
       block
       size="lg"
       type="clear"
@@ -29,7 +25,7 @@
       {dayjs().format('h:mm a')}
     </Button>
     <Button
-      className="mb-3 {$UserStore.meta.is24Hour ? 'bg-primary-500' : 'text-gray-500'}"
+      className="mb-3 {$UserStore.meta.is24Hour ? 'bg-primary-500 text-white font-bold' : 'bg-white dark:bg-black text-primary-600'}"
       type="clear"
       block
       size="lg"

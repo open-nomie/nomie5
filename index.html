@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/css/vendors.css?v=APP_VERSION" defer />
+    
     <title>Nomie 6 Alpha</title>
     <script>
       window.global = window
@@ -13,9 +13,10 @@
       name="viewport"
       content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover"
       />
+    <base href="/" />
     <meta http-equiv="Cache-Control" content="max-age=600" />
     <meta name="description" content="Open Source Mood Tracking" />
-    <meta name="apple-mobile-web-app-title" content="Nomie 5" />
+    <meta name="apple-mobile-web-app-title" content="Nomie 6" />
     <meta name="theme-color" content="#000000" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -33,7 +34,7 @@
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="undefined" />
-    <meta property="og:title" content="Nomie 5" />
+    <meta property="og:title" content="Nomie 6 Dev" />
     <meta property="og:description" content="Private Mood and Life Tracking" />
     <meta property="og:image" content="" />
 
@@ -123,13 +124,14 @@
   </head>
   <body>
     <div class="loading-screen delete-on-app">
-      <div class="version" style="">Loading...</div>
+      <div class="version">Loading...</div>
     </div>
     <div id="app" class="bg-primary-500"></div>
+    <link rel="stylesheet" href="/css/vendors.css" defer />
     <script src="/js/vendors.js"></script>
     <script type="module" src="/src/main.ts"></script>
-
     <!-- Simple Analytics-->
+    
     <script async defer src="https://cdn.simpleanalytics.io/hello.js"></script>
     <noscript>
       <img src="https://api.simpleanalytics.io/hello.gif" alt="" />

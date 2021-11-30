@@ -120,7 +120,7 @@ export default class CSV {
 
     // generate CSV array
     let csvArray = this.logsToCSV(logs, trackers);
-    let filename = `n-${dayjs(start).format("YYYY-MM-DD")}-${dayjs(end).format("YYYY-MM-DD")}.${nid(6)}.APP_VERSION.csv`;
+    let filename = `n-${dayjs(start).format("YYYY-MM-DD")}-${dayjs(end).format("YYYY-MM-DD")}.${nid(6)}.${import.meta.env.PACKAGE_VERSION}.csv`;
     download.csv(filename, csvArray.join("\r\n"));
     // this.download(filename, csvArray.join("\r\n"));
   }

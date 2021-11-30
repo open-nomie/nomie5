@@ -1,91 +1,93 @@
 <script lang="ts">
-  import NIcon from '@/components/icon/icon.svelte'
-  import { useStorageSelectMenu } from './settings-functions'
-  import { LastUsed } from '../../store/last-used'
-  import ToggleSwitch from '../../components/toggle-switch/toggle-switch.svelte'
-  import ImporterModal from '../../domains/importer/importer.svelte'
-  import { UserStore } from '../../store/user-store'
-  import Text from '@/components/text/text.svelte'
-  import ListItem from '@/components/list-item/list-item.svelte'
-  import { Lang } from '../../store/lang'
-  import BlockstackOptions from '@/components/storage/blockstack.svelte'
-  import LocalstorageOptions from '@/components/storage/localstorage.svelte'
-  import PouchDBOptions from '@/components/storage/pouchdb.svelte'
+  import NIcon from "@/components/icon/icon.svelte";
+  import { useStorageSelectMenu } from "./settings-functions";
+  import { LastUsed } from "../../store/last-used";
+  import ToggleSwitch from "../../components/toggle-switch/toggle-switch.svelte";
 
-  import List from '@/components/list/list.svelte'
-  import { ApiStore } from '../api/api-store'
-  import { navigate } from 'svelte-routing'
-  import { ChevronRight } from 'svelte-hero-icons'
-  import { deleteEverything } from './settings-functions'
-  import { createEventDispatcher } from 'svelte'
+  import { UserStore } from "../../store/user-store";
+  import Text from "@/components/text/text.svelte";
+  import ListItem from "@/components/list-item/list-item.svelte";
+  import { Lang } from "../../store/lang";
+  import LocalstorageOptions from "@/components/storage/localstorage.svelte";
+  import PouchDBOptions from "@/components/storage/pouchdb.svelte";
 
-  let fileInput
-  let showImporter = false
+  import List from "@/components/list/list.svelte";
+  import { ApiStore } from "../api/api-store";
+  import { navigate } from "svelte-routing";
+  import { ChevronRight } from "svelte-hero-icons";
+  import { deleteEverything } from "./settings-functions";
+  import { createEventDispatcher } from "svelte";
 
-  const dispatch = createEventDispatcher()
+  // let fileInput
+  // let showImporter = false
+
+  const dispatch = createEventDispatcher();
 
   const showStorageOptions = () => {
     useStorageSelectMenu({
       current: $UserStore.storageType,
       onSelect(storage: any) {
-        console.log('Selected', storage)
+        console.log("Selected", storage);
       },
-    })
-  }
+    });
+  };
 </script>
 
 <List
   className="mb-3"
-  title={Lang.t('settings.storage-location', 'Storage Location')}
-  outside>
+  title={Lang.t("settings.storage-location", "Storage Location")}
+  outside
+>
   <ListItem on:click={showStorageOptions}>
     <span slot="left">☁️</span>
     <Text>
-      {#if $UserStore.storageType === 'local'}
+      {#if $UserStore.storageType === "local"}
         This device only
-      {:else if $UserStore.storageType === 'pouchdb'}
-        {Lang.t('storage.pouchdb', 'Local + CouchDB')}
-      {:else if $UserStore.storageType === 'blockstack'}
-        {Lang.t('storage.blockstack', 'Blockstack')}
+      {:else if $UserStore.storageType === "pouchdb"}
+        {Lang.t("storage.pouchdb", "Local + CouchDB")}
+      {:else if $UserStore.storageType === "blockstack"}
+        {Lang.t("storage.blockstack", "Blockstack")}
       {/if}
     </Text>
     <div slot="right">
       <Text size="sm" className="text-primary-bright">
-        {Lang.t('general.change', 'Change')}
+        {Lang.t("general.change", "Change")}
       </Text>
     </div>
   </ListItem>
 
-  {#if $UserStore.storageType === 'blockstack'}
+  {#if $UserStore.storageType === "blockstack"}
     Blockstack is no longer available
     <!-- <BlockstackOptions /> -->
   {/if}
-  {#if $UserStore.storageType === 'local'}
+  {#if $UserStore.storageType === "local"}
     <LocalstorageOptions />
   {/if}
-  {#if $UserStore.storageType === 'pouchdb'}
+  {#if $UserStore.storageType === "pouchdb"}
     <PouchDBOptions />
   {/if}
 
   <ListItem
     detail
-    title={Lang.t('general.browse-files', 'Browse Files...')}
+    title={Lang.t("general.browse-files", "Browse Files...")}
     on:click={() => {
-      navigate('/files')
-    }}>
+      navigate("/files");
+    }}
+  >
     <span slot="left">📂</span>
   </ListItem>
-
 </List>
 
 <List
   className="mb-3"
   outside
-  title={Lang.t('settings.import-data', 'Import Data')}>
+  title={Lang.t("settings.import-data", "Import Data")}
+>
   <ListItem
     clickable
-    title={Lang.t('settings.nomie-api', 'Nomie API')}
-    on:click={() => navigate('/api')}>
+    title={Lang.t("settings.nomie-api", "Nomie API")}
+    on:click={() => navigate("/api")}
+  >
     <span slot="left">🚚</span>
     <span slot="right">
       {#if $ApiStore.items.length}
@@ -98,27 +100,35 @@
   </ListItem>
   <ListItem
     clickable
-    title={`${Lang.t('settings.import-from-backup', 'Import from Backup')}`}
+    title={`${Lang.t("settings.import-from-backup", "Import from Backup")}`}
     on:click={() => {
-      dispatch('showImporter')
-    }}>
+      dispatch("showImporter");
+    }}
+  >
     <span slot="left">📦</span>
     <div slot="right">
-      <input
+      <!-- <input
         class="hidden"
         type="file"
         bind:this={fileInput}
-        on:change={() => {}} />
+        on:change={() => {}} /> -->
       <NIcon name="chevronRight" className="fill-faded-2" />
     </div>
   </ListItem>
+</List>
+<List className="mb-3" outside>
   <ListItem
     clickable
-    title={`${Lang.t('settings.import-from-csv', 'Import from CSV ')}`}
-    to="/settings/import/csv">
+    title={`${Lang.t("settings.import-from-csv", "Import from CSV ")}`}
+    to="/settings/import/csv"
+  >
     <span slot="left">📄</span>
     <span slot="right" class="flex">
-      <div class="nbtn nbtn-xs nbtn-rounded nbtn-light">Beta</div>
+      <div
+        class="bg-red-500 text-white rounded-lg text-sm flex items-center px-2"
+      >
+        Beta
+      </div>
       <NIcon name="chevronRight" className="fill-faded-2" />
     </span>
   </ListItem>
@@ -127,43 +137,48 @@
 <List
   className="mb-3"
   outside
-  title={Lang.t('settings.export-data', 'Export Data')}>
-
+  title={Lang.t("settings.export-data", "Export Data")}
+>
   <ListItem
     detail
-    title={Lang.t('settings.generate-backup', 'Generate Backup')}
-    to="/settings/export/backup">
+    title={Lang.t("settings.generate-backup", "Generate Backup")}
+    to="/settings/export/backup"
+  >
     <span slot="left">📦</span>
-
   </ListItem>
   <ListItem
     detail
-    title={Lang.t('settings.generate-csv', 'Generate CSV')}
-    to="/settings/export/csv">
+    title={Lang.t("settings.generate-csv", "Generate CSV")}
+    to="/settings/export/csv"
+  >
     <span slot="left">📃</span>
   </ListItem>
 </List>
 
 <ListItem
-  title={Lang.t('settings.hide-backup-reminder', 'Hide backup reminder')}>
+  title={Lang.t("settings.hide-backup-reminder", "Hide backup reminder")}
+>
   <span slot="left">📕</span>
   <div slot="right">
     <ToggleSwitch
       bind:value={$UserStore.meta.hideBackup}
       on:change={() => {
-        alert('Make this work')
-      }} />
+        alert("Make this work");
+      }}
+    />
   </div>
 </ListItem>
 
 <List
   className="mb-3"
   outside
-  title={Lang.t('settings.miscellaneous', 'Miscellaneous')}>
+  title={Lang.t("settings.miscellaneous", "Miscellaneous")}
+>
   <ListItem
     clickable
-    title={Lang.t('settings.update-last-used-date', "Update All Tracker's Last-Used")}
-    on:click={LastUsed.updateAll}>
+    title={Lang.t("settings.update-last-used-date", "Update Last-Used Dates")}
+    on:click={LastUsed.updateAll}
+  >
     <span slot="left">🕰</span>
   </ListItem>
 </List>
@@ -171,11 +186,12 @@
 <List
   className="mb-3"
   outside
-  title={Lang.t('settings.danger-zone', 'Danger Zone')}>
+  title={Lang.t("settings.danger-zone", "Danger Zone")}
+>
   <ListItem detail on:click={deleteEverything} clickable>
     <div slot="left">⚠️</div>
     <Text className="text-red">
-      {Lang.t('settings.destroy-all-data', 'Destroy all Data')}
+      {Lang.t("settings.destroy-all-data", "Destroy all Data")}
     </Text>
   </ListItem>
 </List>

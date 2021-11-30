@@ -473,7 +473,7 @@ const trackerStoreInit = () => {
         type: "tracker",
         tracker,
         created: new Date(),
-        version: `APP_VERSION`,
+        version: import.meta.env.PACKAGE_VERSION,
       };
       downloader.text(`${snakeCase(tracker.label).toLowerCase()}.tracker.json`, JSON.stringify(pkg));
     },

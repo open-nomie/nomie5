@@ -1,7 +1,7 @@
 <script>
   import { Lang } from '../../store/lang'
   import { UserStore } from '../../store/user-store'
-  import Text from '../../components/text/text.svelte'
+  
   import Button from '../../components/button/button.svelte'
 
   const state = {
@@ -15,11 +15,11 @@
       {Lang.t('setup.choose-theme', `Choose your Theme`)}
     </h1>
     <Button
-      className="mb-3 {state.theme === 'light' ? 'bg-primary-600' : 'bg-white text-primary-600 dark:bg-black dark:text-white'}"
+      className="mb-3 {state.theme === 'light' ? 'bg-primary-500 text-white font-bold' : 'bg-white dark:bg-black text-primary-600'}"
       block
       size="lg"
       delay={20}
-      color={state.theme == 'light' ? 'primary' : ''}
+      type="clear"
       on:click={() => {
         UserStore.setTheme('light')
         state.theme = 'light'
@@ -27,11 +27,11 @@
       Light
     </Button>
     <Button
-      className="mb-3 {state.theme === 'dark' ? 'bg-primary-600' : 'bg-white text-primary-600 dark:bg-black dark:text-white'}"
+      className="mb-3 {state.theme === 'dark' ? 'bg-primary-500 text-white font-bold' : 'bg-white dark:bg-black text-primary-600'}"
       delay={20}
       block
       size="lg"
-      color={state.theme == 'dark' ? 'primary' : ''}
+      type="clear"
       on:click={() => {
         UserStore.setTheme('dark')
         state.theme = 'dark'
@@ -39,11 +39,11 @@
       Dark
     </Button>
     <Button
-      className="mb-3 {state.theme === 'auto' ? 'bg-primary-600' : 'bg-white text-primary-600 dark:bg-black dark:text-white'}"
+      className="mb-3 {state.theme === 'auto' ? 'bg-primary-500 text-white font-bold' : 'bg-white dark:bg-black text-primary-600'}"
       delay={20}
       block
       size="lg"
-      color={state.theme == 'auto' ? 'primary' : ''}
+      type="clear"
       on:click={() => {
         UserStore.setTheme('auto')
         state.theme = 'auto'

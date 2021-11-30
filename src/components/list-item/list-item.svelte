@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { navigate, Link } from 'svelte-routing'
-  import NText from '../text/text.svelte'
+  import { navigate } from 'svelte-routing'
   import { createEventDispatcher } from 'svelte'
   import Ripple from '../button/ripple.svelte'
   import tick from '../../utils/tick/tick'
@@ -32,7 +31,7 @@
 
   const has_left = (arguments[1].$$slots || {}).hasOwnProperty('left')
   const has_right = (arguments[1].$$slots || {}).hasOwnProperty('right')
-  const has_icon = (arguments[1].$$slots || {}).hasOwnProperty('icon')
+  // const has_icon = (arguments[1].$$slots || {}).hasOwnProperty('icon')
 
   const dispatch = createEventDispatcher()
 

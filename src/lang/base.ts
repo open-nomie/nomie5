@@ -30,7 +30,7 @@ export default {
       "generate-csv": "Generate CSV",
       "hide-backup-reminder": "Hide backup reminder",
       miscellaneous: "Miscellaneous",
-      "update-last-used-date": "Update All Tracker's Last-Used",
+      "update-last-used-date": "Update Last-Used Dates",
       "destroy-all-data": "Destroy all Data",
       "join-the-community": "Join the Community",
       "redo-setup": "Redo Setup",

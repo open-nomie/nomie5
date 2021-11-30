@@ -1,9 +1,6 @@
 <script lang="ts">
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
   import Panel from '../../components/panel/panel.svelte'
   import Modal2 from '../../components/modal/modal2.svelte'
-
-  import NText from '../../components/text/text.svelte'
   import NIcon from '../../components/icon/icon.svelte'
 
   // Stores
@@ -12,8 +9,6 @@
   import { TrackerLibrary } from '../../store/tracker-library'
   import { Interact } from '../../store/interact'
   import { UserStore } from '../../store/user-store'
-  import tick from '../../utils/tick/tick'
-  import TrackerList from '../board/trackers.svelte'
   import ListItem from '../../components/list-item/list-item.svelte'
   import Text from '../../components/text/text.svelte'
   import Button from '../../components/button/button.svelte'
@@ -22,8 +17,6 @@
   import Avatar from '../../components/avatar/avatar.svelte'
   import List from '../../components/list/list.svelte'
   import Empty from '../../components/empty/empty.svelte'
-  import type { t } from 'i18next'
-
   let installed = {} // hol der for anything installed during the opening
 
   let trackers = []
@@ -82,30 +75,31 @@
   }
 </script>
 
-<style lang="postcss">
+<style global lang="postcss">
   .intro-message {
-    text-align: center;
-    margin: 0 16px;
+    
+    @apply text-gray-500 dark:text-gray-300;
+    @apply text-sm;
+    @apply leading-tight;
   }
 </style>
 
 <Modal2 visible={true} id="library" className="library-modal h-full">
   <Panel className="h-full">
     <header slot="header">
-      <ToolbarGrid>
+      <main class="flex flex-col items-center justify-center py-4 space-y-2">
         <h3 class="ntitle">
           {Lang.t('tracker.things-to-track', 'Things to Track')}
         </h3>
-      </ToolbarGrid>
+        {#if $TrackerLibrary.first}
+        <div class="intro-message">
+          {Lang.t('tracker.pick-at-least-one', 'Pick 1 to continue')}
+        </div>
+      {/if}
+      </main>
     </header>
 
-    {#if $TrackerLibrary.first}
-      <div class="p-3 intro-message">
-        <NText size="sm" tag="div">
-          {Lang.t('tracker.pick-at-least-one', 'Pick 1 to continue')}
-        </NText>
-      </div>
-    {/if}
+   
 
     <List>
       {#if trackers.length == 0}

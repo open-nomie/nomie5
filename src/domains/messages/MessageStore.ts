@@ -1,6 +1,5 @@
 
 import appConfig from "../../config/appConfig";
-import { Interact } from "../../store/interact";
 import { writable } from "svelte/store";
 import type { MessagesState, MessageType } from "./message.td";
 

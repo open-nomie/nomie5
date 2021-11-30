@@ -7,10 +7,6 @@
 
   import NStepper from '../../components/stepper/stepper.svelte'
 
-  // import NToggle from "../../components/toggle-switch/toggle-switch.svelte";
-  // import NItem from "../../components/list-item/list-item.svelte";
-  import NText from '../../components/text/text.svelte'
-  import NIcon from '../../components/icon/icon.svelte'
   import Logo from '../../components/logo/logo.svelte'
 
   // Slides
@@ -24,23 +20,15 @@
 
   import NLayout from '../layout/layout.svelte'
 
-  import dayjs from 'dayjs'
   // Local components
 
   // Stores
   import { UserStore } from '../../store/user-store'
-  import { Lang } from '../../store/lang'
   import { Device } from '../../store/device-store'
   import { Interact } from '../../store/interact'
   import Button from '../../components/button/button.svelte'
   import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
 
-  // TODO: UserSession shouldn't be in here - login should be fired by Storage.
-  // const UserSession = new blockstack.UserSession();
-
-  let isMobile =
-    typeof window.orientation !== 'undefined' ||
-    navigator.userAgent.indexOf('IEMobile') !== -1
 
   const state = {
     ready: false,
@@ -123,7 +111,7 @@
     <svelte:component this={slides[state.activeSlide]} />
   </main>
   <div slot="footer">
-    <ToolbarGrid>
+    <ToolbarGrid className="px-4 py-3">
       <div slot="left">
         {#if state.activeSlide > 0}
           <Button

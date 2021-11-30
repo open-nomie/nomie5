@@ -43,7 +43,7 @@ export default class Export {
     this.format = options.format || "json";
     this.backup = {
       nomie: {
-        number: "APP_VERSION",
+        number: `${import.meta.env.PACKAGE_VERSION}`,
         created: new Date().toJSON(),
         startDate: new Date().toJSON(),
         endDate: new Date().toJSON(),

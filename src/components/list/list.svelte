@@ -10,9 +10,9 @@
 </script>
 
 {#if title && outside}
-  <Text size="xs" bold className="pb-2 px-3 pt-3" faded>
+  <div class="font-bold text-sm pb-2 px-3 pt-3 text-gray-500">
     {title.toUpperCase()}
-  </Text>
+  </div>
 {/if}
 <div
   class="n-list {solo ? 'solo' : ''}

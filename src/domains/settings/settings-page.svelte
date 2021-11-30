@@ -347,7 +347,7 @@ Note: Your data will not automatically move over. You'll first need to export it
                 <Text size="sm">
                   <a
                     class="nbtn nbtn-xs nbtn-rounded nbtn-dark"
-                    href={`mailto:${config.support_email}?subject=Nomie APP_VERSION `}>
+                    href={`mailto:${config.support_email}?subject=Nomie ${import.meta.env.PACKAGE_VERSION} `}>
                     Email
                   </a>
                 </Text>
