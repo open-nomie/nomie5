@@ -279,7 +279,7 @@
    * Returns a Dayjs version of the date
    * **/
   function getToDate(): Dayjs {
-    let toDate = dayjs(state.date).endOf("day");
+    let toDate = dayjs($StatsStore.date).endOf("day");
     return toDate;
   }
 
@@ -341,13 +341,13 @@
     const startOfMonth = {
       title: Lang.t("time.start-of-month", "Start of month"),
       click: () => {
-        changeDate(state.date.startOf("month").subtract(1, "day"));
+        changeDate($StatsStore.date.startOf("month").subtract(1, "day"));
       },
     };
     const startOfYear = {
       title: Lang.t("time.start-of-year", "Start of year"),
       click: () => {
-        changeDate(state.date.startOf("year"));
+        changeDate($StatsStore.date.startOf("year"));
       },
     };
     const startOfWeek = {
@@ -361,7 +361,9 @@
       },
     };
 
-    if (dayjs().format("DD-MM-YYYY") !== state.date.format("DD-MM-YYYY")) {
+    if (
+      dayjs().format("DD-MM-YYYY") !== $StatsStore.date.format("DD-MM-YYYY")
+    ) {
       buttons.push(gotoToday);
     }
     buttons.push(startOfWeek);
@@ -414,23 +416,22 @@
   } // end getStats()
 
   function getDayRange(): string {
-    return state.date.format(`ddd ${dateFormat}`);
+    return $StatsStore.date.format(`ddd ${dateFormat}`);
   }
 
   function loadPreviousDate(): void {
-    // state.date = dayjs(state.date).subtract(1, getTimeSpan().unit);
-    setStatsDate(dayjs(state.date).subtract(1, getTimeSpan().unit));
+    setStatsDate(dayjs($StatsStore.date).subtract(1, getTimeSpan().unit));
     lastTimeSpan = null;
     console.log({ state });
   }
 
   function loadNextDate(): void {
-    setStatsDate(dayjs(state.date).add(1, getTimeSpan().unit));
+    setStatsDate(dayjs($StatsStore.date).add(1, getTimeSpan().unit));
     lastTimeSpan = null;
   }
 
   function changeDate(date): void {
-    state.date = date;
+    setStatsDate(date);
     lastTimeSpan = null;
   }
 
@@ -445,20 +446,6 @@
       )}`;
     }
   }
-
-  // function getCalendarData() {
-  //   let rows = state.stats.rows
-  //     .filter((row) => {
-  //       return new Date(row.end).getMonth() == state.date.toDate().getMonth()
-  //     })
-  //     .map((row) => {
-  //       row.start = new Date(row.start)
-  //       row.end = new Date(row.end)
-  //       row.repeat = 'never'
-  //       return row
-  //     })
-  //   return rows
-  // }
 
   function getLocations() {
     return state.stats.rows
@@ -718,7 +705,7 @@
                   showDetail={true}
                   term={undefined}
                   element={state.trackableElement}
-                  selectedDate={state.date}
+                  selectedDate={$StatsStore.date}
                   view={timeSpans[state.timeSpan].streakUnit}
                 />
               {:else}

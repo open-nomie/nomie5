@@ -11,13 +11,11 @@
   import appConfig from "../../config/appConfig";
   import { Device } from "../../store/device-store";
   import ApiRegsiter from "./api-regsiter.svelte";
-  
+
   import math from "../../utils/math/math";
-  
+
   import { ApiStore } from "./api-store";
   import { Lang } from "../../store/lang";
-
-
 
   let state = {
     apiExample: null,
@@ -35,20 +33,21 @@
 </script>
 
 {#if $ApiStore.deviceDisabled}
-<div class="contain-sm">
-  <List className="my-4">
-    <ListItem>
-      {Lang.t('general.enabled', 'Enabled')}
-      <div slot="right">
-        <ToggleSwitch
-          value={false}
-          on:change={() => {
-            ApiStore.toggleDeviceDisabled();
-          }} />
-      </div>
-    </ListItem>
-  </List>
-</div>
+  <div class="contain-sm">
+    <List className="my-4">
+      <ListItem>
+        {Lang.t("general.enabled", "Enabled")}
+        <div slot="right">
+          <ToggleSwitch
+            value={false}
+            on:change={() => {
+              ApiStore.toggleDeviceDisabled();
+            }}
+          />
+        </div>
+      </ListItem>
+    </List>
+  </div>
 {:else if $ApiStore.registered === undefined}
   <div class="p-4 text-center">
     <Text faded>Connecting...</Text>
@@ -57,7 +56,6 @@
   <ApiRegsiter />
 {:else}
   <div class="contain-sm">
-
     <Divider pad>
       🟢
       <span class="mr-2" />
@@ -69,10 +67,11 @@
         listItem
         type="text"
         value={$ApiStore.apiKey}
-        placeholder="API Key">
+        placeholder="API Key"
+      >
         <div slot="right">
           <Button size="sm" icon on:click={() => Device.copy($ApiStore.apiKey)}>
-            <Icon name="copy" size="20" />
+            <Icon name="copy" size={20} />
           </Button>
         </div>
       </Input>
@@ -80,14 +79,16 @@
 
     <List className="mt-2 mb-2">
       <ListItem
-        title={Lang.t('nomie-api.example-request', 'Example Request')}
+        title={Lang.t("nomie-api.example-request", "Example Request")}
         clickable
         delay={0}
-        on:click={() => (state.showExample = !state.showExample)}>
+        on:click={() => (state.showExample = !state.showExample)}
+      >
         <div slot="left">
           <Icon
             name="chevron{state.showExample ? 'Down' : 'Right'}"
-            size="16" />
+            size={16}
+          />
         </div>
       </ListItem>
       {#if state.showExample}
@@ -99,29 +100,36 @@
             inputClass="code"
             label="Private Key"
             inputStyle="font-size:10px;"
-            bind:value={state.apiExample}>
+            bind:value={state.apiExample}
+          >
             <div slot="right">
               <Button
                 icon
-                
                 on:click={() => {
                   Device.copy(state.apiExample);
-                }}>
-                <Icon name="copy" size="20" className="text-inverse" />
+                }}
+              >
+                <Icon name="copy" size={20} className="text-inverse" />
               </Button>
             </div>
           </Input>
-          <a href="https://nomie.app/tutorials" target="_blank" rel="nofollow" class="text-xs text-center d-block text-underline">See more examples</a>
+          <a
+            href="https://nomie.app/tutorials"
+            target="_blank"
+            rel="nofollow"
+            class="text-xs text-center d-block text-underline"
+            >See more examples</a
+          >
         </ListItem>
         <ListItem compact title="URL" className="py-0">
           <div slot="right" class="flex">
-
             <Button
               icon
               on:click={() => {
                 Device.copy(`${appConfig.api}/log`);
-              }}>
-              <Icon name="copy" size="20" className="text-inverse"  />
+              }}
+            >
+              <Icon name="copy" size={20} className="text-inverse" />
             </Button>
             <Text size="sm">{appConfig.api}/log</Text>
           </div>
@@ -132,7 +140,7 @@
           </span>
         </ListItem>
         <ListItem itemDivider compact topLine>
-          {Lang.t('nomie-api.fields', 'Fields')}
+          {Lang.t("nomie-api.fields", "Fields")}
         </ListItem>
         <ListItem compact title="note (required)" className="py-1">
           <Text size="sm" faded>
@@ -165,14 +173,16 @@
 
     <List className="mt-2 mb-2">
       <ListItem
-        title={Lang.t('general.advanced', 'Advanced')}
+        title={Lang.t("general.advanced", "Advanced")}
         clickable
         delay={0}
-        on:click={() => (state.showPrivateKey = !state.showPrivateKey)}>
+        on:click={() => (state.showPrivateKey = !state.showPrivateKey)}
+      >
         <div slot="left">
           <Icon
             name="chevron{state.showPrivateKey ? 'Down' : 'Right'}"
-            size="16" />
+            size={16}
+          />
         </div>
       </ListItem>
       {#if state.showPrivateKey}
@@ -184,13 +194,15 @@
           inputClass="code"
           label="Private Key"
           inputStyle="font-size:12px;"
-          value={$ApiStore.privateKey}>
+          value={$ApiStore.privateKey}
+        >
           <div slot="right">
             <Button
               size="sm"
               icon
-              on:click={() => Device.copy($ApiStore.privateKey)}>
-              <Icon name="copy" size="20" className="text-inverse" />
+              on:click={() => Device.copy($ApiStore.privateKey)}
+            >
+              <Icon name="copy" size={20} className="text-inverse" />
             </Button>
           </div>
         </Input>
@@ -207,7 +219,8 @@
       <div>
         <ProgressBar
           percentage={math.percentage(10, $ApiStore.inAPI.length)}
-          color={$ApiStore.inAPI.length >= 9 ? 'red' : 'primary'} />
+          color={$ApiStore.inAPI.length >= 9 ? "red" : "primary"}
+        />
         <Text size="xs" faded className="pt-1 text-center">
           Stored on nomieapi.com
         </Text>
@@ -215,32 +228,32 @@
     </ListItem>
     <Divider inset />
     <ListItem>
-      {Lang.t('api.auto-save', 'Auto save new logs?')}
+      {Lang.t("api.auto-save", "Auto save new logs?")}
       <div slot="right">
         <ToggleSwitch
           value={$ApiStore.autoImport}
           on:change={() => {
             ApiStore.toggleAutoImport();
-          }} />
+          }}
+        />
       </div>
     </ListItem>
 
     <Divider inset />
-    
+
     <List className="my-4">
       <ListItem>
-        {Lang.t('general.enabled', 'Enabled')}
+        {Lang.t("general.enabled", "Enabled")}
         <div slot="right">
           <ToggleSwitch
             value={true}
             on:change={() => {
               ApiStore.toggleDeviceDisabled();
-            }} />
+            }}
+          />
         </div>
       </ListItem>
     </List>
-
-    
 
     <Divider pad className="text-red-500 text-opacity-50 mt-4">
       Danger Zone
@@ -249,14 +262,14 @@
       <ListItem
         clickable
         on:click={ApiStore.forget}
-        className="text-primary-500">
+        className="text-primary-500"
+      >
         Forget API on ALL Devices
       </ListItem>
       <Divider inset />
       <ListItem clickable on:click={ApiStore.destroy} className="text-red-500">
         Destory API Key
       </ListItem>
-
     </List>
   </div>
 {/if}

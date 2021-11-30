@@ -26,11 +26,14 @@
   @apply px-4 py-2;
   @apply relative;
   @apply text-gray-800 dark:text-gray-200;
-  @apply bg-white dark:bg-black dark:bg-opacity-50;
+  /* @apply bg-white dark:bg-black dark:bg-opacity-50; */
 
   min-height: 46px;
   transition: all 0.2s ease-in-out;
   text-decoration: none;
+}
+.n-item.filled {
+  @apply bg-white dark:bg-black dark:bg-opacity-50;
 }
 
 .n-item:focus {
@@ -223,28 +226,7 @@
   min-height: 20px !important;
   padding-bottom: 0;
 }
-.n-list {
-  @apply bg-white dark:bg-transparent;
-  margin-bottom: 16px;
-  overflow: hidden;
-}
-.n-list.transparent,
-.n-list[transparent] {
-  background-color: transparent;
-}
-.n-list.solo,
-.n-list [solo] {
-  width: calc(100% - 16px);
-  margin: 8px;
-  box-shadow: var(--box-shadow);
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: var(--color-solid);
-  padding: 0px 0;
-}
-.n-list.framed {
-  /* border: solid 1px var(--color-solid-2) !important; */
-}
+
 .bg-selected {
   background-color: var(--color-background-selected) !important;
 }
