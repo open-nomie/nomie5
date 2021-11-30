@@ -1,8 +1,8 @@
-// import Stats from "../../../src/modules/stats/stats";
-import StatsV5, { IStats, IStatsChartMode, timeSpans, ITimeSpanUnit } from "./statsV5";
+
+import StatsV5, { IStats, timeSpans, ITimeSpanUnit } from "./statsV5";
 import NomieLog from "../../modules/nomie-log/nomie-log";
 import Tracker from "../../modules/tracker/tracker";
-import dayjs, { OpUnitType, Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import TrackableElement, { toElement } from "../../modules/trackable-element/trackable-element";
 import StatsProcessor from "./statsV5";
 import NLog from "../../modules/nomie-log/nomie-log";

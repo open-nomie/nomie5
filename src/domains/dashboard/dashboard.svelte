@@ -15,16 +15,15 @@
   import Button from '../../components/button/button.svelte'
   import Icon from '../../components/icon/icon.svelte'
   import ListItem from '../../components/list-item/list-item.svelte'
-  import Modal from '../../components/modal/modal.svelte'
+
   import NText from '../../components/text/text.svelte'
   import SortableList from '../../components/sortable-list/sortable-list.svelte'
-  import Stepper from '../../components/stepper/stepper.svelte'
+
   import Text from '../../components/text/text.svelte'
   import TrackerSmallBlock from '../../components/tracker-small-block/tracker-small-block.svelte'
   // modules
-  import StatsProcessor from '../../modules/stats/statsV5'
+  import StatsProcessor from '../../domains/stats/statsV5'
   import { Widget } from '../../modules/dashboard/widget'
-  import Tracker from '../../modules/tracker/tracker'
 
   // Utils
   import { positivityFromLogs } from '../../utils/positivity/positivity'

@@ -1,39 +1,47 @@
 <script lang="ts">
-  import type { IStats } from "../../modules/stats/statsV5";
-  import ListItem from "../../components/list-item/list-item.svelte";
-  import type Tracker from "../../modules/tracker/tracker";
-  import HScroller from "../../components/h-scroller/h-scroller.svelte";
-  import math from "../../utils/math/math";
-  import { Lang } from "../../store/lang";
+  import type { IStats } from '../../domains/stats/statsV5'
+  import ListItem from '../../components/list-item/list-item.svelte'
+  import type Tracker from '../../modules/tracker/tracker'
+  import HScroller from '../../components/h-scroller/h-scroller.svelte'
+  import math from '../../utils/math/math'
+  import { Lang } from '../../store/lang'
 
-  export let stats: IStats;
-  export let tracker: Tracker;
+  export let stats: IStats
+  export let tracker: Tracker
 
   function formatValue(value: number, includeUnit?: boolean) {
     if (tracker) {
-      return tracker.displayValue(value, includeUnit);
+      return tracker.displayValue(value, includeUnit)
     }
-    return value;
+    return value
   }
   function getScore() {
-    let score = stats._stats.getScore();
-    return `${score.score} ${score.emoji}`;
+    let score = stats._stats.getScore()
+    return `${score.score} ${score.emoji}`
   }
 </script>
 
 {#if stats}
-  <div class="overview py-2 flex-grow flex-shrink">
+  <div class="flex-grow flex-shrink py-2 overview">
     {#if stats.math == 'sum'}
       <ListItem className="solo" title={Lang.t('general.total', 'Total')}>
-        <div slot="right" class="text-lg text-inverse">{formatValue(math.round(stats.sum, 100))}</div>
+        <div slot="right" class="text-lg text-inverse">
+          {formatValue(math.round(stats.sum, 100))}
+        </div>
       </ListItem>
     {/if}
     <ListItem className="solo" title={Lang.t('general.average', 'Average')}>
-      <div slot="right" class="text-lg text-inverse">{formatValue(math.round(stats.avg, 100))}</div>
+      <div slot="right" class="text-lg text-inverse">
+        {formatValue(math.round(stats.avg, 100))}
+      </div>
     </ListItem>
     {#if stats._stats.mode !== 'd'}
-      <ListItem className="solo" title={Lang.t('stats.daily-average', 'Daily Average')}>
-        <div slot="right" class="text-lg text-inverse">{formatValue(math.round(stats.sum / stats.rows.length, 100))}</div>
+      <ListItem
+        className="solo"
+        title={Lang.t('stats.daily-average', 'Daily Average')}>
+        <div slot="right" class="text-lg text-inverse">
+          {formatValue(math.round(stats.sum / stats.rows.length, 100))}
+        </div>
       </ListItem>
     {/if}
     {#if stats.max.value > stats.min.value}
