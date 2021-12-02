@@ -177,13 +177,9 @@ export const usePlanModal = () => {
 };
 
 const loadUserSubscription = (subscriptions: Array<Subscription>) => {
-  console.log("Loading user Subscriptions", subscriptions);
   const active: Subscription = subscriptions.find((s) => s.status === "active");
-  console.log({ active });
   if (active) {
     const activePlan: any = active.product;
-
-    console.log({ activePlan, id: activePlan.id });
     FirebaseStore.update((s) => {
       const activeProduct: any = s.products.find((p) => p.id === activePlan.id);
       s.plan = active;

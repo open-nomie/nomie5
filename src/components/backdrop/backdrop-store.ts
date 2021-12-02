@@ -1,4 +1,3 @@
-
 import { writable } from "svelte/store";
 
 function createBackdropStore() {
@@ -6,12 +5,10 @@ function createBackdropStore() {
   const { subscribe, update, set } = writable(state);
 
   function getId(): string {
-
     let id: string;
     update((state) => {
       id = `bd-${state.length}`;
       state.push(id);
-      console.log(`Backdrop getting id`, id, { state });
       return state;
     });
     return id;
@@ -23,7 +20,7 @@ function createBackdropStore() {
         state.push(id);
       }
       return state;
-    })
+    });
   }
 
   function read(): Array<string> {
@@ -44,7 +41,6 @@ function createBackdropStore() {
   async function refresh() {
     const _state = read().filter((id) => {
       const childId = `child-${id}`;
-      console.log({ childId, found: document.getElementById(childId) });
       return document.getElementById(childId) ? true : false;
     });
 
