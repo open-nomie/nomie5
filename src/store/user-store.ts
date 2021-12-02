@@ -9,7 +9,10 @@ import Logger from "../utils/log/log";
 import { writable } from "svelte/store";
 
 // Modules
-import Storage, { getStorageType, setStorage } from "../modules/storage/storage";
+import Storage, {
+  getStorageType,
+  setStorage,
+} from "../modules/storage/storage";
 
 // Stores
 import { TrackerStore } from "./tracker-store";
@@ -81,7 +84,10 @@ const userInit = () => {
   let listeners = [];
   // Using local storage because we need this before Storage can be initialized...
   // But this is pretty hacky and should be improved
-  let useCompactButtons = JSON.parse(localStorage.getItem(`${config.data_root}/settings/compactButtons`) || "false");
+  let useCompactButtons = JSON.parse(
+    localStorage.getItem(`${config.data_root}/settings/compactButtons`) ||
+      "false"
+  );
   // User State
   let state: IUserState = {
     // SEt the storage type
@@ -91,12 +97,17 @@ const userInit = () => {
     // Is the user signedin
     signedIn: undefined,
     // Number of times app launched
-    launchCount: JSON.parse(localStorage.getItem(`n4/storage/root/launch_count`) || "0"),
+    launchCount: JSON.parse(
+      localStorage.getItem(`n4/storage/root/launch_count`) || "0"
+    ),
     // Locate when tracking?
-    alwaysLocate: JSON.parse(localStorage.getItem(config.always_locate_key) || "false"),
+    alwaysLocate: JSON.parse(
+      localStorage.getItem(config.always_locate_key) || "false"
+    ),
     // App Theme
     theme: localStorage.getItem(config.theme_key) || "auto",
-    theme_accent: localStorage.getItem(`${config.theme_key}-accent`) || "default",
+    theme_accent:
+      localStorage.getItem(`${config.theme_key}-accent`) || "default",
     // location: undefined,
     autoImportApi: JSON.parse(localStorage.getItem("napi-auto") || "false"),
     // Should user be redirected to /setup
@@ -158,11 +169,19 @@ const userInit = () => {
       });
       return format;
     },
-    getDateTimeFormat(): { time: string, date: string, shortDate: string } {
-      let format: { time: string, date: string, shortDate: string } = { time: "h:mm A", date: "MMM Do YYYY", shortDate: "M/D/YYYY" };
+    getDateTimeFormat(): { time: string; date: string; shortDate: string } {
+      let format: { time: string; date: string; shortDate: string } = {
+        time: "h:mm A",
+        date: "MMM Do YYYY",
+        shortDate: "M/D/YYYY",
+      };
       update((state) => {
         if (state.meta.is24Hour) {
-          format = { time: "HH:mm", date: "Do MMM YYYY", shortDate: "D MM YYYY" };;
+          format = {
+            time: "HH:mm",
+            date: "Do MMM YYYY",
+            shortDate: "D MM YYYY",
+          };
         }
         return state;
       });
@@ -208,7 +227,6 @@ const userInit = () => {
       }
     },
     setStorage(type) {
-      type = ["blockstack", "local", "pouchdb"].indexOf(type) > -1 ? type : "local";
       update((d) => {
         d.storageType = type;
         setStorage(type);
@@ -236,7 +254,7 @@ const userInit = () => {
     /**
      * Set Profile and Signin
      */
-    setProfile(profile) { },
+    setProfile(profile) {},
     async bootstrap() {
       // First lets get the TrackerStore loaded
       state.launchCount++;
@@ -244,7 +262,11 @@ const userInit = () => {
       // Load up the first date found.
       // LedgerStore.getFirstDate();
       // Prepare prmpses
-      let promises = [methods.loadMeta(), TrackerStore.initialize(this), BoardStore.initialize()];
+      let promises = [
+        methods.loadMeta(),
+        TrackerStore.initialize(this),
+        BoardStore.initialize(),
+      ];
       try {
         await Promise.all(promises);
         return methods.fireReady(state);
@@ -312,7 +334,7 @@ const userInit = () => {
       let value;
       try {
         value = await Storage.get(config.user_meta_path);
-      } catch (e) { }
+      } catch (e) {}
       update((usr) => {
         if (value) {
           usr.meta = value;
@@ -330,7 +352,9 @@ const userInit = () => {
       // Give the UI time to catch up
       await tick(200);
       // Get the pin from the user
-      let pin = await Interact.inputPin(Lang.t("settings.pin-required", "Pin Required"));
+      let pin = await Interact.inputPin(
+        Lang.t("settings.pin-required", "Pin Required")
+      );
       // Default to locked
       let isUnlocked: boolean = false;
       // If we have a pin
@@ -348,7 +372,9 @@ const userInit = () => {
         });
         // If it's still unlocked - it failed.
         if (!isUnlocked) {
-          Interact.alert(Lang.t("settings.pin-invalid", "Invalid Pin, try again"));
+          Interact.alert(
+            Lang.t("settings.pin-invalid", "Invalid Pin, try again")
+          );
           // Call this again
           return methods.getRequiredPin();
         }
@@ -389,7 +415,9 @@ const userInit = () => {
       localStorage.setItem(`${config.theme_key}-accent`, accent);
       document.documentElement.classList.add(`mode-${theme}`);
       document.documentElement.classList.add(`${accent}`);
-      document.documentElement.classList.add(`font-size-${localStorage.getItem("font-size") || "md"}`);
+      document.documentElement.classList.add(
+        `font-size-${localStorage.getItem("font-size") || "md"}`
+      );
       update((u) => {
         u.theme = theme;
         u.theme_accent = accent;

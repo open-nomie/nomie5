@@ -10,6 +10,7 @@ import LocalForageEngine from "./engine.localforage";
 // import BlockStackEngine from "./engine.blockstack";
 // import PouchDBEngine from "./engine.pouchdb";
 import Config from "../../config/appConfig";
+import FirebaseEngine from "./engine.firebase";
 
 const STORAGE_TYPE_PATH = "n6/storage-type";
 
@@ -48,6 +49,7 @@ export interface IStorage {
   engines: {
     // blockstack: BlockStackEngine;
     local: typeof LocalForageEngine;
+    firebase: typeof FirebaseEngine;
     // pouchdb: typeof PouchDBEngine;
   };
   engine: any;
@@ -67,6 +69,7 @@ const Storage = {
   engines: {
     // blockstack: BlockStackEngine,
     local: LocalForageEngine,
+    firebase: FirebaseEngine,
     // pouchdb: PouchDBEngine,
   },
   engine: getStorageType(),

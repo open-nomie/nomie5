@@ -4,15 +4,15 @@ export default {
   storage_engine: "local", // local or blockstack
   book_time_format: "YYYY-w", // Careful changing this!! Its how all records are referenced. Changing it breaks everything.
   book_time_unit: "week", // SERIOUSLY!
-  data_root: "v5-data",
-  data_people_key: "people-v5",
-  book_root: "v5-data/books",
+  data_root: "data",
+  data_people_key: "people.json",
+  book_root: "data/books",
   tracker_file: "trackers.json",
   board_file: "boards.json",
   always_locate_key: "always-locate",
   dark_mode_key: "dark-mode",
   theme_key: "theme",
-  user_meta_path: "v5-data/meta.json",
+  user_meta_path: "data/meta.json",
   support_email: "support@happydata.org",
   support_contact: "Email Brandon",
   messages_url: "https://s3.amazonaws.com/cdn.nomie.app/messages/messages.json",

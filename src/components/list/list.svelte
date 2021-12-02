@@ -33,6 +33,7 @@
     @apply bg-white dark:bg-gray-900;
     margin-bottom: 16px;
     overflow: hidden;
+    @apply lg:rounded-lg;
   }
   .n-list.transparent,
   .n-list[transparent] {
@@ -43,9 +44,9 @@
     width: calc(100% - 16px);
     margin: 8px;
     box-shadow: var(--box-shadow);
-    border-radius: 12px;
+    @apply rounded-xl;
     overflow: hidden;
-    background-color: var(--color-solid);
+    @apply bg-gray-900;
     padding: 0px 0;
   }
   .n-list.framed {

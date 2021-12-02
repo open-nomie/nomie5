@@ -1,6 +1,6 @@
 <script lang="ts">
   import NIcon from "@/components/icon/icon.svelte";
-  import { useStorageSelectMenu } from "./settings-functions";
+  import { switchStorage, useStorageSelectMenu } from "./settings-functions";
   import { LastUsed } from "../../store/last-used";
   import ToggleSwitch from "../../components/toggle-switch/toggle-switch.svelte";
 
@@ -18,6 +18,8 @@
   import { deleteEverything } from "./settings-functions";
   import { createEventDispatcher } from "svelte";
 
+  import FirebaseSettings from "../firebase/firebase-settings.svelte";
+
   // let fileInput
   // let showImporter = false
 
@@ -27,7 +29,7 @@
     useStorageSelectMenu({
       current: $UserStore.storageType,
       onSelect(storage: any) {
-        console.log("Selected", storage);
+        switchStorage(storage);
       },
     });
   };
@@ -38,45 +40,38 @@
   title={Lang.t("settings.storage-location", "Storage Location")}
   outside
 >
-  <ListItem on:click={showStorageOptions}>
+  <ListItem on:click={showStorageOptions} detail>
     <span slot="left">☁️</span>
     <Text>
       {#if $UserStore.storageType === "local"}
         This device only
       {:else if $UserStore.storageType === "pouchdb"}
         {Lang.t("storage.pouchdb", "Local + CouchDB")}
+      {:else if $UserStore.storageType === "firebase"}
+        Nomie Cloud
       {:else if $UserStore.storageType === "blockstack"}
         {Lang.t("storage.blockstack", "Blockstack")}
       {/if}
     </Text>
-    <div slot="right">
-      <Text size="sm" className="text-primary-bright">
-        {Lang.t("general.change", "Change")}
-      </Text>
+    <div slot="right" class="text-sm text-primary-500">
+      {Lang.t("general.switch", "Switch")}
     </div>
   </ListItem>
-
-  {#if $UserStore.storageType === "blockstack"}
-    Blockstack is no longer available
-    <!-- <BlockstackOptions /> -->
-  {/if}
-  {#if $UserStore.storageType === "local"}
-    <LocalstorageOptions />
-  {/if}
-  {#if $UserStore.storageType === "pouchdb"}
-    <PouchDBOptions />
-  {/if}
-
-  <ListItem
-    detail
-    title={Lang.t("general.browse-files", "Browse Files...")}
-    on:click={() => {
-      navigate("/files");
-    }}
-  >
-    <span slot="left">📂</span>
-  </ListItem>
 </List>
+
+{#if $UserStore.storageType === "blockstack"}
+  Blockstack is no longer available
+  <!-- <BlockstackOptions /> -->
+{/if}
+{#if $UserStore.storageType === "local"}
+  <LocalstorageOptions />
+{/if}
+{#if $UserStore.storageType === "firebase"}
+  <FirebaseSettings />
+{/if}
+{#if $UserStore.storageType === "pouchdb"}
+  <PouchDBOptions />
+{/if}
 
 <List
   className="mb-3"
@@ -155,20 +150,6 @@
   </ListItem>
 </List>
 
-<ListItem
-  title={Lang.t("settings.hide-backup-reminder", "Hide backup reminder")}
->
-  <span slot="left">📕</span>
-  <div slot="right">
-    <ToggleSwitch
-      bind:value={$UserStore.meta.hideBackup}
-      on:change={() => {
-        alert("Make this work");
-      }}
-    />
-  </div>
-</ListItem>
-
 <List
   className="mb-3"
   outside
@@ -180,6 +161,30 @@
     on:click={LastUsed.updateAll}
   >
     <span slot="left">🕰</span>
+  </ListItem>
+
+  <ListItem
+    title={Lang.t("settings.hide-backup-reminder", "Hide backup reminder")}
+  >
+    <span slot="left">📕</span>
+    <div slot="right">
+      <ToggleSwitch
+        bind:value={$UserStore.meta.hideBackup}
+        on:change={() => {
+          alert("Make this work");
+        }}
+      />
+    </div>
+  </ListItem>
+
+  <ListItem
+    detail
+    title={Lang.t("general.browse-files", "Browse My Data Files...")}
+    on:click={() => {
+      navigate("/files");
+    }}
+  >
+    <span slot="left">📂</span>
   </ListItem>
 </List>
 

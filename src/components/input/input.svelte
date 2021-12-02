@@ -1,82 +1,263 @@
 <script>
-  import NIcon from '../icon/icon.svelte'
-  import { createEventDispatcher, onMount } from 'svelte'
+  import NIcon from "../icon/icon.svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  export let label = null
-  export let placeholder = null
-  export let inputmode = undefined
-  export let value = null
-  export let type = 'text'
-  export let help = null
-  export let className = ''
-  export let style = ''
-  export let inputStyle = ''
-  export let inputClass = ''
-  export let pattern = ''
-  export let width = ''
-  export let disabled = undefined
-  export let solo = undefined
-  export let listItem = undefined
-  export let compact = undefined
-  export let rows = 2
-  export let accept = 'png,jpeg,jpg,csv'
-  export let name = undefined
+  export let label = null;
+  export let placeholder = null;
+  export let inputmode = undefined;
+  export let value = null;
+  export let type = "text";
+  export let help = null;
+  export let className = "";
+  export let style = "";
+  export let inputStyle = "";
+  export let inputClass = "";
+  export let pattern = "";
+  export let width = "";
+  export let disabled = undefined;
+  export let solo = undefined;
+  export let listItem = undefined;
+  export let compact = undefined;
+  export let rows = 2;
+  export let accept = "png,jpeg,jpg,csv";
+  export let name = undefined;
 
-  export let autocomplete = undefined
-  export let autocorrect = undefined
-  export let autocapitalize = undefined
-  export let autofocus = undefined
+  export let autocomplete = undefined;
+  export let autocorrect = undefined;
+  export let autocapitalize = undefined;
+  export let autofocus = undefined;
 
-  let focused = false
-  let hit = false
-  let hasInput = false
+  let focused = false;
+  let hit = false;
+  let hasInput = false;
 
-  let _elInput
+  let _elInput;
 
   export function doFocus() {
-    _elInput.focus()
+    _elInput.focus();
   }
 
   export function getValue() {
-    return _elInput.value
+    return _elInput.value;
   }
 
   let blur = () => {
-    focused = false
-  }
+    focused = false;
+  };
   let focus = (event) => {
-    focused = true
-    dispatch('focus', event)
-  }
+    focused = true;
+    dispatch("focus", event);
+  };
   let change = (evt) => {
-    if (evt.key == 'Enter') {
-      dispatch('enter', value)
+    if (evt.key == "Enter") {
+      dispatch("enter", value);
     }
-    dispatch('change', value)
-  }
+    dispatch("change", value);
+  };
 
   $: if (value && `${value}`.length > 0) {
-    hasInput = true
+    hasInput = true;
   } else {
-    hasInput = false
+    hasInput = false;
   }
 
   onMount(() => {
-    if (type == 'select') {
-      hasInput = true
+    if (type == "select") {
+      hasInput = true;
     }
     if (value && `${value}`.length) {
-      hasInput = true
+      hasInput = true;
     }
     if (autofocus) {
       setTimeout(() => {
-        _elInput.focus()
-      }, 300)
+        _elInput.focus();
+      }, 300);
     }
-  })
+  });
 </script>
+
+<div
+  class="n-input-container n-input-type-{type}
+  {className}
+  {compact ? 'compact' : ''}
+  {listItem ? 'list-item' : ''}
+  {solo ? 'solo' : 'with-label'}"
+  style="{width ? `max-width:${width}; width:${width}; ` : ``}
+  {style}"
+>
+  <div
+    class="n-input-wrapper {hasInput ? 'has-input' : 'no-input'}
+    {focused ? 'has-focus' : 'no-focus'}"
+  >
+    <slot name="left" />
+    <div class="n-input">
+      {#if label || placeholder}
+        <label for={name}>{label || placeholder}</label>
+      {/if}
+      {#if type == "email"}
+        <input
+          bind:this={_elInput}
+          {disabled}
+          {inputmode}
+          {name}
+          type="email"
+          style={inputStyle}
+          class={inputClass}
+          {pattern}
+          bind:value
+          {autocomplete}
+          {autocorrect}
+          {autocapitalize}
+          {placeholder}
+          on:input={change}
+          on:change={(evt) => {
+            dispatch("change", evt);
+          }}
+          on:focus={focus}
+          on:blur={blur}
+        />
+      {:else if type == "file"}
+        <input
+          bind:this={_elInput}
+          {disabled}
+          {inputmode}
+          {name}
+          type="file"
+          style={inputStyle}
+          class={inputClass}
+          {pattern}
+          {accept}
+          bind:value
+          {placeholder}
+          on:change={(evt) => {
+            dispatch("change", evt);
+          }}
+          on:input={change}
+          on:focus={focus}
+          on:blur={blur}
+        />
+      {:else if type == "password"}
+        <input
+          bind:this={_elInput}
+          {disabled}
+          {inputmode}
+          type="password"
+          style={inputStyle}
+          class={inputClass}
+          {pattern}
+          bind:value
+          {autocomplete}
+          {autocorrect}
+          {autocapitalize}
+          {placeholder}
+          on:input={change}
+          on:focus={focus}
+          on:blur={blur}
+        />
+      {:else if type == "datetime-local"}
+        <input
+          bind:this={_elInput}
+          {disabled}
+          {inputmode}
+          type="datetime-local"
+          style={inputStyle}
+          class={inputClass}
+          bind:value
+          {autocomplete}
+          {autocorrect}
+          {autocapitalize}
+          {placeholder}
+          on:input={change}
+          on:focus={focus}
+          on:blur={blur}
+        />
+      {:else if type == "number"}
+        <input
+          bind:this={_elInput}
+          {disabled}
+          {inputmode}
+          type="number"
+          style={inputStyle}
+          class={inputClass}
+          bind:value
+          {autocomplete}
+          {autocorrect}
+          {autocapitalize}
+          {placeholder}
+          on:input={change}
+          on:focus={focus}
+          on:blur={blur}
+        />
+      {:else if type == "select"}
+        <div class="select-wrap">
+          <select
+            {placeholder}
+            bind:this={_elInput}
+            {disabled}
+            on:change={change}
+            bind:value
+          >
+            <slot />
+          </select>
+          <!-- <NIcon
+            name="chevronDown"
+            className="text-gray-500 mr-3"
+            size={16}
+            style="position:absolute; right:4px; top:50%; transform:
+            translateY(-50%); pointer-events:none" /> -->
+        </div>
+      {:else if type == "textarea"}
+        <textarea
+          bind:this={_elInput}
+          {disabled}
+          {rows}
+          style={inputStyle}
+          class={inputClass}
+          {autocomplete}
+          {autocorrect}
+          {autocapitalize}
+          {placeholder}
+          on:input={change}
+          on:focus={focus}
+          on:blur={blur}
+          bind:value
+        />
+        <slot />
+      {:else}
+        <input
+          bind:this={_elInput}
+          {disabled}
+          type="text"
+          {inputmode}
+          style={inputStyle}
+          class={inputClass}
+          {pattern}
+          bind:value
+          {autocomplete}
+          {autocorrect}
+          {autocapitalize}
+          {placeholder}
+          on:keyup={(evt) => {
+            if (evt.key === "Enter") {
+              dispatch("enter", value);
+            }
+            dispatch("keyup", evt);
+          }}
+          on:input={change}
+          on:focus={focus}
+          on:blur={blur}
+        />
+      {/if}
+    </div>
+    <slot name="right" />
+  </div>
+  <slot name="bottom" />
+  {#if help}
+    <div class="helper">{help}</div>
+  {/if}
+</div>
 
 <style global lang="postcss">
   .n-input-container.list-item div.n-input label {
@@ -187,7 +368,7 @@
   }
   .n-input-container .n-input-wrapper:before {
     transition: all 0.2s ease-in-out;
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -196,16 +377,23 @@
     opacity: 0;
     pointer-events: none;
   }
-  .n-input-container .n-input-wrapper.has-focus:before {
-    content: '';
+
+  .n-input-container .n-input-wrapper:after {
+    @apply w-0;
+    @apply transform transition-all duration-300;
+    content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
     bottom: 0;
-    box-shadow: 0px 0px 1px 2px var(--color-primary);
-    opacity: 0.3;
-    border-radius: 6px;
+    height: 0px;
+    left: 0;
+  }
+  .n-input-container .n-input-wrapper.has-focus:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    @apply w-full;
+    @apply bg-primary-500;
   }
   .n-input-container .n-input-wrapper textarea,
   .n-input-container .n-input-wrapper input {
@@ -260,174 +448,3 @@
     opacity: 0.7;
   }
 </style>
-
-<div
-  class="n-input-container n-input-type-{type}
-  {className}
-  {compact ? 'compact' : ''}
-  {listItem ? 'list-item' : ''}
-  {solo ? 'solo' : 'with-label'}"
-  style="{width ? `max-width:${width}; width:${width}; ` : ``}
-  {style}">
-  <div
-    class="n-input-wrapper {hasInput ? 'has-input' : 'no-input'}
-    {focused ? 'has-focus' : 'no-focus'}">
-    <slot name="left" />
-    <div class="n-input">
-      {#if label || placeholder}
-        <label for={name}>{label || placeholder}</label>
-      {/if}
-      {#if type == 'email'}
-        <input
-          bind:this={_elInput}
-          {disabled}
-          {inputmode}
-          {name}
-          type="email"
-          style={inputStyle}
-          class={inputClass}
-          {pattern}
-          bind:value
-          {autocomplete}
-          {autocorrect}
-          {autocapitalize}
-          {placeholder}
-          on:input={change}
-          on:change={(evt) => {
-            dispatch('change', evt)
-          }}
-          on:focus={focus}
-          on:blur={blur} />
-      {:else if type == 'file'}
-        <input
-          bind:this={_elInput}
-          {disabled}
-          {inputmode}
-          {name}
-          type="file"
-          style={inputStyle}
-          class={inputClass}
-          {pattern}
-          {accept}
-          bind:value
-          {placeholder}
-          on:change={(evt) => {
-            dispatch('change', evt)
-          }}
-          on:input={change}
-          on:focus={focus}
-          on:blur={blur} />
-      {:else if type == 'password'}
-        <input
-          bind:this={_elInput}
-          {disabled}
-          {inputmode}
-          type="password"
-          style={inputStyle}
-          class={inputClass}
-          {pattern}
-          bind:value
-          {autocomplete}
-          {autocorrect}
-          {autocapitalize}
-          {placeholder}
-          on:input={change}
-          on:focus={focus}
-          on:blur={blur} />
-      {:else if type == 'datetime-local'}
-        <input
-          bind:this={_elInput}
-          {disabled}
-          {inputmode}
-          type="datetime-local"
-          style={inputStyle}
-          class={inputClass}
-          bind:value
-          {autocomplete}
-          {autocorrect}
-          {autocapitalize}
-          {placeholder}
-          on:input={change}
-          on:focus={focus}
-          on:blur={blur} />
-      {:else if type == 'number'}
-        <input
-          bind:this={_elInput}
-          {disabled}
-          {inputmode}
-          type="number"
-          style={inputStyle}
-          class={inputClass}
-          bind:value
-          {autocomplete}
-          {autocorrect}
-          {autocapitalize}
-          {placeholder}
-          on:input={change}
-          on:focus={focus}
-          on:blur={blur} />
-      {:else if type == 'select'}
-        <div class="select-wrap">
-          <select
-            {placeholder}
-            bind:this={_elInput}
-            {disabled}
-            on:change={change}
-            bind:value>
-            <slot />
-          </select>
-          <!-- <NIcon
-            name="chevronDown"
-            className="text-gray-500 mr-3"
-            size={16}
-            style="position:absolute; right:4px; top:50%; transform:
-            translateY(-50%); pointer-events:none" /> -->
-        </div>
-      {:else if type == 'textarea'}
-        <textarea
-          bind:this={_elInput}
-          {disabled}
-          {rows}
-          style={inputStyle}
-          class={inputClass}
-          {autocomplete}
-          {autocorrect}
-          {autocapitalize}
-          {placeholder}
-          on:input={change}
-          on:focus={focus}
-          on:blur={blur}
-          bind:value />
-        <slot />
-      {:else}
-        <input
-          bind:this={_elInput}
-          {disabled}
-          type="text"
-          {inputmode}
-          style={inputStyle}
-          class={inputClass}
-          {pattern}
-          bind:value
-          {autocomplete}
-          {autocorrect}
-          {autocapitalize}
-          {placeholder}
-          on:keyup={(evt) => {
-            if (evt.key === 'Enter') {
-              dispatch('enter', value)
-            }
-            dispatch('keyup', evt)
-          }}
-          on:input={change}
-          on:focus={focus}
-          on:blur={blur} />
-      {/if}
-    </div>
-    <slot name="right" />
-  </div>
-  <slot name="bottom" />
-  {#if help}
-    <div class="helper">{help}</div>
-  {/if}
-</div>

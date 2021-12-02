@@ -54,7 +54,9 @@
 .nbtn:disabled,
 .nbtn.disabled {
   opacity: 0.5;
+  pointer-events: none;
 }
+
 .nbtn-md {
   @apply text-lg;
 }
