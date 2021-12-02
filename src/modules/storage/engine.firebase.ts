@@ -45,7 +45,10 @@ const FirebaseEngine = {
         eThree = await EThree.initialize(async () => {
           return s.jwt;
         });
-        await eThree.register().catch((e) => {});
+        console.log("trying to register device");
+        await eThree.register().catch((e) => {
+          console.log(`eThree threw error - on register`, e);
+        });
 
         func();
       }
