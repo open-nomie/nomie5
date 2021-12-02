@@ -70,11 +70,7 @@
       freshProducts.push(product);
     }
     products = freshProducts;
-    console.log({ products });
-
     selectedPlan = products[0];
-
-    console.log({ products });
   };
 
   const getPrice = (id: string) => {

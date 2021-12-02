@@ -45,11 +45,7 @@ const FirebaseEngine = {
         eThree = await EThree.initialize(async () => {
           return s.jwt;
         });
-        if (!eThree.keyLoader.hasPrivateKey()) {
-          await eThree.register().catch((e) => {
-            console.error(e);
-          });
-        }
+        await eThree.register().catch((e) => {});
 
         func();
       }
